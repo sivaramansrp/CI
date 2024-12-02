@@ -104,5 +104,11 @@
             "razon_social": "",
             "correo": ""
         }
+    ],
+    "requisitos": [
+        {
+            "tipo_documento": 2
+        }
     ]
+
 }
