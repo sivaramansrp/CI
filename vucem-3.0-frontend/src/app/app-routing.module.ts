@@ -5,7 +5,7 @@ const routes: Routes = [
   {path: '', pathMatch: 'full', redirectTo: '/solicitud/servicios-extraordinarios'},
   {
     path: 'solicitud',
-    loadChildren: () => import('./views/solicitudes/solicitudes.module').then(m => m.SolicitudesModule)
+    loadChildren: () => import('./views/5701/solicitudes.module').then(m => m.SolicitudesModule)
   }
 ];
 
