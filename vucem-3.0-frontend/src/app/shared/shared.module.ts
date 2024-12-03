@@ -5,13 +5,12 @@ import { WizardComponent } from './components/wizard/wizard.component';
 
 
 @NgModule({
-  declarations: [  ],
+  declarations: [  
+  ],
   imports: [
     CommonModule,
-    WizardComponent
   ],
   exports: [
-    WizardComponent
   ]
 })
 export class SharedModule { }

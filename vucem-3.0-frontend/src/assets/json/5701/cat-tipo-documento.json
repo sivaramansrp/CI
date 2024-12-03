@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "value": "Documento que ampare el valor de la mercancía"
+  },
+  {
+    "id": 2,
+    "value": "Pedimento(s) para Servicio Extraordinario"
+  },
+  {
+    "id": 3,
+    "value": "Documentos del medio de transporte (Guías, BL o carta porte según corresponda)"
+  },
+  {
+    "id": 4,
+    "value": "Otro"
+  }
+]

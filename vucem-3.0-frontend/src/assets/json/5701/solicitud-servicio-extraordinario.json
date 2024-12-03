@@ -1,4 +1,5 @@
 {
+    "id_solicitud": "1cd4e76e-db2a-42c3-ae37-e2c7ef4373ab",
     "datos_solicitante" : {
         "generales": {
             "curp": "LEQI810131HDGSXG05",
@@ -108,7 +109,9 @@
     "requisitos": [
         {
             "tipo_documento": 2
+        },
+        {
+            "tipo_documento": 4
         }
     ]
-
 }
