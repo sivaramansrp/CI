@@ -6,6 +6,7 @@ import { WizardComponent } from './components/wizard/wizard.component';
 
 @NgModule({
   declarations: [  
+  
   ],
   imports: [
     CommonModule,

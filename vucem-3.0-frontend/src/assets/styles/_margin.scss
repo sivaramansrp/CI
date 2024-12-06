@@ -1,0 +1,110 @@
+/* You can add global styles to this file, and also import other style files */
+
+$spacer: 1rem;
+
+/* Margins bottom */
+.mb-0 {
+    margin-bottom: 0;
+}
+
+.mb-1 {
+    margin-bottom: ($spacer * 0.25);
+}
+
+.mb-2 {
+    margin-bottom: $spacer * 0.5;
+}
+
+.mb-3 {
+    margin-bottom: $spacer;
+}
+
+.mb-4 {
+    margin-bottom: $spacer * 1.5;
+}
+
+.mb-5 {
+    margin-bottom: $spacer * 3;
+}
+
+/* Margins start */
+.ms-0 {
+  margin-left: 0 !important;
+}
+
+.ms-1 {
+  margin-left: ($spacer * 0.25) !important;
+}
+
+.ms-2 {
+  margin-left: $spacer * 0.5 !important;
+}
+
+.ms-3 {
+  margin-left: $spacer !important;
+}
+
+.ms-4 {
+  margin-left: $spacer * 1.5 !important;
+}
+
+.ms-5 {
+  margin-right: $spacer * 3 !important;
+}
+
+/* Margins end */
+.me-0 {
+  margin-right: 0 !important;
+}
+
+.me-1 {
+  margin-right: ($spacer * 0.25) !important;
+}
+
+.me-2 {
+  margin-right: $spacer * 0.5 !important;
+}
+
+.me-3 {
+  margin-right: $spacer !important;
+}
+
+.me-4 {
+  margin-right: $spacer * 1.5 !important;
+}
+
+.me-5 {
+  margin-top: $spacer * 3 !important;
+}
+
+/* Margins top */
+.mt-0 {
+  margin-top: 0 !important;
+}
+
+.mt-1 {
+  margin-top: ($spacer * 0.25) !important;
+}
+
+.mt-2 {
+  margin-right: $spacer * 0.5 !important;
+}
+
+.mt-3 {
+  margin-top: $spacer !important;
+}
+
+.mt-4 {
+  margin-top: $spacer * 1.5 !important;
+}
+
+.mt-5 {
+  margin-top: $spacer * 3 !important;
+}
+
+
+
+
+
+
+

@@ -36,8 +36,12 @@
               "src/favicon.ico",
               "src/assets"
             ],
-            "styles": [],
-            "scripts": []
+            "styles": [
+              "src/styles.scss"
+
+            ],
+            "scripts": [
+            ]
           },
           "configurations": {
             "production": {

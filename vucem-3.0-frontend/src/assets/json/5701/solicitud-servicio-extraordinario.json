@@ -81,9 +81,9 @@
             }
         ],
         "mercancia": {
-            "pais_origen": "",
-            "pais_procedencia": "",
-            "desccripcion": "",
+            "pais_origen": 12,
+            "pais_procedencia": 18,
+            "descripcion": "",
             "justificacion": ""
         },
         "responsables_despacho": [

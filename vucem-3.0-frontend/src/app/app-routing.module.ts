@@ -2,10 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  {path: '', pathMatch: 'full', redirectTo: '/solicitud/servicios-extraordinarios'},
+  {path: '**', pathMatch: 'full', redirectTo: 'servicios-extraordinarios'},
   {
-    path: 'solicitud',
-    loadChildren: () => import('./views/5701/solicitudes.module').then(m => m.SolicitudesModule)
+    path: 'servicios-extraordinarios',
+    loadChildren: () => import('./tramites/5701/servicios-extraordinarios.module').then(m => m.ServiciosExtraordinariosModule)
   }
 ];
 

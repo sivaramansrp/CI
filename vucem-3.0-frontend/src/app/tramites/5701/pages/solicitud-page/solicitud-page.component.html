@@ -1,0 +1,41 @@
+<div class="page">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h1>Solicitud servicios extraordinarios</h1>
+      </div>
+
+      <app-wizard [listaPasos]="pasos"></app-wizard>
+
+    </div>
+
+    <div class="row">
+      <ul class="nav nav-tabs">
+        <li [ngClass]="indice === 1 ? 'active' : ''">
+          <a data-toggle="tab" (click)="seleccionaTab(1)">Solicitante</a>
+        </li>
+        <li [ngClass]="indice === 2 ? 'active' : ''">
+          <a data-toggle="tab" (click)="seleccionaTab(2)">Datos de la solicitud</a>
+        </li>
+        <li [ngClass]="indice === 3 ? 'active' : ''">
+          <a data-toggle="tab" (click)="seleccionaTab(3)">Terceros relacionados</a>
+        </li>
+      </ul>
+
+      <ng-container>
+        @switch (indice) {
+        @case (1) {
+          <solicitante></solicitante>
+        }
+        @case (2) {
+          <solicitud></solicitud>
+        }
+        @case (3) {
+          <terceros></terceros>
+        }
+        }
+        <btn-continuar></btn-continuar>
+      </ng-container>
+    </div>
+  </div>
+</div>
