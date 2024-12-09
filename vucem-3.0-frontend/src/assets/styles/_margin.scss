@@ -49,7 +49,7 @@ $spacer: 1rem;
 }
 
 .ms-5 {
-  margin-right: $spacer * 3 !important;
+  margin-left: $spacer * 3 !important;
 }
 
 /* Margins end */
@@ -74,7 +74,7 @@ $spacer: 1rem;
 }
 
 .me-5 {
-  margin-top: $spacer * 3 !important;
+  margin-right: $spacer * 3 !important;
 }
 
 /* Margins top */
@@ -87,7 +87,7 @@ $spacer: 1rem;
 }
 
 .mt-2 {
-  margin-right: $spacer * 0.5 !important;
+  margin-top: $spacer * 0.5 !important;
 }
 
 .mt-3 {
@@ -101,6 +101,70 @@ $spacer: 1rem;
 .mt-5 {
   margin-top: $spacer * 3 !important;
 }
+
+/* Margins set both top and bottom */
+.my-0 {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.my-1 {
+  margin-top: ($spacer * 0.25) !important;
+  margin-bottom: ($spacer * 0.25) !important;
+}
+
+.my-2 {
+  margin-top: $spacer * 0.5 !important;
+  margin-bottom: $spacer * 0.5 !important;
+}
+
+.my-3 {
+  margin-top: $spacer !important;
+  margin-bottom: $spacer !important;
+}
+
+.my-4 {
+  margin-top: $spacer * 1.5 !important;
+  margin-bottom: $spacer * 1.5 !important;
+}
+
+.my-5 {
+  margin-top: $spacer * 3 !important;
+  margin-bottom: $spacer * 3 !important;
+}
+
+/* Margins set both right and left */
+.mx-0 {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+}
+
+.mx-1 {
+  margin-right: ($spacer * 0.25) !important;
+  margin-left: ($spacer * 0.25) !important;
+}
+
+.mx-2 {
+  margin-right: $spacer * 0.5 !important;
+  margin-left: $spacer * 0.5 !important;
+}
+
+.mx-3 {
+  margin-right: $spacer !important;
+  margin-left: $spacer !important;
+}
+
+.mx-4 {
+  margin-right: $spacer * 1.5 !important;
+  margin-left: $spacer * 1.5 !important;
+}
+
+.mx-5 {
+  margin-right: $spacer * 3 !important;
+  margin-left: $spacer * 3 !important;
+}
+
+
 
 
 

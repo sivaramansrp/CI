@@ -8,7 +8,7 @@ import { ServiciosExtraordinariosService } from '../../../../core/services/5701/
 })
 export class SolicitudPageComponent {
   pasos: Array<string> = PASOS;
-  indice: number = 1;
+  indice: number = 2;
 
   constructor( private sExtraordinariosService: ServiciosExtraordinariosService ) {}
 
