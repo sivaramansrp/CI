@@ -42,7 +42,6 @@ export class SolicitanteComponent {
 
   getDatosGenerales() {
     this.sExtraordinariosService.getDatosGenerales().subscribe((resp) => {
-      console.log(resp);
 
       if ( resp.code === 200) {
         const datosSolicitante = resp.data.datos_solicitante.generales;

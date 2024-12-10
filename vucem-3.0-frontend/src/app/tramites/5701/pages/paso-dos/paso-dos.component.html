@@ -1,1 +1,61 @@
-<p>paso-dos works!</p>
+<div class="container">
+  <ng-titulo titulo="Requisitos opcionales" />
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="alert alert-info">
+        <h6>Instrucciones</h6>
+        <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
+        <p>- En caso de que no rquieras algún documento, seleccionalo y elíminalo</p>
+        <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar de nuevo"</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div [formGroup]="FormDocumento">
+        <label for="tipo_solicitud" class="control-label">Tipo de documento*:</label>
+        <select class="form-control" id="tipo-solicitud" (change)="agregarDocumento()" formControlName="documento">
+          <option>Selecciona un tipo de Documento</option>
+          @for (item of tiposDocumentos; track $index)
+          {
+            <option value={{item.id}}>{{item.value}}</option>
+          }
+        </select>
+
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <table class="table table-responsive">
+        <thead>
+          <tr>
+            <th>
+              Tipo de documento
+            </th>
+            <th>
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of documentosSeleccionados; let i = $index; track item.id;) {
+          <tr>
+            <td>{{item.value}}</td>
+            <td>
+              <button class="btn btn-link" (click)="eliminar(i)">
+                <i class="glyphicon glyphicon-trash"></i>
+              </button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+
+
+</div>

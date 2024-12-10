@@ -27,9 +27,6 @@
         <thead>
           <tr>
             <th>
-              <input type="checkbox" name="" id="">
-            </th>
-            <th>
               Nombre/Razón social
             </th>
             <th>
@@ -41,15 +38,12 @@
           </tr>
         </thead>
         <tbody>
-          @for (item of personas; track $index) {
+          @for (item of personas; let i = $index; track item.nombre;) {
           <tr>
-            <td>
-              <input type="checkbox" name="" id="">
-            </td>
             <td>{{item.nombre}}</td>
             <td>{{item.correo}}</td>
             <td>
-              <button class="btn btn-link">
+              <button class="btn btn-link" (click)="eliminar(i)">
                 <i class="glyphicon glyphicon-trash"></i>
               </button>
             </td>
