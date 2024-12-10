@@ -1,117 +1,119 @@
 {
+  "code": 200,
+  "data": {
     "id_solicitud": "1cd4e76e-db2a-42c3-ae37-e2c7ef4373ab",
-    "datos_solicitante" : {
-        "generales": {
-            "curp": "LEQI810131HDGSXG05",
-            "rfc": "LEQI8101314S7",
-            "nombre": "IGNACIO EDUARDO",
-            "a_paterno": "LEOS",
-            "a_materno": "QUIÑONES",
-            "act_economica": "ASALARIADO",
-            "correo": "VUCEMcbp@hotmail.com"
-        },
-        "domicilio_fiscal": {
-            "pais": "Estados Unidos Mexicanos",
-            "codigo_postal": "34078",
-            "entidad_federativa": 10,
-            "municipio": 15,
-            "localidad": "Victoria de Durango",
-            "colonia": "Los Sauces",
-            "calle": "PRIV. PINO PIÑON",
-            "nro_exterior": 703,
-            "nro_interior": 0,
-            "lada": "618",
-            "telefono": "8366941"
-        }
+    "datos_solicitante": {
+      "generales": {
+        "curp": "LEQI810131HDGSXG05",
+        "rfc": "LEQI8101314S7",
+        "nombre": "IGNACIO EDUARDO",
+        "a_paterno": "LEOS",
+        "a_materno": "QUIÑONES",
+        "act_economica": "ASALARIADO",
+        "correo": "VUCEMcbp@hotmail.com"
+      },
+      "domicilio_fiscal": {
+        "pais": "Estados Unidos Mexicanos",
+        "codigo_postal": "34078",
+        "entidad_federativa": 10,
+        "municipio": 15,
+        "localidad": "Victoria de Durango",
+        "colonia": "Los Sauces",
+        "calle": "PRIV. PINO PIÑON",
+        "n_ext": 703,
+        "n_int": 0,
+        "lada": "618",
+        "telefono": "8366941"
+      }
     },
-    "datos_solicitud" : {
-        "tipo": 1,
-        "datos_importador_exportador" : {
-            "rfc": "",
-            "nombre": "",
-            "nro_registro": "",
-            "programa_fomento": "",
-            "immex": "",
-            "industria_automotriz": "",
-            "tipo_empresa": {
-                "certificacion_a": false,
-                "certificacion_aa": false,
-                "certificacion_aaa": false,
-                "socio_comercial": false,
-                "op_economico_aut": false,
-                "revision_origen": false
-            },
-            "id_socio_comercial": ""
+    "datos_solicitud": {
+      "tipo": 1,
+      "datos_importador_exportador": {
+        "rfc": "",
+        "nombre": "",
+        "nro_registro": "",
+        "programa_fomento": "",
+        "immex": "",
+        "industria_automotriz": "",
+        "tipo_empresa": {
+          "certificacion_a": false,
+          "certificacion_aa": false,
+          "certificacion_aaa": false,
+          "socio_comercial": false,
+          "op_economico_aut": false,
+          "revision_origen": false
         },
-        "datos_servicio": {
-            "f_inicio": "",
-            "h_inicio": "",
-            "f_final": "",
-            "h_final": "",
-            "f_seleccionadas": ""
+        "id_socio_comercial": ""
+      },
+      "datos_servicio": {
+        "f_inicio": "",
+        "h_inicio": "",
+        "f_final": "",
+        "h_final": "",
+        "f_seleccionadas": []
+      },
+      "datos_despacho": {
+        "despacho": {
+          "lda": false,
+          "dd": false
         },
-        "datos_despacho": {
-            "despacho": { 
-                "lda": false,
-                "dd": false             
-            },
-            "rfc_autorizacion": "",
-            "ddex_autorizacion": "",
-            "aduana": "",
-            "seccion_aduanera": "",
-            "nombre_recinto": "",
-            "tipo_despacho": "",
-            "tipo_operacion": "",
-            "patente": "",
-            "relacion_sociedad": false,
-            "encargo_conferido": false,
-            "domicilio": ""
-
-        },
-        "datos_pedimento": [
-            {
-                "patente": 3061,
-                "pedimento": 1234,
-                "aduana": 800,
-                "tipo_pedimento": "Por evaluar",
-                "numero": 0,
-                "comprobante_valor": "",
-                "pedimento_validado": false
-
-            }
-        ],
-        "mercancia": {
-            "pais_origen": 12,
-            "pais_procedencia": 18,
-            "descripcion": "",
-            "justificacion": ""
-        },
-        "responsables_despacho": [
-            {
-                "gafete": "",
-                "nombre": "",
-                "a_paterno": "",
-                "a_materno": ""
-            }
-        ] ,
-        "pagos": {
-            "monto_pagar": "",
-            "linea_captura": "",
-            "monto": ""
-        }   
+        "rfc_autorizacion": "",
+        "ddex_autorizacion": "",
+        "aduana": "",
+        "seccion_aduanera": "",
+        "nombre_recinto": "",
+        "tipo_despacho": "",
+        "tipo_operacion": "",
+        "patente": "",
+        "relacion_sociedad": false,
+        "encargo_conferido": false,
+        "domicilio": ""
+      },
+      "datos_pedimento": [
+        {
+          "patente": 3061,
+          "pedimento": 1234,
+          "aduana": 800,
+          "tipo_pedimento": "Por evaluar",
+          "numero": 0,
+          "comprobante_valor": "",
+          "pedimento_validado": false
+        }
+      ],
+      "mercancia": {
+        "pais_origen": 12,
+        "pais_procedencia": 18,
+        "descripcion": "",
+        "justificacion": ""
+      },
+      "responsables_despacho": [
+        {
+          "gafete": "",
+          "nombre": "",
+          "a_paterno": "",
+          "a_materno": ""
+        }
+      ],
+      "pagos": {
+        "monto_pagar": "",
+        "linea_captura": "",
+        "monto": ""
+      }
     },
     "terceros_relacionados": [
-        {
-            "razon_social": "",
-            "correo": ""
-        }
+      {
+        "razon_social": "",
+        "correo": ""
+      }
     ],
     "requisitos": [
-        {
-            "tipo_documento": 2
-        },
-        {
-            "tipo_documento": 4
-        }
+      {
+        "tipo_documento": 2
+      },
+      {
+        "tipo_documento": 4
+      }
     ]
+  },
+  "message": "Consulta exitosa"
 }

@@ -11,7 +11,7 @@ import { BtnContinuarComponent } from '../../../../shared/components/btn-continu
 })
 export class PasoUnoComponent {
   pasos: Array<string> = PASOS;
-  indice: number = 3;
+  indice: number = 1;
 
   seleccionaTab(i: number): void {
     this.indice = i;

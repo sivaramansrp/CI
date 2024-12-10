@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" [formGroup]="SolicitanteForm">
 
   <ng-titulo titulo="Datos generales del solicitante" />
 
@@ -7,15 +7,13 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="control-label" for="curp">CURP:</label>
-          <input class="form-control" id="curp" placeholder="CURP" type="text">
-          <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top"
-            title="Tooltip en la izquierda">Tooltip en la izquierda</button>
+          <input class="form-control" id="curp" placeholder="CURP" type="text" formControlName="curp">
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label class="control-label" for="rfc">RFC:</label>
-          <input class="form-control" id="rfc" placeholder="RFC" type="text">
+          <input class="form-control" id="rfc" placeholder="RFC" type="text" formControlName="rfc">
         </div>
       </div>
     </div>
@@ -23,19 +21,19 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="control-label" for="nombre">Nombre(s):</label>
-          <input class="form-control" id="nombre" placeholder="Nombre" type="text">
+          <input class="form-control" id="nombre" placeholder="Nombre" type="text" formControlName="nombre">
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label class="control-label" for="a_paterno">Primer Apellido:</label>
-          <input class="form-control" id="a_paterno" placeholder="Primer Apellido" type="text">
+          <input class="form-control" id="a_paterno" placeholder="Primer Apellido" type="text" formControlName="a_paterno">
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label class="control-label" for="a_materno">Segundo Apellido:</label>
-          <input class="form-control" id="a_materno" placeholder="Segundo Apellido" type="text">
+          <input class="form-control" id="a_materno" placeholder="Segundo Apellido" type="text" formControlName="a_materno">
         </div>
       </div>
     </div>
@@ -43,13 +41,13 @@
       <div class="col-md-8">
         <div class="form-group">
           <label class="control-label" for="act_economica">Actividad económica preponderante:</label>
-          <input class="form-control" id="act_economica" placeholder="Nombre" type="text">
+          <input class="form-control" id="act_economica" placeholder="Nombre" type="text" formControlName="act_economica">
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label class="control-label" for="correo">Correo electrónico:</label>
-          <input class="form-control" id="correo" placeholder="correo" type="text">
+          <input class="form-control" id="correo" placeholder="correo" type="text" formControlName="correo">
         </div>
       </div>
     </div>
@@ -61,54 +59,54 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="control-label" for="curp">País:</label>
-          <input class="form-control" id="curp" placeholder="País" type="text">
+          <label class="control-label" for="pais">País:</label>
+          <input class="form-control" id="pais" placeholder="País" type="text" formControlName="pais">
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="control-label" for="rfc">Código postal:</label>
-          <input class="form-control" id="rfc" placeholder="CP" type="text">
+          <label class="control-label" for="codigo_postal">Código postal:</label>
+          <input class="form-control" id="codigo_postal" placeholder="CP" type="text" formControlName="codigo_postal">
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="control-label" for="rfc">Estado:</label>
-          <input class="form-control" id="rfc" placeholder="Estado" type="text">
+          <label class="control-label" for="entidad_federativa">Estado:</label>
+          <input class="form-control" id="entidad_federativa" placeholder="Estado" type="text" formControlName="entidad_federativa">
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="control-label" for="nombre">Municipio o alcaldía:</label>
-          <input class="form-control" id="nombre" placeholder="Municipio" type="text">
+          <label class="control-label" for="municipio">Municipio o alcaldía:</label>
+          <input class="form-control" id="municipio" placeholder="Municipio" type="text" formControlName="municipio">
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="control-label" for="a_paterno">Localidad:</label>
-          <input class="form-control" id="a_paterno" placeholder="Localidad" type="text">
+          <label class="control-label" for="localidad">Localidad:</label>
+          <input class="form-control" id="localidad" placeholder="Localidad" type="text" formControlName="localidad">
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="control-label" for="a_materno">Colonia:</label>
-          <input class="form-control" id="a_materno" placeholder="Colonia" type="text">
+          <label class="control-label" for="colonia">Colonia:</label>
+          <input class="form-control" id="colonia" placeholder="Colonia" type="text" formControlName="colonia">
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="control-label" for="act_economica">Calle:</label>
-          <input class="form-control" id="act_economica" placeholder="Calle" type="text">
+          <label class="control-label" for="calle">Calle:</label>
+          <input class="form-control" id="calle" placeholder="Calle" type="text" formControlName="calle">
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label class="control-label" for="n_ext">Número exterior:</label>
-          <input class="form-control" id="n_ext" placeholder="N Exterior" type="text">
+          <input class="form-control" id="n_ext" placeholder="N Exterior" type="text" formControlName="n_ext">
         </div>
       </div>
     </div>
@@ -116,19 +114,19 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="control-label" for="n_int">Número interior:</label>
-          <input class="form-control" id="n_int" placeholder="N Interior" type="text">
+          <input class="form-control" id="n_int" placeholder="N Interior" type="text" formControlName="n_int">
         </div>
       </div>
       <div class="col-md-1">
         <div class="form-group">
           <label class="control-label" for="lada">Lada:</label>
-          <input class="form-control" id="lada" placeholder="Lada" type="text">
+          <input class="form-control" id="lada" placeholder="Lada" type="text" formControlName="lada">
         </div>
       </div>
       <div class="col-md-3">
         <div class="form-group">
           <label class="control-label" for="telefono">Télefono:</label>
-          <input class="form-control" id="telefono" placeholder="Teléfono" type="text">
+          <input class="form-control" id="telefono" placeholder="Teléfono" type="text" formControlName="telefono">
         </div>
       </div>
     </div>
