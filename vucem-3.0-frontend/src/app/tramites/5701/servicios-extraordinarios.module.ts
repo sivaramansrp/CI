@@ -18,6 +18,7 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
+import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
 
 
 
@@ -43,7 +44,8 @@ import { FirmaElectronicaComponent } from '../../shared/components/firma-electro
     BtnContinuarComponent,
     ReactiveFormsModule,
     AlertComponent,
-    FirmaElectronicaComponent
+    FirmaElectronicaComponent,
+    SelectCatalogosComponent,
     // PasoUnoComponent
 ],
 exports: [

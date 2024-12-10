@@ -1,14 +1,18 @@
-[
+{
+  "code": 200,
+  "data": [
     {
-        "id": 1,
-        "value": "Individual"
+      "id": 1,
+      "value": "Individual"
     },
     {
-        "id": 2,
-        "value": "Semanal"
+      "id": 2,
+      "value": "Semanal"
     },
     {
-        "id": 3,
-        "value": "Mensual"
+      "id": 3,
+      "value": "Mensual"
     }
-]
+  ],
+  "message": "Consulta exitosa"
+}

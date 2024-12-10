@@ -38,7 +38,7 @@ export class PasoDosComponent {
   }
 
   getTiposSolicitud() {
-    this.sExtraordinarios.getCatalogoTipoSolicitudes().subscribe((resp) => {
+    this.sExtraordinarios.getCatalogos('cat-tipo-solicitud.json').subscribe((resp) => {
       if (resp.code === 200) {
         this.tiposDocumentos = resp.data
       }

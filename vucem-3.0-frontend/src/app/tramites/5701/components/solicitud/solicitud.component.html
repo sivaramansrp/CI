@@ -1,14 +1,11 @@
 <div class="container">
   <ng-titulo titulo="Tipo de servicio extraordinario" />
+
+
+
   <div class="row">
     <div class="col-md-4">
-      <label for="tipo_solicitud" class="control-label">Tipo de solicitud*:</label>
-      <select class="form-control" id="tipo-solicitud">
-        <option>Selecciona un valor</option>
-        <option>Individual</option>
-        <option>Semanal</option>
-        <option>Mensual</option>
-      </select>
+      <select-catalogos [catalogosDatos]="datosTiposSolicitud" />
     </div>
   </div>
 
@@ -311,7 +308,8 @@
   </div>
 
   <div class="row">
-    <p class="p-bold">A través del siguiente vinculo puedes ingresar a la página para generar la línea de captura de la constancia que se solicita:</p>
+    <p class="p-bold">A través del siguiente vinculo puedes ingresar a la página para generar la línea de captura de la
+      constancia que se solicita:</p>
     <p>Generar línea de captura</p>
   </div>
 

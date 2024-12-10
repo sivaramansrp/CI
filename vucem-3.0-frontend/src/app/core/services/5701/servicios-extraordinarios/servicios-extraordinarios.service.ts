@@ -17,15 +17,15 @@ export class ServiciosExtraordinariosService {
     )
   }
 
-  getCatalogoTiposSolicitud() {
-    return this.http.get<RespuestaCatalogos>(
-      `${this.urlServer}/cat-tipo-solicitud.json`,
-    )
-  }
+  // getCatalogoTiposSolicitud() {
+  //   return this.http.get<RespuestaCatalogos>(
+  //     `${this.urlServer}/cat-tipo-solicitud.json`,
+  //   )
+  // }
 
-  getCatalogoTipoSolicitudes() {
+  getCatalogos(catalogo:string) {
     return this.http.get<RespuestaCatalogos>(
-      `${this.urlServer}/cat-tipo-documento.json`,
+      `${this.urlServer}/${catalogo}`,
     )
   }
 }
