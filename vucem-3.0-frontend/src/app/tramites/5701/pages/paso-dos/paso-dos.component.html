@@ -3,46 +3,62 @@
 
   <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
 
-  <div class="row">
-    <div class="col-md-6">
-      <div [formGroup]="FormDocumento">
-        <label for="tipo_solicitud" class="control-label">Tipo de documento*:</label>
-        <select class="form-control" id="tipo-solicitud" (change)="agregarDocumento()" formControlName="documento">
-          <option>Selecciona un tipo de documento</option>
-          @for (item of tiposDocumentos; track $index)
-          {
-            <option value={{item.id}}>{{item.value}}</option>
-          }
-        </select>
+  <!-- <div class="row">
+    <div class="col-md-12">
+      <div class="btn-group-vertical" role="group"> -->
+  <!-- <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true">
+          Dropdown
+        </button>
+        <ul class="dropdown-menu"> -->
+  <!-- @for (item of tiposDocumentos; track $index)
+          { -->
+  <!-- <li><a class="dropdown-item" href="#">{{item.value}}</a></li> -->
+  <!-- <button type="button" class="btn btn-default" (click)="agregarDocumento()">
+              {{item.value}}
+            </button>
+          } -->
+  <!-- </ul> -->
+  <!-- </div> -->
 
-      </div>
-    </div>
 
-    <div class="col-md-6">
-      <table class="table table-responsive">
-        <thead>
-          <tr>
-            <th>
-              Tipo de documento
-            </th>
-            <th>
-              Acciones
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (item of documentosSeleccionados; let i = $index; track item.id;) {
-          <tr>
-            <td>{{item.value}}</td>
-            <td>
-              <button class="btn btn-link" (click)="eliminar(i)">
-                <i class="glyphicon glyphicon-trash"></i>
-              </button>
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+
+  <!-- </div> -->
+  <div class="col-md-6" [formGroup]="FormDocumento">
+    <label for="tipo_solicitud" class="control-label">Tipo de documento*:</label>
+    <select class="form-control" id="tipo-solicitud" (change)="agregarDocumento()" formControlName="documento">
+      <option value=0 disabled>Selecciona un tipo de documento</option>
+      @for (item of tiposDocumentos; track $index)
+      {
+      <option value={{item.id}}>{{item.value}}</option>
+      }
+    </select>
+  </div>
+
+  <div class="col-md-6">
+    <table class="table table-responsive">
+      <thead>
+        <tr>
+          <th class="th-center" colspan="2">
+            Tipo de documento
+          </th>
+          <th>
+            Acciones
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of documentosSeleccionados; let i = $index; track item.id;) {
+        <tr>
+          <td>{{i + 1}}</td>
+          <td>{{item.value}}</td>
+          <td>
+            <button class="btn btn-link" (click)="eliminar(i)">
+              <i class="glyphicon glyphicon-trash"></i>
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
   </div>
 </div>

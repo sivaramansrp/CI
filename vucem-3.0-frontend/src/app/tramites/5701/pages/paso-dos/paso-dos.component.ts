@@ -12,7 +12,7 @@ import { ServiciosExtraordinariosService } from '../../../../core/services/5701/
 export class PasoDosComponent {
   TEXTOS = TEXTOS;
   public FormDocumento: FormGroup = this.fb.group({
-    documento: ['']
+    documento: [0]
   })
   tiposDocumentos: Array<Catalogo> = [];
   documentosSeleccionados: Array<Catalogo> = [];
@@ -24,6 +24,16 @@ export class PasoDosComponent {
 
   ngOnInit() {
     this.getTiposSolicitud();
+    this.documentosSeleccionados = [
+      {
+        id: 1,
+        value: 'Documentos que ampare el valor de la mercancía'
+      },
+      {
+        id: 2,
+        value: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)'
+      }
+    ]
 
   }
 
