@@ -6,3 +6,8 @@ export interface ListaPasosWizard {
     validado: boolean;
     final: boolean;
 }
+
+export interface PersonaTerceros {
+  nombre: string;
+  correo: string;
+}

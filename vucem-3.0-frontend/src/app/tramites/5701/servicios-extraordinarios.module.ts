@@ -12,6 +12,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { TercerosComponent } from './components/terceros/terceros.component';
+import { PasoUnoComponent } from "./pages/paso-uno/paso-uno.component";
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 
 
 
@@ -21,6 +25,10 @@ import { TercerosComponent } from './components/terceros/terceros.component';
     SolicitudPageComponent,
     SolicitudComponent,
     TercerosComponent,
+    PasoUnoComponent,
+    PasoDosComponent,
+    PasoTresComponent,
+    PasoCuatroComponent
   ] ,
   imports: [
     CommonModule,
@@ -32,6 +40,12 @@ import { TercerosComponent } from './components/terceros/terceros.component';
     InputTextComponent,
     BtnContinuarComponent,
     ReactiveFormsModule,
+    // PasoUnoComponent
+],
+exports: [
+  SolicitanteComponent,
+  SolicitudComponent,
+  TercerosComponent
 ]
 })
 export class ServiciosExtraordinariosModule { }

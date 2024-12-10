@@ -10,32 +10,22 @@
     </div>
 
     <div class="row">
-      <ul class="nav nav-tabs">
-        <li [ngClass]="indice === 1 ? 'active' : ''">
-          <a data-toggle="tab" (click)="seleccionaTab(1)">Solicitante</a>
-        </li>
-        <li [ngClass]="indice === 2 ? 'active' : ''">
-          <a data-toggle="tab" (click)="seleccionaTab(2)">Datos de la solicitud</a>
-        </li>
-        <li [ngClass]="indice === 3 ? 'active' : ''">
-          <a data-toggle="tab" (click)="seleccionaTab(3)">Terceros relacionados</a>
-        </li>
-      </ul>
+      @switch (indice) {
+      @case (1) {
+      <paso-uno></paso-uno>
+      }
+      @case (2) {
+      <paso-dos></paso-dos>
+      }
+      @case (3) {
+      <paso-tres></paso-tres>
+      }
+      @case (4) {
+      <paso-cuatro></paso-cuatro>
+      }
+      }
 
-      <ng-container>
-        @switch (indice) {
-        @case (1) {
-          <solicitante></solicitante>
-        }
-        @case (2) {
-          <solicitud></solicitud>
-        }
-        @case (3) {
-          <terceros></terceros>
-        }
-        }
-        <btn-continuar></btn-continuar>
-      </ng-container>
+      <btn-continuar (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
   </div>
 </div>

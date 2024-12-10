@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'btn-continuar',
@@ -8,5 +8,16 @@ import { Component } from '@angular/core';
   styleUrl: './btn-continuar.component.scss'
 })
 export class BtnContinuarComponent {
+  @Output() continuarEvento = new EventEmitter<number>();
+  constructor() {}
 
+  indice: number = 1;
+
+  continuar() : void {
+    this.continuarEvento.emit(this.indice += 1)
+  }
+
+  anterior() : void {
+    this.continuarEvento.emit(this.indice -= 1)
+  }
 }
