@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Catalogo } from '../../../../core/models/5701/catalogos.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 
 @Component({
   selector: 'paso-dos',
@@ -8,19 +10,42 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent {
+  TEXTOS = TEXTOS;
   public FormDocumento: FormGroup = this.fb.group({
     documento: ['']
   })
   tiposDocumentos: Array<Catalogo> = [];
   documentosSeleccionados: Array<Catalogo> = [];
 
-  constructor(private fb: FormBuilder) {}
-  agregarDocumento() {
-    const documento = this.FormDocumento.get('documento')?.value;
-    console.log(documento)
+  constructor(
+    private fb: FormBuilder,
+    private sExtraordinarios: ServiciosExtraordinariosService,
+  ) {}
 
+  ngOnInit() {
+    this.getTiposSolicitud();
 
   }
 
-  eliminar(i: number) {}
+  getTiposSolicitud() {
+    this.sExtraordinarios.getCatalogoTipoSolicitudes().subscribe((resp) => {
+      if (resp.code === 200) {
+        this.tiposDocumentos = resp.data
+      }
+    })
+  }
+
+  agregarDocumento() {
+    const documentoID = parseInt(this.FormDocumento.get('documento')?.value);
+
+    this.tiposDocumentos.forEach( el => {
+      if (el.id === documentoID) {
+        this.documentosSeleccionados.push(el);
+      }
+    })
+  }
+
+  eliminar(i: number) {
+    this.documentosSeleccionados.splice(i, 1)
+  }
 }

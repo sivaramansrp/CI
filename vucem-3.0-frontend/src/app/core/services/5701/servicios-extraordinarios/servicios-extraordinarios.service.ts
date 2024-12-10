@@ -22,4 +22,10 @@ export class ServiciosExtraordinariosService {
       `${this.urlServer}/cat-tipo-solicitud.json`,
     )
   }
+
+  getCatalogoTipoSolicitudes() {
+    return this.http.get<RespuestaCatalogos>(
+      `${this.urlServer}/cat-tipo-documento.json`,
+    )
+  }
 }
