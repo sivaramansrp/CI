@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
-import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { RespuestaSolicitud } from '../../../../core/models/5701/servicios-extraordinarios.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'solicitante',
+  standalone: true,
+  imports: [TituloComponent, ReactiveFormsModule, CommonModule],
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
 })
@@ -32,7 +35,7 @@ export class SolicitanteComponent {
   })
 
   constructor(
-    private sExtraordinariosService: ServiciosExtraordinariosService,
+    private solicitanteServicio: SolicitanteService,
     private fb: FormBuilder,
   ) {}
 
@@ -41,9 +44,11 @@ export class SolicitanteComponent {
   }
 
   getDatosGenerales() {
-    this.sExtraordinariosService.getDatosGenerales().subscribe((resp) => {
+    this.solicitanteServicio.getDatosGenerales().subscribe((resp) => {
 
       if ( resp.code === 200) {
+        console.log('Entro al servicio');
+
         const datosSolicitante = resp.data.datos_solicitante.generales;
         const datosDomFiscal = resp.data.datos_solicitante.domicilio_fiscal;
 
@@ -66,18 +71,7 @@ export class SolicitanteComponent {
         this.setValorInput('n_int', datosDomFiscal.n_int);
         this.setValorInput('lada', datosDomFiscal.lada);
         this.setValorInput('telefono', datosDomFiscal.telefono);
-
-
-
-
-
-
-
-
-
       }
-
-
     });
   }
 

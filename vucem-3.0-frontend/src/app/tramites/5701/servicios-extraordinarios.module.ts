@@ -24,7 +24,6 @@ import { SelectCatalogosComponent } from '../../shared/components/select-catalog
 
 @NgModule({
   declarations: [
-    SolicitanteComponent,
     SolicitudPageComponent,
     SolicitudComponent,
     TercerosComponent,
@@ -46,10 +45,9 @@ import { SelectCatalogosComponent } from '../../shared/components/select-catalog
     AlertComponent,
     FirmaElectronicaComponent,
     SelectCatalogosComponent,
-    // PasoUnoComponent
+    SolicitanteComponent
 ],
 exports: [
-  SolicitanteComponent,
   SolicitudComponent,
   TercerosComponent
 ]
