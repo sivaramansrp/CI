@@ -4572,7 +4572,7 @@ tbody.collapse.in {
 .dropdown-menu > .disabled > a:hover {
   text-decoration: none;
   background-color: transparent;
-  filter: progid: DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: "progid: DXImageTransform.Microsoft.gradient(enabled=false)";
   cursor: not-allowed;
 }
 
@@ -7775,7 +7775,6 @@ button.close {
     rgba(0, 0, 0, 0.0001) 100%
   );
   background-repeat: repeat-x;
-  filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#80000000', endColorstr='#00000000', GradientType=1);
 }
 
 .carousel-control.right {
@@ -7792,7 +7791,6 @@ button.close {
     rgba(0, 0, 0, 0.5) 100%
   );
   background-repeat: repeat-x;
-  filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#80000000', GradientType=1);
 }
 
 .carousel-control:focus,
