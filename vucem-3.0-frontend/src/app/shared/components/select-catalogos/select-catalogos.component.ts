@@ -1,4 +1,10 @@
-import { Component, Input, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { Catalogo } from '../../../core/models/5701/catalogos.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CatalogosSelect } from '../../../core/models/shared/components.model';
@@ -14,7 +20,7 @@ import { CommonModule } from '@angular/common';
 export class SelectCatalogosComponent {
   @Input() catalogosDatos!: CatalogosSelect;
 
-  // @Output()
+  @Output() valorSelección = new EventEmitter<Catalogo>();
 
   public FormCatalogo: FormGroup = this.fb.group({
     seleccion: [0],
@@ -23,8 +29,17 @@ export class SelectCatalogosComponent {
   constructor(private fb: FormBuilder) {}
 
   seleccion() {
-    const opcionSeleccionada = this.FormCatalogo.get('seleccion')?.value;
+    const opcionSeleccionada = parseInt(
+      this.FormCatalogo.get('seleccion')?.value
+    );
 
-    console.log(opcionSeleccionada);
+    let seleccion: Catalogo;
+
+    this.catalogosDatos.catalogos.forEach((el: Catalogo) => {
+      if (el.id === opcionSeleccionada) {
+        seleccion = el;
+        this.valorSelección.emit(seleccion);
+      }
+    });
   }
 }

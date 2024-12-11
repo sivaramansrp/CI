@@ -38,4 +38,11 @@ export class SolicitudComponent {
         }
       });
   }
+
+  tipoSolicitud(e: Catalogo) {
+    console.log(e);
+
+  }
+
+
 }

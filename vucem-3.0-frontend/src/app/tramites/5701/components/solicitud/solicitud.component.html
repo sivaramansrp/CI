@@ -5,7 +5,7 @@
 
   <div class="row">
     <div class="col-md-4">
-      <select-catalogos [catalogosDatos]="datosTiposSolicitud" />
+      <select-catalogos [catalogosDatos]="datosTiposSolicitud" (valorSelección)="tipoSolicitud($event)"/>
     </div>
   </div>
 
