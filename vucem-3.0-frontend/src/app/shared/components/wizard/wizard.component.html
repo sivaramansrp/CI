@@ -2,12 +2,10 @@
     <div class="col-md-12 hidden-xs">
         <ul class="wizard-steps">
             @for (item of lista; track item; let i = $index) {
-                <li class="wizard-item">
+                <li class="wizard-item success">
                     <h5>Paso {{i + 1}}</h5>
                     <span> {{item.titulo}} </span>
-
                 </li>
-
             }
         </ul>
     </div>
