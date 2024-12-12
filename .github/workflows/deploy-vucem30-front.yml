@@ -28,7 +28,7 @@ jobs:
 
       - name: Build Angular project
         run: |
-          cd angular-app
+          cd vucem-3.0-frontend
           npm run build --configuration=production
 
       - name: Set up Docker Buildx
@@ -49,7 +49,7 @@ jobs:
           context: ./vucem-3.0-frontend/
           # Note: tags has to be all lower-case
           tags: |
-            ghcr.io/vucem30/dockerized-v30-front:latest
+            ghcr.io/vucem30/dockerized-front-vucem30:latest
           # build on feature branches, push only on develop branch
           push: ${{ github.ref == 'refs/heads/develop' }}
 
@@ -61,5 +61,5 @@ jobs:
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/v30-front
-            microk8s kubectl rollout restart deployment front-v30
+            cd /home/ubuntu/vucem-3.0-frontend
+            microk8s kubectl rollout restart deployment front-vucem30-deployment-dev
