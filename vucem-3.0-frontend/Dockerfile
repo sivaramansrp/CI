@@ -1,5 +1,4 @@
-#FROM nginx
-#COPY dist/vucem-3.0-frontend/browser /usr/share/nginx/html
+# Necesitamos esta configuración debido a que Angular maneja las ritas y el browser no debe hacerlo...
 
 # Usa la imagen base oficial de Nginx
 FROM nginx:alpine
