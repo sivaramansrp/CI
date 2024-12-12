@@ -21,20 +21,23 @@ jobs:
         with:
           node-version: 22.12.0
 
-      - name: Install dependencies
-        run: |
-          cd vucem-3.0-frontend
-          npm install -g @angular/cli@17.3.11
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
         run: |
           cd vucem-3.0-frontend
-          npm ci          
+          npm ci
 
       - name: Build Angular project
         run: |
           cd vucem-3.0-frontend
-          npm run build --configuration=production
+          npx ng build --configuration=production
 
       - name: Set up Docker Buildx
         id: buildx
