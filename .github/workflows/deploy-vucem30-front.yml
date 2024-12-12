@@ -66,5 +66,5 @@ jobs:
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/vucem-3.0-frontend
+            cd /home/ubuntu/v30
             microk8s kubectl rollout restart deployment front-vucem30-deployment-dev
