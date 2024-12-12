@@ -1,2 +1,2 @@
 FROM nginx
-copy dist /usr/share/nginx/html
+copy /home/runner/work/frontend/frontend/vucem-3.0-frontend/dist/vucem-3.0-frontend /usr/share/nginx/html
