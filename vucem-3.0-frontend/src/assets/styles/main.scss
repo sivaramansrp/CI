@@ -1,6 +1,15 @@
 @import "_variables.scss";
 @import "_gobmx.scss";
 
+.bi-c {
+  color: $color-primario;
+
+  &:hover {
+    color: $color-danger;
+  }
+}
+
+
 // .navbar-gob {
 //   background-color: $color-primario;
 //   height: 60px;

@@ -7,7 +7,7 @@ import { PASOS } from '../../../../shared/constantes/servicios-extraordinarios.e
 })
 export class SolicitudPageComponent {
   pasos: Array<string> = PASOS;
-  indice: number = 1;
+  indice: number = 4;
 
   constructor( ) {}
 
