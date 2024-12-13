@@ -14,3 +14,8 @@ export interface CatalogosSelect {
   primerOpcion: string;
   catalogos: Array<Catalogo>
 }
+
+export interface DatosPasos {
+  indice: number;
+  nro_pasos: number;
+}

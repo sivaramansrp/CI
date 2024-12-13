@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { PASOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { DatosPasos } from '../../../../core/models/shared/components.model';
 
 @Component({
   templateUrl: './solicitud-page.component.html',
@@ -7,7 +8,12 @@ import { PASOS } from '../../../../shared/constantes/servicios-extraordinarios.e
 })
 export class SolicitudPageComponent {
   pasos: Array<string> = PASOS;
-  indice: number = 4;
+  indice: number = 3;
+
+  datos_pasos: DatosPasos = {
+    nro_pasos: this.pasos.length,
+    indice: this.indice
+  }
 
   constructor( ) {}
 
@@ -16,7 +22,7 @@ export class SolicitudPageComponent {
   }
 
   getValorIndice(e: number) {
-    if (e < 5) {
+    if ( e > 0 && e < 5) {
       this.indice = e;
       console.log(this.indice);
     }
