@@ -16,6 +16,8 @@ export interface CatalogosSelect {
 }
 
 export interface DatosPasos {
+  txt_btn_sig: string;
+  txt_btn_ant: string;
   indice: number;
   nro_pasos: number;
 }

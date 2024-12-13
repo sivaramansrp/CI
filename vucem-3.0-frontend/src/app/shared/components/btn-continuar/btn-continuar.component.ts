@@ -14,6 +14,10 @@ export class BtnContinuarComponent {
   @Output() continuarEvento = new EventEmitter<number>();
   constructor() {}
 
+  get visibility() {
+    return (this.datos.indice === 1 ? 'hidden' : 'visible')
+  }
+
   continuar() : void {
     const CONDICION = this.datos.indice > 0  && this.datos.indice < this.datos.nro_pasos;
     if (CONDICION) {

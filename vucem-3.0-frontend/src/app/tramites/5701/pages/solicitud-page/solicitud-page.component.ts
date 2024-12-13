@@ -12,7 +12,9 @@ export class SolicitudPageComponent {
 
   datos_pasos: DatosPasos = {
     nro_pasos: this.pasos.length,
-    indice: this.indice
+    indice: this.indice,
+    txt_btn_ant: 'Anterior',
+    txt_btn_sig: 'Continuar'
   }
 
   constructor( ) {}
