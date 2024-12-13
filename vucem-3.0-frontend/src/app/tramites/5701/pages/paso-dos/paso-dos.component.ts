@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Catalogo } from '../../../../core/models/5701/catalogos.model';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 
@@ -11,14 +10,11 @@ import { ServiciosExtraordinariosService } from '../../../../core/services/5701/
 })
 export class PasoDosComponent {
   TEXTOS = TEXTOS;
-  public FormDocumento: FormGroup = this.fb.group({
-    documento: [0]
-  })
+
   tiposDocumentos: Array<Catalogo> = [];
   documentosSeleccionados: Array<Catalogo> = [];
 
   constructor(
-    private fb: FormBuilder,
     private sExtraordinarios: ServiciosExtraordinariosService,
   ) {}
 
@@ -38,18 +34,18 @@ export class PasoDosComponent {
   }
 
   getTiposSolicitud() {
-    this.sExtraordinarios.getCatalogos('cat-tipo-solicitud.json').subscribe((resp) => {
+    this.sExtraordinarios.getCatalogos('cat-tipo-documento.json').subscribe((resp) => {
       if (resp.code === 200) {
         this.tiposDocumentos = resp.data
       }
     })
   }
 
-  agregarDocumento() {
-    const documentoID = parseInt(this.FormDocumento.get('documento')?.value);
+  agregarDocumento(id: number) {
+    console.log(id);
 
     this.tiposDocumentos.forEach( el => {
-      if (el.id === documentoID) {
+      if (el.id === id) {
         this.documentosSeleccionados.push(el);
       }
     })
