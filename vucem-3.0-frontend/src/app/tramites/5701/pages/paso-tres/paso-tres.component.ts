@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 
 @Component({
   selector: 'paso-tres',
@@ -6,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './paso-tres.component.scss'
 })
 export class PasoTresComponent {
+  TEXTOS = TEXTOS;
 
 }

@@ -8,7 +8,7 @@ import { DatosPasos } from '../../../../core/models/shared/components.model';
 })
 export class SolicitudPageComponent {
   pasos: Array<string> = PASOS;
-  indice: number = 2;
+  indice: number = 3;
 
   datos_pasos: DatosPasos = {
     nro_pasos: this.pasos.length,
