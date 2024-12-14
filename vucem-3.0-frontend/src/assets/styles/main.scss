@@ -1,3 +1,4 @@
+@import "bootstrap/scss/bootstrap";
 @import "_variables.scss";
 @import "_gobmx.scss";
 
@@ -9,6 +10,20 @@
   }
 }
 
+/* Tamaños personalizados del offcanvas */
+
+.offcanvas-size-xl {
+  --#{$prefix}offcanvas-width: min(95vw, 45%) !important;
+}
+.offcanvas-size-xxl {
+  --#{$prefix}offcanvas-width: min(95vw, 90vw) !important;
+}
+.offcanvas-size-md { /* add Responsivenes to default offcanvas */
+  --#{$prefix}offcanvas-width: min(95vw, 400px) !important;
+}
+.offcanvas-size-sm {
+  --#{$prefix}offcanvas-width: min(95vw, 250px) !important;
+}
 
 // .navbar-gob {
 //   background-color: $color-primario;

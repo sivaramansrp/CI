@@ -19,6 +19,7 @@ import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
 import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
+import { TableDocumentosComponent } from '../../shared/components/table-documentos/table-documentos.component';
 
 
 
@@ -45,7 +46,8 @@ import { SelectCatalogosComponent } from '../../shared/components/select-catalog
     AlertComponent,
     FirmaElectronicaComponent,
     SelectCatalogosComponent,
-    SolicitanteComponent
+    SolicitanteComponent,
+    TableDocumentosComponent
 ],
 exports: [
   SolicitudComponent,
