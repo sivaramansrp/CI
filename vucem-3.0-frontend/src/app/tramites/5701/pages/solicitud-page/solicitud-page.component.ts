@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
 import { PASOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
+import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
 
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``
 })
 export class SolicitudPageComponent {
-  pasos: Array<string> = PASOS;
-  indice: number = 1;
+  pasos: Array<ListaPasosWizard> = PASOS;
+  indice: number = 3;
 
   datos_pasos: DatosPasos = {
     nro_pasos: this.pasos.length,

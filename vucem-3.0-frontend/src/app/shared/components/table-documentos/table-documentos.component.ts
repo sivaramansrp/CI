@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
 import { Documento } from '../../../core/models/shared/tabla-documentos.model';
-import { TituloComponent } from '../titulo/titulo.component';
 
 @Component({
   selector: 'table-documentos',
   standalone: true,
-  imports: [TituloComponent],
+  imports: [],
   templateUrl: './table-documentos.component.html',
   styleUrl: './table-documentos.component.scss',
 })
 export class TableDocumentosComponent {
   listaDocumentos!: Array<Documento>;
+  documento!: Documento | undefined;
 
   constructor() {
     this.listaDocumentos = [
@@ -42,9 +42,16 @@ export class TableDocumentosComponent {
     ];
   }
 
-  verDocumento(id: number) {}
+  verDocumento(id: number) {
+   this.documento = this.listaDocumentos.find((el: Documento) => el.id === id);
+
+  }
 
   abrirVentanaCargaDoc() {
+
+  }
+
+  adjuntar() {
 
   }
 

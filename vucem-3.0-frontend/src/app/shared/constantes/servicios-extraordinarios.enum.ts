@@ -1,12 +1,28 @@
 export const PASOS = [
-  'Capturar solicitud',
-  'Requisitos necesarios',
-  'Anexar requisitos',
-  'Firmar solicitud',
+  {
+    indice: 1,
+    titulo: 'Capturar solicitud',
+    completado: true,
+  },
+  {
+    indice: 1,
+    titulo: 'Requisitos necesarios',
+    completado: false,
+  },
+  {
+    indice: 1,
+    titulo: 'Anexar requisitos',
+    completado: false,
+  },
+  {
+    indice: 1,
+    titulo: 'Firmar solicitud',
+    completado: false,
+  },
 ];
 
 export const CONSTANTES = {
-  EXP_CORREO: /^[\w-]+(?:\.[\w-]+)*@(?:[\w-]+\.)+[a-zA-Z]{2,7}$/
+  EXP_CORREO: /^[\w-]+(?:\.[\w-]+)*@(?:[\w-]+\.)+[a-zA-Z]{2,7}$/,
 };
 
 export const TEXTOS = {
@@ -14,5 +30,5 @@ export const TEXTOS = {
   <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
   <p>- En caso de que no requieras algún documento, seleccionalo y elíminalo</p>
   <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista.</p>`,
-  ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`
-}
+  ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
+};

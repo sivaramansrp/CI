@@ -18,11 +18,16 @@
 .offcanvas-size-xxl {
   --#{$prefix}offcanvas-width: min(95vw, 90vw) !important;
 }
-.offcanvas-size-md { /* add Responsivenes to default offcanvas */
+.offcanvas-size-md {
+  /* add Responsivenes to default offcanvas */
   --#{$prefix}offcanvas-width: min(95vw, 400px) !important;
 }
 .offcanvas-size-sm {
   --#{$prefix}offcanvas-width: min(95vw, 250px) !important;
+}
+
+.offcanvas-footer {
+  padding: 10px;
 }
 
 // .navbar-gob {

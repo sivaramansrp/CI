@@ -10,7 +10,7 @@ import { BtnContinuarComponent } from '../../../../shared/components/btn-continu
   styles: ``
 })
 export class PasoUnoComponent {
-  pasos: Array<string> = PASOS;
+  // pasos: Array<string> = PASOS;
   indice: number = 1;
 
   seleccionaTab(i: number): void {

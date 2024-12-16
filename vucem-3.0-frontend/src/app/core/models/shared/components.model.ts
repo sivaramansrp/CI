@@ -21,3 +21,8 @@ export interface DatosPasos {
   indice: number;
   nro_pasos: number;
 }
+
+export interface DatosIndice {
+  indice: number;
+  estatus: boolean;
+}
