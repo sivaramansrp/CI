@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './select-catalogos.component.scss',
 })
 export class SelectCatalogosComponent {
-  @Input() catalogosDatos!: CatalogosSelect;
+  @Input() catalogos_datos!: CatalogosSelect;
 
   @Output() valorSelección = new EventEmitter<Catalogo>();
 
@@ -35,7 +35,7 @@ export class SelectCatalogosComponent {
 
     let seleccion: Catalogo;
 
-    this.catalogosDatos.catalogos.forEach((el: Catalogo) => {
+    this.catalogos_datos.catalogos.forEach((el: Catalogo) => {
       if (el.id === opcionSeleccionada) {
         seleccion = el;
         this.valorSelección.emit(seleccion);

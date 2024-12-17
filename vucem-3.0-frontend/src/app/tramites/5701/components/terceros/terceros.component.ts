@@ -10,7 +10,7 @@ import { CONSTANTES } from '../../../../shared/constantes/servicios-extraordinar
 })
 export class TercerosComponent {
 
-  public personaForm: FormGroup = this.fb.group({
+  public FormPersona: FormGroup = this.fb.group({
     nombre: ['', [Validators.required]],
     correo: ['', [Validators.required, Validators.pattern(CONSTANTES.EXP_CORREO)]]
   })
@@ -20,15 +20,15 @@ export class TercerosComponent {
   constructor( private fb: FormBuilder) {}
 
   agregaPersona(): void{
-    console.log(this.personaForm.valid);
+    console.log(this.FormPersona.valid);
 
 
 
 
-    if (this.personas.length < 5 && this.personaForm.valid) {
-      const datos = this.personaForm.value;
+    if (this.personas.length < 5 && this.FormPersona.valid) {
+      const datos = this.FormPersona.value;
       this.personas.push(datos);
-      this.personaForm.reset();
+      this.FormPersona.reset();
     } else {
       console.log('No puede agregar mas de cinco personas o el formato de la dirección correo no es valido');
 

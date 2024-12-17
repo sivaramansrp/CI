@@ -11,8 +11,8 @@ import { ServiciosExtraordinariosService } from '../../../../core/services/5701/
 export class PasoDosComponent {
   TEXTOS = TEXTOS;
 
-  tiposDocumentos: Array<Catalogo> = [];
-  documentosSeleccionados: Array<Catalogo> = [];
+  tipos_documentos: Array<Catalogo> = [];
+  documentos_seleccionados: Array<Catalogo> = [];
 
   constructor(
     private sExtraordinarios: ServiciosExtraordinariosService,
@@ -20,7 +20,7 @@ export class PasoDosComponent {
 
   ngOnInit() {
     this.getTiposSolicitud();
-    this.documentosSeleccionados = [
+    this.documentos_seleccionados = [
       {
         id: 1,
         value: 'Documentos que ampare el valor de la mercancía'
@@ -36,7 +36,7 @@ export class PasoDosComponent {
   getTiposSolicitud() {
     this.sExtraordinarios.getCatalogos('cat-tipo-documento.json').subscribe((resp) => {
       if (resp.code === 200) {
-        this.tiposDocumentos = resp.data
+        this.tipos_documentos = resp.data
       }
     })
   }
@@ -44,14 +44,14 @@ export class PasoDosComponent {
   agregarDocumento(id: number) {
     console.log(id);
 
-    this.tiposDocumentos.forEach( el => {
+    this.tipos_documentos.forEach( el => {
       if (el.id === id) {
-        this.documentosSeleccionados.push(el);
+        this.documentos_seleccionados.push(el);
       }
     })
   }
 
   eliminar(i: number) {
-    this.documentosSeleccionados.splice(i, 1)
+    this.documentos_seleccionados.splice(i, 1)
   }
 }

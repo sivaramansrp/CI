@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row d-flex align-items-end">
     <div class="col-md-4">
-      <select-catalogos [catalogosDatos]="tipos_documentos"
+      <select-catalogos [catalogos_datos]="tipos_documentos"
         (valorSelección)="docSeleccionado($event)"></select-catalogos>
     </div>
     <div class="col-md-4">
@@ -35,12 +35,11 @@
             <td>{{ item.nombre_archivo}}</td>
             <td>
               <button class="btn btn-link" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight">
+                aria-controls="offcanvasRight" (click)="verDocumento(i)">
                 <i class="bi bi-eye bi-c"></i>
               </button>
 
-              <button type="button" class="btn btn-link" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight">
+              <button type="button" class="btn btn-link" (click)="eliminarDocumento(i)">
                 <i class="bi bi-trash3 bi-c"></i>
               </button>
 

@@ -30,9 +30,9 @@ export class SolicitudPageComponent {
       console.log(this.indice);
 
       // buscar indice a pasar
-      const indiceSig = this.pasos.findIndex( el => el.indice === this.indice)
+      const indice_sig = this.pasos.findIndex( el => el.indice === this.indice)
 
-      this.pasos[indiceSig].completado = true;
+      this.pasos[indice_sig].completado = true;
 
 
     }

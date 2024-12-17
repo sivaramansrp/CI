@@ -9,11 +9,11 @@ import { RespuestaCatalogos } from '../../../models/5701/catalogos.model';
 export class ServiciosExtraordinariosService {
   constructor(private http: HttpClient) {}
 
-  urlServer = 'http://localhost:4200/assets/json/5701';
+  url_server = 'http://localhost:4200/assets/json/5701';
 
   getCatalogos(catalogo:string) {
     return this.http.get<RespuestaCatalogos>(
-      `${this.urlServer}/${catalogo}`,
+      `${this.url_server}/${catalogo}`,
     )
   }
 }

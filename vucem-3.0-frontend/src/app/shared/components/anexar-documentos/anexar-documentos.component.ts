@@ -89,4 +89,13 @@ export class AnexarDocumentosComponent {
 
 
   }
+
+  verDocumento(i: number) {
+
+
+  }
+
+  eliminarDocumento(i: number) {
+    this.documentos_cargados.splice(i, 1);
+  }
 }

@@ -19,15 +19,15 @@ export class BtnContinuarComponent {
   }
 
   continuar() : void {
-    const CONDICION = this.datos.indice > 0  && this.datos.indice < this.datos.nro_pasos;
-    if (CONDICION) {
+    const condicion = this.datos.indice > 0  && this.datos.indice < this.datos.nro_pasos;
+    if (condicion) {
       this.continuarEvento.emit(this.datos.indice += 1)
     }
   }
 
   anterior() : void {
-    const CONDICION = this.datos.indice > 1 && this.datos.indice < this.datos.nro_pasos + 1;
-    if (CONDICION) {
+    const condicion = this.datos.indice > 1 && this.datos.indice < this.datos.nro_pasos + 1;
+    if (condicion) {
       this.continuarEvento.emit(this.datos.indice -= 1)
     }
   }

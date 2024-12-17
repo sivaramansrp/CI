@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './wizard.component.scss'
 })
 export class WizardComponent {
-  @Input() listaPasos: Array<ListaPasosWizard> = [];
+  @Input() lista_pasos: Array<ListaPasosWizard> = [];
   @Output() indice = new EventEmitter<any>();
 
   iActual: number = 0;
@@ -23,13 +23,13 @@ export class WizardComponent {
   ngOnChanges(changes: SimpleChanges) {
     console.log(changes);
 
-    if (changes['listaPasos'].currentValue !== undefined && changes['listaPasos'].currentValue !== undefined) {
-      this.listaPasos = changes['listaPasos'].currentValue;
+    if (changes['lista_pasos'].currentValue !== undefined && changes['lista_pasos'].currentValue !== undefined) {
+      this.lista_pasos = changes['lista_pasos'].currentValue;
 
-      console.log(this.listaPasos);
+      console.log(this.lista_pasos);
 
 
-      this.listaPasos.forEach((element, index) => {
+      this.lista_pasos.forEach((element, index) => {
         this.edo_inicial = index == 0 ? true : false;
         this.lista.push({
           indice: index,

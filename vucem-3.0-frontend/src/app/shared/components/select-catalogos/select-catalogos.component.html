@@ -1,12 +1,12 @@
 <form [formGroup]="FormCatalogo">
-  @if (catalogosDatos) {
+  @if (catalogos_datos) {
     <label for="tipo_solicitud" class="control-label">
-      {{catalogosDatos.labelNombre}}
-      @if (catalogosDatos.required) {*}:
+      {{catalogos_datos.labelNombre}}
+      @if (catalogos_datos.required) {*}:
     </label>
     <select class="form-control" id="tipo-solicitud" formControlName="seleccion" (change)="seleccion()">
       <option value=0 disabled>Selecciona un valor</option>
-      @for (item of catalogosDatos.catalogos; track $index)
+      @for (item of catalogos_datos.catalogos; track $index)
       {
       <option value={{item.id}}>{{item.value}}</option>
       }

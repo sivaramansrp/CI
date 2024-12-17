@@ -8,11 +8,11 @@ import { RespuestaSolicitud } from '../../../models/5701/servicios-extraordinari
 export class SolicitanteService {
   constructor(private http: HttpClient) {}
 
-  urlServer = 'http://localhost:4200/assets/json/5701';
+  url_server = 'http://localhost:4200/assets/json/5701';
 
   getDatosGenerales() {
     return this.http.get<RespuestaSolicitud>(
-      `${this.urlServer}/solicitud-servicio-extraordinario.json`,
+      `${this.url_server}/solicitud-servicio-extraordinario.json`,
     )
   }
 }
