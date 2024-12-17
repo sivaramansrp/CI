@@ -6,9 +6,11 @@
           <th class="th-center" colspan="2">
             Tipo de documento
           </th>
-          <th>
+          <!-- <th>
             Documento
-          </th>
+          </th> -->
+          <th>Tamaño máximo</th>
+          Resolución mínima
           <th>
             Acciones
           </th>
@@ -18,20 +20,31 @@
         @for (item of listaDocumentos; track item.id; let i = $index) {
         <tr>
           <td>{{i + 1}}</td>
-          <td> {{ item.value }} </td>
+          <td class="td-nombre"> {{ item.value }} </td>
+          <td>{{item.tamanio}}</td>
+          <td>{{item.tamanio}}</td>
+          <!-- <td>
+            <select class="form-control" name="select_doc" id="select_doc">
+              <option value=0>Adjuntar documento</option>
+            </select>
+          </td> -->
           <td>
-            <select name="" id=""></select>
-          </td>
-          <td>
-            <button class="btn btn-link" (click)="verDocumento(i)" [disabled]="!item.acciones.ver">
-              <i class="bi bi-eye bi-c"></i>
-            </button>
-
-            <button type="button" class="btn btn-link" [disabled]="!item.acciones.cargar"
-              (click)="abrirVentanaCargaDoc()" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+            <!-- <button class="btn btn-link" (click)="verDocumento(i)" [disabled]="!item.acciones.ver"
+              (click)="abrirVentana('v')" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
               aria-controls="offcanvasRight">
+              <i class="bi bi-eye bi-c"></i>
+            </button> -->
+
+            <!-- <button type="button" class="btn btn-link" [disabled]="!item.acciones.cargar" (click)="abrirVentana('a')"
+              data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
               <i class="bi bi-cloud-arrow-up bi-c"></i>
-            </button>
+            </button> -->
+            <div class="image-upload">
+              <label for="file-input">
+                <i class="bi bi-cloud-arrow-up bi-c"></i>
+              </label>
+              <input type="file" class="form-control" id="file-input" (change)="leerDocumento($event)" accept=".pdf">
+            </div>
           </td>
         </tr>
         }
@@ -44,37 +57,39 @@
 <div class="offcanvas offcanvas-size-xl offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="offcanvasRight"
   aria-labelledby="offcanvasRightLabel">
   <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="offcanvasRightLabel">Adjuntar documentos</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <h5 class="offcanvas-title" id="offcanvasRightLabel">{{tituloCanvas}} documento</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body">
-    <div class="colsm-12">
-      <table class="table table-responsive">
-        <thead>
-          <tr>
-            <th>Tipo de Documento</th>
-            <th>Tamaño máximo permitido (MB)</th>
-            <th>Resolución mínima de las imagenes contenidas (DPIs)</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <span class="label-control">
+            Tamaño máximo permitido {{documento?.unidad}}:
+          </span>
+          {{documento?.tamanio}} {{documento?.unidad}}
+        </div>
+        <div class="col-md-12">
+          <span class="label-control">
+            Resolución mínima de las imagenes contenidas (en DPIs):
+          </span>
+          {{documento?.tamanio}}
+        </div>
 
+      </div>
 
-        </tbody>
-      </table>
+      <div class="row">
+        <div class="input-group">
+          <label for="cer">Documento:</label>
+          <input type="file" class="form-control" id="cer" (change)="leerDocumento($event)" accept=".pdf">
+        </div>
 
+      </div>
     </div>
-
-
   </div>
   <div class="offcanvas-footer">
+    @if (mostrarBtn) {
     <button type="button" (click)="adjuntar()" class="btn btn-primary">Adjuntar</button>
+    }
   </div>
 </div>

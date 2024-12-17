@@ -11,6 +11,7 @@ import { Documento } from '../../../core/models/shared/tabla-documentos.model';
 export class TableDocumentosComponent {
   listaDocumentos!: Array<Documento>;
   documento!: Documento | undefined;
+  tituloCanvas!: string;
 
   constructor() {
     this.listaDocumentos = [
@@ -43,17 +44,38 @@ export class TableDocumentosComponent {
   }
 
   verDocumento(id: number) {
-   this.documento = this.listaDocumentos.find((el: Documento) => el.id === id);
+    this.documento = this.listaDocumentos.find((el: Documento) => el.id === id);
+  }
+
+  get mostrarBtn () {
+    return this.tituloCanvas === 'Adjuntar' ? true : false;
+  }
+
+  abrirVentana(accion: string) {
+    switch (accion) {
+      case 'v':
+        console.log('ver documento');
+        this.tituloCanvas = 'Ver';
+
+        break;
+
+      case 'a':
+        console.log('adjuntar documento');
+        this.tituloCanvas = 'Adjuntar';
+
+      break;
+      default:
+        break;
+    }
+  }
+
+  adjuntar() {}
+
+  abrirVentanaVerDoc() {
 
   }
 
-  abrirVentanaCargaDoc() {
+  leerDocumento(e: any) {
 
   }
-
-  adjuntar() {
-
-  }
-
-
 }

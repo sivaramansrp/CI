@@ -21,6 +21,8 @@ export class WizardComponent {
   constructor() {}
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
+
     if (changes['listaPasos'].currentValue !== undefined && changes['listaPasos'].currentValue !== undefined) {
       this.listaPasos = changes['listaPasos'].currentValue;
 

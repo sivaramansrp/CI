@@ -28,6 +28,13 @@ export class SolicitudPageComponent {
     if ( e > 0 && e < 5) {
       this.indice = e;
       console.log(this.indice);
+
+      // buscar indice a pasar
+      const indiceSig = this.pasos.findIndex( el => el.indice === this.indice)
+
+      this.pasos[indiceSig].completado = true;
+
+
     }
 
   }
