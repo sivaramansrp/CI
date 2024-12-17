@@ -20,11 +20,6 @@ export class TercerosComponent {
   constructor( private fb: FormBuilder) {}
 
   agregaPersona(): void{
-    console.log(this.FormPersona.valid);
-
-
-
-
     if (this.personas.length < 5 && this.FormPersona.valid) {
       const datos = this.FormPersona.value;
       this.personas.push(datos);

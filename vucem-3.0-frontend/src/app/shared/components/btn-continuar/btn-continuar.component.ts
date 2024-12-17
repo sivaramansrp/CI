@@ -9,7 +9,6 @@ import { DatosPasos } from '../../../core/models/shared/components.model';
   styleUrl: './btn-continuar.component.scss'
 })
 export class BtnContinuarComponent {
-  // indice = input({required: true})
   @Input({required:true}) datos!: DatosPasos;
   @Output() continuarEvento = new EventEmitter<number>();
   constructor() {}

@@ -18,8 +18,6 @@ export class SolicitudPageComponent {
     txt_btn_sig: 'Continuar'
   }
 
-  constructor( ) {}
-
   seleccionaTab(i: number): void {
     this.indice = i;
   }
@@ -27,13 +25,11 @@ export class SolicitudPageComponent {
   getValorIndice(e: number) {
     if ( e > 0 && e < 5) {
       this.indice = e;
-      console.log(this.indice);
 
       // buscar indice a pasar
       const indice_sig = this.pasos.findIndex( el => el.indice === this.indice)
 
       this.pasos[indice_sig].completado = true;
-
 
     }
 

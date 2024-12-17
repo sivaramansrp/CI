@@ -40,7 +40,6 @@ export class AnexarDocumentosComponent {
             primerOpcion: 'Selecciona un tipo de documento',
             catalogos: documentos
           }
-          // this.tiposDocumentos = resp.data
         }
       });
   }
@@ -64,27 +63,7 @@ export class AnexarDocumentosComponent {
 
 
 
-      // const documento_info = this.lista_documentos.find((el) => el.id === idDoc);
-      // const tamanio = documentoInfo?.tamanio
-      //   ? documentoInfo?.tamanio * 1000000
-      //   : 0;
 
-      //   console.log(tamanio);
-
-
-      // if (tamanio < archivo.size) {
-      //   console.log(
-      //     'El archivo es muy grande, intente con otro de menor tamaño'
-      //   );
-      //   return;
-      // } else {
-      //   console.log('Sube el archivo');
-      //   documentoInfo?.documentos.push({ id: 2, nombre: archivo.name });
-      // }
-
-      // console.log(documentoInfo);
-
-      // Validacion tamaño
     }
 
 

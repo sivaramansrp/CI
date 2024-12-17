@@ -42,8 +42,6 @@ export class PasoDosComponent {
   }
 
   agregarDocumento(id: number) {
-    console.log(id);
-
     this.tipos_documentos.forEach( el => {
       if (el.id === id) {
         this.documentos_seleccionados.push(el);

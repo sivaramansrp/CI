@@ -47,8 +47,6 @@ export class SolicitanteComponent {
     this.solicitanteServicio.getDatosGenerales().subscribe((resp) => {
 
       if ( resp.code === 200) {
-        console.log('Entro al servicio');
-
         const datos_solicitante = resp.data.datos_solicitante.generales;
         const datos_dom_fiscal = resp.data.datos_solicitante.domicilio_fiscal;
 

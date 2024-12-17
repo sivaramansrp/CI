@@ -30,21 +30,14 @@ export class FirmaElectronicaComponent {
         this[type_file] = e.target.result;
     };
     reader.readAsText(file);
-    console.log(`.cer: ${this.cert_file}`);
-    console.log(`.key: ${this.key_file}`);
   }
 
   validarCertificado() {
     try {
-      console.log(`.cer: ${this.cert_file}`);
-      console.log(`.key: ${this.key_file}`);
       const contraseña = this.FormCertificado.get('password')?.value;
       if (contraseña) {
         const cert = pki.certificateFromPem(this.cert_file);
-        console.log(cert);
-
         const privateKey = pki.decryptRsaPrivateKey(this.key_file, contraseña);
-        console.log(privateKey);
 
         if (privateKey) {
           this.validation_message =

@@ -31,8 +31,6 @@ export class SolicitudComponent {
             primerOpcion: 'Selecciona un valor',
             catalogos: tipos_solicitud,
           };
-
-          console.log(this.datos_tipos_solicitud);
         }
       });
   }
