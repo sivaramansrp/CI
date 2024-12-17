@@ -6,16 +6,11 @@ export const PASOS = [
   },
   {
     indice: 2,
-    titulo: 'Requisitos necesarios',
+    titulo: 'Anexar necesarios',
     completado: false,
   },
   {
     indice: 3,
-    titulo: 'Anexar requisitos',
-    completado: false,
-  },
-  {
-    indice: 4,
     titulo: 'Firmar solicitud',
     completado: false,
   },

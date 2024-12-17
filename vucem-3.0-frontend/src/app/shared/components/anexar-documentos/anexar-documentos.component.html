@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="row d-flex align-items-end">
+    <div class="col-md-4">
+      <select-catalogos [catalogosDatos]="tipos_documentos"
+        (valorSelección)="docSeleccionado($event)"></select-catalogos>
+    </div>
+    <div class="col-md-4">
+      <div class="btn-upload">
+        <input type="file" class="form-control" id="file-input" accept=".pdf" (change)="cargarDoc($event)">
+        <label for="file-input" class="btn btn-primary">
+          <i class="bi bi-cloud-arrow-up bi-c"></i>
+          Subir documento
+        </label>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-12">
+      @if (docCargados) {
+      <table class="table table-responsive">
+        <thead>
+          <tr>
+            <th colspan="2">Tipo Documento</th>
+            <th>Documento</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of documentos_cargados; track item.tipo_documento.id; let i = $index) {
+          <tr>
+            <td> {{i+1}} </td>
+            <td>{{ item.tipo_documento.value}}</td>
+            <td>{{ item.nombre_archivo}}</td>
+            <td>
+              <button class="btn btn-link" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                aria-controls="offcanvasRight">
+                <i class="bi bi-eye bi-c"></i>
+              </button>
+
+              <button type="button" class="btn btn-link" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                aria-controls="offcanvasRight">
+                <i class="bi bi-trash3 bi-c"></i>
+              </button>
+
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+      }
+
+    </div>
+  </div>
+</div>

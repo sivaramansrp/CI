@@ -4,7 +4,6 @@ import { ServiciosExtraordinariosRoutingModule } from './servicios-extraordinari
 import { RouterModule } from '@angular/router';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 import { NavComponent } from '../../shared/components/nav/nav.component';
-import { InputTextComponent } from '../../shared/components/input-text/input-text.component';
 import { SolicitanteComponent } from './components/solicitante/solicitante.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn-continuar.component';
@@ -15,11 +14,10 @@ import { TercerosComponent } from './components/terceros/terceros.component';
 import { PasoUnoComponent } from "./pages/paso-uno/paso-uno.component";
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
 import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
-import { TableDocumentosComponent } from '../../shared/components/table-documentos/table-documentos.component';
+import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';
 
 
 
@@ -31,8 +29,7 @@ import { TableDocumentosComponent } from '../../shared/components/table-document
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    PasoCuatroComponent
-  ] ,
+ ] ,
   imports: [
     CommonModule,
     ServiciosExtraordinariosRoutingModule,
@@ -40,14 +37,13 @@ import { TableDocumentosComponent } from '../../shared/components/table-document
     NavComponent,
     WizardComponent,
     TituloComponent,
-    InputTextComponent,
     BtnContinuarComponent,
     ReactiveFormsModule,
     AlertComponent,
     FirmaElectronicaComponent,
     SelectCatalogosComponent,
     SolicitanteComponent,
-    TableDocumentosComponent
+    AnexarDocumentosComponent
 ],
 exports: [
   SolicitudComponent,

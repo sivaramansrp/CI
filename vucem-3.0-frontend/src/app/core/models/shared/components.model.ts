@@ -26,3 +26,8 @@ export interface DatosIndice {
   indice: number;
   estatus: boolean;
 }
+
+export interface DocumentosCargados {
+  tipo_documento: Catalogo;
+  nombre_archivo: string;
+}

@@ -3,44 +3,5 @@
 
   <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
 
-  <div class="row">
-    <div class="col-md-6">
-      <div class="btn-group-vertical" role="group">
-        @for (item of tiposDocumentos; track item.id)
-        {
-        <button type="button" class="btn btn-primary btn-list" (click)="agregarDocumento(item.id)">
-          {{item.value}}
-        </button>
-        }
-      </div>
-    </div>
-
-
-    <div class="col-md-6">
-      <table class="table table-responsive">
-        <thead>
-          <tr>
-            <th class="th-center" colspan="2">
-              Tipo de documento
-            </th>
-            <th>
-              Acciones
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (item of documentosSeleccionados; let i = $index; track item.id;) {
-          <tr>
-            <td>{{i + 1}}</td>
-            <td>{{item.value}}</td>
-            <td>
-              <button class="btn btn-link" (click)="eliminar(i)">
-                <i class="bi bi-trash bi-c"></i>
-              </button>
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <anexar-documentos></anexar-documentos>
+</div>
