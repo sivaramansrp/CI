@@ -2,8 +2,10 @@
   <div class="col-md-8">
     <p>* Campos obligatorios</p>
   </div>
-  <div class="col-md-4">
-    <button type="button" class="btn btn-default" (click)="anterior()">Anterior</button>
-    <button type="button" class="btn btn-primary ms-3" (click)="continuar()" >Continuar</button>
+  <div class="col-md-4 d-flex justify-content-end">
+    <button type="button" class="btn btn-default" (click)="anterior()"
+      [style.visibility]="visibility">{{datos.txt_btn_ant}}</button>
+
+    <button type="button" class="btn btn-primary ms-3" (click)="continuar()">{{datos.txt_btn_sig}}</button>
   </div>
 </div>

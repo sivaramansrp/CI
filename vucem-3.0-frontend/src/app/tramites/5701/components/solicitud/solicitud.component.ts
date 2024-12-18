@@ -9,7 +9,7 @@ import { ServiciosExtraordinariosService } from '../../../../core/services/5701/
   styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent {
-  datosTiposSolicitud!: CatalogosSelect;
+  datos_tipos_solicitud!: CatalogosSelect;
 
   constructor(private sExtraordinarios: ServiciosExtraordinariosService) {
   }
@@ -23,18 +23,14 @@ export class SolicitudComponent {
     this.sExtraordinarios
       .getCatalogos('cat-tipo-solicitud.json')
       .subscribe((resp) => {
-        console.log('Hola');
-
         if (resp.code === 200) {
-          const tiposSolicitud = resp.data;
-          this.datosTiposSolicitud = {
+          const tipos_solicitud = resp.data;
+          this.datos_tipos_solicitud = {
             labelNombre: 'Tipo de solicitud',
             required: true,
             primerOpcion: 'Selecciona un valor',
-            catalogos: tiposSolicitud,
+            catalogos: tipos_solicitud,
           };
-
-          console.log(this.datosTiposSolicitud);
         }
       });
   }

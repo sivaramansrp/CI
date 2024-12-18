@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class SolicitanteComponent {
 
-  public SolicitanteForm: FormGroup = this.fb.group({
+  public FormSolicitante: FormGroup = this.fb.group({
     curp: [{value: '', disabled: true}],
     rfc: [{value: '', disabled: true}],
     nombre: [{value: '', disabled: true}],
@@ -47,38 +47,36 @@ export class SolicitanteComponent {
     this.solicitanteServicio.getDatosGenerales().subscribe((resp) => {
 
       if ( resp.code === 200) {
-        console.log('Entro al servicio');
+        const datos_solicitante = resp.data.datos_solicitante.generales;
+        const datos_dom_fiscal = resp.data.datos_solicitante.domicilio_fiscal;
 
-        const datosSolicitante = resp.data.datos_solicitante.generales;
-        const datosDomFiscal = resp.data.datos_solicitante.domicilio_fiscal;
+        this.setValorInput('curp', datos_solicitante.curp);
+        this.setValorInput('rfc', datos_solicitante.rfc);
+        this.setValorInput('nombre', datos_solicitante.nombre);
+        this.setValorInput('a_paterno', datos_solicitante.a_paterno);
+        this.setValorInput('a_materno', datos_solicitante.a_materno);
+        this.setValorInput('act_economica', datos_solicitante.act_economica);
+        this.setValorInput('correo', datos_solicitante.correo);
 
-        this.setValorInput('curp', datosSolicitante.curp);
-        this.setValorInput('rfc', datosSolicitante.rfc);
-        this.setValorInput('nombre', datosSolicitante.nombre);
-        this.setValorInput('a_paterno', datosSolicitante.a_paterno);
-        this.setValorInput('a_materno', datosSolicitante.a_materno);
-        this.setValorInput('act_economica', datosSolicitante.act_economica);
-        this.setValorInput('correo', datosSolicitante.correo);
-
-        this.setValorInput('pais', datosDomFiscal.pais);
-        this.setValorInput('codigo_postal', datosDomFiscal.codigo_postal);
-        this.setValorInput('entidad_federativa', datosDomFiscal.entidad_federativa);
-        this.setValorInput('municipio', datosDomFiscal.municipio);
-        this.setValorInput('localidad', datosDomFiscal.localidad);
-        this.setValorInput('colonia', datosDomFiscal.colonia);
-        this.setValorInput('calle', datosDomFiscal.calle);
-        this.setValorInput('n_ext', datosDomFiscal.n_ext);
-        this.setValorInput('n_int', datosDomFiscal.n_int);
-        this.setValorInput('lada', datosDomFiscal.lada);
-        this.setValorInput('telefono', datosDomFiscal.telefono);
+        this.setValorInput('pais', datos_dom_fiscal.pais);
+        this.setValorInput('codigo_postal', datos_dom_fiscal.codigo_postal);
+        this.setValorInput('entidad_federativa', datos_dom_fiscal.entidad_federativa);
+        this.setValorInput('municipio', datos_dom_fiscal.municipio);
+        this.setValorInput('localidad', datos_dom_fiscal.localidad);
+        this.setValorInput('colonia', datos_dom_fiscal.colonia);
+        this.setValorInput('calle', datos_dom_fiscal.calle);
+        this.setValorInput('n_ext', datos_dom_fiscal.n_ext);
+        this.setValorInput('n_int', datos_dom_fiscal.n_int);
+        this.setValorInput('lada', datos_dom_fiscal.lada);
+        this.setValorInput('telefono', datos_dom_fiscal.telefono);
       }
     });
   }
 
   setValorInput(field: string, value: string) : void {
-    this.SolicitanteForm.controls[field].enable();
-    this.SolicitanteForm.controls[field].setValue(value);
-    this.SolicitanteForm.controls[field].disable();
+    this.FormSolicitante.controls[field].enable();
+    this.FormSolicitante.controls[field].setValue(value);
+    this.FormSolicitante.controls[field].disable();
   }
 }
 

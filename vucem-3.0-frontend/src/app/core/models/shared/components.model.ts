@@ -14,3 +14,20 @@ export interface CatalogosSelect {
   primerOpcion: string;
   catalogos: Array<Catalogo>
 }
+
+export interface DatosPasos {
+  txt_btn_sig: string;
+  txt_btn_ant: string;
+  indice: number;
+  nro_pasos: number;
+}
+
+export interface DatosIndice {
+  indice: number;
+  estatus: boolean;
+}
+
+export interface DocumentosCargados {
+  tipo_documento: Catalogo;
+  nombre_archivo: string;
+}

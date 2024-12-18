@@ -7,4 +7,17 @@ export interface RespuestaCatalogos {
 export interface Catalogo {
   id: number;
   value: string;
+  tipo_archivo?: string;
+  imagen?: DatosImagen;
+  archivo?: DatosArchivo;
+}
+
+export interface DatosImagen {
+  resolucion: number;
+  unidad: string;
+}
+
+export interface DatosArchivo {
+  tamanio: number;
+  unidad: string;
 }

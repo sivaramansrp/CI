@@ -1,15 +1,16 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { ListaPasosWizard } from '../../../core/models/5701/servicios-extraordinarios.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-wizard',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './wizard.component.html',
   styleUrl: './wizard.component.scss'
 })
 export class WizardComponent {
-  @Input() listaPasos: Array<string> = [];
+  @Input() lista_pasos: Array<ListaPasosWizard> = [];
   @Output() indice = new EventEmitter<any>();
 
   iActual: number = 0;
@@ -20,19 +21,15 @@ export class WizardComponent {
   constructor() {}
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['listaPasos'].currentValue !== undefined && changes['listaPasos'].currentValue !== undefined) {
-      this.listaPasos = changes['listaPasos'].currentValue;
+    if (changes['lista_pasos'].currentValue !== undefined && changes['lista_pasos'].currentValue !== undefined) {
+      this.lista_pasos = changes['lista_pasos'].currentValue;
 
-      this.listaPasos.forEach((element, index) => {
+      this.lista_pasos.forEach((element, index) => {
         this.edo_inicial = index == 0 ? true : false;
         this.lista.push({
           indice: index,
-          titulo: element,
-          activo: this.edo_inicial,
-          completado: false,
-          validado: false,
-          final: false,
-
+          titulo: element.titulo,
+          completado: element.completado
         })
       })
 

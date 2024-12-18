@@ -5,7 +5,7 @@
 
   <div class="row">
     <div class="col-md-4">
-      <select-catalogos [catalogosDatos]="datosTiposSolicitud" (valorSelección)="tipoSolicitud($event)"/>
+      <select-catalogos [catalogos_datos]="datos_tipos_solicitud" (valorSelección)="tipoSolicitud($event)"/>
     </div>
   </div>
 
@@ -14,7 +14,7 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="control-label" for="rfc_imp">RFC*:</label>
-        <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
+        <input class="form-control required" id="rfc_imp" placeholder="RFC" type="text">
       </div>
     </div>
 

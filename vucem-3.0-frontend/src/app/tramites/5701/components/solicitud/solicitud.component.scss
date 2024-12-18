@@ -17,3 +17,12 @@
   text-align: justify;
   font-weight: bold;
 }
+
+.required {
+  -webkit-transition: 1s; /* Safari */
+  transition: 1s;
+  box-shadow: 0 0 4pt 0.4pt red;
+
+
+}
+

@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { DatosPasos } from '../../../core/models/shared/components.model';
 
 @Component({
   selector: 'btn-continuar',
@@ -8,16 +9,25 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrl: './btn-continuar.component.scss'
 })
 export class BtnContinuarComponent {
+  @Input({required:true}) datos!: DatosPasos;
   @Output() continuarEvento = new EventEmitter<number>();
   constructor() {}
 
-  indice: number = 1;
+  get visibility() {
+    return (this.datos.indice === 1 ? 'hidden' : 'visible')
+  }
 
   continuar() : void {
-    this.continuarEvento.emit(this.indice += 1)
+    const condicion = this.datos.indice > 0  && this.datos.indice < this.datos.nro_pasos;
+    if (condicion) {
+      this.continuarEvento.emit(this.datos.indice += 1)
+    }
   }
 
   anterior() : void {
-    this.continuarEvento.emit(this.indice -= 1)
+    const condicion = this.datos.indice > 1 && this.datos.indice < this.datos.nro_pasos + 1;
+    if (condicion) {
+      this.continuarEvento.emit(this.datos.indice -= 1)
+    }
   }
 }

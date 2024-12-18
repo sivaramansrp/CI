@@ -5,7 +5,7 @@
         <h1>Solicitud servicios extraordinarios</h1>
       </div>
 
-      <app-wizard [listaPasos]="pasos"></app-wizard>
+      <app-wizard [lista_pasos]="pasos"></app-wizard>
 
     </div>
 
@@ -20,12 +20,9 @@
       @case (3) {
       <paso-tres></paso-tres>
       }
-      @case (4) {
-      <paso-cuatro></paso-cuatro>
-      }
       }
 
-      <btn-continuar (continuarEvento)="getValorIndice($event)"></btn-continuar>
+      <btn-continuar [datos]="datos_pasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
   </div>
 </div>

@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { Catalogo } from '../../../../core/models/5701/catalogos.model';
 
 @Component({
   selector: 'paso-tres',
@@ -6,5 +8,6 @@ import { Component } from '@angular/core';
   styleUrl: './paso-tres.component.scss'
 })
 export class PasoTresComponent {
+
 
 }
