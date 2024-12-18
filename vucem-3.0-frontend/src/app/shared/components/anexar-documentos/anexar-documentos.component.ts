@@ -3,11 +3,12 @@ import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.c
 import { CatalogosSelect, DocumentosCargados } from '../../../core/models/shared/components.model';
 import { ServiciosExtraordinariosService } from '../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 import { Catalogo } from '../../../core/models/5701/catalogos.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'anexar-documentos',
   standalone: true,
-  imports: [SelectCatalogosComponent],
+  imports: [SelectCatalogosComponent, CommonModule],
   templateUrl: './anexar-documentos.component.html',
   styleUrl: './anexar-documentos.component.scss',
 })
@@ -15,6 +16,9 @@ export class AnexarDocumentosComponent {
   tipos_documentos!: CatalogosSelect;
   documentos_cargados: Array<DocumentosCargados> = [];
   documento_seleccionado!: Catalogo;
+  abrir_modal: boolean = false;
+  modal:string = 'modal';
+  indice_doc!: number;
 
   constructor(private sExtraordinarios: ServiciosExtraordinariosService) {}
 
@@ -26,6 +30,12 @@ export class AnexarDocumentosComponent {
   get docCargados() {
     return this.documentos_cargados.length > 0 ? true : false;
   }
+
+  get btn_desactivado() {
+    return (this.documento_seleccionado && this.documento_seleccionado.id !== 0) ? false : true;
+  }
+
+
 
 
   getTiposDocumentos() {
@@ -58,23 +68,32 @@ export class AnexarDocumentosComponent {
         tipo_documento: this.documento_seleccionado,
         nombre_archivo: archivo_info.name
       })
-
-
-
-
-
-
     }
+  }
+
+  verDocumento(i: number, accion: string) {
+    // v => ver
+    this.abrir_modal = accion === 'v' ? true : false;
+    console.log(this.abrir_modal);
+
+
 
 
   }
 
-  verDocumento(i: number) {
-
-
+  abrirModal(inp: string, i: number) {
+    this.modal = 'modal-open';
+    this.indice_doc = i;
   }
 
-  eliminarDocumento(i: number) {
+  eliminarDocumento( i: number) {
     this.documentos_cargados.splice(i, 1);
+    this.cerrarModal();
   }
+
+  cerrarModal() {
+    this.modal='modal';
+  }
+
+
 }
