@@ -1,6 +1,10 @@
-// @import "bootstrap/scss/bootstrap";
+// regular style toast
+@import 'ngx-toastr/toastr';
+
 
 @import "../src/assets/styles/main.scss";
+
+
 
 .d-flex {
   display: flex;

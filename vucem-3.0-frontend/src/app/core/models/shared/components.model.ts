@@ -31,3 +31,9 @@ export interface DocumentosCargados {
   tipo_documento: Catalogo;
   nombre_archivo: string;
 }
+
+export interface DatosArchivo {
+  tam_req: number;
+  tamanio: number;
+  unidad: string;
+}
