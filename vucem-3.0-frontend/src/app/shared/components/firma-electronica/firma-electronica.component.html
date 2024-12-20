@@ -2,11 +2,11 @@
   <div class="col-md-4">
     <div class="input-group">
        <label for="cer">Certificado (cer)*:</label>
-      <input type="file" class="form-control" id="cer"  (change)="desencriptarKey('cer', $event)" accept=".cer">
+      <input type="file" class="form-control" id="cer"  (change)="onCertFileChange($event)" accept=".cer">
     </div>
     <div class="input-group">
        <label for="key">Clave privada (key)*:</label>
-      <input type="file" class="form-control" id="key" (change)="desencriptarKey('key', $event)" accept=".key">
+      <input type="file" class="form-control" id="key" (change)="onKeyFileChange($event)" accept=".key">
     </div>
     <div class="input-group">
        <label for="password">Contraseña de clave privada*:</label>
