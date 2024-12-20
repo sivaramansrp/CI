@@ -7,7 +7,7 @@ import {
 import { ServiciosExtraordinariosService } from '../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 import { Catalogo } from '../../../core/models/5701/catalogos.model';
 import { CommonModule } from '@angular/common';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 import { DatosArchivo } from '../../../core/models/shared/components.model';
 
 @Component({
@@ -34,7 +34,7 @@ export class AnexarDocumentosComponent {
     this.getTiposDocumentos();
   }
 
-  get docCargados() {
+  get doc_cargados() {
     return this.documentos_cargados.length > 0 ? true : false;
   }
 

@@ -9,7 +9,7 @@ import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraor
 })
 export class SolicitudPageComponent {
   pasos: Array<ListaPasosWizard> = PASOS;
-  indice: number = 2;
+  indice: number = 1;
 
   datos_pasos: DatosPasos = {
     nro_pasos: this.pasos.length,

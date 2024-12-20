@@ -36,7 +36,7 @@ export class FirmaElectronicaComponent {
     try {
       const contraseña = this.FormCertificado.get('password')?.value;
       if (contraseña) {
-        const cert = pki.certificateFromPem(this.cert_file);
+        const cert = pki.certificateToPem(this.cert_file);
         const privateKey = pki.decryptRsaPrivateKey(this.key_file, contraseña);
 
         if (privateKey) {

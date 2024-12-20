@@ -13,14 +13,18 @@ import { CommonModule } from '@angular/common';
 })
 export class SolicitanteComponent {
 
-  public FormSolicitante: FormGroup = this.fb.group({
-    curp: [{value: '', disabled: true}],
+  public FormPersonaFisica: FormGroup = this.fb.group({
     rfc: [{value: '', disabled: true}],
-    nombre: [{value: '', disabled: true}],
+    curp: [{value: '', disabled: true}],
+    nombre_razon_social: [{value: '', disabled: true}],
     a_paterno: [{value: '', disabled: true}],
     a_materno: [{value: '', disabled: true}],
+
+    // Persona Moral
     act_economica: [{value: '', disabled: true}],
     correo: [{value: '', disabled: true}],
+
+    // Domicilio Fiscal Persona Moral o Fisica Nacional
     pais: [{value: '', disabled: true}],
     codigo_postal: [{value: '', disabled: true}],
     entidad_federativa: [{value: '', disabled: true}],
@@ -32,7 +36,25 @@ export class SolicitanteComponent {
     n_int: [{value: '', disabled: true}],
     lada: [{value: '', disabled: true}],
     telefono: [{value: '', disabled: true}]
+  });
+
+  public FormExtranjero = this.fb.group({
+    nombre_razon_social: [{value:'', disabled: true}],
+    p_apellido: [{value:'', disabled: true}],
+    s_apellido: [{value:'', disabled: true}],
+    n_id_fiscal: [{value:'', disabled: true}],
+    n_seg_social: [{value:'', disabled: true}],
+    correo: [{value:'', disabled: true}],
+    act_economica: [{value: '', disabled: true}],
+
+    pais: [{value:'', disabled: true}],
+    codigo_postal: [{value:'', disabled: true}],
+    estado: [{value:'', disabled: true}],
+    calle: [{value:'', disabled: true}],
+    n_int: [{value:'', disabled: true}],
+    n_ext: [{value:'', disabled: true}],
   })
+
 
   constructor(
     private solicitanteServicio: SolicitanteService,
@@ -41,6 +63,14 @@ export class SolicitanteComponent {
 
   ngOnInit() {
     this.getDatosGenerales();
+  }
+
+  get nacional() {
+    return true;
+  }
+
+  get personaFisica() {
+    return false;
   }
 
   getDatosGenerales() {
@@ -74,9 +104,9 @@ export class SolicitanteComponent {
   }
 
   setValorInput(field: string, value: string) : void {
-    this.FormSolicitante.controls[field].enable();
-    this.FormSolicitante.controls[field].setValue(value);
-    this.FormSolicitante.controls[field].disable();
+    this.FormPersonaFisica.controls[field].enable();
+    this.FormPersonaFisica.controls[field].setValue(value);
+    this.FormPersonaFisica.controls[field].disable();
   }
 }
 
