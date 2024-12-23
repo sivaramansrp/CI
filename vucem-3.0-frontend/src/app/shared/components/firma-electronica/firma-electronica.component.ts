@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 import * as forge from 'node-forge';
+import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 @Component({
   selector: 'firma-electronica',
@@ -23,7 +24,15 @@ export class FirmaElectronicaComponent {
     password: ['', [Validators.required]],
   });
 
-  constructor(private fb: FormBuilder, private toastrService: ToastrService) {}
+  constructor(
+    private fb: FormBuilder,
+    private toastrService: ToastrService,
+    private formValidator: ValidacionesFormularioService
+  ) {}
+
+  isValid(field: string) {
+    return this.formValidator.isValidField(this.FormCertificado, field);
+  }
 
   handleFile(type: string, event: Event) {
     const input = event.target as HTMLInputElement;
@@ -52,8 +61,17 @@ export class FirmaElectronicaComponent {
   }
 
   onSubmit() {
-    const password = this.FormCertificado.get('password')?.value;
+    console.log(this.FormCertificado.valid);
 
+    console.log(this.isValid('password'));
+
+
+    if (this.FormCertificado.invalid) {
+      this.FormCertificado.markAllAsTouched();
+      return;
+    }
+
+    const password = this.FormCertificado.get('password')?.value;
     this.contrasenia =
       password !== undefined && password !== null ? password : '';
 

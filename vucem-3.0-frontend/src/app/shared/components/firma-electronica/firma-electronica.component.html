@@ -9,13 +9,11 @@
         <label for="key">Clave privada (key)*:</label>
         <input type="file" class="form-control" id="key" (change)="handleFile('key', $event)" accept=".key">
       </div>
+
       <div class="input-group">
         <label for="password">Contraseña de clave privada*:</label>
-        <input type="password" class="form-control" id="password" formControlName="password">
-
-        <div>
-          {{mensaje_validacion}}
-        </div>
+        <input type="password" class="form-control" [ngClass]="isValid('password') ? 'required' : ''" id="password"
+          formControlName="password">
       </div>
 
       <button type="submit" class="btn btn-primary mt-4">Firmar</button>
