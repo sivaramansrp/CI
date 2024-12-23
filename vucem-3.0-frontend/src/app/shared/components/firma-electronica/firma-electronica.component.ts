@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { asn1, pki, util } from 'node-forge';
+
+import * as forge from 'node-forge';
 
 @Component({
   selector: 'firma-electronica',
@@ -62,59 +63,29 @@ export class FirmaElectronicaComponent {
   validarCertificado() {
     try {
       const contrasenia = this.FormCertificado.get('password')?.value;
+
       if (contrasenia) {
-        // Remove spaces and newlines from the privateKeyBase64
+        // Remove headers, footers, and whitespace
         const cert1 = this.cert_file.split(',');
         this.cert_file = cert1[1];
 
-        const certDerBytes = util.decode64(this.cert_file);
-        const obj = asn1.fromDer(certDerBytes);
-        const cert_archivo = pki.certificateFromAsn1(obj);
+        const cleanedCert = this.cert_file
+          .replace(/-----.*-----/g, '')
+          .replace(/\s+/g, '');
+        const certBuffer = forge.util.decode64(cleanedCert);
+        console.log(cleanedCert);
+        const asn1Cert = forge.asn1.fromDer(
+          forge.util.createBuffer(certBuffer)
+        );
+        const cert = forge.pki.certificateFromAsn1(asn1Cert);
 
-        const cerKey = cert_archivo.publicKey;
+        // Convert to PEM format
+        this.cert_file = forge.pki.certificateToPem(cert);
+        console.log(this.cert_file);
 
-        const cerToPem = pki.publicKeyToPem(cerKey);
-
-        console.log(cerToPem);
+        // Convert Base64 to DER
 
         // *** Conversion de key to PEM *** //
-
-        const key1 = this.key_file.split(',');
-        this.key_file = key1[1];
-        const keyDerBytes = util.decode64(this.cert_file);
-        const objKey = asn1.fromDer(keyDerBytes);
-
-        console.log(objKey);
-
-
-
-
-
-
-        // const key_archivo = pki.certificateFromAsn1(objKey);
-
-        // const keyKey = key_archivo.publicKey;
-
-        // const keyToPem = pki.publicKeyToPem(keyKey);
-
-        // console.log(keyToPem);
-
-        // const privateKey = pki.decryptRsaPrivateKey(cerToPem, contrasenia);
-        // console.log(privateKey);
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // const privateCert = pki.certificateToPem(this.cert_file)
 
         // if (privateKey) {
         //   this.validation_message =
