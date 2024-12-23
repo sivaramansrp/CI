@@ -61,11 +61,6 @@ export class FirmaElectronicaComponent {
   }
 
   onSubmit() {
-    console.log(this.FormCertificado.valid);
-
-    console.log(this.isValid('password'));
-
-
     if (this.FormCertificado.invalid) {
       this.FormCertificado.markAllAsTouched();
       return;
