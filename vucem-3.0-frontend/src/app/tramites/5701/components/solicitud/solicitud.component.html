@@ -16,17 +16,13 @@
         <div class="form-group">
           <label class="control-label" for="rfc_import_export">RFC*:</label>
           <input class="form-control" id="rfc_import_export" placeholder="RFC" type="text" formControlName="rfc_import_export" [ngClass]="isValid('rfc_import_export') ? 'required' : ''" appUppercase>
-
-          @if(isValid('rfc_import_export')) {
-            <span>Campo requerido</span>
-          }
         </div>
       </div>
 
       <div class="col-md-8">
         <div class="form-group">
-          <label class="control-label" for="nombre_imp">Nombre*:</label>
-          <input class="form-control" id="rfc_imp" placeholder="RFC" type="text" >
+          <label class="control-label" for="nombre_import_export">Nombre*:</label>
+          <input class="form-control" id="nombre_import_export" formControlName="nombre_import_export" placeholder="Nombre" type="text" >
         </div>
       </div>
     </div>
@@ -35,7 +31,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="control-label" for="nombre_imp">Número de registro o programa:</label>
-          <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
+          <input class="form-control" id="rfc_imp" placeholder="RFC" type="text" formControlName="">
         </div>
       </div>
     </div>
@@ -43,18 +39,18 @@
     <div class="row">
       <div class="col-md-4">
         <label class="control-label" for="nombre_imp">Programa de fomento:</label>
-        <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
-        <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
+        <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault" formControlName="">
+        <input class="form-control" id="rfc_imp" placeholder="RFC" type="text" formControlName="">
       </div>
       <div class="col-md-4">
         <label class="control-label" for="nombre_imp">IMMEX (Número/aaaa):</label>
-        <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
-        <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
+        <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault" formControlName="">
+        <input class="form-control" id="rfc_imp" placeholder="RFC" type="text" formControlName="">
       </div>
       <div class="col-md-4">
         <label class="control-label" for="nombre_imp">Industria automotriz:</label>
-        <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
-        <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
+        <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault" formControlName="">
+        <input class="form-control" id="rfc_imp" placeholder="RFC" type="text" formControlName="">
       </div>
     </div>
 
