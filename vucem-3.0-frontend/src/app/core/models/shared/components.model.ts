@@ -1,18 +1,18 @@
-import { Catalogo } from "../5701/catalogos.model";
+import { Catalogo } from '../5701/catalogos.model';
 
 export interface DatosInput {
-    lbl_name: string;
-    id: string;
-    tooltip: boolean;
-    title_tooltip?: string;
-    disabled: boolean;
+  lbl_name: string;
+  id: string;
+  tooltip: boolean;
+  title_tooltip?: string;
+  disabled: boolean;
 }
 
 export interface CatalogosSelect {
   labelNombre: string;
   required: boolean;
   primerOpcion: string;
-  catalogos: Array<Catalogo>
+  catalogos: Array<Catalogo>;
 }
 
 export interface DatosPasos {
@@ -36,4 +36,17 @@ export interface DatosArchivo {
   tam_req: number;
   tamanio: number;
   unidad: string;
+}
+
+export interface InputCheck {
+  label_nombre: string;
+  maxlength: number;
+  minlenght: number;
+  required: boolean;
+  alfanumerico: boolean;
+}
+
+export interface DatosInputCheck {
+  check: boolean;
+  valor: string;
 }

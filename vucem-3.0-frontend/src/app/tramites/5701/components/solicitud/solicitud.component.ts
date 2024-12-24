@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Catalogo } from '../../../../core/models/5701/catalogos.model';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+import { CatalogosSelect, DatosInputCheck, InputCheck } from '../../../../core/models/shared/components.model';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+import { IMMEX, INDUSTRIA_AUTOMOTRIZ, PROGRAMA_FOMENTO, SOCIO_COMERCIAL } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 
 @Component({
   selector: 'solicitud',
@@ -15,6 +16,13 @@ export class SolicitudComponent {
 
   tipo_sol_seleccionada!: Catalogo;
   tipo_sol_sel_valor!: number;
+
+  programa_fomento: InputCheck = PROGRAMA_FOMENTO;
+  immex: InputCheck = IMMEX;
+  industria_automotriz: InputCheck = INDUSTRIA_AUTOMOTRIZ;
+  socio_comercial: InputCheck = SOCIO_COMERCIAL;
+
+
 
   FormSolicitud: FormGroup = this.fb.group({
     tipo_solicitud: [{ value: '', requerid: true }, [Validators.required]],
@@ -35,7 +43,7 @@ export class SolicitudComponent {
     immex: [false],
     immex_value: [''],
     industria_automotriz: [false],
-    industria_automitriz_value: [''],
+    industria_automotriz_value: [''],
     tipo_empresa_certificada: [''],
     id_socio_comercial: [''],
     socio_comercial: [false],
@@ -84,5 +92,10 @@ export class SolicitudComponent {
       this.FormSolicitud.markAllAsTouched();
       return;
     }
+  }
+
+  valorInputCheck(e: DatosInputCheck) {
+    console.log(e);
+
   }
 }

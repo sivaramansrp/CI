@@ -19,6 +19,7 @@ import { FirmaElectronicaComponent } from '../../shared/components/firma-electro
 import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
 import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';
 import { SharedModule } from '../../shared/shared.module';
+import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
 
 
 
@@ -45,7 +46,8 @@ import { SharedModule } from '../../shared/shared.module';
     FirmaElectronicaComponent,
     SelectCatalogosComponent,
     SolicitanteComponent,
-    AnexarDocumentosComponent
+    AnexarDocumentosComponent,
+    InputCheckComponent
 ],
 exports: [
   SolicitudComponent,
