@@ -18,6 +18,7 @@ import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
 import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
 import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';
+import { SharedModule } from '../../shared/shared.module';
 
 
 
@@ -32,6 +33,7 @@ import { AnexarDocumentosComponent } from '../../shared/components/anexar-docume
  ] ,
   imports: [
     CommonModule,
+    SharedModule,
     ServiciosExtraordinariosRoutingModule,
     RouterModule,
     NavComponent,

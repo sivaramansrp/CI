@@ -30,20 +30,18 @@
       "tipo": 1,
       "datos_importador_exportador": {
         "rfc": "",
-        "nombre": "",
+        "nombre": ""
+      },
+      "certificaiones": {
         "nro_registro": "",
         "programa_fomento": "",
         "immex": "",
         "industria_automotriz": "",
-        "tipo_empresa": {
-          "certificacion_a": false,
-          "certificacion_aa": false,
-          "certificacion_aaa": false,
-          "socio_comercial": false,
-          "op_economico_aut": false,
-          "revision_origen": false
-        },
-        "id_socio_comercial": ""
+        "tipo_empresa_certificada": "",
+        "id_socio_comercial": "",
+        "socio_comercial": false,
+        "op_economico_aut": false,
+        "revision_origen": false
       },
       "datos_servicio": {
         "f_inicio": "",
@@ -57,63 +55,66 @@
           "lda": false,
           "dd": false
         },
-        "rfc_autorizacion": "",
-        "ddex_autorizacion": "",
         "aduana": "",
-        "seccion_aduanera": "",
         "nombre_recinto": "",
-        "tipo_despacho": "",
+        "seccion_aduanera": "",
         "tipo_operacion": "",
         "patente": "",
         "relacion_sociedad": false,
         "encargo_conferido": false,
+        "rfc_autorizacion": "",
+        "ddex_autorizacion": "",
+        "tipo_despacho": "",
         "domicilio": ""
       },
-      "datos_pedimento": [
-        {
-          "patente": 3061,
-          "pedimento": 1234,
-          "aduana": 800,
-          "tipo_pedimento": "Por evaluar",
-          "numero": 0,
-          "comprobante_valor": "",
-          "pedimento_validado": false
+      "pedimento": {
+        "id_pedimento": 0,
+        "datos_pedimento": [
+          {
+            "patente": 3061,
+            "pedimento": 1234,
+            "aduana": 800,
+            "tipo_pedimento": "Por evaluar",
+            "numeros": 123,
+            "comprobante_valor": "",
+            "pedimento_validado": false
+          }
+        ],
+        "mercancia": {
+          "pais_origen": 12,
+          "pais_procedencia": 18,
+          "descripcion": "",
+          "justificacion": ""
+        },
+        "responsables_despacho": [
+          {
+            "gafete": "",
+            "nombre": "",
+            "a_paterno": "",
+            "a_materno": ""
+          }
+        ],
+        "pagos": {
+          "monto_pagar": "",
+          "linea_captura": "",
+          "monto": ""
         }
-      ],
-      "mercancia": {
-        "pais_origen": 12,
-        "pais_procedencia": 18,
-        "descripcion": "",
-        "justificacion": ""
       },
-      "responsables_despacho": [
+      "terceros_relacionados": [
         {
-          "gafete": "",
-          "nombre": "",
-          "a_paterno": "",
-          "a_materno": ""
+          "razon_social": "",
+          "correo": ""
         }
       ],
-      "pagos": {
-        "monto_pagar": "",
-        "linea_captura": "",
-        "monto": ""
-      }
+      "requisitos": [
+        {
+          "tipo_documento": 2
+        },
+        {
+          "tipo_documento": 4
+        }
+      ]
     },
-    "terceros_relacionados": [
-      {
-        "razon_social": "",
-        "correo": ""
-      }
-    ],
-    "requisitos": [
-      {
-        "tipo_documento": 2
-      },
-      {
-        "tipo_documento": 4
-      }
-    ]
-  },
-  "message": "Consulta exitosa"
+    "message": "Consulta exitosa"
+  }
 }

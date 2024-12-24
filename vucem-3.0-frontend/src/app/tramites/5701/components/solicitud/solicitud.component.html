@@ -1,317 +1,334 @@
 <div class="container">
   <ng-titulo titulo="Tipo de servicio extraordinario" />
 
-
-
   <div class="row">
     <div class="col-md-4">
-      <select-catalogos [catalogos_datos]="datos_tipos_solicitud" (valorSelección)="tipoSolicitud($event)"/>
+      <select-catalogos [catalogos_datos]="datos_tipos_solicitud" (valorSelección)="tipoSolicitud($event)" />
     </div>
   </div>
 
-  <ng-titulo titulo="Datos del importador/exportador" />
-  <div class="row">
-    <div class="col-md-4">
-      <div class="form-group">
-        <label class="control-label" for="rfc_imp">RFC*:</label>
-        <input class="form-control required" id="rfc_imp" placeholder="RFC" type="text">
+  @if(tipo_sol_seleccionada) {
+  <form [formGroup]="FormSolicitud" (ngSubmit)="validarFormulario()">
+
+    <ng-titulo titulo="Datos del importador/exportador" />
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="control-label" for="rfc_import_export">RFC*:</label>
+          <input class="form-control" id="rfc_import_export" placeholder="RFC" type="text" formControlName="rfc_import_export" [ngClass]="isValid('rfc_import_export') ? 'required' : ''" appUppercase>
+
+          @if(isValid('rfc_import_export')) {
+            <span>Campo requerido</span>
+          }
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="control-label" for="nombre_imp">Nombre*:</label>
+          <input class="form-control" id="rfc_imp" placeholder="RFC" type="text" >
+        </div>
       </div>
     </div>
 
-    <div class="col-md-8">
-      <div class="form-group">
-        <label class="control-label" for="nombre_imp">Nombre*:</label>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="control-label" for="nombre_imp">Número de registro o programa:</label>
+          <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <label class="control-label" for="nombre_imp">Programa de fomento:</label>
+        <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
+        <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
+      </div>
+      <div class="col-md-4">
+        <label class="control-label" for="nombre_imp">IMMEX (Número/aaaa):</label>
+        <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
+        <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
+      </div>
+      <div class="col-md-4">
+        <label class="control-label" for="nombre_imp">Industria automotriz:</label>
+        <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
         <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
       </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-4">
-      <div class="form-group">
-        <label class="control-label" for="nombre_imp">Número de registro o programa:</label>
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <label for="control-label">Tipo de empresa certificada</label>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <div>
+            <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
+            <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación A:</label>
+          </div>
+          <div>
+            <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
+            <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación AA:</label>
+          </div>
+          <div>
+            <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
+            <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación AAA:</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <div>
+            <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
+            <label class="control-label" for="nombre_imp">Socio comercial</label>
+          </div>
+          <div>
+            <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
+            <label class="control-label" for="nombre_imp">Operador económico autorizado</label>
+          </div>
+          <div>
+            <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
+            <label class="control-label" for="nombre_imp">Revisión en origen</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="control-label" for="curp">ID socio comercial:</label>
+          <input class="form-control" id="curp" placeholder="País" type="text">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="ol-md-12">
+        <button type="submit">Validar Campos</button>
+      </div>
+    </div>
+
+
+    <ng-titulo titulo="Datos del servicio" />
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group datepicker-group">
+          <label class="control-label" for="calendar">Fecha inicio*:</label>
+          <input class="form-control" type="text" name="" id="">
+          <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group datepicker-group">
+          <label class="control-label" for="calendar">Hora inicio*:</label>
+          <input class="form-control" type="text" name="" id="">
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group datepicker-group">
+          <label class="control-label" for="calendar">Fecha final*:</label>
+          <input class="form-control" type="text" name="" id="">
+          <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group datepicker-group">
+          <label class="control-label" for="calendar">Hora final*:</label>
+          <input class="form-control" type="text" name="" id="">
+        </div>
+      </div>
+
+    </div>
+
+
+    <ng-titulo titulo="Datos del despacho para el servicio extraordinario" />
+
+    <div class="row">
+      <div class="col-md-4">
+        <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
+        <label class="control-label" for="nombre_imp">Despacho LDA</label>
+      </div>
+      <div class="col-md-4">
+        <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
+        <label class="control-label" for="nombre_imp">Despacho DD</label>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <label for="tipo_solicitud" class="control-label">Aduana*:</label>
+        <select class="form-control" id="tipo-solicitud">
+          <option>Selecciona un valor</option>
+          <option>Individual</option>
+          <option>Semanal</option>
+          <option>Mensual</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="tipo_solicitud" class="control-label">Sección aduanera*:</label>
+        <select class="form-control" id="tipo-solicitud">
+          <option>Selecciona un valor</option>
+          <option>Individual</option>
+          <option>Semanal</option>
+          <option>Mensual</option>
+        </select>
+
+      </div>
+      <div class="col-md-4">
+        <label for="tipo_solicitud" class="control-label">Nombre del recinto:</label>
+        <select class="form-control" id="tipo-solicitud">
+          <option>Selecciona un valor</option>
+          <option>Individual</option>
+          <option>Semanal</option>
+          <option>Mensual</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <label for="tipo_solicitud" class="control-label">Tipo de operación*:</label>
+        <select class="form-control" id="tipo-solicitud">
+          <option>Selecciona un valor</option>
+          <option>Individual</option>
+          <option>Semanal</option>
+          <option>Mensual</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="tipo_solicitud" class="control-label">Patente/Número de autorización:</label>
+        <input class="form-control" type="text" name="" id="">
+      </div>
+      <div class="col-md-4">
+        <div class="group-checkbox">
+          <div>
+            <label class="control-label" for="nombre_imp">Relación de sociedad: </label>
+            <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
+          </div>
+          <div>
+            <label class="control-label" for="nombre_imp">Encargo conferido:</label>
+            <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <ng-titulo titulo="Datos del pedimento" />
+
+
+    <ng-titulo titulo="Mercancía" />
+
+    <div class="row">
+      <div class="col-md-4">
+        <label for="tipo_solicitud" class="control-label">País de origen*:</label>
+        <select class="form-control" id="tipo-solicitud">
+          <option>Selecciona un valor</option>
+          <option>Individual</option>
+          <option>Semanal</option>
+          <option>Mensual</option>
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label for="tipo_solicitud" class="control-label">País de procedencia*:</label>
+        <select class="form-control" id="tipo-solicitud">
+          <option>Selecciona un valor</option>
+          <option>Individual</option>
+          <option>Semanal</option>
+          <option>Mensual</option>
+        </select>
+      </div>
+
+      <div class="col-md-8">
+        <div class="form-group">
+          <label for="tipo_solicitud" class="control-label">Descripción genérica*:</label>
+          <textarea class="form-control" rows="3"></textarea>
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        <div class="form-group">
+          <label for="tipo_solicitud" class="control-label">Justificación*:</label>
+          <textarea class="form-control" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- <ng-titulo titulo="Datos del vehículo de como se presentará al despacho" />
+
+
+
+    <ng-titulo titulo="Datos del transporte de arribo/salida (al/del) país" /> -->
+
+    <ng-titulo titulo="Personas responsables del despacho (máximo 5)" />
+
+    <div class="row d-flex">
+      <div class="col-md-4 form-group">
+        <label class="control-label" for="nombre_imp">Gafete:</label>
+        <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
+      </div>
+      <div class="col-md-4">
+        <div class="btn-group">
+          <button class="btn btn-default" type="button">Buscar</button>
+          <button class="btn btn-primary ms-2" type="button">Agregar</button>
+        </div>
+      </div>
+    </div>
+
+
+    <ng-titulo titulo="Pagos" />
+
+    <div class="row rf">
+      <div class="col-md-4 form-group">
+        <label class="control-label" for="nombre_imp">Monto a pagar:</label>
         <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
       </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-4">
-      <label class="control-label" for="nombre_imp">Programa de fomento:</label>
-      <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
-      <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
-    </div>
-    <div class="col-md-4">
-      <label class="control-label" for="nombre_imp">IMMEX (Número/aaaa):</label>
-      <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
-      <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
-    </div>
-    <div class="col-md-4">
-      <label class="control-label" for="nombre_imp">Industria automotriz:</label>
-      <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
-      <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
-    </div>
-  </div>
+    <div class="row">
+      <div class="col-md-4 form-group">
+        <label class="control-label" for="nombre_imp">Línea de captura*:</label>
+        <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="control-label" for="nombre_imp">Monto*:</label>
+        <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
+      </div>
 
-  <div class="row mt-4">
-    <div class="col-md-12">
-      <label for="control-label">Tipo de empresa certificada</label>
     </div>
-    <div class="col-md-4">
-      <div class="form-group">
-        <div>
-          <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
-          <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación A:</label>
-        </div>
-        <div>
-          <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
-          <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación AA:</label>
-        </div>
-        <div>
-          <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
-          <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación AAA:</label>
+
+    <div class="row">
+      <div class="col-md-8"></div>
+      <div class="col-md-4">
+        <div class="btn-group">
+          <button class="btn btn-primario me-2" type="button">Consultar</button>
+          <button class="btn btn-danger" type="button">Eliminar</button>
         </div>
       </div>
     </div>
 
-    <div class="col-md-4">
-      <div class="form-group">
-        <div>
-          <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
-          <label class="control-label" for="nombre_imp">Socio comercial</label>
-        </div>
-        <div>
-          <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
-          <label class="control-label" for="nombre_imp">Operador económico autorizado</label>
-        </div>
-        <div>
-          <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
-          <label class="control-label" for="nombre_imp">Revisión en origen</label>
-        </div>
-      </div>
+    <div class="row">
+      <p class="p-bold">A través del siguiente vinculo puedes ingresar a la página para generar la línea de captura de
+        la
+        constancia que se solicita:</p>
+      <p>Generar línea de captura</p>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-4">
-      <div class="form-group">
-        <label class="control-label" for="curp">ID socio comercial:</label>
-        <input class="form-control" id="curp" placeholder="País" type="text">
-      </div>
-    </div>
-  </div>
-
-  <ng-titulo titulo="Datos del servicio" />
-  <div class="row">
-    <div class="col-md-4">
-      <div class="form-group datepicker-group">
-        <label class="control-label" for="calendar">Fecha inicio*:</label>
-        <input class="form-control" type="text" name="" id="">
-        <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="form-group datepicker-group">
-        <label class="control-label" for="calendar">Hora inicio*:</label>
-        <input class="form-control" type="text" name="" id="">
-      </div>
-    </div>
-
-  </div>
-
-  <div class="row">
-    <div class="col-md-4">
-      <div class="form-group datepicker-group">
-        <label class="control-label" for="calendar">Fecha final*:</label>
-        <input class="form-control" type="text" name="" id="">
-        <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="form-group datepicker-group">
-        <label class="control-label" for="calendar">Hora final*:</label>
-        <input class="form-control" type="text" name="" id="">
-      </div>
-    </div>
-
-  </div>
+  </form>
+  }
 
 
-  <ng-titulo titulo="Datos del despacho para el servicio extraordinario" />
-
-  <div class="row">
-    <div class="col-md-4">
-      <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
-      <label class="control-label" for="nombre_imp">Despacho LDA</label>
-    </div>
-    <div class="col-md-4">
-      <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
-      <label class="control-label" for="nombre_imp">Despacho DD</label>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-4">
-      <label for="tipo_solicitud" class="control-label">Aduana*:</label>
-      <select class="form-control" id="tipo-solicitud">
-        <option>Selecciona un valor</option>
-        <option>Individual</option>
-        <option>Semanal</option>
-        <option>Mensual</option>
-      </select>
-    </div>
-    <div class="col-md-4">
-      <label for="tipo_solicitud" class="control-label">Sección aduanera*:</label>
-      <select class="form-control" id="tipo-solicitud">
-        <option>Selecciona un valor</option>
-        <option>Individual</option>
-        <option>Semanal</option>
-        <option>Mensual</option>
-      </select>
-
-    </div>
-    <div class="col-md-4">
-      <label for="tipo_solicitud" class="control-label">Nombre del recinto:</label>
-      <select class="form-control" id="tipo-solicitud">
-        <option>Selecciona un valor</option>
-        <option>Individual</option>
-        <option>Semanal</option>
-        <option>Mensual</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-4">
-      <label for="tipo_solicitud" class="control-label">Tipo de operación*:</label>
-      <select class="form-control" id="tipo-solicitud">
-        <option>Selecciona un valor</option>
-        <option>Individual</option>
-        <option>Semanal</option>
-        <option>Mensual</option>
-      </select>
-    </div>
-    <div class="col-md-4">
-      <label for="tipo_solicitud" class="control-label">Patente/Número de autorización:</label>
-      <input class="form-control" type="text" name="" id="">
-    </div>
-    <div class="col-md-4">
-      <div class="group-checkbox">
-        <div>
-          <label class="control-label" for="nombre_imp">Relación de sociedad: </label>
-          <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
-        </div>
-        <div>
-          <label class="control-label" for="nombre_imp">Encargo conferido:</label>
-          <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-
-  <ng-titulo titulo="Datos del pedimento" />
-
-
-  <ng-titulo titulo="Mercancía" />
-
-  <div class="row">
-    <div class="col-md-4">
-      <label for="tipo_solicitud" class="control-label">País de origen*:</label>
-      <select class="form-control" id="tipo-solicitud">
-        <option>Selecciona un valor</option>
-        <option>Individual</option>
-        <option>Semanal</option>
-        <option>Mensual</option>
-      </select>
-    </div>
-
-    <div class="col-md-4">
-      <label for="tipo_solicitud" class="control-label">País de procedencia*:</label>
-      <select class="form-control" id="tipo-solicitud">
-        <option>Selecciona un valor</option>
-        <option>Individual</option>
-        <option>Semanal</option>
-        <option>Mensual</option>
-      </select>
-    </div>
-
-    <div class="col-md-8">
-      <div class="form-group">
-        <label for="tipo_solicitud" class="control-label">Descripción genérica*:</label>
-        <textarea class="form-control" rows="3"></textarea>
-      </div>
-    </div>
-
-    <div class="col-md-8">
-      <div class="form-group">
-        <label for="tipo_solicitud" class="control-label">Justificación*:</label>
-        <textarea class="form-control" rows="3"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- <ng-titulo titulo="Datos del vehículo de como se presentará al despacho" />
-
-
-
-  <ng-titulo titulo="Datos del transporte de arribo/salida (al/del) país" /> -->
-
-  <ng-titulo titulo="Personas responsables del despacho (máximo 5)" />
-
-  <div class="row d-flex">
-    <div class="col-md-4 form-group">
-      <label class="control-label" for="nombre_imp">Gafete:</label>
-      <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
-    </div>
-    <div class="col-md-4">
-      <div class="btn-group">
-        <button class="btn btn-default" type="button">Buscar</button>
-        <button class="btn btn-primary ms-2" type="button">Agregar</button>
-      </div>
-    </div>
-  </div>
-
-
-  <ng-titulo titulo="Pagos" />
-
-  <div class="row rf">
-    <div class="col-md-4 form-group">
-      <label class="control-label" for="nombre_imp">Monto a pagar:</label>
-      <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-4 form-group">
-      <label class="control-label" for="nombre_imp">Línea de captura*:</label>
-      <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
-    </div>
-    <div class="col-md-4 form-group">
-      <label class="control-label" for="nombre_imp">Monto*:</label>
-      <input class="form-control" id="rfc_imp" placeholder="RFC" type="text">
-    </div>
-
-  </div>
-
-  <div class="row">
-    <div class="col-md-8"></div>
-    <div class="col-md-4">
-      <div class="btn-group">
-        <button class="btn btn-primario me-2" type="button">Consultar</button>
-        <button class="btn btn-danger" type="button">Eliminar</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <p class="p-bold">A través del siguiente vinculo puedes ingresar a la página para generar la línea de captura de la
-      constancia que se solicita:</p>
-    <p>Generar línea de captura</p>
-  </div>
 
 
 </div>

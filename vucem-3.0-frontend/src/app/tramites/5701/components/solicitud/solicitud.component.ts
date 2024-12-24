@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Catalogo } from '../../../../core/models/5701/catalogos.model';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 @Component({
   selector: 'solicitud',
@@ -11,12 +13,48 @@ import { ServiciosExtraordinariosService } from '../../../../core/services/5701/
 export class SolicitudComponent {
   datos_tipos_solicitud!: CatalogosSelect;
 
-  constructor(private sExtraordinarios: ServiciosExtraordinariosService) {
-  }
+  tipo_sol_seleccionada!: Catalogo;
+  tipo_sol_sel_valor!: number;
+
+  FormSolicitud: FormGroup = this.fb.group({
+    tipo_solicitud: [{ value: '', requerid: true }, [Validators.required]],
+    rfc_import_export: [
+      '',
+      [
+        Validators.required,
+        Validators.pattern(this.validacionesService.rfc_pf_pattern),
+      ],
+    ],
+    nombre_import_export: [
+      { value: '', disabled: true },
+      [Validators.required],
+    ],
+    nro_registro: ['', [Validators.required]],
+    programa_fomento: [false],
+    programa_fomento_value: [''],
+    immex: [false],
+    immex_value: [''],
+    industria_automotriz: [false],
+    industria_automitriz_value: [''],
+    tipo_empresa_certificada: [''],
+    id_socio_comercial: [''],
+    socio_comercial: [false],
+    op_economico_aut: [false],
+    revision_origen: [false],
+  });
+
+  constructor(
+    private sExtraordinarios: ServiciosExtraordinariosService,
+    private fb: FormBuilder,
+    private validacionesService: ValidacionesFormularioService
+  ) {}
 
   ngOnInit() {
     this.getTiposSolicitud();
+  }
 
+  isValid(field: string) {
+    return this.validacionesService.isValidField(this.FormSolicitud, field);
   }
 
   getTiposSolicitud() {
@@ -36,9 +74,15 @@ export class SolicitudComponent {
   }
 
   tipoSolicitud(e: Catalogo) {
-    console.log(e);
-
+    this.tipo_sol_seleccionada = e;
   }
 
+  validarFormulario() {
+    console.log(this.FormSolicitud.controls);
+    if (this.FormSolicitud.invalid) {
 
+      this.FormSolicitud.markAllAsTouched();
+      return;
+    }
+  }
 }
