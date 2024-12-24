@@ -2191,13 +2191,14 @@ a.text-danger {
 
 .bg-primary {
   color: $c-white;
-  background-color: #4a90e2;
+  background-color: $color-primario;
 }
 
 a.bg-primary {
   &:focus,
   &:hover {
-    background-color: #2275d7;
+    color: #D4C19C;
+    background-color: rgba(255, 255, 255, .15);
   }
 }
 
@@ -10698,7 +10699,6 @@ hr.red:before {
 }
 
 body {
-  padding-top: 46px;
   font-weight: 300;
 }
 

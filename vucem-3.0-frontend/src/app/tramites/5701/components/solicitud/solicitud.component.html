@@ -7,7 +7,7 @@
     </div>
   </div>
 
-  @if(tipo_sol_seleccionada) {
+  <!-- @if(tipo_sol_seleccionada) { -->
   <form [formGroup]="FormSolicitud" (ngSubmit)="validarFormulario()">
 
     <ng-titulo titulo="Datos del importador/exportador" />
@@ -31,7 +31,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="control-label" for="nombre_imp">Número de registro o programa:</label>
-          <input class="form-control" id="rfc_imp" placeholder="RFC" type="text" formControlName="">
+          <input class="form-control" id="rfc_imp" placeholder="Numero de registro" type="text" formControlName="nro_registro">
         </div>
       </div>
     </div>
@@ -322,7 +322,7 @@
       <p>Generar línea de captura</p>
     </div>
   </form>
-  }
+  <!-- } -->
 
 
 
