@@ -20,6 +20,7 @@ import { SelectCatalogosComponent } from '../../shared/components/select-catalog
 import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';
 import { SharedModule } from '../../shared/shared.module';
 import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
+import { InputHoraComponent } from '../../shared/components/input-hora/input-hora.component';
 
 
 
@@ -47,7 +48,8 @@ import { InputCheckComponent } from '../../shared/components/input-check/input-c
     SelectCatalogosComponent,
     SolicitanteComponent,
     AnexarDocumentosComponent,
-    InputCheckComponent
+    InputCheckComponent,
+    InputHoraComponent,
 ],
 exports: [
   SolicitudComponent,

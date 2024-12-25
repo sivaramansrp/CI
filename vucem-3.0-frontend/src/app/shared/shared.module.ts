@@ -12,7 +12,7 @@ import { InputCheckComponent } from './components/input-check/input-check.compon
     InputCheckComponent
    ],
   exports: [
-    UppercaseDirective
+    UppercaseDirective,
   ]
 })
 export class SharedModule { }

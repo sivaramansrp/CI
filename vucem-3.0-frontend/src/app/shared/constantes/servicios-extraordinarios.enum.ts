@@ -58,3 +58,13 @@ export const INDUSTRIA_AUTOMOTRIZ = {
     required: false,
     alfanumerico: true,
   }
+
+  export const HORA_INICIO = {
+    label_nombre: 'Hora inicio',
+    required: true,
+  }
+
+  export const HORA_FINAL = {
+    label_nombre: 'Hora final',
+    required: true,
+  }

@@ -50,3 +50,8 @@ export interface DatosInputCheck {
   check: boolean;
   valor: string;
 }
+
+export interface InputHora {
+  label_nombre: string;
+  required: boolean;
+}

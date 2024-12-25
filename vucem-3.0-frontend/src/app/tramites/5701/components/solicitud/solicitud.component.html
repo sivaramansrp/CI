@@ -96,11 +96,9 @@
         </div>
       </div>
 
+
       <div class="col-md-4">
-        <div class="form-group datepicker-group">
-          <label class="control-label" for="calendar">Hora inicio*:</label>
-          <input class="form-control" type="text" name="" id="">
-        </div>
+        <input-hora [datosHora]="hora_inicio" (horaValor)="obtenerHora($event, 'i')"></input-hora>
       </div>
 
     </div>
@@ -115,10 +113,7 @@
       </div>
 
       <div class="col-md-4">
-        <div class="form-group datepicker-group">
-          <label class="control-label" for="calendar">Hora final*:</label>
-          <input class="form-control" type="text" name="" id="">
-        </div>
+        <input-hora [datosHora]="hora_final" (horaValor)="obtenerHora($event, 'f')"></input-hora>
       </div>
 
     </div>

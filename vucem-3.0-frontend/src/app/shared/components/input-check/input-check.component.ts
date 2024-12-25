@@ -1,11 +1,20 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { DatosInputCheck, InputCheck } from '../../../core/models/shared/components.model';
+import {
+  DatosInputCheck,
+  InputCheck,
+} from '../../../core/models/shared/components.model';
 
 @Component({
   selector: 'input-check',
@@ -17,14 +26,12 @@ import { DatosInputCheck, InputCheck } from '../../../core/models/shared/compone
 export class InputCheckComponent {
   @Input({ required: true }) datos!: InputCheck;
 
-  @Output() valores = new EventEmitter<DatosInputCheck>()
+  @Output() valores = new EventEmitter<DatosInputCheck>();
 
   label_nombre: string = 'Programa de fomento';
   FormInput!: FormGroup;
 
-  constructor(private fb: FormBuilder) {
-  }
-
+  constructor(private fb: FormBuilder) {}
   ngOnInit() {
     this.crearFormInput();
 
@@ -54,10 +61,8 @@ export class InputCheckComponent {
     const valores: DatosInputCheck = {
       check: this.FormInput.get('seleccion')?.value,
       valor: this.FormInput.get('valor_input')?.value,
-    }
+    };
 
     this.valores.emit(valores);
   }
-
-
 }

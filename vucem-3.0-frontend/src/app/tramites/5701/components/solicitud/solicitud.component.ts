@@ -1,10 +1,22 @@
 import { Component } from '@angular/core';
 import { Catalogo } from '../../../../core/models/5701/catalogos.model';
-import { CatalogosSelect, DatosInputCheck, InputCheck } from '../../../../core/models/shared/components.model';
+import {
+  CatalogosSelect,
+  DatosInputCheck,
+  InputCheck,
+  InputHora,
+} from '../../../../core/models/shared/components.model';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-import { IMMEX, INDUSTRIA_AUTOMOTRIZ, PROGRAMA_FOMENTO, SOCIO_COMERCIAL } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import {
+  HORA_FINAL,
+  HORA_INICIO,
+  IMMEX,
+  INDUSTRIA_AUTOMOTRIZ,
+  PROGRAMA_FOMENTO,
+  SOCIO_COMERCIAL,
+} from '../../../../shared/constantes/servicios-extraordinarios.enum';
 
 @Component({
   selector: 'solicitud',
@@ -22,7 +34,8 @@ export class SolicitudComponent {
   industria_automotriz: InputCheck = INDUSTRIA_AUTOMOTRIZ;
   socio_comercial: InputCheck = SOCIO_COMERCIAL;
 
-
+  hora_inicio: InputHora = HORA_INICIO;
+  hora_final: InputHora = HORA_FINAL;
 
   FormSolicitud: FormGroup = this.fb.group({
     tipo_solicitud: [{ value: '', requerid: true }, [Validators.required]],
@@ -88,7 +101,6 @@ export class SolicitudComponent {
   validarFormulario() {
     console.log(this.FormSolicitud.controls);
     if (this.FormSolicitud.invalid) {
-
       this.FormSolicitud.markAllAsTouched();
       return;
     }
@@ -96,6 +108,13 @@ export class SolicitudComponent {
 
   valorInputCheck(e: DatosInputCheck) {
     console.log(e);
+  }
 
+  obtenerHora(e: string, tipo: string) {
+    if (tipo === 'i') {
+      console.log('Hora inicial:' + e);
+    } else if (tipo === 'f') {
+      console.log('Hora final:' + e);
+    }
   }
 }
