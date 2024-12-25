@@ -21,6 +21,7 @@ import { AnexarDocumentosComponent } from '../../shared/components/anexar-docume
 import { SharedModule } from '../../shared/shared.module';
 import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
 import { InputHoraComponent } from '../../shared/components/input-hora/input-hora.component';
+import { InputFechaComponent } from "../../shared/components/input-fecha/input-fecha.component";
 
 
 
@@ -50,6 +51,7 @@ import { InputHoraComponent } from '../../shared/components/input-hora/input-hor
     AnexarDocumentosComponent,
     InputCheckComponent,
     InputHoraComponent,
+    InputFechaComponent
 ],
 exports: [
   SolicitudComponent,
