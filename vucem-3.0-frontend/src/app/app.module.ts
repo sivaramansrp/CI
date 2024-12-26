@@ -9,25 +9,22 @@ import { HeaderComponent } from './shared/components/header/header.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideToastr, ToastrModule } from 'ngx-toastr';
 
-
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NavComponent,
     HttpClientModule,
     HeaderComponent,
+    ToastrModule.forRoot(),
     BrowserAnimationsModule,
-        ToastrModule.forRoot(),
   ],
   providers: [
     provideToastr({
       positionClass: 'toast-top-right',
-    })
+    }),
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

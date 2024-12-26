@@ -89,13 +89,7 @@
     <ng-titulo titulo="Datos del servicio" />
     <div class="row">
       <div class="col-md-4">
-        <input-fecha></input-fecha>
-
-        <div class="form-group datepicker-group">
-          <label class="control-label" for="calendar">Fecha inicio*:</label>
-          <input class="form-control" type="text" name="" id="">
-          <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-        </div>
+        <input-fecha [setFecha]="fechaInicio()" [habilitado]="true" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
       </div>
 
 
@@ -107,11 +101,7 @@
 
     <div class="row">
       <div class="col-md-4">
-        <div class="form-group datepicker-group">
-          <label class="control-label" for="calendar">Fecha final*:</label>
-          <input class="form-control" type="text" name="" id="">
-          <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-        </div>
+        <input-fecha></input-fecha>
       </div>
 
       <div class="col-md-4">

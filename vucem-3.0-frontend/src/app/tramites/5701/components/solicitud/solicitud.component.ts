@@ -37,41 +37,66 @@ export class SolicitudComponent {
   hora_inicio: InputHora = HORA_INICIO;
   hora_final: InputHora = HORA_FINAL;
 
-  FormSolicitud: FormGroup = this.fb.group({
-    tipo_solicitud: [{ value: '', requerid: true }, [Validators.required]],
-    rfc_import_export: [
-      '',
-      [
-        Validators.required,
-        Validators.pattern(this.validacionesService.rfc_pf_pattern),
-      ],
-    ],
-    nombre_import_export: [
-      { value: '', disabled: true },
-      [Validators.required],
-    ],
-    nro_registro: ['', [Validators.required]],
-    programa_fomento: [false],
-    programa_fomento_value: [''],
-    immex: [false],
-    immex_value: [''],
-    industria_automotriz: [false],
-    industria_automotriz_value: [''],
-    tipo_empresa_certificada: [''],
-    id_socio_comercial: [''],
-    socio_comercial: [false],
-    op_economico_aut: [false],
-    revision_origen: [false],
-  });
+  FormSolicitud!: FormGroup;
 
   constructor(
     private sExtraordinarios: ServiciosExtraordinariosService,
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService
-  ) {}
+  ) {
+    this.crearFormSolicitud();
+  }
 
   ngOnInit() {
     this.getTiposSolicitud();
+  }
+
+  fechaInicio() {
+    const fecha_inicio = this.FormSolicitud.get('f_inicio')?.value;
+    return fecha_inicio;
+  }
+
+  cambioFechaInicio(nuevo_valor: string) {
+    this.FormSolicitud.get('f_inicio')?.setValue(
+      nuevo_valor,
+    );
+    this.FormSolicitud.get(
+      'f_inicio',
+    )?.markAsUntouched();
+
+    console.log(this.FormSolicitud.get('f_inicio')?.value);
+
+
+  }
+  crearFormSolicitud() {
+    this.FormSolicitud = this.fb.group({
+      tipo_solicitud: [{ value: '', requerid: true }, [Validators.required]],
+      rfc_import_export: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(this.validacionesService.rfc_pf_pattern),
+        ],
+      ],
+      nombre_import_export: [
+        { value: '', disabled: true },
+        [Validators.required],
+      ],
+      nro_registro: ['', [Validators.required]],
+      programa_fomento: [false],
+      programa_fomento_value: [''],
+      immex: [false],
+      immex_value: [''],
+      industria_automotriz: [false],
+      industria_automotriz_value: [''],
+      tipo_empresa_certificada: [''],
+      id_socio_comercial: [''],
+      socio_comercial: [false],
+      op_economico_aut: [false],
+      revision_origen: [false],
+      f_inicio:  [{ value: '', disabled: true }, [Validators.required]],
+      f_final: [ [{ value: '', disabled: true }, [Validators.required]],]
+    });
   }
 
   isValid(field: string) {
