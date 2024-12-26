@@ -2191,13 +2191,14 @@ a.text-danger {
 
 .bg-primary {
   color: $c-white;
-  background-color: #4a90e2;
+  background-color: $color-primario;
 }
 
 a.bg-primary {
   &:focus,
   &:hover {
-    background-color: #2275d7;
+    color: #D4C19C;
+    background-color: rgba(255, 255, 255, .15);
   }
 }
 
@@ -9647,7 +9648,6 @@ button.close {
   cursor: pointer;
   background: 0 0;
   border: 0;
-  -webkit-appearance: none;
 }
 
 .modal-content,
@@ -9657,7 +9657,7 @@ button.close {
 
 .modal {
   display: none;
-  position: fixed;
+  position: relative;
   z-index: 1050;
   -webkit-overflow-scrolling: touch;
   outline: 0;
@@ -10699,7 +10699,6 @@ hr.red:before {
 }
 
 body {
-  padding-top: 46px;
   font-weight: 300;
 }
 

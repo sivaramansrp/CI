@@ -1,4 +1,5 @@
 @import "bootstrap/scss/bootstrap";
+
 @import "_variables.scss";
 @import "_gobmx.scss";
 
@@ -32,22 +33,6 @@
   justify-content: end;
 }
 
-.navbar-gob {
-  background-color: $color-primario;
-  height: 60px;
-  color: $white;
-}
-
-.img-logo {
-  width: 128px;
-  height: 48px;
-}
-
-.align-icon {
-  display: grid;
-  align-items: center;
-}
-
 .btn-disabled {
   background-color: $color-primario;
   color: $white;
@@ -59,6 +44,14 @@
     color: $white;
   }
 }
+
+
+.required {
+  -webkit-transition: 1s; /* Safari */
+  transition: 1s;
+  box-shadow: 0 0 4px 1px #fe4a47;
+}
+
 
 
 

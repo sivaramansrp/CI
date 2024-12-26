@@ -8,7 +8,6 @@ import {
 import { Catalogo } from '../../../core/models/5701/catalogos.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CatalogosSelect } from '../../../core/models/shared/components.model';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'select-catalogos',

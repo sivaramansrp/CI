@@ -1,24 +1,22 @@
-<div class="rows" [formGroup]="FormCertificado">
-  <div class="col-md-4">
-    <div class="input-group">
-       <label for="cer">Certificado (cer)*:</label>
-      <input type="file" class="form-control" id="cer"  (change)="desencriptarKey('cer', $event)" accept=".pem">
-    </div>
-    <div class="input-group">
-       <label for="key">Clave privada (key)*:</label>
-      <input type="file" class="form-control" id="key" (change)="desencriptarKey('key', $event)" accept=".key">
-    </div>
-    <div class="input-group">
-       <label for="password">Contraseña de clave privada*:</label>
-      <input type="password" class="form-control" id="password" formControlName="password">
-
-      <div>
-        {{validation_message}}
+<div class="rows">
+  <form action="" [formGroup]="FormCertificado" (ngSubmit)="onSubmit()">
+    <div class="col-md-4">
+      <div class="input-group">
+        <label for="cer">Certificado (cer)*:</label>
+        <input type="file" class="form-control" id="cer" (change)="handleFile('cer', $event)" accept=".cer">
       </div>
+      <div class="input-group">
+        <label for="key">Clave privada (key)*:</label>
+        <input type="file" class="form-control" id="key" (change)="handleFile('key', $event)" accept=".key">
+      </div>
+
+      <div class="input-group">
+        <label for="password">Contraseña de clave privada*:</label>
+        <input type="password" class="form-control" [ngClass]="isValid('password') ? 'required' : ''" id="password"
+          formControlName="password">
+      </div>
+
+      <button type="submit" class="btn btn-primary mt-4">Firmar</button>
     </div>
-
-    <button type="button" class="btn btn-primary mt-4" (click)="validarCertificado()">Firmar</button>
-  </div>
-
-
+  </form>
 </div>

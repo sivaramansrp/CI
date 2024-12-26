@@ -18,6 +18,9 @@ import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
 import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
 import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';
+import { SharedModule } from '../../shared/shared.module';
+import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
+import { InputHoraComponent } from '../../shared/components/input-hora/input-hora.component';
 
 
 
@@ -32,6 +35,7 @@ import { AnexarDocumentosComponent } from '../../shared/components/anexar-docume
  ] ,
   imports: [
     CommonModule,
+    SharedModule,
     ServiciosExtraordinariosRoutingModule,
     RouterModule,
     NavComponent,
@@ -43,7 +47,9 @@ import { AnexarDocumentosComponent } from '../../shared/components/anexar-docume
     FirmaElectronicaComponent,
     SelectCatalogosComponent,
     SolicitanteComponent,
-    AnexarDocumentosComponent
+    AnexarDocumentosComponent,
+    InputCheckComponent,
+    InputHoraComponent,
 ],
 exports: [
   SolicitudComponent,

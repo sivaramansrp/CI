@@ -27,3 +27,44 @@ export const TEXTOS = {
   <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista.</p>`,
   ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
 };
+
+export const INDUSTRIA_AUTOMOTRIZ = {
+    label_nombre: 'Industria Automotriz',
+    maxlength: 10,
+    minlenght: 0,
+    required: false,
+    alfanumerico: true,
+  }
+
+  export const PROGRAMA_FOMENTO = {
+    label_nombre: 'Programa de fomento',
+    maxlength: 10,
+    minlenght: 0,
+    required: false,
+    alfanumerico: true,
+  }
+  export const IMMEX = {
+    label_nombre: 'IMMEX (Número/aaaa)',
+    maxlength: 10,
+    minlenght: 0,
+    required: false,
+    alfanumerico: true,
+  }
+
+  export const SOCIO_COMERCIAL = {
+    label_nombre: 'ID Socio comercial',
+    maxlength: 10,
+    minlenght: 0,
+    required: false,
+    alfanumerico: true,
+  }
+
+  export const HORA_INICIO = {
+    label_nombre: 'Hora inicio',
+    required: true,
+  }
+
+  export const HORA_FINAL = {
+    label_nombre: 'Hora final',
+    required: true,
+  }
