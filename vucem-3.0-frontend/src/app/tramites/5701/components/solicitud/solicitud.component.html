@@ -89,7 +89,7 @@
     <ng-titulo titulo="Datos del servicio" />
     <div class="row">
       <div class="col-md-4">
-        <input-fecha [setFecha]="fechaInicio()" [habilitado]="true" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
+        <input-fecha [datos]="fecha_inicio" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
       </div>
 
 
@@ -101,7 +101,7 @@
 
     <div class="row">
       <div class="col-md-4">
-        <input-fecha></input-fecha>
+        <input-fecha [datos]="fecha_final" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
       </div>
 
       <div class="col-md-4">

@@ -55,3 +55,9 @@ export interface InputHora {
   label_nombre: string;
   required: boolean;
 }
+
+export interface InputFecha {
+  label_nombre: string;
+  required: boolean;
+  habilitado: boolean
+}

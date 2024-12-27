@@ -92,3 +92,15 @@ export const INDUSTRIA_AUTOMOTRIZ = {
     'Sabado',
     'Domingo',
   ]
+
+  export const FECHA_INICIO = {
+    label_nombre: 'Fecha inicio',
+    required: true,
+    habilitado: true,
+  }
+
+  export const FECHA_FINAL = {
+    label_nombre: 'Fecha final',
+    required: true,
+    habilitado: true,
+  }

@@ -4,12 +4,15 @@ import {
   CatalogosSelect,
   DatosInputCheck,
   InputCheck,
+  InputFecha,
   InputHora,
 } from '../../../../core/models/shared/components.model';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import {
+  FECHA_FINAL,
+  FECHA_INICIO,
   HORA_FINAL,
   HORA_INICIO,
   IMMEX,
@@ -37,6 +40,9 @@ export class SolicitudComponent {
   hora_inicio: InputHora = HORA_INICIO;
   hora_final: InputHora = HORA_FINAL;
 
+  fecha_inicio: InputFecha = FECHA_INICIO;
+  fecha_final: InputFecha = FECHA_FINAL;
+
   FormSolicitud!: FormGroup;
 
   constructor(
@@ -57,17 +63,19 @@ export class SolicitudComponent {
   }
 
   cambioFechaInicio(nuevo_valor: string) {
-    this.FormSolicitud.get('f_inicio')?.setValue(
-      nuevo_valor,
-    );
-    this.FormSolicitud.get(
-      'f_inicio',
-    )?.markAsUntouched();
+    this.FormSolicitud.get('f_inicio')?.setValue(nuevo_valor);
+    this.FormSolicitud.get('f_inicio')?.markAsUntouched();
 
     console.log(this.FormSolicitud.get('f_inicio')?.value);
-
-
   }
+
+  cambioFechaFinal(nuevo_valor: string) {
+    this.FormSolicitud.get('f_final')?.setValue(nuevo_valor);
+    this.FormSolicitud.get('f_final')?.markAsUntouched();
+
+    console.log(this.FormSolicitud.get('f_final')?.value);
+  }
+
   crearFormSolicitud() {
     this.FormSolicitud = this.fb.group({
       tipo_solicitud: [{ value: '', requerid: true }, [Validators.required]],
@@ -94,8 +102,8 @@ export class SolicitudComponent {
       socio_comercial: [false],
       op_economico_aut: [false],
       revision_origen: [false],
-      f_inicio:  [{ value: '', disabled: true }, [Validators.required]],
-      f_final: [ [{ value: '', disabled: true }, [Validators.required]],]
+      f_inicio: [{ value: '', disabled: true }, [Validators.required]],
+      f_final: [[{ value: '', disabled: true }, [Validators.required]]],
     });
   }
 

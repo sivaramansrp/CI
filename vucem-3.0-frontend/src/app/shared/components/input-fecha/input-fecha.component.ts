@@ -1,15 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MESES, SEMANA } from '../../constantes/servicios-extraordinarios.enum';
 
 import moment from 'moment';
+import { InputFecha } from '../../../core/models/shared/components.model';
+
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker'
+
 @Component({
   selector: 'input-fecha',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    BsDatepickerModule,
   ],
   templateUrl: './input-fecha.component.html',
   styleUrl: './input-fecha.component.scss',
@@ -17,7 +22,8 @@ import moment from 'moment';
 export class InputFechaComponent {
   @Output() valorCambiado: EventEmitter<string> = new EventEmitter();
   @Input() setFecha!: string;
-  @Input() habilitado: boolean = true;
+  @Input({required: true}) datos!: InputFecha;
+
 
   meses = MESES;
   semana = SEMANA;
@@ -28,9 +34,11 @@ export class InputFechaComponent {
   Formulario!: FormGroup;
 
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder
+  ) {
     moment.locale('es');
-    this.generaanios();
+    // this.generaanios();
     const fechaActual = moment().format('DD/MM/YYYY');
     const fecha = fechaActual.split('/');
     const ObjectDate = moment.utc(`${fecha[2]}-${fecha[1]}-${fecha[0]}`);
@@ -50,12 +58,16 @@ export class InputFechaComponent {
     }
   }
 
+  get fecha_string() {
+    return this.Formulario.get('fecha_string')?.value;
+  }
+
   generarFormulario(fechaActual: moment.Moment) {
     this.Formulario = this.fb.group({
       dia: [fechaActual.date()],
       mes: [fechaActual.month() + 1],
       anio: [fechaActual.year()],
-      fecha_string: [fechaActual.format('DD/MM/YYYY')],
+      fecha_string: [],
       fecha_seleccionada: [fechaActual],
     });
     this.Formulario.controls['fecha_string'].disable();
@@ -181,7 +193,7 @@ export class InputFechaComponent {
   }
 
   mostrarCalendario() {
-    if (this.habilitado) {
+    if (this.datos.habilitado) {
       this.mostrar = true;
     }
   }
