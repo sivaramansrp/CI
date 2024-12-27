@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HoraFormatoDirective } from '../../directives/hora-formato/hora-formato.directive';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
@@ -13,18 +13,22 @@ import { InputHora } from '../../../core/models/shared/components.model';
   styleUrl: './input-hora.component.scss',
 })
 export class InputHoraComponent {
-  @Input({required: true}) datosHora!: InputHora;
+  @Input({ required: true }) datosHora!: InputHora;
 
   @Output() horaValor = new EventEmitter<string>();
 
-
-  hora: FormControl = new FormControl('' , [Validators.pattern(this.validacionesService.hora_pattern)]);
+  hora: FormControl = new FormControl('', [
+    Validators.pattern(this.validacionesService.hora_pattern),
+  ]);
 
   constructor(private validacionesService: ValidacionesFormularioService) {}
 
   ngOnInit() {
-    if(this.datosHora.required) {
-      this.hora.setValidators([Validators.required, Validators.pattern(this.validacionesService.hora_pattern)])
+    if (this.datosHora.required) {
+      this.hora.setValidators([
+        Validators.required,
+        Validators.pattern(this.validacionesService.hora_pattern),
+      ]);
       this.hora.updateValueAndValidity();
     }
   }

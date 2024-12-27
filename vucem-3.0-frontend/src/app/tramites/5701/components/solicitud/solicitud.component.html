@@ -18,7 +18,8 @@
             <label class="control-label" for="rfc_import_export">RFC*:</label>
             <input class="form-control" id="rfc_import_export" placeholder="RFC" type="text"
               formControlName="rfc_import_export"
-              [ngClass]="isValid(datos_importador_exportador,'rfc_import_export') ? 'required' : ''" appUppercase (blur)="busqueda_rfc()">
+              [ngClass]="isValid(datos_importador_exportador,'rfc_import_export') ? 'required' : ''" appUppercase
+              (blur)="busqueda_rfc()">
           </div>
         </div>
         <div class="col-md-8">
@@ -87,8 +88,6 @@
         </div>
       </div>
     </div>
-
-
 
     <ng-titulo titulo="Datos del servicio" />
     <div class="row">

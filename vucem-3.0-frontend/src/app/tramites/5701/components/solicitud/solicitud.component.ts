@@ -42,7 +42,7 @@ export class SolicitudComponent {
   socio_comercial: InputCheck = SOCIO_COMERCIAL;
 
   despacho_dd = DESPACHO_DD;
-  despacho_lda = DESPACHO_LDA
+  despacho_lda = DESPACHO_LDA;
 
   hora_inicio: InputHora = HORA_INICIO;
   hora_final: InputHora = HORA_FINAL;
@@ -118,10 +118,12 @@ export class SolicitudComponent {
         revision_origen: [false],
       }),
 
-      f_inicio: [{ value: '', disabled: true }, [Validators.required]],
-      f_final: [[{ value: '', disabled: true }, [Validators.required]]],
-      h_inicio: ['', Validators.required],
-      h_final: ['', Validators.required],
+      datos_servicio: this.fb.group({
+        f_inicio: [{ value: '', disabled: true }, [Validators.required]],
+        f_final: [[{ value: '', disabled: true }, [Validators.required]]],
+        h_inicio: ['', Validators.required],
+        h_final: ['', Validators.required],
+      }),
 
       despacho: this.fb.group({
         tipo: [''],
@@ -131,9 +133,9 @@ export class SolicitudComponent {
         nombre_recinto: [''],
         tipo_operacion: [''],
         patente: [''],
-        relacion_sociedad:[],
-        encargo_conferido:[],
-        domicilio: ['', Validators.required]
+        relacion_sociedad: [],
+        encargo_conferido: [],
+        domicilio: ['', Validators.required],
       }),
 
       mercancia: this.fb.group({
@@ -146,7 +148,7 @@ export class SolicitudComponent {
   }
 
   get datos_importador_exportador() {
-    return this.FormSolicitud.get('datos_importador_exportador') as FormGroup
+    return this.FormSolicitud.get('datos_importador_exportador') as FormGroup;
   }
 
   isValid(form: FormGroup, field: string) {
@@ -170,11 +172,14 @@ export class SolicitudComponent {
   }
 
   busqueda_rfc() {
-    const rfc = this.datos_importador_exportador.get('rfc_import_export')?.value;
+    const rfc =
+      this.datos_importador_exportador.get('rfc_import_export')?.value;
     // Aqui se hará la busqueda del rfc, para obtener el nombre
 
-    this.llenarCamposDesactivados(this.datos_importador_exportador, 'nombre_import_export');
-
+    this.llenarCamposDesactivados(
+      this.datos_importador_exportador,
+      'nombre_import_export'
+    );
   }
 
   llenarCamposDesactivados(form: FormGroup, field: string) {
@@ -182,8 +187,6 @@ export class SolicitudComponent {
     form.get(field)?.setValue('DAYNIZ YAEL VELASCO CORONEL');
     form.get(field)?.disable();
   }
-
-
 
   tipoSolicitud(e: Catalogo) {
     this.tipo_sol_seleccionada = e;
@@ -260,5 +263,4 @@ export class SolicitudComponent {
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
   }
-
 }
