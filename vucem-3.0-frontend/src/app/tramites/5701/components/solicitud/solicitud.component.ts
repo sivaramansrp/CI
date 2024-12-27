@@ -92,29 +92,32 @@ export class SolicitudComponent {
   crearFormSolicitud() {
     this.FormSolicitud = this.fb.group({
       tipo_solicitud: [{ value: '', requerid: true }, [Validators.required]],
-      rfc_import_export: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(this.validacionesService.rfc_pf_pattern),
+      datos_importador_exportador: this.fb.group({
+        rfc_import_export: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern(this.validacionesService.rfc_pf_pattern),
+          ],
         ],
-      ],
-      nombre_import_export: [
-        { value: '', disabled: true },
-        [Validators.required],
-      ],
-      nro_registro: ['', [Validators.required]],
-      programa_fomento: [false],
-      programa_fomento_value: [''],
-      immex: [false],
-      immex_value: [''],
-      industria_automotriz: [false],
-      industria_automotriz_value: [''],
-      tipo_empresa_certificada: [''],
-      id_socio_comercial: [''],
-      socio_comercial: [false],
-      op_economico_aut: [false],
-      revision_origen: [false],
+        nombre_import_export: [
+          { value: '', disabled: true },
+          [Validators.required],
+        ],
+        nro_registro: ['', [Validators.required]],
+        programa_fomento: [false],
+        programa_fomento_value: [''],
+        immex: [false],
+        immex_value: [''],
+        industria_automotriz: [false],
+        industria_automotriz_value: [''],
+        tipo_empresa_certificada: [''],
+        id_socio_comercial: [''],
+        socio_comercial: [false],
+        op_economico_aut: [false],
+        revision_origen: [false],
+      }),
+
       f_inicio: [{ value: '', disabled: true }, [Validators.required]],
       f_final: [[{ value: '', disabled: true }, [Validators.required]]],
       h_inicio: ['', Validators.required],
@@ -142,8 +145,12 @@ export class SolicitudComponent {
     });
   }
 
-  isValid(field: string) {
-    return this.validacionesService.isValidField(this.FormSolicitud, field);
+  get datos_importador_exportador() {
+    return this.FormSolicitud.get('datos_importador_exportador') as FormGroup
+  }
+
+  isValid(form: FormGroup, field: string) {
+    return this.validacionesService.isValidField(form, field);
   }
 
   getTiposSolicitud() {
@@ -161,6 +168,22 @@ export class SolicitudComponent {
         }
       });
   }
+
+  busqueda_rfc() {
+    const rfc = this.datos_importador_exportador.get('rfc_import_export')?.value;
+    // Aqui se hará la busqueda del rfc, para obtener el nombre
+
+    this.llenarCamposDesactivados(this.datos_importador_exportador, 'nombre_import_export');
+
+  }
+
+  llenarCamposDesactivados(form: FormGroup, field: string) {
+    form.get(field)?.enable();
+    form.get(field)?.setValue('DAYNIZ YAEL VELASCO CORONEL');
+    form.get(field)?.disable();
+  }
+
+
 
   tipoSolicitud(e: Catalogo) {
     this.tipo_sol_seleccionada = e;

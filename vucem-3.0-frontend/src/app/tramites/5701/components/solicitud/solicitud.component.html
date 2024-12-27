@@ -11,80 +11,83 @@
   <form [formGroup]="FormSolicitud" (ngSubmit)="validarFormulario()">
 
     <ng-titulo titulo="Datos del importador/exportador" />
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="control-label" for="rfc_import_export">RFC*:</label>
-          <input class="form-control" id="rfc_import_export" placeholder="RFC" type="text"
-            formControlName="rfc_import_export" [ngClass]="isValid('rfc_import_export') ? 'required' : ''" appUppercase>
+    <div formGroupName="datos_importador_exportador">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label" for="rfc_import_export">RFC*:</label>
+            <input class="form-control" id="rfc_import_export" placeholder="RFC" type="text"
+              formControlName="rfc_import_export"
+              [ngClass]="isValid(datos_importador_exportador,'rfc_import_export') ? 'required' : ''" appUppercase (blur)="busqueda_rfc()">
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="control-label" for="nombre_import_export">Nombre*:</label>
+            <input class="form-control" id="nombre_import_export" formControlName="nombre_import_export"
+              placeholder="Nombre" type="text" appUppercase>
+          </div>
         </div>
       </div>
-      <div class="col-md-8">
-        <div class="form-group">
-          <label class="control-label" for="nombre_import_export">Nombre*:</label>
-          <input class="form-control" id="nombre_import_export" formControlName="nombre_import_export"
-            placeholder="Nombre" type="text">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label" for="nombre_imp">Número de registro o programa:</label>
+            <input class="form-control" id="rfc_imp" placeholder="Numero de registro" type="text"
+              formControlName="nro_registro">
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <input-check [datos]="programa_fomento" (valores)="valorInputCheck($event)"></input-check>
+        </div>
+
+        <div class="col-md-4">
+          <input-check [datos]="immex" (valores)="valorInputCheck($event)"></input-check>
+        </div>
+
+        <div class="col-md-4">
+          <input-check [datos]="industria_automotriz" (valores)="valorInputCheck($event)"></input-check>
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-md-12">
+          <label for="certficacion_a">Tipo de empresa certificada</label>
+        </div>
+        <div class="col-md-4">
+          <input class="form-check-input me-3" type="radio" name="certficacion" value="a" id="certficacion_a">
+          <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación A:</label>
+        </div>
+        <div class="col-md-4">
+          <input class="form-check-input me-3" type="radio" name="certficacion" value="aa" id="certficacion_aa">
+          <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación AA:</label>
+        </div>
+        <div class="col-md-4">
+          <input class="form-check-input me-3" type="radio" name="certficacion" value="aaa" id="certficacion_aaa">
+          <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación AAA:</label>
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-md-4">
+          <input-check [datos]="socio_comercial" (valores)="valorInputCheck($event)"></input-check>
+        </div>
+
+        <div class="col-md-4">
+          <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
+          <label class="control-label" for="nombre_imp">Operador económico autorizado</label>
+        </div>
+
+        <div class="col-md-4">
+          <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
+          <label class="control-label" for="nombre_imp">Revisión en origen</label>
         </div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="control-label" for="nombre_imp">Número de registro o programa:</label>
-          <input class="form-control" id="rfc_imp" placeholder="Numero de registro" type="text"
-            formControlName="nro_registro">
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-4">
-        <input-check [datos]="programa_fomento" (valores)="valorInputCheck($event)"></input-check>
-      </div>
-
-      <div class="col-md-4">
-        <input-check [datos]="immex" (valores)="valorInputCheck($event)"></input-check>
-      </div>
-
-      <div class="col-md-4">
-        <input-check [datos]="industria_automotriz" (valores)="valorInputCheck($event)"></input-check>
-      </div>
-    </div>
-
-    <div class="row mt-2">
-      <div class="col-md-12">
-        <label for="certficacion_a">Tipo de empresa certificada</label>
-      </div>
-      <div class="col-md-4">
-        <input class="form-check-input me-3" type="radio" name="certficacion" value="a" id="certficacion_a">
-        <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación A:</label>
-      </div>
-      <div class="col-md-4">
-        <input class="form-check-input me-3" type="radio" name="certficacion" value="aa" id="certficacion_aa">
-        <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación AA:</label>
-      </div>
-      <div class="col-md-4">
-        <input class="form-check-input me-3" type="radio" name="certficacion" value="aaa" id="certficacion_aaa">
-        <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación AAA:</label>
-      </div>
-    </div>
-
-    <div class="row mt-3">
-      <div class="col-md-4">
-        <input-check [datos]="socio_comercial" (valores)="valorInputCheck($event)"></input-check>
-      </div>
-
-      <div class="col-md-4">
-        <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
-        <label class="control-label" for="nombre_imp">Operador económico autorizado</label>
-      </div>
-
-      <div class="col-md-4">
-        <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
-        <label class="control-label" for="nombre_imp">Revisión en origen</label>
-      </div>
-    </div>
 
 
     <ng-titulo titulo="Datos del servicio" />
