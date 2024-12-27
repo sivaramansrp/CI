@@ -11,6 +11,8 @@ import { ServiciosExtraordinariosService } from '../../../../core/services/5701/
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import {
+  DESPACHO_DD,
+  DESPACHO_LDA,
   FECHA_FINAL,
   FECHA_INICIO,
   HORA_FINAL,
@@ -38,6 +40,9 @@ export class SolicitudComponent {
   immex: InputCheck = IMMEX;
   industria_automotriz: InputCheck = INDUSTRIA_AUTOMOTRIZ;
   socio_comercial: InputCheck = SOCIO_COMERCIAL;
+
+  despacho_dd = DESPACHO_DD;
+  despacho_lda = DESPACHO_LDA
 
   hora_inicio: InputHora = HORA_INICIO;
   hora_final: InputHora = HORA_FINAL;
@@ -112,6 +117,28 @@ export class SolicitudComponent {
       revision_origen: [false],
       f_inicio: [{ value: '', disabled: true }, [Validators.required]],
       f_final: [[{ value: '', disabled: true }, [Validators.required]]],
+      h_inicio: ['', Validators.required],
+      h_final: ['', Validators.required],
+
+      despacho: this.fb.group({
+        tipo: [''],
+        autorizacion: [''],
+        aduana: [''],
+        seccion_aduanera: [''],
+        nombre_recinto: [''],
+        tipo_operacion: [''],
+        patente: [''],
+        relacion_sociedad:[],
+        encargo_conferido:[],
+        domicilio: ['', Validators.required]
+      }),
+
+      mercancia: this.fb.group({
+        pais_origen: ['', Validators.required],
+        pais_procedencia: ['', Validators.required],
+        descripcion: ['', Validators.required],
+        justificacion: ['', Validators.required],
+      }),
     });
   }
 
@@ -211,9 +238,4 @@ export class SolicitudComponent {
     this.colapsable = !this.colapsable;
   }
 
-  fechaSeleccionada() {
-    console.log();
-
-
-  }
 }

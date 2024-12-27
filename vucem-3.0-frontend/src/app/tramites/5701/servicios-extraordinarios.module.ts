@@ -22,6 +22,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
 import { InputHoraComponent } from '../../shared/components/input-hora/input-hora.component';
 import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
+import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
 
 
 
@@ -51,7 +52,8 @@ import { InputFechaComponent } from '../../shared/components/input-fecha/input-f
     AnexarDocumentosComponent,
     InputCheckComponent,
     InputHoraComponent,
-    InputFechaComponent
+    InputFechaComponent,
+    CrosslistComponent
 ],
 exports: [
   SolicitudComponent,

@@ -43,6 +43,7 @@ export const PROGRAMA_FOMENTO = {
   required: false,
   alfanumerico: true,
 };
+
 export const IMMEX = {
   label_nombre: 'IMMEX (Número/aaaa)',
   maxlength: 10,
@@ -53,6 +54,22 @@ export const IMMEX = {
 
 export const SOCIO_COMERCIAL = {
   label_nombre: 'ID Socio comercial',
+  maxlength: 10,
+  minlenght: 0,
+  required: false,
+  alfanumerico: true,
+};
+
+export const DESPACHO_LDA = {
+  label_nombre: 'RFC autorización LDA',
+  maxlength: 10,
+  minlenght: 0,
+  required: false,
+  alfanumerico: true,
+};
+
+export const DESPACHO_DD = {
+  label_nombre: 'Autorizacion DDEX',
   maxlength: 10,
   minlenght: 0,
   required: false,
@@ -114,3 +131,4 @@ export const FECHA_FINAL = {
   required: true,
   habilitado: true,
 };
+
