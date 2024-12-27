@@ -29,78 +29,88 @@ export const TEXTOS = {
 };
 
 export const INDUSTRIA_AUTOMOTRIZ = {
-    label_nombre: 'Industria Automotriz',
-    maxlength: 10,
-    minlenght: 0,
-    required: false,
-    alfanumerico: true,
-  }
+  label_nombre: 'Industria Automotriz',
+  maxlength: 10,
+  minlenght: 0,
+  required: false,
+  alfanumerico: true,
+};
 
-  export const PROGRAMA_FOMENTO = {
-    label_nombre: 'Programa de fomento',
-    maxlength: 10,
-    minlenght: 0,
-    required: false,
-    alfanumerico: true,
-  }
-  export const IMMEX = {
-    label_nombre: 'IMMEX (Número/aaaa)',
-    maxlength: 10,
-    minlenght: 0,
-    required: false,
-    alfanumerico: true,
-  }
+export const PROGRAMA_FOMENTO = {
+  label_nombre: 'Programa de fomento',
+  maxlength: 10,
+  minlenght: 0,
+  required: false,
+  alfanumerico: true,
+};
+export const IMMEX = {
+  label_nombre: 'IMMEX (Número/aaaa)',
+  maxlength: 10,
+  minlenght: 0,
+  required: false,
+  alfanumerico: true,
+};
 
-  export const SOCIO_COMERCIAL = {
-    label_nombre: 'ID Socio comercial',
-    maxlength: 10,
-    minlenght: 0,
-    required: false,
-    alfanumerico: true,
-  }
+export const SOCIO_COMERCIAL = {
+  label_nombre: 'ID Socio comercial',
+  maxlength: 10,
+  minlenght: 0,
+  required: false,
+  alfanumerico: true,
+};
 
-  export const HORA_INICIO = {
-    label_nombre: 'Hora inicio',
-    required: true,
-  }
+export const HORA_INICIO = {
+  label_nombre: 'Hora inicio',
+  required: true,
+};
 
-  export const HORA_FINAL = {
-    label_nombre: 'Hora final',
-    required: true,
-  }
-  export const MESES = [
-    { id: '1', mes: 'Enero' },
-    { id: '2', mes: 'Febrero' },
-    { id: '3', mes: 'Marzo' },
-    { id: '4', mes: 'Abril' },
-    { id: '5', mes: 'Mayo' },
-    { id: '6', mes: 'Junio' },
-    { id: '7', mes: 'Julio' },
-    { id: '8', mes: 'Agosto' },
-    { id: '9', mes: 'Septiembre' },
-    { id: '10', mes: 'Octubre' },
-    { id: '11', mes: 'Noviembre' },
-    { id: '12', mes: 'Diciembre' },
-  ]
+export const HORA_FINAL = {
+  label_nombre: 'Hora final',
+  required: true,
+};
+export const MESES = [
+  { id: '1', mes: 'Enero' },
+  { id: '2', mes: 'Febrero' },
+  { id: '3', mes: 'Marzo' },
+  { id: '4', mes: 'Abril' },
+  { id: '5', mes: 'Mayo' },
+  { id: '6', mes: 'Junio' },
+  { id: '7', mes: 'Julio' },
+  { id: '8', mes: 'Agosto' },
+  { id: '9', mes: 'Septiembre' },
+  { id: '10', mes: 'Octubre' },
+  { id: '11', mes: 'Noviembre' },
+  { id: '12', mes: 'Diciembre' },
+];
 
-  export const SEMANA = [
-    'Lunes',
-    'Martes',
-    'Miercoles',
-    'Jueves',
-    'Viernes',
-    'Sabado',
-    'Domingo',
-  ]
+export const SEMANA = [
+  'Lunes',
+  'Martes',
+  'Miercoles',
+  'Jueves',
+  'Viernes',
+  'Sabado',
+  'Domingo',
+];
 
-  export const FECHA_INICIO = {
-    label_nombre: 'Fecha inicio',
-    required: true,
-    habilitado: true,
-  }
+export const SEMANA_D = [
+  'Domingo',
+  'Lunes',
+  'Martes',
+  'Miercoles',
+  'Jueves',
+  'Viernes',
+  'Sabado',
+];
 
-  export const FECHA_FINAL = {
-    label_nombre: 'Fecha final',
-    required: true,
-    habilitado: true,
-  }
+export const FECHA_INICIO = {
+  label_nombre: 'Fecha inicio',
+  required: true,
+  habilitado: true,
+};
+
+export const FECHA_FINAL = {
+  label_nombre: 'Fecha final',
+  required: true,
+  habilitado: true,
+};

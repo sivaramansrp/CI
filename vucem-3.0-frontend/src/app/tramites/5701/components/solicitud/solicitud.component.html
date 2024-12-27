@@ -86,6 +86,7 @@
       </div>
     </div>
 
+
     <ng-titulo titulo="Datos del servicio" />
     <div class="row">
       <div class="col-md-4">
@@ -107,7 +108,46 @@
       <div class="col-md-4">
         <input-hora [datosHora]="hora_final" (horaValor)="obtenerHora($event, 'f')"></input-hora>
       </div>
+    </div>
 
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel-group ficha-collapse" id="accordion">
+          <div class="panel panel-default">
+            <div class="panel-heading" (click)="mostrar_colapsable()">
+              <h4 class="panel-title">
+                <a>
+                  Especifique los días que se utilizarán dentro del periodo*:
+                </a>
+              </h4>
+              <button type="button" class="collpase-button collapsed"></button>
+            </div>
+            @if(colapsable){
+            <div class="panel-collapse collapse in" id="panel-01">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-md-3">
+
+                    <select class="form-select" multiple aria-label="Multiple select example" (change)="fechaSeleccionada()">
+                      @for (fecha of selectRangoDias; track $index) {
+                        <option value="fecha" >{{fecha}}</option>
+                      }
+                      <!-- <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option> -->
+                    </select>
+
+                  </div>
+                  <div class="col-md-3"></div>
+                  <div class="col-md-3"></div>
+                </div>
+
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
     </div>
 
 

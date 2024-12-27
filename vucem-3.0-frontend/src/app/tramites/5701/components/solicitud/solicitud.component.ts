@@ -18,6 +18,8 @@ import {
   IMMEX,
   INDUSTRIA_AUTOMOTRIZ,
   PROGRAMA_FOMENTO,
+  SEMANA,
+  SEMANA_D,
   SOCIO_COMERCIAL,
 } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 
@@ -45,6 +47,10 @@ export class SolicitudComponent {
 
   FormSolicitud!: FormGroup;
 
+  colapsable: boolean = false;
+
+  selectRangoDias: Array<string> = [];
+
   constructor(
     private sExtraordinarios: ServiciosExtraordinariosService,
     private fb: FormBuilder,
@@ -57,6 +63,12 @@ export class SolicitudComponent {
     this.getTiposSolicitud();
   }
 
+  get datos_servicio() {
+    return this.tipo_sol_seleccionada && this.tipo_sol_seleccionada.id !== 1
+      ? true
+      : false;
+  }
+
   fechaInicio() {
     const fecha_inicio = this.FormSolicitud.get('f_inicio')?.value;
     return fecha_inicio;
@@ -65,15 +77,11 @@ export class SolicitudComponent {
   cambioFechaInicio(nuevo_valor: string) {
     this.FormSolicitud.get('f_inicio')?.setValue(nuevo_valor);
     this.FormSolicitud.get('f_inicio')?.markAsUntouched();
-
-    console.log(this.FormSolicitud.get('f_inicio')?.value);
   }
 
   cambioFechaFinal(nuevo_valor: string) {
     this.FormSolicitud.get('f_final')?.setValue(nuevo_valor);
     this.FormSolicitud.get('f_final')?.markAsUntouched();
-
-    console.log(this.FormSolicitud.get('f_final')?.value);
   }
 
   crearFormSolicitud() {
@@ -129,6 +137,7 @@ export class SolicitudComponent {
 
   tipoSolicitud(e: Catalogo) {
     this.tipo_sol_seleccionada = e;
+    console.log(this.tipo_sol_seleccionada);
   }
 
   validarFormulario() {
@@ -148,6 +157,63 @@ export class SolicitudComponent {
       console.log('Hora inicial:' + e);
     } else if (tipo === 'f') {
       console.log('Hora final:' + e);
+      this.rango_fechas();
     }
+  }
+
+  rango_fechas() {
+    const f_inicial = this.FormSolicitud.get('f_inicio')?.value;
+    const f_final = this.FormSolicitud.get('f_final')?.value;
+
+    const formato_fi = this.formato_fecha(f_inicial);
+    const formato_ff = this.formato_fecha(f_final);
+
+    this.selectRangoDias = this.obtenerDiasEntreFechas(formato_fi, formato_ff);
+    this.colapsable = true;
+
+    // console.log(this.obtenerDiasEntreFechas(formato_fi, formato_ff));
+  }
+
+  obtenerDiasEntreFechas(f_inicio: string, f_final: string): Array<string> {
+    const [dia_in, mes_in, anio_in] = f_inicio.split('-').map(Number);
+    const [dia_fi, mes_fi, anio_fi] = f_final.split('-').map(Number);
+
+    let fechaActual = new Date(anio_in, mes_in - 1, dia_in);
+    const fe_final = new Date(anio_fi, mes_fi - 1, dia_fi);
+    const dias = [];
+
+    while (fechaActual <= new Date(fe_final)) {
+      // Formatear la fecha actual en formato Día de la semana, DD/MM/YYYY, HH:MM
+      const diaSemana = this.obtenerNombreDiaSemana(fechaActual);
+      const dia = String(fechaActual.getDate()).padStart(2, '0');
+      const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
+      const año = fechaActual.getFullYear();
+      const horas = String(fechaActual.getHours()).padStart(2, '0');
+      const minutos = String(fechaActual.getMinutes()).padStart(2, '0');
+      dias.push(`${diaSemana}, ${dia}/${mes}/${año}, ${horas}:${minutos}`); // Incrementar la fecha en un día
+      fechaActual.setDate(fechaActual.getDate() + 1);
+    }
+
+    return dias;
+  }
+
+  obtenerNombreDiaSemana(fecha: Date) {
+    const diasSemana = SEMANA_D;
+    return diasSemana[fecha.getDay()];
+  }
+
+  formato_fecha(fecha: string): string {
+    const [anio, mes, dia] = fecha.split('/');
+    return `${anio}-${mes}-${dia}`;
+  }
+
+  mostrar_colapsable() {
+    this.colapsable = !this.colapsable;
+  }
+
+  fechaSeleccionada() {
+    console.log();
+
+
   }
 }

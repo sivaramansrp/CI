@@ -1,7 +1,7 @@
 <div class="form-group">
-  <label for="">{{datos.label_nombre}} {{datos.required ? '*' : ''}}:</label>
+  <label for="input_fecha">{{datos.label_nombre}} {{datos.required ? '*' : ''}}:</label>
   <div class="d-flex justify-content-start" [formGroup]="Formulario">
-    <div class="input-group-text">
+    <div class="input-group-text" id="input_fecha">
       <div class="fecha">
         <span>{{fecha_string}}</span>
       </div>
