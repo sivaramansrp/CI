@@ -38,6 +38,7 @@ export class InputHoraComponent {
   }
 
   onBlurEvent() {
+    console.log(this.hora);
     const valor = this.hora.value;
     this.horaValor.emit(valor);
   }

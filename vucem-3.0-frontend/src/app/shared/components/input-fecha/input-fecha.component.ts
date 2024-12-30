@@ -38,7 +38,7 @@ export class InputFechaComponent {
     private fb: FormBuilder
   ) {
     moment.locale('es');
-    // this.generaanios();
+    this.generaanios();
     const fechaActual = moment().format('DD/MM/YYYY');
     const fecha = fechaActual.split('/');
     const ObjectDate = moment.utc(`${fecha[2]}-${fecha[1]}-${fecha[0]}`);

@@ -29,23 +29,15 @@ export class SelectCatalogosComponent {
 
   @Output() valorSelección = new EventEmitter<Catalogo>();
 
-  tipo_solicitud: FormControl = new FormControl('')
-
-  // public FormCatalogo: FormGroup = this.fb.group({
-  //   seleccion: [0],
-  // });
-
-  constructor(
-    private validacionesService: ValidacionesFormularioService
-  ) {}
+  tipo_solicitud: FormControl = new FormControl('');
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
+
     if (changes['catalogos_datos'].currentValue) {
       this.catalogos_datos = changes['catalogos_datos'].currentValue;
       if (this.catalogos_datos.required) {
-        this.tipo_solicitud.setValidators([
-          Validators.required,
-        ]);
+        this.tipo_solicitud.setValidators([Validators.required]);
         this.tipo_solicitud.updateValueAndValidity();
       }
     }
@@ -56,9 +48,7 @@ export class SelectCatalogosComponent {
   }
 
   seleccion() {
-    const opcionSeleccionada = parseInt(
-      this.tipo_solicitud.value
-    );
+    const opcionSeleccionada = parseInt(this.tipo_solicitud.value);
 
     let seleccion: Catalogo;
 

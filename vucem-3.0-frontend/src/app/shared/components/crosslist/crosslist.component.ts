@@ -48,6 +48,13 @@ export class CrosslistComponent {
     this.fs_datos = [...this.fechas];
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes['fechas'].currentValue){
+      this.fechas = [...changes['fechas'].currentValue];
+      this.fs_datos = [...this.fechas]
+    }
+  }
+
   agregar(type: string) {
     if (type === 't') {
       this.fs_seleccionadas = [...this.fechas];

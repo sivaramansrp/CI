@@ -23,6 +23,8 @@ import { InputCheckComponent } from '../../shared/components/input-check/input-c
 import { InputHoraComponent } from '../../shared/components/input-hora/input-hora.component';
 import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
 import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
+import { AgregarTransporteComponent } from "../../shared/components/agregar-transporte/agregar-transporte.component";
+import { AgregarPersonasComponent } from '../../shared/components/agregar-personas/agregar-personas.component';
 
 
 
@@ -53,7 +55,9 @@ import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.
     InputCheckComponent,
     InputHoraComponent,
     InputFechaComponent,
-    CrosslistComponent
+    CrosslistComponent,
+    AgregarTransporteComponent,
+    AgregarPersonasComponent
 ],
 exports: [
   SolicitudComponent,

@@ -74,19 +74,12 @@ export class SolicitudComponent {
       : false;
   }
 
-  fechaInicio() {
-    const fecha_inicio = this.FormSolicitud.get('f_inicio')?.value;
-    return fecha_inicio;
+  get datos_importador_exportador() {
+    return this.FormSolicitud.get('datos_importador_exportador') as FormGroup;
   }
 
-  cambioFechaInicio(nuevo_valor: string) {
-    this.FormSolicitud.get('f_inicio')?.setValue(nuevo_valor);
-    this.FormSolicitud.get('f_inicio')?.markAsUntouched();
-  }
-
-  cambioFechaFinal(nuevo_valor: string) {
-    this.FormSolicitud.get('f_final')?.setValue(nuevo_valor);
-    this.FormSolicitud.get('f_final')?.markAsUntouched();
+  get d_servicio() {
+    return this.FormSolicitud.get('datos_servicio') as FormGroup;
   }
 
   crearFormSolicitud() {
@@ -144,11 +137,37 @@ export class SolicitudComponent {
         descripcion: ['', Validators.required],
         justificacion: ['', Validators.required],
       }),
+
+      pedimento: this.fb.group({
+        id_pedimento: [''],
+        datos_pedimento: this.fb.group({
+          patente: [],
+          pedimento: [],
+          aduana: [],
+          tipo_pedimento: [],
+          numeros: [],
+          comprobante_valor: [],
+          pedimento_validado: [],
+        })
+      }),
+
+
     });
   }
 
-  get datos_importador_exportador() {
-    return this.FormSolicitud.get('datos_importador_exportador') as FormGroup;
+  fechaInicio() {
+    const fecha_inicio = this.d_servicio.get('f_inicio')?.value;
+    return fecha_inicio;
+  }
+
+  cambioFechaInicio(nuevo_valor: string) {
+    this.d_servicio.get('f_inicio')?.setValue(nuevo_valor);
+    this.d_servicio.get('f_inicio')?.markAsUntouched();
+  }
+
+  cambioFechaFinal(nuevo_valor: string) {
+    this.d_servicio.get('f_final')?.setValue(nuevo_valor);
+    this.d_servicio.get('f_final')?.markAsUntouched();
   }
 
   isValid(form: FormGroup, field: string) {
@@ -208,23 +227,45 @@ export class SolicitudComponent {
   obtenerHora(e: string, tipo: string) {
     if (tipo === 'i') {
       console.log('Hora inicial:' + e);
+      this.d_servicio.get('h_inicio')?.setValue(e);
     } else if (tipo === 'f') {
-      console.log('Hora final:' + e);
+
+
+
+      switch (this.tipo_sol_seleccionada.id) {
+        case 1:
+          this.d_servicio.get('h_final')?.setValue(e);
+
+          const f_inicial = this.d_servicio.get('f_inicio')?.value;
+          const f_final = this.d_servicio.get('f_final')?.value;
+
+          console.log(f_inicial + e);
+          console.log(f_final);
+
+
+          console.log(this.tipo_sol_seleccionada.value);
+          break;
+        case 2:
+          console.log(this.tipo_sol_seleccionada.value);
+          break;
+        case 3:
+          console.log(this.tipo_sol_seleccionada.value);
+          break;
+      }
       this.rango_fechas();
     }
   }
 
   rango_fechas() {
-    const f_inicial = this.FormSolicitud.get('f_inicio')?.value;
-    const f_final = this.FormSolicitud.get('f_final')?.value;
+    const f_inicial = this.d_servicio.get('f_inicio')?.value;
+    const f_final = this.d_servicio.get('f_final')?.value;
 
     const formato_fi = this.formato_fecha(f_inicial);
     const formato_ff = this.formato_fecha(f_final);
 
     this.selectRangoDias = this.obtenerDiasEntreFechas(formato_fi, formato_ff);
-    this.colapsable = true;
 
-    // console.log(this.obtenerDiasEntreFechas(formato_fi, formato_ff));
+    this.colapsable = true;
   }
 
   obtenerDiasEntreFechas(f_inicio: string, f_final: string): Array<string> {
@@ -241,12 +282,9 @@ export class SolicitudComponent {
       const dia = String(fechaActual.getDate()).padStart(2, '0');
       const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
       const año = fechaActual.getFullYear();
-      const horas = String(fechaActual.getHours()).padStart(2, '0');
-      const minutos = String(fechaActual.getMinutes()).padStart(2, '0');
-      dias.push(`${diaSemana}, ${dia}/${mes}/${año}, ${horas}:${minutos}`); // Incrementar la fecha en un día
+      dias.push(`${diaSemana}, ${dia}/${mes}/${año}`); // Incrementar la fecha en un día
       fechaActual.setDate(fechaActual.getDate() + 1);
     }
-
     return dias;
   }
 

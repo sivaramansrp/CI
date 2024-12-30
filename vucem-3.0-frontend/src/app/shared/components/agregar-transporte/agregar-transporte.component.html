@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-md-4">
+    <select-catalogos [catalogos_datos]="datos_tipos_transporte"></select-catalogos>
+  </div>
+  <div class="col md-4 d-flex align-items-end">
+    <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+    aria-controls="offcanvasRight" >Agregar</button>
+  </div>
+
+</div>
+<div class="row mt-4">
+  <div class="col-md-12">
+    <c-tabla></c-tabla>
+  </div>
+</div>
+
+<!-- Offcanvas para ver documento -->
+<div class="offcanvas offcanvas-end offcanvas-size-xl" tabindex="-5" id="offcanvasRight" data-bs-backdrop="static"
+  aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="staticBackdropLabel">Agregar transporte</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+
+    </div>
+  </div>
+</div>
+
+
