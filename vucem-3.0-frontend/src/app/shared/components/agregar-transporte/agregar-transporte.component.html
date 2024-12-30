@@ -1,10 +1,11 @@
 <div class="row">
   <div class="col-md-4">
-    <select-catalogos [catalogos_datos]="datos_tipos_transporte"></select-catalogos>
+    <select-catalogos [catalogos_datos]="datos_tipos_transporte"
+      (valorSelección)="tipoTransporte($event)"></select-catalogos>
   </div>
   <div class="col md-4 d-flex align-items-end">
     <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-    aria-controls="offcanvasRight" >Agregar</button>
+      aria-controls="offcanvasRight" (click)="crearFormulario()">Agregar</button>
   </div>
 
 </div>
@@ -23,9 +24,35 @@
   </div>
   <div class="offcanvas-body">
     <div>
+      <form [formGroup]="FormTransporte">
+        @for (item of campos_formulario; track $index) {
+          @if (item.tipo_input === 'text') {
 
+            <div [ngClass]="item.class">
+              <label for="{{item.campo}}">{{item.label_nombre}}:</label>
+              <input class="form-control" type="text" name="" id="{{item.campo}}" [formControlName]="item.campo">
+            </div>
+          } @else if (item.tipo_input === 'date') {
+            <!-- <input-fecha [datos]="item"></input-fecha> -->
+
+
+          }
+          @else if (item.tipo_input === 'textarea') {
+            <div [ngClass]="item.class" class="mt-3">
+              <label for="{{item.campo}}">{{item.label_nombre}}:</label>
+              <textarea  class="form-control"  name="" id="{{item.label_nombre}}" rows="5" [formControlName]="item.campo"></textarea>
+            </div>
+          }
+        }
+      </form>
     </div>
   </div>
+
+  <div class="offcanvas-footer">
+    <div class="botones">
+      <button type="button" class="btn btn-default">Limpiar</button>
+      <button type="button" class="btn btn-primary">Agregar</button>
+    </div>
+
+  </div>
 </div>
-
-
