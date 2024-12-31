@@ -21,12 +21,6 @@ jobs:
         with:
           node-version: 18.20.5
 
-      - name: Setup Java 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
       - name: Download SonarScanner
         run: |
           cd vucem-3.0-frontend
@@ -38,6 +32,12 @@ jobs:
           export SONAR_PATH="./sonar-scanner-4.8.0.2856-linux/bin"
           echo "Sonar Path"
           echo "$SONAR_PATH"
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
           
       - name: Verify SonarScanner Installation
         run: |
