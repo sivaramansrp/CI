@@ -46,7 +46,7 @@ jobs:
           ${{ env.SONAR_PATH }}/sonar-scanner \
             -Dsonar.projectKey=v30_front \
             -Dsonar.organization=v30 \
-            -Dsonar.sources=vucem-3.0-frontend/src \
+            -Dsonar.sources=. \
             -Dsonar.host.url=https://sonar.ultrasist.net \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.verbose=true
