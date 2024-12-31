@@ -21,29 +21,29 @@ jobs:
         with:
           node-version: 18.20.5
 
-      - name: Define SonarScanner Version
-        run: echo "SONAR_VERSION=sonar-scanner-6.2.1.4610-linux-x64" >> $GITHUB_ENV
+      - name: Set Sonar Version Number
+        run: echo "VERSION=6.2.1.4610-linux-x64" >> $GITHUB_ENV
         
-      - name: Set SonarScanner Path
-        run: echo "SONAR_PATH=./${{ env.SONAR_VERSION }}/bin" >> $GITHUB_ENV
+      - name: Define SonarScanner full name
+        run: echo "SONAR=sonar-scanner-${{ env.VERSION }}" >> $GITHUB_ENV
         
       - name: Download SonarScanner
         run: |
           cd vucem-3.0-frontend
-          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.2.1.4610-linux-x64.zip
+          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.VERSION }}.zip
           unzip sonar-scanner.zip
           
       - name: Verify SonarScanner Installation
         run: |
           cd vucem-3.0-frontend
-          ${{ env.SONAR_PATH }}/sonar-scanner --version
+          ./${{ env.SONAR }}/bin/sonar-scanner --version
         
       - name: Run SonarQube Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           cd vucem-3.0-frontend
-          ${{ env.SONAR_PATH }}/sonar-scanner \
+          ./${{ env.SONAR }}/bin/sonar-scanner \
             -Dsonar.projectKey=v30_front \
             -Dsonar.organization=v30 \
             -Dsonar.sources=. \
