@@ -9,6 +9,8 @@ import { HeaderComponent } from './shared/components/header/header.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideToastr, ToastrModule } from 'ngx-toastr';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.component';
+import { InformacionUsuarioComponent } from "./shared/components/informacion-usuario/informacion-usuario.component";
 
 @NgModule({
   declarations: [AppComponent],
@@ -17,11 +19,14 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     AppRoutingModule,
     NavComponent,
     HttpClientModule,
+    BreadcrumbComponent,
     HeaderComponent,
     FooterComponent,
+    InformacionUsuarioComponent,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
-  ],
+    InformacionUsuarioComponent
+],
   providers: [
     provideToastr({
       positionClass: 'toast-top-right',

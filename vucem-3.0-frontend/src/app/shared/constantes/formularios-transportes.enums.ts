@@ -51,13 +51,38 @@ export const CARRETERO = [
 ];
 
 export const FERROVIARIO = [
-  'emp_transportitsa',
-  'n_carta_porte',
-  'f_carta_porte',
-  'marca',
-  'modelo',
-  'placas',
-  'contenedor',
+  {
+    label_nombre: 'Número de BL',
+    campo: 'n_bl',
+    class: 'col-md-6',
+    tipo_input: 'text'
+  },
+  {
+    label_nombre: 'Tipo de equipo',
+    campo: 'tipo_equipo',
+    class: 'col-md-6',
+    tipo_input: 'select'
+  },
+  {
+    label_nombre: 'Iniciales de equipo',
+    campo: 'i_equipo',
+    class: 'col-md-6',
+    tipo_input: 'text'
+  },
+  {
+    label_nombre: 'Numero de equipo',
+    campo: 'n_equipo',
+    class: 'col-md-6',
+    tipo_input: 'text'
+  },
+
+
+  {
+    label_nombre: 'Observaciones',
+    campo: 'observaciones',
+    class: 'col-md-12',
+    tipo_input: 'textarea'
+  },
 ];
 
 export const PEATONAL = [
@@ -99,3 +124,4 @@ export const OTRO = [
   'placas',
   'contenedor',
 ];
+
