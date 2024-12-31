@@ -43,17 +43,21 @@ jobs:
         run: |
           curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
           unzip sonar-scanner.zip -d $HOME
-          export PATH="$HOME/sonar-scanner-4.8.0.2856-linux/bin:$PATH"
-          echo "$PATH"
+          echo $(pwd)
+          export SONAR_PATH="$HOME/sonar-scanner-4.8.0.2856-linux/bin:
+          echo "$SONAR_PATH"
           
       - name: Verify SonarScanner Installation
-        run: sonar-scanner --version
+        run: |
+          export SONAR_PATH="/home/runner/sonar-scanner-4.8.0.2856-linux/bin"
+          $SONAR_PATH/sonar-scanner --version
         
       - name: Run SonarQube Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          export PATH="$HOME/sonar-scanner-4.8.0.2856-linux/bin:$PATH"
+          export SONAR_PATH="/home/runner/sonar-scanner-4.8.0.2856-linux/bin"
+          export PATH="$SONAR_PATH:$PATH"
           sonar-scanner \
             -Dsonar.projectKey=v30_front \
             -Dsonar.organization=v30 \
