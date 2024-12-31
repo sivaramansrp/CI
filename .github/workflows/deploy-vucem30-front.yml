@@ -39,6 +39,24 @@ jobs:
           cd vucem-3.0-frontend
           npx ng build --configuration=production
 
+      - name: Download SonarScanner
+        run: |
+          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+          unzip sonar-scanner.zip
+          export PATH="$PATH:$(pwd)/sonar-scanner-4.8.0.2856-linux/bin"
+
+      - name: Run SonarQube Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner \
+            -Dsonar.projectKey=v30_api \
+            -Dsonar.organization=v30 \
+            -Dsonar.sources=vucem-3.0-frontend/src \
+            -Dsonar.host.url=https://sonar.ultrasist.net \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.verbose=true
+
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
@@ -53,12 +71,9 @@ jobs:
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
-          # relative path to the place where source code with Dockerfile is located
           context: ./vucem-3.0-frontend/
-          # Note: tags has to be all lower-case
           tags: |
             ghcr.io/vucem30/dockerized-front-vucem30:latest
-          # build on feature branches, push only on develop branch
           push: ${{ github.ref == 'refs/heads/develop' }}
 
       - name: Execute remote command (last one)
