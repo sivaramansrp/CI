@@ -50,7 +50,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sonar-scanner \
-            -Dsonar.projectKey=v30_api \
+            -Dsonar.projectKey=v30_front \
             -Dsonar.organization=v30 \
             -Dsonar.sources=vucem-3.0-frontend/src \
             -Dsonar.host.url=https://sonar.ultrasist.net \
