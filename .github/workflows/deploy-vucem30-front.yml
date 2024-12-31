@@ -32,17 +32,10 @@ jobs:
           cd vucem-3.0-frontend
           curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.2.1.4610-linux-x64.zip
           unzip sonar-scanner.zip
-          echo "Lugar en el que se descompactó sonar-scanner:"
-          echo $(pwd)
-
-          export SONAR_PATH="./${{ env.SONAR_VERSION }}/bin"
-          echo "Ruta de Sonar:"
-          echo "${{ env.SONAR_PATH }}"
           
       - name: Verify SonarScanner Installation
         run: |
           cd vucem-3.0-frontend
-          export SONAR_PATH="./${{ env.SONAR_VERSION }}/bin"
           ${{ env.SONAR_PATH }}/sonar-scanner --version
         
       - name: Run SonarQube Analysis
@@ -50,7 +43,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           cd vucem-3.0-frontend
-          export PATH="${{ env.SONAR_PATH }}:$PATH"
           ${{ env.SONAR_PATH }}/sonar-scanner \
             -Dsonar.projectKey=v30_front \
             -Dsonar.organization=v30 \
