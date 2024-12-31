@@ -24,7 +24,7 @@ jobs:
       - name: Download SonarScanner
         run: |
           cd vucem-3.0-frontend
-          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.1.0.4477-linux.zip
+          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.2.1.4610-linux-x64.zip
           unzip sonar-scanner.zip
           echo "Lugar en el que se descompactó sonar-scanner:"
           echo $(pwd)
