@@ -53,13 +53,21 @@ export class WizardComponent {
   }
 
   siguiente(activo: boolean = true) {
+    console.log(`siguiente: ${this.i_actual}`);
+
     this.i_actual = this.i_actual === this.maximo ? this.i_actual : this.i_actual + 1;
     this.lista[this.i_actual].activo = activo;
+    console.log(`siguiente: ${this.i_actual}`);
 
     if( this.i_actual === (this.maximo)) {
       this.lista[this.i_actual].completado = activo;
     }
   }
 
-  atras() {}
+  atras() {
+    console.log(`atras: ${this.i_actual}`);
+    this.lista[this.i_actual].activo = false;
+    this.lista[this.i_actual].completado = false;
+
+  }
 }
