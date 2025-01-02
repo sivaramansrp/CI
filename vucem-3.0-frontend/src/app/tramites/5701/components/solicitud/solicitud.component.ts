@@ -209,11 +209,9 @@ export class SolicitudComponent {
 
   tipoSolicitud(e: Catalogo) {
     this.tipo_sol_seleccionada = e;
-    console.log(this.tipo_sol_seleccionada);
   }
 
   validarFormulario() {
-    console.log(this.FormSolicitud.controls);
     if (this.FormSolicitud.invalid) {
       this.FormSolicitud.markAllAsTouched();
       return;
@@ -226,7 +224,6 @@ export class SolicitudComponent {
 
   obtenerHora(e: string, tipo: string) {
     if (tipo === 'i') {
-      console.log('Hora inicial:' + e);
       this.d_servicio.get('h_inicio')?.setValue(e);
     } else if (tipo === 'f') {
 
@@ -239,11 +236,8 @@ export class SolicitudComponent {
           const f_inicial = this.d_servicio.get('f_inicio')?.value;
           const f_final = this.d_servicio.get('f_final')?.value;
 
-          console.log(f_inicial + e);
-          console.log(f_final);
 
 
-          console.log(this.tipo_sol_seleccionada.value);
           break;
         case 2:
           console.log(this.tipo_sol_seleccionada.value);

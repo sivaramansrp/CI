@@ -7,9 +7,8 @@
     </div>
   </div>
 
-  <!-- @if(tipo_sol_seleccionada) { -->
+  @if(tipo_sol_seleccionada) {
   <form [formGroup]="FormSolicitud" (ngSubmit)="validarFormulario()">
-
     <ng-titulo titulo="Datos del importador/exportador" />
     <div formGroupName="datos_importador_exportador">
       <div class="row">
@@ -264,18 +263,6 @@
       </div>
     </div>
 
-    <!-- @if(!datos_servicio) { -->
-      <ng-titulo titulo="Datos del vehículo de como se presentará al despacho" />
-
-      <agregar-transporte tipo="'despacho'"></agregar-transporte>
-
-
-
-
-
-      <ng-titulo titulo="Datos del transporte de arribo/salida (al/del) país" />
-
-    <!-- } -->
 
     <ng-titulo titulo="Personas responsables del despacho (máximo 5)" />
 
@@ -291,7 +278,6 @@
         </div>
       </div>
     </div>
-
 
     <ng-titulo titulo="Pagos" />
 
@@ -331,9 +317,5 @@
       <p>Generar línea de captura</p>
     </div>
   </form>
-  <!-- } -->
-
-
-
-
+  }
 </div>

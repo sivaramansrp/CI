@@ -60,7 +60,6 @@ export class AgregarTransporteComponent {
         break;
 
       case 2:
-        console.log(CONSTANTES.FERROVIARIO);
 
         this.campos_formulario = CONSTANTES.FERROVIARIO;
 
@@ -74,7 +73,6 @@ export class AgregarTransporteComponent {
       default:
         break;
     }
-    console.log(this.campos_formulario);
 
 
     this.agregarCamposAlForm(this.campos_formulario);
@@ -106,13 +104,10 @@ export class AgregarTransporteComponent {
           const response = resp.data;
           const tipos_transporte: Array<Catalogo> = [];
 
-          console.log(this.tipo);
 
           response.forEach((el) => {
-            console.log(el);
 
             if (this.tipo == 'despacho') {
-              console.log('entro al primer if');
 
               if (el.id !== 3 && el.id !== 4) {
                 tipos_transporte.push(el);
@@ -120,7 +115,6 @@ export class AgregarTransporteComponent {
             }
           });
 
-          console.log(tipos_transporte);
 
           this.datos_tipos_transporte = {
             labelNombre: 'Tipo de transporte',
@@ -129,7 +123,6 @@ export class AgregarTransporteComponent {
             catalogos: response,
           };
 
-          console.log(this.datos_tipos_transporte);
         }
       });
   }

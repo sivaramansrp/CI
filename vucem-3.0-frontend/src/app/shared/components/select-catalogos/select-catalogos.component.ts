@@ -32,8 +32,6 @@ export class SelectCatalogosComponent {
   tipo_solicitud: FormControl = new FormControl('');
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
-
     if (changes['catalogos_datos'].currentValue) {
       this.catalogos_datos = changes['catalogos_datos'].currentValue;
       if (this.catalogos_datos.required) {
