@@ -39,8 +39,6 @@ export class BtnContinuarComponent {
   anterior() : void {
     const condicion = this.datos.indice > 1 && this.datos.indice < this.datos.nro_pasos + 1;
     if (condicion) {
-      console.log('entro aqui');
-
       this.continuarEvento.emit(this.datos.indice -= 1)
     }
   }

@@ -46,21 +46,10 @@ export class WizardComponent {
           completado: element.completado,
         });
       });
-
-      console.log(this.lista_pasos);
-      console.log(this.lista);
     }
   }
 
   siguiente(activo: boolean = true) {
-    // this.wizardService.actual_indice.subscribe((indice) => {
-    //   console.log(indice);
-    //   this.i_actual = indice;
-    // });
-
-    console.log(this.i_actual);
-
-    // this.i_actual = this.i_actual === this.maximo ? this.i_actual : this.i_actual + 1 ;
     this.lista[this.i_actual - 1].activo = activo;
   }
 
