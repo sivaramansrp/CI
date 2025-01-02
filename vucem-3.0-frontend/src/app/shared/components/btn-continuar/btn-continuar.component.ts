@@ -53,6 +53,7 @@ export class BtnContinuarComponent {
         accion: 'ant',
         valor: this.datos.indice -= 1
       }
+
       this.continuarEvento.emit(datosAnterior)
     }
   }
