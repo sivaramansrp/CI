@@ -6,6 +6,8 @@
       </div>
 
       <app-wizard [lista_pasos]="pasos"></app-wizard>
+      <btn-continuar [datos]="datos_pasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+
 
     </div>
 
@@ -22,7 +24,7 @@
       }
       }
 
-      <btn-continuar [datos]="datos_pasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+      <!-- <btn-continuar [datos]="datos_pasos" (continuarEvento)="getValorIndice($event)"></btn-continuar> -->
     </div>
   </div>
 </div>

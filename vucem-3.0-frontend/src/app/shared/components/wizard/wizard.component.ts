@@ -5,6 +5,7 @@ import {
   Input,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { ListaPasosWizard } from '../../../core/models/5701/servicios-extraordinarios.model';
 import { CommonModule } from '@angular/common';
@@ -28,7 +29,7 @@ export class WizardComponent {
 
   wizardService = inject(WizardService);
 
-  constructor() {}
+
 
   ngOnChanges(changes: SimpleChanges) {
     if (
@@ -46,11 +47,18 @@ export class WizardComponent {
           completado: element.completado,
         });
       });
+
+      this.maximo = this.lista.length - 1;
     }
   }
 
   siguiente(activo: boolean = true) {
-    this.lista[this.i_actual - 1].activo = activo;
+    this.i_actual = this.i_actual === this.maximo ? this.i_actual : this.i_actual + 1;
+    this.lista[this.i_actual].activo = activo;
+
+    if( this.i_actual === (this.maximo)) {
+      this.lista[this.i_actual].completado = activo;
+    }
   }
 
   atras() {}
