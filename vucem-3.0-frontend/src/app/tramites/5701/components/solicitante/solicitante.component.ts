@@ -82,7 +82,7 @@ export class SolicitanteComponent {
 
         this.setValorInput('curp', datos_solicitante.curp);
         this.setValorInput('rfc', datos_solicitante.rfc);
-        this.setValorInput('nombre', datos_solicitante.nombre);
+        this.setValorInput('nombre_razon_social', datos_solicitante.nombre);
         this.setValorInput('a_paterno', datos_solicitante.a_paterno);
         this.setValorInput('a_materno', datos_solicitante.a_materno);
         this.setValorInput('act_economica', datos_solicitante.act_economica);
