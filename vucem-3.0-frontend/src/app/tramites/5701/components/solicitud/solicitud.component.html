@@ -229,23 +229,11 @@
     <ng-titulo titulo="Mercancía" />
     <div class="row">
       <div class="col-md-4">
-        <label for="tipo_solicitud" class="control-label">País de origen*:</label>
-        <select class="form-control" id="tipo-solicitud">
-          <option>Selecciona un valor</option>
-          <option>Individual</option>
-          <option>Semanal</option>
-          <option>Mensual</option>
-        </select>
+        <select-catalogos [catalogos_datos]="paises_o" (valorSelección)="paisOrigen($event)" />
       </div>
 
       <div class="col-md-4">
-        <label for="tipo_solicitud" class="control-label">País de procedencia*:</label>
-        <select class="form-control" id="tipo-solicitud">
-          <option>Selecciona un valor</option>
-          <option>Individual</option>
-          <option>Semanal</option>
-          <option>Mensual</option>
-        </select>
+        <select-catalogos [catalogos_datos]="paises_p" (valorSelección)="paisProcedencia($event)" />
       </div>
 
       <div class="col-md-8">

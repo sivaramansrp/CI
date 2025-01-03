@@ -32,6 +32,9 @@ import {
 })
 export class SolicitudComponent {
   datos_tipos_solicitud!: CatalogosSelect;
+  paises_o!: CatalogosSelect;
+  paises_p!: CatalogosSelect;
+
 
   tipo_sol_seleccionada!: Catalogo;
   tipo_sol_sel_valor!: number;
@@ -66,7 +69,9 @@ export class SolicitudComponent {
 
   ngOnInit() {
     this.getTiposSolicitud();
+    this.getPaises();
   }
+
 
   get datos_servicio() {
     return this.tipo_sol_seleccionada && this.tipo_sol_seleccionada.id !== 1
@@ -188,6 +193,37 @@ export class SolicitudComponent {
           };
         }
       });
+  }
+
+  getPaises() {
+    this.sExtraordinarios
+      .getCatalogos('cat-paises.json')
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const paises = resp.data;
+          this.paises_o = {
+            labelNombre: 'País de origen',
+            required: true,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: paises,
+          };
+
+          this.paises_p = {
+            labelNombre: 'País de procedencia',
+            required: true,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: paises,
+          }
+        }
+      });
+  }
+
+  paisOrigen(pais: Catalogo) {
+    console.log(pais);
+  }
+
+  paisProcedencia(pais: Catalogo) {
+    console.log(pais);
   }
 
   busqueda_rfc() {
