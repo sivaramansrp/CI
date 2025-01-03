@@ -148,27 +148,28 @@
 
     <div class="row">
       <div class="col-md-4">
-        <label for="tipo_solicitud" class="control-label">Aduana*:</label>
+        <select-catalogos [catalogos_datos]="aduanas" (valorSelección)="tipoSolicitud($event)" />
+        <!-- <label for="tipo_solicitud" class="control-label">Aduana*:</label>
         <select class="form-control" id="tipo-solicitud">
           <option>Selecciona un valor</option>
           <option>Individual</option>
           <option>Semanal</option>
           <option>Mensual</option>
-        </select>
+        </select> -->
       </div>
       <div class="col-md-4">
         <label for="tipo_solicitud" class="control-label">Sección aduanera*:</label>
         <select class="form-control" id="tipo-solicitud">
           <option>Selecciona un valor</option>
-          <option>Individual</option>
-          <option>Semanal</option>
-          <option>Mensual</option>
+          <option>32 - 304 - AEROPUERTO INTERNACIONAL GENERAL. LUCIO BLANCO, CIUDAD REYNOSA, TAMAULIPAS.</option>
+          <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
+          <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
         </select>
 
       </div>
       <div class="col-md-4">
         <label for="tipo_solicitud" class="control-label">Nombre del recinto:</label>
-        <select class="form-control" id="tipo-solicitud">
+        <select class="form-control" id="tipo-solicitud" disabled>
           <option>Selecciona un valor</option>
           <option>Individual</option>
           <option>Semanal</option>
@@ -182,9 +183,8 @@
         <label for="tipo_solicitud" class="control-label">Tipo de operación*:</label>
         <select class="form-control" id="tipo-solicitud">
           <option>Selecciona un valor</option>
-          <option>Individual</option>
-          <option>Semanal</option>
-          <option>Mensual</option>
+          <option>Importación</option>
+          <option>Exportación</option>
         </select>
       </div>
       <div class="col-md-4">

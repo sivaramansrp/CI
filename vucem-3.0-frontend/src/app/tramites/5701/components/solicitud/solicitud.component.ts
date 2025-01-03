@@ -34,6 +34,8 @@ export class SolicitudComponent {
   datos_tipos_solicitud!: CatalogosSelect;
   paises_o!: CatalogosSelect;
   paises_p!: CatalogosSelect;
+  aduanas!: CatalogosSelect;
+  seccion_aduanera!: CatalogosSelect;
 
 
   tipo_sol_seleccionada!: Catalogo;
@@ -70,6 +72,8 @@ export class SolicitudComponent {
   ngOnInit() {
     this.getTiposSolicitud();
     this.getPaises();
+    this.getAduanas();
+    this.getSeccionAduanera();
   }
 
 
@@ -216,6 +220,27 @@ export class SolicitudComponent {
           }
         }
       });
+  }
+
+  getAduanas() {
+    this.sExtraordinarios
+      .getCatalogos('cat-aduana.json')
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const aduanas = resp.data;
+          this.aduanas = {
+            labelNombre: 'Aduana',
+            required: true,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: aduanas,
+          };
+        }
+      });
+
+  }
+
+  getSeccionAduanera() {
+
   }
 
   paisOrigen(pais: Catalogo) {
