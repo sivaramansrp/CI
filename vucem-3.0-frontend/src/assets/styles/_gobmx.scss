@@ -4237,7 +4237,7 @@ output {
   }
 }
 
-.datepicker-group .has-success .glyphicon {
+.has-success .glyphicon {
   color: #3c763d;
 }
 
@@ -4245,7 +4245,7 @@ output {
   .checkbox,
   .checkbox-inline,
   .control-label,
-  .datepicker-group .glyphicon,
+  .glyphicon,
   .form-control-feedback,
   .help-block,
   .radio,
@@ -4738,17 +4738,16 @@ textarea.input-lg {
   }
 }
 
-.datepicker-group,
 .has-feedback {
   position: relative;
 }
 
-.datepicker-group .form-control,
+.form-control,
 .has-feedback .form-control {
   padding-right: 48.75px;
 }
 
-.datepicker-group .glyphicon,
+.glyphicon,
 .form-control-feedback {
   position: absolute;
   top: 0;
@@ -4768,40 +4767,8 @@ textarea.input-lg {
   position: relative;
 }
 
-.datepicker-group {
-  .form-group-lg .form-control + .glyphicon {
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-  }
-
-  .input-group-lg {
-    + .glyphicon {
-      width: 50px;
-      height: 50px;
-      line-height: 50px;
-    }
-
-    > {
-      .form-control + .glyphicon,
-      .input-group-addon + .glyphicon,
-      .input-group-btn > .btn + .glyphicon {
-        width: 50px;
-        height: 50px;
-        line-height: 50px;
-      }
-    }
-  }
-
-  .input-lg + .glyphicon {
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-  }
-}
-
 .form-group-lg {
-  .datepicker-group .form-control + .glyphicon,
+   .form-control + .glyphicon,
   .form-control + .form-control-feedback {
     width: 50px;
     height: 50px;
@@ -4833,40 +4800,9 @@ textarea.input-lg {
   line-height: 50px;
 }
 
-.datepicker-group {
-  .form-group-sm .form-control + .glyphicon {
-    width: 33px;
-    height: 33px;
-    line-height: 33px;
-  }
-
-  .input-group-sm {
-    + .glyphicon {
-      width: 33px;
-      height: 33px;
-      line-height: 33px;
-    }
-
-    > {
-      .form-control + .glyphicon,
-      .input-group-addon + .glyphicon,
-      .input-group-btn > .btn + .glyphicon {
-        width: 33px;
-        height: 33px;
-        line-height: 33px;
-      }
-    }
-  }
-
-  .input-sm + .glyphicon {
-    width: 33px;
-    height: 33px;
-    line-height: 33px;
-  }
-}
 
 .form-group-sm {
-  .datepicker-group .form-control + .glyphicon,
+  .form-control + .glyphicon,
   .form-control + .form-control-feedback {
     width: 33px;
     height: 33px;
@@ -4916,15 +4852,15 @@ textarea.input-lg {
   }
 }
 
-.datepicker-group .has-warning .glyphicon {
-  color: #8a6d3b;
-}
+// .datepicker-group .has-warning .glyphicon {
+//   color: #8a6d3b;
+// }
 
 .has-warning {
   .checkbox,
   .checkbox-inline,
   .control-label,
-  .datepicker-group .glyphicon,
+  .glyphicon,
   .form-control-feedback,
   .help-block,
   .radio,
@@ -4953,15 +4889,15 @@ textarea.input-lg {
   }
 }
 
-.datepicker-group .has-error .glyphicon {
-  color: #a94442;
-}
+// .datepicker-group .has-error .glyphicon {
+//   color: #a94442;
+// }
 
 .has-error {
   .checkbox,
   .checkbox-inline,
   .control-label,
-  .datepicker-group .glyphicon,
+  .glyphicon,
   .form-control-feedback,
   .help-block,
   .radio,
@@ -4990,34 +4926,9 @@ textarea.input-lg {
   }
 }
 
-.datepicker-group {
-  .has-feedback label ~ .glyphicon {
-    top: 30px;
-  }
-
-  label ~ {
-    .form-control-feedback,
-    .glyphicon {
-      top: 30px;
-    }
-  }
-}
 
 .has-feedback label ~ .form-control-feedback {
   top: 30px;
-}
-
-.datepicker-group {
-  .has-feedback label.sr-only ~ .glyphicon {
-    top: 0;
-  }
-
-  label.sr-only ~ {
-    .form-control-feedback,
-    .glyphicon {
-      top: 0;
-    }
-  }
 }
 
 .has-feedback label.sr-only ~ .form-control-feedback {
@@ -5085,18 +4996,11 @@ textarea.input-lg {
     }
   }
 
-  .datepicker-group .form-inline .has-feedback .glyphicon {
+ .form-inline .has-feedback .glyphicon {
     top: 0;
   }
 
   .form-inline {
-    .datepicker-group {
-      .form-control-feedback,
-      .glyphicon {
-        top: 0;
-      }
-    }
-
     .has-feedback .form-control-feedback {
       top: 0;
     }
@@ -5136,17 +5040,11 @@ textarea.input-lg {
   }
 }
 
-.datepicker-group .form-horizontal .has-feedback .glyphicon {
+.form-horizontal .has-feedback .glyphicon {
   right: 15px;
 }
 
 .form-horizontal {
-  .datepicker-group {
-    .form-control-feedback,
-    .glyphicon {
-      right: 15px;
-    }
-  }
 
   .has-feedback .form-control-feedback {
     right: 15px;
@@ -7269,17 +7167,11 @@ tbody.collapse.in {
     }
   }
 
-  .datepicker-group .navbar-form .has-feedback .glyphicon {
+  .navbar-form .has-feedback .glyphicon {
     top: 0;
   }
 
   .navbar-form {
-    .datepicker-group {
-      .form-control-feedback,
-      .glyphicon {
-        top: 0;
-      }
-    }
 
     .has-feedback .form-control-feedback {
       top: 0;
@@ -13372,9 +13264,6 @@ dt {
   }
 }
 
-.datepicker-group .glyphicon {
-  color: #919191;
-}
 
 .section-migrate {
   margin: 25px auto;

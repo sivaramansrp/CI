@@ -70,7 +70,7 @@ export class SolicitanteComponent {
   }
 
   get personaFisica() {
-    return false;
+    return true;
   }
 
   getDatosGenerales() {

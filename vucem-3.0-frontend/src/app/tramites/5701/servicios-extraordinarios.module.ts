@@ -21,6 +21,10 @@ import { AnexarDocumentosComponent } from '../../shared/components/anexar-docume
 import { SharedModule } from '../../shared/shared.module';
 import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
 import { InputHoraComponent } from '../../shared/components/input-hora/input-hora.component';
+import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
+import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
+import { AgregarTransporteComponent } from "../../shared/components/agregar-transporte/agregar-transporte.component";
+import { AgregarPersonasComponent } from '../../shared/components/agregar-personas/agregar-personas.component';
 
 
 
@@ -50,6 +54,10 @@ import { InputHoraComponent } from '../../shared/components/input-hora/input-hor
     AnexarDocumentosComponent,
     InputCheckComponent,
     InputHoraComponent,
+    InputFechaComponent,
+    CrosslistComponent,
+    AgregarTransporteComponent,
+    AgregarPersonasComponent
 ],
 exports: [
   SolicitudComponent,

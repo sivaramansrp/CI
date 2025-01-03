@@ -6,13 +6,21 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { Catalogo } from '../../../core/models/5701/catalogos.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CatalogosSelect } from '../../../core/models/shared/components.model';
+import { CommonModule } from '@angular/common';
+import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 @Component({
   selector: 'select-catalogos',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './select-catalogos.component.html',
   styleUrl: './select-catalogos.component.scss',
 })
@@ -21,16 +29,24 @@ export class SelectCatalogosComponent {
 
   @Output() valorSelección = new EventEmitter<Catalogo>();
 
-  public FormCatalogo: FormGroup = this.fb.group({
-    seleccion: [0],
-  });
+  tipo_solicitud: FormControl = new FormControl('');
 
-  constructor(private fb: FormBuilder) {}
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['catalogos_datos'].currentValue) {
+      this.catalogos_datos = changes['catalogos_datos'].currentValue;
+      if (this.catalogos_datos.required) {
+        this.tipo_solicitud.setValidators([Validators.required]);
+        this.tipo_solicitud.updateValueAndValidity();
+      }
+    }
+  }
+
+  isValid() {
+    return this.tipo_solicitud.errors && this.tipo_solicitud.touched;
+  }
 
   seleccion() {
-    const opcionSeleccionada = parseInt(
-      this.FormCatalogo.get('seleccion')?.value
-    );
+    const opcionSeleccionada = parseInt(this.tipo_solicitud.value);
 
     let seleccion: Catalogo;
 

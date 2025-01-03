@@ -2,7 +2,7 @@
   <div class="col-md-12 hidden-xs">
     <ul class="wizard-steps">
       @for (item of lista; track lista; let i = $index) {
-      <li class="wizard-item" [ngClass]="item.completado ? 'completed': ''">
+      <li class="wizard-item" [class.completed]="item.activo" [class.success]="item.completado">
         <h5>Paso {{i + 1}}</h5>
         <span> {{item.titulo}} </span>
       </li>
@@ -10,3 +10,4 @@
     </ul>
   </div>
 </div>
+

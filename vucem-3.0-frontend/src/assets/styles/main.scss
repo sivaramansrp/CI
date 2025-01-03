@@ -2,6 +2,7 @@
 
 @import "_variables.scss";
 @import "_gobmx.scss";
+@import "_iconos_gobmx.scss";
 
 .bi-c {
   color: $color-primario;
@@ -47,9 +48,7 @@
 
 
 .required {
-  -webkit-transition: 1s; /* Safari */
-  transition: 1s;
-  box-shadow: 0 0 4px 1px #fe4a47;
+  border: #fe4a47 1px solid;
 }
 
 

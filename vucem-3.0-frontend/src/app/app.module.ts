@@ -8,26 +8,30 @@ import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideToastr, ToastrModule } from 'ngx-toastr';
-
+import { FooterComponent } from './shared/components/footer/footer.component';
+import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.component';
+import { InformacionUsuarioComponent } from "./shared/components/informacion-usuario/informacion-usuario.component";
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NavComponent,
     HttpClientModule,
+    BreadcrumbComponent,
     HeaderComponent,
+    FooterComponent,
+    InformacionUsuarioComponent,
+    ToastrModule.forRoot(),
     BrowserAnimationsModule,
-        ToastrModule.forRoot(),
-  ],
+    InformacionUsuarioComponent
+],
   providers: [
     provideToastr({
       positionClass: 'toast-top-right',
-    })
+    }),
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
