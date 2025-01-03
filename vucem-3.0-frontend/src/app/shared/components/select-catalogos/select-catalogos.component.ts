@@ -29,7 +29,7 @@ export class SelectCatalogosComponent {
 
   @Output() valorSelección = new EventEmitter<Catalogo>();
 
-  tipo_solicitud: FormControl = new FormControl('');
+  tipo_solicitud: FormControl = new FormControl(0);
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['catalogos_datos'].currentValue) {

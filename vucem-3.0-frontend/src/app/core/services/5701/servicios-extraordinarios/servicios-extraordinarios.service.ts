@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaSolicitud } from '../../../models/5701/servicios-extraordinarios.model';
-import { RespuestaCatalogos } from '../../../models/5701/catalogos.model';
+import {
+  JSONResponse,
+  RespuestaCatalogos,
+} from '../../../models/5701/catalogos.model';
 
 @Injectable({
   providedIn: 'root',
@@ -9,11 +12,13 @@ import { RespuestaCatalogos } from '../../../models/5701/catalogos.model';
 export class ServiciosExtraordinariosService {
   constructor(private http: HttpClient) {}
 
-  url_server = 'http://localhost:4200/assets/json/5701';
+  url_server = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
 
-  getCatalogos(catalogo:string) {
-    return this.http.get<RespuestaCatalogos>(
-      `${this.url_server}/${catalogo}`,
-    )
+  getCatalogo(catalogo: number) {
+    return this.http.get<JSONResponse>(`${this.url_server}/${catalogo}`);
+  }
+
+  getCatalogos(catalogo: string) {
+    return this.http.get<RespuestaCatalogos>(`${this.url_server}/${catalogo}`);
   }
 }

@@ -74,11 +74,14 @@ export class SolicitanteComponent {
   }
 
   getDatosGenerales() {
-    this.solicitanteServicio.getDatosGenerales().subscribe((resp) => {
+    this.solicitanteServicio.getDatosGenerales(5).subscribe((resp) => {
+      if ( resp.codigo === "200") {
+        const datos = JSON.parse(resp.data);
+        console.log(datos);
 
-      if ( resp.code === 200) {
-        const datos_solicitante = resp.data.datos_solicitante.generales;
-        const datos_dom_fiscal = resp.data.datos_solicitante.domicilio_fiscal;
+
+        const datos_solicitante = datos.datos_solicitante.generales;
+        const datos_dom_fiscal = datos.datos_solicitante.domicilio_fiscal;
 
         this.setValorInput('curp', datos_solicitante.curp);
         this.setValorInput('rfc', datos_solicitante.rfc);

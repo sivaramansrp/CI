@@ -1,7 +1,7 @@
 export interface RespuestaSolicitud {
-  code: number;
-  // data: any;
-  data: Solicitud;
+  codigo: number;
+  descripcion: string;
+  data: string;
   message: string;
 }
 export interface Solicitud {
