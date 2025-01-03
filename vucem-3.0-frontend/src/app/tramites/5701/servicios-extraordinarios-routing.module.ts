@@ -5,9 +5,18 @@ import { SolicitudPageComponent } from "./pages/solicitud-page/solicitud-page.co
 export const ROUTES_SOLICITUDES: Routes = [
     {
         path: 'solicitud',
-        component: SolicitudPageComponent
+        component: SolicitudPageComponent,
+        children: [
+          { path: 'solicitud',
+            component: SolicitudPageComponent
+          },
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'solicitud',
+          },
+        ]
     },
-    { path: '**', redirectTo: 'solicitud'}
 ];
 
 @NgModule({

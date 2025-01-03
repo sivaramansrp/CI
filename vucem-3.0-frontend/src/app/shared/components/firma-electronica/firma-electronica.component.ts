@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, input, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
@@ -14,6 +14,9 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   styleUrl: './firma-electronica.component.scss',
 })
 export class FirmaElectronicaComponent {
+  @Input() tipo: string = '';
+  @Output() valido = new EventEmitter<boolean>();
+
   cert_file: string = '';
   key_file: string = '';
   datos_binarios!: ArrayBuffer;
@@ -29,6 +32,10 @@ export class FirmaElectronicaComponent {
     private toastrService: ToastrService,
     private formValidator: ValidacionesFormularioService
   ) {}
+
+  get login() {
+    return this.tipo === 'login' ? true : false;
+  }
 
   isValid(field: string) {
     return this.formValidator.isValidField(this.FormCertificado, field);
@@ -98,15 +105,20 @@ export class FirmaElectronicaComponent {
           cert_public_key.n.t === private_key.n.t &&
           cert_public_key.e.t === private_key.e.t
         ) {
+          this.valido.emit(true);
           this.toastrService.success(
             '¡Certificado válido y llave privada coinciden!'
           );
         } else {
+          this.valido.emit(false);
+
           this.toastrService.error(
             'La llave privada no coincide con el certificado o la contraseña es incorrecta.'
           );
         }
       } else {
+        this.valido.emit(false);
+
         this.toastrService.error(
           'La llave privada no coincide con el certificado o la contraseña es incorrecta.'
         );
