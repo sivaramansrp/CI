@@ -185,15 +185,14 @@ export class SolicitudComponent {
 
   getTiposSolicitud() {
     this.sExtraordinarios
-      .getCatalogos('cat-tipo-solicitud.json')
+      .getCatalogo(1)
       .subscribe((resp) => {
-        if (resp.code === 200) {
-          const tipos_solicitud = resp.data;
+        if (resp.codigo === '200') {
           this.datos_tipos_solicitud = {
             labelNombre: 'Tipo de solicitud',
             required: true,
             primerOpcion: 'Selecciona un valor',
-            catalogos: tipos_solicitud,
+            catalogos: JSON.parse(resp.data),
           };
         }
       });
@@ -201,22 +200,22 @@ export class SolicitudComponent {
 
   getPaises() {
     this.sExtraordinarios
-      .getCatalogos('cat-paises.json')
+      .getCatalogo(2)
       .subscribe((resp) => {
-        if (resp.code === 200) {
+        if (resp.codigo === '200') {
           const paises = resp.data;
           this.paises_o = {
             labelNombre: 'País de origen',
             required: true,
             primerOpcion: 'Selecciona un valor',
-            catalogos: paises,
+            catalogos: JSON.parse(resp.data),
           };
 
           this.paises_p = {
             labelNombre: 'País de procedencia',
             required: true,
             primerOpcion: 'Selecciona un valor',
-            catalogos: paises,
+            catalogos: JSON.parse(resp.data),
           }
         }
       });
@@ -224,23 +223,20 @@ export class SolicitudComponent {
 
   getAduanas() {
     this.sExtraordinarios
-      .getCatalogos('cat-aduana.json')
+      .getCatalogo(3)
       .subscribe((resp) => {
-        if (resp.code === 200) {
-          const aduanas = resp.data;
+        if (resp.codigo === '200') {
           this.aduanas = {
             labelNombre: 'Aduana',
             required: true,
             primerOpcion: 'Selecciona un valor',
-            catalogos: aduanas,
+            catalogos: JSON.parse(resp.data),
           };
         }
       });
-
   }
 
   getSeccionAduanera() {
-
   }
 
   paisOrigen(pais: Catalogo) {

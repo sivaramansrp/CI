@@ -1,3 +1,10 @@
+export interface JSONResponse {
+  id: number;
+  descripcion: string;
+  codigo: string;
+  data: string;
+}
+
 export interface RespuestaCatalogos {
   code: number;
   data: Array<Catalogo>;
