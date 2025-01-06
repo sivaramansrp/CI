@@ -77,9 +77,6 @@ export class SolicitanteComponent {
     this.solicitanteServicio.getDatosGenerales(5).subscribe((resp) => {
       if ( resp.codigo === "200") {
         const datos = JSON.parse(resp.data);
-        console.log(datos);
-
-
         const datos_solicitante = datos.datos_solicitante.generales;
         const datos_dom_fiscal = datos.datos_solicitante.domicilio_fiscal;
 

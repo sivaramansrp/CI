@@ -45,18 +45,16 @@ export class AnexarDocumentosComponent {
   }
 
   getTiposDocumentos() {
-    this.sExtraordinarios
-      .getCatalogo(6)
-      .subscribe((resp) => {
-        if (resp.codigo === '200') {
-          this.tipos_documentos = {
-            labelNombre: 'Tipo de documento',
-            required: true,
-            primerOpcion: 'Selecciona un tipo de documento',
-            catalogos: JSON.parse(resp.data),
-          };
-        }
-      });
+    this.sExtraordinarios.getCatalogo(6).subscribe((resp) => {
+      if (resp.codigo === '200') {
+        this.tipos_documentos = {
+          labelNombre: 'Tipo de documento',
+          required: true,
+          primerOpcion: 'Selecciona un tipo de documento',
+          catalogos: JSON.parse(resp.data),
+        };
+      }
+    });
   }
 
   docSeleccionado(e: Catalogo) {
@@ -74,20 +72,26 @@ export class AnexarDocumentosComponent {
       let ext_archivo = archivo_info.name.split('.').pop() as string;
       ext_archivo = ext_archivo.toLowerCase();
 
-      if(ext_archivo !== this.documento_seleccionado.tipo_archivo) {
+      if (ext_archivo !== this.documento_seleccionado.tipoArchivo) {
         this.toastr.error('Solo se aceptan archivos pdf');
         return;
       }
 
       // Validacion tamaño
       const datos: DatosArchivo = {
-        tam_req: this.documento_seleccionado.archivo ? this.documento_seleccionado.archivo.tamanio : 0,
+        tam_req: this.documento_seleccionado.archivo
+          ? this.documento_seleccionado.archivo.tamanio
+          : 0,
         tamanio: archivo_info.size,
-        unidad: this.documento_seleccionado.archivo ? this.documento_seleccionado.archivo.unidad : '',
-      }
+        unidad: this.documento_seleccionado.archivo
+          ? this.documento_seleccionado.archivo.unidad
+          : '',
+      };
 
       if (!this.validarTamanio(datos)) {
-        this.toastr.error('El tamaño del documento que intenta cargar excede el tamaño permitido');
+        this.toastr.error(
+          'El tamaño del documento que intenta cargar excede el tamaño permitido'
+        );
         return;
       }
 

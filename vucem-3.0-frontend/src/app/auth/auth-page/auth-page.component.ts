@@ -17,7 +17,7 @@ export class AuthPageComponent {
 
   validarEFirma(login: boolean) {
     if ( login ) {
-      const datos_usuario = {
+      const datosUsuario = {
         id_user: 'LEQI',
         rol: 1,
         rfc: '',
@@ -27,7 +27,7 @@ export class AuthPageComponent {
 
       localStorage.setItem(
         COOKIE.NOMBRE_COOKIE_ID_USUARIO,
-        datos_usuario.id_user
+        datosUsuario.id_user
       );
       this.router.navigateByUrl('/servicios-extraordinarios/solicitud');
     }
