@@ -234,11 +234,9 @@ export class SolicitudComponent {
           };
         }
       });
-
   }
 
   getSeccionAduanera() {
-
   }
 
   paisOrigen(pais: Catalogo) {
