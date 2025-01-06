@@ -33,13 +33,6 @@ export class SolicitudPageComponent {
   getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
-
-      // // buscar indice a pasar
-      // const indice_sig = this.pasos.findIndex(
-      //   (el) => el.indice === this.indice
-      // );
-      // this.pasos[indice_sig].completado = true;
-
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Catalogo } from '../../../../core/models/5701/catalogos.model';
 import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
+import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 
 @Component({
   selector: 'paso-dos',
@@ -19,7 +20,7 @@ export class PasoDosComponent {
   ) {}
 
   ngOnInit() {
-    this.getTiposSolicitud();
+    this.getTiposDocumentos();
     this.documentos_seleccionados = [
       {
         id: 1,
@@ -33,10 +34,10 @@ export class PasoDosComponent {
 
   }
 
-  getTiposSolicitud() {
-    this.sExtraordinarios.getCatalogos('cat-tipo-documento.json').subscribe((resp) => {
-      if (resp.code === 200) {
-        this.tipos_documentos = resp.data
+  getTiposDocumentos() {
+    this.sExtraordinarios.getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).subscribe((resp) => {
+      if (resp.codigo === '200') {
+        this.tipos_documentos = JSON.parse(resp.data)
       }
     })
   }

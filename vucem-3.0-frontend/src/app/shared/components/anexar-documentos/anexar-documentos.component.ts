@@ -46,15 +46,14 @@ export class AnexarDocumentosComponent {
 
   getTiposDocumentos() {
     this.sExtraordinarios
-      .getCatalogos('cat-tipo-documento.json')
+      .getCatalogo(6)
       .subscribe((resp) => {
-        if (resp.code === 200) {
-          const documentos = resp.data;
+        if (resp.codigo === '200') {
           this.tipos_documentos = {
             labelNombre: 'Tipo de documento',
             required: true,
             primerOpcion: 'Selecciona un tipo de documento',
-            catalogos: documentos,
+            catalogos: JSON.parse(resp.data),
           };
         }
       });
