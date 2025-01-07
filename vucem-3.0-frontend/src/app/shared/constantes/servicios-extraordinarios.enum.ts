@@ -33,7 +33,7 @@ export const TEXTOS = {
 
 export const INDUSTRIA_AUTOMOTRIZ = {
   label_nombre: 'Industria Automotriz',
-  maxlength: 10,
+  maxlength: 25,
   minlenght: 0,
   required: false,
   alfanumerico: true,
@@ -41,7 +41,7 @@ export const INDUSTRIA_AUTOMOTRIZ = {
 
 export const PROGRAMA_FOMENTO = {
   label_nombre: 'Programa de fomento',
-  maxlength: 10,
+  maxlength: 25,
   minlenght: 0,
   required: false,
   alfanumerico: true,
@@ -49,7 +49,7 @@ export const PROGRAMA_FOMENTO = {
 
 export const IMMEX = {
   label_nombre: 'IMMEX (Número/aaaa)',
-  maxlength: 10,
+  maxlength: 25,
   minlenght: 0,
   required: false,
   alfanumerico: true,

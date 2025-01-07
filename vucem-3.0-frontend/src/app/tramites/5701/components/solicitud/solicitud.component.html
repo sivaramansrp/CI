@@ -7,17 +7,17 @@
     </div>
   </div>
 
-  <!-- @if(tipo_sol_seleccionada) { -->
+  <!-- @if(tipoSolSeleccionada) { -->
   <form [formGroup]="FormSolicitud" (ngSubmit)="validarFormulario()">
     <ng-titulo titulo="Datos del importador/exportador" />
-    <div formGroupName="datos_importador_exportador">
+    <ng-container formGroupName="datosImportadorExportador">
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label" for="rfc_import_export">RFC*:</label>
             <input class="form-control" id="rfc_import_export" placeholder="RFC" type="text"
               formControlName="rfc_import_export"
-              [ngClass]="isValid(datos_importador_exportador,'rfc_import_export') ? 'required' : ''" appUppercase
+              [ngClass]="isValid(datosImportadorExportador,'rfc_import_export') ? 'required' : ''" appUppercase
               (blur)="busqueda_rfc()">
           </div>
         </div>
@@ -34,22 +34,22 @@
           <div class="form-group">
             <label class="control-label" for="nombre_imp">Número de registro o programa:</label>
             <input class="form-control" id="rfc_imp" placeholder="Numero de registro" type="text"
-              formControlName="nro_registro">
+              formControlName="nro_registro" [ngClass]="isValid(datosImportadorExportador, 'nro_registro') ? 'required' : ''">
           </div>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-4">
-          <input-check [datos]="programa_fomento" (valores)="valorInputCheck($event)"></input-check>
+          <input-check [datos]="programaFomento" (valores)="programaFomentoF($event)"></input-check>
         </div>
 
         <div class="col-md-4">
-          <input-check [datos]="immex" (valores)="valorInputCheck($event)"></input-check>
+          <input-check [datos]="immex" (valores)="immexSeleccion($event)"></input-check>
         </div>
 
         <div class="col-md-4">
-          <input-check [datos]="industria_automotriz" (valores)="valorInputCheck($event)"></input-check>
+          <input-check [datos]="industriaAutomotriz" (valores)="industriaAutomotrizSeleccion($event)"></input-check>
         </div>
       </div>
 
@@ -73,7 +73,7 @@
 
       <div class="row mt-3">
         <div class="col-md-4">
-          <input-check [datos]="socio_comercial" (valores)="valorInputCheck($event)"></input-check>
+          <input-check [datos]="socioComercial" (valores)="valorInputCheck($event)"></input-check>
         </div>
 
         <div class="col-md-4">
@@ -86,7 +86,7 @@
           <label class="control-label" for="nombre_imp">Revisión en origen</label>
         </div>
       </div>
-    </div>
+    </ng-container>
 
     <ng-titulo titulo="Datos del servicio" />
     <div class="row">
@@ -203,7 +203,7 @@
 
 
 
-    @if (!datos_servicio) {
+    @if (solIndividual) {
     <ng-titulo titulo="Datos del pedimento" />
 
     <c-pedimento [validacion]="validacionPedimento" [datosNroPedimento]="datosPedimentoComponente"

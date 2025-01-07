@@ -1,7 +1,7 @@
 <div class="form-group">
   <form [formGroup]="FormInput">
     <label class="control-label" for="nombre_imp">{{datos.label_nombre}}:</label>
-    <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault" formControlName="seleccion">
-    <input class="form-control" id="rfc_imp" placeholder="" type="text" formControlName="valor_input" (blur)="onBlurEvent()">
+    <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault" formControlName="seleccion" (change)="seleccion()">
+    <input class="form-control" id="valorInput" placeholder="" type="text" formControlName="valorInput" (blur)="onBlurEvent()">
   </form>
 </div>

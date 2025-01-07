@@ -19,5 +19,9 @@ export class FormulariosService {
     return form.get(field)?.value ? parseInt(form.get(field)?.value) : 0;
   }
 
+  public insertarValorCampoForm(datosForm: datosAgregarFormulario) {
+    datosForm.form.get(datosForm.field)?.setValue(datosForm.valor);
+  }
+
 
 }
