@@ -61,3 +61,7 @@ export interface InputFecha {
   required: boolean;
   habilitado: boolean
 }
+
+export interface ConfiguracionTabla {
+  [clave: string]: string
+}

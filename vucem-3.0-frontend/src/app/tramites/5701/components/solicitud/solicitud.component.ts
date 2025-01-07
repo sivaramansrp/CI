@@ -62,6 +62,8 @@ export class SolicitudComponent {
 
   selectRangoDias: Array<string> = [];
 
+  validacionPedimento: boolean = false;
+
   constructor(
     private sExtraordinarios: ServiciosExtraordinariosService,
     private fb: FormBuilder,
@@ -91,6 +93,15 @@ export class SolicitudComponent {
   get d_servicio() {
     return this.FormSolicitud.get('datos_servicio') as FormGroup;
   }
+
+  get despacho() {
+    return this.FormSolicitud.get('despacho') as FormGroup;
+  }
+
+  get pedimento() {
+    return this.FormSolicitud.get('pedimento') as FormGroup;
+  }
+
 
   crearFormSolicitud() {
     this.FormSolicitud = this.fb.group({
@@ -131,7 +142,8 @@ export class SolicitudComponent {
       despacho: this.fb.group({
         tipo: [''],
         autorizacion: [''],
-        aduana: [''],
+        idAduana: [null, [Validators.required]],
+        descripcionAduana: ['', [Validators.required]],
         seccion_aduanera: [''],
         nombre_recinto: [''],
         tipo_operacion: [''],
@@ -351,5 +363,21 @@ export class SolicitudComponent {
 
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
+  }
+
+  aduanaSeleccion(aduana: Catalogo) {
+    this.darValorCampoFormulario(this.despacho, 'idAduana', aduana.id)
+    this.darValorCampoFormulario(this.despacho, 'descripcionAduana', aduana.value)
+  }
+
+  validaCampoPedimento() {
+    const aduanaValidacion = this.isValid(this.despacho, 'descripcionAduana');
+
+    if (aduanaValidacion === null)
+      this.validacionPedimento = true;
+  }
+
+  darValorCampoFormulario(form: FormGroup, field: string, valor: string | number) {
+    form.get(field)?.setValue(valor);
   }
 }
