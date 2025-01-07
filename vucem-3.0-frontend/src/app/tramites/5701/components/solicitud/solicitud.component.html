@@ -137,73 +137,76 @@
 
     <ng-titulo titulo="Datos del despacho para el servicio extraordinario" />
 
-    <div class="row" formGroupName="despacho">
-      <div class="col-md-4">
-        <input-check [datos]="despacho_lda" (valores)="valorInputCheck($event)"></input-check>
-      </div>
-      <div class="col-md-4">
-        <input-check [datos]="despacho_dd" (valores)="valorInputCheck($event)"></input-check>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-4">
-        <select-catalogos [catalogos_datos]="aduanas" (valorSelección)="aduanaSeleccion($event)" />
-      </div>
-      <div class="col-md-4">
-        <label for="tipo_solicitud" class="control-label">Sección aduanera*:</label>
-        <select class="form-control" id="tipo-solicitud">
-          <option>Selecciona un valor</option>
-          <option>32 - 304 - AEROPUERTO INTERNACIONAL GENERAL. LUCIO BLANCO, CIUDAD REYNOSA, TAMAULIPAS.</option>
-          <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
-          <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
-        </select>
-
-      </div>
-      <div class="col-md-4">
-        <label for="tipo_solicitud" class="control-label">Nombre del recinto:</label>
-        <select class="form-control" id="tipo-solicitud" disabled>
-          <option>Selecciona un valor</option>
-          <option>Individual</option>
-          <option>Semanal</option>
-          <option>Mensual</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-4">
-        <label for="tipo_solicitud" class="control-label">Tipo de operación*:</label>
-        <select class="form-control" id="tipo-solicitud">
-          <option>Selecciona un valor</option>
-          <option>Importación</option>
-          <option>Exportación</option>
-        </select>
-      </div>
-      <div class="col-md-4">
-        <label for="tipo_solicitud" class="control-label">Patente/Número de autorización:</label>
-        <input class="form-control" type="text" name="" id="">
-      </div>
-      <div class="col-md-4">
-        <div class="group-checkbox">
-          <div>
-            <label class="control-label" for="nombre_imp">Relación de sociedad: </label>
-            <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
-          </div>
-          <div>
-            <label class="control-label" for="nombre_imp">Encargo conferido:</label>
-            <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
-          </div>
+    <ng-container formGroupName="despacho">
+      <div class="row">
+        <div class="col-md-4">
+          <input-check [datos]="despacho_lda" (valores)="valorInputCheck($event)"></input-check>
         </div>
-
+        <div class="col-md-4">
+          <input-check [datos]="despacho_dd" (valores)="valorInputCheck($event)"></input-check>
+        </div>
       </div>
-    </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <select-catalogos [catalogos_datos]="aduanas" (valorSelección)="aduanaSeleccion($event)" />
+        </div>
+        <div class="col-md-4">
+          <label for="tipo_solicitud" class="control-label">Sección aduanera*:</label>
+          <select class="form-control" id="tipo-solicitud">
+            <option>Selecciona un valor</option>
+            <option>32 - 304 - AEROPUERTO INTERNACIONAL GENERAL. LUCIO BLANCO, CIUDAD REYNOSA, TAMAULIPAS.</option>
+            <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
+            <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
+          </select>
+
+        </div>
+        <div class="col-md-4">
+          <label for="tipo_solicitud" class="control-label">Nombre del recinto:</label>
+          <select class="form-control" id="tipo-solicitud" disabled>
+            <option>Selecciona un valor</option>
+            <option>Individual</option>
+            <option>Semanal</option>
+            <option>Mensual</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <label for="tipo_solicitud" class="control-label">Tipo de operación*:</label>
+          <select class="form-control" id="tipo-solicitud">
+            <option>Selecciona un valor</option>
+            <option>Importación</option>
+            <option>Exportación</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="patente" class="control-label">Patente/Número de autorización:</label>
+          <input class="form-control" type="text" name="patente" id="patente" formControlName="patente">
+        </div>
+        <div class="col-md-4">
+          <div class="group-checkbox">
+            <div>
+              <label class="control-label" for="nombre_imp">Relación de sociedad: </label>
+              <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
+            </div>
+            <div>
+              <label class="control-label" for="nombre_imp">Encargo conferido:</label>
+              <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </ng-container>
+
 
 
     @if (!datos_servicio) {
     <ng-titulo titulo="Datos del pedimento" />
 
-    <c-pedimento [validacion]="validacionPedimento" (validaCampos)="validaCampoPedimento()"></c-pedimento>
+    <c-pedimento [validacion]="validacionPedimento" [datosNroPedimento]="datosPedimentoComponente" (validaCampos)="validaCampoPedimento()"></c-pedimento>
 
 
     <!-- <div class="row" formGroupName="pedimento">

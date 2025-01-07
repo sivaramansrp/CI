@@ -63,5 +63,17 @@ export interface InputFecha {
 }
 
 export interface ConfiguracionTabla {
-  [clave: string]: string
+  [clave: string]: string | number | boolean | null;
+}
+
+export interface Pedimento {
+  patente: number;
+  pedimento: number;
+  aduana: number;
+  idTipoPedimento: number;
+  descTipoPedimento: string,
+  numero: string;
+  comprobanteValor: string;
+  pedimentoValidado: boolean;
+
 }

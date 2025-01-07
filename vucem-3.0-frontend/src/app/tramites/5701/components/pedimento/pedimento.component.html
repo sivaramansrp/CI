@@ -2,11 +2,42 @@
   <div class="col-md-4">
     <div class="form-group">
       <label class="control-label" for="id_pedimento">Número de pedimento:</label>
-      <input class="form-control" id="id_pedimento" placeholder="" type="text" [formControl]="pedimento"
+      <input class="form-control" id="id_pedimento" placeholder="" type="text" [formControl]="pedimentoForm"
         [ngClass]="isValid ? 'required' : ''" appSoloNumeros>
     </div>
   </div>
   <div class="col-md-4 d-flex align-items-center">
     <button type="button" class="btn btn-primary" (click)="agregaPedimento()">Agregar</button>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-respomsive">
+      <thead>
+        <tr>
+          @for (item of hTabla; track $index) {
+            <th>{{item}}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          @for (item of pedimentos; track $index) {
+            <td>{{item.patente}}</td>
+            <td>{{item.pedimento}}</td>
+            <td>{{item.aduana}}</td>
+            <td>{{item.descTipoPedimento}}</td>
+            <td>{{item.numero}}</td>
+            <td>{{item.comprobanteValor}}</td>
+            <td>{{item.pedimentoValidado}}</td>
+            <td>
+              Eliminar
+            </td>
+          }
+        </tr>
+
+      </tbody>
+    </table>
   </div>
 </div>

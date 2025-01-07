@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Signal, signal, WritableSignal } from '@angular/core';
 import { Catalogo } from '../../../../core/models/5701/catalogos.model';
 import {
   CatalogosSelect,
@@ -25,6 +25,9 @@ import {
   SOCIO_COMERCIAL,
 } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
+import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
+import { datosAgregarFormulario } from '../../../../core/models/shared/forms-model';
+import { DatosComponentePedimento } from '../../../../core/models/5701/servicios-extraordinarios.model';
 
 @Component({
   selector: 'solicitud',
@@ -62,11 +65,14 @@ export class SolicitudComponent {
 
   selectRangoDias: Array<string> = [];
 
+  // Pedimento -crea una señal para validar
   validacionPedimento: boolean = false;
+  datosPedimentoComponente!: DatosComponentePedimento;
 
   constructor(
     private sExtraordinarios: ServiciosExtraordinariosService,
     private fb: FormBuilder,
+    private fService: FormulariosService,
     private validacionesService: ValidacionesFormularioService
   ) {
     this.crearFormSolicitud();
@@ -77,7 +83,10 @@ export class SolicitudComponent {
     this.getPaises();
     this.getAduanas();
     this.getSeccionAduanera();
-  }
+
+    // Aqui se busca el nro de patente o autorizacion
+    this.obtenerPatente();
+    }
 
 
   get datos_servicio() {
@@ -100,6 +109,16 @@ export class SolicitudComponent {
 
   get pedimento() {
     return this.FormSolicitud.get('pedimento') as FormGroup;
+  }
+
+  obtenerPatente() {
+    // Busqueda de la patente a algun endpoint
+    const datosPatente: datosAgregarFormulario= {
+      form: this.despacho,
+      field: 'patente',
+      valor: '3061'
+    }
+    this.fService.agregarValorCamposDesactivados(datosPatente);
   }
 
 
@@ -147,7 +166,7 @@ export class SolicitudComponent {
         seccion_aduanera: [''],
         nombre_recinto: [''],
         tipo_operacion: [''],
-        patente: [''],
+        patente: [{value:'', disabled: true}],
         relacion_sociedad: [],
         encargo_conferido: [],
         domicilio: ['', Validators.required],
@@ -172,8 +191,6 @@ export class SolicitudComponent {
           pedimento_validado: [],
         })
       }),
-
-
     });
   }
 
@@ -367,7 +384,17 @@ export class SolicitudComponent {
 
   aduanaSeleccion(aduana: Catalogo) {
     this.darValorCampoFormulario(this.despacho, 'idAduana', aduana.id)
-    this.darValorCampoFormulario(this.despacho, 'descripcionAduana', aduana.value)
+    this.darValorCampoFormulario(this.despacho, 'descripcionAduana', aduana.value);
+    this.validacionPedimento = true;
+
+    //
+    const patente = this.fService.convertirValorANumero(this.despacho, 'patente');
+    const idAduana = this.fService.convertirValorANumero(this.despacho, 'idAduana');
+
+    this.datosPedimentoComponente = {
+      patente: patente,
+      idAduana: idAduana
+    }
   }
 
   validaCampoPedimento() {

@@ -140,3 +140,9 @@ export interface ListaPasosWizard {
   activo: boolean;
   completado: boolean;
 }
+
+// Pedimento
+export interface DatosComponentePedimento {
+  patente: number;
+  idAduana: number;
+}
