@@ -41,7 +41,6 @@ export class SolicitudComponent {
   aduanas!: CatalogosSelect;
   seccion_aduanera!: CatalogosSelect;
 
-
   tipo_sol_seleccionada!: Catalogo;
   tipo_sol_sel_valor!: number;
 
@@ -86,8 +85,7 @@ export class SolicitudComponent {
 
     // Aqui se busca el nro de patente o autorizacion
     this.obtenerPatente();
-    }
-
+  }
 
   get datos_servicio() {
     return this.tipo_sol_seleccionada && this.tipo_sol_seleccionada.id !== 1
@@ -113,14 +111,13 @@ export class SolicitudComponent {
 
   obtenerPatente() {
     // Busqueda de la patente a algun endpoint
-    const datosPatente: datosAgregarFormulario= {
+    const datosPatente: datosAgregarFormulario = {
       form: this.despacho,
       field: 'patente',
-      valor: '3061'
-    }
+      valor: '3061',
+    };
     this.fService.agregarValorCamposDesactivados(datosPatente);
   }
-
 
   crearFormSolicitud() {
     this.FormSolicitud = this.fb.group({
@@ -166,7 +163,7 @@ export class SolicitudComponent {
         seccion_aduanera: [''],
         nombre_recinto: [''],
         tipo_operacion: [''],
-        patente: [{value:'', disabled: true}],
+        patente: [{ value: '', disabled: true }],
         relacion_sociedad: [],
         encargo_conferido: [],
         domicilio: ['', Validators.required],
@@ -189,7 +186,7 @@ export class SolicitudComponent {
           numeros: [],
           comprobante_valor: [],
           pedimento_validado: [],
-        })
+        }),
       }),
     });
   }
@@ -245,7 +242,7 @@ export class SolicitudComponent {
             required: true,
             primerOpcion: 'Selecciona un valor',
             catalogos: JSON.parse(resp.data),
-          }
+          };
         }
       });
   }
@@ -265,8 +262,7 @@ export class SolicitudComponent {
       });
   }
 
-  getSeccionAduanera() {
-  }
+  getSeccionAduanera() {}
 
   paisOrigen(pais: Catalogo) {
     console.log(pais);
@@ -312,17 +308,12 @@ export class SolicitudComponent {
     if (tipo === 'i') {
       this.d_servicio.get('h_inicio')?.setValue(e);
     } else if (tipo === 'f') {
-
-
-
       switch (this.tipo_sol_seleccionada.id) {
         case 1:
           this.d_servicio.get('h_final')?.setValue(e);
 
           const f_inicial = this.d_servicio.get('f_inicio')?.value;
           const f_final = this.d_servicio.get('f_final')?.value;
-
-
 
           break;
         case 2:
@@ -383,28 +374,41 @@ export class SolicitudComponent {
   }
 
   aduanaSeleccion(aduana: Catalogo) {
-    this.darValorCampoFormulario(this.despacho, 'idAduana', aduana.id)
-    this.darValorCampoFormulario(this.despacho, 'descripcionAduana', aduana.value);
+    this.darValorCampoFormulario(this.despacho, 'idAduana', aduana.id);
+    this.darValorCampoFormulario(
+      this.despacho,
+      'descripcionAduana',
+      aduana.value
+    );
     this.validacionPedimento = true;
 
     //
-    const patente = this.fService.convertirValorANumero(this.despacho, 'patente');
-    const idAduana = this.fService.convertirValorANumero(this.despacho, 'idAduana');
+    const patente = this.fService.convertirValorANumero(
+      this.despacho,
+      'patente'
+    );
+    const idAduana = this.fService.convertirValorANumero(
+      this.despacho,
+      'idAduana'
+    );
 
     this.datosPedimentoComponente = {
       patente: patente,
-      idAduana: idAduana
-    }
+      idAduana: idAduana,
+    };
   }
 
   validaCampoPedimento() {
     const aduanaValidacion = this.isValid(this.despacho, 'descripcionAduana');
 
-    if (aduanaValidacion === null)
-      this.validacionPedimento = true;
+    if (aduanaValidacion === null) this.validacionPedimento = true;
   }
 
-  darValorCampoFormulario(form: FormGroup, field: string, valor: string | number) {
+  darValorCampoFormulario(
+    form: FormGroup,
+    field: string,
+    valor: string | number
+  ) {
     form.get(field)?.setValue(valor);
   }
 }

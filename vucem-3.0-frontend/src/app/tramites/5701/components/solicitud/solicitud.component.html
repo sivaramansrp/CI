@@ -206,22 +206,8 @@
     @if (!datos_servicio) {
     <ng-titulo titulo="Datos del pedimento" />
 
-    <c-pedimento [validacion]="validacionPedimento" [datosNroPedimento]="datosPedimentoComponente" (validaCampos)="validaCampoPedimento()"></c-pedimento>
-
-
-    <!-- <div class="row" formGroupName="pedimento">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="control-label" for="id_pedimento">Número de pedimento:</label>
-          <input class="form-control" id="id_pedimento" placeholder="" type="text" formControlName="id_pedimento"
-            [ngClass]="isValid(datos_importador_exportador,'rfc_import_export') ? 'required' : ''" appUppercase
-            (blur)="busqueda_rfc()">
-        </div>
-      </div>
-      <div class="col-md-4 d-flex align-items-center">
-        <button type="button" class="btn btn-primary">Agregar</button>
-      </div>
-    </div> -->
+    <c-pedimento [validacion]="validacionPedimento" [datosNroPedimento]="datosPedimentoComponente"
+      (validaCampos)="validaCampoPedimento()"></c-pedimento>
     }
 
 

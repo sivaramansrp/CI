@@ -5,17 +5,18 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../../../shared/shared.module';
 import { Pedimento } from '../../../../core/models/shared/components.model';
 import { DatosComponentePedimento } from '../../../../core/models/5701/servicios-extraordinarios.model';
+import { BooleanoSiNoPipe } from '../../../../shared/pipes/booleanoSiNo/booleano-si-no.pipe';
 
 @Component({
   selector: 'c-pedimento',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, SharedModule],
+  imports: [ReactiveFormsModule, CommonModule, SharedModule, BooleanoSiNoPipe],
   templateUrl: './pedimento.component.html',
   styleUrl: './pedimento.component.scss',
 })
 export class PedimentoComponent {
-  @Input({required: true}) validacion!: boolean;
-  @Input({required: true}) datosNroPedimento!: DatosComponentePedimento;
+  @Input({ required: true }) validacion!: boolean;
+  @Input({ required: true }) datosNroPedimento!: DatosComponentePedimento;
 
   validaCampos = output<void>();
 
@@ -48,8 +49,6 @@ export class PedimentoComponent {
     if (changes['datosNroPedimento']) {
       this.datosNroPedimento = changes['datosNroPedimento'].currentValue;
     }
-
-
   }
   agregaPedimento() {
     this.validaCampos.emit();
@@ -58,9 +57,11 @@ export class PedimentoComponent {
 
   acciones() {
     if (this.validacion) {
-      const nroPedimento = this.pedimentoForm.value ? parseInt(this.pedimentoForm.value) : 0;
+      const nroPedimento = this.pedimentoForm.value
+        ? parseInt(this.pedimentoForm.value)
+        : 0;
 
-      if(nroPedimento !== 0) {
+      if (nroPedimento !== 0) {
         const pedimento = {
           patente: this.datosNroPedimento.patente,
           pedimento: nroPedimento,
@@ -73,13 +74,19 @@ export class PedimentoComponent {
         };
         this.pedimentos.push(pedimento);
       } else {
-        alert('Necesita agregar un número de pedimento')
+        alert('Necesita agregar un número de pedimento');
       }
 
       // 'No se pudo validar el pedimento, favor de capturar los datos de pedimento faltante y anexar documento.'
-
     } else {
-      alert('Necesita seleccionar una aduana de despacho y agregar un número de pedimento');
+      alert(
+        'Necesita seleccionar una aduana de despacho y agregar un número de pedimento'
+      );
     }
+  }
+
+  eliminar(i: number) {
+    this.pedimentos.splice(i, 1)
+    //modal de confirmacion de elimincacion
   }
 }
