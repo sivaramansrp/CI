@@ -5,3 +5,13 @@ export const COOKIE = {
   NOMBRE_COOKIE_USUARIO: 'sg-usuario',
   NOMBRE_COOKIE_RFC: 'sg-rfc',
 }
+
+export const CATALOGOS_ID = {
+  CAT_TIPO_SOL: 1,
+  CAT_PAISES: 2,
+  CAT_ADUANAS: 3,
+  CAT_SECCION_ADUANAS: 4,
+  DATOS_GNRLS_SOL: 5,
+  CAT_TIPO_DOCUMENTO: 6,
+  CAT_TIPO_OPERACION: 7
+}

@@ -24,6 +24,7 @@ import {
   SEMANA_D,
   SOCIO_COMERCIAL,
 } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 
 @Component({
   selector: 'solicitud',
@@ -185,7 +186,7 @@ export class SolicitudComponent {
 
   getTiposSolicitud() {
     this.sExtraordinarios
-      .getCatalogo(1)
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_SOL)
       .subscribe((resp) => {
         if (resp.codigo === '200') {
           this.datos_tipos_solicitud = {
@@ -200,10 +201,9 @@ export class SolicitudComponent {
 
   getPaises() {
     this.sExtraordinarios
-      .getCatalogo(2)
+      .getCatalogo(CATALOGOS_ID.CAT_PAISES)
       .subscribe((resp) => {
         if (resp.codigo === '200') {
-          const paises = resp.data;
           this.paises_o = {
             labelNombre: 'País de origen',
             required: true,
@@ -223,7 +223,7 @@ export class SolicitudComponent {
 
   getAduanas() {
     this.sExtraordinarios
-      .getCatalogo(3)
+      .getCatalogo(CATALOGOS_ID.CAT_ADUANAS)
       .subscribe((resp) => {
         if (resp.codigo === '200') {
           this.aduanas = {

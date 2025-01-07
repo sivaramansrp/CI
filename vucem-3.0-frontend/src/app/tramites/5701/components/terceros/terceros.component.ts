@@ -26,7 +26,6 @@ export class TercerosComponent {
       this.FormPersona.reset();
     } else {
       console.log('No puede agregar mas de cinco personas o el formato de la dirección correo no es valido');
-
     }
   }
 
