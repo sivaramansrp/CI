@@ -194,7 +194,7 @@ export class SolicitudComponent {
           '',
           [
             Validators.required,
-            Validators.pattern(this.validacionesService.rfc_pf_pattern),
+            Validators.pattern(this.validacionesService.rfcPattern),
           ],
         ],
         nombreImportExport: [

@@ -12,8 +12,8 @@ import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 export class PasoDosComponent {
   TEXTOS = TEXTOS;
 
-  tipos_documentos: Array<Catalogo> = [];
-  documentos_seleccionados: Array<Catalogo> = [];
+  tiposDocumentos: Array<Catalogo> = [];
+  documentosSeleccionados: Array<Catalogo> = [];
 
   constructor(
     private sExtraordinarios: ServiciosExtraordinariosService,
@@ -21,7 +21,7 @@ export class PasoDosComponent {
 
   ngOnInit() {
     this.getTiposDocumentos();
-    this.documentos_seleccionados = [
+    this.documentosSeleccionados = [
       {
         id: 1,
         value: 'Documentos que ampare el valor de la mercancía'
@@ -37,20 +37,20 @@ export class PasoDosComponent {
   getTiposDocumentos() {
     this.sExtraordinarios.getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).subscribe((resp) => {
       if (resp.codigo === '200') {
-        this.tipos_documentos = JSON.parse(resp.data)
+        this.tiposDocumentos = JSON.parse(resp.data)
       }
     })
   }
 
   agregarDocumento(id: number) {
-    this.tipos_documentos.forEach( el => {
+    this.tiposDocumentos.forEach( el => {
       if (el.id === id) {
-        this.documentos_seleccionados.push(el);
+        this.documentosSeleccionados.push(el);
       }
     })
   }
 
   eliminar(i: number) {
-    this.documentos_seleccionados.splice(i, 1)
+    this.documentosSeleccionados.splice(i, 1)
   }
 }

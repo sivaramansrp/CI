@@ -19,11 +19,11 @@ import { WizardService } from '../../../core/services/shared/wizard/wizard.servi
   styleUrl: './wizard.component.scss',
 })
 export class WizardComponent {
-  @Input() lista_pasos: Array<ListaPasosWizard> = [];
+  @Input() listaPasos: Array<ListaPasosWizard> = [];
   @Output() indice = new EventEmitter<any>();
 
-  i_actual: number = 0;
-  edo_inicial: boolean = false;
+  indiceActual: number = 0;
+  estadoInicial: boolean = false;
   lista: Array<ListaPasosWizard> = [];
   maximo: number = 0;
 
@@ -33,13 +33,13 @@ export class WizardComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     if (
-      changes['lista_pasos'].currentValue !== undefined &&
-      changes['lista_pasos'].currentValue !== null
+      changes['listaPasos'].currentValue !== undefined &&
+      changes['listaPasos'].currentValue !== null
     ) {
-      this.lista_pasos = changes['lista_pasos'].currentValue;
+      this.listaPasos = changes['listaPasos'].currentValue;
 
-      this.lista_pasos.forEach((element, index) => {
-        this.edo_inicial = index == 0 ? true : false;
+      this.listaPasos.forEach((element, index) => {
+        this.estadoInicial = index == 0 ? true : false;
         this.lista.push({
           indice: index,
           titulo: element.titulo,
@@ -54,19 +54,17 @@ export class WizardComponent {
 
   siguiente(activo: boolean = true) {
 
-    this.i_actual = this.i_actual === this.maximo ? this.i_actual : this.i_actual + 1;
-    this.lista[this.i_actual].activo = activo;
+    this.indiceActual = this.indiceActual === this.maximo ? this.indiceActual : this.indiceActual + 1;
+    this.lista[this.indiceActual].activo = activo;
 
-    if( this.i_actual === (this.maximo)) {
-      this.lista[this.i_actual].completado = activo;
+    if( this.indiceActual === (this.maximo)) {
+      this.lista[this.indiceActual].completado = activo;
     }
   }
 
   atras() {
-    this.lista[this.i_actual].activo = false;
-    this.lista[this.i_actual].completado = false;
-    this.i_actual = this.i_actual == 0 ? 0 : this.i_actual - 1;
-
-
+    this.lista[this.indiceActual].activo = false;
+    this.lista[this.indiceActual].completado = false;
+    this.indiceActual = this.indiceActual == 0 ? 0 : this.indiceActual - 1;
   }
 }

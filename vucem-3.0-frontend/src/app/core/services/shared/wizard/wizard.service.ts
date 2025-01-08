@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 export class WizardService {
   private indice = new BehaviorSubject<number>(1);
 
-  actual_indice = this.indice.asObservable();
+  actualIndice = this.indice.asObservable();
 
   cambio_indice(indice: number) {
     this.indice.next(indice);

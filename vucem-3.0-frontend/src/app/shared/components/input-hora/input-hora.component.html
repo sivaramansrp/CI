@@ -1,5 +1,5 @@
 <div class="form-group">
-  <label class="control-label" for="calendar">{{datosHora.label_nombre}} {{datosHora.required ? '*' : ''}}:</label>
+  <label class="control-label" for="calendar">{{datosHora.labelNombre}} {{datosHora.required ? '*' : ''}}:</label>
   <input class="form-control" type="text" name="hora" id="hora" [formControl]="hora" placeholder="00:00 (24 hrs)"
     HoraFormato [ngClass]="isValid ? 'required' : ''" (blur)="onBlurEvent()">
 </div>

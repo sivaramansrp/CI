@@ -4,9 +4,9 @@
   </div>
   <div class="col-md-4 d-flex justify-content-end">
     <button type="button" class="btn btn-default" (click)="anterior()"
-      [style.visibility]="btn_ant_visibility">{{datos.txt_btn_ant}}</button>
-    @if (btn_cont_visibility) {
-    <button type="button" class="btn btn-primary ms-3" (click)="continuar()">{{datos.txt_btn_sig}}</button>
+      [style.visibility]="btnAntVisible">{{datos.txtBtnAnt}}</button>
+    @if (btnContVisible) {
+    <button type="button" class="btn btn-primary ms-3" (click)="continuar()">{{datos.txtBtnSig}}</button>
     }
   </div>
 </div>

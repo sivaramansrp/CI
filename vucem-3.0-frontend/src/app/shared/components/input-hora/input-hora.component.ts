@@ -18,7 +18,7 @@ export class InputHoraComponent {
   @Output() horaValor = new EventEmitter<string>();
 
   hora: FormControl = new FormControl('', [
-    Validators.pattern(this.validacionesService.hora_pattern),
+    Validators.pattern(this.validacionesService.horaPattern),
   ]);
 
   constructor(private validacionesService: ValidacionesFormularioService) {}
@@ -27,7 +27,7 @@ export class InputHoraComponent {
     if (this.datosHora.required) {
       this.hora.setValidators([
         Validators.required,
-        Validators.pattern(this.validacionesService.hora_pattern),
+        Validators.pattern(this.validacionesService.horaPattern),
       ]);
       this.hora.updateValueAndValidity();
     }

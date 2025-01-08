@@ -16,10 +16,10 @@ export interface CatalogosSelect {
 }
 
 export interface DatosPasos {
-  txt_btn_sig: string;
-  txt_btn_ant: string;
+  txtBtnSig: string;
+  txtBtnAnt: string;
   indice: number;
-  nro_pasos: number;
+  nroPasos: number;
 }
 
 export interface DatosIndice {
@@ -39,7 +39,7 @@ export interface DatosArchivo {
 }
 
 export interface InputCheck {
-  label_nombre: string;
+  labelNombre: string;
   maxlength: number;
   minlenght: number;
   required: boolean;
@@ -52,12 +52,12 @@ export interface DatosInputCheck {
 }
 
 export interface InputHora {
-  label_nombre: string;
+  labelNombre: string;
   required: boolean;
 }
 
 export interface InputFecha {
-  label_nombre: string;
+  labelNombre: string;
   required: boolean;
   habilitado: boolean
 }

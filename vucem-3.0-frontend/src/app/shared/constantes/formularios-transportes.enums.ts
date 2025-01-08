@@ -1,49 +1,49 @@
 export const CARRETERO = [
   {
-    label_nombre: 'Empresa transportista',
+    labelNombre: 'Empresa transportista',
     campo: 'emp_transportista',
     class: 'col-md-6',
     tipo_input: 'text'
   },
   {
-    label_nombre: 'Número carta porte',
+    labelNombre: 'Número carta porte',
     campo: 'n_carta_porte',
     class: 'col-md-6',
     tipo_input: 'text'
   },
   {
-    label_nombre: 'Fecha carta porte',
+    labelNombre: 'Fecha carta porte',
     campo: 'f_carta_porte',
     class: 'col-md-6',
     tipo_input: 'date'
   },
   {
-    label_nombre: 'Marca',
+    labelNombre: 'Marca',
     campo: 'marca',
     class: 'col-md-6',
     tipo_input: 'text'
 
   },
   {
-    label_nombre: 'Modelo',
+    labelNombre: 'Modelo',
     campo: 'modelo',
     class: 'col-md-6',
     tipo_input: 'select'
   },
   {
-    label_nombre: 'Placas',
+    labelNombre: 'Placas',
     campo: 'placas',
     class: 'col-md-6',
     tipo_input: 'text'
   },
   {
-    label_nombre: 'Contenerdor(es)',
+    labelNombre: 'Contenerdor(es)',
     campo: 'contenedor',
     class: 'col-md-12',
     tipo_input: 'textarea'
   },
   {
-    label_nombre: 'Observaciones',
+    labelNombre: 'Observaciones',
     campo: 'observaciones',
     class: 'col-md-12',
     tipo_input: 'textarea'
@@ -52,25 +52,25 @@ export const CARRETERO = [
 
 export const FERROVIARIO = [
   {
-    label_nombre: 'Número de BL',
+    labelNombre: 'Número de BL',
     campo: 'n_bl',
     class: 'col-md-6',
     tipo_input: 'text'
   },
   {
-    label_nombre: 'Tipo de equipo',
+    labelNombre: 'Tipo de equipo',
     campo: 'tipo_equipo',
     class: 'col-md-6',
     tipo_input: 'select'
   },
   {
-    label_nombre: 'Iniciales de equipo',
+    labelNombre: 'Iniciales de equipo',
     campo: 'i_equipo',
     class: 'col-md-6',
     tipo_input: 'text'
   },
   {
-    label_nombre: 'Numero de equipo',
+    labelNombre: 'Numero de equipo',
     campo: 'n_equipo',
     class: 'col-md-6',
     tipo_input: 'text'
@@ -78,7 +78,7 @@ export const FERROVIARIO = [
 
 
   {
-    label_nombre: 'Observaciones',
+    labelNombre: 'Observaciones',
     campo: 'observaciones',
     class: 'col-md-12',
     tipo_input: 'textarea'

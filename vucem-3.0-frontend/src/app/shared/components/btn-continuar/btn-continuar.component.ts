@@ -25,17 +25,17 @@ export class BtnContinuarComponent {
   wizardService = inject(WizardService);
 
 
-  get btn_ant_visibility() {
+  get btnAntVisible() {
     return (this.datos.indice === 1  ? 'hidden' : 'visible')
   }
 
-  get btn_cont_visibility() {
-    return (this.datos.indice === this.datos.nro_pasos  ? false : true)
+  get btnContVisible() {
+    return (this.datos.indice === this.datos.nroPasos  ? false : true)
   }
 
 
   continuar() : void {
-    const condicion = this.datos.indice > 0  && this.datos.indice < this.datos.nro_pasos;
+    const condicion = this.datos.indice > 0  && this.datos.indice < this.datos.nroPasos;
     if (condicion) {
       this.wizardService.cambio_indice(this.datos.indice);
       const datosContinuar: AccionBoton = {
@@ -47,7 +47,7 @@ export class BtnContinuarComponent {
   }
 
   anterior() : void {
-    const condicion = this.datos.indice > 1 && this.datos.indice < this.datos.nro_pasos + 1;
+    const condicion = this.datos.indice > 1 && this.datos.indice < this.datos.nroPasos + 1;
     if (condicion) {
       const datosAnterior: AccionBoton = {
         accion: 'ant',

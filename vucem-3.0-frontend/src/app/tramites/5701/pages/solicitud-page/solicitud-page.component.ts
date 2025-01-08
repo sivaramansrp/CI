@@ -19,11 +19,11 @@ export class SolicitudPageComponent {
 
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-  datos_pasos: DatosPasos = {
-    nro_pasos: this.pasos.length,
+  datosPasos: DatosPasos = {
+    nroPasos: this.pasos.length,
     indice: this.indice,
-    txt_btn_ant: 'Anterior',
-    txt_btn_sig: 'Continuar',
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
   };
 
   seleccionaTab(i: number): void {

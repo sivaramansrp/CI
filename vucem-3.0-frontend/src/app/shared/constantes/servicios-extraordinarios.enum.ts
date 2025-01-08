@@ -32,7 +32,7 @@ export const TEXTOS = {
 };
 
 export const INDUSTRIA_AUTOMOTRIZ = {
-  label_nombre: 'Industria Automotriz',
+  labelNombre: 'Industria Automotriz',
   maxlength: 25,
   minlenght: 0,
   required: false,
@@ -40,7 +40,7 @@ export const INDUSTRIA_AUTOMOTRIZ = {
 };
 
 export const PROGRAMA_FOMENTO = {
-  label_nombre: 'Programa de fomento',
+  labelNombre: 'Programa de fomento',
   maxlength: 25,
   minlenght: 0,
   required: false,
@@ -48,7 +48,7 @@ export const PROGRAMA_FOMENTO = {
 };
 
 export const IMMEX = {
-  label_nombre: 'IMMEX (Número/aaaa)',
+  labelNombre: 'IMMEX (Número/aaaa)',
   maxlength: 25,
   minlenght: 0,
   required: false,
@@ -56,7 +56,7 @@ export const IMMEX = {
 };
 
 export const SOCIO_COMERCIAL = {
-  label_nombre: 'ID Socio comercial',
+  labelNombre: 'ID Socio comercial',
   maxlength: 10,
   minlenght: 0,
   required: false,
@@ -64,7 +64,7 @@ export const SOCIO_COMERCIAL = {
 };
 
 export const DESPACHO_LDA = {
-  label_nombre: 'RFC autorización LDA',
+  labelNombre: 'RFC autorización LDA',
   maxlength: 10,
   minlenght: 0,
   required: false,
@@ -72,7 +72,7 @@ export const DESPACHO_LDA = {
 };
 
 export const DESPACHO_DD = {
-  label_nombre: 'Autorizacion DDEX',
+  labelNombre: 'Autorizacion DDEX',
   maxlength: 10,
   minlenght: 0,
   required: false,
@@ -80,12 +80,12 @@ export const DESPACHO_DD = {
 };
 
 export const HORA_INICIO = {
-  label_nombre: 'Hora inicio',
+  labelNombre: 'Hora inicio',
   required: true,
 };
 
 export const HORA_FINAL = {
-  label_nombre: 'Hora final',
+  labelNombre: 'Hora final',
   required: true,
 };
 export const MESES = [
@@ -124,13 +124,13 @@ export const SEMANA_D = [
 ];
 
 export const FECHA_INICIO = {
-  label_nombre: 'Fecha inicio',
+  labelNombre: 'Fecha inicio',
   required: true,
   habilitado: true,
 };
 
 export const FECHA_FINAL = {
-  label_nombre: 'Fecha final',
+  labelNombre: 'Fecha final',
   required: true,
   habilitado: true,
 };

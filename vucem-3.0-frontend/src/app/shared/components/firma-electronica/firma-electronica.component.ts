@@ -17,10 +17,10 @@ export class FirmaElectronicaComponent {
   @Input() tipo: string = '';
   @Output() valido = new EventEmitter<boolean>();
 
-  cert_file: string = '';
-  key_file: string = '';
-  datos_binarios!: ArrayBuffer;
-  mensaje_validacion: string = '';
+  certFile: string = '';
+  keyFile: string = '';
+  datosBinarios!: ArrayBuffer;
+  mensajeValidacion: string = '';
   contrasenia: string = '';
 
   FormCertificado = this.fb.group({
@@ -45,7 +45,7 @@ export class FirmaElectronicaComponent {
     const input = event.target as HTMLInputElement;
 
     if (input.files) {
-      const original_file = input.files[0];
+      const archivoOriginal = input.files[0];
       const reader = new FileReader();
       reader.onload = async (e: ProgressEvent<FileReader>) => {
         if (e.target && e.target.result) {
@@ -56,14 +56,14 @@ export class FirmaElectronicaComponent {
             const asn1 = forge.asn1.fromDer(buff);
             const cert = forge.pki.certificateFromAsn1(asn1);
             const pem = forge.pki.certificateToPem(cert);
-            this.cert_file = pem;
+            this.certFile = pem;
           }
           if (type === 'key') {
-            this.datos_binarios = (await e.target.result) as ArrayBuffer;
+            this.datosBinarios = (await e.target.result) as ArrayBuffer;
           }
         }
       };
-      reader.readAsArrayBuffer(original_file);
+      reader.readAsArrayBuffer(archivoOriginal);
     }
   }
 
@@ -78,8 +78,8 @@ export class FirmaElectronicaComponent {
       password !== undefined && password !== null ? password : '';
 
     this.validateFilesBase(
-      this.cert_file,
-      this.datos_binarios,
+      this.certFile,
+      this.datosBinarios,
       this.contrasenia
     );
   }
@@ -91,19 +91,19 @@ export class FirmaElectronicaComponent {
   ): void {
     try {
       const cert = forge.pki.certificateFromPem(certFile);
-      const cert_public_key = cert.publicKey as forge.pki.rsa.PublicKey;
+      const certPublicKey = cert.publicKey as forge.pki.rsa.PublicKey;
 
-      const padding_start = '-----BEGIN ENCRYPTED PRIVATE KEY-----\n';
-      const padding_end = '\n-----END ENCRYPTED PRIVATE KEY-----';
+      const paddingStart = '-----BEGIN ENCRYPTED PRIVATE KEY-----\n';
+      const paddingEnd = '\n-----END ENCRYPTED PRIVATE KEY-----';
       const der = new Uint8Array(binaryData);
-      const binary_string = String.fromCharCode(...der);
-      const content = padding_start + btoa(binary_string) + padding_end; // añadir paddings
-      const private_key = forge.pki.decryptRsaPrivateKey(content, password);
+      const binaryString = String.fromCharCode(...der);
+      const content = paddingStart + btoa(binaryString) + paddingEnd; // añadir paddings
+      const privateKey = forge.pki.decryptRsaPrivateKey(content, password);
 
-      if (private_key && cert_public_key) {
+      if (privateKey && certPublicKey) {
         if (
-          cert_public_key.n.t === private_key.n.t &&
-          cert_public_key.e.t === private_key.e.t
+          certPublicKey.n.t === privateKey.n.t &&
+          certPublicKey.e.t === privateKey.e.t
         ) {
           this.valido.emit(true);
           this.toastrService.success(

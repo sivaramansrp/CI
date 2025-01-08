@@ -28,7 +28,7 @@ export class InputCheckComponent {
 
   @Output() valores = new EventEmitter<DatosInputCheck>();
 
-  label_nombre: string = 'Programa de fomento';
+  labelNombre: string = 'Programa de fomento';
   FormInput!: FormGroup;
 
   constructor(private fb: FormBuilder) {}

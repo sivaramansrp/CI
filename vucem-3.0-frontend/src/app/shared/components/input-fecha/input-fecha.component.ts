@@ -50,16 +50,16 @@ export class InputFechaComponent {
       const fecha = this.setFecha.split('/');
       const ObjectDate = moment.utc(`${fecha[2]}-${fecha[1]}-${fecha[0]}`);
       this.generarFormulario(ObjectDate);
-      this.Formulario.controls['fecha_string'].enable();
-      this.Formulario.get('fecha_string')?.setValue(
+      this.Formulario.controls['fechaString'].enable();
+      this.Formulario.get('fechaString')?.setValue(
         moment.utc(ObjectDate).format('DD/MM/YYYY'),
       );
-      this.Formulario.controls['fecha_string'].disable();
+      this.Formulario.controls['fechaString'].disable();
     }
   }
 
-  get fecha_string() {
-    return this.Formulario.get('fecha_string')?.value;
+  get fechaString() {
+    return this.Formulario.get('fechaString')?.value;
   }
 
   generarFormulario(fechaActual: moment.Moment) {
@@ -67,10 +67,10 @@ export class InputFechaComponent {
       dia: [fechaActual.date()],
       mes: [fechaActual.month() + 1],
       anio: [fechaActual.year()],
-      fecha_string: [],
-      fecha_seleccionada: [fechaActual],
+      fechaString: [],
+      fechaSeleccionada: [fechaActual],
     });
-    this.Formulario.controls['fecha_string'].disable();
+    this.Formulario.controls['fechaString'].disable();
     this.getDayFromDate(
       this.Formulario.get('mes')?.value,
       this.Formulario.get('anio')?.value,
@@ -84,7 +84,7 @@ export class InputFechaComponent {
     const ObjectDate = moment.utc(
       `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')?.value.toString().padStart(2, '0')}-01`,
     );
-    this.Formulario.get('fecha_seleccionada')?.setValue(ObjectDate);
+    this.Formulario.get('fechaSeleccionada')?.setValue(ObjectDate);
 
     this.getDayFromDate(
       this.Formulario.get('mes')?.value,
@@ -99,7 +99,7 @@ export class InputFechaComponent {
     const ObjectDate = moment.utc(
       `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')?.value.toString().padStart(2, '0')}-01`,
     );
-    this.Formulario.get('fecha_seleccionada')?.setValue(ObjectDate);
+    this.Formulario.get('fechaSeleccionada')?.setValue(ObjectDate);
 
     this.getDayFromDate(
       this.Formulario.get('mes')?.value,
@@ -142,7 +142,7 @@ export class InputFechaComponent {
 
   changeMount(flag: any) {
     if (flag < 0) {
-      const prevDate = this.Formulario.get('fecha_seleccionada')
+      const prevDate = this.Formulario.get('fechaSeleccionada')
         ?.value.clone()
         .subtract(1, 'month');
       this.Formulario.get('mes')?.setValue(prevDate.format('M'));
@@ -150,14 +150,14 @@ export class InputFechaComponent {
       const ObjectDate = moment.utc(
         `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')?.value.toString().padStart(2, '0')}-01`,
       );
-      this.Formulario.get('fecha_seleccionada')?.setValue(ObjectDate);
+      this.Formulario.get('fechaSeleccionada')?.setValue(ObjectDate);
 
       this.getDayFromDate(
         this.Formulario.get('mes')?.value,
         this.Formulario.get('anio')?.value,
       );
     } else {
-      const nextDate = this.Formulario.get('fecha_seleccionada')
+      const nextDate = this.Formulario.get('fechaSeleccionada')
         ?.value.clone()
         .add(1, 'month');
       this.Formulario.get('mes')?.setValue(nextDate.format('M'));
@@ -165,7 +165,7 @@ export class InputFechaComponent {
       const ObjectDate = moment.utc(
         `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')?.value.toString().padStart(2, '0')}-01`,
       );
-      this.Formulario.get('fecha_seleccionada')?.setValue(ObjectDate);
+      this.Formulario.get('fechaSeleccionada')?.setValue(ObjectDate);
 
       this.getDayFromDate(
         this.Formulario.get('mes')?.value,
@@ -176,20 +176,20 @@ export class InputFechaComponent {
 
   clickDay(day: any) {
     const mountYear =
-      this.Formulario.get('fecha_seleccionada')?.value.format('YYYY-MM');
+      this.Formulario.get('fechaSeleccionada')?.value.format('YYYY-MM');
     const dia = day.value > 9 ? day.value : '0' + day.value;
     const parse = `${mountYear}-${dia}`;
     const ObjectDate = moment(parse);
     this.Formulario.get('dia')?.setValue(day.value);
-    this.Formulario.controls['fecha_string'].enable();
-    this.Formulario.get('fecha_string')?.setValue(
+    this.Formulario.controls['fechaString'].enable();
+    this.Formulario.get('fechaString')?.setValue(
       moment.utc(ObjectDate).format('DD/MM/YYYY'),
     );
-    this.Formulario.controls['fecha_string'].disable();
-    this.Formulario.get('fecha_seleccionada')?.setValue(ObjectDate);
+    this.Formulario.controls['fechaString'].disable();
+    this.Formulario.get('fechaSeleccionada')?.setValue(ObjectDate);
     this.mostrar = false;
 
-    this.valorCambiado.emit(this.Formulario.get('fecha_string')?.value);
+    this.valorCambiado.emit(this.Formulario.get('fechaString')?.value);
   }
 
   mostrarCalendario() {
