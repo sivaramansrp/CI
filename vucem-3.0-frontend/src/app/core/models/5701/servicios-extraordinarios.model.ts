@@ -146,3 +146,10 @@ export interface DatosComponentePedimento {
   patente: number;
   idAduana: number;
 }
+
+export interface Persona {
+  gafete?: number;
+  nombre: string;
+  aPaterno: string;
+  aMaterno: string;
+}

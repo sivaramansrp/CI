@@ -8,7 +8,7 @@ import {
   InputHora,
 } from '../../../../core/models/shared/components.model';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import {
   DESPACHO_DD,
@@ -105,6 +105,10 @@ export class SolicitudComponent {
 
   get pedimento() {
     return this.FormSolicitud.get('pedimento') as FormGroup;
+  }
+
+  get personasResponsablesDespacho() {
+    return this.FormSolicitud.get('personasResponsablesDespacho') as FormArray;
   }
 
   // * Peticiones a las apis
@@ -253,6 +257,8 @@ export class SolicitudComponent {
           pedimento_validado: [],
         }),
       }),
+
+      personasResponsablesDespacho: this.fb.array([]),
     });
   }
 

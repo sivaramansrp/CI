@@ -27,6 +27,7 @@ import { AgregarTransporteComponent } from "../../shared/components/agregar-tran
 import { AgregarPersonasComponent } from '../../shared/components/agregar-personas/agregar-personas.component';
 import { BusquedaTablaComponent } from '../../shared/components/busqueda-tabla/busqueda-tabla.component';
 import { PedimentoComponent } from './components/pedimento/pedimento.component';
+import { AgregaPersonasComponent } from "./components/agrega-personas/agrega-personas.component";
 
 
 
@@ -61,7 +62,9 @@ import { PedimentoComponent } from './components/pedimento/pedimento.component';
     AgregarTransporteComponent,
     AgregarPersonasComponent,
     BusquedaTablaComponent,
-    PedimentoComponent
+    PedimentoComponent,
+    AgregarPersonasComponent,
+    AgregaPersonasComponent
 ],
 exports: [
   SolicitudComponent,
