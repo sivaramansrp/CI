@@ -42,10 +42,10 @@
           </tr>
         </thead>
         <tbody>
-          @for (item of documentos_cargados; track item.tipo_documento.id; let i = $index) {
+          @for (item of documentos_cargados; track item.tipoDocumento.id; let i = $index) {
           <tr>
             <td> {{i+1}} </td>
-            <td>{{ item.tipo_documento.value}}</td>
+            <td>{{ item.tipoDocumento.value}}</td>
             <td>{{ item.nombre_archivo}}</td>
             <td>
               <button class="btn btn-link" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"

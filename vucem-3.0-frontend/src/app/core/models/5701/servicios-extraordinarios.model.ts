@@ -5,22 +5,22 @@ export interface RespuestaSolicitud {
   message: string;
 }
 export interface Solicitud {
-  id_solicitud: string;
-  datos_solicitante: {
+  idSolicitud: string;
+  datosSolicitante: {
     generales: DatosGenerales;
-    domicilio_fiscal: DomicilioFiscal;
+    domicilioFiscal: DomicilioFiscal;
   };
-  datos_solicitud: {
+  datosSolicitud: {
     tipo: number;
-    datos_importador_exportador: DatosImportador;
-    datos_servicio: DatosServicio;
-    datos_despacho: DatosDespacho;
-    datos_pedimento: DatosPedimento;
+    datosImportadorExportador: DatosImportador;
+    datosServicio: DatosServicio;
+    datosDespacho: DatosDespacho;
+    datosPedimento: DatosPedimento;
     mercancia: DatosMercancia;
-    responsables_despacho: Array<ResponsablesDespacho>;
+    responsablesDespacho: Array<ResponsablesDespacho>;
     pagos: DatosPago;
   };
-  terceros_relacionados: Array<Personas>;
+  tercerosRelacionados: Array<Personas>;
   requisitos: Array<TipoDocumento>;
 }
 
@@ -28,21 +28,21 @@ export interface DatosGenerales {
   curp: string;
   rfc: string;
   nombre: string;
-  a_paterno: string;
-  a_materno: string;
-  act_economica: string;
+  aPaterno: string;
+  aMaterno: string;
+  actEconomica: string;
   correo: string;
 }
 export interface DomicilioFiscal {
   pais: string;
-  codigo_postal: string;
-  entidad_federativa: string;
+  codigoPostal: string;
+  entidadFederativa: string;
   municipio: string;
   localidad: string;
   colonia: string;
   calle: string;
-  n_ext: string;
-  n_int: string;
+  nExt: string;
+  nInt: string;
   lada: string;
   telefono: string;
 }
@@ -54,42 +54,42 @@ export interface PersonaTerceros {
 export interface DatosImportador {
   rfc: string;
   nombre: string;
-  nro_registro: string;
-  programa_fomento: string;
+  nroRegistro: string;
+  programaFomento: string;
   immex: string;
-  industria_automotriz: string;
-  tipo_empresa: DatosTipoEmpresa;
-  id_socio_comercial: string;
+  industriaAutomotriz: string;
+  tipoEmpresa: DatosTipoEmpresa;
+  idSocioComercial: string;
 }
 
 export interface DatosTipoEmpresa {
-  certificacion_a: boolean;
-  certificacion_aa: boolean;
-  certificacion_aaa: boolean;
-  socio_comercial: boolean;
-  op_economico_aut: boolean;
-  revision_origen: boolean;
+  certificacionA: boolean;
+  certificacionAA: boolean;
+  certificacionAAA: boolean;
+  socioComercial: boolean;
+  opEconomicoAut: boolean;
+  revisionOrigen: boolean;
 }
 
 export interface DatosServicio {
-  f_inicio: string;
-  h_inicio: string;
-  f_final: string;
-  h_final: string;
-  f_seleccionadas: Array<string>;
+  fechaInicio: string;
+  horaInicio: string;
+  fechaFinal: string;
+  horaFinal: string;
+  fechasSeleccionadas: Array<string>;
 }
 export interface DatosDespacho {
   despacho: DatosDespacho;
-  rfc_autorizacion: string;
-  ddex_autorizacion: string;
+  rfcAutorizacion: string;
+  ddexAutorizacion: string;
   aduana: string;
-  seccion_aduanera: string;
-  nombre_recinto: string;
-  tipo_despacho: string;
-  tipo_operacion: string;
+  seccionAduanera: string;
+  nombreRecinto: string;
+  tipoDespacho: string;
+  tipoOperacion: string;
   patente: string;
-  relacion_sociedad: boolean;
-  encargo_conferido: boolean;
+  relacionSociedad: boolean;
+  encargoConferido: boolean;
   domicilio: string;
 }
 
@@ -101,37 +101,37 @@ export interface DatosPedimento {
   patente: number;
   pedimento: number;
   aduana: number;
-  tipo_pedimento: string;
+  tipoPedimento: string;
   numero: number;
-  comprobante_valor: string;
-  pedimento_validado: boolean;
+  comprobanteValor: string;
+  pedimentoValidado: boolean;
 }
 
 export interface DatosMercancia {
-  pais_origen: number;
-  pais_procedencia: number;
+  paisOrigen: number;
+  paisProcedencia: number;
   descripcion: string;
   justificacion: string;
 }
 export interface ResponsablesDespacho {
   gafete: string;
   nombre: string;
-  a_paterno: string;
-  a_materno: string;
+  aPaterno: string;
+  aMaterno: string;
 }
 export interface DatosPago {
-  monto_pagar: string;
-  linea_captura: string;
+  montoPagar: string;
+  lineaCaptura: string;
   monto: number;
 }
 
 export interface Personas {
-  razon_social: string;
+  razonSocial: string;
   correo: string;
 }
 
 export interface TipoDocumento {
-  tipo_documento: number;
+  tipoDocumento: number;
 }
 
 export interface ListaPasosWizard {

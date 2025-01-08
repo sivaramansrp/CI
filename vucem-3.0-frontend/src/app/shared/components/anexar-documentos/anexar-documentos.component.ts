@@ -96,7 +96,7 @@ export class AnexarDocumentosComponent {
       }
 
       this.documentos_cargados.push({
-        tipo_documento: this.documento_seleccionado,
+        tipoDocumento: this.documento_seleccionado,
         nombre_archivo: archivo_info.name,
       });
     }

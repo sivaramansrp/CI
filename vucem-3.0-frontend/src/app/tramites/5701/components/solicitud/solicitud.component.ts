@@ -39,7 +39,7 @@ export class SolicitudComponent {
   paises_o!: CatalogosSelect;
   paises_p!: CatalogosSelect;
   aduanas!: CatalogosSelect;
-  seccion_aduanera!: CatalogosSelect;
+  seccionAduanera!: CatalogosSelect;
 
   tipoSolSeleccionada!: Catalogo;
   tipo_sol_sel_valor!: number;
@@ -96,7 +96,7 @@ export class SolicitudComponent {
   }
 
   get d_servicio() {
-    return this.FormSolicitud.get('datos_servicio') as FormGroup;
+    return this.FormSolicitud.get('datosServicio') as FormGroup;
   }
 
   get despacho() {
@@ -203,7 +203,7 @@ export class SolicitudComponent {
           { value: '', disabled: true },
           [Validators.required],
         ],
-        nro_registro: ['', [Validators.maxLength(25)]],
+        nroRegistro: ['', [Validators.maxLength(25)]],
         programaFomento: [false],
         programaFomentoValue: [''],
         immex: [false],
@@ -211,17 +211,17 @@ export class SolicitudComponent {
         industriaAutomotriz: [false],
         industriaAutomotrizValue: [''],
         tipo_empresa_certificada: [''],
-        id_socio_comercial: [''],
+        idSocioComercial: [''],
         socioComercial: [false],
-        op_economico_aut: [false],
-        revision_origen: [false],
+        opEconomicoAut: [false],
+        revisionOrigen: [false],
       }),
 
-      datos_servicio: this.fb.group({
-        f_inicio: [{ value: '', disabled: true }, [Validators.required]],
-        f_final: [[{ value: '', disabled: true }, [Validators.required]]],
-        h_inicio: ['', Validators.required],
-        h_final: ['', Validators.required],
+      datosServicio: this.fb.group({
+        fechaInicio: [{ value: '', disabled: true }, [Validators.required]],
+        fechaFinal: [[{ value: '', disabled: true }, [Validators.required]]],
+        horaInicio: ['', Validators.required],
+        horaFinal: ['', Validators.required],
       }),
 
       despacho: this.fb.group({
@@ -229,32 +229,32 @@ export class SolicitudComponent {
         autorizacion: [''],
         idAduana: [null, [Validators.required]],
         descripcionAduana: ['', [Validators.required]],
-        seccion_aduanera: [''],
-        nombre_recinto: [''],
-        tipo_operacion: [''],
+        seccionAduanera: [''],
+        nombreRecinto: [''],
+        tipoOperacion: [''],
         patente: [{ value: '', disabled: true }],
-        relacion_sociedad: [],
-        encargo_conferido: [],
+        relacionSociedad: [],
+        encargoConferido: [],
         domicilio: ['', Validators.required],
       }),
 
       mercancia: this.fb.group({
-        pais_origen: ['', Validators.required],
-        pais_procedencia: ['', Validators.required],
+        paisOrigen: ['', Validators.required],
+        paisProcedencia: ['', Validators.required],
         descripcion: ['', Validators.required],
         justificacion: ['', Validators.required],
       }),
 
       pedimento: this.fb.group({
         id_pedimento: [''],
-        datos_pedimento: this.fb.group({
+        datosPedimento: this.fb.group({
           patente: [],
           pedimento: [],
           aduana: [],
-          tipo_pedimento: [],
+          tipoPedimento: [],
           numeros: [],
-          comprobante_valor: [],
-          pedimento_validado: [],
+          comprobanteValor: [],
+          pedimentoValidado: [],
         }),
       }),
 
@@ -263,18 +263,18 @@ export class SolicitudComponent {
   }
 
   fechaInicio() {
-    const fecha_inicio = this.d_servicio.get('f_inicio')?.value;
+    const fecha_inicio = this.d_servicio.get('fechaInicio')?.value;
     return fecha_inicio;
   }
 
   cambioFechaInicio(nuevo_valor: string) {
-    this.d_servicio.get('f_inicio')?.setValue(nuevo_valor);
-    this.d_servicio.get('f_inicio')?.markAsUntouched();
+    this.d_servicio.get('fechaInicio')?.setValue(nuevo_valor);
+    this.d_servicio.get('fechaInicio')?.markAsUntouched();
   }
 
   cambioFechaFinal(nuevo_valor: string) {
-    this.d_servicio.get('f_final')?.setValue(nuevo_valor);
-    this.d_servicio.get('f_final')?.markAsUntouched();
+    this.d_servicio.get('fechaFinal')?.setValue(nuevo_valor);
+    this.d_servicio.get('fechaFinal')?.markAsUntouched();
   }
 
 
@@ -339,14 +339,14 @@ export class SolicitudComponent {
 
   obtenerHora(e: string, tipo: string) {
     if (tipo === 'i') {
-      this.d_servicio.get('h_inicio')?.setValue(e);
+      this.d_servicio.get('horaInicio')?.setValue(e);
     } else if (tipo === 'f') {
       switch (this.tipoSolSeleccionada.id) {
         case 1:
-          this.d_servicio.get('h_final')?.setValue(e);
+          this.d_servicio.get('horaFinal')?.setValue(e);
 
-          const f_inicial = this.d_servicio.get('f_inicio')?.value;
-          const f_final = this.d_servicio.get('f_final')?.value;
+          const f_inicial = this.d_servicio.get('fechaInicio')?.value;
+          const fechaFinal = this.d_servicio.get('fechaFinal')?.value;
 
           break;
         case 2:
@@ -361,20 +361,20 @@ export class SolicitudComponent {
   }
 
   rango_fechas() {
-    const f_inicial = this.d_servicio.get('f_inicio')?.value;
-    const f_final = this.d_servicio.get('f_final')?.value;
+    const f_inicial = this.d_servicio.get('fechaInicio')?.value;
+    const fechaFinal = this.d_servicio.get('fechaFinal')?.value;
 
     const formato_fi = this.formato_fecha(f_inicial);
-    const formato_ff = this.formato_fecha(f_final);
+    const formato_ff = this.formato_fecha(fechaFinal);
 
     this.selectRangoDias = this.obtenerDiasEntreFechas(formato_fi, formato_ff);
 
     this.colapsable = true;
   }
 
-  obtenerDiasEntreFechas(f_inicio: string, f_final: string): Array<string> {
-    const [dia_in, mes_in, anio_in] = f_inicio.split('-').map(Number);
-    const [dia_fi, mes_fi, anio_fi] = f_final.split('-').map(Number);
+  obtenerDiasEntreFechas(fechaInicio: string, fechaFinal: string): Array<string> {
+    const [dia_in, mes_in, anio_in] = fechaInicio.split('-').map(Number);
+    const [dia_fi, mes_fi, anio_fi] = fechaFinal.split('-').map(Number);
 
     let fechaActual = new Date(anio_in, mes_in - 1, dia_in);
     const fe_final = new Date(anio_fi, mes_fi - 1, dia_fi);

@@ -90,6 +90,11 @@ export class AgregaPersonasComponent {
       return;
     }
 
+    if (this.personas.length >= 5) {
+      alert('Solo puede agregar hasta 5 personas');
+      return;
+    }
+
     const responsable: Persona = {
       gafete: this.gafete.value,
       nombre: this.personaForm.get('nombre')?.value,

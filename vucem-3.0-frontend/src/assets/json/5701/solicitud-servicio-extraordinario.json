@@ -1,117 +1,117 @@
 {
   "code": 200,
   "data": {
-    "id_solicitud": "1cd4e76e-db2a-42c3-ae37-e2c7ef4373ab",
-    "datos_solicitante": {
+    "idSolicitud": "1cd4e76e-db2a-42c3-ae37-e2c7ef4373ab",
+    "datosSolicitante": {
       "generales": {
         "curp": "LEQI810131HDGSXG05",
         "rfc": "LEQI8101314S7",
         "nombre": "IGNACIO EDUARDO",
-        "a_paterno": "LEOS",
-        "a_materno": "QUIÑONES",
-        "act_economica": "ASALARIADO",
+        "aPaterno": "LEOS",
+        "aMaterno": "QUIÑONES",
+        "actEconomica": "ASALARIADO",
         "correo": "VUCEMcbp@hotmail.com"
       },
-      "domicilio_fiscal": {
+      "domicilioFiscal": {
         "pais": "Estados Unidos Mexicanos",
-        "codigo_postal": "34078",
-        "entidad_federativa": 10,
+        "codigoPostal": "34078",
+        "entidadFederativa": 10,
         "municipio": 15,
         "localidad": "Victoria de Durango",
         "colonia": "Los Sauces",
         "calle": "PRIV. PINO PIÑON",
-        "n_ext": 703,
-        "n_int": 0,
+        "nExt": 703,
+        "nInt": 0,
         "lada": "618",
         "telefono": "8366941"
       }
     },
-    "datos_solicitud": {
+    "datosSolicitud": {
       "tipo": 1,
-      "datos_importador_exportador": {
+      "datosImportadorExportador": {
         "rfc": "",
         "nombre": ""
       },
       "certificaiones": {
-        "nro_registro": "",
-        "programa_fomento": "",
+        "nroRegistro": "",
+        "programaFomento": "",
         "immex": "",
-        "industria_automotriz": "",
+        "industriaAutomotriz": "",
         "tipo_empresa_certificada": "",
-        "id_socio_comercial": "",
-        "socio_comercial": false,
-        "op_economico_aut": false,
-        "revision_origen": false
+        "idSocioComercial": "",
+        "socioComercial": false,
+        "opEconomicoAut": false,
+        "revisionOrigen": false
       },
-      "datos_servicio": {
-        "f_inicio": "",
-        "h_inicio": "",
-        "f_final": "",
-        "h_final": "",
-        "f_seleccionadas": []
+      "datosServicio": {
+        "fechaInicio": "",
+        "horaInicio": "",
+        "fechaFinal": "",
+        "horaFinal": "",
+        "fechasSeleccionadas": []
       },
-      "datos_despacho": {
+      "datosDespacho": {
         "despacho": {
           "tipo": "lda",
           "autorizacion": "LEQI8101314S7"
         },
         "aduana": "",
-        "nombre_recinto": "",
-        "seccion_aduanera": "",
-        "tipo_operacion": "",
+        "nombreRecinto": "",
+        "seccionAduanera": "",
+        "tipoOperacion": "",
         "patente": "",
-        "relacion_sociedad": false,
-        "encargo_conferido": false,
-        "rfc_autorizacion": "",
-        "ddex_autorizacion": "",
-        "tipo_despacho": "",
+        "relacionSociedad": false,
+        "encargoConferido": false,
+        "rfcAutorizacion": "",
+        "ddexAutorizacion": "",
+        "tipoDespacho": "",
         "domicilio": ""
       },
       "pedimento": {
         "id_pedimento": 0,
-        "datos_pedimento": [
+        "datosPedimento": [
           {
             "patente": 3061,
             "pedimento": 1234,
             "aduana": 800,
-            "tipo_pedimento": "Por evaluar",
+            "tipoPedimento": "Por evaluar",
             "numeros": 123,
-            "comprobante_valor": "",
-            "pedimento_validado": false
+            "comprobanteValor": "",
+            "pedimentoValidado": false
           }
         ],
         "mercancia": {
-          "pais_origen": 12,
-          "pais_procedencia": 18,
+          "paisOrigen": 12,
+          "paisProcedencia": 18,
           "descripcion": "",
           "justificacion": ""
         },
-        "responsables_despacho": [
+        "responsablesDespacho": [
           {
             "gafete": "",
             "nombre": "",
-            "a_paterno": "",
-            "a_materno": ""
+            "aPaterno": "",
+            "aMaterno": ""
           }
         ],
         "pagos": {
-          "monto_pagar": "",
-          "linea_captura": "",
+          "montoPagar": "",
+          "lineaCaptura": "",
           "monto": ""
         }
       },
-      "terceros_relacionados": [
+      "tercerosRelacionados": [
         {
-          "razon_social": "",
+          "razonSocial": "",
           "correo": ""
         }
       ],
       "requisitos": [
         {
-          "tipo_documento": 2
+          "tipoDocumento": 2
         },
         {
-          "tipo_documento": 4
+          "tipoDocumento": 4
         }
       ]
     },

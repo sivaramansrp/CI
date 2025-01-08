@@ -28,7 +28,7 @@ export interface DatosIndice {
 }
 
 export interface DocumentosCargados {
-  tipo_documento: Catalogo;
+  tipoDocumento: Catalogo;
   nombre_archivo: string;
 }
 
