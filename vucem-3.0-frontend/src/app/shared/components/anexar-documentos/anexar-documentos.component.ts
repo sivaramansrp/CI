@@ -18,12 +18,12 @@ import { DatosArchivo } from '../../../core/models/shared/components.model';
   styleUrl: './anexar-documentos.component.scss',
 })
 export class AnexarDocumentosComponent {
-  tipos_documentos!: CatalogosSelect;
-  documentos_cargados: Array<DocumentosCargados> = [];
-  documento_seleccionado!: Catalogo;
-  abrir_modal: boolean = false;
+  tiposDocumentos!: CatalogosSelect;
+  documentosCargados: Array<DocumentosCargados> = [];
+  documentoSeleccionado!: Catalogo;
+  mostrarModal: boolean = false;
   modal: string = 'modal';
-  indice_doc!: number;
+  indiceDocumento!: number;
 
   constructor(
     private sExtraordinarios: ServiciosExtraordinariosService,
@@ -34,33 +34,31 @@ export class AnexarDocumentosComponent {
     this.getTiposDocumentos();
   }
 
-  get doc_cargados() {
-    return this.documentos_cargados.length > 0 ? true : false;
+  get docCargados() {
+    return this.documentosCargados.length > 0 ? true : false;
   }
 
-  get btn_desactivado() {
-    return this.documento_seleccionado && this.documento_seleccionado.id !== 0
+  get btnDesactivado() {
+    return this.documentoSeleccionado && this.documentoSeleccionado.id !== 0
       ? false
       : true;
   }
 
   getTiposDocumentos() {
-    this.sExtraordinarios
-      .getCatalogo(6)
-      .subscribe((resp) => {
-        if (resp.codigo === '200') {
-          this.tipos_documentos = {
-            labelNombre: 'Tipo de documento',
-            required: true,
-            primerOpcion: 'Selecciona un tipo de documento',
-            catalogos: JSON.parse(resp.data),
-          };
-        }
-      });
+    this.sExtraordinarios.getCatalogo(6).subscribe((resp) => {
+      if (resp.codigo === '200') {
+        this.tiposDocumentos = {
+          labelNombre: 'Tipo de documento',
+          required: true,
+          primerOpcion: 'Selecciona un tipo de documento',
+          catalogos: JSON.parse(resp.data),
+        };
+      }
+    });
   }
 
   docSeleccionado(e: Catalogo) {
-    this.documento_seleccionado = e;
+    this.documentoSeleccionado = e;
   }
 
   cargarDoc(event: Event) {
@@ -74,25 +72,31 @@ export class AnexarDocumentosComponent {
       let ext_archivo = archivo_info.name.split('.').pop() as string;
       ext_archivo = ext_archivo.toLowerCase();
 
-      if(ext_archivo !== this.documento_seleccionado.tipo_archivo) {
+      if (ext_archivo !== this.documentoSeleccionado.tipoArchivo) {
         this.toastr.error('Solo se aceptan archivos pdf');
         return;
       }
 
       // Validacion tamaño
       const datos: DatosArchivo = {
-        tam_req: this.documento_seleccionado.archivo ? this.documento_seleccionado.archivo.tamanio : 0,
+        tam_req: this.documentoSeleccionado.archivo
+          ? this.documentoSeleccionado.archivo.tamanio
+          : 0,
         tamanio: archivo_info.size,
-        unidad: this.documento_seleccionado.archivo ? this.documento_seleccionado.archivo.unidad : '',
-      }
+        unidad: this.documentoSeleccionado.archivo
+          ? this.documentoSeleccionado.archivo.unidad
+          : '',
+      };
 
       if (!this.validarTamanio(datos)) {
-        this.toastr.error('El tamaño del documento que intenta cargar excede el tamaño permitido');
+        this.toastr.error(
+          'El tamaño del documento que intenta cargar excede el tamaño permitido'
+        );
         return;
       }
 
-      this.documentos_cargados.push({
-        tipo_documento: this.documento_seleccionado,
+      this.documentosCargados.push({
+        tipoDocumento: this.documentoSeleccionado,
         nombre_archivo: archivo_info.name,
       });
     }
@@ -100,16 +104,16 @@ export class AnexarDocumentosComponent {
 
   verDocumento(i: number, accion: string) {
     // v => ver
-    this.abrir_modal = accion === 'v' ? true : false;
+    this.mostrarModal = accion === 'v' ? true : false;
   }
 
   abrirModal(i: number) {
     this.modal = 'modal-open';
-    this.indice_doc = i;
+    this.indiceDocumento = i;
   }
 
   eliminarDocumento(i: number) {
-    this.documentos_cargados.splice(i, 1);
+    this.documentosCargados.splice(i, 1);
     this.cerrarModal();
     this.toastr.success('Se ha eliminado el archivo exitosamente');
   }

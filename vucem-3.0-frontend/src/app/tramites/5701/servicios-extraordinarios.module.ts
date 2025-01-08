@@ -24,7 +24,8 @@ import { InputHoraComponent } from '../../shared/components/input-hora/input-hor
 import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
 import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
 import { AgregarTransporteComponent } from "../../shared/components/agregar-transporte/agregar-transporte.component";
-import { AgregarPersonasComponent } from '../../shared/components/agregar-personas/agregar-personas.component';
+import { PedimentoComponent } from './components/pedimento/pedimento.component';
+import { AgregaPersonasComponent } from "./components/agrega-personas/agrega-personas.component";
 
 
 
@@ -57,7 +58,8 @@ import { AgregarPersonasComponent } from '../../shared/components/agregar-person
     InputFechaComponent,
     CrosslistComponent,
     AgregarTransporteComponent,
-    AgregarPersonasComponent
+    PedimentoComponent,
+    AgregaPersonasComponent
 ],
 exports: [
   SolicitudComponent,

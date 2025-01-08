@@ -25,32 +25,32 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   styleUrl: './select-catalogos.component.scss',
 })
 export class SelectCatalogosComponent {
-  @Input() catalogos_datos!: CatalogosSelect;
+  @Input() catalogosDatos!: CatalogosSelect;
 
   @Output() valorSelección = new EventEmitter<Catalogo>();
 
-  tipo_solicitud: FormControl = new FormControl(0);
+  tipoSolicitud: FormControl = new FormControl(0);
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['catalogos_datos'].currentValue) {
-      this.catalogos_datos = changes['catalogos_datos'].currentValue;
-      if (this.catalogos_datos.required) {
-        this.tipo_solicitud.setValidators([Validators.required]);
-        this.tipo_solicitud.updateValueAndValidity();
+    if (changes['catalogosDatos'].currentValue) {
+      this.catalogosDatos = changes['catalogosDatos'].currentValue;
+      if (this.catalogosDatos.required) {
+        this.tipoSolicitud.setValidators([Validators.required]);
+        this.tipoSolicitud.updateValueAndValidity();
       }
     }
   }
 
   isValid() {
-    return this.tipo_solicitud.errors && this.tipo_solicitud.touched;
+    return this.tipoSolicitud.errors && this.tipoSolicitud.touched;
   }
 
   seleccion() {
-    const opcionSeleccionada = parseInt(this.tipo_solicitud.value);
+    const opcionSeleccionada = parseInt(this.tipoSolicitud.value);
 
     let seleccion: Catalogo;
 
-    this.catalogos_datos.catalogos.forEach((el: Catalogo) => {
+    this.catalogosDatos.catalogos.forEach((el: Catalogo) => {
       if (el.id === opcionSeleccionada) {
         seleccion = el;
         this.valorSelección.emit(seleccion);

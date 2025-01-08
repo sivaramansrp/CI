@@ -10,7 +10,6 @@ import {
 import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
 import { ServiciosExtraordinariosService } from './../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 import { CatalogosSelect } from '../../../core/models/shared/components.model';
-import { TablaComponent } from '../tabla/tabla.component';
 import { Catalogo } from '../../../core/models/5701/catalogos.model';
 import * as CONSTANTES from '../../constantes/formularios-transportes.enums';
 import { CampoForm } from '../../../core/models/shared/forms-model';
@@ -22,7 +21,6 @@ import { InputFechaComponent } from '../input-fecha/input-fecha.component';
     CommonModule,
     ReactiveFormsModule,
     SelectCatalogosComponent,
-    TablaComponent,
     InputFechaComponent,
   ],
   templateUrl: './agregar-transporte.component.html',
@@ -31,11 +29,11 @@ import { InputFechaComponent } from '../input-fecha/input-fecha.component';
 export class AgregarTransporteComponent {
   @Input({ required: true }) tipo!: string;
 
-  datos_tipos_transporte!: CatalogosSelect;
+  datosTiposTransporte!: CatalogosSelect;
 
   FormTransporte!: FormGroup;
-  tipo_transporte!: Catalogo;
-  campos_formulario!: Array<CampoForm>;
+  tipoTransporteSeleccionado!: Catalogo;
+  camposFormulario!: Array<CampoForm>;
 
   constructor(
     private fb: FormBuilder,
@@ -49,19 +47,19 @@ export class AgregarTransporteComponent {
   }
 
   tipoTransporte(e: Catalogo) {
-    this.tipo_transporte = e;
+    this.tipoTransporteSeleccionado = e;
   }
 
   crearFormulario() {
 
-    switch (this.tipo_transporte.id) {
+    switch (this.tipoTransporteSeleccionado.id) {
       case 1:
-        this.campos_formulario = CONSTANTES.CARRETERO;
+        this.camposFormulario = CONSTANTES.CARRETERO;
         break;
 
       case 2:
 
-        this.campos_formulario = CONSTANTES.FERROVIARIO;
+        this.camposFormulario = CONSTANTES.FERROVIARIO;
 
         break;
 
@@ -75,7 +73,7 @@ export class AgregarTransporteComponent {
     }
 
 
-    this.agregarCamposAlForm(this.campos_formulario);
+    this.agregarCamposAlForm(this.camposFormulario);
   }
 
   agregarCamposAlForm(campos: Array<CampoForm>) {
@@ -102,7 +100,7 @@ export class AgregarTransporteComponent {
       .subscribe((resp) => {
         if (resp.code === 200) {
           const response = resp.data;
-          const tipos_transporte: Array<Catalogo> = [];
+          const tiposTransporte: Array<Catalogo> = [];
 
 
           response.forEach((el) => {
@@ -110,13 +108,13 @@ export class AgregarTransporteComponent {
             if (this.tipo == 'despacho') {
 
               if (el.id !== 3 && el.id !== 4) {
-                tipos_transporte.push(el);
+                tiposTransporte.push(el);
               }
             }
           });
 
 
-          this.datos_tipos_transporte = {
+          this.datosTiposTransporte = {
             labelNombre: 'Tipo de transporte',
             required: false,
             primerOpcion: 'Selecciona un valor',

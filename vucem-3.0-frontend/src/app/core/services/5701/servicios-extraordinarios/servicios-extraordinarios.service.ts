@@ -12,13 +12,13 @@ import {
 export class ServiciosExtraordinariosService {
   constructor(private http: HttpClient) {}
 
-  url_server = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
+  urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
 
   getCatalogo(catalogo: number) {
-    return this.http.get<JSONResponse>(`${this.url_server}/${catalogo}`);
+    return this.http.get<JSONResponse>(`${this.urlServer}/${catalogo}`);
   }
 
   getCatalogos(catalogo: string) {
-    return this.http.get<RespuestaCatalogos>(`${this.url_server}/${catalogo}`);
+    return this.http.get<RespuestaCatalogos>(`${this.urlServer}/${catalogo}`);
   }
 }

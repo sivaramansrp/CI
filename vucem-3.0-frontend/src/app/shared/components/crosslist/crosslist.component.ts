@@ -12,32 +12,32 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 export class CrosslistComponent {
   @Input({ required: true }) fechas!: Array<string>;
 
-  fs_datos: Array<string> = [];
+  fechasDatos: Array<string> = [];
 
-  fs_seleccionadas: Array<string> = [];
+  fechasSeleccionadas: Array<string> = [];
   fecha: FormControl = new FormControl('');
-  f_seleccionada: FormControl = new FormControl('');
+  fechaSeleccionada: FormControl = new FormControl('');
 
   botones = [
     {
-      btn_nombre: 'Agregar',
+      btnNombre: 'Agregar',
       class: 'btn-primary',
       funcion: () => this.agregar(''),
     },
     {
-      btn_nombre: 'Agregar todas',
+      btnNombre: 'Agregar todas',
       class: 'btn-default',
 
       funcion: () => this.agregar('t'),
     },
     {
-      btn_nombre: 'Quitar',
+      btnNombre: 'Quitar',
       class: 'btn-danger',
 
       funcion: () => this.quitar(''),
     },
     {
-      btn_nombre: 'Quitar todas',
+      btnNombre: 'Quitar todas',
       class: 'btn-default',
 
       funcion: () => this.quitar('t'),
@@ -45,35 +45,35 @@ export class CrosslistComponent {
   ];
 
   ngOnInit() {
-    this.fs_datos = [...this.fechas];
+    this.fechasDatos = [...this.fechas];
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if(changes['fechas'].currentValue){
       this.fechas = [...changes['fechas'].currentValue];
-      this.fs_datos = [...this.fechas]
+      this.fechasDatos = [...this.fechas]
     }
   }
 
   agregar(type: string) {
     if (type === 't') {
-      this.fs_seleccionadas = [...this.fechas];
-      this.fs_datos = [];
+      this.fechasSeleccionadas = [...this.fechas];
+      this.fechasDatos = [];
     } else {
-      const fecha_valor = this.fecha.value.map(Number);
-      this.fs_seleccionadas.push(this.fs_datos[fecha_valor]);
-      this.fs_datos.splice(fecha_valor, 1);
+      const fechaValor = this.fecha.value.map(Number);
+      this.fechasSeleccionadas.push(this.fechasDatos[fechaValor]);
+      this.fechasDatos.splice(fechaValor, 1);
     }
   }
 
   quitar(type: string = '') {
     if (type === 't') {
-      this.fs_datos = [...this.fechas];
-      this.fs_seleccionadas = [];
+      this.fechasDatos = [...this.fechas];
+      this.fechasSeleccionadas = [];
     } else {
-      const fecha_valor = this.f_seleccionada.value.map(Number);
-      this.fs_datos.push(this.fs_seleccionadas[fecha_valor]);
-      this.fs_seleccionadas.splice(fecha_valor, 1);
+      const fechaValor = this.fechaSeleccionada.value.map(Number);
+      this.fechasDatos.push(this.fechasSeleccionadas[fechaValor]);
+      this.fechasSeleccionadas.splice(fechaValor, 1);
     }
   }
 }

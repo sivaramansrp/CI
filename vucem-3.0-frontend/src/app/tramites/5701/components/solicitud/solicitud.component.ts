@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Signal, signal, WritableSignal } from '@angular/core';
 import { Catalogo } from '../../../../core/models/5701/catalogos.model';
 import {
   CatalogosSelect,
@@ -8,7 +8,7 @@ import {
   InputHora,
 } from '../../../../core/models/shared/components.model';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import {
   DESPACHO_DD,
@@ -20,11 +20,13 @@ import {
   IMMEX,
   INDUSTRIA_AUTOMOTRIZ,
   PROGRAMA_FOMENTO,
-  SEMANA,
   SEMANA_D,
   SOCIO_COMERCIAL,
 } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
+import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
+import { datosAgregarFormulario } from '../../../../core/models/shared/forms-model';
+import { DatosComponentePedimento } from '../../../../core/models/5701/servicios-extraordinarios.model';
 
 @Component({
   selector: 'solicitud',
@@ -32,29 +34,27 @@ import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
   styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent {
-  datos_tipos_solicitud!: CatalogosSelect;
-  paises_o!: CatalogosSelect;
-  paises_p!: CatalogosSelect;
+  datosTiposSolicitud!: CatalogosSelect;
+  paisesOrigen!: CatalogosSelect;
+  paisesProcedencia!: CatalogosSelect;
   aduanas!: CatalogosSelect;
-  seccion_aduanera!: CatalogosSelect;
+  seccionAduanera!: CatalogosSelect;
 
+  tipoSolSeleccionada!: Catalogo;
 
-  tipo_sol_seleccionada!: Catalogo;
-  tipo_sol_sel_valor!: number;
-
-  programa_fomento: InputCheck = PROGRAMA_FOMENTO;
+  programaFomento: InputCheck = PROGRAMA_FOMENTO;
   immex: InputCheck = IMMEX;
-  industria_automotriz: InputCheck = INDUSTRIA_AUTOMOTRIZ;
-  socio_comercial: InputCheck = SOCIO_COMERCIAL;
+  industriaAutomotriz: InputCheck = INDUSTRIA_AUTOMOTRIZ;
+  socioComercial: InputCheck = SOCIO_COMERCIAL;
 
-  despacho_dd = DESPACHO_DD;
-  despacho_lda = DESPACHO_LDA;
+  despachoDD = DESPACHO_DD;
+  despachoLDA = DESPACHO_LDA;
 
-  hora_inicio: InputHora = HORA_INICIO;
-  hora_final: InputHora = HORA_FINAL;
+  horaInicio: InputHora = HORA_INICIO;
+  horaFinal: InputHora = HORA_FINAL;
 
-  fecha_inicio: InputFecha = FECHA_INICIO;
-  fecha_final: InputFecha = FECHA_FINAL;
+  fechaInicioInput: InputFecha = FECHA_INICIO;
+  fechaFinalInput: InputFecha = FECHA_FINAL;
 
   FormSolicitud!: FormGroup;
 
@@ -62,134 +62,60 @@ export class SolicitudComponent {
 
   selectRangoDias: Array<string> = [];
 
+  // Pedimento -crea una señal para validar
+  validacionPedimento: boolean = false;
+  datosPedimentoComponente!: DatosComponentePedimento;
+
+  solIndividual!: boolean;
+
   constructor(
     private sExtraordinarios: ServiciosExtraordinariosService,
     private fb: FormBuilder,
+    private fService: FormulariosService,
     private validacionesService: ValidacionesFormularioService
   ) {
     this.crearFormSolicitud();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.getTiposSolicitud();
     this.getPaises();
     this.getAduanas();
     this.getSeccionAduanera();
+
+    // Aqui se busca el nro de patente o autorizacion
+    this.obtenerPatente();
   }
 
 
-  get datos_servicio() {
-    return this.tipo_sol_seleccionada && this.tipo_sol_seleccionada.id !== 1
-      ? true
-      : false;
+
+  get datosImportadorExportador() {
+    return this.FormSolicitud.get('datosImportadorExportador') as FormGroup;
   }
 
-  get datos_importador_exportador() {
-    return this.FormSolicitud.get('datos_importador_exportador') as FormGroup;
+  get datosServicio() {
+    return this.FormSolicitud.get('datosServicio') as FormGroup;
   }
 
-  get d_servicio() {
-    return this.FormSolicitud.get('datos_servicio') as FormGroup;
+  get despacho() {
+    return this.FormSolicitud.get('despacho') as FormGroup;
   }
 
-  crearFormSolicitud() {
-    this.FormSolicitud = this.fb.group({
-      tipo_solicitud: [{ value: '', requerid: true }, [Validators.required]],
-      datos_importador_exportador: this.fb.group({
-        rfc_import_export: [
-          '',
-          [
-            Validators.required,
-            Validators.pattern(this.validacionesService.rfc_pf_pattern),
-          ],
-        ],
-        nombre_import_export: [
-          { value: '', disabled: true },
-          [Validators.required],
-        ],
-        nro_registro: ['', [Validators.required]],
-        programa_fomento: [false],
-        programa_fomento_value: [''],
-        immex: [false],
-        immex_value: [''],
-        industria_automotriz: [false],
-        industria_automotriz_value: [''],
-        tipo_empresa_certificada: [''],
-        id_socio_comercial: [''],
-        socio_comercial: [false],
-        op_economico_aut: [false],
-        revision_origen: [false],
-      }),
-
-      datos_servicio: this.fb.group({
-        f_inicio: [{ value: '', disabled: true }, [Validators.required]],
-        f_final: [[{ value: '', disabled: true }, [Validators.required]]],
-        h_inicio: ['', Validators.required],
-        h_final: ['', Validators.required],
-      }),
-
-      despacho: this.fb.group({
-        tipo: [''],
-        autorizacion: [''],
-        aduana: [''],
-        seccion_aduanera: [''],
-        nombre_recinto: [''],
-        tipo_operacion: [''],
-        patente: [''],
-        relacion_sociedad: [],
-        encargo_conferido: [],
-        domicilio: ['', Validators.required],
-      }),
-
-      mercancia: this.fb.group({
-        pais_origen: ['', Validators.required],
-        pais_procedencia: ['', Validators.required],
-        descripcion: ['', Validators.required],
-        justificacion: ['', Validators.required],
-      }),
-
-      pedimento: this.fb.group({
-        id_pedimento: [''],
-        datos_pedimento: this.fb.group({
-          patente: [],
-          pedimento: [],
-          aduana: [],
-          tipo_pedimento: [],
-          numeros: [],
-          comprobante_valor: [],
-          pedimento_validado: [],
-        })
-      }),
-
-
-    });
+  get pedimento() {
+    return this.FormSolicitud.get('pedimento') as FormGroup;
   }
 
-  fechaInicio() {
-    const fecha_inicio = this.d_servicio.get('f_inicio')?.value;
-    return fecha_inicio;
+  get personasResponsablesDespacho() {
+    return this.FormSolicitud.get('personasResponsablesDespacho') as FormArray;
   }
 
-  cambioFechaInicio(nuevo_valor: string) {
-    this.d_servicio.get('f_inicio')?.setValue(nuevo_valor);
-    this.d_servicio.get('f_inicio')?.markAsUntouched();
-  }
-
-  cambioFechaFinal(nuevo_valor: string) {
-    this.d_servicio.get('f_final')?.setValue(nuevo_valor);
-    this.d_servicio.get('f_final')?.markAsUntouched();
-  }
-
-  isValid(form: FormGroup, field: string) {
-    return this.validacionesService.isValidField(form, field);
-  }
-
-  getTiposSolicitud() {
+  // * Peticiones a las apis
+  getTiposSolicitud(): void {
     this.sExtraordinarios
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_SOL)
       .subscribe((resp) => {
         if (resp.codigo === '200') {
-          this.datos_tipos_solicitud = {
+          this.datosTiposSolicitud = {
             labelNombre: 'Tipo de solicitud',
             required: true,
             primerOpcion: 'Selecciona un valor',
@@ -199,29 +125,29 @@ export class SolicitudComponent {
       });
   }
 
-  getPaises() {
+  getPaises(): void {
     this.sExtraordinarios
       .getCatalogo(CATALOGOS_ID.CAT_PAISES)
       .subscribe((resp) => {
         if (resp.codigo === '200') {
-          this.paises_o = {
+          this.paisesOrigen = {
             labelNombre: 'País de origen',
             required: true,
             primerOpcion: 'Selecciona un valor',
             catalogos: JSON.parse(resp.data),
           };
 
-          this.paises_p = {
+          this.paisesProcedencia = {
             labelNombre: 'País de procedencia',
             required: true,
             primerOpcion: 'Selecciona un valor',
             catalogos: JSON.parse(resp.data),
-          }
+          };
         }
       });
   }
 
-  getAduanas() {
+  getAduanas(): void {
     this.sExtraordinarios
       .getCatalogo(CATALOGOS_ID.CAT_ADUANAS)
       .subscribe((resp) => {
@@ -236,9 +162,122 @@ export class SolicitudComponent {
       });
   }
 
-  getSeccionAduanera() {
+  getSeccionAduanera(): void {}
+
+  obtenerPatente() {
+    // Busqueda de la patente a algun endpoint
+    const datosPatente: datosAgregarFormulario = {
+      form: this.despacho,
+      field: 'patente',
+      valor: '3061',
+    };
+    this.fService.agregarValorCamposDesactivados(datosPatente);
   }
 
+  // ************************************************************
+
+  individual(): boolean {
+    return this.tipoSolSeleccionada && this.tipoSolSeleccionada.id === 1
+      ? true
+      : false;
+  }
+
+  isValid(form: FormGroup, field: string) {
+    return this.validacionesService.isValidField(form, field);
+  }
+
+  crearFormSolicitud() {
+    this.FormSolicitud = this.fb.group({
+      tipoSolicitud: [{ value: '', requerid: true }, [Validators.required]],
+      datosImportadorExportador: this.fb.group({
+        rfcImportExport: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern(this.validacionesService.rfcPattern),
+          ],
+        ],
+        nombreImportExport: [
+          { value: '', disabled: true },
+          [Validators.required],
+        ],
+        nroRegistro: ['', [Validators.maxLength(25)]],
+        programaFomento: [false],
+        programaFomentoValue: [''],
+        immex: [false],
+        immexValue: [''],
+        industriaAutomotriz: [false],
+        industriaAutomotrizValue: [''],
+        tipoEmpresaCertificada: [''],
+        idSocioComercial: [''],
+        socioComercial: [false],
+        opEconomicoAut: [false],
+        revisionOrigen: [false],
+      }),
+
+      datosServicio: this.fb.group({
+        fechaInicio: [{ value: '', disabled: true }, [Validators.required]],
+        fechaFinal: [[{ value: '', disabled: true }, [Validators.required]]],
+        horaInicio: ['', Validators.required],
+        horaFinal: ['', Validators.required],
+      }),
+
+      despacho: this.fb.group({
+        tipo: [''],
+        autorizacion: [''],
+        idAduana: [null, [Validators.required]],
+        descripcionAduana: ['', [Validators.required]],
+        seccionAduanera: [''],
+        nombreRecinto: [''],
+        tipoOperacion: [''],
+        patente: [{ value: '', disabled: true }],
+        relacionSociedad: [],
+        encargoConferido: [],
+        domicilio: ['', Validators.required],
+      }),
+
+      mercancia: this.fb.group({
+        paisOrigen: ['', Validators.required],
+        paisProcedencia: ['', Validators.required],
+        descripcion: ['', Validators.required],
+        justificacion: ['', Validators.required],
+      }),
+
+      pedimento: this.fb.group({
+        idPedimento: [''],
+        datosPedimento: this.fb.group({
+          patente: [],
+          pedimento: [],
+          aduana: [],
+          tipoPedimento: [],
+          numeros: [],
+          comprobanteValor: [],
+          pedimentoValidado: [],
+        }),
+      }),
+
+      personasResponsablesDespacho: this.fb.array([]),
+    });
+  }
+
+  fechaInicio() {
+    const fechaInicio = this.datosServicio.get('fechaInicio')?.value;
+    return fechaInicio;
+  }
+
+  cambioFechaInicio(nuevo_valor: string) {
+    this.datosServicio.get('fechaInicio')?.setValue(nuevo_valor);
+    this.datosServicio.get('fechaInicio')?.markAsUntouched();
+  }
+
+  cambioFechaFinal(nuevo_valor: string) {
+    this.datosServicio.get('fechaFinal')?.setValue(nuevo_valor);
+    this.datosServicio.get('fechaFinal')?.markAsUntouched();
+  }
+
+
+
+  // *Eventos de los componentes hijos
   paisOrigen(pais: Catalogo) {
     console.log(pais);
   }
@@ -249,12 +288,12 @@ export class SolicitudComponent {
 
   busqueda_rfc() {
     const rfc =
-      this.datos_importador_exportador.get('rfc_import_export')?.value;
+      this.datosImportadorExportador.get('rfcImportExport')?.value;
     // Aqui se hará la busqueda del rfc, para obtener el nombre
 
     this.llenarCamposDesactivados(
-      this.datos_importador_exportador,
-      'nombre_import_export'
+      this.datosImportadorExportador,
+      'nombreImportExport'
     );
   }
 
@@ -265,7 +304,8 @@ export class SolicitudComponent {
   }
 
   tipoSolicitud(e: Catalogo) {
-    this.tipo_sol_seleccionada = e;
+    this.tipoSolSeleccionada = e;
+    this.solIndividual = this.individual();
   }
 
   validarFormulario() {
@@ -275,32 +315,43 @@ export class SolicitudComponent {
     }
   }
 
+  programaFomentoF(e: DatosInputCheck) {
+    this.datosImportadorExportador.get('programaFomento')?.setValue(e.check);
+    this.datosImportadorExportador.get('programaFomentoValue')?.setValue(e.valor);
+  }
+
+  immexSeleccion(e: DatosInputCheck) {
+    this.datosImportadorExportador.get('immex')?.setValue(e.check);
+    this.datosImportadorExportador.get('immexValue')?.setValue(e.valor);
+  }
+
+  industriaAutomotrizSeleccion(e: DatosInputCheck) {
+    this.datosImportadorExportador.get('industriaAutomotriz')?.setValue(e.check);
+    this.datosImportadorExportador.get('industriaAutomotrizValue')?.setValue(e.valor);
+  }
+
   valorInputCheck(e: DatosInputCheck) {
     console.log(e);
+
   }
 
   obtenerHora(e: string, tipo: string) {
     if (tipo === 'i') {
-      this.d_servicio.get('h_inicio')?.setValue(e);
+      this.datosServicio.get('horaInicio')?.setValue(e);
     } else if (tipo === 'f') {
-
-
-
-      switch (this.tipo_sol_seleccionada.id) {
+      switch (this.tipoSolSeleccionada.id) {
         case 1:
-          this.d_servicio.get('h_final')?.setValue(e);
+          this.datosServicio.get('horaFinal')?.setValue(e);
 
-          const f_inicial = this.d_servicio.get('f_inicio')?.value;
-          const f_final = this.d_servicio.get('f_final')?.value;
-
-
+          const fechaInicial = this.datosServicio.get('fechaInicio')?.value;
+          const fechaFinal = this.datosServicio.get('fechaFinal')?.value;
 
           break;
         case 2:
-          console.log(this.tipo_sol_seleccionada.value);
+          console.log(this.tipoSolSeleccionada.value);
           break;
         case 3:
-          console.log(this.tipo_sol_seleccionada.value);
+          console.log(this.tipoSolSeleccionada.value);
           break;
       }
       this.rango_fechas();
@@ -308,20 +359,20 @@ export class SolicitudComponent {
   }
 
   rango_fechas() {
-    const f_inicial = this.d_servicio.get('f_inicio')?.value;
-    const f_final = this.d_servicio.get('f_final')?.value;
+    const fechaInicial = this.datosServicio.get('fechaInicio')?.value;
+    const fechaFinal = this.datosServicio.get('fechaFinal')?.value;
 
-    const formato_fi = this.formato_fecha(f_inicial);
-    const formato_ff = this.formato_fecha(f_final);
+    const formatoFechaInicial = this.formato_fecha(fechaInicial);
+    const formatoFechaFinal = this.formato_fecha(fechaFinal);
 
-    this.selectRangoDias = this.obtenerDiasEntreFechas(formato_fi, formato_ff);
+    this.selectRangoDias = this.obtenerDiasEntreFechas(formatoFechaInicial, formatoFechaFinal);
 
     this.colapsable = true;
   }
 
-  obtenerDiasEntreFechas(f_inicio: string, f_final: string): Array<string> {
-    const [dia_in, mes_in, anio_in] = f_inicio.split('-').map(Number);
-    const [dia_fi, mes_fi, anio_fi] = f_final.split('-').map(Number);
+  obtenerDiasEntreFechas(fechaInicio: string, fechaFinal: string): Array<string> {
+    const [dia_in, mes_in, anio_in] = fechaInicio.split('-').map(Number);
+    const [dia_fi, mes_fi, anio_fi] = fechaFinal.split('-').map(Number);
 
     let fechaActual = new Date(anio_in, mes_in - 1, dia_in);
     const fe_final = new Date(anio_fi, mes_fi - 1, dia_fi);
@@ -351,5 +402,44 @@ export class SolicitudComponent {
 
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
+  }
+
+  aduanaSeleccion(aduana: Catalogo) {
+    this.darValorCampoFormulario(this.despacho, 'idAduana', aduana.id);
+    this.darValorCampoFormulario(
+      this.despacho,
+      'descripcionAduana',
+      aduana.value
+    );
+    this.validacionPedimento = true;
+
+    //
+    const patente = this.fService.convertirValorANumero(
+      this.despacho,
+      'patente'
+    );
+    const idAduana = this.fService.convertirValorANumero(
+      this.despacho,
+      'idAduana'
+    );
+
+    this.datosPedimentoComponente = {
+      patente: patente,
+      idAduana: idAduana,
+    };
+  }
+
+  validaCampoPedimento() {
+    const aduanaValidacion = this.isValid(this.despacho, 'descripcionAduana');
+
+    if (aduanaValidacion === null) this.validacionPedimento = true;
+  }
+
+  darValorCampoFormulario(
+    form: FormGroup,
+    field: string,
+    valor: string | number
+  ) {
+    form.get(field)?.setValue(valor);
   }
 }

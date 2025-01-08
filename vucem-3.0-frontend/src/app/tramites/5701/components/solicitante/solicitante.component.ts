@@ -16,43 +16,43 @@ export class SolicitanteComponent {
   public FormPersonaFisica: FormGroup = this.fb.group({
     rfc: [{value: '', disabled: true}],
     curp: [{value: '', disabled: true}],
-    nombre_razon_social: [{value: '', disabled: true}],
-    a_paterno: [{value: '', disabled: true}],
-    a_materno: [{value: '', disabled: true}],
+    nombreRazonSocial: [{value: '', disabled: true}],
+    aPaterno: [{value: '', disabled: true}],
+    aMaterno: [{value: '', disabled: true}],
 
     // Persona Moral
-    act_economica: [{value: '', disabled: true}],
+    actEconomica: [{value: '', disabled: true}],
     correo: [{value: '', disabled: true}],
 
     // Domicilio Fiscal Persona Moral o Fisica Nacional
     pais: [{value: '', disabled: true}],
-    codigo_postal: [{value: '', disabled: true}],
-    entidad_federativa: [{value: '', disabled: true}],
+    codigoPostal: [{value: '', disabled: true}],
+    entidadFederativa: [{value: '', disabled: true}],
     municipio: [{value: '', disabled: true}],
     localidad: [{value: '', disabled: true}],
     colonia: [{value: '', disabled: true}],
     calle: [{value: '', disabled: true}],
-    n_ext: [{value: '', disabled: true}],
-    n_int: [{value: '', disabled: true}],
+    nExt: [{value: '', disabled: true}],
+    nInt: [{value: '', disabled: true}],
     lada: [{value: '', disabled: true}],
     telefono: [{value: '', disabled: true}]
   });
 
   public FormExtranjero = this.fb.group({
-    nombre_razon_social: [{value:'', disabled: true}],
-    p_apellido: [{value:'', disabled: true}],
-    s_apellido: [{value:'', disabled: true}],
-    n_id_fiscal: [{value:'', disabled: true}],
-    n_seg_social: [{value:'', disabled: true}],
+    nombreRazonSocial: [{value:'', disabled: true}],
+    aPaterno: [{value:'', disabled: true}],
+    aMaterno: [{value:'', disabled: true}],
+    idFiscal: [{value:'', disabled: true}],
+    nroSegSocial: [{value:'', disabled: true}],
     correo: [{value:'', disabled: true}],
-    act_economica: [{value: '', disabled: true}],
+    actEconomica: [{value: '', disabled: true}],
 
     pais: [{value:'', disabled: true}],
-    codigo_postal: [{value:'', disabled: true}],
+    codigoPostal: [{value:'', disabled: true}],
     estado: [{value:'', disabled: true}],
     calle: [{value:'', disabled: true}],
-    n_int: [{value:'', disabled: true}],
-    n_ext: [{value:'', disabled: true}],
+    nInt: [{value:'', disabled: true}],
+    nExt: [{value:'', disabled: true}],
   })
 
 
@@ -77,31 +77,28 @@ export class SolicitanteComponent {
     this.solicitanteServicio.getDatosGenerales(5).subscribe((resp) => {
       if ( resp.codigo === "200") {
         const datos = JSON.parse(resp.data);
-        console.log(datos);
+        const datosSolicitante = datos.datosSolicitante.generales;
+        const datosDomicilioFiscal = datos.datosSolicitante.domicilioFiscal;
 
+        this.setValorInput('curp', datosSolicitante.curp);
+        this.setValorInput('rfc', datosSolicitante.rfc);
+        this.setValorInput('nombreRazonSocial', datosSolicitante.nombre);
+        this.setValorInput('aPaterno', datosSolicitante.aPaterno);
+        this.setValorInput('aMaterno', datosSolicitante.aMaterno);
+        this.setValorInput('actEconomica', datosSolicitante.actEconomica);
+        this.setValorInput('correo', datosSolicitante.correo);
 
-        const datos_solicitante = datos.datos_solicitante.generales;
-        const datos_dom_fiscal = datos.datos_solicitante.domicilio_fiscal;
-
-        this.setValorInput('curp', datos_solicitante.curp);
-        this.setValorInput('rfc', datos_solicitante.rfc);
-        this.setValorInput('nombre_razon_social', datos_solicitante.nombre);
-        this.setValorInput('a_paterno', datos_solicitante.a_paterno);
-        this.setValorInput('a_materno', datos_solicitante.a_materno);
-        this.setValorInput('act_economica', datos_solicitante.act_economica);
-        this.setValorInput('correo', datos_solicitante.correo);
-
-        this.setValorInput('pais', datos_dom_fiscal.pais);
-        this.setValorInput('codigo_postal', datos_dom_fiscal.codigo_postal);
-        this.setValorInput('entidad_federativa', datos_dom_fiscal.entidad_federativa);
-        this.setValorInput('municipio', datos_dom_fiscal.municipio);
-        this.setValorInput('localidad', datos_dom_fiscal.localidad);
-        this.setValorInput('colonia', datos_dom_fiscal.colonia);
-        this.setValorInput('calle', datos_dom_fiscal.calle);
-        this.setValorInput('n_ext', datos_dom_fiscal.n_ext);
-        this.setValorInput('n_int', datos_dom_fiscal.n_int);
-        this.setValorInput('lada', datos_dom_fiscal.lada);
-        this.setValorInput('telefono', datos_dom_fiscal.telefono);
+        this.setValorInput('pais', datosDomicilioFiscal.pais);
+        this.setValorInput('codigoPostal', datosDomicilioFiscal.codigoPostal);
+        this.setValorInput('entidadFederativa', datosDomicilioFiscal.entidadFederativa);
+        this.setValorInput('municipio', datosDomicilioFiscal.municipio);
+        this.setValorInput('localidad', datosDomicilioFiscal.localidad);
+        this.setValorInput('colonia', datosDomicilioFiscal.colonia);
+        this.setValorInput('calle', datosDomicilioFiscal.calle);
+        this.setValorInput('nExt', datosDomicilioFiscal.nExt);
+        this.setValorInput('nInt', datosDomicilioFiscal.nInt);
+        this.setValorInput('lada', datosDomicilioFiscal.lada);
+        this.setValorInput('telefono', datosDomicilioFiscal.telefono);
       }
     });
   }

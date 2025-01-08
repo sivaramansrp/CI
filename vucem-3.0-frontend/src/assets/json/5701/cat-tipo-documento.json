@@ -4,7 +4,7 @@
     {
       "id": 1,
       "value": "Documento que ampare el valor de la mercancía",
-      "tipo_archivo": "pdf",
+      "tipoArchivo": "pdf",
       "archivo": {
         "unidad": "MB",
         "tamanio": 3
@@ -18,7 +18,7 @@
     {
       "id": 2,
       "value": "Pedimento(s) para Servicio Extraordinario",
-      "tipo_archivo": "pdf",
+      "tipoArchivo": "pdf",
       "archivo": {
         "unidad": "KB",
         "tamanio": 15
@@ -31,7 +31,7 @@
     {
       "id": 3,
       "value": "Documentos del medio de transporte (Guías, BL o carta porte según corresponda)",
-      "tipo_archivo": "pdf",
+      "tipoArchivo": "pdf",
       "archivo": {
         "unidad": "MB",
         "tamanio": 5
@@ -45,7 +45,7 @@
     {
       "id": 4,
       "value": "Otro",
-      "tipo_archivo": "pdf",
+      "tipoArchivo": "pdf",
       "archivo": {
         "unidad": "MB",
         "tamanio": 3

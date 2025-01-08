@@ -28,7 +28,7 @@ export class InputCheckComponent {
 
   @Output() valores = new EventEmitter<DatosInputCheck>();
 
-  label_nombre: string = 'Programa de fomento';
+  labelNombre: string = 'Programa de fomento';
   FormInput!: FormGroup;
 
   constructor(private fb: FormBuilder) {}
@@ -37,9 +37,9 @@ export class InputCheckComponent {
 
     this.FormInput.get('seleccion')?.valueChanges.subscribe((checked) => {
       if (checked) {
-        this.FormInput.get('valor_input')?.enable();
+        this.FormInput.get('valorInput')?.enable();
       } else {
-        this.FormInput.get('valor_input')?.disable();
+        this.FormInput.get('valorInput')?.disable();
       }
     });
   }
@@ -47,7 +47,7 @@ export class InputCheckComponent {
   crearFormInput() {
     this.FormInput = this.fb.group({
       seleccion: [false],
-      valor_input: [
+      valorInput: [
         { value: '', disabled: true },
         [
           Validators.maxLength(this.datos.maxlength),
@@ -57,12 +57,19 @@ export class InputCheckComponent {
     });
   }
 
+  seleccion(){
+    const checkSeleccionado = this.FormInput.get('seleccion')?.value;
+    if( !checkSeleccionado ) {
+      this.FormInput.get('valorInput')?.setValue('');
+    }
+    this.onBlurEvent();
+  }
+
   onBlurEvent() {
     const valores: DatosInputCheck = {
       check: this.FormInput.get('seleccion')?.value,
-      valor: this.FormInput.get('valor_input')?.value,
+      valor: this.FormInput.get('valorInput')?.value,
     };
-
     this.valores.emit(valores);
   }
 }

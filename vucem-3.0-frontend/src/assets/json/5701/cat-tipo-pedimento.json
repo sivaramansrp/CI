@@ -1,0 +1,26 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 0,
+      "value": "Por Evaluar"
+    },
+    {
+      "id": 1,
+      "value": "Normal"
+    },
+    {
+      "id": 2,
+      "value": "Copia simple"
+    },
+    {
+      "id": 3,
+      "value": "Parte dos"
+    },
+    {
+      "id": 4,
+      "value": "Remesa consolidado"
+    }
+  ],
+  "message": "Consulta exitosa"
+}

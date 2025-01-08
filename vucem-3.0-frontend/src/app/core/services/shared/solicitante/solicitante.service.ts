@@ -8,12 +8,11 @@ import { JSONResponse } from '../../../models/5701/catalogos.model';
 export class SolicitanteService {
   constructor(private http: HttpClient) {}
 
-  // url_server = 'http://localhost:4200/assets/json/5701';
-  url_server = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
+  urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
 
   getDatosGenerales(id: number) {
     return this.http.get<JSONResponse>(
-      `${this.url_server}/${id}`
+      `${this.urlServer}/${id}`
     );
   }
 }

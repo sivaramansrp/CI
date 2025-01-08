@@ -16,10 +16,10 @@ export interface CatalogosSelect {
 }
 
 export interface DatosPasos {
-  txt_btn_sig: string;
-  txt_btn_ant: string;
+  txtBtnSig: string;
+  txtBtnAnt: string;
   indice: number;
-  nro_pasos: number;
+  nroPasos: number;
 }
 
 export interface DatosIndice {
@@ -28,7 +28,7 @@ export interface DatosIndice {
 }
 
 export interface DocumentosCargados {
-  tipo_documento: Catalogo;
+  tipoDocumento: Catalogo;
   nombre_archivo: string;
 }
 
@@ -39,7 +39,7 @@ export interface DatosArchivo {
 }
 
 export interface InputCheck {
-  label_nombre: string;
+  labelNombre: string;
   maxlength: number;
   minlenght: number;
   required: boolean;
@@ -52,12 +52,28 @@ export interface DatosInputCheck {
 }
 
 export interface InputHora {
-  label_nombre: string;
+  labelNombre: string;
   required: boolean;
 }
 
 export interface InputFecha {
-  label_nombre: string;
+  labelNombre: string;
   required: boolean;
   habilitado: boolean
+}
+
+export interface ConfiguracionTabla {
+  [clave: string]: string | number | boolean | null;
+}
+
+export interface Pedimento {
+  patente: number;
+  pedimento: number;
+  aduana: number;
+  idTipoPedimento: number;
+  descTipoPedimento: string,
+  numero: string;
+  comprobanteValor: string;
+  pedimentoValidado: boolean;
+
 }
