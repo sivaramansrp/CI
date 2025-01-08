@@ -37,7 +37,7 @@
         "programaFomento": "",
         "immex": "",
         "industriaAutomotriz": "",
-        "tipo_empresa_certificada": "",
+        "tipoEmpresaCertificada": "",
         "idSocioComercial": "",
         "socioComercial": false,
         "opEconomicoAut": false,
@@ -68,7 +68,7 @@
         "domicilio": ""
       },
       "pedimento": {
-        "id_pedimento": 0,
+        "idPedimento": 0,
         "datosPedimento": [
           {
             "patente": 3061,

@@ -20,7 +20,6 @@ import {
   IMMEX,
   INDUSTRIA_AUTOMOTRIZ,
   PROGRAMA_FOMENTO,
-  SEMANA,
   SEMANA_D,
   SOCIO_COMERCIAL,
 } from '../../../../shared/constantes/servicios-extraordinarios.enum';
@@ -35,28 +34,27 @@ import { DatosComponentePedimento } from '../../../../core/models/5701/servicios
   styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent {
-  datos_tipos_solicitud!: CatalogosSelect;
-  paises_o!: CatalogosSelect;
-  paises_p!: CatalogosSelect;
+  datosTiposSolicitud!: CatalogosSelect;
+  paisesOrigen!: CatalogosSelect;
+  paisesProcedencia!: CatalogosSelect;
   aduanas!: CatalogosSelect;
   seccionAduanera!: CatalogosSelect;
 
   tipoSolSeleccionada!: Catalogo;
-  tipo_sol_sel_valor!: number;
 
   programaFomento: InputCheck = PROGRAMA_FOMENTO;
   immex: InputCheck = IMMEX;
   industriaAutomotriz: InputCheck = INDUSTRIA_AUTOMOTRIZ;
   socioComercial: InputCheck = SOCIO_COMERCIAL;
 
-  despacho_dd = DESPACHO_DD;
-  despacho_lda = DESPACHO_LDA;
+  despachoDD = DESPACHO_DD;
+  despachoLDA = DESPACHO_LDA;
 
-  hora_inicio: InputHora = HORA_INICIO;
-  hora_final: InputHora = HORA_FINAL;
+  horaInicio: InputHora = HORA_INICIO;
+  horaFinal: InputHora = HORA_FINAL;
 
-  fecha_inicio: InputFecha = FECHA_INICIO;
-  fecha_final: InputFecha = FECHA_FINAL;
+  fechaInicioInput: InputFecha = FECHA_INICIO;
+  fechaFinalInput: InputFecha = FECHA_FINAL;
 
   FormSolicitud!: FormGroup;
 
@@ -95,7 +93,7 @@ export class SolicitudComponent {
     return this.FormSolicitud.get('datosImportadorExportador') as FormGroup;
   }
 
-  get d_servicio() {
+  get datosServicio() {
     return this.FormSolicitud.get('datosServicio') as FormGroup;
   }
 
@@ -117,7 +115,7 @@ export class SolicitudComponent {
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_SOL)
       .subscribe((resp) => {
         if (resp.codigo === '200') {
-          this.datos_tipos_solicitud = {
+          this.datosTiposSolicitud = {
             labelNombre: 'Tipo de solicitud',
             required: true,
             primerOpcion: 'Selecciona un valor',
@@ -132,14 +130,14 @@ export class SolicitudComponent {
       .getCatalogo(CATALOGOS_ID.CAT_PAISES)
       .subscribe((resp) => {
         if (resp.codigo === '200') {
-          this.paises_o = {
+          this.paisesOrigen = {
             labelNombre: 'País de origen',
             required: true,
             primerOpcion: 'Selecciona un valor',
             catalogos: JSON.parse(resp.data),
           };
 
-          this.paises_p = {
+          this.paisesProcedencia = {
             labelNombre: 'País de procedencia',
             required: true,
             primerOpcion: 'Selecciona un valor',
@@ -190,16 +188,16 @@ export class SolicitudComponent {
 
   crearFormSolicitud() {
     this.FormSolicitud = this.fb.group({
-      tipo_solicitud: [{ value: '', requerid: true }, [Validators.required]],
+      tipoSolicitud: [{ value: '', requerid: true }, [Validators.required]],
       datosImportadorExportador: this.fb.group({
-        rfc_import_export: [
+        rfcImportExport: [
           '',
           [
             Validators.required,
             Validators.pattern(this.validacionesService.rfc_pf_pattern),
           ],
         ],
-        nombre_import_export: [
+        nombreImportExport: [
           { value: '', disabled: true },
           [Validators.required],
         ],
@@ -210,7 +208,7 @@ export class SolicitudComponent {
         immexValue: [''],
         industriaAutomotriz: [false],
         industriaAutomotrizValue: [''],
-        tipo_empresa_certificada: [''],
+        tipoEmpresaCertificada: [''],
         idSocioComercial: [''],
         socioComercial: [false],
         opEconomicoAut: [false],
@@ -246,7 +244,7 @@ export class SolicitudComponent {
       }),
 
       pedimento: this.fb.group({
-        id_pedimento: [''],
+        idPedimento: [''],
         datosPedimento: this.fb.group({
           patente: [],
           pedimento: [],
@@ -263,18 +261,18 @@ export class SolicitudComponent {
   }
 
   fechaInicio() {
-    const fecha_inicio = this.d_servicio.get('fechaInicio')?.value;
-    return fecha_inicio;
+    const fechaInicio = this.datosServicio.get('fechaInicio')?.value;
+    return fechaInicio;
   }
 
   cambioFechaInicio(nuevo_valor: string) {
-    this.d_servicio.get('fechaInicio')?.setValue(nuevo_valor);
-    this.d_servicio.get('fechaInicio')?.markAsUntouched();
+    this.datosServicio.get('fechaInicio')?.setValue(nuevo_valor);
+    this.datosServicio.get('fechaInicio')?.markAsUntouched();
   }
 
   cambioFechaFinal(nuevo_valor: string) {
-    this.d_servicio.get('fechaFinal')?.setValue(nuevo_valor);
-    this.d_servicio.get('fechaFinal')?.markAsUntouched();
+    this.datosServicio.get('fechaFinal')?.setValue(nuevo_valor);
+    this.datosServicio.get('fechaFinal')?.markAsUntouched();
   }
 
 
@@ -290,12 +288,12 @@ export class SolicitudComponent {
 
   busqueda_rfc() {
     const rfc =
-      this.datosImportadorExportador.get('rfc_import_export')?.value;
+      this.datosImportadorExportador.get('rfcImportExport')?.value;
     // Aqui se hará la busqueda del rfc, para obtener el nombre
 
     this.llenarCamposDesactivados(
       this.datosImportadorExportador,
-      'nombre_import_export'
+      'nombreImportExport'
     );
   }
 
@@ -339,14 +337,14 @@ export class SolicitudComponent {
 
   obtenerHora(e: string, tipo: string) {
     if (tipo === 'i') {
-      this.d_servicio.get('horaInicio')?.setValue(e);
+      this.datosServicio.get('horaInicio')?.setValue(e);
     } else if (tipo === 'f') {
       switch (this.tipoSolSeleccionada.id) {
         case 1:
-          this.d_servicio.get('horaFinal')?.setValue(e);
+          this.datosServicio.get('horaFinal')?.setValue(e);
 
-          const f_inicial = this.d_servicio.get('fechaInicio')?.value;
-          const fechaFinal = this.d_servicio.get('fechaFinal')?.value;
+          const fechaInicial = this.datosServicio.get('fechaInicio')?.value;
+          const fechaFinal = this.datosServicio.get('fechaFinal')?.value;
 
           break;
         case 2:
@@ -361,13 +359,13 @@ export class SolicitudComponent {
   }
 
   rango_fechas() {
-    const f_inicial = this.d_servicio.get('fechaInicio')?.value;
-    const fechaFinal = this.d_servicio.get('fechaFinal')?.value;
+    const fechaInicial = this.datosServicio.get('fechaInicio')?.value;
+    const fechaFinal = this.datosServicio.get('fechaFinal')?.value;
 
-    const formato_fi = this.formato_fecha(f_inicial);
-    const formato_ff = this.formato_fecha(fechaFinal);
+    const formatoFechaInicial = this.formato_fecha(fechaInicial);
+    const formatoFechaFinal = this.formato_fecha(fechaFinal);
 
-    this.selectRangoDias = this.obtenerDiasEntreFechas(formato_fi, formato_ff);
+    this.selectRangoDias = this.obtenerDiasEntreFechas(formatoFechaInicial, formatoFechaFinal);
 
     this.colapsable = true;
   }

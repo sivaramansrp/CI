@@ -29,24 +29,24 @@ export class SelectCatalogosComponent {
 
   @Output() valorSelección = new EventEmitter<Catalogo>();
 
-  tipo_solicitud: FormControl = new FormControl(0);
+  tipoSolicitud: FormControl = new FormControl(0);
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['catalogos_datos'].currentValue) {
       this.catalogos_datos = changes['catalogos_datos'].currentValue;
       if (this.catalogos_datos.required) {
-        this.tipo_solicitud.setValidators([Validators.required]);
-        this.tipo_solicitud.updateValueAndValidity();
+        this.tipoSolicitud.setValidators([Validators.required]);
+        this.tipoSolicitud.updateValueAndValidity();
       }
     }
   }
 
   isValid() {
-    return this.tipo_solicitud.errors && this.tipo_solicitud.touched;
+    return this.tipoSolicitud.errors && this.tipoSolicitud.touched;
   }
 
   seleccion() {
-    const opcionSeleccionada = parseInt(this.tipo_solicitud.value);
+    const opcionSeleccionada = parseInt(this.tipoSolicitud.value);
 
     let seleccion: Catalogo;
 

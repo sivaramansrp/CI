@@ -3,7 +3,7 @@
 
   <div class="row">
     <div class="col-md-4">
-      <select-catalogos [catalogos_datos]="datos_tipos_solicitud" (valorSelección)="tipoSolicitud($event)" />
+      <select-catalogos [catalogos_datos]="datosTiposSolicitud" (valorSelección)="tipoSolicitud($event)" />
     </div>
   </div>
 
@@ -14,17 +14,17 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="control-label" for="rfc_import_export">RFC*:</label>
-            <input class="form-control" id="rfc_import_export" placeholder="RFC" type="text"
-              formControlName="rfc_import_export"
-              [ngClass]="isValid(datosImportadorExportador,'rfc_import_export') ? 'required' : ''" appUppercase
+            <label class="control-label" for="rfcImportExport">RFC*:</label>
+            <input class="form-control" id="rfcImportExport" placeholder="RFC" type="text"
+              formControlName="rfcImportExport"
+              [ngClass]="isValid(datosImportadorExportador,'rfcImportExport') ? 'required' : ''" appUppercase
               (blur)="busqueda_rfc()">
           </div>
         </div>
         <div class="col-md-8">
           <div class="form-group">
-            <label class="control-label" for="nombre_import_export">Nombre*:</label>
-            <input class="form-control" id="nombre_import_export" formControlName="nombre_import_export"
+            <label class="control-label" for="nombreImportExport">Nombre*:</label>
+            <input class="form-control" id="nombreImportExport" formControlName="nombreImportExport"
               placeholder="Nombre" type="text" appUppercase>
           </div>
         </div>
@@ -91,23 +91,23 @@
     <ng-titulo titulo="Datos del servicio" />
     <div class="row">
       <div class="col-md-4">
-        <input-fecha [datos]="fecha_inicio" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
+        <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
       </div>
 
 
       <div class="col-md-4">
-        <input-hora [datosHora]="hora_inicio" (horaValor)="obtenerHora($event, 'i')"></input-hora>
+        <input-hora [datosHora]="horaInicio" (horaValor)="obtenerHora($event, 'i')"></input-hora>
       </div>
 
     </div>
 
     <div class="row">
       <div class="col-md-4">
-        <input-fecha [datos]="fecha_final" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+        <input-fecha [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
       </div>
 
       <div class="col-md-4">
-        <input-hora [datosHora]="hora_final" (horaValor)="obtenerHora($event, 'f')"></input-hora>
+        <input-hora [datosHora]="horaFinal" (horaValor)="obtenerHora($event, 'f')"></input-hora>
       </div>
     </div>
 
@@ -140,10 +140,10 @@
     <ng-container formGroupName="despacho">
       <div class="row">
         <div class="col-md-4">
-          <input-check [datos]="despacho_lda" (valores)="valorInputCheck($event)"></input-check>
+          <input-check [datos]="despachoLDA" (valores)="valorInputCheck($event)"></input-check>
         </div>
         <div class="col-md-4">
-          <input-check [datos]="despacho_dd" (valores)="valorInputCheck($event)"></input-check>
+          <input-check [datos]="despachoDD" (valores)="valorInputCheck($event)"></input-check>
         </div>
       </div>
 
@@ -152,7 +152,7 @@
           <select-catalogos [catalogos_datos]="aduanas" (valorSelección)="aduanaSeleccion($event)" />
         </div>
         <div class="col-md-4">
-          <label for="tipo_solicitud" class="control-label">Sección aduanera*:</label>
+          <label for="tipoSolicitud" class="control-label">Sección aduanera*:</label>
           <select class="form-control" id="tipo-solicitud">
             <option>Selecciona un valor</option>
             <option>32 - 304 - AEROPUERTO INTERNACIONAL GENERAL. LUCIO BLANCO, CIUDAD REYNOSA, TAMAULIPAS.</option>
@@ -162,7 +162,7 @@
 
         </div>
         <div class="col-md-4">
-          <label for="tipo_solicitud" class="control-label">Nombre del recinto:</label>
+          <label for="tipoSolicitud" class="control-label">Nombre del recinto:</label>
           <select class="form-control" id="tipo-solicitud" disabled>
             <option>Selecciona un valor</option>
             <option>Individual</option>
@@ -174,7 +174,7 @@
 
       <div class="row">
         <div class="col-md-4">
-          <label for="tipo_solicitud" class="control-label">Tipo de operación*:</label>
+          <label for="tipoSolicitud" class="control-label">Tipo de operación*:</label>
           <select class="form-control" id="tipo-solicitud">
             <option>Selecciona un valor</option>
             <option>Importación</option>
@@ -214,23 +214,23 @@
     <ng-titulo titulo="Mercancía" />
     <div class="row">
       <div class="col-md-4">
-        <select-catalogos [catalogos_datos]="paises_o" (valorSelección)="paisOrigen($event)" />
+        <select-catalogos [catalogos_datos]="paisesOrigen" (valorSelección)="paisOrigen($event)" />
       </div>
 
       <div class="col-md-4">
-        <select-catalogos [catalogos_datos]="paises_p" (valorSelección)="paisProcedencia($event)" />
+        <select-catalogos [catalogos_datos]="paisesProcedencia" (valorSelección)="paisProcedencia($event)" />
       </div>
 
       <div class="col-md-8">
         <div class="form-group">
-          <label for="tipo_solicitud" class="control-label">Descripción genérica*:</label>
+          <label for="tipoSolicitud" class="control-label">Descripción genérica*:</label>
           <textarea class="form-control" rows="3"></textarea>
         </div>
       </div>
 
       <div class="col-md-8">
         <div class="form-group">
-          <label for="tipo_solicitud" class="control-label">Justificación*:</label>
+          <label for="tipoSolicitud" class="control-label">Justificación*:</label>
           <textarea class="form-control" rows="3"></textarea>
         </div>
       </div>

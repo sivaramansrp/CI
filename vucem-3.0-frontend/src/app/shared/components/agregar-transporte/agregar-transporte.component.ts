@@ -10,7 +10,6 @@ import {
 import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
 import { ServiciosExtraordinariosService } from './../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 import { CatalogosSelect } from '../../../core/models/shared/components.model';
-import { TablaComponent } from '../tabla/tabla.component';
 import { Catalogo } from '../../../core/models/5701/catalogos.model';
 import * as CONSTANTES from '../../constantes/formularios-transportes.enums';
 import { CampoForm } from '../../../core/models/shared/forms-model';
@@ -22,7 +21,6 @@ import { InputFechaComponent } from '../input-fecha/input-fecha.component';
     CommonModule,
     ReactiveFormsModule,
     SelectCatalogosComponent,
-    TablaComponent,
     InputFechaComponent,
   ],
   templateUrl: './agregar-transporte.component.html',
