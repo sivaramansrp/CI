@@ -32,7 +32,7 @@
   &.completed,
   &.current {
     background-color: $color-primario;
-    color: $c-white;
+    color: $color-white;
   }
 }
 
@@ -40,7 +40,7 @@
   &.completed,
   &.current {
     background-color: $color-primario;
-    color: $c-white;
+    color: $color-white;
   }
 }
 
@@ -52,7 +52,7 @@
 .wizard-steps li:last-child.success i,
 .wizard-steps-extensive li:last-child.success i {
   visibility: visible;
-  color: $c-white;
+  color: $color-white;
 }
 
 @media (min-width: 768px) {
@@ -79,7 +79,7 @@
     i {
       padding-top: 18px;
       font-size: 35px;
-      color: $c-white;
+      color: $color-white;
       display: block;
       margin: auto;
       text-align: center;
@@ -115,8 +115,8 @@
       right: -29px;
       top: 9px;
       border-radius: 3px;
-      border-right: 3px solid $c-white;
-      border-top: 3px solid $c-white;
+      border-right: 3px solid $color-white;
+      border-top: 3px solid $color-white;
       height: 52px;
       width: 52px;
       -webkit-transform: rotate(45deg);
@@ -140,7 +140,7 @@
     &.current,
     &.success {
       background-color: $color-primario;
-      color: $c-white;
+      color: $color-white;
       height: 80px;
       top: 0;
     }
@@ -230,7 +230,7 @@
 
       &.completed {
         background-color: $color-primario;
-        color: $c-white;
+        color: $color-white;
 
         &:after {
           background-color: $color-primario;
