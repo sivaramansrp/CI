@@ -229,5 +229,37 @@ hr.red {
 
 .custom-footer {
   border-top: none;
+}
+
+/* Estilos del nav-gob */
+.nav-gob {
+  border-bottom: 1px solid #ddd;
+
+  li {
+    a {
+      background-color: #eee;
+      margin-right: 0;
+      border: 1px solid #fff;
+      border-top-color: rgb(255, 255, 255);
+      border-right-color: rgb(255, 255, 255);
+      border-bottom-color: rgb(255, 255, 255);
+      border-left-color: rgb(255, 255, 255);
+      border-radius: 0;
+      text-decoration: none;
+      color: #404041;
+      font-size: 16px;
+    }
+
+    &:hover {
+      a {
+        background-color: #ddd;
+        color: #404041;
+      }
+    }
+  }
+
+  .active {
+    background-color: $color-primario;
+  }
 
 }
