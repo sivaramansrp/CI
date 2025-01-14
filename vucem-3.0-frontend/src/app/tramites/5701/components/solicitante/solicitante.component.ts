@@ -55,7 +55,12 @@ export class SolicitanteComponent {
     this.getDatosGenerales();
   }
 
-  obtenerTipoPersona(tipo: number) {
+  /**
+   * Obtiene el tipo de persona que es solicitante, y asigna los campos correspondientes al formulario.
+   * @param tipo - Tipo de persona que es solicitante.
+   * @returns void
+   */
+  obtenerTipoPersona(tipo: number): void {
     this.tipoPersona = tipo;
     if (tipo === 1) {
       // Persona fisica nacional
@@ -76,22 +81,40 @@ export class SolicitanteComponent {
     }
   }
 
+  /**
+   * Es un getter que proporciona un acceso más sencillo ala grupo de formularios llamado datosGenerales contenido dentr del formulario principal Form.
+   */
   get datosGeneralesForm() {
     return this.form.get('datosGenerales') as FormGroup;
   }
 
+  /**
+   * Es un getter que proporciona un acceso más sencillo ala grupo de formularios llamado domicilioFiscal contenido dentr del formulario principal Form.
+   */
   get domicilioFiscalForm() {
     return this.form.get('domicilioFiscal') as FormGroup;
   }
 
-  crearFormulario() {
+  /**
+   * Crea un formulario vacío con dis grupos de formularios, datosGenerales y domicilioFiscal.
+   */
+  crearFormulario(): void {
     this.form = this.fb.group({
       datosGenerales: this.fb.group({}),
       domicilioFiscal: this.fb.group({}),
     });
   }
 
-  inicializarFormGroup(config: Array<FormularioDinamico>, grupoNombre: string) {
+  /**
+   * Inicializa los campos del formulario con los campos de la configuración de los campos de los formularios.
+   * @param config - Configuración de los campos de los formularios.
+   * @param grupoNombre - Nombre del grupo de formularios a inicializar.
+   * @returns void
+   */
+  inicializarFormGroup(
+    config: Array<FormularioDinamico>,
+    grupoNombre: string
+  ): void {
     const grupo = this.form.get(grupoNombre) as FormGroup;
     config.forEach((campo) => {
       const validators = this.getValidators(campo.validators);
@@ -102,6 +125,11 @@ export class SolicitanteComponent {
     });
   }
 
+  /**
+   * Obtiene los validadores de los campos de los formularios.
+   * @param validators - Validadores de los campos de los formularios.
+   * @returns ValidatorFn[]
+   */
   getValidators(validators: Array<string>): ValidatorFn[] {
     const formValidators: ValidatorFn[] = [];
     validators.forEach((validator) => {
@@ -118,7 +146,11 @@ export class SolicitanteComponent {
     return formValidators;
   }
 
-  getDatosGenerales() {
+  /**
+   * Obtiene los datos generales del solicitante con una peticion get.
+   * @returns void
+   */
+  getDatosGenerales(): void {
     this.solicitanteServicio.getDatosGenerales(5).subscribe((resp) => {
       if (resp.codigo === '200') {
         const datos = JSON.parse(resp.data);
@@ -148,11 +180,5 @@ export class SolicitanteComponent {
         });
       }
     });
-  }
-
-  setValorInput(field: string, value: string): void {
-    this.datosGeneralesForm.controls[field].enable();
-    this.datosGeneralesForm.controls[field].setValue(value);
-    this.datosGeneralesForm.controls[field].disable();
   }
 }
