@@ -107,8 +107,6 @@ export class FirmaElectronicaComponent {
         ) {
           this.valido.emit(true);
           const firma = this.firmar('hola', privateKey);
-          console.log(firma);
-
           this.toastrService.success(
             '¡Certificado válido y llave privada coinciden!'
           );
