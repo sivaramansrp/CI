@@ -106,6 +106,9 @@ export class FirmaElectronicaComponent {
           certPublicKey.e.t === privateKey.e.t
         ) {
           this.valido.emit(true);
+          const firma = this.firmar('hola', privateKey);
+          console.log(firma);
+
           this.toastrService.success(
             '¡Certificado válido y llave privada coinciden!'
           );
@@ -127,5 +130,11 @@ export class FirmaElectronicaComponent {
       console.log(error);
       this.toastrService.error('Error en la validación');
     }
+  }
+
+  firmar(cadena: string, privateKey: any): string {
+    const md = forge.md.sha256.create();
+    md.update(cadena, 'utf8');
+    return forge.util.encode64(privateKey.sign(md));
   }
 }
