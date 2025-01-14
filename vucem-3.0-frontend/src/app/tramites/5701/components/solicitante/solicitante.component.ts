@@ -45,7 +45,7 @@ export class SolicitanteComponent {
     private fb: FormBuilder,
     private formServices: FormulariosService
   ) {
-    this.obtenerTipoPersona(2);
+    this.obtenerTipoPersona(1);
     this.crearFormulario();
     this.inicializarFormGroup(this.persona, 'datosGenerales');
     this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
