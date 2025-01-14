@@ -26,7 +26,7 @@ export class AnexarDocumentosComponent {
   modal: string = 'modal';
   indiceDocumento!: number;
 
-  @ViewChild('exampleModal') modalElement!: ElementRef;
+  @ViewChild('modalConfirmacion') modalElement!: ElementRef;
 
   constructor(
     private sExtraordinarios: ServiciosExtraordinariosService,
