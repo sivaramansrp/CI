@@ -249,7 +249,7 @@ export const PERSONA_FISICA_EXTRANJERO = [
   },
   {
     labelNombre: 'Número de identificación fiscal',
-    campo: 'nroIdentificacionFiscal',
+    campo: 'nIdentificacionFiscal',
     class: 'col-md-4',
     tipo_input: 'text',
     disabled: true,
@@ -258,7 +258,7 @@ export const PERSONA_FISICA_EXTRANJERO = [
   },
   {
     labelNombre: 'Número de seguro social',
-    campo: 'nrSeguroSocial',
+    campo: 'nSeguroSocial',
     class: 'col-md-4',
     tipo_input: 'text',
     disabled: true,
