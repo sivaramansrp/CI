@@ -1,112 +1,158 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, UpperCasePipe } from '@angular/common';
+import {
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+  PERSONA_FISICA_EXTRANJERO,
+  PERSONA_FISICA_NACIONAL,
+  PERSONA_MORAL_EXTRANJERO,
+  PERSONA_MORAL_NACIONAL,
+} from '../../../../shared/constantes/solicitante-constantes.enum';
+import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
+import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA } from '../../../../shared/constantes/solicitante-constantes.enum';
+import { UppercaseDirective } from '../../../../shared/directives/Uppercase/uppercase.directive';
 
 @Component({
   selector: 'solicitante',
   standalone: true,
-  imports: [TituloComponent, ReactiveFormsModule, CommonModule],
+  imports: [
+    TituloComponent,
+    ReactiveFormsModule,
+    CommonModule,
+    UppercaseDirective,
+  ],
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
 })
 export class SolicitanteComponent {
+  tipoPersona: number = 1;
+  persona: Array<FormularioDinamico> = [];
+  domicilioFiscal: Array<FormularioDinamico> = [];
 
-  public FormPersonaFisica: FormGroup = this.fb.group({
-    rfc: [{value: '', disabled: true}],
-    curp: [{value: '', disabled: true}],
-    nombreRazonSocial: [{value: '', disabled: true}],
-    aPaterno: [{value: '', disabled: true}],
-    aMaterno: [{value: '', disabled: true}],
-
-    // Persona Moral
-    actEconomica: [{value: '', disabled: true}],
-    correo: [{value: '', disabled: true}],
-
-    // Domicilio Fiscal Persona Moral o Fisica Nacional
-    pais: [{value: '', disabled: true}],
-    codigoPostal: [{value: '', disabled: true}],
-    entidadFederativa: [{value: '', disabled: true}],
-    municipio: [{value: '', disabled: true}],
-    localidad: [{value: '', disabled: true}],
-    colonia: [{value: '', disabled: true}],
-    calle: [{value: '', disabled: true}],
-    nExt: [{value: '', disabled: true}],
-    nInt: [{value: '', disabled: true}],
-    lada: [{value: '', disabled: true}],
-    telefono: [{value: '', disabled: true}]
-  });
-
-  public FormExtranjero = this.fb.group({
-    nombreRazonSocial: [{value:'', disabled: true}],
-    aPaterno: [{value:'', disabled: true}],
-    aMaterno: [{value:'', disabled: true}],
-    idFiscal: [{value:'', disabled: true}],
-    nroSegSocial: [{value:'', disabled: true}],
-    correo: [{value:'', disabled: true}],
-    actEconomica: [{value: '', disabled: true}],
-
-    pais: [{value:'', disabled: true}],
-    codigoPostal: [{value:'', disabled: true}],
-    estado: [{value:'', disabled: true}],
-    calle: [{value:'', disabled: true}],
-    nInt: [{value:'', disabled: true}],
-    nExt: [{value:'', disabled: true}],
-  })
-
+  form!: FormGroup;
 
   constructor(
     private solicitanteServicio: SolicitanteService,
     private fb: FormBuilder,
-  ) {}
+    private formServices: FormulariosService
+  ) {
+    this.obtenerTipoPersona(2);
+    this.crearFormulario();
+    this.inicializarFormGroup(this.persona, 'datosGenerales');
+    this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
+  }
 
   ngOnInit() {
     this.getDatosGenerales();
   }
 
-  get nacional() {
-    return true;
+  obtenerTipoPersona(tipo: number) {
+    this.tipoPersona = tipo;
+    if (tipo === 1) {
+      // Persona fisica nacional
+      this.persona = PERSONA_FISICA_NACIONAL;
+      this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
+    } else if (tipo === 2) {
+      // Persona moral nacional
+      this.persona = PERSONA_MORAL_NACIONAL;
+      this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
+    } else if (tipo === 3) {
+      // Persona fisica extranjera
+      this.persona = PERSONA_FISICA_EXTRANJERO;
+      this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
+    } else if (tipo === 4) {
+      // Persona moral extranjera
+      this.persona = PERSONA_MORAL_EXTRANJERO;
+      this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
+    }
   }
 
-  get personaFisica() {
-    return true;
+  get datosGeneralesForm() {
+    return this.form.get('datosGenerales') as FormGroup;
+  }
+
+  get domicilioFiscalForm() {
+    return this.form.get('domicilioFiscal') as FormGroup;
+  }
+
+  crearFormulario() {
+    this.form = this.fb.group({
+      datosGenerales: this.fb.group({}),
+      domicilioFiscal: this.fb.group({}),
+    });
+  }
+
+  inicializarFormGroup(config: Array<FormularioDinamico>, grupoNombre: string) {
+    const grupo = this.form.get(grupoNombre) as FormGroup;
+    config.forEach((campo) => {
+      const validators = this.getValidators(campo.validators);
+      grupo.addControl(
+        campo.campo,
+        this.fb.control({ value: '', disabled: campo.disabled }, validators)
+      );
+    });
+  }
+
+  getValidators(validators: Array<string>): ValidatorFn[] {
+    const formValidators: ValidatorFn[] = [];
+    validators.forEach((validator) => {
+      if (validator === 'required') {
+        formValidators.push(Validators.required);
+      } else if (validator.includes('maxLength')) {
+        const max = validator.split(':')[1];
+        formValidators.push(Validators.maxLength(Number(max)));
+      } else if (validator.includes('pattern')) {
+        const pattern = validator.split(':')[1];
+        formValidators.push(Validators.pattern(pattern));
+      }
+    });
+    return formValidators;
   }
 
   getDatosGenerales() {
     this.solicitanteServicio.getDatosGenerales(5).subscribe((resp) => {
-      if ( resp.codigo === "200") {
+      if (resp.codigo === '200') {
         const datos = JSON.parse(resp.data);
         const datosSolicitante = datos.datosSolicitante.generales;
         const datosDomicilioFiscal = datos.datosSolicitante.domicilioFiscal;
 
-        this.setValorInput('curp', datosSolicitante.curp);
-        this.setValorInput('rfc', datosSolicitante.rfc);
-        this.setValorInput('nombreRazonSocial', datosSolicitante.nombre);
-        this.setValorInput('aPaterno', datosSolicitante.aPaterno);
-        this.setValorInput('aMaterno', datosSolicitante.aMaterno);
-        this.setValorInput('actEconomica', datosSolicitante.actEconomica);
-        this.setValorInput('correo', datosSolicitante.correo);
+        const camposDatosGenerales = this.formServices.obtenerNombresCamposForm(
+          this.datosGeneralesForm
+        );
+        const camposDatosDomicilioFiscal =
+          this.formServices.obtenerNombresCamposForm(this.domicilioFiscalForm);
 
-        this.setValorInput('pais', datosDomicilioFiscal.pais);
-        this.setValorInput('codigoPostal', datosDomicilioFiscal.codigoPostal);
-        this.setValorInput('entidadFederativa', datosDomicilioFiscal.entidadFederativa);
-        this.setValorInput('municipio', datosDomicilioFiscal.municipio);
-        this.setValorInput('localidad', datosDomicilioFiscal.localidad);
-        this.setValorInput('colonia', datosDomicilioFiscal.colonia);
-        this.setValorInput('calle', datosDomicilioFiscal.calle);
-        this.setValorInput('nExt', datosDomicilioFiscal.nExt);
-        this.setValorInput('nInt', datosDomicilioFiscal.nInt);
-        this.setValorInput('lada', datosDomicilioFiscal.lada);
-        this.setValorInput('telefono', datosDomicilioFiscal.telefono);
+        camposDatosGenerales.forEach((campo) => {
+          this.formServices.agregarValorCampoDesactivados(
+            this.datosGeneralesForm,
+            campo,
+            datosSolicitante[campo]
+          );
+        });
+
+        camposDatosDomicilioFiscal.forEach((campo) => {
+          this.formServices.agregarValorCampoDesactivados(
+            this.domicilioFiscalForm,
+            campo,
+            datosDomicilioFiscal[campo]
+          );
+        });
       }
     });
   }
 
-  setValorInput(field: string, value: string) : void {
-    this.FormPersonaFisica.controls[field].enable();
-    this.FormPersonaFisica.controls[field].setValue(value);
-    this.FormPersonaFisica.controls[field].disable();
+  setValorInput(field: string, value: string): void {
+    this.datosGeneralesForm.controls[field].enable();
+    this.datosGeneralesForm.controls[field].setValue(value);
+    this.datosGeneralesForm.controls[field].disable();
   }
 }
-

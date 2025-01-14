@@ -7,12 +7,12 @@ import { BooleanoSiNoPipe } from './pipes/booleanoSiNo/booleano-si-no.pipe';
 
 @NgModule({
   declarations: [
-    UppercaseDirective,
     SoloNumerosDirective,
   ],
   imports: [
     CommonModule,
-    InputCheckComponent
+    InputCheckComponent,
+    UppercaseDirective
    ],
   exports: [
     UppercaseDirective,

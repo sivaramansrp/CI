@@ -98,7 +98,7 @@ export class FirmaElectronicaComponent {
       const der = new Uint8Array(binaryData);
       const binaryString = String.fromCharCode(...der);
       const content = paddingStart + btoa(binaryString) + paddingEnd; // añadir paddings
-      const privateKey = forge.pki.decryptRsaPrivateKey(content, password) as forge.pki.rsa.PrivateKey;
+      const privateKey = forge.pki.decryptRsaPrivateKey(content, password);
 
       if (privateKey && certPublicKey) {
         if (
