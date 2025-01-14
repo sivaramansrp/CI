@@ -98,7 +98,7 @@ export class FirmaElectronicaComponent {
       const der = new Uint8Array(binaryData);
       const binaryString = String.fromCharCode(...der);
       const content = paddingStart + btoa(binaryString) + paddingEnd; // añadir paddings
-      const privateKey = forge.pki.decryptRsaPrivateKey(content, password);
+      const privateKey = forge.pki.decryptRsaPrivateKey(content, password) as forge.pki.rsa.PrivateKey;
 
       if (privateKey && certPublicKey) {
         if (
@@ -132,7 +132,7 @@ export class FirmaElectronicaComponent {
     }
   }
 
-  firmar(cadena: string, privateKey: any): string {
+  firmar(cadena: string, privateKey: forge.pki.rsa.PrivateKey): string {
     const md = forge.md.sha256.create();
     md.update(cadena, 'utf8');
     return forge.util.encode64(privateKey.sign(md));
