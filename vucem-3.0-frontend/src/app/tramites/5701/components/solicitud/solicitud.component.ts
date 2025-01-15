@@ -114,12 +114,14 @@ export class SolicitudComponent {
     this.sExtraordinarios
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_SOL)
       .subscribe((resp) => {
-        if (resp.codigo === '200') {
+        console.log(resp);
+
+        if (resp.length > 0) {
           this.datosTiposSolicitud = {
             labelNombre: 'Tipo de solicitud',
             required: true,
             primerOpcion: 'Selecciona un valor',
-            catalogos: JSON.parse(resp.data),
+            catalogos: resp,
           };
         }
       });
@@ -129,19 +131,20 @@ export class SolicitudComponent {
     this.sExtraordinarios
       .getCatalogo(CATALOGOS_ID.CAT_PAISES)
       .subscribe((resp) => {
-        if (resp.codigo === '200') {
+
+        if (resp.length > 0) {
           this.paisesOrigen = {
             labelNombre: 'País de origen',
             required: true,
             primerOpcion: 'Selecciona un valor',
-            catalogos: JSON.parse(resp.data),
+            catalogos: resp,
           };
 
           this.paisesProcedencia = {
             labelNombre: 'País de procedencia',
             required: true,
             primerOpcion: 'Selecciona un valor',
-            catalogos: JSON.parse(resp.data),
+            catalogos: resp,
           };
         }
       });
@@ -151,12 +154,12 @@ export class SolicitudComponent {
     this.sExtraordinarios
       .getCatalogo(CATALOGOS_ID.CAT_ADUANAS)
       .subscribe((resp) => {
-        if (resp.codigo === '200') {
+        if (resp.length > 0) {
           this.aduanas = {
             labelNombre: 'Aduana',
             required: true,
             primerOpcion: 'Selecciona un valor',
-            catalogos: JSON.parse(resp.data),
+            catalogos: resp,
           };
         }
       });
@@ -348,10 +351,10 @@ export class SolicitudComponent {
 
           break;
         case 2:
-          console.log(this.tipoSolSeleccionada.value);
+          console.log(this.tipoSolSeleccionada.descripcion);
           break;
         case 3:
-          console.log(this.tipoSolSeleccionada.value);
+          console.log(this.tipoSolSeleccionada.descripcion);
           break;
       }
       this.rango_fechas();
@@ -409,7 +412,7 @@ export class SolicitudComponent {
     this.darValorCampoFormulario(
       this.despacho,
       'descripcionAduana',
-      aduana.value
+      aduana.descripcion
     );
     this.validacionPedimento = true;
 

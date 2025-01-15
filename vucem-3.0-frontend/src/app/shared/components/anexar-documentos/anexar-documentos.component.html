@@ -45,8 +45,8 @@
           @for (item of documentosCargados; track item.tipoDocumento.id; let i = $index) {
           <tr>
             <td> {{i+1}} </td>
-            <td>{{ item.tipoDocumento.value}}</td>
-            <td>{{ item.nombre_archivo}}</td>
+            <td>{{ item.tipoDocumento.descripcion}}</td>
+            <td>{{ item.nombreArchivo}}</td>
             <td>
               <button type="button" class="btn btn-link"            (click)="verDocumento(i, 'v')">
                 <i class="bi bi-eye bi-c"></i>

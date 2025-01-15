@@ -1,3 +1,8 @@
+export interface catalogoResponse {
+  id: number;
+  descripcion: string;
+}
+
 export interface JSONResponse {
   id: number;
   descripcion: string;
@@ -13,7 +18,7 @@ export interface RespuestaCatalogos {
 
 export interface Catalogo {
   id: number;
-  value: string;
+  descripcion: string;
   tipoArchivo?: string;
   imagen?: DatosImagen;
   archivo?: DatosArchivo;
