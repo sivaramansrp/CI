@@ -22,3 +22,11 @@ export const TIPO_PERSONA = {
   FISICA_EXTRANJERA: 3,
   MORAL_EXTRANJERA: 4
 }
+export const PADDING = {
+  INICIO: '-----BEGIN ENCRYPTED PRIVATE KEY-----\n',
+  FIN: '\n-----END ENCRYPTED PRIVATE KEY-----'
+}
+
+export const LOGIN = 'login';
+
+
