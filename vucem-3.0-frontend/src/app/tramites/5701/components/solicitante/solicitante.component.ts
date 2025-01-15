@@ -11,15 +11,18 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
 import { CommonModule, UpperCasePipe } from '@angular/common';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
   PERSONA_FISICA_EXTRANJERO,
   PERSONA_FISICA_NACIONAL,
   PERSONA_MORAL_EXTRANJERO,
   PERSONA_MORAL_NACIONAL,
 } from '../../../../shared/constantes/solicitante-constantes.enum';
+import { TIPO_PERSONA } from '../../../../shared/constantes/constantes';
 import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA } from '../../../../shared/constantes/solicitante-constantes.enum';
 import { UppercaseDirective } from '../../../../shared/directives/Uppercase/uppercase.directive';
+
+
 
 @Component({
   selector: 'solicitante',
@@ -34,7 +37,7 @@ import { UppercaseDirective } from '../../../../shared/directives/Uppercase/uppe
   styleUrl: './solicitante.component.scss',
 })
 export class SolicitanteComponent {
-  tipoPersona: number = 1;
+  tipoPersona!: number;
   persona: Array<FormularioDinamico> = [];
   domicilioFiscal: Array<FormularioDinamico> = [];
 
@@ -45,7 +48,7 @@ export class SolicitanteComponent {
     private fb: FormBuilder,
     private formServices: FormulariosService
   ) {
-    this.obtenerTipoPersona(1);
+    this.obtenerTipoPersona(TIPO_PERSONA.FISICA_NACIONAL);
     this.crearFormulario();
     this.inicializarFormGroup(this.persona, 'datosGenerales');
     this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
@@ -62,19 +65,19 @@ export class SolicitanteComponent {
    */
   obtenerTipoPersona(tipo: number): void {
     this.tipoPersona = tipo;
-    if (tipo === 1) {
+    if (tipo === TIPO_PERSONA.FISICA_NACIONAL) {
       // Persona fisica nacional
       this.persona = PERSONA_FISICA_NACIONAL;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-    } else if (tipo === 2) {
+    } else if (tipo === TIPO_PERSONA.MORAL_NACIONAL) {
       // Persona moral nacional
       this.persona = PERSONA_MORAL_NACIONAL;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-    } else if (tipo === 3) {
+    } else if (tipo === TIPO_PERSONA.FISICA_EXTRANJERA) {
       // Persona fisica extranjera
       this.persona = PERSONA_FISICA_EXTRANJERO;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
-    } else if (tipo === 4) {
+    } else if (tipo === TIPO_PERSONA.MORAL_EXTRANJERA) {
       // Persona moral extranjera
       this.persona = PERSONA_MORAL_EXTRANJERO;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;

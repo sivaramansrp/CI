@@ -37,9 +37,16 @@ export class FirmaElectronicaComponent {
     return this.tipo === 'login' ? true : false;
   }
 
-  isValid(field: string) {
+  /**
+   *Verifica si un campo es válido o no
+   * @param field - Nombre del campo a validar
+   * @returns boolean | null
+   */
+  isValid(field: string): boolean | null {
     return this.formValidator.isValidField(this.FormCertificado, field);
   }
+
+
 
   handleFile(type: string, event: Event) {
     const input = event.target as HTMLInputElement;
@@ -130,6 +137,12 @@ export class FirmaElectronicaComponent {
     }
   }
 
+  /**
+   *
+   * @param cadena
+   * @param privateKey
+   * @returns string, cadena encriptada
+   */
   firmar(cadena: string, privateKey: forge.pki.rsa.PrivateKey): string {
     const md = forge.md.sha256.create();
     md.update(cadena, 'utf8');
