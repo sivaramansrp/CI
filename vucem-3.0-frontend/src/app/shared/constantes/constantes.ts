@@ -16,4 +16,11 @@ export const CATALOGOS_ID = {
   CAT_TIPO_OPERACION: 7
 }
 
+export const PADDING = {
+  INICIO: '-----BEGIN ENCRYPTED PRIVATE KEY-----\n',
+  FIN: '\n-----END ENCRYPTED PRIVATE KEY-----'
+}
+
+export const LOGIN = 'login';
+
 
