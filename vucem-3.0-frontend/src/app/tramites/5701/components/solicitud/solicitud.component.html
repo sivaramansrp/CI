@@ -7,7 +7,7 @@
     </div>
   </div>
 
-  <!-- @if(tipoSolSeleccionada) { -->
+  @if(tipoSolSeleccionada) {
   <form [formGroup]="FormSolicitud" (ngSubmit)="validarFormulario()">
     <ng-titulo titulo="Datos del importador/exportador" />
     <ng-container formGroupName="datosImportadorExportador">
@@ -279,5 +279,5 @@
       <p>Generar línea de captura</p>
     </div>
   </form>
-  <!-- } -->
+  }
 </div>

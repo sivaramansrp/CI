@@ -48,12 +48,11 @@
             <td>{{ item.tipoDocumento.value}}</td>
             <td>{{ item.nombre_archivo}}</td>
             <td>
-              <button class="btn btn-link" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight" (click)="verDocumento(i, 'v')">
+              <button type="button" class="btn btn-link"            (click)="verDocumento(i, 'v')">
                 <i class="bi bi-eye bi-c"></i>
               </button>
 
-              <button type="button" class="btn btn-link" (click)="abrirModal(i)">
+              <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modalConfirmacion" (click)="abrirModal(i)">
                 <i class="bi bi-trash3 bi-c"></i>
               </button>
             </td>
@@ -82,8 +81,8 @@
 
 
 <!-- Modal -->
-<div [ngClass]="modal" tabindex="-1">
-  <div class="modal-dialog">
+<div class="modal fade" id="modalConfirmacion" tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Eliminar archivo</h4>
@@ -91,10 +90,11 @@
       <div class="modal-body">
         <p>¿Desea eliminar el archivo</p>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="cerrarModal()">Cerrar</button>
+      <div class="modal-footer custom-footer">
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cerrar</button>
         <button type="button" class="btn btn-primary" (click)="eliminarDocumento(indiceDocumento)">Eliminar</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+

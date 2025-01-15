@@ -3,16 +3,27 @@ import { FormGroup } from '@angular/forms';
 import { datosAgregarFormulario } from '../../../models/shared/forms-model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FormulariosService {
+  constructor() {}
 
-  constructor() { }
-
-  public agregarValorCamposDesactivados(datosForm: datosAgregarFormulario): void {
+  public agregarValorCamposDesactivados(
+    datosForm: datosAgregarFormulario
+  ): void {
     datosForm.form.controls[datosForm.field].enable();
     datosForm.form.controls[datosForm.field].setValue(datosForm.valor);
     datosForm.form.controls[datosForm.field].disable();
+  }
+
+  public agregarValorCampoDesactivados(
+    form: FormGroup,
+    field: string,
+    valor: string
+  ): void {
+    form.controls[field].enable();
+    form.controls[field].setValue(valor);
+    form.controls[field].disable();
   }
 
   public convertirValorANumero(form: FormGroup, field: string): number {
@@ -23,5 +34,7 @@ export class FormulariosService {
     datosForm.form.get(datosForm.field)?.setValue(datosForm.valor);
   }
 
-
+  public obtenerNombresCamposForm(form: FormGroup): string[] {
+    return Object.keys(form.controls);
+  }
 }
