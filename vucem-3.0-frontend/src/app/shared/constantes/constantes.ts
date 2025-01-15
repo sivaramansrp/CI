@@ -7,11 +7,13 @@ export const COOKIE = {
 }
 
 export const CATALOGOS_ID = {
-  CAT_TIPO_SOL: 1,
-  CAT_PAISES: 2,
-  CAT_ADUANAS: 3,
-  CAT_SECCION_ADUANAS: 4,
+  CAT_TIPO_SOL: 'tipos-solicitud',
+  CAT_PAISES: 'paises',
+  CAT_ADUANAS: 'aduanas',
+  CAT_SECCION_ADUANAS: 'secciones-aduanas',
   DATOS_GNRLS_SOL: 5,
-  CAT_TIPO_DOCUMENTO: 6,
+  CAT_TIPO_DOCUMENTO: 'tipos-documento',
   CAT_TIPO_OPERACION: 7
 }
+
+

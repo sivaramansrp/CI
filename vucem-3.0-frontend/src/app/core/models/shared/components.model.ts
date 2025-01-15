@@ -29,11 +29,11 @@ export interface DatosIndice {
 
 export interface DocumentosCargados {
   tipoDocumento: Catalogo;
-  nombre_archivo: string;
+  nombreArchivo: string;
 }
 
 export interface DatosArchivo {
-  tam_req: number;
+  tamanioRequerido: number;
   tamanio: number;
   unidad: string;
 }
