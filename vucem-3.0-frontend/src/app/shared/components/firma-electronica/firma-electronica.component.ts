@@ -36,15 +36,16 @@ export class FirmaElectronicaComponent {
 
   /**
    * Getter para saber si el componente esta siendo usado para hacer 'login'
+   * @returns {boolean} Regresa un true si el componente se esta usando para autenticarse e iniciar sesión, de lo contrario retorna un false.
    */
-  get login() {
+  get login(): boolean {
     return this.tipo === LOGIN ? true : false;
   }
 
   /**
    * Metodo para saber si el campo del formulario es valido.
    * @param field El nombre del campo del formulario que se va a validar.
-   * @returns : Regresa un booleano si el campo es valido o no o puede regresar null si no se ha tocado el campo.
+   * @returns {boolean | null} : Regresa un booleano si el campo es valido o no o puede regresar null si no se ha tocado el campo.
    */
   isValid(field: string): boolean | null {
     return this.formValidator.isValidField(this.FormCertificado, field);
@@ -54,7 +55,7 @@ export class FirmaElectronicaComponent {
    * Lee el archivo seleccionado y lo convierte a un ArrayBuffer.
    * @param type El tipo de archivo que se esta leyendo .cer o .key.
    * @param event El evento de cambio que se dispara cuando se selecciona un archivo.
-   * @returns No devuelve valor alguno.
+   * @returns {void} No devuelve valor alguno.
    */
   handleFile(type: string, event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -83,7 +84,7 @@ export class FirmaElectronicaComponent {
 
   /**
    * Metodo que se ejecuta al dar click en el boton de 'Firmar'.
-   * @returns No regresa valor alguno.
+   * @returns {void} No regresa valor alguno.
    */
   onSubmit(): void {
     if (this.FormCertificado.invalid) {
@@ -103,7 +104,7 @@ export class FirmaElectronicaComponent {
    * @param certFile Datos del certificado en el formato pem (.cer).
    * @param binaryData Datos en binario de la llave privada (.key).
    * @param password contraseña de la llave privada.
-   * @returns No regresa valor alguno.
+   * @returns {void} No regresa valor alguno.
    */
   validateFilesBase(
     certFile: string,
@@ -159,7 +160,7 @@ export class FirmaElectronicaComponent {
    * Encripta una cadena de texto, usando la libreria forge.
    * @param cadena cadena a encriptar.
    * @param privateKey Llave privada en formato RSA.
-   * @returns Regresa la cadena encriptada.
+   * @returns {string} Regresa la cadena encriptada.
    */
   firmar(cadena: string, privateKey: forge.pki.rsa.PrivateKey): string {
     const md = forge.md.sha256.create();

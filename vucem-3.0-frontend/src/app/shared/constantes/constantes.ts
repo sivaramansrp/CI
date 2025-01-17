@@ -23,4 +23,13 @@ export const PADDING = {
 
 export const LOGIN = 'login';
 
+export const MB = 'MB';
+export const KB = 'KB';
+
+export const UNIDADES = {
+  KB: 1024,
+  MB: 1048576,
+  GB: 1073741824
+}
+
 
