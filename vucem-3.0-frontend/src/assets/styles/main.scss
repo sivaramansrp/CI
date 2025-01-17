@@ -1,11 +1,8 @@
-// @import "bootstrap/scss/bootstrap";
-
-@import "_colores.scss";
-@import "_gobmx.scss";
+@import "_variables.scss";
 @import "_gobmxstyles.scss";
-@import "_iconos_gobmx.scss";
 @import "_fonts.scss";
 @import "_titulos.scss";
+@import "_gobmx.scss";
 
 .bi-c {
   color: $color-primario;

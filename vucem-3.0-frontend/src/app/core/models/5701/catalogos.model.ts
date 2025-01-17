@@ -19,17 +19,7 @@ export interface RespuestaCatalogos {
 export interface Catalogo {
   id: number;
   descripcion: string;
-  tipoArchivo?: string;
-  imagen?: DatosImagen;
-  archivo?: DatosArchivo;
+  tam?: string;
+  dpi?: string
 }
 
-export interface DatosImagen {
-  resolucion: number;
-  unidad: string;
-}
-
-export interface DatosArchivo {
-  tamanio: number;
-  unidad: string;
-}

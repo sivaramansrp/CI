@@ -20,10 +20,10 @@
     <div class="col-md-4">
       @if (documentoSeleccionado) {
       <div class="especificaciones">
-        <span>Tipo documento: {{documentoSeleccionado.tipoArchivo}}</span>
-        <span>Tamaño(MB): {{documentoSeleccionado.archivo?.tamanio}} {{documentoSeleccionado.archivo?.unidad}} </span>
-        <span>Resolución(dpi): {{documentoSeleccionado.imagen?.resolucion}}
-          {{documentoSeleccionado.imagen?.unidad}}</span>
+        <span>Tipo documento: {{PDF}}</span>
+        <span>Tamaño(KB): {{tamMaximo}} {{MB}} </span>
+        <span>Resolución(dpi): {{documentoSeleccionado.dpi}}
+          {{DPI}}</span>
       </div>
 
       }
@@ -48,11 +48,12 @@
             <td>{{ item.tipoDocumento.descripcion}}</td>
             <td>{{ item.nombreArchivo}}</td>
             <td>
-              <button type="button" class="btn btn-link"            (click)="verDocumento(i, 'v')">
+              <button type="button" class="btn btn-link" (click)="verDocumento(i, 'v')">
                 <i class="bi bi-eye bi-c"></i>
               </button>
 
-              <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modalConfirmacion" (click)="abrirModal(i)">
+              <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
+                (click)="abrirModal(i)">
                 <i class="bi bi-trash3 bi-c"></i>
               </button>
             </td>
@@ -97,4 +98,3 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-

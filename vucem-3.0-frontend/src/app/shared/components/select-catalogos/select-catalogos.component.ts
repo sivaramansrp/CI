@@ -7,9 +7,7 @@ import {
 } from '@angular/core';
 import { Catalogo } from '../../../core/models/5701/catalogos.model';
 import {
-  FormBuilder,
   FormControl,
-  FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -46,18 +44,20 @@ export class SelectCatalogosComponent {
     }
   }
 
-  isValid(): boolean | null {
+  /**
+   *
+   * @returns
+   */
+  isValid() {
     return this.tipoSolicitud.errors && this.tipoSolicitud.touched;
   }
 
   seleccion() {
-    const opcionSeleccionada = this.tipoSolicitud.value;   
+    const opcionSeleccionada = this.tipoSolicitud.value;
 
     let seleccion: Catalogo;
 
     this.catalogosDatos.catalogos.forEach((el: Catalogo) => {
-      console.log({el});
-      
       if (el.id === opcionSeleccionada) {
         seleccion = el;
         this.valorSelección.emit(seleccion);
