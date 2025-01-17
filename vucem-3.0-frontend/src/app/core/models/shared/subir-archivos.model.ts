@@ -1,3 +1,3 @@
 export interface SubirArchivoBody {
-  file: string;
+  file: any;
 }
