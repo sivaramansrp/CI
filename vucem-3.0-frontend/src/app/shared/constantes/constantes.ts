@@ -23,6 +23,8 @@ export const PADDING = {
 
 export const LOGIN = 'login';
 
+export const PDF = 'PDF';
+export const DPI = 'DPIs';
 export const MB = 'MB';
 export const KB = 'KB';
 

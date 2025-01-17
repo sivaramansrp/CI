@@ -1,10 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  Input,
-  Renderer2,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
 import {
   CatalogosSelect,
@@ -15,16 +9,20 @@ import { Catalogo } from '../../../core/models/5701/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { DatosArchivo } from '../../../core/models/shared/components.model';
-import { CATALOGOS_ID, KB, MB, UNIDADES } from '../../constantes/constantes';
 import {
-  Login,
-  TokenResponse,
-} from '../../../core/models/shared/inicio-sesion.model';
+  CATALOGOS_ID,
+  KB,
+  MB,
+  UNIDADES,
+  PDF,
+  DPI,
+} from '../../constantes/constantes';
+import { Login } from '../../../core/models/shared/inicio-sesion.model';
 import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
 import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
-import { SubirArchivoBody } from '../../../core/models/shared/subir-archivos.model';
 
 declare const bootstrap: any; // Importación para manejar Bootstrap en TS
+
 @Component({
   selector: 'anexar-documentos',
   standalone: true,
@@ -33,6 +31,11 @@ declare const bootstrap: any; // Importación para manejar Bootstrap en TS
   styleUrl: './anexar-documentos.component.scss',
 })
 export class AnexarDocumentosComponent {
+  PDF = PDF;
+  MB = MB;
+  DPI = DPI;
+
+  tamMaximo: number = 0;
   tiposDocumentos!: CatalogosSelect;
   documentosCargados: Array<DocumentosCargados> = [];
   documentoSeleccionado!: Catalogo;
@@ -48,7 +51,7 @@ export class AnexarDocumentosComponent {
   token!: string;
   base64File: string = '';
 
-  @ViewChild('exampleModal') modalElement!: ElementRef;
+  @ViewChild('modalConfirmacion') modalElement!: ElementRef;
 
   constructor(
     private sExtraordinarios: ServiciosExtraordinariosService,
@@ -64,23 +67,26 @@ export class AnexarDocumentosComponent {
   }
 
   /**
-   *
+   * Verifica si hay documentos cargados.
+   * @returns {boolean} `true` si hay documentos cargados, de lo contrario `false`.
    */
   get docCargados() {
-    return this.documentosCargados.length > 0 ? true : false;
+    return this.documentosCargados.length > 0;
   }
 
   /**
-   * Getter que determina si el botón debe estar desactivado.
-   * @returns {boolean} `false` si no existe un documento seleccionado, de lo contrario retorna un true
+   * Determina si el botón de carga debe estar desactivado.
+   * @returns {boolean} `true` si no hay un documento seleccionado, de lo contrario `false`.
    */
-  get btnDesactivado(): boolean {    
-    return this.documentoSeleccionado && this.documentoSeleccionado.id !== 0
-      ? false
-      : true;
+  get btnDesactivado(): boolean {
+    return !(this.documentoSeleccionado && this.documentoSeleccionado.id !== 0);
   }
 
-  obtenerToken(body: Login) {
+  /**
+   * Obtiene el token de autenticación.
+   * @param {Login} body - Datos de inicio de sesión.
+   */
+  obtenerToken(body: Login): void {
     this.inicioSesionService.obtenerToken(body).subscribe({
       next: (resp): void => {
         this.token = resp.jwt;
@@ -92,9 +98,7 @@ export class AnexarDocumentosComponent {
   }
 
   /**
-   * Hace la petición para obtener los tipos de documentos.
-   * @param {none} Sin tiene parametros.
-   * @returns { none } No retorna resultado alguno.
+   * Obtiene los tipos de documentos disponibles.
    */
   getTiposDocumentos(): void {
     this.sExtraordinarios
@@ -117,74 +121,58 @@ export class AnexarDocumentosComponent {
   }
 
   /**
-   * Recibe el valor de la selecion del documento elegido en el select, y se asigna a la varible documentoSleccionado.
-   * @param { catalogo } Recibe el catalogo que se selecciono en el select.
-   * @returns { none } No regresa valor alguno.
+   * Maneja la selección de un documento.
+   * @param {Catalogo} e - El documento seleccionado.
    */
   docSeleccionado(e: Catalogo) {
-    console.log(e);
-    
     this.documentoSeleccionado = e;
+    this.tamMaximo = this.documentoSeleccionado.tam
+      ? this.convertirKilobytesAMegabytes(
+          parseInt(this.documentoSeleccionado.tam)
+        )
+      : 0;
   }
 
+  /**
+   * Maneja la carga de un documento.
+   * @param {Event} event - El evento de carga del archivo.
+   */
   async cargarDoc(event: Event) {
     const archivo = event.target as HTMLInputElement;
-    const informacionArchivo = (archivo.files as FileList)[0]
+    const informacionArchivo = (archivo.files as FileList)[0];
 
-    console.log(informacionArchivo);
-
-
-    // Validaciones
     if (informacionArchivo) {
-      // const informacionArchivo = archivo.files[0]
-        // Validacion tipo archivo
-      let extArchivo = informacionArchivo.name.split('.').pop() as string;
-      extArchivo = extArchivo.toLowerCase();
+      let extArchivo = informacionArchivo.name.split('.').pop()?.toLowerCase();
 
-      // if (extArchivo !== this.documentoSeleccionado.tipoArchivo) {
-      //   this.toastr.error('Solo se aceptan archivos pdf');
-      //   return;
-      // }
+      if (extArchivo !== this.PDF.toLowerCase()) {
+        this.toastr.error('Solo se aceptan archivos pdf');
+        return;
+      }
 
-      // Validacion tamaño
-      const datos: DatosArchivo = {
-        tamanioRequerido: this.documentoSeleccionado.archivo
-          ? this.documentoSeleccionado.archivo.tamanio
-          : 0,
-        tamanio: informacionArchivo.size,
-        unidad: this.documentoSeleccionado.archivo
-          ? this.documentoSeleccionado.archivo.unidad
-          : '',
-      };
+      const tamanioRequerido = this.documentoSeleccionado.tam
+        ? this.convertirKilobytesABytes(
+            parseInt(this.documentoSeleccionado.tam)
+          )
+        : 0;
+      const tamanioArchivo = informacionArchivo.size;
 
-      // if (!this.validarTamanio(datos)) {
-      //   this.toastr.error(
-      //     'El tamaño del documento que intenta cargar excede el tamaño permitido'
-      //   );
-      //   return;
-      // }
+      if (tamanioArchivo > tamanioRequerido) {
+        this.toastr.error(
+          'El tamaño del documento que intenta cargar excede el tamaño permitido'
+        );
+        return;
+      }
 
-      // Agregar documento
-
-      console.log(informacionArchivo);
-
-      // this.base64File = await (await this.convertFileToBase64(informacionArchivo)).split(',')[1];
-
-      // console.log(this.base64File);
-
-
-
-
-      this.subirDocumentoService
-        .subirDocumento(this.token, informacionArchivo)
-        .subscribe({
-          next: (resp): void => {
-            alert('Documento subido');
-          },
-          error: (error): void => {
-            console.log(error);
-          },
-        });
+      // this.subirDocumentoService
+      //   .subirDocumento(this.token, informacionArchivo)
+      //   .subscribe({
+      //     next: (): void => {
+      //       alert('Documento subido');
+      //     },
+      //     error: (error): void => {
+      //       console.log(error);
+      //     },
+      //   });
 
       this.documentosCargados.push({
         tipoDocumento: this.documentoSeleccionado,
@@ -193,25 +181,46 @@ export class AnexarDocumentosComponent {
     }
   }
 
-  convertFileToBase64(file: File): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
+  /**
+   * Convierte kilobytes a megabytes.
+   * @param {number} kilobytes - El tamaño en kilobytes.
+   * @returns {number} El tamaño en megabytes.
+   */
+  convertirKilobytesAMegabytes(kilobytes: number): number {
+    return Math.round(kilobytes / 1024);
   }
 
+  /**
+   * Convierte kilobytes a bytes.
+   * @param {number} kilobytes - El tamaño en kilobytes.
+   * @returns {number} El tamaño en bytes.
+   */
+  convertirKilobytesABytes(kilobytes: number): number {
+    return kilobytes * 1024;
+  }
+
+  /**
+   * Muestra el modal para ver un documento.
+   * @param {number} i - El índice del documento.
+   * @param {string} accion - La acción a realizar.
+   */
   verDocumento(i: number, accion: string) {
-    // v => ver
-    this.mostrarModal = accion === 'v' ? true : false;
+    this.mostrarModal = accion === 'v';
   }
 
+  /**
+   * Abre el modal para eliminar un documento.
+   * @param {number} i - El índice del documento.
+   */
   abrirModal(i: number) {
     this.modal = 'show';
     this.indiceDocumento = i;
   }
 
+  /**
+   * Elimina un documento de la lista.
+   * @param {number} i - El índice del documento.
+   */
   eliminarDocumento(i: number) {
     this.documentosCargados.splice(i, 1);
     this.cerrarModal();
@@ -219,38 +228,12 @@ export class AnexarDocumentosComponent {
   }
 
   /**
-   * Método para cerrar el modal
-   * @returns No regresa valor alguno
+   * Cierra el modal.
    */
   cerrarModal(): void {
     if (this.modalElement) {
       const modal = new bootstrap.Modal(this.modalElement.nativeElement);
       modal.hide();
     }
-  }
-
-  /**
-   * Valida si el tamaño del archivo requerido, cumple con los requerimientos
-   * @param datos objeto con los datos del archivo: Tamaño maximo permitido, tamaño del archivo a subir y unidad (MB o KB)
-   * @returns
-   */
-  validarTamanio(datos: DatosArchivo): boolean {
-    let size: number = 0;
-    let validacion: boolean = false;
-    switch (datos.unidad) {
-      case KB:
-        size = datos.tamanioRequerido * UNIDADES.KB;
-        validacion = datos.tamanio <= size ? true : false;
-        break;
-
-      case MB:
-        size = datos.tamanioRequerido * UNIDADES.MB;
-        validacion = datos.tamanio <= size ? true : false;
-        break;
-      case '':
-        validacion = false;
-        break;
-    }
-    return validacion;
   }
 }

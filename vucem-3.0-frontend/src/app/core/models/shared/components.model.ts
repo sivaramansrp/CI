@@ -33,8 +33,8 @@ export interface DocumentosCargados {
 }
 
 export interface DatosArchivo {
-  tamanioRequerido: number;
-  tamanio: number;
+  tamRequerido: number;
+  tam: number;
   unidad: string;
 }
 

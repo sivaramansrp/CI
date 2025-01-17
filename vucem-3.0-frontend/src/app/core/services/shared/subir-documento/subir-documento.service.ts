@@ -21,8 +21,6 @@ export class SubirDocumentoService {
     const formData = new FormData();
     formData.append('file', file, file.name);
 
-    console.log(formData)
-
     return this.http.put<{ message: string }>(this.urlServer, formData, {
       headers,
     });
