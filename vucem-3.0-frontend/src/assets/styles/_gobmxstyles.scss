@@ -238,29 +238,6 @@ hr.red {
   }
 }
 
-/* Estilos del modal */
-.modal-content {
-  position: relative;
-  background-color: #fff;
-  border: 1px solid transparent;
-  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
-  outline: 0;
-  border-radius: 0;
-}
-
-.modal-header {
-  padding: 15px;
-  border-bottom: 1px solid transparent;
-  background-color: #393c3e;
-  color: #fff;
-  border-radius: 0;
-  /* min-height: 16.43px; */
-}
-
-.custom-footer {
-  border-top: none;
-}
-
 /* Estilos del nav-gob */
 .nav-gob {
   border-bottom: 1px solid #ddd;
@@ -298,3 +275,14 @@ hr.red {
   color: #d0021b;
   font-size: 14px;
 }
+
+/* Estilos del modal */
+.modal-header {
+  background-color: #393c3e;
+  color: #fff;
+}
+
+.modal-footer {
+  border-top: none;
+}
+
