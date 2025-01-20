@@ -169,7 +169,18 @@ hr.red {
 .btn {
   font-size: 18px;
   border-radius: 3px;
-  padding: 10px 25px;
+}
+
+.btn-group-primary {
+  background-color: $color-white;
+  border: 1px solid $color-primario;
+  color: $color-primario;
+
+  &:hover {
+    background-color: $color-primario;
+    border-color: $color-primario;
+    color: #fff;
+  }
 }
 
 .btn-default {
@@ -177,6 +188,7 @@ hr.red {
   box-shadow: 0 0 $color-gray-btn-default;
   color: $color-gray-btn-default;
   background-color: #fff;
+  padding: 10px 25px;
 
   &:hover {
     background-color: $color-gray-btn-default;
@@ -188,6 +200,7 @@ hr.red {
   background-color: $color-white;
   border: 2px solid $color-primario;
   color: $color-primario;
+  padding: 10px 25px;
 
   &:hover {
     background-color: $color-primario;
@@ -200,6 +213,7 @@ hr.red {
   background-color: $color-primario;
   color: $color-white;
   opacity: 0.6;
+  padding: 10px 25px;
   cursor: not-allowed;
 
   &:hover {
@@ -261,5 +275,4 @@ hr.red {
   .active {
     background-color: $color-primario;
   }
-
 }

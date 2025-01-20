@@ -26,6 +26,7 @@ import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.
 import { AgregarTransporteComponent } from "../../shared/components/agregar-transporte/agregar-transporte.component";
 import { PedimentoComponent } from './components/pedimento/pedimento.component';
 import { AgregaPersonasComponent } from "./components/agrega-personas/agrega-personas.component";
+import { RepresentanteFiscalComponent } from '../../shared/components/representante-fiscal/representante-fiscal.component';
 
 
 
@@ -59,7 +60,8 @@ import { AgregaPersonasComponent } from "./components/agrega-personas/agrega-per
     CrosslistComponent,
     AgregarTransporteComponent,
     PedimentoComponent,
-    AgregaPersonasComponent
+    AgregaPersonasComponent,
+    RepresentanteFiscalComponent,
 ],
 exports: [
   SolicitudComponent,
