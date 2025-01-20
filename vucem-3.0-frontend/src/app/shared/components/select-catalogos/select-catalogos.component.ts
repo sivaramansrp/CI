@@ -53,7 +53,7 @@ export class SelectCatalogosComponent {
   }
 
   seleccion() {
-    const opcionSeleccionada = this.tipoSolicitud.value;
+    const opcionSeleccionada = parseInt(this.tipoSolicitud.value);
 
     let seleccion: Catalogo;
 

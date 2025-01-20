@@ -1,3 +1,5 @@
+import { SEMANA } from "./servicios-extraordinarios.enum"
+
 export const COOKIE = {
   NOMBRE_COOKIE_ID_USUARIO: 'sg-id-user',
   NOMBRE_COOKIE_ROL: 'sg-rol',
@@ -23,6 +25,12 @@ export const TIPO_PERSONA = {
   MORAL_EXTRANJERA: 4
 }
 
+export const TIPO_SOLICITUD = {
+  INDIVIDUAL: 27,
+  SEMANAL: 28,
+  MENSUAL: 29,
+}
+
 export const PADDING = {
   INICIO: '-----BEGIN ENCRYPTED PRIVATE KEY-----\n',
   FIN: '\n-----END ENCRYPTED PRIVATE KEY-----'
@@ -39,6 +47,12 @@ export const UNIDADES = {
   KB: 1024,
   MB: 1048576,
   GB: 1073741824
+}
+
+export const MILISEGUNDOS = {
+  DIA: 86400000,
+  SEMANA: 604800000,
+  MES: 2592000000
 }
 
 
