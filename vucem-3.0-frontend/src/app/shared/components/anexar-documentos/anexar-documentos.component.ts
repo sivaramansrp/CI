@@ -8,7 +8,6 @@ import { ServiciosExtraordinariosService } from '../../../core/services/5701/ser
 import { Catalogo } from '../../../core/models/5701/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { DatosArchivo } from '../../../core/models/shared/components.model';
 import {
   CATALOGOS_ID,
   KB,
@@ -40,7 +39,8 @@ export class AnexarDocumentosComponent {
   documentosCargados: Array<DocumentosCargados> = [];
   documentoSeleccionado!: Catalogo;
   mostrarModal: boolean = false;
-  modal: string = 'modal';
+
+  modal: string = '';
   indiceDocumento!: number;
 
   @ViewChild('modalConfirmacion') modalElement!: ElementRef;
@@ -163,16 +163,16 @@ export class AnexarDocumentosComponent {
         return;
       }
 
-      // this.subirDocumentoService
-      //   .subirDocumento(this.token, informacionArchivo)
-      //   .subscribe({
-      //     next: (): void => {
-      //       alert('Documento subido');
-      //     },
-      //     error: (error): void => {
-      //       console.log(error);
-      //     },
-      //   });
+      this.subirDocumentoService
+        .subirDocumento(this.token, informacionArchivo)
+        .subscribe({
+          next: (): void => {
+            alert('Documento subido');
+          },
+          error: (error): void => {
+            console.log(error);
+          },
+        });
 
       this.documentosCargados.push({
         tipoDocumento: this.documentoSeleccionado,
@@ -231,9 +231,10 @@ export class AnexarDocumentosComponent {
    * Cierra el modal.
    */
   cerrarModal(): void {
-    if (this.modalElement) {
-      const modal = new bootstrap.Modal(this.modalElement.nativeElement);
-      modal.hide();
+    const modalElement = this.modalConfirmacion.nativeElement;
+    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    if (modalInstance) {
+      modalInstance.hide();
     }
   }
 }

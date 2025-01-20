@@ -82,7 +82,7 @@
 
 
 <!-- Modal -->
-<div class="modal" id="modalConfirmacion" tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
+<div class="modal" [ngClass]="modal" id="modalConfirmacion" #modalConfirmacion tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -92,7 +92,7 @@
         <p>¿Desea eliminar el archivo</p>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-default" (click)="cerrarModal()">Cerrar</button>
         <button type="button" class="btn btn-primary" (click)="eliminarDocumento(indiceDocumento)">Eliminar</button>
       </div>
     </div><!-- /.modal-content -->
