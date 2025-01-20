@@ -11,15 +11,18 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
 import { CommonModule, UpperCasePipe } from '@angular/common';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
   PERSONA_FISICA_EXTRANJERO,
   PERSONA_FISICA_NACIONAL,
   PERSONA_MORAL_EXTRANJERO,
   PERSONA_MORAL_NACIONAL,
 } from '../../../../shared/constantes/solicitante-constantes.enum';
+import { TIPO_PERSONA } from '../../../../shared/constantes/constantes';
 import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA } from '../../../../shared/constantes/solicitante-constantes.enum';
 import { UppercaseDirective } from '../../../../shared/directives/Uppercase/uppercase.directive';
+
+
 
 @Component({
   selector: 'solicitante',
@@ -34,7 +37,7 @@ import { UppercaseDirective } from '../../../../shared/directives/Uppercase/uppe
   styleUrl: './solicitante.component.scss',
 })
 export class SolicitanteComponent {
-  tipoPersona: number = 1;
+  tipoPersona!: number;
   persona: Array<FormularioDinamico> = [];
   domicilioFiscal: Array<FormularioDinamico> = [];
 
@@ -45,7 +48,7 @@ export class SolicitanteComponent {
     private fb: FormBuilder,
     private formServices: FormulariosService
   ) {
-    this.obtenerTipoPersona(2);
+    this.obtenerTipoPersona(TIPO_PERSONA.FISICA_NACIONAL);
     this.crearFormulario();
     this.inicializarFormGroup(this.persona, 'datosGenerales');
     this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
@@ -55,43 +58,66 @@ export class SolicitanteComponent {
     this.getDatosGenerales();
   }
 
-  obtenerTipoPersona(tipo: number) {
+  /**
+   * Obtiene el tipo de persona que es solicitante, y asigna los campos correspondientes al formulario.
+   * @param tipo - Tipo de persona que es solicitante.
+   * @returns void
+   */
+  obtenerTipoPersona(tipo: number): void {
     this.tipoPersona = tipo;
-    if (tipo === 1) {
+    if (tipo === TIPO_PERSONA.FISICA_NACIONAL) {
       // Persona fisica nacional
       this.persona = PERSONA_FISICA_NACIONAL;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-    } else if (tipo === 2) {
+    } else if (tipo === TIPO_PERSONA.MORAL_NACIONAL) {
       // Persona moral nacional
       this.persona = PERSONA_MORAL_NACIONAL;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-    } else if (tipo === 3) {
+    } else if (tipo === TIPO_PERSONA.FISICA_EXTRANJERA) {
       // Persona fisica extranjera
       this.persona = PERSONA_FISICA_EXTRANJERO;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
-    } else if (tipo === 4) {
+    } else if (tipo === TIPO_PERSONA.MORAL_EXTRANJERA) {
       // Persona moral extranjera
       this.persona = PERSONA_MORAL_EXTRANJERO;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
     }
   }
 
+  /**
+   * Es un getter que proporciona un acceso más sencillo ala grupo de formularios llamado datosGenerales contenido dentr del formulario principal Form.
+   */
   get datosGeneralesForm() {
     return this.form.get('datosGenerales') as FormGroup;
   }
 
+  /**
+   * Es un getter que proporciona un acceso más sencillo ala grupo de formularios llamado domicilioFiscal contenido dentr del formulario principal Form.
+   */
   get domicilioFiscalForm() {
     return this.form.get('domicilioFiscal') as FormGroup;
   }
 
-  crearFormulario() {
+  /**
+   * Crea un formulario vacío con dis grupos de formularios, datosGenerales y domicilioFiscal.
+   */
+  crearFormulario(): void {
     this.form = this.fb.group({
       datosGenerales: this.fb.group({}),
       domicilioFiscal: this.fb.group({}),
     });
   }
 
-  inicializarFormGroup(config: Array<FormularioDinamico>, grupoNombre: string) {
+  /**
+   * Inicializa los campos del formulario con los campos de la configuración de los campos de los formularios.
+   * @param config - Configuración de los campos de los formularios.
+   * @param grupoNombre - Nombre del grupo de formularios a inicializar.
+   * @returns void
+   */
+  inicializarFormGroup(
+    config: Array<FormularioDinamico>,
+    grupoNombre: string
+  ): void {
     const grupo = this.form.get(grupoNombre) as FormGroup;
     config.forEach((campo) => {
       const validators = this.getValidators(campo.validators);
@@ -102,6 +128,11 @@ export class SolicitanteComponent {
     });
   }
 
+  /**
+   * Obtiene los validadores de los campos de los formularios.
+   * @param validators - Validadores de los campos de los formularios.
+   * @returns ValidatorFn[]
+   */
   getValidators(validators: Array<string>): ValidatorFn[] {
     const formValidators: ValidatorFn[] = [];
     validators.forEach((validator) => {
@@ -118,7 +149,11 @@ export class SolicitanteComponent {
     return formValidators;
   }
 
-  getDatosGenerales() {
+  /**
+   * Obtiene los datos generales del solicitante con una peticion get.
+   * @returns void
+   */
+  getDatosGenerales(): void {
     this.solicitanteServicio.getDatosGenerales(5).subscribe((resp) => {
       if (resp.codigo === '200') {
         const datos = JSON.parse(resp.data);
@@ -148,11 +183,5 @@ export class SolicitanteComponent {
         });
       }
     });
-  }
-
-  setValorInput(field: string, value: string): void {
-    this.datosGeneralesForm.controls[field].enable();
-    this.datosGeneralesForm.controls[field].setValue(value);
-    this.datosGeneralesForm.controls[field].disable();
   }
 }
