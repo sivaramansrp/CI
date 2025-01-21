@@ -77,3 +77,18 @@ export interface Pedimento {
   pedimentoValidado: boolean;
 
 }
+
+export interface DatosRfcResponse {
+  rfc: string;
+  nombre: string;
+  aPaterno: string;
+  aMaterno: string;
+}
+export interface DatosRepresentanteLegal {
+  rfc: string;
+  nombre: string;
+  aPaterno: string;
+  aMaterno: string;
+  telefono: string;
+  correo: string;
+}

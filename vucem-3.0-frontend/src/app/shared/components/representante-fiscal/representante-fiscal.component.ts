@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -9,11 +9,24 @@ import {
 } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
+import { FormulariosService } from '../../../core/services/shared/formularios/formularios.service';
+import {
+  DatosRepresentanteLegal,
+  DatosRfcResponse,
+} from '../../../core/models/shared/components.model';
+import { SharedModule } from '../../shared.module';
+import { SoloNumerosDirective } from '../../directives/solo-numeros/solo-numeros.directive';
+import { NumeroTelefonicoDirective } from '../../directives/numeroTelefonico/numero-telefonico.directive';
 
 @Component({
   selector: 'representante-fiscal',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, UppercaseDirective],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    UppercaseDirective,
+    NumeroTelefonicoDirective,
+  ],
   templateUrl: './representante-fiscal.component.html',
   styleUrl: './representante-fiscal.component.scss',
 })
@@ -27,9 +40,13 @@ export class RepresentanteFiscalComponent {
 
   representanteLegalForm!: FormGroup;
 
+  @Output() datosRepresentanteLegal: EventEmitter<DatosRepresentanteLegal> =
+    new EventEmitter();
+
   constructor(
     private validacionesService: ValidacionesFormularioService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private formServices: FormulariosService
   ) {}
 
   ngOnInit(): void {
@@ -105,14 +122,34 @@ export class RepresentanteFiscalComponent {
    * @returns {void}
    */
   buscarRepresentanteFiscal(): void {
-    console.log('Busqueda de representante fiscal');
+    const rfc = this.rfcBusqueda.value;
+    const datosRepresentante: DatosRfcResponse = {
+      rfc: 'LEQI810131HDGSXG05',
+      nombre: 'IGNACIO EDUARDO',
+      aPaterno: 'LEOS',
+      aMaterno: 'QUIÑONES',
+    };
 
-    const datosRepresentante = {};
-
-    if (datosRepresentante) {
-      this.representanteLegalForm.patchValue(datosRepresentante);
+    // Obtenemos los campos deactivados de la formulario para el Representante Legal por RFC
+    const camposDisabled = this.formServices.obtenerCamnposDisabled(
+      this.representanteLegalForm
+    );
+    if (rfc) {
+      //Agregamos los valores a los campos desactivados
+      camposDisabled.forEach((campo) => {
+        if (campo in datosRepresentante) {
+          this.formServices.agregarValorCampoDesactivados(
+            this.representanteLegalForm,
+            campo,
+            datosRepresentante[campo as keyof DatosRfcResponse]
+          );
+        }
+      });
     } else {
-      console.log('Se activan los campos del formulario');
+      // Activamos los campos desactivados en el formulario para que se pueda ingresar la información.
+      camposDisabled.forEach((campo) => {
+        this.representanteLegalForm.controls[campo].enable();
+      });
     }
   }
 }

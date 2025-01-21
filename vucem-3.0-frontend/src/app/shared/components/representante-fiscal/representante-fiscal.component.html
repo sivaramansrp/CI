@@ -3,7 +3,7 @@
     <div class="form-group">
       <div class="input-group">
         <input type="text" class="form-control" placeholder="" aria-label="RFC" aria-describedby="button-addon2"
-          id="rfcBusqueda" [formControl]="rfcBusqueda" [ngClass]="isValid() ? 'required' : ''">
+          id="rfcBusqueda" [formControl]="rfcBusqueda" [ngClass]="isValid() ? 'required' : ''" appUppercase>
         <button class="btn btn-group-primary" type="button" id="buscarRFC" (click)="buscarRepresentanteFiscal()">
           <i class="bi bi-search"></i>
         </button>
@@ -39,19 +39,19 @@
     <div class="col-md-4">
       <div class="form-group">
         <label for="nombre" class="form-label">Nombre</label>
-        <input class="form-control" id="nombre" placeholder="Nombre" type="text" formControlName="nombre">
+        <input class="form-control" id="nombre" placeholder="Nombre" type="text" formControlName="nombre" appUppercase>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label for="aPaterno" class="form-label">Apellido Paterno</label>
-        <input class="form-control" id="aPaterno" placeholder="Apellido Paterno" type="text" formControlName="aPaterno">
+        <input class="form-control" id="aPaterno" placeholder="Apellido Paterno" type="text" formControlName="aPaterno" appUppercase>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label for="aMaterno" class="form-label">Apellido Materno</label>
-        <input class="form-control" id="aMaterno" placeholder="Apellido Materno" type="text" formControlName="aMaterno">
+        <input class="form-control" id="aMaterno" placeholder="Apellido Materno" type="text" formControlName="aMaterno" appUppercase>
       </div>
     </div>
   </div>
@@ -60,7 +60,7 @@
     <div class="col-md-4">
       <div class="form-group">
         <label for="telefono" class="form-label">Teléfono</label>
-        <input class="form-control" id="telefono" placeholder="Teléfono" type="text" formControlName="telefono">
+        <input class="form-control" id="telefono" placeholder="Teléfono" type="text" formControlName="telefono" appNumeroTelefonico>
       </div>
     </div>
     <div class="col-md-4">

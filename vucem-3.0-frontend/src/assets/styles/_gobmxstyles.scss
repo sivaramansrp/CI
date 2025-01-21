@@ -1,4 +1,4 @@
-@import "./variables";
+@import "./_colores";
 
 /* Alert */
 .alert,
@@ -183,6 +183,8 @@ hr.red {
   }
 }
 
+
+
 .btn-default {
   border: 2px solid $color-gray-btn-default;
   box-shadow: 0 0 $color-gray-btn-default;
@@ -192,6 +194,20 @@ hr.red {
 
   &:hover {
     background-color: $color-gray-btn-default;
+    color: #fff;
+  }
+}
+
+.btn-danger {
+  border: 2px solid $color-btn-danger;
+  box-shadow: 0 0 $color-btn-danger;
+  color: $color-btn-danger;
+  background-color: #fff;
+  padding: 10px 25px;
+
+  &:hover {
+    background-color: $color-btn-danger;
+    border-color: $color-btn-danger;
     color: #fff;
   }
 }
