@@ -38,7 +38,7 @@ export class FormulariosService {
     return Object.keys(form.controls);
   }
 
-  public obtenerCamnposDisabled(form: FormGroup): string[] {
+  public obtenerCamposDisabled(form: FormGroup): string[] {
     const camposDisabled: string[] = [];
     Object.keys(form.controls).forEach((key) => {
       if (form.controls[key].disabled) {
