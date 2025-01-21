@@ -28,6 +28,7 @@ import { PedimentoComponent } from './components/pedimento/pedimento.component';
 import { AgregaPersonasComponent } from "./components/agrega-personas/agrega-personas.component";
 import { RepresentanteFiscalComponent } from '../../shared/components/representante-fiscal/representante-fiscal.component';
 import { AcusePageComponent } from './pages/acuse-page/acuse-page.component';
+import { TablaComponent } from '../../shared/components/tabla/tabla.component';
 
 
 
@@ -64,6 +65,7 @@ import { AcusePageComponent } from './pages/acuse-page/acuse-page.component';
     PedimentoComponent,
     AgregaPersonasComponent,
     RepresentanteFiscalComponent,
+    TablaComponent
 ],
 exports: [
   SolicitudComponent,

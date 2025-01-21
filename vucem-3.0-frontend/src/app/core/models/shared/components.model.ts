@@ -66,6 +66,17 @@ export interface ConfiguracionTabla {
   [clave: string]: string | number | boolean | null;
 }
 
+export interface EncabezadosTabla {
+  key: string;
+  valor: string;
+}
+
+export interface AccionesTabla {
+  tipo: string;
+  label: string;
+  icono:  string;
+}
+
 export interface Pedimento {
   patente: number;
   pedimento: number;

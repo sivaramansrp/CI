@@ -1,0 +1,27 @@
+<table class="table table-responsive">
+  <thead>
+    <tr>
+      @for (item of encabezadosTabla; track $index) {
+      <th>{{ item.valor }}</th>
+      }
+      <th class="center">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (row of datosTabla; track $index) {
+    <tr>
+      @for (item of encabezadosTabla; track item.key; let i = $index) {
+      <td>{{ row[item.key] }}</td>
+      }
+      @if (accionesTabla.length) {
+      @for (accion of accionesTabla; track $index) {
+      <td class="center">
+        <button type="button" class="btn btn-link" data-bs-toggle="tooltip" data-bs-placement="top" [title]="accion.label"
+          [ngClass]="accion.icono" ></button>
+      </td>
+      }
+      }
+    </tr>
+    }
+  </tbody>
+</table>
