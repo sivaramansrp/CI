@@ -4,21 +4,21 @@
       <div class="input-group">
         <input type="text" class="form-control" placeholder="" aria-label="RFC" aria-describedby="button-addon2"
           id="rfcBusqueda" [formControl]="rfcBusqueda" [ngClass]="isValid() ? 'required' : ''">
-        <button class="btn btn-group-primary" type="button" id="buscarRFC">
+        <button class="btn btn-group-primary" type="button" id="buscarRFC" (click)="buscarRepresentanteFiscal()">
           <i class="bi bi-search"></i>
         </button>
       </div>
       <div>
       </div>
       @if (errorRequerido()) {
-        <div class="mensaje-error ">
-          Este campo es obligatorio
-        </div>
+      <div class="mensaje-error ">
+        Este campo es obligatorio
+      </div>
       }
       @if(errorPattern()) {
-        <div class="mensaje-error ">
-          La nomenclatura del RFC es incorrecta
-        </div>
+      <div class="mensaje-error ">
+        La nomenclatura del RFC es incorrecta
+      </div>
       }
     </div>
   </div>
@@ -45,15 +45,13 @@
     <div class="col-md-4">
       <div class="form-group">
         <label for="aPaterno" class="form-label">Apellido Paterno</label>
-        <input class="form-control" id="aPaterno" placeholder="Apellido Paterno" type="text"
-          formControlName="aPaterno">
+        <input class="form-control" id="aPaterno" placeholder="Apellido Paterno" type="text" formControlName="aPaterno">
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label for="aMaterno" class="form-label">Apellido Materno</label>
-        <input class="form-control" id="aMaterno" placeholder="Apellido Materno" type="text"
-          formControlName="aMaterno">
+        <input class="form-control" id="aMaterno" placeholder="Apellido Materno" type="text" formControlName="aMaterno">
       </div>
     </div>
   </div>

@@ -99,4 +99,20 @@ export class RepresentanteFiscalComponent {
       ],
     });
   }
+
+  /**
+   * Busqueda de representante fiscal por RFC
+   * @returns {void}
+   */
+  buscarRepresentanteFiscal(): void {
+    console.log('Busqueda de representante fiscal');
+
+    const datosRepresentante = {};
+
+    if (datosRepresentante) {
+      this.representanteLegalForm.patchValue(datosRepresentante);
+    } else {
+      console.log('Se activan los campos del formulario');
+    }
+  }
 }
