@@ -43,7 +43,7 @@ export class FirmaElectronicaComponent {
    * @returns boolean | null
    */
   isValid(field: string): boolean | null {
-    return this.formValidator.isValidField(this.FormCertificado, field);
+    return this.formValidator.isValid(this.FormCertificado, field);
   }
 
 

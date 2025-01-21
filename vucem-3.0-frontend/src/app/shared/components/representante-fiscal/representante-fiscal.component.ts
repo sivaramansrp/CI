@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -17,6 +18,11 @@ import {
 import { SharedModule } from '../../shared.module';
 import { SoloNumerosDirective } from '../../directives/solo-numeros/solo-numeros.directive';
 import { NumeroTelefonicoDirective } from '../../directives/numeroTelefonico/numero-telefonico.directive';
+import { CORREO_INVALIDO } from '../../constantes/mensajes-error-formularios';
+import {
+  REQUERIDO,
+  RFC_INVALIDO,
+} from '../../constantes/mensajes-error-formularios';
 
 @Component({
   selector: 'representante-fiscal',
@@ -32,6 +38,11 @@ import { NumeroTelefonicoDirective } from '../../directives/numeroTelefonico/num
 })
 export class RepresentanteFiscalComponent {
   // Componente para representante fiscal
+
+  MENSAJE_REQUERIDO = REQUERIDO;
+  RFC_INVALIDO = RFC_INVALIDO;
+  CORREO_INVALIDO = CORREO_INVALIDO;
+
 
   rfcBusqueda: FormControl = new FormControl('', [
     Validators.required,
@@ -57,26 +68,27 @@ export class RepresentanteFiscalComponent {
    * Retorna un booleano si el campo no contiene errores
    * @returns {boolean | null}
    */
-  isValid(): boolean | null {
-    return this.validacionesService.validaFormControl(this.rfcBusqueda);
+  isValid(control: AbstractControl, campo?: string): boolean | null {
+    return this.validacionesService.isValid(control, campo);
   }
 
   /**
    * Retorna un booleano si el campo tiene un error de pattern
    * @returns {boolean | null}
    */
-  errorPattern(): boolean | null {
-    return this.validacionesService.errorPatternControl(this.rfcBusqueda);
+  errorPattern(control: AbstractControl, campo?: string): boolean | null {
+    return this.validacionesService.errorPattern(control, campo);
   }
 
   /**
    * Retorna un booleano si el campo tiene un error de requerido
    * @returns {boolean | null}
    */
-  errorRequerido() {
-    return this.validacionesService.errorCampoRequeridoControl(
-      this.rfcBusqueda
-    );
+  errorRequerido(
+    control: AbstractControl,
+    field?: string
+  ): boolean | null {
+    return this.validacionesService.errorCampoRequerido(control, field);
   }
 
   /**
@@ -149,6 +161,8 @@ export class RepresentanteFiscalComponent {
       // Activamos los campos desactivados en el formulario para que se pueda ingresar la información.
       camposDisabled.forEach((campo) => {
         this.representanteLegalForm.controls[campo].enable();
+        this.representanteLegalForm.controls[campo].setValidators([Validators.required]);
+        this.representanteLegalForm.controls[campo].updateValueAndValidity();
       });
     }
   }

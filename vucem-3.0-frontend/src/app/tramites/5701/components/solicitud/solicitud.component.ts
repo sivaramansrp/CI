@@ -183,7 +183,7 @@ export class SolicitudComponent {
   }
 
   isValid(form: FormGroup, field: string) {
-    return this.validacionesService.isValidField(form, field);
+    return this.validacionesService.isValid(form, field);
   }
 
   crearFormSolicitud() {

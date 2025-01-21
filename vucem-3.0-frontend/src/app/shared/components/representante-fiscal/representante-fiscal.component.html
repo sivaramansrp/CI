@@ -3,21 +3,22 @@
     <div class="form-group">
       <div class="input-group">
         <input type="text" class="form-control" placeholder="" aria-label="RFC" aria-describedby="button-addon2"
-          id="rfcBusqueda" [formControl]="rfcBusqueda" [ngClass]="isValid() ? 'required' : ''" appUppercase>
+          id="rfcBusqueda" [formControl]="rfcBusqueda" [ngClass]="isValid(rfcBusqueda) ? 'required' : ''" appUppercase>
         <button class="btn btn-group-primary" type="button" id="buscarRFC" (click)="buscarRepresentanteFiscal()">
           <i class="bi bi-search"></i>
         </button>
       </div>
       <div>
       </div>
-      @if (errorRequerido()) {
+      @if (errorRequerido(rfcBusqueda)) {
       <div class="mensaje-error ">
-        Este campo es obligatorio
+        {{ MENSAJE_REQUERIDO}}
       </div>
       }
-      @if(errorPattern()) {
+      @if(
+      errorPattern(rfcBusqueda)) {
       <div class="mensaje-error ">
-        La nomenclatura del RFC es incorrecta
+        {{ RFC_INVALIDO }}
       </div>
       }
     </div>
@@ -45,13 +46,15 @@
     <div class="col-md-4">
       <div class="form-group">
         <label for="aPaterno" class="form-label">Apellido Paterno</label>
-        <input class="form-control" id="aPaterno" placeholder="Apellido Paterno" type="text" formControlName="aPaterno" appUppercase>
+        <input class="form-control" id="aPaterno" placeholder="Apellido Paterno" type="text" formControlName="aPaterno"
+          appUppercase>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label for="aMaterno" class="form-label">Apellido Materno</label>
-        <input class="form-control" id="aMaterno" placeholder="Apellido Materno" type="text" formControlName="aMaterno" appUppercase>
+        <input class="form-control" id="aMaterno" placeholder="Apellido Materno" type="text" formControlName="aMaterno"
+          [ngClass]="isValid( representanteLegalForm ,'aMaterno') ? 'required' : ''" appUppercase>
       </div>
     </div>
   </div>
@@ -60,14 +63,27 @@
     <div class="col-md-4">
       <div class="form-group">
         <label for="telefono" class="form-label">Teléfono</label>
-        <input class="form-control" id="telefono" placeholder="Teléfono" type="text" formControlName="telefono" appNumeroTelefonico>
+        <input class="form-control" id="telefono" placeholder="Teléfono" type="text" formControlName="telefono"
+          appNumeroTelefonico>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label for="correo" class="form-label">Correo</label>
-        <input class="form-control" id="correo" placeholder="Correo" type="text" formControlName="correo">
+        <input class="form-control" id="correo" placeholder="Correo" type="text" formControlName="correo"
+          [ngClass]="isValid( representanteLegalForm ,'correo') ? 'required' : ''">
       </div>
+      @if(errorRequerido(representanteLegalForm, 'correo')) {
+      <div class="mensaje-error ">
+        {{ MENSAJE_REQUERIDO}}
+      </div>
+      }
+      @if(
+      errorPattern(representanteLegalForm, 'correo')) {
+      <div class="mensaje-error ">
+        {{ CORREO_INVALIDO }}
+      </div>
+      }
     </div>
   </div>
 
