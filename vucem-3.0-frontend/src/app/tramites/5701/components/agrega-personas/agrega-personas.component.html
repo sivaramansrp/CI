@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-4 form-group">
-    <label class="control-label" for="gafete">Gafete:</label>
+    <label class="form-label" for="gafete">Gafete:</label>
     <input class="form-control" id="gafete" [formControl]="gafete" placeholder="" type="text"
       [ngClass]="gafeteIsValid ? 'required' : ''">
   </div>
@@ -15,17 +15,17 @@
 <form action="" [formGroup]="personaForm">
   <div class="row">
     <div class="col-md-4 form-group">
-      <label class="control-label" for="nombre">Nombre(s):</label>
+      <label class="form-label" for="nombre">Nombre(s):</label>
       <input class="form-control" id="nombre" placeholder="" type="text" formControlName="nombre"
         [ngClass]="isValid('nombre') ? 'required' : ''">
     </div>
     <div class="col-md-4 form-group">
-      <label class="control-label" for="aPaterno">Apellido paterno:</label>
+      <label class="form-label" for="aPaterno">Apellido paterno:</label>
       <input class="form-control" id="aPaterno" placeholder="" type="text" formControlName="aPaterno"
         [ngClass]="isValid('aPaterno') ? 'required' : ''">
     </div>
     <div class="col-md-4 form-group">
-      <label class="control-label" for="aMaterno">Apellido materno:</label>
+      <label class="form-label" for="aMaterno">Apellido materno:</label>
       <input class="form-control" id="aMaterno" placeholder="" type="text" formControlName="aMaterno"
         [ngClass]="isValid('aMaterno') ? 'required' : ''">
     </div>

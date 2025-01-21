@@ -31,17 +31,22 @@ export class SelectCatalogosComponent {
 
   tipoSolicitud: FormControl = new FormControl(0);
 
+  constructor(private validacionesService: ValidacionesFormularioService) {}
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['catalogosDatos'].currentValue) {
       this.catalogosDatos = changes['catalogosDatos'].currentValue;
       if (this.catalogosDatos.required) {
-        this.tipoSolicitud.setValidators([Validators.required]);
+        this.tipoSolicitud.setValidators([
+          Validators.required,
+          this.validacionesService.noCeroValidator(),
+        ]);
         this.tipoSolicitud.updateValueAndValidity();
       }
     }
   }
 
-  isValid() {
+  isValid(): boolean | null {
     return this.tipoSolicitud.errors && this.tipoSolicitud.touched;
   }
 

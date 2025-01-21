@@ -1,12 +1,76 @@
-<div class="row">
+<div class="row mb-3">
   <div class="col-md-4">
-    <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
-      <button class="btn btn-group-primary" type="button" id="button-addon2">
-        <i class="bi bi-search"></i>
-      </button>
+    <div class="form-group">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="" aria-label="RFC" aria-describedby="button-addon2"
+          id="rfcBusqueda" [formControl]="rfcBusqueda" [ngClass]="isValid() ? 'required' : ''">
+        <button class="btn btn-group-primary" type="button" id="buscarRFC">
+          <i class="bi bi-search"></i>
+        </button>
+      </div>
+      <div>
+      </div>
+      @if (errorRequerido()) {
+        <div class="mensaje-error ">
+          Este campo es obligatorio
+        </div>
+      }
+      @if(errorPattern()) {
+        <div class="mensaje-error ">
+          La nomenclatura del RFC es incorrecta
+        </div>
+      }
     </div>
-
-
   </div>
 </div>
+
+<form [formGroup]="representanteLegalForm">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="rfc" class="form-label">RFC</label>
+        <input class="form-control" id="rfc" placeholder="RFC" type="text" formControlName="rfc" appUppercase>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input class="form-control" id="nombre" placeholder="Nombre" type="text" formControlName="nombre">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="aPaterno" class="form-label">Apellido Paterno</label>
+        <input class="form-control" id="aPaterno" placeholder="Apellido Paterno" type="text"
+          formControlName="aPaterno">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="aMaterno" class="form-label">Apellido Materno</label>
+        <input class="form-control" id="aMaterno" placeholder="Apellido Materno" type="text"
+          formControlName="aMaterno">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="telefono" class="form-label">Teléfono</label>
+        <input class="form-control" id="telefono" placeholder="Teléfono" type="text" formControlName="telefono">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="correo" class="form-label">Correo</label>
+        <input class="form-control" id="correo" placeholder="Correo" type="text" formControlName="correo">
+      </div>
+    </div>
+  </div>
+
+</form>
