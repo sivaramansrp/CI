@@ -1,3 +1,4 @@
+
 {
   "code": 200,
   "data": [
@@ -7,7 +8,7 @@
       "tipoArchivo": "pdf",
       "archivo": {
         "unidad": "MB",
-        "tamanio": 3
+        "tam": 3
       },
       "imagen": {
         "resolucion": 300,
@@ -21,7 +22,7 @@
       "tipoArchivo": "pdf",
       "archivo": {
         "unidad": "KB",
-        "tamanio": 15
+        "tam": 15
       },
       "imagen": {
         "resolucion": 300,
@@ -34,7 +35,7 @@
       "tipoArchivo": "pdf",
       "archivo": {
         "unidad": "MB",
-        "tamanio": 5
+        "tam": 5
       },
       "imagen": {
         "resolucion": 300,
@@ -48,7 +49,7 @@
       "tipoArchivo": "pdf",
       "archivo": {
         "unidad": "MB",
-        "tamanio": 3
+        "tam": 3
       },
       "imagen": {
         "resolucion": 300,
