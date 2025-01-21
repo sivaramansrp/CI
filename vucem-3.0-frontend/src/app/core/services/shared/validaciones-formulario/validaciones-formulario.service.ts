@@ -16,7 +16,7 @@ export class ValidacionesFormularioService {
   public correoPattern: string = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
 
   /**
-   * Valida si el campo de un formulario no cntiene errores
+   * Valida si el campo de un formulario no contiene errores
    * @param {AbstractControl} control  : Control del formulario
    * @param {string} campo  : Nombre del campo a validar, si el control es un FormGroup
    * @returns {boolean | null} : Retorna true si el campo contiene errores y ha sido tocado, de lo contrario retorna false

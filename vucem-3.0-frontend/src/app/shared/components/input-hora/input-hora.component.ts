@@ -31,10 +31,6 @@ export class InputHoraComponent {
       ]);
       this.hora.updateValueAndValidity();
     }
-    console.log('hora');
-
-    console.log(this.hora);
-
   }
 
   get isValid() {

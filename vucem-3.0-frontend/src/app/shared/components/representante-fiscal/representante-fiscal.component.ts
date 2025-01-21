@@ -143,7 +143,7 @@ export class RepresentanteFiscalComponent {
     };
 
     // Obtenemos los campos deactivados de la formulario para el Representante Legal por RFC
-    const camposDisabled = this.formServices.obtenerCamnposDisabled(
+    const camposDisabled = this.formServices.obtenerCamposDisabled(
       this.representanteLegalForm
     );
     if (rfc) {
