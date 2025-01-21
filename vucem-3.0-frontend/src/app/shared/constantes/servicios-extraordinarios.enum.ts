@@ -135,3 +135,4 @@ export const FECHA_FINAL = {
   habilitado: true,
 };
 
+export const TXT_TITULO = 'Tu solicitud ha sido registrada con el siguiente núnero de folio:';

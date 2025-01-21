@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { AcusePageComponent } from '../../shared/pages/acuse-page/acuse-page.component';
+import { AcusePageComponent } from './pages/acuse-page/acuse-page.component';
 
 export const ROUTES_SOLICITUDES: Routes = [
   {
