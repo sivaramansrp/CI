@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
 import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
 import {
   CatalogosSelect,
@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { DatosArchivo } from '../../../core/models/shared/components.model';
 
+declare const bootstrap: any; // Importación para manejar Bootstrap en TS
 @Component({
   selector: 'anexar-documentos',
   standalone: true,
@@ -25,14 +26,18 @@ export class AnexarDocumentosComponent {
   modal: string = 'modal';
   indiceDocumento!: number;
 
+  @ViewChild('modalConfirmacion') modalElement!: ElementRef;
+
   constructor(
     private sExtraordinarios: ServiciosExtraordinariosService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private renderer: Renderer2,
   ) {}
 
   ngOnInit() {
     this.getTiposDocumentos();
   }
+
 
   get docCargados() {
     return this.documentosCargados.length > 0 ? true : false;
@@ -108,7 +113,7 @@ export class AnexarDocumentosComponent {
   }
 
   abrirModal(i: number) {
-    this.modal = 'modal-open';
+    this.modal = 'show';
     this.indiceDocumento = i;
   }
 
@@ -119,7 +124,10 @@ export class AnexarDocumentosComponent {
   }
 
   cerrarModal() {
-    this.modal = 'modal';
+    if (this.modalElement) {
+      const modal = new bootstrap.Modal(this.modalElement.nativeElement);
+      modal.hide();
+    }
   }
 
   validarTamanio(datos: DatosArchivo): boolean {
