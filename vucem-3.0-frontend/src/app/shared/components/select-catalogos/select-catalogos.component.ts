@@ -7,9 +7,7 @@ import {
 } from '@angular/core';
 import { Catalogo } from '../../../core/models/5701/catalogos.model';
 import {
-  FormBuilder,
   FormControl,
-  FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';

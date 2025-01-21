@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
 import {
   CatalogosSelect,
@@ -8,9 +8,20 @@ import { ServiciosExtraordinariosService } from '../../../core/services/5701/ser
 import { Catalogo } from '../../../core/models/5701/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { DatosArchivo } from '../../../core/models/shared/components.model';
+import {
+  CATALOGOS_ID,
+  KB,
+  MB,
+  UNIDADES,
+  PDF,
+  DPI,
+} from '../../constantes/constantes';
+import { Login } from '../../../core/models/shared/inicio-sesion.model';
+import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
+import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
 
 declare const bootstrap: any; // Importación para manejar Bootstrap en TS
+
 @Component({
   selector: 'anexar-documentos',
   standalone: true,
@@ -19,134 +30,211 @@ declare const bootstrap: any; // Importación para manejar Bootstrap en TS
   styleUrl: './anexar-documentos.component.scss',
 })
 export class AnexarDocumentosComponent {
+  PDF = PDF;
+  MB = MB;
+  DPI = DPI;
+
+  tamMaximo: number = 0;
   tiposDocumentos!: CatalogosSelect;
   documentosCargados: Array<DocumentosCargados> = [];
   documentoSeleccionado!: Catalogo;
   mostrarModal: boolean = false;
-  modal: string = 'modal';
+
+  modal: string = '';
   indiceDocumento!: number;
 
-  @ViewChild('modalConfirmacion') modalElement!: ElementRef;
+  datosLogin: Login = {
+    user: 'user1@example.com',
+    password: 'clave1',
+  };
+
+  token!: string;
+  base64File: string = '';
+
+  @ViewChild('modalConfirmacion') modalConfirmacion!: ElementRef;
 
   constructor(
     private sExtraordinarios: ServiciosExtraordinariosService,
     private toastr: ToastrService,
     private renderer: Renderer2,
+    private inicioSesionService: InicioSesionService,
+    private subirDocumentoService: SubirDocumentoService
   ) {}
 
   ngOnInit() {
+    this.obtenerToken(this.datosLogin);
     this.getTiposDocumentos();
   }
 
-
+  /**
+   * Verifica si hay documentos cargados.
+   * @returns {boolean} `true` si hay documentos cargados, de lo contrario `false`.
+   */
   get docCargados() {
-    return this.documentosCargados.length > 0 ? true : false;
+    return this.documentosCargados.length > 0;
   }
 
-  get btnDesactivado() {
-    return this.documentoSeleccionado && this.documentoSeleccionado.id !== 0
-      ? false
-      : true;
+  /**
+   * Determina si el botón de carga debe estar desactivado.
+   * @returns {boolean} `true` si no hay un documento seleccionado, de lo contrario `false`.
+   */
+  get btnDesactivado(): boolean {
+    return !(this.documentoSeleccionado && this.documentoSeleccionado.id !== 0);
   }
 
-  getTiposDocumentos() {
-    this.sExtraordinarios.getCatalogo(6).subscribe((resp) => {
-      if (resp.codigo === '200') {
-        this.tiposDocumentos = {
-          labelNombre: 'Tipo de documento',
-          required: true,
-          primerOpcion: 'Selecciona un tipo de documento',
-          catalogos: JSON.parse(resp.data),
-        };
-      }
+  /**
+   * Obtiene el token de autenticación.
+   * @param {Login} body - Datos de inicio de sesión.
+   */
+  obtenerToken(body: Login): void {
+    this.inicioSesionService.obtenerToken(body).subscribe({
+      next: (resp): void => {
+        this.token = resp.jwt;
+      },
+      error: (error): void => {
+        console.log(error);
+      },
     });
   }
 
-  docSeleccionado(e: Catalogo) {
-    this.documentoSeleccionado = e;
+  /**
+   * Obtiene los tipos de documentos disponibles.
+   */
+  getTiposDocumentos(): void {
+    this.sExtraordinarios
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .subscribe({
+        next: (resp): void => {
+          if (resp.length > 0) {
+            this.tiposDocumentos = {
+              labelNombre: 'Tipo de documento',
+              required: true,
+              primerOpcion: 'Selecciona un tipo de documento',
+              catalogos: resp,
+            };
+          }
+        },
+        error: (error): void => {
+          console.log(error);
+        },
+      });
   }
 
-  cargarDoc(event: Event) {
+  /**
+   * Maneja la selección de un documento.
+   * @param {Catalogo} e - El documento seleccionado.
+   */
+  docSeleccionado(e: Catalogo) {
+    this.documentoSeleccionado = e;
+    this.tamMaximo = this.documentoSeleccionado.tam
+      ? this.convertirKilobytesAMegabytes(
+          parseInt(this.documentoSeleccionado.tam)
+        )
+      : 0;
+  }
+
+  /**
+   * Maneja la carga de un documento.
+   * @param {Event} event - El evento de carga del archivo.
+   */
+  async cargarDoc(event: Event) {
     const archivo = event.target as HTMLInputElement;
+    const informacionArchivo = (archivo.files as FileList)[0];
 
-    // Validaciones
-    if (archivo.files && archivo.files.length > 0) {
-      const archivo_info = archivo.files[0];
+    if (informacionArchivo) {
+      let extArchivo = informacionArchivo.name.split('.').pop()?.toLowerCase();
 
-      // Validacion tipo archivo
-      let ext_archivo = archivo_info.name.split('.').pop() as string;
-      ext_archivo = ext_archivo.toLowerCase();
-
-      if (ext_archivo !== this.documentoSeleccionado.tipoArchivo) {
+      if (extArchivo !== this.PDF.toLowerCase()) {
         this.toastr.error('Solo se aceptan archivos pdf');
         return;
       }
 
-      // Validacion tamaño
-      const datos: DatosArchivo = {
-        tam_req: this.documentoSeleccionado.archivo
-          ? this.documentoSeleccionado.archivo.tamanio
-          : 0,
-        tamanio: archivo_info.size,
-        unidad: this.documentoSeleccionado.archivo
-          ? this.documentoSeleccionado.archivo.unidad
-          : '',
-      };
+      const tamanioRequerido = this.documentoSeleccionado.tam
+        ? this.convertirKilobytesABytes(
+            parseInt(this.documentoSeleccionado.tam)
+          )
+        : 0;
+      const tamanioArchivo = informacionArchivo.size;
 
-      if (!this.validarTamanio(datos)) {
+      if (tamanioArchivo > tamanioRequerido) {
         this.toastr.error(
           'El tamaño del documento que intenta cargar excede el tamaño permitido'
         );
         return;
       }
 
+      this.subirDocumentoService
+        .subirDocumento(this.token, informacionArchivo)
+        .subscribe({
+          next: (): void => {
+            alert('Documento subido');
+          },
+          error: (error): void => {
+            console.log(error);
+          },
+        });
+
       this.documentosCargados.push({
         tipoDocumento: this.documentoSeleccionado,
-        nombre_archivo: archivo_info.name,
+        nombreArchivo: informacionArchivo.name,
       });
     }
   }
 
-  verDocumento(i: number, accion: string) {
-    // v => ver
-    this.mostrarModal = accion === 'v' ? true : false;
+  /**
+   * Convierte kilobytes a megabytes.
+   * @param {number} kilobytes - El tamaño en kilobytes.
+   * @returns {number} El tamaño en megabytes.
+   */
+  convertirKilobytesAMegabytes(kilobytes: number): number {
+    return Math.round(kilobytes / 1024);
   }
 
+  /**
+   * Convierte kilobytes a bytes.
+   * @param {number} kilobytes - El tamaño en kilobytes.
+   * @returns {number} El tamaño en bytes.
+   */
+  convertirKilobytesABytes(kilobytes: number): number {
+    return kilobytes * 1024;
+  }
+
+  /**
+   * Muestra el modal para ver un documento.
+   * @param {number} i - El índice del documento.
+   * @param {string} accion - La acción a realizar.
+   */
+  verDocumento(i: number, accion: string) {
+    this.mostrarModal = accion === 'v';
+  }
+
+  /**
+   * Abre el modal para eliminar un documento.
+   * @param {number} i - El índice del documento.
+   */
   abrirModal(i: number) {
     this.modal = 'show';
     this.indiceDocumento = i;
   }
 
+  /**
+   * Elimina un documento de la lista.
+   * @param {number} i - El índice del documento.
+   */
   eliminarDocumento(i: number) {
     this.documentosCargados.splice(i, 1);
     this.cerrarModal();
     this.toastr.success('Se ha eliminado el archivo exitosamente');
   }
 
-  cerrarModal() {
-    if (this.modalElement) {
-      const modal = new bootstrap.Modal(this.modalElement.nativeElement);
-      modal.hide();
+  /**
+   * Cierra el modal.
+   */
+  cerrarModal(): void {
+    const modalElement = this.modalConfirmacion.nativeElement;
+    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    if (modalInstance) {
+      modalInstance.hide();
     }
-  }
-
-  validarTamanio(datos: DatosArchivo): boolean {
-    let size: number = 0;
-    let validacion: boolean = false;
-    switch (datos.unidad) {
-      case 'KB':
-        size = datos.tam_req * 1024;
-        validacion = datos.tamanio <= size ? true : false;
-        break;
-
-      case 'MB':
-        size = datos.tam_req * 1024 * 1024;
-        validacion = datos.tamanio <= size ? true : false;
-        break;
-      case '':
-        validacion = false;
-        break;
-    }
-    return validacion;
   }
 }
