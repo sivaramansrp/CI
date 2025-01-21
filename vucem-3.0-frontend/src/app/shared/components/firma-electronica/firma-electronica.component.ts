@@ -17,6 +17,7 @@ import { LOGIN, PADDING } from '../../constantes/constantes';
 export class FirmaElectronicaComponent {
   @Input({ required: true }) tipo: string = '';
   @Output() valido = new EventEmitter<boolean>();
+  @Output() firma = new EventEmitter<string>();
 
   certFile: string = '';
   keyFile: string = '';
@@ -131,10 +132,9 @@ export class FirmaElectronicaComponent {
           this.toastrService.success(
             '¡Certificado válido y llave privada coinciden!'
           );
-
           if (!this.login) {
             const firma = this.firmar('hola', privateKey);
-            console.log(firma);
+            this.firma.emit(firma);
           }
         } else {
           this.valido.emit(false);
