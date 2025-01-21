@@ -17,6 +17,7 @@ import { LOGIN, PADDING } from '../../constantes/constantes';
 export class FirmaElectronicaComponent {
   @Input({ required: true }) tipo: string = '';
   @Output() valido = new EventEmitter<boolean>();
+  @Output() firma = new EventEmitter<string>();
 
   certFile: string = '';
   keyFile: string = '';
@@ -123,30 +124,23 @@ export class FirmaElectronicaComponent {
       const content = paddingStart + btoa(binaryString) + paddingEnd; // añadir paddings al string del certificado, para poder desencriptarlo.
       const privateKey = forge.pki.decryptRsaPrivateKey(content, password);
 
-      if (privateKey && certPublicKey) {
-        if (
-          certPublicKey.n.t === privateKey.n.t &&
-          certPublicKey.e.t === privateKey.e.t
-        ) {
-          this.valido.emit(true);
-          this.toastrService.success(
-            '¡Certificado válido y llave privada coinciden!'
-          );
+      const validaciones =
+        privateKey &&
+        certPublicKey &&
+        certPublicKey.n.t === privateKey.n.t &&
+        certPublicKey.e.t === privateKey.e.t;
 
-          if (!this.login) {
-            const firma = this.firmar('hola', privateKey);
-            console.log(firma);
-          }
-        } else {
-          this.valido.emit(false);
-
-          this.toastrService.error(
-            'La llave privada no coincide con el certificado o la contraseña es incorrecta.'
-          );
+      if (validaciones) {
+        this.toastrService.success(
+          '¡Certificado válido y llave privada coinciden!'
+        );
+        this.valido.emit(true);
+        if (!this.login) {
+          const firma = this.firmar('hola', privateKey);
+          this.firma.emit(firma);
         }
       } else {
         this.valido.emit(false);
-
         this.toastrService.error(
           'La llave privada no coincide con el certificado o la contraseña es incorrecta.'
         );
