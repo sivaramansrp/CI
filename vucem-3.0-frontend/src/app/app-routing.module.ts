@@ -15,6 +15,13 @@ const routes: Routes = [
         (m) => m.ServiciosExtraordinariosModule
       ),
   },
+  {
+    path: 'despacho-mercancias',
+    loadChildren: () =>
+      import('./tramites/303/despacho-mercancias.module').then(
+        (m) => m.DespachoMercanciasModule
+      ),
+  },
 ];
 
 @NgModule({

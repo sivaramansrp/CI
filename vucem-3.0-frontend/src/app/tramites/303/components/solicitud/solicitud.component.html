@@ -1,0 +1,283 @@
+<div class="container">
+  <ng-titulo titulo="Tipo de servicio extraordinario" />
+
+  <div class="row">
+    <div class="col-md-4">
+      <select-catalogos [catalogosDatos]="datosTiposSolicitud" (valorSelección)="tipoSolicitud($event)" />
+    </div>
+  </div>
+
+  <!-- @if(tipoSolSeleccionada) { -->
+  <form [formGroup]="FormSolicitud" (ngSubmit)="validarFormulario()">
+    <ng-titulo titulo="Datos del importador/exportador" />
+    <ng-container formGroupName="datosImportadorExportador">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label" for="rfcImportExport">RFC*:</label>
+            <input class="form-control" id="rfcImportExport" placeholder="RFC" type="text"
+              formControlName="rfcImportExport"
+              [ngClass]="isValid(datosImportadorExportador,'rfcImportExport') ? 'required' : ''" appUppercase
+              (blur)="busqueda_rfc()">
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="control-label" for="nombreImportExport">Nombre*:</label>
+            <input class="form-control" id="nombreImportExport" formControlName="nombreImportExport"
+              placeholder="Nombre" type="text" appUppercase>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label" for="nombre_imp">Número de registro o programa:</label>
+            <input class="form-control" id="rfc_imp" placeholder="Numero de registro" type="text"
+              formControlName="nroRegistro" [ngClass]="isValid(datosImportadorExportador, 'nroRegistro') ? 'required' : ''">
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <input-check [datos]="programaFomento" (valores)="programaFomentoF($event)"></input-check>
+        </div>
+
+        <div class="col-md-4">
+          <input-check [datos]="immex" (valores)="immexSeleccion($event)"></input-check>
+        </div>
+
+        <div class="col-md-4">
+          <input-check [datos]="industriaAutomotriz" (valores)="industriaAutomotrizSeleccion($event)"></input-check>
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-md-12">
+          <label for="certficacion_a">Tipo de empresa certificada</label>
+        </div>
+        <div class="col-md-4">
+          <input class="form-check-input me-3" type="radio" name="certficacion" value="a" id="certficacion_a">
+          <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación A:</label>
+        </div>
+        <div class="col-md-4">
+          <input class="form-check-input me-3" type="radio" name="certficacion" value="aa" id="certficacion_aa">
+          <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación AA:</label>
+        </div>
+        <div class="col-md-4">
+          <input class="form-check-input me-3" type="radio" name="certficacion" value="aaa" id="certficacion_aaa">
+          <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación AAA:</label>
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-md-4">
+          <input-check [datos]="socioComercial" (valores)="valorInputCheck($event)"></input-check>
+        </div>
+
+        <div class="col-md-4">
+          <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
+          <label class="control-label" for="nombre_imp">Operador económico autorizado</label>
+        </div>
+
+        <div class="col-md-4">
+          <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
+          <label class="control-label" for="nombre_imp">Revisión en origen</label>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-titulo titulo="Datos del servicio" />
+    <div class="row">
+      <div class="col-md-4">
+        <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
+      </div>
+
+
+      <div class="col-md-4">
+        <input-hora [datosHora]="horaInicio" (horaValor)="obtenerHora($event, 'i')"></input-hora>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <input-fecha [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+      </div>
+
+      <div class="col-md-4">
+        <input-hora [datosHora]="horaFinal" (horaValor)="obtenerHora($event, 'f')"></input-hora>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel-group ficha-collapse" id="accordion">
+          <div class="panel panel-default">
+            <div class="panel-heading" (click)="mostrar_colapsable()">
+              <h4 class="panel-title">
+                <a>
+                  Especifique los días que se utilizarán dentro del periodo*:
+                </a>
+              </h4>
+              <button type="button" class="collpase-button collapsed"></button>
+            </div>
+            @if(colapsable){
+            <div class="panel-collapse collapse in" id="panel-01">
+              <div class="panel-body">
+                <crosslist [fechas]="selectRangoDias"></crosslist>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-titulo titulo="Datos del despacho para el servicio extraordinario" />
+
+    <ng-container formGroupName="despacho">
+      <div class="row">
+        <div class="col-md-4">
+          <input-check [datos]="despachoLDA" (valores)="valorInputCheck($event)"></input-check>
+        </div>
+        <div class="col-md-4">
+          <input-check [datos]="despachoDD" (valores)="valorInputCheck($event)"></input-check>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <select-catalogos [catalogosDatos]="aduanas" (valorSelección)="aduanaSeleccion($event)" />
+        </div>
+        <div class="col-md-4">
+          <label for="tipoSolicitud" class="control-label">Sección aduanera*:</label>
+          <select class="form-control" id="tipo-solicitud">
+            <option>Selecciona un valor</option>
+            <option>32 - 304 - AEROPUERTO INTERNACIONAL GENERAL. LUCIO BLANCO, CIUDAD REYNOSA, TAMAULIPAS.</option>
+            <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
+            <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
+          </select>
+
+        </div>
+        <div class="col-md-4">
+          <label for="tipoSolicitud" class="control-label">Nombre del recinto:</label>
+          <select class="form-control" id="tipo-solicitud" disabled>
+            <option>Selecciona un valor</option>
+            <option>Individual</option>
+            <option>Semanal</option>
+            <option>Mensual</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <label for="tipoSolicitud" class="control-label">Tipo de operación*:</label>
+          <select class="form-control" id="tipo-solicitud">
+            <option>Selecciona un valor</option>
+            <option>Importación</option>
+            <option>Exportación</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="patente" class="control-label">Patente/Número de autorización:</label>
+          <input class="form-control" type="text" name="patente" id="patente" formControlName="patente">
+        </div>
+        <div class="col-md-4">
+          <div class="group-checkbox">
+            <div>
+              <label class="control-label" for="nombre_imp">Relación de sociedad: </label>
+              <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
+            </div>
+            <div>
+              <label class="control-label" for="nombre_imp">Encargo conferido:</label>
+              <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </ng-container>
+
+
+
+    @if (solIndividual) {
+    <ng-titulo titulo="Datos del pedimento" />
+
+    <c-pedimento [validacion]="validacionPedimento" [datosNroPedimento]="datosPedimentoComponente"
+      (validaCampos)="validaCampoPedimento()"></c-pedimento>
+    }
+
+
+    <ng-titulo titulo="Mercancía" />
+    <div class="row">
+      <div class="col-md-4">
+        <select-catalogos [catalogosDatos]="paisesOrigen" (valorSelección)="paisOrigen($event)" />
+      </div>
+
+      <div class="col-md-4">
+        <select-catalogos [catalogosDatos]="paisesProcedencia" (valorSelección)="paisProcedencia($event)" />
+      </div>
+
+      <div class="col-md-8">
+        <div class="form-group">
+          <label for="tipoSolicitud" class="control-label">Descripción genérica*:</label>
+          <textarea class="form-control" rows="3"></textarea>
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        <div class="form-group">
+          <label for="tipoSolicitud" class="control-label">Justificación*:</label>
+          <textarea class="form-control" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+
+
+    <ng-titulo titulo="Personas responsables del despacho (máximo 5)" />
+    <agrega-personas/>
+
+
+
+    <ng-titulo titulo="Pagos" />
+    <div class="row rf">
+      <div class="col-md-4 form-group">
+        <label class="control-label" for="nombre_imp">Monto a pagar:</label>
+        <input class="form-control" id="rfc_imp" placeholder="" type="text">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 form-group">
+        <label class="control-label" for="nombre_imp">Línea de captura*:</label>
+        <input class="form-control" id="rfc_imp" placeholder="" type="text">
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="control-label" for="nombre_imp">Monto*:</label>
+        <input class="form-control" id="rfc_imp" placeholder="" type="text">
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col-md-8"></div>
+      <div class="col-md-4">
+        <div class="btn-group">
+          <button class="btn btn-primary me-2" type="button">Consultar</button>
+          <button class="btn btn-danger" type="button">Eliminar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <p class="p-bold">A través del siguiente vinculo puedes ingresar a la página para generar la línea de captura de
+        la
+        constancia que se solicita:</p>
+      <p>Generar línea de captura</p>
+    </div>
+  </form>
+  <!-- } -->
+</div>

@@ -1,0 +1,94 @@
+<div class="container">
+    <ng-titulo titulo="Datos de Transportista" />
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-responsive">
+              <thead>
+                <tr>
+                  <th>Transportista</th>
+                  <th>Tipo de persona</th>
+                  <th>Tax ID</th>
+                  <th>Denominación o Razón Social</th>
+                  <th>R.F.C</th>
+                  <th>Nombre(s)</th>
+                  <th>Primer apellido</th>
+                  <th>Segundo apellido</th>
+                </tr>
+              </thead>
+        
+              <tbody>
+                <tr>
+
+                </tr>
+              </tbody>
+        
+            </table>
+            
+          </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4 d-flex align-items-rigth">
+            <div class="btn-group">
+              <button class="btn btn-default" type="button" >Modificar</button>
+              <button class="btn btn-default" type="button" >Eliminar</button>
+              <button type="button" class="btn btn-primary ms-2">Agregar </button>
+            </div>
+        </div>
+    </div>
+
+    
+    
+
+<div [ngClass]="modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Agregar Transportista</h4>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                  <label for="tipoFigura">Transportista</label>
+                  <input type="text" id="tipoFigura" formControlName="tipoFigura" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="nombres">Tipo de persona</label>
+                  <input type="text" id="nombres" formControlName="nombres" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="primerApellido">Tax ID</label>
+                  <input type="text" id="primerApellido" formControlName="primerApellido" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="segundoApellido">Denominación o Razón Social</label>
+                  <input type="text" id="segundoApellido" formControlName="segundoApellido" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="patenteAutorizacion">R.F.C</label>
+                  <input type="text" id="patenteAutorizacion" formControlName="patenteAutorizacion" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="se">Nombre(s)</label>
+                  <input type="text" id="se" formControlName="se" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="se">Primer apellido</label>
+                    <input type="text" id="se" formControlName="se" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="se">Segundo apellido</label>
+                    <input type="text" id="se" formControlName="se" class="form-control">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" (click)="cerrarModal()">Cerrar</button>
+          <button type="button" class="btn btn-primary" >Agregar</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  
+</div>
