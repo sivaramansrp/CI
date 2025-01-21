@@ -12,9 +12,6 @@ export class PasoTresComponent {
 
   constructor(private roouter: Router) { }
 
-
-
-
   firmaAceptada(ev: string) : void {
     if(ev) {
       const firma = ev;
@@ -23,10 +20,6 @@ export class PasoTresComponent {
 
       // Ir a la Pagina de Acuses
       this.roouter.navigate(['/servicios-extraordinarios/acuse']);
-
-
-
-
     }
 
   }

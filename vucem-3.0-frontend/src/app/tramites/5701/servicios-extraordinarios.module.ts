@@ -27,6 +27,7 @@ import { AgregarTransporteComponent } from "../../shared/components/agregar-tran
 import { PedimentoComponent } from './components/pedimento/pedimento.component';
 import { AgregaPersonasComponent } from "./components/agrega-personas/agrega-personas.component";
 import { RepresentanteFiscalComponent } from '../../shared/components/representante-fiscal/representante-fiscal.component';
+import { AcusePageComponent } from './pages/acuse-page/acuse-page.component';
 
 
 
@@ -38,6 +39,7 @@ import { RepresentanteFiscalComponent } from '../../shared/components/representa
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
+    AcusePageComponent,
  ] ,
   imports: [
     CommonModule,
