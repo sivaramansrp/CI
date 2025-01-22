@@ -1,5 +1,5 @@
 import { Component, Signal, signal, WritableSignal } from '@angular/core';
-import { Catalogo, CatalogoPaises } from '../../../../core/models/5701/catalogos.model';
+import { Catalogo, CatalogoPaises } from '../../../../core/models/shared/catalogos.model';
 import {
   CatalogosSelect,
   CatalogosSelectPaises,
@@ -39,6 +39,7 @@ import { datosAgregarFormulario } from '../../../../core/models/shared/forms-mod
 import { DatosComponentePedimento } from '../../../../core/models/5701/servicios-extraordinarios.model';
 import { FechasService } from '../../../../core/services/shared/fechas/fechas.service';
 import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.model';
+import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
 
 @Component({
   selector: 'solicitud',
@@ -84,7 +85,7 @@ export class SolicitudComponent {
     private fechaService: FechasService,
     private fb: FormBuilder,
     private fService: FormulariosService,
-    private sExtraordinarios: ServiciosExtraordinariosService,
+    private catalogosServices: CatalogosService,
     private validacionesService: ValidacionesFormularioService
   ) {
     this.crearFormSolicitud();
@@ -150,12 +151,12 @@ export class SolicitudComponent {
   /**
    * Obtiene los tipos de solicitud desde el catálogo y los asigna a `datosTiposSolicitud`.
    *
-   * Este método realiza una solicitud al servicio `sExtraordinarios` para obtener el catálogo de tipos de solicitud identificado por `CATALOGOS_ID.CAT_TIPO_SOL`. Una vez que recibe la  respuesta, verifica si la respuesta contiene elementos. Si es así, asigna los datos recibidos a la propiedad `datosTiposSolicitud` con la estructura adecuada.
+   * Este método realiza una solicitud al servicio `catalogosServices` para obtener el catálogo de tipos de solicitud identificado por `CATALOGOS_ID.CAT_TIPO_SOL`. Una vez que recibe la  respuesta, verifica si la respuesta contiene elementos. Si es así, asigna los datos recibidos a la propiedad `datosTiposSolicitud` con la estructura adecuada.
    *
    * @returns {void} No retorna ningún valor.
    */
   getTiposSolicitud(): void {
-    this.sExtraordinarios
+    this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_SOL)
       .subscribe((resp) => {
         if (resp.length > 0) {
@@ -170,7 +171,7 @@ export class SolicitudComponent {
   }
 
   getPaises(): void {
-    this.sExtraordinarios
+    this.catalogosServices
       .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
       .subscribe((resp) => {
         if (resp.length > 0) {
@@ -192,7 +193,7 @@ export class SolicitudComponent {
   }
 
   getAduanas(): void {
-    this.sExtraordinarios
+    this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_ADUANAS)
       .subscribe((resp) => {
         if (resp.length > 0) {

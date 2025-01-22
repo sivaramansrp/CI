@@ -29,7 +29,7 @@ import { AgregaPersonasComponent } from "./components/agrega-personas/agrega-per
 import { RepresentanteFiscalComponent } from '../../shared/components/representante-fiscal/representante-fiscal.component';
 import { AcusePageComponent } from './pages/acuse-page/acuse-page.component';
 import { TablaComponent } from '../../shared/components/tabla/tabla.component';
-import { SelectPaisesComponent } from "../../shared/components/select-paises/select-paises.component";
+import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
 
 
 

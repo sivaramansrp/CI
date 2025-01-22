@@ -1,33 +1,22 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaSolicitud } from '../../../models/5701/servicios-extraordinarios.model';
-import { CatalogoPaises, catalogoResponse } from '../../../models/5701/catalogos.model';
+import { catalogoResponse } from '../../../models/shared/catalogos.model';
 import {
-  JSONResponse,
   RespuestaCatalogos,
-} from '../../../models/5701/catalogos.model';
+} from '../../../models/shared/catalogos.model';
+import { enviroment } from '../../../../../enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServiciosExtraordinariosService {
+  urlServer = enviroment.URL_SERVER;
+
   constructor(private http: HttpClient) {}
 
-  urlServer = 'https://dev.v30.ultrasist.net/api';
-
-  getCatalogo(catalogo: string) {
-    return this.http.get<catalogoResponse[]>(`${this.urlServer}/${catalogo}`);
-  }
-
-  getCatalogoPaises(catalogo: string) {
-    return this.http.get<CatalogoPaises[]>(`${this.urlServer}/${catalogo}`);
-  }
 
 
-
-  getCatalogos(catalogo: string) {
-    return this.http.get<RespuestaCatalogos>(`${this.urlServer}/${catalogo}`);
-  }
 
 
 }

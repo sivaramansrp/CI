@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { JSONResponse } from '../../../models/5701/catalogos.model';
+import { JSONResponse } from '../../../models/shared/catalogos.model';
 
 @Injectable({
   providedIn: 'root',

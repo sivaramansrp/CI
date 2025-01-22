@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -5,14 +6,10 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {
-  CatalogosSelect,
-  CatalogosSelectPaises,
-} from '../../../core/models/shared/components.model';
-import { CatalogoPaises } from '../../../core/models/5701/catalogos.model';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CatalogoPaises } from '../../../core/models/shared/catalogos.model';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-import { CommonModule } from '@angular/common';
+import { CatalogosSelectPaises } from '../../../core/models/shared/components.model';
 
 @Component({
   selector: 'select-paises',
@@ -22,7 +19,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './select-paises.component.scss',
 })
 export class SelectPaisesComponent {
-  @Input({required: true}) catalogosPaises!: CatalogosSelectPaises;
+  @Input({ required: true }) catalogosPaises!: CatalogosSelectPaises;
 
   @Output() paisSeleccionado = new EventEmitter<CatalogoPaises>();
 
@@ -52,13 +49,11 @@ export class SelectPaisesComponent {
 
     let seleccion: CatalogoPaises;
 
-    (this.catalogosPaises.catalogos).forEach(
-      (el: CatalogoPaises) => {
-        if (el.id === opcionSeleccionada) {
-          seleccion = el;
-          this.paisSeleccionado.emit(seleccion);
-        }
+    this.catalogosPaises.catalogos.forEach((el: CatalogoPaises) => {
+      if (el.id === opcionSeleccionada) {
+        seleccion = el;
+        this.paisSeleccionado.emit(seleccion);
       }
-    );
+    });
   }
 }
