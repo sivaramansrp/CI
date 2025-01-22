@@ -1,3 +1,5 @@
+import { SEMANA } from "./servicios-extraordinarios.enum"
+
 export const COOKIE = {
   NOMBRE_COOKIE_ID_USUARIO: 'sg-id-user',
   NOMBRE_COOKIE_ROL: 'sg-rol',
@@ -7,12 +9,12 @@ export const COOKIE = {
 }
 
 export const CATALOGOS_ID = {
-  CAT_TIPO_SOL: 1,
-  CAT_PAISES: 2,
-  CAT_ADUANAS: 3,
-  CAT_SECCION_ADUANAS: 4,
+  CAT_TIPO_SOL: 'tipos-solicitud',
+  CAT_PAISES: 'paises',
+  CAT_ADUANAS: 'aduanas',
+  CAT_SECCION_ADUANAS: 'secciones-aduanas',
   DATOS_GNRLS_SOL: 5,
-  CAT_TIPO_DOCUMENTO: 6,
+  CAT_TIPO_DOCUMENTO: 'tipos-documento',
   CAT_TIPO_OPERACION: 7
 }
 
@@ -22,3 +24,35 @@ export const TIPO_PERSONA = {
   FISICA_EXTRANJERA: 3,
   MORAL_EXTRANJERA: 4
 }
+
+export const TIPO_SOLICITUD = {
+  INDIVIDUAL: 27,
+  SEMANAL: 28,
+  MENSUAL: 29,
+}
+
+export const PADDING = {
+  INICIO: '-----BEGIN ENCRYPTED PRIVATE KEY-----\n',
+  FIN: '\n-----END ENCRYPTED PRIVATE KEY-----'
+}
+
+export const LOGIN = 'login';
+
+export const PDF = 'PDF';
+export const DPI = 'DPIs';
+export const MB = 'MB';
+export const KB = 'KB';
+
+export const UNIDADES = {
+  KB: 1024,
+  MB: 1048576,
+  GB: 1073741824
+}
+
+export const MILISEGUNDOS = {
+  DIA: 86400000,
+  SEMANA: 604800000,
+  MES: 2592000000
+}
+
+

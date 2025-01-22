@@ -24,11 +24,11 @@ export class PasoDosComponent {
     this.documentosSeleccionados = [
       {
         id: 1,
-        value: 'Documentos que ampare el valor de la mercancía'
+        descripcion: 'Documentos que ampare el valor de la mercancía'
       },
       {
         id: 2,
-        value: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)'
+        descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)'
       }
     ]
 
@@ -36,8 +36,8 @@ export class PasoDosComponent {
 
   getTiposDocumentos() {
     this.sExtraordinarios.getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).subscribe((resp) => {
-      if (resp.codigo === '200') {
-        this.tiposDocumentos = JSON.parse(resp.data)
+      if (resp.length > 0) {
+        this.tiposDocumentos = resp;
       }
     })
   }
