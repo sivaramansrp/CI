@@ -44,12 +44,8 @@ export class SelectCatalogosComponent {
     }
   }
 
-  /**
-   *
-   * @returns
-   */
-  isValid() {
-    return this.tipoSolicitud.errors && this.tipoSolicitud.touched;
+  isValid(): boolean | null {
+    return this.itemSeleccionado.errors && this.itemSeleccionado.touched;
   }
 
   seleccion() {
