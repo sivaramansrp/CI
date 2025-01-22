@@ -1,4 +1,4 @@
-import { Catalogo } from '../5701/catalogos.model';
+import { Catalogo, CatalogoPaises } from '../5701/catalogos.model';
 
 export interface DatosInput {
   lbl_name: string;
@@ -12,7 +12,14 @@ export interface CatalogosSelect {
   labelNombre: string;
   required: boolean;
   primerOpcion: string;
-  catalogos: Array<Catalogo>;
+  catalogos: Array<Catalogo> ;
+}
+
+export interface CatalogosSelectPaises {
+  labelNombre: string;
+  required: boolean;
+  primerOpcion: string;
+  catalogos: Array<CatalogoPaises>;
 }
 
 export interface DatosPasos {

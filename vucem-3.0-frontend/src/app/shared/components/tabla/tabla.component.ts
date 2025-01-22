@@ -1,5 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { AccionesTabla, ConfiguracionTabla, EncabezadosTabla } from '../../../core/models/shared/components.model';
+import {
+  AccionesTabla,
+  ConfiguracionTabla,
+  EncabezadosTabla,
+} from '../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -7,14 +11,12 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './tabla.component.html',
-  styleUrl: './tabla.component.scss'
+  styleUrl: './tabla.component.scss',
 })
 export class TablaComponent {
-  @Input({required: true}) encabezadosTabla!: EncabezadosTabla[];
-  @Input({required: true}) datosTabla!: ConfiguracionTabla[];
-  @Input({required: true}) accionesTabla!: AccionesTabla[];
+  @Input({ required: true }) encabezadosTabla!: EncabezadosTabla[];
+  @Input({ required: true }) datosTabla!: ConfiguracionTabla[];
+  @Input({ required: true }) accionesTabla!: AccionesTabla[];
 
-  onAccion() : void {
-
-  }
+  onAccion(): void {}
 }

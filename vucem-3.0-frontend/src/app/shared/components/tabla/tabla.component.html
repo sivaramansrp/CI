@@ -1,4 +1,4 @@
-<table class="table table-responsive">
+<table class="table table-striped">
   <thead>
     <tr>
       @for (item of encabezadosTabla; track $index) {
@@ -16,8 +16,8 @@
       @if (accionesTabla.length) {
       <td class="center">
         @for (accion of accionesTabla; track $index) {
-        <button type="button" class="btn btn-link me-2"  [id]="accion.tipo" data-bs-toggle="button" data-bs-placement="top"
-          [title]="accion.label">
+        <button type="button" class="btn btn-link me-2" [id]="accion.tipo" data-bs-toggle="button"
+          data-bs-placement="top" [title]="accion.label" (click)="onAccion()">
           <i class="bi bi-c" [ngClass]="accion.icono"></i>
         </button>
         }

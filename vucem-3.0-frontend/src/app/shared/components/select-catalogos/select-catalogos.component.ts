@@ -25,9 +25,9 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
 export class SelectCatalogosComponent {
   @Input() catalogosDatos!: CatalogosSelect;
 
-  @Output() valorSelección = new EventEmitter<Catalogo>();
+  @Output() valorSeleccion = new EventEmitter<Catalogo>();
 
-  tipoSolicitud: FormControl = new FormControl(0);
+  itemSeleccionado: FormControl = new FormControl(0);
 
   constructor(private validacionesService: ValidacionesFormularioService) {}
 
@@ -35,11 +35,11 @@ export class SelectCatalogosComponent {
     if (changes['catalogosDatos'].currentValue) {
       this.catalogosDatos = changes['catalogosDatos'].currentValue;
       if (this.catalogosDatos.required) {
-        this.tipoSolicitud.setValidators([
+        this.itemSeleccionado.setValidators([
           Validators.required,
           this.validacionesService.noCeroValidator(),
         ]);
-        this.tipoSolicitud.updateValueAndValidity();
+        this.itemSeleccionado.updateValueAndValidity();
       }
     }
   }
@@ -53,14 +53,16 @@ export class SelectCatalogosComponent {
   }
 
   seleccion() {
-    const opcionSeleccionada = parseInt(this.tipoSolicitud.value);
+    const opcionSeleccionada = parseInt(this.itemSeleccionado.value);
 
     let seleccion: Catalogo;
 
-    this.catalogosDatos.catalogos.forEach((el: Catalogo) => {
+
+    (this.catalogosDatos.catalogos).forEach((el: Catalogo) => {
+      el.id = (typeof(el.id) === 'string') ? parseInt(el.id) : el.id;
       if (el.id === opcionSeleccionada) {
         seleccion = el;
-        this.valorSelección.emit(seleccion);
+        this.valorSeleccion.emit(seleccion);
       }
     });
   }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TXT_TITULO } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { ACCIONES_TABLA_ACUSE, TXT_TITULO } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { AccionesTabla, ConfiguracionTabla, EncabezadosTabla } from '../../../../core/models/shared/components.model';
 
 @Component({
@@ -22,28 +22,18 @@ export class AcusePageComponent {
   ];
 
 
-
   datosTablaAcuses : ConfiguracionTabla[] = [
     {
       id: 1,
+      idDocumento: 'doc12',
       documento: 'Acuse de recepción de trámite',
     },
 
   ]
 
-  acciones: AccionesTabla[] = [
-    {
-      tipo: 'ver',
-      label: 'Ver documento',
-      icono: 'bi-eye'
-    },
-    {
-      tipo: 'descargar',
-      label: 'Descargar',
-      icono: 'bi-arrow-bar-down'
-    },
+  acciones: AccionesTabla[] = ACCIONES_TABLA_ACUSE;
 
-  ]
+
 
 
 }

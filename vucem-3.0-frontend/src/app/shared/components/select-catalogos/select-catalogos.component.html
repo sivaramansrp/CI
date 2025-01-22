@@ -1,9 +1,9 @@
 @if (catalogosDatos) {
-<label for="tipoSolicitud" class="form-label">
+<label for="valorSeleccion" class="form-label">
   {{catalogosDatos.labelNombre}}
   @if (catalogosDatos.required) {*}:
 </label>
-<select class="form-control" id="tipo-solicitud" [formControl]="tipoSolicitud" (change)="seleccion()"
+<select class="form-control" id="tipo-solicitud" [formControl]="itemSeleccionado" (change)="seleccion()"
   [ngClass]="isValid() ? 'required' : ''">
   <option value=0 disabled>Selecciona un valor</option>
   @for (item of catalogosDatos.catalogos; track $index)

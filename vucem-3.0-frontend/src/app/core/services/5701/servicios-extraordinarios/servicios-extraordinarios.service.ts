@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaSolicitud } from '../../../models/5701/servicios-extraordinarios.model';
-import { catalogoResponse } from '../../../models/5701/catalogos.model';
+import { CatalogoPaises, catalogoResponse } from '../../../models/5701/catalogos.model';
 import {
   JSONResponse,
   RespuestaCatalogos,
@@ -18,6 +18,12 @@ export class ServiciosExtraordinariosService {
   getCatalogo(catalogo: string) {
     return this.http.get<catalogoResponse[]>(`${this.urlServer}/${catalogo}`);
   }
+
+  getCatalogoPaises(catalogo: string) {
+    return this.http.get<CatalogoPaises[]>(`${this.urlServer}/${catalogo}`);
+  }
+
+
 
   getCatalogos(catalogo: string) {
     return this.http.get<RespuestaCatalogos>(`${this.urlServer}/${catalogo}`);

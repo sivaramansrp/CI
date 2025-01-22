@@ -1,7 +1,8 @@
 import { Component, Signal, signal, WritableSignal } from '@angular/core';
-import { Catalogo } from '../../../../core/models/5701/catalogos.model';
+import { Catalogo, CatalogoPaises } from '../../../../core/models/5701/catalogos.model';
 import {
   CatalogosSelect,
+  CatalogosSelectPaises,
   DatosInputCheck,
   InputCheck,
   InputFecha,
@@ -46,8 +47,8 @@ import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.
 })
 export class SolicitudComponent {
   datosTiposSolicitud!: CatalogosSelect;
-  paisesOrigen!: CatalogosSelect;
-  paisesProcedencia!: CatalogosSelect;
+  paisesOrigen!: CatalogosSelectPaises;
+  paisesProcedencia!: CatalogosSelectPaises;
   aduanas!: CatalogosSelect;
   seccionAduanera!: CatalogosSelect;
 
@@ -170,7 +171,7 @@ export class SolicitudComponent {
 
   getPaises(): void {
     this.sExtraordinarios
-      .getCatalogo(CATALOGOS_ID.CAT_PAISES)
+      .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
       .subscribe((resp) => {
         if (resp.length > 0) {
           this.paisesOrigen = {
@@ -320,11 +321,11 @@ export class SolicitudComponent {
   }
 
   // *Eventos de los componentes hijos
-  paisOrigen(pais: Catalogo) {
+  paisOrigen(pais: CatalogoPaises) {
     console.log(pais);
   }
 
-  paisProcedencia(pais: Catalogo) {
+  paisProcedencia(pais: CatalogoPaises) {
     console.log(pais);
   }
 
