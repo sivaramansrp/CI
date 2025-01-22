@@ -33,9 +33,21 @@
               </thead>
         
               <tbody>
-                <tr>
-
-                </tr>
+                @for (item of agentes; let i = $index; track item.nombres;) {
+                  <tr>
+                    <td>{{item.tipoFigura}}</td>
+                    <td>{{item.nombres}}</td>
+                    <td>{{item.primerApellido}}</td>
+                    <td>{{item.segundoApellido}}</td>
+                    <td>{{item.patenteAutorizacion}}</td>
+                    <td>{{item.se}}</td>
+                    <td>
+                      <button class="btn btn-link" >
+                        <i class="bi bi-trash3"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  }
               </tbody>
         
             </table>
@@ -48,7 +60,9 @@
         <div class="col-md-4 d-flex align-items-rigth">
             <div class="btn-group">
               <button class="btn btn-default" type="button" >Eliminar</button>
-              <button type="button" class="btn btn-primary ms-2" (click)="abrirModal()">Agregar </button>
+              <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent" (click)="abrirModal()">
+                Agregar
+              </button>
             </div>
           </div>
     </div>
@@ -56,48 +70,47 @@
         <ng-alert [CONTENIDO]="TEXTOS.TEXTO_AGENTES_ADUANALES"></ng-alert>
     </div>
 
-    
 
-<div [ngClass]="modal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Agregar agente</h4>
-        </div>
-        <div class="modal-body">
-            <form>
-                <div class="form-group">
-                  <label for="tipoFigura">Tipo de figura</label>
-                  <input type="text" id="tipoFigura" formControlName="tipoFigura" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label for="nombres">Nombre(s)</label>
-                  <input type="text" id="nombres" formControlName="nombres" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label for="primerApellido">Primer apellido</label>
-                  <input type="text" id="primerApellido" formControlName="primerApellido" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label for="segundoApellido">Segundo apellido</label>
-                  <input type="text" id="segundoApellido" formControlName="segundoApellido" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label for="patenteAutorizacion">Patente/Autorización</label>
-                  <input type="text" id="patenteAutorizacion" formControlName="patenteAutorizacion" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label for="se">Se</label>
-                  <input type="text" id="se" formControlName="se" class="form-control">
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" (click)="cerrarModal()">Cerrar</button>
-          <button type="button" class="btn btn-primary" >Agregar</button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
   
 </div>
+<div class="modal fade" id="modalAddAgent" tabindex="-1" aria-labelledby="modalAddAgentLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Agregar</h4>
+      </div>
+      <div class="modal-body">
+        <form action="" [formGroup]="formAgente">
+          <div class="form-group">
+            <label for="tipoFigura">Tipo de figura</label>
+            <input type="text" id="tipoFigura" formControlName="tipoFigura" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="nombres">Nombre(s)</label>
+            <input type="text" id="nombres" formControlName="nombres" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="primerApellido">Primer apellido</label>
+            <input type="text" id="primerApellido" formControlName="primerApellido" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="segundoApellido">Segundo apellido</label>
+            <input type="text" id="segundoApellido" formControlName="segundoApellido" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="patenteAutorizacion">Patente/Autorización</label>
+            <input type="text" id="patenteAutorizacion" formControlName="patenteAutorizacion" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="se">Se</label>
+            <input type="text" id="se" formControlName="se" class="form-control">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer custom-footer">
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="agregarAgente()">Agregar</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

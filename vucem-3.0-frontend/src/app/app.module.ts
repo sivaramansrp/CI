@@ -25,7 +25,7 @@ import { InformacionUsuarioComponent } from "./shared/components/informacion-usu
     InformacionUsuarioComponent,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
-    InformacionUsuarioComponent
+    InformacionUsuarioComponent,
 ],
   providers: [
     provideToastr({

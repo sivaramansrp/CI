@@ -19,7 +19,7 @@ import { AnexarDocumentosComponent } from '../../shared/components/anexar-docume
 import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
 import { InputHoraComponent } from '../../shared/components/input-hora/input-hora.component';
 import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
-import { AgregaPersonasComponent } from './components/agrega-personas/agrega-personas.component';
+import { AgregaPersonasComponent } from '../303/components/agrega-personas/agrega-personas.component';
 import { AgregarTransporteComponent } from '../../shared/components/agregar-transporte/agregar-transporte.component';
 import { PedimentoComponent } from './components/pedimento/pedimento.component';
 import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
