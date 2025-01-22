@@ -135,4 +135,18 @@ export const FECHA_FINAL = {
   habilitado: true,
 };
 
-export const TXT_TITULO = 'Tu solicitud ha sido registrada con el siguiente núnero de folio:';
+export const TXT_TITULO =
+  'Tu solicitud ha sido registrada con el siguiente número de folio:';
+
+export const ACCIONES_TABLA_ACUSE = [
+  {
+    tipo: 'ver',
+    label: 'Ver documento',
+    icono: 'bi-eye',
+  },
+  {
+    tipo: 'descargar',
+    label: 'Descargar',
+    icono: 'bi-arrow-bar-down',
+  },
+];
