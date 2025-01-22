@@ -14,12 +14,14 @@
       <td>{{ row[item.key] }}</td>
       }
       @if (accionesTabla.length) {
-      @for (accion of accionesTabla; track $index) {
       <td class="center">
-        <button type="button" class="btn btn-link" data-bs-toggle="tooltip" data-bs-placement="top" [title]="accion.label"
-          [ngClass]="accion.icono" ></button>
+        @for (accion of accionesTabla; track $index) {
+        <button type="button" class="btn btn-link me-2"  [id]="accion.tipo" data-bs-toggle="button" data-bs-placement="top"
+          [title]="accion.label">
+          <i class="bi bi-c" [ngClass]="accion.icono"></i>
+        </button>
+        }
       </td>
-      }
       }
     </tr>
     }
