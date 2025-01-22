@@ -34,7 +34,8 @@
           <div class="form-group">
             <label class="form-label" for="nroRegistro">Número de registro o programa:</label>
             <input class="form-control" id="nroRegistro" placeholder="Numero de registro" type="text"
-              formControlName="nroRegistro" [ngClass]="isValid(datosImportadorExportador, 'nroRegistro') ? 'required' : ''">
+              formControlName="nroRegistro"
+              [ngClass]="isValid(datosImportadorExportador, 'nroRegistro') ? 'required' : ''">
           </div>
         </div>
       </div>
@@ -111,7 +112,7 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-5">
       <div class="col-md-12">
         <div class="panel-group ficha-collapse" id="accordion">
           <div class="panel panel-default">
@@ -201,15 +202,12 @@
       </div>
     </ng-container>
 
-
-
     @if (solIndividual) {
     <ng-titulo titulo="Datos del pedimento" />
 
     <c-pedimento [validacion]="validacionPedimento" [datosNroPedimento]="datosPedimentoComponente"
       (validaCampos)="validaCampoPedimento()"></c-pedimento>
     }
-
 
     <ng-titulo titulo="Mercancía" />
     <div class="row">
@@ -218,29 +216,27 @@
       </div>
 
       <div class="col-md-4">
-        <select-paises [catalogosPaises]="paisesProcedencia" (paisSeleccionado)="paisProcedencia($event)"></select-paises>
+        <select-paises [catalogosPaises]="paisesProcedencia"
+          (paisSeleccionado)="paisProcedencia($event)"></select-paises>
       </div>
 
       <div class="col-md-8">
         <div class="form-group">
           <label for="descripcion" class="form-label">Descripción genérica*:</label>
-          <textarea class="form-control" rows="3" id="descripcion"></textarea>
+          <textarea class="form-control" rows="5" id="descripcion"></textarea>
         </div>
       </div>
 
       <div class="col-md-8">
         <div class="form-group">
           <label for="justificacion" class="form-label">Justificación*:</label>
-          <textarea class="form-control" rows="3" id="justificacion"></textarea>
+          <textarea class="form-control" rows="5" id="justificacion"></textarea>
         </div>
       </div>
     </div>
 
-
     <ng-titulo titulo="Personas responsables del despacho (máximo 5)" />
-    <agrega-personas/>
-
-
+    <agrega-personas />
 
     <ng-titulo titulo="Pagos" />
     <div class="row rf">
