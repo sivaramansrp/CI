@@ -33,10 +33,16 @@ export class AcusePageComponent {
 
   acciones: AccionesTabla[] = [
     {
+      tipo: 'ver',
+      label: 'Ver documento',
+      icono: 'bi-eye'
+    },
+    {
       tipo: 'descargar',
       label: 'Descargar',
-      icono: 'bi bi-arrow-bar-down bi-c'
-    }
+      icono: 'bi-arrow-bar-down'
+    },
+
   ]
 
 
