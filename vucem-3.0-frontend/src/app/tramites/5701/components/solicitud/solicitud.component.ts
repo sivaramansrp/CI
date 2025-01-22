@@ -8,9 +8,7 @@ import {
   InputFecha,
   InputHora,
 } from '../../../../core/models/shared/components.model';
-import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 import {
-  Form,
   FormArray,
   FormBuilder,
   FormGroup,
@@ -27,7 +25,6 @@ import {
   IMMEX,
   INDUSTRIA_AUTOMOTRIZ,
   PROGRAMA_FOMENTO,
-  SEMANA_D,
   SOCIO_COMERCIAL,
 } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import {
