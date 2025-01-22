@@ -15,8 +15,6 @@ import {
   DatosRepresentanteLegal,
   DatosRfcResponse,
 } from '../../../core/models/shared/components.model';
-import { SharedModule } from '../../shared.module';
-import { SoloNumerosDirective } from '../../directives/solo-numeros/solo-numeros.directive';
 import { NumeroTelefonicoDirective } from '../../directives/numeroTelefonico/numero-telefonico.directive';
 import { CORREO_INVALIDO } from '../../constantes/mensajes-error-formularios';
 import {
@@ -42,7 +40,6 @@ export class RepresentanteFiscalComponent {
   MENSAJE_REQUERIDO = REQUERIDO;
   RFC_INVALIDO = RFC_INVALIDO;
   CORREO_INVALIDO = CORREO_INVALIDO;
-
 
   rfcBusqueda: FormControl = new FormControl('', [
     Validators.required,
@@ -81,13 +78,18 @@ export class RepresentanteFiscalComponent {
   }
 
   /**
+   * Retorna un booleano si el campo tiene un error de pattern
+   * @returns {boolean | null}
+   */
+  errorEmail(control: AbstractControl, campo?: string): boolean | null {
+    return this.validacionesService.errorEmail(control, campo);
+  }
+
+  /**
    * Retorna un booleano si el campo tiene un error de requerido
    * @returns {boolean | null}
    */
-  errorRequerido(
-    control: AbstractControl,
-    field?: string
-  ): boolean | null {
+  errorRequerido(control: AbstractControl, field?: string): boolean | null {
     return this.validacionesService.errorCampoRequerido(control, field);
   }
 
@@ -120,11 +122,7 @@ export class RepresentanteFiscalComponent {
       telefono: [null, [Validators.required, Validators.maxLength(15)]],
       correo: [
         '',
-        [
-          Validators.required,
-          Validators.maxLength(50),
-          Validators.pattern(this.validacionesService.correoPattern),
-        ],
+        [Validators.required, Validators.maxLength(50), Validators.email],
       ],
     });
   }
@@ -161,7 +159,9 @@ export class RepresentanteFiscalComponent {
       // Activamos los campos desactivados en el formulario para que se pueda ingresar la información.
       camposDisabled.forEach((campo) => {
         this.representanteLegalForm.controls[campo].enable();
-        this.representanteLegalForm.controls[campo].setValidators([Validators.required]);
+        this.representanteLegalForm.controls[campo].setValidators([
+          Validators.required,
+        ]);
         this.representanteLegalForm.controls[campo].updateValueAndValidity();
       });
     }
