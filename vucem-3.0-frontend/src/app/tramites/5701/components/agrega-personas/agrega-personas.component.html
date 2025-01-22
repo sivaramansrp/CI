@@ -4,7 +4,7 @@
     <input class="form-control" id="gafete" [formControl]="gafete" placeholder="" type="text"
       [ngClass]="gafeteIsValid ? 'required' : ''">
   </div>
-  <div class="col-md-4 d-flex align-items-center">
+  <div class="col-md-4 d-flex align-items-end">
     <div class="btn-group">
       <button class="btn btn-default" type="button" (click)="buscarGafete()">Buscar</button>
       <button class="btn btn-primary ms-2" type="button" (click)="agregarPersona()">Agregar</button>
@@ -13,7 +13,7 @@
 </div>
 
 <form action="" [formGroup]="personaForm">
-  <div class="row">
+  <div class="row mt-5">
     <div class="col-md-4 form-group">
       <label class="form-label" for="nombre">Nombre(s):</label>
       <input class="form-control" id="nombre" placeholder="" type="text" formControlName="nombre"
@@ -32,7 +32,7 @@
   </div>
 </form>
 
-<div class="row">
+<div class="row mt-5">
   <div class="col-md-12">
     <table class="table table-responsive">
       <thead>

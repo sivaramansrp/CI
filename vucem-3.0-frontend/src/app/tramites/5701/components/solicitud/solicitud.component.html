@@ -3,7 +3,7 @@
 
   <div class="row">
     <div class="col-md-4">
-      <select-catalogos [catalogosDatos]="datosTiposSolicitud" (valorSelección)="tipoSolicitud($event)" />
+      <select-catalogos [catalogosDatos]="datosTiposSolicitud" (valorSeleccion)="tipoSolicitud($event)" />
     </div>
   </div>
 
@@ -111,7 +111,7 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-5">
       <div class="col-md-12">
         <div class="panel-group ficha-collapse" id="accordion">
           <div class="panel panel-default">
@@ -149,7 +149,7 @@
 
       <div class="row">
         <div class="col-md-4">
-          <select-catalogos [catalogosDatos]="aduanas" (valorSelección)="aduanaSeleccion($event)" />
+          <select-catalogos [catalogosDatos]="aduanas" (valorSeleccion)="aduanaSeleccion($event)" />
         </div>
         <div class="col-md-4">
           <label for="seccionAduanera" class="form-label">Sección aduanera*:</label>
@@ -214,11 +214,11 @@
     <ng-titulo titulo="Mercancía" />
     <div class="row">
       <div class="col-md-4">
-        <select-catalogos [catalogosDatos]="paisesOrigen" (valorSelección)="paisOrigen($event)" />
+        <select-catalogos [catalogosDatos]="paisesOrigen" (valorSeleccion)="paisOrigen($event)" />
       </div>
 
       <div class="col-md-4">
-        <select-catalogos [catalogosDatos]="paisesProcedencia" (valorSelección)="paisProcedencia($event)" />
+        <select-catalogos [catalogosDatos]="paisesProcedencia" (valorSeleccion)="paisProcedencia($event)" />
       </div>
 
       <div class="col-md-8">
