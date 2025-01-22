@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { Catalogo } from '../../../../core/models/5701/catalogos.model';
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
+import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
 
 @Component({
   selector: 'paso-dos',
@@ -16,7 +17,7 @@ export class PasoDosComponent {
   documentosSeleccionados: Array<Catalogo> = [];
 
   constructor(
-    private sExtraordinarios: ServiciosExtraordinariosService,
+    private catalogosServices: CatalogosService,
   ) {}
 
   ngOnInit() {
@@ -35,7 +36,7 @@ export class PasoDosComponent {
   }
 
   getTiposDocumentos() {
-    this.sExtraordinarios.getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).subscribe((resp) => {
+    this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).subscribe((resp) => {
       if (resp.length > 0) {
         this.tiposDocumentos = resp;
       }

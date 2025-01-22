@@ -27,6 +27,7 @@ import { AgregarTransporteComponent } from "../../shared/components/agregar-tran
 import { PedimentoComponent } from './components/pedimento/pedimento.component';
 import { AgregaPersonasComponent } from "./components/agrega-personas/agrega-personas.component";
 import { RepresentanteFiscalComponent } from '../../shared/components/representante-fiscal/representante-fiscal.component';
+import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
 
 
 
@@ -62,6 +63,7 @@ import { RepresentanteFiscalComponent } from '../../shared/components/representa
     PedimentoComponent,
     AgregaPersonasComponent,
     RepresentanteFiscalComponent,
+    SelectPaisesComponent
 ],
 exports: [
   SolicitudComponent,

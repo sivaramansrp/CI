@@ -214,11 +214,12 @@
     <ng-titulo titulo="Mercancía" />
     <div class="row">
       <div class="col-md-4">
-        <select-catalogos [catalogosDatos]="paisesOrigen" (valorSeleccion)="paisOrigen($event)" />
+        <select-paises [catalogosPaises]="paisesOrigen" (paisSeleccionado)="paisOrigen($event)"></select-paises>
       </div>
 
       <div class="col-md-4">
-        <select-catalogos [catalogosDatos]="paisesProcedencia" (valorSeleccion)="paisProcedencia($event)" />
+        <select-paises [catalogosPaises]="paisesProcedencia"
+          (paisSeleccionado)="paisProcedencia($event)"></select-paises>
       </div>
 
       <div class="col-md-8">
