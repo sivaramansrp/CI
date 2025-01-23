@@ -37,4 +37,14 @@ export class FormulariosService {
   public obtenerNombresCamposForm(form: FormGroup): string[] {
     return Object.keys(form.controls);
   }
+
+  public obtenerCamposDisabled(form: FormGroup): string[] {
+    const camposDisabled: string[] = [];
+    Object.keys(form.controls).forEach((key) => {
+      if (form.controls[key].disabled) {
+        camposDisabled.push(key);
+      }
+    });
+    return camposDisabled;
+  }
 }

@@ -1,27 +1,26 @@
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
-import { SolicitudPageComponent } from "./pages/solicitud-page/solicitud-page.component";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { AcusePageComponent } from '../../shared/pages/acuse-page/acuse-page.component';
 
 export const ROUTES_SOLICITUDES: Routes = [
-    {
-        path: 'solicitud',
-        component: SolicitudPageComponent,
-        children: [
-          { path: 'solicitud',
-            component: SolicitudPageComponent
-          },
-          {
-            path: '',
-            pathMatch: 'full',
-            redirectTo: 'solicitud',
-          },
-        ]
-    },
+  {
+    path: 'solicitud',
+    component: SolicitudPageComponent,
+  },
+  {
+    path: 'acuse',
+    component: AcusePageComponent,
+  },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'solicitud',
+  },
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(ROUTES_SOLICITUDES)],
-    exports: [RouterModule]
+  imports: [RouterModule.forChild(ROUTES_SOLICITUDES)],
+  exports: [RouterModule],
 })
-
-export class ServiciosExtraordinariosRoutingModule { }
+export class ServiciosExtraordinariosRoutingModule {}

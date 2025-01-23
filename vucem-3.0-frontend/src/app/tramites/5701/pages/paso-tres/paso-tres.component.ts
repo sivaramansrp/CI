@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
-import { Catalogo } from '../../../../core/models/5701/catalogos.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'paso-tres',
@@ -9,5 +8,14 @@ import { Catalogo } from '../../../../core/models/5701/catalogos.model';
 })
 export class PasoTresComponent {
 
+  constructor(private router: Router) {}
+
+  obtieneFirma(ev: string){
+    const firma: string = ev;
+    if (firma) {
+      this.router.navigate(['servicios-extraordinarios/acuse']);
+
+    }
+  }
 
 }

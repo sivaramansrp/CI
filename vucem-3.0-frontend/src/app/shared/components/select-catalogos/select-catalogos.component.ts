@@ -5,7 +5,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { Catalogo } from '../../../core/models/5701/catalogos.model';
+import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import {
   FormControl,
   ReactiveFormsModule,
@@ -25,37 +25,39 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
 export class SelectCatalogosComponent {
   @Input() catalogosDatos!: CatalogosSelect;
 
-  @Output() valorSelección = new EventEmitter<Catalogo>();
+  @Output() valorSeleccion = new EventEmitter<Catalogo>();
 
-  tipoSolicitud: FormControl = new FormControl(0);
+  itemSeleccionado: FormControl = new FormControl(0);
+
+  constructor(private validacionesService: ValidacionesFormularioService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['catalogosDatos'].currentValue) {
       this.catalogosDatos = changes['catalogosDatos'].currentValue;
       if (this.catalogosDatos.required) {
-        this.tipoSolicitud.setValidators([Validators.required]);
-        this.tipoSolicitud.updateValueAndValidity();
+        this.itemSeleccionado.setValidators([
+          Validators.required,
+          this.validacionesService.noCeroValidator(),
+        ]);
+        this.itemSeleccionado.updateValueAndValidity();
       }
     }
   }
 
-  /**
-   *
-   * @returns
-   */
-  isValid() {
-    return this.tipoSolicitud.errors && this.tipoSolicitud.touched;
+  isValid(): boolean | null {
+    return this.itemSeleccionado.errors && this.itemSeleccionado.touched;
   }
 
   seleccion() {
-    const opcionSeleccionada = parseInt(this.tipoSolicitud.value);
+    const opcionSeleccionada = parseInt(this.itemSeleccionado.value);
 
     let seleccion: Catalogo;
 
     this.catalogosDatos.catalogos.forEach((el: Catalogo) => {
+      el.id = (typeof(el.id) === 'string') ? parseInt(el.id) : el.id;
       if (el.id === opcionSeleccionada) {
         seleccion = el;
-        this.valorSelección.emit(seleccion);
+        this.valorSeleccion.emit(seleccion);
       }
     });
   }

@@ -10,10 +10,11 @@ import {
 import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
 import { ServiciosExtraordinariosService } from './../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 import { CatalogosSelect } from '../../../core/models/shared/components.model';
-import { Catalogo } from '../../../core/models/5701/catalogos.model';
+import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import * as CONSTANTES from '../../constantes/formularios-transportes.enums';
 import { CampoForm } from '../../../core/models/shared/forms-model';
 import { InputFechaComponent } from '../input-fecha/input-fecha.component';
+import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
 @Component({
   selector: 'agregar-transporte',
   standalone: true,
@@ -37,7 +38,7 @@ export class AgregarTransporteComponent {
 
   constructor(
     private fb: FormBuilder,
-    private sExtraordinarios: ServiciosExtraordinariosService
+    private catalogosServices: CatalogosService
   ) {
     this.crearFormTransporte();
   }
@@ -95,7 +96,7 @@ export class AgregarTransporteComponent {
   }
 
   getTiposTransporte() {
-    this.sExtraordinarios
+    this.catalogosServices
       .getCatalogos('cat-tipo-transporte.json')
       .subscribe((resp) => {
         if (resp.code === 200) {

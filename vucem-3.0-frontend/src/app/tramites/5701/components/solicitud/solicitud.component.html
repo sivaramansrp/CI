@@ -3,7 +3,7 @@
 
   <div class="row">
     <div class="col-md-4">
-      <select-catalogos [catalogosDatos]="datosTiposSolicitud" (valorSelección)="tipoSolicitud($event)" />
+      <select-catalogos [catalogosDatos]="datosTiposSolicitud" (valorSeleccion)="tipoSolicitud($event)" />
     </div>
   </div>
 
@@ -14,7 +14,7 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="control-label" for="rfcImportExport">RFC*:</label>
+            <label class="form-label" for="rfcImportExport">RFC*:</label>
             <input class="form-control" id="rfcImportExport" placeholder="RFC" type="text"
               formControlName="rfcImportExport"
               [ngClass]="isValid(datosImportadorExportador,'rfcImportExport') ? 'required' : ''" appUppercase
@@ -23,7 +23,7 @@
         </div>
         <div class="col-md-8">
           <div class="form-group">
-            <label class="control-label" for="nombreImportExport">Nombre*:</label>
+            <label class="form-label" for="nombreImportExport">Nombre*:</label>
             <input class="form-control" id="nombreImportExport" formControlName="nombreImportExport"
               placeholder="Nombre" type="text" appUppercase>
           </div>
@@ -32,8 +32,8 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="control-label" for="nombre_imp">Número de registro o programa:</label>
-            <input class="form-control" id="rfc_imp" placeholder="Numero de registro" type="text"
+            <label class="form-label" for="nroRegistro">Número de registro o programa:</label>
+            <input class="form-control" id="nroRegistro" placeholder="Numero de registro" type="text"
               formControlName="nroRegistro" [ngClass]="isValid(datosImportadorExportador, 'nroRegistro') ? 'required' : ''">
           </div>
         </div>
@@ -59,15 +59,15 @@
         </div>
         <div class="col-md-4">
           <input class="form-check-input me-3" type="radio" name="certficacion" value="a" id="certficacion_a">
-          <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación A:</label>
+          <label class="form-label" for="certficacion_a">I.V.A e I.E.P.S Certificación A:</label>
         </div>
         <div class="col-md-4">
           <input class="form-check-input me-3" type="radio" name="certficacion" value="aa" id="certficacion_aa">
-          <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación AA:</label>
+          <label class="form-label" for="certficacion_aa">I.V.A e I.E.P.S Certificación AA:</label>
         </div>
         <div class="col-md-4">
           <input class="form-check-input me-3" type="radio" name="certficacion" value="aaa" id="certficacion_aaa">
-          <label class="control-label" for="nombre_imp">I.V.A e I.E.P.S Certificación AAA:</label>
+          <label class="form-label" for="certficacion_aaa">I.V.A e I.E.P.S Certificación AAA:</label>
         </div>
       </div>
 
@@ -77,13 +77,13 @@
         </div>
 
         <div class="col-md-4">
-          <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
-          <label class="control-label" for="nombre_imp">Operador económico autorizado</label>
+          <input class="form-check-input me-3" type="checkbox" value="" id="opEconomicoAut">
+          <label class="form-label" for="opEconomicoAut">Operador económico autorizado</label>
         </div>
 
         <div class="col-md-4">
-          <input class="form-check-input me-3" type="checkbox" value="" id="flexCheckDefault">
-          <label class="control-label" for="nombre_imp">Revisión en origen</label>
+          <input class="form-check-input me-3" type="checkbox" value="" id="revisionOrigen">
+          <label class="form-label" for="revisionOrigen">Revisión en origen</label>
         </div>
       </div>
     </ng-container>
@@ -111,7 +111,7 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-5">
       <div class="col-md-12">
         <div class="panel-group ficha-collapse" id="accordion">
           <div class="panel panel-default">
@@ -149,11 +149,11 @@
 
       <div class="row">
         <div class="col-md-4">
-          <select-catalogos [catalogosDatos]="aduanas" (valorSelección)="aduanaSeleccion($event)" />
+          <select-catalogos [catalogosDatos]="aduanas" (valorSeleccion)="aduanaSeleccion($event)" />
         </div>
         <div class="col-md-4">
-          <label for="tipoSolicitud" class="control-label">Sección aduanera*:</label>
-          <select class="form-control" id="tipo-solicitud">
+          <label for="seccionAduanera" class="form-label">Sección aduanera*:</label>
+          <select class="form-control" id="seccionAduanera">
             <option>Selecciona un valor</option>
             <option>32 - 304 - AEROPUERTO INTERNACIONAL GENERAL. LUCIO BLANCO, CIUDAD REYNOSA, TAMAULIPAS.</option>
             <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
@@ -162,8 +162,8 @@
 
         </div>
         <div class="col-md-4">
-          <label for="tipoSolicitud" class="control-label">Nombre del recinto:</label>
-          <select class="form-control" id="tipo-solicitud" disabled>
+          <label for="recinto" class="form-label">Nombre del recinto:</label>
+          <select class="form-control" id="recinto" disabled>
             <option>Selecciona un valor</option>
             <option>Individual</option>
             <option>Semanal</option>
@@ -174,26 +174,26 @@
 
       <div class="row">
         <div class="col-md-4">
-          <label for="tipoSolicitud" class="control-label">Tipo de operación*:</label>
-          <select class="form-control" id="tipo-solicitud">
+          <label for="operacion" class="form-label">Tipo de operación*:</label>
+          <select class="form-control" id="operacion">
             <option>Selecciona un valor</option>
             <option>Importación</option>
             <option>Exportación</option>
           </select>
         </div>
         <div class="col-md-4">
-          <label for="patente" class="control-label">Patente/Número de autorización:</label>
+          <label for="patente" class="form-label">Patente/Número de autorización:</label>
           <input class="form-control" type="text" name="patente" id="patente" formControlName="patente">
         </div>
         <div class="col-md-4">
-          <div class="group-checkbox">
+          <div class="form-check">
             <div>
-              <label class="control-label" for="nombre_imp">Relación de sociedad: </label>
-              <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
+              <label class="form-label" for="relacionSociedad">Relación de sociedad: </label>
+              <input class="form-check-input ms-3" type="checkbox" value="" id="relacionSociedad">
             </div>
             <div>
-              <label class="control-label" for="nombre_imp">Encargo conferido:</label>
-              <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault">
+              <label class="form-label" for="encargoConferido">Encargo conferido:</label>
+              <input class="form-check-input ms-3" type="checkbox" value="" id="encargoConferido">
             </div>
           </div>
 
@@ -214,24 +214,25 @@
     <ng-titulo titulo="Mercancía" />
     <div class="row">
       <div class="col-md-4">
-        <select-catalogos [catalogosDatos]="paisesOrigen" (valorSelección)="paisOrigen($event)" />
+        <select-paises [catalogosPaises]="paisesOrigen" (paisSeleccionado)="paisOrigen($event)"></select-paises>
       </div>
 
       <div class="col-md-4">
-        <select-catalogos [catalogosDatos]="paisesProcedencia" (valorSelección)="paisProcedencia($event)" />
+        <select-paises [catalogosPaises]="paisesProcedencia"
+          (paisSeleccionado)="paisProcedencia($event)"></select-paises>
       </div>
 
       <div class="col-md-8">
         <div class="form-group">
-          <label for="tipoSolicitud" class="control-label">Descripción genérica*:</label>
-          <textarea class="form-control" rows="3"></textarea>
+          <label for="descripcion" class="form-label">Descripción genérica*:</label>
+          <textarea class="form-control" rows="3" id="descripcion"></textarea>
         </div>
       </div>
 
       <div class="col-md-8">
         <div class="form-group">
-          <label for="tipoSolicitud" class="control-label">Justificación*:</label>
-          <textarea class="form-control" rows="3"></textarea>
+          <label for="justificacion" class="form-label">Justificación*:</label>
+          <textarea class="form-control" rows="3" id="justificacion"></textarea>
         </div>
       </div>
     </div>
@@ -245,19 +246,19 @@
     <ng-titulo titulo="Pagos" />
     <div class="row rf">
       <div class="col-md-4 form-group">
-        <label class="control-label" for="nombre_imp">Monto a pagar:</label>
-        <input class="form-control" id="rfc_imp" placeholder="" type="text">
+        <label class="form-label" for="montoPagar">Monto a pagar:</label>
+        <input class="form-control" id="montoPagar" placeholder="" type="text">
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-4 form-group">
-        <label class="control-label" for="nombre_imp">Línea de captura*:</label>
-        <input class="form-control" id="rfc_imp" placeholder="" type="text">
+        <label class="form-label" for="lineaCaptura">Línea de captura*:</label>
+        <input class="form-control" id="lineaCaptura" placeholder="" type="text">
       </div>
       <div class="col-md-4 form-group">
-        <label class="control-label" for="nombre_imp">Monto*:</label>
-        <input class="form-control" id="rfc_imp" placeholder="" type="text">
+        <label class="form-label" for="monto">Monto*:</label>
+        <input class="form-control" id="monto" placeholder="" type="text">
       </div>
 
     </div>
