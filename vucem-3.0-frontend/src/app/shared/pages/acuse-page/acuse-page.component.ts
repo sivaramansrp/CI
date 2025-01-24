@@ -1,17 +1,11 @@
 import { Component } from '@angular/core';
 import {
-  ACCIONES_TABLA_ACUSE,
+  ACUSE_SERVICIOS_EXTRAORDINARIOS,
   TXT_TITULO,
 } from '../../constantes/servicios-extraordinarios.enum';
-import {
-  AccionesTabla,
-  ConfiguracionTabla,
-  EncabezadosTabla,
-} from '../../../core/models/shared/components.model';
-import { TituloComponent } from '../../components/titulo/titulo.component';
-import { TablaComponent } from '../../components/tabla/tabla.component';
-import { AlertComponent } from '../../components/alert/alert.component';
+import { DatosPageAcuse } from '../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
+import { AcuseComponent } from '../../components/acuse/acuse.component';
 
 @Component({
   templateUrl: './acuse-page.component.html',
@@ -19,33 +13,11 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [
     CommonModule,
-    TituloComponent,
-    TablaComponent,
-    AlertComponent,
+    AcuseComponent,
   ],
 })
 export class AcusePageComponent {
-  folio = '123456';
-  txtTitulo = `${TXT_TITULO} <${this.folio}>`;
+  datosPageAcuse: DatosPageAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS;
 
-  encabezadoTablaAcuses: EncabezadosTabla[] = [
-    {
-      key: 'id',
-      valor: 'No.',
-    },
-    {
-      key: 'documento',
-      valor: 'Documento.',
-    },
-  ];
-
-  datosTablaAcuses: ConfiguracionTabla[] = [
-    {
-      id: 1,
-      idDocumento: 'doc12',
-      documento: 'Acuse de recepción de trámite',
-    },
-  ];
-
-  acciones: AccionesTabla[] = ACCIONES_TABLA_ACUSE;
+  folio = '123456'; // Lo traemos de los estados
 }

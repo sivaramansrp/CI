@@ -138,15 +138,37 @@ export const FECHA_FINAL = {
 export const TXT_TITULO =
   'Tu solicitud ha sido registrada con el siguiente número de folio:';
 
-export const ACCIONES_TABLA_ACUSE = [
-  {
-    tipo: 'ver',
-    label: 'Ver documento',
-    icono: 'bi-eye',
-  },
-  {
-    tipo: 'descargar',
-    label: 'Descargar',
-    icono: 'bi-arrow-bar-down',
-  },
-];
+export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
+  txtAlerta:
+    'Tu solicitud ha sido registrada con el siguiente número de folio:',
+  tituloSeccionAcuse: 'Acuse(s)',
+  encabezadoTablaAcuse: [
+    {
+      key: 'id',
+      valor: 'No.',
+    },
+    {
+      key: 'documento',
+      valor: 'Documento.',
+    },
+  ],
+  datosTablaAcuse: [
+    {
+      id: 1,
+      idDocumento: 'doc12',
+      documento: 'Acuse de recepción de trámite',
+    },
+  ],
+  accionesTablaAcuse: [
+    {
+      tipo: 'ver',
+      label: 'Ver documento',
+      icono: 'bi-eye',
+    },
+    {
+      tipo: 'descargar',
+      label: 'Descargar',
+      icono: 'bi-arrow-bar-down',
+    },
+  ],
+};

@@ -110,3 +110,11 @@ export interface DatosRepresentanteLegal {
   telefono: string;
   correo: string;
 }
+
+export interface DatosPageAcuse {
+  txtAlerta: string;
+  tituloSeccionAcuse: string;
+  encabezadoTablaAcuse: EncabezadosTabla[];
+  datosTablaAcuse: ConfiguracionTabla[];
+  accionesTablaAcuse: AccionesTabla[];
+}
