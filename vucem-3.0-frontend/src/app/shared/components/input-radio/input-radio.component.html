@@ -1,0 +1,29 @@
+
+
+<div class="form-group">
+<form [formGroup]="FormInputRadio"> 
+    <div *ngFor="let option of radioOptions">
+        <label> </label>
+          <input 
+            type="radio"
+            [value]="option.value"
+            [checked]="selectedValue === option.value"
+            (change)="onSelectionChange(option.value)"
+            formControlName="seleccion" 
+          />
+          {{ option.label }}
+       
+      </div>
+      
+</form>
+</div>
+
+  
+  <!-- <div class="form-group">
+    <form [formGroup]="FormInput">
+      <label class="form-label" for="nombre_imp">{{datos.labelNombre}}:</label>
+      <input class="form-check-input ms-3" type="checkbox" value="" id="flexCheckDefault" formControlName="seleccion" (change)="seleccion()">
+      <input class="form-control" id="valorInput" placeholder="" type="text" formControlName="valorInput" (blur)="onBlurEvent()">
+    </form>
+  </div> -->
+  

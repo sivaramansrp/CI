@@ -1,1 +1,29 @@
-<p>datos-del works!</p>
+<div class="container">
+    <form >
+        <ng-titulo titulo="Datos del tramite a realizar" />
+        <div class="row">
+            <div class="col-md-12">
+                <label for="solicitud.tipoMercancia">Tipo de Certificado</label>
+                <span class="require">*</span>
+                <label for="puntos"></label>
+            </div>
+        </div>
+        <app-input-radio
+        [radioOptions]="radioOptions"
+        [selectedValue]="selectedValue"
+        (valueChange)="onValueChange($event)"
+      ></app-input-radio>
+      <div class="row mt-4">
+        <div class="col-md-12">
+            
+               <label for="message" class="form-label">Tratamiento :</label>
+               <textarea
+                 id="message"
+                 class="form-control mb-5"
+                 placeholder="Type your message here..."
+               ></textarea>
+        </div>
+    </div>
+   
+    </form>
+    </div>

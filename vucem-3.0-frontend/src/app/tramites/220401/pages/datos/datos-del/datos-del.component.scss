@@ -1,0 +1,65 @@
+
+//   .container {
+//     max-width: 800px;
+//     margin: 20px auto;
+//     padding: 10px;
+//   }
+
+//   .form-group {
+//     margin-bottom: 20px;
+//   }
+
+//   .form-group label {
+//     display: block;
+//     margin-bottom: 8px;
+//     font-size: 16px;
+//     font-weight: bold;
+//   }
+
+//   .form-group textarea {
+//     width: 100%; /* Takes full width of the container */
+//     height: 150px; /* Default height */
+//     padding: 10px;
+//     font-size: 16px;
+//     border: 1px solid #ccc;
+//     border-radius: 4px;
+//     resize: vertical; /* Allow resizing only vertically */
+//   }
+
+//   /* Responsive adjustments */
+//   @media (max-width: 768px) {
+//     .form-group textarea {
+//       height: 120px; /* Adjust height for smaller screens */
+//     }
+//   }
+
+//   @media (max-width: 480px) {
+//     .form-group textarea {
+//       height: 100px; /* Further adjust height for very small screens */
+//     }
+//   }
+
+textarea {
+    width: 100%; /* Takes the full width of the container */
+    min-height: 120px; /* Minimum height */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical; /* Allow only vertical resizing */
+    box-sizing: border-box; /* Includes padding and border in the element's total width/height */
+  }
+  
+  /* Adjustments for smaller screens */
+  @media (max-width: 768px) {
+    textarea {
+      min-height: 100px; /* Slightly smaller height for smaller screens */
+      font-size: 14px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    textarea {
+      min-height: 80px; /* Further reduced height for very small screens */
+    }
+  }
