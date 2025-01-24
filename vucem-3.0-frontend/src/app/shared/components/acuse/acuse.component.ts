@@ -27,10 +27,4 @@ export class AcuseComponent {
   ngOnInit(): void {
     this.txtAlerta = `${this.datosPageAcuse.txtAlerta} <${this.folio}>`
   }
-  // @Input() txtTitulo!: string;
-  // @Input() tituloSeccionAcuse!: string;
-  // @Input() encabezadoTablaAcuses!: EncabezadosTabla[];
-  // @Input() datosTablaAcuses!: ConfiguracionTabla[];
-  // @Input() acciones!: AccionesTabla[];
-
 }
