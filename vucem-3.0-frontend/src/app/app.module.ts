@@ -1,6 +1,9 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
+import { provideToastr, ToastrModule } from 'ngx-toastr';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideToastr, ToastrModule } from 'ngx-toastr';
@@ -24,6 +27,7 @@ import { TituloComponent } from "./shared/components/titulo/titulo.component";
     AppRoutingModule,
     NavComponent,
     HttpClientModule,
+    AkitaNgDevtools,
     BreadcrumbComponent,
     HeaderComponent,
     FooterComponent,

@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
-import { COOKIE } from '../../shared/constantes/constantes';
 import { Router } from '@angular/router';
+import { TipoPersona } from '../../core/enums/tipoPersona.enum';
+import { PerfilUsuario } from '../../core/models/usuario/perfilUsuario.model';
+import { Rol } from '../../core/models/usuario/rol.model';
+import { UsuarioStore } from './../../estados/usuario.store';
 
 @Component({
   templateUrl: './auth-page.component.html',
@@ -9,7 +12,12 @@ import { Router } from '@angular/router';
 export class AuthPageComponent {
   indice: number = 1;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private usuarioStore: UsuarioStore,
+  ) {
+    
+  }
 
   seleccionaTab(i: number): void {
     this.indice = i;
@@ -17,18 +25,18 @@ export class AuthPageComponent {
 
   validarEFirma(login: boolean) {
     if ( login ) {
-      const datosUsuario = {
-        id_user: 'LEQI',
-        rol: 1,
+      const roles: Rol[] = [{idRol: 1, codigoRol:'', nombre:'', descripcion:''}];
+      const perfilUsuario: PerfilUsuario = {
+        nombre: '',
+        apellidoPaterno: '',
+        apellidoMaterno: '',
+        nombreCompleto: '',
         rfc: '',
-        tipo_persona: 'Física',
-        jwt: '',
-      };
+        correoElectronico: '',
+        tipoPersona: TipoPersona.FISICA
+      }
+      this.usuarioStore.establecerUsuario('LEQI', perfilUsuario, roles, '');
 
-      localStorage.setItem(
-        COOKIE.NOMBRE_COOKIE_ID_USUARIO,
-        datosUsuario.id_user
-      );
       this.router.navigateByUrl('/seleccion-tramite');
     }
   }
