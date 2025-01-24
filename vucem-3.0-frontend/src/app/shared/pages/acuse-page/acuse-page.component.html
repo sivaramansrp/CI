@@ -1,1 +1,27 @@
-<p>acuse-page works!</p>
+<div class="page">
+  <div class="container">
+    <div class="row">
+      <div class="col-md 6">
+        <h1>Acuse de recibo</h1>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <ng-alert [CONTENIDO]="txtTitulo"></ng-alert>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <ng-titulo [titulo]="'Acuse(s)'"></ng-titulo>
+
+        <ng-tabla [encabezadosTabla]="encabezadoTablaAcuses" [datosTabla]="datosTablaAcuses" [accionesTabla]="acciones"></ng-tabla>
+
+      </div>
+    </div>
+  </div>
+
+
+
+</div>

@@ -27,7 +27,6 @@ import { AgregarTransporteComponent } from "../../shared/components/agregar-tran
 import { PedimentoComponent } from './components/pedimento/pedimento.component';
 import { AgregaPersonasComponent } from "./components/agrega-personas/agrega-personas.component";
 import { RepresentanteFiscalComponent } from '../../shared/components/representante-fiscal/representante-fiscal.component';
-import { AcusePageComponent } from './pages/acuse-page/acuse-page.component';
 import { TablaComponent } from '../../shared/components/tabla/tabla.component';
 import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
 
@@ -41,7 +40,6 @@ import { SelectPaisesComponent } from '../../shared/components/select-paises/sel
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    AcusePageComponent,
  ] ,
   imports: [
     CommonModule,
