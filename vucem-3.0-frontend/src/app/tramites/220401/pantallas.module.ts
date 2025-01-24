@@ -11,16 +11,11 @@ import { DatosDelComponent } from './pages/datos/datos-del/datos-del.component';
 
 @NgModule({
   declarations: [
-    PantallasComponent,
-    DatosComponent,
-    SolicitudComponent,
-    DatosDelComponent,
   ],
   imports: [
     CommonModule,
-    PantallasRoutingModule,    
-    NavComponent,
-    WizardComponent,
+    PantallasRoutingModule,
+    PantallasComponent
   ]
 })
 export class PantallasModule { }
