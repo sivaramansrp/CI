@@ -44,7 +44,6 @@ export class AnexarDocumentosComponent {
   modal: string = '';
   indiceDocumento!: number;
 
-  @ViewChild('modalConfirmacion') modalElement!: ElementRef;
   datosLogin: Login = {
     user: 'user1@example.com',
     password: 'clave1',
@@ -53,6 +52,7 @@ export class AnexarDocumentosComponent {
   token!: string;
   base64File: string = '';
 
+  @ViewChild('modalConfirmacion') modalConfirmacion!: ElementRef;
 
   constructor(
     private catalogosServices: CatalogosService,

@@ -22,12 +22,6 @@ export interface CatalogosSelectPaises {
   catalogos: Array<CatalogoPaises>;
 }
 
-export interface CatalogosSelectPaises {
-  labelNombre: string;
-  required: boolean;
-  primerOpcion: string;
-  catalogos: Array<CatalogoPaises>;
-}
 
 export interface DatosPasos {
   txtBtnSig: string;

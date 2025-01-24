@@ -49,11 +49,13 @@ export class SelectPaisesComponent {
 
     let seleccion: CatalogoPaises;
 
-    this.catalogosPaises.catalogos.forEach((el: CatalogoPaises) => {
-      if (el.id === opcionSeleccionada) {
-        seleccion = el;
-        this.paisSeleccionado.emit(seleccion);
+    (this.catalogosPaises.catalogos).forEach(
+      (el: CatalogoPaises) => {
+        if (el.id === opcionSeleccionada) {
+          seleccion = el;
+          this.paisSeleccionado.emit(seleccion);
+        }
       }
-    });
+    );
   }
 }

@@ -52,7 +52,6 @@ export class FirmaElectronicaComponent {
     return this.formValidator.isValid(this.FormCertificado, field);
   }
 
-
   /**
    * Lee el archivo seleccionado y lo convierte a un ArrayBuffer.
    * @param type El tipo de archivo que se esta leyendo .cer o .key.
