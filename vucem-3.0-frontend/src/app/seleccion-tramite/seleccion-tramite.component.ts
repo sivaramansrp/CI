@@ -4,7 +4,6 @@ import { AMBIENTES } from '../core/ambientes';
 @Component({
   selector: 'seleccion-tramite',
   templateUrl: './seleccion-tramite.component.html',
-  styleUrl: './seleccion-tramite.component.scss'
 })
 export class SeleccionTramiteComponent {
 
