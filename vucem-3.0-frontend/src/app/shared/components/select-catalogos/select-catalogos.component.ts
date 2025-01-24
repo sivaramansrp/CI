@@ -53,8 +53,7 @@ export class SelectCatalogosComponent {
 
     let seleccion: Catalogo;
 
-
-    (this.catalogosDatos.catalogos).forEach((el: Catalogo) => {
+    this.catalogosDatos.catalogos.forEach((el: Catalogo) => {
       el.id = (typeof(el.id) === 'string') ? parseInt(el.id) : el.id;
       if (el.id === opcionSeleccionada) {
         seleccion = el;

@@ -14,5 +14,4 @@ export class ServiciosExtraordinariosService {
   urlServer = enviroment.URL_SERVER;
 
   constructor(private http: HttpClient) {}
-
 }

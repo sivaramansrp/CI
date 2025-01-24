@@ -22,7 +22,6 @@ export interface CatalogosSelectPaises {
   catalogos: Array<CatalogoPaises>;
 }
 
-
 export interface DatosPasos {
   txtBtnSig: string;
   txtBtnAnt: string;
