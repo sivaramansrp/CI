@@ -6,14 +6,19 @@ import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { provideToastr, ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { InformacionUsuarioComponent } from "./shared/components/informacion-usuario/informacion-usuario.component";
 import { NavComponent } from './shared/components/nav/nav.component';
+import { TituloComponent } from "./shared/components/titulo/titulo.component";
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+    SeleccionTramiteComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -26,7 +31,8 @@ import { NavComponent } from './shared/components/nav/nav.component';
     InformacionUsuarioComponent,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
-    InformacionUsuarioComponent
+    InformacionUsuarioComponent,
+    TituloComponent
 ],
   providers: [
     provideToastr({

@@ -37,7 +37,7 @@ export class AuthPageComponent {
       }
       this.usuarioStore.establecerUsuario('LEQI', perfilUsuario, roles, '');
 
-      this.router.navigateByUrl('/servicios-extraordinarios/solicitud');
+      this.router.navigateByUrl('/seleccion-tramite');
     }
   }
 }
