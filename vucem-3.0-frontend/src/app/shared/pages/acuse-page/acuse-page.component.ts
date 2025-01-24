@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import {
   ACUSE_SERVICIOS_EXTRAORDINARIOS,
-  TXT_TITULO,
 } from '../../constantes/servicios-extraordinarios.enum';
 import { DatosPageAcuse } from '../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';

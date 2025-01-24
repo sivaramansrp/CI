@@ -135,8 +135,10 @@ export const FECHA_FINAL = {
   habilitado: true,
 };
 
-export const TXT_TITULO =
+export const TXT_ALERTA_ACUSE =
   'Tu solicitud ha sido registrada con el siguiente número de folio:';
+
+export const TITULO_ACUSE = 'Acuse(s)';
 
 export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
   txtAlerta:
@@ -160,11 +162,6 @@ export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
     },
   ],
   accionesTablaAcuse: [
-    {
-      tipo: 'ver',
-      label: 'Ver documento',
-      icono: 'bi-eye',
-    },
     {
       tipo: 'descargar',
       label: 'Descargar',
