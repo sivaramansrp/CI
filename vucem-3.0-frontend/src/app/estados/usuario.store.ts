@@ -1,11 +1,14 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { PerfilUsuario } from '../core/models/usuario/perfilUsuario.model';
 import { Rol } from '../core/models/usuario/rol.model';
+import { Injectable } from '@angular/core';
 
 /**
  * Estado para la información de usuario obtenida del inicio de sesión
  */
 export interface UsuarioState {
+    idUsuario: string;
+    idOrganizacion: number;
     logueado: boolean;
     token: string;
     perfilUsuario: PerfilUsuario;
@@ -18,6 +21,8 @@ export interface UsuarioState {
  */
 export function createInitialState(): UsuarioState {
   return {
+    idUsuario: null,
+    idOrganizacion: null,
     logueado: false,
     token: '',
     perfilUsuario: null,
@@ -25,6 +30,9 @@ export function createInitialState(): UsuarioState {
   };
 }
 
+@Injectable({
+  providedIn: 'root'
+})
 @StoreConfig({ name: 'usuario', resettable: true, })
 export class UsuarioStore extends Store<UsuarioState> {
   constructor() {
@@ -38,10 +46,13 @@ export class UsuarioStore extends Store<UsuarioState> {
    * @param token 
    * @param nombre
    */
-  public setUser(perfilUsuario: PerfilUsuario, roles: Rol[]) {
+  public establecerUsuario(idUsuario: string, perfilUsuario: PerfilUsuario,
+    roles: Rol[], jwt: string) {
     this.update(state => ({
       ...state,
+      idUsuario,
       logueado: true,
+      token: jwt,
       perfilUsuario,
       roles,
     }));

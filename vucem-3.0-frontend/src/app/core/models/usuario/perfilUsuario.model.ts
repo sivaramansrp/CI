@@ -6,8 +6,7 @@ export interface PerfilUsuario {
     apellidoPaterno: string;
     apellidoMaterno: string;
     nombreCompleto: string;
-    telefono: string;
+    rfc: string;
     correoElectronico: string;
-    idUsuario: number;
-    tipoUsuario: string;
+    tipoPersona: string
 }
