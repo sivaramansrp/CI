@@ -5,7 +5,7 @@ import {
   DocumentosCargados,
 } from '../../../core/models/shared/components.model';
 import { ServiciosExtraordinariosService } from '../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
-import { Catalogo } from '../../../core/models/5701/catalogos.model';
+import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import {
@@ -19,6 +19,7 @@ import {
 import { Login } from '../../../core/models/shared/inicio-sesion.model';
 import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
 import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
+import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
 
 declare const bootstrap: any; // Importación para manejar Bootstrap en TS
 
@@ -54,7 +55,7 @@ export class AnexarDocumentosComponent {
   @ViewChild('modalConfirmacion') modalConfirmacion!: ElementRef;
 
   constructor(
-    private sExtraordinarios: ServiciosExtraordinariosService,
+    private catalogosServices: CatalogosService,
     private toastr: ToastrService,
     private renderer: Renderer2,
     private inicioSesionService: InicioSesionService,
@@ -101,7 +102,7 @@ export class AnexarDocumentosComponent {
    * Obtiene los tipos de documentos disponibles.
    */
   getTiposDocumentos(): void {
-    this.sExtraordinarios
+    this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
       .subscribe({
         next: (resp): void => {

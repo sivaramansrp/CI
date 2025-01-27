@@ -36,7 +36,7 @@ export class AgregaPersonasComponent {
   ) {}
 
   isValid(field: string) {
-    return this.validacionesService.isValidField(this.personaForm, field);
+    return this.validacionesService.isValid(this.personaForm, field);
   }
 
   get gafeteIsValid() {
