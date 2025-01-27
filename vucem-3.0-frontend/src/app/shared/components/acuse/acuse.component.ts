@@ -1,4 +1,4 @@
-import { Component, Input, input } from '@angular/core';
+import { Component, Input, input, SimpleChanges } from '@angular/core';
 import { AccionesTabla, ConfiguracionTabla, DatosPageAcuse, EncabezadosTabla } from '../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { AlertComponent } from '../alert/alert.component';
@@ -19,12 +19,27 @@ import { TablaComponent } from '../tabla/tabla.component';
   styleUrl: './acuse.component.scss'
 })
 export class AcuseComponent {
-  @Input() datosPageAcuse!: DatosPageAcuse;
+  @Input() txtAlerta!: string;
+  @Input() subtitulo!: string;
+  @Input() encabezadoTablaAcuse!: EncabezadosTabla[];
+  @Input() configuracionTabla!: ConfiguracionTabla;
+  @Input() accionesTablaAcuse!: AccionesTabla[];
+  @Input() datosTablaAcuse!: any[];
+
+  // @Input() datosPageAcuse!: DatosPageAcuse;
   @Input() folio!: string;
 
-  txtAlerta!: string;
+  alerta!: string;
 
-  ngOnInit(): void {
-    this.txtAlerta = `${this.datosPageAcuse.txtAlerta} <${this.folio}>`
+  // ngOnInit(): void {
+  //   this.alerta = `${this.txtAlerta} <${this.folio}>`;
+  // }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['folio'].currentValue) {
+      console.log(changes['folio'].currentValue);
+
+      this.alerta = `${this.txtAlerta} <${this.folio}>`;
+    }
   }
 }

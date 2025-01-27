@@ -1,6 +1,11 @@
 import { Query } from '@datorama/akita';
 import { TramiteStore } from '../../estados/tramite.store';
 import { TramiteState } from '../../estados/tramite.store';
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root',
+})
 
 export class TramitesQueries extends Query<TramiteState> {
   /**
