@@ -1,0 +1,41 @@
+<div class="container">
+  <div class="row">
+    <ul class="nav nav-tabs">
+      <li [ngClass]="indice === 1 ? 'active' : ''">
+        <a data-toggle="tab" (click)="seleccionaTab(1)">Solicitante</a>
+      </li>
+      <li [ngClass]="indice === 2 ? 'active' : ''">
+        <a data-toggle="tab" (click)="seleccionaTab(2)"
+          >Datos de la solicitud</a
+        >
+      </li>
+      <li [ngClass]="indice === 3 ? 'active' : ''">
+        <a data-toggle="tab" (click)="seleccionaTab(3)"
+          >Datos para movilización nacional</a
+        >
+      </li>
+      <li [ngClass]="indice === 4 ? 'active' : ''">
+        <a data-toggle="tab" (click)="seleccionaTab(4)"
+          >Terceros relacionados</a
+        >
+      </li>
+      <li [ngClass]="indice === 5 ? 'active' : ''">
+        <a data-toggle="tab" (click)="seleccionaTab(5)">Pago de derechos</a>
+      </li>
+    </ul>
+
+    <ng-container>
+      @switch (indice) { @case (1) {
+      <solicitante></solicitante>
+      } @case (2) {
+      <datos-de-la-solicitud></datos-de-la-solicitud>
+      } @case (3) {
+      <datos-para-movilizacion-nacional></datos-para-movilizacion-nacional>
+      } @case (4) {
+      <terceror-relacionados></terceror-relacionados>
+      } @case (5) {
+      <pago-de-derechos></pago-de-derechos>
+      } }
+    </ng-container>
+  </div>
+</div>
