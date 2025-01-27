@@ -19,10 +19,17 @@ const routes: Routes = [
         (m) => m.ServiciosExtraordinariosModule
       ),
   },
+  {
+    path: 'issuance-extension',
+    loadChildren: () =>
+      import('./tramites/220201/issuance-extension-modification.module').then(
+        (m) => m.IssuanceExtensionModificationModule
+      ),
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
