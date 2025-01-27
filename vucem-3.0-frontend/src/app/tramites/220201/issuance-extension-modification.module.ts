@@ -35,6 +35,7 @@ import { RouterModule } from '@angular/router';
 
   ],
   imports: [
+
     SharedModule,
     CommonModule,
     IssuanceExtensionModificationRoutingModule,
@@ -42,7 +43,6 @@ import { RouterModule } from '@angular/router';
     TituloComponent,
     BtnContinuarComponent,
     ReactiveFormsModule
-
   ]
 })
 export class IssuanceExtensionModificationModule { }

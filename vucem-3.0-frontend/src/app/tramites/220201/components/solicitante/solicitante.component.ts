@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
 import { ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from '../../../../shared/constantes/issuance-extension-modification.enum';
@@ -57,5 +58,4 @@ export class SolicitanteComponent implements OnInit {
     });
     return formValidators;
   }
-
 }
