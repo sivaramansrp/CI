@@ -1,21 +1,30 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
+import { TramiteStore } from '../../../../estados/tramite.store';
 
 @Component({
   selector: 'paso-tres',
   templateUrl: './paso-tres.component.html',
-  styleUrl: './paso-tres.component.scss'
+  styleUrl: './paso-tres.component.scss',
 })
 export class PasoTresComponent {
+  constructor(
+    private router: Router,
+    private sercviciosExtraordinariosServices: ServiciosExtraordinariosService,
+    private tramiteStore: TramiteStore
+  ) {}
 
-  constructor(private router: Router) {}
-
-  obtieneFirma(ev: string){
+  obtieneFirma(ev: string) {
     const firma: string = ev;
     if (firma) {
-      this.router.navigate(['servicios-extraordinarios/acuse']);
-
+      // Obtiene el número de trámite
+      this.sercviciosExtraordinariosServices
+        .obtenerTramite(19)
+        .subscribe((tramite) => {
+          this.tramiteStore.establecerTramite(tramite.data, firma);
+          this.router.navigate(['servicios-extraordinarios/acuse']);
+        });
     }
   }
-
 }
