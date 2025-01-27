@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { SolicitudComponent } from './solicitud/solicitud.component';
 import { DatosDelComponent } from './datos-del/datos-del.component';
 import { CommonModule } from '@angular/common';
+import { CombinacionRequeridaComponent } from './combinacion-requerida/combinacion-requerida.component';
 
 @Component({
   selector: 'app-pantalla-datos',
@@ -12,6 +13,7 @@ import { CommonModule } from '@angular/common';
       CommonModule,
       SolicitudComponent,
       DatosDelComponent,
+      CombinacionRequeridaComponent
   ]
 })
 export class DatosComponent {
