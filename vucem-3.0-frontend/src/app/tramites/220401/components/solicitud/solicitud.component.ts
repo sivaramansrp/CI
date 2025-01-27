@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ServiciosPantallasService } from '../../../../../core/services/220471/servicios-pantallas.service';
 import { ReplaySubject, takeUntil } from 'rxjs';
-import { PantallasFormData } from '../../../../../core/models/220401/servicios-pantallas.model';
+import { PantallasFormData } from '../../../../core/models/220401/servicios-pantallas.model';
+import { ServiciosPantallasService } from '../../../../core/services/220471/servicios-pantallas.service';
 
 @Component({
   selector: 'app-solicitud',
