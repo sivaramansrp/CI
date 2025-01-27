@@ -9,6 +9,7 @@ import { NavComponent } from '../../shared/components/nav/nav.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 import { DatosDelComponent } from './pages/datos/datos-del/datos-del.component';
 import { CombinacionRequeridaComponent } from './pages/datos/combinacion-requerida/combinacion-requerida.component';
+import { TercerosRelacionadosComponent } from './pages/datos/terceros-relacionados/terceros-relacionados.component';
 
 @NgModule({
   declarations: [

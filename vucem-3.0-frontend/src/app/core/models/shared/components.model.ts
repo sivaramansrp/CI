@@ -99,3 +99,12 @@ export interface DatosRepresentanteLegal {
   telefono: string;
   correo: string;
 }
+
+export interface TableData {
+  tableHeader: Array<string>;
+  tableBody: Array<TableBodyData>;
+}
+
+export interface TableBodyData {
+  tbodyData: Array<string>;
+}
