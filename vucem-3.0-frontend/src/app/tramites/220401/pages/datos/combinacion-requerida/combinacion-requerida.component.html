@@ -3,61 +3,43 @@
     <form>
         <div class="row mb-3">
             <div class="col-md-4">
-                <label for="especie" class="form-label">Especie*</label>
-                <select class="form-select" id="especie" required>
-                    <option selected>Selecciona un valor</option>
-                    <option value="1">Opción 1</option>
-                    <option value="2">Opción 2</option>
-                </select>
+                <select-catalogos [catalogosDatos]="especie"
+                                  (valorSeleccion)="docSeleccionado($event)">
+                </select-catalogos>
             </div>
             <div class="col-md-4">
-                <label for="funcion" class="form-label">Función Zootécnica*</label>
-                <select class="form-select" id="funcion" required>
-                    <option selected>Selecciona un valor</option>
-                    <option value="1">Opción 1</option>
-                    <option value="2">Opción 2</option>
-                </select>
+                <select-catalogos [catalogosDatos]="funcionZootecnica"
+                                  (valorSeleccion)="docSeleccionado($event)">
+                </select-catalogos>
             </div>
             <div class="col-md-4">
-                <label for="mercancia" class="form-label">Mercancía*</label>
-                <select class="form-select" id="mercancia" required>
-                    <option selected>Selecciona un valor</option>
-                    <option value="1">Opción 1</option>
-                    <option value="2">Opción 2</option>
-                </select>
+                <select-catalogos [catalogosDatos]="mercancia"
+                                  (valorSeleccion)="docSeleccionado($event)">
+                </select-catalogos>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-4">
-                <label for="paisDestino" class="form-label">País Destino*</label>
-                <select class="form-select" id="paisDestino" required>
-                    <option selected>Selecciona un valor</option>
-                    <option value="1">Opción 1</option>
-                    <option value="2">Opción 2</option>
-                </select>
+                <select-catalogos [catalogosDatos]="paisDestino"
+                                  (valorSeleccion)="docSeleccionado($event)">
+                </select-catalogos>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-8">
-                <label for="nombreEstablecimiento" class="form-label">Nombre, Denominación o Razón Social*</label>
-                <select class="form-select" id="nombreEstablecimiento" required>
-                    <option selected>Selecciona un valor</option>
-                    <option value="1">Opción 1</option>
-                    <option value="2">Opción 2</option>
-                </select>
+                <select-catalogos [catalogosDatos]="nombreEstablecimiento"
+                                  (valorSeleccion)="docSeleccionado($event)">
+                </select-catalogos>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-8">
-                <label for="tipoActividad" class="form-label">Tipo de Actividad del Establecimiento*</label>
-                <select class="form-select" id="tipoActividad" required>
-                    <option selected>Selecciona un valor</option>
-                    <option value="1">Opción 1</option>
-                    <option value="2">Opción 2</option>
-                </select>
+                <select-catalogos [catalogosDatos]="tipoActividad"
+                                  (valorSeleccion)="docSeleccionado($event)">
+                </select-catalogos>
             </div>
             <div class="col-md-4">
                 <label for="otro" class="form-label">Otro</label>
@@ -91,45 +73,33 @@
 
         <div class="row mb-3">
             <div class="col-md-8">
-                <label for="aduanaSalida" class="form-label">Aduana de Salida/Lugar de Embarque*</label>
-                <select class="form-select" id="aduanaSalida" required>
-                    <option selected>Selecciona un valor</option>
-                    <option value="1">Opción 1</option>
-                    <option value="2">Opción 2</option>
-                </select>
+                <select-catalogos [catalogosDatos]="aduanaSalida"
+                                  (valorSeleccion)="docSeleccionado($event)">
+                </select-catalogos>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-8">
-                <label for="oisaSalida" class="form-label">OISA de Salida*</label>
-                <select class="form-select" id="oisaSalida" required>
-                    <option selected>Selecciona un valor</option>
-                    <option value="1">Opción 1</option>
-                    <option value="2">Opción 2</option>
-                </select>
+                <select-catalogos [catalogosDatos]="oisaSalida"
+                                  (valorSeleccion)="docSeleccionado($event)">
+                </select-catalogos>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-8">
-                <label for="regimenMercancia" class="form-label">Régimen al que se Destinará la Mercancía*</label>
-                <select class="form-select" id="regimenMercancia" required>
-                    <option selected>Selecciona un valor</option>
-                    <option value="1">Opción 1</option>
-                    <option value="2">Opción 2</option>
-                </select>
+                <select-catalogos [catalogosDatos]="regimenMercancia"
+                                  (valorSeleccion)="docSeleccionado($event)">
+                </select-catalogos>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-8">
-                <label for="paisOrigen" class="form-label">País Origen*</label>
-                <select class="form-select" id="paisOrigen" required>
-                    <option selected>MÉXICO (ESTADOS UNIDOS MEXICANOS)</option>
-                    <option value="1">Opción 1</option>
-                    <option value="2">Opción 2</option>
-                </select>
+                <select-catalogos [catalogosDatos]="paisOrigen"
+                                  (valorSeleccion)="docSeleccionado($event)">
+                </select-catalogos>
             </div>
             <div class="col-md-4">
                 <label for="fechaArribo" class="form-label">Fecha Arribo País Importador</label>
