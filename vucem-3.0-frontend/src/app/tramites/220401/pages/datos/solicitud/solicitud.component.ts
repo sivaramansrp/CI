@@ -20,7 +20,6 @@ export class SolicitudComponent implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe((formData: PantallasFormData) => {
         this.pantallasFormData = formData;
-        console.log('Form data', this.pantallasFormData);
       });
       // Set the form data
       this.pantallasFormData['solict'] = [];
