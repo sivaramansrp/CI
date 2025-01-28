@@ -11,6 +11,8 @@ import { DatosDelComponent } from './components/datos-del/datos-del.component';
 import { TransporteComponent } from './pages/transporte/transporte.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CombinacionRequeridaComponent } from './components/combinacion-requerida/combinacion-requerida.component';
+import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     SolicitudComponent,
     DatosDelComponent,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CombinacionRequeridaComponent,
+    TercerosRelacionadosComponent
   ]
 })
 export class PantallasModule { }

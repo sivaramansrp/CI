@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
-import { TituloComponent } from '../../../../../shared/components/titulo/titulo.component';
-import { TableComponent } from '../../../../../shared/components/table/table.component';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { TableComponent } from '../../../../shared/components/table/table.component';
 
 @Component({
   selector: 'app-terceros-relacionados',
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
-  standalone: true,
+   standalone: true,
   imports: [TituloComponent,TableComponent],
 })
 export class TercerosRelacionadosComponent {
+
 
   public establecimientoHeaderData: any[] = [];
   public establecimientoBodyData: any[] = [];
@@ -46,5 +47,6 @@ export class TercerosRelacionadosComponent {
     this.importadorHeaderData = ['Nombre/Denominación o Razón Social','Teléfono','Correo Electrónico','Domicilio','País'];
     this.importadorBodyData = []
   }
+
 
 }

@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './datos.component.html'
 })
 export class DatosComponent {
-  indice: number = 1;
+  indice: number = 4;
 
   seleccionaTab(i: number): void {
     this.indice = i;
