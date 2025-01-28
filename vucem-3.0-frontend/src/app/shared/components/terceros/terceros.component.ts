@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PersonaTerceros } from '../../../../core/models/5701/servicios-extraordinarios.model';
-import { CONSTANTES } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { PersonaTerceros } from '../../../core/models/5701/servicios-extraordinarios.model';
+import { CONSTANTES } from '../../constantes/servicios-extraordinarios.enum';
 
 @Component({
   selector: 'terceros',

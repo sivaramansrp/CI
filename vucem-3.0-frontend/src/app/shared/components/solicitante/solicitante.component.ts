@@ -6,9 +6,9 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { CommonModule, UpperCasePipe } from '@angular/common';
+import { SolicitanteService } from '../../../core/services/shared/solicitante/solicitante.service';
+import { TituloComponent } from '../titulo/titulo.component';
+import { CommonModule } from '@angular/common';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
@@ -16,13 +16,15 @@ import {
   PERSONA_FISICA_NACIONAL,
   PERSONA_MORAL_EXTRANJERO,
   PERSONA_MORAL_NACIONAL,
-} from '../../../../shared/constantes/solicitante-constantes.enum';
-import { TIPO_PERSONA } from '../../../../shared/constantes/constantes';
-import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
-import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
-import { UppercaseDirective } from '../../../../shared/directives/Uppercase/uppercase.directive';
-
-
+} from '../../constantes/solicitante-constantes.enum';
+import {
+  CATALOGOS_ID,
+  TIPO_PERSONA,
+} from '../../constantes/constantes';
+import { FormularioDinamico } from '../../../core/models/shared/forms-model';
+import { FormulariosService } from '../../../core/services/shared/formularios/formularios.service';
+import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'solicitante',
@@ -154,34 +156,42 @@ export class SolicitanteComponent {
    * @returns void
    */
   getDatosGenerales(): void {
-    this.solicitanteServicio.getDatosGenerales(5).subscribe((resp) => {
-      if (resp.codigo === '200') {
-        const datos = JSON.parse(resp.data);
-        const datosSolicitante = datos.datosSolicitante.generales;
-        const datosDomicilioFiscal = datos.datosSolicitante.domicilioFiscal;
+    this.solicitanteServicio
+      .getDatosGenerales(CATALOGOS_ID.DATOS_PERSONA_FISICA)
+      .pipe(
+        tap((response) => {
+          if (response) {
+            const datos = JSON.parse(response.data);
+            const datosSolicitante = datos.datosGenerales;
+            const datosDomicilioFiscal = datos.domicilioFiscal;
 
-        const camposDatosGenerales = this.formServices.obtenerNombresCamposForm(
-          this.datosGeneralesForm
-        );
-        const camposDatosDomicilioFiscal =
-          this.formServices.obtenerNombresCamposForm(this.domicilioFiscalForm);
+            const camposDatosGenerales =
+              this.formServices.obtenerNombresCamposForm(
+                this.datosGeneralesForm
+              );
+            const camposDatosDomicilioFiscal =
+              this.formServices.obtenerNombresCamposForm(
+                this.domicilioFiscalForm
+              );
 
-        camposDatosGenerales.forEach((campo) => {
-          this.formServices.agregarValorCampoDesactivados(
-            this.datosGeneralesForm,
-            campo,
-            datosSolicitante[campo]
-          );
-        });
+            camposDatosGenerales.forEach((campo) => {
+              this.formServices.agregarValorCampoDesactivados(
+                this.datosGeneralesForm,
+                campo,
+                datosSolicitante[campo]
+              );
+            });
 
-        camposDatosDomicilioFiscal.forEach((campo) => {
-          this.formServices.agregarValorCampoDesactivados(
-            this.domicilioFiscalForm,
-            campo,
-            datosDomicilioFiscal[campo]
-          );
-        });
-      }
-    });
+            camposDatosDomicilioFiscal.forEach((campo) => {
+              this.formServices.agregarValorCampoDesactivados(
+                this.domicilioFiscalForm,
+                campo,
+                datosDomicilioFiscal[campo]
+              );
+            });
+          }
+        })
+      )
+      .subscribe();
   }
 }
