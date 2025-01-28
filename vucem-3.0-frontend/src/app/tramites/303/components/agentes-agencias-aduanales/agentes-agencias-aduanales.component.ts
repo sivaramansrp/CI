@@ -42,7 +42,6 @@ export class AgentesAgenciasAduanalesComponent {
       return;
     }
     const agente = this.formAgente.value;
-    console.log(agente);
     this.agentes.push(agente);
     this.formAgente.reset();
     this.cerrarModal();

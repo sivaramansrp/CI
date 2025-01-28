@@ -377,7 +377,7 @@ export class SolicitudComponent {
   }
 
   valorInputCheck(e: DatosInputCheck) {
-    console.log(e);
+
   }
 
   obtenerHora(e: string, tipo: string) {
