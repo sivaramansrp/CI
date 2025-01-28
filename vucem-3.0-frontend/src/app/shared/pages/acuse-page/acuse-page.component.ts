@@ -4,13 +4,11 @@ import {
   TITULO_ACUSE,
   TXT_ALERTA_ACUSE,
 } from '../../constantes/servicios-extraordinarios.enum';
-import {
-  AccionesTabla,
-  DatosPageAcuse,
-} from '../../../core/models/shared/components.model';
+import { AccionesTabla } from '../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { AcuseComponent } from '../../components/acuse/acuse.component';
 import { TramitesQueries } from '../../../core/queries/tramites.queries';
+import { DocumentoService } from '../../../core/services/shared/documento/documento.service';
 
 @Component({
   templateUrl: './acuse-page.component.html',
@@ -19,7 +17,7 @@ import { TramitesQueries } from '../../../core/queries/tramites.queries';
   imports: [CommonModule, AcuseComponent],
 })
 export class AcusePageComponent {
-  txtAlerta = TXT_ALERTA_ACUSE;
+  txtAlerta!: string;
   subtitulo = TITULO_ACUSE;
   encabezadoTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.encabezadoTablaAcuse;
   accionesTablaAcuse: AccionesTabla[] =
@@ -28,11 +26,40 @@ export class AcusePageComponent {
 
   folio!: string;
 
-  constructor( private tramiteQueries : TramitesQueries) {
-
-  }
+  constructor(
+    private tramiteQueries: TramitesQueries,
+    private documentoService: DocumentoService
+  ) {}
 
   ngOnInit(): void {
     this.folio = this.tramiteQueries.getTramite();
+    this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
+
+    this.obtenerAcuse();
+  }
+
+  obtenerAcuse() {
+    console.log('Obteniendo acuse');
+
+    const datosAcuse = {
+      templateFullPath: '',
+      data: {
+        '%TITULO%': 'Narnia',
+        '%NOMBRE%': 'Goose',
+        '%TOKEN%': 'XYZ123',
+        '%HORA%': '14',
+        '%MIN%': '58',
+        '%SEG%': '11',
+      },
+    };
+    this.documentoService.generarAcuse(datosAcuse).subscribe(
+      (resp) => {
+        console.log('Acuse generado');
+        console.log(resp);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 }

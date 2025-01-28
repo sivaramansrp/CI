@@ -3,8 +3,9 @@ import { AccionesTabla, ConfiguracionTabla, DatosPageAcuse, EncabezadosTabla } f
 import { CommonModule } from '@angular/common';
 import { AlertComponent } from '../alert/alert.component';
 import { TituloComponent } from '../titulo/titulo.component';
-import { Tab } from 'bootstrap';
 import { TablaComponent } from '../tabla/tabla.component';
+import { DocumentoService } from '../../../core/services/shared/documento/documento.service';
+
 
 @Component({
   selector: 'c-acuse',
@@ -29,17 +30,21 @@ export class AcuseComponent {
   // @Input() datosPageAcuse!: DatosPageAcuse;
   @Input() folio!: string;
 
-  alerta!: string;
+  constructor() {
+    console.log('Constructor acuse component');
 
-  // ngOnInit(): void {
-  //   this.alerta = `${this.txtAlerta} <${this.folio}>`;
-  // }
+  }
+
+  ngOninit(): void {
+  }
+
+
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['folio'].currentValue) {
-      console.log(changes['folio'].currentValue);
 
-      this.alerta = `${this.txtAlerta} <${this.folio}>`;
+    if (changes['txtAlerta'].currentValue) {
+      this.txtAlerta = changes['txtAlerta'].currentValue;
+      console.log(this.txtAlerta);
     }
   }
 }

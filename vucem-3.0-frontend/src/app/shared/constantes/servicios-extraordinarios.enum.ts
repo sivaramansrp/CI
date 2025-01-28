@@ -135,8 +135,9 @@ export const FECHA_FINAL = {
   habilitado: true,
 };
 
-export const TXT_ALERTA_ACUSE =
-  'Tu solicitud ha sido registrada con el siguiente número de folio:';
+export const TXT_ALERTA_ACUSE = (folio: string) => {
+  return `Tu solicitud ha sido registrada con el siguiente número de folio:  < ${folio} >`;
+}
 
 export const TITULO_ACUSE = 'Acuse(s)';
 

@@ -18,7 +18,7 @@ import {
 } from '../../constantes/constantes';
 import { Login } from '../../../core/models/shared/inicio-sesion.model';
 import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
-import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
+import { DocumentoService } from '../../../core/services/shared/documento/documento.service';
 import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
 
 declare const bootstrap: any; // Importación para manejar Bootstrap en TS
@@ -59,7 +59,7 @@ export class AnexarDocumentosComponent {
     private toastr: ToastrService,
     private renderer: Renderer2,
     private inicioSesionService: InicioSesionService,
-    private subirDocumentoService: SubirDocumentoService
+    private DocumentoService: DocumentoService
   ) {}
 
   ngOnInit() {
@@ -164,7 +164,7 @@ export class AnexarDocumentosComponent {
         return;
       }
 
-      this.subirDocumentoService
+      this.DocumentoService
         .subirDocumento(this.token, informacionArchivo)
         .subscribe({
           next: (): void => {

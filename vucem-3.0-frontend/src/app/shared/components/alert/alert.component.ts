@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChange } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
@@ -18,11 +18,12 @@ export class AlertComponent {
    ) {}
 
    ngOnInit(): void {
+    console.log('AlertComponent ' + this.CONTENIDO);
+
     this.setHTML(this.CONTENIDO);
    }
 
    setHTML(html: string): void {
     this.textoHTML = this.sanitizer.bypassSecurityTrustHtml(html);
    }
-
 }
