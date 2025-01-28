@@ -1,1 +1,76 @@
-<p>datos-del works!</p>
+ <div class="container">
+    <form [formGroup]="form">
+        <ng-titulo titulo="Unidad expedidora"></ng-titulo>
+            <div class="row">
+                <div class="col-md-4" *ngFor="let option of radioBoton">
+                    <label class="form-label">
+                        <input type="radio" [value]="option" formControlName="seleccion" (change)="onSelectionChange(option)" />
+                         {{ option }}<span class="require">:*</span>
+                     </label>
+                </div>
+            </div>
+        
+        <div *ngIf="form.get('seleccion')?.value === 'oficina central'">
+            <div class="row">
+                <div class="col-md-4" *ngFor="let config of dropdownConfigs">
+                     <select-catalogos [catalogosDatos]="config" (valorSeleccion)="seleccionar()"></select-catalogos>
+                </div>
+            </div>
+         </div>
+    </form>
+        
+    <ng-titulo titulo="Datos Generales de la mercancia Animal"></ng-titulo>
+        <h6>Mercancias</h6>
+
+
+            <div class="table-responsive">
+                <table class="table" data-sort-order="desc">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                <div class="form-check">
+                                    <input type="checkbox"/>
+                                </div>
+                            </th>
+                            <th class="table-header" scope="col">No.partida
+                                <span style="cursor: pointer;">&#9650;</span>
+                                <span style="cursor: pointer;">&#9660;</span>
+                            </th>
+                            <th class="table-header" scope="col">Fraccion arancelaria</th>
+                            <th class="table-header" scope="col">Descripción de la fraccion</th>
+                            <th class="table-header" scope="col">Unidad de medida de tarifa (UMT)</th>
+                            <th class="table-header" scope="col">Cantidad (UMT)</th>
+                            <th class="table-header" scope="col">Unidad de medida de comercialización (UMC)</th>
+                            <th class="table-header" scope="col">Cantidad (UMC)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of mercanciasData">
+                            <th scope="row">
+                                <div class="form-check">
+                                    <input type="checkbox" />
+                                </div>
+                            </th>
+                            <td>{{ item.noPartida }}</td>
+                            <td>{{ item.fraccionArancelaria }}</td>
+                            <td>{{ item.descripcionDeLaFraccion }}</td>
+                            <td>{{ item.unidadDeMedidaDeTarifaUMT }}</td>
+                            <td>{{ item.cantidadUMT }}</td>
+                            <td>{{ item.unidadDeMedidaDeComercializacionUMC }}</td>
+                            <td>{{ item.cantidadUMC }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        <!-- <app-table [tableData]="tableData"></app-table> -->
+            <div class="text-end">
+                <button class="btn btn-primary me-2" type="button">Carga por archivo</button>
+                <button class="btn btn-primary me-2" type="button">Agregar</button>
+            </div>
+        
+            <div class="mb-5">
+                <label for="message" class="form-label">Tratamiento:</label>
+                <textarea class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+        

@@ -1,0 +1,39 @@
+[
+    {
+      "noPartida": "001",
+      "fraccionArancelaria": "1234.56.78",
+      "descripcionDeLaFraccion": "Descripción de ejemplo 1",
+      "unidadDeMedidaDeTarifaUMT": "kg",
+      "cantidadUMT": 100,
+      "unidadDeMedidaDeComercializacionUMC": "units",
+      "cantidadUMC": 50
+    },
+    {
+      "noPartida": "002",
+      "fraccionArancelaria": "2345.67.89",
+      "descripcionDeLaFraccion": "Descripción de ejemplo 2",
+      "unidadDeMedidaDeTarifaUMT": "liters",
+      "cantidadUMT": 200,
+      "unidadDeMedidaDeComercializacionUMC": "cases",
+      "cantidadUMC": 75
+    },
+    {
+      "noPartida": "003",
+      "fraccionArancelaria": "3456.78.90",
+      "descripcionDeLaFraccion": "Descripción de ejemplo 3",
+      "unidadDeMedidaDeTarifaUMT": "meters",
+      "cantidadUMT": 300,
+      "unidadDeMedidaDeComercializacionUMC": "rolls",
+      "cantidadUMC": 120
+    },
+    {
+      "noPartida": "004",
+      "fraccionArancelaria": "4567.89.01",
+      "descripcionDeLaFraccion": "Descripción de ejemplo 4",
+      "unidadDeMedidaDeTarifaUMT": "pieces",
+      "cantidadUMT": 400,
+      "unidadDeMedidaDeComercializacionUMC": "packs",
+      "cantidadUMC": 200
+    }
+  ]
+  
