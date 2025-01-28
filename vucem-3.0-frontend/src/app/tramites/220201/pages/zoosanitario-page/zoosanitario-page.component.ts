@@ -20,7 +20,7 @@ export class ZoosanitarioPageComponent {
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
-    txtBtnAnt: 'Anterior',
+    txtBtnAnt: 'Guardar',
     txtBtnSig: 'Continuar',
   };
   getValorIndice(e: AccionBoton) {
