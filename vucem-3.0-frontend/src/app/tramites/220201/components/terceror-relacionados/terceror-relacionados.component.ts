@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrl: './terceror-relacionados.component.scss'
 })
 export class TercerorRelacionadosComponent {
-
+  TEXTO_DE_ALERTA: string = '';
 }
