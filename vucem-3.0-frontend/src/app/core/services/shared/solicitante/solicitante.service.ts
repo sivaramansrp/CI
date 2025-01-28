@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JSONResponse } from '../../../models/shared/catalogos.model';
+import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -10,9 +11,18 @@ export class SolicitanteService {
 
   urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
 
-  getDatosGenerales(id: number) {
-    return this.http.get<JSONResponse>(
-      `${this.urlServer}/${id}`
+  /**
+   * Obtiene los datos Generales del Usuario de una API
+   * @param {id} - Id del json auxiliar
+   * @returns {Observable<JSONResponse>} - Respuesta de la API
+   */
+
+  getDatosGenerales(id: number): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>(`${this.urlServer}/${id}`).pipe(
+      catchError((error) => {
+        console.log(error);
+        return throwError(() => error);
+      })
     );
   }
 }
