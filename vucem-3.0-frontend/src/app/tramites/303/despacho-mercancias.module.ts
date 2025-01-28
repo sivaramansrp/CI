@@ -35,6 +35,7 @@ import { DatosTransportistaComponent } from './components/datos-transportista/da
 import { ControlInventariosComponent } from './components/control-inventarios/control-inventarios.component';
 import { AgregarMiembrosEmpresaComponent } from './components/agregar-miembros-empresa/agregar-miembros-empresa.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
+import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { TituloComponent } from '../../shared/components/titulo/titulo.component
     CrosslistComponent,
     AgregarTransporteComponent,
     PedimentoComponent,
-    AgregaPersonasComponent
+    AgregaPersonasComponent,
+    SelectPaisesComponent
 
   ],
   exports: [

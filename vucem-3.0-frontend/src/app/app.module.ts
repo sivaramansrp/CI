@@ -32,10 +32,7 @@ import { TituloComponent } from "./shared/components/titulo/titulo.component";
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
     InformacionUsuarioComponent,
-<<<<<<< HEAD
-=======
     TituloComponent
->>>>>>> 85250b92613614d75d376b8220008a1fed82fde5
 ],
   providers: [
     provideToastr({
