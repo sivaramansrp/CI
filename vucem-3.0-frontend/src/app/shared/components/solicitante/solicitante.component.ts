@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { SolicitanteService } from '../../../core/services/shared/solicitante/solicitante.service';
 import { TituloComponent } from '../titulo/titulo.component';
-import { CommonModule, UpperCasePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
@@ -19,13 +19,12 @@ import {
 } from '../../constantes/solicitante-constantes.enum';
 import {
   CATALOGOS_ID,
-  CODIGOS_HTTP,
   TIPO_PERSONA,
 } from '../../constantes/constantes';
 import { FormularioDinamico } from '../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../core/services/shared/formularios/formularios.service';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
-import { catchError, map, tap, throwError } from 'rxjs';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'solicitante',

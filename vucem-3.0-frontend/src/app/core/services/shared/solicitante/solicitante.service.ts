@@ -13,8 +13,8 @@ export class SolicitanteService {
 
   /**
    * Obtiene los datos Generales del Usuario de una API
-   * @param {id} - Id del json auxiliar
-   * @returns {Observable<JSONResponse>} - Respuesta de la API
+   * @param {id} - Id del json auxiliar que trae los datos generales del usuario
+   * @returns {Observable<JSONResponse>} - Respuesta de la API de tipo observable de tipo JSONResponse.
    */
 
   getDatosGenerales(id: number): Observable<JSONResponse> {
