@@ -16,7 +16,7 @@ import { TituloComponent } from "../../shared/components/titulo/titulo.component
 import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn-continuar.component';
 import { SharedModule } from '../../shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
 
 
 
@@ -35,14 +35,14 @@ import { RouterModule } from '@angular/router';
 
   ],
   imports: [
-
     SharedModule,
     CommonModule,
     IssuanceExtensionModificationRoutingModule,
     WizardComponent,
     TituloComponent,
     BtnContinuarComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CrosslistComponent
   ]
 })
 export class IssuanceExtensionModificationModule { }
