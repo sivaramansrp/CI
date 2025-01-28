@@ -30,6 +30,8 @@ module.exports = tseslint.config(
           style: "kebab-case",
         },
       ],
+      "@typescript-eslint/consistent-generic-constructors": "off",
+      "@typescript-eslint/no-inferrable-types": "off",
     },
   },
   {

@@ -7,21 +7,21 @@ import { ValidacionesFormularioService } from '../../../../core/services/shared/
   templateUrl: './transporte.component.html'
 })
 export class TransporteComponent {
-  TransporteForm!: FormGroup;
+  transporteForm!: FormGroup;
   constructor(
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService
   ) {
-    this.crearFormSolicitud();
+    this.crearFormTransporte();
   }
 
-  crearFormSolicitud() {
-    this.TransporteForm = this.fb.group({
+  crearFormTransporte() {
+    this.transporteForm = this.fb.group({
       mediodeTransporte: ['', [Validators.required]],
-      identificationDelTransporte: ['', [Validators.required]],
-      numerodeContenedor: ['', [Validators.required]],
-      fetchdeEmbarque: ['', [Validators.required]],
-      numerodeFlejes: ['', [Validators.required]]
+      identificationDelTransporte: [''],
+      numerodeContenedor: [''],
+      fetchdeEmbarque: [''],
+      numerodeFlejes: ['']
     });
   }
 
@@ -29,9 +29,9 @@ export class TransporteComponent {
     return this.validacionesService.isValid(form, field);
   }
 
-  validarFormulario() {
-    if (this.TransporteForm.invalid) {
-      this.TransporteForm.markAllAsTouched();
+  validarTransporteFormulario() {
+    if (this.transporteForm.invalid) {
+      this.transporteForm.markAllAsTouched();
       return;
     }
   }

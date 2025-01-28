@@ -11,6 +11,7 @@ import { DatosDelComponent } from './components/datos-del/datos-del.component';
 import { TransporteComponent } from './pages/transporte/transporte.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn-continuar.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NavComponent,
     WizardComponent,
     TituloComponent,
+    BtnContinuarComponent,
     SolicitudComponent,
     DatosDelComponent,
     FormsModule,

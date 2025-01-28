@@ -7,6 +7,6 @@ import { PANTAPASOS } from '../../../../core/services/220471/servicios-pantallas
   templateUrl: './pantallas.component.html'
 })
 export class PantallasComponent {
-  pasos: Array<ListaPasosWizard> = PANTAPASOS;
+  pantallasPasos: ListaPasosWizard[] = PANTAPASOS;
   indice: number = 2;
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { PantallasFormData } from '../../../../core/models/220401/servicios-pantallas.model';
 import { ServiciosPantallasService } from '../../../../core/services/220471/servicios-pantallas.service';
@@ -9,7 +9,7 @@ import { ServiciosPantallasService } from '../../../../core/services/220471/serv
   standalone: true,
   styleUrl: './solicitud.component.scss'
 })
-export class SolicitudComponent implements OnInit {
+export class SolicitudComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   public pantallasFormData!: PantallasFormData;
 
