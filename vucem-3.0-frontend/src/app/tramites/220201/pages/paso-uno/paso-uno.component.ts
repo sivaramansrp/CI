@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   styleUrl: './paso-uno.component.scss'
 })
 export class PasoUnoComponent {
-  indice: number = 1;
+  indice: number = 2;
 
   seleccionaTab(i: number): void {
     this.indice = i;

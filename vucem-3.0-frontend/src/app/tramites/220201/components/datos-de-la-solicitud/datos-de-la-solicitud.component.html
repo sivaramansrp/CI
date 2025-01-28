@@ -20,4 +20,166 @@
       </div>
     </div>
   </div>
+  <div class="row">
+    <ng-titulo titulo="Datos del tramite a realizar" />
+    <div class="col-md-12">
+      <label for="seccionAduanera" class="form-label">Aduana de ingreso*</label>
+      <select class="form-control" id="seccionAduanera">
+        <option>Selecciona un valor</option>
+        <option>AEROPUERTO INTERNAL. CD.DE MEXICO, D.F.</option>
+        <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
+        <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
+      </select>
+    </div>
+    <div class="col-md-12">
+      <label for="seccionAduanera" class="form-label"
+        >Oficina de inspeccion de sanidad Agropecuaria*:</label
+      >
+      <select class="form-control" id="seccionAduanera">
+        <option>Selecciona un valor</option>
+        <option>AICM Aduana de Carga Cd de Mexico.</option>
+        <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
+        <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
+      </select>
+    </div>
+    <div class="col-md-12">
+      <label for="seccionAduanera" class="form-label"
+        >Punto de inspeccion*:</label
+      >
+      <select class="form-control" id="seccionAduanera">
+        <option>Selecciona un valor</option>
+        <option>AICM Aduana de Carga Cd de Mexico Oficina de inspeccion</option>
+        <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
+        <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
+      </select>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label" for="nombreImportExport"
+          >Clave UCON*:
+          <i class="bi bi-question-circle-fill" style="margin-bottom:'5px"></i
+        ></label>
+        <input
+          class="form-control"
+          id="nombreImportExport"
+          placeholder=""
+          type="text"
+          appUppercase
+        />
+      </div>
+    </div>
+    <div class="col-md-6">
+      <label for="seccionAduanera" class="form-label"
+        >Establecimiento TIF*:</label
+      >
+      <select class="form-control" id="seccionAduanera">
+        <option>Selecciona un valor</option>
+        <option>AICM Aduana de Carga Cd de Mexico Oficina de inspeccion</option>
+        <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
+        <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
+      </select>
+    </div>
+    <div class="col-md-12">
+      <label for="seccionAduanera" class="form-label"
+        >Nombre del medcio veterinario*:</label
+      >
+      <select class="form-control" id="seccionAduanera">
+        <option>Selecciona un valor</option>
+        <option>AICM Aduana de Carga Cd de Mexico Oficina de inspeccion</option>
+        <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
+        <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
+      </select>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label" for="nombreImportExport"
+          >Numero de guia</label
+        >
+        <input
+          class="form-control"
+          id="nombreImportExport"
+          placeholder=""
+          type="text"
+          appUppercase
+        />
+      </div>
+    </div>
+    <div class="col-md-6">
+      <label for="seccionAduanera" class="form-label"
+        >Regimen*:
+        <i class="bi bi-question-circle-fill" style="margin-bottom:'5px"></i
+      ></label>
+      <select class="form-control" id="seccionAduanera">
+        <option>Selecciona un valor</option>
+        <option>AICM Aduana de Carga Cd de Mexico Oficina de inspeccion</option>
+        <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
+        <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <ng-titulo titulo="Tipo de Mercancía" />
+    <div class="col-md-12">
+      <label for="certficacion_a">Captura de datos de mercancía</label>
+    </div>
+    <div class="col-md-12">
+      <input
+        class="form-check-input me-3"
+        type="radio"
+        name="certficacion"
+        value="a"
+        id="certficacion_a"
+      />
+      <label class="form-label" for="certficacion_a">Animales Vivos:</label>
+    </div>
+    <div class="col-md-12">
+      <input
+        class="form-check-input me-3"
+        type="radio"
+        name="certficacion"
+        value="aa"
+        id="certficacion_aa"
+      />
+      <label class="form-label" for="certficacion_aa"
+        >Productos Subproductos</label
+      >
+    </div>
+  </div>
+  <div class="row">
+    <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <label for="certficacion_a">Mercancía</label>
+      </div>
+      <div class="col-md-12">
+        <table class="table table-responsive">
+          <thead>
+            <tr>
+              <th>Gafete</th>
+              <th>Nombre</th>
+              <th>Apellido paterno</th>
+              <th>Apellido materno</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- <tr>
+              @for (persona of personas; let i = $index; track i) {
+              <td>{{ persona.gafete }}</td>
+              <td>{{ persona.nombre }}</td>
+              <td>{{ persona.aPaterno }}</td>
+              <td>{{ persona.aMaterno }}</td>
+              <td>
+                <button type="button" class="btn btn-link">
+                  <i class="bi bi-trash3 bi-c"></i>
+                </button>
+              </td>
+              }
+            </tr> -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>

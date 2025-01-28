@@ -17,7 +17,9 @@ import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn
 import { SharedModule } from '../../shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
-
+import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
+import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
+import { AlertComponent } from '../../shared/components/alert/alert.component';
 
 
 @NgModule({
@@ -42,7 +44,10 @@ import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.
     TituloComponent,
     BtnContinuarComponent,
     ReactiveFormsModule,
-    CrosslistComponent
+    CrosslistComponent,
+    InputCheckComponent,
+    SelectCatalogosComponent,
+    AlertComponent
   ]
 })
 export class IssuanceExtensionModificationModule { }
