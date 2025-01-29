@@ -1,5 +1,57 @@
 <div class="container">
-    <ng-titulo titulo="Transporte" />
-   
+    <ng-titulo titulo="Transporte" />   
+    <form [formGroup]="transporteForm" (ngSubmit)="validarTransporteFormulario()">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="mediodeTransporte">Medio de transporte*:</label>
+                <input class="form-control" id="mediodeTransporte" placeholder="Selecciona un valor" type="text"
+                  formControlName="mediodeTransporte"
+                  [ngClass]="isValid(transporteForm,'mediodeTransporte') ? 'required' : ''">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="identificationDelTransporte">Identification del transporte:</label>
+                <input class="form-control" id="identificationDelTransporte" formControlName="identificationDelTransporte"
+                  placeholder="" type="text">
+              </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="numerodeContenedor">Número de Contenedor:</label>
+                  <input class="form-control" id="numerodeContenedor" placeholder="" type="text"
+                    formControlName="numerodeContenedor" [ngClass]="isValid(transporteForm, 'numerodeContenedor') ? 'required' : ''">
+                </div>
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="fetchdeEmbarque">Fetcha de Embarque:</label>
+                <input class="form-control" id="fetchdeEmbarque" placeholder="" type="text"
+                  formControlName="fetchdeEmbarque" [ngClass]="isValid(transporteForm, 'fetchdeEmbarque') ? 'required' : ''">
+              </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="numerodeFlejes">Número de Flejes:</label>
+                  <input class="form-control" id="numerodeFlejes" placeholder="" type="text"
+                    formControlName="numerodeFlejes" [ngClass]="isValid(transporteForm, 'numerodeFlejes') ? 'required' : ''">
+                </div>
+              </div>
+          </div>
+          <div class="row mt-5 mb-2">
+            <div class="col-md-8">
+                <p>* Campos obligatorios</p>
+            </div>
+            <div class="col-md-4">
+              <div class="btn-group">
+                <button class="btn btn-primary me-2" type="button">Guardar</button>
+                <button class="btn btn-danger" type="button">Continuar</button>
+              </div>
+            </div>
+          </div>   
+      </form>
   </div>
   

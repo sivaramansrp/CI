@@ -7,7 +7,10 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "compodoc:build": "npx compodoc -p tsconfig.doc.json",
+    "compodoc:build-and-serve": "npx compodoc -p tsconfig.doc.json -s",
+    "compodoc:serve": "npx compodoc -s"
   },
   "private": true,
   "dependencies": {
@@ -33,6 +36,7 @@
     "@angular-devkit/build-angular": "^17.3.11",
     "@angular/cli": "^17.3.11",
     "@angular/compiler-cli": "^17.3.0",
+    "@compodoc/compodoc": "1.1.26",
     "@types/bootstrap": "^5.2.10",
     "@types/jasmine": "~5.1.0",
     "angular-eslint": "19.0.2",
