@@ -4,16 +4,17 @@ import { ReplaySubject, takeUntil } from 'rxjs';
 import { PantallasFormData } from '../../../../core/models/220401/servicios-pantallas.model';
 import { ServiciosPantallasService } from '../../../../core/services/220471/servicios-pantallas.service';
 
+/**
+ * Este componente se utiliza para mostrar el formulario de solicitud.- 220401
+ * pantallasFormData: Form data of the screens
+ */
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   standalone: true,
   styleUrl: './solicitud.component.scss'
 })
-/**
- * Este componente se utiliza para mostrar el formulario de solicitud.- 220401
- * pantallasFormData: Form data of the screens
- */
+
 export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Esta variable se utiliza para destruir la suscripción.

@@ -3,16 +3,16 @@ import { Component } from '@angular/core';
 
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
-@Component({
-  selector: 'app-transporte',
-  templateUrl: './transporte.component.html'
-})
-
 /**
  * Este componente se utiliza para mostrar la forma del transporte. - 220401
  * @param transporteForm: Forma del transporte
  * @returns Validations of the form
  */
+@Component({
+  selector: 'app-transporte',
+  templateUrl: './transporte.component.html'
+})
+
 export class TransporteComponent {
   /**
    * Esta variable se utiliza para crear la forma del transporte.
