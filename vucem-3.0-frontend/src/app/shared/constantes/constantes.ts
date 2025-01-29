@@ -1,11 +1,13 @@
-import { SEMANA } from "./servicios-extraordinarios.enum"
-
 export const COOKIE = {
   NOMBRE_COOKIE_ID_USUARIO: 'sg-id-user',
   NOMBRE_COOKIE_ROL: 'sg-rol',
   NOMBRE_COOKIE_TOKEN: 'sg-token',
   NOMBRE_COOKIE_USUARIO: 'sg-usuario',
   NOMBRE_COOKIE_RFC: 'sg-rfc',
+}
+
+export const CODIGOS_HTTP = {
+  SUCCESS: "200"
 }
 
 export const CATALOGOS_ID = {
@@ -17,8 +19,8 @@ export const CATALOGOS_ID = {
   CAT_TIPO_DOCUMENTO: 'tipos-documento',
   CAT_TIPO_OPERACION: 7,
   CAT_REGIMEN_MERCANCIA: 'regimen-mercancia',
-  CAT_CLASIFI_REGIMEN: 'clasifi-regimen'
-
+  CAT_CLASIFI_REGIMEN: 'clasifi-regimen',
+  DATOS_PERSONA_FISICA: 21,
 }
 
 export const TIPO_PERSONA = {

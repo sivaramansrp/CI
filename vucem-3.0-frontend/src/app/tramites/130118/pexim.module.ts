@@ -22,8 +22,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
-
-
+import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';
+import { AlertComponent } from '../../shared/components/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +31,7 @@ import { FirmaElectronicaComponent } from '../../shared/components/firma-electro
     PasoDosComponent,
     PasoTresComponent,
     SolicitudPageComponent,
-    SolicitudComponent
+    SolicitudComponent,
   ],
   imports: [
     CommonModule,
@@ -53,7 +53,9 @@ import { FirmaElectronicaComponent } from '../../shared/components/firma-electro
     ReactiveFormsModule,
     TituloComponent,
     SelectPaisesComponent,
-    FirmaElectronicaComponent
+    FirmaElectronicaComponent,
+    AnexarDocumentosComponent,
+    AlertComponent
   ],
   exports: [
     SolicitudComponent
