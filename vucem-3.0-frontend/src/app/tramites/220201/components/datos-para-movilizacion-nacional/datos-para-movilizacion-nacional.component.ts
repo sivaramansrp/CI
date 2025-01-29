@@ -1,10 +1,20 @@
 import { Component } from '@angular/core';
-
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'datos-para-movilizacion-nacional',
   templateUrl: './datos-para-movilizacion-nacional.component.html',
   styleUrl: './datos-para-movilizacion-nacional.component.scss'
 })
-export class DatosParaMovilizacionNacionalComponent {
 
+export class DatosParaMovilizacionNacionalComponent {
+  movilizacionForm: FormGroup;
+  constructor(private fb: FormBuilder) {
+    this.movilizacionForm = this.fb.group({
+      coordenadas: ['', Validators.required],
+      nombre: ['', Validators.required],
+      medio: ['', Validators.required],
+      transporte: ['', [Validators.required]],
+      punto: ['', [Validators.required]]
+    });
+  }
 }
