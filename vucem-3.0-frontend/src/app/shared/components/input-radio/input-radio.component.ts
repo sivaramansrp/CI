@@ -14,16 +14,18 @@ export class InputRadioComponent {
   FormInputRadio!: FormGroup;
   @Input() radioOptions: { label: string; value: any }[] = [];
   @Input() selectedValue: any;
+  @Input() isRequired: boolean=false;
   @Output() valueChange = new EventEmitter<any>();
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
     this.createFormRadio();
-
+console.log(this.isRequired);
   }
   createFormRadio() {
+    const validators = this.isRequired ? [Validators.required] : [];
     this.FormInputRadio = this.fb.group({
-      seleccion: ['', Validators.required] // Add validation if necessary
+      seleccion: [this.selectedValue || '', validators]
     });
   }
   onSelectionChange(value: any) {

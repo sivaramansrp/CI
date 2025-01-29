@@ -1,15 +1,15 @@
 [
     {
       "label": "Animal",
-      "value": "option1"
+      "value": "Animal.."
     },
     {
       "label": "Producto o Subproducto de Origen Animal",
-      "value": "option2"
+      "value": "Producto.."
     },
     {
       "label": "QFBA(Productors quimicos,farmaceuticos,biologicos y alimenticios para en animales o consumo por estos)",
-      "value": "option3"
+      "value": "QFBA.."
     }
   ]
   

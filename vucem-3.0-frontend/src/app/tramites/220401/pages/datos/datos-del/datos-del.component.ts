@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TituloComponent } from '../../../../../shared/components/titulo/titulo.component';
 import { CommonModule } from '@angular/common';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputRadioComponent } from '../../../../../shared/components/input-radio/input-radio.component';
 import radioOptionsData from '../../../../../../assets/json/220401/radioButton.json'; // Adjust the path if needed
 @Component({
@@ -17,13 +17,18 @@ import radioOptionsData from '../../../../../../assets/json/220401/radioButton.j
   ]
 })
 export class DatosDelComponent {
-  // radioOptions = [
-  //   { label: 'Animal', value: 'A' },
-  //   { label: 'Option B', value: 'B' },
-  //   { label: 'Option C', value: 'C' }
-  // ];
+  formGroup!: FormGroup;
   radioOptions = radioOptionsData; // Use imported JSON data
   selectedValue = 'option1';
+  constructor(private fb: FormBuilder) {
+  
+  }
+  ngOnInit(): void {
+    this.formGroup = this.fb.group({
+      seleccion: [this.selectedValue]
+    });
+    
+  }
   onValueChange(newValue: any) {
     console.log('Selected Value:', newValue);
     this.selectedValue = newValue;
