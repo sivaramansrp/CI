@@ -12,7 +12,7 @@ export class DatosDeLaSolicitudComponent {
   selectRangoDias: Array<string> = [];
   colapsable: boolean = false;
   despachoLDA: any = ADUANA_DE_INGRESO;
-  constructor(private fb: FormBuilder) {
+  constructor(private readonly fb: FormBuilder) {
 
   }
 

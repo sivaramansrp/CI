@@ -20,6 +20,7 @@ import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.
 import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
 import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
+import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { AlertComponent } from '../../shared/components/alert/alert.component';
     CrosslistComponent,
     InputCheckComponent,
     SelectCatalogosComponent,
-    AlertComponent
+    AlertComponent,
+    InputFechaComponent
   ]
 })
 export class IssuanceExtensionModificationModule { }

@@ -71,5 +71,11 @@ export const ADUANA_DE_INGRESO = {
     required: true,
     alfanumerico: true,
 };
+export const FECHA_DE_PAGO = {
+    labelNombre: 'Fecha de pago',
+    required: true,
+    habilitado: true,
+
+};
 export const TEXTOS = 'Para continuar con el trámite, deberá agregar por lo menos una mercancia.';
 export const TERCEROR_TEXTO_DE_ALERTA = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
