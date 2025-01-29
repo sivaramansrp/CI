@@ -1,31 +1,39 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Component } from '@angular/core';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-combinacion-requerida',
   templateUrl: './combinacion-requerida.component.html',
   standalone: true,
-  imports: [SelectCatalogosComponent,TituloComponent],
+  imports: [SelectCatalogosComponent,TituloComponent,ReactiveFormsModule,CommonModule],
   styleUrl: './combinacion-requerida.component.scss'
 })
 export class CombinacionRequeridaComponent {
 
   public especie!: CatalogosSelect;
-    public funcionZootecnica!: CatalogosSelect;
-    public mercancia!: CatalogosSelect;
-    public paisDestino!: CatalogosSelect;
-    public nombreEstablecimiento!: CatalogosSelect;
-    public tipoActividad!: CatalogosSelect;
-    public aduanaSalida!: CatalogosSelect;
-    public oisaSalida!: CatalogosSelect;
-    public regimenMercancia!: CatalogosSelect;
-    public paisOrigen!: CatalogosSelect;
+  public funcionZootecnica!: CatalogosSelect;
+  public mercancia!: CatalogosSelect;
+  public paisDestino!: CatalogosSelect;
+  public nombreEstablecimiento!: CatalogosSelect;
+  public tipoActividad!: CatalogosSelect;
+  public aduanaSalida!: CatalogosSelect;
+  public oisaSalida!: CatalogosSelect;
+  public regimenMercancia!: CatalogosSelect;
+  public paisOrigen!: CatalogosSelect;
+
+  public formCombinacion!: FormGroup;
   
-    constructor() {
-  
+    constructor(private fb: FormBuilder,
+                private validacionesService: ValidacionesFormularioService
+    ) {
+      this.crearFormCombinacion();
     }
   
     ngOnInit(): void {
@@ -39,6 +47,28 @@ export class CombinacionRequeridaComponent {
       this.getOisaSalida();
       this.getRegimenMercancia();
       this.getPaisOrigen();
+    }
+
+    public isValid(field: string) {
+      return this.validacionesService.isValid(this.formCombinacion,field);
+    }
+
+    public crearFormCombinacion() {
+      this.formCombinacion =  this.fb.group({
+        especie:[''],
+        funcionZootecnica:[''],
+        mercancia:[''],
+        paisDestino:[''],
+        nombreEstablecimiento:[''],
+        tipoActividad:[''],
+        otro: [''],
+        aduanaSalida:[''],
+        oisaSalida:[''],
+        regimenMercancia:[''],
+        paisOrigen:[''],
+        fechaArribo:[''],
+        puntoIngreso:['',[Validators.maxLength(200)]],
+      });
     }
   
   
@@ -226,7 +256,7 @@ export class CombinacionRequeridaComponent {
     }
   
     public docSeleccionado(e: Catalogo) {
-      
+      console.log(e);
     }
 
 }

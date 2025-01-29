@@ -3,7 +3,7 @@
     
       <div class="row mb-3">
         <div class="col-md-12">
-          <label class="form-label">Tipo persona*:</label>
+          <label class="form-label" for="tipoPersona">Tipo persona*:</label>
         </div>
         <div class="col-md-12">
           <input type="radio" id="fisica" name="tipoPersona" [checked]="fisica" (change)="inputChecked('fisica')">
@@ -20,16 +20,16 @@
      @if (fisica) {
       <div class="row">
         <div class="col-md-4 mb-3">
-          <label class="form-label">Nombre(s)*:</label>
-          <input type="text" class="form-control">
+          <label class="form-label" for="nombre">Nombre(s)*:</label>
+          <input type="text" class="form-control" id="nombre">
         </div>
         <div class="col-md-4 mb-3">
-          <label class="form-label">Primer apellido*:</label>
-          <input type="text" class="form-control">
+          <label class="form-label" for="primerApellido">Primer apellido*:</label>
+          <input type="text" class="form-control" id="primerApellido">
         </div>
         <div class="col-md-4 mb-3">
-          <label class="form-label">Segundo apellido:</label>
-          <input type="text" class="form-control">
+          <label class="form-label" for="segundoApellido">Segundo apellido:</label>
+          <input type="text" class="form-control" id="segundoApellido">
         </div>
       </div>
      }
@@ -37,8 +37,8 @@
      @if (moral) {
       <div class="row">
           <div class="col-md-8 mb-3">
-            <label class="form-label">Denominacion/razon social*:</label>
-            <input type="text" class="form-control">
+            <label class="form-label" for="denominacion">Denominacion/razon social*:</label>
+            <input type="text" class="form-control" id="denominacion">
           </div>
       </div>
      }
@@ -53,24 +53,24 @@
 
     <div class="row">
         <div class="col-md-8 mb-3">
-            <label class="form-label">Domicilio*:</label>
-            <textarea class="form-control" rows="2" height="50" placeholder="Calle, No Ext, No Int, Ciudad, C.P."></textarea>
+            <label class="form-label" for="domicilio">Domicilio*:</label>
+            <textarea class="form-control" id="domicilio" rows="2" height="50" placeholder="Calle, No Ext, No Int, Ciudad, C.P."></textarea>
         </div>
     </div>
     
     <div class="row">
       <div class="col-md-1 mb-3">
-        <label class="form-label">Lada:</label>
-        <input type="text" class="form-control">
+        <label class="form-label" for="lada">Lada:</label>
+        <input type="text" class="form-control" id="lada">
       </div>
       <div class="col-md-3 mb-3">
-        <label class="form-label">Teléfono:</label>
-        <input type="text" class="form-control">
+        <label class="form-label" for="telefono">Teléfono:</label>
+        <input type="text" class="form-control" id="telefono">
       </div>
       <div class="col-md-4 mb-3">
-        <label class="form-label">Correo electrónico:</label>
+        <label class="form-label" for="correoElectronico">Correo electrónico:</label>
         <div class="input-group">
-          <input type="email" class="form-control">
+          <input type="email" class="form-control" id="correoElectronico">
           <span class="input-group-text"></span>
         </div>
       </div>

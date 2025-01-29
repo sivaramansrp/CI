@@ -12,15 +12,16 @@ import { TableComponent } from '../../../../shared/components/table/table.compon
 export class TercerosRelacionadosComponent {
 
 
-  public establecimientoHeaderData: any[] = [];
+  public establecimientoHeaderData: string[] = [];
   public establecimientoBodyData: any[] = [];
-  public destinatarioHeaderData: any[] = [];
+  public destinatarioHeaderData: string[] = [];
   public destinatarioBodyData: any[] = [];
-  public importadorHeaderData: any[] = [];
+  public importadorHeaderData: string[] = [];
   public importadorBodyData: any[] = [];
 
 
   constructor() {
+    console.log('TercerosRelacionadosComponent');
   }
 
   ngOnInit(): void {

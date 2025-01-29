@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Component } from '@angular/core';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
@@ -14,9 +15,12 @@ import { SelectCatalogosComponent } from '../../../../shared/components/select-c
 export class AgregarDestinatoriaComponent {
 
   public pais!: CatalogosSelect;
+  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   public fisica: boolean = true;
+  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   public moral: boolean = false;
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   conatructor() {
 
   }
@@ -43,6 +47,7 @@ export class AgregarDestinatoriaComponent {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   public docSeleccionado(e: Catalogo) {
       
   }

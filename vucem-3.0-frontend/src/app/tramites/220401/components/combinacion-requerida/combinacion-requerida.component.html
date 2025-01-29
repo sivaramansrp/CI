@@ -1,6 +1,6 @@
 <div class="container form-container">
     <ng-titulo titulo="Combinación Requerida" />
-    <form>
+    <form [formGroup]="formCombinacion">
         <div class="row mb-3">
             <div class="col-md-4">
                 <select-catalogos [catalogosDatos]="especie"
@@ -43,7 +43,7 @@
             </div>
             <div class="col-md-4">
                 <label for="otro" class="form-label">Otro</label>
-                <input type="text" class="form-control" id="otro">
+                <input type="text" class="form-control" id="otro" formControlName="otro">
             </div>
         </div>
 
@@ -103,14 +103,18 @@
             </div>
             <div class="col-md-4">
                 <label for="fechaArribo" class="form-label">Fecha Arribo País Importador</label>
-                <input type="date" class="form-control" id="fechaArribo">
+                <input type="date" class="form-control" id="fechaArribo" formControlName="fechaArribo">
             </div>
         </div>
 
+        <!-- puntoIngreso required field and maxlength 200 -->
         <div class="row mb-3">
             <div class="col-md-4">
                 <label for="puntoIngreso" class="form-label">Punto de Ingreso al País Destino</label>
-                <input type="text" class="form-control" id="puntoIngreso">
+                <input type="text" class="form-control" 
+                    id="puntoIngreso" 
+                    formControlName="puntoIngreso"
+                    [ngClass]="isValid('puntoIngreso') ? 'required' : ''">
             </div>
         </div>
     </form>
