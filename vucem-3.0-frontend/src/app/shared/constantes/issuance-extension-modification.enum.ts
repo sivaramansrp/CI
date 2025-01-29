@@ -72,4 +72,4 @@ export const ADUANA_DE_INGRESO = {
     alfanumerico: true,
 };
 export const TEXTOS = 'Para continuar con el trámite, deberá agregar por lo menos una mercancia.';
-export const TERCEROR_TEXTO_DE_ALERTA = 'Las tablas con asterisco son obligatorias y debes';
+export const TERCEROR_TEXTO_DE_ALERTA = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';

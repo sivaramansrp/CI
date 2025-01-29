@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TERCEROR_TEXTO_DE_ALERTA } from '../../../../shared/constantes/issuance-extension-modification.enum';
 
 @Component({
   selector: 'terceror-relacionados',
@@ -6,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './terceror-relacionados.component.scss'
 })
 export class TercerorRelacionadosComponent {
-  TEXTO_DE_ALERTA: string = '';
+  TEXTO_DE_ALERTA: string = TERCEROR_TEXTO_DE_ALERTA;
 }
