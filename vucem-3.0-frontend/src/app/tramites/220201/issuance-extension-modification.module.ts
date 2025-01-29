@@ -21,7 +21,8 @@ import { InputCheckComponent } from '../../shared/components/input-check/input-c
 import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
-
+import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';
+import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,9 @@ import { InputFechaComponent } from '../../shared/components/input-fecha/input-f
     InputCheckComponent,
     SelectCatalogosComponent,
     AlertComponent,
-    InputFechaComponent
+    InputFechaComponent,
+    AnexarDocumentosComponent,
+    FirmaElectronicaComponent
   ]
 })
 export class IssuanceExtensionModificationModule { }
