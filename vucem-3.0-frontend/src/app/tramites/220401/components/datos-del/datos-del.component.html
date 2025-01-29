@@ -12,6 +12,7 @@
         [selectedValue]="selectedValue"
         [isRequired]="true"
         (valueChange)="onValueChange($event)"
+        [layout]="'vertical'"
       ></app-input-radio>
       <div class="row mt-4">
         <div class="col-md-12">
@@ -20,6 +21,7 @@
                  id="message"
                  class="form-control mb-5"
                  placeholder=""
+                 readonly="true"
                ></textarea>
         </div>
     </div>

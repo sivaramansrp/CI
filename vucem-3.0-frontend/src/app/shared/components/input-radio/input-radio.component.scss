@@ -1,10 +1,18 @@
 
-label {
+// label {
+//     display: block;
+//     margin: 5px 0;
+//   }
+  
+//   input[type="radio"] {
+//     margin-right: 8px;
+//   }
+  .vertical {
     display: block;
-    margin: 5px 0;
+    margin-bottom: 10px;
   }
   
-  input[type="radio"] {
-    margin-right: 8px;
+  .horizontal {
+    display: inline-block;
+    margin-right: 10px;
   }
-  

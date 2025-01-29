@@ -15,6 +15,7 @@ export class InputRadioComponent {
   @Input() radioOptions: { label: string; value: any }[] = [];
   @Input() selectedValue: any;
   @Input() isRequired: boolean=false;
+  @Input() layout: 'vertical' | 'horizontal' = 'vertical'; 
   @Output() valueChange = new EventEmitter<any>();
   constructor(private fb: FormBuilder) { }
 
