@@ -13,6 +13,7 @@ import { TituloComponent } from '../../shared/components/titulo/titulo.component
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CombinacionRequeridaComponent } from './components/combinacion-requerida/combinacion-requerida.component';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
+import { AgregarDestinatoriaComponent } from './components/agregar-destinatoria/agregar-destinatoria.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { TercerosRelacionadosComponent } from './components/terceros-relacionado
     FormsModule,
     ReactiveFormsModule,
     CombinacionRequeridaComponent,
-    TercerosRelacionadosComponent
+    TercerosRelacionadosComponent,
+    AgregarDestinatoriaComponent
   ]
 })
 export class PantallasModule { }
