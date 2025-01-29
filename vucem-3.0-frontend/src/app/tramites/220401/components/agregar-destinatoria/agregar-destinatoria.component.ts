@@ -14,6 +14,8 @@ import { SelectCatalogosComponent } from '../../../../shared/components/select-c
 export class AgregarDestinatoriaComponent {
 
   public pais!: CatalogosSelect;
+  public fisica: boolean = true;
+  public moral: boolean = false;
 
   conatructor() {
 
@@ -43,6 +45,16 @@ export class AgregarDestinatoriaComponent {
 
   public docSeleccionado(e: Catalogo) {
       
+  }
+
+  public inputChecked(checkBoxName:string) {
+    if(checkBoxName === 'fisica') {
+      this.fisica = true;
+      this.moral = false;
+    } else {
+      this.fisica = false;
+      this.moral = true;
+    }
   }
 
 }

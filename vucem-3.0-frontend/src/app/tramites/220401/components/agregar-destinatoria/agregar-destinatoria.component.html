@@ -1,32 +1,47 @@
 <div class="container">
     <ng-titulo titulo="Agregar destinatario (destino final)" />
     
-    <div class="mb-3">
-      <label class="form-label">Tipo persona*:</label>
-      <div>
-        <input type="radio" id="fisica" name="tipoPersona" checked>
-        <label for="fisica">Física</label>
-        <input type="radio" id="moral" name="tipoPersona" class="ms-3">
-        <label for="moral">Moral</label>
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <label class="form-label">Tipo persona*:</label>
+        </div>
+        <div class="col-md-12">
+          <input type="radio" id="fisica" name="tipoPersona" [checked]="fisica" (change)="inputChecked('fisica')">
+          <label for="fisica">Física</label>
+        </div>
+        <div class="col-md-12">
+          <input type="radio" id="moral" name="tipoPersona" [checked]="moral" (change)="inputChecked('moral')">
+          <label for="moral">Moral</label>
+        </div>
       </div>
-    </div>
 
     <ng-titulo titulo="Datos personales" />
     <!-- <h5 class="section-title">Datos personales</h5> -->
-    <div class="row">
-      <div class="col-md-4 mb-3">
-        <label class="form-label">Nombre(s)*:</label>
-        <input type="text" class="form-control">
+     @if (fisica) {
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Nombre(s)*:</label>
+          <input type="text" class="form-control">
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Primer apellido*:</label>
+          <input type="text" class="form-control">
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Segundo apellido:</label>
+          <input type="text" class="form-control">
+        </div>
       </div>
-      <div class="col-md-4 mb-3">
-        <label class="form-label">Primer apellido*:</label>
-        <input type="text" class="form-control">
+     }
+
+     @if (moral) {
+      <div class="row">
+          <div class="col-md-8 mb-3">
+            <label class="form-label">Denominacion/razon social*:</label>
+            <input type="text" class="form-control">
+          </div>
       </div>
-      <div class="col-md-4 mb-3">
-        <label class="form-label">Segundo apellido:</label>
-        <input type="text" class="form-control">
-      </div>
-    </div>
+     }
     
     <div class="row">
       <div class="col-md-4 mb-3">
