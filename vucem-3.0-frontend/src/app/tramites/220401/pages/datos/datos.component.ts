@@ -1,18 +1,8 @@
 import { Component } from '@angular/core';
-import { SolicitudComponent } from './solicitud/solicitud.component';
-import { DatosDelComponent } from './datos-del/datos-del.component';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-pantalla-datos',
-  templateUrl: './datos.component.html',
-  styleUrl: './datos.component.scss',
-  standalone: true,
-  imports: [
-      CommonModule,
-      SolicitudComponent,
-      DatosDelComponent,
-  ]
+  templateUrl: './datos.component.html'
 })
 export class DatosComponent {
   indice: number = 1;
