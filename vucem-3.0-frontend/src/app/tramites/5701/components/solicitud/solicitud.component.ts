@@ -37,6 +37,9 @@ import { DatosComponentePedimento } from '../../../../core/models/5701/servicios
 import { FechasService } from '../../../../core/services/shared/fechas/fechas.service';
 import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.model';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
+import { delay, map, Subject, takeUntil, tap } from 'rxjs';
+import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
+import { SeccionQuery } from '../../../../core/queries/seccion.query';
 
 @Component({
   selector: 'solicitud',
@@ -77,8 +80,12 @@ export class SolicitudComponent {
   datosPedimentoComponente!: DatosComponentePedimento;
 
   solIndividual!: boolean;
+  private destroyNotifier$: Subject<void> = new Subject();
+  private seccion: SeccionState;
 
   constructor(
+    private seccionQuery: SeccionQuery,
+    private seccionStore: SeccionStore,
     private fechaService: FechasService,
     private fb: FormBuilder,
     private fService: FormulariosService,
@@ -96,6 +103,28 @@ export class SolicitudComponent {
 
     // Aqui se busca el nro de patente o autorizacion
     this.obtenerPatente();
+
+    this.seccionQuery.selectSeccionState$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map(seccionState => {
+        this.seccion = seccionState;
+      })
+    ).subscribe();
+
+    this.FormSolicitud.valueChanges.pipe(
+      takeUntil(this.destroyNotifier$),
+      delay(10),
+      tap((value) => {
+        if (this.FormSolicitud.valid) {
+          const secciones = this.seccion.seccion;
+          const seccionSinValidar = secciones.findIndex((seccion) => seccion === false);
+          secciones.splice(seccionSinValidar);
+          secciones.push(true);
+          this.seccionStore.establecerFormaValida(secciones);
+        }
+      }),
+    ).subscribe();
+
   }
 
   /**
@@ -237,7 +266,6 @@ export class SolicitudComponent {
           '',
           [
             Validators.required,
-            Validators.pattern(this.validacionesService.rfcPattern),
           ],
         ],
         nombreImportExport: [
