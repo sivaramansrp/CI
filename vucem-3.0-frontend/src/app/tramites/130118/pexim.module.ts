@@ -18,7 +18,7 @@ import { InputCheckComponent } from '../../shared/components/input-check/input-c
 import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
 import { PedimentoComponent } from '../5701/components/pedimento/pedimento.component';
 import { AgregaPersonasComponent } from '../5701/components/agrega-personas/agrega-personas.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
@@ -36,6 +36,7 @@ import { FirmaElectronicaComponent } from '../../shared/components/firma-electro
   imports: [
     CommonModule,
     RouterModule,
+    FormsModule,
     WizardComponent,
     PeximRoutingModule,
     SharedModule,

@@ -15,7 +15,10 @@ export const CATALOGOS_ID = {
   CAT_SECCION_ADUANAS: 'secciones-aduanas',
   DATOS_GNRLS_SOL: 5,
   CAT_TIPO_DOCUMENTO: 'tipos-documento',
-  CAT_TIPO_OPERACION: 7
+  CAT_TIPO_OPERACION: 7,
+  CAT_REGIMEN_MERCANCIA: 'regimen-mercancia',
+  CAT_CLASIFI_REGIMEN: 'clasifi-regimen'
+
 }
 
 export const TIPO_PERSONA = {
