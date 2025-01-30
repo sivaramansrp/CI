@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ADUANA_DE_INGRESO, TEXTOS } from '../../../../shared/constantes/issuance-extension-modification.enum';
+import { TEXTOS } from '../../../../shared/constantes/issuance-extension-modification.enum';
 import { FormBuilder } from '@angular/forms';
 
 @Component({
@@ -11,7 +11,6 @@ export class DatosDeLaSolicitudComponent {
   TEXTOS: string = TEXTOS;
   selectRangoDias: Array<string> = [];
   colapsable: boolean = false;
-  despachoLDA: any = ADUANA_DE_INGRESO;
   constructor(private readonly fb: FormBuilder) {
 
   }

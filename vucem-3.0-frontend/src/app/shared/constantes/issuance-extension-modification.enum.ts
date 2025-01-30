@@ -72,13 +72,6 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
         placeholder: '',
     }
 ];
-export const ADUANA_DE_INGRESO = {
-    labelNombre: 'Aduana de ingreso',
-    maxlength: 10,
-    minlenght: 0,
-    required: true,
-    alfanumerico: true,
-};
 export const FECHA_DE_PAGO = {
     labelNombre: 'Fecha de pago',
     required: true,
