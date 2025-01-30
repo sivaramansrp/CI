@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'paso-uno',
@@ -21,6 +21,7 @@ export class PasoUnoComponent {
     { index: 4, title: 'Terceros relacionados', component: 'terceror-relacionados' },
     { index: 5, title: 'Pago de derechos', component: 'pago-de-derechos' }
   ];
+  @Output() tabChanged = new EventEmitter<number>();
   /**
     * @method seleccionaTab
     * @description Cambia el índice de la pestaña seleccionada.
@@ -28,5 +29,6 @@ export class PasoUnoComponent {
     */
   seleccionaTab(i: number): void {
     this.indice = i;
+    this.tabChanged.emit(i);
   }
 }

@@ -52,19 +52,41 @@ export class ZoosanitarioPageComponent {
      * Obtener un título para todas las páginas.
      * @param valor - valor del índice de página. --220201
      */
-  obtenerNombreDelTítulo(valor: number) {
+  obtenerNombreDelTítulo(valor: number, pestañaÍndice?: number) {
     switch (valor) {
       case 1:
         return 'Zoosanitario para importación';
       case 2:
         return 'Cargar archivos';
       case 3:
-        return 'Datos de la solicitud';
+        return 'Zoosanitario para importación';
       case 4:
         return 'Firmar'
       default:
         return 'Zoosanitario para importación';
     }
 
+  }
+  onTabChange(selectedTab: number): void {
+    switch (selectedTab) {
+      case 1:
+        this.tituloMensaje = 'Zoosanitario para importación';
+        break;
+      case 2:
+        this.tituloMensaje = 'Captura del certificado zoosanitario para importación';
+        break;
+      case 3:
+        this.tituloMensaje = 'Zoosanitario para importación';
+        break;
+      case 4:
+        this.tituloMensaje = 'Zoosanitario para importación';
+        break;
+      case 5:
+        this.tituloMensaje = 'Captura del certificado zoosanitario para importación';
+        break;
+      default:
+        this.tituloMensaje = 'Zoosanitario para importación';
+        break;
+    }
   }
 }
