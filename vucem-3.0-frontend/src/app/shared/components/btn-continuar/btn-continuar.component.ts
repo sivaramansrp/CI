@@ -2,6 +2,9 @@ import { Component, EventEmitter, inject, Input, Output, signal, ViewChild } fro
 import { DatosPasos } from '../../../core/models/shared/components.model';
 import { WizardComponent } from '../wizard/wizard.component';
 import { WizardService } from '../../../core/services/shared/wizard/wizard.service';
+import { SeccionQuery } from '../../../core/queries/seccion.query';
+import { SeccionState, SeccionStore } from '../../../estados/seccion.store';
+import { map, Subject, takeUntil } from 'rxjs';
 
 interface AccionBoton {
   accion: string;
@@ -23,7 +26,25 @@ export class BtnContinuarComponent {
 // @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   wizardService = inject(WizardService);
+  public seccion: SeccionState;
+  private destroyNotifier$: Subject<void> = new Subject();
+  public habilitarBoton: boolean = false;
 
+  constructor(
+    private seccionQuery: SeccionQuery,
+  ){
+
+  }
+
+  ngOnInit() {
+    this.seccionQuery.selectSeccionState$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map(seccionState => {
+        this.seccion = seccionState;
+        this.habilitarBoton = this.seccion.formaValida === this.seccion.seccion;
+      })
+    ).subscribe();
+  }
 
   get btnAntVisible() {
     return (this.datos.indice === 1  ? 'hidden' : 'visible')

@@ -37,7 +37,7 @@ import { DatosComponentePedimento } from '../../../../core/models/5701/servicios
 import { FechasService } from '../../../../core/services/shared/fechas/fechas.service';
 import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.model';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
-import { delay, map, Subject, takeUntil, tap } from 'rxjs';
+import { delay, distinctUntilChanged, map, Subject, takeUntil, tap } from 'rxjs';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SeccionQuery } from '../../../../core/queries/seccion.query';
 
@@ -112,15 +112,17 @@ export class SolicitudComponent {
     ).subscribe();
 
     this.FormSolicitud.valueChanges.pipe(
+      distinctUntilChanged(),
       takeUntil(this.destroyNotifier$),
       delay(10),
       tap((value) => {
         if (this.FormSolicitud.valid) {
           const secciones = this.seccion.seccion;
           const seccionSinValidar = secciones.findIndex((seccion) => seccion === false);
-          secciones.splice(seccionSinValidar);
-          secciones.push(true);
-          this.seccionStore.establecerFormaValida(secciones);
+          const formas = this.seccion.formaValida;
+          formas.splice(seccionSinValidar,1);
+          formas.push(true);
+          this.seccionStore.establecerFormaValida(formas);
         }
       }),
     ).subscribe();
