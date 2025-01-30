@@ -101,10 +101,10 @@ export interface DatosRepresentanteLegal {
 }
 
 export interface TableData {
-  tableHeader: Array<string>;
-  tableBody: Array<TableBodyData>;
+  tableHeader: string[];
+  tableBody: TableBodyData[];
 }
 
 export interface TableBodyData {
-  tbodyData: Array<string>;
+  tbodyData: string[];
 }
