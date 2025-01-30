@@ -14,7 +14,7 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
-import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component'; 
 import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';
 import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
 import { InputHoraComponent } from '../../shared/components/input-hora/input-hora.component';
@@ -23,7 +23,6 @@ import { AgregaPersonasComponent } from '../303/components/agrega-personas/agreg
 import { AgregarTransporteComponent } from '../../shared/components/agregar-transporte/agregar-transporte.component';
 import { PedimentoComponent } from './components/pedimento/pedimento.component';
 import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
-import { TercerosComponent } from './components/terceros/terceros.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { DespachoMercanciasSolicitudComponent } from './components/despacho-mercancias-solicitud/despacho-mercancias-solicitud.component';
 import { PagoDerechosComponent } from './components/pago-derechos/pago-derechos.component';
@@ -36,12 +35,12 @@ import { ControlInventariosComponent } from './components/control-inventarios/co
 import { AgregarMiembrosEmpresaComponent } from './components/agregar-miembros-empresa/agregar-miembros-empresa.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
+import { RepresentanteFiscalComponent } from '../../shared/components/representante-fiscal/representante-fiscal.component';
 
 @NgModule({
   declarations: [
     RegistroPageComponent,
     SolicitudComponent,
-    TercerosComponent,
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
@@ -53,7 +52,8 @@ import { SelectPaisesComponent } from '../../shared/components/select-paises/sel
     ClientesProveedoresExtrajeroComponent,
     DatosTransportistaComponent,
     ControlInventariosComponent,
-    AgregarMiembrosEmpresaComponent
+    AgregarMiembrosEmpresaComponent,
+    
   ],
   imports: [
     CommonModule,
@@ -76,11 +76,11 @@ import { SelectPaisesComponent } from '../../shared/components/select-paises/sel
     AgregarTransporteComponent,
     PedimentoComponent,
     AgregaPersonasComponent,
-    SelectPaisesComponent
+    SelectPaisesComponent,
+    RepresentanteFiscalComponent
 
   ],
   exports: [
-    
   ]
 })
 export class DespachoMercanciasModule { }
