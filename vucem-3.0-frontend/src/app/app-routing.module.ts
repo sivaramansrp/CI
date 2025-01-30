@@ -24,6 +24,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tramites/303/despacho-mercancias.module').then(
         (m) => m.DespachoMercanciasModule
+  )
+  },
+  {
+    path: 'pantallas-extraordinarios',
+    loadChildren: () =>
+      import('./tramites/220401/pantallas.module').then(
+        (m) => m.PantallasModule
       ),
   },
 ];
