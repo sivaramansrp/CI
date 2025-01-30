@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { Catalogo, CatalogoPaises } from '../../../../core/models/shared/catalogos.model';
+import {
+  Catalogo,
+  CatalogoPaises,
+} from '../../../../core/models/shared/catalogos.model';
 import {
   CatalogosSelect,
   CatalogosSelectPaises,
@@ -8,12 +11,7 @@ import {
   InputFecha,
   InputHora,
 } from '../../../../core/models/shared/components.model';
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import {
   DESPACHO_DD,
@@ -37,7 +35,14 @@ import { DatosComponentePedimento } from '../../../../core/models/5701/servicios
 import { FechasService } from '../../../../core/services/shared/fechas/fechas.service';
 import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.model';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
-import { delay, distinctUntilChanged, map, Subject, takeUntil, tap } from 'rxjs';
+import {
+  delay,
+  distinctUntilChanged,
+  map,
+  Subject,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SeccionQuery } from '../../../../core/queries/seccion.query';
 
@@ -104,32 +109,45 @@ export class SolicitudComponent {
     // Aqui se busca el nro de patente o autorizacion
     this.obtenerPatente();
 
-    this.seccionQuery.selectSeccionState$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map(seccionState => {
-        this.seccion = seccionState;
-      })
-    ).subscribe();
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
 
-    this.FormSolicitud.valueChanges.pipe(
-      distinctUntilChanged(),
-      takeUntil(this.destroyNotifier$),
-      delay(10),
-      tap((value) => {
-        const secciones = this.seccion.seccion;
-        const formas = this.seccion.formaValida;
-        const seccionSinValidar = secciones.findIndex((seccion) => seccion === true);
+    this.FormSolicitud.valueChanges
+      .pipe(
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((value) => {
+          const secciones = this.seccion.seccion;
+          const formasValidadas = this.seccion.formaValida;
+          for (let i = 0; i < this.seccion.seccion.length; i++) {
+            if (
+              this.seccion.seccion[i] === true &&
+              this.seccion.formaValida[i] === false
+            )
+              formasValidadas[i] = true;
+            break;
+          }
+          const seccionSinValidar = secciones.findIndex(
+            (seccion) => seccion === true
+          );
 
-        if (this.FormSolicitud.valid) {
-          formas[seccionSinValidar] = true;
-          this.seccionStore.establecerFormaValida(formas);
-        } else {
-          formas[seccionSinValidar] = false;
-          this.seccionStore.establecerFormaValida(formas);
-        }
-      }),
-    ).subscribe();
-
+          if (this.FormSolicitud.valid) {
+            formasValidadas[seccionSinValidar] = true;
+            this.seccionStore.establecerFormaValida(formasValidadas);
+          } else {
+            formasValidadas[seccionSinValidar] = false;
+            this.seccionStore.establecerFormaValida(formasValidadas);
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -281,15 +299,8 @@ export class SolicitudComponent {
     this.FormSolicitud = this.fb.group({
       tipoSolicitud: [{ value: '', requerid: true }, [Validators.required]],
       datosImportadorExportador: this.fb.group({
-        rfcImportExport: [
-          '',
-          [
-            Validators.required,
-          ],
-        ],
-        nombreImportExport: [
-          { value: '', disabled: true }
-        ],
+        rfcImportExport: ['', [Validators.required]],
+        nombreImportExport: [{ value: '', disabled: true }],
         nroRegistro: ['', [Validators.maxLength(25)]],
         programaFomento: [false],
         programaFomentoValue: [''],
@@ -349,8 +360,8 @@ export class SolicitudComponent {
 
       pagoCaptura: this.fb.group({
         montoAPagar: [{ value: '', disabled: true }],
-        lineaCaptura: [ '', [Validators.required]],
-        monto: [ '', [Validators.required]],
+        lineaCaptura: ['', [Validators.required]],
+        monto: ['', [Validators.required]],
       }),
     });
   }
@@ -377,7 +388,7 @@ export class SolicitudComponent {
 
   paisProcedencia(pais: CatalogoPaises) {
     this.mercancia.get('paisProcedencia')?.setValue(pais.id);
-    (pais);
+    pais;
   }
 
   busqueda_rfc() {
@@ -405,7 +416,6 @@ export class SolicitudComponent {
    * Valida el formulario
    */
   validarFormulario(): void {
-
     if (this.FormSolicitud.invalid) {
       this.FormSolicitud.markAllAsTouched();
       return;
