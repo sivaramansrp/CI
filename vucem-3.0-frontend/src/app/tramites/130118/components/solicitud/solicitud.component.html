@@ -25,15 +25,15 @@
             <div class="row mb-3">
                 <div class="col-md-8">
                     <div class="form-group">
-                        <label for="descripcion" class="form-label">Descripción de la mercancia <span
-                                class="text-danger">*</span>:</label>
+                        <label for="descripcion" class="form-label">Descripción de la mercancia*</label>
                         <textarea class="form-control" cols="60" rows="10" id="valueTA" formControlName="valueTA"
                             [ngClass]="isValid(datosMercancia, 'valueTA') ? 'required' : ''"></textarea>
                         <input type="hidden" id="valueHidden" name="descripcionMerc" />
-                        <div *ngIf="FormSolicitud.get('datosMercancia.valueTA')?.hasError('maxlength')"
-                            class="text-danger">
+                        @if (FormSolicitud.get('datosMercancia.valueTA')?.hasError('maxlength')){
+                        <div class="text-danger">
                             Por favor, no escriba más de 1000 caracteres.
                         </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -50,8 +50,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-8">
-                    <label for="unidadMedidaTarifaria" class="form-label">Unidad de medida de la tarifa (UMT) </label>
-                    <span class="text-danger">*</span>
+                    <label for="unidadMedidaTarifaria" class="form-label">Unidad de medida de la tarifa (UMT)*</label>
                     <span class="bi bi-question-circle-fill" title="Unidad de medida de la tarifa (UMT)"
                         data-bs-toggle="tooltip"></span>
                 </div>
@@ -67,9 +66,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-8">
-                    <label for="cantidadTarifaria" class="form-label">Cantidad </label>
-                    <span class="text-danger">*</span>
-                    <label for="puntos">:</label>
+                    <label for="cantidadTarifaria" class="form-label">Cantidad*:</label>
                     <input class="form-control onceEnterosDosdecimals"
                         [ngClass]="isValid(datosMercancia, 'cantidadTarifaria') ? 'required' : ''" type="number"
                         formControlName="cantidadTarifaria" name="cantidadTarifaria" id="cantidadTarifaria"
@@ -78,9 +75,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-8">
-                    <label for="valorFacturaUSD" class="form-label">Valor factura USD </label>
-                    <span class="text-danger">*</span>
-                    <label for="puntos">:</label>
+                    <label for="valorFacturaUSD" class="form-label">Valor factura USD*:</label>
                     <span class="bi bi-question-circle-fill"
                         title="En caso de no contar con valor factura proporciona el valor estimado"
                         data-bs-toggle="tooltip"></span>
@@ -91,8 +86,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-8">
-                    <label for="precioUnitarioUSD" class="form-label">Precio unitario en USD </label>
-                    <span class="text-danger">*</span>
+                    <label for="precioUnitarioUSD" class="form-label">Precio unitario en USD*</label>
                     <input class="form-control"
                         [ngClass]="isValid(datosMercancia, 'precioUnitarioUSD') ? 'required' : ''" type="text"
                         formControlName="precioUnitarioUSD" name="precioUnitarioUSD" id="precioUnitarioUSD" />
@@ -110,8 +104,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <label for="lote" class="form-label">Número de certificado de molino o de calidad
-                        <span class="text-danger">*</span>
+                    <label for="lote" class="form-label">Número de certificado de molino o de calidad*
                         <span class="bi bi-question-circle-fill" title="Número de certificado de molino o de calidad"
                             data-bs-toggle="tooltip"></span></label>
                     <input type="text" [ngClass]="isValid(datosMercancia, 'lote') ? 'required' : ''"
@@ -141,8 +134,7 @@
             <div class="row mb-3" id="tipoPer">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="tipoPersona" class="form-label">Tipo de persona
-                            <span class="text-danger">*</span>:</label>
+                        <label for="tipoPersona" class="form-label">Tipo de persona*:</label>
                         <div class="form-check">
                             <input type="radio" value="pfisica" id="pfisica" class="form-check-input"
                                 formControlName="tipoPersona" (change)="personaFisica()">
@@ -166,21 +158,18 @@
                 <br>
             </div>
 
-            <div class="row mb-3 pf">
+            @if(isVisibleFisica){
+            <div class="row mb-3">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="nombre" class="form-label">Nombre(s) </label>
-                        <span class="text-danger">*</span>
-                        <label for="puntos">:</label>
+                        <label for="nombre" class="form-label">Nombre(s)*:</label>
                         <input class="form-control" [ngClass]="isValid(datosProducto, 'nombre') ? 'required' : ''"
                             type="text" name="nombre" id="nombre" formControlName="nombre" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="apellidoPaterno" class="form-label">Primer apellido </label>
-                        <span class="text-danger">*</span>
-                        <label for="puntos">:</label>
+                        <label for="apellidoPaterno" class="form-label">Primer apellido*:</label>
                         <input class="form-control"
                             [ngClass]="isValid(datosProducto, 'apellidoPaterno') ? 'required' : ''" type="text"
                             name="apellidoPaterno" id="apellidoPaterno" formControlName="apellidoPaterno" />
@@ -188,30 +177,29 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="apellidoMaterno" class="form-label">Segundo apellido</label>
-                        <label for="puntos">:</label>
+                        <label for="apellidoMaterno" class="form-label">Segundo apellido:</label>
                         <input class="form-control" type="text" name="apellidoMaterno" id="apellidoMaterno"
                             formControlName="apellidoMaterno" />
                     </div>
                 </div>
             </div>
+            }
 
+            @if(isVisibleMoral){
             <div class="row mb-3 pm">
                 <div class="col-md-8">
                     <div class="form-group">
-                        <label for="razonSocial" class="form-label">Razon social </label>
-                        <span class="text-danger">*</span>
-                        <label for="puntos">:</label>
+                        <label for="razonSocial" class="form-label">Razon social*:</label>
                         <input class="form-control" [ngClass]="isValid(datosProducto, 'razonSocial') ? 'required' : ''"
                             type="text" name="razonSocial" id="razonSocial" formControlName="razonSocial" />
                     </div>
                 </div>
             </div>
+            }
 
             <div class="row mb-3" id="molino">
                 <div class="col-md-8">
-                    <label for="molinoSeleccion" class="form-label">Molino </label>
-                    <span class="text-danger">*</span>
+                    <label for="molinoSeleccion" class="form-label">Molino*:</label>
                     <select id="molinoSeleccion" [ngClass]="isValid(datosProducto, 'molinoSeleccion') ? 'required' : ''"
                         class="form-control" formControlName="molinoSeleccion">
                         <option value="">Selecciona un valor</option>
@@ -227,9 +215,7 @@
             <div class="row mb-3" style="margin-bottom:51px ">
                 <div class="col-md-8">
                     <div class="form-group">
-                        <label for="domicilio" class="form-label">Domicilio </label>
-                        <span class="text-danger">*</span>
-                        <label for="puntos">:</label>
+                        <label for="domicilio" class="form-label">Domicilio*:</label>
                         <textarea class="form-control" [ngClass]="isValid(datosProducto, 'domicilio') ? 'required' : ''"
                             id="domicilio" name="domicilio" cols="50" rows="7" formControlName="domicilio"></textarea>
                     </div>
@@ -249,9 +235,7 @@
                 </div>
                 <div class="col-md-4 rf-input">
                     <div class="form-group">
-                        <label for="unidadAdministrativaRepresentacionFederal">Representacion Federal </label>
-                        <span class="text-danger">*</span>
-                        <label for="puntos">:</label>
+                        <label for="unidadAdministrativaRepresentacionFederal">Representacion Federal*:</label>
                         <input type="hidden" name="idRepresetancionFederalSeleccionado"
                             id="idRepresetancionFederalSeleccionado" />
                         <select name="unidadAdministrativaRepresentacionFederal" id="representacionFederalSelect"

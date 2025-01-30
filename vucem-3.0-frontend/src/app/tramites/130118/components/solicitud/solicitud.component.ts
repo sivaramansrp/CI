@@ -19,6 +19,8 @@ export class SolicitudComponent {
   datosPaisOrigen!: CatalogosSelect;
   datosPaisDestino!: CatalogosSelect;
   datosEstado!: CatalogosSelect;
+  isVisibleFisica: boolean;
+  isVisibleMoral: boolean;
 
   regimenMercanciaSeleccionada!: Catalogo;
   clasifiRegimenSeleccionada!: Catalogo;
@@ -132,9 +134,9 @@ export class SolicitudComponent {
         ],
         paisOrigen: ['', Validators.required],
         paisDestino: ['', Validators.required],
-        lote: ['', 
+        lote: ['',
           [
-            Validators.required, 
+            Validators.required,
             Validators.maxLength(60)
           ]
         ],
@@ -161,14 +163,6 @@ export class SolicitudComponent {
         representacionFederal: ['', Validators.required]
       })
     })
-
-    // this.FormSolicitud.get('datosProducto.tipoPersona')?.valueChanges.subscribe((value) => {
-    //   if (value.toLowerCase() === 'pfisica') {
-    //     this.personaFisica();
-    //   } else if (value.toLowerCase() === 'pmoral') {
-    //     this.personaMoral();
-    //   }
-    // });
   }
 
   validarFormulario() {
@@ -179,40 +173,27 @@ export class SolicitudComponent {
   }
 
   muestraCamposPersona(): void {
-    const pfElements = document.querySelectorAll('.pf') as NodeListOf<HTMLElement>;
-    const pmElements = document.querySelectorAll('.pm') as NodeListOf<HTMLElement>;
-    const molinoElements = document.querySelectorAll('#molino') as NodeListOf<HTMLElement>;
-
-    pfElements.forEach(element => element.style.display = 'none');
-    pmElements.forEach(element => element.style.display = 'none');
-    molinoElements.forEach(element => element.style.display = 'none');
-
-    const razonSocial = (document.getElementById('razonSocial') as HTMLInputElement).value;
-    const nombre = (document.getElementById('nombre') as HTMLInputElement).value;
+    const razonSocial = this.FormSolicitud.get('datosProducto.razonSocial')?.value;
+    const nombre = this.FormSolicitud.get('datosProducto.nombre')?.value;
 
     if (razonSocial !== '') {
       this.personaMoral();
-      (document.getElementById('pmoral') as HTMLInputElement).checked = true;
+      this.FormSolicitud.get('datosProducto.tipoPersona')?.setValue('pmoral');
     } else if (nombre !== '') {
       this.personaFisica();
-      (document.getElementById('pfisica') as HTMLInputElement).checked = true;
+      this.FormSolicitud.get('datosProducto.tipoPersona')?.setValue('pfisica');
     }
   }
 
   personaMoral(): void {
-    const pfElements = document.querySelectorAll('.pf') as NodeListOf<HTMLElement>;
-    const pmElements = document.querySelectorAll('.pm') as NodeListOf<HTMLElement>;
-    const molinoElements = document.querySelectorAll('#molino') as NodeListOf<HTMLElement>;
+    this.isVisibleFisica = false;
+    this.isVisibleMoral = true;
 
-    pfElements.forEach(element => element.style.display = 'none');
-    pmElements.forEach(element => element.style.display = 'block');
-    molinoElements.forEach(element => element.style.display = 'none');
-
-    // Reset the values and disable fields for "Persona Moral"
+    // Restablecer los valores y desactivar campos para "Persona Moral"
     this.FormSolicitud.get('datosProducto.nombre')?.setValue('');
     this.FormSolicitud.get('datosProducto.apellidoPaterno')?.setValue('');
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.setValue('');
-    this.FormSolicitud.get('datosProducto.razonSocial')?.setValue('');  // Make sure to enable the relevant fields
+    this.FormSolicitud.get('datosProducto.razonSocial')?.setValue('');  //Asegúrate de habilitar los campos relevantes
     this.FormSolicitud.get('datosProducto.razonSocial')?.enable();
 
     this.FormSolicitud.get('datosProducto.nombre')?.disable();
@@ -221,15 +202,10 @@ export class SolicitudComponent {
   }
 
   personaFisica(): void {
-    const pfElements = document.querySelectorAll('.pf') as NodeListOf<HTMLElement>;
-    const pmElements = document.querySelectorAll('.pm') as NodeListOf<HTMLElement>;
-    const molinoElements = document.querySelectorAll('#molino') as NodeListOf<HTMLElement>;
+    this.isVisibleFisica = true;
+    this.isVisibleMoral = false;
 
-    pfElements.forEach(element => element.style.display = 'block');
-    pmElements.forEach(element => element.style.display = 'none');
-    molinoElements.forEach(element => element.style.display = 'none');
-
-    // Reset the values and enable fields for "Persona Física"
+    //Restablecer los valores y habilitar campos para "Persona Física"
     this.FormSolicitud.get('datosProducto.razonSocial')?.setValue('');
     this.FormSolicitud.get('datosProducto.razonSocial')?.disable();
 
@@ -238,18 +214,18 @@ export class SolicitudComponent {
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.enable();
   }
 
-  // Function to calculate price per unit
+  //Función para calcular el precio por unidad
   calcularUmtPrecioUnitario() {
     this.calcularPrecioUnitarioUSD();
   }
 
-  // Function to calculate unit price in USD
+  // Función para calcular el precio unitario en USD
   calcularPrecioUnitarioUSD() {
     const cantidadUmt = this.FormSolicitud.get('datosMercancia.cantidadTarifaria')?.value;
     const mercanciaAviso = this.FormSolicitud.get('datosMercancia.valorFacturaUSD')?.value;
 
     if (cantidadUmt != null && cantidadUmt.toString().length >= 1 &&
-        mercanciaAviso != null && mercanciaAviso.toString().length >= 1) {
+      mercanciaAviso != null && mercanciaAviso.toString().length >= 1) {
 
       if (cantidadUmt === 0 || cantidadUmt.toString().length === 0) {
         this.FormSolicitud.get('precioUnitarioAcero')?.setValue('0');
@@ -270,7 +246,7 @@ export class SolicitudComponent {
     }
   }
 
-  // Function to truncate the decimal part to two decimal places
+  // Función para truncar la parte decimal a dos decimales
   truncar(num: number): number {
     const numStr = num.toString();
     if (numStr.indexOf('.') !== -1) {
@@ -278,7 +254,7 @@ export class SolicitudComponent {
       if (numArr.length === 1) {
         return Number(num);
       } else {
-        return parseFloat(numArr[0] + '.' + numArr[1].slice(0, 3));  // Limit to 2 decimals
+        return parseFloat(numArr[0] + '.' + numArr[1].slice(0, 3));  // Limitar a 2 decimales
       }
     } else {
       return Number(num);
