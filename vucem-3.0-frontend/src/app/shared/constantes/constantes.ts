@@ -18,6 +18,8 @@ export const CATALOGOS_ID = {
   DATOS_GNRLS_SOL: 5,
   CAT_TIPO_DOCUMENTO: 'tipos-documento',
   CAT_TIPO_OPERACION: 7,
+  CAT_REGIMEN_MERCANCIA: 'regimen-mercancia',
+  CAT_CLASIFI_REGIMEN: 'clasifi-regimen',
   DATOS_PERSONA_FISICA: 21,
 }
 

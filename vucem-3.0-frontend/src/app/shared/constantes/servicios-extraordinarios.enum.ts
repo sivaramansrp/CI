@@ -135,3 +135,9 @@ export const FECHA_FINAL = {
   habilitado: true,
 };
 
+export const FECHA_SALIDA = {
+  labelNombre:'Fecha de expedición de certificado de Molino o de calidad',
+  required: true,
+  habilitado: false,
+}
+
