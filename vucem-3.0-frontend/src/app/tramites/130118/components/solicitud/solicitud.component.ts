@@ -143,7 +143,8 @@ export class SolicitudComponent {
         fechaSalida: [
           { value: '', disabled: true }
         ],
-        observaciones: ['', [Validators.maxLength(250)]]
+        observaciones: ['', [Validators.maxLength(250)]],
+        observacionMerc: ''
       }),
 
       datosProducto: this.fb.group({
@@ -170,6 +171,10 @@ export class SolicitudComponent {
       this.FormSolicitud.markAllAsTouched();
       return;
     }
+  }
+
+  escapeHtmlQuotes(value: string): string {
+    return value ? value.replace(/"/g, '&#34;') : '';//Reemplazar comillas dobles por comillas dobles HTML
   }
 
   muestraCamposPersona(): void {
@@ -309,7 +314,7 @@ export class SolicitudComponent {
           const response = resp.data;
 
           this.datosRegimenMercancia = {
-            labelNombre: 'Regimen al que se destinara la mercancia',
+            labelNombre: 'Régimen al que se destinará la mercancía',
             required: true,
             primerOpcion: 'Selecciona un valor',
             catalogos: response,
@@ -326,7 +331,7 @@ export class SolicitudComponent {
           const response = resp.data;
 
           this.datosClasifiRegimen = {
-            labelNombre: 'Clasificacion de regimen',
+            labelNombre: 'Clasificación de régimen',
             required: true,
             primerOpcion: 'Selecciona un valor',
             catalogos: response,
@@ -343,7 +348,7 @@ export class SolicitudComponent {
           const response = resp.data;
 
           this.datosFraccionArancelaria = {
-            labelNombre: 'Fraccion arancelaria',
+            labelNombre: 'Fracción arancelaria',
             required: true,
             primerOpcion: 'Selecciona un valor',
             catalogos: response,
@@ -377,7 +382,7 @@ export class SolicitudComponent {
           const response = resp.data;
 
           this.datosPaisOrigen = {
-            labelNombre: 'Pais origen del acero/Pais origen de la mercancia',
+            labelNombre: 'País origen del acero/País origen de la mercancía',
             required: true,
             primerOpcion: 'Selecciona un valor',
             catalogos: response,
@@ -394,7 +399,7 @@ export class SolicitudComponent {
           const response = resp.data;
 
           this.datosPaisDestino = {
-            labelNombre: 'Pais exportador',
+            labelNombre: 'País exportador',
             required: true,
             primerOpcion: 'Selecciona un valor',
             catalogos: response,
