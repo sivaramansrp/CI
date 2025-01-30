@@ -7,12 +7,13 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import { CommonModule } from '@angular/common';
+import { TercerosRelacionadosComponent } from '../terceros-relacionados/terceros-relacionados.component';
 
 @Component({
   selector: 'app-combinacion-requerida',
   templateUrl: './combinacion-requerida.component.html',
   standalone: true,
-  imports: [SelectCatalogosComponent,TituloComponent,ReactiveFormsModule,CommonModule],
+  imports: [SelectCatalogosComponent,TituloComponent,ReactiveFormsModule,CommonModule,TercerosRelacionadosComponent],
   styleUrl: './combinacion-requerida.component.scss'
 })
 export class CombinacionRequeridaComponent {

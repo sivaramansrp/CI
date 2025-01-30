@@ -13,11 +13,12 @@ export class TercerosRelacionadosComponent {
 
 
   public establecimientoHeaderData: string[] = [];
-  public establecimientoBodyData: any[] = [];
+  public establecimientoBodyData = [{}];
   public destinatarioHeaderData: string[] = [];
-  public destinatarioBodyData: any[] = [];
+  public destinatarioBodyData = [{}];
   public importadorHeaderData: string[] = [];
-  public importadorBodyData: any[] = [];
+  public importadorBodyData = [{}];
+  //public getEstablecimientoTableData = establecimientoTable
 
 
   constructor() {
