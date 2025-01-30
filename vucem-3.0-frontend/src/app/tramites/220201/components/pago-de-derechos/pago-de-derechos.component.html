@@ -28,7 +28,7 @@
     </div>
     <div class="col-md-4">
       <label for="seccionAduanera" class="form-label">Justificacion*</label>
-      <select class="form-control" id="seccionAduanera">
+      <select class="form-control" id="seccionAduanera" disabled="true">
         <option>Selecciona un valor</option>
         <option>AEROPUERTO INTERNAL. CD.DE MEXICO, D.F.</option>
         <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
@@ -46,7 +46,7 @@
           id="nombreImportExport"
           placeholder=""
           type="text"
-          readonly="true"
+          disabled="true"
         />
       </div>
     </div>
@@ -61,13 +61,13 @@
           placeholder=""
           type="text"
           appUppercase
-          readonly="true"
+          disabled="true"
         />
       </div>
     </div>
     <div class="col-md-4">
       <label for="seccionAduanera" class="form-label">Banco*</label>
-      <select class="form-control" id="seccionAduanera">
+      <select class="form-control" id="seccionAduanera" disabled="true">
         <option>Selecciona un valor</option>
         <option>AEROPUERTO INTERNAL. CD.DE MEXICO, D.F.</option>
         <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
@@ -83,15 +83,13 @@
           placeholder=""
           type="text"
           appUppercase
+          disabled="true"
         />
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <input-fecha
-          [datos]="fechaInicioInput"
-          aria-disabled="true"
-        ></input-fecha>
+        <input-fecha [datos]="fechaInicioInput" [disabled]="true"></input-fecha>
       </div>
     </div>
     <div class="col-md-4">
@@ -104,6 +102,7 @@
           id="nombreImportExport"
           placeholder=""
           type="text"
+          disabled="true"
         />
       </div>
     </div>
