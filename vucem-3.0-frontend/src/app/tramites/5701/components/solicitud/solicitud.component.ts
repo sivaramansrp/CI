@@ -1,4 +1,4 @@
-import { Component, Signal, signal, WritableSignal } from '@angular/core';
+import { Component } from '@angular/core';
 import { Catalogo, CatalogoPaises } from '../../../../core/models/shared/catalogos.model';
 import {
   CatalogosSelect,
@@ -172,6 +172,20 @@ export class SolicitudComponent {
     return this.FormSolicitud.get('personasResponsablesDespacho') as FormArray;
   }
 
+  /**
+   * Obtiene el grupo de formulario 'mercancia' del formulario principal 'FormSolicitud'.
+   */
+  get mercancia(): FormGroup {
+    return this.FormSolicitud.get('mercancia') as FormGroup;
+  }
+
+  /**
+   * Obtiene el grupo de formulario 'pagoCaptura' del formulario principal 'FormSolicitud'.
+   */
+  get pagoCaptura(): FormGroup {
+    return this.FormSolicitud.get('pagoCaptura') as FormGroup;
+  }
+
   // * Peticiones a las apis
 
   /**
@@ -269,8 +283,7 @@ export class SolicitudComponent {
           ],
         ],
         nombreImportExport: [
-          { value: '', disabled: true },
-          [Validators.required],
+          { value: '', disabled: true }
         ],
         nroRegistro: ['', [Validators.maxLength(25)]],
         programaFomento: [false],
@@ -304,7 +317,7 @@ export class SolicitudComponent {
         patente: [{ value: '', disabled: true }],
         relacionSociedad: [],
         encargoConferido: [],
-        domicilio: ['', Validators.required],
+        domicilio: [''],
       }),
 
       mercancia: this.fb.group({
@@ -328,6 +341,12 @@ export class SolicitudComponent {
       }),
 
       personasResponsablesDespacho: this.fb.array([]),
+
+      pagoCaptura: this.fb.group({
+        montoAPagar: [{ value: '', disabled: true }],
+        lineaCaptura: [ '', [Validators.required]],
+        monto: [ '', [Validators.required]],
+      }),
     });
   }
 
@@ -348,11 +367,12 @@ export class SolicitudComponent {
 
   // *Eventos de los componentes hijos
   paisOrigen(pais: CatalogoPaises) {
-    console.log(pais);
+    this.mercancia.get('paisOrigen')?.setValue(pais.id);
   }
 
   paisProcedencia(pais: CatalogoPaises) {
-    console.log(pais);
+    this.mercancia.get('paisProcedencia')?.setValue(pais.id);
+    (pais);
   }
 
   busqueda_rfc() {
@@ -376,7 +396,11 @@ export class SolicitudComponent {
     this.solIndividual = this.individual();
   }
 
-  validarFormulario() {
+  /**
+   * Valida el formulario
+   */
+  validarFormulario(): void {
+
     if (this.FormSolicitud.invalid) {
       this.FormSolicitud.markAllAsTouched();
       return;
