@@ -1,10 +1,12 @@
-/* eslint-disable sort-imports */
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
-import radioOptionsData from '../../../../../assets/json/220401/radioButton.json'
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import radioOptionsData from '../../../../../assets/json/220401/tipo-de-certifico.json'
 @Component({
   selector: 'app-datos-del',
   templateUrl: './datos-del.component.html',

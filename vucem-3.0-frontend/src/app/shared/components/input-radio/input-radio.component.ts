@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { CommonModule } from '@angular/common';
-// eslint-disable-next-line sort-imports
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -12,14 +12,14 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   templateUrl: './input-radio.component.html',
   styleUrl: './input-radio.component.scss'
 })
-export class InputRadioComponent {
+export class InputRadioComponent implements OnInit {
 
   FormInputRadio!: FormGroup;
-  @Input() radioOptions: { label: string; value: any }[] = [];
-  @Input() selectedValue: any;
+  @Input() radioOptions: { label: string; value: string | number }[] = [];
+  @Input() selectedValue: string | number | null = null;
   @Input() isRequired: boolean=false;
   @Input() layout: 'vertical' | 'horizontal' = 'vertical'; 
-  @Output() valueChange = new EventEmitter<any>();
+  @Output() valueChange = new EventEmitter<string | number>();
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -32,7 +32,7 @@ export class InputRadioComponent {
       seleccion: [this.selectedValue || '', validators]
     });
   }
-  onSelectionChange(value: any) {
+  onSelectionChange(value: string | number) {
     this.selectedValue = value;
     this.valueChange.emit(value);
   }
