@@ -1,3 +1,8 @@
+textarea.form-control {
+    height: auto;
+    resize: none;
+}
+
 .table-responsive {
     overflow-x: auto;
 }
@@ -7,7 +12,30 @@
     opacity: 0.7;
 }
 
-textarea.form-control {
-    height: auto;
-    resize: none;
+
+textarea{
+    width: 100%;
 }
+
+@media (max-width: 575px) {
+    textarea {
+        width: 100%; 
+        font-size: 0.9rem;  
+        padding: 10px; 
+        resize: none;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    textarea {
+        width: 100%; 
+        font-size: 1rem; 
+        padding: 12px; 
+        resize: vertical;
+    }
+}
+
+
+
+  
+  

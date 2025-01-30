@@ -16,6 +16,9 @@ export class ServiciosPantallasService {
     };
     private pantallasFormSubject = new BehaviorSubject<PantallasFormData>(this.pantallasFormData);
     public pantallasFormObservable$ = this.pantallasFormSubject.asObservable();
+
+    private dummyJson: string = '/assets/json/5701/220401/mercancias.json';
+    
     
     constructor(private http: HttpClient) { }
 
@@ -31,4 +34,8 @@ export class ServiciosPantallasService {
     setPantallasFormDataSubject(data: PantallasFormData) {
         this.pantallasFormSubject.next(data);
     }
+
+    fetchMercanciasData() {
+       return this.http.get(this.dummyJson)
+      }
 }
