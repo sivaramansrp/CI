@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 export class DatosParaMovilizacionNacionalComponent {
   movilizacionForm: FormGroup;
-  constructor(private fb: FormBuilder) {
+  constructor(private readonly fb: FormBuilder) {
     this.movilizacionForm = this.fb.group({
       coordenadas: ['', Validators.required],
       nombre: ['', Validators.required],
