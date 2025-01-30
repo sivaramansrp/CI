@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
+// eslint-disable-next-line sort-imports
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
@@ -21,7 +24,7 @@ export class InputRadioComponent {
 
   ngOnInit() {
     this.createFormRadio();
-console.log(this.isRequired);
+
   }
   createFormRadio() {
     const validators = this.isRequired ? [Validators.required] : [];

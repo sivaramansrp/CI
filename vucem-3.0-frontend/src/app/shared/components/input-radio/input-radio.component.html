@@ -1,8 +1,8 @@
 
 <div class="form-group">
 <form [formGroup]="FormInputRadio"> 
-    <div *ngFor="let option of radioOptions">
-        <label> </label>
+    <div *ngFor="let option of radioOptions" [ngClass]="layout">
+        
           <input 
             type="radio"
             [value]="option.value"
@@ -10,8 +10,8 @@
             (change)="onSelectionChange(option.value)"
             formControlName="seleccion" 
           />
-          {{ option.label }}
-       
+          <span class="radio-label">{{ option.label }}</span>
+    
       </div>
       
 </form>

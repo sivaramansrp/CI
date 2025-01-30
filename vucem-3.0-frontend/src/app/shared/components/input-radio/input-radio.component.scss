@@ -1,12 +1,5 @@
 
-// label {
-//     display: block;
-//     margin: 5px 0;
-//   }
-  
-//   input[type="radio"] {
-//     margin-right: 8px;
-//   }
+
   .vertical {
     display: block;
     margin-bottom: 10px;
@@ -15,4 +8,8 @@
   .horizontal {
     display: inline-block;
     margin-right: 10px;
+  }
+  
+  .radio-label {
+    margin-left: 16px; /* Adjust the value as needed */
   }
