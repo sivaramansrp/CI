@@ -12,6 +12,9 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { TransporteComponent } from './pages/transporte/transporte.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
+import { CombinacionRequeridaComponent } from './components/combinacion-requerida/combinacion-requerida.component';
+import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
+import { AgregarDestinatoriaComponent } from './components/agregar-destinatoria/agregar-destinatoria.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,10 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     SolicitudComponent,
     DatosDelComponent,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CombinacionRequeridaComponent,
+    TercerosRelacionadosComponent,
+    AgregarDestinatoriaComponent
   ]
 })
 /**
