@@ -28,7 +28,7 @@ export class ZoosanitarioPageComponent {
     txtBtnAnt: 'Guardar',
     txtBtnSig: 'Continuar',
   };
-  successTextMessage: string = SUCECESS_MESSAGE_STAGEONE;
+  mensajeDeTextoDeExito: string = SUCECESS_MESSAGE_STAGEONE;
   /**
    * Maneja la acción del botón y determina la navegación (siguiente o anterior).
    * 
