@@ -35,7 +35,7 @@ export const SUCECESS_MESSAGE_STAGEONE = `La solicitud ha quedado registrada con
 export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
     {
         labelNombre: 'Registro federal de contribuyentes:',
-        campo: 'Registro federal de contribuyentes:',
+        campo: 'rfc',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -45,7 +45,7 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
     },
     {
         labelNombre: 'Denominacion o razon social:',
-        campo: 'Denominacion o razon social',
+        campo: 'nombreRazonSocial',
         class: 'col-md-8',
         tipo_input: 'text',
         disabled: true,
@@ -55,7 +55,7 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
     },
     {
         labelNombre: 'Actividad económica preponderante:',
-        campo: 'Actividad económica preponderante',
+        campo: 'aPaterno',
         class: 'col-md-12',
         tipo_input: 'text',
         disabled: true,
@@ -64,7 +64,7 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
     },
     {
         labelNombre: 'Correo electronic',
-        campo: 'Correo electronic',
+        campo: 'correo',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -87,3 +87,4 @@ export const FECHA_DE_PAGO = {
 };
 export const TEXTOS = 'Para continuar con el trámite, deberá agregar por lo menos una mercancia.';
 export const TERCEROR_TEXTO_DE_ALERTA = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
+export const IDDEUSUARIO = 21;

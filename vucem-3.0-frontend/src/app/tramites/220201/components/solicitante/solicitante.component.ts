@@ -1,8 +1,10 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
-import { ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from '../../../../shared/constantes/issuance-extension-modification.enum';
+import { IDDEUSUARIO, ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from '../../../../shared/constantes/issuance-extension-modification.enum';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
+import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
 
 @Component({
   selector: 'solicitante',
@@ -12,21 +14,44 @@ import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms'
 export class SolicitanteComponent implements OnInit {
   persona: Array<FormularioDinamico> = []
   form!: FormGroup;
+
   constructor(
-    private fb: FormBuilder,
+    private readonly fb: FormBuilder,
+    private readonly solicitanteServices: SolicitanteService,
+    private readonly formServices: FormulariosService
   ) {
     this.persona = ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL;
     this.crearFormulario();
-
   }
   ngOnInit() {
     this.inicializarFormGroup(this.persona, 'datosGenerales');
+    this.obtenerDetallesDeUsuario();
   }
-
+  obtenerDetallesDeUsuario() {
+    this.solicitanteServices.getDatosGenerales(IDDEUSUARIO).subscribe((response) => {
+      if (response) {
+        const datos = JSON.parse(response.data);
+        const datosSolicitante = datos.datosGenerales;
+        const camposDatosGenerales =
+          this.formServices.obtenerNombresCamposForm(
+            this.datosGeneralesForm
+          );
+        camposDatosGenerales.forEach((campo) => {
+          this.formServices.agregarValorCampoDesactivados(
+            this.datosGeneralesForm,
+            campo,
+            datosSolicitante[campo]
+          );
+        });
+      }
+    });
+  }
+  get datosGeneralesForm() {
+    return this.form.get('datosGenerales') as FormGroup;
+  }
   crearFormulario(): void {
     this.form = this.fb.group({
-      datosGenerales: this.fb.group({}),
-      domicilioFiscal: this.fb.group({}),
+      datosGenerales: this.fb.group({})
     });
   }
   inicializarFormGroup(
