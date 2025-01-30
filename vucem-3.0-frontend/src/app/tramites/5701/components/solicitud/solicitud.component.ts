@@ -116,12 +116,15 @@ export class SolicitudComponent {
       takeUntil(this.destroyNotifier$),
       delay(10),
       tap((value) => {
+        const secciones = this.seccion.seccion;
+        const formas = this.seccion.formaValida;
+        const seccionSinValidar = secciones.findIndex((seccion) => seccion === true);
+
         if (this.FormSolicitud.valid) {
-          const secciones = this.seccion.seccion;
-          const seccionSinValidar = secciones.findIndex((seccion) => seccion === false);
-          const formas = this.seccion.formaValida;
-          formas.splice(seccionSinValidar,1);
-          formas.push(true);
+          formas[seccionSinValidar] = true;
+          this.seccionStore.establecerFormaValida(formas);
+        } else {
+          formas[seccionSinValidar] = false;
           this.seccionStore.establecerFormaValida(formas);
         }
       }),

@@ -41,7 +41,8 @@ export class BtnContinuarComponent {
       takeUntil(this.destroyNotifier$),
       map(seccionState => {
         this.seccion = seccionState;
-        this.habilitarBoton = this.seccion.formaValida === this.seccion.seccion;
+        this.habilitarBoton = JSON.stringify(this.seccion.formaValida) === JSON.stringify(this.seccion.seccion);
+
       })
     ).subscribe();
   }
