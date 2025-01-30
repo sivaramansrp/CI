@@ -1,9 +1,12 @@
 
 import { Component, ViewChild } from '@angular/core';
-import { PASOS } from '../../../../shared/constantes/issuance-extension-modification.enum'
+import { PASOS, SUCECESS_MESSAGE_STAGEONE } from '../../../../shared/constantes/issuance-extension-modification.enum'
 import { ListaPasosWizard } from '../../../../core/models/220201/issuance-extension-modification.model';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
+/**
+ * Interfaz para definir la acción y el valor del botón. --220201
+ */
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -14,7 +17,9 @@ interface AccionBoton {
   templateUrl: './zoosanitario-page.component.html',
 })
 export class ZoosanitarioPageComponent {
+
   pasos: Array<ListaPasosWizard> = PASOS;
+  tituloMensaje: string | null = 'Zoosanitario para importación';
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   indice: number = 1;
   datosPasos: DatosPasos = {
@@ -23,14 +28,43 @@ export class ZoosanitarioPageComponent {
     txtBtnAnt: 'Guardar',
     txtBtnSig: 'Continuar',
   };
+  successTextMessage: string = SUCECESS_MESSAGE_STAGEONE;
+  /**
+   * Maneja la acción del botón y determina la navegación (siguiente o anterior).
+   * 
+   * @param e - Objeto de acción que contiene la acción y el valor a manejar..
+   * El `valor` representa el índice del paso al que ir.
+   * La `accion` determina si avanzar (cont) o retroceder (atras).  --220201
+   */
   getValorIndice(e: AccionBoton) {
+    console.log(e);
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
+      this.tituloMensaje = this.obtenerNombreDelTítulo(e.valor);
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();
       }
     }
+  }
+  /**
+     * Obtener un título para todas las páginas.
+     * @param valor - valor del índice de página. --220201
+     */
+  obtenerNombreDelTítulo(valor: number) {
+    switch (valor) {
+      case 1:
+        return 'Zoosanitario para importación';
+      case 2:
+        return 'Cargar archivos';
+      case 3:
+        return 'Datos de la solicitud';
+      case 4:
+        return 'Firmar'
+      default:
+        return 'Zoosanitario para importación';
+    }
+
   }
 }
