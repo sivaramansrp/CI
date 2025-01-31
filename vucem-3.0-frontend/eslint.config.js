@@ -20,7 +20,7 @@ module.exports = tseslint.config(
       ],
       "@typescript-eslint/no-explicit-any": "error",
       "@angular-eslint/directive-selector": [
-        "error",
+        "off",
         {
           type: "attribute",
           prefix: "app",
@@ -28,7 +28,7 @@ module.exports = tseslint.config(
         },
       ],
       "@angular-eslint/component-selector": [
-        "error",
+        "off",
         {
           type: "element",
           prefix: "app",

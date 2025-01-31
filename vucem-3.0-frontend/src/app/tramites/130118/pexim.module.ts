@@ -1,29 +1,31 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { PeximRoutingModule } from './pexim-routing.module';
-import { WizardComponent } from '../../shared/components/wizard/wizard.component';
-import { SharedModule } from '../../shared/shared.module';
-import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { AgregaPersonasComponent } from '../5701/components/agrega-personas/agrega-personas.component';
+import { AlertComponent } from '../../shared/components/alert/alert.component';
+import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';
 import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn-continuar.component';
-import { SolicitudComponent } from './components/solicitud/solicitud.component';
-import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
+import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
+import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
+import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
 import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
 import { InputHoraComponent } from '../../shared/components/input-hora/input-hora.component';
-import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
-import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PedimentoComponent } from '../5701/components/pedimento/pedimento.component';
-import { AgregaPersonasComponent } from '../5701/components/agrega-personas/agrega-personas.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TituloComponent } from '../../shared/components/titulo/titulo.component';
+import { PeximRoutingModule } from './pexim-routing.module';
+import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
 import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
-import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
-import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';
-import { AlertComponent } from '../../shared/components/alert/alert.component';
+import { SharedModule } from '../../shared/shared.module';
+import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+import { SolicitudComponent } from './components/solicitud/solicitud.component';
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { TituloComponent } from '../../shared/components/titulo/titulo.component';
+import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 
 @NgModule({
   declarations: [
