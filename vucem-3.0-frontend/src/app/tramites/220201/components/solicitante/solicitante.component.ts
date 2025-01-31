@@ -2,9 +2,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
-import { IDDEUSUARIO, ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from '../../../../shared/constantes/issuance-extension-modification.enum';
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
+import { IDDEUSUARIO } from '../../../../shared/constantes/issuance-extension-modification.enum';
 import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
+import { ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from '../../../../shared/constantes/issuance-extension-modification.enum';
 
 
 

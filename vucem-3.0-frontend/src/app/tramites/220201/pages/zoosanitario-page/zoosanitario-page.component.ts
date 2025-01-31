@@ -1,9 +1,13 @@
 
-import { Component, ViewChild } from '@angular/core';
-import { PASOS, SUCECESS_MESSAGE_STAGEONE } from '../../../../shared/constantes/issuance-extension-modification.enum'
-import { ListaPasosWizard } from '../../../../core/models/220201/issuance-extension-modification.model';
-import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
+import { Component } from '@angular/core';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
+import { ListaPasosWizard } from '../../../../core/models/220201/issuance-extension-modification.model';
+import { PASOS } from '../../../../shared/constantes/issuance-extension-modification.enum'
+import { SUCECESS_MESSAGE_STAGEONE } from '../../../../shared/constantes/issuance-extension-modification.enum'
+import { ViewChild } from '@angular/core';
+import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
+
+
 /**
  * Interfaz para definir la acción y el valor del botón. --220201
  */
@@ -18,7 +22,7 @@ interface AccionBoton {
 })
 export class ZoosanitarioPageComponent {
 
-  pasos: Array<ListaPasosWizard> = PASOS;
+  pasos: ListaPasosWizard[] = PASOS;
   tituloMensaje: string | null = 'Zoosanitario para importación';
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   indice: number = 1;
