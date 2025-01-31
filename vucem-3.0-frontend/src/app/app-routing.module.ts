@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/auth/login' },
@@ -20,11 +20,10 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'despacho-mercancias',
+    path: 'issuance-extension',
     loadChildren: () =>
-      import('./tramites/303/despacho-mercancias.module').then(
-        (m) => m.DespachoMercanciasModule
-  )
+      import('./tramites/220201/issuance-extension-modification.module').then(
+        (m) => m.IssuanceExtensionModificationModule)
   },
   {
     path: 'pantallas-extraordinarios',
@@ -33,10 +32,17 @@ const routes: Routes = [
         (m) => m.PantallasModule
       ),
   },
+  {
+    path: 'despacho-mercancias',
+    loadChildren: () =>
+      import('./tramites/303/despacho-mercancias.module').then(
+        (m) => m.DespachoMercanciasModule
+      )
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

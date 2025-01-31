@@ -1,0 +1,74 @@
+<div class="container">
+  <ng-titulo titulo="Terceros relacionados" />
+  <div class="row">
+    <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <label for="exportador">Exportador*</label>
+      </div>
+      <div class="col-md-12">
+        <table class="table table-responsive">
+          <thead>
+            <tr>
+              <th>Gafete</th>
+              <th>Nombre</th>
+              <th>Apellido paterno</th>
+              <th>Apellido materno</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- <tr>
+              @for (persona of personas; let i = $index; track i) {
+              <td>{{ persona.gafete }}</td>
+              <td>{{ persona.nombre }}</td>
+              <td>{{ persona.aPaterno }}</td>
+              <td>{{ persona.aMaterno }}</td>
+              <td>
+                <button type="button" class="btn btn-link">
+                  <i class="bi bi-trash3 bi-c"></i>
+                </button>
+              </td>
+              }
+            </tr> -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <label for="destinatario">Destinatario (destino final)*</label>
+      </div>
+      <div class="col-md-12">
+        <table class="table table-responsive">
+          <thead>
+            <tr>
+              <th>Gafete</th>
+              <th>Nombre</th>
+              <th>Apellido paterno</th>
+              <th>Apellido materno</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- <tr>
+              @for (persona of personas; let i = $index; track i) {
+              <td>{{ persona.gafete }}</td>
+              <td>{{ persona.nombre }}</td>
+              <td>{{ persona.aPaterno }}</td>
+              <td>{{ persona.aMaterno }}</td>
+              <td>
+                <button type="button" class="btn btn-link">
+                  <i class="bi bi-trash3 bi-c"></i>
+                </button>
+              </td>
+              }
+            </tr> -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
