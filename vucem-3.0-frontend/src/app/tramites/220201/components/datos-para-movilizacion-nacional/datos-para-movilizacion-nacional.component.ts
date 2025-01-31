@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
 @Component({
-  selector: 'datos-para-movilizacion-nacional',
+  selector: 'app-datos-para-movilizacion-nacional',
   templateUrl: './datos-para-movilizacion-nacional.component.html',
   styleUrl: './datos-para-movilizacion-nacional.component.scss'
 })
