@@ -1,17 +1,20 @@
-import { Component } from '@angular/core';
-import { CatalogosSelect, InputFecha } from '../../../../core/models/shared/components.model';
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { Component, OnInit } from '@angular/core';
+
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PeximService } from '../../../../core/services/130118/pexim/pexim.service';
+
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { FECHA_SALIDA } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { PeximService } from '../../../../core/services/130118/pexim/pexim.service';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+
+import { CatalogosSelect, InputFecha } from '../../../../core/models/shared/components.model';
 
 @Component({
   selector: 'solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
 })
-export class SolicitudComponent {
+export class SolicitudComponent implements OnInit {
   datosRegimenMercancia!: CatalogosSelect;
   datosClasifiRegimen!: CatalogosSelect;
   datosFraccionArancelaria!: CatalogosSelect;
@@ -116,7 +119,7 @@ export class SolicitudComponent {
             Validators.required,
             Validators.maxLength(17),
             Validators.min(0),
-            Validators.max(99999999999999.99),
+            Validators.max(parseFloat('99999999999999.99')),
             Validators.pattern(/^(\d{1,14})(\.\d{1,2})?$/)
           ]
         ],
@@ -125,7 +128,7 @@ export class SolicitudComponent {
             Validators.required,
             Validators.maxLength(17),
             Validators.min(0),
-            Validators.max(99999999999999.99),
+            Validators.max(parseFloat('99999999999999.99')),
             Validators.pattern(/^(\d{1,14})(\.\d{1,2})?$/)
           ]
         ],

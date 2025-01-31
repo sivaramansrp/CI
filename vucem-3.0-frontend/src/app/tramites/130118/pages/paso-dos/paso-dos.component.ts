@@ -8,8 +8,4 @@ import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.
 })
 export class PasoDosComponent {
   TEXTOS = TEXTOS;
-
-  constructor() {}
-
-  ngOnInit() {}
 }

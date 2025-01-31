@@ -1,4 +1,18 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+import { Component, OnInit } from '@angular/core';
+
+import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
+import { TIPO_PERSONA } from '../../../../shared/constantes/constantes';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+
+import {
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+  PERSONA_FISICA_EXTRANJERO,
+  PERSONA_MORAL_EXTRANJERO,
+  PERSONA_MORAL_NACIONAL,
+} from '../../../../shared/constantes/solicitante-constantes.enum';
 import {
   FormBuilder,
   FormGroup,
@@ -6,21 +20,8 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { CommonModule, UpperCasePipe } from '@angular/common';
-import {
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
-  PERSONA_FISICA_EXTRANJERO,
-  PERSONA_FISICA_NACIONAL,
-  PERSONA_MORAL_EXTRANJERO,
-  PERSONA_MORAL_NACIONAL,
-} from '../../../../shared/constantes/solicitante-constantes.enum';
-import { TIPO_PERSONA } from '../../../../shared/constantes/constantes';
 import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
-import { UppercaseDirective } from '../../../../shared/directives/Uppercase/uppercase.directive';
 
 @Component({
   selector: 'solicitante',
@@ -29,10 +30,10 @@ import { UppercaseDirective } from '../../../../shared/directives/Uppercase/uppe
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
 })
-export class SolicitanteComponent {
+export class SolicitanteComponent implements OnInit{
  tipoPersona!: number;
-  persona: Array<FormularioDinamico> = [];
-  domicilioFiscal: Array<FormularioDinamico> = [];
+  persona: FormularioDinamico[] = [];
+  domicilioFiscal: FormularioDinamico[] = [];
 
   form!: FormGroup;
 
@@ -108,7 +109,7 @@ export class SolicitanteComponent {
    * @returns void
    */
   inicializarFormGroup(
-    config: Array<FormularioDinamico>,
+    config: FormularioDinamico[],
     grupoNombre: string
   ): void {
     const grupo = this.form.get(grupoNombre) as FormGroup;
@@ -126,7 +127,7 @@ export class SolicitanteComponent {
    * @param validators - Validadores de los campos de los formularios.
    * @returns ValidatorFn[]
    */
-  getValidators(validators: Array<string>): ValidatorFn[] {
+  getValidators(validators: string[]): ValidatorFn[] {
     const formValidators: ValidatorFn[] = [];
     validators.forEach((validator) => {
       if (validator === 'required') {

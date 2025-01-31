@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
 import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
-import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 import { PASOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 
 interface AccionBoton {
   accion: string;
@@ -14,7 +14,7 @@ interface AccionBoton {
   styles: ``,
 })
 export class SolicitudPageComponent {
-  pasos: Array<ListaPasosWizard> = PASOS;
+  pasos: ListaPasosWizard[] = PASOS;
   indice: number = 1;
 
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;

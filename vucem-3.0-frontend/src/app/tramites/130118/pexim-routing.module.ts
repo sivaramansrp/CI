@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+
 import { RouterModule, Routes } from '@angular/router';
 
 export const ROUTES_SOLICITUDES: Routes = [
