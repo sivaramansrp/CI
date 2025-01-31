@@ -1,5 +1,8 @@
-import { Component, Signal, signal, WritableSignal } from '@angular/core';
-import { Catalogo, CatalogoPaises } from '../../../../core/models/shared/catalogos.model';
+import { Component } from '@angular/core';
+import {
+  Catalogo,
+  CatalogoPaises,
+} from '../../../../core/models/shared/catalogos.model';
 import {
   CatalogosSelect,
   CatalogosSelectPaises,
@@ -8,12 +11,7 @@ import {
   InputFecha,
   InputHora,
 } from '../../../../core/models/shared/components.model';
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import {
   DESPACHO_DD,
@@ -37,6 +35,16 @@ import { DatosComponentePedimento } from '../../../../core/models/5701/servicios
 import { FechasService } from '../../../../core/services/shared/fechas/fechas.service';
 import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.model';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
+import {
+  delay,
+  distinctUntilChanged,
+  map,
+  Subject,
+  takeUntil,
+  tap,
+} from 'rxjs';
+import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
+import { SeccionQuery } from '../../../../core/queries/seccion.query';
 
 @Component({
   selector: 'solicitud',
@@ -77,8 +85,12 @@ export class SolicitudComponent {
   datosPedimentoComponente!: DatosComponentePedimento;
 
   solIndividual!: boolean;
+  private destroyNotifier$: Subject<void> = new Subject();
+  private seccion: SeccionState;
 
   constructor(
+    private seccionQuery: SeccionQuery,
+    private seccionStore: SeccionStore,
     private fechaService: FechasService,
     private fb: FormBuilder,
     private fService: FormulariosService,
@@ -96,7 +108,39 @@ export class SolicitudComponent {
 
     // Aqui se busca el nro de patente o autorizacion
     this.obtenerPatente();
-  }
+
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
+
+    this.FormSolicitud.statusChanges.pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((value) => {
+          let seccion:  number;
+          const formasValidadas = this.seccion.formaValida;
+          for (let i = 0; i < this.seccion.seccion.length; i++) {
+            if ( this.seccion.seccion[i] === true && this.seccion.formaValida[i] === false ) {
+              seccion = i;
+              break;
+            }
+          }
+          if (this.FormSolicitud.valid) {
+            formasValidadas[seccion] = true;
+            this.seccionStore.establecerFormaValida(formasValidadas);
+          } else {
+            formasValidadas[seccion] = false;
+            this.seccionStore.establecerFormaValida(formasValidadas);
+          }
+        })
+      )
+      .subscribe();
+    }
 
   /**
    * Obtiene el grupo de formulario 'datosImportadorExportador' del formulario principal 'FormSolicitud'.
@@ -141,6 +185,20 @@ export class SolicitudComponent {
    */
   get personasResponsablesDespacho(): FormArray {
     return this.FormSolicitud.get('personasResponsablesDespacho') as FormArray;
+  }
+
+  /**
+   * Obtiene el grupo de formulario 'mercancia' del formulario principal 'FormSolicitud'.
+   */
+  get mercancia(): FormGroup {
+    return this.FormSolicitud.get('mercancia') as FormGroup;
+  }
+
+  /**
+   * Obtiene el grupo de formulario 'pagoCaptura' del formulario principal 'FormSolicitud'.
+   */
+  get pagoCaptura(): FormGroup {
+    return this.FormSolicitud.get('pagoCaptura') as FormGroup;
   }
 
   // * Peticiones a las apis
@@ -240,10 +298,7 @@ export class SolicitudComponent {
             Validators.pattern(this.validacionesService.rfcPattern),
           ],
         ],
-        nombreImportExport: [
-          { value: '', disabled: true },
-          [Validators.required],
-        ],
+        nombreImportExport: [{ value: '', disabled: true }],
         nroRegistro: ['', [Validators.maxLength(25)]],
         programaFomento: [false],
         programaFomentoValue: [''],
@@ -276,7 +331,7 @@ export class SolicitudComponent {
         patente: [{ value: '', disabled: true }],
         relacionSociedad: [],
         encargoConferido: [],
-        domicilio: ['', Validators.required],
+        domicilio: [''],
       }),
 
       mercancia: this.fb.group({
@@ -300,6 +355,12 @@ export class SolicitudComponent {
       }),
 
       personasResponsablesDespacho: this.fb.array([]),
+
+      pagoCaptura: this.fb.group({
+        montoAPagar: [{ value: '', disabled: true }],
+        lineaCaptura: ['', [Validators.required]],
+        monto: ['', [Validators.required]],
+      }),
     });
   }
 
@@ -320,11 +381,12 @@ export class SolicitudComponent {
 
   // *Eventos de los componentes hijos
   paisOrigen(pais: CatalogoPaises) {
-    console.log(pais);
+    this.mercancia.get('paisOrigen')?.setValue(pais.id);
   }
 
   paisProcedencia(pais: CatalogoPaises) {
-    console.log(pais);
+    this.mercancia.get('paisProcedencia')?.setValue(pais.id);
+    pais;
   }
 
   busqueda_rfc() {
@@ -348,7 +410,10 @@ export class SolicitudComponent {
     this.solIndividual = this.individual();
   }
 
-  validarFormulario() {
+  /**
+   * Valida el formulario
+   */
+  validarFormulario(): void {
     if (this.FormSolicitud.invalid) {
       this.FormSolicitud.markAllAsTouched();
       return;
