@@ -56,7 +56,7 @@ export class ZoosanitarioPageComponent {
      * Obtener un título para todas las páginas.
      * @param valor - valor del índice de página. --220201
      */
-  obtenerNombreDelTítulo(valor: number, pestañaÍndice?: number) {
+  obtenerNombreDelTítulo(valor: number) {
     switch (valor) {
       case 1:
         return 'Zoosanitario para importación';
