@@ -1,9 +1,12 @@
-
 import { Component, ViewChild } from '@angular/core';
-import { PASOS, SUCECESS_MESSAGE_STAGEONE } from '../../../../shared/constantes/issuance-extension-modification.enum'
-import { ListaPasosWizard } from '../../../../core/models/220201/issuance-extension-modification.model';
+import {
+  PASOS,
+  SUCECESS_MESSAGE_STAGEONE,
+} from '../../../../shared/constantes/issuance-extension-modification.enum';
+
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
+import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
 /**
  * Interfaz para definir la acción y el valor del botón. --220201
  */
@@ -17,7 +20,6 @@ interface AccionBoton {
   templateUrl: './zoosanitario-page.component.html',
 })
 export class ZoosanitarioPageComponent {
-
   pasos: Array<ListaPasosWizard> = PASOS;
   tituloMensaje: string | null = 'Zoosanitario para importación';
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
@@ -31,7 +33,7 @@ export class ZoosanitarioPageComponent {
   mensajeDeTextoDeExito: string = SUCECESS_MESSAGE_STAGEONE;
   /**
    * Maneja la acción del botón y determina la navegación (siguiente o anterior).
-   * 
+   *
    * @param e - Objeto de acción que contiene la acción y el valor a manejar..
    * El `valor` representa el índice del paso al que ir.
    * La `accion` determina si avanzar (cont) o retroceder (atras).  --220201
@@ -49,9 +51,9 @@ export class ZoosanitarioPageComponent {
     }
   }
   /**
-     * Obtener un título para todas las páginas.
-     * @param valor - valor del índice de página. --220201
-     */
+   * Obtener un título para todas las páginas.
+   * @param valor - valor del índice de página. --220201
+   */
   obtenerNombreDelTítulo(valor: number, pestañaÍndice?: number) {
     switch (valor) {
       case 1:
@@ -61,11 +63,10 @@ export class ZoosanitarioPageComponent {
       case 3:
         return 'Zoosanitario para importación';
       case 4:
-        return 'Firmar'
+        return 'Firmar';
       default:
         return 'Zoosanitario para importación';
     }
-
   }
   onTabChange(selectedTab: number): void {
     switch (selectedTab) {
@@ -73,7 +74,8 @@ export class ZoosanitarioPageComponent {
         this.tituloMensaje = 'Zoosanitario para importación';
         break;
       case 2:
-        this.tituloMensaje = 'Captura del certificado zoosanitario para importación';
+        this.tituloMensaje =
+          'Captura del certificado zoosanitario para importación';
         break;
       case 3:
         this.tituloMensaje = 'Zoosanitario para importación';
@@ -82,7 +84,8 @@ export class ZoosanitarioPageComponent {
         this.tituloMensaje = 'Zoosanitario para importación';
         break;
       case 5:
-        this.tituloMensaje = 'Captura del certificado zoosanitario para importación';
+        this.tituloMensaje =
+          'Captura del certificado zoosanitario para importación';
         break;
       default:
         this.tituloMensaje = 'Zoosanitario para importación';

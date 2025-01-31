@@ -7,17 +7,24 @@ import {
   tercerosRelacionados,
   pagoDeDerechos,
 } from '../../../../../models/220201/capturar-solicitud.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IssuanceExtensionModificationServiceService {
-  capturarSolicitudCargaUtil: capturarSolicitud;
+  public capturarSolicitudCargaUtil: capturarSolicitud = {
+    solicitante: undefined,
+    datosDeLaSolicitud: undefined,
+    datosParaMovilizacionNacional: undefined,
+    tercerosRelacionados: undefined,
+    pagoDeDerechos: undefined,
+  };
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   setSoliciante(solicitante: solicitante) {
-    this.capturarSolicitudCargaUtil.solicitane = solicitante;
+    this.capturarSolicitudCargaUtil.solicitante = solicitante;
   }
 
   setDatosDeLaSolicitud(datosDeLaSolicitud: datosDeLaSolicitud) {
@@ -34,5 +41,11 @@ export class IssuanceExtensionModificationServiceService {
   }
   setPagoDeDerechos(pagoDeDerechos: pagoDeDerechos) {
     this.capturarSolicitudCargaUtil.pagoDeDerechos = pagoDeDerechos;
+  }
+
+  CapturarsolicitudEnviar() {
+    console.log(this.capturarSolicitudCargaUtil);
+    const _url = 'http://localhost:3000/capturarSolicitud';
+    return this.http.post<any>(_url, this.capturarSolicitudCargaUtil);
   }
 }

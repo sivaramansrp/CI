@@ -1,4 +1,3 @@
-
 /**
  * Modelo de datos de la solicitud
  * @export
@@ -8,14 +7,14 @@
  * @property {datosParaMovilizacionNacional} datosParaMovilizacionNacional
  * @property {tercerosRelacionados} tercerosRelacionados
  * @property {pagoDeDerechos} pagoDeDerechos
- * 
+ *
  */
 export interface capturarSolicitud {
-solicitane : solicitante,
-datosDeLaSolicitud : datosDeLaSolicitud,
-datosParaMovilizacionNacional : datosParaMovilizacionNacional,
-tercerosRelacionados : tercerosRelacionados,
-pagoDeDerechos : pagoDeDerechos
+  solicitante: solicitante;
+  datosDeLaSolicitud: datosDeLaSolicitud;
+  datosParaMovilizacionNacional: datosParaMovilizacionNacional;
+  tercerosRelacionados: tercerosRelacionados;
+  pagoDeDerechos: pagoDeDerechos;
 }
 
 /**
@@ -27,13 +26,12 @@ pagoDeDerechos : pagoDeDerechos
  * @property {string} aPaterno
  **/
 
-export interface solicitante{   
-    rfc : string,
-    nombreRazonSocial : string,
-    aPaterno : string,
-    correo : string,
-    }
-
+export interface solicitante {
+  rfc: string;
+  nombreRazonSocial: string;
+  aPaterno: string;
+  correo: string;
+}
 
 /**
  * Modelo de datos de la solicitud
@@ -48,22 +46,20 @@ export interface solicitante{
  * @property {string} numeroGuia
  * @property {string} certficacion
  * @property {string} regimen
- * 
+ *
  */
 
 export interface datosDeLaSolicitud {
-    aduanaIngreso : string,
-    oficinaInspeccion : string,
-    puntoInspeccion : string,
-    claveUCON : string,
-    establecimientoTIF : string,
-    nombreVeterinario : string,
-    numeroGuia : string,
-    certficacion : string,
-    regimen : string
+  aduanaIngreso: string;
+  oficinaInspeccion: string;
+  puntoInspeccion: string;
+  claveUCON: string;
+  establecimientoTIF: string;
+  nombreVeterinario: string;
+  numeroGuia: string;
+  certficacion: string;
+  regimen: string;
 }
-
-
 
 /**
  * Modelo para los datos de movilización nacional
@@ -74,23 +70,20 @@ export interface datosDeLaSolicitud {
  * @property {string} medio Medio de transporte
  * @property {string} transporte Tipo de transporte
  * @property {string} punto Punto de encuentro
- * 
+ *
  */
 
 export interface datosParaMovilizacionNacional {
-    coordenadas: string;
-    nombre: string;
-    medio: string;
-    transporte: string;
-    punto: string;
-
+  coordenadas: string;
+  nombre: string;
+  medio: string;
+  transporte: string;
+  punto: string;
 }
-
-
 
 /**
  * Modelo para pago de derechos
- * @export 
+ * @export
  * @interface pagoDeDerechos
  * @property {string} exentoPagoNo
  * @property {string} exentoPagoSi
@@ -99,36 +92,26 @@ export interface datosParaMovilizacionNacional {
  * @property {string} cadenaDependencia
  * @property {string} banco
  * @property {string} llavePago
- * @property {string} importePago   
- * 
+ * @property {string} importePago
+ *
  */
 
 export interface pagoDeDerechos {
-    exentoPagoNo: string,
-    exentoPagoSi : string,
-    justificacion : string,
-    claveReferencia :string,
-    cadenaDependencia : string,
-    banco : string,
-    llavePago :string,
-    importePago :string
-
+  exentoPagoNo: string;
+  exentoPagoSi: string;
+  justificacion: string;
+  claveReferencia: string;
+  cadenaDependencia: string;
+  banco: string;
+  llavePago: string;
+  importePago: string;
 }
-
-
-
-
-
 
 /**
  * Interface tercerosRelacionados
  * @export
  * @interface tercerosRelacionados
- * 
+ *
  * */
 
-export interface tercerosRelacionados {
-
-
-}
-    
+export interface tercerosRelacionados {}
