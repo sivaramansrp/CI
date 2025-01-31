@@ -5,7 +5,6 @@ import { NgModule } from '@angular/core';
 import { BtnContinuarComponent } from './../../shared/components/btn-continuar/btn-continuar.component';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDelComponent } from './components/datos-del/datos-del.component';
-import { DatosGeneralsAnimalsComponent } from './components/datos-generals-animals/datos-generals-animals.component';
 import { NavComponent } from '../../shared/components/nav/nav.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PantallasRoutingModule } from './pantallas-routing.module';
@@ -13,6 +12,10 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { TransporteComponent } from './pages/transporte/transporte.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
+import { CombinacionRequeridaComponent } from './components/combinacion-requerida/combinacion-requerida.component';
+import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
+import { AgregarDestinatoriaComponent } from './components/agregar-destinatoria/agregar-destinatoria.component';
+import { DatosGeneralsAnimalsComponent } from './components/datos-generals-animals/datos-generals-animals.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,7 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
   ],
   imports: [
     CommonModule,
-    PantallasRoutingModule,
+    PantallasRoutingModule,    
     NavComponent,
     WizardComponent,
     TituloComponent,
@@ -31,8 +34,11 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     DatosDelComponent,
     FormsModule,
     ReactiveFormsModule,
+    CombinacionRequeridaComponent,
+    TercerosRelacionadosComponent,
+    AgregarDestinatoriaComponent,
     DatosGeneralsAnimalsComponent
-]
+  ]
 })
 /**
  * Este módulo se utiliza para configurar los componentes del módulo 220401.

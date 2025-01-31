@@ -1,15 +1,15 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import radioOptionsData from '../../../../../assets/json/220401/tipo-de-certifico.json'
-/**
- * DatosDelComponent es un componente que maneja la selección de opciones de radio y muestra otros componentes basados en la selección.
- */
+import { AgregarArchivoComponent } from '../../../../shared/components/agregar-archivo/agregar-archivo.component';
+import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+import { TableComponent } from '../../../../shared/components/table/table.component';
+import unidadRadioFields from '../../../../../assets/json/220401/unidad.json'
 @Component({
   selector: 'app-datos-del',
   templateUrl: './datos-del.component.html',
@@ -19,16 +19,21 @@ import radioOptionsData from '../../../../../assets/json/220401/tipo-de-certific
     TituloComponent,
     CommonModule,
     ReactiveFormsModule,
-    InputRadioComponent
+    InputRadioComponent,
+    AgregarArchivoComponent,
+    SelectCatalogosComponent,
+    TableComponent
   ]
 })
 export class DatosDelComponent implements OnInit {
-   /** Grupo de formulario para manejar la selección de radio */
+  /** Grupo de formulario para manejar la selección de radio */
   formGroup!: FormGroup;
   /** Opciones de radio cargadas desde un archivo JSON */
   radioOptions = radioOptionsData; // Use imported JSON data
   /** Valor seleccionado actualmente */
   selectedValue: string | number = 'option1'; // Update the type to string | number
+
+  radioBoton = unidadRadioFields // import data from Json
 
   constructor(private fb: FormBuilder) {
 
@@ -37,17 +42,54 @@ export class DatosDelComponent implements OnInit {
     this.formGroup = this.fb.group({
       seleccion: [this.selectedValue]
     });
-
   }
-   /**
-   * Maneja el evento de cambio de valor y actualiza el valor seleccionado.
-   * @param newValue - El nuevo valor seleccionado.
-   */
-  onValueChange(newValue: string | number): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onValueChange(newValue: any) {
     console.log('Selected Value:', newValue);
     this.selectedValue = newValue;
-    
   }
-   /** Declaración de la propiedad `form` */
   form!: FormGroup; // Declare the `form` property
+
+  dropdownConfigs: CatalogosSelect[] = [
+    { labelNombre: 'Delegaciones estatales SAGARPA', required: true, catalogos: this.getCatalogos(), primerOpcion: '' },
+    { labelNombre: 'OSIA', required: true, catalogos: this.getCatalogos(), primerOpcion: '' },
+    { labelNombre: 'Oficina Central', required: true, catalogos: this.getCatalogos(), primerOpcion: '' },
+    { labelNombre: 'Distrito Desarrollo Rural (DDR)', required: false, catalogos: this.getCatalogos(), primerOpcion: '' }
+  ];
+
+  private getCatalogos() {
+    return [
+      { id: 1, descripcion: 'Option 1' },
+      { id: 2, descripcion: 'Option 2' },
+      { id: 3, descripcion: 'Option 3' }
+    ];
+  }
+
+  tableColumns = [
+    'No. partida',
+    'Fracción arancelaria',
+    'Descripción de la fracción',
+    'Unidad de medida de tarifa (UMT)',
+    'Cantidad (UMT)',
+    'Unidad de medida de comercialización (UMC)',
+    'Cantidad (UMC)'
+  ];
+
+   mercanciasData = [
+    {
+      tbodyData: ['Establecimiento 1','123-456-7890','correo','Actividad 1','Otro detalle','Certificado 001','Domicilio 1'],
+    }
+  ]
+
+  seleccionar(e:any){
+    console.log(e)
+  }
+  
+  cargarArchivo(){
+
+  }
+
+  agregar(){}
+  
+
 }

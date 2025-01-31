@@ -16,7 +16,7 @@ export class ServiciosPantallasService {
     };
     private pantallasFormSubject = new BehaviorSubject<PantallasFormData>(this.pantallasFormData);
     public pantallasFormObservable$ = this.pantallasFormSubject.asObservable();
-    
+
     constructor(private http: HttpClient) { }
 
     // Method to set in the form data
