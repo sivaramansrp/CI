@@ -59,7 +59,7 @@ export class SolicitanteComponent implements OnInit {
     });
   }
   inicializarFormGroup(
-    config: Array<FormularioDinamico>,
+    config: FormularioDinamico[],
     grupoNombre: string
   ): void {
     const grupo = this.form.get(grupoNombre) as FormGroup;
@@ -72,7 +72,7 @@ export class SolicitanteComponent implements OnInit {
     });
 
   }
-  getValidators(validators: Array<string>): ValidatorFn[] {
+  getValidators(validators: string[]): ValidatorFn[] {
     const formValidators: ValidatorFn[] = [];
     validators.forEach((validator) => {
       if (validator === 'required') {
@@ -87,4 +87,5 @@ export class SolicitanteComponent implements OnInit {
     });
     return formValidators;
   }
+
 }
