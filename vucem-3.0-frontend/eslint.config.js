@@ -14,6 +14,11 @@ module.exports = tseslint.config(
     ],
     processor: angular.processInlineTemplates,
     rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
+      ],
+      "@typescript-eslint/no-explicit-any": "error",
       "@angular-eslint/directive-selector": [
         "error",
         {
@@ -30,6 +35,15 @@ module.exports = tseslint.config(
           style: "kebab-case",
         },
       ],
+      "sort-imports": ["error", {
+        "ignoreCase": false,
+        "ignoreDeclarationSort": false,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
+        "allowSeparatedGroups": true
+      }],
+      "@typescript-eslint/consistent-generic-constructors": "off",
+      "@typescript-eslint/no-inferrable-types": "off",
     },
   },
   {

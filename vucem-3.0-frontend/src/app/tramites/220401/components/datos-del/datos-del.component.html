@@ -1,83 +1,54 @@
 <div class="container">
-    <form [formGroup]="unidadExpedidora">
-        <ng-titulo titulo="Unidad expedidora"></ng-titulo>
-        <div class="row">
-            <div class="col-md-4" *ngFor="let option of radioBoton">
-                <label class="form-label">
-                    <input type="radio" [value]="option" formControlName="unidad"
-                        (change)="onSelectionChange(option)" />
-                    {{ option }}<span class="require">:*</span>
-                </label>
-            </div>
-        </div>
+  <form>
+    <ng-titulo titulo="Datos del tramite a realizar" />
+    <div class="row">
+      <div class="col-md-12">
+        <label for="Tipo_de_Certificado">Tipo de Certificado</label>
+        <span class="require">*</span>
+      </div>
+    </div>
+    <app-input-radio [radioOptions]="radioOptions" [selectedValue]="selectedValue" [isRequired]="true"
+      (valueChange)="onValueChange($event)" [layout]="'vertical'"></app-input-radio>
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <label for="message" class="form-label">Tratamiento :</label>
+        <textarea id="message" class="form-control mb-5" placeholder="" readonly="true"></textarea>
+      </div>
+    </div>
+  </form>
 
-        <div *ngIf="unidadExpedidora.get('unidad')?.value === 'oficina central'">
+  <ng-titulo titulo="Unidad expedidora"></ng-titulo>
+ 
+  <app-input-radio class="fw-semibold" [radioOptions]="radioBoton" [selectedValue]="selectedValue" [isRequired]="true"
+      (valueChange)="onValueChange($event)" [layout]="'horizontal'"></app-input-radio>
+
+      <div *ngIf="selectedValue === 'oficina central'">
             <div class="row">
                 <div class="col-md-4" *ngFor="let config of dropdownConfigs">
-                    <select-catalogos [catalogosDatos]="config" (valorSeleccion)="seleccionar()"></select-catalogos>
+                    <select-catalogos [catalogosDatos]="config" (valorSeleccion)="seleccionar($event)"></select-catalogos>
                 </div>
             </div>
         </div>
-    </form>
 
-    <ng-titulo titulo="Datos Generales de la mercancia Animal"></ng-titulo>
-    <h6>Mercancias</h6>
+        <ng-titulo titulo="Datos Generales de la mercancia Animal"></ng-titulo>
+        <h6>Mercancias</h6>
 
+        <ng-table [commonTableHeader]="tableColumns" [commonTableBody]="mercanciasData"></ng-table>
 
-    <div class="table-responsive">
-        <table class="table" data-sort-order="desc">
-            <thead>
-                <tr>
-                    <th scope="col">
-                        <div class="form-check">
-                            <input type="checkbox" />
-                        </div>
-                    </th>
-                    <th class="table-header" scope="col">No.partida
-                        <span style="cursor: pointer;">&#9650;</span>
-                        <span style="cursor: pointer;">&#9660;</span>
-                    </th>
-                    <th class="table-header" scope="col">Fraccion arancelaria</th>
-                    <th class="table-header" scope="col">Descripción de la fraccion</th>
-                    <th class="table-header" scope="col">Unidad de medida de tarifa (UMT)</th>
-                    <th class="table-header" scope="col">Cantidad (UMT)</th>
-                    <th class="table-header" scope="col">Unidad de medida de comercialización (UMC)</th>
-                    <th class="table-header" scope="col">Cantidad (UMC)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let item of mercanciasData">
-                    <th scope="row">
-                        <div class="form-check">
-                            <input type="checkbox" />
-                        </div>
-                    </th>
-                    <td>{{ item.noPartida }}</td>
-                    <td>{{ item.fraccionArancelaria }}</td>
-                    <td>{{ item.descripcionDeLaFraccion }}</td>
-                    <td>{{ item.unidadDeMedidaDeTarifaUMT }}</td>
-                    <td>{{ item.cantidadUMT }}</td>
-                    <td>{{ item.unidadDeMedidaDeComercializacionUMC }}</td>
-                    <td>{{ item.cantidadUMC }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <agregar-archivo 
-    [label1]="'Carga por archivo'" 
-    [label2]="'Agregar'" 
-    (archivoAction)="cargarArchivo()"
-    (agregarAction)="agregar()">
-    </agregar-archivo>
-
-    <div class="mb-5">
-        <label for="message" class="form-label">Tratamiento:</label>
-        <textarea class="form-control" rows="5"></textarea>
-    </div>
-
-    <div class="container text-end mt-5">
-        <button class="btn btn-default me-2">Guardar</button>
-        <button class="btn btn-primary">Continuar</button>
-    </div>
+        <agregar-archivo 
+        [label1]="'Carga por archivo'" 
+        [label2]="'Agregar'" 
+        (archivoAction)="cargarArchivo()"
+        (agregarAction)="agregar()">
+        </agregar-archivo>
+    
+        <div class="mb-5">
+            <label for="message" class="form-label">Tratamiento:</label>
+            <textarea class="form-control" rows="5"></textarea>
+        </div>
+    
+        <div class="container text-end mt-5">
+            <button class="btn btn-default me-2">Guardar</button>
+            <button class="btn btn-primary">Continuar</button>
+        </div>
 </div>

@@ -1,84 +1,65 @@
-import { Component } from '@angular/core';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
-import { CatalogosSelect, DatosPasos } from '../../../../core/models/shared/components.model';
-import { ServiciosPantallasService } from '../../../../core/services/220471/servicios-pantallas.service';
-import { BtnContinuarComponent } from '../../../../shared/components/btn-continuar/btn-continuar.component';
-import { AgregarArchivoComponent } from '../../../../shared/components/agregar-archivo/agregar-archivo.component';
 
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import radioOptionsData from '../../../../../assets/json/220401/tipo-de-certifico.json'
+import { AgregarArchivoComponent } from '../../../../shared/components/agregar-archivo/agregar-archivo.component';
+import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+import { TableComponent } from '../../../../shared/components/table/table.component';
+import unidadRadioFields from '../../../../../assets/json/220401/unidad.json'
 @Component({
   selector: 'app-datos-del',
   templateUrl: './datos-del.component.html',
   standalone: true,
+  styleUrl: './datos-del.component.scss',
   imports: [
     TituloComponent,
     CommonModule,
     ReactiveFormsModule,
+    InputRadioComponent,
+    AgregarArchivoComponent,
     SelectCatalogosComponent,
-    BtnContinuarComponent,
-    AgregarArchivoComponent
-  ],
-  styleUrl: './datos-del.component.scss'
+    TableComponent
+  ]
 })
-export class DatosDelComponent {
-  unidadExpedidora!: FormGroup;
-  radioBoton: string[] = ['Oficina Estatal/OISA', 'OSIA (solo perros y gatos)', 'oficina central'];
-  mercanciasData: any
-  
-  dropdownConfigs: CatalogosSelect[] = [
-    { labelNombre: 'Delegaciones estatales SAGARPA', 
-      required: true, 
-      catalogos: [{ id: 1, descripcion: 'Option 1' }, 
-        { id: 2, descripcion: 'Option 2' }, 
-        { id: 3, descripcion: 'Option 3' }], 
-      primerOpcion: '' 
-    },
-    { labelNombre: 'OSIA', 
-      required: true, 
-      catalogos: [{ id: 1, descripcion: 'Option 1' }, 
-        { id: 2, descripcion: 'Option 2' }, 
-        { id: 3, descripcion: 'Option 3' }], 
-        primerOpcion: '' },
-    { labelNombre: 'oficina centra', 
-      required: true, 
-      catalogos: [{ id: 1, descripcion: 'Option 1' }, 
-        { id: 2, descripcion: 'Option 2' }, 
-        { id: 3, descripcion: 'Option 3' }], 
-        primerOpcion: '' 
-      },
-    { labelNombre: 'Distrito desarrollo rural (DDR)', 
-      required: false,
-       catalogos: [{ id: 1, descripcion: 'Option 1' },
-         { id: 2, descripcion: 'Option 2' }, 
-         { id: 3, descripcion: 'Option 3' }],
-          primerOpcion: '' 
-        },
-  ];
+export class DatosDelComponent implements OnInit {
+  formGroup!: FormGroup;
+  radioOptions = radioOptionsData; // Use imported JSON data
+  selectedValue = 'option1';
+  radioBoton = unidadRadioFields // import data from Json
 
-  constructor(private fb: FormBuilder, private serviciosPantallasService: ServiciosPantallasService) { }
+  constructor(private fb: FormBuilder) {
 
-  ngOnInit() {
-    this.initForm();
-    this.serviciosPantallasService.fetchMercanciasData().subscribe((data) => {
-      this.mercanciasData = data;
-      console.log(this.mercanciasData)
-      }); 
   }
-
-  initForm(): void {
-    this.unidadExpedidora = this.fb.group({
-      unidad: ['', Validators.required]
+  ngOnInit(): void {
+    this.formGroup = this.fb.group({
+      seleccion: [this.selectedValue]
     });
   }
-
-  onSelectionChange(value: string) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onValueChange(newValue: any) {
+    console.log('Selected Value:', newValue);
+    this.selectedValue = newValue;
   }
+  form!: FormGroup; // Declare the `form` property
 
-  seleccionar() {
+  dropdownConfigs: CatalogosSelect[] = [
+    { labelNombre: 'Delegaciones estatales SAGARPA', required: true, catalogos: this.getCatalogos(), primerOpcion: '' },
+    { labelNombre: 'OSIA', required: true, catalogos: this.getCatalogos(), primerOpcion: '' },
+    { labelNombre: 'Oficina Central', required: true, catalogos: this.getCatalogos(), primerOpcion: '' },
+    { labelNombre: 'Distrito Desarrollo Rural (DDR)', required: false, catalogos: this.getCatalogos(), primerOpcion: '' }
+  ];
 
-  }  
+  private getCatalogos() {
+    return [
+      { id: 1, descripcion: 'Option 1' },
+      { id: 2, descripcion: 'Option 2' },
+      { id: 3, descripcion: 'Option 3' }
+    ];
+  }
 
   tableColumns = [
     'No. partida',
@@ -90,22 +71,21 @@ export class DatosDelComponent {
     'Cantidad (UMC)'
   ];
 
-  handleGuardar() {
+   mercanciasData = [
+    {
+      tbodyData: ['Establecimiento 1','123-456-7890','correo','Actividad 1','Otro detalle','Certificado 001','Domicilio 1'],
+    }
+  ]
+
+  seleccionar(e:any){
+    console.log(e)
+  }
   
+  cargarArchivo(){
+
   }
 
-  handleContinuar(event: any) {
-   
+  agregar(){}
   
-  }
 
-  cargarArchivo(): void {
-    console.log('Carga por archivo clicked');
-
-  }
-
-  agregar(): void {
-    console.log('Agregar clicked');
-  
-  }
 }
