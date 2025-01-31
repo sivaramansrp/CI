@@ -1,27 +1,25 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
-import {
-  IDDEUSUARIO,
-  ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL,
-} from '../../../../shared/constantes/issuance-extension-modification.enum';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
+import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
+import { IDDEUSUARIO } from '../../../../shared/constantes/issuance-extension-modification.enum';
 import { IssuanceExtensionModificationServiceService } from '../../../../core/services/220201/core/services/220201/issuance-extension-modification.service';
+import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
 import { solicitante } from '../../../../core/models/220201/capturar-solicitud.model';
+import { ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from '../../../../shared/constantes/issuance-extension-modification.enum';
 
 @Component({
-  selector: 'solicitante',
+  selector: 'app-solicitante',
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
 })
-export class SolicitanteComponent implements OnInit, OnDestroy {
-  persona: Array<FormularioDinamico> = [];
+export class SolicitanteComponent implements OnInit {
+  persona: FormularioDinamico[] = [];
   form!: FormGroup;
 
   constructor(
@@ -65,7 +63,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
     });
   }
   inicializarFormGroup(
-    config: Array<FormularioDinamico>,
+    config: FormularioDinamico[],
     grupoNombre: string
   ): void {
     const grupo = this.form.get(grupoNombre) as FormGroup;
@@ -77,7 +75,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
       );
     });
   }
-  getValidators(validators: Array<string>): ValidatorFn[] {
+  getValidators(validators: string[]): ValidatorFn[] {
     const formValidators: ValidatorFn[] = [];
     validators.forEach((validator) => {
       if (validator === 'required') {

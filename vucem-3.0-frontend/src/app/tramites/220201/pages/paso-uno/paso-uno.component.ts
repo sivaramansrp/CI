@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
-  selector: 'paso-uno',
+  selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss'
 })

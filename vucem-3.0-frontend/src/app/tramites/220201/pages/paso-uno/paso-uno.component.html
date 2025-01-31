@@ -6,24 +6,28 @@
           *ngFor="let tab of cortina_A_la_italiana"
           [ngClass]="indice === tab.index ? 'active' : ''"
         >
-          <a data-toggle="tab" (click)="seleccionaTab(tab.index)">{{
-            tab.title
-          }}</a>
+          <a
+            data-toggle="tab"
+            (click)="seleccionaTab(tab.index)"
+            (keydown.enter)="seleccionaTab(tab.index)"
+            tabindex="0"
+            >{{ tab.title }}</a
+          >
         </li>
       </ul>
     </ul>
 
     <ng-container>
       @switch (indice) { @case (1) {
-      <solicitante></solicitante>
+      <app-solicitante></app-solicitante>
       } @case (2) {
-      <datos-de-la-solicitud></datos-de-la-solicitud>
+      <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
       } @case (3) {
-      <datos-para-movilizacion-nacional></datos-para-movilizacion-nacional>
+      <app-datos-para-movilizacion-nacional></app-datos-para-movilizacion-nacional>
       } @case (4) {
-      <terceror-relacionados></terceror-relacionados>
+      <app-terceror-relacionados></app-terceror-relacionados>
       } @case (5) {
-      <pago-de-derechos></pago-de-derechos>
+      <app-pago-de-derechos></app-pago-de-derechos>
       } }
     </ng-container>
   </div>

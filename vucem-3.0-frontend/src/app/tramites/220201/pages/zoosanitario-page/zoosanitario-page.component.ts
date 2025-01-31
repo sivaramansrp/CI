@@ -1,12 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
-import {
-  PASOS,
-  SUCECESS_MESSAGE_STAGEONE,
-} from '../../../../shared/constantes/issuance-extension-modification.enum';
-
-import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
+import { Component } from '@angular/core';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
-import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
+import { ListaPasosWizard } from '../../../../core/models/220201/issuance-extension-modification.model';
+import { PASOS } from '../../../../shared/constantes/issuance-extension-modification.enum';
+import { SUCECESS_MESSAGE_STAGEONE } from '../../../../shared/constantes/issuance-extension-modification.enum';
+import { ViewChild } from '@angular/core';
+import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
+
 /**
  * Interfaz para definir la acción y el valor del botón. --220201
  */
@@ -20,7 +19,7 @@ interface AccionBoton {
   templateUrl: './zoosanitario-page.component.html',
 })
 export class ZoosanitarioPageComponent {
-  pasos: Array<ListaPasosWizard> = PASOS;
+  pasos: ListaPasosWizard[] = PASOS;
   tituloMensaje: string | null = 'Zoosanitario para importación';
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   indice: number = 1;
@@ -54,7 +53,7 @@ export class ZoosanitarioPageComponent {
    * Obtener un título para todas las páginas.
    * @param valor - valor del índice de página. --220201
    */
-  obtenerNombreDelTítulo(valor: number, pestañaÍndice?: number) {
+  obtenerNombreDelTítulo(valor: number) {
     switch (valor) {
       case 1:
         return 'Zoosanitario para importación';

@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitario-page.component';
 
 export const ROUTES_ZOOSANITARIO: Routes = [

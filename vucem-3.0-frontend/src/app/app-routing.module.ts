@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/auth/login' },
