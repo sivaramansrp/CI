@@ -25,30 +25,85 @@ import { UppercaseDirective } from '../../../../shared/directives/Uppercase/uppe
 @Component({
   selector: 'solicitante',
   standalone: true,
-  imports: [ReactiveFormsModule,TituloComponent,CommonModule],
+  imports: [ReactiveFormsModule, TituloComponent, CommonModule],
   templateUrl: './solicitante.component.html',
-  styleUrl: './solicitante.component.scss',
+  styleUrls: ['./solicitante.component.scss'],
 })
 export class SolicitanteComponent {
- tipoPersona!: number;
+  /**
+   * Tipo de persona que es el solicitante.
+   */
+  tipoPersona!: number;
+
+  /**
+   * Información de la persona del solicitante.
+   */
   persona: Array<FormularioDinamico> = [];
+
+  /**
+   * Información del domicilio fiscal del solicitante.
+   */
   domicilioFiscal: Array<FormularioDinamico> = [];
 
+  /**
+   * Formulario principal del componente.
+   */
   form!: FormGroup;
+  datosGeneralesForm!: FormGroup;
+  domicilioFiscalForm!: FormGroup;
 
   constructor(
-    private solicitanteServicio: SolicitanteService,
     private fb: FormBuilder,
+    private solicitanteServicio: SolicitanteService,
     private formServices: FormulariosService
-  ) {
-    this.obtenerTipoPersona(TIPO_PERSONA.FISICA_NACIONAL);
+  ) {}
+
+  /**
+   * Inicializa el componente.
+   * @returns void
+   */
+  ngOnInit(): void {
     this.crearFormulario();
-    this.inicializarFormGroup(this.persona, 'datosGenerales');
-    this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
   }
 
-  ngOnInit() {
-    this.getDatosGenerales();
+  /**
+   * Crea el formulario principal del componente.
+   * @returns void
+   */
+  crearFormulario(): void {
+    this.form = this.fb.group({
+      datosGenerales: this.fb.group({}),
+      domicilioFiscal: this.fb.group({})
+    });
+  }
+
+  /**
+   * Inicializa un FormGroup con la configuración dada.
+   * @param config - Configuración del formulario.
+   * @param formGroupName - Nombre del grupo de formulario.
+   * @returns void
+   */
+  inicializarFormGroup(config: Array<FormularioDinamico>, formGroupName: string): void {
+    const formGroup = this.form.get(formGroupName) as FormGroup;
+    config.forEach((campo) => {
+      formGroup.addControl(campo.campo, this.fb.control({ value: '', disabled: campo.disabled }, this.getValidators(campo.validators)));
+    });
+  }
+
+  /**
+   * Obtiene los validadores para un campo de formulario.
+   * @param validators - Lista de validadores en formato string.
+   * @returns Array de validadores.
+   */
+  getValidators(validators: string[]): any[] {
+    const validatorFns: ValidatorFn[] = [];
+    validators.forEach((validator) => {
+      if (validator === 'required') {
+        validatorFns.push(Validators.required);
+      }
+      // Add more validators as needed
+    });
+    return validatorFns;
   }
 
   /**
@@ -59,91 +114,22 @@ export class SolicitanteComponent {
   obtenerTipoPersona(tipo: number): void {
     this.tipoPersona = tipo;
     if (tipo === TIPO_PERSONA.FISICA_NACIONAL) {
-      // Persona fisica nacional
       this.persona = PERSONA_MORAL_NACIONAL;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
     } else if (tipo === TIPO_PERSONA.MORAL_NACIONAL) {
-      // Persona moral nacional
       this.persona = PERSONA_MORAL_NACIONAL;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
     } else if (tipo === TIPO_PERSONA.FISICA_EXTRANJERA) {
-      // Persona fisica extranjera
       this.persona = PERSONA_FISICA_EXTRANJERO;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
     } else if (tipo === TIPO_PERSONA.MORAL_EXTRANJERA) {
-      // Persona moral extranjera
       this.persona = PERSONA_MORAL_EXTRANJERO;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
     }
   }
 
   /**
-   * Es un getter que proporciona un acceso más sencillo ala grupo de formularios llamado datosGenerales contenido dentr del formulario principal Form.
-   */
-  get datosGeneralesForm() {
-    return this.form.get('datosGenerales') as FormGroup;
-  }
-
-  /**
-   * Es un getter que proporciona un acceso más sencillo ala grupo de formularios llamado domicilioFiscal contenido dentr del formulario principal Form.
-   */
-  get domicilioFiscalForm() {
-    return this.form.get('domicilioFiscal') as FormGroup;
-  }
-
-  /**
-   * Crea un formulario vacío con dis grupos de formularios, datosGenerales y domicilioFiscal.
-   */
-  crearFormulario(): void {
-    this.form = this.fb.group({
-      datosGenerales: this.fb.group({}),
-      domicilioFiscal: this.fb.group({}),
-    });
-  }
-
-  /**
-   * Inicializa los campos del formulario con los campos de la configuración de los campos de los formularios.
-   * @param config - Configuración de los campos de los formularios.
-   * @param grupoNombre - Nombre del grupo de formularios a inicializar.
-   * @returns void
-   */
-  inicializarFormGroup(
-    config: Array<FormularioDinamico>,
-    grupoNombre: string
-  ): void {
-    const grupo = this.form.get(grupoNombre) as FormGroup;
-    config.forEach((campo) => {
-      const validators = this.getValidators(campo.validators);
-      grupo.addControl(
-        campo.campo,
-        this.fb.control({ value: '', disabled: campo.disabled }, validators)
-      );
-    });
-  }
-
-  /**
-   * Obtiene los validadores de los campos de los formularios.
-   * @param validators - Validadores de los campos de los formularios.
-   * @returns ValidatorFn[]
-   */
-  getValidators(validators: Array<string>): ValidatorFn[] {
-    const formValidators: ValidatorFn[] = [];
-    validators.forEach((validator) => {
-      if (validator === 'required') {
-        formValidators.push(Validators.required);
-      } else if (validator.includes('maxLength')) {
-        const max = validator.split(':')[1];
-        formValidators.push(Validators.maxLength(Number(max)));
-      } else if (validator.includes('pattern')) {
-        const pattern = validator.split(':')[1];
-        formValidators.push(Validators.pattern(pattern));
-      }
-    });
-    return formValidators;
-  }
-
-  /**
-   * Obtiene los datos generales del solicitante con una peticion get.
+   * Obtiene los datos generales del solicitante con una petición GET.
    * @returns void
    */
   getDatosGenerales(): void {
@@ -178,4 +164,3 @@ export class SolicitanteComponent {
     });
   }
 }
-
