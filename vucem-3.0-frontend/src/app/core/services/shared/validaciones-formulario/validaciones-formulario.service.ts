@@ -1,10 +1,12 @@
 import {
   AbstractControl,
+  FormControl,
   FormGroup,
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
 import { Injectable } from '@angular/core';
+import { min } from 'moment';
 
 @Injectable({
   providedIn: 'root',
@@ -56,16 +58,13 @@ export class ValidacionesFormularioService {
     }
   }
 
-   /**
+  /**
    * Obtiene el error de un campo con patterns
    * @param {AbstractControl} control : Control del formulario
    * @param {string} campo Nombre del campo a validar, si el control es un FormGroup
    * @returns {boolean | null} : Retorna true si el campo o control contiene errores de pattern y ha sido tocado, de lo contrario retorna false
    */
-   public errorEmail(
-    control: AbstractControl,
-    campo?: string
-  ): boolean | null {
+  public errorEmail(control: AbstractControl, campo?: string): boolean | null {
     if (control instanceof FormGroup && campo) {
       const campoControl = control.controls[campo];
       return campoControl?.errors?.['email'] && campoControl.touched;
@@ -90,5 +89,17 @@ export class ValidacionesFormularioService {
     } else {
       return control.errors && control.errors['pattern'] && control.touched;
     }
+  }
+
+  /**
+   * Validacion personalida para el input fecha, compara la fecha seleccionada con la fecha actual y devuelve un error de validación si la fecha es igual o anterior a hoy.
+   * @param {AbstractControl} control: Este es el control del formulario que contiene el valor de la fecha seleccionada a validar.
+   * @returns {ValidationErrors} | null: La función devuelve un objeto ValidationErrors si la validación falla (es decir, si la fecha es igual o anterior a hoy), o null si la validación es exitosa.
+   */
+  validaFechaNoHoy(control: AbstractControl): ValidationErrors | null {
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    const diaSeleccionado = new Date(control.value);
+    return diaSeleccionado > hoy ? null : { minDate: true };
   }
 }

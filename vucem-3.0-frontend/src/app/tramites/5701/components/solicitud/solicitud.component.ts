@@ -30,13 +30,7 @@ import {
   CATALOGOS_ID,
   TIPO_SOLICITUD,
 } from '../../../../shared/constantes/constantes';
-import {
-  Subject,
-  delay,
-  map,
-  takeUntil,
-  tap,
-} from 'rxjs';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
 import { DatosComponentePedimento } from '../../../../core/models/5701/servicios-extraordinarios.model';
 import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.model';
@@ -110,6 +104,16 @@ export class SolicitudComponent implements OnInit {
     // Aqui se busca el nro de patente o autorizacion
     this.obtenerPatente();
 
+    /* Valida la fecha de incio */
+    this.datosServicio.get('fechaInicio').valueChanges.subscribe((value) => {
+      const hoy = new Date();
+      console.log(hoy);
+
+      console.log(value);
+      console.log(this.datosServicio);
+
+    });
+
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -119,14 +123,18 @@ export class SolicitudComponent implements OnInit {
       )
       .subscribe();
 
-    this.FormSolicitud.statusChanges.pipe(
+    this.FormSolicitud.statusChanges
+      .pipe(
         takeUntil(this.destroyNotifier$),
         delay(10),
         tap((_value) => {
-          let seccion:  number;
+          let seccion: number;
           const formasValidadas = this.seccion.formaValida;
           for (let i = 0; i < this.seccion.seccion.length; i++) {
-            if ( this.seccion.seccion[i] === true && this.seccion.formaValida[i] === false ) {
+            if (
+              this.seccion.seccion[i] === true &&
+              this.seccion.formaValida[i] === false
+            ) {
               seccion = i;
               break;
             }
@@ -141,7 +149,7 @@ export class SolicitudComponent implements OnInit {
         })
       )
       .subscribe();
-    }
+  }
 
   /**
    * Obtiene el grupo de formulario 'datosImportadorExportador' del formulario principal 'FormSolicitud'.
@@ -263,7 +271,6 @@ export class SolicitudComponent implements OnInit {
       });
   }
 
-
   obtenerPatente() {
     // Busqueda de la patente a algun endpoint
     const datosPatente: datosAgregarFormulario = {
@@ -300,22 +307,19 @@ export class SolicitudComponent implements OnInit {
         ],
         nombreImportExport: [{ value: '', disabled: true }],
         nroRegistro: ['', [Validators.maxLength(25)]],
-        programaFomento: [false],
-        programaFomentoValue: [''],
-        immex: [false],
-        immexValue: [''],
-        industriaAutomotriz: [false],
-        industriaAutomotrizValue: [''],
+        programaFomento: [''],
+        immex: [''],
+        industriaAutomotriz: [''],
         tipoEmpresaCertificada: [''],
-        idSocioComercial: [''],
         socioComercial: [false],
         opEconomicoAut: [false],
         revisionOrigen: [false],
+        idSocioComercial: [''],
       }),
 
       datosServicio: this.fb.group({
-        fechaInicio: [{ value: '', disabled: true }, [Validators.required]],
-        fechaFinal: [[{ value: '', disabled: true }, [Validators.required]]],
+        fechaInicio: ['', [Validators.required, this.validacionesService.validaFechaNoHoy]],
+        fechaFinal: ['', [Validators.required]],
         horaInicio: ['', Validators.required],
         horaFinal: ['', Validators.required],
       }),
@@ -364,20 +368,20 @@ export class SolicitudComponent implements OnInit {
     });
   }
 
-  fechaInicio() {
-    const fechaInicio = this.datosServicio.get('fechaInicio')?.value;
-    return fechaInicio;
-  }
+  // fechaInicio() {
+  //   const fechaInicio = this.datosServicio.get('fechaInicio')?.value;
+  //   return fechaInicio;
+  // }
 
-  cambioFechaInicio(nuevo_valor: string) {
-    this.datosServicio.get('fechaInicio')?.setValue(nuevo_valor);
-    this.datosServicio.get('fechaInicio')?.markAsUntouched();
-  }
+  // cambioFechaInicio(nuevo_valor: string) {
+  //   this.datosServicio.get('fechaInicio')?.setValue(nuevo_valor);
+  //   this.datosServicio.get('fechaInicio')?.markAsUntouched();
+  // }
 
-  cambioFechaFinal(nuevo_valor: string) {
-    this.datosServicio.get('fechaFinal')?.setValue(nuevo_valor);
-    this.datosServicio.get('fechaFinal')?.markAsUntouched();
-  }
+  // cambioFechaFinal(nuevo_valor: string) {
+  //   this.datosServicio.get('fechaFinal')?.setValue(nuevo_valor);
+  //   this.datosServicio.get('fechaFinal')?.markAsUntouched();
+  // }
 
   // *Eventos de los componentes hijos
   paisOrigen(pais: CatalogoPaises) {
@@ -503,6 +507,8 @@ export class SolicitudComponent implements OnInit {
   rango_fechas() {
     const fechaInicial = this.datosServicio.get('fechaInicio')?.value;
     const fechaFinal = this.datosServicio.get('fechaFinal')?.value;
+
+    console.log(fechaInicial, fechaFinal);
 
     const formatoFechaInicial =
       this.fechaService.formatoFechaGuion(fechaInicial);

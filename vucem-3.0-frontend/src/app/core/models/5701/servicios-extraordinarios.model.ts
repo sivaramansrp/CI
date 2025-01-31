@@ -7,7 +7,7 @@ export interface RespuestaSolicitud {
 export interface Solicitud {
   idSolicitud: string;
   tipoSolicitud: string;
-  datosImportadorExportador: DatosImportador;
+  datosImportadorExportador: DatosImportadorExportador;
   datosServicio: DatosServicio;
   datosDespacho: DatosDespacho;
   datosPedimento: DatosPedimento;
@@ -45,15 +45,18 @@ export interface PersonaTerceros {
   correo: string;
 }
 
-export interface DatosImportador {
+export interface DatosImportadorExportador {
   rfcImportExport: string;
-  nombre: string;
+  nombreImportExport: string;
   nroRegistro: string;
   programaFomento: string;
   immex: string;
+  immexValue: string;
   industriaAutomotriz: string;
-  tipoEmpresa: DatosTipoEmpresa;
+  tipoEmpresaCertificada: string;
   idSocioComercial: string;
+  opEconomicoAut: boolean;
+  revisionOrigen: boolean;
 }
 
 export interface DatosTipoEmpresa {
