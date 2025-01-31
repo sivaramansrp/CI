@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PasoDosComponent } from './paso-dos.component';
+import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -19,5 +19,9 @@ describe('PasoDosComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have TEXTOS defined', () => {
+    expect(component.TEXTOS).toBe(TEXTOS);
   });
 });
