@@ -1,12 +1,11 @@
 import {
   AbstractControl,
-  FormControl,
   FormGroup,
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
 import { Injectable } from '@angular/core';
-import { min } from 'moment';
+import { differenceInDays } from 'date-ns';
 
 @Injectable({
   providedIn: 'root',
@@ -101,5 +100,33 @@ export class ValidacionesFormularioService {
     hoy.setHours(0, 0, 0, 0);
     const diaSeleccionado = new Date(control.value);
     return diaSeleccionado > hoy ? null : { minDate: true };
+  }
+
+  validaDiaDiferencia(groupName: string): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const controlGroup = control.get(groupName) as FormGroup;
+
+      if (!controlGroup) {
+        return null;
+      }
+
+      const fechaUno = control.get('fechaInicio')?.value;
+      const fechaDos = control.get('fechaFinal')?.value;
+
+      if (!fechaUno || !fechaDos) {
+        return null;
+      }
+
+      const diaUno = new Date(fechaUno);
+      const diaDos = new Date(fechaDos);
+
+      const diferencia = differenceInDays(diaUno, diaDos);
+
+      if (diferencia < 1) {
+        return { diferencia: true };
+      }
+
+      return null;
+    };
   }
 }

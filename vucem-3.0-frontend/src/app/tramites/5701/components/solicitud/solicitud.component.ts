@@ -23,7 +23,7 @@ import {
   InputFecha,
   InputHora,
 } from '../../../../core/models/shared/components.model';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 import {
@@ -149,6 +149,18 @@ export class SolicitudComponent implements OnInit {
         })
       )
       .subscribe();
+
+      this.datosServicio.valueChanges.subscribe((value) => {
+        console.log(value);
+        if (this.tipoSolSeleccionada.id == TIPO_SOLICITUD.INDIVIDUAL) {
+          console.log('Validar que entre una fecha y otra sean un día');
+          this.datosServicio.setValidators([
+            Validators.required,
+            this.validacionesService.validaDiaDiferencia('datosServicio'),
+          ]);
+          this.datosServicio.updateValueAndValidity();
+        }
+      })
   }
 
   /**
