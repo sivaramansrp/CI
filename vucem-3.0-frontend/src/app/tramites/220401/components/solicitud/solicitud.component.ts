@@ -59,6 +59,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.showContent = !this.showContent;
   }
   constructor(private serviciosPantallasService: ServiciosPantallasService, private http: HttpClient) { }
+    /**
+   * Este método se utiliza para inicializar los datos del formulario de las pantallas.
+   * Suscríbete/escucha los datos del formulario
+   * Establecer los datos del formulario
+   * Darse de baja de la suscripción
+   */
 
   public ngOnInit(): void {
     this.serviciosPantallasService.pantallasFormObservable$
