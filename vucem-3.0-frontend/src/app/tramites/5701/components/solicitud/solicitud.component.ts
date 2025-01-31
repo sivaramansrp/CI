@@ -118,37 +118,29 @@ export class SolicitudComponent {
       )
       .subscribe();
 
-    this.FormSolicitud.valueChanges
-      .pipe(
-        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
+    this.FormSolicitud.statusChanges.pipe(
         takeUntil(this.destroyNotifier$),
         delay(10),
         tap((value) => {
-          const secciones = this.seccion.seccion;
+          let seccion:  number;
           const formasValidadas = this.seccion.formaValida;
           for (let i = 0; i < this.seccion.seccion.length; i++) {
-            if (
-              this.seccion.seccion[i] === true &&
-              this.seccion.formaValida[i] === false
-            )
-              formasValidadas[i] = true;
-            break;
+            if ( this.seccion.seccion[i] === true && this.seccion.formaValida[i] === false ) {
+              seccion = i;
+              break;
+            }
           }
-          const seccionSinValidar = secciones.findIndex(
-            (seccion) => seccion === true
-          );
-
           if (this.FormSolicitud.valid) {
-            formasValidadas[seccionSinValidar] = true;
+            formasValidadas[seccion] = true;
             this.seccionStore.establecerFormaValida(formasValidadas);
           } else {
-            formasValidadas[seccionSinValidar] = false;
+            formasValidadas[seccion] = false;
             this.seccionStore.establecerFormaValida(formasValidadas);
           }
         })
       )
       .subscribe();
-  }
+    }
 
   /**
    * Obtiene el grupo de formulario 'datosImportadorExportador' del formulario principal 'FormSolicitud'.
