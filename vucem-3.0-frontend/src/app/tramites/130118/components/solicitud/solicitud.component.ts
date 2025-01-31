@@ -1,51 +1,131 @@
 import { Component, OnInit } from '@angular/core';
-
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { FECHA_SALIDA } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { PeximService } from '../../../../core/services/130118/pexim/pexim.service';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-
 import { CatalogosSelect, InputFecha } from '../../../../core/models/shared/components.model';
 
+/**
+ * Componente para la vista de la solicitud de la sección de "130118".
+ */
 @Component({
   selector: 'solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit {
+  /**
+   * Datos del catálogo de régimen de mercancía.
+   */
   datosRegimenMercancia!: CatalogosSelect;
+
+  /**
+   * Datos del catálogo de clasificación de régimen.
+   */
   datosClasifiRegimen!: CatalogosSelect;
+
+  /**
+   * Datos del catálogo de fracción arancelaria.
+   */
   datosFraccionArancelaria!: CatalogosSelect;
+
+  /**
+   * Datos del catálogo de NICO.
+   */
   datosNico!: CatalogosSelect;
+
+  /**
+   * Datos del catálogo de país de origen.
+   */
   datosPaisOrigen!: CatalogosSelect;
+
+  /**
+   * Datos del catálogo de país de destino.
+   */
   datosPaisDestino!: CatalogosSelect;
+
+  /**
+   * Datos del catálogo de estado.
+   */
   datosEstado!: CatalogosSelect;
+
+  /**
+   * Indica si la persona física es visible.
+   */
   isVisibleFisica: boolean;
+
+  /**
+   * Indica si la persona moral es visible.
+   */
   isVisibleMoral: boolean;
 
+  /**
+   * Régimen de mercancía seleccionado.
+   */
   regimenMercanciaSeleccionada!: Catalogo;
+
+  /**
+   * Clasificación de régimen seleccionada.
+   */
   clasifiRegimenSeleccionada!: Catalogo;
+
+  /**
+   * Fracción arancelaria seleccionada.
+   */
   fraccionArancelariaSeleccionada!: Catalogo;
+
+  /**
+   * NICO seleccionado.
+   */
   nicoSeleccionada!: Catalogo;
+
+  /**
+   * País de origen seleccionado.
+   */
   paisOrigenSeleccionado!: Catalogo;
+
+  /**
+   * País de destino seleccionado.
+   */
   paisDestinoSeleccionado!: Catalogo;
+
+  /**
+   * Estado seleccionado.
+   */
   estadoSeleccionado!: Catalogo;
 
+  /**
+   * Fecha final de entrada.
+   */
   fechaFinalInput: InputFecha = FECHA_SALIDA;
 
-
+  /**
+   * Formulario principal de la solicitud.
+   */
   FormSolicitud!: FormGroup;
 
+  /**
+   * Constructor del componente.
+   * @param peximService Servicio para obtener datos de PEXIM.
+   * @param fb FormBuilder para crear formularios.
+   * @param validacionesService Servicio para validaciones de formularios.
+   */
   constructor(
     private peximService: PeximService,
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService
   ) {
+    // Inicializar el formulario principal
     this.crearFormSolicitud();
   }
 
+  /**
+   * Método que se ejecuta al iniciar el componente.
+   * Obtiene los catálogos necesarios para el formulario.
+   * Muestra los campos correspondientes a la persona seleccionada.
+   * @returns void
+   */
   ngOnInit(): void {
     this.getRegimenMercancia();
     this.getClasifiRegimen();
@@ -59,7 +139,6 @@ export class SolicitudComponent implements OnInit {
 
   /**
    * Obtiene el grupo de formulario 'datosRegimen' del formulario principal 'FormSolicitud'.
-   *
    * @returns {FormGroup} El grupo de formulario 'datosRegimen'.
    */
   get datosRegimen(): FormGroup {
@@ -68,7 +147,6 @@ export class SolicitudComponent implements OnInit {
 
   /**
    * Obtiene el grupo de formulario 'datosMercancia' del formulario principal 'FormSolicitud'.
-   *
    * @returns {FormGroup} El grupo de formulario 'datosMercancia'.
    */
   get datosMercancia(): FormGroup {
@@ -77,7 +155,6 @@ export class SolicitudComponent implements OnInit {
 
   /**
    * Obtiene el grupo de formulario 'datosProducto' del formulario principal 'FormSolicitud'.
-   *
    * @returns {FormGroup} El grupo de formulario 'datosProducto'.
    */
   get datosProducto(): FormGroup {
@@ -86,24 +163,31 @@ export class SolicitudComponent implements OnInit {
 
   /**
    * Obtiene el grupo de formulario 'registroFederal' del formulario principal 'FormSolicitud'.
-   *
    * @returns {FormGroup} El grupo de formulario 'registroFederal'.
    */
   get registroFederal(): FormGroup {
     return this.FormSolicitud.get('registroFederal') as FormGroup;
   }
 
-  isValid(form: FormGroup, field: string) {
+  /**
+   * Método para validar el formulario.
+   * @param form Formulario a validar.
+   * @param field Campo a validar.
+   * @returns {boolean} Regresa un booleano si el campo es válido o no.
+   */
+  isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field);
   }
 
-  crearFormSolicitud() {
+  /**
+   * Método para crear el formulario principal de la solicitud.
+   */
+  crearFormSolicitud(): void {
     this.FormSolicitud = this.fb.group({
       datosRegimen: this.fb.group({
         regimenMercancia: ['', Validators.required],
         clasifiRegimen: ['', Validators.required]
       }),
-
       datosMercancia: this.fb.group({
         valueTA: ['',
           [
@@ -149,7 +233,6 @@ export class SolicitudComponent implements OnInit {
         observaciones: ['', [Validators.maxLength(250)]],
         observacionMerc: ''
       }),
-
       datosProducto: this.fb.group({
         tipoPersona: ['', Validators.required],
         nombre: ['', [Validators.required, Validators.maxLength(200)]],
@@ -161,25 +244,37 @@ export class SolicitudComponent implements OnInit {
         ],
         domicilio: ['', [Validators.required, Validators.maxLength(1000)]]
       }),
-
       registroFederal: this.fb.group({
         entidadSolicitud: ['', Validators.required],
         representacionFederal: ['', Validators.required]
       })
-    })
+    });
   }
 
-  validarFormulario() {
+  /**
+   * Método para validar el formulario.
+   * @returns void
+   */
+  validarFormulario(): void {
     if (this.FormSolicitud.invalid) {
       this.FormSolicitud.markAllAsTouched();
       return;
     }
   }
 
+  /**
+   * Método para escapar comillas dobles en una cadena.
+   * @param value Cadena a escapar.
+   * @returns {string} Cadena con comillas escapadas.
+   */
   escapeHtmlQuotes(value: string): string {
-    return value ? value.replace(/"/g, '&#34;') : '';//Reemplazar comillas dobles por comillas dobles HTML
+    return value ? value.replace(/"/g, '&#34;') : '';
   }
 
+  /**
+   * Método para mostrar los campos correspondientes a la persona seleccionada.
+   * @returns void
+   */
   muestraCamposPersona(): void {
     const razonSocial = this.FormSolicitud.get('datosProducto.razonSocial')?.value;
     const nombre = this.FormSolicitud.get('datosProducto.nombre')?.value;
@@ -193,6 +288,10 @@ export class SolicitudComponent implements OnInit {
     }
   }
 
+  /**
+   * Método para mostrar los campos correspondientes a una persona moral.
+   * @returns void
+   */
   personaMoral(): void {
     this.isVisibleFisica = false;
     this.isVisibleMoral = true;
@@ -201,7 +300,7 @@ export class SolicitudComponent implements OnInit {
     this.FormSolicitud.get('datosProducto.nombre')?.setValue('');
     this.FormSolicitud.get('datosProducto.apellidoPaterno')?.setValue('');
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.setValue('');
-    this.FormSolicitud.get('datosProducto.razonSocial')?.setValue('');  //Asegúrate de habilitar los campos relevantes
+    this.FormSolicitud.get('datosProducto.razonSocial')?.setValue('');
     this.FormSolicitud.get('datosProducto.razonSocial')?.enable();
 
     this.FormSolicitud.get('datosProducto.nombre')?.disable();
@@ -209,11 +308,15 @@ export class SolicitudComponent implements OnInit {
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.disable();
   }
 
+  /**
+   * Método para mostrar los campos correspondientes a una persona física.
+   * @returns void
+   */
   personaFisica(): void {
     this.isVisibleFisica = true;
     this.isVisibleMoral = false;
 
-    //Restablecer los valores y habilitar campos para "Persona Física"
+    // Restablecer los valores y habilitar campos para "Persona Física"
     this.FormSolicitud.get('datosProducto.razonSocial')?.setValue('');
     this.FormSolicitud.get('datosProducto.razonSocial')?.disable();
 
@@ -222,13 +325,17 @@ export class SolicitudComponent implements OnInit {
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.enable();
   }
 
-  //Función para calcular el precio por unidad
-  calcularUmtPrecioUnitario() {
+  /**
+   * Función para calcular el precio por unidad.
+   */
+  calcularUmtPrecioUnitario(): void {
     this.calcularPrecioUnitarioUSD();
   }
 
-  // Función para calcular el precio unitario en USD
-  calcularPrecioUnitarioUSD() {
+  /**
+   * Función para calcular el precio unitario en USD.
+   */
+  calcularPrecioUnitarioUSD(): void {
     const cantidadUmt = this.FormSolicitud.get('datosMercancia.cantidadTarifaria')?.value;
     const mercanciaAviso = this.FormSolicitud.get('datosMercancia.valorFacturaUSD')?.value;
 
@@ -254,7 +361,11 @@ export class SolicitudComponent implements OnInit {
     }
   }
 
-  // Función para truncar la parte decimal a dos decimales
+  /**
+   * Función para truncar la parte decimal a dos decimales.
+   * @param num Número a truncar.
+   * @returns {number} Número truncado.
+   */
   truncar(num: number): number {
     const numStr = num.toString();
     if (numStr.indexOf('.') !== -1) {
@@ -262,53 +373,81 @@ export class SolicitudComponent implements OnInit {
       if (numArr.length === 1) {
         return Number(num);
       } else {
-        return parseFloat(numArr[0] + '.' + numArr[1].slice(0, 3));  // Limitar a 2 decimales
+        return parseFloat(numArr[0] + '.' + numArr[1].slice(0, 3));
       }
     } else {
       return Number(num);
     }
   }
 
-  regimenMercancia(e: Catalogo) {
+  /**
+   * Método para seleccionar el régimen de mercancía.
+   * @param e Régimen de mercancía seleccionado.
+   */
+  regimenMercancia(e: Catalogo): void {
     this.regimenMercanciaSeleccionada = e;
-    // this.solIndividual = this.individualRegimenMercancia();
   }
 
-  clasifiRegimen(e: Catalogo) {
+  /**
+   * Método para seleccionar la clasificación de régimen.
+   * @param e Clasificación de régimen seleccionada.
+   */
+  clasifiRegimen(e: Catalogo): void {
     this.clasifiRegimenSeleccionada = e;
-    // this.solIndividual = this.individualClasifiRegimen();
   }
 
-  fraccionArancelaria(e: Catalogo) {
+  /**
+   * Método para seleccionar la fracción arancelaria.
+   * @param e Fracción arancelaria seleccionada.
+   */
+  fraccionArancelaria(e: Catalogo): void {
     this.fraccionArancelariaSeleccionada = e;
-    // this.solIndividual = this.individualFraccionArancelaria();
   }
 
-  nico(e: Catalogo) {
+  /**
+   * Método para seleccionar el NICO.
+   * @param e NICO seleccionado.
+   */
+  nico(e: Catalogo): void {
     this.nicoSeleccionada = e;
-    // this.solIndividual = this.individualNico();
   }
 
-  paisOrigen(e: Catalogo) {
+  /**
+   * Método para seleccionar el país de origen.
+   * @param e País de origen seleccionado.
+   */
+  paisOrigen(e: Catalogo): void {
     this.paisOrigenSeleccionado = e;
-    // this.solIndividual = this.individualPaisOrigen();
   }
 
-  paisDestino(e: Catalogo) {
+  /**
+   * Método para seleccionar el país de destino.
+   * @param e País de destino seleccionado.
+   */
+  paisDestino(e: Catalogo): void {
     this.paisDestinoSeleccionado = e;
-    // this.solIndividual = this.individualPaisDestino();
   }
 
-  estado(e: Catalogo) {
+  /**
+   * Método para seleccionar el estado.
+   * @param e Estado seleccionado.
+   */
+  estado(e: Catalogo): void {
     this.estadoSeleccionado = e;
-    // this.solIndividual = this.individualEstado();
   }
 
-  cambioFechaFinal(nuevo_valor: string) {
+  /**
+   * Método para cambiar la fecha final.
+   * @param nuevo_valor Nuevo valor de la fecha final.
+   */
+  cambioFechaFinal(nuevo_valor: string): void {
     this.datosMercancia.get('fechaFinal')?.setValue(nuevo_valor);
     this.datosMercancia.get('fechaFinal')?.markAsUntouched();
   }
 
+  /**
+   * Método para obtener el catálogo de régimen de mercancía.
+   */
   getRegimenMercancia(): void {
     this.peximService
       .getRegimenMercancia()
@@ -326,6 +465,9 @@ export class SolicitudComponent implements OnInit {
       });
   }
 
+  /**
+   * Método para obtener el catálogo de clasificación de régimen.
+   */
   getClasifiRegimen(): void {
     this.peximService
       .getClasifiRegimen()
@@ -343,6 +485,9 @@ export class SolicitudComponent implements OnInit {
       });
   }
 
+  /**
+   * Método para obtener el catálogo de fracción arancelaria.
+   */
   getFraccionArancelaria(): void {
     this.peximService
       .getFraccionArancelariaCatalogo()
@@ -360,6 +505,9 @@ export class SolicitudComponent implements OnInit {
       });
   }
 
+  /**
+   * Método para obtener el catálogo de NICO.
+   */
   getNico(): void {
     this.peximService
       .getNicoCatalogo()
@@ -377,6 +525,9 @@ export class SolicitudComponent implements OnInit {
       });
   }
 
+  /**
+   * Método para obtener el catálogo de país de origen.
+   */
   getPaisOrigen(): void {
     this.peximService
       .getPaisOrigenCatalogo()
@@ -394,6 +545,9 @@ export class SolicitudComponent implements OnInit {
       });
   }
 
+  /**
+   * Método para obtener el catálogo de país de destino.
+   */
   getPaisDestino(): void {
     this.peximService
       .getPaisDestinoCatalogo()
@@ -411,6 +565,9 @@ export class SolicitudComponent implements OnInit {
       });
   }
 
+  /**
+   * Método para obtener el catálogo de estado.
+   */
   getEstado(): void {
     this.peximService
       .getEstadoCatalogo()
@@ -427,5 +584,4 @@ export class SolicitudComponent implements OnInit {
         }
       });
   }
-
 }
