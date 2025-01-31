@@ -291,7 +291,13 @@ export class SolicitudComponent {
     this.FormSolicitud = this.fb.group({
       tipoSolicitud: [{ value: '', requerid: true }, [Validators.required]],
       datosImportadorExportador: this.fb.group({
-        rfcImportExport: ['', [Validators.required]],
+        rfcImportExport: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern(this.validacionesService.rfcPattern),
+          ],
+        ],
         nombreImportExport: [{ value: '', disabled: true }],
         nroRegistro: ['', [Validators.maxLength(25)]],
         programaFomento: [false],
