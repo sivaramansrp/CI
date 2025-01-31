@@ -23,9 +23,22 @@ const routes: Routes = [
     path: 'issuance-extension',
     loadChildren: () =>
       import('./tramites/220201/issuance-extension-modification.module').then(
-        (m) => m.IssuanceExtensionModificationModule
+        (m) => m.IssuanceExtensionModificationModule)
+  },
+  {
+    path: 'pantallas-extraordinarios',
+    loadChildren: () =>
+      import('./tramites/220401/pantallas.module').then(
+        (m) => m.PantallasModule
       ),
   },
+  {
+    path: 'despacho-mercancias',
+    loadChildren: () =>
+      import('./tramites/303/despacho-mercancias.module').then(
+        (m) => m.DespachoMercanciasModule
+      )
+  }
 ];
 
 @NgModule({
