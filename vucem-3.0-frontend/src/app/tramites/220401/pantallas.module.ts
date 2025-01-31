@@ -16,15 +16,18 @@ import { CombinacionRequeridaComponent } from './components/combinacion-requerid
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { AgregarDestinatoriaComponent } from './components/agregar-destinatoria/agregar-destinatoria.component';
 import { DatosGeneralsAnimalsComponent } from './components/datos-generals-animals/datos-generals-animals.component';
+import { PagoDeDerechoComponent } from './components/pago-de-derecho/pago-de-derecho.component';
 
 @NgModule({
   declarations: [
     PantallasComponent,
     DatosComponent,
-    TransporteComponent
+    TransporteComponent,
+    
   ],
   imports: [
     CommonModule,
+    PagoDeDerechoComponent,
     PantallasRoutingModule,    
     NavComponent,
     WizardComponent,
