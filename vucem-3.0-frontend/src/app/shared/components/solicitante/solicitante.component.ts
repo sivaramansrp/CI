@@ -1,4 +1,19 @@
-import { Component } from '@angular/core';
+import {
+  CATALOGOS_ID,
+  TIPO_PERSONA,
+} from '../../constantes/constantes';
+
+import {
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+  PERSONA_FISICA_EXTRANJERO,
+  PERSONA_FISICA_NACIONAL,
+  PERSONA_MORAL_EXTRANJERO,
+  PERSONA_MORAL_NACIONAL,
+} from '../../constantes/solicitante-constantes.enum';
+
+import { Component, OnInit } from '@angular/core';
+
 import {
   FormBuilder,
   FormGroup,
@@ -6,21 +21,11 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+
+import { CommonModule } from '@angular/common';
 import { SolicitanteService } from '../../../core/services/shared/solicitante/solicitante.service';
 import { TituloComponent } from '../titulo/titulo.component';
-import { CommonModule } from '@angular/common';
-import {
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
-  PERSONA_FISICA_EXTRANJERO,
-  PERSONA_FISICA_NACIONAL,
-  PERSONA_MORAL_EXTRANJERO,
-  PERSONA_MORAL_NACIONAL,
-} from '../../constantes/solicitante-constantes.enum';
-import {
-  CATALOGOS_ID,
-  TIPO_PERSONA,
-} from '../../constantes/constantes';
+
 import { FormularioDinamico } from '../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../core/services/shared/formularios/formularios.service';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
@@ -38,10 +43,10 @@ import { tap } from 'rxjs';
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
 })
-export class SolicitanteComponent {
+export class SolicitanteComponent implements OnInit {
   tipoPersona!: number;
-  persona: Array<FormularioDinamico> = [];
-  domicilioFiscal: Array<FormularioDinamico> = [];
+  persona: FormularioDinamico[] = [];
+  domicilioFiscal: FormularioDinamico[] = [];
 
   form!: FormGroup;
 
@@ -117,7 +122,7 @@ export class SolicitanteComponent {
    * @returns void
    */
   inicializarFormGroup(
-    config: Array<FormularioDinamico>,
+    config: FormularioDinamico[],
     grupoNombre: string
   ): void {
     const grupo = this.form.get(grupoNombre) as FormGroup;
@@ -135,7 +140,7 @@ export class SolicitanteComponent {
    * @param validators - Validadores de los campos de los formularios.
    * @returns ValidatorFn[]
    */
-  getValidators(validators: Array<string>): ValidatorFn[] {
+  getValidators(validators: string[]): ValidatorFn[] {
     const formValidators: ValidatorFn[] = [];
     validators.forEach((validator) => {
       if (validator === 'required') {

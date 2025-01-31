@@ -1,4 +1,16 @@
-import { Component } from '@angular/core';
+import {
+  DESPACHO_DD,
+  DESPACHO_LDA,
+  FECHA_FINAL,
+  FECHA_INICIO,
+  HORA_FINAL,
+  HORA_INICIO,
+  IMMEX,
+  INDUSTRIA_AUTOMOTRIZ,
+  PROGRAMA_FOMENTO,
+  SOCIO_COMERCIAL,
+} from '../../../../shared/constantes/servicios-extraordinarios.enum';
+
 import {
   Catalogo,
   CatalogoPaises,
@@ -13,45 +25,36 @@ import {
 } from '../../../../core/models/shared/components.model';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-import {
-  DESPACHO_DD,
-  DESPACHO_LDA,
-  FECHA_FINAL,
-  FECHA_INICIO,
-  HORA_FINAL,
-  HORA_INICIO,
-  IMMEX,
-  INDUSTRIA_AUTOMOTRIZ,
-  PROGRAMA_FOMENTO,
-  SOCIO_COMERCIAL,
-} from '../../../../shared/constantes/servicios-extraordinarios.enum';
+
 import {
   CATALOGOS_ID,
   TIPO_SOLICITUD,
 } from '../../../../shared/constantes/constantes';
-import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
-import { datosAgregarFormulario } from '../../../../core/models/shared/forms-model';
-import { DatosComponentePedimento } from '../../../../core/models/5701/servicios-extraordinarios.model';
-import { FechasService } from '../../../../core/services/shared/fechas/fechas.service';
-import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.model';
-import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
 import {
+  Subject,
   delay,
   distinctUntilChanged,
   map,
-  Subject,
   takeUntil,
   tap,
 } from 'rxjs';
+import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
+import { DatosComponentePedimento } from '../../../../core/models/5701/servicios-extraordinarios.model';
+import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.model';
+import { FechasService } from '../../../../core/services/shared/fechas/fechas.service';
+import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
+import { datosAgregarFormulario } from '../../../../core/models/shared/forms-model';
+
+import { Component, OnInit } from '@angular/core';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SeccionQuery } from '../../../../core/queries/seccion.query';
 
 @Component({
-  selector: 'solicitud',
+  selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
 })
-export class SolicitudComponent {
+export class SolicitudComponent implements OnInit {
   datosTiposSolicitud!: CatalogosSelect;
   paisesOrigen!: CatalogosSelectPaises;
   paisesProcedencia!: CatalogosSelectPaises;
@@ -78,7 +81,7 @@ export class SolicitudComponent {
 
   colapsable: boolean = false;
 
-  selectRangoDias: Array<string> = [];
+  selectRangoDias: string[] = [];
 
   // Pedimento -crea una señal para validar
   validacionPedimento: boolean = false;
@@ -104,7 +107,6 @@ export class SolicitudComponent {
     this.getTiposSolicitud();
     this.getPaises();
     this.getAduanas();
-    this.getSeccionAduanera();
 
     // Aqui se busca el nro de patente o autorizacion
     this.obtenerPatente();
@@ -123,7 +125,7 @@ export class SolicitudComponent {
         distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
         takeUntil(this.destroyNotifier$),
         delay(10),
-        tap((value) => {
+        tap((_value) => {
           const secciones = this.seccion.seccion;
           const formasValidadas = this.seccion.formaValida;
           for (let i = 0; i < this.seccion.seccion.length; i++) {
@@ -270,7 +272,6 @@ export class SolicitudComponent {
       });
   }
 
-  getSeccionAduanera(): void {}
 
   obtenerPatente() {
     // Busqueda de la patente a algun endpoint
@@ -388,7 +389,6 @@ export class SolicitudComponent {
 
   paisProcedencia(pais: CatalogoPaises) {
     this.mercancia.get('paisProcedencia')?.setValue(pais.id);
-    pais;
   }
 
   busqueda_rfc() {
@@ -470,7 +470,7 @@ export class SolicitudComponent {
 
   validaRangoFechas(datos: DatosParaValidacionFecha): void {
     switch (this.tipoSolSeleccionada.id) {
-      case TIPO_SOLICITUD.INDIVIDUAL:
+      case TIPO_SOLICITUD.INDIVIDUAL: {
         const rangoFechaValida = this.fechaService.validacion24Horas(datos);
         if (!rangoFechaValida) {
           // Aqui se muestra un mensaje de error
@@ -478,9 +478,9 @@ export class SolicitudComponent {
           return;
         }
         this.rango_fechas();
-
         break;
-      case TIPO_SOLICITUD.SEMANAL:
+      }
+      case TIPO_SOLICITUD.SEMANAL: {
         const rangoFechaSemana = this.fechaService.validacionSemana(datos);
         if (!rangoFechaSemana) {
           // Aqui se muestra un mensaje de error
@@ -489,7 +489,8 @@ export class SolicitudComponent {
         }
         this.rango_fechas();
         break;
-      case TIPO_SOLICITUD.MENSUAL:
+      }
+      case TIPO_SOLICITUD.MENSUAL: {
         const rangoFechaMes = this.fechaService.validacionMes(datos);
         if (!rangoFechaMes) {
           // Aqui se muestra un mensaje de error
@@ -498,6 +499,7 @@ export class SolicitudComponent {
         }
         this.rango_fechas();
         break;
+      }
     }
   }
 

@@ -1,12 +1,11 @@
-import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Injectable } from '@angular/core';
 import { datosAgregarFormulario } from '../../../models/shared/forms-model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormulariosService {
-  constructor() {}
 
   public agregarValorCamposDesactivados(
     datosForm: datosAgregarFormulario

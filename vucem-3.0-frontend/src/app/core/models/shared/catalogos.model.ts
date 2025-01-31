@@ -12,7 +12,7 @@ export interface JSONResponse {
 
 export interface RespuestaCatalogos {
   code: number;
-  data: Array<Catalogo>;
+  data: Catalogo[]
   message: string;
 }
 

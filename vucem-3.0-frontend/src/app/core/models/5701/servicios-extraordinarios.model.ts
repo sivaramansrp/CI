@@ -1,35 +1,29 @@
 export interface RespuestaSolicitud {
   codigo: number;
-  descripcion: string;
   data: string;
+  descripcion: string;
   message: string;
 }
 export interface Solicitud {
   idSolicitud: string;
-  datosSolicitante: {
-    generales: DatosGenerales;
-    domicilioFiscal: DomicilioFiscal;
-  };
-  datosSolicitud: {
-    tipo: number;
-    datosImportadorExportador: DatosImportador;
-    datosServicio: DatosServicio;
-    datosDespacho: DatosDespacho;
-    datosPedimento: DatosPedimento;
-    mercancia: DatosMercancia;
-    responsablesDespacho: Array<ResponsablesDespacho>;
-    pagos: DatosPago;
-  };
-  tercerosRelacionados: Array<Personas>;
-  requisitos: Array<TipoDocumento>;
+  tipoSolicitud: string;
+  datosImportadorExportador: DatosImportador;
+  datosServicio: DatosServicio;
+  datosDespacho: DatosDespacho;
+  datosPedimento: DatosPedimento;
+  mercancia: DatosMercancia;
+  responsablesDespacho: ResponsablesDespacho[];
+  pagos: DatosPago;
+
+  tercerosRelacionados: Personas[];
 }
 
 export interface DatosGenerales {
-  curp: string;
-  rfc: string;
-  nombre: string;
-  aPaterno: string;
-  aMaterno: string;
+  curp?: string;
+  rfc?: string;
+  nombreRazonSocial: string;
+  primerApellido?: string;
+  segundoApellido?: string;
   actEconomica: string;
   correo: string;
 }
@@ -52,7 +46,7 @@ export interface PersonaTerceros {
 }
 
 export interface DatosImportador {
-  rfc: string;
+  rfcImportExport: string;
   nombre: string;
   nroRegistro: string;
   programaFomento: string;
@@ -76,7 +70,7 @@ export interface DatosServicio {
   horaInicio: string;
   fechaFinal: string;
   horaFinal: string;
-  fechasSeleccionadas: Array<string>;
+  fechasSeleccionadas: string[];
 }
 export interface DatosDespacho {
   despacho: DatosDespacho;
@@ -116,8 +110,8 @@ export interface DatosMercancia {
 export interface ResponsablesDespacho {
   gafete: string;
   nombre: string;
-  aPaterno: string;
-  aMaterno: string;
+  primerApellido: string;
+  segundoApellido: string;
 }
 export interface DatosPago {
   montoPagar: string;
@@ -150,6 +144,6 @@ export interface DatosComponentePedimento {
 export interface Persona {
   gafete?: number;
   nombre: string;
-  aPaterno: string;
-  aMaterno: string;
+  primerApellido: string;
+  segundoApellido: string;
 }
