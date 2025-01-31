@@ -4,26 +4,24 @@
       <div class="col-md-12">
         <div class="panel-group ficha-collapse" id="accordion">
           <div class="panel panel-default">
-            <button>
-              <div
-                class="panel-heading"
-                (click)="mostrar_colapsable()"
-                tabindex="0"
-              >
-                <h4 class="panel-title">
-                  <a aria-label="Repeat"
-                    ><i class="bi bi-repeat" aria-hidden="true"></i>.</a
-                  >
-                </h4>
+            <div
+              class="panel-heading"
+              (click)="mostrar_colapsable()"
+              tabindex="0"
+            >
+              <h4 class="panel-title">
+                <a aria-label="Repeat"
+                  ><i class="bi bi-repeat" aria-hidden="true"></i>.</a
+                >
+              </h4>
+            </div>
+            @if(colapsable){
+            <div class="panel-collapse collapse in" id="panel-01">
+              <div class="panel-body">
+                <crosslist [fechas]="selectRangoDias"></crosslist>
               </div>
-              @if(colapsable){
-              <div class="panel-collapse collapse in" id="panel-01">
-                <div class="panel-body">
-                  <crosslist [fechas]="selectRangoDias"></crosslist>
-                </div>
-              </div>
-              }
-            </button>
+            </div>
+            }
           </div>
         </div>
       </div>
