@@ -26,9 +26,13 @@ import unidadRadioFields from '../../../../../assets/json/220401/unidad.json'
   ]
 })
 export class DatosDelComponent implements OnInit {
+  /** Grupo de formulario para manejar la selección de radio */
   formGroup!: FormGroup;
+  /** Opciones de radio cargadas desde un archivo JSON */
   radioOptions = radioOptionsData; // Use imported JSON data
-  selectedValue = 'option1';
+  /** Valor seleccionado actualmente */
+  selectedValue: string | number = 'option1'; // Update the type to string | number
+
   radioBoton = unidadRadioFields // import data from Json
 
   constructor(private fb: FormBuilder) {
