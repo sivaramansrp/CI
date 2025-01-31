@@ -21,6 +21,13 @@ const routes: Routes = [
       ),
   },
   {
+      path: 'pexim',
+      loadChildren: () =>
+        import('./tramites/130118/pexim.module').then(
+          (m) => m.PeximModule
+        ),
+  },
+  {
     path: 'despacho-mercancias',
     loadChildren: () =>
       import('./tramites/303/despacho-mercancias.module').then(
@@ -34,13 +41,6 @@ const routes: Routes = [
         (m) => m.PantallasModule
       ),
   },
-  {
-      path: 'pexim',
-      loadChildren: () =>
-        import('./tramites/130118/pexim.module').then(
-          (m) => m.PeximModule
-        ),
-  }
 ];
 
 @NgModule({
