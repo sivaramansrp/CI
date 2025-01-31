@@ -38,7 +38,7 @@
       <div class="col-md-4">
         <div class="form-group datepicker-group" style="margin-bottom: 0px">
           <label for="fechaCaducidad" class="form-label">Cantidad UMC <span class="require">*</span>:</label>
-          <input type="text" class="form-control" id="fechaCaducidad" formControlName="fechaCaducidad" readonly>
+          <input type="text" class="form-control" id="fechaCaducidad" formControlName="fechaCaducidad">
           <div *ngIf="formGroup.get('fechaCaducidad')?.invalid && formGroup.get('fechaCaducidad')?.touched">
             <small class="text-danger" *ngIf="formGroup.get('fechaCaducidad')?.errors?.['required']">Este campo es obligatorio.</small>
           </div>
