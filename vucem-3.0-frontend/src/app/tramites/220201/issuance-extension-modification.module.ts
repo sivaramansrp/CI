@@ -36,7 +36,6 @@ import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitari
     DatosParaMovilizacionNacionalComponent,
     TercerorRelacionadosComponent,
     PagoDeDerechosComponent,
-
   ],
   imports: [
     SharedModule,
