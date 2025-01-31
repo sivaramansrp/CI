@@ -25,7 +25,21 @@ const routes: Routes = [
         import('./tramites/130118/pexim.module').then(
           (m) => m.PeximModule
         ),
-  }
+  },
+  {
+    path: 'despacho-mercancias',
+    loadChildren: () =>
+      import('./tramites/303/despacho-mercancias.module').then(
+        (m) => m.DespachoMercanciasModule
+  )
+  },
+  {
+    path: 'pantallas-extraordinarios',
+    loadChildren: () =>
+      import('./tramites/220401/pantallas.module').then(
+        (m) => m.PantallasModule
+      ),
+  },
 ];
 
 @NgModule({
