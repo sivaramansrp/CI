@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { InputFecha } from '../../../../core/models/shared/components.model';
 import { FECHA_DE_PAGO } from '../../../../shared/constantes/issuance-extension-modification.enum';
+import { InputFecha } from '../../../../core/models/shared/components.model';
 
 @Component({
-  selector: 'pago-de-derechos',
+  selector: 'app-pago-de-derechos',
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.scss'
 })
