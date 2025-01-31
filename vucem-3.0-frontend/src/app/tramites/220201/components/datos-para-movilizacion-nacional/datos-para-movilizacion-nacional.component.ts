@@ -12,7 +12,7 @@ export class DatosParaMovilizacionNacionalComponent {
     this.movilizacionForm = this.fb.group({
       coordenadas: ['', Validators.required],
       nombre: ['', Validators.required],
-      medio: ['', Validators.required],
+      medio: ['Aereo', Validators.required],
       transporte: ['', [Validators.required]],
       punto: ['', [Validators.required]]
     });
