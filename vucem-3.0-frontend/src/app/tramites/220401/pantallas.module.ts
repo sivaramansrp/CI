@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { BtnContinuarComponent } from './../../shared/components/btn-continuar/btn-continuar.component';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDelComponent } from './components/datos-del/datos-del.component';
+import { DatosGeneralsAnimalsComponent } from './components/datos-generals-animals/datos-generals-animals.component';
 import { NavComponent } from '../../shared/components/nav/nav.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PantallasRoutingModule } from './pantallas-routing.module';
@@ -21,7 +22,7 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
   ],
   imports: [
     CommonModule,
-    PantallasRoutingModule,    
+    PantallasRoutingModule,
     NavComponent,
     WizardComponent,
     TituloComponent,
@@ -29,8 +30,9 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     SolicitudComponent,
     DatosDelComponent,
     FormsModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+    DatosGeneralsAnimalsComponent
+]
 })
 /**
  * Este módulo se utiliza para configurar los componentes del módulo 220401.
