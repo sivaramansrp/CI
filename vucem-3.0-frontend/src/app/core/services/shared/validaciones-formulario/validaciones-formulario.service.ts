@@ -5,7 +5,7 @@ import {
   ValidatorFn,
 } from '@angular/forms';
 import { Injectable } from '@angular/core';
-import { differenceInDays } from 'date-ns';
+import { differenceInDays } from 'date-fns';
 
 @Injectable({
   providedIn: 'root',
@@ -120,13 +120,12 @@ export class ValidacionesFormularioService {
       const diaUno = new Date(fechaUno);
       const diaDos = new Date(fechaDos);
 
-      const diferencia = differenceInDays(diaUno, diaDos);
+      const diaDiferencia = differenceInDays(diaUno, diaDos);
 
-      if (diferencia < 1) {
-        return { diferencia: true };
-      }
+      console.log({ diaDiferencia });
 
-      return null;
+
+      return diaDiferencia === 1 ? null : { dateDifference: true };
     };
   }
 }

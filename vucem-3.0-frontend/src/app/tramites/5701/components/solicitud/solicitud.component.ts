@@ -23,7 +23,15 @@ import {
   InputFecha,
   InputHora,
 } from '../../../../core/models/shared/components.model';
-import { FormArray, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 import {
@@ -41,6 +49,7 @@ import { datosAgregarFormulario } from '../../../../core/models/shared/forms-mod
 import { Component, OnInit } from '@angular/core';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SeccionQuery } from '../../../../core/queries/seccion.query';
+import { MILISEGUNDOS } from '../../../../shared/constantes/constantes';
 
 @Component({
   selector: 'app-solicitud',
@@ -81,6 +90,8 @@ export class SolicitudComponent implements OnInit {
   datosPedimentoComponente!: DatosComponentePedimento;
 
   solIndividual!: boolean;
+  diaMinimo: string;
+
   private destroyNotifier$: Subject<void> = new Subject();
   private seccion: SeccionState;
 
@@ -97,22 +108,17 @@ export class SolicitudComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const diaHoy = new Date();
+    const manania = new Date(diaHoy);
+    manania.setDate(diaHoy.getDate() + 1);
+    this.diaMinimo = manania.toISOString().split('T')[0];
+
     this.getTiposSolicitud();
     this.getPaises();
     this.getAduanas();
 
     // Aqui se busca el nro de patente o autorizacion
     this.obtenerPatente();
-
-    /* Valida la fecha de incio */
-    this.datosServicio.get('fechaInicio').valueChanges.subscribe((value) => {
-      const hoy = new Date();
-      console.log(hoy);
-
-      console.log(value);
-      console.log(this.datosServicio);
-
-    });
 
     this.seccionQuery.selectSeccionState$
       .pipe(
@@ -150,17 +156,13 @@ export class SolicitudComponent implements OnInit {
       )
       .subscribe();
 
-      this.datosServicio.valueChanges.subscribe((value) => {
-        console.log(value);
-        if (this.tipoSolSeleccionada.id == TIPO_SOLICITUD.INDIVIDUAL) {
-          console.log('Validar que entre una fecha y otra sean un día');
-          this.datosServicio.setValidators([
-            Validators.required,
-            this.validacionesService.validaDiaDiferencia('datosServicio'),
-          ]);
-          this.datosServicio.updateValueAndValidity();
-        }
-      })
+    this.datosServicio.get('fechaInicio').valueChanges.subscribe((_value) => {
+      this.validaFechas();
+    });
+
+    this.datosServicio.get('fechaFinal').valueChanges.subscribe((_value) => {
+      this.validaFechas();
+    });
   }
 
   /**
@@ -330,8 +332,14 @@ export class SolicitudComponent implements OnInit {
       }),
 
       datosServicio: this.fb.group({
-        fechaInicio: ['', [Validators.required, this.validacionesService.validaFechaNoHoy]],
-        fechaFinal: ['', [Validators.required]],
+        fechaInicio: [
+          '',
+          [Validators.required, this.validacionesService.validaFechaNoHoy],
+        ],
+        fechaFinal: [
+          '',
+          [Validators.required, this.validacionesService.validaFechaNoHoy],
+        ],
         horaInicio: ['', Validators.required],
         horaFinal: ['', Validators.required],
       }),
@@ -380,20 +388,40 @@ export class SolicitudComponent implements OnInit {
     });
   }
 
-  // fechaInicio() {
-  //   const fechaInicio = this.datosServicio.get('fechaInicio')?.value;
-  //   return fechaInicio;
-  // }
+  validaFechas() {
+    const fechaInicio = this.fechaService.parseDate(
+      this.datosServicio.get('fechaInicio')?.value
+    );
+    const fechaFinal = this.fechaService.parseDate(
+      this.datosServicio.get('fechaFinal')?.value
+    );
 
-  // cambioFechaInicio(nuevo_valor: string) {
-  //   this.datosServicio.get('fechaInicio')?.setValue(nuevo_valor);
-  //   this.datosServicio.get('fechaInicio')?.markAsUntouched();
-  // }
+    let valido = false;
+    const diferenciaFecha = fechaFinal.getTime() - fechaInicio.getTime();
 
-  // cambioFechaFinal(nuevo_valor: string) {
-  //   this.datosServicio.get('fechaFinal')?.setValue(nuevo_valor);
-  //   this.datosServicio.get('fechaFinal')?.markAsUntouched();
-  // }
+    switch (this.tipoSolSeleccionada.id) {
+      case TIPO_SOLICITUD.INDIVIDUAL: {
+        valido = diferenciaFecha < MILISEGUNDOS.DIA && diferenciaFecha > 0;
+        break;
+      }
+      case TIPO_SOLICITUD.SEMANAL: {
+        valido = diferenciaFecha < MILISEGUNDOS.SEMANA && diferenciaFecha > 0;
+        break;
+      }
+      case TIPO_SOLICITUD.MENSUAL: {
+        valido = diferenciaFecha < MILISEGUNDOS.MES && diferenciaFecha > 0;
+        break;
+      }
+    }
+
+    if (!valido) {
+      this.datosServicio
+        .get('fechaFinal')
+        ?.setErrors({ fechaFinalInvalida: true });
+    } else {
+      this.datosServicio.get('fechaFinal')?.setErrors(null);
+    }
+  }
 
   // *Eventos de los componentes hijos
   paisOrigen(pais: CatalogoPaises) {
@@ -471,13 +499,15 @@ export class SolicitudComponent implements OnInit {
       const horaInicial = this.datosServicio.get('horaInicio')?.value;
       const horaFinal = this.datosServicio.get('horaFinal')?.value;
 
-      const rangoFecha = {
-        fechaInicio: this.fechaService.formatoFechaGuion(fechaInicial, false),
-        horaInicio: horaInicial,
-        fechaFin: this.fechaService.formatoFechaGuion(fechaFinal, false),
-        horaFin: horaFinal,
-      };
-      this.validaRangoFechas(rangoFecha);
+      if (fechaInicial && fechaFinal && horaInicial && horaFinal) {
+        const rangoFecha = {
+          fechaInicio: this.fechaService.formatoFechaGuion(fechaInicial, false),
+          horaInicio: horaInicial,
+          fechaFin: this.fechaService.formatoFechaGuion(fechaFinal, false),
+          horaFin: horaFinal,
+        };
+        this.validaRangoFechas(rangoFecha);
+      }
     }
   }
 
@@ -519,8 +549,6 @@ export class SolicitudComponent implements OnInit {
   rango_fechas() {
     const fechaInicial = this.datosServicio.get('fechaInicio')?.value;
     const fechaFinal = this.datosServicio.get('fechaFinal')?.value;
-
-    console.log(fechaInicial, fechaFinal);
 
     const formatoFechaInicial =
       this.fechaService.formatoFechaGuion(fechaInicial);

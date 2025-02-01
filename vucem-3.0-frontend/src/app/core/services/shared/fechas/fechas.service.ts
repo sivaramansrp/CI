@@ -122,4 +122,11 @@ export class FechasService {
     }
     return false;
   }
+
+  parseDate(input: string): Date {
+    const [year, month, day] = input.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+
 }

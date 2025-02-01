@@ -123,7 +123,6 @@
     <ng-container formGroupName="datosServicio">
       <div class="row">
         <div class="col-md-4">
-          <!-- <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaInicio($event)"></input-fecha> -->
           <label for="fechaInicio" class="form-label">Fecha inicio*:</label>
           <input class="form-control" type="date" name="fechaInicio" id="fechaInicio" formControlName="fechaInicio"
             [ngClass]="isValid(datosServicio,'fechaInicio') ? 'required' : ''">
@@ -145,13 +144,17 @@
       <div class="row">
         <div class="col-md-4">
           <label for="fechaFinal" class="form-label">Fecha final*:</label>
-          <input class="form-control" type="date" name="fechaFinal" id="fechaFinal" formControlName="fechaFinal">
+          <input class="form-control" type="date" name="fechaFinal" id="fechaFinal" formControlName="fechaFinal"
+            [ngClass]="isValid(datosServicio,'fechaFinal') ? 'required' : ''" [min]="diaMinimo">
 
-          <!-- <input-fecha [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"></input-fecha> -->
+          @if (isValid(datosServicio,'fechaFinal')) {
+          <div class="mensaje-error">
+            Fecha no válida, elija otro día
+          </div>
+          }
         </div>
 
         <div class="col-md-4">
-
           <input-hora [datosHora]="horaFinal" (horaValor)="obtenerHora($event, 'f')"></input-hora>
         </div>
       </div>
