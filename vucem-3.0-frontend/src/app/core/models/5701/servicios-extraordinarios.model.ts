@@ -17,7 +17,6 @@ export interface Solicitud {
 
   tercerosRelacionados: Personas[];
 }
-
 export interface DatosGenerales {
   curp?: string;
   rfc?: string;
@@ -44,7 +43,6 @@ export interface PersonaTerceros {
   nombre: string;
   correo: string;
 }
-
 export interface DatosImportadorExportador {
   rfcImportExport: string;
   nombreImportExport: string;
@@ -58,7 +56,6 @@ export interface DatosImportadorExportador {
   opEconomicoAut: boolean;
   revisionOrigen: boolean;
 }
-
 export interface DatosTipoEmpresa {
   certificacionA: boolean;
   certificacionAA: boolean;
@@ -67,7 +64,6 @@ export interface DatosTipoEmpresa {
   opEconomicoAut: boolean;
   revisionOrigen: boolean;
 }
-
 export interface DatosServicio {
   fechaInicio: string;
   horaInicio: string;
@@ -76,11 +72,16 @@ export interface DatosServicio {
   fechasSeleccionadas: string[];
 }
 export interface DatosDespacho {
-  despacho: DatosDespacho;
+  despacho: string;
   rfcAutorizacion: string;
   ddexAutorizacion: string;
-  aduana: string;
+
+  idAduana: string;
+  descripcionAduana: string;
+
+  idSeccionAduanera: string;
   seccionAduanera: string;
+
   nombreRecinto: string;
   tipoDespacho: string;
   tipoOperacion: string;
@@ -90,13 +91,10 @@ export interface DatosDespacho {
   domicilio: string;
 }
 
-export interface DatosDespacho {
-  lda: boolean;
-  dd: boolean;
-}
 export interface DatosPedimento {
+  idPedimento: number;
   patente: number;
-  pedimento: number;
+  pedimento: string;
   aduana: number;
   tipoPedimento: string;
   numero: number;
@@ -121,6 +119,7 @@ export interface DatosPago {
   lineaCaptura: string;
   monto: number;
 }
+/** Hasta aqui terminan las interfaces de la solicitud */
 
 export interface Personas {
   razonSocial: string;

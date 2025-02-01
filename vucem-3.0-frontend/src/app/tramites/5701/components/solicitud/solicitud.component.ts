@@ -24,12 +24,9 @@ import {
   InputHora,
 } from '../../../../core/models/shared/components.model';
 import {
-  AbstractControl,
   FormArray,
   FormBuilder,
   FormGroup,
-  NG_VALUE_ACCESSOR,
-  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
@@ -38,6 +35,8 @@ import {
   CATALOGOS_ID,
   TIPO_SOLICITUD,
 } from '../../../../shared/constantes/constantes';
+import { MILISEGUNDOS } from '../../../../shared/constantes/constantes';
+
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
 import { DatosComponentePedimento } from '../../../../core/models/5701/servicios-extraordinarios.model';
@@ -49,7 +48,6 @@ import { datosAgregarFormulario } from '../../../../core/models/shared/forms-mod
 import { Component, OnInit } from '@angular/core';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SeccionQuery } from '../../../../core/queries/seccion.query';
-import { MILISEGUNDOS } from '../../../../shared/constantes/constantes';
 
 @Component({
   selector: 'app-solicitud',
@@ -342,13 +340,15 @@ export class SolicitudComponent implements OnInit {
         ],
         horaInicio: ['', Validators.required],
         horaFinal: ['', Validators.required],
+        fechasSeleccionadas: this.fb.array([]),
       }),
 
       despacho: this.fb.group({
-        tipo: [''],
+        despacho: [''],
         autorizacion: [''],
         idAduana: [null, [Validators.required]],
         descripcionAduana: ['', [Validators.required]],
+        idSeccionAduanera: [''],
         seccionAduanera: [''],
         nombreRecinto: [''],
         tipoOperacion: [''],
