@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18.20.5
+          node-version: 20.9.0
 
       - name: Set Sonar Version Number
         run: echo "VERSION=6.2.1.4610-linux-x64" >> $GITHUB_ENV
