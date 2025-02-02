@@ -62,6 +62,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd vucem-3.0-frontend
+          npm install
           npm ci
 
       - name: Build Angular project
