@@ -17,6 +17,7 @@ import { TercerosRelacionadosComponent } from './components/terceros-relacionado
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { TransporteComponent } from './pages/transporte/transporte.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
+import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     CombinacionRequeridaComponent,
     TercerosRelacionadosComponent,
     AgregarDestinatoriaComponent,
-    DatosGeneralsAnimalsComponent
+    DatosGeneralsAnimalsComponent,
+    SelectCatalogosComponent
   ]
 })
 /**

@@ -1,10 +1,12 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import radioOptionsData from '../../../../../assets/json/220401/tipo-de-certifico.json'
+
 import { AgregarArchivoComponent } from '../../../../shared/components/agregar-archivo/agregar-archivo.component';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
@@ -32,6 +34,7 @@ export class DatosDelComponent implements OnInit {
   radioOptions = radioOptionsData; // Use imported JSON data
   /** Valor seleccionado actualmente */
   selectedValue: string | number = 'option1'; // Update the type to string | number
+  defaultSelect:string | number = 'oficina central';
 
   radioBoton = unidadRadioFields // import data from Json
 
@@ -57,6 +60,11 @@ export class DatosDelComponent implements OnInit {
     { labelNombre: 'Distrito Desarrollo Rural (DDR)', required: false, catalogos: this.getCatalogos(), primerOpcion: '' }
   ];
 
+    /**
+   * Retrieves a list of catalog items.
+   *
+   * @returns An array of catalog objects, each containing an `id` and a `descripcion`.
+   */
   private getCatalogos() {
     return [
       { id: 1, descripcion: 'Option 1' },
@@ -80,15 +88,16 @@ export class DatosDelComponent implements OnInit {
       tbodyData: ['Establecimiento 1','123-456-7890','correo','Actividad 1','Otro detalle','Certificado 001','Domicilio 1'],
     }
   ]
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   seleccionar(e:any){
     console.log(e)
   }
   
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   cargarArchivo(){
 
   }
-
+// eslint-disable-next-line @typescript-eslint/no-empty-function
   agregar(){}
   
 
