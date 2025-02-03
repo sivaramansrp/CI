@@ -5,3 +5,11 @@ export interface PantallasFormData {
     unidads: [],
     datasGenerals: []
   }
+
+  export interface TransporteFormData  {
+    mediodeTransporte: string,
+    identificationDelTransporte: string,
+    numerodeContenedor: string,
+    fetchdeEmbarque: string,
+    numerodeFlejes: string
+  }
