@@ -31,6 +31,7 @@ export class TercerosRelacionadosComponent {
   public getDestinatarioTableData = destinatarioTable;
   public getImportadorTableData = importardorTable;
   public TEXTOS = MENSAJEDEALERTA;
+  public hasAgregar:boolean = false;
 
 
   constructor() {
@@ -68,6 +69,18 @@ export class TercerosRelacionadosComponent {
   public getImportador() {
     this.importadorHeaderData = this.getImportadorTableData.tableHeader;
     this.importadorBodyData = this.getImportadorTableData.tableBody;
+  }
+
+  /**
+   * 
+   * @param  agregar, que acepta datos de tipo cadena
+   * @description agregar se utiliza para agregar un nuevo estable
+   */
+  public agregar(agregar:string) {
+    if(agregar === 'Agregar'){
+      this.hasAgregar = true;
+      //console.log('Agregar Establecimiento');
+    }
   }
 
 

@@ -1,12 +1,16 @@
 
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ReplaySubject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+
 
 
 import { PantallasFormData } from '../../../../core/models/220401/servicios-pantallas.model';
 import { ServiciosPantallasService } from '../../../../core/services/220471/servicios-pantallas.service';
-import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+
+
 interface Solicitude {
   fechaCreacion: string;
   mercancia: string;
@@ -42,9 +46,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   solicitudes: Solicitude[] = [];
   displayedColumns: string[] = ['fechaCreacion', 'mercancia', 'cantidad', 'proovedor'];
   showContent = false;
-  
+  /**
+ * Carga los datos de las solicitudes desde un archivo JSON ubicado en la carpeta de assets.
+ * 
+ * Este método realiza una solicitud HTTP GET para obtener los datos de 'assets/json/220401/solicitude.json'.
+ * Al recuperar los datos exitosamente, los asigna a la propiedad `solicitudes`.
+ * Si ocurre un error durante la solicitud, registra un mensaje de error en la consola.
+ */
+
   loadSolicitudesData() {
-    // Load the JSON file from the assets folder using a relative path
+   
     this.http.get<Solicitude[]>('assets/json/220401/solicitude.json').subscribe(
       (data) => {
         this.solicitudes = data;
