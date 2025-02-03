@@ -43,7 +43,7 @@
                 </ul>
             </nav>
             <div class="container-fluid text-end mt-5">
-                <button class="btn btn-agregar me-3">Agregar</button>
+                <button class="btn btn-agregar me-3" (click)="agregar('Agregar')">Agregar</button>
                 <button class="btn btn-buscar">Buscar</button>
             </div>
         </div>
@@ -74,8 +74,10 @@
      </div>
 </div>
 
+@if(hasAgregar) {
+    <app-agregar-destinatoria></app-agregar-destinatoria>
+}
 
-<app-agregar-destinatoria></app-agregar-destinatoria>
 
 
 <div class="container-fluid text-end mt-5">
