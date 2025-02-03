@@ -7,7 +7,7 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
 
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule,Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule,ValidationErrors,Validators } from '@angular/forms';
 /**
  * DatosGeneralsAnimalsComponent es un componente que maneja la selección de aduanas y otros datos generales de animales.
  */
@@ -24,7 +24,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule,Validators } from '@angular
 })
 export class DatosGeneralsAnimalsComponent  {
     /** Configuración del primer select de aduanas */
-    formGroup!: FormGroup;
+    frmMercanciaAnimal!: FormGroup;
+  /** Configuración del primer select de aduanas */
     aduanas: CatalogosSelect = {
     labelNombre: 'UMC',
     required: true,
@@ -57,26 +58,122 @@ selectedAduanaOne: Catalogo = { id: 0, descripcion: '' }; // Provide an initial 
    * @param e - La aduana seleccionada.
    */
   constructor(private fb: FormBuilder) {}
-
+    /**
+   * Custom validator for special description rule.
+   * @param control - The form control to validate.
+   * @returns A validation error object or null.
+   */
+    descripcionEspecialesValidatorFalse(control: AbstractControl): ValidationErrors | null {
+      const value = control.value;
+      const regex = /^[-A-Za-z0-9\u000D\u000A\u00D1\u00F1\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00C4\u00CB\u00CF\u00D6\u00DC\u00E4\u00EB\u00EF\u00F6\u00FC\u00C7\u00E7\u201C\u002B\u0022\u0027\u003C\u003D\u003E\u00B5\u00BA\u00DF\s\%$*()!_?ï¿½&#@;,.:'"ï¿½\/\[\]_-]*$/;
+      if (/^[ ]+/.test(value) || !regex.test(value)) {
+        return { descripcionEspeciales: false };
+      }
+      return null;
+    }
+    /**
+   * Custom validator for descripcion rule.
+   * @param control - The form control to validate.
+   * @returns A validation error object or null.
+   */
+    descripcionValidator(control: AbstractControl): ValidationErrors | null {
+      const value = control.value;
+      // Implement your custom validation logic here
+      if (value && value.length > 0) {
+        return null;
+      }
+      return { descripcion: true };
+    }
+  /**
+   * Custom validator for special description rule.
+   * @param control - The form control to validate.
+   * @returns A validation error object or null.
+   */
+  descripcionEspecialesValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    const regex = /^[-A-Za-z0-9\u000D\u000A\u00D1\u00F1\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00C4\u00CB\u00CF\u00D6\u00DC\u00E4\u00EB\u00EF\u00F6\u00FC\u00C7\u00E7\u201C\u002B\u0022\u0027\u003C\u003D\u003E\u00B5\u00BA\u00DF\s\%$*()!_?ï¿½&#@;,.:'"ï¿½\/\[\]_-]*$/;
+    if (/^[ ]+/.test(value) || !regex.test(value)) {
+      return { descripcionEspeciales: 'Ingresa datos validos.' };
+    }
+    return null;
+  }
+   /**
+   * Custom validator to check if the value is within the specified range.
+   * @param min - The minimum value.
+   * @param max - The maximum value.
+   * @returns A validation function.
+   */
+   valueRangeValidator(min: number, max: number) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = parseFloat(control.value);
+      if (isNaN(value) || value < min || value > max) {
+        return { valueRange: true };
+      }
+      return null;
+    };
+  }
+ /**
+   * Initializes the component and sets up the form group with validation rules.
+   */
   ngOnInit(): void {
-    this.formGroup = this.fb.group({
-      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(8)]],
-      tratamiento: ['', Validators.maxLength(1000)],
-      presentacion: ['', Validators.required],
-      marcaEmbarque: ['', Validators.maxLength(200)],
-      fechaCaducidad: ['', Validators.required],
+    this.frmMercanciaAnimal = this.fb.group({
+      fraccionArancelaria: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(8),
+        Validators.pattern('^[0-9]*$') // Only digits
+      ]],
+      tratamiento: ['', [
+        Validators.maxLength(1000),
+        this.descripcionEspecialesValidator // Custom validator
+      ]],
+      presentacion: ['', [
+        Validators.required,
+        Validators.maxLength(15),
+        Validators.pattern('^[0-9]*\.?[0-9]+$'), // Must be a number
+        this.valueRangeValidator(0.01, 999999999999.99) // Custom validator for value range
+      ]],
+      marcaEmbarque: ['', [
+        Validators.maxLength(30),
+        this.descripcionValidator // Custom validator
+      ]],
+      fechaCaducidad: ['', [
+        Validators.required,
+        Validators.maxLength(15),
+        Validators.pattern('^[0-9]*\.?[0-9]+$'), // Must be a number
+        this.valueRangeValidator(0.01, 999999999999.99) // Custom validator for value range
+      ]],
+      aduana: ['', Validators.required] ,// Add FormControl for the select field
       cites: ['', Validators.maxLength(15)],
-      nombreIdentificacion: ['', Validators.maxLength(1000)],
-      raza: [''],
-      edadAnimal: ['', Validators.required],
-      color: ['', Validators.maxLength(15)],
-      numeroAutorizacionCITES: ['', Validators.maxLength(15)]
+      nombreIdentificacion: ['', [
+        Validators.required,
+        Validators.maxLength(200),
+        this.descripcionEspecialesValidatorFalse // Custom validator
+      ]],
+      numeroAutorizacionCITES: ['', Validators.maxLength(15)],
+      raza: ['', [
+        Validators.maxLength(50),
+        this.descripcionEspecialesValidator // Custom validator
+      ]],
+      edadAnimal: ['', [
+        Validators.required,
+        Validators.maxLength(50),
+        this.descripcionEspecialesValidator // Custom validator
+      ]],
+      color: ['', [
+        Validators.maxLength(30),
+        this.descripcionEspecialesValidator // Custom validator
+      ]],
     });
   }
+ /**
+   * Maneja la selección de una aduana en el primer select.
+   * @param e - La aduana seleccionada.
+   */
 aduanaSeleccion(e: Catalogo): void {
 
   this.selectedAduana = e;
-  console.log('Aduana seleccionada:', e);
+  
 }
  /**
    * Maneja la selección de una aduana en el segundo select.
@@ -85,7 +182,7 @@ aduanaSeleccion(e: Catalogo): void {
 aduanaSeleccionOne(e: Catalogo): void {
 
    this.selectedAduanaOne = e;
-  console.log('Aduana seleccionada:', e);
+
 }
 /**
  * Obtiene la descripción de la fracción arancelaria.
@@ -93,14 +190,14 @@ aduanaSeleccionOne(e: Catalogo): void {
  * @param length - La longitud del valor de la fracción arancelaria.
  */
 obtenerDescripcionFraccion(value: string, length: number): void {
-  // Implement the logic to obtain the description of the fraction
-  this.formGroup.get('descFraccionArancelaria')?.setValue('Descripción de la fracción');
+ // Implementar la lógica para obtener la descripción de la fracción
+  this.frmMercanciaAnimal.get('descFraccionArancelaria')?.setValue('Descripción de la fracción');
 }
 /**
  * Limpia los datos capturados en el formulario de mercancía.
  */
 limpiarDatosCapturaMercancia(): void {
-  this.formGroup.reset();
+  this.frmMercanciaAnimal.reset();
   this.ocultarErrores();
 }
 /**
@@ -108,8 +205,8 @@ limpiarDatosCapturaMercancia(): void {
  * Muestra un mensaje si el formulario es válido, de lo contrario muestra los errores.
  */
 guardarCapturaMercancia(): void {
-  if (this.formGroup.valid) {
-    console.log('Form data:', this.formGroup.value);
+  if (this.frmMercanciaAnimal.valid) {
+ 
     this.mostrarMensaje();
   } else {
     this.mostrarErrores();
@@ -119,25 +216,25 @@ guardarCapturaMercancia(): void {
  * Cierra la captura de mercancía animal y oculta los errores.
  */
 cerrarCapturaMercanciaAnimal(): void {
-  console.log('Cerrar captura de mercancia animal');
+
   this.ocultarErrores();
 }
 /**
  * Muestra un mensaje.
  */
 mostrarMensaje(): void {
-  console.log('Mostrar mensaje');
+
 }
 /**
  * Oculta los errores.
  */
 ocultarErrores(): void {
-  console.log('Ocultar errores');
+ 
 }
 /**
  * Muestra los errores.
  */
 mostrarErrores(): void {
-  console.log('Mostrar errores');
+ 
 }
 }

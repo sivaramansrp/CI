@@ -10,6 +10,9 @@ import { CatalogosSelect } from '../../../../core/models/shared/components.model
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import unidadRadioFields from '../../../../../assets/json/220401/unidad.json'
+/**
+ * DatosDelComponent es un componente que maneja la selección de opciones de radio y muestra otros componentes basados en la selección.
+ */
 @Component({
   selector: 'app-datos-del',
   templateUrl: './datos-del.component.html',
@@ -33,30 +36,43 @@ export class DatosDelComponent implements OnInit {
   /** Valor seleccionado actualmente */
   selectedValue: string | number = 'option1'; // Update the type to string | number
 
-  radioBoton = unidadRadioFields // import data from Json
+  /** Datos de los botones de radio importados desde un archivo JSON */
+  radioBoton = unidadRadioFields;
 
-  constructor(private fb: FormBuilder) {
-
-  }
+    /**
+   * Constructor para inyectar FormBuilder
+   * @param fb - Instancia de FormBuilder
+   */
+    constructor(private fb: FormBuilder) {}
+      /**
+   * Inicializa el componente y configura el grupo de formulario.
+   */
   ngOnInit(): void {
     this.formGroup = this.fb.group({
       seleccion: [this.selectedValue]
     });
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   /**
+   * Maneja el evento de cambio de valor y actualiza el valor seleccionado.
+   * @param newValue - El nuevo valor seleccionado.
+   */
   onValueChange(newValue: any) {
     console.log('Selected Value:', newValue);
     this.selectedValue = newValue;
   }
+    /** Grupo de formulario adicional */
   form!: FormGroup; // Declare the `form` property
-
+  /** Configuraciones de los dropdowns */
   dropdownConfigs: CatalogosSelect[] = [
     { labelNombre: 'Delegaciones estatales SAGARPA', required: true, catalogos: this.getCatalogos(), primerOpcion: '' },
     { labelNombre: 'OSIA', required: true, catalogos: this.getCatalogos(), primerOpcion: '' },
     { labelNombre: 'Oficina Central', required: true, catalogos: this.getCatalogos(), primerOpcion: '' },
     { labelNombre: 'Distrito Desarrollo Rural (DDR)', required: false, catalogos: this.getCatalogos(), primerOpcion: '' }
   ];
-
+  /**
+   * Obtiene los datos de los catálogos.
+   * @returns Un array de objetos de catálogo.
+   */
   private getCatalogos() {
     return [
       { id: 1, descripcion: 'Option 1' },
@@ -64,7 +80,7 @@ export class DatosDelComponent implements OnInit {
       { id: 3, descripcion: 'Option 3' }
     ];
   }
-
+  /** Columnas de la tabla */
   tableColumns = [
     'No. partida',
     'Fracción arancelaria',
@@ -74,21 +90,24 @@ export class DatosDelComponent implements OnInit {
     'Unidad de medida de comercialización (UMC)',
     'Cantidad (UMC)'
   ];
-
+  /** Datos de las mercancías */
    mercanciasData = [
     {
       tbodyData: ['Establecimiento 1','123-456-7890','correo','Actividad 1','Otro detalle','Certificado 001','Domicilio 1'],
     }
   ]
-
+ /**
+   * Maneja la selección de un elemento.
+   * @param e - El elemento seleccionado.
+   */
   seleccionar(e:any){
     console.log(e)
   }
-  
+   /** Maneja la carga de archivos */
   cargarArchivo(){
 
   }
-
+  /** Agrega un nuevo elemento */
   agregar(){}
   
 
