@@ -1,3 +1,5 @@
+/* eslint-disable @angular-eslint/component-selector */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Component, Input } from '@angular/core';
 import { TableData } from '../../../core/models/shared/components.model';
 
@@ -9,8 +11,13 @@ import { TableData } from '../../../core/models/shared/components.model';
 })
 export class TableComponent {
 
-  @Input() commonTableHeader: any;
-  @Input() commonTableBody: any;
+  /**
+   * @description 
+   * commonTableHeader se utiliza para obtener datos de encabezado de tabla del componente 
+   * commonTableBody se utiliza para obtener datos del cuerpo de la tabla de la componente
+   */
+  @Input() commonTableHeader: string[] = [];
+  @Input() commonTableBody: any =[];
 
   public tableData: TableData = {
     tableHeader: [],

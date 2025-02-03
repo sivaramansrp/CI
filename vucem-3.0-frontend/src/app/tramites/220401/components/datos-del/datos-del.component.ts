@@ -3,16 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import radioOptionsData from '../../../../../assets/json/220401/tipo-de-certifico.json'
 
 import { AgregarArchivoComponent } from '../../../../shared/components/agregar-archivo/agregar-archivo.component';
-import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
+import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TableComponent } from '../../../../shared/components/table/table.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
-
-import radioOptionsData from '../../../../../assets/json/220401/tipo-de-certifico.json'
 import unidadRadioFields from '../../../../../assets/json/220401/unidad.json'
 @Component({
   selector: 'app-datos-del',
@@ -30,10 +28,14 @@ import unidadRadioFields from '../../../../../assets/json/220401/unidad.json'
   ]
 })
 export class DatosDelComponent implements OnInit {
+  /** Grupo de formulario para manejar la selección de radio */
   formGroup!: FormGroup;
+  /** Opciones de radio cargadas desde un archivo JSON */
   radioOptions = radioOptionsData; // Use imported JSON data
-  selectedValue = 'option1';
-  defaultSelect = 'oficina central';
+  /** Valor seleccionado actualmente */
+  selectedValue: string | number = 'option1'; // Update the type to string | number
+  defaultSelect:string | number = 'oficina central';
+
   radioBoton = unidadRadioFields // import data from Json
 
   constructor(private fb: FormBuilder) {
@@ -49,7 +51,6 @@ export class DatosDelComponent implements OnInit {
     console.log('Selected Value:', newValue);
     this.selectedValue = newValue;
   }
-  
   form!: FormGroup; // Declare the `form` property
 
   dropdownConfigs: CatalogosSelect[] = [
@@ -59,7 +60,7 @@ export class DatosDelComponent implements OnInit {
     { labelNombre: 'Distrito Desarrollo Rural (DDR)', required: false, catalogos: this.getCatalogos(), primerOpcion: '' }
   ];
 
-  /**
+    /**
    * Retrieves a list of catalog items.
    *
    * @returns An array of catalog objects, each containing an `id` and a `descripcion`.
@@ -87,7 +88,6 @@ export class DatosDelComponent implements OnInit {
       tbodyData: ['Establecimiento 1','123-456-7890','correo','Actividad 1','Otro detalle','Certificado 001','Domicilio 1'],
     }
   ]
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   seleccionar(e:any){
     console.log(e)
@@ -97,8 +97,7 @@ export class DatosDelComponent implements OnInit {
   cargarArchivo(){
 
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+// eslint-disable-next-line @typescript-eslint/no-empty-function
   agregar(){}
   
 

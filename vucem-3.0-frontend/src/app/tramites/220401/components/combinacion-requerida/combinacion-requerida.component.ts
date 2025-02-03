@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable sort-imports */
 import { Component } from '@angular/core';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
@@ -54,6 +54,11 @@ export class CombinacionRequeridaComponent {
       return this.validacionesService.isValid(this.formCombinacion,field);
     }
 
+    /**
+     * @description createFormMerge se utiliza para crear el formulario denominado formCombinacion
+     * 
+     */
+
     public crearFormCombinacion() {
       this.formCombinacion =  this.fb.group({
         especie:[''],
@@ -72,6 +77,9 @@ export class CombinacionRequeridaComponent {
       });
     }
   
+  /**
+   * @description getPaisOrigen se utiliza para obtener los datos del menú desplegable de la opción de selección
+   */
   
     public getPaisOrigen() {
       this.paisOrigen = {
@@ -91,6 +99,9 @@ export class CombinacionRequeridaComponent {
       };
     }
   
+  /**
+  * @description getRegimenMercancia se utiliza para obtener los datos del menú desplegable de la opción de selección
+  */
   
     public getRegimenMercancia() {
       this.regimenMercancia = {
@@ -110,6 +121,9 @@ export class CombinacionRequeridaComponent {
       };
     }
   
+  /**
+   * @description getOisaSalida se utiliza para obtener los datos del menú desplegable de la opción de selección
+   */
   
     public getOisaSalida() {
       this.oisaSalida = {
@@ -129,6 +143,9 @@ export class CombinacionRequeridaComponent {
       };
     }
   
+  /**
+   * @description getAduanaSalida se utiliza para obtener los datos del menú desplegable de la opción de selección
+   */
   
     public getAduanaSalida() {
       this.aduanaSalida = {
@@ -148,6 +165,10 @@ export class CombinacionRequeridaComponent {
       };
     }
   
+
+  /**
+   * @description getTipoActividad se utiliza para obtener los datos del menú desplegable de la opción de selección
+   */
     public getTipoActividad() {
       this.tipoActividad = {
         labelNombre: 'Tipo de Actividad del Establecimiento',
@@ -165,6 +186,10 @@ export class CombinacionRequeridaComponent {
         ],
       };
     }
+
+  /**
+   * @description getNombreEstablecimiento se utiliza para obtener los datos del menú desplegable de la opción de selección
+   */
   
     public getNombreEstablecimiento() {
       this.nombreEstablecimiento = {
@@ -183,6 +208,10 @@ export class CombinacionRequeridaComponent {
         ],
     }
   }
+
+  /**
+   * @description getPaisDestino se utiliza para obtener los datos del menú desplegable de la opción de selección
+   */
   
     public getPaisDestino() {
       this.paisDestino = {
@@ -201,6 +230,10 @@ export class CombinacionRequeridaComponent {
         ],
       };
     }
+
+  /**
+   * @description getMercancia se utiliza para obtener los datos del menú desplegable de la opción de selección
+   */
   
     public getMercancia() { 
       this.mercancia = { 
@@ -219,6 +252,10 @@ export class CombinacionRequeridaComponent {
         ],
       }
     }
+
+  /**
+   * @description getEspecie se utiliza para obtener los datos del menú desplegable de la opción de selección
+   */
   
     public getEspecie() {
       this.especie = {
@@ -237,6 +274,10 @@ export class CombinacionRequeridaComponent {
         ],
       };
     }
+
+    /**
+     * @description getFuncionZootecnica se utiliza para obtener los datos del menú desplegable de la opción de selección
+     */
   
     public getFuncionZootecnica() {
       this.funcionZootecnica = {

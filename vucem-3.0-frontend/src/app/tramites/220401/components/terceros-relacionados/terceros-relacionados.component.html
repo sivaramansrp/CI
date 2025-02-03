@@ -1,5 +1,6 @@
 <div class="container table-container">
     <ng-titulo titulo="Terceros relacionados" />
+    <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR"></ng-alert>
      <div class="row">
         <div class="col-md-12">
             <h6 class="mb-5">Establecimiento de Origen *</h6>
@@ -17,7 +18,7 @@
                     </li> -->
                 </ul>
             </nav>
-            <div class="container text-end mt-5">
+            <div class="container-fluid text-end mt-5">
                 <button class="btn btn-agregar me-3">Agregar</button>
                 <button class="btn btn-buscar">Buscar</button>
             </div>
@@ -41,7 +42,7 @@
                     </li> -->
                 </ul>
             </nav>
-            <div class="container text-end mt-5">
+            <div class="container-fluid text-end mt-5">
                 <button class="btn btn-agregar me-3">Agregar</button>
                 <button class="btn btn-buscar">Buscar</button>
             </div>
@@ -65,7 +66,7 @@
                     </li> -->
                 </ul>
             </nav>
-            <div class="container text-end mt-5">
+            <div class="container-fluid text-end mt-5">
                 <button class="btn btn-agregar me-3">Agregar</button>
                 <button class="btn btn-buscar">Buscar</button>
             </div>
@@ -74,8 +75,10 @@
 </div>
 
 
+<app-agregar-destinatoria></app-agregar-destinatoria>
 
-<div class="container text-end mt-5">
+
+<div class="container-fluid text-end mt-5">
     <button class="btn btn-buscar me-2">Guardar</button>
     <button class="btn btn-agregar">Continuar</button>
 </div>

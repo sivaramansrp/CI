@@ -15,15 +15,19 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
 import { CombinacionRequeridaComponent } from './components/combinacion-requerida/combinacion-requerida.component';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { AgregarDestinatoriaComponent } from './components/agregar-destinatoria/agregar-destinatoria.component';
+import { DatosGeneralsAnimalsComponent } from './components/datos-generals-animals/datos-generals-animals.component';
+import { PagoDeDerechoComponent } from './components/pago-de-derecho/pago-de-derecho.component';
 
 @NgModule({
   declarations: [
     PantallasComponent,
     DatosComponent,
-    TransporteComponent
+    TransporteComponent,
+    
   ],
   imports: [
     CommonModule,
+    PagoDeDerechoComponent,
     PantallasRoutingModule,    
     NavComponent,
     WizardComponent,
@@ -35,7 +39,8 @@ import { AgregarDestinatoriaComponent } from './components/agregar-destinatoria/
     ReactiveFormsModule,
     CombinacionRequeridaComponent,
     TercerosRelacionadosComponent,
-    AgregarDestinatoriaComponent
+    AgregarDestinatoriaComponent,
+    DatosGeneralsAnimalsComponent
   ]
 })
 /**
