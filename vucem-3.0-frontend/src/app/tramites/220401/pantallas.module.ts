@@ -17,6 +17,7 @@ import { TercerosRelacionadosComponent } from './components/terceros-relacionado
 import { AgregarDestinatoriaComponent } from './components/agregar-destinatoria/agregar-destinatoria.component';
 import { DatosGeneralsAnimalsComponent } from './components/datos-generals-animals/datos-generals-animals.component';
 import { PagoDeDerechoComponent } from './components/pago-de-derecho/pago-de-derecho.component';
+import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { PagoDeDerechoComponent } from './components/pago-de-derecho/pago-de-der
     CombinacionRequeridaComponent,
     TercerosRelacionadosComponent,
     AgregarDestinatoriaComponent,
-    DatosGeneralsAnimalsComponent
+    DatosGeneralsAnimalsComponent,
+    SelectCatalogosComponent
   ]
 })
 /**
