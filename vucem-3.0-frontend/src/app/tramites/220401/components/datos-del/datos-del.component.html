@@ -19,10 +19,10 @@
 
   <ng-titulo titulo="Unidad expedidora"></ng-titulo>
  
-  <app-input-radio class="fw-semibold" [radioOptions]="radioBoton" [selectedValue]="selectedValue" [isRequired]="true"
+  <app-input-radio class="fw-semibold" [radioOptions]="radioBoton" [selectedValue]="defaultSelect" [isRequired]="true"
       (valueChange)="onValueChange($event)" [layout]="'horizontal'"></app-input-radio>
 
-      <div *ngIf="selectedValue === 'oficina central'">
+      <div *ngIf="defaultSelect === 'oficina central'">
             <div class="row">
                 <div class="col-md-4" *ngFor="let config of dropdownConfigs">
                     <select-catalogos [catalogosDatos]="config" (valorSeleccion)="seleccionar($event)"></select-catalogos>
@@ -35,12 +35,12 @@
 
         <ng-table [commonTableHeader]="tableColumns" [commonTableBody]="mercanciasData"></ng-table>
 
-        <agregar-archivo 
+        <app-agregar-archivo 
         [label1]="'Carga por archivo'" 
         [label2]="'Agregar'" 
         (archivoAction)="cargarArchivo()"
         (agregarAction)="agregar()">
-        </agregar-archivo>
+        </app-agregar-archivo>
     
         <div class="mb-5">
             <label for="message" class="form-label">Tratamiento:</label>

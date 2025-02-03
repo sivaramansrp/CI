@@ -1,14 +1,18 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import radioOptionsData from '../../../../../assets/json/220401/tipo-de-certifico.json'
+
 import { AgregarArchivoComponent } from '../../../../shared/components/agregar-archivo/agregar-archivo.component';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TableComponent } from '../../../../shared/components/table/table.component';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+
+import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+
+import radioOptionsData from '../../../../../assets/json/220401/tipo-de-certifico.json'
 import unidadRadioFields from '../../../../../assets/json/220401/unidad.json'
 @Component({
   selector: 'app-datos-del',
@@ -29,6 +33,7 @@ export class DatosDelComponent implements OnInit {
   formGroup!: FormGroup;
   radioOptions = radioOptionsData; // Use imported JSON data
   selectedValue = 'option1';
+  defaultSelect = 'oficina central';
   radioBoton = unidadRadioFields // import data from Json
 
   constructor(private fb: FormBuilder) {
@@ -44,6 +49,7 @@ export class DatosDelComponent implements OnInit {
     console.log('Selected Value:', newValue);
     this.selectedValue = newValue;
   }
+  
   form!: FormGroup; // Declare the `form` property
 
   dropdownConfigs: CatalogosSelect[] = [
@@ -53,6 +59,11 @@ export class DatosDelComponent implements OnInit {
     { labelNombre: 'Distrito Desarrollo Rural (DDR)', required: false, catalogos: this.getCatalogos(), primerOpcion: '' }
   ];
 
+  /**
+   * Retrieves a list of catalog items.
+   *
+   * @returns An array of catalog objects, each containing an `id` and a `descripcion`.
+   */
   private getCatalogos() {
     return [
       { id: 1, descripcion: 'Option 1' },
@@ -77,14 +88,17 @@ export class DatosDelComponent implements OnInit {
     }
   ]
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   seleccionar(e:any){
     console.log(e)
   }
   
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   cargarArchivo(){
 
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   agregar(){}
   
 
