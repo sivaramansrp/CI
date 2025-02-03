@@ -1,5 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
+/**
+ * AgregarArchivoComponent is a reusable component for handling file upload and item addition actions.
+ * It provides two buttons: one for file upload and another for adding items.
+ * Each button emits an event when clicked.
+ *
+ */
+
 @Component({
   selector: 'app-agregar-archivo',
   templateUrl: './agregar-archivo.component.html',
@@ -8,27 +15,46 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   imports: [],
 })
 export class AgregarArchivoComponent {
-  @Input() label1: string = 'Carga por archivo'; 
-  @Input() label2: string = 'Agregar'; 
-
-  @Output() archivoAction = new EventEmitter<void>();  
-  @Output() agregarAction = new EventEmitter<void>();
-
-
-  /**
-   * Handles the click event for the archivo (file) action.
-   * Emits the archivoAction event.
+   /**
+   * La etiqueta para el botón de acción del archivo.
+   * @type {string}
+   * @default 'Carga por archivo'
    */
-  onArchivoClick() {
-    this.archivoAction.emit();
-  }
+    @Input() archivoBtn: string = 'Carga por archivo';
 
-  /**
-   * @comdoc
-   * Handles the click event for adding an item.
-   * Emits the `agregarAction` event to notify parent components.
-   */
-  onAgregarClick() {
-    this.agregarAction.emit();
-  }
+   /**
+     * La etiqueta para el botón de acción de agregar.
+     * @type {string}
+     * @default 'Agregar'
+     */
+    @Input() agregarBtn: string = 'Agregar';
+  
+    /**
+     * Evento emitido cuando se hace clic en el botón de acción del archivo.
+     * @event archivoAction
+     */
+
+    @Output() archivoAction = new EventEmitter<void>();
+  
+    /**
+     * Evento emitido cuando se hace clic en el botón de acción de agregar.
+     * @event agregarAction
+     */
+    @Output() agregarAction = new EventEmitter<void>();
+  
+    /**
+     * Maneja el evento de clic para el botón de acción del archivo.
+     * Emite el evento `archivoAction`.
+     */
+    onArchivoClick() {
+      this.archivoAction.emit();
+    }
+  
+    /**
+     * Maneja el evento de clic para el botón de acción de agregar.
+     * Emite el evento `agregarAction` para notificar a los componentes padres.
+     */
+    onAgregarClick() {
+      this.agregarAction.emit()
+    }
 }

@@ -36,8 +36,8 @@
         <ng-table [commonTableHeader]="tableColumns" [commonTableBody]="mercanciasData"></ng-table>
 
         <app-agregar-archivo 
-        [label1]="'Carga por archivo'" 
-        [label2]="'Agregar'" 
+        [archivoBtn]="'Carga por archivo'" 
+        [agregarBtn]="'Agregar'" 
         (archivoAction)="cargarArchivo()"
         (agregarAction)="agregar()">
         </app-agregar-archivo>
