@@ -4,7 +4,7 @@ import { PantallasComponent } from '../pages/pantallas/pantallas.component';
 
 const routes: Routes = [
   {
-      path: 'datosdelasolicitud',
+      path: 'datosdecomponentes',
       component: PantallasComponent,
     }
 ];

@@ -1,13 +1,14 @@
+/* eslint-disable sort-imports */
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DatosComponent } from './110101/pages/datos/datos.component';
-import { PantallasComponent } from './110101/pages/pantallas/pantallas.component';
+import { SolicitanteComponent } from './110101/components/solicitante/solicitante.component';
 
 
 
 @NgModule({
   declarations: [  
-    DatosComponent, PantallasComponent
+  
+    SolicitanteComponent
   ],
   imports: [
     CommonModule,

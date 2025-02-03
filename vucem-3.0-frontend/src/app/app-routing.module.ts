@@ -23,7 +23,7 @@ const routes: Routes = [
       ),
   },
   { 
-    path: 'pantallas-extraordinarios-110101',
+    path: 'pantallas',
     loadChildren: () =>
       import('./tramites/110101/pantallas/pantallas.module').then(
         (m) => m.PantallasModule
