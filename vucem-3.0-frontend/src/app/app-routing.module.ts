@@ -22,6 +22,13 @@ const routes: Routes = [
         (m) => m.PantallasModule
       ),
   },
+  { 
+    path: 'pantallas-extraordinarios-110101',
+    loadChildren: () =>
+      import('./tramites/110101/pantallas/pantallas.module').then(
+        (m) => m.PantallasModule
+      ),
+  },
 ];
 
 @NgModule({
