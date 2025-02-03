@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 
 import { enviroment } from '../../../../../enviroments/enviroment';
-
-@Injectable({
-  providedIn: 'root'
-})
 /**
  * This service is used to make http requests & handle the response.
  */
+@Injectable({
+  providedIn: 'root'
+})
+
 export class HttpCoreService {
 /**
  * This variable is used to store the server URL.
