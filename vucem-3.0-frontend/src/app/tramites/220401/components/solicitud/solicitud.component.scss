@@ -1,0 +1,96 @@
+/* Style the table for a more modern and clean look */
+.custom-table {
+    width: 100%;                 /* Make table take full width */
+    margin: 20px auto;           /* Center table with auto margin */
+    border-collapse: collapse;   /* Collapse borders for neat appearance */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);  /* Add subtle shadow for depth */
+    background-color: #fff;      /* White background for the table */
+  }
+  
+  /* Header styling */
+  .custom-table th {
+    background-color: #fff;   /* Green background for the header */
+    color: #333333;                /* White text color */
+    font-weight: bold;           /* Make header text bold */
+    text-align: center;          /* Center the text */
+    padding: 12px 15px;          /* Add padding for better spacing */
+    border-bottom: 2px solid #ddd;  /* Light bottom border */
+  }
+  
+  /* Body cell styling */
+  .custom-table td {
+    text-align: center;          /* Center text inside the cells */
+    padding: 12px 15px;          /* Add padding for better readability */
+    border-bottom: 1px solid #ddd;  /* Add bottom border to rows */
+    font-size: 14px;             /* Adjust font size */
+  }
+  
+  /* Zebra striping for better row readability */
+  .custom-table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;   /* Light gray background for odd rows */
+  }
+
+  
+  .custom-table tbody tr:nth-child(even) {
+    background-color: #ffffff;   /* White background for even rows */
+  }
+  
+  /* Hover effect on rows for better interactivity */
+  .custom-table tbody tr:hover {
+    background-color: #f1f1f1;   /* Highlight row on hover */
+  }
+  
+  /* Optional: Responsive Table for small screens */
+  @media (max-width: 600px) {
+    .custom-table {
+      font-size: 12px;            /* Smaller font size for mobile devices */
+    }
+  
+    .custom-table th, .custom-table td {
+      padding: 10px;              /* Reduce padding for mobile devices */
+    }
+  
+    .custom-table th {
+      font-size: 14px;            /* Make the header text slightly larger */
+    }
+  }
+  .container {
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .plus-icon {
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .content {
+    margin-top: 10px;
+  }
+  /* Styling for the info box */
+.info-box {
+    background-color:#daecf4;
+    color:#6d9ebb;               /* White text color */
+    padding: 15px;              /* Padding around the content */
+    border-radius: 8px;         /* Slightly curved borders */
+    border: 1px solid #a0cadd;
+    font-size: 16px;            /* Font size for the text */
+    margin: 20px 0;             /* Space above and below the box */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Slight shadow for depth */
+    text-align: center;           /* Horizontally center the text */
+    display: flex;                /* Enable flexbox */
+    justify-content: center;      /* Horizontally center the content (for flexbox) */
+    align-items: center;          /* Vertically center the content (for flexbox) */
+  }
+  .refresh-icon {
+    font-size: 20px;             /* Set the size of the icon */
+    cursor: pointer;            /* Change the cursor to pointer on hover */
+    color: #007bff;              /* Blue color for the refresh icon */
+  }
+
+  

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable sort-imports */
 import { Component } from '@angular/core';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
@@ -29,6 +29,10 @@ export class AgregarDestinatoriaComponent {
     this.getPais();
   }
 
+  /**
+   * @description getPais se utiliza para obtener los datos de los paises
+   */
+
   public getPais() {
     this.pais = {
       labelNombre: 'País',
@@ -52,6 +56,11 @@ export class AgregarDestinatoriaComponent {
       
   }
 
+  /**
+   * 
+   * @param  checkBoxName, que acepta datos de tipo cadena
+   * @description inputChecked se utiliza para verificar si el checkbox está seleccionado
+   */
   public inputChecked(checkBoxName:string) {
     if(checkBoxName === 'fisica') {
       this.fisica = true;
