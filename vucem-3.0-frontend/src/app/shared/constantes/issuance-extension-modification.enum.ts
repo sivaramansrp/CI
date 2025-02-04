@@ -55,7 +55,7 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
     },
     {
         labelNombre: 'Actividad económica preponderante:',
-        campo: 'aPaterno',
+        campo: 'actEconomica',
         class: 'col-md-12',
         tipo_input: 'text',
         disabled: true,
