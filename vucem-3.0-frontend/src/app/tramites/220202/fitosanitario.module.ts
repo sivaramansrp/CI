@@ -26,9 +26,6 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
 
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
 
-
-
-
 @NgModule({
   declarations: [
     PasoUnoComponent,
@@ -56,7 +53,7 @@ import { FirmaElectronicaComponent } from '../../shared/components/firma-electro
     AlertComponent,
     InputFechaComponent,
     AnexarDocumentosComponent,
-    FirmaElectronicaComponent
+    FirmaElectronicaComponent,
   ]
 })
 export class FitosanitarioModule { }
