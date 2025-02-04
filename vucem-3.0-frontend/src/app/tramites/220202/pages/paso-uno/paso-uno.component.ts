@@ -14,5 +14,7 @@ export class PasoUnoComponent {
     { index: 4, title: 'Terceros relacionados', component: 'terceror-relacionados' },
     { index: 5, title: 'Pago de derechos', component: 'pago-de-derechos' }
   ];
-
+  seleccionaTab(i: number): void {
+    this.indice = i;
+  }
 }
