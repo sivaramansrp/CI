@@ -1,12 +1,17 @@
+import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
+
 import { Component, OnInit } from '@angular/core';
+
 import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
 import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
-import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
-import { CATALOGOS_ID, TIPO_PERSONA } from '../../../../shared/constantes/constantes';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA, DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_FISICA_EXTRANJERO, PERSONA_FISICA_NACIONAL, PERSONA_MORAL_EXTRANJERO, PERSONA_MORAL_NACIONAL } from '../../../../shared/constantes/solicitante-constantes.enum';
+
 import { tap } from 'rxjs';
 
+import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+
+import { FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL, FITOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from '../../../../shared/constantes/220202/fitosanitario.enums';
 @Component({
   selector: 'app-solicitante',
   templateUrl: './solicitante.component.html',
@@ -14,17 +19,18 @@ import { tap } from 'rxjs';
 })
 export class SolicitanteComponent implements OnInit {
   tipoPersona!: number;
-  persona: Array<FormularioDinamico> = [];
-  domicilioFiscal: Array<FormularioDinamico> = [];
+  persona: FormularioDinamico[] = [];
+  domicilioFiscal: FormularioDinamico[] = [];
 
   form!: FormGroup;
 
   constructor(
-    private solicitanteServicio: SolicitanteService,
-    private fb: FormBuilder,
-    private formServices: FormulariosService
+    private readonly solicitanteServicio: SolicitanteService,
+    private readonly fb: FormBuilder,
+    private readonly formServices: FormulariosService
   ) {
-    this.obtenerTipoPersona(TIPO_PERSONA.FISICA_NACIONAL);
+    this.persona = FITOSANITARIO_SOLICITANTE_FISICA_NACIONAL;
+    this.domicilioFiscal = FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL;
     this.crearFormulario();
     this.inicializarFormGroup(this.persona, 'datosGenerales');
     this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
@@ -39,26 +45,7 @@ export class SolicitanteComponent implements OnInit {
    * @param tipo - Tipo de persona que es solicitante.
    * @returns void
    */
-  obtenerTipoPersona(tipo: number): void {
-    this.tipoPersona = tipo;
-    if (tipo === TIPO_PERSONA.FISICA_NACIONAL) {
-      // Persona fisica nacional
-      this.persona = PERSONA_FISICA_NACIONAL;
-      this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-    } else if (tipo === TIPO_PERSONA.MORAL_NACIONAL) {
-      // Persona moral nacional
-      this.persona = PERSONA_MORAL_NACIONAL;
-      this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-    } else if (tipo === TIPO_PERSONA.FISICA_EXTRANJERA) {
-      // Persona fisica extranjera
-      this.persona = PERSONA_FISICA_EXTRANJERO;
-      this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
-    } else if (tipo === TIPO_PERSONA.MORAL_EXTRANJERA) {
-      // Persona moral extranjera
-      this.persona = PERSONA_MORAL_EXTRANJERO;
-      this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
-    }
-  }
+
 
   /**
    * Es un getter que proporciona un acceso más sencillo ala grupo de formularios llamado datosGenerales contenido dentr del formulario principal Form.
@@ -91,7 +78,7 @@ export class SolicitanteComponent implements OnInit {
    * @returns void
    */
   inicializarFormGroup(
-    config: Array<FormularioDinamico>,
+    config: FormularioDinamico[],
     grupoNombre: string
   ): void {
     const grupo = this.form.get(grupoNombre) as FormGroup;
@@ -109,7 +96,7 @@ export class SolicitanteComponent implements OnInit {
    * @param validators - Validadores de los campos de los formularios.
    * @returns ValidatorFn[]
    */
-  getValidators(validators: Array<string>): ValidatorFn[] {
+  getValidators(validators: string[]): ValidatorFn[] {
     const formValidators: ValidatorFn[] = [];
     validators.forEach((validator) => {
       if (validator === 'required') {
