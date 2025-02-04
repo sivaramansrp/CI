@@ -1,15 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'ng-alert',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './alert.component.html',
   styleUrl: './alert.component.scss'
 })
 export class AlertComponent {
   @Input() CONTENIDO!: string;
+  @Input() CUSTOMECLASS!: string;
 
   textoHTML: SafeHtml = '';
 

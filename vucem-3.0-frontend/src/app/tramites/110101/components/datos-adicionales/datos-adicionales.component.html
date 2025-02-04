@@ -1,0 +1,24 @@
+<div class="container">
+    <ng-titulo titulo="Representación federal" />
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <select-catalogos [catalogosDatos]="entidad"
+                            (valorSeleccion)="docSeleccionado($event)">
+            </select-catalogos>
+        </div>
+        <div class="col-md-4">
+            <select-catalogos [catalogosDatos]="representacion"
+                            (valorSeleccion)="docSeleccionado($event)">
+            </select-catalogos>
+        </div>
+    </div>
+    
+    <ng-titulo titulo="Protesto de Decir Verdad" />
+    <div class="form-check bg-light p-3 border rounded">
+        <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
+        <!-- <input class="form-check-input" type="checkbox" id="protesta">
+        <label class="form-check-label" for="protesta">
+            El/la que suscribe manifiesto(a) bajo protesta de decir verdad, que la información declarada en el presente trámite de REGISTRO ÚNICO DE PRODUCTOS ELEGIBLES PARA PREFERENCIAS Y CONCESIONES ARANCELARIAS es copia fiel, íntegra e inalterada de la información y documentación soporte que obra en poder del (de la) solicitante.
+        </label> -->
+    </div>
+</div>

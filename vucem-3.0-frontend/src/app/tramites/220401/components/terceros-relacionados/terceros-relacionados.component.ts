@@ -32,6 +32,7 @@ export class TercerosRelacionadosComponent {
   public getImportadorTableData = importardorTable;
   public TEXTOS = MENSAJEDEALERTA;
   public hasAgregar:boolean = false;
+  public infoAlert = 'alert-info';
 
 
   constructor() {
