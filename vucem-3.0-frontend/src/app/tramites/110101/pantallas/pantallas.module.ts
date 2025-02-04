@@ -8,6 +8,7 @@ import { NavComponent } from '../../../shared/components/nav/nav.component';
 import { PantallasComponent } from '../pages/pantallas/pantallas.component';
 import { DatosComponent } from '../pages/datos/datos.component';
 import { SolicitanteComponent } from '../components/solicitante/solicitante.component';
+import { TratadosComponent } from '../components/tratados/tratados.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { SolicitanteComponent } from '../components/solicitante/solicitante.comp
     PantallasRoutingModule,
     WizardComponent,
     NavComponent,
-    SolicitanteComponent
+    SolicitanteComponent,
+    TratadosComponent
   ]
 })
 export class PantallasModule { }
