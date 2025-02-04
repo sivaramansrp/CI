@@ -38,7 +38,15 @@ const routes: Routes = [
       import('./tramites/303/despacho-mercancias.module').then(
         (m) => m.DespachoMercanciasModule
       )
+  },
+  {
+    path: 'agricultura',
+    loadChildren: () =>
+      import('./tramites/220202/fitosanitario.module').then(
+        (m) => m.FitosanitarioModule
+      )
   }
+
 ];
 
 @NgModule({
