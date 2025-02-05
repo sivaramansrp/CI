@@ -1,6 +1,8 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component } from '@angular/core';
 import { TEXTOS } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
+import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -58,8 +60,10 @@ export class DatosDeLaSolicitudComponent {
   TEXTOS: string = TEXTOS;
   forma!: FormGroup;
   selectRangoDias: string[] = [];
+  datosTiposTransporte!: CatalogosSelect;
   colapsable: boolean = false;
   datosDelaSolicitud!: FormGroup;
+  tipoTransporteSeleccionado!: Catalogo;
   constructor(private readonly fb: FormBuilder) {
     this.crearFormulario();
     this.initActionFormBuild();
@@ -120,5 +124,8 @@ export class DatosDeLaSolicitudComponent {
    */
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
+  }
+  tipoTransporte(e: Catalogo) {
+    this.tipoTransporteSeleccionado = e;
   }
 }

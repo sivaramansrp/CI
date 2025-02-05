@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { IssuanceExtensionModificationServiceService } from './módulodemodificacióndeextensióndeemisión.service';
+import { MódulodeModificacióndeExtensióndeemisiónServiceService } from './módulodemodificacióndeextensióndeemisión.service';
 
-describe('IssuanceExtensionModificationServiceService', () => {
-  let service: IssuanceExtensionModificationServiceService;
+describe('MódulodeModificacióndeExtensióndeemisiónServiceService', () => {
+  let service: MódulodeModificacióndeExtensióndeemisiónServiceService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(IssuanceExtensionModificationServiceService);
+    service = TestBed.inject(MódulodeModificacióndeExtensióndeemisiónServiceService);
   });
 
   it('should be created', () => {

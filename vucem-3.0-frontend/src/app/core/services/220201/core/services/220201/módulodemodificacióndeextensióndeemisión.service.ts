@@ -12,7 +12,8 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
 })
-export class IssuanceExtensionModificationServiceService {
+
+export class MódulodeModificacióndeExtensióndeemisiónServiceService {
   public capturarSolicitudCargaUtil: capturarSolicitud = {
     solicitante: undefined,
     datosDeLaSolicitud: undefined,
@@ -21,7 +22,7 @@ export class IssuanceExtensionModificationServiceService {
     pagoDeDerechos: undefined,
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   setSoliciante(solicitante: solicitante) {
     this.capturarSolicitudCargaUtil.solicitante = solicitante;
