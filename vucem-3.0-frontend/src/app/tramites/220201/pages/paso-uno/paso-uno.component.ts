@@ -12,7 +12,7 @@ export class PasoUnoComponent {
    */
   indice: number = 1;
   /** 
-   * @property {Array} cortina_A_la_italiana - Lista de pasos dentro del formulario con sus respectivos componentes. --220201
+   * @property {Array} seccionesDeLaSolicitud - Lista de pasos dentro del formulario con sus respectivos componentes. --220201
    */
   seccionesDeLaSolicitud = [
     { index: 1, title: 'Solicitante', component: 'solicitante' },
