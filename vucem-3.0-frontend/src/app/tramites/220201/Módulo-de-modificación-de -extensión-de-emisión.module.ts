@@ -51,7 +51,8 @@ import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitari
     AlertComponent,
     InputFechaComponent,
     AnexarDocumentosComponent,
-    FirmaElectronicaComponent
+    FirmaElectronicaComponent,
+    SelectCatalogosComponent
   ]
 })
 export class EmisiónExtensiónModificaciónModule { }
