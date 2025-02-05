@@ -23,7 +23,7 @@ const routes: Routes = [
     path: 'extensión-emisión',
     loadChildren: () =>
       import('./tramites/220201/Módulo-de-modificación-de -extensión-de-emisión.module').then(
-        (m) => m.IssuanceExtensionModificationModule)
+        (m) => m.EmisiónExtensiónModificaciónModule)
   },
   {
     path: 'pantallas-extraordinarios',

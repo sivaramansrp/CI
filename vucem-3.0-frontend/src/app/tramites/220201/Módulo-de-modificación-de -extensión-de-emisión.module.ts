@@ -54,4 +54,4 @@ import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitari
     FirmaElectronicaComponent
   ]
 })
-export class IssuanceExtensionModificationModule { }
+export class EmisiónExtensiónModificaciónModule { }
