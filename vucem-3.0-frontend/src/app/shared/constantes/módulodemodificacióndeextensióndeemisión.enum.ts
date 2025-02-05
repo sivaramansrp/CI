@@ -44,12 +44,12 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
         placeholder: '',
     },
     {
-        labelNombre: 'Denominacion o razon social:',
+        labelNombre: 'Denominación o razon social:',
         campo: 'nombreRazonSocial',
         class: 'col-md-8',
         tipo_input: 'text',
         disabled: true,
-        tooltip: 'Denominacion o razon social',
+        tooltip: 'Denominación o razon social',
         validators: ['required'],
         placeholder: '',
     },
@@ -63,7 +63,7 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
         placeholder: '',
     },
     {
-        labelNombre: 'Correo electronic',
+        labelNombre: 'Correo electrónico',
         campo: 'correo',
         class: 'col-md-4',
         tipo_input: 'text',
@@ -78,6 +78,6 @@ export const FECHA_DE_PAGO = {
     habilitado: true,
 
 };
-export const TEXTOS = 'Para continuar con el trámite, deberá agregar por lo menos una mercancia.';
+export const TEXTOS = 'Para continuar con el trámite, deberá agregar por lo menos una mercancía.';
 export const TERCEROR_TEXTO_DE_ALERTA = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
 export const IDDEUSUARIO = 21;
