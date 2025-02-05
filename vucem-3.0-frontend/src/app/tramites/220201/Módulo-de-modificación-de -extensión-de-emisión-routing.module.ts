@@ -19,4 +19,4 @@ export const ROUTES_ZOOSANITARIO: Routes = [
   imports: [RouterModule.forChild(ROUTES_ZOOSANITARIO)],
   exports: [RouterModule]
 })
-export class IssuanceExtensionModificationRoutingModule { }
+export class Módulodemodificacióndeextensióndeemisión { }

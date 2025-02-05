@@ -8,7 +8,7 @@ import { DatosParaMovilizacionNacionalComponent } from './components/datos-para-
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
 import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
 import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
-import { IssuanceExtensionModificationRoutingModule } from './issuance-extension-modification-routing.module';
+import { Módulodemodificacióndeextensióndeemisión } from './Módulo-de-modificación-de -extensión-de-emisión-routing.module';
 import { NgModule } from '@angular/core';
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
@@ -40,7 +40,7 @@ import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitari
   imports: [
     SharedModule,
     CommonModule,
-    IssuanceExtensionModificationRoutingModule,
+    Módulodemodificacióndeextensióndeemisión,
     WizardComponent,
     TituloComponent,
     BtnContinuarComponent,
