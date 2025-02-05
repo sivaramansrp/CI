@@ -16,16 +16,16 @@
         <table class="custom-table">
             <thead>
               <tr>
-                <th>Fecha Creacion</th>
-                <th>Mercancia</th>
+                <th>Fecha Creación</th>
+                <th>Mercancía</th>
                 <th>Cantidad</th>
                 <th>Proveedor</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let solicitud of solicitudes">
-                <td>{{ solicitud.fechaCreacion }}</td>
-                <td>{{ solicitud.mercancia || 'N/A' }}</td>
+                <td>{{ solicitud.fechaCreación }}</td>
+                <td>{{ solicitud.Mercancía || 'N/A' }}</td>
                 <td>{{ solicitud.cantidad }}</td>
                 <td>{{ solicitud.proovedor }}</td>
               </tr>
