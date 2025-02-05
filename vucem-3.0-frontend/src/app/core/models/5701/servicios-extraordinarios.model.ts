@@ -4,7 +4,7 @@ export interface RespuestaSolicitud {
   descripcion: string;
   message: string;
 }
-export interface Solicitud {
+export interface Solicitud5701 {
   idSolicitud: string;
   tipoSolicitud: string;
   datosImportadorExportador: DatosImportadorExportador;

@@ -1,7 +1,4 @@
-import {
-  CATALOGOS_ID,
-  TIPO_PERSONA,
-} from '../../constantes/constantes';
+import { CATALOGOS_ID, TIPO_PERSONA } from '../../constantes/constantes';
 
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
@@ -12,7 +9,7 @@ import {
   PERSONA_MORAL_NACIONAL,
 } from '../../constantes/solicitante-constantes.enum';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import {
   FormBuilder,
@@ -44,6 +41,8 @@ import { tap } from 'rxjs';
   styleUrl: './solicitante.component.scss',
 })
 export class SolicitanteComponent implements OnInit {
+  @Input() tabindex!: number;
+
   tipoPersona!: number;
   persona: FormularioDinamico[] = [];
   domicilioFiscal: FormularioDinamico[] = [];

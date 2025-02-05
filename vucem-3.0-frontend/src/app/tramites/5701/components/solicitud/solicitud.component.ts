@@ -23,12 +23,7 @@ import {
   InputFecha,
   InputHora,
 } from '../../../../core/models/shared/components.model';
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 import {
@@ -37,7 +32,11 @@ import {
 } from '../../../../shared/constantes/constantes';
 import { MILISEGUNDOS } from '../../../../shared/constantes/constantes';
 
-import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+import {
+  FormSateSolicitud5701,
+  Tramite5701Store,
+} from '../../../../estados/tramites/tramite5701.store';
+import { Subject, Subscription, delay, map, takeUntil, tap } from 'rxjs';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
 import { DatosComponentePedimento } from '../../../../core/models/5701/servicios-extraordinarios.model';
 import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.model';
@@ -45,9 +44,10 @@ import { FechasService } from '../../../../core/services/shared/fechas/fechas.se
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
 import { datosAgregarFormulario } from '../../../../core/models/shared/forms-model';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SeccionQuery } from '../../../../core/queries/seccion.query';
+import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
 @Component({
   selector: 'app-solicitud',
@@ -55,6 +55,8 @@ import { SeccionQuery } from '../../../../core/queries/seccion.query';
   styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit {
+  @Input({ required: true }) tabindex!: number;
+
   datosTiposSolicitud!: CatalogosSelect;
   paisesOrigen!: CatalogosSelectPaises;
   paisesProcedencia!: CatalogosSelectPaises;
@@ -96,24 +98,23 @@ export class SolicitudComponent implements OnInit {
   constructor(
     private seccionQuery: SeccionQuery,
     private seccionStore: SeccionStore,
+    private tramite5701Store: Tramite5701Store,
+    private tramite5701Query: Tramite5701Query,
     private fechaService: FechasService,
     private fb: FormBuilder,
     private fService: FormulariosService,
     private catalogosServices: CatalogosService,
     private validacionesService: ValidacionesFormularioService
-  ) {
-    this.crearFormSolicitud();
-  }
+  ) {}
 
   ngOnInit(): void {
-    const diaHoy = new Date();
-    const manania = new Date(diaHoy);
-    manania.setDate(diaHoy.getDate() + 1);
-    this.diaMinimo = manania.toISOString().split('T')[0];
-
     this.getTiposSolicitud();
     this.getPaises();
     this.getAduanas();
+
+    //Validacion si tenemos datos guardados en el store
+
+    this.crearFormSolicitud();
 
     // Aqui se busca el nro de patente o autorizacion
     this.obtenerPatente();
@@ -134,6 +135,7 @@ export class SolicitudComponent implements OnInit {
         tap((_value) => {
           let seccion: number;
           const formasValidadas = this.seccion.formaValida;
+
           for (let i = 0; i < this.seccion.seccion.length; i++) {
             if (
               this.seccion.seccion[i] === true &&
@@ -161,6 +163,44 @@ export class SolicitudComponent implements OnInit {
     this.datosServicio.get('fechaFinal').valueChanges.subscribe((_value) => {
       this.validaFechas();
     });
+
+    /* Suscripcion a los FormGroup para guardar su informacion en el store */
+    this.FormSolicitud.get('tipoSolicitud')?.valueChanges.subscribe((value) => {
+      this.tramite5701Store.guardaTipoSolicitud(value);
+    });
+
+    this.datosImportadorExportador.valueChanges.subscribe((_value) => {
+      const valor = this.datosImportadorExportador.getRawValue();
+      this.tramite5701Store.guadarDatosImportadorExportador(valor);
+    });
+
+    this.datosServicio.valueChanges.subscribe((value) => {
+      this.tramite5701Store.guardaDatosServicio(value);
+    });
+
+    this.despacho.valueChanges.subscribe((value) => {
+      this.tramite5701Store.guardarDatosDespacho(value);
+    });
+
+    this.mercancia.valueChanges.subscribe((value) => {
+      this.tramite5701Store.guardarDatosMercancia(value);
+    });
+
+    this.pedimento.valueChanges.subscribe((value) => {
+      this.tramite5701Store.guardarDatosPedimento(value);
+    });
+
+    this.personasResponsablesDespacho.valueChanges.subscribe((value) => {
+      this.tramite5701Store.guardarPersonasResponsablesDespacho(value);
+    });
+
+    this.pagoCaptura.valueChanges.subscribe((value) => {
+      this.tramite5701Store.guardarDatosPago(value);
+    });
+
+    // this.datosServicio.valueChanges.subscribe((value) => {
+    //   this.tramite5701Store.guardaDatosServicio(value);
+    // });
   }
 
   /**
@@ -326,7 +366,7 @@ export class SolicitudComponent implements OnInit {
         socioComercial: [false],
         opEconomicoAut: [false],
         revisionOrigen: [false],
-        idSocioComercial: [''],
+        idSocioComercial: [{ value: '', disabled: true }],
       }),
 
       datosServicio: this.fb.group({
@@ -379,6 +419,8 @@ export class SolicitudComponent implements OnInit {
       }),
 
       personasResponsablesDespacho: this.fb.array([]),
+
+      transporte: this.fb.group({}),
 
       pagoCaptura: this.fb.group({
         montoAPagar: [{ value: '', disabled: true }],
@@ -451,6 +493,7 @@ export class SolicitudComponent implements OnInit {
   tipoSolicitud(e: Catalogo) {
     this.tipoSolSeleccionada = e;
     this.solIndividual = this.individual();
+    this.FormSolicitud.get('tipoSolicitud')?.setValue(e.id);
   }
 
   /**
@@ -602,5 +645,15 @@ export class SolicitudComponent implements OnInit {
     valor: string | number
   ) {
     form.get(field)?.setValue(valor);
+  }
+
+  socioComercialChange() {
+    const socioComercial =
+      this.datosImportadorExportador.get('socioComercial')?.value;
+    if (socioComercial) {
+      this.datosImportadorExportador.get('idSocioComercial')?.enable();
+    } else {
+      this.datosImportadorExportador.get('idSocioComercial')?.disable();
+    }
   }
 }

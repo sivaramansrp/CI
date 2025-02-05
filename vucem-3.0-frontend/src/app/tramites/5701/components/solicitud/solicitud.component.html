@@ -67,41 +67,53 @@
 
       <div class="row mt-2">
         <div class="col-md-12">
-          <label for="certficacion_a">Tipo de empresa certificada</label>
+          <label for="certificacion_a">Tipo de empresa certificada</label>
         </div>
 
         <div class="col-md-6">
           <div class="col">
-            <input class="form-check-input me-3" type="radio" name="certficacion" value="a" id="certficacion_a">
-            <label class="form-label" for="certficacion_a">I.V.A e I.E.P.S Certificación A:</label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="a" id="certificacion_a" formControlName="tipoEmpresaCertificada">
+              <label class="form-check-label" for="certificacion_a">I.V.A e I.E.P.S Certificación A:</label>
+            </div>
           </div>
           <div class="col">
-            <input class="form-check-input me-3" type="radio" name="certficacion" value="aa" id="certficacion_aa">
-            <label class="form-label" for="certficacion_aa">I.V.A e I.E.P.S Certificación AA:</label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="aa" id="certificacion_aa" formControlName="tipoEmpresaCertificada">
+              <label class="form-check-label" for="certificacion_aa">I.V.A e I.E.P.S Certificación AA:</label>
+            </div>
           </div>
           <div class="col">
-            <input class="form-check-input me-3" type="radio" name="certficacion" value="aaa" id="certficacion_aaa">
-            <label class="form-label" for="certficacion_aaa">I.V.A e I.E.P.S Certificación AAA:</label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="oea" id="certificacion_oea" formControlName="tipoEmpresaCertificada">
+              <label class="form-check-label" for="certificacion_oea">I.V.A e I.E.P.S Certificación AAA:</label>
+            </div>
           </div>
 
         </div>
         <div class="col-md-6">
           <div class="col">
-            <input class="form-check-input me-3" type="checkbox" value="" id="socioComercial"
-              formControlName="socioComercial">
-            <label class="form-label" for="socioComercial">Socio comercial</label>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="socioComercial"
+                formControlName="socioComercial" (change)="socioComercialChange()">
+              <label class="form-check-label" for="socioComercial">Socio comercial</label>
+            </div>
           </div>
 
           <div class="col">
-            <input class="form-check-input me-3" type="checkbox" value="" id="opEconomicoAut"
-              formControlName="opEconomicoAut">
-            <label class="form-label" for="opEconomicoAut">Operador económico autorizado</label>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="opEconomicoAut"
+                formControlName="opEconomicoAut">
+              <label class="form-check-label" for="opEconomicoAut">Operador económico autorizado</label>
+            </div>
           </div>
 
           <div class="col">
-            <input class="form-check-input me-3" type="checkbox" value="" id="revisionOrigen"
-              formControlName="revisionOrigen">
-            <label class="form-label" for="revisionOrigen">Revisión en origen</label>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="revisionOrigen"
+                formControlName="revisionOrigen">
+              <label class="form-check-label" for="revisionOrigen">Revisión en origen</label>
+            </div>
           </div>
         </div>
 

@@ -18,13 +18,13 @@
     <ng-container>
       @switch (indice) {
       @case (1) {
-      <solicitante></solicitante>
+      <solicitante [tabindex]="1"></solicitante>
       }
       @case (2) {
-      <app-solicitud></app-solicitud>
+      <app-solicitud [tabindex]="2"></app-solicitud>
       }
       @case (3) {
-      <terceros></terceros>
+      <terceros [tabindex]="3"></terceros>
       }
       }
     </ng-container>
