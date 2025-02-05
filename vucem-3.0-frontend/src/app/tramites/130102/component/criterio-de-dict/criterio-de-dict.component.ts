@@ -19,11 +19,11 @@ export class CriterioDeDictComponent {
   solicitudMercancia: CatalogosSelect = {
     labelNombre: 'Solicitud mercancia esquema regla octava clave',
     required: true,
-    primerOpcion: 'Seleccione una aduana',
+    primerOpcion: 'Seleccione una Solicitud mercancia',
     catalogos: [
       { id: 1, descripcion: 'La SE autorizará la importación de mercancías de la Regla 8a, cuando se' },
-      { id: 2, descripcion: 'Aduana 2' },
-      { id: 3, descripcion: 'Aduana 3' }
+      { id: 2, descripcion: 'Solicitud mercancia 2' },
+      { id: 3, descripcion: 'Solicitud mercancia 3' }
     ]
   };
 
