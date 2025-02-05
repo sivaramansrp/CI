@@ -20,9 +20,9 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'issuance-extension',
+    path: 'extensión-emisión',
     loadChildren: () =>
-      import('./tramites/220201/issuance-extension-modification.module').then(
+      import('./tramites/220201/Módulo-de-modificación-de -extensión-de-emisión.module').then(
         (m) => m.IssuanceExtensionModificationModule)
   },
   {
