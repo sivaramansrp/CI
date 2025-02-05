@@ -7,29 +7,18 @@
 
       <div class="row">
         @for (item of persona; track $index) {
-        <div *ngIf="item.campo != 'rfc'" [ngClass]="item.class" [ngStyle]="{'visibility': item.visibility}">
+        <div [ngClass]="item.class" [ngStyle]="{'visibility': item.visibility}">
           <div class="form-group">
             <label class="form-label" [for]="item.campo">{{ item.labelNombre }}</label>
             <input class="form-control" [type]="item.tipo_input" [id]="item.campo" [placeholder]="item.placeholder"
               [formControlName]="item.campo" appUppercase>
           </div>
         </div>
-
-
-        <div  *ngIf="item.campo == 'rfc'" [ngClass]="item.class" [ngStyle]="{'visibility': item.visibility}">
-          <div class="form-group">
-            <label class="form-label" [for]="item.campo">{{ item.labelNombre }}</label>
-            <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" aria-hidden="true" ></span>
-            <input class="form-control" [type]="item.tipo_input" [id]="item.campo" [placeholder]="item.placeholder"
-              [formControlName]="item.campo" appUppercase>
-          </div>
-        </div>
-
         }
       </div>
     </div>
 
-    <!-- <div class="form" formGroupName="domicilioFiscal">
+    <div class="form" formGroupName="domicilioFiscal">
       <ng-titulo titulo="Domicilio fiscal del solicitante" />
       <div class="row">
         @for (item of domicilioFiscal; track $index) {
@@ -42,6 +31,6 @@
         </div>
         }
       </div>
-    </div> -->
+    </div>
   </form>
 </div>
