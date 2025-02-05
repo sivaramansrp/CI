@@ -10,6 +10,10 @@ import { PROTESTA } from '../../../../shared/constantes/servicios-extraordinario
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
+
+/**
+* Este componente se utiliza para mostrar la forma del datos adicionales. - 110101
+*/
 @Component({
   selector: 'app-datos-adicionales',
   templateUrl: './datos-adicionales.component.html',
@@ -31,9 +35,15 @@ export class DatosAdicionalesComponent {
 
 
 
+  /**
+   * constructor de la clase
+   * Fetch the fetchtiposDocumentos datos
+   * Crea el formulario
+   * @param fb: constructor de formularios
+   * @param validacionesService: Validaciones comunes del formulario.
+   */
   constructor(private fb: FormBuilder,
               private validacionesService: ValidacionesFormularioService) {
-    console.log('DatosAdicionalesComponent');
   }
 
   ngOnInit(): void {
@@ -41,12 +51,10 @@ export class DatosAdicionalesComponent {
     this.getRepresentacionFederal();
   }
 
-  // public createRepresentacionFederalForm() {
-  //   this.representacionFederalForm = this.fb.group({
-  //     entidadFederativa: [''],
-  //     representacionFederal: [''],
-  //   });
-  // }
+  /**
+   * @description getEntidadFederativa se usa para obtener datos del menú desplegable
+   * @returns Devuelve la entidad junto con los datos del menú desplegable
+   */
 
   public getEntidadFederativa() {
     this.entidad = {
@@ -65,6 +73,11 @@ export class DatosAdicionalesComponent {
       ],
     };
   }
+
+    /**
+   * @description getRepresentacionFederal se usa para obtener datos del menú desplegable
+   * @returns Devuelve la representacion junto con los datos del menú desplegable
+   */
 
   public getRepresentacionFederal() {
     this.representacion = {
@@ -89,6 +102,10 @@ export class DatosAdicionalesComponent {
   public docSeleccionado(e: Catalogo) {
     console.log(this.representacionFederalForm,'===>',e);
     
+  }
+
+  public validarRepresentacionFederalIDCSECEROR_(e: Catalogo) {
+    console.log('Validating with RFC:', 'and Discriminator Value:');
   }
 
 }

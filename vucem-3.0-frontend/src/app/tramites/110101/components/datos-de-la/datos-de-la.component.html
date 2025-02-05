@@ -1,4 +1,3 @@
-<!-- style="border: 1px solid #ddd;" -->
 <div class="container mt-4">
     <ng-titulo titulo="Mercancía" />
     <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="warningAlert"></ng-alert>
@@ -10,7 +9,7 @@
                 @if(formMercancia.get('nombreComercial')?.invalid && formMercancia.get('nombreComercial')?.touched) {
                     <div>
                         @if(formMercancia.get('nombreComercial')?.errors?.['required']) {
-                            <small class="text-danger">Este campo es obligatorio.</small>
+                            <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
                         }
                     </div>
                 }
@@ -23,7 +22,7 @@
                 @if(formMercancia.get('nombreIngles')?.invalid && formMercancia.get('nombreIngles')?.touched) {
                     <div>
                         @if(formMercancia.get('nombreIngles')?.errors?.['required']) {
-                            <small class="text-danger">Este campo es obligatorio.</small>
+                            <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
                         }
                     </div>
                 }
@@ -43,7 +42,8 @@
        <div class="row mb-3">
         <div class="col-md-4">
             <label for="valorTransaccion" class="form-label">Valor de transacción*:</label>
-            <input type="text" id="valorTransaccion" formControlName="valorTransaccion" class="form-control">
+            <input type="text" id="valorTransaccion" formControlName="valorTransaccion" class="form-control"
+            [ngClass]="isValid('valorTransaccion') ? 'required' : ''">
         </div>
        </div>
     </form>
