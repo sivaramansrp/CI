@@ -21,6 +21,12 @@ export class Tramite5701Query extends Query<FormSateSolicitud5701> {
     super(store);
   }
 
+  getFormaTramite5071(): FormSateSolicitud5701 {
+    return this.getValue();
+  }
+
+
+
   /**
    * Actualiza la informacion del formulario
    */

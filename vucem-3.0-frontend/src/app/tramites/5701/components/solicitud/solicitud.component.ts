@@ -48,6 +48,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SeccionQuery } from '../../../../core/queries/seccion.query';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+import { isArray } from '@datorama/akita';
 
 @Component({
   selector: 'app-solicitud',
@@ -113,8 +114,29 @@ export class SolicitudComponent implements OnInit {
     this.getAduanas();
 
     //Validacion si tenemos datos guardados en el store
+    const datosForma5701 = this.tramite5701Query.getFormaTramite5071();
+
+    console.log(datosForma5701);
 
     this.crearFormSolicitud();
+
+    console.log(this.validarCamposNull(datosForma5701));
+
+    if (this.validarCamposNull(datosForma5701)) {
+      this.FormSolicitud.get('tipoSolicitud').setValue(
+        datosForma5701.tipoSolicitud
+      );
+
+      const camposdatosImportadorExportador =
+        this.fService.obtenerNombresCamposForm(this.datosImportadorExportador);
+
+      console.log(camposdatosImportadorExportador);
+      camposdatosImportadorExportador.forEach((campo) => {
+        this.datosImportadorExportador.controls[campo].setValue(
+          datosForma5701.datosImportadorExportador[campo]
+        );
+      });
+    }
 
     // Aqui se busca el nro de patente o autorizacion
     this.obtenerPatente();
@@ -655,5 +677,17 @@ export class SolicitudComponent implements OnInit {
     } else {
       this.datosImportadorExportador.get('idSocioComercial')?.disable();
     }
+  }
+
+  validarCamposNull(solicitud: FormSateSolicitud5701): boolean {
+    for (const llave in solicitud) {
+      if (
+        solicitud[llave] !== null &&
+        (!Array.isArray(solicitud[llave]) || solicitud[llave].length > 0)
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
 }
