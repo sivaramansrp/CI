@@ -33,7 +33,6 @@ export class TercerosRelacionadosComponent {
 
 
   constructor() {
-    // console.log('TercerosRelacionadosComponent====>',this.getEstablecimientoTableData);
   }
 
   ngOnInit(): void {
