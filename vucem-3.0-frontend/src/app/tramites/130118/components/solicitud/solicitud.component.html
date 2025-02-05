@@ -191,7 +191,7 @@
             <div class="row mb-3 pm">
                 <div class="col-md-8">
                     <div class="form-group">
-                        <label for="razonSocial" class="form-label">Razon social*:</label>
+                        <label for="razonSocial" class="form-label">Razón social*:</label>
                         <input class="form-control" [ngClass]="isValid(datosProducto, 'razonSocial') ? 'required' : ''"
                             type="text" name="razonSocial" id="razonSocial" formControlName="razonSocial" />
                     </div>
@@ -201,14 +201,7 @@
 
             <div class="row mb-3" id="molino">
                 <div class="col-md-8">
-                    <label for="molinoSeleccion" class="form-label">Molino*:</label>
-                    <select id="molinoSeleccion" [ngClass]="isValid(datosProducto, 'molinoSeleccion') ? 'required' : ''"
-                        class="form-control" formControlName="molinoSeleccion">
-                        <option value="">Selecciona un valor</option>
-                        <option value="">Molino_01</option>
-                        <option value="">Molino_02</option>
-                        <option value="">Molino_03</option>
-                    </select>
+                    <select-catalogos [catalogosDatos]="datosMolino" (valorSeleccion)="molino($event)" />
                     <input type="hidden" id="selectMolino">
                 </div>
             </div>

@@ -38,4 +38,8 @@ export class PeximService {
   getEstadoCatalogo() {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/estado.json');
   }
+
+  getMolinoCatalogo() {
+    return this.http.get<RespuestaCatalogos>('assets/json/130118/molino.json');
+  }
 }
