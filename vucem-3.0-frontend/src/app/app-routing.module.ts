@@ -33,6 +33,13 @@ const routes: Routes = [
         (m) => m.PantallasModule
       ),
   },
+  {
+    path: 'elegibilidad-de-textiles',
+    loadChildren: () =>
+      import('./tramites/120301/elegibilidad-de-textiles.module').then(
+        (m) => m.ElegibilidadDeTextilesModule
+      ),
+  },
 ];
 
 @NgModule({
