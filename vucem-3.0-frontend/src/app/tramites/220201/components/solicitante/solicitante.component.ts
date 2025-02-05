@@ -7,11 +7,11 @@ import {
 } from '@angular/forms';
 import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
-import { IDDEUSUARIO } from '../../../../shared/constantes/issuance-extension-modification.enum';
-import { IssuanceExtensionModificationServiceService } from '../../../../core/services/220201/core/services/220201/issuance-extension-modification.service';
+import { IDDEUSUARIO } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
+import { IssuanceExtensionModificationServiceService } from '../../../../core/services/220201/core/services/220201/módulodemodificacióndeextensióndeemisión.service';
 import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
 import { solicitante } from '../../../../core/models/220201/capturar-solicitud.model';
-import { ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from '../../../../shared/constantes/issuance-extension-modification.enum';
+import { ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
 
 @Component({
   selector: 'app-solicitante',

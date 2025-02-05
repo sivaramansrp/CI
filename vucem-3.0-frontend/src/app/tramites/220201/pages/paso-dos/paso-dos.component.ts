@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TEXTOS_REQUISITOS } from '../../../../shared/constantes/issuance-extension-modification.enum';
+import { TEXTOS_REQUISITOS } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
 
 @Component({
   selector: 'app-paso-dos',

@@ -1,6 +1,6 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component } from '@angular/core';
-import { TEXTOS } from '../../../../shared/constantes/issuance-extension-modification.enum';
+import { TEXTOS } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',

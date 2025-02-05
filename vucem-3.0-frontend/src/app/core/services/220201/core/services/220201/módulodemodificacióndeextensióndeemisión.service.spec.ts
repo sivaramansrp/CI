@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { IssuanceExtensionModificationServiceService } from './issuance-extension-modification.service';
+import { IssuanceExtensionModificationServiceService } from './módulodemodificacióndeextensióndeemisión.service';
 
 describe('IssuanceExtensionModificationServiceService', () => {
   let service: IssuanceExtensionModificationServiceService;

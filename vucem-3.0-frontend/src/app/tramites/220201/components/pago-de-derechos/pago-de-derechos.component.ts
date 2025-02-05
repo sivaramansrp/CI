@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FECHA_DE_PAGO } from '../../../../shared/constantes/issuance-extension-modification.enum';
+import { FECHA_DE_PAGO } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputFecha } from '../../../../core/models/shared/components.model';
