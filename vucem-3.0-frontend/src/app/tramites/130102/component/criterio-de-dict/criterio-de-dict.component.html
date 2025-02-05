@@ -1,1 +1,16 @@
-<p>criterio-de-dict works!</p>
+<div class="container">
+    <ng-titulo titulo="Criterio de dictamen de regla octava"></ng-titulo>
+    <form>
+        <div class="row">
+            <div class="col-md-7 form-group">
+                <select-catalogos [catalogosDatos]="solicitudMercancia" (valorSeleccion)="solicitudMercanciaSeleccion($event)"></select-catalogos>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-7 mb-3">
+                <label class="form-label" for="domicilio">Criterio de dictamen de regla octava seleccionado*:</label>
+                <textarea class="form-control" id="domicilio" rows="2" height="50" [value]="selectedSolicitudMercancia.descripcion" placeholder="" style="height: 80px;" disabled></textarea>
+            </div>
+        </div>
+    </form>
+</div>
