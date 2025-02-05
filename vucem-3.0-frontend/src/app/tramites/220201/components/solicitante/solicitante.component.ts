@@ -92,14 +92,8 @@ export class SolicitanteComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    console.log(this.form.value.datosGenerales);
     const sol: solicitante = this.form.value.datosGenerales as solicitante;
-    console.log(sol);
     this.issuanceExtensionModificationService.setSoliciante(sol);
-    console.log(
-      this.issuanceExtensionModificationService.capturarSolicitudCargaUtil
-    );
-    console.log('ondestroy');
     this.form.reset();
   }
 }
