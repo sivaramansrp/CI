@@ -3,11 +3,11 @@
     "data": [
         {
             "id": 1,
-            "descripcion": "De importacion"
+            "descripcion": "De importación"
         },
         {
             "id": 2,
-            "descripcion": "De exportacion"
+            "descripcion": "De exportación"
         }
     ],
     "message": "Consulta exitosa"

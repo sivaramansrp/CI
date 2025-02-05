@@ -51,6 +51,11 @@ export class SolicitudComponent implements OnInit {
   datosEstado!: CatalogosSelect;
 
   /**
+   * Datos del catálogo de molino.
+   */
+  datosMolino!: CatalogosSelect;
+
+  /**
    * Indica si la persona física es visible.
    */
   isVisibleFisica: boolean;
@@ -96,6 +101,11 @@ export class SolicitudComponent implements OnInit {
   estadoSeleccionado!: Catalogo;
 
   /**
+   * Molino seleccionado.
+   */
+  molinoSeleccionado!: Catalogo;
+
+  /**
    * Fecha final de entrada.
    */
   fechaFinalInput: InputFecha = FECHA_SALIDA;
@@ -134,6 +144,7 @@ export class SolicitudComponent implements OnInit {
     this.getPaisOrigen();
     this.getPaisDestino();
     this.getEstado();
+    this.getMolino();
     this.muestraCamposPersona();
   }
 
@@ -437,6 +448,14 @@ export class SolicitudComponent implements OnInit {
   }
 
   /**
+   * Método para seleccionar el molino.
+   * @param e Molino seleccionado.
+   */
+  molino(e: Catalogo): void {
+    this.molinoSeleccionado = e;
+  }
+
+  /**
    * Método para cambiar la fecha final.
    * @param nuevo_valor Nuevo valor de la fecha final.
    */
@@ -577,6 +596,26 @@ export class SolicitudComponent implements OnInit {
 
           this.datosEstado = {
             labelNombre: 'Estado',
+            required: true,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: response,
+          };
+        }
+      });
+  }
+
+  /**
+   * Método para obtener el catálogo de molino.
+   */
+  getMolino(): void {
+    this.peximService
+      .getMolinoCatalogo()
+      .subscribe((resp) => {
+        if (resp.code == 200) {
+          const response = resp.data;
+
+          this.datosMolino = {
+            labelNombre: 'Molino',
             required: true,
             primerOpcion: 'Selecciona un valor',
             catalogos: response,
