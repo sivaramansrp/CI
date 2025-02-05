@@ -36,10 +36,9 @@ export class PagoDeDerechosComponent implements OnInit {
   constructor(private readonly fb: FormBuilder, private readonly httpServices: HttpClient) {
   }
   ngOnInit(): void {
-    this.getBancoSelectorList();
+    this.obtenerBancoSelectorList();
   }
-
-  getBancoSelectorList() {
+  obtenerBancoSelectorList() {
     this.httpServices.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json').subscribe((data): void => {
       const datos = data?.data;
       this.bancoSelector['catalogos'] = datos as Catalogo[];
