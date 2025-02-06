@@ -1,0 +1,81 @@
+{
+  "hTabla": [
+    "Fracción arancelaria",
+    "Descripción de la fracción",
+    "Nico",
+    "Descripción Nico",
+    "Cantidad solicitada en UMT",
+    "Unidad de medida de tarifa (UMT)",
+    "Cantidad total UMT",
+    "Saldo pendiente"
+  ],
+  "hHistorialinspeccion": [
+    "Número parcialidad/remesa",
+    "Fracción arancelaria",
+    "Nico",
+    "Cantidad total en UMT",
+    "Cantidad parcial en UTM",
+    "Saldo pendiente",
+    "Fecha de ingreso"
+  ],
+  "hCarroFerrocarril": [
+    "Número de parcialidad/remesa",
+    "Cantidad de carros de ferrocarril"
+  ],
+  "datosMercancia": [
+    {
+      "fraccionArancelaria": "1001.10.10",
+      "descripcionFraccion": "Trigo duro",
+      "unico": "Sí",
+      "nicoDescripcion": "Trigo para molienda",
+      "cantidadInUMT": 50,
+      "unidadDeMedidaRate": "kg",
+      "totalDeUMT": 500,
+      "saldoAbierto": 100
+    },
+    {
+      "fraccionArancelaria": "2002.90.10",
+      "descripcionFraccion": "Puré de tomate",
+      "unico": "No",
+      "nicoDescripcion": "Concentrado envasado",
+      "cantidadInUMT": 30,
+      "unidadDeMedidaRate": "kg",
+      "totalDeUMT": 300,
+      "saldoAbierto": 50
+    }
+  ],
+  "carrosDeFerrocarrilPager": [
+    {
+      "idInspeccionFisica": 1,
+      "numeroAutorizacion": "12345",
+      "numeroPartidaMercancia": "P001",
+      "numeroTotalCarros": 10
+    },
+    {
+      "idInspeccionFisica": 2,
+      "numeroAutorizacion": "12345",
+      "numeroPartidaMercancia": "P002",
+      "numeroTotalCarros": 15
+    }
+  ],
+  "inspecciones": [
+    {
+      "numeroPartidaMercancia": "12345",
+      "fraccionArancelaria": "0101.21.00",
+      "nico": "Si",
+      "cantidadUmt": "1000",
+      "cantidadInspeccion": "500",
+      "saldoPendiente": "500",
+      "fechaInspeccionString": "2023-10-01"
+    },
+    {
+      "numeroPartidaMercancia": "67890",
+      "fraccionArancelaria": "0202.30.00",
+      "nico": "No",
+      "cantidadUmt": "2000",
+      "cantidadInspeccion": "1500",
+      "saldoPendiente": "500",
+      "fechaInspeccionString": "2023-10-02"
+    }
+  ]
+}
