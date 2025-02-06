@@ -8,7 +8,7 @@ import {
 import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
 import { IDDEUSUARIO } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
-import { MódulodeModificacióndeExtensióndeemisiónServiceService } from '../../../../core/services/220201/core/services/220201/módulodemodificacióndeextensióndeemisión.service';
+import { MódulodeModificacióndeExtensióndeemisiónServiceService } from '../../../../core/services/220201/core/services/220201/certificado-zoosanitario.service';
 import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
 import { solicitante } from '../../../../core/models/220201/capturar-solicitud.model';
 

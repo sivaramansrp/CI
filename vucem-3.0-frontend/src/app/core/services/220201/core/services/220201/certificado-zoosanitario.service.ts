@@ -13,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 
-export class MódulodeModificacióndeExtensióndeemisiónServiceService {
+export class CertificadoZoosanitarioServiceService {
   public capturarSolicitudCargaUtil: capturarSolicitud = {
     solicitante: undefined,
     datosDeLaSolicitud: undefined,
