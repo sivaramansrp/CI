@@ -1,13 +1,27 @@
-.info-box {
-    background-color:#daecf4;
-    color:#6d9ebb;               /* White text color */
-    padding: 15px;              /* Padding around the content */
-    border-radius: 8px;         /* Slightly curved borders */
-    border: 1px solid #a0cadd;
-    font-size: 16px;            /* Font size for the text */
+@media (min-width: 320px) and (max-width: 376px) {
 
+  .btn-default,
+  .btn-primary {
+    padding: 5px !important;
+    margin: 5px
   }
+}
 
-  .info-box ul {
-    text-align: center
+@media (min-width: 376px) and (max-width: 480px) {
+
+  .btn-default,
+  .btn-primary {
+    padding: 5px !important;
+    margin: 5px
+  }
+}
+
+
+@media (min-width: 481px) and (max-width: 767px) {
+
+  .btn-default,
+  .btn-primary {
+    padding: 5px !important;
+    margin: 5px
+  }
 }

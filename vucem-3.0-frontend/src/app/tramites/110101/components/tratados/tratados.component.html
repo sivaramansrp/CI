@@ -1,25 +1,24 @@
 <ng-titulo titulo="Datos generales del solicitante" />
-<div class="info-box">
-    <ul>Para seleccionar un tratado y criterio,siga los siguientes pasos:
-        <li>Primero seleccione un pais o bloque</li>
-        <li>Despues seleccione un tratado o acuerdo</li>
-        <li>Seleccione el criterio para conferir origen</li>
-        <li>Finalmente agregue su seleccion a la lista de tratados</li>
-    </ul>
-</div>
+<ng-alert [CONTENIDO]="mensajeAlerta"></ng-alert>
 
 <div class="row">
-    <div class="col-md-8" *ngFor="let config of dropdownConfigs">
-        <select-catalogos [catalogosDatos]="config" (valorSeleccion)="seleccionar()"></select-catalogos>
+    <div class="col-md-8" *ngFor="let config of dropdownConfigs; let i = index">
+        <select-catalogos [catalogosDatos]="config" (valorSeleccion)="seleccionar($event,i)">
+        </select-catalogos>
     </div>
 </div>
 
-<!-- <button class="btn btn-primary float-end">Agregar tratado</button> -->
+<div class="col-12 d-flex justify-content-end mt-3 mb-4">
+    <button class="btn btn-primary" (click)="agregarTratado()">Agregar tratado</button>
+</div>
 
-<div class="col-12 d-flex justify-content-end mt-3">
-    <button class="btn btn-primary">Agregar tratado</button>
-  </div>
+<ng-alert [CONTENIDO]="'Para continuar con el trámite, deberá agregar por lo menos un tratado o acuerdo.'"></ng-alert>
+
+<h6 class="fs-4">Pais/bloque-tratado/acuerdo seleccionados por el solicitante</h6>
 
 <ng-table [commonTableHeader]="commonTableHeaders" [commonTableBody]="mercanciasData"></ng-table>
 
-
+<div class=" text-end mt-5">
+    <button class="btn btn-default me-2">Modificar tratado</button>
+    <button class="btn btn-primary">Eliminar tratado</button>
+</div>
