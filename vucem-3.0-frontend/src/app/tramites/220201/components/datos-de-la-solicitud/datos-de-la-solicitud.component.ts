@@ -57,7 +57,7 @@ import { HttpClient } from '@angular/common/http';
  * 
  * @método mostrar_colapsable
  * @descripción
- * Alterna el estado colapsable de la sección del formulario.
+ * Alterna el estado colapsable de la sección del formulario. --220201
  * 
  * @returns {void} --202201
  */

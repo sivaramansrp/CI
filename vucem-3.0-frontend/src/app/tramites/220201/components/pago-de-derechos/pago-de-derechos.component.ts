@@ -41,7 +41,7 @@ export class PagoDeDerechosComponent implements OnInit {
     llavePago: [{ value: '', disabled: true }],
     importePago: [{ value: '', disabled: true }]
   });
-  constructor(private readonly fb: FormBuilder, private readonly httpServices: HttpClient) {
+  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient) {
   }
   ngOnInit(): void {
     this.obtenerDetallesDeListaDeOpciones()
@@ -51,13 +51,13 @@ export class PagoDeDerechosComponent implements OnInit {
     this.obtenerListaDeJustificaciones();
   }
   obtenerBancoSelectorList() {
-    this.httpServices.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json').subscribe((data): void => {
       const datos = data?.data;
       this.bancoSelector['catalogos'] = datos as Catalogo[];
     });
   }
   obtenerListaDeJustificaciones() {
-    this.httpServices.get<RespuestaCatalogos>('../../../../../assets/json/220201/Justificación.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/Justificación.json').subscribe((data): void => {
       const datos = data?.data;
       this.justificacionSelector['catalogos'] = datos as Catalogo[];
     });
