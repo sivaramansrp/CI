@@ -2,8 +2,8 @@ import {
   Component,
   Input,
   OnChanges,
-  forwardRef,
   SimpleChanges,
+  forwardRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -42,18 +42,16 @@ export class CatalogoSelectComponent
 
   constructor(private fb: FormBuilder) {
     this.formSelect = this.fb.group({
-      selectControl: ['', this.required ? Validators.required : null],
+      selectControl: [''],
     });
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['required']) {
-      console.log(this.required);
-      
       if (this.required) {
         this.formSelect
           .get('selectControl')
-          ?.setValidators(Validators.required);
+          ?.setValidators([Validators.required]);
       } else {
         this.formSelect.get('selectControl')?.clearValidators();
       }
@@ -87,8 +85,9 @@ export class CatalogoSelectComponent
     }
   }
 
-  isValid(): boolean | null {
-    return this.formSelect.errors && this.formSelect.touched;
+  isInvalid(): boolean | null {
+    const control = this.formSelect.get('selectControl');
+    return control?.invalid && control?.touched;
   }
 
   registerOnChange(fn: (_value: string) => void): void {
@@ -97,7 +96,7 @@ export class CatalogoSelectComponent
   }
 
   registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
+    this.onTouched = fn;    
   }
 
   setDisabledState?(isDisabled: boolean): void {

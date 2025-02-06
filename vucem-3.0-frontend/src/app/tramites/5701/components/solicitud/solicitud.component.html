@@ -1,14 +1,15 @@
 <div class="container">
   <ng-titulo titulo="Tipo de servicio extraordinario" />
 
-  <div class="row">
-    <div class="col-md-4">
-      <select-catalogos [catalogosDatos]="datosTiposSolicitud" (valorSeleccion)="tipoSolicitud($event)" />
-    </div>
-  </div>
-
-  <!-- @if(tipoSolSeleccionada) { -->
   <form [formGroup]="FormSolicitud">
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="datosTiposSolicitud" formControlName="tipoSolicitud" [label]="'Tipo solicitud'"
+        [required]="true"  name="tipoSolicitud"></app-catalogo-select>
+      </div>
+    </div>
+
+    <!-- @if(tipoSolSeleccionada) { -->
     <ng-titulo titulo="Datos del importador/exportador" />
     <ng-container formGroupName="datosImportadorExportador">
       <div class="row">
@@ -218,37 +219,18 @@
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="seccionAduanera" formControlName="idSeccionAduanera"
-            [label]="'Sección aduanera'" [required]="true" name="idSeccionAduanera"></app-catalogo-select>
-
-          <!-- <label for="seccionAduanera" class="form-label">Sección aduanera*:</label>
-          <select class="form-control" id="seccionAduanera" formControlName="seccionAduanera">
-            <option>Selecciona un valor</option>
-            <option value=32>32 - 304 - AEROPUERTO INTERNACIONAL GENERAL. LUCIO BLANCO, CIUDAD REYNOSA, TAMAULIPAS.
-            </option>
-            <option value=34>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
-            <option value=31>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
-          </select> -->
-
+            [label]="'Sección aduanera'" [required]="true"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <label for="recinto" class="form-label">Nombre del recinto:</label>
-          <select class="form-control" id="recinto" disabled>
-            <option>Selecciona un valor</option>
-            <option>Individual</option>
-            <option>Semanal</option>
-            <option>Mensual</option>
-          </select>
+          <app-catalogo-select [catalogo]="seccionAduanera" formControlName="idRecinto"
+          [label]="'Nombre del recinto'" [required]="true" [isDisabled]="true"></app-catalogo-select>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-4">
-          <label for="tipoOperacion" class="form-label">Tipo de operación*:</label>
-          <select class="form-control" id="tipoOperacion" formControlName="tipoOperacion">
-            <option>Selecciona un valor</option>
-            <option>Importación</option>
-            <option>Exportación</option>
-          </select>
+          <app-catalogo-select [catalogo]="tipoOperacion" formControlName="tipoOperacion"
+          [label]="'Tipod de operacion'" [required]="true"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <label for="patente" class="form-label">Patente/Número de autorización:</label>

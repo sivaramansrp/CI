@@ -83,11 +83,12 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 export class SolicitudComponent implements OnInit, OnDestroy {
   @Input({ required: true }) tabindex!: number;
 
-  datosTiposSolicitud!: CatalogosSelect;
+  datosTiposSolicitud!: Catalogo[];
   paisesOrigen!: CatalogosSelectPaises;
   paisesProcedencia!: CatalogosSelectPaises;
   aduanas!: CatalogosSelect;
-  seccionAduanera!: any;
+  seccionAduanera!: Catalogo[];
+  tipoOperacion: Catalogo[];
 
   tipoSolSeleccionada!: Catalogo;
 
@@ -138,6 +139,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.getPaises();
     this.getAduanas();
     this.getSeccionesAduaneras();
+    this.getTipoOperacion();
 
     //Validacion si tenemos datos guardados en el store
     const datosForma5701 = this.tramite5701Query.getFormaTramite5071();
@@ -306,12 +308,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_SOL)
       .subscribe((resp) => {
         if (resp.length > 0) {
-          this.datosTiposSolicitud = {
-            labelNombre: 'Tipo de solicitud',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: resp,
-          };
+          this.datosTiposSolicitud = resp;
+          // {
+          //   labelNombre: 'Tipo de solicitud',
+          //   required: true,
+          //   primerOpcion: 'Selecciona un valor',
+          //   catalogos: resp,
+          // };
         }
       });
   }
@@ -358,7 +361,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .getCatalogoById(CATALOGOS_ID.CAT_SECCION_ADUANAS)
       .subscribe((resp) => {
         this.seccionAduanera = JSON.parse(resp.data);
-        console.log(this.seccionAduanera);
+      });
+  }
+
+  getTipoOperacion(): void {
+    this.catalogosServices
+      .getCatalogoById(CATALOGOS_ID.CAT_TIPO_OPERACION)
+      .subscribe((resp) => {
+        this.tipoOperacion = JSON.parse(resp.data);
       });
   }
 
@@ -387,7 +397,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   crearFormSolicitud() {
     this.FormSolicitud = this.fb.group({
-      tipoSolicitud: [{ value: '', requerid: true }, [Validators.required]],
+      tipoSolicitud: ['', [Validators.required]],
       datosImportadorExportador: this.fb.group({
         rfcImportExport: [
           '',
@@ -429,6 +439,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         descripcionAduana: ['', [Validators.required]],
         idSeccionAduanera: [''],
         seccionAduanera: [''],
+        idRecinto:[null],
         nombreRecinto: [''],
         tipoOperacion: [''],
         patente: [{ value: '', disabled: true }],
