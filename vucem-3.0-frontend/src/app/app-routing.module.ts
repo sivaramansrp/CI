@@ -2,7 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: '/agricultura' },
+  { path: '', pathMatch: 'full', redirectTo: '/certificado-fitosanitario' },
 
   {
     path: 'auth',
@@ -34,7 +34,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'agricultura',
+    path: 'certificado-fitosanitario',
     loadChildren: () =>
       import('./tramites/220202/fitosanitario.module').then(
         (m) => m.FitosanitarioModule

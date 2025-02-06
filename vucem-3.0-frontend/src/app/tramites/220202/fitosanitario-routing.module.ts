@@ -7,13 +7,13 @@ import { Routes } from '@angular/router';
 
 export const ROUTES_FITOSANITARIO: Routes = [
   {
-    path: 'fitosanitario',
+    path: 'agricultura',
     component: AgriculturaComponent,
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'fitosanitario',
+    redirectTo: 'agricultura',
   },
 
 ];
