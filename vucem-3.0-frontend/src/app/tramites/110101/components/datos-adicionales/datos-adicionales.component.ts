@@ -100,12 +100,12 @@ export class DatosAdicionalesComponent {
   
 
   public docSeleccionado(e: Catalogo) {
-    console.log(this.representacionFederalForm,'===>',e);
+    // this is a dynamic function once we get the api will implement it
     
   }
 
   public validarRepresentacionFederalIDCSECEROR_(e: Catalogo) {
-    console.log('Validating with RFC:', 'and Discriminator Value:');
+    // this is a dynamic function once we get the api will implement it
   }
 
 }
