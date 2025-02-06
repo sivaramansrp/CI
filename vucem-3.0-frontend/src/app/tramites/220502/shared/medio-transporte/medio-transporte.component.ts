@@ -46,9 +46,9 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
         this.controlKey,
         new FormGroup({
           transporteIdMedio: new FormControl('', [Validators.required]),
-          identificacionTransporte: new FormControl('', [Validators.required]),
-          solicitudInspeccion: new FormControl('', [Validators.required]),
-          totalDeGuiasCubiertos: new FormControl('', [Validators.required])
+          identificacionTransporte: new FormControl('', [Validators.maxLength(30)]),
+          esSolicitudFerros: new FormControl('', [Validators.required]),
+          totalDeGuiasAmparadas: new FormControl('', [])
         })
       );
     }
