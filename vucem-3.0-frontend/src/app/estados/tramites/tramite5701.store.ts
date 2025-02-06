@@ -93,24 +93,24 @@ export class Tramite5701Store extends Store<FormSateSolicitud5701> {
     }));
   }
 
-  public guardarDatosDespacho(datosDespacho: DatosDespacho) {
+  public guardarDatosDespacho(despacho: DatosDespacho) {
     this.update((state) => ({
       ...state,
-      datosDespacho,
+      despacho,
     }));
   }
 
-  public guardarDatosMercancia(datosMercancia: DatosMercancia) {
+  public guardarDatosMercancia(mercancia: DatosMercancia) {
     this.update((state) => ({
       ...state,
-      datosMercancia,
+      mercancia,
     }));
   }
 
-  public guardarDatosPedimento(datosPedimento: DatosPedimento) {
+  public guardarDatosPedimento(pedimento: DatosPedimento) {
     this.update((state) => ({
       ...state,
-      datosPedimento,
+      pedimento,
     }));
   }
 
@@ -123,17 +123,17 @@ export class Tramite5701Store extends Store<FormSateSolicitud5701> {
     }));
   }
 
-  public guardarDatosTransportes(datosTransportes: any) {
+  public guardarDatosTransportes(transporte: any) {
     this.update((state) => ({
       ...state,
-      datosTransportes,
+      transporte,
     }));
   }
 
-  public guardarDatosPago(datosPago: DatosPago) {
+  public guardarDatosPago(pagoCaptura: DatosPago) {
     this.update((state) => ({
       ...state,
-      datosPago,
+      pagoCaptura,
     }));
   }
 

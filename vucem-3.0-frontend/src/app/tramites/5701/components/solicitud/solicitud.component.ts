@@ -23,7 +23,13 @@ import {
   InputFecha,
   InputHora,
 } from '../../../../core/models/shared/components.model';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 import {
@@ -36,26 +42,43 @@ import {
   FormSateSolicitud5701,
   Tramite5701Store,
 } from '../../../../estados/tramites/tramite5701.store';
-import { Subject, Subscription, delay, map, takeUntil, tap } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  Subscription,
+  delay,
+  map,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
-import { DatosComponentePedimento } from '../../../../core/models/5701/servicios-extraordinarios.model';
+import {
+  DatosComponentePedimento,
+  DatosDespacho,
+  DatosImportadorExportador,
+  DatosPago,
+  DatosPedimento,
+  DatosServicio,
+  Personas,
+  ResponsablesDespacho,
+} from '../../../../core/models/5701/servicios-extraordinarios.model';
+import { DatosMercancia } from '../../../../core/models/5701/servicios-extraordinarios.model';
 import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.model';
 import { FechasService } from '../../../../core/services/shared/fechas/fechas.service';
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
 import { datosAgregarFormulario } from '../../../../core/models/shared/forms-model';
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SeccionQuery } from '../../../../core/queries/seccion.query';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
-import { isArray } from '@datorama/akita';
 
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
 })
-export class SolicitudComponent implements OnInit {
+export class SolicitudComponent implements OnInit, OnDestroy {
   @Input({ required: true }) tabindex!: number;
 
   datosTiposSolicitud!: CatalogosSelect;
@@ -103,7 +126,7 @@ export class SolicitudComponent implements OnInit {
     private tramite5701Query: Tramite5701Query,
     private fechaService: FechasService,
     private fb: FormBuilder,
-    private fService: FormulariosService,
+    private formulariosService: FormulariosService,
     private catalogosServices: CatalogosService,
     private validacionesService: ValidacionesFormularioService
   ) {}
@@ -116,26 +139,12 @@ export class SolicitudComponent implements OnInit {
     //Validacion si tenemos datos guardados en el store
     const datosForma5701 = this.tramite5701Query.getFormaTramite5071();
 
-    console.log(datosForma5701);
+
 
     this.crearFormSolicitud();
 
-    console.log(this.validarCamposNull(datosForma5701));
-
     if (this.validarCamposNull(datosForma5701)) {
-      this.FormSolicitud.get('tipoSolicitud').setValue(
-        datosForma5701.tipoSolicitud
-      );
-
-      const camposdatosImportadorExportador =
-        this.fService.obtenerNombresCamposForm(this.datosImportadorExportador);
-
-      console.log(camposdatosImportadorExportador);
-      camposdatosImportadorExportador.forEach((campo) => {
-        this.datosImportadorExportador.controls[campo].setValue(
-          datosForma5701.datosImportadorExportador[campo]
-        );
-      });
+      this.fillForm(datosForma5701);
     }
 
     // Aqui se busca el nro de patente o autorizacion
@@ -178,7 +187,8 @@ export class SolicitudComponent implements OnInit {
       )
       .subscribe();
 
-    this.datosServicio.get('fechaInicio').valueChanges.subscribe((_value) => {
+
+      this.datosServicio.get('fechaInicio').valueChanges.subscribe((_value) => {
       this.validaFechas();
     });
 
@@ -352,7 +362,7 @@ export class SolicitudComponent implements OnInit {
       field: 'patente',
       valor: '3061',
     };
-    this.fService.agregarValorCamposDesactivados(datosPatente);
+    this.formulariosService.agregarValorCamposDesactivados(datosPatente);
   }
 
   // ************************************************************
@@ -641,11 +651,11 @@ export class SolicitudComponent implements OnInit {
     this.validacionPedimento = true;
 
     //
-    const patente = this.fService.convertirValorANumero(
+    const patente = this.formulariosService.convertirValorANumero(
       this.despacho,
       'patente'
     );
-    const idAduana = this.fService.convertirValorANumero(
+    const idAduana = this.formulariosService.convertirValorANumero(
       this.despacho,
       'idAduana'
     );
@@ -689,5 +699,57 @@ export class SolicitudComponent implements OnInit {
       }
     }
     return false;
+  }
+
+  fillForm(data: Partial<FormSateSolicitud5701>) {
+    this.fillFormRecursive(this.FormSolicitud, data);
+  }
+
+  fillFormRecursive(
+    form: FormGroup | FormArray,
+    data: Partial<
+      | FormSateSolicitud5701
+      | DatosImportadorExportador
+      | DatosServicio
+      | DatosDespacho
+      | DatosMercancia
+      | DatosPedimento
+      | DatosPago
+      | Personas
+      | ResponsablesDespacho
+    >
+  ) {
+    Object.keys(data).forEach((key) => {
+      const control = form.get(key);
+      if (
+        control &&
+        data[key as keyof typeof data] !== null &&
+        data[key as keyof typeof data] !== undefined
+      ) {
+        if (control instanceof FormGroup || control instanceof FormArray) {
+          this.fillFormRecursive(
+            control,
+            data[key as keyof typeof data] as Partial<
+              | FormSateSolicitud5701
+              | DatosImportadorExportador
+              | DatosServicio
+              | DatosDespacho
+              | DatosMercancia
+              | DatosPedimento
+              | DatosPago
+              | Personas
+              | ResponsablesDespacho
+            >
+          );
+        } else {
+          control.setValue(data[key as keyof typeof data]);
+        }
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

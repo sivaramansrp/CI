@@ -105,7 +105,7 @@ export class SolicitanteComponent implements OnInit {
   }
 
   /**
-   * Crea un formulario vacío con dis grupos de formularios, datosGenerales y domicilioFiscal.
+   * Crea un formulario vacío con dos grupos de formularios, datosGenerales y domicilioFiscal.
    */
   crearFormulario(): void {
     this.form = this.fb.group({

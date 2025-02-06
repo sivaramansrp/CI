@@ -1,4 +1,5 @@
-import { FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { datosAgregarFormulario } from '../../../models/shared/forms-model';
 
@@ -6,6 +7,7 @@ import { datosAgregarFormulario } from '../../../models/shared/forms-model';
   providedIn: 'root',
 })
 export class FormulariosService {
+  private destroy$ = new Subject<void>();
 
   public agregarValorCamposDesactivados(
     datosForm: datosAgregarFormulario
@@ -45,5 +47,23 @@ export class FormulariosService {
       }
     });
     return camposDisabled;
+  }
+
+  public subscribeToValueChanges<T>(
+    control: AbstractControl | null,
+    callback: (value: T) => void
+  ): void {
+    if (control) {
+      (control.valueChanges as Observable<T>)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((value) => {
+          callback(value);
+        });
+    }
+  }
+
+  unsubscribeAll(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
