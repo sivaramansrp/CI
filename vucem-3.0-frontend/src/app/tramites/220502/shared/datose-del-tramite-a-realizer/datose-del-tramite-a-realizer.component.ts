@@ -151,7 +151,7 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
       ],
     };
     this.horaDeInspeccion = {
-      labelNombre: 'Hora de inspeccion',
+      labelNombre: 'Hora de inspección',
       required: true,
       primerOpcion: 'Selecciona un valor',
       catalogos: [
@@ -177,7 +177,7 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
     };
     this.aduanaDeIngreso = {
       labelNombre: 'Aduana de ingreso',
-      required: true,
+      required: false,
       primerOpcion: 'Selecciona un valor',
       catalogos: [
         {
@@ -201,8 +201,8 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
       ],
     };
     this.sanidadAgropecuaria = {
-      labelNombre: 'Oficina de inspeccion de Sanidad Agropecuaria',
-      required: true,
+      labelNombre: 'Oficina de inspección de Sanidad Agropecuaria',
+      required: false,
       primerOpcion: 'Selecciona un valor',
       catalogos: [
         {
@@ -226,8 +226,8 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
       ],
     };
     this.puntoDeInspeccion = {
-      labelNombre: 'Punto de inspeccion',
-      required: true,
+      labelNombre: 'Punto de inspección',
+      required: false,
       primerOpcion: 'Selecciona un valor',
       catalogos: [
         {

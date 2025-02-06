@@ -87,8 +87,8 @@ export class ResponsableInspeccionEnPuntoComponent
    */
   getRegimenMercancia(): void {
     this.datosRegimenMercancia = {
-      labelNombre: 'Tipo contenedor:',
-      required: true,
+      labelNombre: 'Tipo contenedor',
+      required: false,
       primerOpcion: 'Selecciona un valor',
       catalogos: [
         {
