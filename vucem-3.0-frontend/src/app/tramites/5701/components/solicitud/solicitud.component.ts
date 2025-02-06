@@ -1,10 +1,4 @@
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import {
   DESPACHO_DD,
@@ -13,10 +7,6 @@ import {
   FECHA_INICIO,
   HORA_FINAL,
   HORA_INICIO,
-  IMMEX,
-  INDUSTRIA_AUTOMOTRIZ,
-  PROGRAMA_FOMENTO,
-  SOCIO_COMERCIAL,
 } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 
 import {
@@ -25,12 +15,21 @@ import {
 } from '../../../../core/models/shared/catalogos.model';
 import {
   CatalogosSelect,
-  CatalogosSelectPaises,
   DatosInputCheck,
-  InputCheck,
   InputFecha,
   InputHora,
 } from '../../../../core/models/shared/components.model';
+
+import {
+  DatosComponentePedimento,
+  DatosDespacho,
+  DatosImportadorExportador,
+  DatosPago,
+  DatosPedimento,
+  DatosServicio,
+  Personas,
+  ResponsablesDespacho,
+} from '../../../../core/models/5701/servicios-extraordinarios.model';
 
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
@@ -44,26 +43,9 @@ import {
   FormSateSolicitud5701,
   Tramite5701Store,
 } from '../../../../estados/tramites/tramite5701.store';
-import {
-  Observable,
-  Subject,
-  Subscription,
-  delay,
-  map,
-  takeUntil,
-  tap,
-} from 'rxjs';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
-import {
-  DatosComponentePedimento,
-  DatosDespacho,
-  DatosImportadorExportador,
-  DatosPago,
-  DatosPedimento,
-  DatosServicio,
-  Personas,
-  ResponsablesDespacho,
-} from '../../../../core/models/5701/servicios-extraordinarios.model';
+
 import { DatosMercancia } from '../../../../core/models/5701/servicios-extraordinarios.model';
 import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.model';
 import { FechasService } from '../../../../core/services/shared/fechas/fechas.service';
@@ -83,19 +65,14 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 export class SolicitudComponent implements OnInit, OnDestroy {
   @Input({ required: true }) tabindex!: number;
 
-  datosTiposSolicitud!: Catalogo[];
+  tiposSolicitud!: Catalogo[];
   paisesOrigen!: CatalogoPaises[];
   paisesProcedencia!: CatalogoPaises[];
   aduanas!: CatalogosSelect;
   seccionAduanera!: Catalogo[];
   tipoOperacion: Catalogo[];
 
-  tipoSolSeleccionada!: Catalogo;
-
-  programaFomento: InputCheck = PROGRAMA_FOMENTO;
-  immex: InputCheck = IMMEX;
-  industriaAutomotriz: InputCheck = INDUSTRIA_AUTOMOTRIZ;
-  socioComercial: InputCheck = SOCIO_COMERCIAL;
+  tipoSolicitudSeleccionada: number;
 
   despachoDD = DESPACHO_DD;
   despachoLDA = DESPACHO_LDA;
@@ -116,7 +93,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   validacionPedimento: boolean = false;
   datosPedimentoComponente!: DatosComponentePedimento;
 
-  solIndividual!: boolean;
   diaMinimo: string;
 
   private destroyNotifier$: Subject<void> = new Subject();
@@ -135,6 +111,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.crearFormSolicitud();
+
     this.getTiposSolicitud();
     this.getPaises();
     this.getAduanas();
@@ -143,8 +121,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
     //Validacion si tenemos datos guardados en el store
     const datosForma5701 = this.tramite5701Query.getFormaTramite5071();
-
-    this.crearFormSolicitud();
 
     this.fillForm(datosForma5701);
 
@@ -230,9 +206,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.tramite5701Store.guardarDatosPago(value);
     });
 
-    // this.datosServicio.valueChanges.subscribe((value) => {
-    //   this.tramite5701Store.guardaDatosServicio(value);
-    // });
+    this.tipoSolicitudSeleccion();
   }
 
   /**
@@ -297,9 +271,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   // * Peticiones a las apis
 
   /**
-   * Obtiene los tipos de solicitud desde el catálogo y los asigna a `datosTiposSolicitud`.
+   * Obtiene los tipos de solicitud desde el catálogo y los asigna a `tiposSolicitud`.
    *
-   * Este método realiza una solicitud al servicio `catalogosServices` para obtener el catálogo de tipos de solicitud identificado por `CATALOGOS_ID.CAT_TIPO_SOL`. Una vez que recibe la  respuesta, verifica si la respuesta contiene elementos. Si es así, asigna los datos recibidos a la propiedad `datosTiposSolicitud` con la estructura adecuada.
+   * Este método realiza una solicitud al servicio `catalogosServices` para obtener el catálogo de tipos de solicitud identificado por `CATALOGOS_ID.CAT_TIPO_SOL`. Una vez que recibe la  respuesta, verifica si la respuesta contiene elementos. Si es así, asigna los datos recibidos a la propiedad `tiposSolicitud` con la estructura adecuada.
    *
    * @returns {void} No retorna ningún valor.
    */
@@ -308,13 +282,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_SOL)
       .subscribe((resp) => {
         if (resp.length > 0) {
-          this.datosTiposSolicitud = resp;
-          // {
-          //   labelNombre: 'Tipo de solicitud',
-          //   required: true,
-          //   primerOpcion: 'Selecciona un valor',
-          //   catalogos: resp,
-          // };
+          this.tiposSolicitud = resp;
         }
       });
   }
@@ -374,8 +342,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   // ************************************************************
 
   individual(): boolean {
-    return this.tipoSolSeleccionada &&
-      this.tipoSolSeleccionada.id === TIPO_SOLICITUD.INDIVIDUAL
+    const tipoSolicitud = parseInt(
+      this.FormSolicitud.get('tipoSolicitud')?.value
+    );
+    return tipoSolicitud && tipoSolicitud === TIPO_SOLICITUD.INDIVIDUAL
       ? true
       : false;
   }
@@ -428,7 +398,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         descripcionAduana: ['', [Validators.required]],
         idSeccionAduanera: [''],
         seccionAduanera: [''],
-        idRecinto:[null],
+        idRecinto: [null],
         nombreRecinto: [''],
         tipoOperacion: [''],
         patente: [{ value: '', disabled: true }],
@@ -438,7 +408,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       }),
 
       mercancia: this.fb.group({
-        paisOrigen: [null, Validators.required],
+        paisOrigen: ['', Validators.required],
         paisProcedencia: [null, Validators.required],
         descripcion: ['', Validators.required],
         justificacion: ['', Validators.required],
@@ -480,7 +450,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     let valido = false;
     const diferenciaFecha = fechaFinal.getTime() - fechaInicio.getTime();
 
-    switch (this.tipoSolSeleccionada.id) {
+    switch (this.tipoSolicitudSeleccionada) {
       case TIPO_SOLICITUD.INDIVIDUAL: {
         valido = diferenciaFecha < MILISEGUNDOS.DIA && diferenciaFecha > 0;
         break;
@@ -505,13 +475,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   // *Eventos de los componentes hijos
-  paisOrigen(pais: CatalogoPaises) {
-    this.mercancia.get('paisOrigen')?.setValue(pais.id);
-  }
-
-  paisProcedencia(pais: CatalogoPaises) {
-    this.mercancia.get('paisProcedencia')?.setValue(pais.id);
-  }
 
   busqueda_rfc() {
     const rfc = this.datosImportadorExportador.get('rfcImportExport')?.value;
@@ -529,10 +492,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     form.get(field)?.disable();
   }
 
-  tipoSolicitud(e: Catalogo) {
-    this.tipoSolSeleccionada = e;
-    this.solIndividual = this.individual();
-    this.FormSolicitud.get('tipoSolicitud')?.setValue(e.id);
+  tipoSolicitudSeleccion() {
+    console.log(this.FormSolicitud.get('tipoSolicitud')?.value);
+
+    this.tipoSolicitudSeleccionada =
+      this.FormSolicitud.get('tipoSolicitud')?.value;
   }
 
   /**
@@ -543,27 +507,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.FormSolicitud.markAllAsTouched();
       return;
     }
-  }
-
-  programaFomentoF(e: DatosInputCheck) {
-    this.datosImportadorExportador.get('programaFomento')?.setValue(e.check);
-    this.datosImportadorExportador
-      .get('programaFomentoValue')
-      ?.setValue(e.valor);
-  }
-
-  immexSeleccion(e: DatosInputCheck) {
-    this.datosImportadorExportador.get('immex')?.setValue(e.check);
-    this.datosImportadorExportador.get('immexValue')?.setValue(e.valor);
-  }
-
-  industriaAutomotrizSeleccion(e: DatosInputCheck) {
-    this.datosImportadorExportador
-      .get('industriaAutomotriz')
-      ?.setValue(e.check);
-    this.datosImportadorExportador
-      .get('industriaAutomotrizValue')
-      ?.setValue(e.valor);
   }
 
   valorInputCheck(e: DatosInputCheck) {
@@ -594,7 +537,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   validaRangoFechas(datos: DatosParaValidacionFecha): void {
-    switch (this.tipoSolSeleccionada.id) {
+    switch (this.tipoSolicitudSeleccionada) {
       case TIPO_SOLICITUD.INDIVIDUAL: {
         const rangoFechaValida = this.fechaService.validacion24Horas(datos);
         if (!rangoFechaValida) {

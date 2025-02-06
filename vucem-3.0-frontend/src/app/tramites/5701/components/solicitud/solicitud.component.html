@@ -4,14 +4,14 @@
   <form [formGroup]="FormSolicitud">
     <div class="row">
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="datosTiposSolicitud" formControlName="tipoSolicitud" [label]="'Tipo solicitud'"
-          [required]="true" name="tipoSolicitud"></app-catalogo-select>
+        <app-catalogo-select [catalogo]="tiposSolicitud" formControlName="tipoSolicitud" [label]="'Tipo solicitud'"
+          [required]="true" name="tipoSolicitud" (change)="tipoSolicitudSeleccion()" ></app-catalogo-select>
       </div>
     </div>
 
-    <!-- @if(tipoSolSeleccionada) { -->
+    @if(tipoSolicitudSeleccionada) {
     <ng-titulo titulo="Datos del importador/exportador" />
-    <ng-container formGroupName="datosImportadorExportador">
+    <div formGroupName="datosImportadorExportador">
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
@@ -132,11 +132,11 @@
           </div>
         </div>
       </div>
-    </ng-container>
+    </div>
 
 
     <ng-titulo titulo="Datos del servicio" />
-    <ng-container formGroupName="datosServicio">
+    <div formGroupName="datosServicio">
       <div class="row">
         <div class="col-md-4">
           <label for="fechaInicio" class="form-label">Fecha inicio*:</label>
@@ -199,11 +199,11 @@
         </div>
       </div>
 
-    </ng-container>
+    </div>
 
     <ng-titulo titulo="Datos del despacho para el servicio extraordinario" />
 
-    <ng-container formGroupName="despacho">
+    <div formGroupName="despacho">
       <div class="row">
         <div class="col-md-4">
           <input-check [datos]="despachoLDA" (valores)="valorInputCheck($event)"></input-check>
@@ -250,20 +250,19 @@
 
         </div>
       </div>
-    </ng-container>
+    </div>
 
 
 
-    @if (solIndividual) {
+    @if (individual()) {
     <ng-titulo titulo="Datos del pedimento" />
 
     <c-pedimento [validacion]="validacionPedimento" [datosNroPedimento]="datosPedimentoComponente"
       (validaCampos)="validaCampoPedimento()"></c-pedimento>
     }
 
-
     <ng-titulo titulo="Mercancía" />
-    <ng-container [formGroup]="mercancia">
+    <div formGroupName="mercancia">
       <div class="row">
         <div class="col-md-4">
           <app-select-paises [catalogosPaises]="paisesOrigen" formControlName="paisOrigen" [label]="'País de origen'"
@@ -289,14 +288,14 @@
           </div>
         </div>
       </div>
-    </ng-container>
+    </div>
 
 
     <ng-titulo titulo="Personas responsables del despacho (máximo 5)" />
     <agrega-personas />
 
     <ng-titulo titulo="Pagos" />
-    <ng-container [formGroup]="pagoCaptura">
+    <div formGroupName="pagoCaptura">
       <div class="row rf">
         <div class="col-md-4 form-group">
           <label class="form-label" for="montoPagar">Monto a pagar:</label>
@@ -334,6 +333,7 @@
       </div>
 
 
-    </ng-container>
+    </div>
+  }
   </form>
-  <!-- } -->
+  

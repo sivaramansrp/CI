@@ -3,8 +3,9 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
+  forwardRef,
 } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CatalogoPaises } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 
@@ -14,6 +15,13 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './select-paises.component.html',
   styleUrl: './select-paises.component.scss',
+  providers: [
+      {
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => SelectPaisesComponent),
+        multi: true,
+      },
+    ],
 })
 export class SelectPaisesComponent implements OnChanges{
   @Input() id: string;
