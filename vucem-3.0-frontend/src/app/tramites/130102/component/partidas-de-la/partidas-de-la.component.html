@@ -7,13 +7,13 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label class="form-label" for="cantidad">Cantidad*:</label>
-                        <input class="form-control" type="text" id="cantidad" formControlName="cantidad" appUppercase>
+                        <input class="form-control" type="text" id="cantidad" formControlName="cantidad" appUppercase aria-labelledby="cantidad">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="form-label">Fracción Arancelaria TIGIE*:</label>
-                        <input class="form-control" type="text" formControlName="fraccionArancelariaTIGIE">
+                        <label class="form-label" for="fraccionArancelariaTIGIE">Fracción Arancelaria TIGIE*:</label>
+                        <input class="form-control" type="text" id="fraccionArancelariaTIGIE" formControlName="fraccionArancelariaTIGIE" aria-labelledby="fraccionArancelariaTIGIE">
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -23,14 +23,14 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="form-group">
-                        <label class="form-label">Descripción*:</label>
-                        <textarea class="form-control height" rows="3" formControlName="descripcion"></textarea>
+                        <label class="form-label" for="descripcion">Descripción*:</label>
+                        <textarea class="form-control height" rows="3" id="descripcion" formControlName="descripcion" aria-labelledby="descripcion"></textarea>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="form-label">Valor partida USD*:</label>
-                        <input class="form-control" type="number" formControlName="valorPartidaUSD">
+                        <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
+                        <input class="form-control" type="number" id="valorPartidaUSD" formControlName="valorPartidaUSD" aria-labelledby="valorPartidaUSD">
                     </div>
                 </div>
             </div>
@@ -51,4 +51,8 @@
             </div>
         </div>
     </form>
+
+    <div>
+        <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
+    </div>
 </div>

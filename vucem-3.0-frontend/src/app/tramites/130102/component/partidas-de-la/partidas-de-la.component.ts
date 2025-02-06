@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { UppercaseDirective } from '../../../../shared/directives/Uppercase/uppercase.directive';
+
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
-import { TEXTOS } from '../../../../shared/constantes/octava-temporral.enum';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { UppercaseDirective } from '../../../../shared/directives/Uppercase/uppercase.directive';
+
+import { Component, OnInit } from '@angular/core';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+import { TEXTOS } from '../../../../shared/constantes/octava-temporral.enum';
 
 @Component({
   selector: 'app-partidas-de-la',
@@ -51,7 +53,7 @@ export class PartidasDeLaComponent implements OnInit {
     });
   }
 
-  fraccionArancelariaTIGIESelection(aduana: any) {
+  fraccionArancelariaTIGIESelection(aduana: CatalogosSelect) {
     // Handle selection logic here
   }
 }
