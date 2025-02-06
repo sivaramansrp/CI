@@ -18,7 +18,6 @@ import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn
 import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
 import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
 import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
-import { IssuanceExtensionModificationRoutingModule } from '../220201/issuance-extension-modification-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
@@ -41,8 +40,8 @@ import { FirmaElectronicaComponent } from '../../shared/components/firma-electro
   ],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     FitosanitarioRoutingModule,
-    IssuanceExtensionModificationRoutingModule,
     WizardComponent,
     TituloComponent,
     BtnContinuarComponent,
