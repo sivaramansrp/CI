@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18.20.5
+          node-version: 22.0.0
 
       - name: Set Sonar Version Number
         run: echo "VERSION=6.2.1.4610-linux-x64" >> $GITHUB_ENV
@@ -62,6 +62,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd vucem-3.0-frontend
+          npm install
           npm ci
 
       - name: Build Angular project
