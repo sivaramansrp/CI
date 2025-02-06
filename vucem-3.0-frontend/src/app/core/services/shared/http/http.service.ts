@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { enviroment } from '../../../../../enviroments/enviroment';
 /**
- * This service is used to make http requests & handle the response.
+ * Este servicio se utiliza para realizar solicitudes HTTP y manejar la respuesta.
  */
 @Injectable({
   providedIn: 'root'
@@ -11,30 +11,30 @@ import { enviroment } from '../../../../../enviroments/enviroment';
 
 export class HttpCoreService {
 /**
- * This variable is used to store the server URL.
+ * Esta variable se utiliza para almacenar la URL del servidor.
  */
   url: string;
   /**
-   * constructor of the class
-   * @param http: HttpClient constructor
+   * Constructor de la clase
+   * @param http: Constructor de HttpClient
    */
   constructor(public http: HttpClient) {
     this.url = !enviroment.MOCK ? enviroment.URL_SERVER : '';
   }
   /**
-   * This method is used to make a post request & handle the response.
-   * @param apiRoute: API route
-   * @param body: request body
-   * @returns response
+   * Este método se utiliza para hacer una solicitud POST y manejar la respuesta.
+   * @param apiRoute: Ruta de la API
+   * @param body: Cuerpo de la solicitud
+   * @returns respuesta
    * @example post('/save', {name: 'John'})
    */    
    post(apiRoute: string, body: any) {
     return this.http.post(`${this.url + apiRoute}`, body, { headers: this.getHttpHeaders() });
   }
   /**
-   * This method is used to make a get request & handle the response.
-   * @param apiRoute: API route
-   * @returns response
+   * Este método se utiliza para hacer una solicitud GET y manejar la respuesta.
+   * @param apiRoute: Ruta de la API
+   * @returns respuesta
    * @example get('/get')
    * @example get('/get/1')
    */
@@ -42,26 +42,26 @@ export class HttpCoreService {
     return this.http.get(`${this.url + apiRoute}`, { headers: this.getHttpHeaders() });
   }
   /**
-   * This method is used to make a put request & handle the response.
-   * @param apiRoute: API route
-   * @param body: request body
-   * @returns response
+   * Este método se utiliza para hacer una solicitud PUT y manejar la respuesta.
+   * @param apiRoute: Ruta de la API
+   * @param body: Cuerpo de la solicitud
+   * @returns respuesta
    * @example put('/update', {name: 'John'})
    */
   put(apiRoute: string, body: any) {
     return this.http.put(`${this.url + apiRoute}`, body, { headers: this.getHttpHeaders() });
   }
   /**
-   * This method is used to make a delete request & handle the response.
-   * @param apiRoute: API route
-   * @returns response
+   * Este método se utiliza para hacer una solicitud DELETE y manejar la respuesta.
+   * @param apiRoute: Ruta de la API
+   * @returns respuesta
    * @example delete('/delete')
    */
   delete(apiRoute: string) {
     return this.http.delete(`${this.url + apiRoute}`, { headers: this.getHttpHeaders() });
   }
   /**
-   * This method is used to get the http headers.
+   * Este método se utiliza para obtener los encabezados HTTP.
    * @returns HttpHeaders
    * @example getHttpHeaders()
    * @example getHttpHeaders().set('Content-Type', 'application/json')
