@@ -45,8 +45,8 @@ import { CatalogosService } from '../../../../core/services/shared/catalogos/cat
 })
 export class SolicitudComponent {
   datosTiposSolicitud!: CatalogosSelect;
-  paisesOrigen!: CatalogosSelectPaises;
-  paisesProcedencia!: CatalogosSelectPaises;
+  paisesOrigen!: CatalogoPaises[];
+  paisesProcedencia!: CatalogoPaises[];
   aduanas!: CatalogosSelect;
   seccionAduanera!: CatalogosSelect;
 
@@ -172,19 +172,8 @@ export class SolicitudComponent {
       .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
       .subscribe((resp) => {
         if (resp.length > 0) {
-          this.paisesOrigen = {
-            labelNombre: 'País de origen',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: resp,
-          };
-
-          this.paisesProcedencia = {
-            labelNombre: 'País de procedencia',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: resp,
-          };
+          this.paisesOrigen = resp;
+          this.paisesProcedencia = resp;
         }
       });
   }

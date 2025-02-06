@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="datosTiposSolicitud" formControlName="tipoSolicitud" [label]="'Tipo solicitud'"
-        [required]="true"  name="tipoSolicitud"></app-catalogo-select>
+          [required]="true" name="tipoSolicitud"></app-catalogo-select>
       </div>
     </div>
 
@@ -222,15 +222,15 @@
             [label]="'Sección aduanera'" [required]="true"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="seccionAduanera" formControlName="idRecinto"
-          [label]="'Nombre del recinto'" [required]="true" [isDisabled]="true"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="seccionAduanera" formControlName="idRecinto" [label]="'Nombre del recinto'"
+            [required]="true" [isDisabled]="true"></app-catalogo-select>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="tipoOperacion" formControlName="tipoOperacion"
-          [label]="'Tipod de operacion'" [required]="true"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="tipoOperacion" formControlName="tipoOperacion" [label]="'Tipod de operacion'"
+            [required]="true"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <label for="patente" class="form-label">Patente/Número de autorización:</label>
@@ -266,12 +266,13 @@
     <ng-container [formGroup]="mercancia">
       <div class="row">
         <div class="col-md-4">
-          <select-paises [catalogosPaises]="paisesOrigen" (paisSeleccionado)="paisOrigen($event)"></select-paises>
+          <app-select-paises [catalogosPaises]="paisesOrigen" formControlName="paisOrigen" [label]="'País de origen'"
+            [required]="true"></app-select-paises>
         </div>
 
         <div class="col-md-4">
-          <select-paises [catalogosPaises]="paisesProcedencia"
-            (paisSeleccionado)="paisProcedencia($event)"></select-paises>
+          <app-select-paises [catalogosPaises]="paisesProcedencia" formControlName="paisProcedencia"
+            [label]="'País de procedencia'" [required]="true"></app-select-paises>
         </div>
 
         <div class="col-md-8">
