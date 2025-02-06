@@ -1,9 +1,10 @@
 <div class="container">
     <form [formGroup]="form">
+      <app-solicitud-datos [tablaHeadData]="hSolicitud" [tablaFilaDatos]="dSolicitud"></app-solicitud-datos>
       <!-- Cantidad de carros de ferrocarril -->
-      <carros-de-ferrocarril [tablaHeadData]="hCarroFerrocarril" [tablaFilaDatos]="carrosDeFerrocarrilPager"></carros-de-ferrocarril>
+      <app-carros-de-ferrocarril [tablaHeadData]="hCarroFerrocarril" [tablaFilaDatos]="carrosDeFerrocarrilPager"></app-carros-de-ferrocarril>
       <!-- Historial inspeccion fisica -->
-      <historial-inspeccion-fisica [tablaHeadData]="hHistorialinspeccion" [tablaFilaDatos]="dHistorialInspecciones"></historial-inspeccion-fisica>
+      <app-historial-inspeccion-fisica [tablaHeadData]="hHistorialinspeccion" [tablaFilaDatos]="dHistorialInspecciones"></app-historial-inspeccion-fisica>
     </form>
   </div>
   

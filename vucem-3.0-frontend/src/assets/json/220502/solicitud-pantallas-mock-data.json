@@ -22,6 +22,44 @@
     "Número de parcialidad/remesa",
     "Cantidad de carros de ferrocarril"
   ],
+  "hSolicitud":[
+    "Fecha Creación",
+    "Mercancía",
+    "Cantidad",
+    "Proovedor"
+  ],
+  "dSolicitud":[
+    {
+      "fechaCreacion":"2025-02-02 19:50:08:0",
+      "mercancia":"descripcion",
+      "cantidad":"1000000",
+      "proovedor":"erick"
+    },
+    {
+      "fechaCreacion":"2025-02-02 19:50:08:0",
+      "mercancia":"descripcion",
+      "cantidad":"1000000",
+      "proovedor":"erick"
+    },
+    {
+      "fechaCreacion":"2025-02-02 19:50:08:0",
+      "mercancia":"descripcion",
+      "cantidad":"1000000",
+      "proovedor":"erick"
+    },
+    {
+      "fechaCreacion":"2025-02-02 19:50:08:0",
+      "mercancia":"descripcion",
+      "cantidad":"1000000",
+      "proovedor":"erick"
+    },
+    {
+      "fechaCreacion":"2025-02-02 19:50:08:0",
+      "mercancia":"descripcion",
+      "cantidad":"1000000",
+      "proovedor":"erick"
+    }
+  ],
   "datosMercancia": [
     {
       "fraccionArancelaria": "1001.10.10",
