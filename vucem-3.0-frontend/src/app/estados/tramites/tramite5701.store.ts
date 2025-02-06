@@ -15,7 +15,7 @@ import { Injectable } from '@angular/core';
  * Creacion del estado inicial para la interfaz de tramite 5701
  * @returns Solicitud5701
  */
-export interface FormSateSolicitud5701 {
+export interface Solicitud5701State {
   id: ID;
   idSolicitud: string;
   tipoSolicitud: string;
@@ -30,7 +30,7 @@ export interface FormSateSolicitud5701 {
   tercerosRelacionados: Personas[];
 }
 
-export function createInitialState(): FormSateSolicitud5701 {
+export function createInitialState(): Solicitud5701State {
   return {
     id: null,
     idSolicitud: null,
@@ -51,7 +51,7 @@ export function createInitialState(): FormSateSolicitud5701 {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite5701', resettable: true })
-export class Tramite5701Store extends Store<FormSateSolicitud5701> {
+export class Tramite5701Store extends Store<Solicitud5701State> {
   constructor() {
     super(createInitialState());
   }
