@@ -1,1 +1,54 @@
-<p>partidas-de-la works!</p>
+<div class="container">
+    <form [formGroup]="form">
+        <div>
+            <ng-titulo titulo="Partidas de la mercancía"></ng-titulo>
+            <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label" for="cantidad">Cantidad*:</label>
+                        <input class="form-control" type="text" id="cantidad" formControlName="cantidad" appUppercase>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Fracción Arancelaria TIGIE*:</label>
+                        <input class="form-control" type="text" formControlName="fraccionArancelariaTIGIE">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <select-catalogos [catalogosDatos]="fraccionArancelariaTIGIE" (valorSeleccion)="fraccionArancelariaTIGIESelection($event)"></select-catalogos>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label class="form-label">Descripción*:</label>
+                        <textarea class="form-control height" rows="3" formControlName="descripcion"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Valor partida USD*:</label>
+                        <input class="form-control" type="number" formControlName="valorPartidaUSD">
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-4"></div>
+                <div class="col-md-8">
+                    <hr>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8"></div>
+                <div class="col-md-4">
+                    <div class="btn-group">
+                        <button class="btn btn-primary me-2" type="button">Cargar archivo</button>
+                        <button class="btn btn-danger" type="button">Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
