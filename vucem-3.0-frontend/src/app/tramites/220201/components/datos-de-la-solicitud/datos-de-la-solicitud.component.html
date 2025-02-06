@@ -32,37 +32,15 @@
       <ng-titulo titulo="Datos del trámite a realizar" />
 
       <div class="col-md-12">
-        <label for="aduanaIngreso" class="form-label">Aduana de ingreso*</label>
-
-        <select class="form-control" id="aduanaIngreso">
-          <option>AEROPUERTO INTERNAL. CD.DE MEXICO, D.F.</option>
-          <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
-          <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
-        </select>
+        <select-catalogos [catalogosDatos]="aduanaDeIngreso"></select-catalogos>
       </div>
       <div class="col-md-12">
-        <label for="oficinaInspeccion" class="form-label"
-          >Oficina de inspección de sanidad Agropecuaria*:</label
-        >
-        <select class="form-control" id="oficinaInspeccion">
-          <option>Selecciona un valor</option>
-          <option>AICM Aduana de Carga Cd de Mexico.</option>
-          <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
-          <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
-        </select>
+        <select-catalogos
+          [catalogosDatos]="sanidadAgropecuaria"
+        ></select-catalogos>
       </div>
       <div class="col-md-12">
-        <label for="puntoInspeccion" class="form-label"
-          >Punto de inspección*:</label
-        >
-        <select class="form-control" id="puntoInspeccion">
-          <option>Selecciona un valor</option>
-          <option>
-            AICM Aduana de Carga Cd de Mexico Oficina de inspección
-          </option>
-          <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
-          <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
-        </select>
+        <select-catalogos [catalogosDatos]="puntoInspeccion"></select-catalogos>
       </div>
       <div class="col-md-6">
         <div class="form-group">

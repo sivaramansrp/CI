@@ -1,8 +1,13 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Component } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
+
 import { TEXTOS } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
+
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
+
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -56,15 +61,31 @@ import { Catalogo } from '../../../../core/models/shared/catalogos.model';
  * 
  * @returns {void} --202201
  */
-export class DatosDeLaSolicitudComponent {
+export class DatosDeLaSolicitudComponent implements OnInit {
   TEXTOS: string = TEXTOS;
   forma!: FormGroup;
   selectRangoDias: string[] = [];
-  datosTiposTransporte!: CatalogosSelect;
   colapsable: boolean = false;
   datosDelaSolicitud!: FormGroup;
-  tipoTransporteSeleccionado!: Catalogo;
-  constructor(private readonly fb: FormBuilder) {
+  aduanaDeIngreso: CatalogosSelect = {
+    labelNombre: 'Aduana de ingreso',
+    required: true,
+    primerOpcion: 'Selecciona un Aduana de ingreso',
+    catalogos: [],
+  }
+  sanidadAgropecuaria: CatalogosSelect = {
+    labelNombre: 'Oficina de inspección de sanidad Agropecuaria',
+    required: true,
+    primerOpcion: 'Selecciona un Agropecuaria',
+    catalogos: [],
+  }
+  puntoInspeccion: CatalogosSelect = {
+    labelNombre: 'Punto de inspección',
+    required: true,
+    primerOpcion: 'Selecciona un Punto',
+    catalogos: [],
+  }
+  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient) {
     this.crearFormulario();
     this.initActionFormBuild();
   }
@@ -79,9 +100,12 @@ export class DatosDeLaSolicitudComponent {
   crearFormulario(): void {
     this.forma = this.fb.group({
       datosDelaSolicitud: this.fb.group({}),
-
     });
   }
+  ngOnInit(): void {
+    this.obtenerListasDesplegables();
+  }
+
   /**
    * Inicializa el grupo de formularios para "datosDelaSolicitud" con varios controles de formulario y sus respectivos validadores.
    * 
@@ -123,7 +147,30 @@ export class DatosDeLaSolicitudComponent {
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
   }
-  tipoTransporte(e: Catalogo) {
-    this.tipoTransporteSeleccionado = e;
+
+  obtenerListasDesplegables() {
+    this.obtenerIngresoSelectList();
+    this.obtenerSanidadAgropecuariaList();
+    this.obtenerPuntoInspeccionList();
+  }
+
+  obtenerIngresoSelectList() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/aduana_de_ingreso.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.aduanaDeIngreso['catalogos'] = datos;
+    });
+  }
+
+  obtenerSanidadAgropecuariaList() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/oficina_de_inspeccion.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.sanidadAgropecuaria['catalogos'] = datos;
+    });
+  }
+  obtenerPuntoInspeccionList() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.puntoInspeccion['catalogos'] = datos;
+    });
   }
 }
