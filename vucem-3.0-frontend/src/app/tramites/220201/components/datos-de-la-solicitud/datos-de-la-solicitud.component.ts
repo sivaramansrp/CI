@@ -85,6 +85,25 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     primerOpcion: 'Selecciona un Punto',
     catalogos: [],
   }
+  establecimientoTIF: CatalogosSelect = {
+    labelNombre: `Establecimiento TIF `,
+    required: true,
+    primerOpcion: 'Selecciona un Establecimiento',
+    catalogos: [],
+  }
+  veterinario: CatalogosSelect = {
+    labelNombre: 'Nombre del médico veterinario',
+    required: true,
+    primerOpcion: 'Selecciona un Nombre',
+    catalogos: [],
+  }
+  regimen: CatalogosSelect = {
+    labelNombre: 'Régimen',
+    required: true,
+    primerOpcion: 'Selecciona un Régimen',
+    catalogos: [],
+  }
+
   constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient) {
     this.crearFormulario();
     this.initActionFormBuild();
@@ -152,6 +171,9 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     this.obtenerIngresoSelectList();
     this.obtenerSanidadAgropecuariaList();
     this.obtenerPuntoInspeccionList();
+    this.obtenerEstablecimientoList();
+    this.obtenerVeterinarioList();
+    this.obtenerRegimenList();
   }
 
   obtenerIngresoSelectList() {
@@ -171,6 +193,24 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').subscribe((data): void => {
       const datos = data?.data;
       this.puntoInspeccion['catalogos'] = datos;
+    });
+  }
+  obtenerEstablecimientoList() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/establecimiento.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.puntoInspeccion['catalogos'] = datos;
+    });
+  }
+  obtenerVeterinarioList() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.veterinario['catalogos'] = datos;
+    });
+  }
+  obtenerRegimenList() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/regimen.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.regimen['catalogos'] = datos;
     });
   }
 }
