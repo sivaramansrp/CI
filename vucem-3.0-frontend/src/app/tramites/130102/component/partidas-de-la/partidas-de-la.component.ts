@@ -13,6 +13,7 @@ import { TEXTOS } from '../../../../shared/constantes/octava-temporral.enum';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 
 import establecimientoTable from '../../../../../assets/json/130102/partidas-de-la.json'
+import fraccionArancelariaTIGIE from '../../../../../assets/json/130102/partidas-de-la-catalogos-select.json';
 
 @Component({
   selector: 'app-partidas-de-la',
@@ -48,16 +49,7 @@ export class PartidasDeLaComponent implements OnInit {
   /**
    * @property {CatalogosSelect} fraccionArancelariaTIGIE - Datos del catálogo de fracciones arancelarias TIGIE.
    */
-  fraccionArancelariaTIGIE: CatalogosSelect = {
-    labelNombre: '',
-    required: false,
-    primerOpcion: 'Seleccione una Fraccion Arancelaria TIGIE',
-    catalogos: [
-      { id: 1, descripcion: '98020018 Mercancias para el Pro' },
-      { id: 2, descripcion: '98020019 Mercancias para el Pro' },
-      { id: 3, descripcion: '98020020 Mercancias para el Pro' }
-    ]
-  };
+  fraccionArancelariaTIGIE: CatalogosSelect = fraccionArancelariaTIGIE;
   
   /**
    * @property {string[]} tableHeaderData - Datos del encabezado de la tabla.
