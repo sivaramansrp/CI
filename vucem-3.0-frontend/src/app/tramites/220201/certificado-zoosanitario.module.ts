@@ -3,12 +3,15 @@ import { AnexarDocumentosComponent } from '../../shared/components/anexar-docume
 import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn-continuar.component';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
+
+import { CertificadoZoosanitario } from './certificado-zoosanitario-routing.module';
+
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionNacionalComponent } from './components/datos-para-movilizacion-nacional/datos-para-movilizacion-nacional.component';
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
 import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
 import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
-import { Módulodemodificacióndeextensióndeemisión } from './Módulo-de-modificación-de -extensión-de-emisión-routing.module';
+
 import { NgModule } from '@angular/core';
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
@@ -40,7 +43,7 @@ import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitari
   imports: [
     SharedModule,
     CommonModule,
-    Módulodemodificacióndeextensióndeemisión,
+    CertificadoZoosanitario,
     WizardComponent,
     TituloComponent,
     BtnContinuarComponent,
@@ -55,4 +58,4 @@ import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitari
     SelectCatalogosComponent
   ]
 })
-export class EmisiónExtensiónModificaciónModule { }
+export class CertificadoZoosanitarioModule { }
