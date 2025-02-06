@@ -1,4 +1,12 @@
 import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+
+import {
   DESPACHO_DD,
   DESPACHO_LDA,
   FECHA_FINAL,
@@ -23,13 +31,7 @@ import {
   InputFecha,
   InputHora,
 } from '../../../../core/models/shared/components.model';
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 import {
@@ -85,7 +87,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   paisesOrigen!: CatalogosSelectPaises;
   paisesProcedencia!: CatalogosSelectPaises;
   aduanas!: CatalogosSelect;
-  seccionAduanera!: CatalogosSelect;
+  seccionAduanera!: any;
 
   tipoSolSeleccionada!: Catalogo;
 
@@ -135,17 +137,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.getTiposSolicitud();
     this.getPaises();
     this.getAduanas();
+    this.getSeccionesAduaneras();
 
     //Validacion si tenemos datos guardados en el store
     const datosForma5701 = this.tramite5701Query.getFormaTramite5071();
 
-
-
     this.crearFormSolicitud();
 
-    if (this.validarCamposNull(datosForma5701)) {
-      this.fillForm(datosForma5701);
-    }
+    this.fillForm(datosForma5701);
 
     // Aqui se busca el nro de patente o autorizacion
     this.obtenerPatente();
@@ -187,8 +186,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-
-      this.datosServicio.get('fechaInicio').valueChanges.subscribe((_value) => {
+    this.datosServicio.get('fechaInicio').valueChanges.subscribe((_value) => {
       this.validaFechas();
     });
 
@@ -352,6 +350,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             catalogos: resp,
           };
         }
+      });
+  }
+
+  getSeccionesAduaneras(): void {
+    this.catalogosServices
+      .getCatalogoById(CATALOGOS_ID.CAT_SECCION_ADUANAS)
+      .subscribe((resp) => {
+        this.seccionAduanera = JSON.parse(resp.data);
+        console.log(this.seccionAduanera);
       });
   }
 

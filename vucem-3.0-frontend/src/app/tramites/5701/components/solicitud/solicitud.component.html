@@ -73,19 +73,22 @@
         <div class="col-md-6">
           <div class="col">
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="a" id="certificacion_a" formControlName="tipoEmpresaCertificada">
+              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="a" id="certificacion_a"
+                formControlName="tipoEmpresaCertificada">
               <label class="form-check-label" for="certificacion_a">I.V.A e I.E.P.S Certificación A:</label>
             </div>
           </div>
           <div class="col">
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="aa" id="certificacion_aa" formControlName="tipoEmpresaCertificada">
+              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="aa"
+                id="certificacion_aa" formControlName="tipoEmpresaCertificada">
               <label class="form-check-label" for="certificacion_aa">I.V.A e I.E.P.S Certificación AA:</label>
             </div>
           </div>
           <div class="col">
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="oea" id="certificacion_oea" formControlName="tipoEmpresaCertificada">
+              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="oea"
+                id="certificacion_oea" formControlName="tipoEmpresaCertificada">
               <label class="form-check-label" for="certificacion_oea">I.V.A e I.E.P.S Certificación AAA:</label>
             </div>
           </div>
@@ -214,14 +217,17 @@
           <select-catalogos [catalogosDatos]="aduanas" (valorSeleccion)="aduanaSeleccion($event)" />
         </div>
         <div class="col-md-4">
-          <label for="seccionAduanera" class="form-label">Sección aduanera*:</label>
+          <app-catalogo-select [catalogo]="seccionAduanera" formControlName="idSeccionAduanera"
+            [label]="'Sección aduanera'" [required]="true" name="idSeccionAduanera"></app-catalogo-select>
+
+          <!-- <label for="seccionAduanera" class="form-label">Sección aduanera*:</label>
           <select class="form-control" id="seccionAduanera" formControlName="seccionAduanera">
             <option>Selecciona un valor</option>
             <option value=32>32 - 304 - AEROPUERTO INTERNACIONAL GENERAL. LUCIO BLANCO, CIUDAD REYNOSA, TAMAULIPAS.
             </option>
             <option value=34>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
             <option value=31>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
-          </select>
+          </select> -->
 
         </div>
         <div class="col-md-4">

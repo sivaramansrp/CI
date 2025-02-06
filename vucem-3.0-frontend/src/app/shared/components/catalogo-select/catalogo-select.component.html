@@ -1,0 +1,10 @@
+<div [formGroup]="formSelect">
+    <label for="{id}" class="form-label" *ngIf="label">{{ label }} @if (required) {*}:</label>
+    <select class="form-control" [id]="id" formControlName="selectControl" (change)="handleChange($event)">
+        <option value="" disabled selected>Seleccione una opción</option>
+        <option *ngFor="let option of catalogo" [value]="option.id">{{ option.descripcion }}</option>
+    </select>
+    <div *ngIf="isValid()" class="error-message">
+        Este campo es obligatorio.
+    </div>
+</div>
