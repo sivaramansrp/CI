@@ -11,7 +11,7 @@ import {
   CarroFerrocarril,
   DatosMercancia,
   InspeccionFisica,
-  MERCANCIATABLADATA,
+  mercanciaTablaData,
   Solicitud,
 } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
@@ -80,7 +80,7 @@ export class SolicitudComponent implements OnInit {
   carrosDeFerrocarrilPager: CarroFerrocarril[];
   hHistorialinspeccion: string[];
   dHistorialInspecciones: InspeccionFisica[];
-  mercanciaTableData: MERCANCIATABLADATA;
+  mercanciaTableData: mercanciaTablaData;
   constructor(
     private fb: FormBuilder,
     private solicitudService: SolicitudPantallasService

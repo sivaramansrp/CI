@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
-import { MERCANCIATABLADATA } from '../../../../core/models/220502/solicitud-pantallas.model';
+import { mercanciaTablaData } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 
 @Component({
@@ -33,7 +33,7 @@ import { CatalogosSelect } from '../../../../core/models/shared/components.model
 })
 export class MedioTransporteComponent implements OnInit, OnDestroy {
   @Input() controlKey: string = '';
-  @Input() mercanciaTableData: MERCANCIATABLADATA;
+  @Input() mercanciaTableData: mercanciaTablaData;
   @Input() mediodetransporte!: CatalogosSelect;
   parentContainer = inject(ControlContainer);
   get parentFormGroup() {

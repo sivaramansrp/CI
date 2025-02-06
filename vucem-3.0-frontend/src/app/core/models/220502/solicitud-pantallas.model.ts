@@ -34,7 +34,7 @@ export interface Solicitud {
   proovedor: string;
 }
 
-export interface MERCANCIATABLADATA {
+export interface mercanciaTablaData {
   hMercanciaTabla :string[];
   dMercanciaBody:DatosMercancia[];
 }
