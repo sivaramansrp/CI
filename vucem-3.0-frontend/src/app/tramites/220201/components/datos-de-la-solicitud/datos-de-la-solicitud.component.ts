@@ -112,9 +112,7 @@ export class DatosDeLaSolicitudComponent {
       certficacion: [''],
       regimen: ['', Validators.required]
     });
-
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
-    console.log(this.forma);
   }
 
   /**

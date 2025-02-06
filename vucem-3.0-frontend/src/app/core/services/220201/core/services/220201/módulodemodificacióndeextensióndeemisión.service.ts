@@ -45,7 +45,6 @@ export class MódulodeModificacióndeExtensióndeemisiónServiceService {
   }
 
   CapturarsolicitudEnviar() {
-    console.log(this.capturarSolicitudCargaUtil);
     const _url = 'http://localhost:3000/capturarSolicitud';
     return this.http.post<any>(_url, this.capturarSolicitudCargaUtil);
   }

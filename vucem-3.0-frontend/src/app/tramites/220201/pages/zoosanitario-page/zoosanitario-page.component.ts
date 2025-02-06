@@ -38,7 +38,6 @@ export class ZoosanitarioPageComponent {
    * La `accion` determina si avanzar (cont) o retroceder (atras).  --220201
    */
   getValorIndice(e: AccionBoton) {
-    console.log(e);
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       this.tituloMensaje = this.obtenerNombreDelTítulo(e.valor);
