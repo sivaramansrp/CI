@@ -20,6 +20,8 @@ import { CommonModule } from '@angular/common';
 import { HistorialInspeccionFisicaComponent } from '../../shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
 import { CarrosDeFerrocarrilComponent } from '../../shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
 import { SolicitudDatosComponent } from '../../shared/solicitud-datos/solicitud-datos.component';
+import { ResponsableInspeccionEnPuntoComponent } from '../../shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
+import { DatoseDelTramiteARealizerComponent } from '../../shared/datose-del-tramite-a-realizer/datose-del-tramite-a-realizer.component';
 
 @Component({
   selector: 'app-solicitud',
@@ -30,7 +32,9 @@ import { SolicitudDatosComponent } from '../../shared/solicitud-datos/solicitud-
     FormsModule,
     HistorialInspeccionFisicaComponent,
     CarrosDeFerrocarrilComponent,
-    SolicitudDatosComponent
+    SolicitudDatosComponent,
+    ResponsableInspeccionEnPuntoComponent,
+    DatoseDelTramiteARealizerComponent
   ],
   providers:[
     SolicitudPantallasService, 
@@ -54,9 +58,9 @@ export class SolicitudComponent implements OnInit {
     private solicitudService: SolicitudPantallasService
   ) {
     this.form = this.fb.group({
-      identificaciontransporte: new FormControl('', [Validators.required]),
-      mediodetransporte: new FormControl('', [Validators.required]),
-      totalDeGuiasCubiertos: new FormControl('', [Validators.required]),
+      // identificaciontransporte: new FormControl('', [Validators.required]),
+      // mediodetransporte: new FormControl('', [Validators.required]),
+      // totalDeGuiasCubiertos: new FormControl('', [Validators.required]),
     });
   }
 
@@ -93,5 +97,9 @@ export class SolicitudComponent implements OnInit {
   alternarSeleccionarTodo(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
     this.datosMercancia.forEach((item) => (item.selected = checked));
+  }
+
+  submitForm(){
+    console.log(this.form.value)
   }
 }

@@ -1,0 +1,40 @@
+<fieldset [formGroupName]="controlKey">
+    <ng-titulo titulo="Datose del tramite a realizer" />
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-field">
+          <select-catalogos [catalogosDatos]="certificadosAutorizados"
+                (valorSeleccion)="certificadosSeleccion($event)" />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-field">
+            <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-field">
+            <select-catalogos [catalogosDatos]="horaDeInspeccion"
+                (valorSeleccion)="horaDeSeleccion($event)" />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-field">
+            <select-catalogos [catalogosDatos]="aduanaDeIngreso"
+                (valorSeleccion)="aduanaDeSeleccion($event)" />
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="form-field">
+            <select-catalogos [catalogosDatos]="sanidadAgropecuaria"
+                (valorSeleccion)="sanidadSeleccion($event)" />
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-field">
+            <select-catalogos [catalogosDatos]="puntoDeInspeccion"
+                (valorSeleccion)="puntoDeSeleccion($event)" />
+        </div>
+    </div>
+    </div>
+  </fieldset>

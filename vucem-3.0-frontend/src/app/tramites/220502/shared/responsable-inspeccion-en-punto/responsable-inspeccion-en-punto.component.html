@@ -1,0 +1,35 @@
+  <fieldset [formGroupName]="controlKey">
+    <ng-titulo titulo="Responsable inspeccion en punto" />
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-field">
+          <label for="nombre" class="form-label">Nombre(s):</label>
+          <input class="form-control" type="number" formControlName="nombre" id="nombre" />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-field">
+            <label for="primerapellido" class="form-label">Primer apellido:</label>
+            <input class="form-control" type="text" formControlName="primerapellido" id="primerapellido"/>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-field">
+            <label for="segyndoapellido" class="form-label">Segyndo apellido:</label>
+            <input class="form-control" type="text" formControlName="segyndoapellido" id="segyndoapellido" />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-field">
+            <label for="mercancía" class="form-label">Cantidad de contenedores enquearriba la mercancia*:</label>
+            <input class="form-control" type="text" formControlName="mercancía" id="mercancía" />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-field">
+          <select-catalogos [catalogosDatos]="datosRegimenMercancia"
+                (valorSeleccion)="regimenMercancia($event)" />
+        </div>
+    </div>
+    </div>
+  </fieldset>

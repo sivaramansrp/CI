@@ -1,10 +1,16 @@
 <div class="container">
-    <form [formGroup]="form">
+    <form [formGroup]="form" (ngSubmit)="submitForm()">
+      <!-- Solicitud Tabla -->
       <app-solicitud-datos [tablaHeadData]="hSolicitud" [tablaFilaDatos]="dSolicitud"></app-solicitud-datos>
+      <!-- Datose del tramite a realizer -->
+      <app-datose-del-tramite-a-realizer controlKey="datoseDelTramiteRealizer"></app-datose-del-tramite-a-realizer>
+      <!-- Responsable inspeccion en punto -->
+      <app-responsable-inspeccion-en-punto controlKey="responsableInspeccionEnPunto"></app-responsable-inspeccion-en-punto>
       <!-- Cantidad de carros de ferrocarril -->
       <app-carros-de-ferrocarril [tablaHeadData]="hCarroFerrocarril" [tablaFilaDatos]="carrosDeFerrocarrilPager"></app-carros-de-ferrocarril>
       <!-- Historial inspeccion fisica -->
       <app-historial-inspeccion-fisica [tablaHeadData]="hHistorialinspeccion" [tablaFilaDatos]="dHistorialInspecciones"></app-historial-inspeccion-fisica>
+      <button type="submit">Submit</button>
     </form>
   </div>
   

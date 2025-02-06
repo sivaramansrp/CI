@@ -25,6 +25,7 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { CarrosDeFerrocarrilComponent } from './shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
 import { HistorialInspeccionFisicaComponent } from './shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
 import { SolicitudDatosComponent } from './shared/solicitud-datos/solicitud-datos.component';
+import { ResponsableInspeccionEnPuntoComponent } from './shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { SolicitudDatosComponent } from './shared/solicitud-datos/solicitud-dato
     SolicitudDatosComponent,
     CarrosDeFerrocarrilComponent,
     HistorialInspeccionFisicaComponent,
-    SolicitudComponent
+    SolicitudComponent,
+    ResponsableInspeccionEnPuntoComponent
   ]
 })
 export class InspeccionFisicaModule {}
