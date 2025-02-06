@@ -33,3 +33,8 @@ export interface Solicitud {
   cantidad: string;
   proovedor: string;
 }
+
+export interface MERCANCIATABLADATA {
+  hMercanciaTabla :string[];
+  dMercanciaBody:DatosMercancia[];
+}

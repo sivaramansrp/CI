@@ -11,6 +11,7 @@ import {
   CarroFerrocarril,
   DatosMercancia,
   InspeccionFisica,
+  MERCANCIATABLADATA,
   Solicitud,
 } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
@@ -22,6 +23,7 @@ import { CarrosDeFerrocarrilComponent } from '../../shared/carros-de-ferrocarril
 import { SolicitudDatosComponent } from '../../shared/solicitud-datos/solicitud-datos.component';
 import { ResponsableInspeccionEnPuntoComponent } from '../../shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
 import { DatoseDelTramiteARealizerComponent } from '../../shared/datose-del-tramite-a-realizer/datose-del-tramite-a-realizer.component';
+import { MedioTransporteComponent } from '../../shared/medio-transporte/medio-transporte.component';
 
 @Component({
   selector: 'app-solicitud',
@@ -34,7 +36,8 @@ import { DatoseDelTramiteARealizerComponent } from '../../shared/datose-del-tram
     CarrosDeFerrocarrilComponent,
     SolicitudDatosComponent,
     ResponsableInspeccionEnPuntoComponent,
-    DatoseDelTramiteARealizerComponent
+    DatoseDelTramiteARealizerComponent,
+    MedioTransporteComponent
   ],
   providers:[
     SolicitudPantallasService, 
@@ -47,21 +50,42 @@ export class SolicitudComponent implements OnInit {
   hMercancia!: string[];
   hSolicitud: string[];
   dSolicitud: Solicitud[];
-  mediodetransporte!: CatalogosSelect;
+  mediodetransporte: CatalogosSelect = {
+    labelNombre: 'Medio de transporte',
+    required: true,
+    primerOpcion: 'Selecciona un valor',
+    catalogos: [
+      {
+        id: 1,
+        descripcion: 'abc',
+        tam: 'abc',
+        dpi: 'abc',
+      },
+      {
+        id: 2,
+        descripcion: 'cde',
+        tam: 'cde',
+        dpi: 'cde',
+      },
+      {
+        id: 3,
+        descripcion: 'xyz',
+        tam: 'xyz',
+        dpi: 'xyz',
+      },
+    ],
+  };;
   datosMercancia: DatosMercancia[];
   hCarroFerrocarril: string[];
   carrosDeFerrocarrilPager: CarroFerrocarril[];
   hHistorialinspeccion: string[];
   dHistorialInspecciones: InspeccionFisica[];
+  mercanciaTableData: MERCANCIATABLADATA;
   constructor(
     private fb: FormBuilder,
     private solicitudService: SolicitudPantallasService
   ) {
-    this.form = this.fb.group({
-      // identificaciontransporte: new FormControl('', [Validators.required]),
-      // mediodetransporte: new FormControl('', [Validators.required]),
-      // totalDeGuiasCubiertos: new FormControl('', [Validators.required]),
-    });
+    this.form = this.fb.group({});
   }
 
   ngOnInit() {
@@ -85,11 +109,15 @@ export class SolicitudComponent implements OnInit {
           this.hHistorialinspeccion = data.hHistorialinspeccion;
           this.dHistorialInspecciones = data.inspecciones;
           this.carrosDeFerrocarrilPager = data.carrosDeFerrocarrilPager;
-          this.datosMercancia = data.datosMercancia;
-          this.hMercancia = data.hTabla;
+          // this.datosMercancia = data.datosMercancia;
+          // this.hMercancia = data.hTabla;
           this.hCarroFerrocarril = data.hCarroFerrocarril;
           this.hSolicitud = data.hSolicitud;
           this.dSolicitud = data.dSolicitud;
+          this.mercanciaTableData = {
+            hMercanciaTabla :data.hTabla,
+            dMercanciaBody:data.datosMercancia
+          }
         }
       );
   }

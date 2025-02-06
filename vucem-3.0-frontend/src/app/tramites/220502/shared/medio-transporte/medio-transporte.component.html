@@ -1,0 +1,106 @@
+<fieldset [formGroupName]="controlKey">
+  <ng-titulo titulo="Medio de transporte" />
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-field">
+        <select-catalogos
+          [catalogosDatos]="mediodetransporte"
+          (valorSeleccion)="selecctionMediodetransporte($event)"
+        />
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-field">
+        <label for="ideTransporte" class="form-label"
+          >Identificación del transporte:</label
+        >
+        <input
+          class="form-control"
+          type="text"
+          formControlName="identificacionTransporte"
+          id="ideTransporte"
+        />
+      </div>
+    </div>
+    <div class="col-md-12 mt-5">
+      <label class="form-label" for="solicituddeInspección"
+        >¿La solicitud de Inspección Física es para trámites que arriban por
+        Ferrocarril o por Partes II?*:</label
+      >
+      <div class="form-check">
+        <input
+          class="form-check-input me-2"
+          type="radio"
+          name="solicitudInspeccion"
+          formControlName="solicitudInspeccion"
+          value="Si"
+          id="si"
+        />
+        <label class="form-check-label" for="si">Sí</label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input me-2"
+          type="radio"
+          name="solicitudInspeccion"
+          formControlName="solicitudInspeccion"
+          value="No"
+          id="no"
+        />
+        <label class="form-check-label" for="no">No</label>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="form-field">
+        <label for="Datosdelamercancía" class="form-label"
+          >Datos de la mercancía:</label
+        >
+      </div>
+    </div>
+    <div class="col-md-12">
+      <table class="table table-responsive">
+        <thead>
+          <tr>
+            <th>
+              <input type="checkbox" />
+            </th>
+            @for (item of mercanciaTableData?.hMercanciaTabla; track $index) {
+            <th>{{ item }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of mercanciaTableData?.dMercanciaBody; let i = $index; track
+          i) {
+          <tr>
+            <td>
+              <input type="checkbox" />
+            </td>
+            <td>{{ item.fraccionArancelaria }}</td>
+            <td>{{ item.descripcionFraccion }}</td>
+            <td>{{ item.unico }}</td>
+            <td>{{ item.nicoDescripcion }}</td>
+            <td>{{ item.cantidadInUMT }}</td>
+            <td>{{ item.unidadDeMedidaRate }}</td>
+            <td>{{ item.totalDeUMT }}</td>
+            <td>{{ item.saldoAbierto }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-4">
+      <div class="form-field">
+        <label for="totalDeGuiasCubiertos" class="form-label"
+          >Total de guías amparadas:</label
+        >
+        <input
+          class="form-control"
+          type="number"
+          formControlName="totalDeGuiasCubiertos"
+          id="totalDeGuiasCubiertos"
+        />
+      </div>
+    </div>
+  </div>
+</fieldset>
