@@ -1,13 +1,9 @@
-import { FormSateSolicitud5701, Tramite5701Store } from '../../estados/tramites/tramite5701.store';
+import { Solicitud5701State, Tramite5701Store } from '../../estados/tramites/tramite5701.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
-export class Tramite5701Query extends Query<FormSateSolicitud5701> {
-  /**
-   *
-   */
-
+export class Tramite5701Query extends Query<Solicitud5701State> {
 
   /**
    * Selecciona el estado completo de la solicitud
@@ -17,11 +13,12 @@ export class Tramite5701Query extends Query<FormSateSolicitud5701> {
   });
 
   /**Guarda el estado completo del formulario de la solicitud */
-  constructor(protected override store: Tramite5701Store) {
+  constructor(
+    protected override store: Tramite5701Store) {
     super(store);
   }
 
-  getFormaTramite5071(): FormSateSolicitud5701 {
+  getFormaTramite5071(): Solicitud5701State {
     return this.getValue();
   }
 
