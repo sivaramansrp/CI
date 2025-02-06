@@ -16,8 +16,16 @@ import { Catalogo, RespuestaCatalogos } from '../../../../core/models/shared/cat
 })
 export class PagoDeDerechosComponent implements OnInit {
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
+  justificacionSelector: CatalogosSelect = {
+    labelNombre: 'Justificación',
+    required: true,
+    primerOpcion: 'Selecciona un Justificación',
+    catalogos: [],
+  }
+
+
   bancoSelector: CatalogosSelect = {
-    labelNombre: 'Banco*',
+    labelNombre: 'Banco',
     required: true,
     primerOpcion: 'Selecciona un banco',
     catalogos: [],
@@ -26,22 +34,32 @@ export class PagoDeDerechosComponent implements OnInit {
   pagoForm: FormGroup = this.fb.group({
     exentoPagoNo: [''],
     exentoPagoSi: [''],
-    justificacion: [''],
-    claveReferencia: [''],
-    cadenaDependencia: [''],
-    banco: [''],
-    llavePago: [''],
-    importePago: ['']
+    justificacion: [{ value: '', disabled: false }],
+    claveReferencia: [{ value: '', disabled: true }],
+    cadenaDependencia: [{ value: '', disabled: true }],
+    banco: [{ value: '', disabled: true }],
+    llavePago: [{ value: '', disabled: true }],
+    importePago: [{ value: '', disabled: true }]
   });
   constructor(private readonly fb: FormBuilder, private readonly httpServices: HttpClient) {
   }
   ngOnInit(): void {
+    this.obtenerDetallesDeListaDeOpciones()
+  }
+  obtenerDetallesDeListaDeOpciones() {
     this.obtenerBancoSelectorList();
+    this.obtenerListaDeJustificaciones();
   }
   obtenerBancoSelectorList() {
     this.httpServices.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json').subscribe((data): void => {
       const datos = data?.data;
       this.bancoSelector['catalogos'] = datos as Catalogo[];
+    });
+  }
+  obtenerListaDeJustificaciones() {
+    this.httpServices.get<RespuestaCatalogos>('../../../../../assets/json/220201/Justificación.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.justificacionSelector['catalogos'] = datos as Catalogo[];
     });
   }
 } 

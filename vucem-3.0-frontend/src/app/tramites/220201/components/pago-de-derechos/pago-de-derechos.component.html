@@ -30,19 +30,9 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label for="seccionAduanera" class="form-label">Justificación*</label>
-        <select
-          class="form-control"
-          id="seccionAduanera"
-          name="justificacion"
-          formControlName="justificacion"
-          [disabled]="true"
-        >
-          <option>Selecciona un valor</option>
-          <option>AEROPUERTO INTERNAL. CD.DE MEXICO, D.F.</option>
-          <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
-          <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
-        </select>
+        <select-catalogos
+          [catalogosDatos]="justificacionSelector"
+        ></select-catalogos>
       </div>
       <div class="col-md-8"></div>
       <div class="col-md-4">
