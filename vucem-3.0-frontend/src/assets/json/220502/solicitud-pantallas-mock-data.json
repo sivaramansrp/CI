@@ -66,20 +66,20 @@
       "descripcionFraccion": "Trigo duro",
       "unico": "Sí",
       "nicoDescripcion": "Trigo para molienda",
-      "cantidadInUMT": 50,
-      "unidadDeMedidaRate": "kg",
-      "totalDeUMT": 500,
-      "saldoAbierto": 100
+      "cantidadSolicitadaUMT": 50,
+      "unidadMedidaUMT": "kg",
+      "cantidadTotalUMT": 500,
+      "saldoPendiente": 100
     },
     {
       "fraccionArancelaria": "2002.90.10",
       "descripcionFraccion": "Puré de tomate",
       "unico": "No",
       "nicoDescripcion": "Concentrado envasado",
-      "cantidadInUMT": 30,
-      "unidadDeMedidaRate": "kg",
-      "totalDeUMT": 300,
-      "saldoAbierto": 50
+      "cantidadSolicitadaUMT": 50,
+      "unidadMedidaUMT": "kg",
+      "cantidadTotalUMT": 300,
+      "saldoPendiente": 10
     }
   ],
   "carrosDeFerrocarrilPager": [

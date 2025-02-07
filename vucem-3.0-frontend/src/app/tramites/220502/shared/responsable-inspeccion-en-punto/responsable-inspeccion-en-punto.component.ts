@@ -58,11 +58,11 @@ export class ResponsableInspeccionEnPuntoComponent
       this.parentFormGroup.addControl(
         this.controlKey,
         new FormGroup({
-          nombre: new FormControl('', [Validators.required]),
-          primerapellido: new FormControl('', [Validators.required]),
-          segyndoapellido: new FormControl('', [Validators.required]),
-          mercancía: new FormControl('', [Validators.required]),
-          tipocontenedor: new FormControl('', [Validators.required]),
+          nombre: new FormControl('', [Validators.required, Validators.maxLength(150)]),
+          primerapellido: new FormControl('', []),
+          segyndoapellido: new FormControl('', []),
+          mercancia: new FormControl('', [Validators.required]),
+          tipocontenedor: new FormControl('', []),
         })
       );
     }

@@ -3,10 +3,10 @@ export interface DatosMercancia {
   descripcionFraccion: string;
   unico: string;
   nicoDescripcion: string;
-  cantidadInUMT: number;
-  unidadDeMedidaRate: string;
-  totalDeUMT: number;
-  saldoAbierto: number;
+  cantidadSolicitadaUMT: number;
+  unidadMedidaUMT: string;
+  cantidadTotalUMT: number;
+  saldoPendiente: number;
   selected?: boolean;
 }
 
