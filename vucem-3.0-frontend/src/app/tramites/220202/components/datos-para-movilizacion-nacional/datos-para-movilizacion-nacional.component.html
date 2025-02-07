@@ -1,1 +1,25 @@
-<p>datos-para-movilizacion-nacional works!</p>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <ng-titulo titulo="Medio de transporte"></ng-titulo>
+    </div>
+    <div class="col-md-6">
+      <select-catalogos [catalogosDatos]="transporteList"></select-catalogos>
+    </div>
+    <div class="col-md-6 mt-2">
+      <label class="control-label" for="guia"
+        >Identificación del transporte:</label
+      >
+      <input class="form-control mt-1" id="guia" placeholder="" type="text" />
+    </div>
+    <div class="col-md-12">
+      <select-catalogos [catalogosDatos]="puntoList"></select-catalogos>
+    </div>
+    <div class="col-md-12 mt-2">
+      <label class="control-label" for="guia"
+        >Nombre de la empresa transportista:*</label
+      >
+      <input class="form-control mt-1" id="guia" placeholder="" type="text" />
+    </div>
+  </div>
+</div>

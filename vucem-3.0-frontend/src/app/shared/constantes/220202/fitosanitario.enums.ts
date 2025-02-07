@@ -166,3 +166,4 @@ export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
     },
 ];
 export const INSTRUCCION_DOBLE_CLIC = 'Al dar doble clic en el registro seleccionado creará una nueva solicitud con los mismos datos de la solicitud elegida'
+export const ESREQUIREDTABLESMENSAJE = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.'

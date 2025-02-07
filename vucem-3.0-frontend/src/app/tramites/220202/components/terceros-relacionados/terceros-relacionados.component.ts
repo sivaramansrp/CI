@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ESREQUIREDTABLESMENSAJE } from '../../../../shared/constantes/220202/fitosanitario.enums';
 
 @Component({
   selector: 'app-terceros-relacionados',
@@ -6,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './terceros-relacionados.component.scss'
 })
 export class TercerosRelacionadosComponent {
-
+  esRequiredTablesMensaje: string = ESREQUIREDTABLESMENSAJE
 }

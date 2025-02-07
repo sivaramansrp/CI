@@ -1,1 +1,90 @@
-<p>terceros-relacionados works!</p>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <ng-titulo titulo="Terceros relacionados"></ng-titulo>
+    </div>
+    <div class="col-md-12">
+      <ng-alert [CONTENIDO]="esRequiredTablesMensaje"></ng-alert>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <h5>Exportador *</h5>
+    </div>
+    <div class="col-md-12">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th class="text-center">
+              <input type="checkbox" />
+            </th>
+            <th class="text-center">Nombre/denominación o razón social</th>
+            <th class="text-center">Teléfono</th>
+            <th class="text-center">Correo electrónico</th>
+            <th class="text-center">Domicilio</th>
+            <th class="text-center">País</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <h5>Destinatario (destino final) *</h5>
+    </div>
+    <div class="col-md-12">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th class="text-center">
+              <input type="checkbox" />
+            </th>
+            <th class="text-center">Nombre/denominación o razón social</th>
+            <th class="text-center">Teléfono</th>
+            <th class="text-center">Correo electrónico</th>
+            <th class="text-center">Calle</th>
+            <th class="text-center">Número exterior</th>
+            <th class="text-center">Número interior</th>
+            <th class="text-center">País</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <ng-titulo titulo="Agregar exportador"></ng-titulo>
+    </div>
+    <div class="col-md-12">
+      <label class="control-label" for="guia">Tipo persona*</label>
+      <div class="col-md-12">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="tipoPersona"
+          id="fisica"
+          value="fisica"
+          required
+        />
+        <label class="form-check-label ml-3" for="fisica"> Física </label>
+      </div>
+      <div class="col-md-12">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="tipoPersona"
+          id="fisica"
+          value="Moral"
+          required
+        />
+        <label class="form-check-label ml-3" for="Moral"> Moral </label>
+      </div>
+    </div>
+  </div>
+</div>
