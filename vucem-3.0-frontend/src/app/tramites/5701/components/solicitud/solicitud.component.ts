@@ -14,7 +14,6 @@ import {
   CatalogoPaises,
 } from '../../../../core/models/shared/catalogos.model';
 import {
-  CatalogosSelect,
   DatosInputCheck,
   InputFecha,
   InputHora,
@@ -28,7 +27,6 @@ import {
   CATALOGOS_ID,
   TIPO_SOLICITUD,
 } from '../../../../shared/constantes/constantes';
-import { MILISEGUNDOS } from '../../../../shared/constantes/constantes';
 
 import {
   Solicitud5701State,
@@ -155,15 +153,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    // this.datosServicio.get('fechaInicio').valueChanges.subscribe((_value) => {
-    //   this.validaFechas();
-    // });
-
-    // this.datosServicio.get('fechaFinal').valueChanges.subscribe((_value) => {
-    //   this.validaFechas();
-    // });
-
     this.tipoSolicitudSeleccion();
   }
 
@@ -233,18 +222,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       : false;
   }
 
-  fechaRangoValidacion() {
-    return (
-      this.datosServicio.get('fechaFinal').invalid &&
-      this.datosServicio.get('fechaFinal')?.touched
-    );
-  }
-
-  isValid(form: FormGroup, field: string) {
+  isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field);
   }
 
-  private inicializaCatalogos() {
+  private inicializaCatalogos() : void {
     /**
      * Obtiene los tipos de solicitud desde el catálogo y los asigna a `datosTiposSolicitud`.
      *
@@ -309,7 +291,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  obtenerPatente() {
+  private obtenerPatente() : void {
     // Busqueda de la patente a algun endpoint
     const datosPatente: datosAgregarFormulario = {
       form: this.despacho,
@@ -431,17 +413,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
-  fechaMinima() {
-    return (control) => {
-      const fechaSeleccionada = new Date(control.value);
-      const hoy = new Date();
-      hoy.setHours(0, 0, 0, 0); // Resetea la hora para comparar solo las fechas
-      return fechaSeleccionada >= hoy ? null : { fechaMinima: true };
-    };
-  }
-
-  validarDiferenciaFechas() {
-    const periodo = parseInt(this.FormSolicitud.get('tipoSolicitud')?.value);
+  validarDiferenciaFechas() : void {
+    const periodo = parseInt(this.FormSolicitud.get('tipoSolicitud')?.value, 10);
     const fechaInicio = new Date(this.datosServicio.get('fechaInicio').value);
     const fechaFin = new Date(this.datosServicio.get('fechaFinal').value);
 
@@ -481,7 +454,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   // *Eventos de los componentes hijos
 
-  busqueda_rfc() {
+  busqueda_rfc() : void {
     const rfcImportExport =
       this.datosImportadorExportador.get('rfcImportExport')?.value;
     // Aqui se hará la busqueda del rfc, para obtener el nombre
@@ -496,13 +469,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tramite5701Store.setNombreImportExport(nombreImportExport);
   }
 
-  llenarCamposDesactivados(form: FormGroup, field: string) {
+  // eslint-disable-next-line class-methods-use-this
+  llenarCamposDesactivados(form: FormGroup, field: string) : void {
     form.get(field)?.enable();
     form.get(field)?.setValue('DAYNIZ YAEL VELASCO CORONEL');
     form.get(field)?.disable();
   }
 
-  tipoSolicitudSeleccion() {
+  tipoSolicitudSeleccion() : void{
     this.tipoSolicitudSeleccionada =
       this.FormSolicitud.get('tipoSolicitud')?.value;
 
@@ -510,77 +484,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tramite5701Store.setTipoSolicitud(tipoSolicitud);
   }
 
-  /**
-   * Valida el formulario
-   */
-  validarFormulario(): void {
-    if (this.FormSolicitud.invalid) {
-      this.FormSolicitud.markAllAsTouched();
-      return;
-    }
-  }
+  valorInputCheck(e: DatosInputCheck) : void {}
 
-  valorInputCheck(e: DatosInputCheck) {}
 
-  obtenerHora(e: string, tipo: string) {
-    if (tipo === 'i') {
-      this.datosServicio.get('horaInicio')?.setValue(e);
-    } else if (tipo === 'f') {
-      this.datosServicio.get('horaFinal')?.setValue(e);
-
-      const fechaInicial = this.datosServicio.get('fechaInicio')?.value;
-      const fechaFinal = this.datosServicio.get('fechaFinal')?.value;
-      const horaInicial = this.datosServicio.get('horaInicio')?.value;
-      const horaFinal = this.datosServicio.get('horaFinal')?.value;
-
-      if (fechaInicial && fechaFinal && horaInicial && horaFinal) {
-        const rangoFecha = {
-          fechaInicio: this.fechaService.formatoFechaGuion(fechaInicial, false),
-          horaInicio: horaInicial,
-          fechaFin: this.fechaService.formatoFechaGuion(fechaFinal, false),
-          horaFin: horaFinal,
-        };
-        this.validaRangoFechas(rangoFecha);
-      }
-    }
-  }
-
-  validaRangoFechas(datos: DatosParaValidacionFecha): void {
-    switch (this.tipoSolicitudSeleccionada) {
-      case TIPO_SOLICITUD.INDIVIDUAL: {
-        const rangoFechaValida = this.fechaService.validacion24Horas(datos);
-        if (!rangoFechaValida) {
-          // Aqui se muestra un mensaje de error
-          alert('El rango de fechas no puede ser mayor a 24 horas');
-          return;
-        }
-        this.rango_fechas();
-        break;
-      }
-      case TIPO_SOLICITUD.SEMANAL: {
-        const rangoFechaSemana = this.fechaService.validacionSemana(datos);
-        if (!rangoFechaSemana) {
-          // Aqui se muestra un mensaje de error
-          alert('El rango de fechas no puede ser mayor a una semana');
-          return;
-        }
-        this.rango_fechas();
-        break;
-      }
-      case TIPO_SOLICITUD.MENSUAL: {
-        const rangoFechaMes = this.fechaService.validacionMes(datos);
-        if (!rangoFechaMes) {
-          // Aqui se muestra un mensaje de error
-          alert('El rango de fechas no puede ser mayor a un mes');
-          return;
-        }
-        this.rango_fechas();
-        break;
-      }
-    }
-  }
-
-  rango_fechas() {
+  rango_fechas() : void {
     const fechaInicial = this.datosServicio.get('fechaInicio')?.value;
     const fechaFinal = this.datosServicio.get('fechaFinal')?.value;
 
@@ -596,11 +503,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.colapsable = true;
   }
 
-  mostrar_colapsable() {
+  mostrar_colapsable() : void {
     this.colapsable = !this.colapsable;
   }
 
-  aduanaSeleccion(aduana: Catalogo) {
+  aduanaSeleccion(aduana: Catalogo) :void {
     this.darValorCampoFormulario(this.despacho, 'idAduana', aduana.id);
     this.darValorCampoFormulario(
       this.despacho,
@@ -625,7 +532,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     };
   }
 
-  validaCampoPedimento() {
+  validaCampoPedimento() : void {
     const aduanaValidacion = this.isValid(this.despacho, 'descripcionAduana');
     if (aduanaValidacion === null) this.validacionPedimento = true;
   }
@@ -634,11 +541,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     form: FormGroup,
     field: string,
     valor: string | number
-  ) {
+  ) : void {
     form.get(field)?.setValue(valor);
   }
 
-  socioComercialChange() {
+  socioComercialChange() : void {
     const socioComercial =
       this.datosImportadorExportador.get('socioComercial')?.value;
     if (socioComercial) {
@@ -659,25 +566,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     );
   }
 
-  validarCamposNull(solicitud: Solicitud5701State): boolean {
-    for (const llave in solicitud) {
-      if (
-        solicitud[llave] !== null &&
-        (!Array.isArray(solicitud[llave]) || solicitud[llave].length > 0)
-      ) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: string) {
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: string) :void {
     const valor = form.get(campo)?.value;
     this.tramite5701Store[metodoNombre](valor);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy() : void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 }
+
+ 
