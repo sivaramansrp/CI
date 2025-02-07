@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="tiposSolicitud" formControlName="tipoSolicitud" [label]="'Tipo solicitud'"
-          [required]="true" name="tipoSolicitud" (change)="tipoSolicitudSeleccion()" ></app-catalogo-select>
+          [required]="true" name="tipoSolicitud" (change)="tipoSolicitudSeleccion()"></app-catalogo-select>
       </div>
     </div>
 
@@ -36,7 +36,8 @@
             <label class="form-label" for="nroRegistro">Número de registro o programa:</label>
             <input class="form-control" id="nroRegistro" placeholder="Numero de registro" type="text"
               formControlName="nroRegistro"
-              [ngClass]="isValid(datosImportadorExportador, 'nroRegistro') ? 'required' : ''">
+              [ngClass]="isValid(datosImportadorExportador, 'nroRegistro') ? 'required' : ''"
+              (change)="setValoresStore(datosImportadorExportador,'nroRegistro', 'setNroRegistro')">
           </div>
         </div>
       </div>
@@ -46,14 +47,14 @@
           <div class="form-group">
             <label class="form-label" for="programaFomento">Programa de fomento:</label>
             <input class="form-control" id="programaFomento" placeholder="" type="text"
-              formControlName="programaFomento">
+              formControlName="programaFomento"  (change)="setValoresStore(datosImportadorExportador,'programaFomento', 'setProgramaFomento')">
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="immex">IMMEX (Número/aaaa):</label>
-            <input class="form-control" id="immex" placeholder="" type="text" formControlName="immex">
+            <input class="form-control" id="immex" placeholder="" type="text" formControlName="immex" (change)="setValoresStore(datosImportadorExportador,'immex', 'setImmexValue')">
           </div>
         </div>
 
@@ -61,7 +62,7 @@
           <div class="form-group">
             <label class="form-label" for="industriaAutomotriz">Industria Automotriz:</label>
             <input class="form-control" id="industriaAutomotriz" placeholder="" type="text"
-              formControlName="industriaAutomotriz">
+              formControlName="industriaAutomotriz"  (change)="setValoresStore(datosImportadorExportador,'industriaAutomotriz', 'setIndustriaAutomotriz')">
           </div>
         </div>
       </div>
@@ -75,26 +76,27 @@
           <div class="col">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="a" id="certificacion_a"
-                formControlName="tipoEmpresaCertificada">
+                formControlName="tipoEmpresaCertificada" (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')">
               <label class="form-check-label" for="certificacion_a">I.V.A e I.E.P.S Certificación A:</label>
             </div>
           </div>
           <div class="col">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="aa"
-                id="certificacion_aa" formControlName="tipoEmpresaCertificada">
+                id="certificacion_aa" formControlName="tipoEmpresaCertificada" (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')">
               <label class="form-check-label" for="certificacion_aa">I.V.A e I.E.P.S Certificación AA:</label>
             </div>
           </div>
           <div class="col">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="oea"
-                id="certificacion_oea" formControlName="tipoEmpresaCertificada">
+                id="certificacion_oea" formControlName="tipoEmpresaCertificada" (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')">
               <label class="form-check-label" for="certificacion_oea">I.V.A e I.E.P.S Certificación AAA:</label>
             </div>
           </div>
 
         </div>
+        
         <div class="col-md-6">
           <div class="col">
             <div class="form-check">
@@ -107,7 +109,7 @@
           <div class="col">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="" id="opEconomicoAut"
-                formControlName="opEconomicoAut">
+                formControlName="opEconomicoAut" (change)="setValoresStore(datosImportadorExportador,'opEconomicoAut', 'setOpEconomicoAut')">
               <label class="form-check-label" for="opEconomicoAut">Operador económico autorizado</label>
             </div>
           </div>
@@ -115,12 +117,11 @@
           <div class="col">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="" id="revisionOrigen"
-                formControlName="revisionOrigen">
+                formControlName="revisionOrigen" (change)="setValoresStore(datosImportadorExportador,'revisionOrigen', 'setRevisionOrigen')">
               <label class="form-check-label" for="revisionOrigen">Revisión en origen</label>
             </div>
           </div>
         </div>
-
       </div>
 
       <div class="row mt-3">
@@ -141,7 +142,7 @@
         <div class="col-md-4">
           <label for="fechaInicio" class="form-label">Fecha inicio*:</label>
           <input class="form-control" type="date" name="fechaInicio" id="fechaInicio" formControlName="fechaInicio"
-            [ngClass]="isValid(datosServicio,'fechaInicio') ? 'required' : ''">
+            [ngClass]="isValid(datosServicio,'fechaInicio') ? 'required' : ''" (change)="setValoresStore(datosServicio,'fechaInicio', 'setFechaInicio')">
 
           @if (isValid(datosServicio,'fechaInicio')) {
           <div class="mensaje-error">
@@ -152,7 +153,7 @@
         </div>
 
         <div class="col-md-4">
-          <input-hora [datosHora]="horaInicio" (horaValor)="obtenerHora($event, 'i')"></input-hora>
+          <input-hora [datosHora]="horaInicio" (horaValor)="obtenerHora($event, 'i')" (change)="setValoresStore(datosServicio,'fechaInicio', 'setFechaInicio')"></input-hora >
         </div>
 
       </div>
@@ -222,8 +223,8 @@
             [label]="'Sección aduanera'" [required]="true"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="seccionAduanera" formControlName="nombreRecinto" [label]="'Nombre del recinto'"
-            [required]="true" [isDisabled]="true"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="seccionAduanera" formControlName="nombreRecinto"
+            [label]="'Nombre del recinto'" [required]="true" [isDisabled]="true"></app-catalogo-select>
         </div>
       </div>
 
@@ -334,6 +335,5 @@
 
 
     </div>
-  }
+    }
   </form>
-  

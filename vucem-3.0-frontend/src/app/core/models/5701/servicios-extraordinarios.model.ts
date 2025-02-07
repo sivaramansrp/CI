@@ -93,7 +93,7 @@ export interface DatosDespacho {
 
 export interface DatosPedimento {
   idPedimento: number;
-  patente: number;
+  patentePedimento: number;
   pedimento: string;
   aduana: number;
   tipoPedimento: string;
