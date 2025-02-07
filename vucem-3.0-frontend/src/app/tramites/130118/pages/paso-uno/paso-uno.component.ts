@@ -26,25 +26,14 @@ export class PasoUnoComponent implements AfterViewInit {
   tipoPersona!: number;
   persona: Array<FormularioDinamico> = [];
   domicilioFiscal: Array<FormularioDinamico> = [];
-    indice: number = 1;
+  indice: number = 1;
 
   ngAfterViewInit(): void {
-    
+
     this.persona = PERSONA_MORAL_NACIONAL;
-    
     this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
     this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
-
-    // this.clearArray();
-
   }
-
-  // clearArray(){
-  //   this.domicilioFiscal =[];
-  //   this.solicitante.domicilioFiscal=[];
-  //   this.solicitante.domicilioFiscalForm.reset();
-    
-  // }
 
   seleccionaTab(i: number): void {
     this.indice = i;
