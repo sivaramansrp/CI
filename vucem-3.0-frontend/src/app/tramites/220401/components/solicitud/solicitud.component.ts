@@ -29,7 +29,7 @@ interface Solicitude {
   styleUrl: './solicitud.component.scss'
 })
 
-export class SolicitudComponent implements OnInit, OnDestroy {
+export class SolicitudPantallasComponent implements OnInit, OnDestroy {
 
   /**
    * Esta variable se utiliza para destruir la suscripción.
