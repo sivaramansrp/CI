@@ -10,7 +10,7 @@
           <input
             class="form-check-input me-3"
             type="radio"
-            name="certficacion"
+            name="exentoPagoNo"
             value=""
             id="certficacion_a"
             formControlName="exentoPagoNo"
@@ -21,27 +21,18 @@
           <input
             class="form-check-input me-3"
             type="radio"
-            name="certficacion"
+            name="exentoPagoSi"
             value="aa"
             id="certficacion_aa"
             formControlName="exentoPagoSi"
           />
-          <label class="form-label" for="certficacion_aa">Si</label>
+          <label class="form-label" for="certficacion_aa">Sí</label>
         </div>
       </div>
       <div class="col-md-4">
-        <label for="seccionAduanera" class="form-label">Justificacion*</label>
-        <select
-          class="form-control"
-          id="seccionAduanera"
-          formControlName="justificacion"
-          [disabled]="true"
-        >
-          <option>Selecciona un valor</option>
-          <option>AEROPUERTO INTERNAL. CD.DE MEXICO, D.F.</option>
-          <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
-          <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
-        </select>
+        <select-catalogos
+          [catalogosDatos]="justificacionSelector"
+        ></select-catalogos>
       </div>
       <div class="col-md-8"></div>
       <div class="col-md-4">
@@ -55,6 +46,7 @@
             placeholder=""
             type="text"
             [disabled]="true"
+            name="claveReferencia"
             formControlName="claveReferencia"
           />
         </div>
@@ -71,23 +63,13 @@
             type="text"
             appUppercase
             [disabled]="true"
+            name="cadenaDependencia"
             formControlName="cadenaDependencia"
           />
         </div>
       </div>
       <div class="col-md-4">
-        <label for="seccionAduanera" class="form-label">Banco*</label>
-        <select
-          class="form-control"
-          id="seccionAduanera"
-          [disabled]="true"
-          formControlName="banco"
-        >
-          <option>Selecciona un valor</option>
-          <option>AEROPUERTO INTERNAL. CD.DE MEXICO, D.F.</option>
-          <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
-          <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
-        </select>
+        <select-catalogos [catalogosDatos]="bancoSelector"></select-catalogos>
       </div>
       <div class="col-md-4">
         <div class="form-group">
@@ -101,6 +83,7 @@
             type="text"
             appUppercase
             [disabled]="true"
+            name="llavePago"
             formControlName="llavePago"
           />
         </div>
@@ -121,6 +104,7 @@
             placeholder=""
             type="text"
             [disabled]="true"
+            name="importePago"
             formControlName="importePago"
           />
         </div>

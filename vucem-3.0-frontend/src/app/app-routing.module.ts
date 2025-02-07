@@ -20,10 +20,10 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'issuance-extension',
+    path: 'certificado-zoosanitario ',
     loadChildren: () =>
-      import('./tramites/220201/issuance-extension-modification.module').then(
-        (m) => m.IssuanceExtensionModificationModule)
+      import('./tramites/220201/certificado-zoosanitario.module').then(
+        (m) => m.CertificadoZoosanitarioModule)
   },
   {
     path: 'pantallas-extraordinarios',

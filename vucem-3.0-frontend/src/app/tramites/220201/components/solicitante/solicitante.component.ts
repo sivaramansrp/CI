@@ -7,17 +7,55 @@ import {
 } from '@angular/forms';
 import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
-import { IDDEUSUARIO } from '../../../../shared/constantes/issuance-extension-modification.enum';
-import { IssuanceExtensionModificationServiceService } from '../../../../core/services/220201/core/services/220201/issuance-extension-modification.service';
+import { IDDEUSUARIO } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
+import { MódulodeModificacióndeExtensióndeemisiónServiceService } from '../../../../core/services/220201/core/services/220201/certificado-zoosanitario.service';
 import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
 import { solicitante } from '../../../../core/models/220201/capturar-solicitud.model';
-import { ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from '../../../../shared/constantes/issuance-extension-modification.enum';
+
+import { ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-solicitante',
   templateUrl: './solicitante.component.html',
-  styleUrl: './solicitante.component.scss',
+  styleUrls: ['./solicitante.component.scss'],
 })
+/**
+ * @component SolicitanteComponent
+ * @description Este componente maneja el formulario para la sección "Solicitante", incluyendo la inicialización, obtención de datos y gestión de controles del formulario.
+ * 
+ * @example
+ * <app-solicitante></app-solicitante>
+ * 
+ * @function crearFormulario
+ * @description Inicializa el grupo de formularios para el componente.
+ * 
+ * @function inicializarFormGroup
+ * @description Inicializa un grupo de formularios con campos dinámicos basados en la configuración proporcionada.
+ * @param {FormularioDinamico[]} config - Array de configuración de campos de formulario dinámicos.
+ * @param {string} grupoNombre - El nombre del grupo de formularios a inicializar.
+ * 
+ * @function obtenerDetallesDeUsuario
+ * @description Obtiene los detalles del usuario y llena el formulario con los datos obtenidos.
+ * 
+ * @function getValidators
+ * @description Genera un array de ValidatorFn de Angular basado en las cadenas de validadores proporcionadas.
+ * @param {string[]} validators - Un array de cadenas que representan los validadores a aplicar.
+ * @returns {ValidatorFn[]} Un array de ValidatorFn para ser usados en formularios de Angular.
+ * 
+ * @function ngOnDestroy
+ * @description Limpia el componente reseteando el formulario y estableciendo los datos del "Solicitante" en el servicio.
+ * 
+ * @property {FormularioDinamico[]} persona - Array de campos de formulario dinámicos para el "Solicitante".
+ * @property {FormGroup} form - El grupo de formularios principal para el componente.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * const validators = getValidators(['required', 'maxLength:10', 'pattern:^[a-zA-Z]+$']);
+ * // Devuelve un array de ValidatorFn incluyendo Validators.required, Validators.maxLength(10), y Validators.pattern(/^[a-zA-Z]+$/)
+ * 
+ * @compodoc
+ */
 export class SolicitanteComponent implements OnInit {
   persona: FormularioDinamico[] = [];
   form!: FormGroup;
@@ -26,42 +64,52 @@ export class SolicitanteComponent implements OnInit {
     private readonly fb: FormBuilder,
     private readonly solicitanteServices: SolicitanteService,
     private readonly formServices: FormulariosService,
-    private issuanceExtensionModificationService: IssuanceExtensionModificationServiceService
+    private readonly MódulodeModificacióndeExtensióndeemisiónService: MódulodeModificacióndeExtensióndeemisiónServiceService
   ) {
     this.persona = ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL;
     this.crearFormulario();
   }
+
   ngOnInit() {
     this.inicializarFormGroup(this.persona, 'datosGenerales');
     this.obtenerDetallesDeUsuario();
   }
+
   obtenerDetallesDeUsuario() {
     this.solicitanteServices
       .getDatosGenerales(IDDEUSUARIO)
-      .subscribe((response) => {
-        if (response) {
-          const datos = JSON.parse(response.data);
-          const datosSolicitante = datos.datosGenerales;
-          const camposDatosGenerales =
-            this.formServices.obtenerNombresCamposForm(this.datosGeneralesForm);
-          camposDatosGenerales.forEach((campo) => {
-            this.formServices.agregarValorCampoDesactivados(
-              this.datosGeneralesForm,
-              campo,
-              datosSolicitante[campo]
-            );
-          });
-        }
-      });
+      .pipe(
+        tap((response) => {
+          if (response) {
+            const datos = JSON.parse(response?.data);
+            const datosSolicitante = datos.datosGenerales;
+            const camposDatosGenerales =
+              this.formServices.obtenerNombresCamposForm(
+                this.datosGeneralesForm
+              );
+            camposDatosGenerales.forEach((campo) => {
+              this.formServices.agregarValorCampoDesactivados(
+                this.datosGeneralesForm,
+                campo,
+                datosSolicitante[campo]
+              );
+            });
+          }
+        })
+      )
+      .subscribe();
   }
+
   get datosGeneralesForm() {
     return this.form.get('datosGenerales') as FormGroup;
   }
+
   crearFormulario(): void {
     this.form = this.fb.group({
       datosGenerales: this.fb.group({}),
     });
   }
+
   inicializarFormGroup(
     config: FormularioDinamico[],
     grupoNombre: string
@@ -75,6 +123,18 @@ export class SolicitanteComponent implements OnInit {
       );
     });
   }
+
+  /**
+   * @function getValidators
+   * @description Genera un array de ValidatorFn de Angular basado en las cadenas de validadores proporcionadas.
+   * @param {string[]} validators - Un array de cadenas que representan los validadores a aplicar.
+   * @returns {ValidatorFn[]} Un array de ValidatorFn para ser usados en formularios de Angular.
+   * 
+   * @example
+   * // Ejemplo de uso:
+   * const validators = getValidators(['required', 'maxLength:10', 'pattern:^[a-zA-Z]+$']);
+   * // Devuelve un array de ValidatorFn incluyendo Validators.required, Validators.maxLength(10), y Validators.pattern(/^[a-zA-Z]+$/)
+   */
   getValidators(validators: string[]): ValidatorFn[] {
     const formValidators: ValidatorFn[] = [];
     validators.forEach((validator) => {
@@ -92,14 +152,8 @@ export class SolicitanteComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    console.log(this.form.value.datosGenerales);
     const sol: solicitante = this.form.value.datosGenerales as solicitante;
-    console.log(sol);
-    this.issuanceExtensionModificationService.setSoliciante(sol);
-    console.log(
-      this.issuanceExtensionModificationService.capturarSolicitudCargaUtil
-    );
-    console.log('ondestroy');
+    this.MódulodeModificacióndeExtensióndeemisiónService.setSoliciante(sol);
     this.form.reset();
   }
 }

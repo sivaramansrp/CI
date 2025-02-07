@@ -26,7 +26,7 @@ export const PASOS = [
 ];
 export const TEXTOS_REQUISITOS = {
     INSTRUCCIONES: `<h6>Instrucciones</h6>
-    <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
+    <p>- De acuerdo al caso particular, algunos dcumentos podrían ser obligatorios</p>
     <p>- En caso de que no requieras algún documento, seleccionalo y elíminalo</p>
     <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`,
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
@@ -44,18 +44,18 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
         placeholder: '',
     },
     {
-        labelNombre: 'Denominacion o razon social:',
+        labelNombre: 'Denominación o razón social:',
         campo: 'nombreRazonSocial',
         class: 'col-md-8',
         tipo_input: 'text',
         disabled: true,
-        tooltip: 'Denominacion o razon social',
+        tooltip: 'Denominación o razón social',
         validators: ['required'],
         placeholder: '',
     },
     {
         labelNombre: 'Actividad económica preponderante:',
-        campo: 'aPaterno',
+        campo: 'actEconomica',
         class: 'col-md-12',
         tipo_input: 'text',
         disabled: true,
@@ -63,7 +63,7 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
         placeholder: '',
     },
     {
-        labelNombre: 'Correo electronic',
+        labelNombre: 'Correo electrónico',
         campo: 'correo',
         class: 'col-md-4',
         tipo_input: 'text',
@@ -78,6 +78,6 @@ export const FECHA_DE_PAGO = {
     habilitado: true,
 
 };
-export const TEXTOS = 'Para continuar con el trámite, deberá agregar por lo menos una mercancia.';
+export const TEXTOS = 'Para continuar con el trámite, deberá agregar por lo menos una mercancía.';
 export const TERCEROR_TEXTO_DE_ALERTA = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
 export const IDDEUSUARIO = 21;

@@ -12,7 +12,8 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
 })
-export class IssuanceExtensionModificationServiceService {
+
+export class CertificadoZoosanitarioServiceService {
   public capturarSolicitudCargaUtil: capturarSolicitud = {
     solicitante: undefined,
     datosDeLaSolicitud: undefined,
@@ -21,7 +22,7 @@ export class IssuanceExtensionModificationServiceService {
     pagoDeDerechos: undefined,
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   setSoliciante(solicitante: solicitante) {
     this.capturarSolicitudCargaUtil.solicitante = solicitante;
@@ -44,7 +45,6 @@ export class IssuanceExtensionModificationServiceService {
   }
 
   CapturarsolicitudEnviar() {
-    console.log(this.capturarSolicitudCargaUtil);
     const _url = 'http://localhost:3000/capturarSolicitud';
     return this.http.post<any>(_url, this.capturarSolicitudCargaUtil);
   }

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
-import { ListaPasosWizard } from '../../../../core/models/220201/issuance-extension-modification.model';
-import { PASOS } from '../../../../shared/constantes/issuance-extension-modification.enum';
-import { SUCECESS_MESSAGE_STAGEONE } from '../../../../shared/constantes/issuance-extension-modification.enum';
+import { ListaPasosWizard } from '../../../../core/models/220201/Módulodemodificacióndeextensióndeemisión.model';
+import { PASOS } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
+import { SUCECESS_MESSAGE_STAGEONE } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 
@@ -38,7 +38,6 @@ export class ZoosanitarioPageComponent {
    * La `accion` determina si avanzar (cont) o retroceder (atras).  --220201
    */
   getValorIndice(e: AccionBoton) {
-    console.log(e);
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       this.tituloMensaje = this.obtenerNombreDelTítulo(e.valor);

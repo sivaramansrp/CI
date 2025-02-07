@@ -1,6 +1,13 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Component } from '@angular/core';
-import { TEXTOS } from '../../../../shared/constantes/issuance-extension-modification.enum';
+
+import { Component, OnInit } from '@angular/core';
+
+import { TEXTOS } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
+
+import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+import { RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
+
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -50,17 +57,54 @@ import { TEXTOS } from '../../../../shared/constantes/issuance-extension-modific
  * 
  * @método mostrar_colapsable
  * @descripción
- * Alterna el estado colapsable de la sección del formulario.
+ * Alterna el estado colapsable de la sección del formulario. --220201
  * 
  * @returns {void} --202201
  */
-export class DatosDeLaSolicitudComponent {
+export class DatosDeLaSolicitudComponent implements OnInit {
   TEXTOS: string = TEXTOS;
   forma!: FormGroup;
   selectRangoDias: string[] = [];
   colapsable: boolean = false;
   datosDelaSolicitud!: FormGroup;
-  constructor(private readonly fb: FormBuilder) {
+  aduanaDeIngreso: CatalogosSelect = {
+    labelNombre: 'Aduana de ingreso',
+    required: true,
+    primerOpcion: 'Selecciona un Aduana de ingreso',
+    catalogos: [],
+  }
+  sanidadAgropecuaria: CatalogosSelect = {
+    labelNombre: 'Oficina de inspección de sanidad Agropecuaria',
+    required: true,
+    primerOpcion: 'Selecciona un Agropecuaria',
+    catalogos: [],
+  }
+  puntoInspeccion: CatalogosSelect = {
+    labelNombre: 'Punto de inspección',
+    required: true,
+    primerOpcion: 'Selecciona un Punto',
+    catalogos: [],
+  }
+  establecimientoTIF: CatalogosSelect = {
+    labelNombre: `Establecimiento TIF `,
+    required: true,
+    primerOpcion: 'Selecciona un Establecimiento',
+    catalogos: [],
+  }
+  veterinario: CatalogosSelect = {
+    labelNombre: 'Nombre del médico veterinario',
+    required: true,
+    primerOpcion: 'Selecciona un Nombre',
+    catalogos: [],
+  }
+  regimen: CatalogosSelect = {
+    labelNombre: 'Régimen',
+    required: true,
+    primerOpcion: 'Selecciona un Régimen',
+    catalogos: [],
+  }
+
+  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient) {
     this.crearFormulario();
     this.initActionFormBuild();
   }
@@ -75,9 +119,12 @@ export class DatosDeLaSolicitudComponent {
   crearFormulario(): void {
     this.forma = this.fb.group({
       datosDelaSolicitud: this.fb.group({}),
-
     });
   }
+  ngOnInit(): void {
+    this.obtenerListasDesplegables();
+  }
+
   /**
    * Inicializa el grupo de formularios para "datosDelaSolicitud" con varios controles de formulario y sus respectivos validadores.
    * 
@@ -108,9 +155,7 @@ export class DatosDeLaSolicitudComponent {
       certficacion: [''],
       regimen: ['', Validators.required]
     });
-
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
-    console.log(this.forma);
   }
 
   /**
@@ -120,5 +165,52 @@ export class DatosDeLaSolicitudComponent {
    */
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
+  }
+
+  obtenerListasDesplegables() {
+    this.obtenerIngresoSelectList();
+    this.obtenerSanidadAgropecuariaList();
+    this.obtenerPuntoInspeccionList();
+    this.obtenerEstablecimientoList();
+    this.obtenerVeterinarioList();
+    this.obtenerRegimenList();
+  }
+
+  obtenerIngresoSelectList() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/aduana_de_ingreso.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.aduanaDeIngreso['catalogos'] = datos;
+    });
+  }
+
+  obtenerSanidadAgropecuariaList() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/oficina_de_inspeccion.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.sanidadAgropecuaria['catalogos'] = datos;
+    });
+  }
+  obtenerPuntoInspeccionList() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.puntoInspeccion['catalogos'] = datos;
+    });
+  }
+  obtenerEstablecimientoList() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/establecimiento.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.puntoInspeccion['catalogos'] = datos;
+    });
+  }
+  obtenerVeterinarioList() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.veterinario['catalogos'] = datos;
+    });
+  }
+  obtenerRegimenList() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/regimen.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.regimen['catalogos'] = datos;
+    });
   }
 }
