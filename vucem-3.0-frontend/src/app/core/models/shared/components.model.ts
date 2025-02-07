@@ -97,3 +97,12 @@ export interface DatosRepresentanteLegal {
   telefono: string;
   correo: string;
 }
+
+export interface TableData {
+  tableHeader: string[];
+  tableBody: TableBodyData[];
+}
+
+export interface TableBodyData {
+  tbodyData: string[];
+}
