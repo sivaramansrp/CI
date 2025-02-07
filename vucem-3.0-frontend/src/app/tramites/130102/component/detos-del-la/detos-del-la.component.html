@@ -1,1 +1,45 @@
-<p>detos-del-la works!</p>
+<div class="container">
+    <form>
+        <ng-titulo titulo="Datos del la mercancia">
+
+        </ng-titulo>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="producto">Producto*:</label>
+                    <app-input-radio [radioOptions]="producto" [selectedValue]="defaultSelect" [isRequired]="true"
+                        (valueChange)="onValueChange($event)" [layout]="'vertical'"></app-input-radio>
+                </div>
+            </div>
+            <div class="col-md-8">
+
+                <label for="message" class="form-label">Descripcion de la mercancia :</label>
+                <textarea id="message" class="form-control mb-5" placeholder="Descripcion de la mercancia"
+                    rows="8"></textarea>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <select-catalogos [catalogosDatos]="fraccionF" (valorSeleccion)="fetchFraccion($event)"
+                [tooltipT]="false"></select-catalogos>
+        </div>
+        <div class="row ">
+            <div class="col-md-4 form-group">
+                <select-catalogos [catalogosDatos]="Unidad" (valorSeleccion)="fetchUnidad($event)"
+                    [tooltipT]="true"></select-catalogos>
+            </div>
+            <div class="col-md-4 form-group ">
+                <label class="form-label" for="nombre_imp">Cantidad<span class="require">*</span>:</label>
+                <input class="form-control" id="Cantidad" placeholder="" type="text">
+
+            </div>
+            <div class="col-md-4 form-group">
+
+                <label class="form-label" for="nombre_imp">Valor factura USD<span class="require">*</span>:</label><span
+                    class="bi bi-question-circle-fill" title="Valor factura USD" data-bs-toggle="tooltip"></span>
+                <input class="form-control" id="Valor_factura_USD" placeholder="" type="text">
+
+            </div>
+        </div>
+    </form>
+</div>

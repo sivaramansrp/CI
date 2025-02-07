@@ -2,7 +2,10 @@
 <label for="itemSeleccionado" class="form-label">
   {{catalogosDatos.labelNombre}}
   @if (catalogosDatos.required) {*}:
+  @if(tooltipT){ <span class="bi bi-question-circle-fill" title="{{catalogosDatos.labelNombre}}"
+    data-bs-toggle="tooltip"></span>}
 </label>
+
 <select class="form-control" id="tipo-solicitud" [formControl]="itemSeleccionado" (change)="seleccion()"
   [ngClass]="isValid() ? 'required' : ''">
   <option value=0 disabled>Selecciona un valor</option>
