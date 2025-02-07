@@ -165,3 +165,4 @@ export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
         placeholder: '',
     },
 ];
+export const INSTRUCCION_DOBLE_CLIC = 'Al dar doble clic en el registro seleccionado creará una nueva solicitud con los mismos datos de la solicitud elegida'

@@ -1,1 +1,183 @@
-<p>datos-de-la-solicitud works!</p>
+<div class="container">
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="panel-group ficha-collapse" id="accordion">
+        <div class="panel panel-default">
+          <div class="panel-heading" (click)="mostrar_colapsable()">
+            <h4 class="panel-title">
+              <a> <i class="bi bi-arrow-repeat"></i>. </a>
+            </h4>
+            <button type="button" class="collpase-button collapsed"></button>
+          </div>
+          @if(colapsable){
+          <div class="panel-collapse collapse in" id="panel-01">
+            <div class="panel-body">
+              <div class="row">
+                <ng-alert [CONTENIDO]="instruccionDobleClic"></ng-alert>
+              </div>
+              <div class="row">
+                <h5>Solicita</h5>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th class="text-center">Fecha Creación</th>
+                          <th class="text-center">Mercancía</th>
+                          <th class="text-center">Cantidad</th>
+                          <th class="text-center">Proveedor</th>
+                        </tr>
+                      </thead>
+
+                      <tbody class="text-center">
+                        @for (persona of tablaDeDatosDeCelda; let i = $index;
+                        track i) {
+                        <tr>
+                          <td id="{{ i }}">{{ persona.Fecha_Creacion }}</td>
+                          <td id="{{ i }}">{{ persona.Mercancia }}</td>
+                          <td id="{{ i }}">{{ persona.Cantidad }}</td>
+                          <td id="{{ i }}">{{ persona.Proveedor }}</td>
+                        </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <ng-titulo titulo="Datos del trámite a realizar"></ng-titulo>
+    </div>
+    <div class="col-md-12">
+      <select-catalogos [catalogosDatos]="aduanaList"> </select-catalogos>
+    </div>
+    <div class="col-md-12">
+      <select-catalogos [catalogosDatos]="agropecuariaList"> </select-catalogos>
+    </div>
+    <div class="col-md-12">
+      <select-catalogos [catalogosDatos]="puntoList"> </select-catalogos>
+    </div>
+    <div class="col-md-6 mt-2">
+      <label class="control-label" for="guia">Número de guía:</label>
+      <input class="form-control" id="guia" placeholder="" type="text" />
+    </div>
+    <div class="col-md-6">
+      <select-catalogos [catalogosDatos]="regimeList"></select-catalogos>
+    </div>
+    <div class="col-md-6">
+      <label class="control-label" for="ferrocarril"
+        >Número de Carro de Ferrocarril:</label
+      >
+      <input class="form-control" id="ferrocarril" placeholder="" type="text" />
+    </div>
+    <div class="col-md-12">
+      <h5>Mercancías</h5>
+    </div>
+    <div class="col-md-12">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th class="text-center">
+              <input type="checkbox" />
+            </th>
+            <th class="text-center">No. partida</th>
+            <th class="text-center">Tipo de requisito</th>
+            <th class="text-center">Requisito</th>
+            <th class="text-center">Número de Certificado Internacional</th>
+            <th class="text-center">Fracción arancelaria</th>
+            <th class="text-center">Descripción de la fracción</th>
+            <th class="text-center">Nico</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <ng-titulo titulo="Datos mercancía"></ng-titulo>
+    </div>
+    <div class="col-md-4">
+      <select-catalogos [catalogosDatos]="aduanaList"> </select-catalogos>
+    </div>
+    <div class="col-md-4">
+      <label class="control-label" for="guia">Requisito:</label>
+      <input class="form-control" id="guia" placeholder="" type="text" />
+    </div>
+    <div class="col-md-4">
+      <label class="control-label" for="guia"
+        >Número de certificado internacional:*:</label
+      >
+      <input class="form-control" id="guia" placeholder="" type="text" />
+    </div>
+    <div class="col-md-4">
+      <select-catalogos [catalogosDatos]="arancelariaList"> </select-catalogos>
+    </div>
+    <div class="col-md-8">
+      <label class="control-label" for="guia"
+        >Descripción de la fracción arancelaria:*</label
+      >
+      <input
+        class="form-control"
+        id="guia"
+        placeholder=""
+        type="text"
+        disabled="true"
+      />
+    </div>
+    <div class="col-md-4">
+      <select-catalogos [catalogosDatos]="nicoList"> </select-catalogos>
+    </div>
+    <div class="col-md-8 mt-2">
+      <label class="control-label" for="guia">Descripción Nico:*</label>
+      <input
+        class="form-control"
+        id="guia"
+        placeholder=""
+        type="text"
+        disabled="true"
+      />
+    </div>
+    <div class="col-md-12 mt-2">
+      <label class="control-label" for="guia">Descripción*:</label>
+      <textarea class="form-control" name="" rows="12"></textarea>
+    </div>
+    <div class="col-md-4 mt-2">
+      <label class="control-label" for="guia">Cantidad UMT:*</label>
+      <input class="form-control" id="guia" placeholder="" type="text" />
+    </div>
+    <div class="col-md-4 mt-2">
+      <label class="control-label" for="guia">UMT:*</label>
+      <input
+        class="form-control"
+        id="guia"
+        placeholder=""
+        type="text"
+        disabled="true"
+      />
+    </div>
+    <div class="col-md-4 mt-2">
+      <label class="control-label" for="guia">Cantidad UMC*:</label>
+      <input class="form-control" id="guia" placeholder="" type="text" />
+    </div>
+    <div class="col-md-4">
+      <select-catalogos [catalogosDatos]="umcList"> </select-catalogos>
+    </div>
+    <div class="col-md-4">
+      <select-catalogos [catalogosDatos]="usoList"> </select-catalogos>
+    </div>
+    <div class="col-md-4">
+      <select-catalogos [catalogosDatos]="productoList"> </select-catalogos>
+    </div>
+  </div>
+</div>

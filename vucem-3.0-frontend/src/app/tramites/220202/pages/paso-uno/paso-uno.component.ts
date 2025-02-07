@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   styleUrl: './paso-uno.component.scss'
 })
 export class PasoUnoComponent {
-  indice: number = 1;
+  indice: number = 2;
   cortina_A_la_italiana = [
     { index: 1, title: 'Solicitante', component: 'solicitante' },
     { index: 2, title: 'Datos de la solicitud', component: 'datos-de-la-solicitud' },
