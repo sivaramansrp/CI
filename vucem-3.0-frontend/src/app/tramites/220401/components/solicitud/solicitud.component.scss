@@ -1,57 +1,57 @@
-/* Style the table for a more modern and clean look */
+/* Dale estilo a la mesa para darle una apariencia más moderna y limpia. */
 .custom-table {
-    width: 100%;                 /* Make table take full width */
-    margin: 20px auto;           /* Center table with auto margin */
-    border-collapse: collapse;   /* Collapse borders for neat appearance */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);  /* Add subtle shadow for depth */
-    background-color: #fff;      /* White background for the table */
+    width: 100%;                 /* Hacer que la mesa ocupe todo el ancho */
+    margin: 20px auto;           /* Mesa centrada con margen automático */
+    border-collapse: collapse;   /* Contraer bordes para una apariencia ordenada */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);  /* Añadir una sombra sutil para darle profundidad */
+    background-color: #fff;      /* Fondo blanco para la mesa */
   }
   
-  /* Header styling */
+  /* Estilo del encabezado */
   .custom-table th {
-    background-color: #fff;   /* Green background for the header */
-    color: #333333;                /* White text color */
-    font-weight: bold;           /* Make header text bold */
-    text-align: center;          /* Center the text */
-    padding: 12px 15px;          /* Add padding for better spacing */
-    border-bottom: 2px solid #ddd;  /* Light bottom border */
+    background-color: #fff;      /* Fondo blanco para el encabezado */
+    color: #333333;              /* Color de texto gris oscuro */
+    font-weight: bold;           /* Poner el texto del encabezado en negrita */
+    text-align: center;          /* Centrar el texto */
+    padding: 12px 15px;          /* Añadir relleno para mejor espaciado */
+    border-bottom: 2px solid #ddd;  /* Borde inferior ligero */
   }
   
-  /* Body cell styling */
+  /* Estilo de las celdas del cuerpo */
   .custom-table td {
-    text-align: center;          /* Center text inside the cells */
-    padding: 12px 15px;          /* Add padding for better readability */
-    border-bottom: 1px solid #ddd;  /* Add bottom border to rows */
-    font-size: 14px;             /* Adjust font size */
+    text-align: center;          /* Centrar el texto dentro de las celdas */
+    padding: 12px 15px;          /* Añadir relleno para mejor legibilidad */
+    border-bottom: 1px solid #ddd;  /* Añadir borde inferior a las filas */
+    font-size: 14px;             /* Ajustar el tamaño de la fuente */
   }
   
-  /* Zebra striping for better row readability */
+  /* Rayado de cebra para mejor legibilidad de las filas */
   .custom-table tbody tr:nth-child(odd) {
-    background-color: #f9f9f9;   /* Light gray background for odd rows */
+    background-color: #f9f9f9;   /* Fondo gris claro para las filas impares */
   }
 
   
   .custom-table tbody tr:nth-child(even) {
-    background-color: #ffffff;   /* White background for even rows */
+    background-color: #ffffff;   /* Fondo blanco para las filas pares */
   }
   
-  /* Hover effect on rows for better interactivity */
+  /* Efecto hover en las filas para mejor interactividad */
   .custom-table tbody tr:hover {
-    background-color: #f1f1f1;   /* Highlight row on hover */
+    background-color: #f1f1f1;   /* Resaltar la fila al pasar el ratón por encima */
   }
   
-  /* Optional: Responsive Table for small screens */
+  /* Opcional: Tabla responsiva para pantallas pequeñas */
   @media (max-width: 600px) {
     .custom-table {
-      font-size: 12px;            /* Smaller font size for mobile devices */
+      font-size: 12px; /* Tamaño de fuente más pequeño para dispositivos móviles */
     }
   
     .custom-table th, .custom-table td {
-      padding: 10px;              /* Reduce padding for mobile devices */
+      padding: 10px;  /* Reducir el relleno para dispositivos móviles */
     }
   
     .custom-table th {
-      font-size: 14px;            /* Make the header text slightly larger */
+      font-size: 14px; /* Hacer el texto del encabezado ligeramente más grande */
     }
   }
   .container {
@@ -72,25 +72,23 @@
   .content {
     margin-top: 10px;
   }
-  /* Styling for the info box */
+  /* Estilo para la caja de información */
 .info-box {
     background-color:#daecf4;
-    color:#6d9ebb;               /* White text color */
-    padding: 15px;              /* Padding around the content */
-    border-radius: 8px;         /* Slightly curved borders */
+    color:#6d9ebb;             /* Color de texto azul */
+    padding: 15px;               /* Relleno alrededor del contenido */
+    border-radius: 8px;          /* Bordes ligeramente curvados */
     border: 1px solid #a0cadd;
-    font-size: 16px;            /* Font size for the text */
-    margin: 20px 0;             /* Space above and below the box */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Slight shadow for depth */
-    text-align: center;           /* Horizontally center the text */
-    display: flex;                /* Enable flexbox */
-    justify-content: center;      /* Horizontally center the content (for flexbox) */
-    align-items: center;          /* Vertically center the content (for flexbox) */
+    font-size: 16px;             /* Tamaño de fuente para el texto */
+    margin: 20px 0;              /* Espacio arriba y abajo de la caja */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Sombra ligera para profundidad */
+    text-align: center;          /* Centrar horizontalmente el texto */
+    display: flex;               /* Habilitar flexbox */
+    justify-content: center;     /* Centrar horizontalmente el contenido (para flexbox) */
+    align-items: center;         /* Centrar verticalmente el contenido (para flexbox) */
   }
   .refresh-icon {
-    font-size: 20px;             /* Set the size of the icon */
-    cursor: pointer;            /* Change the cursor to pointer on hover */
-    color: #007bff;              /* Blue color for the refresh icon */
+    font-size: 20px;             /* Establecer el tamaño del icono */
+    cursor: pointer;             /* Cambiar el cursor a puntero al pasar el ratón por encima */
+    color: #007bff;            /* Color azul para el icono de actualización */
   }
-
-  

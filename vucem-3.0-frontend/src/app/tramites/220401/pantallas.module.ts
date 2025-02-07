@@ -12,7 +12,7 @@ import { NavComponent } from '../../shared/components/nav/nav.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PantallasRoutingModule } from './pantallas-routing.module';
 import { PagoDeDerechoComponent } from './components/pago-de-derecho/pago-de-derecho.component';
-import { SolicitudComponent } from './components/solicitud/solicitud.component';
+import { SolicitudPantallasComponent } from './components/solicitud/solicitud.component';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { TransporteComponent } from './pages/transporte/transporte.component';
@@ -23,9 +23,8 @@ import { SelectCatalogosComponent } from '../../shared/components/select-catalog
   declarations: [
     PantallasComponent,
     DatosComponent,
-    TransporteComponent,
-    
-  ],
+    TransporteComponent
+   ],
   imports: [
     CommonModule,
     PagoDeDerechoComponent,
@@ -34,7 +33,7 @@ import { SelectCatalogosComponent } from '../../shared/components/select-catalog
     WizardComponent,
     TituloComponent,
     BtnContinuarComponent,
-    SolicitudComponent,
+    SolicitudPantallasComponent,
     DatosDelComponent,
     FormsModule,
     ReactiveFormsModule,
