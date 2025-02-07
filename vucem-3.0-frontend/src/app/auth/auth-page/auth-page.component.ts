@@ -29,7 +29,8 @@ export class AuthPageComponent {
         COOKIE.NOMBRE_COOKIE_ID_USUARIO,
         datosUsuario.id_user
       );
-      this.router.navigateByUrl('/servicios-extraordinarios/solicitud');
+      // this.router.navigateByUrl('/servicios-extraordinarios/solicitud');
+      this.router.navigateByUrl('/pantallas/datosdecomponentes');
     }
   }
 }

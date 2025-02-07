@@ -6,6 +6,7 @@ import { SelectCatalogosComponent } from '../../../../shared/components/select-c
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import tratadosDropdown from '../../../../../assets/json/110101/tratdos-dropdown.json';
+import tratadosTable from '../../../../../assets/json/110101/tratados-table.json';
 
 @Component({
   selector: 'app-tratados',
@@ -52,21 +53,21 @@ export class TratadosComponent {
   }
 
   /**
-  * Encabezados comunes de la tabla.
-  * 
-  * @property {string[]} commonTableHeaders - Array de encabezados de tabla.
-  */
-  commonTableHeaders = ['Pais o bloque', 'Tratado o Acuerdo', 'Criterio de origen'];
+   * Encabezados comunes de la tabla de tratados.
+   * 
+   * @property {string[]} commonTableHeaders - Array de cadenas de encabezados de tabla.
+   */
+  commonTableHeaders = tratadosTable.tableHeader;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  mercanciasData: any[] = [];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+  tableBody:any[] = tratadosTable.tableBody
 
  /**
   * Agrega un nuevo tratado al array mercanciasData.
   */
   agregarTratado() {
     if (this.selectedValues.pais && this.selectedValues.tratado && this.selectedValues.origen) {
-      this.mercanciasData.push({
+      this.tableBody.push({
         tbodyData: [
           this.selectedValues.pais.descripcion,
           this.selectedValues.tratado.descripcion,
