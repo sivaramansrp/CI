@@ -1,4 +1,4 @@
-<fieldset [formGroupName]="controlKey">
+<fieldset [formGroupName]="claveDeControl">
   <ng-titulo titulo="Medio de transporte" />
   <div class="row">
     <div class="col-md-4">
@@ -22,8 +22,8 @@
           id="puntos"
         />
         <div
-          *ngIf="parentFormGroup.get(controlKey)?.get('identificacionTransporte')?.errors?.['maxlength'] &&
-    parentFormGroup.get(controlKey)?.get('identificacionTransporte')?.touched
+          *ngIf="grupoformulariopadre.get(claveDeControl)?.get('identificacionTransporte')?.errors?.['maxlength'] &&
+          grupoformulariopadre.get(claveDeControl)?.get('identificacionTransporte')?.touched
   "
         >
           Se superó la longitud máxima de 30 caracteres.
@@ -72,13 +72,13 @@
             <th>
               <input type="checkbox" />
             </th>
-            @for (item of mercanciaTableData?.hMercanciaTabla; track $index) {
+            @for (item of mercanciaTablaData?.hMercanciaTabla; track $index) {
             <th>{{ item }}</th>
             }
           </tr>
         </thead>
         <tbody>
-          @for (item of mercanciaTableData?.dMercanciaBody; let i = $index;
+          @for (item of mercanciaTablaData?.dMercanciaBody; let i = $index;
           track i) {
           <tr>
             <td>

@@ -10,6 +10,9 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
   styleUrl: './carros-de-ferrocarril.component.scss'
 })
 export class CarrosDeFerrocarrilComponent {
+   /** Matriz para contener datos para cada fila de la tabla */
   @Input() tablaFilaDatos: CarroFerrocarril[];
+
+  /** Matriz para contener etiquetas de encabezado para la tabla */
   @Input() tablaHeadData: string[];
 }

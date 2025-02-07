@@ -5,11 +5,14 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
 @Component({
   selector: 'app-historial-inspeccion-fisica',
   standalone: true,
-  imports:[TituloComponent],
+  imports: [TituloComponent],
   templateUrl: './historial-inspeccion-fisica.component.html',
-  styleUrl: './historial-inspeccion-fisica.component.scss'
+  styleUrl: './historial-inspeccion-fisica.component.scss',
 })
 export class HistorialInspeccionFisicaComponent {
-  @Input() tablaHeadData : string[];
+  /** Matriz para contener etiquetas de encabezado para la tabla */
+  @Input() tablaHeadData: string[];
+
+  /** Matriz para contener datos para cada fila de la tabla */
   @Input() tablaFilaDatos: InspeccionFisica[];
 }

@@ -96,7 +96,7 @@
       "numeroTotalCarros": 15
     }
   ],
-  "inspecciones": [
+  "dHistorialInspecciones": [
     {
       "numeroPartidaMercancia": "12345",
       "fraccionArancelaria": "0101.21.00",

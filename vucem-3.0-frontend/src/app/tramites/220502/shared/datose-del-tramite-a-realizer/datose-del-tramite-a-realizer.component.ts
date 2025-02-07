@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import {
   ControlContainer,
-  FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -39,14 +38,25 @@ import { Catalogo } from '../../../../core/models/shared/catalogos.model';
   styleUrl: './datose-del-tramite-a-realizer.component.scss',
 })
 export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
+  /**
+   * Input key used to identify the control inside the parent form group.
+   */
   @Input() controlKey: string = '';
+
+  /**
+   * Injects the parent form control container.
+   */
   parentContainer = inject(ControlContainer);
 
-  get parentFormGroup() {
+  /**
+   * Getter to access the parent form group.
+   */
+  get parentFormGroup(): FormGroup {
     return this.parentContainer.control as FormGroup;
   }
+
   /**
-   * Datos del catálogo de régimen de mercancía.
+   * Form select options for different catalog data.
    */
   certificadosAutorizados!: CatalogosSelect;
   horaDeInspeccion!: CatalogosSelect;
@@ -55,12 +65,14 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
   puntoDeInspeccion!: CatalogosSelect;
 
   /**
-   * Fecha final de entrada.
+   * Date input field initialized with FECHA_INSPECCION constant.
    */
   fechaInicioInput: InputFecha = FECHA_INSPECCION;
 
-  constructor(private fb: FormBuilder) {}
-  ngOnInit() {
+  /**
+   * Lifecycle hook that initializes form controls when the component is loaded.
+   */
+  ngOnInit(): void {
     if (this.controlKey) {
       this.parentFormGroup.addControl(
         this.controlKey,
@@ -70,215 +82,107 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
           aduanaDeIngreso: new FormControl('', [Validators.required]),
           sanidadAgropecuaria: new FormControl('', [Validators.required]),
           puntoDeInspeccion: new FormControl('', [Validators.required]),
-          fechaDeInspección: new FormControl('', [Validators.required]),
+          fechaDeInspeccion: new FormControl('', [Validators.required]),
         })
       );
     }
-    this.getRegimenMercancia();
+    this.cargarDatosIniciales();
   }
 
   /**
-   * Método para seleccionar el régimen de mercancía.
-   * @param e Régimen de mercancía seleccionado.
+   * Handles the selection of 'Certificados Autorizados' and updates the form control.
+   * @param e The selected catalog item.
    */
   certificadosSeleccion(e: Catalogo): void {
-    if (this.controlKey && this.parentFormGroup.contains(this.controlKey)) {
-      this.parentFormGroup.controls[this.controlKey].patchValue({
-        certificadosAutorizados: e.descripcion,
-      });
-    }
+    this.updateFormValue('certificadosAutorizados', e.descripcion);
   }
 
+  /**
+   * Handles the selection of 'Hora de Inspección' and updates the form control.
+   * @param e The selected catalog item.
+   */
   horaDeSeleccion(e: Catalogo): void {
-    if (this.controlKey && this.parentFormGroup.contains(this.controlKey)) {
-      this.parentFormGroup.controls[this.controlKey].patchValue({
-        horaDeInspeccion: e.descripcion,
-      });
-    }
+    this.updateFormValue('horaDeInspeccion', e.descripcion);
   }
 
+  /**
+   * Handles the selection of 'Aduana de Ingreso' and updates the form control.
+   * @param e The selected catalog item.
+   */
   aduanaDeSeleccion(e: Catalogo): void {
-    if (this.controlKey && this.parentFormGroup.contains(this.controlKey)) {
-      this.parentFormGroup.controls[this.controlKey].patchValue({
-        aduanaDeIngreso: e.descripcion,
-      });
-    }
+    this.updateFormValue('aduanaDeIngreso', e.descripcion);
   }
 
+  /**
+   * Handles the selection of 'Sanidad Agropecuaria' and updates the form control.
+   * @param e The selected catalog item.
+   */
   sanidadSeleccion(e: Catalogo): void {
-    if (this.controlKey && this.parentFormGroup.contains(this.controlKey)) {
-      this.parentFormGroup.controls[this.controlKey].patchValue({
-        sanidadAgropecuaria: e.descripcion,
-      });
-    }
+    this.updateFormValue('sanidadAgropecuaria', e.descripcion);
   }
 
+  /**
+   * Handles the selection of 'Punto de Inspección' and updates the form control.
+   * @param e The selected catalog item.
+   */
   puntoDeSeleccion(e: Catalogo): void {
+    this.updateFormValue('puntoDeInspeccion', e.descripcion);
+  }
+
+  /**
+   * Updates a specific form control with a new value.
+   * @param controlName The name of the control to update.
+   * @param value The new value to set.
+   */
+  private updateFormValue(controlName: string, value: string): void {
     if (this.controlKey && this.parentFormGroup.contains(this.controlKey)) {
       this.parentFormGroup.controls[this.controlKey].patchValue({
-        puntoDeInspeccion: e.descripcion,
+        [controlName]: value,
       });
     }
   }
 
   /**
-   * Método para obtener el catálogo de régimen de mercancía.
+   * Loads initial catalog data for the form selects.
    */
-  getRegimenMercancia(): void {
-    this.certificadosAutorizados = {
-      labelNombre: 'Certificados autorizados penientes',
-      required: true,
+  cargarDatosIniciales(): void {
+    const catalogoTemplate = (label: string, required: boolean) => ({
+      labelNombre: label,
+      required,
       primerOpcion: 'Selecciona un valor',
       catalogos: [
-        {
-          id: 1,
-          descripcion: 'abc',
-          tam: 'abc',
-          dpi: 'abc',
-        },
-        {
-          id: 2,
-          descripcion: 'cde',
-          tam: 'cde',
-          dpi: 'cde',
-        },
-        {
-          id: 3,
-          descripcion: 'xyz',
-          tam: 'xyz',
-          dpi: 'xyz',
-        },
+        { id: 1, descripcion: 'abc', tam: 'abc', dpi: 'abc' },
+        { id: 2, descripcion: 'cde', tam: 'cde', dpi: 'cde' },
+        { id: 3, descripcion: 'xyz', tam: 'xyz', dpi: 'xyz' },
       ],
-    };
-    this.horaDeInspeccion = {
-      labelNombre: 'Hora de inspección',
-      required: true,
-      primerOpcion: 'Selecciona un valor',
-      catalogos: [
-        {
-          id: 1,
-          descripcion: 'abc',
-          tam: 'abc',
-          dpi: 'abc',
-        },
-        {
-          id: 2,
-          descripcion: 'cde',
-          tam: 'cde',
-          dpi: 'cde',
-        },
-        {
-          id: 3,
-          descripcion: 'xyz',
-          tam: 'xyz',
-          dpi: 'xyz',
-        },
-      ],
-    };
-    this.aduanaDeIngreso = {
-      labelNombre: 'Aduana de ingreso',
-      required: false,
-      primerOpcion: 'Selecciona un valor',
-      catalogos: [
-        {
-          id: 1,
-          descripcion: 'abc',
-          tam: 'abc',
-          dpi: 'abc',
-        },
-        {
-          id: 2,
-          descripcion: 'cde',
-          tam: 'cde',
-          dpi: 'cde',
-        },
-        {
-          id: 3,
-          descripcion: 'xyz',
-          tam: 'xyz',
-          dpi: 'xyz',
-        },
-      ],
-    };
-    this.sanidadAgropecuaria = {
-      labelNombre: 'Oficina de inspección de Sanidad Agropecuaria',
-      required: false,
-      primerOpcion: 'Selecciona un valor',
-      catalogos: [
-        {
-          id: 1,
-          descripcion: 'abc',
-          tam: 'abc',
-          dpi: 'abc',
-        },
-        {
-          id: 2,
-          descripcion: 'cde',
-          tam: 'cde',
-          dpi: 'cde',
-        },
-        {
-          id: 3,
-          descripcion: 'xyz',
-          tam: 'xyz',
-          dpi: 'xyz',
-        },
-      ],
-    };
-    this.puntoDeInspeccion = {
-      labelNombre: 'Punto de inspección',
-      required: false,
-      primerOpcion: 'Selecciona un valor',
-      catalogos: [
-        {
-          id: 1,
-          descripcion: 'abc',
-          tam: 'abc',
-          dpi: 'abc',
-        },
-        {
-          id: 2,
-          descripcion: 'cde',
-          tam: 'cde',
-          dpi: 'cde',
-        },
-        {
-          id: 3,
-          descripcion: 'xyz',
-          tam: 'xyz',
-          dpi: 'xyz',
-        },
-      ],
-    };
+    });
+
+    this.certificadosAutorizados = catalogoTemplate('Certificados autorizados pendientes', true);
+    this.horaDeInspeccion = catalogoTemplate('Hora de inspección', true);
+    this.aduanaDeIngreso = catalogoTemplate('Aduana de ingreso', false);
+    this.sanidadAgropecuaria = catalogoTemplate('Oficina de inspección de Sanidad Agropecuaria', false);
+    this.puntoDeInspeccion = catalogoTemplate('Punto de inspección', false);
   }
 
   /**
-   * Formulario principal de la solicitud.
-   */
-  FormSolicitud!: FormGroup;
-
-  /**
-   * Obtiene el grupo de formulario 'datosServicio' del formulario principal 'FormSolicitud'.
-   *
-   * @returns {FormGroup} El grupo de formulario 'datosServicio'.
+   * Getter to access the 'datosServicio' form group.
    */
   get datosServicio(): FormGroup {
     return this.parentFormGroup.get('datosServicio') as FormGroup;
   }
 
   /**
-   * Método para cambiar la fecha final.
-   * @param nuevo_valor Nuevo valor de la fecha final.
+   * Handles changes to the start date field.
+   * @param nuevo_valor The new date value selected.
    */
   cambioFechaInicio(nuevo_valor: string): void {
-    if (this.controlKey && this.parentFormGroup.contains(this.controlKey)) {
-      this.parentFormGroup.controls[this.controlKey].patchValue({
-        fechaDeInspección: nuevo_valor,
-      });
-    }
+    this.updateFormValue('fechaDeInspeccion', nuevo_valor);
   }
 
-  ngOnDestroy() {
+  /**
+   * Lifecycle hook to clean up form controls when the component is destroyed.
+   */
+  ngOnDestroy(): void {
     if (this.controlKey && this.parentFormGroup.contains(this.controlKey)) {
       this.parentFormGroup.removeControl(this.controlKey);
     }

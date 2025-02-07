@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
-  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  Validators,
 } from '@angular/forms';
 import {
   CarroFerrocarril,
@@ -57,30 +55,30 @@ export class SolicitudComponent implements OnInit {
     catalogos: [
       {
         id: 1,
-        descripcion: 'abc',
-        tam: 'abc',
-        dpi: 'abc',
+        descripcion: 'transporte 1',
+        tam: 'transporte 1',
+        dpi: 'transporte 1',
       },
       {
         id: 2,
-        descripcion: 'cde',
-        tam: 'cde',
-        dpi: 'cde',
+        descripcion: 'transporte 2',
+        tam: 'transporte 2',
+        dpi: 'transporte 2',
       },
       {
         id: 3,
-        descripcion: 'xyz',
-        tam: 'xyz',
-        dpi: 'xyz',
+        descripcion: 'transporte 3',
+        tam: 'transporte 3',
+        dpi: 'transporte 3',
       },
     ],
-  };;
+  };
   datosMercancia: DatosMercancia[];
   hCarroFerrocarril: string[];
   carrosDeFerrocarrilPager: CarroFerrocarril[];
   hHistorialinspeccion: string[];
   dHistorialInspecciones: InspeccionFisica[];
-  mercanciaTableData: mercanciaTablaData;
+  mercanciaTablaData: mercanciaTablaData;
   constructor(
     private fb: FormBuilder,
     private solicitudService: SolicitudPantallasService
@@ -102,32 +100,21 @@ export class SolicitudComponent implements OnInit {
           hCarroFerrocarril: string[];
           hTabla: string[];
           hHistorialinspeccion: string[];
-          inspecciones: InspeccionFisica[];
+          dHistorialInspecciones: InspeccionFisica[];
           carrosDeFerrocarrilPager: CarroFerrocarril[];
           datosMercancia: DatosMercancia[];
         }) => {
           this.hHistorialinspeccion = data.hHistorialinspeccion;
-          this.dHistorialInspecciones = data.inspecciones;
+          this.dHistorialInspecciones = data.dHistorialInspecciones;
           this.carrosDeFerrocarrilPager = data.carrosDeFerrocarrilPager;
-          // this.datosMercancia = data.datosMercancia;
-          // this.hMercancia = data.hTabla;
           this.hCarroFerrocarril = data.hCarroFerrocarril;
           this.hSolicitud = data.hSolicitud;
           this.dSolicitud = data.dSolicitud;
-          this.mercanciaTableData = {
+          this.mercanciaTablaData = {
             hMercanciaTabla :data.hTabla,
             dMercanciaBody:data.datosMercancia
           }
         }
       );
-  }
-
-  alternarSeleccionarTodo(event: Event) {
-    const checked = (event.target as HTMLInputElement).checked;
-    this.datosMercancia.forEach((item) => (item.selected = checked));
-  }
-
-  submitForm(){
-    console.log(this.form.value)
   }
 }

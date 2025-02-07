@@ -32,39 +32,70 @@ import { CatalogosSelect } from '../../../../core/models/shared/components.model
   styleUrl: './medio-transporte.component.scss',
 })
 export class MedioTransporteComponent implements OnInit, OnDestroy {
-  @Input() controlKey: string = '';
-  @Input() mercanciaTableData: mercanciaTablaData;
+  /** Propiedad de entrada para identificar la clave de control en el formulario principal */
+  @Input() claveDeControl: string = '';
+
+  /** Propiedad de entrada para contener datos relacionados con mercancia. */
+  @Input() mercanciaTablaData: mercanciaTablaData;
+
+  /** Propiedad de entrada para gestionar la selección del método de transporte. */
   @Input() mediodetransporte!: CatalogosSelect;
+
+  /** Inyectar el ControlContainer principal para administrar los controles de formulario */
   parentContainer = inject(ControlContainer);
-  get parentFormGroup() {
+
+  /** Getter para acceder al grupo de formularios principal */
+  get grupoformulariopadre() {
     return this.parentContainer.control as FormGroup;
   }
 
+  /**
+   * Gancho de ciclo de vida que inicializa el componente.
+   * Agrega un control de formulario dinámico al formulario principal
+   */
   ngOnInit() {
-    if (this.controlKey) {
-      this.parentFormGroup.addControl(
-        this.controlKey,
+    if (this.claveDeControl) {
+      // Agregar un nuevo FormGroup dinámicamente al formulario principal
+      this.grupoformulariopadre.addControl(
+        this.claveDeControl,
         new FormGroup({
           transporteIdMedio: new FormControl('', [Validators.required]),
-          identificacionTransporte: new FormControl('', [Validators.maxLength(30)]),
+          identificacionTransporte: new FormControl('', [
+            Validators.maxLength(30),
+          ]),
           esSolicitudFerros: new FormControl('', [Validators.required]),
-          totalDeGuiasAmparadas: new FormControl('', [])
+          totalDeGuiasAmparadas: new FormControl('', []),
         })
       );
     }
   }
 
+  /**
+   * Maneja la selección de un método de transporte.
+   * Actualiza el formulario con la descripción del transporte seleccionado.
+   * @param e - El artículo del catálogo seleccionado que representa el método de transporte.
+   */
   selecctionMediodetransporte(e) {
-    if (this.controlKey && this.parentFormGroup.contains(this.controlKey)) {
-      this.parentFormGroup.controls[this.controlKey].patchValue({
+    if (
+      this.claveDeControl &&
+      this.grupoformulariopadre.contains(this.claveDeControl)
+    ) {
+      this.grupoformulariopadre.controls[this.claveDeControl].patchValue({
         transporteIdMedio: e.descripcion,
       });
     }
   }
 
+  /**
+   * Gancho de ciclo de vida que limpia el componente.
+   * Elimina el control de formulario dinámico del formulario principal.
+   */
   ngOnDestroy() {
-    if (this.controlKey && this.parentFormGroup.contains(this.controlKey)) {
-      this.parentFormGroup.removeControl(this.controlKey);
+    if (
+      this.claveDeControl &&
+      this.grupoformulariopadre.contains(this.claveDeControl)
+    ) {
+      this.grupoformulariopadre.removeControl(this.claveDeControl);
     }
   }
 }

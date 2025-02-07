@@ -13,11 +13,28 @@ import { AlertComponent } from '../../../../shared/components/alert/alert.compon
   styleUrl: './solicitud-datos.component.scss'
 })
 export class SolicitudDatosComponent {
+   /**
+   * Gets the enum data and sets TEXTOS values
+   */
   TEXTOS = TEXTOS;
+ /**
+   * Controls the collapsible panel's visibility
+   * Default value is set to true (expanded)
+   */
   colapsable: boolean = true;
+  /**
+   * Receives table header data as an input property
+   */
   @Input() tablaHeadData : string[];
+  /**
+   * Receives the list of solicitudes as table row data
+   */
   @Input() tablaFilaDatos : Solicitud[];
-  mostrar_colapsable() {
+
+ /**
+   * Toggles the collapsible panel (expand/collapse)
+   */
+ mostrarColapsable() {
     this.colapsable = !this.colapsable;
   }
 }

@@ -1,4 +1,4 @@
-  <fieldset [formGroupName]="controlKey">
+  <fieldset [formGroupName]="claveDeControl">
     <ng-titulo titulo="Responsable inspección en punto" />
     <div class="row">
       <div class="col-md-4">
@@ -27,8 +27,8 @@
       </div>
       <div class="col-md-4">
         <div class="form-field">
-          <select-catalogos [catalogosDatos]="datosRegimenMercancia"
-                (valorSeleccion)="regimenMercancia($event)" />
+          <select-catalogos [catalogosDatos]="tipoContenedor"
+                (valorSeleccion)="tipoContenedorSeleccion($event)" />
         </div>
     </div>
     </div>

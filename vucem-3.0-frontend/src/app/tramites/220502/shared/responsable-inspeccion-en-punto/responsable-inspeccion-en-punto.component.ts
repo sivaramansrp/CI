@@ -21,7 +21,7 @@ import { CatalogosSelect } from '../../../../core/models/shared/components.model
     RouterModule,
     ReactiveFormsModule,
     TituloComponent,
-    SelectCatalogosComponent
+    SelectCatalogosComponent,
   ],
   viewProviders: [
     {
@@ -36,29 +36,34 @@ import { CatalogosSelect } from '../../../../core/models/shared/components.model
 export class ResponsableInspeccionEnPuntoComponent
   implements OnInit, OnDestroy
 {
-  @Input() controlKey: string = '';
-  parentContainer = inject(ControlContainer);
+  /** Propiedad de entrada para identificar la clave de control en el formulario principal */
+  @Input() claveDeControl: string = '';
 
-  get parentFormGroup() {
-    return this.parentContainer.control as FormGroup;
+  /** Inyectar el ControlContainer principal para administrar los controles de formulario*/
+  contenedorPrincipal = inject(ControlContainer);
+
+  /** Getter para acceder al grupo de formularios principal */
+  get grupoformulariopadre() {
+    return this.contenedorPrincipal.control as FormGroup;
   }
-  /**
-   * Datos del catálogo de régimen de mercancía.
-   */
-  datosRegimenMercancia!: CatalogosSelect;
+
+  /** Almacena datos del catálogo para el tipo de contenedor */
+  tipoContenedor!: CatalogosSelect;
 
   /**
-   * Régimen de mercancía seleccionado.
+   * Gancho de ciclo de vida que inicializa el componente.
+   * Agrega un control de formulario dinámico y carga datos iniciales.
    */
-  regimenMercanciaSeleccionada!: Catalogo;
-
-  // constructor(private peximService: PeximService){}
   ngOnInit() {
-    if (this.controlKey) {
-      this.parentFormGroup.addControl(
-        this.controlKey,
+    if (this.claveDeControl) {
+      // Agregar un nuevo FormGroup dinámicamente al formulario principal
+      this.grupoformulariopadre.addControl(
+        this.claveDeControl,
         new FormGroup({
-          nombre: new FormControl('', [Validators.required, Validators.maxLength(150)]),
+          nombre: new FormControl('', [
+            Validators.required,
+            Validators.maxLength(150),
+          ]),
           primerapellido: new FormControl('', []),
           segyndoapellido: new FormControl('', []),
           mercancia: new FormControl('', [Validators.required]),
@@ -66,27 +71,27 @@ export class ResponsableInspeccionEnPuntoComponent
         })
       );
     }
-    this.getRegimenMercancia();
+    this.cargarDatosIniciales(); // Cargar datos del catálogo inicial
   }
 
   /**
-   * Método para seleccionar el régimen de mercancía.
-   * @param e Régimen de mercancía seleccionado.
+   * Maneja la selección de un artículo del catálogo.
+   * Actualiza el formulario con la descripción del catálogo seleccionado.
+   * @param e - El artículo del catálogo seleccionado
    */
-  regimenMercancia(e: Catalogo): void {
-    this.regimenMercanciaSeleccionada = e;
-    if (this.controlKey && this.parentFormGroup.contains(this.controlKey)) {
-      this.parentFormGroup.controls[this.controlKey].patchValue({
+  tipoContenedorSeleccion(e: Catalogo): void {
+    if (this.claveDeControl && this.grupoformulariopadre.contains(this.claveDeControl)) {
+      this.grupoformulariopadre.controls[this.claveDeControl].patchValue({
         tipocontenedor: e.descripcion,
       });
     }
   }
 
   /**
-   * Método para obtener el catálogo de régimen de mercancía.
+   * Carga datos del catálogo inicial para el tipo contenedor.
    */
-  getRegimenMercancia(): void {
-    this.datosRegimenMercancia = {
+  cargarDatosIniciales(): void {
+    this.tipoContenedor = {
       labelNombre: 'Tipo contenedor',
       required: false,
       primerOpcion: 'Selecciona un valor',
@@ -113,9 +118,13 @@ export class ResponsableInspeccionEnPuntoComponent
     };
   }
 
+  /**
+   * Gancho de ciclo de vida que limpia el componente.
+   * Elimina el control de formulario del formulario principal.
+   */
   ngOnDestroy() {
-    if (this.controlKey && this.parentFormGroup.contains(this.controlKey)) {
-      this.parentFormGroup.removeControl(this.controlKey);
+    if (this.claveDeControl && this.grupoformulariopadre.contains(this.claveDeControl)) {
+      this.grupoformulariopadre.removeControl(this.claveDeControl);
     }
   }
 }
