@@ -9,6 +9,7 @@ import { ELVALORALERTA } from '../../../../shared/constantes/servicios-extraordi
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import { INTRODUZCA_NUMERO, REQUERIDO } from '../../../../shared/constantes/mensajes-error-formularios';
+import mercancia from '../../../../../assets/json/110101/mercancia.json'
 
 /**
 * Este componente se utiliza para mostrar la forma del datosdelamercancia. - 110101
@@ -31,7 +32,10 @@ export class DatosDeLaComponent implements OnInit {
   public booleanVariable = '#cccccc';
   public MENSAJE_REQUERIDO = REQUERIDO;
   public NUMERO_REQUERIDO = INTRODUZCA_NUMERO;
-
+  /**
+   * apiDatosDeRespuesta se utiliza para obtener datos del nombre de archivo JSON ficticio como mercancia.json
+   */
+  public apiDatosDeRespuesta = mercancia;
 
 
     /**
@@ -48,7 +52,7 @@ export class DatosDeLaComponent implements OnInit {
   } 
 
   ngOnInit(): void {
-    
+    this.getFormDatosDeMercancia();
   }
 
   /**
@@ -61,11 +65,22 @@ export class DatosDeLaComponent implements OnInit {
     this.formMercancia =  this.fb.group({
       nombreComercial: ['',Validators.required],
       nombreIngles: ['',Validators.required],
-      fraccionArancelaria: ['816346',[Validators.maxLength(8),Validators.pattern(this.validacionesService.patronDeNumero)]],
-      descripcion: ['Usados, excepto lo comprendido en la fracción arancelaria 8704.21.01'],
-      valorTransaccion: ['123.0000',Validators.maxLength(20)]
+      fraccionArancelaria: ['',[Validators.maxLength(8),Validators.pattern(this.validacionesService.patronDeNumero)]],
+      descripcion: [''],
+      valorTransaccion: ['',Validators.maxLength(20)]
     });
 
+  }
+
+  /**
+   * getFormDatosDeMercancia() se utiliza para establecer el valor del formulario Mercancia de acuerdo con el nombre del controlador del formulario.
+   * @returns valor del controlador de formular
+   */
+
+  public getFormDatosDeMercancia() {
+    this.formMercancia.get('fraccionArancelaria')?.setValue(this.apiDatosDeRespuesta.fraccionArancelaria);
+    this.formMercancia.get('descripcion')?.setValue(this.apiDatosDeRespuesta.descripcion);
+    this.formMercancia.get('valorTransaccion')?.setValue(this.apiDatosDeRespuesta.valorTransaccion);
   }
 
     /**
