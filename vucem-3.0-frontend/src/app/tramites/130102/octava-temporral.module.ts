@@ -14,6 +14,7 @@ import { UsoEspicificoComponent } from "./component/uso-espicifico/uso-espicific
 import { CriterioDeDictComponent } from "./component/criterio-de-dict/criterio-de-dict.component";
 import { PaisProcendenciaComponent } from "./component/pais-procendencia/pais-procendencia.component";
 import { RepresentacionComponent } from "./component/representacion/representacion.component";
+import { BtnContinuarComponent } from "../../shared/components/btn-continuar/btn-continuar.component";
 
 
 
@@ -38,7 +39,8 @@ import { RepresentacionComponent } from "./component/representacion/representaci
     UsoEspicificoComponent,
     CriterioDeDictComponent,
     PaisProcendenciaComponent,
-    RepresentacionComponent
+    RepresentacionComponent,
+    BtnContinuarComponent
 ]
 })
 export class OctavaTemporralModule { }
