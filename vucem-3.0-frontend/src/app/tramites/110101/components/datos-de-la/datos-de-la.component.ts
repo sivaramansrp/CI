@@ -26,10 +26,23 @@ import mercancia from '../../../../../assets/json/110101/mercancia.json'
 })
 export class DatosDeLaComponent implements OnInit {
 
+  /**
+   * Una cadena que representa la clase CSS para una alerta de advertencia.
+   * Esta clase se utiliza para aplicar estilo a los mensajes de advertencia en el componente.
+   */
   public warningAlert = 'alert-warning';
   public TEXTOS = ELVALORALERTA;
+  /**
+   * Una instancia de FormGroup que representa el formulario para Mercancia (bienes).
+   * Este formulario se utiliza para capturar y validar los datos relacionados con Mercancia.
+   */
   public formMercancia!: FormGroup;
+  /** Adición de color de fondo dinámico al área de texto */
   public booleanVariable = '#cccccc';
+  /**
+   * Una constante que contiene la cadena de mensaje requerida.
+   * Este mensaje se utiliza para indicar que un campo es obligatorio.
+   */
   public MENSAJE_REQUERIDO = REQUERIDO;
   public NUMERO_REQUERIDO = INTRODUZCA_NUMERO;
   /**
@@ -56,11 +69,13 @@ export class DatosDeLaComponent implements OnInit {
   }
 
   /**
-   * 
-   * @description createFormMercancia se utiliza para crear un nombre de formulario como formMercancia que contiene 5 campos en su
-   * @returns Validaciones del formulario
-   */
-
+    * Crea un grupo de formularios reactivos para "Mercancia" con los siguientes controles:
+    * - nombreComercial: Un campo de texto obligatorio.
+    * - nombreIngles: Un campo de texto obligatorio.
+    * - fraccionArancelaria: Un campo de texto con una longitud máxima de 8 caracteres y un validador de patrones para valores numéricos.
+    * - descripcion: Un campo de texto opcional.
+    * - valorTransaccion: Un campo de texto con una longitud máxima de 20 caracteres.
+    */
   public createFormMercancia() {
     this.formMercancia =  this.fb.group({
       nombreComercial: ['',Validators.required],
@@ -72,11 +87,15 @@ export class DatosDeLaComponent implements OnInit {
 
   }
 
-  /**
-   * getFormDatosDeMercancia() se utiliza para establecer el valor del formulario Mercancia de acuerdo con el nombre del controlador del formulario.
-   * @returns valor del controlador de formular
-   */
 
+  /**
+    * Rellena los campos del formulario en 'formMercancia' con datos de 'apiDatosDeRespuesta'.
+    *
+    * Este método establece los valores para los siguientes controles de formulario:
+    * - 'fraccionArancelaria': Establece el valor de 'apiDatosDeRespuesta.fraccionArancelaria'.
+    * - 'descripcion': Establece el valor de 'apiDatosDeRespuesta.descripcion'.
+    * - 'valorTransaccion': Establece el valor de 'apiDatosDeRespuesta.valorTransaccion'.
+    */
   public getFormDatosDeMercancia() {
     this.formMercancia.get('fraccionArancelaria')?.setValue(this.apiDatosDeRespuesta.fraccionArancelaria);
     this.formMercancia.get('descripcion')?.setValue(this.apiDatosDeRespuesta.descripcion);
