@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import mockData from '../../../../../assets/json/110101/solicitante-mockdata.json';
+
 
 
 @Component({
@@ -26,19 +28,36 @@ export class SolicitanteComponent implements OnInit {
  * @property {string} actividadEconomica - La actividad económica o sector empresarial del solicitante.
  * @property {string} correoElectronico - La dirección de correo electrónico del solicitante.
  */
-  mockData = {
-    rfc: 'AAL0409235E6',
-    denominacion: 'AGRICOLA ALPE S DE RL DE CV',
-    actividadEconomica: 'Siembra, cultivo y cosecha de papa',
-    correoElectronico: 'vucem2.5@hotmail.com'
-  };
+ 
   
   ngOnInit(): void {
     this.solicitudForm = this.fb.group({
-      rfc: this.mockData.rfc,
-      denominacion: this.mockData.denominacion,
-      actividadEconomica: this.mockData.actividadEconomica,
-      correoElectronico: this.mockData.correoElectronico
+      rfc: [''],
+      denominacion: [''],
+      actividadEconomica: [''],
+      correoElectronico: ['']
     });
+    this.setFormValues()
+  }
+
+  /**
+ * Establece los valores del formulario `solicitudForm` utilizando datos simulados.
+ * 
+ * Este método llena los siguientes campos en el formulario:
+ * - rfc: El RFC (Registro Federal de Contribuyentes).
+ * - denominacion: La denominación o razón social.
+ * - actividadEconomica: La actividad económica.
+ * - correoElectronico: La dirección de correo electrónico.
+ * 
+ * @remarks
+ * Este método asume que `mockData` contiene los campos necesarios
+ * y que `solicitudForm` está correctamente inicializado.
+ */
+
+  setFormValues(){
+    this.solicitudForm.get('rfc')?.setValue(mockData.rfc);
+    this.solicitudForm.get('denominacion')?.setValue(mockData.denominacion);
+    this.solicitudForm.get('actividadEconomica')?.setValue(mockData.actividadEconomica);
+    this.solicitudForm.get('correoElectronico')?.setValue(mockData.correoElectronico);
   }
 }
