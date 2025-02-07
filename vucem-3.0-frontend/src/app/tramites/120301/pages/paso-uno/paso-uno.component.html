@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="row">
+    <ul class="nav nav-tabs">
+      <li [ngClass]="indice === 1 ? 'active' : ''">
+        <a data-toggle="tab" (click)="seleccionaTab(1)">Solicitante</a>
+      </li>
+      <li [ngClass]="indice === 2 ? 'active' : ''">
+        <a data-toggle="tab" (click)="seleccionaTab(2)">Constancia del registro</a>
+      </li>
+      <!-- <li [ngClass]="indice === 3 ? 'active' : ''">
+        <a data-toggle="tab" (click)="seleccionaTab(3)">Terceros relacionados</a>
+      </li> -->
+    </ul>
+
+    <ng-container>
+      @switch (indice) {
+      @case (1) {
+      <app-solicitante></app-solicitante>
+      }
+       @case (2) {
+      <app-constancia-del-registro></app-constancia-del-registro>
+      }
+      @case (3) {
+      <!-- <terceros></terceros> -->
+      } 
+      }
+    </ng-container>
+  </div>
+</div>

@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { ElegibilidadDeTextilesRoutingModule } from './elegibilidad-de-textiles-routing.module';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { CapturarSolicitudComponent } from './pages/capturar-solicitud/capturar-solicitud.component';
 import { ResquistosNecesariosComponent } from './pages/resquistos-necesarios/resquistos-necesarios.component';
 import { AnexarRequistosComponent } from './pages/anexar-requistos/anexar-requistos.component';
@@ -21,6 +23,7 @@ import { SelectCatalogosComponent } from '../../shared/components/select-catalog
 import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -31,7 +34,10 @@ import { FirmaElectronicaComponent } from '../../shared/components/firma-electro
     FirmarSolicitudComponent,
     SolicitanteComponent,
     ConstanciaDelRegistroComponent,
-    ElegibilidadTextilesComponent
+    ElegibilidadTextilesComponent,
+    PasoDosComponent,
+    PasoTresComponent,
+    PasoUnoComponent,
   ],
   imports: [
     CommonModule,
@@ -48,6 +54,7 @@ import { FirmaElectronicaComponent } from '../../shared/components/firma-electro
     InputFechaComponent,
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
+    RouterModule,
     
   ]
 })
