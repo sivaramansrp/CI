@@ -110,7 +110,14 @@ module.exports = tseslint.config(
       "no-with": "error",
       "prefer-promise-reject-errors": "error",
       "radix": "error",
-      "require-await": "error"
+      "require-await": "error",
+      "@angular-eslint/no-conflicting-lifecycle": "error",
+      "@angular-eslint/no-input-rename": "error",
+      "@angular-eslint/no-output-native": "error",
+      "@angular-eslint/no-output-on-prefix": "error",
+      "@angular-eslint/use-lifecycle-interface": "error",
+      "@angular-eslint/use-pipe-transform-interface": "error",
+      "@typescript-eslint/explicit-function-return-type": "warn"
     },
   },
   {
