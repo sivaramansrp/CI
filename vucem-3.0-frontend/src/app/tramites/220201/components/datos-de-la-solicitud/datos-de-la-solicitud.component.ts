@@ -2,7 +2,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Component, OnInit } from '@angular/core';
 
-import { TEXTOS } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
+import { TEXTOS } from '../../../../shared/constantes/certificado-zoosanitario.enum';
 
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';

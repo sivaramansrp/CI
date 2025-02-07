@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TERCEROR_TEXTO_DE_ALERTA } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
+import { TERCEROR_TEXTO_DE_ALERTA } from '../../../../shared/constantes/certificado-zoosanitario.enum';
 
 @Component({
   selector: 'app-terceror-relacionados',

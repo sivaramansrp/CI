@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TEXTOS_REQUISITOS } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
+import { TEXTOS_REQUISITOS } from '../../../../shared/constantes/certificado-zoosanitario.enum';
 
 @Component({
   selector: 'app-paso-dos',

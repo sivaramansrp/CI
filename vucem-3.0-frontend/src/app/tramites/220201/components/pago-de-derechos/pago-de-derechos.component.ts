@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FECHA_DE_PAGO } from '../../../../shared/constantes/módulodemodificacióndeextensióndeemisión.enum';
+import { FECHA_DE_PAGO } from '../../../../shared/constantes/certificado-zoosanitario.enum';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 
