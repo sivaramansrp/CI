@@ -34,7 +34,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="nroRegistro">Número de registro o programa:</label>
-            <input class="form-control" id="nroRegistro" placeholder="Numero de registro" type="text"
+            <input class="form-control" id="nroRegistro" placeholder="" type="text"
               formControlName="nroRegistro"
               [ngClass]="isValid(datosImportadorExportador, 'nroRegistro') ? 'required' : ''"
               (change)="setValoresStore(datosImportadorExportador,'nroRegistro', 'setNroRegistro')">
@@ -162,7 +162,7 @@
         <div class="col-md-4">
           <label for="fechaFinal" class="form-label">Fecha final*:</label>
           <input class="form-control" type="date" name="fechaFinal" id="fechaFinal" formControlName="fechaFinal"
-            [ngClass]="isValid(datosServicio,'fechaFinal') ? 'required' : ''" [min]="diaMinimo">
+            [ngClass]="isValid(datosServicio,'fechaFinal') ? 'required' : ''" [min]="diaMinimo"  (change)="setValoresStore(datosServicio,'fechaFinal', 'setFechaFinal')">
 
           @if (isValid(datosServicio,'fechaFinal')) {
           <div class="mensaje-error">
@@ -216,11 +216,11 @@
 
       <div class="row">
         <div class="col-md-4">
-          <select-catalogos [catalogosDatos]="aduanas" (valorSeleccion)="aduanaSeleccion($event)" />
+          <select-catalogos [catalogosDatos]="aduanas" (valorSeleccion)="aduanaSeleccion($event)"  />
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="seccionAduanera" formControlName="idSeccionAduanera"
-            [label]="'Sección aduanera'" [required]="true"></app-catalogo-select>
+            [label]="'Sección aduanera'" [required]="true" (change)="setValoresStore(despacho,'idSeccionAduanera', 'setIdSeccionAduanera')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="seccionAduanera" formControlName="nombreRecinto"
@@ -230,8 +230,8 @@
 
       <div class="row">
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="tipoOperacion" formControlName="tipoOperacion" [label]="'Tipod de operacion'"
-            [required]="true"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="tipoOperacion" formControlName="tipoOperacion" [label]="'Tipo de operacion'"
+            [required]="true"  (change)="setValoresStore(despacho,'tipoOperacion', 'setTipoOperacion')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <label for="patente" class="form-label">Patente/Número de autorización:</label>
@@ -267,25 +267,25 @@
       <div class="row">
         <div class="col-md-4">
           <app-select-paises [catalogosPaises]="paisesOrigen" formControlName="paisOrigen" [label]="'País de origen'"
-            [required]="true"></app-select-paises>
+            [required]="true" (change)="setValoresStore(mercancia,'paisOrigen', 'setPaisOrigen')"></app-select-paises>
         </div>
 
         <div class="col-md-4">
           <app-select-paises [catalogosPaises]="paisesProcedencia" formControlName="paisProcedencia"
-            [label]="'País de procedencia'" [required]="true"></app-select-paises>
+            [label]="'País de procedencia'" [required]="true" (change)="setValoresStore(mercancia,'paisProcedencia', 'setPaisProcedencia')"></app-select-paises>
         </div>
 
         <div class="col-md-8">
           <div class="form-group">
             <label for="descripcion" class="form-label">Descripción genérica*:</label>
-            <textarea class="form-control" rows="3" id="descripcion" formControlName="descripcion"></textarea>
+            <textarea class="form-control" rows="3" id="descripcion" formControlName="descripcion" (change)="setValoresStore(mercancia,'descripcion', 'setDescripcion')"></textarea>
           </div>
         </div>
 
         <div class="col-md-8">
           <div class="form-group">
             <label for="justificacion" class="form-label">Justificación*:</label>
-            <textarea class="form-control" rows="3" id="justificacion" formControlName="justificacion"></textarea>
+            <textarea class="form-control" rows="3" id="justificacion" formControlName="justificacion" (change)="setValoresStore(mercancia,'justificacion', 'setJustificacion')"></textarea>
           </div>
         </div>
       </div>
@@ -300,18 +300,18 @@
       <div class="row rf">
         <div class="col-md-4 form-group">
           <label class="form-label" for="montoPagar">Monto a pagar:</label>
-          <input class="form-control" id="montoPagar" placeholder="" type="text" formControlName="montoAPagar">
+          <input class="form-control" id="montoPagar" placeholder="" type="text" formControlName="montoAPagar" (change)="setValoresStore(pagoCaptura,'montoAPagar', 'setMontoPagar')">
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-4 form-group">
           <label class="form-label" for="lineaCaptura">Línea de captura*:</label>
-          <input class="form-control" id="lineaCaptura" placeholder="" type="text" formControlName="lineaCaptura">
+          <input class="form-control" id="lineaCaptura" placeholder="" type="text" formControlName="lineaCaptura" (change)="setValoresStore(pagoCaptura,'lineaCaptura', 'setLineaCaptura')">
         </div>
         <div class="col-md-4 form-group">
           <label class="form-label" for="monto">Monto*:</label>
-          <input class="form-control" id="monto" placeholder="" type="text" formControlName="monto">
+          <input class="form-control" id="monto" placeholder="" type="text" formControlName="monto" (change)="setValoresStore(pagoCaptura,'monto', 'setMonto')">
         </div>
 
       </div>

@@ -20,9 +20,7 @@ import {
   InputHora,
 } from '../../../../core/models/shared/components.model';
 
-import {
-  DatosComponentePedimento
-} from '../../../../core/models/5701/servicios-extraordinarios.model';
+import { DatosComponentePedimento } from '../../../../core/models/5701/servicios-extraordinarios.model';
 
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
@@ -36,14 +34,7 @@ import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../estados/tramites/tramite5701.store';
-import {
-  Subject,
-  delay,
-  map,
-  merge,
-  takeUntil,
-  tap,
-} from 'rxjs';
+import { Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
 
 import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.model';
@@ -173,11 +164,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.validaFechas();
     });
 
-    // this.datosImportadorExportador.valueChanges.subscribe((_value) => {
-    //   const valor = this.datosImportadorExportador.getRawValue();
-    //   this.tramite5701Store.guadarDatosImportadorExportador(valor);
-    // });
-
     this.tipoSolicitudSeleccion();
   }
 
@@ -294,27 +280,31 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       );
     catalogoAduanas$.subscribe();
-    
-  
-    merge(
-      catTipoSolicitud$, catalogoPaises$, catalogoAduanas$, catalogoAduanas$
-    ).subscribe();
-  }
 
-  getSeccionesAduaneras(): void {
-    this.catalogosServices
+    const seccionesAduaneras$ = this.catalogosServices
       .getCatalogoById(CATALOGOS_ID.CAT_SECCION_ADUANAS)
-      .subscribe((resp) => {
-        this.seccionAduanera = JSON.parse(resp.data);
-      });
-  }
+      .pipe(
+        map((resp) => {
+          this.seccionAduanera = JSON.parse(resp.data);
+        })
+      );
 
-  getTipoOperacion(): void {
-    this.catalogosServices
-      .getCatalogoById(CATALOGOS_ID.CAT_TIPO_OPERACION)
-      .subscribe((resp) => {
+    const tipoOperacion$ = this.catalogosServices
+    .getCatalogoById(CATALOGOS_ID.CAT_TIPO_OPERACION)
+    .pipe(
+      map((resp) => {
         this.tipoOperacion = JSON.parse(resp.data);
-      });
+      })
+    );
+
+    merge(
+      catTipoSolicitud$,
+      catalogoPaises$,
+      catalogoAduanas$,
+      catalogoAduanas$,
+      seccionesAduaneras$,
+      tipoOperacion$
+    ).subscribe();
   }
 
   obtenerPatente() {
@@ -640,8 +630,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.datosImportadorExportador.get('idSocioComercial')?.disable();
     }
 
-    this.setValoresStore(this.datosImportadorExportador, 'idSocioComercial', 'setIdSocioComercial');
-    this.setValoresStore(this.datosImportadorExportador, 'socioComercial', 'setSocioComercial');
+    this.setValoresStore(
+      this.datosImportadorExportador,
+      'idSocioComercial',
+      'setIdSocioComercial'
+    );
+    this.setValoresStore(
+      this.datosImportadorExportador,
+      'socioComercial',
+      'setSocioComercial'
+    );
   }
 
   validarCamposNull(solicitud: Solicitud5701State): boolean {
