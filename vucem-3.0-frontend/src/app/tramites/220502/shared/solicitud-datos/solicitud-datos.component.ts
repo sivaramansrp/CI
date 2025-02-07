@@ -14,25 +14,25 @@ import { AlertComponent } from '../../../../shared/components/alert/alert.compon
 })
 export class SolicitudDatosComponent {
    /**
-   * Gets the enum data and sets TEXTOS values
+   * Obtiene los datos de enumeración y establece valores de TEXTOS
    */
   TEXTOS = TEXTOS;
  /**
-   * Controls the collapsible panel's visibility
-   * Default value is set to true (expanded)
+   * Controla la visibilidad del panel plegable.
+   * El valor predeterminado está establecido en verdadero (ampliado)
    */
   colapsable: boolean = true;
   /**
-   * Receives table header data as an input property
+   * Recibe datos del encabezado de la tabla como propiedad de entrada
    */
   @Input() tablaHeadData : string[];
   /**
-   * Receives the list of solicitudes as table row data
+   * Recibe la lista de solicitudes como datos de fila de la tabla.
    */
   @Input() tablaFilaDatos : Solicitud[];
 
  /**
-   * Toggles the collapsible panel (expand/collapse)
+   * Alterna el panel plegable (expandir/contraer)
    */
  mostrarColapsable() {
     this.colapsable = !this.colapsable;

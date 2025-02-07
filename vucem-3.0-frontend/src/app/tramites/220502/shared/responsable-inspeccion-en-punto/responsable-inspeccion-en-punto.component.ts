@@ -64,10 +64,10 @@ export class ResponsableInspeccionEnPuntoComponent
             Validators.required,
             Validators.maxLength(150),
           ]),
-          primerapellido: new FormControl('', []),
-          segyndoapellido: new FormControl('', []),
+          primerapellido: new FormControl('', [Validators.maxLength(80)]),
+          segyndoapellido: new FormControl('', [Validators.maxLength(80)]),
           mercancia: new FormControl('', [Validators.required]),
-          tipocontenedor: new FormControl('', []),
+          tipocontenedor: new FormControl('', [Validators.maxLength(3)]),
         })
       );
     }

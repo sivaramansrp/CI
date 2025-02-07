@@ -39,24 +39,24 @@ import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 })
 export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
   /**
-   * Input key used to identify the control inside the parent form group.
+   * Clave de entrada utilizada para identificar el control dentro del grupo de formulario principal.
    */
-  @Input() controlKey: string = '';
+  @Input() claveDeControl: string = '';
 
   /**
-   * Injects the parent form control container.
+   * Inyecta el contenedor de control del formulario principal.
    */
   parentContainer = inject(ControlContainer);
 
   /**
-   * Getter to access the parent form group.
+   * Getter para acceder al grupo de formularios principal.
    */
-  get parentFormGroup(): FormGroup {
+  get grupoformulariopadre(): FormGroup {
     return this.parentContainer.control as FormGroup;
   }
 
   /**
-   * Form select options for different catalog data.
+   * Opciones de selección de formulario para diferentes datos del catálogo.
    */
   certificadosAutorizados!: CatalogosSelect;
   horaDeInspeccion!: CatalogosSelect;
@@ -65,17 +65,17 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
   puntoDeInspeccion!: CatalogosSelect;
 
   /**
-   * Date input field initialized with FECHA_INSPECCION constant.
+   * Campo de entrada de fecha inicializado con la constante FECHA_INSPECCION.
    */
   fechaInicioInput: InputFecha = FECHA_INSPECCION;
 
   /**
-   * Lifecycle hook that initializes form controls when the component is loaded.
+   * Gancho de ciclo de vida que inicializa los controles de formulario cuando se carga el componente.
    */
   ngOnInit(): void {
-    if (this.controlKey) {
-      this.parentFormGroup.addControl(
-        this.controlKey,
+    if (this.claveDeControl) {
+      this.grupoformulariopadre.addControl(
+        this.claveDeControl,
         new FormGroup({
           certificadosAutorizados: new FormControl('', [Validators.required]),
           horaDeInspeccion: new FormControl('', [Validators.required]),
@@ -90,60 +90,60 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles the selection of 'Certificados Autorizados' and updates the form control.
-   * @param e The selected catalog item.
+   * Maneja la selección de 'Certificados Autorizados' y actualiza el control del formulario.
+   * @param e El artículo del catálogo seleccionado.
    */
   certificadosSeleccion(e: Catalogo): void {
-    this.updateFormValue('certificadosAutorizados', e.descripcion);
+    this.actualizarFormValue('certificadosAutorizados', e.descripcion);
   }
 
   /**
-   * Handles the selection of 'Hora de Inspección' and updates the form control.
-   * @param e The selected catalog item.
+   * Maneja la selección de 'Hora de Inspección' y actualiza el control del formulario.
+   * @param e El artículo del catálogo seleccionado.
    */
   horaDeSeleccion(e: Catalogo): void {
-    this.updateFormValue('horaDeInspeccion', e.descripcion);
+    this.actualizarFormValue('horaDeInspeccion', e.descripcion);
   }
 
   /**
-   * Handles the selection of 'Aduana de Ingreso' and updates the form control.
-   * @param e The selected catalog item.
+   * Maneja la selección de 'Aduana de Ingreso' y actualiza el control del formulario.
+   * @param e El artículo del catálogo seleccionado.
    */
   aduanaDeSeleccion(e: Catalogo): void {
-    this.updateFormValue('aduanaDeIngreso', e.descripcion);
+    this.actualizarFormValue('aduanaDeIngreso', e.descripcion);
   }
 
   /**
-   * Handles the selection of 'Sanidad Agropecuaria' and updates the form control.
-   * @param e The selected catalog item.
+   * Maneja la selección de 'Sanidad Agropecuaria' y actualiza el control del formulario.
+   * @param e El artículo del catálogo seleccionado.
    */
   sanidadSeleccion(e: Catalogo): void {
-    this.updateFormValue('sanidadAgropecuaria', e.descripcion);
+    this.actualizarFormValue('sanidadAgropecuaria', e.descripcion);
   }
 
   /**
-   * Handles the selection of 'Punto de Inspección' and updates the form control.
-   * @param e The selected catalog item.
+   * Maneja la selección de 'Punto de Inspección' y actualiza el control del formulario.
+   * @param e El artículo del catálogo seleccionado.
    */
   puntoDeSeleccion(e: Catalogo): void {
-    this.updateFormValue('puntoDeInspeccion', e.descripcion);
+    this.actualizarFormValue('puntoDeInspeccion', e.descripcion);
   }
 
   /**
-   * Updates a specific form control with a new value.
-   * @param controlName The name of the control to update.
-   * @param value The new value to set.
+   * Actualiza un control de formulario específico con un nuevo valor.
+   * @param nombreDeControl El nombre del control a actualizar.
+   * @param value El nuevo valor a establecer.
    */
-  private updateFormValue(controlName: string, value: string): void {
-    if (this.controlKey && this.parentFormGroup.contains(this.controlKey)) {
-      this.parentFormGroup.controls[this.controlKey].patchValue({
-        [controlName]: value,
+  private actualizarFormValue(nombreDeControl: string, value: string): void {
+    if (this.claveDeControl && this.grupoformulariopadre.contains(this.claveDeControl)) {
+      this.grupoformulariopadre.controls[this.claveDeControl].patchValue({
+        [nombreDeControl]: value,
       });
     }
   }
 
   /**
-   * Loads initial catalog data for the form selects.
+   * Carga datos del catálogo inicial para las selecciones de formulario.
    */
   cargarDatosIniciales(): void {
     const catalogoTemplate = (label: string, required: boolean) => ({
@@ -165,26 +165,26 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Getter to access the 'datosServicio' form group.
+   * Getter para acceder al grupo de formularios 'datosServicio'.
    */
   get datosServicio(): FormGroup {
-    return this.parentFormGroup.get('datosServicio') as FormGroup;
+    return this.grupoformulariopadre.get('datosServicio') as FormGroup;
   }
 
   /**
-   * Handles changes to the start date field.
-   * @param nuevo_valor The new date value selected.
+   * Maneja los cambios en el campo de fecha de inicio.
+   * @param nuevo_valor El nuevo valor de fecha seleccionado.
    */
   cambioFechaInicio(nuevo_valor: string): void {
-    this.updateFormValue('fechaDeInspeccion', nuevo_valor);
+    this.actualizarFormValue('fechaDeInspeccion', nuevo_valor);
   }
 
   /**
-   * Lifecycle hook to clean up form controls when the component is destroyed.
+   * Gancho de ciclo de vida para limpiar los controles de formulario cuando se destruye el componente.
    */
   ngOnDestroy(): void {
-    if (this.controlKey && this.parentFormGroup.contains(this.controlKey)) {
-      this.parentFormGroup.removeControl(this.controlKey);
+    if (this.claveDeControl && this.grupoformulariopadre.contains(this.claveDeControl)) {
+      this.grupoformulariopadre.removeControl(this.claveDeControl);
     }
   }
 }

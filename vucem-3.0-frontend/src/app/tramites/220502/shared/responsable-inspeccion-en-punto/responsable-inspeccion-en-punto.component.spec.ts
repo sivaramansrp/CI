@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ResponsableInspeccionEnPuntoComponent } from './responsable-inspeccion-en-punto.component';
 
 describe('ResponsableInspeccionEnPuntoComponent', () => {
@@ -8,16 +8,24 @@ describe('ResponsableInspeccionEnPuntoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ResponsableInspeccionEnPuntoComponent]
+      declarations: [ ResponsableInspeccionEnPuntoComponent ],
+      imports: [ ReactiveFormsModule ]
     })
     .compileComponents();
-    
+  });
+
+  beforeEach(() => {
     fixture = TestBed.createComponent(ResponsableInspeccionEnPuntoComponent);
     component = fixture.componentInstance;
+    (component.grupoformulariopadre as FormGroup).controls = {};
+    component.claveDeControl = 'testControl';
+    component.grupoformulariopadre.addControl(component.claveDeControl, new FormGroup({}));
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should remove control on ngOnDestroy', () => {
+    expect(component.grupoformulariopadre.contains(component.claveDeControl)).toBeTrue();
+    component.ngOnDestroy();
+    expect(component.grupoformulariopadre.contains(component.claveDeControl)).toBeFalse();
   });
 });
