@@ -4,10 +4,6 @@ import { ElegibilidadDeTextilesRoutingModule } from './elegibilidad-de-textiles-
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { CapturarSolicitudComponent } from './pages/capturar-solicitud/capturar-solicitud.component';
-import { ResquistosNecesariosComponent } from './pages/resquistos-necesarios/resquistos-necesarios.component';
-import { AnexarRequistosComponent } from './pages/anexar-requistos/anexar-requistos.component';
-import { FirmarSolicitudComponent } from './pages/firmar-solicitud/firmar-solicitud.component';
 import { SolicitanteComponent } from './components/solicitante/solicitante.component';
 import { ConstanciaDelRegistroComponent } from './components/constancia-del-registro/constancia-del-registro.component';
 import { ElegibilidadTextilesComponent } from './pages/elegibilidad-textiles/elegibilidad-textiles.component';
@@ -28,10 +24,6 @@ import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
-    CapturarSolicitudComponent,
-    ResquistosNecesariosComponent,
-    AnexarRequistosComponent,
-    FirmarSolicitudComponent,
     SolicitanteComponent,
     ConstanciaDelRegistroComponent,
     ElegibilidadTextilesComponent,
