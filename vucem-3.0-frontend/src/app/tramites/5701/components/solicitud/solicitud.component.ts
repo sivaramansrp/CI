@@ -35,7 +35,6 @@ import {
 import { Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
 
-import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.model';
 import { FechasService } from '../../../../core/services/shared/fechas/fechas.service';
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
 import { datosAgregarFormulario } from '../../../../core/models/shared/forms-model';
@@ -120,12 +119,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     this.crearFormSolicitud();
-
-    // Aqui se busca el nro de patente o autorizacion
-    this.obtenerPatente();
-
     this.FormSolicitud.statusChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -153,6 +147,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+
+    // Aqui se busca el nro de patente o autorizacion
+    this.obtenerPatente();
     this.tipoSolicitudSeleccion();
   }
 
@@ -226,7 +224,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     return this.validacionesService.isValid(form, field);
   }
 
-  private inicializaCatalogos() : void {
+  private inicializaCatalogos(): void {
     /**
      * Obtiene los tipos de solicitud desde el catálogo y los asigna a `datosTiposSolicitud`.
      *
@@ -291,7 +289,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  private obtenerPatente() : void {
+  private obtenerPatente(): void {
     // Busqueda de la patente a algun endpoint
     const datosPatente: datosAgregarFormulario = {
       form: this.despacho,
@@ -301,7 +299,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.formulariosService.agregarValorCamposDesactivados(datosPatente);
   }
 
-  crearFormSolicitud() {
+  // eslint-disable-next-line complexity
+  crearFormSolicitud(): void {
     this.FormSolicitud = this.fb.group({
       tipoSolicitud: [
         this.solicitudState?.tipoSolicitud,
@@ -407,14 +406,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         monto: [this.solicitudState?.monto, [Validators.required]],
       }),
     });
-
-    this.datosServicio.get('fechaFinal').valueChanges.subscribe((_values) => {
-      this.validarDiferenciaFechas();
-    });
   }
 
-  validarDiferenciaFechas() : void {
-    const periodo = parseInt(this.FormSolicitud.get('tipoSolicitud')?.value, 10);
+  validarDiferenciaFechas(): void {
+    const periodo = parseInt(
+      this.FormSolicitud.get('tipoSolicitud')?.value,
+      10
+    );
     const fechaInicio = new Date(this.datosServicio.get('fechaInicio').value);
     const fechaFin = new Date(this.datosServicio.get('fechaFinal').value);
 
@@ -454,7 +452,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   // *Eventos de los componentes hijos
 
-  busqueda_rfc() : void {
+  busqueda_rfc(): void {
     const rfcImportExport =
       this.datosImportadorExportador.get('rfcImportExport')?.value;
     // Aqui se hará la busqueda del rfc, para obtener el nombre
@@ -470,13 +468,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  llenarCamposDesactivados(form: FormGroup, field: string) : void {
+  llenarCamposDesactivados(form: FormGroup, field: string): void {
     form.get(field)?.enable();
     form.get(field)?.setValue('DAYNIZ YAEL VELASCO CORONEL');
     form.get(field)?.disable();
   }
 
-  tipoSolicitudSeleccion() : void{
+  tipoSolicitudSeleccion(): void {
     this.tipoSolicitudSeleccionada =
       this.FormSolicitud.get('tipoSolicitud')?.value;
 
@@ -484,10 +482,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tramite5701Store.setTipoSolicitud(tipoSolicitud);
   }
 
-  valorInputCheck(e: DatosInputCheck) : void {}
+  valorInputCheck(e: DatosInputCheck): void {}
 
-
-  rango_fechas() : void {
+  rango_fechas(): void {
     const fechaInicial = this.datosServicio.get('fechaInicio')?.value;
     const fechaFinal = this.datosServicio.get('fechaFinal')?.value;
 
@@ -503,11 +500,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.colapsable = true;
   }
 
-  mostrar_colapsable() : void {
+  mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
-  aduanaSeleccion(aduana: Catalogo) :void {
+  aduanaSeleccion(aduana: Catalogo): void {
     this.darValorCampoFormulario(this.despacho, 'idAduana', aduana.id);
     this.darValorCampoFormulario(
       this.despacho,
@@ -532,7 +529,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     };
   }
 
-  validaCampoPedimento() : void {
+  validaCampoPedimento(): void {
     const aduanaValidacion = this.isValid(this.despacho, 'descripcionAduana');
     if (aduanaValidacion === null) this.validacionPedimento = true;
   }
@@ -541,11 +538,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     form: FormGroup,
     field: string,
     valor: string | number
-  ) : void {
+  ): void {
     form.get(field)?.setValue(valor);
   }
 
-  socioComercialChange() : void {
+  socioComercialChange(): void {
     const socioComercial =
       this.datosImportadorExportador.get('socioComercial')?.value;
     if (socioComercial) {
@@ -566,15 +563,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     );
   }
 
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: string) :void {
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
     const valor = form.get(campo)?.value;
     this.tramite5701Store[metodoNombre](valor);
   }
 
-  ngOnDestroy() : void {
+  ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 }
-
- 
