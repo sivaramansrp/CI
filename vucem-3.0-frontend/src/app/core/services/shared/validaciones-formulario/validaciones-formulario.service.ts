@@ -122,11 +122,7 @@ export class ValidacionesFormularioService {
 
       const diaDiferencia = differenceInDays(diaUno, diaDos);
 
-      console.log({ diaDiferencia });
-
-
       return diaDiferencia === 1 ? null : { dateDifference: true };
-      return null;
     };
   }
 }

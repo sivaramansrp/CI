@@ -169,6 +169,12 @@
             Fecha no válida, elija otro día
           </div>
           }
+
+          @if (fechaRangoValidacion()) {
+            <div class="mensaje-error">
+              Fecha no válida, elija otro díaa
+            </div>
+            }
         </div>
 
         <div class="col-md-4">

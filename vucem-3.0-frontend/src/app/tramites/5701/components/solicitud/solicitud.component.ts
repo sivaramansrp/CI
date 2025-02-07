@@ -156,13 +156,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.datosServicio.get('fechaInicio').valueChanges.subscribe((_value) => {
-      this.validaFechas();
-    });
+    // this.datosServicio.get('fechaInicio').valueChanges.subscribe((_value) => {
+    //   this.validaFechas();
+    // });
 
-    this.datosServicio.get('fechaFinal').valueChanges.subscribe((_value) => {
-      this.validaFechas();
-    });
+    // this.datosServicio.get('fechaFinal').valueChanges.subscribe((_value) => {
+    //   this.validaFechas();
+    // });
 
     this.tipoSolicitudSeleccion();
   }
@@ -231,6 +231,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
       ? true
       : false;
+  }
+
+  fechaRangoValidacion() {
+    return (
+      this.datosServicio.get('fechaFinal').invalid &&
+      this.datosServicio.get('fechaFinal')?.touched
+    );
   }
 
   isValid(form: FormGroup, field: string) {
@@ -418,40 +425,57 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         monto: [this.solicitudState?.monto, [Validators.required]],
       }),
     });
+
+    this.datosServicio.get('fechaFinal').valueChanges.subscribe((_values) => {
+      this.validarDiferenciaFechas();
+    });
   }
 
-  validaFechas() {
-    const fechaInicio = this.fechaService.parseDate(
-      this.datosServicio.get('fechaInicio')?.value
-    );
-    const fechaFinal = this.fechaService.parseDate(
-      this.datosServicio.get('fechaFinal')?.value
-    );
+  fechaMinima() {
+    return (control) => {
+      const fechaSeleccionada = new Date(control.value);
+      const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0); // Resetea la hora para comparar solo las fechas
+      return fechaSeleccionada >= hoy ? null : { fechaMinima: true };
+    };
+  }
 
-    let valido = false;
-    const diferenciaFecha = fechaFinal.getTime() - fechaInicio.getTime();
+  validarDiferenciaFechas() {
+    const periodo = parseInt(this.FormSolicitud.get('tipoSolicitud')?.value);
+    const fechaInicio = new Date(this.datosServicio.get('fechaInicio').value);
+    const fechaFin = new Date(this.datosServicio.get('fechaFinal').value);
 
-    switch (this.tipoSolicitudSeleccionada) {
-      case TIPO_SOLICITUD.INDIVIDUAL: {
-        valido = diferenciaFecha < MILISEGUNDOS.DIA && diferenciaFecha > 0;
+    let diferenciaPermitidaMin, diferenciaPermitidaMax;
+    switch (periodo) {
+      case TIPO_SOLICITUD.INDIVIDUAL:
+        diferenciaPermitidaMin = 1;
+        diferenciaPermitidaMax = 1;
         break;
-      }
-      case TIPO_SOLICITUD.SEMANAL: {
-        valido = diferenciaFecha < MILISEGUNDOS.SEMANA && diferenciaFecha > 0;
+      case TIPO_SOLICITUD.SEMANAL:
+        diferenciaPermitidaMin = 1;
+        diferenciaPermitidaMax = 7;
         break;
-      }
-      case TIPO_SOLICITUD.MENSUAL: {
-        valido = diferenciaFecha < MILISEGUNDOS.MES && diferenciaFecha > 0;
+      case TIPO_SOLICITUD.MENSUAL:
+        diferenciaPermitidaMin = 1;
+        diferenciaPermitidaMax = 30;
         break;
-      }
+      default:
+        diferenciaPermitidaMin = 0;
+        diferenciaPermitidaMax = 0;
     }
 
-    if (!valido) {
+    const diferenciaDias =
+      (fechaFin.getTime() - fechaInicio.getTime()) / (1000 * 3600 * 24);
+
+    if (
+      diferenciaDias < diferenciaPermitidaMin ||
+      diferenciaDias > diferenciaPermitidaMax
+    ) {
       this.datosServicio
         .get('fechaFinal')
-        ?.setErrors({ fechaFinalInvalida: true });
+        .setErrors({ diferenciaExcedida: true });
     } else {
-      this.datosServicio.get('fechaFinal')?.setErrors(null);
+      this.datosServicio.get('fechaFinal').setErrors(null);
     }
   }
 
@@ -496,9 +520,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-  valorInputCheck(e: DatosInputCheck) {
-    console.log(e);
-  }
+  valorInputCheck(e: DatosInputCheck) {}
 
   obtenerHora(e: string, tipo: string) {
     if (tipo === 'i') {
