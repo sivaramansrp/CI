@@ -1,8 +1,8 @@
 <div class="container">
-    <form [formGroup]="forma" >
+    <form>
         <div class="row mt-5">
   
-            <div class="row" formGroupName="Representación-federal">
+            <div class="row">
                 <!-- <h2>Representación-federal</h2> -->
                  <div class="col-md-12">
                 <ng-titulo titulo="Representación federal" />
@@ -13,7 +13,6 @@
                     >Estado:</label>
                     <input
                     class="form-control"
-                    formControlName="Estado"
                     value="SINALOA"
                     class="form-control"
                     id="Estado"
@@ -28,7 +27,6 @@
                     <label class="form-label" for="federal"
                     >Representación federal:</label>
                 <input
-                    formControlName="federal"
                     value="CULIACAN"
                     class="form-control"
                     id="federal"
@@ -40,14 +38,13 @@
                 </div>
             </div>
         
-            <div class="row pb-5" formGroupName="Descripción del cupo.">
+            <div class="row pb-5">
                 <ng-titulo titulo="Descripción del cupo." />
                 <div class="col-md-4">
                     <div class="form-group">
                         <label class="form-label" for="Fracción-arancelaria"
                         >Fracción arancelaria:</label>
                         <input
-                        formControlName="Fracción-arancelaria"
                         value=""
                         class="form-control"
                         id="Fracción-arancelaria"
@@ -63,7 +60,6 @@
                         <label class="form-label" for="producto"
                         >Descripción del producto:</label>
                         <input
-                        formControlName="producto"
                         value=""
                         class="form-control"
                         id="producto"
@@ -79,7 +75,6 @@
                         <label class="form-label" for="Tratado"
                         >Tratado o bloque:</label>
                         <input
-                        formControlName="Tratado"
                         value=""
                         class="form-control"
                         id="Tratado"
@@ -95,7 +90,6 @@
                         <label class="form-label" for="subproducto"
                           >Clasificación del subproducto:</label>
                         <input
-                          formControlName="subproducto"
                           value=""
                           class="form-control"
                           id="subproducto"
@@ -111,7 +105,6 @@
                         <label class="form-label" for="Mecanismo"
                           >Mecanismo de asignación:</label>
                         <input
-                          formControlName="Mecanismo"
                           value=""
                           class="form-control"
                           id="Mecanismo"
@@ -127,7 +120,6 @@
                         <label class="form-label" for="textil"
                           >Categoria textil:</label>
                         <input
-                          formControlName="textil"
                           value=""
                           class="form-control"
                           id="textil"
@@ -143,7 +135,6 @@
                         <label class="form-label" for="regimen"
                           >Clasificación de regimen:</label>
                         <input
-                          formControlName="regimen"
                           value=""
                           class="form-control"
                           id="regimen"
@@ -159,7 +150,6 @@
                         <label class="form-label" for="categoría-textil"
                           >Descripción de la categoría textil:</label>
                         <input
-                          formControlName="categoría-textil"
                           value=""
                           class="form-control"
                           id="categoría-textil"
@@ -175,7 +165,6 @@
                         <label class="form-label" for="País"
                           >País destino/origen:</label>
                         <input
-                          formControlName="País"
                           value=""
                           class="form-control"
                           id="País"
@@ -191,7 +180,6 @@
                         <label class="form-label" for="medida"
                           >Unidad de medida categoría textil:</label>
                         <input
-                          formControlName="medida"
                           value=""
                           class="form-control"
                           id="medida"
@@ -207,7 +195,6 @@
                         <label class="form-label" for="categoría"
                           >Factor de conversión de la categoría textil:</label>
                         <input
-                          formControlName="categoría"
                           value=""
                           class="form-control"
                           id="categoría"
@@ -223,7 +210,6 @@
                         <label class="form-label" for="fecha-de-inicio"
                           >Fecha de inicio de vigencia:</label>
                         <input
-                          formControlName="fecha-de-inicio"
                           value=""
                           class="form-control"
                           id="fecha-de-inicio"
@@ -239,7 +225,6 @@
                         <label class="form-label" for="fecha-de-fin"
                           >Fecha de fin de vigencia:</label>
                         <input
-                          formControlName="fecha-de-fin"
                           value=""
                           class="form-control"
                           id="fecha-de-fin"

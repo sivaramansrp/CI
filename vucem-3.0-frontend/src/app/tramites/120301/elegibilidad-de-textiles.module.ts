@@ -20,6 +20,7 @@ import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
 import { RouterModule } from '@angular/router';
+import { CapturarFacturasComponent } from './components/capturar-facturas/capturar-facturas.component';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { RouterModule } from '@angular/router';
     PasoDosComponent,
     PasoTresComponent,
     PasoUnoComponent,
+    CapturarFacturasComponent,
   ],
   imports: [
     CommonModule,
