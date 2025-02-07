@@ -50,6 +50,7 @@ import {
   Subscription,
   delay,
   map,
+  merge,
   takeUntil,
   tap,
 } from 'rxjs';
@@ -138,7 +139,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     // Peticiones a las apis
     this.inicializaCatalogos();
 
-    
     //Validacion si tenemos datos guardados en el store
     const datosForma5701 = this.tramite5701Query.getFormaTramite5071();
 
@@ -312,11 +312,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   private inicializaCatalogos() {
     /**
-   * Obtiene los tipos de solicitud desde el catálogo y los asigna a `datosTiposSolicitud`.
-   *
-   * Este método realiza una solicitud al servicio `catalogosServices` para obtener el catálogo de tipos de solicitud identificado por `CATALOGOS_ID.CAT_TIPO_SOL`. Una vez que recibe la  respuesta, verifica si la respuesta contiene elementos. Si es así, asigna los datos recibidos a la propiedad `datosTiposSolicitud` con la estructura adecuada.
-   */
-  const catTipoSolicitud$ = this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_TIPO_SOL).pipe(
+     * Obtiene los tipos de solicitud desde el catálogo y los asigna a `datosTiposSolicitud`.
+     *
+     * Este método realiza una solicitud al servicio `catalogosServices` para obtener el catálogo de tipos de solicitud identificado por `CATALOGOS_ID.CAT_TIPO_SOL`. Una vez que recibe la  respuesta, verifica si la respuesta contiene elementos. Si es así, asigna los datos recibidos a la propiedad `datosTiposSolicitud` con la estructura adecuada.
+     */
+    const catTipoSolicitud$ = this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_TIPO_SOL).pipe(
       map((resp) => {
         this.datosTiposSolicitud = {
           labelNombre: 'Tipo de solicitud',
@@ -327,7 +327,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       }),
       takeUntil(this.destroyNotifier$),
     );
-    catTipoSolicitud$.subscribe();
 
     const catalogoPaises$ = this.catalogosServices.getCatalogoPaises(CATALOGOS_ID.CAT_PAISES).pipe(
       map((resp) => {
@@ -346,9 +345,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             catalogos: resp,
           };
         }
-    }),
+      }),
     );
-    catalogoPaises$.subscribe();
 
     const catalogoAduanas$ = this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_ADUANAS).pipe(
       map((resp) => {
@@ -362,7 +360,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         }
       }),
     );
-    catalogoAduanas$.subscribe();
+
+    merge(
+      catTipoSolicitud$, catalogoPaises$, catalogoAduanas$, catalogoAduanas$
+    ).subscribe();
   }
 
   getSeccionesAduaneras(): void {
@@ -706,7 +707,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
     return false;
   }
-/*
+
   fillForm(data: Partial<Solicitud5701State>) {
     this.fillFormRecursive(this.FormSolicitud, data);
   }
@@ -753,7 +754,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       }
     });
   }
-*/
+
   ngOnDestroy() {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
