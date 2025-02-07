@@ -1,0 +1,24 @@
+<ng-titulo titulo="Datos generales del solicitante" />
+<ng-alert [CONTENIDO]="mensajeAlerta"></ng-alert>
+
+<div class="row">
+    <div class="col-md-8" *ngFor="let config of dropdownConfigs; let i = index">
+        <select-catalogos [catalogosDatos]="config" (valorSeleccion)="seleccionar($event,i)">
+        </select-catalogos>
+    </div>
+</div>
+
+<div class="col-12 d-flex justify-content-end mt-3 mb-4">
+    <button class="btn btn-primary" (click)="agregarTratado()">Agregar tratado</button>
+</div>
+
+<ng-alert [CONTENIDO]="'Para continuar con el trámite, deberá agregar por lo menos un tratado o acuerdo.'"></ng-alert>
+
+<h6 class="fs-4">Pais/bloque-tratado/acuerdo seleccionados por el solicitante</h6>
+
+<ng-table [commonTableHeader]="commonTableHeaders" [commonTableBody]="tableBody"></ng-table>
+
+<div class=" text-end mt-5">
+    <button class="btn btn-default me-2">Modificar tratado</button>
+    <button class="btn btn-primary">Eliminar tratado</button>
+</div>

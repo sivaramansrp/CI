@@ -11,6 +11,7 @@ import { SolicitanteComponent } from '../components/solicitante/solicitante.comp
 import { DatosDeLaComponent } from '../components/datos-de-la/datos-de-la.component';
 import { DatosAdicionalesComponent } from '../components/datos-adicionales/datos-adicionales.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TratadosComponent } from '../components/tratados/tratados.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NavComponent,
     SolicitanteComponent,
     DatosDeLaComponent,
-    DatosAdicionalesComponent
+    DatosAdicionalesComponent,
+    TratadosComponent
   ]
 })
 
