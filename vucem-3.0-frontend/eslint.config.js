@@ -44,6 +44,7 @@ module.exports = tseslint.config(
       }],
       "@typescript-eslint/consistent-generic-constructors": "off",
       "@typescript-eslint/no-inferrable-types": "off",
+      "no-console": "error",
     },
   },
   {
