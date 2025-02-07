@@ -58,7 +58,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   tiposSolicitud!: Catalogo[];
   paisesOrigen!: CatalogoPaises[];
   paisesProcedencia!: CatalogoPaises[];
-  aduanas!: CatalogosSelect;
+  aduanas!: Catalogo[];
   seccionAduanera!: Catalogo[];
   tipoOperacion: Catalogo[];
 
@@ -270,12 +270,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .pipe(
         map((resp) => {
           if (resp.length > 0) {
-            this.aduanas = {
-              labelNombre: 'Aduana',
-              required: true,
-              primerOpcion: 'Selecciona un valor',
-              catalogos: resp,
-            };
+            this.aduanas = resp;
           }
         })
       );
@@ -290,12 +285,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       );
 
     const tipoOperacion$ = this.catalogosServices
-    .getCatalogoById(CATALOGOS_ID.CAT_TIPO_OPERACION)
-    .pipe(
-      map((resp) => {
-        this.tipoOperacion = JSON.parse(resp.data);
-      })
-    );
+      .getCatalogoById(CATALOGOS_ID.CAT_TIPO_OPERACION)
+      .pipe(
+        map((resp) => {
+          this.tipoOperacion = JSON.parse(resp.data);
+        })
+      );
 
     merge(
       catTipoSolicitud$,
