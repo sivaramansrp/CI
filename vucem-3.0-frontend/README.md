@@ -34,3 +34,4 @@ Run `npm run lint` to execute the eslint rules.(https://eslint.org/docs/latest/u
 
 Install `ng add @compodoc/compodoc`
 Run `npm run compodoc:build-and-serve` to run the documentation build file(https://compodoc.app/guides/installation.html)
+output folder: documentaion
