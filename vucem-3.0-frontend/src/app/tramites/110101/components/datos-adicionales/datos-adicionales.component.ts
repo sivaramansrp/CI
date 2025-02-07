@@ -27,11 +27,22 @@ import { ValidacionesFormularioService } from '../../../../core/services/shared/
 })
 export class DatosAdicionalesComponent {
 
+  /**
+   * Representa la entidad seleccionada del catálogo.
+   * Se espera que esta propiedad sea del tipo 'CatalogosSelect'.
+   */
   public entidad!: CatalogosSelect;
   public representacion!: CatalogosSelect;
+  /**
+    * Una cadena que representa la clase CSS para una alerta de información.
+    * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+    */
   public infoAlert = 'alert-info';
+  /**
+    * Una constante que contiene el valor del objeto 'PROTESTA'.
+    * Se utiliza para almacenar datos adicionales relacionados con el componente.
+    */
   TEXTOS = PROTESTA;
-  public representacionFederalForm!: FormGroup;
 
 
 
@@ -52,10 +63,12 @@ export class DatosAdicionalesComponent {
   }
 
   /**
-   * @description getEntidadFederativa se usa para obtener datos del menú desplegable
-   * @returns Devuelve la entidad junto con los datos del menú desplegable
+   * Recupera y establece la información de la entidad federativa.
+   * El objeto de entidad incluye el nombre de la etiqueta, el estado requerido, la opción predeterminada,
+   * y un catálogo de opciones disponibles.
+   *
+   * @returns {void}
    */
-
   public getEntidadFederativa() {
     this.entidad = {
       labelNombre: 'Entidad federativa',
@@ -74,11 +87,13 @@ export class DatosAdicionalesComponent {
     };
   }
 
-    /**
-   * @description getRepresentacionFederal se usa para obtener datos del menú desplegable
-   * @returns Devuelve la representacion junto con los datos del menú desplegable
+  /**
+   * Recupera y establece la información de la entidad federativa.
+   * El objeto de entidad incluye el nombre de la etiqueta, el estado requerido, la opción predeterminada,
+   * y un catálogo de opciones disponibles.
+   *
+   * @returns {void}
    */
-
   public getRepresentacionFederal() {
     this.representacion = {
       labelNombre: 'Representación federal',
