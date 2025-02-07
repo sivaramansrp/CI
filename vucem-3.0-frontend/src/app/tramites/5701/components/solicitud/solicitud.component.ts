@@ -21,14 +21,7 @@ import {
 } from '../../../../core/models/shared/components.model';
 
 import {
-  DatosComponentePedimento,
-  DatosDespacho,
-  DatosImportadorExportador,
-  DatosPago,
-  DatosPedimento,
-  DatosServicio,
-  Personas,
-  ResponsablesDespacho,
+  DatosComponentePedimento
 } from '../../../../core/models/5701/servicios-extraordinarios.model';
 
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
@@ -43,10 +36,16 @@ import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../estados/tramites/tramite5701.store';
-import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+import {
+  Subject,
+  delay,
+  map,
+  merge,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
 
-import { DatosMercancia } from '../../../../core/models/5701/servicios-extraordinarios.model';
 import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.model';
 import { FechasService } from '../../../../core/services/shared/fechas/fechas.service';
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
@@ -295,6 +294,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       );
     catalogoAduanas$.subscribe();
+    
+  
+    merge(
+      catTipoSolicitud$, catalogoPaises$, catalogoAduanas$, catalogoAduanas$
+    ).subscribe();
   }
 
   getSeccionesAduaneras(): void {
