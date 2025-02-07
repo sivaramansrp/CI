@@ -1,0 +1,7 @@
+{
+    "options": [
+      { "label": "Nuevo", "value": "Nuevo" },
+      { "label": "Inicial", "value": "Inicial" }
+    ],
+    "defaultSelect": "Inicial"
+  }

@@ -3,8 +3,8 @@ import {
   Component,
   EventEmitter,
   Input,
-  Output,
-  SimpleChanges,
+  OnChanges,
+  Output, SimpleChanges,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CatalogoPaises } from '../../../core/models/shared/catalogos.model';
@@ -18,7 +18,7 @@ import { CatalogosSelectPaises } from '../../../core/models/shared/components.mo
   templateUrl: './select-paises.component.html',
   styleUrl: './select-paises.component.scss',
 })
-export class SelectPaisesComponent {
+export class SelectPaisesComponent implements OnChanges {
   @Input({ required: true }) catalogosPaises!: CatalogosSelectPaises;
 
   @Output() paisSeleccionado = new EventEmitter<CatalogoPaises>();

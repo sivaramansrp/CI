@@ -3,7 +3,10 @@
 <label for="itemSeleccionado" class="form-label">
   {{catalogosDatos.labelNombre}}
   @if (catalogosDatos.required) {*}:
+  @if(tooltipT){ <span class="bi bi-question-circle-fill" title="{{catalogosDatos.labelNombre}}"
+    data-bs-toggle="tooltip"></span>}
 </label>
+
 } @else {
   <label class="form-label height"></label>
 }
