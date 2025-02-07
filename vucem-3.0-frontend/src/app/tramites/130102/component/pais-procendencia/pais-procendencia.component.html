@@ -1,43 +1,55 @@
 <div class="container">
-    <div class="row">
-        <ng-titulo titulo="Pais(es) procedencia">
+  <div class="row">
+    <ng-titulo titulo="Pais(es) procedencia"> </ng-titulo>
 
-        </ng-titulo>
-       
-        <div class="row mb-5">
-            <div class="col-md-4">
-                <select-catalogos [catalogosDatos]="paisProc" (valorSeleccion)="fetchpaisProc($event)"
-                [tooltipT]="true"></select-catalogos>
-            </div>
-           <div class="col-md-4 d-flex justify-content-center align-items-center mt-5 mx-4">
-            <button type="button" class="btn-primary btn">
-                Todos los paises
-            </button>
-           </div>
-           <div class="col-md-4">   
-
-           </div>
-        </div>
-        <crosslist [fechas]="selectRangoDias" [showSearchInput1] = "true" [showSearchInput2]="true" [botonField]="botonField"></crosslist>
+    <div class="row mb-5">
+      <div class="col-md-4">
+        <select-catalogos
+          [catalogosDatos]="paisProc"
+          (valorSeleccion)="fetchpaisProc($event)"
+          [tooltipT]="true"
+        ></select-catalogos>
+      </div>
+      <div
+        class="col-md-4 d-flex justify-content-center align-items-center mt-5 mx-4"
+      >
+        <button type="button" class="btn-primary btn">Todos los paises</button>
+      </div>
+      <div class="col-md-4"></div>
     </div>
-    <div class="row  mt-4">
-        <div class="col-md-8">
-            <div class="form-group">
-              <label for="descripcion" class="form-label">Justificacion y beneficio que se obtiene*:</label>
-              <textarea class="form-control" rows="3" id="descripcion" placeholder="Justificacion y beneficio que se obtiene"></textarea>
-            </div>
-          </div>
-       
-       
+    <crosslist
+      [fechas]="selectRangoDias"
+      [showSearchInput1]="true"
+      [showSearchInput2]="true"
+      [botonField]="botonField"
+    ></crosslist>
+  </div>
+  <div class="row mt-4">
+    <div class="col-md-8">
+      <div class="form-group">
+        <label for="descripcion" class="form-label"
+          >Justificacion y beneficio que se obtiene*:</label
+        >
+        <textarea
+          class="form-control"
+          rows="3"
+          id="descripcion"
+          placeholder="Justificacion y beneficio que se obtiene"
+        ></textarea>
       </div>
-      <div class="row mt-4">
-        <div class="col-md-8">
-            <div class="form-group">
-              <label for="descripcion" class="form-label">Observaciones:</label>
-              <textarea class="form-control" rows="3" id="descripcion" placeholder="Observaciones"></textarea>
-            </div>
-          </div>
-       
-       
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-md-8">
+      <div class="form-group">
+        <label for="descripcion" class="form-label">Observaciones:</label>
+        <textarea
+          class="form-control"
+          rows="3"
+          id="descripcion"
+          placeholder="Observaciones"
+        ></textarea>
       </div>
+    </div>
+  </div>
 </div>

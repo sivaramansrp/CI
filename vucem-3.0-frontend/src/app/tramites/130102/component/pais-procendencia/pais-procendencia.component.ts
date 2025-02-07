@@ -1,15 +1,15 @@
 /**
  * @fileoverview Este archivo contiene la clase PaisProcendenciaComponent, que es responsable de manejar la lógica del componente País Procedencia.
- * 
+ *
  * @module PaisProcendenciaComponent
  */
 
 import { Component, OnInit } from '@angular/core';
-import { TituloComponent } from "../../../../shared/components/titulo/titulo.component";
-import { CrosslistComponent } from "../../../../shared/components/crosslist/crosslist.component";
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { CrosslistComponent } from '../../../../shared/components/crosslist/crosslist.component';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SelectCatalogosComponent } from "../../../../shared/components/select-catalogos/select-catalogos.component";
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { HttpClient } from '@angular/common/http';
 
@@ -25,12 +25,16 @@ import { HttpClient } from '@angular/common/http';
     CrosslistComponent,
     CommonModule,
     ReactiveFormsModule,
-    SelectCatalogosComponent
+    SelectCatalogosComponent,
   ],
   templateUrl: './pais-procendencia.component.html',
-  styleUrl: './pais-procendencia.component.scss'
+  styleUrl: './pais-procendencia.component.scss',
 })
 export class PaisProcendenciaComponent implements OnInit {
+  fechasSeleccionadas: string[] = [];
+  fecha: FormControl = new FormControl('');
+  fechaSeleccionada: FormControl = new FormControl('');
+  fechasDatos: string[] = [];
   /**
    * @property {Array<string>} selectRangoDias - Array para almacenar los rangos de días seleccionados.
    */
@@ -88,9 +92,12 @@ export class PaisProcendenciaComponent implements OnInit {
    */
   agregar(type: string) {
     if (type === 't') {
-      // Lógica para agregar selección
+      this.fechasSeleccionadas = [...this.selectRangoDias];
+      this.fechasDatos = [];
     } else {
-      // Lógica para agregar todos
+      const fechaValor = this.fecha.value.map(Number);
+      this.fechasSeleccionadas.push(this.fechasDatos[fechaValor]);
+      this.fechasDatos.splice(fechaValor, 1);
     }
   }
 
@@ -99,11 +106,14 @@ export class PaisProcendenciaComponent implements OnInit {
    * @description Quita elementos según el tipo especificado.
    * @param {string} type - El tipo de acción a realizar.
    */
-  quitar(type: string) {
+  quitar(type: string = '') {
     if (type === 't') {
-      // Lógica para restar selección
+      this.fechasDatos = [...this.selectRangoDias];
+      this.fechasSeleccionadas = [];
     } else {
-      // Lógica para restar todos
+      const fechaValor = this.fechaSeleccionada.value.map(Number);
+      this.fechasDatos.push(this.fechasSeleccionadas[fechaValor]);
+      this.fechasSeleccionadas.splice(fechaValor, 1);
     }
   }
 
@@ -119,8 +129,10 @@ export class PaisProcendenciaComponent implements OnInit {
    * @description Obtiene las opciones de países del servidor.
    */
   fetchPaisOptions() {
-    this.http.get('/assets/json/130102/pais-procenia.json').subscribe((data: any) => {
-      this.paisProc = data;
-    });
+    this.http
+      .get('/assets/json/130102/pais-procenia.json')
+      .subscribe((data: any) => {
+        this.paisProc = data;
+      });
   }
 }

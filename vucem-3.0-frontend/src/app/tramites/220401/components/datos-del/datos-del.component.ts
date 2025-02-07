@@ -90,7 +90,7 @@ export class DatosDelComponent implements OnInit {
   ]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   seleccionar(e:any){
-    console.log(e)
+   
   }
   
   // eslint-disable-next-line @typescript-eslint/no-empty-function

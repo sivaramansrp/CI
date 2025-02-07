@@ -1,16 +1,16 @@
 /**
  * @fileoverview Este archivo contiene la clase DetosDelLaComponent, que es responsable de manejar la lógica del componente Detos Del La.
- * 
+ *
  * @module DetosDelLaComponent
  */
 
 import { Component, OnInit } from '@angular/core';
-import { TituloComponent } from "../../../../shared/components/titulo/titulo.component";
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
 import { HttpClient } from '@angular/common/http';
-import { SelectCatalogosComponent } from "../../../../shared/components/select-catalogos/select-catalogos.component";
+import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 /**
  * @class DetosDelLaComponent
@@ -24,17 +24,17 @@ import { CatalogosSelect } from '../../../../core/models/shared/components.model
     CommonModule,
     ReactiveFormsModule,
     InputRadioComponent,
-    SelectCatalogosComponent
+    SelectCatalogosComponent,
   ],
   templateUrl: './detos-del-la.component.html',
-  styleUrl: './detos-del-la.component.scss'
+  styleUrl: './detos-del-la.component.scss',
 })
 export class DetosDelLaComponent implements OnInit {
-    /**
+  /**
    * @property {any[]} producto - Array para almacenar las opciones de productos.
    */
   producto: any[] = [];
-  
+
   /**
    * @property {string | number} selectedValue - El valor seleccionado.
    */
@@ -43,7 +43,7 @@ export class DetosDelLaComponent implements OnInit {
    * @property {string} defaultSelect - El valor seleccionado por defecto.
    */
   defaultSelect: string = 'Nuevo';
-   /**
+  /**
    * @property {CatalogosSelect} Unidad - El catálogo de unidades.
    */
   Unidad!: CatalogosSelect;
@@ -55,9 +55,7 @@ export class DetosDelLaComponent implements OnInit {
    * @constructor
    * @param {HttpClient} http - El cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {
-
-  }
+  constructor(private http: HttpClient) {}
   /**
    * @method ngOnInit
    * @description Inicializa el componente obteniendo los datos necesarios.
@@ -67,7 +65,7 @@ export class DetosDelLaComponent implements OnInit {
     this.fetchProductoOptions();
     this.fetchFraccionarOptions();
   }
-   /**
+  /**
    * @method onValueChange
    * @description Maneja el cambio del valor seleccionado.
    * @param {any} newValue - El nuevo valor.
@@ -75,59 +73,59 @@ export class DetosDelLaComponent implements OnInit {
   onValueChange(newValue: any) {
     this.selectedValue = newValue;
   }
-  
+
   /**
    * @method fetchProductoOptions
    * @description Obtiene las opciones de productos del servidor.
    */
   fetchProductoOptions() {
-    this.http.get('/assets/json/130102/producto-otions.json').subscribe((data: any) => {
-      this.producto = data.options;
-      this.defaultSelect = data.defaultSelect;
-    });
+    this.http
+      .get('/assets/json/130102/producto-otions.json')
+      .subscribe((data: any) => {
+        this.producto = data.options;
+        this.defaultSelect = data.defaultSelect;
+      });
   }
-   /**
+  /**
    * @method fetchfraccionarancelaria
    * @description Método de marcador de posición para obtener datos de fracción.
    * @param {any} e - El parámetro del evento.
    */
-  fetchfraccionarancelaria(e: any) {
-
-  }
+  fetchfraccionarancelaria(e: any) {}
 
   /**
    * @method fetchFraccionarOptions
    * @description Obtiene las opciones de fracción del servidor.
    */
   fetchFraccionarOptions() {
-    this.http.get('/assets/json/130102/fraccion_arancelaria.json').subscribe((data: any) => {
-      this.fraccionF = data;
-    });
+    this.http
+      .get('/assets/json/130102/fraccion_arancelaria.json')
+      .subscribe((data: any) => {
+        this.fraccionF = data;
+      });
   }
-   /**
+  /**
    * @method fetchUnidadDe
    * @description Obtiene los datos de unidad del servidor.
    */
   fetchUnidadDe() {
-    this.http.get('/assets/json/130102/unidad_da.json').subscribe((data: any) => {
-      console.log(data);
-      this.Unidad = data;
-    });
+    this.http
+      .get('/assets/json/130102/unidad_da.json')
+      .subscribe((data: any) => {
+     
+        this.Unidad = data;
+      });
   }
   /**
    * @method fetchFraccion
    * @description Método de marcador de posición para obtener datos de fracción.
    * @param {any} e - El parámetro del evento.
    */
-  fetchFraccion(e: any) {
-
-  }
-   /**
+  fetchFraccion(e: any) {}
+  /**
    * @method fetchUnidad
    * @description Método de marcador de posición para obtener datos de unidad.
    * @param {any} e - El parámetro del evento.
    */
-  fetchUnidad(e: any) {
-
-  }
+  fetchUnidad(e: any) {}
 }
