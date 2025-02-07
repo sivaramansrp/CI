@@ -1,0 +1,250 @@
+<div class="container">
+  <!-- @if(tipoSolSeleccionada) { -->
+  <form [formGroup]="FormSolicitud">
+
+    <ng-titulo titulo="Datos del trámit a realizar" />
+    <ng-container formGroupName="datosDelTramitRealizer">
+      <div class="row">
+        <div class="col-md-4">
+          <label class="form-label" for="tipoDeCertificado">Tipo de certificado*:</label>
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-md-6">
+          <div class="form-check">
+            <input class="form-check-input me-2" type="radio" name="tipoDeCertificado" value="Exportación"
+              id="Exportación" />
+            <label class="form-check-label" for="si">Exportación</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-check">
+            <input class="form-check-input me-2" type="radio" name="tipoDeCertificado" value="Reexportación"
+              id="Reexportación" />
+            <label class="form-check-label" for="no">Reexportación</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-md-8">
+          <label for="seccionAduanera" class="form-label">Aduana de salida/lugar de embarque*:</label>
+          <select class="form-control" id="seccionAduanera" formControlName="seccionAduanera">
+            <option value='' [defaultSelected]=true>Selecciona un valor</option>
+            <option value=1>Option - 1</option>
+            <option value=2>Option - 2</option>
+            <option value=3>Option - 3</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label" for="destino">Punto de destino*:</label>
+            <input class="form-control" id="destino" placeholder="Punto de destino" type="text"
+              formControlName="destino" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-md-8">
+          <label for="seccionAduanera" class="form-label">País de destino*:</label>
+          <select class="form-control" id="seccionAduanera" formControlName="seccionAduanera">
+            <option value='' [defaultSelected]=true>Selecciona un valor</option>
+            <option value=1>Option - 1</option>
+            <option value=2>Option - 2</option>
+            <option value=3>Option - 3</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-md-8">
+          <label for="seccionAduanera" class="form-label">País de procedencia*:</label>
+          <select class="form-control" id="seccionAduanera" formControlName="seccionAduanera">
+            <option value='' [defaultSelected]=true>Selecciona un valor</option>
+            <option value=1>Option - 1</option>
+            <option value=2>Option - 2</option>
+            <option value=3>Option - 3</option>
+          </select>
+        </div>
+      </div>
+
+    </ng-container>
+
+    <ng-titulo titulo="Fecha de inspección de la mercancía" />
+    <ng-container formGroupName="datosMercancia">
+      <div class="row">
+        <div class="col-md-4">
+          <label class="form-check-label" for="revisionOrigen">Rango de fechas:</label>
+          <input class="form-check-input me-3" type="checkbox" value="" id="revisionOrigen">
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-4">
+          <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
+        </div>
+        <div class="col-md-4">
+          <input-fecha [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-md-12">
+          <div class="panel-group ficha-collapse" id="mercancia-accordion">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  Datos Generales de la Mercancía:
+                </h4>
+                @if(!mercanciaCollapsable){
+                <button type="button" (click)="mercancia_colapsable()" class="collpase-button collapsed"></button>
+                }
+              </div>
+              <div class="panel-collapse collapse in" id="mercancia-colapsable">
+                <div class="panel-body">
+                  <table class="table table-responsive">
+                    <thead>
+                      <tr>
+                        <th>No. partida</th>
+                        <th>Fraccíon arancelaria</th>
+                        <th>Descripción de la fraccíon</th>
+                        <th>Cantidad UMT</th>
+                        <th>Unidad de medida de tarifa (UMT)</th>
+                        <th>Cantidad UMC</th>
+                        <th>Unidad de medida de comercialización (UMT)</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr>
+                        <td class="text-center" colspan="7">Sin Datos</td>
+                      </tr>
+                    </tbody>
+
+                  </table>
+                  @if(mercanciaCollapsable){
+                  <div class="panel-group ficha-collapse" id="add-mercancia-accordion">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h5 class="panel-title">
+                          Add Mercancía
+                        </h5>
+                      </div>
+                      <div class="panel-collapse collapse in" id="add-mercancia-colapsable">
+                        <div class="panel-body">
+                          <div class="col-md-12">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label class="form-label" for="destino">Fraccíon arancelaria:</label>
+                                <input class="form-control" id="destino" placeholder="Punto de destino" type="text"
+                                  formControlName="destino" />
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label class="form-label" for="destino">Descripción de la fraccíon:</label>
+                                <input class="form-control" id="destino" placeholder="Punto de destino" type="text"
+                                  formControlName="destino" />
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-12">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label class="form-label" for="destino">Cantidad UMT:</label>
+                                <input class="form-control" id="destino" placeholder="Punto de destino" type="text"
+                                  formControlName="destino" />
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label class="form-label" for="destino">UMT:</label>
+                                <input class="form-control" id="destino" placeholder="Punto de destino" type="text"
+                                  formControlName="destino" />
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-12">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label class="form-label" for="destino">Cantidad UMC:</label>
+                                <input class="form-control" id="destino" placeholder="Punto de destino" type="text"
+                                  formControlName="destino" />
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label class="form-label" for="destino">UMC:</label>
+                                <input class="form-control" id="destino" placeholder="Punto de destino" type="text"
+                                  formControlName="destino" />
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-12">
+                            <div class="col-md-8">
+                              <label for="seccionAduanera" class="form-label">País de origen*:</label>
+                              <select class="form-control" id="seccionAduanera" formControlName="seccionAduanera">
+                                <option value='' [defaultSelected]=true>Selecciona un valor</option>
+                                <option value=1>Option - 1</option>
+                                <option value=2>Option - 2</option>
+                                <option value=3>Option - 3</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-12">
+                            <div class="col-md-8">
+                              <label for="seccionAduanera" class="form-label">Entidad federativa de origen*:</label>
+                              <select class="form-control" id="seccionAduanera" formControlName="seccionAduanera">
+                                <option value='' [defaultSelected]=true>Selecciona un valor</option>
+                                <option value=1>Option - 1</option>
+                                <option value=2>Option - 2</option>
+                                <option value=3>Option - 3</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="col-md-12">
+                            <div class="col-md-8">
+                              <label for="seccionAduanera" class="form-label">Municipio de origen*:</label>
+                              <crosslist [fechas]="selectRangoDias"></crosslist>
+                            </div>
+                          </div>
+
+                          <div class="col-md-12">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-4 mt-3">
+                              <div class="btn-group">
+                                <button class="btn btn-primary me-2" type="button">Agregar</button>
+                                <button (click)="mercancia_colapsable()" class="btn btn-danger"
+                                  type="button">Cancelar</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  }
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+    </ng-container>
+
+    
+  </form>
+  <!-- } -->

@@ -33,6 +33,13 @@ const routes: Routes = [
         (m) => m.PantallasModule
       ),
   },
+  {
+    path: 'pantallas-captura',
+    loadChildren: () =>
+      import('./tramites/220402/pantallas-captura.module').then(
+        (m) => m.PantallasCapturaModule
+      ),
+  },
 ];
 
 @NgModule({
