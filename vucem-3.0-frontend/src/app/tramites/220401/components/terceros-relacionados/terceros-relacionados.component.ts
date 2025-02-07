@@ -1,4 +1,3 @@
-/* eslint-disable sort-imports */
 import { Component } from '@angular/core';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { TableComponent } from '../../../../shared/components/table/table.component';
@@ -8,7 +7,6 @@ import importardorTable from '../../../../../assets/json/220401/importador-table
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { MENSAJEDEALERTA } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { AgregarDestinatoriaComponent } from '../agregar-destinatoria/agregar-destinatoria.component';
-
 
 
 @Component({
@@ -36,7 +34,6 @@ export class TercerosRelacionadosComponent {
 
 
   constructor() {
-    // console.log('TercerosRelacionadosComponent====>',this.getEstablecimientoTableData);
   }
 
   ngOnInit(): void {
@@ -80,9 +77,6 @@ export class TercerosRelacionadosComponent {
   public agregar(agregar:string) {
     if(agregar === 'Agregar'){
       this.hasAgregar = true;
-      //console.log('Agregar Establecimiento');
     }
   }
-
-
 }

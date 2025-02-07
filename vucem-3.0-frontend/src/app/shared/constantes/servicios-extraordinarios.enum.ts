@@ -136,7 +136,7 @@ export const FECHA_FINAL = {
 };
 
 export const MENSAJEDEALERTA = {
-  ADJUNTAR: `<p>Las tablas con asterisco son obligatorias y debes agregarpor lo menos un registro</p>`,
+  ADJUNTAR: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro</p>`,
 };
 
 export const ELVALORALERTA = {
