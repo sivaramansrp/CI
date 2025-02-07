@@ -21,7 +21,7 @@ import { PeximRoutingModule } from './pexim-routing.module';
 import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
 import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
 import { SharedModule } from '../../shared/shared.module';
-import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component'; 
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
