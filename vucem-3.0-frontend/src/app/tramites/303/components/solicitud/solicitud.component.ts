@@ -308,14 +308,6 @@ export class SolicitudComponent {
   }
 
   // *Eventos de los componentes hijos
-  paisOrigen(pais: CatalogoPaises) {
-    console.log(pais);
-  }
-
-  paisProcedencia(pais: CatalogoPaises) {
-    console.log(pais);
-  }
-
   busqueda_rfc() {
     const rfc = this.datosImportadorExportador.get('rfcImportExport')?.value;
     // Aqui se hará la busqueda del rfc, para obtener el nombre
