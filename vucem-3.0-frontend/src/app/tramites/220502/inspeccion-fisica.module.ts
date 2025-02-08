@@ -1,7 +1,7 @@
-// inspeccion-fisica.module.ts
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';

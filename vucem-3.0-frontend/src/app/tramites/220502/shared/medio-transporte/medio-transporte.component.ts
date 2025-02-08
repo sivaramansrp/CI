@@ -1,3 +1,4 @@
+/* eslint-disable sort-imports */
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import {
@@ -9,7 +10,7 @@ import {
 } from '@angular/forms';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
-import { mercanciaTablaData } from '../../../../core/models/220502/solicitud-pantallas.model';
+import { datosDeMercancias } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 
 @Component({
@@ -36,7 +37,9 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   @Input() claveDeControl: string = '';
 
   /** Propiedad de entrada para contener datos relacionados con mercancia. */
-  @Input() mercanciaTablaData: mercanciaTablaData;
+  @Input() hMercanciaTabla: string[] = [];
+
+  @Input() dMercanciaBody: datosDeMercancias[];
 
   /** Propiedad de entrada para gestionar la selección del método de transporte. */
   @Input() mediodetransporte!: CatalogosSelect;

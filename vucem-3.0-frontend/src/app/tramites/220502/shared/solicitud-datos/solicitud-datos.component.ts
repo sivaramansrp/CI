@@ -1,6 +1,7 @@
+/* eslint-disable sort-imports */
 import { Component, Input } from '@angular/core';
 import { TEXTOS } from '../../../../shared/constantes/220502/texto-enum';
-import { Solicitud } from '../../../../core/models/220502/solicitud-pantallas.model';
+import { solicitud } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 
@@ -29,7 +30,7 @@ export class SolicitudDatosComponent {
   /**
    * Recibe la lista de solicitudes como datos de fila de la tabla.
    */
-  @Input() tablaFilaDatos : Solicitud[];
+  @Input() tablaFilaDatos : solicitud[];
 
  /**
    * Alterna el panel plegable (expandir/contraer)

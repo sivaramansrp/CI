@@ -1,3 +1,4 @@
+/* eslint-disable sort-imports */
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import {

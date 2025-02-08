@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { InspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { historialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
 
 @Component({
   selector: 'app-historial-inspeccion-fisica',
@@ -14,5 +14,5 @@ export class HistorialInspeccionFisicaComponent {
   @Input() tablaHeadData: string[];
 
   /** Matriz para contener datos para cada fila de la tabla */
-  @Input() tablaFilaDatos: InspeccionFisica[];
+  @Input() tablaFilaDatos: historialInspeccionFisica[];
 }

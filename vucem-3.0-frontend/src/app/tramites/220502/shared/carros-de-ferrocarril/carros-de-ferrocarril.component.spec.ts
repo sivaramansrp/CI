@@ -1,8 +1,9 @@
+/* eslint-disable sort-imports */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CarrosDeFerrocarrilComponent } from './carros-de-ferrocarril.component';
-import { TituloComponent } from '../titulo/titulo.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { CarroFerrocarril } from '../models/carro-ferrocarril.model';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { carrosDeFerrocarril } from '../../../../core/models/220502/solicitud-pantallas.model';
 
 describe('CarrosDeFerrocarrilComponent', () => {
   let component: CarrosDeFerrocarrilComponent;
@@ -27,16 +28,26 @@ describe('CarrosDeFerrocarrilComponent', () => {
   });
 
   it('should have tablaHeadData as input', () => {
-    const testHeadData = ['Header1', 'Header2'];
+    const testHeadData = ['Número de parcialidad/remesa', 'Cantidad de carros de ferrocarril'];
     component.tablaHeadData = testHeadData;
     fixture.detectChanges();
     expect(component.tablaHeadData).toEqual(testHeadData);
   });
 
   it('should have tablaFilaDatos as input', () => {
-    const testFilaDatos: CarroFerrocarril[] = [
-      { id: 1, nombre: 'Carro 1', fecha: new Date() },
-      { id: 2, nombre: 'Carro 2', fecha: new Date() }
+    const testFilaDatos: carrosDeFerrocarril[] = [
+      { 
+        idInspeccionFisica: 1, 
+        numeroAutorizacion: 'P001', 
+        numeroPartidaMercancia: '10', 
+        numeroTotalCarros: 1,
+      },
+      { 
+        idInspeccionFisica: 2, 
+        numeroAutorizacion: 'P002', 
+        numeroPartidaMercancia: '15', 
+        numeroTotalCarros: 1,
+      },
     ];
     component.tablaFilaDatos = testFilaDatos;
     fixture.detectChanges();

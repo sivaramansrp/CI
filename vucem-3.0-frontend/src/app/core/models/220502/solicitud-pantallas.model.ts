@@ -1,7 +1,7 @@
-export interface DatosMercancia {
+export interface datosDeMercancias {
   fraccionArancelaria: string;
   descripcionFraccion: string;
-  unico: string;
+  nico: string;
   nicoDescripcion: string;
   cantidadSolicitadaUMT: number;
   unidadMedidaUMT: string;
@@ -10,14 +10,14 @@ export interface DatosMercancia {
   selected?: boolean;
 }
 
-export interface CarroFerrocarril {
+export interface carrosDeFerrocarril {
   idInspeccionFisica: number;
   numeroAutorizacion: string;
   numeroPartidaMercancia: string;
   numeroTotalCarros: number;
 }
 
-export interface InspeccionFisica {
+export interface historialInspeccionFisica {
   numeroPartidaMercancia: string;
   fraccionArancelaria: string;
   nico: string;
@@ -27,7 +27,7 @@ export interface InspeccionFisica {
   fechaInspeccionString: string;
 }
 
-export interface Solicitud {
+export interface solicitud {
   fechaCreacion: string;
   mercancia: string;
   cantidad: string;
@@ -36,5 +36,16 @@ export interface Solicitud {
 
 export interface mercanciaTablaData {
   hMercanciaTabla :string[];
-  dMercanciaBody:DatosMercancia[];
+  dMercanciaBody:datosDeMercancias[];
+}
+
+export interface cargarDatosIniciales {
+  hHistorialinspeccion: string[];
+  dHistorialInspecciones: historialInspeccionFisica[];
+  dCarrosDeFerrocarril: carrosDeFerrocarril[];
+  hCarroFerrocarril: string[];
+  hSolicitud: string[];
+  dSolicitud: solicitud[];
+  hMerchandise: string[];
+  dMercancia: datosDeMercancias[];
 }

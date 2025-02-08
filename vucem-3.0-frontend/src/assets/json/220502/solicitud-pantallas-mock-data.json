@@ -1,5 +1,5 @@
 {
-  "hTabla": [
+  "hMerchandise": [
     "Fracción arancelaria",
     "Descripción de la fracción",
     "Nico",
@@ -60,11 +60,11 @@
       "proovedor":"erick"
     }
   ],
-  "datosMercancia": [
+  "dMercancia": [
     {
       "fraccionArancelaria": "1001.10.10",
       "descripcionFraccion": "Trigo duro",
-      "unico": "Sí",
+      "nico": "Sí",
       "nicoDescripcion": "Trigo para molienda",
       "cantidadSolicitadaUMT": 50,
       "unidadMedidaUMT": "kg",
@@ -74,7 +74,7 @@
     {
       "fraccionArancelaria": "2002.90.10",
       "descripcionFraccion": "Puré de tomate",
-      "unico": "No",
+      "nico": "No",
       "nicoDescripcion": "Concentrado envasado",
       "cantidadSolicitadaUMT": 50,
       "unidadMedidaUMT": "kg",
@@ -82,7 +82,7 @@
       "saldoPendiente": 10
     }
   ],
-  "carrosDeFerrocarrilPager": [
+  "dCarrosDeFerrocarril": [
     {
       "idInspeccionFisica": 1,
       "numeroAutorizacion": "12345",

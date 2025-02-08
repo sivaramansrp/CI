@@ -1,5 +1,6 @@
+/* eslint-disable sort-imports */
 import { Component, Input } from '@angular/core';
-import { CarroFerrocarril } from '../../../../core/models/220502/solicitud-pantallas.model';
+import { carrosDeFerrocarril } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 @Component({
@@ -11,7 +12,7 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
 })
 export class CarrosDeFerrocarrilComponent {
    /** Matriz para contener datos para cada fila de la tabla */
-  @Input() tablaFilaDatos: CarroFerrocarril[];
+  @Input() tablaFilaDatos: carrosDeFerrocarril[];
 
   /** Matriz para contener etiquetas de encabezado para la tabla */
   @Input() tablaHeadData: string[];

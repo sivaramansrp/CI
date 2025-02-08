@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PasoUnoComponent } from './paso-uno.component';
 
 describe('PasoUnoComponent', () => {
@@ -8,10 +7,12 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent]
+      declarations: [ PasoUnoComponent ]
     })
     .compileComponents();
-    
+  });
+
+  beforeEach(() => {
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -19,5 +20,14 @@ describe('PasoUnoComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have default indice value', () => {
+    expect(component.indice).toBe(1);
+  });
+
+  it('should update indice when seleccionaTab is called', () => {
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
   });
 });

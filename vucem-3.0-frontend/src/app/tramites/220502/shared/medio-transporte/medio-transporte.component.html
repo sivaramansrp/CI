@@ -72,13 +72,13 @@
             <th>
               <input type="checkbox" />
             </th>
-            @for (item of mercanciaTablaData?.hMercanciaTabla; track $index) {
+            @for (item of hMercanciaTabla; track $index) {
             <th>{{ item }}</th>
             }
           </tr>
         </thead>
         <tbody>
-          @for (item of mercanciaTablaData?.dMercanciaBody; let i = $index;
+          @for (item of dMercanciaBody; let i = $index;
           track i) {
           <tr>
             <td>
@@ -86,7 +86,7 @@
             </td>
             <td>{{ item.fraccionArancelaria }}</td>
             <td>{{ item.descripcionFraccion }}</td>
-            <td>{{ item.unico }}</td>
+            <td>{{ item.nico }}</td>
             <td>{{ item.nicoDescripcion }}</td>
             <td>{{ item.cantidadSolicitadaUMT }}</td>
             <td>{{ item.unidadMedidaUMT }}</td>
