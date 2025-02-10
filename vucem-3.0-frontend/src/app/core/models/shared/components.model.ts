@@ -111,6 +111,15 @@ export interface DatosRepresentanteLegal {
   correo: string;
 }
 
+export interface TableData {
+  tableHeader: string[];
+  tableBody: TableBodyData[];
+}
+
+export interface TableBodyData {
+  tbodyData: string[];
+}
+
 export interface DatosPageAcuse {
   txtAlerta: string;
   tituloSeccionAcuse: string;

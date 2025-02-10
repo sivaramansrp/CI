@@ -8,6 +8,10 @@ export const COOKIE = {
   NOMBRE_COOKIE_RFC: 'sg-rfc',
 };
 
+export const CODIGOS_HTTP = {
+  SUCCESS: "200"
+}
+
 export const CATALOGOS_ID = {
   CAT_TIPO_SOL: 'tipos-solicitud',
   CAT_PAISES: 'paises',
@@ -16,7 +20,8 @@ export const CATALOGOS_ID = {
   DATOS_GNRLS_SOL: 5,
   CAT_TIPO_DOCUMENTO: 'tipos-documento',
   CAT_TIPO_OPERACION: 7,
-};
+  DATOS_PERSONA_FISICA: 21,
+}
 
 export const TIPO_PERSONA = {
   FISICA_NACIONAL: 1,
