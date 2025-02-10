@@ -1,8 +1,8 @@
+import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JSONResponse } from '../../../models/shared/catalogos.model';
 import { enviroment } from '../../../../../enviroments/enviroment';
-import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +20,6 @@ export class ServiciosExtraordinariosService {
   obtenerTramite(id: number): Observable<JSONResponse> {
     return this.http.get<JSONResponse>(`${this.urlServer}/${id}`).pipe(
       catchError((error) => {
-        console.log(error);
         return throwError(() => error);
       })
     );
