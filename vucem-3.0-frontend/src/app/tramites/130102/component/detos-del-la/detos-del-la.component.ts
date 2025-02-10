@@ -7,7 +7,12 @@
 import { Component, OnInit } from '@angular/core';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
 import { HttpClient } from '@angular/common/http';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
@@ -30,6 +35,7 @@ import { CatalogosSelect } from '../../../../core/models/shared/components.model
   styleUrl: './detos-del-la.component.scss',
 })
 export class DetosDelLaComponent implements OnInit {
+  form!: FormGroup;
   /**
    * @property {any[]} producto - Array para almacenar las opciones de productos.
    */
@@ -55,16 +61,45 @@ export class DetosDelLaComponent implements OnInit {
    * @constructor
    * @param {HttpClient} http - El cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private fb: FormBuilder) {}
   /**
    * @method ngOnInit
    * @description Inicializa el componente obteniendo los datos necesarios.
    */
   ngOnInit() {
+    this.form = this.fb.group({
+      descripcion: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(500),
+        ],
+      ],
+      fraccion: ['', [Validators.required]],
+      unidadMedida: ['', [Validators.required]],
+      cantidad: [
+        '',
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.pattern('^[0-9]+$'),
+        ],
+      ],
+      valorFacturaUSD: [
+        '',
+        [
+          Validators.required,
+          Validators.min(0.01),
+          Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
+        ],
+      ],
+    });
     this.fetchUnidadDe();
     this.fetchProductoOptions();
     this.fetchFraccionarOptions();
   }
+
   /**
    * @method onValueChange
    * @description Maneja el cambio del valor seleccionado.
@@ -112,7 +147,6 @@ export class DetosDelLaComponent implements OnInit {
     this.http
       .get('/assets/json/130102/unidad_da.json')
       .subscribe((data: any) => {
-     
         this.Unidad = data;
       });
   }
