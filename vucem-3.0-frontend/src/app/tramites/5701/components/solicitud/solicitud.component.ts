@@ -14,7 +14,6 @@ import {
   CatalogoPaises,
 } from '../../../../core/models/shared/catalogos.model';
 import {
-  DatosInputCheck,
   InputFecha,
   InputHora,
 } from '../../../../core/models/shared/components.model';
@@ -43,7 +42,6 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SeccionQuery } from '../../../../core/queries/seccion.query';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
-import { DatosArchivo } from '../../../../core/models/shared/components.model';
 
 @Component({
   selector: 'app-solicitud',
@@ -215,6 +213,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     return this.FormSolicitud.get('pagoCaptura') as FormGroup;
   }
 
+  /**
+   * Verifica si la solicitud seleccionada es de tipo individual.
+   *
+   * @returns {boolean} - Retorna `true` si la solicitud seleccionada es de tipo individual, de lo contrario retorna `false`.
+   */
   individual(): boolean {
     return this.tipoSolicitudSeleccionada &&
       this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
@@ -222,8 +225,26 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       : false;
   }
 
+  /**
+   * Verifica si un campo específico en un formulario es válido.
+   *
+   * @param {FormGroup} form - El formulario que contiene el campo a validar.
+   * @param {string} field - El nombre del campo a validar.
+   * @returns {boolean} - Retorna `true` si el campo es válido, de lo contrario `false`.
+   */
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field);
+  }
+
+  /**
+   * Verifica si hay un error de intervalo de fecha en los datos del servicio.
+   * @returns {boolean} - `true` si hay un error de intervalo de fecha y el campo ha sido tocado, de lo contrario `false`.
+   */
+  intervaloFechaError(): boolean {
+    return (
+      this.datosServicio.hasError('invalidIntervalo') &&
+      this.datosServicio.touched
+    );
   }
 
   private inicializaCatalogos(): void {
@@ -298,7 +319,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.formulariosService.agregarValorCamposDesactivados(datosPatente);
   }
 
-  // eslint-disable-next-line complexity
+  /**
+   * Crea el formulario de solicitud.
+   * @return {void} No retorna ningún valor.
+   */
   crearFormSolicitud(): void {
     this.FormSolicitud = this.fb.group({
       tipoSolicitud: [
@@ -332,24 +356,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
       }),
 
-      datosServicio: this.fb.group(
-        {
-          fechaInicio: [
-            this.solicitudState?.fechaInicio,
-            [Validators.required, this.validacionesService.validaFechaNoHoy],
-          ],
-          fechaFinal: [
-            this.solicitudState?.fechaFinal,
-            [Validators.required, this.validacionesService.validaFechaNoHoy],
-          ],
-          horaInicio: [this.solicitudState?.horaInicio, Validators.required],
-          horaFinal: [this.solicitudState?.horaFinal, Validators.required],
-          fechasSeleccionadas: this.fb.array([]),
-        },
-        {
-          validators: this.fechaIntervaloValidator(),
-        }
-      ),
+      datosServicio: this.fb.group({
+        fechaInicio: [
+          this.solicitudState?.fechaInicio,
+          [Validators.required, this.validacionesService.validaFechaNoHoy],
+        ],
+        fechaFinal: [
+          this.solicitudState?.fechaFinal,
+          [Validators.required, this.validacionesService.validaFechaNoHoy],
+        ],
+        horaInicio: [this.solicitudState?.horaInicio, Validators.required],
+        horaFinal: [this.solicitudState?.horaFinal, Validators.required],
+        fechasSeleccionadas: this.fb.array([]),
+      }),
 
       despacho: this.fb.group({
         despacho: [this.solicitudState?.despacho],
@@ -413,88 +432,61 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Validador de intervalo de fechas y horas para un formulario.
-   *
    * Este validador verifica que el intervalo entre las fechas y horas de inicio y finalización
    * cumpla con las restricciones específicas según el tipo de solicitud seleccionada.
-   *
-   * @returns Una función que toma un `FormGroup` y devuelve un objeto con una clave booleana
-   *          indicando si el intervalo es inválido, o `null` si el intervalo es válido.
-   *
-   * @example
-   * ```typescript
-   * const formGroup = new FormGroup({
-   *   datosServicio: new FormGroup({
-   *     fechaInicio: new FormControl('2023-01-01'),
-   *     fechaFinal: new FormControl('2023-01-02'),
-   *     horaInicio: new FormControl('08:00'),
-   *     horaFinal: new FormControl('18:00')
-   *   })
-   * });
-   * const validator = fechaIntervaloValidator();
-   * const validationResult = validator(formGroup);
-   * console.log(validationResult); // null si el intervalo es válido, { invalidIntervalo: true } si no lo es
-   * ```
-   *
    * @returns {Function} Una función que toma un `FormGroup` y devuelve un objeto con una clave booleana
    *                     indicando si el intervalo es inválido, o `null` si el intervalo es válido.
    */
-  fechaIntervaloValidator() {
+  fechaIntervaloValidator(): void {
     // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
-    return (group: FormGroup): { [key: string]: boolean } | null => {
-      const datosServicio = group.get('datosServicio') as FormGroup;
-
-      const fechaInicio = new Date(
-        this.datosServicio?.get('fechaInicio').value
+    const fechaInicio = new Date(this.datosServicio.get('fechaInicio').value);
+    const fechaFinal = new Date(this.datosServicio.get('fechaFinal').value);
+    const horaInicio = this.datosServicio.get('horaInicio').value;
+    const horaFinal = this.datosServicio.get('horaFinal').value;
+    const intervalDays = this.getIntervaloDias(this.tipoSolicitudSeleccionada);
+    if (
+      fechaInicio &&
+      fechaFinal &&
+      horaInicio &&
+      horaFinal &&
+      intervalDays !== null
+    ) {
+      fechaInicio.setHours(
+        parseInt(horaInicio.split(':')[0], 10),
+        parseInt(horaInicio.split(':')[1], 10)
       );
-      const fechaFinal = new Date(datosServicio?.get('fechaFinal').value);
-      const horaInicio = datosServicio?.get('horaInicio').value;
-      const horaFinal = datosServicio?.get('horaFinal').value;
-      const intervalDays = this.getIIntervaloDias(
-        this.tipoSolicitudSeleccionada
+      fechaFinal.setHours(
+        parseInt(horaFinal.split(':')[0], 10),
+        parseInt(horaFinal.split(':')[1], 10)
       );
+      const differenceInTime = fechaFinal.getTime() - fechaInicio.getTime();
+      const differenceInHours = differenceInTime / (1000 * 3600);
 
       if (
-        fechaInicio &&
-        fechaFinal &&
-        horaInicio &&
-        horaFinal &&
-        intervalDays !== null
+        this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL &&
+        differenceInHours > 24
       ) {
-        fechaInicio.setHours(
-          parseInt(horaInicio.split(':')[0], 10),
-          parseInt(horaInicio.split(':')[1], 10)
-        );
-        fechaFinal.setHours(
-          parseInt(horaFinal.split(':')[0], 10),
-          parseInt(horaFinal.split(':')[1], 10)
-        );
-        const differenceInTime = fechaFinal.getTime() - fechaInicio.getTime();
-        const differenceInHours = differenceInTime / (1000 * 3600);
-
-        if (
-          this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL &&
-          differenceInHours > 24
-        ) {
-          return { invalidIntervalo: true };
-        }
-
-        const differenceInDays = differenceInTime / (1000 * 3600 * 24);
-        if (
-          (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL &&
-            differenceInDays > 7) ||
-          (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.MENSUAL &&
-            differenceInDays > 30)
-        ) {
-          return { invalidIntervalo: true };
-        }
-
-        if (differenceInTime < 0) {
-          return { endDateBeforeStartDate: true };
-        }
+        this.datosServicio.setErrors({ invalidIntervalo: true });
+        // return { invalidIntervalo: true };
       }
-      return null;
-    };
+
+      const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+      if (
+        (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL &&
+          differenceInDays > 7) ||
+        (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.MENSUAL &&
+          differenceInDays > 30)
+      ) {
+        this.datosServicio
+          .get('fechaFinal')
+          .setErrors({ invalidIntervalo: true });
+        // return { invalidIntervalo: true };
+      }
+
+      if (differenceInTime < 0) {
+        this.datosServicio.setErrors({ endDateBeforeStartDate: true });
+      }
+    }
   }
 
   /**
@@ -503,7 +495,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param {number} intervalo - El tipo de intervalo, que puede ser uno de los valores definidos en TIPO_SOLICITUD.
    * @returns {number | null} El número de días correspondiente al intervalo proporcionado, o null si el intervalo no es válido.
    */
-  getIIntervaloDias(intervalo: number): number | null {
+  getIntervaloDias(intervalo: number): number | null {
     switch (intervalo) {
       case TIPO_SOLICITUD.INDIVIDUAL:
         return 1;
@@ -516,50 +508,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-  validarDiferenciaFechas(): void {
-    const periodo = parseInt(
-      this.FormSolicitud.get('tipoSolicitud')?.value,
-      10
-    );
-    const fechaInicio = new Date(this.datosServicio.get('fechaInicio').value);
-    const fechaFin = new Date(this.datosServicio.get('fechaFinal').value);
-
-    let diferenciaPermitidaMin, diferenciaPermitidaMax;
-    switch (periodo) {
-      case TIPO_SOLICITUD.INDIVIDUAL:
-        diferenciaPermitidaMin = 1;
-        diferenciaPermitidaMax = 1;
-        break;
-      case TIPO_SOLICITUD.SEMANAL:
-        diferenciaPermitidaMin = 1;
-        diferenciaPermitidaMax = 7;
-        break;
-      case TIPO_SOLICITUD.MENSUAL:
-        diferenciaPermitidaMin = 1;
-        diferenciaPermitidaMax = 30;
-        break;
-      default:
-        diferenciaPermitidaMin = 0;
-        diferenciaPermitidaMax = 0;
-    }
-
-    const diferenciaDias =
-      (fechaFin.getTime() - fechaInicio.getTime()) / (1000 * 3600 * 24);
-
-    if (
-      diferenciaDias < diferenciaPermitidaMin ||
-      diferenciaDias > diferenciaPermitidaMax
-    ) {
-      this.datosServicio
-        .get('fechaFinal')
-        .setErrors({ diferenciaExcedida: true });
-    } else {
-      this.datosServicio.get('fechaFinal').setErrors(null);
-    }
-  }
-
   // *Eventos de los componentes hijos
-
   busqueda_rfc(): void {
     const rfcImportExport =
       this.datosImportadorExportador.get('rfcImportExport')?.value;
@@ -583,8 +532,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   tipoSolicitudSeleccion(): void {
-    this.tipoSolicitudSeleccionada =
-      this.FormSolicitud.get('tipoSolicitud')?.value;
+    this.tipoSolicitudSeleccionada = parseInt(
+      this.FormSolicitud.get('tipoSolicitud')?.value,
+      10
+    );
 
     const tipoSolicitud = this.FormSolicitud.get('tipoSolicitud')?.value;
     this.tramite5701Store.setTipoSolicitud(tipoSolicitud);
@@ -619,7 +570,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     );
     this.validacionPedimento = true;
 
-    //
     const patente = this.formulariosService.convertirValorANumero(
       this.despacho,
       'patente'
@@ -637,7 +587,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   validaCampoPedimento(): void {
     const aduanaValidacion = this.isValid(this.despacho, 'descripcionAduana');
-    if (aduanaValidacion === null) this.validacionPedimento = true;
+    if (aduanaValidacion === null) {
+      this.validacionPedimento = true;
+    }
   }
 
   darValorCampoFormulario(
@@ -692,6 +644,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   changeFechaFinal(): void {
     this.datosServicio.updateValueAndValidity();
+    this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
   }
 
@@ -706,9 +659,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   changeHoraFinal(): void {
     this.datosServicio.updateValueAndValidity();
+    this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

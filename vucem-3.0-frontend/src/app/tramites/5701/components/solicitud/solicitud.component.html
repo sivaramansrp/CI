@@ -180,11 +180,21 @@
           </div>
           }
 
+          @if (intervaloFechaError()) {
+          <div class="mensaje-error">
+            Intervalo de fecha no válido
+          </div>
+          }
         </div>
 
         <div class="col-md-4">
           <input-hora formControlName="horaFinal" [label]="'Hora Final'" [required]="true" [inputId]="'horaFinal'"
             (change)="changeHoraFinal()"></input-hora>
+          @if (intervaloFechaError()) {
+          <div class="mensaje-error">
+            Intervalo de fecha no válido
+          </div>
+          }
         </div>
       </div>
 

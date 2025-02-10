@@ -24,9 +24,8 @@ export class ValidacionesFormularioService {
   public isValid(control: AbstractControl, campo?: string): boolean | null {
     if (control instanceof FormGroup && campo) {
       return control.controls[campo].errors && control.controls[campo].touched;
-    } else {
-      return control.errors && control.touched;
     }
+    return control.errors && control.touched;
   }
 
   /**
@@ -52,9 +51,8 @@ export class ValidacionesFormularioService {
     if (control instanceof FormGroup && campo) {
       const campoControl = control.controls[campo];
       return campoControl?.errors?.['required'] && campoControl.touched;
-    } else {
-      return control.errors && control.errors['required'] && control.touched;
     }
+    return control.errors && control.errors['required'] && control.touched;
   }
 
   /**
@@ -85,13 +83,12 @@ export class ValidacionesFormularioService {
     if (control instanceof FormGroup && campo) {
       const campoControl = control.controls[campo];
       return campoControl?.errors?.['pattern'] && campoControl.touched;
-    } else {
-      return control.errors && control.errors['pattern'] && control.touched;
     }
+    return control.errors && control.errors['pattern'] && control.touched;
   }
 
   /**
-   * Validacion personalida para el input fecha, compara la fecha seleccionada con la fecha actual y devuelve un error de validación si la fecha es igual o anterior a hoy.
+   * Validacion personalizada para el input fecha, compara la fecha seleccionada con la fecha actual y devuelve un error de validación si la fecha es igual o anterior a hoy.
    * @param {AbstractControl} control: Este es el control del formulario que contiene el valor de la fecha seleccionada a validar.
    * @returns {ValidationErrors} | null: La función devuelve un objeto ValidationErrors si la validación falla (es decir, si la fecha es igual o anterior a hoy), o null si la validación es exitosa.
    */
@@ -102,6 +99,11 @@ export class ValidacionesFormularioService {
     return diaSeleccionado > hoy ? null : { minDate: true };
   }
 
+  /**
+   * Valida que la fecha de inicio sea menor a la fecha final
+   * @param {string} groupName : Nombre del grupo de campos a validar
+   * @returns {ValidatorFn} : Retorna una función que valida si la fecha de inicio es menor a la fecha final
+   */
   validaDiaDiferencia(groupName: string): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const controlGroup = control.get(groupName) as FormGroup;
