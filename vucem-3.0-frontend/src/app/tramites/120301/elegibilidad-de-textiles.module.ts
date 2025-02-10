@@ -27,7 +27,6 @@ import { TableComponent } from '../../shared/components/table/table.component';
 
 @NgModule({
   declarations: [
-    SolicitanteComponent,
     ConstanciaDelRegistroComponent,
     ElegibilidadTextilesComponent,
     PasoDosComponent,
@@ -40,6 +39,7 @@ import { TableComponent } from '../../shared/components/table/table.component';
     CommonModule,
     ElegibilidadDeTextilesRoutingModule,
     WizardComponent,
+    SolicitanteComponent,
     TituloComponent,
     InputFechaComponent,
     ReactiveFormsModule,

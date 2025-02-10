@@ -3,15 +3,15 @@ import {
   FormBuilder,
   FormGroup,
   ValidatorFn,
-  Validators,
+  Validators, 
+  ReactiveFormsModule
 } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
-// import { IDDEUSUARIO } from '../../../../shared/constantes/elegibilidad-de-textiles.enums';
 import { ServiciosElegibilidadDeTextilesService } from '../../../../core/services/120301/servicios-elegibilidad-de-textiles.service';
 import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
-// import { solicitante } from '../../../../core/models/120301/elegibilidad-de-textiles-routing.model';
-
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from '../../../../shared/constantes/elegibilidad-de-textiles.enums';
 
 
@@ -19,6 +19,12 @@ import { ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from '../../../../shared/con
   selector: 'app-solicitante',
   templateUrl: './solicitante.component.html',
   styleUrls: ['./solicitante.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+  ],
 })
 /**
  * @component SolicitanteComponent

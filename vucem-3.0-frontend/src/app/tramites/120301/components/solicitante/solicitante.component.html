@@ -2,7 +2,7 @@
     <!-- Formulario dinamico de tipo de personas -->
     <form [formGroup]="form">
       <div class="form" formGroupName="datosGenerales">
-        <!-- <ng-titulo tituloMensaje="Datos generales del solicitante" /> -->
+        <ng-titulo titulo="Datos generales del solicitante" />
   
         <div class="row">
           @for (item of persona; track $index) {
