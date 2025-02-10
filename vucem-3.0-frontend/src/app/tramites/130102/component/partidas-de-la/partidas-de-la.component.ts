@@ -90,10 +90,10 @@ export class PartidasDeLaComponent implements OnInit {
    */
   crearFormulario(): void {
     this.form = this.fb.group({
-      cantidad: ['', Validators.required],
-      fraccionArancelariaTIGIE: [''],
-      descripcion: ['', Validators.required],
-      valorPartidaUSD: ['', [Validators.required, Validators.min(0)]]
+      cantidad: ['', [Validators.required, Validators.pattern('^[0-9]+$'), Validators.maxLength(18)]],
+      fraccionArancelariaTIGIE: ['', [Validators.required]],
+      descripcion: ['', [Validators.required, Validators.maxLength(255)]],
+      valorPartidaUSD: ['', [Validators.required, Validators.min(0), Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'), Validators.maxLength(20)]]
     });
   }
 
@@ -133,4 +133,25 @@ export class PartidasDeLaComponent implements OnInit {
     this.tableHeaderData = this.getEstablecimientoTableData.tableHeader;
     this.tableBodyData = this.getEstablecimientoTableData.tableBody;
   }
+
+    /**
+   * Método para validar el formulario al hacer clic en el botón
+   */
+    validarYEnviarFormulario(): void {
+      if (this.form.invalid) {
+        this.form.markAllAsTouched();
+        console.log("El formulario tiene errores. Corríjalos antes de continuar.");
+      } else {
+        console.log("Formulario enviado con éxito", this.form.value);
+      }
+    }
+  
+    /**
+     * Método para verificar si un control del formulario es inválido
+     */
+    esInvalido(nombreControl: string): boolean {
+      const control = this.form.get(nombreControl);
+      return control ? control.invalid && (control.touched || control.dirty) : false;
+    }
+  
 }
