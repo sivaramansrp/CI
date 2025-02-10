@@ -2,12 +2,11 @@
  * Modelo de datos de la solicitud
  * @export
  * @interface capturarSolicitud
- * @property {solicitante} solicitane
- * @property {datosDeLaSolicitud} datosDeLaSolicitud
- * @property {datosParaMovilizacionNacional} datosParaMovilizacionNacional
- * @property {tercerosRelacionados} tercerosRelacionados
- * @property {pagoDeDerechos} pagoDeDerechos
- *
+ * @property {solicitante} solicitante - Información del solicitante.
+ * @property {datosDeLaSolicitud} datosDeLaSolicitud - Datos de la solicitud.
+ * @property {datosParaMovilizacionNacional} datosParaMovilizacionNacional - Datos para la movilización nacional.
+ * @property {tercerosRelacionados} tercerosRelacionados - Información de terceros relacionados.
+ * @property {pagoDeDerechos} pagoDeDerechos - Información de pago de derechos.--220201
  */
 export interface capturarSolicitud {
   solicitante: solicitante;
@@ -21,11 +20,11 @@ export interface capturarSolicitud {
  * Interface solicitante
  * @export
  * @interface solicitante
- * @property {string} rfc
- * @property {string} nombreRazonSocial
- * @property {string} aPaterno
- **/
-
+ * @property {string} rfc - Registro Federal de Contribuyentes (RFC).
+ * @property {string} nombreRazonSocial - Nombre o razón social del solicitante.
+ * @property {string} aPaterno - Apellido paterno del solicitante.--220201
+ * @property {string} correo - Correo electrónico del solicitante.
+ */
 export interface solicitante {
   rfc: string;
   nombreRazonSocial: string;
@@ -37,18 +36,16 @@ export interface solicitante {
  * Modelo de datos de la solicitud
  * @export
  * @interface datosDeLaSolicitud
- * @property {string} aduanaIngreso
- * @property {string} oficinaInspeccion
- * @property {string} puntoInspeccion
- * @property {string} claveUCON
- * @property {string} establecimientoTIF
- * @property {string} nombreVeterinario
- * @property {string} numeroGuia
- * @property {string} certficacion
- * @property {string} regimen
- *
+ * @property {string} aduanaIngreso - Aduana de ingreso.
+ * @property {string} oficinaInspeccion - Oficina de inspección.
+ * @property {string} puntoInspeccion - Punto de inspección.
+ * @property {string} claveUCON - Clave UCON.
+ * @property {string} establecimientoTIF - Establecimiento TIF.
+ * @property {string} nombreVeterinario - Nombre del veterinario.--220201
+ * @property {string} numeroGuia - Número de guía.
+ * @property {string} certificacion - Certificación.
+ * @property {string} regimen - Régimen.
  */
-
 export interface datosDeLaSolicitud {
   aduanaIngreso: string;
   oficinaInspeccion: string;
@@ -57,22 +54,20 @@ export interface datosDeLaSolicitud {
   establecimientoTIF: string;
   nombreVeterinario: string;
   numeroGuia: string;
-  certficacion: string;
+  certificacion: string;
   regimen: string;
 }
 
 /**
  * Modelo para los datos de movilización nacional
- * @export datosParaMovilizacionNacional
+ * @export
  * @interface datosParaMovilizacionNacional
- * @property {string} coordenadas Coordenadas de la ubicación
- * @property {string} nombre Nombre del solicitante
- * @property {string} medio Medio de transporte
- * @property {string} transporte Tipo de transporte
- * @property {string} punto Punto de encuentro
- *
+ * @property {string} coordenadas - Coordenadas de la ubicación.
+ * @property {string} nombre - Nombre del solicitante.
+ * @property {string} medio - Medio de transporte.
+ * @property {string} transporte - Tipo de transporte.--220201
+ * @property {string} punto - Punto de encuentro.
  */
-
 export interface datosParaMovilizacionNacional {
   coordenadas: string;
   nombre: string;
@@ -85,17 +80,15 @@ export interface datosParaMovilizacionNacional {
  * Modelo para pago de derechos
  * @export
  * @interface pagoDeDerechos
- * @property {string} exentoPagoNo
- * @property {string} exentoPagoSi
- * @property {string} justificacion
- * @property {string} claveReferencia
- * @property {string} cadenaDependencia
- * @property {string} banco
- * @property {string} llavePago
- * @property {string} importePago
- *
+ * @property {string} exentoPagoNo - Exento de pago (No).
+ * @property {string} exentoPagoSi - Exento de pago (Sí).
+ * @property {string} justificacion - Justificación.
+ * @property {string} claveReferencia - Clave de referencia.
+ * @property {string} cadenaDependencia - Cadena de dependencia. --220201
+ * @property {string} banco - Banco.
+ * @property {string} llavePago - Llave de pago.
+ * @property {string} importePago - Importe de pago.
  */
-
 export interface pagoDeDerechos {
   exentoPagoNo: string;
   exentoPagoSi: string;
@@ -108,10 +101,8 @@ export interface pagoDeDerechos {
 }
 
 /**
- * Interface tercerosRelacionados
+ * Interface tercerosRelacionados --220201
  * @export
  * @interface tercerosRelacionados
- *
- * */
-
-export interface tercerosRelacionados {}
+ */
+export interface tercerosRelacionados { }
