@@ -1,9 +1,3 @@
-/**
- * @fileoverview Servicio para la gestión de solicitudes de certificado zoosanitario.
- * Este servicio proporciona métodos para configurar y enviar la información de la solicitud.
- * @module certificadoZoosanitario
- */
-
 import { Injectable } from '@angular/core';
 import {
   capturarSolicitud,
@@ -14,10 +8,12 @@ import {
   pagoDeDerechos,
 } from '../../../../../models/220201/capturar-solicitud.model';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs'; // Importa Observable
 
 /**
  * Servicio para la gestión de solicitudes de certificado zoosanitario.
- * @class CertificadoZoosanitarioServiceService
+ * Este servicio proporciona métodos para configurar y enviar la información de la solicitud.
+ * @module certificadoZoosanitario
  */
 @Injectable({
   providedIn: 'root',
@@ -26,7 +22,7 @@ export class CertificadoZoosanitarioServiceService {
 
   /**
    * Objeto para almacenar los datos de la solicitud.
-   * @property {capturarSolicitud} capturarSolicitudCargaUtil
+   * @property {capturarSolicitud} capturarSolicitudCargaUtil - Datos de la solicitud que se enviarán.
    */
   public capturarSolicitudCargaUtil: capturarSolicitud = {
     solicitante: undefined,
@@ -94,9 +90,9 @@ export class CertificadoZoosanitarioServiceService {
   /**
    * Envía la solicitud capturada.
    * @method CapturarsolicitudEnviar
-   * @returns {Observable<any>} - Un Observable que emite la respuesta del servidor. --220201
+   * @returns {Observable<any>} - Un Observable que emite la respuesta del servidor.
    */
-  CapturarsolicitudEnviar() {
+  CapturarsolicitudEnviar(): Observable<any> { // Especifica el tipo de retorno Observable<any>
     const _url = 'http://localhost:3000/capturarSolicitud';
     return this.http.post<any>(_url, this.capturarSolicitudCargaUtil);
   }
