@@ -17,9 +17,8 @@ export class FechasService {
     const [dia, mes, anio] = fecha.split('/');
     if (dma) {
       return `${dia}-${mes}-${anio}`;
-    } else {
-      return `${anio}-${mes}-${dia}`;
     }
+    return `${anio}-${mes}-${dia}`;
   }
 
   /**
@@ -38,10 +37,7 @@ export class FechasService {
    * @param {string} fechaFinal, fecha final en formato string.
    * @returns {Array<string>} Array con las fechas comprendidas entre la fecha de inicio y la fecha final
    */
-  obtenerDiasEntreFechas(
-    fechaInicio: string,
-    fechaFinal: string
-  ): string[] {
+  obtenerDiasEntreFechas(fechaInicio: string, fechaFinal: string): string[] {
     const [diaInicio, mesInicio, anioInicio] = fechaInicio
       .split('-')
       .map(Number);
@@ -122,11 +118,4 @@ export class FechasService {
     }
     return false;
   }
-
-  parseDate(input: string): Date {
-    const [year, month, day] = input.split('-').map(Number);
-    return new Date(year, month - 1, day);
-  }
-
-
 }
