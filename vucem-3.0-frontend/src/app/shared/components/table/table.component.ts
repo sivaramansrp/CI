@@ -1,7 +1,6 @@
 /* eslint-disable @angular-eslint/component-selector */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { TableData } from '../../../core/models/shared/components.model';
 
 @Component({
@@ -9,9 +8,6 @@ import { TableData } from '../../../core/models/shared/components.model';
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
   standalone: true,
-  imports: [
-    CommonModule
-  ]
 })
 export class TableComponent {
   /**
