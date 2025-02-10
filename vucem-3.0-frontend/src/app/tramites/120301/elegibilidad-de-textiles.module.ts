@@ -22,6 +22,8 @@ import { FirmaElectronicaComponent } from '../../shared/components/firma-electro
 import { RouterModule } from '@angular/router';
 import { CapturarFacturasComponent } from './components/capturar-facturas/capturar-facturas.component';
 import { FacturasAsociadasComponent } from './components/facturas-asociadas/facturas-asociadas.component';
+import { HistoricoFabricantesComponent } from './components/historico-fabricantes/historico-fabricantes.component';
+import { ImportadorEnDestinoComponent } from './components/importador-en-destino/importador-en-destino.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,8 @@ import { FacturasAsociadasComponent } from './components/facturas-asociadas/fact
     PasoUnoComponent,
     CapturarFacturasComponent,
     FacturasAsociadasComponent,
+    HistoricoFabricantesComponent,
+    ImportadorEnDestinoComponent,
   ],
   imports: [
     CommonModule,
