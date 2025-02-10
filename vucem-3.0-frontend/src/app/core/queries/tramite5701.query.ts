@@ -17,8 +17,4 @@ export class Tramite5701Query extends Query<Solicitud5701State> {
     protected override store: Tramite5701Store) {
     super(store);
   }
-
-  getFormaTramite5071(): Solicitud5701State {
-    return this.getValue();
-  }
 }
