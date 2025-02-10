@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
@@ -12,7 +17,7 @@ import { CatalogosSelect } from '../../../../core/models/shared/components.model
 import { TEXTOS } from '../../../../shared/constantes/octava-temporral.enum';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 
-import establecimientoTable from '../../../../../assets/json/130102/partidas-de-la.json'
+import establecimientoTable from '../../../../../assets/json/130102/partidas-de-la.json';
 import fraccionArancelariaTIGIE from '../../../../../assets/json/130102/partidas-de-la-catalogos-select.json';
 
 @Component({
@@ -25,52 +30,59 @@ import fraccionArancelariaTIGIE from '../../../../../assets/json/130102/partidas
     UppercaseDirective,
     AlertComponent,
     SelectCatalogosComponent,
-    TableComponent
+    TableComponent,
   ],
   templateUrl: './partidas-de-la.component.html',
-  styleUrl: './partidas-de-la.component.scss'
+  styleUrl: './partidas-de-la.component.scss',
 })
 export class PartidasDeLaComponent implements OnInit {
   /**
-   * @property {FormGroup} form - Formulario reactivo utilizado para gestionar los datos de las partidas de la mercancía.
+   * Formulario reactivo utilizado para gestionar los datos de las partidas de la mercancía.
+   * @type {FormGroup}
    */
   form!: FormGroup;
 
-   /**
-   * @property {FormGroup} formForTotalCount - Formulario reactivo utilizado para gestionar los totales de cantidad y valor en USD.
+  /**
+   * Formulario reactivo utilizado para gestionar los totales de cantidad y valor en USD.
+   * @type {FormGroup}
    */
   formForTotalCount!: FormGroup;
 
   /**
-   * @property {any} TEXTOS - Constantes de texto utilizadas en el componente.
+   * Constantes de texto utilizadas en el componente.
+   * @type {any}
    */
   TEXTOS = TEXTOS;
 
   /**
-   * @property {CatalogosSelect} fraccionArancelariaTIGIE - Datos del catálogo de fracciones arancelarias TIGIE.
+   * Datos del catálogo de fracciones arancelarias TIGIE.
+   * @type {CatalogosSelect}
    */
   fraccionArancelariaTIGIE: CatalogosSelect = fraccionArancelariaTIGIE;
-  
+
   /**
-   * @property {string[]} tableHeaderData - Datos del encabezado de la tabla.
+   * Datos del encabezado de la tabla.
+   * @type {string[]}
    */
   tableHeaderData: string[] = [];
 
   /**
-   * @property {Array<{ tbodyData: string[] }>} tableBodyData - Datos del cuerpo de la tabla.
+   * Datos del cuerpo de la tabla.
+   * @type {Array<{ tbodyData: string[] }>}
    */
   tableBodyData: { tbodyData: string[] }[] = [];
 
   /**
-   * @property {any} getEstablecimientoTableData - Datos de la tabla de establecimiento.
+   * Datos de la tabla de establecimiento.
+   * @type {any}
    */
   public getEstablecimientoTableData = establecimientoTable;
 
-   /**
-   * @constructor
+  /**
+   * Constructor del formulario reactivo.
    * @param {FormBuilder} fb - Constructor del formulario reactivo.
    */
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {}
 
   /**
    * Método de inicialización del componente.
@@ -90,19 +102,42 @@ export class PartidasDeLaComponent implements OnInit {
    */
   crearFormulario(): void {
     this.form = this.fb.group({
-      cantidad: ['', [Validators.required, Validators.pattern('^[0-9]+$'), Validators.maxLength(18)]],
+      cantidad: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^[0-9]+$'),
+          Validators.maxLength(18),
+        ],
+      ],
       fraccionArancelariaTIGIE: ['', [Validators.required]],
       descripcion: ['', [Validators.required, Validators.maxLength(255)]],
-      valorPartidaUSD: ['', [Validators.required, Validators.min(0), Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'), Validators.maxLength(20)]]
+      valorPartidaUSD: [
+        '',
+        [
+          Validators.required,
+          Validators.min(0),
+          Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
+          Validators.maxLength(20),
+        ],
+      ],
     });
   }
 
-   /**
+  /**
    * Método para calcular los totales de cantidad y valor en USD.
    */
   calculateTotals(): void {
-    const cantidadTotal = this.tableBodyData.reduce((sum: number, item: { tbodyData: string[] }) => sum + parseFloat(item.tbodyData[0]), 0);
-    const valorTotalUSD = this.tableBodyData.reduce((sum: number, item: { tbodyData: string[] }) => sum + parseFloat(item.tbodyData[5]), 0);
+    const cantidadTotal = this.tableBodyData.reduce(
+      (sum: number, item: { tbodyData: string[] }) =>
+        sum + parseFloat(item.tbodyData[0]),
+      0
+    );
+    const valorTotalUSD = this.tableBodyData.reduce(
+      (sum: number, item: { tbodyData: string[] }) =>
+        sum + parseFloat(item.tbodyData[5]),
+      0
+    );
 
     this.formForTotalCount.controls['cantidadTotal'].setValue(cantidadTotal);
     this.formForTotalCount.controls['valorTotalUSD'].setValue(valorTotalUSD);
@@ -118,7 +153,7 @@ export class PartidasDeLaComponent implements OnInit {
     });
   }
 
-   /**
+  /**
    * Método para manejar la selección de fracción arancelaria TIGIE.
    * @param {Catalogo} aduana - Datos del catálogo seleccionado.
    */
@@ -134,24 +169,29 @@ export class PartidasDeLaComponent implements OnInit {
     this.tableBodyData = this.getEstablecimientoTableData.tableBody;
   }
 
-    /**
+  /**
    * Método para validar el formulario al hacer clic en el botón
    */
-    validarYEnviarFormulario(): void {
-      if (this.form.invalid) {
-        this.form.markAllAsTouched();
-        console.log("El formulario tiene errores. Corríjalos antes de continuar.");
-      } else {
-        console.log("Formulario enviado con éxito", this.form.value);
-      }
+  validarYEnviarFormulario(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      console.log(
+        'El formulario tiene errores. Corríjalos antes de continuar.'
+      );
+    } else {
+      console.log('Formulario enviado con éxito', this.form.value);
     }
-  
-    /**
-     * Método para verificar si un control del formulario es inválido
-     */
-    esInvalido(nombreControl: string): boolean {
-      const control = this.form.get(nombreControl);
-      return control ? control.invalid && (control.touched || control.dirty) : false;
-    }
-  
+  }
+
+  /**
+   * Método para verificar si un control del formulario es inválido.
+   * @param {string} nombreControl - Nombre del control del formulario.
+   * @returns {boolean} - Retorna true si el control es inválido, de lo contrario false.
+   */
+  esInvalido(nombreControl: string): boolean {
+    const control = this.form.get(nombreControl);
+    return control
+      ? control.invalid && (control.touched || control.dirty)
+      : false;
+  }
 }
