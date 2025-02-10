@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -9,16 +9,15 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
   templateUrl: './crosslist.component.html',
   styleUrl: './crosslist.component.scss',
 })
-export class CrosslistComponent implements OnInit, OnChanges {
-  @Input({ required: true }) fechas!: string[];
-  @Input() botonField: any;
-  fechasDatos: string[] = [];
+export class CrosslistComponent {
+  @Input({ required: true }) fechas!: Array<string>;
 
-  fechasSeleccionadas: string[] = [];
+  fechasDatos: Array<string> = [];
+
+  fechasSeleccionadas: Array<string> = [];
   fecha: FormControl = new FormControl('');
   fechaSeleccionada: FormControl = new FormControl('');
-  @Input() showSearchInput1: boolean = false;
-  @Input() showSearchInput2: boolean = false;
+
   botones = [
     {
       btnNombre: 'Agregar',

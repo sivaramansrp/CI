@@ -2,11 +2,10 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
-  Output, SimpleChanges,
+  Output,
+  SimpleChanges,
 } from '@angular/core';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
-
 import {
   FormControl,
   ReactiveFormsModule,
@@ -23,9 +22,9 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   templateUrl: './select-catalogos.component.html',
   styleUrl: './select-catalogos.component.scss',
 })
-export class SelectCatalogosComponent implements OnChanges {
+export class SelectCatalogosComponent {
   @Input() catalogosDatos!: CatalogosSelect;
-@Input() tooltipT:boolean = false;
+
   @Output() valorSeleccion = new EventEmitter<Catalogo>();
 
   itemSeleccionado: FormControl = new FormControl(0);

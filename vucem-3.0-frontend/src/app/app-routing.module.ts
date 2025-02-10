@@ -32,7 +32,7 @@ const routes: Routes = [
       import('./tramites/220401/pantallas.module').then(
         (m) => m.PantallasModule
       ),
-  }
+  },
 ];
 
 @NgModule({

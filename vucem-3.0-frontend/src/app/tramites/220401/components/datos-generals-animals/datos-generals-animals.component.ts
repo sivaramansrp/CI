@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
@@ -22,7 +22,7 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule,Validation
   templateUrl: './datos-generals-animals.component.html',
   styleUrl: './datos-generals-animals.component.scss'
 })
-export class DatosGeneralsAnimalsComponent implements OnInit  {
+export class DatosGeneralsAnimalsComponent  {
     /** Configuración del primer select de aduanas */
     frmMercanciaAnimal!: FormGroup;
     /** Configuración del primer select de aduanas */
