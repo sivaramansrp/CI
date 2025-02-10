@@ -45,16 +45,16 @@
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <label for="aPaterno" class="form-label">Apellido Paterno</label>
-        <input class="form-control" id="aPaterno" placeholder="Apellido Paterno" type="text" formControlName="aPaterno"
+        <label for="primerApellido" class="form-label">Apellido Paterno</label>
+        <input class="form-control" id="primerApellido" placeholder="Apellido Paterno" type="text" formControlName="primerApellido"
           appUppercase>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <label for="aMaterno" class="form-label">Apellido Materno</label>
-        <input class="form-control" id="aMaterno" placeholder="Apellido Materno" type="text" formControlName="aMaterno"
-          [ngClass]="isValid( representanteLegalForm ,'aMaterno') ? 'required' : ''" appUppercase>
+        <label for="segundoApellido" class="form-label">Apellido Materno</label>
+        <input class="form-control" id="segundoApellido" placeholder="Apellido Materno" type="text" formControlName="segundoApellido"
+          [ngClass]="isValid( representanteLegalForm ,'segundoApellido') ? 'required' : ''" appUppercase>
       </div>
     </div>
   </div>
