@@ -6,7 +6,7 @@ import { INSTRUCCION_DOBLE_CLIC } from '../../../../shared/constantes/220202/fit
 
 import { HttpClient } from '@angular/common/http';
 
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 
@@ -78,16 +78,52 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     primerOpcion: 'Selecciona un valor',
     catalogos: []
   }
+  forma: FormGroup;
+  mercanciaForma: FormGroup;
+  formularioDeTransporte: FormGroup;
 
-  constructor(private readonly httpServicios: HttpClient
+  constructor(private readonly httpServicios: HttpClient,
+    private readonly fb: FormBuilder
   ) {
 
   }
   ngOnInit(): void {
-    this.obtenerTablaCelúlaValor();
+    this.obtenerTablaCelulaValor();
+  }
+  createFromFields() {
+    this.mercanciaForma = this.fb.group({
+      aduana: ['', Validators.required],
+      requisito: [''],
+      numCertificadoInternacional: ['', Validators.required],
+      arancelaria: ['', Validators.required],
+      descripcionFraccion: [''],
+      nico: ['', Validators.required],
+      descripcionNico: [''],
+      descripcion: ['', Validators.required],
+      cantidadUMT: ['', Validators.required],
+      umt: ['', Validators.required],
+      cantidadUMC: ['', Validators.required],
+      umc: ['', Validators.required],
+      uso: ['', Validators.required],
+      producto: ['', Validators.required]
+    });
+
+    this.formularioDeTransporte = this.fb.group({
+      aduana: ['', Validators.required],
+      agropecuaria: ['', Validators.required],
+      punto: ['', Validators.required],
+      guia: [''],
+      regimen: ['', Validators.required],
+      ferrocarril: ['']
+    });
+
+    this.forma = this.fb.group({
+      mercancia: this.mercanciaForma,
+      formularioDeTransporte: this.formularioDeTransporte
+    });
   }
 
-  obtenerTablaCelúlaValor() {
+  obtenerTablaCelulaValor() {
     this.httpServicios.get<Datos_De_Tabla>('../../../../../assets/json/220202/solicitud.json').subscribe((data) => {
       this.tablaDeDatosDeCelda = data?.data;
     });
