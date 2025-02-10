@@ -7,9 +7,9 @@
       <li [ngClass]="indice === 2 ? 'active' : ''">
         <a data-toggle="tab" (click)="seleccionaTab(2)">Constancia del registro</a>
       </li>
-      <!-- <li [ngClass]="indice === 3 ? 'active' : ''">
-        <a data-toggle="tab" (click)="seleccionaTab(3)">Terceros relacionados</a>
-      </li> -->
+      <li [ngClass]="indice === 3 ? 'active' : ''">
+        <a data-toggle="tab" (click)="seleccionaTab(3)">Facturas asociadas</a>
+      </li>
     </ul>
 
     <ng-container>
@@ -21,7 +21,7 @@
       <app-constancia-del-registro></app-constancia-del-registro>
       }
       @case (3) {
-      <!-- <terceros></terceros> -->
+      <app-facturas-asociadas></app-facturas-asociadas>
       } 
       }
     </ng-container>

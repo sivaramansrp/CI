@@ -21,7 +21,7 @@ import { AnexarDocumentosComponent } from '../../shared/components/anexar-docume
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
 import { RouterModule } from '@angular/router';
 import { CapturarFacturasComponent } from './components/capturar-facturas/capturar-facturas.component';
-
+import { FacturasAsociadasComponent } from './components/facturas-asociadas/facturas-asociadas.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +32,7 @@ import { CapturarFacturasComponent } from './components/capturar-facturas/captur
     PasoTresComponent,
     PasoUnoComponent,
     CapturarFacturasComponent,
+    FacturasAsociadasComponent,
   ],
   imports: [
     CommonModule,
