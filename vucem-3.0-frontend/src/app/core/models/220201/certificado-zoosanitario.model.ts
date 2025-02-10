@@ -1,6 +1,6 @@
 /**
  * @fileoverview Archivo principal del módulo. Contiene las interfaces y tipos de datos
- * utilizados en el módulo.
+ * utilizados en el módulo. --220201
  * @module shared
  */
 
@@ -10,7 +10,7 @@
  * @property {number} indice - El índice del paso.
  * @property {string} titulo - El título del paso.
  * @property {boolean} activo - Indica si el paso está activo.
- * @property {boolean} completado - Indica si el paso se ha completado.
+ * @property {boolean} completado - Indica si el paso se ha completado. --220201
  */
 export interface ListaPasosWizard {
     indice: number;
@@ -25,11 +25,11 @@ export interface ListaPasosWizard {
  * @template T - El tipo de datos que se esperan en la respuesta.
  * @property {number} code - El código de respuesta de la API.
  * @property {T} data - Los datos de la respuesta.
- * @property {string} message - Un mensaje descriptivo de la respuesta.
+ * @property {string} message - Un mensaje descriptivo de la respuesta. --220201
  */
 export interface RespuestaAPI<T> {
     code: number;
-    data: T; // Cambiado a T para mayor flexibilidad
+    data: T; // Cambiado a T para mayor flexibilidad--220201
     message: string;
 }
 

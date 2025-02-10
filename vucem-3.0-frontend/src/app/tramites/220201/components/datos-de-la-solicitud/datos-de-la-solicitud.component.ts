@@ -13,12 +13,12 @@ import { HttpClient } from '@angular/common/http';
  * @fileoverview Componente para la gestión del formulario de datos de la solicitud.
  * Este componente maneja la lógica y la presentación del formulario de datos de la solicitud,
  * incluyendo la inicialización, la obtención de datos y la gestión de los controles del formulario.
- * @module datosDeLaSolicitud
+ * @module datosDeLaSolicitud --220201
  */
 
 /**
  * Componente para el formulario de datos de la solicitud.
- * @class DatosDeLaSolicitudComponent
+ * @class DatosDeLaSolicitudComponent --220201
  * @implements {OnInit}
  */
 @Component({
@@ -52,13 +52,13 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   colapsable: boolean = false;
 
   /**
-   * Grupo de formularios anidado para los datos de la solicitud.
+   * Grupo de formularios anidado para los datos de la solicitud.--220201
    * @property {FormGroup} datosDelaSolicitud
    */
   datosDelaSolicitud!: FormGroup;
 
   /**
-   * Configuración para el select de aduana de ingreso.
+   * Configuración para el select de aduana de ingreso. --220201
    * @property {CatalogosSelect} aduanaDeIngreso
    */
   aduanaDeIngreso: CatalogosSelect = {
@@ -69,7 +69,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   };
 
   /**
-   * Configuración para el select de sanidad agropecuaria.
+   * Configuración para el select de sanidad agropecuaria. --220201
    * @property {CatalogosSelect} sanidadAgropecuaria
    */
   sanidadAgropecuaria: CatalogosSelect = {
@@ -80,7 +80,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   };
 
   /**
-   * Configuración para el select de punto de inspección.
+   * Configuración para el select de punto de inspección.--220201
    * @property {CatalogosSelect} puntoInspeccion
    */
   puntoInspeccion: CatalogosSelect = {
@@ -91,7 +91,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   };
 
   /**
-   * Configuración para el select de establecimiento TIF.
+   * Configuración para el select de establecimiento TIF.--220201
    * @property {CatalogosSelect} establecimientoTIF
    */
   establecimientoTIF: CatalogosSelect = {
@@ -102,7 +102,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   };
 
   /**
-   * Configuración para el select de veterinario.
+   * Configuración para el select de veterinario.--220201
    * @property {CatalogosSelect} veterinario
    */
   veterinario: CatalogosSelect = {
@@ -113,7 +113,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   };
 
   /**
-   * Configuración para el select de régimen.
+   * Configuración para el select de régimen.--220201
    * @property {CatalogosSelect} regimen
    */
   regimen: CatalogosSelect = {
@@ -127,7 +127,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
-   * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.
+   * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.--220201
    */
   constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient) {
     this.crearFormulario();

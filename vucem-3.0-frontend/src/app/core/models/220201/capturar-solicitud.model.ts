@@ -6,7 +6,7 @@
  * @property {datosDeLaSolicitud} datosDeLaSolicitud - Datos de la solicitud.
  * @property {datosParaMovilizacionNacional} datosParaMovilizacionNacional - Datos para la movilización nacional.
  * @property {tercerosRelacionados} tercerosRelacionados - Información de terceros relacionados.
- * @property {pagoDeDerechos} pagoDeDerechos - Información de pago de derechos.
+ * @property {pagoDeDerechos} pagoDeDerechos - Información de pago de derechos.--220201
  */
 export interface capturarSolicitud {
   solicitante: solicitante;
@@ -22,7 +22,7 @@ export interface capturarSolicitud {
  * @interface solicitante
  * @property {string} rfc - Registro Federal de Contribuyentes (RFC).
  * @property {string} nombreRazonSocial - Nombre o razón social del solicitante.
- * @property {string} aPaterno - Apellido paterno del solicitante.
+ * @property {string} aPaterno - Apellido paterno del solicitante.--220201
  * @property {string} correo - Correo electrónico del solicitante.
  */
 export interface solicitante {
@@ -41,7 +41,7 @@ export interface solicitante {
  * @property {string} puntoInspeccion - Punto de inspección.
  * @property {string} claveUCON - Clave UCON.
  * @property {string} establecimientoTIF - Establecimiento TIF.
- * @property {string} nombreVeterinario - Nombre del veterinario.
+ * @property {string} nombreVeterinario - Nombre del veterinario.--220201
  * @property {string} numeroGuia - Número de guía.
  * @property {string} certificacion - Certificación.
  * @property {string} regimen - Régimen.
@@ -65,7 +65,7 @@ export interface datosDeLaSolicitud {
  * @property {string} coordenadas - Coordenadas de la ubicación.
  * @property {string} nombre - Nombre del solicitante.
  * @property {string} medio - Medio de transporte.
- * @property {string} transporte - Tipo de transporte.
+ * @property {string} transporte - Tipo de transporte.--220201
  * @property {string} punto - Punto de encuentro.
  */
 export interface datosParaMovilizacionNacional {
@@ -84,7 +84,7 @@ export interface datosParaMovilizacionNacional {
  * @property {string} exentoPagoSi - Exento de pago (Sí).
  * @property {string} justificacion - Justificación.
  * @property {string} claveReferencia - Clave de referencia.
- * @property {string} cadenaDependencia - Cadena de dependencia.
+ * @property {string} cadenaDependencia - Cadena de dependencia. --220201
  * @property {string} banco - Banco.
  * @property {string} llavePago - Llave de pago.
  * @property {string} importePago - Importe de pago.
@@ -101,7 +101,7 @@ export interface pagoDeDerechos {
 }
 
 /**
- * Interface tercerosRelacionados
+ * Interface tercerosRelacionados --220201
  * @export
  * @interface tercerosRelacionados
  */
