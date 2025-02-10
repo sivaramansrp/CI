@@ -23,6 +23,7 @@ import { RouterModule } from '@angular/router';
 import { CapturarFacturasComponent } from './components/capturar-facturas/capturar-facturas.component';
 import { ImportadorEnDestinoComponent } from './components/importador-en-destino/importador-en-destino.component';
 import { FacturasAsociadasComponent } from './components/facturas-asociadas/facturas-asociadas.component';
+import { TableComponent } from '../../shared/components/table/table.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { FacturasAsociadasComponent } from './components/facturas-asociadas/fact
     FirmaElectronicaComponent,
     RouterModule,
     FacturasAsociadasComponent,
+    TableComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
