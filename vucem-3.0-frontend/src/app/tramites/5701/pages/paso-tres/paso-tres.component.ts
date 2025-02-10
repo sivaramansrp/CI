@@ -12,31 +12,30 @@ import { catchError, map } from 'rxjs';
 export class PasoTresComponent {
   constructor(
     private router: Router,
-    private sercviciosExtraordinariosServices: ServiciosExtraordinariosService,
+    private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
     private tramiteStore: TramiteStore
   ) {}
 
-
-
-  obtieneFirma(ev: string) {
+  /**
+   * Maneja el evento para obtener la firma y realiza acciones adicionales.
+   * @param ev - La cadena de texto que representa la firma obtenida.
+   */
+  obtieneFirma(ev: string): void {
     const firma: string = ev;
     if (firma) {
       // Obtiene el número de trámite
-      this.sercviciosExtraordinariosServices
+      this.serviciosExtraordinariosServices
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {
             this.tramiteStore.establecerTramite(tramite.data, firma);
             this.router.navigate(['servicios-extraordinarios/acuse']);
           }),
-          catchError((error) => {
-            console.log(error);
-            return error;
+          catchError((_error) => {
+            return _error;
           })
         )
         .subscribe();
     }
   }
-
-
 }

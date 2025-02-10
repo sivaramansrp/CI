@@ -1,10 +1,9 @@
-import { Component, Input, input, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AccionesTabla, ConfiguracionTabla, DatosPageAcuse, EncabezadosTabla } from '../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { AlertComponent } from '../alert/alert.component';
 import { TituloComponent } from '../titulo/titulo.component';
 import { TablaComponent } from '../tabla/tabla.component';
-import { DocumentoService } from '../../../core/services/shared/documento/documento.service';
 
 
 @Component({
@@ -19,7 +18,7 @@ import { DocumentoService } from '../../../core/services/shared/documento/docume
   templateUrl: './acuse.component.html',
   styleUrl: './acuse.component.scss'
 })
-export class AcuseComponent {
+export class AcuseComponent implements OnChanges {
   @Input() txtAlerta!: string;
   @Input() subtitulo!: string;
   @Input() encabezadoTablaAcuse!: EncabezadosTabla[];
@@ -27,24 +26,17 @@ export class AcuseComponent {
   @Input() accionesTablaAcuse!: AccionesTabla[];
   @Input() datosTablaAcuse!: any[];
 
-  // @Input() datosPageAcuse!: DatosPageAcuse;
   @Input() folio!: string;
 
-  constructor() {
-    console.log('Constructor acuse component');
-
-  }
-
-  ngOninit(): void {
-  }
-
-
-
+  /**
+   * Método que se ejecuta cuando uno o más inputs del componente cambian.
+   * 
+   * @param changes - Objeto que contiene los cambios de los inputs del componente.
+   * @returns void
+   */
   ngOnChanges(changes: SimpleChanges): void {
-
     if (changes['txtAlerta'].currentValue) {
       this.txtAlerta = changes['txtAlerta'].currentValue;
-      console.log(this.txtAlerta);
     }
   }
 }

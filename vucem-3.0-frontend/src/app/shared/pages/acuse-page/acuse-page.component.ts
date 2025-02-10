@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   ACUSE_SERVICIOS_EXTRAORDINARIOS,
   TITULO_ACUSE,
@@ -16,7 +16,7 @@ import { DocumentoService } from '../../../core/services/shared/documento/docume
   standalone: true,
   imports: [CommonModule, AcuseComponent],
 })
-export class AcusePageComponent {
+export class AcusePageComponent implements OnInit {
   txtAlerta!: string;
   subtitulo = TITULO_ACUSE;
   encabezadoTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.encabezadoTablaAcuse;
@@ -39,8 +39,6 @@ export class AcusePageComponent {
   }
 
   obtenerAcuse() {
-    console.log('Obteniendo acuse');
-
     const datosAcuse = {
       templateFullPath: '',
       data: {
@@ -53,13 +51,8 @@ export class AcusePageComponent {
       },
     };
     this.documentoService.generarAcuse(datosAcuse).subscribe(
-      (resp) => {
-        console.log('Acuse generado');
-        console.log(resp);
-      },
-      (error) => {
-        console.log(error);
-      }
+      (_resp) => {},
+      (_error) => {}
     );
   }
 }

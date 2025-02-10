@@ -32,13 +32,11 @@ export class DocumentoService {
    * @param id
    * @returns JSONResponse
    */
-
-  generarAcuse(cuerpoAcuse: any) {
+  generarAcuse(cuerpoAcuse: any): Observable<any> {
     return this.http
       .put<any>(`${this.urlServer}/create-pdf`, cuerpoAcuse)
       .pipe(
         catchError((error) => {
-          console.log(error);
           return throwError(() => error);
         })
       );

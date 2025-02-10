@@ -12,14 +12,14 @@ export interface CatalogosSelect {
   labelNombre: string;
   required: boolean;
   primerOpcion: string;
-  catalogos: Array<Catalogo> ;
+  catalogos: Catalogo[] ;
 }
 
 export interface CatalogosSelectPaises {
   labelNombre: string;
   required: boolean;
   primerOpcion: string;
-  catalogos: Array<CatalogoPaises>;
+  catalogos: CatalogoPaises[];
 }
 
 export interface DatosPasos {
