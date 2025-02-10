@@ -1,0 +1,10 @@
+{
+    "labelNombre": "Fraccion arancelaria",
+    "required": true,
+    "primerOpcion": "Seleccione un documento",
+    "catalogos": [
+      { "id": "1", "descripcion": "De importacion Para retornar al extranjero en el mismo estado...." },
+      { "id": "2", "descripcion": "docB" },
+      { "id": "3", "descripcion": "docC" }
+    ]
+  }
