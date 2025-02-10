@@ -19,7 +19,6 @@ export class HoraFormatoDirective {
       const minutes = value.slice(2, 4);
       hours = hours.length === 1 ? '0' + hours : hours;
       value = hours + (minutes ? ':' + minutes : '');
-      // value = value.slice(0, 2) + ':' + value.slice(2, 4); // Insertar dos puntos
     } else if (value.length >= 1) {
       value = value.slice(0, 2);
     }
