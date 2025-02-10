@@ -434,8 +434,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Este validador verifica que el intervalo entre las fechas y horas de inicio y finalización
    * cumpla con las restricciones específicas según el tipo de solicitud seleccionada.
-   * @returns {Function} Una función que toma un `FormGroup` y devuelve un objeto con una clave booleana
-   *                     indicando si el intervalo es inválido, o `null` si el intervalo es válido.
+   * @returns {Function} Una función que toma un `FormGroup` y devuelve un objeto con una clave booleana indicando si el intervalo es inválido, o `null` si el intervalo es válido.
    */
   fechaIntervaloValidator(): void {
     // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
@@ -635,11 +634,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cambia la hora final del servicio.
-   *
+   * Cambia la fecha final del servicio.
    * Esta función actualiza la validez de los datos del servicio y establece
    * los valores correspondientes en el store.
-   *
    * @returns {void} No retorna ningún valor.
    */
   changeFechaFinal(): void {
@@ -649,13 +646,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Updates the validity of the `datosServicio` form control and sets the final hour value in the store.
-   *
-   * This method performs the following actions:
-   * 1. Calls `updateValueAndValidity` on the `datosServicio` form control to re-evaluate its validity.
-   * 2. Invokes `setValoresStore` to update the store with the final hour value.
-   *
-   * @returns {void}
+   * Cambia la hora de inicio del servicio.
+   * Esta función actualiza la validez de los datos del servicio y establece
+   * los valores correspondientes en el store. Valida el intervalo de las fechas.
+   * @returns {void} No retorna ningún valor.
    */
   changeHoraFinal(): void {
     this.datosServicio.updateValueAndValidity();
