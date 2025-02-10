@@ -1,242 +1,89 @@
 <div class="container">
-    <form>
-        <div class="row mt-5">
-  
-            <div class="row">
-                <!-- <h2>Representación-federal</h2> -->
-                 <div class="col-md-12">
-                <ng-titulo titulo="Asociar facturas a expedición" />
-                </div>
-                <h5>Facturas disponibles</h5>
-                <div class="col-md-4">
-                <div class="form-group">
-                    <label class="form-label" for="Estado"
-                    >Estado:</label>
-                    <input
-                    class="form-control"
-                    value="SINALOA"
-                    class="form-control"
-                    id="Estado"
-                    placeholder=""
-                    type="text"
-                    appUppercase
-                    name="Estado"
-                    />
-                </div>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label" for="federal"
-                    >Representación federal:</label>
-                <input
-                    value="CULIACAN"
-                    class="form-control"
-                    id="federal"
-                    placeholder=""
-                    type="text"
-                    appUppercase
-                    name="federal"
-                />
-                </div>
-            </div>
-        
-            <div class="row pb-5">
-                <ng-titulo titulo="Descripción del cupo." />
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="Fracción-arancelaria"
-                        >Fracción arancelaria:</label>
-                        <input
-                        value=""
-                        class="form-control"
-                        id="Fracción-arancelaria"
-                        placeholder=""
-                        type="text"
-                        appUppercase
-                        name="Fracción-arancelaria"
-                        />
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="producto"
-                        >Descripción del producto:</label>
-                        <input
-                        value=""
-                        class="form-control"
-                        id="producto"
-                        placeholder=""
-                        type="text"
-                        appUppercase
-                        name="producto"
-                        />
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="Tratado"
-                        >Tratado o bloque:</label>
-                        <input
-                        value=""
-                        class="form-control"
-                        id="Tratado"
-                        placeholder=""
-                        type="text"
-                        appUppercase
-                        name="Tratado"
-                        />
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="subproducto"
-                          >Clasificación del subproducto:</label>
-                        <input
-                          value=""
-                          class="form-control"
-                          id="subproducto"
-                          placeholder=""
-                          type="text"
-                          appUppercase
-                          name="subproducto"
-                        />
-                      </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="Mecanismo"
-                          >Mecanismo de asignación:</label>
-                        <input
-                          value=""
-                          class="form-control"
-                          id="Mecanismo"
-                          placeholder=""
-                          type="text"
-                          appUppercase
-                          name="Mecanismo"
-                        />
-                      </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="textil"
-                          >Categoria textil:</label>
-                        <input
-                          value=""
-                          class="form-control"
-                          id="textil"
-                          placeholder=""
-                          type="text"
-                          appUppercase
-                          name="textil"
-                        />
-                      </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="regimen"
-                          >Clasificación de regimen:</label>
-                        <input
-                          value=""
-                          class="form-control"
-                          id="regimen"
-                          placeholder=""
-                          type="text"
-                          appUppercase
-                          name="regimen"
-                        />
-                      </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="categoría-textil"
-                          >Descripción de la categoría textil:</label>
-                        <input
-                          value=""
-                          class="form-control"
-                          id="categoría-textil"
-                          placeholder=""
-                          type="text"
-                          appUppercase
-                          name="categoría-textil"
-                        />
-                      </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="País"
-                          >País destino/origen:</label>
-                        <input
-                          value=""
-                          class="form-control"
-                          id="País"
-                          placeholder=""
-                          type="text"
-                          appUppercase
-                          name="País"
-                        />
-                      </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="form-label" for="medida"
-                          >Unidad de medida categoría textil:</label>
-                        <input
-                          value=""
-                          class="form-control"
-                          id="medida"
-                          placeholder=""
-                          type="text"
-                          appUppercase
-                          name="medida"
-                        />
-                      </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="form-label" for="categoría"
-                          >Factor de conversión de la categoría textil:</label>
-                        <input
-                          value=""
-                          class="form-control"
-                          id="categoría"
-                          placeholder=""
-                          type="text"
-                          appUppercase
-                          name="categoría"
-                        />
-                      </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="fecha-de-inicio"
-                          >Fecha de inicio de vigencia:</label>
-                        <input
-                          value=""
-                          class="form-control"
-                          id="fecha-de-inicio"
-                          placeholder=""
-                          type="text"
-                          appUppercase
-                          name="fecha-de-inicio"
-                        />
-                      </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="fecha-de-fin"
-                          >Fecha de fin de vigencia:</label>
-                        <input
-                          value=""
-                          class="form-control"
-                          id="fecha-de-fin"
-                          placeholder=""
-                          type="text"
-                          appUppercase
-                          name="fecha-de-fin"
-                        />
-                      </div>
-                </div>
-            </div>
+    <!-- <form>
+      <ng-titulo titulo="Datos del tramite a realizar" />
+      <div class="row">
+        <div class="col-md-12">
+          <label for="Tipo_de_Certificado">Tipo de Certificado</label>
+          <span class="require">*</span>
         </div>
-    </form>
+      </div>
+      <app-input-radio [radioOptions]="radioOptions" [selectedValue]="selectedValue" [isRequired]="true"
+        (valueChange)="onValueChange($event)" [layout]="'vertical'"></app-input-radio>
+      <div class="row mt-4">
+        <div class="col-md-12">
+          <label for="message" class="form-label">Tratamiento :</label>
+          <textarea id="message" class="form-control mb-5" placeholder="" readonly="true"></textarea>
+        </div>
+      </div>
+    </form> -->
+  
+    <!-- <ng-titulo titulo="Unidad expedidora"></ng-titulo>
+    -->
+    <!-- <app-input-radio class="fw-semibold" [radioOptions]="radioBoton" [selectedValue]="defaultSelect" [isRequired]="true"
+        (valueChange)="onValueChange($event)" [layout]="'horizontal'"></app-input-radio>
+  
+        <div *ngIf="defaultSelect === 'oficina central'">
+              <div class="row">
+                  <div class="col-md-4" *ngFor="let config of dropdownConfigs">
+                      <select-catalogos [catalogosDatos]="config" (valorSeleccion)="seleccionar($event)"></select-catalogos>
+                  </div>
+              </div>
+          </div> -->
+  
+          <ng-titulo titulo="Asociar facturas a expedición"></ng-titulo>
+          <h6>Facturas disponible</h6>
+  
+          <ng-table [commonTableHeader]="tableColumns" [commonTableBody]="mercanciasData"></ng-table>
+  
+          <!-- <app-agregar-archivo 
+          [archivoBtn]="'Carga por archivo'" 
+          [agregarBtn]="'Agregar'" 
+          (archivoAction)="cargarArchivo()"
+          (agregarAction)="agregar()">
+          </app-agregar-archivo> -->
+      
+          <div class="col-12 col-xxl-4 col-xl-4 col-md-4 col-sm-4 mb-5">
+              <label for="message" class="form-label">Cantidad*:</label>
+              <input type="text" class="form-control" id="message" placeholder="">
+              <p>Kilogramo</p>
+          </div>
+      
+          <div class="container text-end mt-5">
+              <button class="btn btn-default me-2">Asociar</button>
+              <!-- <button class="btn btn-primary">Continuar</button> -->
+          </div>
+          <h6>Facturas asociadas</h6>
+  
+          <ng-table [commonTableHeader]="asociadastableColumns" [commonTableBody]="asociadastableData"></ng-table>
   </div>
+  <!-- <div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <ng-titulo titulo="Asociar facturas a expedición" />
+            </div>
+        <div class="row mt-5">
+          <div class="col-md-12">
+            <label for="mercancia">Facturas disponible</label>
+          </div>
+          <div class="col-md-12">
+            <table class="table table-responsive">
+              <thead>
+                <tr>
+                  <th>Número de la factura</th>
+                  <th>Razón social</th>
+                  <th>Domicilio</th>
+                  <th>Fecha de expedición de la factura</th>
+                  <th>Cantidad total</th>
+                  <th>Cantidad disponible</th>
+                  <th>Unidad de medida</th>
+                  <th>Valor en dólares</th>
+                </tr>
+              </thead>
+    
+              <tbody>
+        
+              </tbody>
+            </table>
+          </div>
+    </div>
+</div> -->

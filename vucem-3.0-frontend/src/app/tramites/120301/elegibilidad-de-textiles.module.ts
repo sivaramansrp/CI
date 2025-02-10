@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ElegibilidadDeTextilesRoutingModule } from './elegibilidad-de-textiles-routing.module';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
@@ -21,9 +21,8 @@ import { AnexarDocumentosComponent } from '../../shared/components/anexar-docume
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
 import { RouterModule } from '@angular/router';
 import { CapturarFacturasComponent } from './components/capturar-facturas/capturar-facturas.component';
-import { FacturasAsociadasComponent } from './components/facturas-asociadas/facturas-asociadas.component';
-import { HistoricoFabricantesComponent } from './components/historico-fabricantes/historico-fabricantes.component';
 import { ImportadorEnDestinoComponent } from './components/importador-en-destino/importador-en-destino.component';
+import { FacturasAsociadasComponent } from './components/facturas-asociadas/facturas-asociadas.component';
 
 @NgModule({
   declarations: [
@@ -34,9 +33,7 @@ import { ImportadorEnDestinoComponent } from './components/importador-en-destino
     PasoTresComponent,
     PasoUnoComponent,
     CapturarFacturasComponent,
-    FacturasAsociadasComponent,
-    HistoricoFabricantesComponent,
-    ImportadorEnDestinoComponent,
+    ImportadorEnDestinoComponent
   ],
   imports: [
     CommonModule,
@@ -54,7 +51,8 @@ import { ImportadorEnDestinoComponent } from './components/importador-en-destino
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     RouterModule,
-    
-  ]
+    FacturasAsociadasComponent,
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ElegibilidadDeTextilesModule { }

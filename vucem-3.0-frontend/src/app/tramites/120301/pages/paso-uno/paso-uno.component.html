@@ -17,7 +17,7 @@
         <a data-toggle="tab" (click)="seleccionaTab(5)">Histórico fabricantes</a>
       </li>
       <li [ngClass]="indice === 6 ? 'active' : ''">
-        <a data-toggle="tab" (click)="seleccionaTab(5)">Importador en destino</a>
+        <a data-toggle="tab" (click)="seleccionaTab(6)">Importador en destino</a>
       </li>
     </ul>
 
@@ -37,7 +37,7 @@
       } 
       @case (5) {
         <historico-fabricantes></historico-fabricantes>
-      }   
+      }
       @case (6) {
         <importador-en-destino></importador-en-destino>
       }  
