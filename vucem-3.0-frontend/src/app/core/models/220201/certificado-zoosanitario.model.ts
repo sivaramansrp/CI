@@ -43,3 +43,13 @@ export interface Banco {
     id: number;
     value: string;
 }
+/**
+ * Interfaz para definir la acción y el valor del botón.
+ * @interface AccionBoton
+ * @property {string} accion - La acción del botón ('cont' o 'atras').
+ * @property {number} valor - El índice del paso al que se navega.
+ */
+export interface AccionBoton {
+    accion: string;
+    valor: number;
+}

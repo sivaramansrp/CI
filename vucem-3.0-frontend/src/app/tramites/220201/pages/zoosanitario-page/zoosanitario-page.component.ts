@@ -1,19 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
-import { ListaPasosWizard } from '../../../../core/models/220201/certificado-zoosanitario.model';
+import { AccionBoton, ListaPasosWizard } from '../../../../core/models/220201/certificado-zoosanitario.model';
 import { PASOS } from '../../../../shared/constantes/certificado-zoosanitario.enum';
 import { SUCECESS_MESSAGE_STAGEONE } from '../../../../shared/constantes/certificado-zoosanitario.enum';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
-/**
- * Interfaz para definir la acción y el valor del botón.
- * @interface AccionBoton
- * @property {string} accion - La acción del botón ('cont' o 'atras').
- * @property {number} valor - El índice del paso al que se navega.
- */
-interface AccionBoton {
-  accion: string;
-  valor: number;
-}
 
 /**
  * Componente principal para el formulario de certificado zoosanitario.
