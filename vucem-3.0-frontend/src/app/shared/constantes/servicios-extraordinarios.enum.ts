@@ -138,6 +138,6 @@ export const FECHA_FINAL = {
 export const FECHA_INSPECCION = {
   labelNombre: 'Fecha de inspección',
   required: true,
-  habilitado: true,
+  habilitado: false,
 }
 
