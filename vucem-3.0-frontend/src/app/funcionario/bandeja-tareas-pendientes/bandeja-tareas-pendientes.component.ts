@@ -23,6 +23,20 @@ export class BandejaTareasPendientesComponent {
   public FormBusqueda!: FormGroup;
   public fechaInicioInput: InputFecha = FECHA_INICIO;
   public fechaFinalInput: InputFecha = FECHA_FINAL;
+  
+  public readonly tableColumns: string[] = [
+    'Folio trámite',
+    'Tipo de trámite',
+    'Nombre de la tarea',
+    'Fecha de asignación',
+    'Estado de trámite',
+  ];
+
+  public readonly tareasPendientesList = [
+    {
+      tbodyData: ['--','--','--','--','--'],
+    }
+  ];
 
   public constructor(
     protected readonly formBuilder: FormBuilder,
@@ -30,24 +44,26 @@ export class BandejaTareasPendientesComponent {
     this.FormBusqueda = this.inicializaFormulario();
   }
 
-  public inicializaFormulario(): FormGroup {
-    const formFields = {
-        folio: [null],
-        fechaInicial: [null],
-        fechaFinal: [null],
+  /**
+   * Método para crear el formulario y sus campos
+   * @returns Un form group con los campos necesarios
+   */
+  private inicializaFormulario(): FormGroup {
+    const camposFomulario = {
+      folio: [],
+      fechaInicial: [],
+      fechaFinal: [],
     };
-
-    return this.formBuilder.group(formFields);
+    return this.formBuilder.group(camposFomulario);
   }
 
-  cambioFechaInicio(nuevo_valor: string) {
+  public cambioFechaInicio(nuevo_valor: string) {
     this.FormBusqueda.get('fechaInicio')?.setValue(nuevo_valor);
     this.FormBusqueda.get('fechaInicio')?.markAsUntouched();
   }
 
-  cambioFechaFinal(nuevo_valor: string) {
+  public cambioFechaFinal(nuevo_valor: string) {
     this.FormBusqueda.get('fechaFinal')?.setValue(nuevo_valor);
     this.FormBusqueda.get('fechaFinal')?.markAsUntouched();
   }
-
 }

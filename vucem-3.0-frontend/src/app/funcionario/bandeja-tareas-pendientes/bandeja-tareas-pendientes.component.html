@@ -33,8 +33,8 @@
                 <form [formGroup]="FormBusqueda">
                   <div class="row">
                     <div class="col-md-4 form-group">
-                      <label class="form-label" for="nombre_rfc">Folio:</label>
-                      <input class="form-control" id="nombre_rfc" placeholder="Ingrese un folio" type="text" formControlName="nombre">
+                      <label class="form-label" for="folio">Folio:</label>
+                      <input class="form-control" id="folio" placeholder="Ingrese un folio" type="text" formControlName="folio">
                     </div>
                     <div class="col-md-4 form-group">
                       <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
@@ -62,5 +62,11 @@
         <h1>Lista de pendientes</h1>
       </div>
     </div>
+
+    <ng-table 
+      [commonTableHeader]="tableColumns"
+      [commonTableBody]="tareasPendientesList"
+      [muestraCheckbox]="false">
+    </ng-table>
   </div>
 </div>

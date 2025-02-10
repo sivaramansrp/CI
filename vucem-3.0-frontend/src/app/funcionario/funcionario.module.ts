@@ -7,6 +7,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
+import { TableComponent } from '../shared/components/table/table.component';
 import { WizardComponent } from '../shared/components/wizard/wizard.component';
 
 @NgModule({
@@ -22,6 +23,7 @@ import { WizardComponent } from '../shared/components/wizard/wizard.component';
     InputFechaComponent,
     CrosslistComponent,
     FuncionarioRoutingModule,
+    TableComponent,
   ],
   exports: [
   ]

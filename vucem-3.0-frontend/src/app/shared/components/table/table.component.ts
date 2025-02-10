@@ -1,6 +1,6 @@
 /* eslint-disable @angular-eslint/component-selector */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { TableData } from '../../../core/models/shared/components.model';
 
 @Component({
@@ -9,15 +9,24 @@ import { TableData } from '../../../core/models/shared/components.model';
   styleUrl: './table.component.scss',
   standalone: true,
 })
-export class TableComponent {
+export class TableComponent implements OnInit {
 
   /**
    * @description 
-   * commonTableHeader se utiliza para obtener datos de encabezado de tabla del componente 
-   * commonTableBody se utiliza para obtener datos del cuerpo de la tabla de la componente
+   * commonTableHeader se utiliza para obtener datos de encabezado de tabla del componente.
    */
   @Input() commonTableHeader: string[] = [];
-  @Input() commonTableBody: any =[];
+  /**
+   * @description 
+   * commonTableBody se utiliza para obtener datos del cuerpo de la tabla de la componente.
+   */
+  @Input() commonTableBody: any = [];
+
+  /**
+   * Variable para indicar si la tabla debe mostrar o no el elemento checkbox.
+   */
+  @Input()
+  public muestraCheckbox: boolean = false;
 
   public tableData: TableData = {
     tableHeader: [],
@@ -33,5 +42,4 @@ export class TableComponent {
       tableBody: this.commonTableBody
     }
   }
-
 }
