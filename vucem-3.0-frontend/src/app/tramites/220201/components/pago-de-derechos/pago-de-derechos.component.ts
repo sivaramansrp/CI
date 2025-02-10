@@ -32,8 +32,8 @@ export class PagoDeDerechosComponent implements OnInit {
   }
     ;
   pagoForm: FormGroup = this.fb.group({
-    exentoPagoNo: [''],
-    exentoPagoSi: [''],
+
+    exentoPago: [''],
     justificacion: [{ value: '', disabled: false }],
     claveReferencia: [{ value: '', disabled: true }],
     cadenaDependencia: [{ value: '', disabled: true }],

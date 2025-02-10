@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Servicio para la gestión de solicitudes de certificado zoosanitario.
+ * Este servicio proporciona métodos para configurar y enviar la información de la solicitud.
+ * @module certificadoZoosanitario
+ */
+
 import { Injectable } from '@angular/core';
 import {
   capturarSolicitud,
@@ -9,11 +15,19 @@ import {
 } from '../../../../../models/220201/capturar-solicitud.model';
 import { HttpClient } from '@angular/common/http';
 
+/**
+ * Servicio para la gestión de solicitudes de certificado zoosanitario.
+ * @class CertificadoZoosanitarioServiceService
+ */
 @Injectable({
   providedIn: 'root',
 })
-
 export class CertificadoZoosanitarioServiceService {
+
+  /**
+   * Objeto para almacenar los datos de la solicitud.
+   * @property {capturarSolicitud} capturarSolicitudCargaUtil
+   */
   public capturarSolicitudCargaUtil: capturarSolicitud = {
     solicitante: undefined,
     datosDeLaSolicitud: undefined,
@@ -22,28 +36,66 @@ export class CertificadoZoosanitarioServiceService {
     pagoDeDerechos: undefined,
   };
 
-  constructor(private http: HttpClient) { }
+  /**
+   * Constructor del servicio.
+   * @constructor
+   * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
+   */
+  constructor(private readonly http: HttpClient) { }
 
+  /**
+   * Establece la información del solicitante.
+   * @method setSoliciante
+   * @param {solicitante} solicitante - La información del solicitante.
+   */
   setSoliciante(solicitante: solicitante) {
     this.capturarSolicitudCargaUtil.solicitante = solicitante;
   }
 
+  /**
+   * Establece los datos de la solicitud.
+   * @method setDatosDeLaSolicitud
+   * @param {datosDeLaSolicitud} datosDeLaSolicitud - Los datos de la solicitud.
+   */
   setDatosDeLaSolicitud(datosDeLaSolicitud: datosDeLaSolicitud) {
     this.capturarSolicitudCargaUtil.datosDeLaSolicitud = datosDeLaSolicitud;
   }
+
+  /**
+   * Establece los datos para la movilización nacional.
+   * @method setDatosParaMovilizacionNacional
+   * @param {datosParaMovilizacionNacional} datosParaMovilizacionNacional - Los datos para la movilización nacional.
+   */
   setDatosParaMovilizacionNacional(
     datosParaMovilizacionNacional: datosParaMovilizacionNacional
   ) {
     this.capturarSolicitudCargaUtil.datosParaMovilizacionNacional =
       datosParaMovilizacionNacional;
   }
+
+  /**
+   * Establece la información de terceros relacionados.
+   * @method setTercerosRelacionados
+   * @param {tercerosRelacionados} tercerosRelacionados - La información de terceros relacionados.
+   */
   setTercerosRelacionados(tercerosRelacionados: tercerosRelacionados) {
     this.capturarSolicitudCargaUtil.tercerosRelacionados = tercerosRelacionados;
   }
+
+  /**
+   * Establece la información de pago de derechos.
+   * @method setPagoDeDerechos
+   * @param {pagoDeDerechos} pagoDeDerechos - La información de pago de derechos.
+   */
   setPagoDeDerechos(pagoDeDerechos: pagoDeDerechos) {
     this.capturarSolicitudCargaUtil.pagoDeDerechos = pagoDeDerechos;
   }
 
+  /**
+   * Envía la solicitud capturada.
+   * @method CapturarsolicitudEnviar
+   * @returns {Observable<any>} - Un Observable que emite la respuesta del servidor. --220201
+   */
   CapturarsolicitudEnviar() {
     const _url = 'http://localhost:3000/capturarSolicitud';
     return this.http.post<any>(_url, this.capturarSolicitudCargaUtil);
