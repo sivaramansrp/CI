@@ -4,14 +4,6 @@ import { ListaPasosWizard } from '../../../../core/models/220201/certificado-zoo
 import { PASOS } from '../../../../shared/constantes/certificado-zoosanitario.enum';
 import { SUCECESS_MESSAGE_STAGEONE } from '../../../../shared/constantes/certificado-zoosanitario.enum';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
-
-/**
- * @fileoverview Componente principal para el formulario de certificado zoosanitario.
- * Este componente gestiona el flujo del formulario a través de un asistente (wizard),
- * controlando la navegación entre los pasos y la información mostrada en cada uno.
- * @module zoosanitarioPage
- */
-
 /**
  * Interfaz para definir la acción y el valor del botón.
  * @interface AccionBoton
@@ -25,7 +17,11 @@ interface AccionBoton {
 
 /**
  * Componente principal para el formulario de certificado zoosanitario.
- * @class ZoosanitarioPageComponent
+ * Este componente gestiona el flujo del formulario a través de un asistente (wizard),
+ * controlando la navegación entre los pasos y la información mostrada en cada uno.
+ * @component ZoosanitarioPageComponent
+ * @selector app-zoosanitario-page
+ * @templateUrl ./zoosanitario-page.component.html
  */
 @Component({
   selector: 'app-zoosanitario-page',
@@ -35,31 +31,31 @@ export class ZoosanitarioPageComponent {
 
   /**
    * Array de pasos del asistente.
-   * @property {ListaPasosWizard[]} pasos
+   * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
    */
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
    * Título del mensaje principal.
-   * @property {string | null} tituloMensaje
+   * @property {string | null} tituloMensaje - Título que se muestra en la parte superior del formulario.
    */
   tituloMensaje: string | null = 'Zoosanitario para importación';
 
   /**
    * Componente Wizard.
-   * @property {WizardComponent} wizardComponent
+   * @property {WizardComponent} wizardComponent - Referencia al componente Wizard para controlar la navegación.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
    * Índice actual del paso.
-   * @property {number} indice
+   * @property {number} indice - Índice del paso actual en el que se encuentra el usuario.
    */
   indice: number = 1;
 
   /**
    * Datos para la configuración de los botones del asistente.
-   * @property {DatosPasos} datosPasos
+   * @property {DatosPasos} datosPasos - Configuración para los botones "Anterior" y "Siguiente".
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -70,14 +66,14 @@ export class ZoosanitarioPageComponent {
 
   /**
    * Mensaje de éxito para el primer paso.
-   * @property {string} mensajeDeTextoDeExito
+   * @property {string} mensajeDeTextoDeExito - Mensaje que se muestra si el primer paso se completa con éxito.
    */
   mensajeDeTextoDeExito: string = SUCECESS_MESSAGE_STAGEONE;
 
   /**
    * Maneja la acción del botón y navega entre los pasos.
    * @method getValorIndice
-   * @param {AccionBoton} e - Objeto con la acción y el valor del botón.
+   * @param {AccionBoton} e - Objeto con la acción (cont/atras) y el valor (índice) del botón.
    */
   getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
@@ -114,10 +110,10 @@ export class ZoosanitarioPageComponent {
 
   /**
    * Cambia el título del mensaje según la pestaña seleccionada.
-   * @method onTabChange
+   * @method enTabChange
    * @param {number} selectedTab - El índice de la pestaña seleccionada.
    */
-  onTabChange(selectedTab: number): void {
+  enTabChange(selectedTab: number): void {
     switch (selectedTab) {
       case 1:
         this.tituloMensaje = 'Zoosanitario para importación';
