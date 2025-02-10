@@ -43,6 +43,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SeccionQuery } from '../../../../core/queries/seccion.query';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+import { DatosArchivo } from '../../../../core/models/shared/components.model';
 
 @Component({
   selector: 'app-solicitud',
@@ -96,7 +97,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private formulariosService: FormulariosService,
     private catalogosServices: CatalogosService,
     private validacionesService: ValidacionesFormularioService
-  ) {}
+  ) {
+    this.crearFormSolicitud();
+  }
 
   ngOnInit(): void {
     // Peticiones a las apis
@@ -119,7 +122,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.crearFormSolicitud();
+
     this.FormSolicitud.statusChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -148,7 +151,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-
     // Aqui se busca el nro de patente o autorizacion
     this.obtenerPatente();
     this.tipoSolicitudSeleccion();
@@ -169,7 +171,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {FormGroup} El grupo de formulario 'datosServicio'.
    */
   get datosServicio(): FormGroup {
-    return this.FormSolicitud.get('datosServicio') as FormGroup;
+    return this.FormSolicitud?.get('datosServicio') as FormGroup;
   }
 
   /**
@@ -333,19 +335,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
       }),
 
-      datosServicio: this.fb.group({
-        fechaInicio: [
-          this.solicitudState?.fechaInicio,
-          [Validators.required, this.validacionesService.validaFechaNoHoy],
-        ],
-        fechaFinal: [
-          this.solicitudState?.fechaFinal,
-          [Validators.required, this.validacionesService.validaFechaNoHoy],
-        ],
-        horaInicio: [this.solicitudState?.horaInicio, Validators.required],
-        horaFinal: [this.solicitudState?.horaFinal, Validators.required],
-        fechasSeleccionadas: this.fb.array([]),
-      }),
+      datosServicio: this.fb.group(
+        {
+          fechaInicio: [
+            this.solicitudState?.fechaInicio,
+            [Validators.required, this.validacionesService.validaFechaNoHoy],
+          ],
+          fechaFinal: [
+            this.solicitudState?.fechaFinal,
+            [Validators.required, this.validacionesService.validaFechaNoHoy],
+          ],
+          horaInicio: [this.solicitudState?.horaInicio, Validators.required],
+          horaFinal: [this.solicitudState?.horaFinal, Validators.required],
+          fechasSeleccionadas: this.fb.array([]),
+        },
+        {
+          asyncValidators: this.fechaIntervaloValidator(),
+        }
+      ),
 
       despacho: this.fb.group({
         despacho: [this.solicitudState?.despacho],
@@ -406,6 +413,110 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         monto: [this.solicitudState?.monto, [Validators.required]],
       }),
     });
+  }
+
+  /**
+   * Validador de intervalo de fechas y horas para un formulario.
+   *
+   * Este validador verifica que el intervalo entre las fechas y horas de inicio y finalización
+   * cumpla con las restricciones específicas según el tipo de solicitud seleccionada.
+   *
+   * @returns Una función que toma un `FormGroup` y devuelve un objeto con una clave booleana
+   *          indicando si el intervalo es inválido, o `null` si el intervalo es válido.
+   *
+   * @example
+   * ```typescript
+   * const formGroup = new FormGroup({
+   *   datosServicio: new FormGroup({
+   *     fechaInicio: new FormControl('2023-01-01'),
+   *     fechaFinal: new FormControl('2023-01-02'),
+   *     horaInicio: new FormControl('08:00'),
+   *     horaFinal: new FormControl('18:00')
+   *   })
+   * });
+   * const validator = fechaIntervaloValidator();
+   * const validationResult = validator(formGroup);
+   * console.log(validationResult); // null si el intervalo es válido, { invalidIntervalo: true } si no lo es
+   * ```
+   *
+   * @returns {Function} Una función que toma un `FormGroup` y devuelve un objeto con una clave booleana
+   *                     indicando si el intervalo es inválido, o `null` si el intervalo es válido.
+   */
+  fechaIntervaloValidator() {
+    // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
+    return (group: FormGroup): { [key: string]: boolean } | null => {
+      const datosServicio = group.get('datosServicio') as FormGroup;
+
+      const fechaInicio = new Date(
+        this.datosServicio?.get('fechaInicio').value
+      );
+      const fechaFinal = new Date(datosServicio.get('fechaFinal').value);
+      const horaInicio = datosServicio.get('horaInicio').value;
+      const horaFinal = datosServicio.get('horaFinal').value;
+      const intervalDays = this.getIIntervaloDias(
+        this.tipoSolicitudSeleccionada
+      );
+
+      if (
+        fechaInicio &&
+        fechaFinal &&
+        horaInicio &&
+        horaFinal &&
+        intervalDays !== null
+      ) {
+        fechaInicio.setHours(
+          parseInt(horaInicio.split(':')[0], 10),
+          parseInt(horaInicio.split(':')[1], 10)
+        );
+        fechaFinal.setHours(
+          parseInt(horaFinal.split(':')[0], 10),
+          parseInt(horaFinal.split(':')[1], 10)
+        );
+        const differenceInTime = fechaFinal.getTime() - fechaInicio.getTime();
+        const differenceInHours = differenceInTime / (1000 * 3600);
+
+        if (
+          this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL &&
+          differenceInHours > 24
+        ) {
+          return { invalidIntervalo: true };
+        }
+
+        const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+        if (
+          (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL &&
+            differenceInDays > 7) ||
+          (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.MENSUAL &&
+            differenceInDays > 30)
+        ) {
+          return { invalidIntervalo: true };
+        }
+
+        if (differenceInTime < 0) {
+          return { endDateBeforeStartDate: true };
+        }
+      }
+      return null;
+    };
+  }
+
+  /**
+   * Devuelve el número de días correspondiente a un intervalo específico.
+   *
+   * @param {number} intervalo - El tipo de intervalo, que puede ser uno de los valores definidos en TIPO_SOLICITUD.
+   * @returns {number | null} El número de días correspondiente al intervalo proporcionado, o null si el intervalo no es válido.
+   */
+  getIIntervaloDias(intervalo: number): number | null {
+    switch (intervalo) {
+      case TIPO_SOLICITUD.INDIVIDUAL:
+        return 1;
+      case TIPO_SOLICITUD.SEMANAL:
+        return 7;
+      case TIPO_SOLICITUD.MENSUAL:
+        return 30;
+      default:
+        return null;
+    }
   }
 
   validarDiferenciaFechas(): void {
@@ -563,9 +674,44 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Establece los valores en el store de tramite5701.
+   *
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   * @returns {void}
+   */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
     const valor = form.get(campo)?.value;
     this.tramite5701Store[metodoNombre](valor);
+  }
+
+  /**
+   * Cambia la hora final del servicio.
+   *
+   * Esta función actualiza la validez de los datos del servicio y establece
+   * los valores correspondientes en el store.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  changeFechaFinal(): void {
+    this.datosServicio.updateValueAndValidity();
+    this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
+  }
+
+  /**
+   * Updates the validity of the `datosServicio` form control and sets the final hour value in the store.
+   * 
+   * This method performs the following actions:
+   * 1. Calls `updateValueAndValidity` on the `datosServicio` form control to re-evaluate its validity.
+   * 2. Invokes `setValoresStore` to update the store with the final hour value.
+   * 
+   * @returns {void}
+   */
+  changeHoraFinal(): void {
+    this.datosServicio.updateValueAndValidity();
+    this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
   }
 
   ngOnDestroy(): void {

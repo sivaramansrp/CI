@@ -172,35 +172,19 @@
           <label for="fechaFinal" class="form-label">Fecha final*:</label>
           <input class="form-control" type="date" name="fechaFinal" id="fechaFinal" formControlName="fechaFinal"
             [ngClass]="isValid(datosServicio,'fechaFinal') ? 'required' : ''" [min]="diaMinimo"
-            (change)="setValoresStore(datosServicio,'fechaFinal', 'setFechaFinal')">
+            (change)="changeFechaFinal()">
 
-          <!-- <div
-            *ngIf="datosServicio.get('dateTimeGroup.endDate')?.touched && datosServicio.get('dateTimeGroup.endDate')?.hasError('pastDate')">
-            No se pueden seleccionar fechas pasadas.
-          </div>
-          <div *ngIf="datosServicio.hasError('invalidInterval')">
-            El intervalo de tiempo no debe exceder el periodo seleccionado.
-          </div>
-          <div *ngIf="datosServicio.hasError('endDateBeforeStartDate')">
-            La fecha y hora finales deben ser posteriores a la fecha y hora iniciales.
-          </div> -->
-          <!-- 
           @if (isValid(datosServicio,'fechaFinal')) {
           <div class="mensaje-error">
             Fecha no válida, elija otro día
           </div>
-          } -->
+          }
 
-          <!-- @if (fechaRangoValidacion()) {
-            <div class="mensaje-error">
-              Fecha no válida, elija otro díaa
-            </div>
-            } -->
         </div>
 
         <div class="col-md-4">
           <input-hora formControlName="horaFinal" [label]="'Hora Final'" [required]="true" [inputId]="'horaFinal'"
-            (change)="setValoresStore(datosServicio,'horaFinal', 'setHoraFinal')"></input-hora>
+            (change)="changeHoraFinal()"></input-hora>
         </div>
       </div>
 
