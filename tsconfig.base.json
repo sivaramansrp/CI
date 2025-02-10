@@ -1,0 +1,26 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "220401/Routes": ["apps/220401/src/app/remote-entry/entry.routes.ts"],
+      "501/Routes": ["apps/501/src/app/remote-entry/entry.routes.ts"],
+      "5701/Routes": ["apps/5701/src/app/remote-entry/entry.routes.ts"],
+      "@ng-mf/data-access-user": ["libs/shared/data-access-user/src/index.ts"],
+      "login/Routes": ["apps/login/src/app/remote-entry/entry.routes.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
