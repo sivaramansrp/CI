@@ -1,0 +1,13 @@
+
+{
+    "tableHeader": [
+        "Nombre/Denominación o Razón Social",
+        "Teléfono",
+        "Correo Electrónico",
+        "Domicilio",
+        "País"
+    ],
+    "tableBody": [
+
+    ]
+}
