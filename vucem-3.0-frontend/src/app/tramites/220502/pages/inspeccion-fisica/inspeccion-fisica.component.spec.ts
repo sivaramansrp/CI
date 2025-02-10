@@ -1,10 +1,10 @@
-/* eslint-disable sort-imports */
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { InspeccionFisicaComponent } from './inspeccion-fisica.component';
-import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { INSPECCIONFISIOPASOS } from '../../../../core/enums/220502/solicitud-pantallas.enum';
+import { ComponentFixture } from '@angular/core/testing';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
+import { INSPECCIONFISIOPASOS } from '../../../../core/enums/220502/solicitud-pantallas.enum';
+import { InspeccionFisicaComponent } from './inspeccion-fisica.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 
 describe('InspeccionFisicaComponent', () => {
   let component: InspeccionFisicaComponent;

@@ -1,5 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
 import { MedioTransporteComponent } from './medio-transporte.component';
+import { TestBed } from '@angular/core/testing';
 
 describe('MedioTransporteComponent', () => {
   let component: MedioTransporteComponent;

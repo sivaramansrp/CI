@@ -1,10 +1,12 @@
-/* eslint-disable sort-imports */
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormGroup, FormGroupName, ReactiveFormsModule } from '@angular/forms';
+import { ComponentFixture } from '@angular/core/testing';
+import { FormGroup } from '@angular/forms';
+import { FormGroupName } from '@angular/forms';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsableInspeccionEnPuntoComponent } from './responsable-inspeccion-en-punto.component';
+import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+import { TestBed } from '@angular/core/testing';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 describe('ResponsableInspeccionEnPuntoComponent', () => {
   let component: ResponsableInspeccionEnPuntoComponent;

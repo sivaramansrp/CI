@@ -1,5 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
+import { TestBed } from '@angular/core/testing';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;

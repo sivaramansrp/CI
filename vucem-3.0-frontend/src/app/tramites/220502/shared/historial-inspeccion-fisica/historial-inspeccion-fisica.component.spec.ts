@@ -1,5 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
 import { HistorialInspeccionFisicaComponent } from './historial-inspeccion-fisica.component';
+import { TestBed } from '@angular/core/testing';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { historialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
 

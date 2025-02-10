@@ -1,7 +1,7 @@
-/* eslint-disable sort-imports */
-import { Component, Input } from '@angular/core';
-import { carrosDeFerrocarril } from '../../../../core/models/220502/solicitud-pantallas.model';
+import { Component } from '@angular/core';
+import { Input } from '@angular/core';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { carrosDeFerrocarril } from '../../../../core/models/220502/solicitud-pantallas.model';
 
 @Component({
   selector: 'app-carros-de-ferrocarril',

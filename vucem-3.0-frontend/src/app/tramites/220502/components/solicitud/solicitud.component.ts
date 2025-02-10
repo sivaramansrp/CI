@@ -1,28 +1,23 @@
-/* eslint-disable sort-imports */
-import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import {
-  cargarDatosIniciales,
-  carrosDeFerrocarril,
-  datosDeMercancias,
-  historialInspeccionFisica,
-  solicitud,
-} from '../../../../core/models/220502/solicitud-pantallas.model';
-import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { CarrosDeFerrocarrilComponent } from '../../shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
+import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
+import { Component  } from '@angular/core';
 import { DatoseDelTramiteARealizerComponent } from '../../shared/datose-del-tramite-a-realizer/datose-del-tramite-a-realizer.component';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { HistorialInspeccionFisicaComponent } from '../../shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
 import { MedioTransporteComponent } from '../../shared/medio-transporte/medio-transporte.component';
+import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsableInspeccionEnPuntoComponent } from '../../shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
 import { SolicitudDatosComponent } from '../../shared/solicitud-datos/solicitud-datos.component';
-
+import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
+import { cargarDatosIniciales } from '../../../../core/models/220502/solicitud-pantallas.model';
+import { carrosDeFerrocarril } from '../../../../core/models/220502/solicitud-pantallas.model';
+import { datosDeMercancias } from '../../../../core/models/220502/solicitud-pantallas.model';
+import { historialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
+import { solicitud } from '../../../../core/models/220502/solicitud-pantallas.model';
 @Component({
   selector: 'app-solicitud',
   standalone: true,

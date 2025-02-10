@@ -1,4 +1,3 @@
-/* eslint-disable sort-imports */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CarrosDeFerrocarrilComponent } from './carros-de-ferrocarril.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';

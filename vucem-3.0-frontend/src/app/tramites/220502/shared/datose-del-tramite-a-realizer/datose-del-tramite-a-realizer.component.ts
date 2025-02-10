@@ -1,22 +1,21 @@
-/* eslint-disable sort-imports */
-import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
-import {
-  ControlContainer,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
-import { InputFechaComponent } from '../../../../shared/components/input-fecha/input-fecha.component';
-import {
-  CatalogosSelect,
-  InputFecha,
-} from '../../../../core/models/shared/components.model';
-import { FECHA_INSPECCION } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ControlContainer } from '@angular/forms';
+import { FECHA_INSPECCION } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { Input } from '@angular/core';
+import { InputFecha } from '../../../../core/models/shared/components.model';
+import { InputFechaComponent } from '../../../../shared/components/input-fecha/input-fecha.component';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { Validators } from '@angular/forms';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-datose-del-tramite-a-realizer',
@@ -147,22 +146,47 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
    * Carga datos del catálogo inicial para las selecciones de formulario.
    */
   cargarDatosIniciales(): void {
-    const catalogoTemplate = (label: string, required: boolean) => ({
+    const catalogoTemplate = (label: string, required: boolean, catalogos: Catalogo[]) => ({
       labelNombre: label,
       required,
       primerOpcion: 'Selecciona un valor',
-      catalogos: [
-        { id: 1, descripcion: 'abc', tam: 'abc', dpi: 'abc' },
-        { id: 2, descripcion: 'cde', tam: 'cde', dpi: 'cde' },
-        { id: 3, descripcion: 'xyz', tam: 'xyz', dpi: 'xyz' },
-      ],
+      catalogos: catalogos,
     });
 
-    this.certificadosAutorizados = catalogoTemplate('Certificados autorizados pendientes', true);
-    this.horaDeInspeccion = catalogoTemplate('Hora de inspección', true);
-    this.aduanaDeIngreso = catalogoTemplate('Aduana de ingreso', false);
-    this.sanidadAgropecuaria = catalogoTemplate('Oficina de inspección de Sanidad Agropecuaria', false);
-    this.puntoDeInspeccion = catalogoTemplate('Punto de inspección', false);
+    const pendientesCertificados = [
+      { id: 1, descripcion: 'Certificado de Exportación', tam: 'A4', dpi: '1234567890' },
+      { id: 2, descripcion: 'Certificado Fitosanitario', tam: 'Carta', dpi: '0987654321' },
+      { id: 3, descripcion: 'Certificado de Origen', tam: 'Legal', dpi: '1122334455' },
+    ];
+  
+    const horaInspeccion = [
+      { id: 1, descripcion: '08:00 AM - 10:00 AM', tam: '2 horas', dpi: 'INS001' },
+      { id: 2, descripcion: '10:00 AM - 12:00 PM', tam: '2 horas', dpi: 'INS002' },
+      { id: 3, descripcion: '01:00 PM - 03:00 PM', tam: '2 horas', dpi: 'INS003' },
+    ];
+  
+    const aduanaIngreso = [
+      { id: 1, descripcion: 'Aduana La Aurora', tam: 'Zona 13', dpi: 'ADU001' },
+      { id: 2, descripcion: 'Aduana Puerto Quetzal', tam: 'Escuintla', dpi: 'ADU002' },
+      { id: 3, descripcion: 'Aduana Santo Tomás', tam: 'Izabal', dpi: 'ADU003' },
+    ];
+  
+    const sanidadAgropecuaria = [
+      { id: 1, descripcion: 'Oficina Central de Sanidad', tam: 'Ciudad Capital', dpi: 'SAN001' },
+      { id: 2, descripcion: 'Sanidad Agropecuaria Zona Norte', tam: 'Petén', dpi: 'SAN002' },
+      { id: 3, descripcion: 'Sanidad Agropecuaria Puerto Barrios', tam: 'Izabal', dpi: 'SAN003' },
+    ];
+  
+    const puntoInspección = [
+      { id: 1, descripcion: 'Punto de Inspección Aérea', tam: 'Terminal de Carga', dpi: 'PIN001' },
+      { id: 2, descripcion: 'Punto de Inspección Marítima', tam: 'Muelle Principal', dpi: 'PIN002' },
+      { id: 3, descripcion: 'Punto de Inspección Terrestre', tam: 'Frontera Tecún Umán', dpi: 'PIN003' },
+    ];
+    this.certificadosAutorizados = catalogoTemplate('Certificados autorizados pendientes', true, pendientesCertificados);
+    this.horaDeInspeccion = catalogoTemplate('Hora de inspección', true, horaInspeccion);
+    this.aduanaDeIngreso = catalogoTemplate('Aduana de ingreso', false, aduanaIngreso);
+    this.sanidadAgropecuaria = catalogoTemplate('Oficina de inspección de Sanidad Agropecuaria', false, sanidadAgropecuaria);
+    this.puntoDeInspeccion = catalogoTemplate('Punto de inspección', false, puntoInspección);
   }
 
   /**

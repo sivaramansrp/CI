@@ -1,5 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
 import { SolicitudDatosComponent } from './solicitud-datos.component';
+import { TestBed } from '@angular/core/testing';
 import { solicitud } from '../../../../core/models/220502/solicitud-pantallas.model';
 
 describe('SolicitudDatosComponent', () => {

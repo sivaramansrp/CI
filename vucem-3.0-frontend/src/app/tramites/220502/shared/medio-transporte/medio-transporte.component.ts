@@ -1,17 +1,18 @@
-/* eslint-disable sort-imports */
-import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-  ControlContainer,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
-import { datosDeMercancias } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ControlContainer } from '@angular/forms';
+import { FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { Input } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { Validators } from '@angular/forms';
+import { datosDeMercancias } from '../../../../core/models/220502/solicitud-pantallas.model';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-medio-transporte',

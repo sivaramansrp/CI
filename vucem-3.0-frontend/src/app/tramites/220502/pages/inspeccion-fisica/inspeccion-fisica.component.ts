@@ -1,8 +1,7 @@
-/* eslint-disable sort-imports */
 import { Component, ViewChild } from '@angular/core';
+import { DatosPasos } from '../../../../core/models/shared/components.model';
 import { INSPECCIONFISIOPASOS } from '../../../../core/enums/220502/solicitud-pantallas.enum';
 import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
-import { DatosPasos } from '../../../../core/models/shared/components.model';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 
 /** Interface to define the structure of button actions */
