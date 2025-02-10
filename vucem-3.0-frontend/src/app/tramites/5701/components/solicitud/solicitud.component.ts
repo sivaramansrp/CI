@@ -240,7 +240,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         }),
         takeUntil(this.destroyNotifier$)
       );
-    catTipoSolicitud$.subscribe();
 
     const catalogoPaises$ = this.catalogosServices
       .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
@@ -252,7 +251,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           }
         })
       );
-    catalogoPaises$.subscribe();
 
     const catalogoAduanas$ = this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_ADUANAS)
@@ -263,7 +261,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           }
         })
       );
-    catalogoAduanas$.subscribe();
 
     const seccionesAduaneras$ = this.catalogosServices
       .getCatalogoById(CATALOGOS_ID.CAT_SECCION_ADUANAS)
@@ -702,11 +699,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Updates the validity of the `datosServicio` form control and sets the final hour value in the store.
-   * 
+   *
    * This method performs the following actions:
    * 1. Calls `updateValueAndValidity` on the `datosServicio` form control to re-evaluate its validity.
    * 2. Invokes `setValoresStore` to update the store with the final hour value.
-   * 
+   *
    * @returns {void}
    */
   changeHoraFinal(): void {

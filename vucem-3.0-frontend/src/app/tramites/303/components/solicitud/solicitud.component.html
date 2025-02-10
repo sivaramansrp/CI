@@ -96,7 +96,7 @@
 
 
       <div class="col-md-4">
-        <!-- <input-hora [datosHora]="horaInicio" (horaValor)="obtenerHora($event, 'i')"></input-hora> -->
+        <input-hora formControlName="horaInicio" [label]="'Hora inicio'" [required]="true" [inputId]="'horaInicio'"></input-hora>
       </div>
 
     </div>
@@ -107,7 +107,7 @@
       </div>
 
       <div class="col-md-4">
-        <!-- <input-hora [datosHora]="horaFinal" (horaValor)="obtenerHora($event, 'f')"></input-hora> -->
+        <input-hora formControlName="horaFinal" [label]="'Hora Final'" [required]="true" [inputId]="'horaFinal'"></input-hora>
       </div>
     </div>
 
