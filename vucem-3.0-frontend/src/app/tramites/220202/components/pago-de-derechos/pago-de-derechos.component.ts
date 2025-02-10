@@ -30,8 +30,7 @@ export class PagoDeDerechosComponent {
   }
     ;
   pagoForm: FormGroup = this.fb.group({
-    exentoPagoNo: [''],
-    exentoPagoSi: [''],
+    exentoPago: [''],
     justificacion: [{ value: '', disabled: true }],
     claveReferencia: [{ value: '', disabled: true }],
     cadenaDependencia: [{ value: '', disabled: true }],
