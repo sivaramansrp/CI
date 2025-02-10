@@ -12,7 +12,7 @@ export interface CatalogosSelect {
   labelNombre: string;
   required: boolean;
   primerOpcion: string;
-  catalogos: Catalogo[] ;
+  catalogos: Catalogo[];
 }
 
 export interface CatalogosSelectPaises {
@@ -66,12 +66,13 @@ export interface InputHora {
 export interface InputFecha {
   labelNombre: string;
   required: boolean;
-  habilitado: boolean
+  habilitado: boolean;
 }
 
-export interface ConfiguracionTabla {
-  [clave: string]: string | number | boolean | null;
-}
+export type ConfiguracionTabla = Record<
+  string,
+  string | number | boolean | null
+>;
 
 export interface EncabezadosTabla {
   key: string;
@@ -81,7 +82,7 @@ export interface EncabezadosTabla {
 export interface AccionesTabla {
   tipo: string;
   label: string;
-  icono:  string;
+  icono: string;
 }
 
 export interface Pedimento {
@@ -89,24 +90,23 @@ export interface Pedimento {
   pedimento: number;
   aduana: number;
   idTipoPedimento: number;
-  descTipoPedimento: string,
+  descTipoPedimento: string;
   numero: string;
   comprobanteValor: string;
   pedimentoValidado: boolean;
-
 }
 
 export interface DatosRfcResponse {
   rfc: string;
   nombre: string;
-  aPaterno: string;
-  aMaterno: string;
+  primerApellido: string;
+  segundoApellido: string;
 }
 export interface DatosRepresentanteLegal {
   rfc: string;
   nombre: string;
-  aPaterno: string;
-  aMaterno: string;
+  primerApellido: string;
+  segundoApellido: string;
   telefono: string;
   correo: string;
 }

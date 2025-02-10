@@ -20,7 +20,7 @@ export interface FormularioDinamico {
   visibility?: string;
   tipo_input: string;
   disabled: boolean;
-  validators: Array<string>;
+  validators: string[];
   tooltip?: string;
   placeholder?: string;
 }
