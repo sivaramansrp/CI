@@ -97,9 +97,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private formulariosService: FormulariosService,
     private catalogosServices: CatalogosService,
     private validacionesService: ValidacionesFormularioService
-  ) {
-    this.crearFormSolicitud();
-  }
+  ) {}
 
   ngOnInit(): void {
     // Peticiones a las apis
@@ -122,6 +120,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+    this.crearFormSolicitud();
 
     this.FormSolicitud.statusChanges
       .pipe(
