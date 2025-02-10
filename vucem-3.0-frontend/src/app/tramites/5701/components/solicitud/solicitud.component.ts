@@ -347,7 +347,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           fechasSeleccionadas: this.fb.array([]),
         },
         {
-          asyncValidators: this.fechaIntervaloValidator(),
+          validators: this.fechaIntervaloValidator(),
         }
       ),
 
@@ -447,9 +447,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       const fechaInicio = new Date(
         this.datosServicio?.get('fechaInicio').value
       );
-      const fechaFinal = new Date(datosServicio.get('fechaFinal').value);
-      const horaInicio = datosServicio.get('horaInicio').value;
-      const horaFinal = datosServicio.get('horaFinal').value;
+      const fechaFinal = new Date(datosServicio?.get('fechaFinal').value);
+      const horaInicio = datosServicio?.get('horaInicio').value;
+      const horaFinal = datosServicio?.get('horaFinal').value;
       const intervalDays = this.getIIntervaloDias(
         this.tipoSolicitudSeleccionada
       );
@@ -589,8 +589,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     const tipoSolicitud = this.FormSolicitud.get('tipoSolicitud')?.value;
     this.tramite5701Store.setTipoSolicitud(tipoSolicitud);
   }
-
-  valorInputCheck(e: DatosInputCheck): void {}
 
   rango_fechas(): void {
     const fechaInicial = this.datosServicio.get('fechaInicio')?.value;

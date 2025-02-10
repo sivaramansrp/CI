@@ -219,16 +219,15 @@
     <div formGroupName="despacho">
       <div class="row">
         <div class="col-md-4">
-          <input-check [datos]="despachoLDA" (valores)="valorInputCheck($event)"></input-check>
+          <input-check [datos]="despachoLDA"></input-check>
         </div>
         <div class="col-md-4">
-          <input-check [datos]="despachoDD" (valores)="valorInputCheck($event)"></input-check>
+          <input-check [datos]="despachoDD"></input-check>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-4">
-          <!-- <select-catalogos [catalogosDatos]="aduanas" (valorSeleccion)="aduanaSeleccion($event)"  /> -->
           <app-catalogo-select [catalogo]="aduanas" formControlName="idAduana" [label]="'Aduana'" [required]="true"
             (change)="setValoresStore(despacho,'idAduana', 'setIdAduana')"></app-catalogo-select>
         </div>
