@@ -1,7 +1,13 @@
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
@@ -13,10 +19,9 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
   standalone: true,
   imports: [TituloComponent, SelectCatalogosComponent, ReactiveFormsModule],
   templateUrl: './representacion.component.html',
-  styleUrl: './representacion.component.scss'
+  styleUrl: './representacion.component.scss',
 })
 export class RepresentacionComponent {
-
   /**
    * Configuración del formulario de representación.
    */
@@ -24,75 +29,91 @@ export class RepresentacionComponent {
 
   /**
    * Configuración del select de entidades federativas.
+   * @type {CatalogosSelect}
    */
-  entidads: CatalogosSelect = {
-    labelNombre: 'Entidad federativa',
-    required: true,
-    primerOpcion: 'Seleccione una entidad federativa',
-    catalogos: [
-      { id: 1, descripcion: 'Sinaloa' },
-      { id: 2, descripcion: 'Entidad federativa 2' },
-      { id: 3, descripcion: 'Entidad federativa 3' }
-    ]
-  };
+  entidadFederativa!: CatalogosSelect;
 
   /**
    * Configuración del select de representaciones federales.
+   * @type {CatalogosSelect}
+   * @description Configuración del select de representaciones federales.
    */
-  representacions: CatalogosSelect = {
-    labelNombre: 'Representación federal',
-    required: true,
-    primerOpcion: 'Seleccione una representación federal',
-    catalogos: [
-      { id: 1, descripcion: 'Culican' },
-      { id: 2, descripcion: 'Representación federal 2' },
-      { id: 3, descripcion: 'Representación federal 3' }
-    ]
-  };
+  representacionFederal!: CatalogosSelect;
 
   /**
    * Entidad federativa seleccionada.
    */
-  selectedEntidad: Catalogo = { id: 0, descripcion: '' };
-  
+  selectedEntidadFederativa: Catalogo = { id: 0, descripcion: '' };
+
   /**
    * Representación federal seleccionada.
    */
-  selectedRepresentacion: Catalogo = { id: 0, descripcion: '' };
+  selectedRepresentacionFederal: Catalogo = { id: 0, descripcion: '' };
 
   /**
-   * Maneja la selección de una entidad federativa.
-   * @param entidad - La entidad federativa seleccionada.
+   * @constructor
+   * @param {FormBuilder} fb - El constructor de formularios.
+   * @param {HttpClient} http - El cliente HTTP para realizar solicitudes.
+   * @returns void
    */
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private http: HttpClient) {}
 
   /**
    * Maneja la selección de una entidad federativa.
    * @param entidad - La entidad federativa seleccionada.
    * @returns void
-  */
-  entidadSeleccion(entidad: Catalogo): void {
-    this.selectedEntidad = entidad;
+   */
+  entidadFederativaSeleccion(entidad: Catalogo): void {
+    this.selectedEntidadFederativa = entidad;
   }
 
   /**
    * Maneja la selección de una representación federal.
    * @param representacion - La representación federal seleccionada.
    * @returns void
-  */
-  representacionSeleccion(representacion: Catalogo): void {
-    this.selectedRepresentacion = representacion;
+   */
+  representacionFederalSeleccion(representacion: Catalogo): void {
+    this.selectedRepresentacionFederal = representacion;
   }
 
   /**
-   * Inicializa el formulario de representación.
+   * Obtiene las entidades federativas.
    * @returns void
-  */
+   */
   ngOnInit(): void {
+    this.fetchEntidadFederativa();
+    this.fetchRepresentacionFederal();
     this.frmRepresentacion = this.fb.group({
-      entidad: [this.selectedEntidad, Validators.required],
-      representacion: [this.selectedRepresentacion, Validators.required]
+      entidad: [this.selectedEntidadFederativa, Validators.required],
+      representacion: [this.selectedRepresentacionFederal, Validators.required],
     });
   }
 
+  /**
+   * Obtiene las entidades federativas.
+   * @returns void
+   * @description Obtiene las entidades federativas.
+   * @todo Cambiar la URL por la URL real de la API.
+   */
+  fetchEntidadFederativa() {
+    this.http
+      .get('/assets/json/130102/entidad_federativa.json')
+      .subscribe((data: any) => {
+        this.entidadFederativa = data;
+      });
+  }
+
+  /**
+   * Obtiene las representaciones federales.
+   * @returns void
+   * @description Obtiene las representaciones federales.
+   * @todo Cambiar la URL por la URL real de la API.
+   */
+  fetchRepresentacionFederal() {
+    this.http
+      .get('/assets/json/130102/representacion_federal.json')
+      .subscribe((data: any) => {
+        this.representacionFederal = data;
+      });
+  }
 }
