@@ -20,7 +20,7 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'certificado-zoosanitario ',
+    path: 'certificado-zoosanitario',
     loadChildren: () =>
       import('./tramites/220201/certificado-zoosanitario.module').then(
         (m) => m.CertificadoZoosanitarioModule)
