@@ -32,14 +32,7 @@ const routes: Routes = [
       import('./tramites/220401/pantallas.module').then(
         (m) => m.PantallasModule
       ),
-  },
-  {
-    path: 'octava-temporral',
-    loadChildren: () =>
-      import('./tramites/130102/octava-temporral.module').then(
-        (m) => m.OctavaTemporralModule
-      ),
-  },
+  }
 ];
 
 @NgModule({
