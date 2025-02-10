@@ -3,11 +3,8 @@
     <form [formGroup]="transporteForm" (ngSubmit)="validarTransporteFormulario()">
           <div class="row">
             <div class="col-md-4">
-              <div class="form-group">
-                <label class="form-label" for="mediodeTransporte">Medio de transporte*:</label>
-                <input class="form-control" id="mediodeTransporte" placeholder="Selecciona un valor" type="text"
-                  formControlName="mediodeTransporte"
-                  [ngClass]="isValid(transporteForm,'mediodeTransporte') ? 'required' : ''">
+              <div class="form-group">                
+                  <select-catalogos [catalogosDatos]="tiposDocumentos"></select-catalogos>
               </div>
             </div>
             <div class="col-md-4">
