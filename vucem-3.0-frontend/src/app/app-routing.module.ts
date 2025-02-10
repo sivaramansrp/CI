@@ -36,7 +36,7 @@ const routes: Routes = [
   {
     path: 'permiso-importacion',
     loadChildren: () =>
-      import('./tramites/130120/permiso-importacion/permiso-importacion.module').then(
+      import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
   },

@@ -1,7 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
-import { IntroPermisoComponent } from '../pages/intro-permiso/intro-permiso/intro-permiso.component';
+import { IntroPermisoComponent } from './pages/intro-permiso/intro-permiso/intro-permiso.component';
 
 export const ROUTES_PERMISO: Routes = [
   {
