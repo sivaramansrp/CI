@@ -6,7 +6,7 @@ import { INSTRUCCION_DOBLE_CLIC } from '../../../../shared/constantes/220202/fit
 
 import { HttpClient } from '@angular/common/http';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 
@@ -91,36 +91,40 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     this.obtenerTablaCelulaValor();
   }
   createFromFields() {
-    this.mercanciaForma = this.fb.group({
-      aduana: ['', Validators.required],
-      requisito: [''],
-      numCertificadoInternacional: ['', Validators.required],
-      arancelaria: ['', Validators.required],
-      descripcionFraccion: [''],
-      nico: ['', Validators.required],
-      descripcionNico: [''],
-      descripcion: ['', Validators.required],
-      cantidadUMT: ['', Validators.required],
-      umt: ['', Validators.required],
-      cantidadUMC: ['', Validators.required],
-      umc: ['', Validators.required],
-      uso: ['', Validators.required],
-      producto: ['', Validators.required]
-    });
-
-    this.formularioDeTransporte = this.fb.group({
-      aduana: ['', Validators.required],
-      agropecuaria: ['', Validators.required],
-      punto: ['', Validators.required],
-      guia: [''],
-      regimen: ['', Validators.required],
-      ferrocarril: ['']
-    });
-
     this.forma = this.fb.group({
-      mercancia: this.mercanciaForma,
-      formularioDeTransporte: this.formularioDeTransporte
+      aduana: [''],
+      agropecuaria: [''],
+      punto: [''],
+      guia: [''],
+      regimen: [''],
+      ferrocarril: [''],
+      mercancias: this.fb.array([]),
+      aduanaMercancia: [''],
+      requisito: [''],
+      numCertificadoInternacional: [''],
+      arancelaria: [''],
+      descFraccionArancelaria: [{ value: '', disabled: true }],
+      nico: [''],
+      descNico: [{ value: '', disabled: true }],
+      descripcion: [''],
+      cantidadUMT: [''],
+      umt: [{ value: '', disabled: true }],
+      cantidadUMC: [''],
+      umc: [''],
+      uso: [''],
+      producto: [''],
     });
+    const mercanciasArray = this.forma.get('mercancias') as FormArray;
+    mercanciasArray.push(this.fb.group({
+      seleccionado: [''], // Checkbox
+      noPartida: [''],
+      tipoRequisito: [''],
+      requisito: [''],
+      numCertificadoInternacional: [''],
+      fraccionArancelaria: [''],
+      descFraccion: [''],
+      nico: ['']
+    }));
   }
 
   obtenerTablaCelulaValor() {
