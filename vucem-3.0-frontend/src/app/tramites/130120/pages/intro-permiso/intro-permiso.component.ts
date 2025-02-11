@@ -1,9 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { BtnContinuarComponent } from "../../../../../shared/components/btn-continuar/btn-continuar.component";
-import { DatosPasos } from '../../../../../core/models/shared/components.model';
-import { ListaPasosWizard } from '../../../../../core/models/130120/permiso-importacion-modification.model';
-import { PASOS } from '../../../../../shared/constantes/130120/permiso-importacion-modification.enum';
-import { WizardComponent } from '../../../../../shared/components/wizard/wizard.component';
+import { BtnContinuarComponent } from "../../../../shared/components/btn-continuar/btn-continuar.component";
+import { DatosPasos } from '../../../../core/models/shared/components.model';
+import { ListaPasosWizard } from '../../../../core/models/130120/permiso-importacion-modification.model';
+import { PASOS } from '../../../../shared/constantes/130120/permiso-importacion-modification.enum';
+import { PasoUnoComponent } from "../paso-uno/paso-uno.component";
+import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 
 interface AccionBoton {
   accion: string;
@@ -13,7 +14,7 @@ interface AccionBoton {
   selector: 'app-intro-permiso',
   templateUrl: './intro-permiso.component.html',
   styleUrl: './intro-permiso.component.scss',
-  imports: [WizardComponent, BtnContinuarComponent],
+  imports: [WizardComponent, BtnContinuarComponent, PasoUnoComponent],
   standalone: true,
 })
 export class IntroPermisoComponent {

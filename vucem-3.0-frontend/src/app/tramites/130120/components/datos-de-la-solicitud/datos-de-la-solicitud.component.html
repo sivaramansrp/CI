@@ -1,0 +1,35 @@
+<div class="container">
+  <form [formGroup]="form">
+    @for(fieldGroup of config; track $index) {
+    <div class="form" [formGroupName]="fieldGroup.formGroupName">
+      <ng-titulo [titulo]="fieldGroup.title" />
+
+      <div class="row">
+        @for (item of fieldGroup.menu; track $index) {
+        <div [ngClass]="item.class" [ngStyle]="{ visibility: item.visibility }">
+          <div class="form-group">
+            @switch (item.inputType) { @case('select') {
+            <select-catalogos [catalogosDatos]="item.props"></select-catalogos>
+            } @case('text') {
+            <label class="form-label" [for]="item.props.campo">{{
+              item.props.labelNombre
+            }}</label>
+            <input
+              class="form-control"
+              [type]="item.props.tipo_input"
+              [id]="item.props.campo"
+              [placeholder]="item.props.placeholder"
+              [formControlName]="item.props.campo"
+              appUppercase
+            />
+            } @case('break-content') {
+            <div class="w-100"></div>
+            } }
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </form>
+</div>
