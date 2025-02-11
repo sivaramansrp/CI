@@ -50,10 +50,10 @@ export class TratadosComponent {
     * @param {Catalogo} event - El elemento seleccionado del catálogo.
     * @param {number} index - El índice del menú desplegable.
     */
-  seleccionar(event: Catalogo, index: number) {
-    if (index === 0) this.selectedValues.pais = event;
-    if (index === 1) this.selectedValues.tratado = event;
-    if (index === 2) this.selectedValues.origen = event;
+  seleccionar(event: Catalogo, index: number): void {
+    if (index === 0) {this.selectedValues.pais = event;}
+    if (index === 1) {this.selectedValues.tratado = event;}
+    if (index === 2) {this.selectedValues.origen = event;}
   }
 
   /**
@@ -69,7 +69,7 @@ export class TratadosComponent {
  /**
   * Agrega un nuevo tratado al array mercanciasData.
   */
-  agregarTratado() {
+  agregarTratado(): void {
     if (this.selectedValues.pais && this.selectedValues.tratado && this.selectedValues.origen) {
       this.tableBody.push({
         tbodyData: [

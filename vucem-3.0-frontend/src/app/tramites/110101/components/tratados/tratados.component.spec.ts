@@ -1,72 +1,15 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
-// import { TratadosComponent } from './tratados.component';
-
-
-// fdescribe('TratadosComponent', () => {
-//   let component: TratadosComponent;
-//   let fixture: ComponentFixture<TratadosComponent>;
-
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       declarations: [TratadosComponent]
-//     }).compileComponents();
-//   });
-
-//   beforeEach(() => {
-//     fixture = TestBed.createComponent(TratadosComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
-
-//   it('should create the component', () => {
-//     expect(component).toBeTruthy();
-//   });
-
-//   it('should select values correctly', () => {
-//     component.seleccionar({ id: 1, descripcion: 'CANADA' }, 0);
-//     component.seleccionar({ id: 2, descripcion: 'Free Trade Agreement' }, 1);
-//     component.seleccionar({ id: 3, descripcion: 'Preferential Origin' }, 2);
-//     expect(component.selectedValues).toEqual({
-//       pais: { id: 1, descripcion: 'CANADA' },
-//       tratado: { id: 2, descripcion: 'Free Trade Agreement' },
-//       origen: { id: 3, descripcion: 'Preferential Origin' }
-//     });
-//   });
-
-//   it('should add tratado when all values are selected', () => {
-//     component.selectedValues = {
-//       pais: { id: 1, descripcion: 'CANADA' },
-//       tratado: { id: 2, descripcion: 'Free Trade Agreement' },
-//       origen: { id: 3, descripcion: 'Preferential Origin' }
-//     };
-//     component.agregarTratado();
-//     expect(component.tableBody.length).toBe(1);
-//   });
-
-//   it('should not add tratado if values are missing', () => {
-//     component.selectedValues = {
-//       pais: { id: 1, descripcion: 'CANADA' },
-//       tratado: { id: 2, descripcion: 'Free Trade Agreement' }
-//     };
-//     component.agregarTratado();
-//     expect(component.tableBody.length).toBe(0);
-//   });
-// });
-
-
-
-
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TratadosComponent } from './tratados.component';
+import tratadosDropdown from '../../../../../assets/json/110101/tratdos-dropdown.json';
 
-fdescribe('TratadosComponent', () => {
+describe('TratadosComponent', () => {
   let component: TratadosComponent;
   let fixture: ComponentFixture<TratadosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      // Move TratadosComponent to imports
       imports: [TratadosComponent] 
     }).compileComponents();
   });
@@ -82,32 +25,63 @@ fdescribe('TratadosComponent', () => {
   });
 
   it('should select values correctly', () => {
-    component.seleccionar({ id: 1, descripcion: 'CANADA' }, 0);
-    component.seleccionar({ id: 2, descripcion: 'Free Trade Agreement' }, 1);
-    component.seleccionar({ id: 3, descripcion: 'Preferential Origin' }, 2);
+    const pais: Catalogo = tratadosDropdown.pais.find(item => item.descripcion === 'CANADA');
+    const tratado: Catalogo = tratadosDropdown.tratado.find(item => item.descripcion === 'Free Trade Agreement');
+    const origen: Catalogo = tratadosDropdown.origen.find(item => item.descripcion === 'Preferential Origin');
+
+    component.seleccionar(pais, 0);
+    component.seleccionar(tratado, 1);
+    component.seleccionar(origen, 2);
+
     expect(component.selectedValues).toEqual({
-      pais: { id: 1, descripcion: 'CANADA' },
-      tratado: { id: 2, descripcion: 'Free Trade Agreement' },
-      origen: { id: 3, descripcion: 'Preferential Origin' }
+      pais,
+      tratado,
+      origen
     });
   });
 
   it('should add tratado when all values are selected', () => {
-    component.selectedValues = {
-      pais: { id: 1, descripcion: 'CANADA' },
-      tratado: { id: 2, descripcion: 'Free Trade Agreement' },
-      origen: { id: 3, descripcion: 'Preferential Origin' }
-    };
+    const pais = tratadosDropdown.pais.find(item => item.descripcion === 'CANADA');
+    const tratado = tratadosDropdown.tratado.find(item => item.descripcion === 'Free Trade Agreement');
+    const origen = tratadosDropdown.origen.find(item => item.descripcion === 'Preferential Origin');
+
+    component.selectedValues = { pais, tratado, origen };
     component.agregarTratado();
     expect(component.tableBody.length).toBe(1);
+    expect(component.tableBody[0].tbodyData).toEqual([
+      'CANADA',
+      'Free Trade Agreement',
+      'Preferential Origin'
+    ]);
   });
 
   it('should not add tratado if values are missing', () => {
-    component.selectedValues = {
-      pais: { id: 1, descripcion: 'CANADA' },
-      tratado: { id: 2, descripcion: 'Free Trade Agreement' }
-    };
+    const pais = tratadosDropdown.pais.find(item => item.descripcion === 'CANADA');
+    const tratado = tratadosDropdown.tratado.find(item => item.descripcion === 'Free Trade Agreement');
+
+    component.selectedValues = { pais, tratado };
     component.agregarTratado();
     expect(component.tableBody.length).toBe(0);
+  });
+
+  it('should clear selectedValues after adding tratado', () => {
+    const pais = tratadosDropdown.pais.find(item => item.descripcion === 'CANADA');
+    const tratado = tratadosDropdown.tratado.find(item => item.descripcion === 'Free Trade Agreement');
+    const origen = tratadosDropdown.origen.find(item => item.descripcion === 'Preferential Origin');
+
+    component.selectedValues = { pais, tratado, origen };
+    component.agregarTratado();
+    expect(component.selectedValues).toEqual({});
+  });
+
+  it('should log an error if values are missing', () => {
+    spyOn(console, 'error');
+
+    const pais = tratadosDropdown.pais.find(item => item.descripcion === 'CANADA');
+    const tratado = tratadosDropdown.tratado.find(item => item.descripcion === 'Free Trade Agreement');
+
+    component.selectedValues = { pais, tratado };
+    component.agregarTratado();
+    expect(console.error).toHaveBeenCalledWith("Some values are missing!");
   });
 });
