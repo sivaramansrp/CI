@@ -3,7 +3,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import mockData from '../../../../../assets/json/110101/solicitante-mockdata.json';
 
-
+/**
+ * Componente para gestionar el formulario del solicitante.
+ */
 
 @Component({
   selector: 'app-solicitante',
@@ -13,7 +15,12 @@ import mockData from '../../../../../assets/json/110101/solicitante-mockdata.jso
   imports:[TituloComponent,ReactiveFormsModule]
 })
 export class SolicitanteComponent implements OnInit {
-  constructor(private fb: FormBuilder) { }
+  /**
+   * Constructor para inyectar las dependencias necesarias.
+   * @param fb - Servicio FormBuilder para crear formularios reactivos.
+   */
+  // eslint-disable-next-line no-empty-function
+  constructor(private fb: FormBuilder) { } 
 
   /**
    * Grupo de formulario para el formulario de solicitud.
@@ -29,7 +36,11 @@ export class SolicitanteComponent implements OnInit {
  * @property {string} correoElectronico - La dirección de correo electrónico del solicitante.
  */
  
-  
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Inicializa el formulario `solicitudForm` con los campos necesarios.
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.solicitudForm = this.fb.group({
       rfc: [''],
@@ -54,6 +65,7 @@ export class SolicitanteComponent implements OnInit {
  * y que `solicitudForm` está correctamente inicializado.
  */
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   setFormValues(){
     this.solicitudForm.get('rfc')?.setValue(mockData.rfc);
     this.solicitudForm.get('denominacion')?.setValue(mockData.denominacion);
