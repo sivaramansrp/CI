@@ -1,28 +1,30 @@
-import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
+import { CATALOGOS_ID, MB, PDF, DPI } from '../../constantes/constantes';
 import {
   CatalogosSelect,
   DocumentosCargados,
 } from '../../../core/models/shared/components.model';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
+import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
 import { CommonModule } from '@angular/common';
+import { DocumentoService } from '../../../core/services/shared/documento/documento.service';
+import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
+import { Login } from '../../../core/models/shared/inicio-sesion.model';
+import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
 import { ToastrService } from 'ngx-toastr';
 import {
-  CATALOGOS_ID,
-  MB,
-  PDF,
-  DPI,
-} from '../../constantes/constantes';
-import { Login } from '../../../core/models/shared/inicio-sesion.model';
-import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
-import { DocumentoService } from '../../../core/services/shared/documento/documento.service';
-import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
-import { CONSTANTES, URL_PRUEBA } from '../../constantes/servicios-extraordinarios.enum';
+  URL_PRUEBA,
+} from '../../constantes/servicios-extraordinarios.enum';
 
 declare const bootstrap: any; // Importación para manejar Bootstrap en TS
 
 @Component({
-  selector: 'anexar-documentos',
+  selector: 'app-anexar-documentos',
   standalone: true,
   imports: [SelectCatalogosComponent, CommonModule],
   templateUrl: './anexar-documentos.component.html',
@@ -133,12 +135,15 @@ export class AnexarDocumentosComponent implements OnInit {
    * Maneja la carga de un documento.
    * @param {Event} event - El evento de carga del archivo.
    */
-  async cargarDoc(event: Event) {
+  cargarDoc(event: Event): void {
     const archivo = event.target as HTMLInputElement;
     const informacionArchivo = (archivo.files as FileList)[0];
 
     if (informacionArchivo) {
-      let extArchivo = informacionArchivo.name.split('.').pop()?.toLowerCase();
+      const extArchivo = informacionArchivo.name
+        .split('.')
+        .pop()
+        ?.toLowerCase();
 
       if (extArchivo !== this.PDF.toLowerCase()) {
         this.toastr.error('Solo se aceptan archivos pdf');
@@ -159,14 +164,15 @@ export class AnexarDocumentosComponent implements OnInit {
         return;
       }
 
-      this.DocumentoService
-        .subirDocumento(this.token, informacionArchivo)
-        .subscribe({
-          next: (): void => {
-            this.toastr.success('Documento subido');
-          },
-          error: (_error): void => {},
-        });
+      this.DocumentoService.subirDocumento(
+        this.token,
+        informacionArchivo
+      ).subscribe({
+        next: (): void => {
+          this.toastr.success('Documento subido');
+        },
+        error: (_error): void => {},
+      });
 
       this.documentosCargados.push({
         tipoDocumento: this.documentoSeleccionado,
@@ -193,17 +199,15 @@ export class AnexarDocumentosComponent implements OnInit {
     return kilobytes * 1024;
   }
 
-    /**
+  /**
    * Abre un archivo PDF en una nueva pestaña del navegador.
    *
    * @param {string} url - La URL del archivo PDF que se va a abrir.
    * @returns {void}
    */
-    verPdf(url: string): void {
-      window.open(url, '_blank');
-    }
-
-
+  verPdf(url: string): void {
+    window.open(url, '_blank');
+  }
 
   /**
    * Abre el modal para eliminar un documento.
