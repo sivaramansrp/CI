@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="col-md-4">
+    <select class="form-select" multiple aria-label="Multiple select example" [formControl]="fecha">
+      @for (fecha of fechasDatos; let i = $index; track i) {
+      <option value="{{i}}">{{fecha}}</option>
+      }
+    </select>
+  </div>
+  <div class="col-md-4">
+    <div class="btn-group">
+      @for (btn of botones; track $index) {
+        <div class="d-flex justify-content-center">
+          <button type="button" class="btn" [ngClass]="btn.class" (click)="btn.funcion()">{{btn.btnNombre}}</button>
+        </div>
+      }
+    </div>
+
+  </div>
+  <div class="col-md-4">
+    <select class="form-select" multiple aria-label="Multiple select example" [formControl]="fechaSeleccionada">
+      @for (f_sel of fechasSeleccionadas; let ifs = $index; track ifs) {
+      <option value="{{ifs}}">{{f_sel}}</option>
+      }
+    </select>
+
+  </div>
+</div>

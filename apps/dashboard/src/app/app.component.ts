@@ -17,7 +17,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
         <tr>
           <td><a routerLink="/501">501</a></td>
           <td><a routerLink="/220401/pago">220401</a></td>
-          <td><a routerLink="/5701">5701</a></td>
+          <td><a routerLink="/5701/pago">5701</a></td>
         </tr>
       </table>
       <router-outlet></router-outlet>
