@@ -12,7 +12,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { InformacionUsuarioComponent } from "./shared/components/informacion-usuario/informacion-usuario.component";
 import { NavComponent } from './shared/components/nav/nav.component';
 import { NgModule } from '@angular/core';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 import { TituloComponent } from "./shared/components/titulo/titulo.component";
 
@@ -34,7 +33,6 @@ import { TituloComponent } from "./shared/components/titulo/titulo.component";
     InformacionUsuarioComponent,
     NavComponent,
     TituloComponent,
-    PdfViewerModule,
     ToastrModule.forRoot(),
 ],
   providers: [

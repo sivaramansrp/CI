@@ -1,9 +1,11 @@
 <div class="container">
   <div class="row d-flex align-items-end">
     <div class="col-md-4">
-      <select-catalogos [catalogosDatos]="tiposDocumentos"
-        (valorSeleccion)="docSeleccionado($event)"></select-catalogos>
+      <form [formGroup]="documentoForma">
+        <app-catalogo-select [catalogo]="catalogoDocumentos" [label]="'Tipo de documento'" [required]="true" formControlName="documento" (change)="seleccionarDocumento()"></app-catalogo-select>
+      </form>
     </div>
+    
     <div class="col-md-4">
       <div class="btn-upload">
         <input type="file" class="form-control" id="file-input" (change)="cargarDoc($event)"
