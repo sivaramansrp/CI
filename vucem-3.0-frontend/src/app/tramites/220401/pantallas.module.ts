@@ -18,17 +18,18 @@ import { TituloComponent } from '../../shared/components/titulo/titulo.component
 import { TransporteComponent } from './pages/transporte/transporte.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
+import { TableComponent } from '../../shared/components/table/table.component';
 
 @NgModule({
   declarations: [
     PantallasComponent,
     DatosComponent,
     TransporteComponent
-   ],
+  ],
   imports: [
     CommonModule,
     PagoDeDerechoComponent,
-    PantallasRoutingModule,    
+    PantallasRoutingModule,
     NavComponent,
     WizardComponent,
     TituloComponent,
@@ -41,7 +42,9 @@ import { SelectCatalogosComponent } from '../../shared/components/select-catalog
     TercerosRelacionadosComponent,
     AgregarDestinatoriaComponent,
     DatosGeneralsAnimalsComponent,
-    SelectCatalogosComponent
+    TableComponent,
+    SelectCatalogosComponent,
+
   ]
 })
 /**

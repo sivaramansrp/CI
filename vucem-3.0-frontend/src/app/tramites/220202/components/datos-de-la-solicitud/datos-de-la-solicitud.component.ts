@@ -20,8 +20,12 @@ import { CatalogosSelect } from '../../../../core/models/shared/components.model
 })
 export class DatosDeLaSolicitudComponent implements OnInit {
   colapsable: boolean = false;
+  mesaColumnas: any = [{
+    tbodyData: ['Establecimiento 1', '123-456-7890', 'correo', 'Actividad 1', 'Otro detalle', 'Certificado 001', 'Domicilio 1'],
+  }];
   selectRangoDias: string[] = [];
   instruccionDobleClic: string = INSTRUCCION_DOBLE_CLIC;
+  mesaCuerpo: any = [];
   tablaDeDatosDeCelda: Datos_de_fila[] = []
   procedureData: FormGroup;
   aduanaList: CatalogosSelect = {
@@ -85,10 +89,11 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   constructor(private readonly httpServicios: HttpClient,
     private readonly fb: FormBuilder
   ) {
-
+    this.mesaColumnasData();
   }
   ngOnInit(): void {
     this.obtenerTablaCelulaValor();
+
   }
   createFromFields() {
     this.forma = this.fb.group({
@@ -132,7 +137,12 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       this.tablaDeDatosDeCelda = data?.data;
     });
   }
-
+  mesaColumnasData() {
+    this.httpServicios.get<any>('../../../../../assets/json/220202/contenidodetabla.json').subscribe((data) => {
+      let val = data.data;
+      this.mesaColumnas = val[0].header;
+    });
+  }
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
   }

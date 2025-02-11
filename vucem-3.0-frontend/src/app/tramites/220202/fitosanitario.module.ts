@@ -26,6 +26,7 @@ import { FirmaElectronicaComponent } from '../../shared/components/firma-electro
 import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component';
 
 import { ServiciosExtraordinariosModule } from '../5701/servicios-extraordinarios.module';
+import { TableComponent } from '../../shared/components/table/table.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { ServiciosExtraordinariosModule } from '../5701/servicios-extraordinario
     FirmaElectronicaComponent,
     SolicitanteComponent,
     ServiciosExtraordinariosModule,
+    TableComponent
   ]
 })
 export class FitosanitarioModule { }
