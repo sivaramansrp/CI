@@ -43,7 +43,6 @@ export class ElegibilidadTextilesComponent {
     getValorIndice(e: AccionBoton) {
       if (e.valor > 0 && e.valor < 5) {
         this.indice = e.valor;
-        this.tituloMensaje = this.obtenerNombreDelTítulo(e.valor);
         if (e.accion === 'cont') {
           this.wizardComponent.siguiente();
         } else {

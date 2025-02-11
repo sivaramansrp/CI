@@ -24,6 +24,7 @@ import { CapturarFacturasComponent } from './components/capturar-facturas/captur
 import { ImportadorEnDestinoComponent } from './components/importador-en-destino/importador-en-destino.component';
 import { FacturasAsociadasComponent } from './components/facturas-asociadas/facturas-asociadas.component';
 import { TableComponent } from '../../shared/components/table/table.component';
+import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { TableComponent } from '../../shared/components/table/table.component';
     PasoTresComponent,
     PasoUnoComponent,
     CapturarFacturasComponent,
-    ImportadorEnDestinoComponent
+    ImportadorEnDestinoComponent,
+    PasoCuatroComponent
   ],
   imports: [
     CommonModule,
