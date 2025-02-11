@@ -136,7 +136,7 @@ export const FECHA_FINAL = {
 };
 
 export const MENSAJEDEALERTA = {
-  ADJUNTAR: `<p>Las tablas con asterisco son obligatorias y debes agregarpor lo menos un registro</p>`,
+  ADJUNTAR: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro</p>`,
 };
 
 export const MENSAJE_ALERTA_TRATADOS = {
@@ -149,3 +149,12 @@ export const MENSAJE_ALERTA_TRATADOS = {
   <li>Finalmente, agregue su selección a la lista de tratados</li>
 </ul>
 `}
+export const ELVALORALERTA = {
+  ADJUNTAR: `<p>El valor de la transacción debe ser mayor al valor de dólares para insumos/envases.</p>`,
+};
+
+export const PROTESTA = {
+  ADJUNTAR: `<input class="form-check-input" type="checkbox" id="protesta">
+  <p>El/la que suscribe manifiesto(a) bajo protesta de decir verdad, que la información declarada en el presente trámite de REGISTRO ÚNICO DE PRODUCTOS ELEGIBLES PARA PREFERENCIAS Y CONCESIONES ARANCELARIAS es copia fiel, íntegra e inalterada de la información y documentación soporte que obra en poder del (de la) solicitante.</p>`,
+}
+

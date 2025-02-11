@@ -15,6 +15,7 @@ export class PasoDosComponent {
 
   tiposDocumentos: Array<Catalogo> = [];
   documentosSeleccionados: Array<Catalogo> = [];
+  infoAlert = 'alert-info';
 
   constructor(
     private catalogosServices: CatalogosService,

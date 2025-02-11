@@ -134,13 +134,9 @@ export class PagoDeDerechoComponent implements OnInit {
  * Si el formulario es válido, registra los valores del formulario en la consola.
  */
   validarFormulario() {
-    if (this.FormSolicitud.valid) {
-     
-      console.log(this.FormSolicitud.value);
+    if (this.FormSolicitud.valid) {     
     }
   }
   public docSeleccionado(e: unknown) {
-    console.log(e);
   }
-
 }

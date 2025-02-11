@@ -1,0 +1,20 @@
+<div class="container">
+    <ng-titulo titulo="Representación federal" />
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <select-catalogos [catalogosDatos]="entidad"
+                            (valorSeleccion)="docSeleccionado($event)">
+            </select-catalogos>
+        </div>
+        <div class="col-md-4">
+            <select-catalogos [catalogosDatos]="representacion"
+                            (valorSeleccion)="validarRepresentacionFederalIDCSECEROR_($event)">
+            </select-catalogos>
+        </div>
+    </div>
+    
+    <ng-titulo titulo="Protesto de Decir Verdad" />
+    <div class="form-check bg-light p-3 border rounded">
+        <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
+    </div>
+</div>

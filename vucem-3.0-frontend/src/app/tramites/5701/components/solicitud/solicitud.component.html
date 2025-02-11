@@ -8,7 +8,7 @@
   </div>
 
   @if(tipoSolSeleccionada) {
-  <form [formGroup]="FormSolicitud" (ngSubmit)="validarFormulario()">
+  <form [formGroup]="FormSolicitud">
     <ng-titulo titulo="Datos del importador/exportador" />
     <ng-container formGroupName="datosImportadorExportador">
       <div class="row">
@@ -23,7 +23,7 @@
         </div>
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="nombreImportExport">Nombre*:</label>
+            <label class="form-label" for="nombreImportExport">Nombre:</label>
             <input class="form-control" id="nombreImportExport" formControlName="nombreImportExport"
               placeholder="Nombre" type="text" appUppercase>
           </div>
@@ -34,7 +34,8 @@
           <div class="form-group">
             <label class="form-label" for="nroRegistro">Número de registro o programa:</label>
             <input class="form-control" id="nroRegistro" placeholder="Numero de registro" type="text"
-              formControlName="nroRegistro" [ngClass]="isValid(datosImportadorExportador, 'nroRegistro') ? 'required' : ''">
+              formControlName="nroRegistro"
+              [ngClass]="isValid(datosImportadorExportador, 'nroRegistro') ? 'required' : ''">
           </div>
         </div>
       </div>
@@ -88,12 +89,12 @@
       </div>
     </ng-container>
 
+
     <ng-titulo titulo="Datos del servicio" />
     <div class="row">
       <div class="col-md-4">
         <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
       </div>
-
 
       <div class="col-md-4">
         <input-hora [datosHora]="horaInicio" (horaValor)="obtenerHora($event, 'i')"></input-hora>
@@ -153,11 +154,12 @@
         </div>
         <div class="col-md-4">
           <label for="seccionAduanera" class="form-label">Sección aduanera*:</label>
-          <select class="form-control" id="seccionAduanera">
+          <select class="form-control" id="seccionAduanera" formControlName="seccionAduanera">
             <option>Selecciona un valor</option>
-            <option>32 - 304 - AEROPUERTO INTERNACIONAL GENERAL. LUCIO BLANCO, CIUDAD REYNOSA, TAMAULIPAS.</option>
-            <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
-            <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
+            <option value=32>32 - 304 - AEROPUERTO INTERNACIONAL GENERAL. LUCIO BLANCO, CIUDAD REYNOSA, TAMAULIPAS.
+            </option>
+            <option value=34>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>
+            <option value=31>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>
           </select>
 
         </div>
@@ -174,8 +176,8 @@
 
       <div class="row">
         <div class="col-md-4">
-          <label for="operacion" class="form-label">Tipo de operación*:</label>
-          <select class="form-control" id="operacion">
+          <label for="tipoOperacion" class="form-label">Tipo de operación*:</label>
+          <select class="form-control" id="tipoOperacion" formControlName="tipoOperacion">
             <option>Selecciona un valor</option>
             <option>Importación</option>
             <option>Exportación</option>
@@ -212,73 +214,76 @@
 
 
     <ng-titulo titulo="Mercancía" />
-    <div class="row">
-      <div class="col-md-4">
-        <select-paises [catalogosPaises]="paisesOrigen" (paisSeleccionado)="paisOrigen($event)"></select-paises>
-      </div>
+    <ng-container [formGroup]="mercancia">
+      <div class="row">
+        <div class="col-md-4">
+          <select-paises [catalogosPaises]="paisesOrigen" (paisSeleccionado)="paisOrigen($event)"></select-paises>
+        </div>
 
-      <div class="col-md-4">
-        <select-paises [catalogosPaises]="paisesProcedencia"
-          (paisSeleccionado)="paisProcedencia($event)"></select-paises>
-      </div>
+        <div class="col-md-4">
+          <select-paises [catalogosPaises]="paisesProcedencia"
+            (paisSeleccionado)="paisProcedencia($event)"></select-paises>
+        </div>
 
-      <div class="col-md-8">
-        <div class="form-group">
-          <label for="descripcion" class="form-label">Descripción genérica*:</label>
-          <textarea class="form-control" rows="3" id="descripcion"></textarea>
+        <div class="col-md-8">
+          <div class="form-group">
+            <label for="descripcion" class="form-label">Descripción genérica*:</label>
+            <textarea class="form-control" rows="3" id="descripcion" formControlName="descripcion"></textarea>
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <div class="form-group">
+            <label for="justificacion" class="form-label">Justificación*:</label>
+            <textarea class="form-control" rows="3" id="justificacion" formControlName="justificacion"></textarea>
+          </div>
         </div>
       </div>
-
-      <div class="col-md-8">
-        <div class="form-group">
-          <label for="justificacion" class="form-label">Justificación*:</label>
-          <textarea class="form-control" rows="3" id="justificacion"></textarea>
-        </div>
-      </div>
-    </div>
+    </ng-container>
 
 
     <ng-titulo titulo="Personas responsables del despacho (máximo 5)" />
-    <agrega-personas/>
-
-
+    <agrega-personas />
 
     <ng-titulo titulo="Pagos" />
-    <div class="row rf">
-      <div class="col-md-4 form-group">
-        <label class="form-label" for="montoPagar">Monto a pagar:</label>
-        <input class="form-control" id="montoPagar" placeholder="" type="text">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-4 form-group">
-        <label class="form-label" for="lineaCaptura">Línea de captura*:</label>
-        <input class="form-control" id="lineaCaptura" placeholder="" type="text">
-      </div>
-      <div class="col-md-4 form-group">
-        <label class="form-label" for="monto">Monto*:</label>
-        <input class="form-control" id="monto" placeholder="" type="text">
-      </div>
-
-    </div>
-
-    <div class="row">
-      <div class="col-md-8"></div>
-      <div class="col-md-4">
-        <div class="btn-group">
-          <button class="btn btn-primary me-2" type="button">Consultar</button>
-          <button class="btn btn-danger" type="button">Eliminar</button>
+    <ng-container [formGroup]="pagoCaptura">
+      <div class="row rf">
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="montoPagar">Monto a pagar:</label>
+          <input class="form-control" id="montoPagar" placeholder="" type="text" formControlName="montoAPagar">
         </div>
       </div>
-    </div>
 
-    <div class="row">
-      <p class="p-bold">A través del siguiente vinculo puedes ingresar a la página para generar la línea de captura de
-        la
-        constancia que se solicita:</p>
-      <p>Generar línea de captura</p>
-    </div>
+      <div class="row">
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="lineaCaptura">Línea de captura*:</label>
+          <input class="form-control" id="lineaCaptura" placeholder="" type="text" formControlName="lineaCaptura">
+        </div>
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="monto">Monto*:</label>
+          <input class="form-control" id="monto" placeholder="" type="text" formControlName="monto">
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4">
+          <div class="btn-group">
+            <button class="btn btn-primary me-2" type="button">Consultar</button>
+            <button class="btn btn-danger" type="button">Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <p class="p-bold">A través del siguiente vinculo puedes ingresar a la página para generar la línea de captura de
+          la
+          constancia que se solicita:</p>
+        <p>Generar línea de captura</p>
+      </div>
+
+
+    </ng-container>
   </form>
   }
-</div>

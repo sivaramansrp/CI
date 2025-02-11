@@ -28,7 +28,7 @@ export class AgregaPersonasComponent {
 
   persona!: Persona;
 
-  personas: Array<Persona> = [];
+  personas: Persona[] = [];
 
   constructor(
     private fb: FormBuilder,
