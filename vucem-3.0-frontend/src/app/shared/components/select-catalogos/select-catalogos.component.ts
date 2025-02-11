@@ -5,12 +5,12 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import {
   FormControl,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogosSelect } from '../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';

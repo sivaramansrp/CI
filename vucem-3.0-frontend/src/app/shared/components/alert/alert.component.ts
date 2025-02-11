@@ -1,5 +1,4 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
@@ -9,7 +8,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   templateUrl: './alert.component.html',
   styleUrl: './alert.component.scss'
 })
-export class AlertComponent {
+export class AlertComponent implements OnInit {
   @Input() CONTENIDO!: string;
   @Input() CUSTOMECLASS!: string;
 

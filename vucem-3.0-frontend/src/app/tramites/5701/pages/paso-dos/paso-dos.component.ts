@@ -12,10 +12,9 @@ import { CatalogosService } from '../../../../core/services/shared/catalogos/cat
 })
 export class PasoDosComponent {
   TEXTOS = TEXTOS;
-
-  tiposDocumentos: Array<Catalogo> = [];
-  documentosSeleccionados: Array<Catalogo> = [];
   infoAlert = 'alert-info';
+  tiposDocumentos: Catalogo[] = [];
+  documentosSeleccionados: Catalogo[] = [];
 
   constructor(
     private catalogosServices: CatalogosService,
