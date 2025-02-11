@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+import { Catalogo, RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
 
 
 
@@ -92,6 +93,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     this.mesaColumnasData();
   }
   ngOnInit(): void {
+    this.obtenerTodosLosDatosDeLaLista();
     this.obtenerTablaCelulaValor();
 
   }
@@ -131,12 +133,27 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       nico: ['']
     }));
   }
+  obtenerTodosLosDatosDeLaLista() {
+    this.getaduanaLista();
+    this.getagropecuariaLista();
+    this.getPuntoLista();
+    this.getRegimenLista();
+    this.getAduanaLista();
+    this.getArancelariaLista();
+    this.getNicoLista();
+    this.getAduanaLista();
+    this.getNicoLista();
+    this.getProductoLista();
+    this.getUmCLista();
+    this.getusoLista();
+  }
 
   obtenerTablaCelulaValor() {
     this.httpServicios.get<Datos_De_Tabla>('../../../../../assets/json/220202/solicitud.json').subscribe((data) => {
       this.tablaDeDatosDeCelda = data?.data;
     });
   }
+
   mesaColumnasData() {
     this.httpServicios.get<any>('../../../../../assets/json/220202/contenidodetabla.json').subscribe((data) => {
       let val = data.data;
@@ -145,5 +162,65 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   }
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
+  }
+  getaduanaLista() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/aduana_de_ingreso.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.aduanaList['catalogos'] = datos as Catalogo[];
+    });
+  }
+  getagropecuariaLista() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/aduana_de_ingreso.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.agropecuariaList['catalogos'] = datos as Catalogo[];
+    });
+  }
+  getPuntoLista() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/punto.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.puntoList['catalogos'] = datos as Catalogo[];
+    });
+  }
+  getRegimenLista() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/regimen.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.regimeList['catalogos'] = datos as Catalogo[];
+    });
+  }
+  getAduanaLista() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/aduana_de_ingreso.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.aduanaList['catalogos'] = datos as Catalogo[];
+    });
+  }
+  getArancelariaLista() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/nombre.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.arancelariaList['catalogos'] = datos as Catalogo[];
+    });
+  }
+  getNicoLista() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/nombre.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.nicoList['catalogos'] = datos as Catalogo[];
+    });
+  }
+  getUmCLista() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/nombre.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.umcList['catalogos'] = datos as Catalogo[];
+    });
+  }
+  getusoLista() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/nombre.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.usoList['catalogos'] = datos as Catalogo[];
+    });
+  }
+  getProductoLista() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/nombre.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.productoList['catalogos'] = datos as Catalogo[];
+    });
   }
 }
