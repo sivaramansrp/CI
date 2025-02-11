@@ -22,11 +22,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
 import { SharedModule } from '../../shared/shared.module';
 
-import { TercerorRelacionadosComponent } from './components/terceror-relacionados/terceror-relacionados.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitario-page.component';
 import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component';
+import { TercerosComponent } from '../../shared/components/terceros/terceros.component';
 
 
 @NgModule({
@@ -38,9 +38,8 @@ import { SolicitanteComponent } from '../../shared/components/solicitante/solici
     ZoosanitarioPageComponent,
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionNacionalComponent,
-    TercerorRelacionadosComponent,
     PagoDeDerechosComponent,
-    SolicitanteComponent
+
   ],
   imports: [
     SharedModule,
@@ -57,7 +56,9 @@ import { SolicitanteComponent } from '../../shared/components/solicitante/solici
     InputFechaComponent,
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
-    SelectCatalogosComponent
+    SelectCatalogosComponent,
+    SolicitanteComponent,
+    TercerosComponent
   ]
 })
 export class CertificadoZoosanitarioModule { }
