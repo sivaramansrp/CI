@@ -107,7 +107,7 @@ export class PagoDeDerechosComponent implements OnInit {
   }
 
   /**
-   * Obtiene la lista de justificaciones para el selector. --220201
+   * Obtiene la lista de justificaciones para el selector. --220202
    * @method obtenerListaDeJustificaciones
    */
   obtenerListaDeJustificaciones() {
@@ -116,4 +116,16 @@ export class PagoDeDerechosComponent implements OnInit {
       this.justificacionSelector['catalogos'] = datos as Catalogo[];
     });
   }
+  /**
+   *  Los datos seleccionados se configuran en los campos fromGroup. --220202
+   * @method seleccionarListDatas
+   */
+
+  seleccionarListDatas(e: Catalogo, name: string) {
+    this.pagoForm.patchValue({
+      name: e.id
+    });
+  }
+
+
 }

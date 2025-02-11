@@ -32,6 +32,7 @@
       <div class="col-md-4">
         <select-catalogos
           [catalogosDatos]="justificacionSelector"
+          (valorSeleccion)="seleccionarListDatas($event, 'justificacion')"
         ></select-catalogos>
       </div>
       <div class="col-md-8"></div>
@@ -69,7 +70,10 @@
         </div>
       </div>
       <div class="col-md-4">
-        <select-catalogos [catalogosDatos]="bancoSelector"></select-catalogos>
+        <select-catalogos
+          [catalogosDatos]="bancoSelector"
+          (valorSeleccion)="seleccionarListDatas($event, 'banco')"
+        ></select-catalogos>
       </div>
       <div class="col-md-4">
         <div class="form-group">
