@@ -50,18 +50,8 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-8">
-                    <label for="unidadMedidaTarifaria" class="form-label">Unidad de medida de la tarifa (UMT)*:</label>
-                    <span class="bi bi-question-circle-fill" title="Unidad de medida de la tarifa (UMT)"
-                        data-bs-toggle="tooltip"></span>
-                </div>
-                <div class="col-md-8">
-                    <select id="unidadTarifariaComboId" class="form-control" formControlName="unidadMedidaTarifaria"
-                        [ngClass]="isValid(datosMercancia, 'unidadMedidaTarifaria') ? 'required' : ''">
-                        <option value="">Selecciona un valor</option>
-                        <option>Metros</option>
-                        <option>Kilogramo</option>
-                        <option>Litros</option>
-                    </select>
+                    <select-catalogos [catalogosDatos]="datosUnidadMedidaTarifaria"
+                            (valorSeleccion)="unidadMedidaTarifaria($event)" />
                 </div>
             </div>
             <div class="row mb-3">
@@ -231,17 +221,11 @@
                         <input type="hidden" name="entidadSolicitud" />
                     </div>
                 </div>
-                <div class="col-md-4 rf-input">
+                <div class="col-md-4">
                     <div class="form-group">
-                        <label for="unidadAdministrativaRepresentacionFederal">Representación Federal*:</label>
                         <input type="hidden" name="idRepresetancionFederalSeleccionado"
                             id="idRepresetancionFederalSeleccionado" />
-                        <select name="unidadAdministrativaRepresentacionFederal" id="representacionFederalSelect"
-                            class="form-control" formControlName="representacionFederal"
-                            [ngClass]="isValid(registroFederal, 'representacionFederal') ? 'required' : ''">
-                            <option value="">Seleccione un valor</option>
-                            <option value="culiacan">CULIACAN</option>
-                        </select>
+                        <select-catalogos [catalogosDatos]="datosRepresentacionFederal" (valorSeleccion)="representacionFederal($event)" />
                     </div>
                 </div>
             </div>

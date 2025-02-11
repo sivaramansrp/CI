@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 /**
- * This component is shown in PasaDos
+ * Este componente se muestra en PasaDos
  */
 @Component({
   selector: 'app-paso-dos',
