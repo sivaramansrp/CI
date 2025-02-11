@@ -63,9 +63,13 @@ export class PagoDeDerechosComponent implements OnInit {
     cadenaDependencia: [{ value: '', disabled: true }],
     banco: [{ value: '', disabled: true }],
     llavePago: [{ value: '', disabled: true }],
-    importePago: [{ value: '', disabled: true }]
+    importePago: [{ value: '', disabled: true }],
+    fechaDePago: [{ value: '', disabled: true }]
   });
-
+  cambioFechaInicio(nuevo_valor: string) {
+    this.pagoForm.get('fechaDePago')?.setValue(nuevo_valor);
+    this.pagoForm.get('fechaDePago')?.markAsUntouched();
+  }
   /**
    * Constructor del componente.
    * @constructor

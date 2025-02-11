@@ -90,7 +90,10 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <input-fecha [datos]="fechaInicioInput"></input-fecha>
+          <input-fecha
+            [datos]="fechaInicioInput"
+            (valorCambiado)="cambioFechaInicio($event)"
+          ></input-fecha>
         </div>
       </div>
       <div class="col-md-4">
