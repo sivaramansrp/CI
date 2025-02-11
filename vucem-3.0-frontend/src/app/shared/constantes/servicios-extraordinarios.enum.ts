@@ -139,6 +139,16 @@ export const MENSAJEDEALERTA = {
   ADJUNTAR: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro</p>`,
 };
 
+export const MENSAJE_ALERTA_TRATADOS = {
+  MENSAJE_ALERTA:`
+<ul>
+  Para seleccionar un tratado y criterio, siga los siguientes pasos:
+  <li>Primero seleccione un país o bloque</li>
+  <li>Después seleccione un tratado o acuerdo</li>
+  <li>Seleccione el criterio para conferir origen</li>
+  <li>Finalmente, agregue su selección a la lista de tratados</li>
+</ul>
+`}
 export const ELVALORALERTA = {
   ADJUNTAR: `<p>El valor de la transacción debe ser mayor al valor de dólares para insumos/envases.</p>`,
 };

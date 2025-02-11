@@ -2,6 +2,7 @@ import { AlertComponent } from '../../../../shared/components/alert/alert.compon
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { MENSAJE_ALERTA_TRATADOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
@@ -18,10 +19,13 @@ import tratadosTable from '../../../../../assets/json/110101/tratados-table.json
     SelectCatalogosComponent,
     CommonModule,
     TableComponent,
-    AlertComponent
+    AlertComponent,
+    
+    
   ]
 })
 export class TratadosComponent {
+  alert = MENSAJE_ALERTA_TRATADOS;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   selectedValues: any = {};
 
@@ -46,10 +50,10 @@ export class TratadosComponent {
     * @param {Catalogo} event - El elemento seleccionado del catálogo.
     * @param {number} index - El índice del menú desplegable.
     */
-  seleccionar(event: Catalogo, index: number) {
-    if (index === 0) this.selectedValues.pais = event;
-    if (index === 1) this.selectedValues.tratado = event;
-    if (index === 2) this.selectedValues.origen = event;
+  seleccionar(event: Catalogo, index: number): void {
+    if (index === 0) {this.selectedValues.pais = event;}
+    if (index === 1) {this.selectedValues.tratado = event;}
+    if (index === 2) {this.selectedValues.origen = event;}
   }
 
   /**
@@ -65,7 +69,7 @@ export class TratadosComponent {
  /**
   * Agrega un nuevo tratado al array mercanciasData.
   */
-  agregarTratado() {
+  agregarTratado(): void {
     if (this.selectedValues.pais && this.selectedValues.tratado && this.selectedValues.origen) {
       this.tableBody.push({
         tbodyData: [
@@ -79,23 +83,4 @@ export class TratadosComponent {
     }
   }
 
-  /**
-   * A string containing HTML markup for an alert message.
-   * The message provides instructions for selecting a treaty and criteria.
-   * 
-   * Instructions:
-   * - First, select a country or block.
-   * - Then, select a treaty or agreement.
-   * - Select the criteria to confer origin.
-   * - Finally, add your selection to the list of treaties.
-   */
-  mensajeAlerta: string = `
-  <ul>
-    Para seleccionar un tratado y criterio, siga los siguientes pasos:
-    <li>Primero seleccione un país o bloque</li>
-    <li>Después seleccione un tratado o acuerdo</li>
-    <li>Seleccione el criterio para conferir origen</li>
-    <li>Finalmente, agregue su selección a la lista de tratados</li>
-  </ul>
-`;
 }
