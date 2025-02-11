@@ -97,9 +97,9 @@ export class RegistroParaLaComponent implements OnInit {
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length, // El número de pasos se obtiene dinámicamente de la lista `pasos`
-    indice: this.indice,  // Índice del paso actual en el formulario
-    txtBtnAnt: 'Anterior',  // Texto para el botón de retroceso
-    txtBtnSig: 'Continuar',  // Texto para el botón de siguiente
+    indice: this.indice, // Índice del paso actual en el formulario
+    txtBtnAnt: 'Anterior', // Texto para el botón de retroceso
+    txtBtnSig: 'Continuar', // Texto para el botón de siguiente
   };
 
   /**
@@ -122,16 +122,16 @@ export class RegistroParaLaComponent implements OnInit {
   public getRegistro(): void {
     this.registro = {
       labelNombre: '¿Se han realizado previamente importaciones o exportaciones del producto a registrar?',
-      required: true,  // El campo es obligatorio
-      primerOpcion: 'Selecciona un valor',  // Texto de opción predeterminada
+      required: true, // El campo es obligatorio
+      primerOpcion: 'Selecciona un valor', // Texto de opción predeterminada
       catalogos: [
         {
           id: 1,
-          descripcion: 'Si',  // Opción para seleccionar "Sí"
+          descripcion: 'Si', // Opción para seleccionar "Sí"
         },
         {
           id: 2,
-          descripcion: 'No',  // Opción para seleccionar "No"
+          descripcion: 'No', // Opción para seleccionar "No"
         }
       ],
     };
