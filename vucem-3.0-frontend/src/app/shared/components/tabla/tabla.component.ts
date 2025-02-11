@@ -16,7 +16,9 @@ import { CommonModule } from '@angular/common';
 export class TablaComponent {
   @Input({ required: true }) encabezadosTabla!: EncabezadosTabla[];
   @Input({ required: true }) datosTabla!: ConfiguracionTabla[];
-  @Input({ required: true }) accionesTabla!: AccionesTabla[];
+  @Input() accionesTabla!: AccionesTabla[];
 
-  onAccion(): void {}
+  onAccion(): void {
+    
+  }
 }

@@ -1,38 +1,57 @@
-import { Component, OnInit } from '@angular/core';
-import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
+import { Component } from '@angular/core';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
 import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
+import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
+import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
 
 @Component({
-  selector: 'app-paso-dos',
+  selector: 'paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent {
   TEXTOS = TEXTOS;
-  catalogoDocumentos: Catalogo[] = [];
 
-  constructor(private catalogosServices: CatalogosService) {}
+  tiposDocumentos: Catalogo[] = [];
+  documentosSeleccionados: Catalogo[] = [];
 
-  ngOnInit(): void {
+  constructor(
+    private catalogosServices: CatalogosService,
+  ) {}
+
+  ngOnInit() {
     this.getTiposDocumentos();
+    this.documentosSeleccionados = [
+      {
+        id: 1,
+        descripcion: 'Documentos que ampare el valor de la mercancía'
+      },
+      {
+        id: 2,
+        descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)'
+      }
+    ]
+
   }
 
-  /**
-   * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
-   */
-  getTiposDocumentos(): void {
-    this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-      .subscribe({
-        next: (resp): void => {
-          if (resp.length > 0) {
-            this.catalogoDocumentos = resp;
-            console.log(this.catalogoDocumentos);
-          }
-        },
-        error: (_error): void => {},
-      });
+  getTiposDocumentos() {
+    this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).subscribe((resp) => {
+      if (resp.length > 0) {
+        this.tiposDocumentos = resp;
+      }
+    })
+  }
+
+  agregarDocumento(id: number) {
+    this.tiposDocumentos.forEach( el => {
+      if (el.id === id) {
+        this.documentosSeleccionados.push(el);
+      }
+    })
+  }
+
+  eliminar(i: number) {
+    this.documentosSeleccionados.splice(i, 1)
   }
 }

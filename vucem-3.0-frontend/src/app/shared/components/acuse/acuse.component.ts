@@ -1,22 +1,20 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { AccionesTabla, ConfiguracionTabla, DatosPageAcuse, EncabezadosTabla } from '../../../core/models/shared/components.model';
+import {
+  AccionesTabla,
+  ConfiguracionTabla,
+  EncabezadosTabla,
+} from '../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { AlertComponent } from '../alert/alert.component';
 import { TituloComponent } from '../titulo/titulo.component';
 import { TablaComponent } from '../tabla/tabla.component';
 
-
 @Component({
-  selector: 'c-acuse',
+  selector: 'app-component-acuse',
   standalone: true,
-  imports: [
-    CommonModule,
-    AlertComponent,
-    TituloComponent,
-    TablaComponent,
-  ],
+  imports: [CommonModule, AlertComponent, TituloComponent, TablaComponent],
   templateUrl: './acuse.component.html',
-  styleUrl: './acuse.component.scss'
+  styleUrl: './acuse.component.scss',
 })
 export class AcuseComponent implements OnChanges {
   @Input() txtAlerta!: string;
@@ -30,7 +28,7 @@ export class AcuseComponent implements OnChanges {
 
   /**
    * Método que se ejecuta cuando uno o más inputs del componente cambian.
-   * 
+   *
    * @param changes - Objeto que contiene los cambios de los inputs del componente.
    * @returns void
    */

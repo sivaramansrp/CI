@@ -1,11 +1,9 @@
 <div class="container">
   <div class="row d-flex align-items-end">
     <div class="col-md-4">
-      <form [formGroup]="documentoForma">
-        <app-catalogo-select [catalogo]="catalogoDocumentos" [label]="'Tipo de documento'" [required]="true" formControlName="documento" (change)="seleccionarDocumento()"></app-catalogo-select>
-      </form>
+      <select-catalogos [catalogosDatos]="tiposDocumentos"
+        (valorSeleccion)="docSeleccionado($event)"></select-catalogos>
     </div>
-
     <div class="col-md-4">
       <div class="btn-upload">
         <input type="file" class="form-control" id="file-input" (change)="cargarDoc($event)"
@@ -64,6 +62,20 @@
         </tbody>
       </table>
       }
+    </div>
+  </div>
+</div>
+
+<!-- Offcanvas para ver documento -->
+<div class="offcanvas offcanvas-end offcanvas-size-xl" tabindex="-1" id="offcanvasRight" data-bs-backdrop="static"
+  aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="staticBackdropLabel">Ver documento</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      Documento
     </div>
   </div>
 </div>

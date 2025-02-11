@@ -19,7 +19,7 @@ interface AccionBoton {
 })
 export class SolicitudPageComponent {
   pasos: ListaPasosWizard[] = PASOS;
-  indice: number = 2;
+  indice: number = 1;
   public seccion: SeccionState;
   private destroyNotifier$: Subject<void> = new Subject();
 
