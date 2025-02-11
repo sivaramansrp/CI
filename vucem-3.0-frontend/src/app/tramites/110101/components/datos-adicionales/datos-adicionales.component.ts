@@ -1,5 +1,5 @@
 /* eslint-disable sort-imports */
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { CommonModule } from '@angular/common';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
@@ -20,18 +20,28 @@ import { ValidacionesFormularioService } from '../../../../core/services/shared/
   styleUrl: './datos-adicionales.component.scss',
   standalone: true,
   imports: [TituloComponent,
-            CommonModule,
-            AlertComponent,
-            SelectCatalogosComponent,
-            ReactiveFormsModule]
+    CommonModule,
+    AlertComponent,
+    SelectCatalogosComponent,
+    ReactiveFormsModule]
 })
-export class DatosAdicionalesComponent {
+export class DatosAdicionalesComponent implements OnInit {
 
   /**
    * Representa la entidad seleccionada del catálogo.
    * Se espera que esta propiedad sea del tipo 'CatalogosSelect'.
+   *
+   * @property {CatalogosSelect} entidad - La entidad seleccionada.
    */
   public entidad!: CatalogosSelect;
+
+  /**
+   * Representa la representación seleccionada del catálogo.
+   * Se espera que esta propiedad sea del tipo 'CatalogosSelect'.
+   *
+   * @property {CatalogosSelect} representacion - La representación seleccionada.
+   */
+
   public representacion!: CatalogosSelect;
   /**
     * Una cadena que representa la clase CSS para una alerta de información.
@@ -43,9 +53,6 @@ export class DatosAdicionalesComponent {
     * Se utiliza para almacenar datos adicionales relacionados con el componente.
     */
   TEXTOS = PROTESTA;
-
-
-
   /**
    * constructor de la clase
    * Fetch the fetchtiposDocumentos datos
@@ -54,9 +61,14 @@ export class DatosAdicionalesComponent {
    * @param validacionesService: Validaciones comunes del formulario.
    */
   constructor(private fb: FormBuilder,
-              private validacionesService: ValidacionesFormularioService) {
+    // eslint-disable-next-line no-empty-function
+    private validacionesService: ValidacionesFormularioService) {
   }
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.getEntidadFederativa();
     this.getRepresentacionFederal();
@@ -69,7 +81,7 @@ export class DatosAdicionalesComponent {
    *
    * @returns {void}
    */
-  public getEntidadFederativa() {
+  public getEntidadFederativa(): void {
     this.entidad = {
       labelNombre: 'Entidad federativa',
       required: true,
@@ -94,7 +106,7 @@ export class DatosAdicionalesComponent {
    *
    * @returns {void}
    */
-  public getRepresentacionFederal() {
+  public getRepresentacionFederal(): void {
     this.representacion = {
       labelNombre: 'Representación federal',
       required: true,
@@ -112,15 +124,25 @@ export class DatosAdicionalesComponent {
     };
   }
 
-  
-
-  public docSeleccionado(e: Catalogo) {
+  /**
+  * Método para validar la representación federal.
+  * @param _e - Objeto de tipo 'Catalogo'.
+  * @returns {void}
+  */
+  // eslint-disable-next-line class-methods-use-this
+  public docSeleccionado(_e: Catalogo): void {
     // this is a dynamic function once we get the api will implement it
-    
   }
 
-  public validarRepresentacionFederalIDCSECEROR_(e: Catalogo) {
-    // this is a dynamic function once we get the api will implement it
-  }
+  /**
+   * Método para validar la representación federal.
+   * @param _e - Objeto de tipo 'Catalogo'.
+   * @returns {void}
+   */
 
+  // eslint-disable-next-line class-methods-use-this
+  public validarRepresentacionFederalIDCSECEROR_(_e: Catalogo): void {
+    // this is a dynamic function once we get the api will implement it
+
+  }
 }

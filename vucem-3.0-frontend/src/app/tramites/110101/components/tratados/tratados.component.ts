@@ -9,6 +9,14 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
 import tratadosDropdown from '../../../../../assets/json/110101/tratdos-dropdown.json';
 import tratadosTable from '../../../../../assets/json/110101/tratados-table.json';
 
+/**
+ * Componente Tratados que se utiliza para mostrar y gestionar los tratados.
+ * 
+ * Este componente utiliza varios subcomponentes como TituloComponent, SelectCatalogosComponent, CommonModule,
+ * TableComponent y AlertComponent para mostrar información y permitir al usuario seleccionar y agregar tratados.
+ * 
+ * @component
+ */
 @Component({
   selector: 'app-tratados',
   templateUrl: './tratados.component.html',
@@ -20,24 +28,33 @@ import tratadosTable from '../../../../../assets/json/110101/tratados-table.json
     CommonModule,
     TableComponent,
     AlertComponent,
-    
-    
   ]
 })
 export class TratadosComponent {
+  /**
+   * Mensaje de alerta para tratados.
+   * 
+   * @property {string} alert - El mensaje de alerta que se mostrará en el componente.
+   */
   alert = MENSAJE_ALERTA_TRATADOS;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  selectedValues: any = {};
+  /**
+  * Valores seleccionados de los menús desplegables.
+  * @property {Object} selectedValues - Objeto que contiene los valores seleccionados.
+  * @property {Catalogo} selectedValues.pais - El país seleccionado del catálogo.
+  * @property {Catalogo} selectedValues.tratado - El tratado seleccionado del catálogo.
+  * @property {Catalogo} selectedValues.origen - El origen seleccionado del catálogo.
+  */
+  selectedValues: { pais?: Catalogo; tratado?: Catalogo; origen?: Catalogo } = {};
 
-/**
- * Configuración para menús desplegables.
- * 
- * @property {Object[]} dropdownConfigs - Array de configuraciones de menús desplegables.
- * @property {string} dropdownConfigs[].labelNombre - Etiqueta para el menú desplegable.
- * @property {boolean} dropdownConfigs[].required - Indica si el menú desplegable es obligatorio.
- * @property {Object[]} dropdownConfigs[].catalogos - Catálogo de opciones para el menú desplegable.
- * @property {string} dropdownConfigs[].primerOpcion - Primera opción en el menú desplegable.
- */
+  /**
+   * Configuración para menús desplegables.
+   * 
+   * @property {Object[]} dropdownConfigs - Array de configuraciones de menús desplegables.
+   * @property {string} dropdownConfigs[].labelNombre - Etiqueta para el menú desplegable.
+   * @property {boolean} dropdownConfigs[].required - Indica si el menú desplegable es obligatorio.
+   * @property {Object[]} dropdownConfigs[].catalogos - Catálogo de opciones para el menú desplegable.
+   * @property {string} dropdownConfigs[].primerOpcion - Primera opción en el menú desplegable.
+   */
   dropdownConfigs = [
     { labelNombre: 'Pais o bloque', required: true, catalogos: tratadosDropdown.pais, primerOpcion: '' },
     { labelNombre: 'Tratado o Acuerdo', required: true, catalogos: tratadosDropdown.tratado, primerOpcion: '' },
@@ -51,9 +68,9 @@ export class TratadosComponent {
     * @param {number} index - El índice del menú desplegable.
     */
   seleccionar(event: Catalogo, index: number): void {
-    if (index === 0) {this.selectedValues.pais = event;}
-    if (index === 1) {this.selectedValues.tratado = event;}
-    if (index === 2) {this.selectedValues.origen = event;}
+    if (index === 0) { this.selectedValues.pais = event; }
+    if (index === 1) { this.selectedValues.tratado = event; }
+    if (index === 2) { this.selectedValues.origen = event; }
   }
 
   /**
@@ -63,11 +80,24 @@ export class TratadosComponent {
    */
   commonTableHeaders = tratadosTable.tableHeader;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tableBody:any[] = tratadosTable.tableBody
 
- /**
-  * Agrega un nuevo tratado al array mercanciasData.
+  /**
+   * Cuerpo de la tabla de tratados.
+   * 
+   * @property {any[]} tableBody - Array de datos del cuerpo de la tabla.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  tableBody: any[] = tratadosTable.tableBody;
+
+
+  /**
+  * Agrega un nuevo tratado al array `tableBody`.
+  * 
+  * Este método se invoca cuando el usuario hace clic en el botón para agregar un nuevo tratado.
+  * Verifica que los valores seleccionados no estén vacíos antes de agregar el tratado a la tabla.
+  * Luego, limpia los valores seleccionados para que el usuario pueda agregar un nuevo tratado.
+  * 
+  * @method agregarTratado
   */
   agregarTratado(): void {
     if (this.selectedValues.pais && this.selectedValues.tratado && this.selectedValues.origen) {
