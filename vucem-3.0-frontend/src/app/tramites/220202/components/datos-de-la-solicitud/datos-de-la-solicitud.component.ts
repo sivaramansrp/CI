@@ -13,7 +13,10 @@ import { Catalogo, RespuestaCatalogos } from '../../../../core/models/shared/cat
 
 
 
-
+/**
+ * @Componente DatosDeLaSolicitudComponent
+ * @description Componente para la sección de datos de la solicitud en el formulario de fitosanitarios.
+ */
 @Component({
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',
