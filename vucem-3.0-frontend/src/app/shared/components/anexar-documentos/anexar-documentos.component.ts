@@ -17,6 +17,7 @@ import { Login } from '../../../core/models/shared/inicio-sesion.model';
 import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
 import { DocumentoService } from '../../../core/services/shared/documento/documento.service';
 import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
+import { CONSTANTES, URL_PRUEBA } from '../../constantes/servicios-extraordinarios.enum';
 
 declare const bootstrap: any; // Importación para manejar Bootstrap en TS
 
@@ -57,6 +58,8 @@ export class AnexarDocumentosComponent implements OnInit {
     private inicioSesionService: InicioSesionService,
     private DocumentoService: DocumentoService
   ) {}
+
+  url: string = URL_PRUEBA;
 
   ngOnInit() {
     this.obtenerToken(this.datosLogin);
@@ -144,7 +147,7 @@ export class AnexarDocumentosComponent implements OnInit {
 
       const tamanioRequerido = this.documentoSeleccionado.tam
         ? this.convertirKilobytesABytes(
-            parseInt(this.documentoSeleccionado.tam)
+            parseInt(this.documentoSeleccionado.tam, 10)
           )
         : 0;
       const tamanioArchivo = informacionArchivo.size;
@@ -160,7 +163,7 @@ export class AnexarDocumentosComponent implements OnInit {
         .subirDocumento(this.token, informacionArchivo)
         .subscribe({
           next: (): void => {
-            alert('Documento subido');
+            this.toastr.success('Documento subido');
           },
           error: (_error): void => {},
         });
@@ -190,14 +193,17 @@ export class AnexarDocumentosComponent implements OnInit {
     return kilobytes * 1024;
   }
 
-  /**
-   * Muestra el modal para ver un documento.
-   * @param {number} i - El índice del documento.
-   * @param {string} accion - La acción a realizar.
+    /**
+   * Abre un archivo PDF en una nueva pestaña del navegador.
+   *
+   * @param {string} url - La URL del archivo PDF que se va a abrir.
+   * @returns {void}
    */
-  verDocumento(i: number, accion: string) {
-    this.mostrarModal = accion === 'v';
-  }
+    verPdf(url: string): void {
+      window.open(url, '_blank');
+    }
+
+
 
   /**
    * Abre el modal para eliminar un documento.

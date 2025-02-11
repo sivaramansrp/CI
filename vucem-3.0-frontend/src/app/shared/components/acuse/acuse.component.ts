@@ -1,31 +1,23 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import {
-  AccionesTabla,
-  ConfiguracionTabla,
-  EncabezadosTabla,
-} from '../../../core/models/shared/components.model';
-import { CommonModule } from '@angular/common';
-import { AlertComponent } from '../alert/alert.component';
-import { TituloComponent } from '../titulo/titulo.component';
-import { TablaComponent } from '../tabla/tabla.component';
 import { ACUSE_SERVICIOS_EXTRAORDINARIOS } from '../../constantes/servicios-extraordinarios.enum';
+import { AlertComponent } from '../alert/alert.component';
+import { CommonModule } from '@angular/common';
+import { TituloComponent } from '../titulo/titulo.component';
 
 @Component({
   selector: 'app-component-acuse',
   standalone: true,
-  imports: [CommonModule, AlertComponent, TituloComponent, TablaComponent],
+  imports: [CommonModule, AlertComponent, TituloComponent],
   templateUrl: './acuse.component.html',
   styleUrl: './acuse.component.scss',
 })
 export class AcuseComponent implements OnChanges {
   @Input() txtAlerta!: string;
   @Input() subtitulo!: string;
-  encabezadoTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.encabezadoTablaAcuse;
-  @Input() configuracionTabla!: ConfiguracionTabla;
-  @Input() accionesTablaAcuse!: AccionesTabla[];
-  datosTablaAcuse!: any[];
-
   @Input() folio!: string;
+
+  encabezadoTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.encabezadoTablaAcuse;
+  datosTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.datosTablaAcuse;
 
   /**
    * Método que se ejecuta cuando uno o más inputs del componente cambian.
@@ -37,5 +29,15 @@ export class AcuseComponent implements OnChanges {
     if (changes['txtAlerta'].currentValue) {
       this.txtAlerta = changes['txtAlerta'].currentValue;
     }
+  }
+
+  /**
+   * Abre un archivo PDF en una nueva pestaña del navegador.
+   *
+   * @param {string} url - La URL del archivo PDF que se va a abrir.
+   * @returns {void}
+   */
+  verPdf(url: string): void {
+    window.open(url, '_blank');
   }
 }

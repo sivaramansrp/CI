@@ -175,3 +175,5 @@ export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
     },
   ],
 };
+
+export const URL_PRUEBA = 'assets/pdf/Test03.pdf';

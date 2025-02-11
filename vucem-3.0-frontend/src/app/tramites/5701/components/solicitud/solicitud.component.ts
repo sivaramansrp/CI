@@ -632,10 +632,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
     const valor = form.get(campo)?.value;
     this.tramite5701Store[metodoNombre](valor);
-
-    if (campo === 'monto') {
-      console.log(this.FormSolicitud);
-    }
   }
 
   /**
