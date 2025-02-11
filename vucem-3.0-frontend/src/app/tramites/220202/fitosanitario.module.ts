@@ -25,6 +25,8 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
 
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
 import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component';
+import { TercerosComponent } from '../../shared/components/terceros/terceros.component';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,6 @@ import { SolicitanteComponent } from '../../shared/components/solicitante/solici
     PasoDosComponent,
     PasoCuatroComponent,
     AgriculturaComponent,
-
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionNacionalComponent,
     TercerosRelacionadosComponent,
@@ -54,7 +55,9 @@ import { SolicitanteComponent } from '../../shared/components/solicitante/solici
     InputFechaComponent,
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
-    SolicitanteComponent
+    SolicitanteComponent,
+    SharedModule,
+    TercerosComponent
   ]
 })
 export class FitosanitarioModule { }

@@ -39,7 +39,7 @@ import { SelectPaisesComponent } from '../../shared/components/select-paises/sel
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
- ] ,
+  ],
   imports: [
     CommonModule,
     SharedModule,
@@ -64,10 +64,10 @@ import { SelectPaisesComponent } from '../../shared/components/select-paises/sel
     AgregaPersonasComponent,
     RepresentanteFiscalComponent,
     SelectPaisesComponent
-],
-exports: [
-  SolicitudComponent,
-  TercerosComponent
-]
+  ],
+  exports: [
+    SolicitudComponent,
+    TercerosComponent
+  ]
 })
 export class ServiciosExtraordinariosModule { }
