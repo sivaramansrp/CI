@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'terceros',
+  standalone: true, // This is correct
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './terceros.component.html',
   styleUrl: './terceros.component.scss',
 })
