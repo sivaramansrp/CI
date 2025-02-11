@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { TableComponent } from '../../../../shared/components/table/table.component';
-import establecimientoTable from '../../../../assets/json/220401/establecimiento-table.json'
-import destinatarioTable from '../../../../assets/json/220401/destinatario-table.json'
-import importardorTable from '../../../../assets/json/220401/importador-table.json'
+import establecimientoTable from './../../../../../../assets/json/220401/establecimiento-table.json'
+import destinatarioTable from './../../../../../../assets/json/220401/destinatario-table.json'
+import importardorTable from './../../../../../../assets/json/220401/importador-table.json'
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { MENSAJEDEALERTA } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { AgregarDestinatoriaComponent } from '../agregar-destinatoria/agregar-destinatoria.component';

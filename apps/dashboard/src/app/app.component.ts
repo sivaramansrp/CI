@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
         // Queue the navigation after initialNavigation blocking is completed
         setTimeout(() => {
           if (!loggedIn) {
-            this.router.navigateByUrl('login');
+            //this.router.navigateByUrl('login');
           } else {
             this.router.navigateByUrl('501');
           }

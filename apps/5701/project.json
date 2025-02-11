@@ -17,9 +17,12 @@
         "tsConfig": "apps/5701/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
+          "apps/5701/src/favicon.ico",
+          "apps/5701/src/assets",
           {
-            "glob": "**/*",
-            "input": "apps/5701/public"
+            "glob": "**.*",
+            "input": "libs/shared/theme/assets",
+            "output": "assets"
           }
         ],
         "styles": [

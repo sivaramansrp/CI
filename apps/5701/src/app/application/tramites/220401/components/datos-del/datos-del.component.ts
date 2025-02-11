@@ -5,13 +5,13 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import radioOptionsData from '../../../../assets/json/220401/tipo-de-certifico.json'
+import radioOptionsData from './../../../../../../assets/json/220401/tipo-de-certifico.json'
 
 import { AgregarArchivoComponent } from '../../../../shared/components/agregar-archivo/agregar-archivo.component';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TableComponent } from '../../../../shared/components/table/table.component';
-import unidadRadioFields from '../../../../assets/json/220401/unidad.json'
+import unidadRadioFields from './../../../../../../assets/json/220401/unidad.json'
 @Component({
   selector: 'app-datos-del',
   templateUrl: './datos-del.component.html',

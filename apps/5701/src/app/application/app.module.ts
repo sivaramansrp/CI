@@ -11,6 +11,7 @@ import { NavComponent } from './shared/components/nav/nav.component';
 import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 import { TituloComponent } from "./shared/components/titulo/titulo.component";
+import { SolicitanteService } from './core/services/shared/solicitante/solicitante.service';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { TituloComponent } from "./shared/components/titulo/titulo.component";
     provideToastr({
       positionClass: 'toast-top-right',
     }),
+    SolicitanteService
   ],
   bootstrap: [AppComponent],
 })
