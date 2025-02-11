@@ -1,0 +1,101 @@
+<form [formGroup]="medioTransporteForm">
+    <ng-titulo titulo="Medio de transporte" />
+    <div class="row">
+        <div class="col-md-4">
+            <select-catalogos [catalogosDatos]="datosMediodetransporte"
+                (valorSeleccion)="medioTransporte($event)" />
+        </div>
+        <div class="col-md-4">
+            <label for="identificacionTransporte" class="form-label">Identificación del transporte:</label>
+            <input class="form-control" type="text" size="30" formControlName="identificacionTransporte"
+                id="identificacionTransporte" />
+            <!-- <div class="form-field">
+                
+                <div *ngIf="parentFormGroup.get(controlKey)?.get('identificacionTransporte')?.errors?.['maxlength'] &&
+                            parentFormGroup.get(controlKey)?.get('identificacionTransporte')?.touched">
+                    Se superó la longitud máxima de 30 caracteres.
+                </div>
+            </div> -->
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <label for="esSolicitudFerros">¿La solicitud de Inspección Física es para trámites que arriban
+                por
+                Ferrocarril o por Partes II?*:</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="esSolicitudFerros" id="SiSolicitudFerros"
+                    value="1" (click)="estableceSeleccionSolicitudFerro($event)">
+                <label class="form-check-label" for="SiSolicitudFerros">Sí</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="esSolicitudFerros" id="NoSolicitudFerros"
+                    value="0" (click)="estableceSeleccionSolicitudFerro($event)">
+                <label class="form-check-label" for="NoSolicitudFerros">No</label>
+            </div>
+        </div>
+    </div>
+
+    @if (esSolicitudFerrosValor == 1) {
+    <ng-alert [CONTENIDO]="TEXTOS.SECCION_LEYENDA_CONFIRMAR_TEXTOS"></ng-alert>
+    }
+
+    <h6>Datos de la mercancía:</h6>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        <input type="checkbox" aria-label="Select All">
+                    </th>
+                    @for (item of mercanciaMesaColumnas; track $index) {
+                    <th scope="col">{{item}}</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @for (data of mercanciasDatos; track $index) {
+                <tr>
+                    <td><input type="checkbox" aria-label="Select Row"></td>
+                    @for (element of data.tbodyData; track $index) {
+                    <td>{{element}}</td>
+                    }
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (esSolicitudFerrosValor == 1) {
+        <div class="row">
+            <div class="text-end">
+                <button name="modificarSaldoMercancia" id="btnSaldoMercancia" class="btn btn-primary"
+                    (click)="modificarSaldosMercancia()">Modificar</button>
+            </div>
+        </div>
+
+        @if (mostrarAgregarMercancia) {
+        <app-agregar-mercancia [mercanciasDatos]="mercanciasDatos"
+            (cancelarEvento)="obtenerAgregarMercanciaEvent($event)"></app-agregar-mercancia>
+        }
+    }
+
+    @if(esSolicitudFerrosValor !== 1) {
+        <div class="row">
+            <div class="col-md-4">
+                <label for="totalGuia" class="form-label">Total de guías amparadas:<span class="bi bi-question-circle-fill"
+                        title="" data-bs-toggle="tooltip"></span></label>
+                <input class="form-control" type="text" formControlName="totalGuias" id="totalGuia" />
+            </div>
+        </div>        
+    }
+</form>

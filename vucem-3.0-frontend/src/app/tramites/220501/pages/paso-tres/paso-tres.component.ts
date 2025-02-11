@@ -1,0 +1,32 @@
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
+/**
+ * Componente para gestionar el paso tres del trámite.
+ */
+@Component({
+  selector: 'paso-tres',
+  templateUrl: './paso-tres.component.html',
+  styleUrl: './paso-tres.component.scss'
+})
+export class PasoTresComponent {
+
+   /**
+   * Constructor del componente.
+   * @param router Router para la navegación.
+   */
+  constructor(private router: Router) {}
+
+  /**
+   * Método para obtener la firma y navegar a la página de acuse.
+   * @param ev Firma obtenida.
+   */
+  obtieneFirma(ev: string){
+    const firma: string = ev;
+    if (firma) {
+      this.router.navigate(['servicios-extraordinarios/acuse']);
+
+    }
+  }
+
+}
