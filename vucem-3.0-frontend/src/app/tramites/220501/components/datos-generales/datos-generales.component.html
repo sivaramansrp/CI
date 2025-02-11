@@ -5,16 +5,16 @@
       class="panel-group ficha-collapse margin-bottom-30px"
       id="accordion"
     ></div>
-    <div class="row">
+    <div class="row" formGroupName="datosDelaSolicitud">
       <div class="col-md-8">
-        <label class="form-label" for="nombreVeterinario"
+        <label class="form-label" for="foliodel"
           >Folio del trámite:</label
         >
         <input
-          formControlName="claveUCON"
+          formControlName="foliodel"
           value="1502200200120240301000015"
           class="form-control"
-          id="claveUCON"
+          id="foliodel"
           placeholder=""
           readonly
           type="text"
@@ -80,7 +80,7 @@
           <input
             formControlName="claveUCON"
             readonly
-            [disabled]="true"
+            
             value=""
             class="form-control"
             id="claveUCON"
@@ -231,7 +231,7 @@
                 class="form-control"
                 id="coordenadas"
                 readonly
-                [disabled]="true"
+                
                 formControlName="coordenadas"
                 placeholder=""
                 type="text"
@@ -254,7 +254,7 @@
                 class="form-control"
                 id="identificacionTransporte"
                 readonly
-                [disabled]="true"
+                
                 placeholder=""
                 type="text"
                 formControlName="transporte"

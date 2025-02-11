@@ -26,18 +26,18 @@
           <div class="form-group">
             <label class="form-label" for="nombreImportExport">Clave de referencia:</label>
             <input class="form-control" id="nombreImportExport" placeholder="" type="text" value="454000554"
-              [disabled]="true" formControlName="claveReferencia" />
+               formControlName="claveReferencia" />
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="nombreImportExport">Cadena de dependencia:</label>
             <input class="form-control" id="nombreImportExport" placeholder="" type="text" value="0003008010CEZI"
-              readonly [disabled]="true" required formControlName="cadenaDependencia" />
+              readonly  required formControlName="cadenaDependencia" />
           </div>
         </div>
         <div class="col-md-4">
-          <select-catalogos formControlName="banco" [catalogosDatos]="banco" readonly [attr.disabled]="true"
+          <select-catalogos  [catalogosDatos]="banco" readonly 
             (valorSeleccion)="bancoDe($event)" />
         </div>
       </div>
@@ -46,20 +46,20 @@
           <div class="form-group">
             <label class="form-label" for="nombreImportExport">Llave de pago:</label>
             <input class="form-control" id="nombreImportExport" placeholder="" type="text" appUppercase
-              [disabled]="true" formControlName="llavePago" />
+              formControlName="llavePago" />
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="nombreImportExport">Fetcha de pago:</label>
             <input class="form-control" id="nombreImportExport" placeholder="" type="text" appUppercase
-              [disabled]="true" formControlName="fetchapago" />
+               formControlName="fetchapago" />
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="nombreImportExport">Importe de pago:</label>
-            <input class="form-control" id="nombreImportExport" placeholder="" type="text" [disabled]="true"
+            <input class="form-control" id="nombreImportExport" placeholder="" type="text" 
               formControlName="importePago" />
           </div>
         </div>

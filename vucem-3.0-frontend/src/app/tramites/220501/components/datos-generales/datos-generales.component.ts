@@ -262,7 +262,8 @@ export class DatosGeneralesComponent implements OnInit {
       puntoInspeccion: ['', Validators.required],
       claveUCON: ['', [Validators.required]],
       establecimientoTIF: ['', Validators.required],
-      regimen: ['', Validators.required]
+      regimen: ['', Validators.required],
+      foliodel: [{ value: '1502200200120240301000015', disabled: true }]
     });
 
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
