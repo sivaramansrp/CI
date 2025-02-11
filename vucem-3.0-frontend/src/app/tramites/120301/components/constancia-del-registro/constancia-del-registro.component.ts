@@ -1,13 +1,13 @@
 /**
  * @component ConstanciaDelRegistroComponent
- * @description This component is responsible for handling the registration certificate form.
- * It includes a form for capturing registration certificate data and additional functionalities.
+ * @description Este componente es responsable de manejar el formulario de constancia de registro.
+ * Incluye un formulario para capturar datos de la constancia de registro y funcionalidades adicionales.
  * 
  * @import { Component } from '@angular/core';
  * @import { FormBuilder, FormGroup, Validators } from '@angular/forms';
  */
-
 import { Component } from '@angular/core';
+import { TableComponent } from '../../../../shared/components/table/table.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -17,22 +17,46 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class ConstanciaDelRegistroComponent {
   /**
-   * @property {FormGroup} forma - The form group for capturing registration certificate data.
+   * @property {FormGroup} forma - El grupo de formularios para capturar datos de facturas.
    */
   forma!: FormGroup;
 
   /**
-   * @property {string[]} selectRangoDias - Array of selectable day ranges.
+   * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
    */
   selectRangoDias: string[] = [];
 
   /**
-   * @property {boolean} colapsable - Boolean to control collapsible state.
+   * @property {boolean} colapsable - Booleano para controlar el estado colapsable.
    */
   colapsable: boolean = false;
 
   /**
-   * @property {FormGroup} ConstanciaDelRegistro - The form group for registration certificate data.
+   * @property {FormGroup} ConstanciaDelRegistro - El grupo de formularios para datos de la constancia de registro.
    */
   ConstanciaDelRegistro!: FormGroup;
+
+  /**
+   * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
+   */
+  tableColumns = [
+    'Número de constancia de registro',
+    'Fracción arancelaria',
+    'Classificación del regimen',
+    'País destino/origen',
+    'Fetcha inicio vigencia',
+    'Fetcha fin vigencia',
+  ];
+
+  /**
+   * @property {Array} facturas - Array de datos de facturas para mostrar en la tabla.
+   */
+  facturas = [
+    {
+      tbodyData: ['prueba107112024', 'RAZON SOCIAL CONSIGNATARIO CONSIGNATARIO', 'CALLE', 'SAN GABRIEL 144 DURANGO', 'SAN GABRIEL', '2024-11-07 00:00:00.0']
+    },
+    {
+      tbodyData: ['3434324', 'FACTURA', 'CALLE', 'SAN GABRIEL 144 DURANGO', 'SAN GABRIEL', '2024-11-07 00:00:00.0']
+    }
+  ];
 }

@@ -5,41 +5,69 @@
             <div class="row">
                 <!-- <h2>Representación-federal</h2> -->
                  <div class="col-md-12">
-                <ng-titulo titulo="Representación federal" />
+                <ng-titulo titulo="Datos de la constancia de registro" />
                 </div>
-                <div class="col-md-4">
-                <div class="form-group">
-                    <label class="form-label" for="Estado"
-                    >Estado:</label>
-                    <input
-                    class="form-control"
-                    value="SINALOA"
-                    class="form-control"
-                    id="Estado"
-                    placeholder=""
-                    type="text"
-                    appUppercase
-                    name="Estado"
-                    />
-                </div>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label" for="federal"
-                    >Representación federal:</label>
-                <input
-                    value="CULIACAN"
-                    class="form-control"
-                    id="federal"
-                    placeholder=""
-                    type="text"
-                    appUppercase
-                    name="federal"
-                />
-                </div>
+                <form>
+                <div class="col-md-3">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioRegistro" id="Espacifico">
+                    <label class="form-check-label" for="Espacifico">
+                      Espacifico
+                    </label>
+                  </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="flexRadioRegistro" id="Tados" checked>
+                      <label class="form-check-label" for="Tados">
+                        Datos
+                      </label>
+                    </div>
+                  </div>
+                  <div class="container text-end mt-5">
+                    <button class="btn btn-default me-2">Buscar</button>
+                    <!-- <button class="btn btn-primary">Continuar</button> -->
+                  </div>
+                </form>
             </div>
-        
+            <div class="col-md-12 mt-5">
+              <ng-table [commonTableHeader]="tableColumns" [commonTableBody]="facturas"></ng-table>
+            </div>
             <div class="row pb-5">
-                <ng-titulo titulo="Descripción del cupo." />
+              <ng-titulo titulo="Representación-federal" />
+              <div class="col-md-4">
+                  <div class="form-group">
+                      <label class="form-label" for="Fracción-arancelaria"
+                      >Estado:</label>
+                      <input
+                      value=""
+                      class="form-control"
+                      id="Fracción-arancelaria"
+                      placeholder=""
+                      type="text"
+                      appUppercase
+                      name="Fracción-arancelaria"
+                      />
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="form-group">
+                      <label class="form-label" for="producto"
+                      >Representación federal:</label>
+                      <input
+                      value=""
+                      class="form-control"
+                      id="producto"
+                      placeholder=""
+                      type="text"
+                      appUppercase
+                      name="producto"
+                      />
+                  </div>
+              </div>
+            </div>
+            <div class="row pb-5">
+                <ng-titulo titulo="Descripción del cupo" />
                 <div class="col-md-4">
                     <div class="form-group">
                         <label class="form-label" for="Fracción-arancelaria"
@@ -238,4 +266,5 @@
             </div>
         </div>
     </form>
+    <!-- <strong>*EI monto mostrado ed de car</strong> -->
   </div>

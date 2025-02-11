@@ -22,6 +22,9 @@ interface AccionBoton {
   templateUrl: './elegibilidad-textiles.component.html',
 })
 export class ElegibilidadTextilesComponent {
+  title(title: any) {
+    throw new Error('Method not implemented.');
+  }
   pasos: Array<ListaPasosWizard> = PASOS;
   tituloMensaje: string | null = 'Zoosanitario para importación';
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
