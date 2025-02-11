@@ -56,6 +56,16 @@ export class SolicitudComponent implements OnInit {
   datosMolino!: CatalogosSelect;
 
   /**
+   * Datod del catálogo de Unidad Medida Tarifaria
+   */
+  datosUnidadMedidaTarifaria!: CatalogosSelect;
+
+  /**
+   * Datos del catálogo de Representacion Federal
+   */
+  datosRepresentacionFederal!: CatalogosSelect;
+
+  /**
    * Indica si la persona física es visible.
    */
   isVisibleFisica: boolean;
@@ -106,6 +116,16 @@ export class SolicitudComponent implements OnInit {
   molinoSeleccionado!: Catalogo;
 
   /**
+   * Unidad Medida Tarifaria seleccionado.
+   */
+  unidadMedidaTarifariaSeleccionado!: Catalogo;
+
+  /**
+   * Representacion Federal seleccionado.
+   */
+  representacionFederalSeleccionado!: Catalogo;
+
+  /**
    * Fecha final de entrada.
    */
   fechaFinalInput: InputFecha = FECHA_SALIDA;
@@ -145,6 +165,8 @@ export class SolicitudComponent implements OnInit {
     this.getPaisDestino();
     this.getEstado();
     this.getMolino();
+    this.getUnidadMedidaTarifaria();
+    this.getRepresentacionFederal();
     this.muestraCamposPersona();
   }
 
@@ -456,6 +478,22 @@ export class SolicitudComponent implements OnInit {
   }
 
   /**
+   * Método para seleccionar el unidad Medida Tarifaria
+   * @param e Unidad Medida Tarifaria seleccionado.
+   */
+  unidadMedidaTarifaria(e: Catalogo): void {
+    this.unidadMedidaTarifariaSeleccionado = e;
+  }
+
+  /**
+   * Método para seleccionar el representacion Federal
+   * @param e Representacion Federal seleccionado.
+   */
+  representacionFederal(e: Catalogo): void {
+    this.representacionFederalSeleccionado = e;
+  }
+
+  /**
    * Método para cambiar la fecha final.
    * @param nuevo_valor Nuevo valor de la fecha final.
    */
@@ -616,6 +654,46 @@ export class SolicitudComponent implements OnInit {
 
           this.datosMolino = {
             labelNombre: 'Molino',
+            required: true,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: response,
+          };
+        }
+      });
+  }
+
+  /**
+   * Método para obtener el catálogo de unidad medida tarifaria.
+   */
+  getUnidadMedidaTarifaria(): void {
+    this.peximService
+      .getUnidadMedidaTarifariaCatalogo()
+      .subscribe((resp) => {
+        if (resp.code == 200) {
+          const response = resp.data;
+
+          this.datosUnidadMedidaTarifaria = {
+            labelNombre: 'Unidad de medida de la tarifa (UMT)',
+            required: true,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: response,
+          };
+        }
+      });
+  }
+
+  /**
+   * Método para obtener el catálogo de representacion federal.
+   */
+  getRepresentacionFederal(): void {
+    this.peximService
+      .getRepresentacionFederal()
+      .subscribe((resp) => {
+        if (resp.code == 200) {
+          const response = resp.data;
+
+          this.datosRepresentacionFederal = {
+            labelNombre: 'Representación Federal',
             required: true,
             primerOpcion: 'Selecciona un valor',
             catalogos: response,

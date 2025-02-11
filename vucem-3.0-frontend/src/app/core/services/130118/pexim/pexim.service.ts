@@ -42,4 +42,12 @@ export class PeximService {
   getMolinoCatalogo() {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/molino.json');
   }
+
+  getUnidadMedidaTarifariaCatalogo() {
+    return this.http.get<RespuestaCatalogos>('assets/json/130118/unidad-medida-tarifaria.json');
+  }
+
+  getRepresentacionFederal() {
+    return this.http.get<RespuestaCatalogos>('assets/json/130118/representacion-federal.json');
+  }
 }

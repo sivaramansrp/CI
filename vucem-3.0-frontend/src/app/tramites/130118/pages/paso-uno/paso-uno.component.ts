@@ -1,19 +1,13 @@
-import { AfterViewInit, Component, OnInit, Renderer2, ViewChild, viewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { SolicitanteComponent } from '../../../../shared/components/solicitante/solicitante.component';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
-  PERSONA_FISICA_EXTRANJERO,
-  PERSONA_FISICA_NACIONAL,
-  PERSONA_MORAL_EXTRANJERO,
   PERSONA_MORAL_NACIONAL,
 } from '../../../../shared/constantes/solicitante-constantes.enum';
 import {
-  CATALOGOS_ID,
   TIPO_PERSONA,
 } from '../../../../shared/constantes/constantes';
 import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
-import { FormGroup, FormGroupName } from '@angular/forms';
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
@@ -24,8 +18,8 @@ export class PasoUnoComponent implements AfterViewInit {
   @ViewChild(SolicitanteComponent) solicitante: SolicitanteComponent;
 
   tipoPersona!: number;
-  persona: Array<FormularioDinamico> = [];
-  domicilioFiscal: Array<FormularioDinamico> = [];
+  persona: FormularioDinamico[] = [];
+  domicilioFiscal: FormularioDinamico[] = [];
   indice: number = 1;
 
   ngAfterViewInit(): void {
