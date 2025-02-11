@@ -42,3 +42,4 @@ testem.log
 Thumbs.db
 .gitignore
 ./.gitignore
+./.package-lock.json
