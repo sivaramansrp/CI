@@ -34,7 +34,7 @@ export class CapturarFacturasComponent {
   colapsable: boolean = false;
 
   /**
-   * @property {FormGroup} ConstanciaDelRegistro - El grupo de formularios para los datos del certificado de registro.
+   * @property {FormGroup} ConstanciaDelRegistro - El grupo de formularios para datos de la constancia de registro.
    */
   ConstanciaDelRegistro!: FormGroup;
 
