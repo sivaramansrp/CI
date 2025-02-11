@@ -1,30 +1,48 @@
 <div class="container">
   <form [formGroup]="form">
-    @for(fieldGroup of config; track $index) {
+    @for(fieldGroup of config; let groupIndex = $index; track groupIndex) {
     <div class="form" [formGroupName]="fieldGroup.formGroupName">
       <ng-titulo [titulo]="fieldGroup.title" />
 
-      <div class="row">
-        @for (item of fieldGroup.menu; track $index) {
+      <div class="row align-items-center">
+        @for (item of fieldGroup.menu; let menuIndex = $index; track menuIndex) {
         <div [ngClass]="item.class" [ngStyle]="{ visibility: item.visibility }">
           <div class="form-group">
             @switch (item.inputType) { @case('select') {
             <select-catalogos [catalogosDatos]="item.props"></select-catalogos>
             } @case('text') {
-            <label class="form-label" [for]="item.props.campo">{{
-              item.props.labelNombre
-            }}</label>
-            <input
-              class="form-control"
-              [type]="item.props.tipo_input"
-              [id]="item.props.campo"
-              [placeholder]="item.props.placeholder"
-              [formControlName]="item.props.campo"
-              appUppercase
-            />
+              @if((!item.props.availableRadioOptions) || (item.props.availableRadioOptions && item.props.availableRadioOptions.includes(radioSelectedValues['radio' + groupIndex]))) {
+                <label class="form-label" [for]="item.props.campo">{{
+                  item.props.labelNombre
+                }}</label>
+                <input
+                  class="form-control"
+                  [type]="item.props.tipo_input"
+                  [id]="item.props.campo"
+                  [placeholder]="item.props.placeholder"
+                  [formControlName]="item.props.campo"
+                  appUppercase
+                />
+              }
             } @case('break-content') {
             <div class="w-100"></div>
-            } }
+            } @case ('date') {
+            <input-fecha
+              [datos]="item.props"
+              (valorCambiado)="fechaCambiado($event)"
+            ></input-fecha>
+            } @case ('radio') {
+            <label class="form-label" [for]="item.props.campo">{{
+              item.props.labelNombre
+            }}</label>@if(item.props.required){<span>*</span>}:
+            <app-input-radio
+              [radioOptions]="item.props.options"
+              [selectedValue]="item.props.selectedValue"
+              [isRequired]="item.props.required"
+              (valueChange)="onValueChange('radio' + groupIndex, $event)"
+              [layout]="'horizontal'"
+            ></app-input-radio>
+            }}
           </div>
         </div>
         }

@@ -18,4 +18,5 @@ export interface MenuConfig {
   props: FormularioDinamico | CatalogosSelect | any,
   class: string,
   visibility?: string,
+  radioConfig?: string[],
 }
