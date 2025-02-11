@@ -1,6 +1,6 @@
-import { Query } from '@datorama/akita';
-import { Injectable } from '@angular/core';
 import { SeccionState, SeccionStore } from '../../estados/seccion.store';
+import { Injectable } from '@angular/core';
+import { Query } from '@datorama/akita';
 
 @Injectable({providedIn: 'root'})
 export class SeccionQuery extends Query<SeccionState> {

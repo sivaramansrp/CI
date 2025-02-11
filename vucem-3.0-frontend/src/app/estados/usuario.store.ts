@@ -1,7 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { Injectable } from '@angular/core';
 import { PerfilUsuario } from '../core/models/usuario/perfilUsuario.model';
 import { Rol } from '../core/models/usuario/rol.model';
-import { Injectable } from '@angular/core';
 
 /**
  * Estado para la información de usuario obtenida del inicio de sesión
@@ -41,9 +41,9 @@ export class UsuarioStore extends Store<UsuarioState> {
 
   /**
    * Guarda la información del usuario registrado en la sesión dentro del state
-   * 
-   * @param logueado 
-   * @param token 
+   *
+   * @param logueado
+   * @param token
    * @param nombre
    */
   public establecerUsuario(idUsuario: string, perfilUsuario: PerfilUsuario,
