@@ -20,14 +20,14 @@
         [ngClass]="isValid('nombre') ? 'required' : ''">
     </div>
     <div class="col-md-4 form-group">
-      <label class="control-label" for="aPaterno">Apellido paterno:</label>
-      <input class="form-control" id="aPaterno" placeholder="" type="text" formControlName="aPaterno"
-        [ngClass]="isValid('aPaterno') ? 'required' : ''">
+      <label class="control-label" for="primerApellido">Apellido paterno:</label>
+      <input class="form-control" id="primerApellido" placeholder="" type="text" formControlName="primerApellido"
+        [ngClass]="isValid('primerApellido') ? 'required' : ''">
     </div>
     <div class="col-md-4 form-group">
-      <label class="control-label" for="aMaterno">Apellido materno:</label>
-      <input class="form-control" id="aMaterno" placeholder="" type="text" formControlName="aMaterno"
-        [ngClass]="isValid('aMaterno') ? 'required' : ''">
+      <label class="control-label" for="segundoApellido">Apellido materno:</label>
+      <input class="form-control" id="segundoApellido" placeholder="" type="text" formControlName="segundoApellido"
+        [ngClass]="isValid('segundoApellido') ? 'required' : ''">
     </div>
   </div>
 </form>
@@ -50,8 +50,8 @@
           @for (persona of personas; let i = $index; track i) {
             <td>{{persona.gafete}}</td>
             <td>{{persona.nombre}}</td>
-            <td>{{persona.aPaterno}}</td>
-            <td>{{persona.aMaterno}}</td>
+            <td>{{persona.primerApellido}}</td>
+            <td>{{persona.segundoApellido}}</td>
             <td>
               <button type="button" class="btn btn-link" (click)="eliminar(i)">
                 <i class="bi bi-trash3 bi-c"></i>
