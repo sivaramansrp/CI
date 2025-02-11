@@ -15,7 +15,35 @@
     <div class="col-md-12">
       <ng-titulo [titulo]="subtitulo"></ng-titulo>
 
-      <ng-tabla [encabezadosTabla]="encabezadoTablaAcuse" [datosTabla]="datosTablaAcuse" [accionesTabla]="accionesTablaAcuse"></ng-tabla>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            @for (item of encabezadoTablaAcuse; track $index) {
+            <th>{{ item.valor }}</th>
+            }
+            <th class="center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of datosTablaAcuse; track $index) {
+          <tr>
+            @for (item of encabezadoTablaAcuse; track item.key; let i = $index) {
+            <td>{{ row[item.key] }}</td>
+            }
+            <!-- <td class="center">
+              <button type="button" class="btn btn-link me-2" [id]="accion.tipo" data-bs-toggle="button"
+                data-bs-placement="top" [title]="accion.label" (click)="verPDF()">
+                <i class="bi bi-c" [ngClass]="accion.icono"></i>
+              </button>
+            </td> -->
+
+          </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- <app-tabla [encabezadosTabla]="encabezadoTablaAcuse" [datosTabla]="datosTablaAcuse"
+        [accionesTabla]="accionesTablaAcuse"></app-tabla> -->
     </div>
   </div>
 </div>

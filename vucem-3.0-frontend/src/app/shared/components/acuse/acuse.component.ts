@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { AlertComponent } from '../alert/alert.component';
 import { TituloComponent } from '../titulo/titulo.component';
 import { TablaComponent } from '../tabla/tabla.component';
+import { ACUSE_SERVICIOS_EXTRAORDINARIOS } from '../../constantes/servicios-extraordinarios.enum';
 
 @Component({
   selector: 'app-component-acuse',
@@ -19,10 +20,10 @@ import { TablaComponent } from '../tabla/tabla.component';
 export class AcuseComponent implements OnChanges {
   @Input() txtAlerta!: string;
   @Input() subtitulo!: string;
-  @Input() encabezadoTablaAcuse!: EncabezadosTabla[];
+  encabezadoTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.encabezadoTablaAcuse;
   @Input() configuracionTabla!: ConfiguracionTabla;
   @Input() accionesTablaAcuse!: AccionesTabla[];
-  @Input() datosTablaAcuse!: any[];
+  datosTablaAcuse!: any[];
 
   @Input() folio!: string;
 
