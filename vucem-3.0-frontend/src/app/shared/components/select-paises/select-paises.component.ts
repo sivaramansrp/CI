@@ -1,59 +1,98 @@
-import { CommonModule } from '@angular/common';
 import {
   Component,
-  EventEmitter,
   Input,
-  Output,
+  OnChanges,
   SimpleChanges,
+  forwardRef,
 } from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CatalogoPaises } from '../../../core/models/shared/catalogos.model';
-import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-import { CatalogosSelectPaises } from '../../../core/models/shared/components.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'select-paises',
+  selector: 'app-select-paises',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './select-paises.component.html',
   styleUrl: './select-paises.component.scss',
+  providers: [
+      {
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => SelectPaisesComponent),
+        multi: true,
+      },
+    ],
 })
-export class SelectPaisesComponent {
-  @Input({ required: true }) catalogosPaises!: CatalogosSelectPaises;
+export class SelectPaisesComponent implements OnChanges{
+  @Input() id: string;
+  @Input() catalogosPaises: CatalogoPaises[];
+  @Input() label: string;
+  @Input() placeholder: string;
+  @Input() isDisabled: boolean;
+  @Input() required: boolean;
 
-  @Output() paisSeleccionado = new EventEmitter<CatalogoPaises>();
+   formSelect: FormGroup;
+  
+    constructor(private fb: FormBuilder) {
+      this.formSelect = this.fb.group({
+        selectControl: [''],
+      });
+    }
 
-  pais: FormControl = new FormControl(0);
-
-  constructor(private validacionesService: ValidacionesFormularioService) {}
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['catalogosPaises'].currentValue) {
-      this.catalogosPaises = changes['catalogosPaises'].currentValue;
-      if (this.catalogosPaises.required) {
-        this.pais.setValidators([
-          Validators.required,
-          this.validacionesService.noCeroValidator(),
-        ]);
-        this.pais.updateValueAndValidity();
+    ngOnChanges(changes: SimpleChanges) {
+      if (changes['required']) {
+        if (this.required) {
+          this.formSelect
+            .get('selectControl')
+            ?.setValidators([Validators.required]);
+        } else {
+          this.formSelect.get('selectControl')?.clearValidators();
+        }
+        this.formSelect.get('selectControl')?.updateValueAndValidity();
+      }
+  
+      if (changes['isDisabled']) {
+        const control = this.formSelect.get('selectControl');
+        if (control) {
+          if (this.isDisabled) {
+            control.disable();
+          } else {
+            control.enable();
+          }
+        }
       }
     }
-  }
-
-  isValid(): boolean | null {
-    return this.pais.errors && this.pais.touched;
-  }
-
-  seleccion() {
-    const opcionSeleccionada = parseInt(this.pais.value);
-
-    let seleccion: CatalogoPaises;
-
-    this.catalogosPaises.catalogos.forEach((el: CatalogoPaises) => {
-      if (el.id === opcionSeleccionada) {
-        seleccion = el;
-        this.paisSeleccionado.emit(seleccion);
+  
+    value: string = '';
+    handleChange(event: Event): void {
+      const value = (event.target as HTMLSelectElement).value;
+      this.onChange(value);
+    }
+  
+    private onChange: (value: string) => void;
+    private onTouched: () => void;
+  
+    writeValue(value: string): void {
+      if (value) {
+        this.formSelect.get('selectControl')?.setValue(value);
       }
-    });
-  }
+    }
+  
+    isInvalid(): boolean | null {
+      const control = this.formSelect.get('selectControl');
+      return control?.invalid && control?.touched;
+    }
+  
+    registerOnChange(fn: (_value: string) => void): void {
+      this.onChange = fn;
+      this.formSelect.get('selectControl')?.valueChanges.subscribe(fn);
+    }
+  
+    registerOnTouched(fn: () => void): void {
+      this.onTouched = fn;    
+    }
+  
+    setDisabledState?(isDisabled: boolean): void {
+      this.isDisabled = isDisabled;
+    }
 }

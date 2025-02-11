@@ -1,0 +1,104 @@
+<div class="container mt-4 mb-4">
+  <ng-titulo titulo="Información de la mercancía" />
+  <form [formGroup]="informacionDeLaform">
+
+    <div class="row">
+      <div class="col-md-4">
+        <label for="fraccionArancelaria" class="form-label">Fracción arancelaria*:</label>
+        <select class="form-select form-control" formControlName="fraccionArancelaria">
+          <option value="">Selecciona un valor</option>
+          <option *ngFor="let item of fraccionArancelariaOptions" [value]="item.Id">{{ item.label }}</option>
+        </select>
+
+
+        <small class="text-danger"
+          *ngIf="informacionDeLaform.get('fraccionArancelaria')?.hasError('required') && informacionDeLaform.get('fraccionArancelaria')?.touched">
+          Campo obligatorio
+        </small>
+      </div>
+
+      <div class="col-md-8">
+        <label for="descripcionFraccion" class="form-label">Descripción:</label>
+        <input id="descripcionFraccion" type="text" class="form-control" formControlName="descripcionFraccion">
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <label for="nico" class="form-label">Nico*:</label>
+        <select class="form-control form-select" formControlName="nico">
+          <option value="">Selecciona un valor</option>
+          <option *ngFor="let item of nicoOptions" [value]="item.Id">{{ item.label }}</option>
+        </select>
+        <small class="text-danger"
+          *ngIf="informacionDeLaform.get('nico')?.hasError('required') && informacionDeLaform.get('nico')?.touched">
+          Campo obligatorio
+        </small>
+      </div>
+
+      <div class="col-md-8">
+        <label for="descripcionNico" class="form-label">Descripción:</label>
+        <input id="descripcionNico" type="text" class="form-control" formControlName="descripcionNico">
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <label for="nombreQuimico" class="form-label">Nombre químico*:</label>
+        <input id="nombreQuimico" type="text" class="form-control" formControlName="nombreQuimico">
+        <small class="text-danger"
+          *ngIf="informacionDeLaform.get('nombreQuimico')?.hasError('required') && informacionDeLaform.get('nombreQuimico')?.touched">
+          Campo obligatorio
+        </small>
+      </div>
+
+      <div class="col-md-8">
+        <label for="nombreComercial" class="form-label">Nombre comercial*:</label>
+        <input id="nombreComercial" type="text" class="form-control" formControlName="nombreComercial">
+        <small class="text-danger"
+          *ngIf="informacionDeLaform.get('nombreComercial')?.hasError('required') && informacionDeLaform.get('nombreComercial')?.touched">
+          Campo obligatorio
+        </small>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-8">
+        <label for="numeroCAS" class="form-label">Número de Chemical Abstracts Substance (CAS)*:</label>
+        <input id="numeroCAS" type="text" class="form-control" formControlName="numeroCAS">
+        <small class="text-danger"
+          *ngIf="informacionDeLaform.get('numeroCAS')?.hasError('required') && informacionDeLaform.get('numeroCAS')?.touched">
+          Campo obligatorio
+        </small>
+      </div>
+
+      <div class="col-md-4">
+        <label for="estadoFisico" class="form-label">Estado físico*:</label>
+        <select id="estadoFisico" class="form-control form-select" formControlName="estadoFisico">
+          <option value="">Selecciona un valor</option>
+          <option *ngFor="let item of estadoFisicoOptions" [value]="item.Id">{{ item.label }}</option>
+        </select>
+        <small class="text-danger"
+          *ngIf="informacionDeLaform.get('estadoFisico')?.hasError('required') && informacionDeLaform.get('estadoFisico')?.touched">
+          Campo obligatorio
+        </small>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-12 ">
+        <label for="acondicionamiento" class="form-label text-start">Indique el acondicionamiento con el que se presenta
+          la mercancía al momento del despacho aduanero (sacos, totes, pipas, carro tanque, iso tanque, etc)*:</label>
+        <textarea id="acondicionamiento" class="form-control"  style="height: 50%; resize: none;" formControlName="acondicionamiento"></textarea>
+        <small class="text-danger"
+          *ngIf="informacionDeLaform.get('acondicionamiento')?.hasError('required') && informacionDeLaform.get('acondicionamiento')?.touched">
+          Campo obligatorio
+        </small>
+      </div>
+    </div>
+  </form>
+
+  <div class="row my-5">
+    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 import { Query } from '@datorama/akita';
-import { UsuarioStore } from '../../estados/usuario.store';
 import { UsuarioState } from '../../estados/usuario.store';
+import { UsuarioStore } from '../../estados/usuario.store';
 
 export class SessionQuery extends Query<UsuarioState> {
 

@@ -1,0 +1,33 @@
+
+
+<div class="container">
+    <ng-titulo titulo="Información de la muestra en despacho" />
+    <form [formGroup]="Informaciondela" (ngSubmit)="validarFormulario()">
+        <div formGroupName="datosImportadorExportador">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group" style="text-align: left;">
+                <select-catalogos [catalogosDatos]="mercancia"
+                (valorSeleccion)="docSeleccionado($event)">
+  </select-catalogos>
+              </div>
+            </div>
+          
+  
+          <!-- Clave de referencia, Cadena de la dependencia, Banco, etc. -->
+          
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="follo">Follo anterior:  </label>
+                <input class="form-control" id="follo" formControlName="follo"  type="text">
+              </div>
+            </div>
+          </div>
+        </div>
+       
+          
+        
+
+    </form>
+    
+</div>

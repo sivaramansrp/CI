@@ -12,14 +12,14 @@ export interface CatalogosSelect {
   labelNombre: string;
   required: boolean;
   primerOpcion: string;
-  catalogos: Array<Catalogo>;
+  catalogos: Catalogo[];
 }
 
 export interface CatalogosSelectPaises {
   labelNombre: string;
   required: boolean;
   primerOpcion: string;
-  catalogos: Array<CatalogoPaises>;
+  catalogos: CatalogoPaises[];
 }
 
 export interface DatosPasos {
@@ -69,9 +69,7 @@ export interface InputFecha {
   habilitado: boolean
 }
 
-export interface ConfiguracionTabla {
-  [clave: string]: string | number | boolean | null;
-}
+export type ConfiguracionTabla = Record<string, string | number | boolean | null>;
 
 export interface Pedimento {
   patente: number;
@@ -88,14 +86,14 @@ export interface Pedimento {
 export interface DatosRfcResponse {
   rfc: string;
   nombre: string;
-  aPaterno: string;
-  aMaterno: string;
+  primerApellido: string;
+  segundoApellido: string;
 }
 export interface DatosRepresentanteLegal {
   rfc: string;
   nombre: string;
-  aPaterno: string;
-  aMaterno: string;
+  primerApellido: string;
+  segundoApellido: string;
   telefono: string;
   correo: string;
 }

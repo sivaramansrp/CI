@@ -1,0 +1,23 @@
+
+<div class="container table-container">
+    <ng-titulo titulo="Importante" />
+    <ng-alert [CONTENIDO]="TEXTOS.Importante"></ng-alert>
+    <div class="row" style="padding-bottom: 20px;text-align: right;">
+        <div>
+            <button type="button" class="btn btn-primary btn-space" >Iniciar</button>
+            
+        </div>
+    </div>
+   
+   
+       <select-catalogos [catalogosDatos]="registro"
+    (valorSeleccion)="docSeleccionado($event)">
+</select-catalogos>
+
+</div>
+<div>
+    <btn-continuar [datos]="datosPasos" ></btn-continuar>
+
+
+</div>
+<ng-alert [CONTENIDO]="ADVERTENCIA.Aviso"></ng-alert>
