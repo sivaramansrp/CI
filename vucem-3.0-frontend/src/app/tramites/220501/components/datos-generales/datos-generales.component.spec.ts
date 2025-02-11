@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosGeneralesComponent } from './datos-generales.component';
-import { RevisionService } from '../../../../core/services/220501/revision.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { RevisionService } from '../../../../core/services/220501/revision.service';
 
 describe('DatosGeneralesComponent', () => {
   let component: DatosGeneralesComponent;
@@ -36,8 +36,16 @@ describe('DatosGeneralesComponent', () => {
     const field = 'someField';
     expect(component.isValid(form, field)).toBeTrue();
   });
+
+  it('should rotate row in the specified direction', () => {
+    const initialIndex = component.currentIndex;
+    const direction = 1;
+    component.rotateRow(direction);
+    expect(component.currentIndex).toBe((initialIndex + direction + component.rows.length) % component.rows.length);
+  });
   
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
 });

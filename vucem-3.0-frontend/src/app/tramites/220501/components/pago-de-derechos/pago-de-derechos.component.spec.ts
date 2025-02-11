@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 import { RevisionService } from '../../../../core/services/220501/revision.service';
@@ -25,6 +25,20 @@ describe('PagoDeDerechosComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  
+  it('should initialize the form on ngOnInit', () => {
+    component.ngOnInit();
+    expect(component.pagoForm).toBeDefined();
+    expect(component.pagoForm.get('exentoPagoNo')).toBeDefined();
+    expect(component.pagoForm.get('exentoPagoSi')).toBeDefined();
+    expect(component.pagoForm.get('justificacion')).toBeDefined();
+    expect(component.pagoForm.get('claveReferencia')).toBeDefined();
+    expect(component.pagoForm.get('cadenaDependencia')).toBeDefined();
+    expect(component.pagoForm.get('banco')).toBeDefined();
+    expect(component.pagoForm.get('llavePago')).toBeDefined();
+    expect(component.pagoForm.get('importePago')).toBeDefined();
+    expect(component.pagoForm.get('fetchapago')).toBeDefined();
   });
   
  it('should get justificación', () => {

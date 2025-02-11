@@ -1,11 +1,10 @@
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { Component } from '@angular/core';
 
 /**
  * Componente para la revisión documental.
  */
 @Component({
-  selector: 'revision-documental',
+  selector: 'app-revision-documental',
   templateUrl: './revision-documental.component.html',
   styleUrl: './revision-documental.component.scss'
 })

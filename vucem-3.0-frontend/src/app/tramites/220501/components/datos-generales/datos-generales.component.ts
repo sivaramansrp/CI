@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormsModule, Validators } from '@angular/forms';
-import { TEXTOS } from '../../../../shared/constantes/issuance-extension-modification.enum';
-import { HttpClient } from '@angular/common/http';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { RevisionService } from '../../../../core/services/220501/revision.service';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder,FormGroup, Validators } from '@angular/forms';
+import { RevisionService } from '../../../../core/services/220501/revision.service';
+import { TEXTOS } from '../../../../shared/constantes/issuance-extension-modification.enum';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 /**
@@ -300,7 +299,6 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   rotateRow(direction: number) {
-    console.log(this.currentDirection)
     const totalRows = this.rows.length;
     this.currentDirection = direction;
     this.currentIndex = (this.currentIndex + direction + totalRows) % totalRows;
@@ -400,7 +398,6 @@ export class DatosGeneralesComponent implements OnInit {
 
         if (resp.code == 200) {
           const response = resp.data;
-          console.log(response);
 
           this.aduanaIngreso = {
             labelNombre: 'Aduana de ingreso',

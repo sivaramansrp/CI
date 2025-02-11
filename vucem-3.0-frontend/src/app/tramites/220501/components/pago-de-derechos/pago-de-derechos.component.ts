@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import {
-  CatalogosSelect,
-  InputFecha,
-} from '../../../../core/models/shared/components.model';
-import { FECHA_DE_PAGO } from '../../../../shared/constantes/issuance-extension-modification.enum';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import {CatalogosSelect,InputFecha} from '../../../../core/models/shared/components.model';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { FECHA_DE_PAGO } from '../../../../shared/constantes/issuance-extension-modification.enum';
 import { RevisionService } from '../../../../core/services/220501/revision.service';
 
 /**

@@ -1,5 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 
+/**
+ * Texto de alerta utilizado en el componente.
+ * @constant {string}
+ */
 const TERCEROR_TEXTO_DE_ALERTA = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.'; // Define the constant
 
 /**

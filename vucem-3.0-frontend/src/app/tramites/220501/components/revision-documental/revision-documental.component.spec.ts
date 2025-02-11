@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { RevisionDocumentalComponent } from './revision-documental.component';
 
 describe('RevisionDocumentalComponent', () => {
@@ -21,8 +20,5 @@ describe('RevisionDocumentalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should validate form field', () => {
-    const form = component.forma;
-    const field = 'someField';
-    });
+  
 });
