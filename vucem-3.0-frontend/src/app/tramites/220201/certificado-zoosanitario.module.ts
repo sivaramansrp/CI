@@ -21,11 +21,13 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
 import { SharedModule } from '../../shared/shared.module';
-import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+
 import { TercerorRelacionadosComponent } from './components/terceror-relacionados/terceror-relacionados.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitario-page.component';
+import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component';
+
 
 @NgModule({
   declarations: [
@@ -34,11 +36,11 @@ import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitari
     PasoTresComponent,
     PasoUnoComponent,
     ZoosanitarioPageComponent,
-    SolicitanteComponent,
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionNacionalComponent,
     TercerorRelacionadosComponent,
     PagoDeDerechosComponent,
+    SolicitanteComponent
   ],
   imports: [
     SharedModule,
