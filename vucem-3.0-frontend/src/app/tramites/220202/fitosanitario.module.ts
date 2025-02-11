@@ -12,7 +12,6 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
-import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 
 import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn-continuar.component';
 import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
@@ -25,8 +24,8 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
 
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
 import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component';
-import { TercerosComponent } from '../../shared/components/terceros/terceros.component';
-import { SharedModule } from '../../shared/shared.module';
+
+import { ServiciosExtraordinariosModule } from '../5701/servicios-extraordinarios.module';
 
 @NgModule({
   declarations: [
@@ -37,7 +36,6 @@ import { SharedModule } from '../../shared/shared.module';
     AgriculturaComponent,
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionNacionalComponent,
-    TercerosRelacionadosComponent,
     PagoDeDerechosComponent
   ],
   imports: [
@@ -56,8 +54,7 @@ import { SharedModule } from '../../shared/shared.module';
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     SolicitanteComponent,
-    SharedModule,
-    TercerosComponent
+    ServiciosExtraordinariosModule,
   ]
 })
 export class FitosanitarioModule { }

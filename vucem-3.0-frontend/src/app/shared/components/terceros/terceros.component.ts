@@ -1,15 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CONSTANTES } from '../../constantes/servicios-extraordinarios.enum';
 import { PersonaTerceros } from '../../../core/models/5701/servicios-extraordinarios.model';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'terceros',
   templateUrl: './terceros.component.html',
   styleUrl: './terceros.component.scss',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
 })
 export class TercerosComponent {
   @Input({ required: true }) tabindex!: number;
