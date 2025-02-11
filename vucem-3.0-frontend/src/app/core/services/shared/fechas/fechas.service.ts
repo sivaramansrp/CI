@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
-import { SEMANA_D } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { DatosParaValidacionFecha } from '../../../models/shared/fechas.model';
+import { Injectable } from '@angular/core';
 import { MILISEGUNDOS } from '../../../../shared/constantes/constantes';
+import { SEMANA_D } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FechasService {
-  constructor() {}
-
   /**
    * Devuelve la fecha actual en formato 'DD-MM-AAAA'
    * @param {string} fecha
@@ -19,9 +17,8 @@ export class FechasService {
     const [dia, mes, anio] = fecha.split('/');
     if (dma) {
       return `${dia}-${mes}-${anio}`;
-    } else {
-      return `${anio}-${mes}-${dia}`;
     }
+    return `${anio}-${mes}-${dia}`;
   }
 
   /**
@@ -40,16 +37,13 @@ export class FechasService {
    * @param {string} fechaFinal, fecha final en formato string.
    * @returns {Array<string>} Array con las fechas comprendidas entre la fecha de inicio y la fecha final
    */
-  obtenerDiasEntreFechas(
-    fechaInicio: string,
-    fechaFinal: string
-  ): Array<string> {
+  obtenerDiasEntreFechas(fechaInicio: string, fechaFinal: string): string[] {
     const [diaInicio, mesInicio, anioInicio] = fechaInicio
       .split('-')
       .map(Number);
     const [diaFin, mesFin, anioFin] = fechaFinal.split('-').map(Number);
 
-    let fechaPrincipio = new Date(anioInicio, mesInicio - 1, diaInicio);
+    const fechaPrincipio = new Date(anioInicio, mesInicio - 1, diaInicio);
     const fechaFin = new Date(anioFin, mesFin - 1, diaFin);
     const dias = [];
 

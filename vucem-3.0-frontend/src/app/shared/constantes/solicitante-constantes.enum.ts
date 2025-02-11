@@ -41,7 +41,7 @@ export const PERSONA_FISICA_NACIONAL = [
   },
   {
     labelNombre: 'Primer apellido',
-    campo: 'aPaterno',
+    campo: 'primerApellido',
     class: 'col-md-4',
     tipo_input: 'text',
     disabled: true,
@@ -50,7 +50,7 @@ export const PERSONA_FISICA_NACIONAL = [
   },
   {
     labelNombre: 'Segundo apellido',
-    campo: 'aMaterno',
+    campo: 'segundoApellido',
     class: 'col-md-4',
     tipo_input: 'text',
     disabled: true,
@@ -231,7 +231,7 @@ export const PERSONA_FISICA_EXTRANJERO = [
   },
   {
     labelNombre: 'Primer apellido',
-    campo: 'aPaterno',
+    campo: 'primerApellido',
     class: 'col-md-4',
     tipo_input: 'text',
     disabled: true,
@@ -240,7 +240,7 @@ export const PERSONA_FISICA_EXTRANJERO = [
   },
   {
     labelNombre: 'Segundo apellido',
-    campo: 'aMaterno',
+    campo: 'segundoApellido',
     class: 'col-md-4',
     tipo_input: 'text',
     disabled: true,
