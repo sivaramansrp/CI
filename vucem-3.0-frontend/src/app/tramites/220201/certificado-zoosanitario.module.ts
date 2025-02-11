@@ -22,7 +22,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
 import { SharedModule } from '../../shared/shared.module';
 
-import { TercerorRelacionadosComponent } from './components/terceror-relacionados/terceror-relacionados.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitario-page.component';
@@ -39,7 +38,6 @@ import { ServiciosExtraordinariosModule } from '../5701/servicios-extraordinario
     ZoosanitarioPageComponent,
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionNacionalComponent,
-    TercerorRelacionadosComponent,
     PagoDeDerechosComponent,
 
   ],
