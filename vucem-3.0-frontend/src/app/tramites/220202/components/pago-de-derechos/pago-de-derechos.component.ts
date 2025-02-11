@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FECHA_DE_PAGO } from '../../../../shared/constantes/220202/fitosanitario.enums';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // Import Validators
 import { CatalogosSelect, InputFecha } from '../../../../core/models/shared/components.model';
 import { HttpClient } from '@angular/common/http';
 import { Catalogo, RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
@@ -8,7 +8,8 @@ import { Catalogo, RespuestaCatalogos } from '../../../../core/models/shared/cat
 /**
  * @fileoverview Componente para la gestión del formulario de pago de derechos.
  * Este componente maneja la lógica y la presentación del formulario de pago de derechos,
- * incluyendo la inicialización, la obtención de datos y la gestión de los controles del formulario.
+ * incluyendo la inicialización, la obtención de datos, la gestión de los controles del formulario
+ * y la validación de los campos.
  * @module pagoDeDerechos
  */
 
@@ -58,18 +59,25 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   pagoForm: FormGroup = this.fb.group({
     exentoPago: [''],
-    justificacion: [{ value: '', disabled: false }],
+    justificacion: [{ value: '', disabled: false }, Validators.required], // Add Validators.required
     claveReferencia: [{ value: '', disabled: true }],
     cadenaDependencia: [{ value: '', disabled: true }],
-    banco: [{ value: '', disabled: true }],
+    banco: [{ value: '', disabled: true }, Validators.required], // Add Validators.required
     llavePago: [{ value: '', disabled: true }],
-    importePago: [{ value: '', disabled: true }],
-    fechaDePago: [{ value: '', disabled: true }]
+    importePago: [{ value: '', disabled: true }, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]], // Validators for required and decimal format
+    fechaDePago: [{ value: '', disabled: true }, Validators.required] // Add Validators.required
   });
+
+  /**
+   * @description Método para actualizar la fecha de pago en el formulario.
+   * @param {string} nuevo_valor - Nueva fecha a establecer.
+   * @returns {void}
+   */
   cambioFechaInicio(nuevo_valor: string) {
     this.pagoForm.get('fechaDePago')?.setValue(nuevo_valor);
     this.pagoForm.get('fechaDePago')?.markAsUntouched();
   }
+
   /**
    * Constructor del componente.
    * @constructor
@@ -116,16 +124,24 @@ export class PagoDeDerechosComponent implements OnInit {
       this.justificacionSelector['catalogos'] = datos as Catalogo[];
     });
   }
-  /**
-   *  Los datos seleccionados se configuran en los campos fromGroup. --220202
-   * @method seleccionarListDatas
-   */
 
+  /**
+   * Los datos seleccionados se configuran en los campos fromGroup. --220202
+   * @method seleccionarListDatas
+   * @param {Catalogo} e - El catálogo seleccionado.
+   * @param {string} name - El nombre del control del formulario a actualizar.
+   */
   seleccionarListDatas(e: Catalogo, name: string) {
     this.pagoForm.patchValue({
-      name: e.id
+      [name]: e.id // Use bracket notation to dynamically set the property
     });
+
+    if (name === 'justificacion') {
+      this.pagoForm.get('justificacion')?.enable();
+    }
+
+    if (name === 'banco') {
+      this.pagoForm.get('banco')?.enable();
+    }
   }
-
-
 }

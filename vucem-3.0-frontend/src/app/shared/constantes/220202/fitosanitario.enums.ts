@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Archivo que contiene las constantes utilizadas en el formulario fitosanitario.
+ * Este archivo define arrays de objetos que representan los pasos del formulario,
+ * los campos para solicitantes (personas físicas y morales), instrucciones y mensajes.
+ * @module constantesFitosanitario
+ */
+
+/**
+ * @description Constante que define los pasos del formulario.
+ * Cada objeto representa un paso con su índice, título, estado activo y completado.
+ * @constant {Array<Object>} PASOS
+ */
 export const PASOS = [
     {
         indice: 1,
@@ -24,6 +36,13 @@ export const PASOS = [
         completado: false,
     },
 ];
+
+/**
+ * @description Constante que define los campos para el solicitante persona física nacional.
+ * Cada objeto representa un campo con su etiqueta, nombre de campo, clase CSS, tipo de input,
+ * estado disabled, tooltip, validadores y placeholder.
+ * @constant {Array<Object>} FITOSANITARIO_SOLICITANTE_FISICA_NACIONAL
+ */
 export const FITOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
     {
         labelNombre: 'Registro federal de contribuyentes:',
@@ -51,6 +70,7 @@ export const FITOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
         class: 'col-md-12',
         tipo_input: 'text',
         disabled: true,
+        tooltip: 'Actividad económica preponderante:',
         validators: ['required'],
         placeholder: '',
     },
@@ -60,10 +80,18 @@ export const FITOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
+        tooltip: 'Correo electrónico',
         validators: ['required'],
         placeholder: '',
     }
 ];
+
+/**
+ * @description Constante que define los campos para persona moral o física nacional.
+ * Cada objeto representa un campo con su etiqueta, nombre de campo, clase CSS, tipo de input,
+ * estado disabled, tooltip, validadores y placeholder.
+ * @constant {Array<Object>} FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL
+ */
 export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
     {
         labelNombre: 'País',
@@ -71,6 +99,7 @@ export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
+        tooltip: 'País',
         validators: ['required', 'maxLength:120'],
         placeholder: '',
     },
@@ -80,6 +109,7 @@ export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
+        tooltip: 'Código Postal',
         validators: ['required', 'maxLength:10'],
         placeholder: '',
     },
@@ -89,6 +119,7 @@ export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
+        tooltip: 'Estado',
         validators: ['required', 'maxLength:50'],
         placeholder: '',
     },
@@ -98,6 +129,7 @@ export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
+        tooltip: 'Municipio o alcaldía',
         validators: ['required', 'maxLength:120'],
         placeholder: '',
     },
@@ -107,6 +139,7 @@ export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
+        tooltip: 'Localidad',
         validators: ['required', 'maxLength:68'],
         placeholder: '',
     },
@@ -116,6 +149,7 @@ export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
+        tooltip: 'Colonia',
         validators: ['required', 'maxLength:68'],
         placeholder: '',
     },
@@ -125,6 +159,7 @@ export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
         class: 'col-md-8',
         tipo_input: 'text',
         disabled: true,
+        tooltip: 'Calle',
         validators: ['required', 'maxLength:68'],
         placeholder: '',
     },
@@ -134,6 +169,7 @@ export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
+        tooltip: 'Número exterior',
         validators: ['required', 'maxLength:10'],
         placeholder: '',
     },
@@ -143,6 +179,7 @@ export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
+        tooltip: 'Número interior',
         validators: ['maxLength:15'],
         placeholder: '',
     },
@@ -152,6 +189,7 @@ export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
         class: 'col-md-1',
         tipo_input: 'text',
         disabled: true,
+        tooltip: 'Lada',
         validators: ['required', 'maxLength:15'],
         placeholder: '',
     },
@@ -161,15 +199,30 @@ export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
         class: 'col-md-3',
         tipo_input: 'text',
         disabled: true,
+        tooltip: 'Teléfono',
         validators: ['required', 'maxLength:15'],
         placeholder: '',
     },
 ];
-export const INSTRUCCION_DOBLE_CLIC = 'Al dar doble clic en el registro seleccionado creará una nueva solicitud con los mismos datos de la solicitud elegida'
+
+/**
+ * @description Constante que define la instrucción para el doble clic en la tabla.
+ * @constant {string} INSTRUCCION_DOBLE_CLIC
+ */
+export const INSTRUCCION_DOBLE_CLIC = 'Al dar doble clic en el registro seleccionado creará una nueva solicitud con los mismos datos de la solicitud elegida';
+
+/**
+ * @description Constante que define el mensaje para tablas obligatorias.
+ * @constant {string} ESREQUIREDTABLESMENSAJE
+ */
 export const ESREQUIREDTABLESMENSAJE = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
+
+/**
+ * @description Constante que define la configuración para el input de fecha de pago.
+ * @constant {Object} FECHA_DE_PAGO
+ */
 export const FECHA_DE_PAGO = {
     labelNombre: 'Fecha de pago',
     required: true,
     habilitado: true,
-
 };
