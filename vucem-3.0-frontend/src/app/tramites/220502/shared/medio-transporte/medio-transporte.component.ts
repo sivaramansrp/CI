@@ -68,7 +68,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
             Validators.maxLength(30),
           ]),
           esSolicitudFerros: new FormControl('', [Validators.required]),
-          totalDeGuiasAmparadas: new FormControl('', []),
+          totalDeGuiasAmparadas: new FormControl('', [Validators.maxLength(50)]),
         })
       );
     }
