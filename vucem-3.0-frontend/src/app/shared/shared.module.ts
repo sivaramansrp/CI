@@ -6,10 +6,11 @@ import { SoloNumerosDirective } from './directives/solo-numeros/solo-numeros.dir
 import { BooleanoSiNoPipe } from './pipes/booleanoSiNo/booleano-si-no.pipe';
 import { AcusePageComponent } from './pages/acuse-page/acuse-page.component';
 
+
 @NgModule({
   declarations: [
     SoloNumerosDirective,
-    AcusePageComponent,
+    AcusePageComponent
   ],
   imports: [
     CommonModule,
