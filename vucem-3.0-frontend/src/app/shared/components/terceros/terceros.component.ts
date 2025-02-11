@@ -1,13 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PersonaTerceros } from '../../../core/models/5701/servicios-extraordinarios.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CONSTANTES } from '../../constantes/servicios-extraordinarios.enum';
-import { CommonModule } from '@angular/common';
+import { PersonaTerceros } from '../../../core/models/5701/servicios-extraordinarios.model';
 
 @Component({
   selector: 'terceros',
-  standalone: true, // This is correct
-  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './terceros.component.html',
   styleUrl: './terceros.component.scss',
 })
