@@ -1,7 +1,7 @@
 /**
  * @component CapturarFacturasComponent
- * @description This component is responsible for capturing invoice details.
- * It includes a form for capturing invoice data and a table for displaying the captured invoices.
+ * @description Este componente es responsable de capturar los detalles de las facturas.
+ * Incluye un formulario para capturar los datos de las facturas y una tabla para mostrar las facturas capturadas.
  * 
  * @import { Component } from '@angular/core';
  * @import { FormGroup, Validators } from '@angular/forms';
@@ -19,27 +19,27 @@ import { TableComponent } from '../../../../shared/components/table/table.compon
 })
 export class CapturarFacturasComponent {
   /**
-   * @property {FormGroup} forma - The form group for capturing invoice data.
+   * @property {FormGroup} forma - El grupo de formularios para capturar los datos de las facturas.
    */
   forma!: FormGroup;
 
   /**
-   * @property {string[]} selectRangoDias - Array of selectable day ranges.
+   * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
    */
   selectRangoDias: string[] = [];
 
   /**
-   * @property {boolean} colapsable - Boolean to control collapsible state.
+   * @property {boolean} colapsable - Booleano para controlar el estado colapsable.
    */
   colapsable: boolean = false;
 
   /**
-   * @property {FormGroup} ConstanciaDelRegistro - The form group for registration certificate data.
+   * @property {FormGroup} ConstanciaDelRegistro - El grupo de formularios para los datos del certificado de registro.
    */
   ConstanciaDelRegistro!: FormGroup;
 
   /**
-   * @property {string[]} tableColumns - Array of table column headers.
+   * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
    */
   tableColumns = [
     'Número de la factura',
@@ -53,7 +53,7 @@ export class CapturarFacturasComponent {
   ];
 
   /**
-   * @property {Array} facturas - Array of invoice data to be displayed in the table.
+   * @property {Array} facturas - Array de datos de facturas para mostrar en la tabla.
    */
   facturas = [
     {

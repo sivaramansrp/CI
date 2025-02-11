@@ -1,7 +1,7 @@
 /**
  * @component ConstanciaDelRegistroComponent
- * @description This component is responsible for handling the registration certificate form.
- * It includes a form for capturing registration certificate data and additional functionalities.
+ * @description Este componente es responsable de manejar el formulario del certificado de registro.
+ * Incluye un formulario para capturar los datos del certificado de registro y funcionalidades adicionales.
  * 
  * @import { Component } from '@angular/core';
  * @import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -17,22 +17,22 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class ConstanciaDelRegistroComponent {
   /**
-   * @property {FormGroup} forma - The form group for capturing registration certificate data.
+   * @property {FormGroup} forma - El grupo de formularios para capturar los datos del certificado de registro.
    */
   forma!: FormGroup;
 
   /**
-   * @property {string[]} selectRangoDias - Array of selectable day ranges.
+   * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
    */
   selectRangoDias: string[] = [];
 
   /**
-   * @property {boolean} colapsable - Boolean to control collapsible state.
+   * @property {boolean} colapsable - Booleano para controlar el estado colapsable.
    */
   colapsable: boolean = false;
 
   /**
-   * @property {FormGroup} ConstanciaDelRegistro - The form group for registration certificate data.
+   * @property {FormGroup} ConstanciaDelRegistro - El grupo de formularios para los datos del certificado de registro.
    */
   ConstanciaDelRegistro!: FormGroup;
 }
