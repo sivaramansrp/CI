@@ -90,7 +90,7 @@ export class MedioTransporteComponent implements OnInit {
   /**
    * Método que se ejecuta al inicializar el componente.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.obtenerMercanciasDatos();
     this.getMediodetransporte();
   }
@@ -98,7 +98,7 @@ export class MedioTransporteComponent implements OnInit {
   /**
    * Método para crear el formulario de medio de transporte.
    */
-  crearFormulario() {
+  crearFormulario(): void {
     this.medioTransporteForm = this.fb.group({
       transporteIdMedio: new FormControl('', [Validators.required]),
       identificacionTransporte: new FormControl('', [Validators.maxLength(30)]),
@@ -139,21 +139,23 @@ export class MedioTransporteComponent implements OnInit {
  * Método para establecer la selección de solicitud de ferrocarril.
  * @param e Evento de cambio del input.
  */
-  estableceSeleccionSolicitudFerro(e: any) {
+  estableceSeleccionSolicitudFerro(e: any): void {
     const target = e.target as HTMLInputElement;
     this.esSolicitudFerrosValor = target.value;
 
-    if (this.esSolicitudFerrosValor == 1)
+    if (this.esSolicitudFerrosValor == 1) {
       this.transporteSeleccionado.emit(true);
-    else
+    }
+    else {
       this.transporteSeleccionado.emit(false);
+    }
     this.mostrarAgregarMercancia = false;
   }
 
   /**
  * Método para modificar los saldos de mercancía.
  */
-  modificarSaldosMercancia() {
+  modificarSaldosMercancia(): void {
     this.obtenerMercanciasDatos();
     this.mostrarAgregarMercancia = true;
   }
@@ -162,7 +164,7 @@ export class MedioTransporteComponent implements OnInit {
  * Método para obtener los datos de mercancías.
  * @returns Datos de mercancías.
  */
-  obtenerMercanciasDatos() {
+  obtenerMercanciasDatos(): void {
     this.mercanciasDatos = [
       {
         tbodyData:
@@ -176,7 +178,7 @@ export class MedioTransporteComponent implements OnInit {
  * Método para manejar el evento de agregar mercancía.
  * @param e Valor booleano que indica si se debe mostrar el componente de agregar mercancía.
  */
-  obtenerAgregarMercanciaEvent(e: boolean) {
+  obtenerAgregarMercanciaEvent(e: boolean): void {
     this.mostrarAgregarMercancia = e;
   }
 }

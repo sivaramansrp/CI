@@ -37,7 +37,7 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit {
    * Método que se ejecuta cuando el componente se inicializa.
    * Aquí se debe inicializar el formulario con los datos de entrada.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.mercanciasDatos && this.mercanciasDatos.length > 0) {
       this.setFormData();
     }
@@ -46,7 +46,7 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit {
   /**
    * Método para crear el formulario de agregar mercancía.
    */
-  crearFormulario() {
+  crearFormulario(): void {
     this.agregarMercanciaForm = this.fb.group({
       agregarMercancia: this.fb.group({
         fraccionArancelaria: [{ value: '', disabled: true }],
@@ -64,9 +64,7 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit {
   /**
    * Método para configurar los datos en el formulario con los valores de mercanciasDatos.
    */
-  setFormData() {
-    const tbodyData = this.mercanciasDatos[0].tbodyData;
-
+  setFormData(): void {
     this.agregarMercanciaForm.patchValue({
       agregarMercancia: {
         fraccionArancelaria: '01039201',
@@ -84,7 +82,7 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit {
    * Método que se ejecuta cuando cambian las propiedades de entrada.
    * @param changes Cambios detectados en las propiedades de entrada.
    */
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes['mercanciasDatos'] && this.mercanciasDatos) {
       this.setFormData();
     }
@@ -93,8 +91,9 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit {
   /**
    * Método para cancelar la acción y emitir el evento correspondiente.
    */
-  cerrarModal(estaConfirmado: boolean) {
-    if (estaConfirmado)
+  cerrarModal(estaConfirmado: boolean): void {
+    if (estaConfirmado) {
       this.cancelarEvento.emit(false);
+    }
   }
 }

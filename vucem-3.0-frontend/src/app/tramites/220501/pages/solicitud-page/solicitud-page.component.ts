@@ -76,13 +76,13 @@ export class SolicitudPageComponent implements OnInit {
     private seccionQuery: SeccionQuery,
     private seccionStore: SeccionStore,
   ) {
-
+    // El constructor se utiliza para la inyección de dependencias.
   }
 
   /**
    * Método que se ejecuta al inicializar el componente.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.seccionQuery.selectSeccionState$.pipe(
       takeUntil(this.destroyNotifier$),
       map(seccionState => {
@@ -105,7 +105,7 @@ export class SolicitudPageComponent implements OnInit {
  * Método para obtener el valor del índice y navegar en el asistente.
  * @param e Acción del botón que contiene el valor del índice.
  */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -119,7 +119,7 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Método para asignar las secciones existentes al stored
    */
-  private asignarSecciones() {
+  private asignarSecciones(): void {
     const secciones: boolean[] = [];
     const formaValida: boolean[] = [];
     for (const llaveSeccion in SECCIONES_TRAMITE_5701.PASO_1) {

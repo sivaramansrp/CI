@@ -51,10 +51,24 @@ export class SolicitudComponent implements OnInit {
    */
   solicitudes: Solicitud[] = [];
 
-  /** Datos de vagones e historial de inspección física. */
+  /**
+   * Lista de identificadores de carros de ferrocarril.
+   */
   hCarroFerrocarril: string[];
+
+  /**
+   * Lista de objetos que representan los carros de ferrocarril.
+   */
   dCarrosDeFerrocarril: carrosDeFerrocarril[];
+
+  /**
+   * Lista de identificadores del historial de inspección.
+   */
   hHistorialinspeccion: string[];
+
+  /**
+   * Lista de objetos que representan el historial de inspecciones físicas.
+   */
   dHistorialInspecciones: historialInspeccionFisica[];
 
   /**
@@ -77,7 +91,7 @@ export class SolicitudComponent implements OnInit {
   /**
    * Método que se ejecuta al inicializar el componente.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.cargarDatosIniciales();
   }
 
@@ -108,7 +122,7 @@ export class SolicitudComponent implements OnInit {
    * Método para manejar el evento de selección de transporte.
    * @param value Valor booleano que indica si se debe mostrar la sección.
    */
-  onTransporteSeleccionado(value: boolean) {
+  onTransporteSeleccionado(value: boolean): void {
     this.mostrarSeccion = value;
   }
 }

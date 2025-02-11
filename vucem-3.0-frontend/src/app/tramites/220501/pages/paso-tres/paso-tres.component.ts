@@ -21,7 +21,7 @@ export class PasoTresComponent {
    * Método para obtener la firma y navegar a la página de acuse.
    * @param ev Firma obtenida.
    */
-  obtieneFirma(ev: string){
+  obtieneFirma(ev: string): void {
     const firma: string = ev;
     if (firma) {
       this.router.navigate(['servicios-extraordinarios/acuse']);

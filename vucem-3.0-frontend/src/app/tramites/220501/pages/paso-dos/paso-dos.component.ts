@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
-import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
-import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
+import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
+import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 
 /**
  * Componente para gestionar el paso dos del trámite.
@@ -44,12 +44,14 @@ export class PasoDosComponent implements OnInit {
    */
   constructor(
     private catalogosServices: CatalogosService,
-  ) { }
+  ) { 
+    // El constructor se utiliza para la inyección de dependencias.
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.getTiposDocumentos();
 
   }
@@ -57,7 +59,7 @@ export class PasoDosComponent implements OnInit {
   /**
    * Método para obtener los tipos de documentos.
    */
-  getTiposDocumentos() {
+  getTiposDocumentos(): void {
     this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).subscribe((resp) => {
       if (resp.length > 0) {
         this.tiposDocumentos = resp;
@@ -69,7 +71,7 @@ export class PasoDosComponent implements OnInit {
    * Método para agregar un documento a la lista de documentos requeridos.
    * @param id Identificador del documento a agregar.
    */
-  agregarDocumento(id: number) {
+  agregarDocumento(id: number): void {
     this.tiposDocumentos.forEach(el => {
       if (el.id === id) {
         this.documentosSeleccionados.push(el);
@@ -81,7 +83,7 @@ export class PasoDosComponent implements OnInit {
  * Método para eliminar un documento de la lista de documentos seleccionados.
  * @param i Índice del documento a eliminar.
  */
-  eliminar(i: number) {
+  eliminar(i: number): void {
     this.documentosSeleccionados.splice(i, 1)
   }
 }
