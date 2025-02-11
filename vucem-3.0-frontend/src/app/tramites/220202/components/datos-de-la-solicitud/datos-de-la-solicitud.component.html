@@ -1,58 +1,59 @@
 <div class="container">
-  <div class="row mt-5">
-    <div class="col-md-12">
-      <div class="panel-group ficha-collapse" id="accordion">
-        <div class="panel panel-default">
-          <div class="panel-heading" (click)="mostrar_colapsable()">
-            <h4 class="panel-title">
-              <a> <i class="bi bi-arrow-repeat"></i>. </a>
-            </h4>
-            <button type="button" class="collpase-button collapsed"></button>
-          </div>
-          @if(colapsable){
-          <div class="panel-collapse collapse in" id="panel-01">
-            <div class="panel-body">
-              <div class="row">
-                <ng-alert [CONTENIDO]="instruccionDobleClic"></ng-alert>
-              </div>
-              <div class="row">
-                <h5>Solicita</h5>
-
+  <form [formGroup]="forma">
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <div class="panel-group ficha-collapse" id="accordion">
+          <div class="panel panel-default">
+            <div class="panel-heading" (click)="mostrar_colapsable()">
+              <h4 class="panel-title">
+                <a> <i class="bi bi-arrow-repeat"></i>. </a>
+              </h4>
+              <button type="button" class="collpase-button collapsed"></button>
+            </div>
+            @if(colapsable){
+            <div class="panel-collapse collapse in" id="panel-01">
+              <div class="panel-body">
                 <div class="row">
-                  <div class="col-md-12">
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th class="text-center">Fecha Creación</th>
-                          <th class="text-center">Mercancía</th>
-                          <th class="text-center">Cantidad</th>
-                          <th class="text-center">Proveedor</th>
-                        </tr>
-                      </thead>
+                  <ng-alert [CONTENIDO]="instruccionDobleClic"></ng-alert>
+                </div>
+                <div class="row">
+                  <h5>Solicita</h5>
 
-                      <tbody class="text-center">
-                        @for (persona of tablaDeDatosDeCelda; let i = $index;
-                        track i) {
-                        <tr>
-                          <td id="{{ i }}">{{ persona.Fecha_Creacion }}</td>
-                          <td id="{{ i }}">{{ persona.Mercancia }}</td>
-                          <td id="{{ i }}">{{ persona.Cantidad }}</td>
-                          <td id="{{ i }}">{{ persona.Proveedor }}</td>
-                        </tr>
-                        }
-                      </tbody>
-                    </table>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th class="text-center">Fecha Creación</th>
+                            <th class="text-center">Mercancía</th>
+                            <th class="text-center">Cantidad</th>
+                            <th class="text-center">Proveedor</th>
+                          </tr>
+                        </thead>
+
+                        <tbody class="text-center">
+                          @for (persona of tablaDeDatosDeCelda; let i = $index;
+                          track i) {
+                          <tr>
+                            <td id="{{ i }}">{{ persona.Fecha_Creacion }}</td>
+                            <td id="{{ i }}">{{ persona.Mercancia }}</td>
+                            <td id="{{ i }}">{{ persona.Cantidad }}</td>
+                            <td id="{{ i }}">{{ persona.Proveedor }}</td>
+                          </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            }
           </div>
-          }
         </div>
       </div>
     </div>
-  </div>
-  <form [formGroup]="forma">
+
     <div class="row">
       <div class="col-md-12">
         <ng-titulo titulo="Datos del trámite a realizar"></ng-titulo>
@@ -186,6 +187,63 @@
       </div>
       <div class="col-md-4">
         <select-catalogos [catalogosDatos]="productoList"> </select-catalogos>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row mt-5">
+        <div class="col-md-12">
+          <div class="panel-group ficha-collapse" id="accordion">
+            <div class="panel panel-default">
+              <div class="panel-heading" (click)="mostrar_colapsable()">
+                <h4 class="panel-title">
+                  <a> Detalle </a>
+                </h4>
+                <button
+                  type="button"
+                  class="collpase-button collapsed"
+                ></button>
+              </div>
+              @if(colapsable){
+              <div class="panel-collapse collapse in" id="panel-01">
+                <div class="panel-body">
+                  <crosslist [fechas]="selectRangoDias"></crosslist>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 d-flex justify-content-end">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasRight"
+          aria-controls="offcanvasRight"
+        >
+          Limpiar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasRight"
+          aria-controls="offcanvasRight"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasRight"
+          aria-controls="offcanvasRight"
+        >
+          Agregar
+        </button>
       </div>
     </div>
   </form>
