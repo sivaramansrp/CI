@@ -14,6 +14,9 @@ import { Validators } from '@angular/forms';
 import { datosDeMercancias } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { inject } from '@angular/core';
 
+/**
+ * Componente para gestionar los datos del medio de transporte.
+ */
 @Component({
   selector: 'app-medio-transporte',
   standalone: true,
@@ -33,6 +36,9 @@ import { inject } from '@angular/core';
   templateUrl: './medio-transporte.component.html',
   styleUrl: './medio-transporte.component.scss',
 })
+/**
+ * Componente para gestionar los datos del medio de transporte
+ */
 export class MedioTransporteComponent implements OnInit, OnDestroy {
   /** Propiedad de entrada para identificar la clave de control en el formulario principal */
   @Input() claveDeControl: string = '';
@@ -40,6 +46,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   /** Propiedad de entrada para contener datos relacionados con mercancia. */
   @Input() hMercanciaTabla: string[] = [];
 
+  /** Propiedad de entrada para contener datos relacionados con mercancia. */
   @Input() dMercanciaBody: datosDeMercancias[];
 
   /** Propiedad de entrada para gestionar la selección del método de transporte. */

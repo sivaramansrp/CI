@@ -1,3 +1,4 @@
+/**  Enumerado para las pantallas de la solicitud de inspección fisica */
 export const INSPECCIONFISIOPASOS = [
     {
       indice: 1,

@@ -6,15 +6,24 @@ import { WizardComponent } from '../../../../shared/components/wizard/wizard.com
 
 /** Interface to define the structure of button actions */
 interface AccionBoton {
+  /**
+   * The action to be performed by the button
+   */
   accion: string;
+  /**
+   * The value of the index
+   */
   valor: number;
 }
-
+/**
+ * Componente para gestionar la inspección física de los servicios extraordinarios.
+ */
 @Component({
   selector: 'app-inspeccion-fisica',
   templateUrl: './inspeccion-fisica.component.html',
   styleUrl: './inspeccion-fisica.component.scss',
 })
+/** Componente para gestionar la inspección física de los servicios extraordinarios */
 export class InspeccionFisicaComponent {
   /** Lista de pasos del asistente inicializados desde la enumeración */
   pasos: ListaPasosWizard[] = INSPECCIONFISIOPASOS;

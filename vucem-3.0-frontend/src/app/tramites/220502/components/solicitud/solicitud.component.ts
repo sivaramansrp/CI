@@ -18,6 +18,9 @@ import { carrosDeFerrocarril } from '../../../../core/models/220502/solicitud-pa
 import { datosDeMercancias } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { historialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { solicitud } from '../../../../core/models/220502/solicitud-pantallas.model';
+/**
+ * Componente para gestionar la solicitud de trámite.
+ */
 @Component({
   selector: 'app-solicitud',
   standalone: true,
@@ -36,16 +39,21 @@ import { solicitud } from '../../../../core/models/220502/solicitud-pantallas.mo
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
 })
+/** Componente para gestionar la solicitud de trámite */
 export class SolicitudComponent implements OnInit {
   /** Grupo de formularios para manejar formularios reactivos.*/
   form: FormGroup;
 
   /** Encabezados y datos para mostrar información de mercancías. */
   hMercanciaTabla: string[];
+
+  /** Datos de mercancías para mostrar en la tabla. */
   dMercanciaBody: datosDeMercancias[];
 
   /** Encabezados y datos para mostrar información de solicitud */
   hSolicitud: string[];
+
+  /** Datos de solicitud para mostrar en la tabla */
   dSolicitud: solicitud[];
 
   /** Información del catálogo para la selección del medio de transporte. */
@@ -77,10 +85,17 @@ export class SolicitudComponent implements OnInit {
 
   /** Datos de vagones e historial de inspección física. */
   hCarroFerrocarril: string[];
+
+  /** Datos de vagones e historial de inspección física. */
   dCarrosDeFerrocarril: carrosDeFerrocarril[];
+
+  /** Encabezados y datos para mostrar información de historial de inspección física. */
   hHistorialinspeccion: string[];
+
+  /** Datos de historial de inspección física para mostrar en la tabla. */
   dHistorialInspecciones: historialInspeccionFisica[];
 
+  /** Constructor para inyectar dependencias */
   constructor(
     private fb: FormBuilder,
     private solicitudService: SolicitudPantallasService /**Servicio para obtener datos de solicitud */
@@ -109,10 +124,7 @@ export class SolicitudComponent implements OnInit {
         this.dSolicitud = data.dSolicitud;
         this.hMercanciaTabla = data.hMerchandise;
         this.dMercanciaBody = data.dMercancia;
-      },
-      error: () => {
-        //console.error('Error al cargar datos iniciales:', err);
-      },
+      }
     });
   }
 }
