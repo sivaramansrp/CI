@@ -376,11 +376,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         idAduana: [this.solicitudState?.idAduana, [Validators.required]],
         descripcionAduana: [
           this.solicitudState?.descripcionAduana,
-          [Validators.required],
         ],
         idSeccionAduanera: [this.solicitudState?.idSeccionAduanera],
         seccionAduanera: [this.solicitudState?.seccionAduanera],
-        nombreRecinto: [this.solicitudState?.nombreRecinto],
+        nombreRecinto: [{value: this.solicitudState?.nombreRecinto, disabled: true}],
         tipoOperacion: [this.solicitudState?.tipoOperacion],
         patente: [{ value: this.solicitudState?.patente, disabled: true }],
         relacionSociedad: [this.solicitudState?.relacionSociedad],
@@ -631,6 +630,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
     const valor = form.get(campo)?.value;
     this.tramite5701Store[metodoNombre](valor);
+    if( campo === 'monto') {
+      console.log(this.FormSolicitud);
+    }
   }
 
   /**
