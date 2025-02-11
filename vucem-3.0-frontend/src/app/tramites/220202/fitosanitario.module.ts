@@ -11,7 +11,7 @@ import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 
 import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn-continuar.component';
@@ -24,6 +24,7 @@ import { TituloComponent } from '../../shared/components/titulo/titulo.component
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
+import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,7 @@ import { FirmaElectronicaComponent } from '../../shared/components/firma-electro
     PasoDosComponent,
     PasoCuatroComponent,
     AgriculturaComponent,
-    SolicitanteComponent,
+
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionNacionalComponent,
     TercerosRelacionadosComponent,
@@ -53,6 +54,7 @@ import { FirmaElectronicaComponent } from '../../shared/components/firma-electro
     InputFechaComponent,
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
+    SolicitanteComponent
   ]
 })
 export class FitosanitarioModule { }
