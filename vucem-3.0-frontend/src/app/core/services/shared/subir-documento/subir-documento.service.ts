@@ -1,8 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SubirArchivoBody } from '../../../models/shared/subir-archivos.model';
-import { enviroment } from '../../../../../enviroments/enviroment';
 import { Observable } from 'rxjs';
+import { enviroment } from '../../../../../enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root',

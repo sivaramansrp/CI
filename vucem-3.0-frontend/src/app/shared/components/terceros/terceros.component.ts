@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PersonaTerceros } from '../../../core/models/5701/servicios-extraordinarios.model';
 import { CONSTANTES } from '../../constantes/servicios-extraordinarios.enum';
+import { PersonaTerceros } from '../../../core/models/5701/servicios-extraordinarios.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -12,6 +12,8 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, ReactiveFormsModule],
 })
 export class TercerosComponent {
+  @Input({ required: true }) tabindex!: number;
+
   public FormPersona: FormGroup = this.fb.group({
     nombre: ['', [Validators.required]],
     correo: [
@@ -20,7 +22,7 @@ export class TercerosComponent {
     ],
   });
 
-  personas: Array<PersonaTerceros> = [];
+  personas: PersonaTerceros[] = [];
 
 
   constructor(
