@@ -5,12 +5,10 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
   standalone: true
 })
 export class HoraFormatoDirective {
-  constructor(private el: ElementRef) {}
-
+  constructor(private el: ElementRef) { }
   @HostListener('input', ['$event']) onInputChange(event: Event) {
     const input = this.el.nativeElement;
     let value = input.value.replace(/[^0-9]/g, ''); // Eliminar caracteres no numéricos
-
     if (value.length > 4) {
       value = value.slice(0, 4); // Limitar la longitud a 4 caracteres
     }

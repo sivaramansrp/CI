@@ -56,13 +56,13 @@ export class ValidacionesFormularioService {
     }
   }
 
-   /**
-   * Obtiene el error de un campo con patterns
-   * @param {AbstractControl} control : Control del formulario
-   * @param {string} campo Nombre del campo a validar, si el control es un FormGroup
-   * @returns {boolean | null} : Retorna true si el campo o control contiene errores de pattern y ha sido tocado, de lo contrario retorna false
-   */
-   public errorEmail(
+  /**
+  * Obtiene el error de un campo con patterns
+  * @param {AbstractControl} control : Control del formulario
+  * @param {string} campo Nombre del campo a validar, si el control es un FormGroup
+  * @returns {boolean | null} : Retorna true si el campo o control contiene errores de pattern y ha sido tocado, de lo contrario retorna false
+  */
+  public errorEmail(
     control: AbstractControl,
     campo?: string
   ): boolean | null {
