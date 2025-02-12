@@ -18,7 +18,6 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PedimentoComponent } from '../5701/components/pedimento/pedimento.component';
 import { PeximRoutingModule } from './pexim-routing.module';
-import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
 import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
 import { SharedModule } from '../../shared/shared.module';
 import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component'; 
@@ -26,6 +25,7 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
+import { CatalogoSelectComponent } from '../../shared/components/catalogo-select/catalogo-select.component';
 
 @NgModule({
   declarations: [
@@ -44,20 +44,19 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     SharedModule,
     SolicitanteComponent,
     BtnContinuarComponent,
-    SelectCatalogosComponent,
     InputCheckComponent,
     InputFechaComponent,
     InputHoraComponent,
     CrosslistComponent,
     PedimentoComponent,
-    SelectCatalogosComponent,
     AgregaPersonasComponent,
     ReactiveFormsModule,
     TituloComponent,
     SelectPaisesComponent,
     FirmaElectronicaComponent,
     AnexarDocumentosComponent,
-    AlertComponent
+    AlertComponent,
+    CatalogoSelectComponent
   ],
   exports: [
     SolicitudComponent
