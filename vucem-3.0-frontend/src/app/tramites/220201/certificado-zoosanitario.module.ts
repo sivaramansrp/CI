@@ -28,6 +28,7 @@ import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitari
 
 import { ServiciosExtraordinariosModule } from '../5701/servicios-extraordinarios.module';
 import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component';
+import { CatalogoSelectComponent } from '../../shared/components/catalogo-select/catalogo-select.component';
 
 
 @NgModule({
@@ -59,6 +60,7 @@ import { SolicitanteComponent } from '../../shared/components/solicitante/solici
     FirmaElectronicaComponent,
     SelectCatalogosComponent,
     SolicitanteComponent,
+    CatalogoSelectComponent,
     ServiciosExtraordinariosModule
   ]
 })
