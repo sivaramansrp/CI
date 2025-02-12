@@ -65,12 +65,16 @@ selectedAduanaOne: Catalogo = { id: 0, descripcion: '' }; // Provide an initial 
    */
     descripcionEspecialesValidatorFalse(control: AbstractControl): ValidationErrors | null {
       const value = control.value;
-      const regex = /^[-A-Za-z0-9\u000D\u000A\u00D1\u00F1\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00C4\u00CB\u00CF\u00D6\u00DC\u00E4\u00EB\u00EF\u00F6\u00FC\u00C7\u00E7\u201C\u002B\u0022\u0027\u003C\u003D\u003E\u00B5\u00BA\u00DF\s\%$*()!_?ï¿½&#@;,.:'"ï¿½\/\[\]_-]*$/;
+    
+      const regex = /^[-A-Za-z0-9\u00D1\u00F1\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00C4\u00CB\u00CF\u00D6\u00DC\u00E4\u00EB\u00EF\u00F6\u00FC\u00C7\u00E7\u201C\u002B\u0022\u0027\u003C\u003D\u003E\u00B5\u00BA\u00DF\s\%$*()!_?&#@;,.:'"\/\[\]_-]*$/;
+    
       if (/^[ ]+/.test(value) || !regex.test(value)) {
-        return { descripcionEspeciales: false };
+        return { descripcionEspeciales: false };  // ❌ Boolean value is unusual for validators
       }
+    
       return null;
     }
+    
     /**
    * Custom validator for descripcion rule.
    * @param control - The form control to validate.
@@ -91,12 +95,16 @@ selectedAduanaOne: Catalogo = { id: 0, descripcion: '' }; // Provide an initial 
    */
   descripcionEspecialesValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
-    const regex = /^[-A-Za-z0-9\u000D\u000A\u00D1\u00F1\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00C4\u00CB\u00CF\u00D6\u00DC\u00E4\u00EB\u00EF\u00F6\u00FC\u00C7\u00E7\u201C\u002B\u0022\u0027\u003C\u003D\u003E\u00B5\u00BA\u00DF\s\%$*()!_?ï¿½&#@;,.:'"ï¿½\/\[\]_-]*$/;
+    
+    const regex = /^[-A-Za-z0-9\u00D1\u00F1\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00C4\u00CB\u00CF\u00D6\u00DC\u00E4\u00EB\u00EF\u00F6\u00FC\u00C7\u00E7\u201C\u002B\u0022\u0027\u003C\u003D\u003E\u00B5\u00BA\u00DF\s\%$*()!_?&#@;,.:'"\/\[\]_-]*$/;
+    
     if (/^[ ]+/.test(value) || !regex.test(value)) {
-      return { descripcionEspeciales: 'Ingresa datos validos.' };
+      return { descripcionEspeciales: 'Ingresa datos válidos.' };
     }
+    
     return null;
   }
+  
    /**
    * Custom validator to check if the value is within the specified range.
    * @param min - The minimum value.
@@ -130,7 +138,7 @@ selectedAduanaOne: Catalogo = { id: 0, descripcion: '' }; // Provide an initial 
       presentacion: ['', [
         Validators.required,
         Validators.maxLength(15),
-        Validators.pattern('^[0-9]*\.?[0-9]+$'), // Must be a number
+        Validators.pattern('^[0-9]*.?[0-9]+$'), // Must be a number
         this.valueRangeValidator(0.01, 999999999999.99) // Custom validator for value range
       ]],
       marcaEmbarque: ['', [
@@ -140,7 +148,7 @@ selectedAduanaOne: Catalogo = { id: 0, descripcion: '' }; // Provide an initial 
       fechaCaducidad: ['', [
         Validators.required,
         Validators.maxLength(15),
-        Validators.pattern('^[0-9]*\.?[0-9]+$'), // Must be a number
+        Validators.pattern('^[0-9]*.?[0-9]+$'), // Must be a number
         this.valueRangeValidator(0.01, 999999999999.99) // Custom validator for value range
       ]],
       aduana: ['', Validators.required] ,// Add FormControl for the select field
@@ -223,18 +231,18 @@ cerrarCapturaMercanciaAnimal(): void {
  * Muestra un mensaje.
  */
 mostrarMensaje(): void {
-
+// Implementar la lógica para mostrar un mensaje
 }
 /**
  * Oculta los errores.
  */
 ocultarErrores(): void {
- 
+ // Implementar la lógica para ocultar los errores
 }
 /**
  * Muestra los errores.
  */
 mostrarErrores(): void {
- 
+ // Implementar la lógica para mostrar los errores
 }
 }

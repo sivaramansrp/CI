@@ -2,7 +2,7 @@
 {
     "tiposDocumentosArray": [
       {
-        "labelNombre": "Tipo de Documento 1",
+        "labelNombre": "Regimen al que se destinara la mercancia",
         "required": true,
         "primerOpcion": "Seleccione un documento",
         "catalogos": [

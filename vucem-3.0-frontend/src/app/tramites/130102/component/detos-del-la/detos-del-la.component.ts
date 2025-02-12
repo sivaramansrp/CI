@@ -1,20 +1,40 @@
+
+
 /**
+ * descripción 
  * @fileoverview Este archivo contiene la clase DetosDelLaComponent, que es responsable de manejar la lógica del componente Detos Del La.
  *
  * @module DetosDelLaComponent
  */
 
 import { Component, OnInit } from '@angular/core';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
 import { HttpClient } from '@angular/common/http';
+
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+
+import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+
+import fractionValues from '../../../../../assets/json/130102/fraccion_arancelaria.json';
+import productoOptions from '../../../../../assets/json/130102/producto-otions.json';
+import unidadOptions from '../../../../../assets/json/130102/unidad_da.json';
+
 /**
+ * descripción 
  * @class DetosDelLaComponent
- * @classdesc Esta clase representa el componente Detos Del La.
+ * @description Componente que maneja la lógica del Detos Del La.
  */
 @Component({
   selector: 'app-detos-del-la',
@@ -31,101 +51,148 @@ import { CatalogosSelect } from '../../../../core/models/shared/components.model
 })
 export class DetosDelLaComponent implements OnInit {
   /**
-   * @property {any[]} producto - Array para almacenar las opciones de productos.
+   * descripción 
+   * @property {any} prodData
+   * @description Contiene las opciones de productos importadas desde un archivo JSON.
    */
-  producto: any[] = [];
+  public prodData = productoOptions;
 
   /**
-   * @property {string | number} selectedValue - El valor seleccionado.
+   * descripción 
+   * @property {FormGroup} form
+   * @description Define la estructura y validaciones del formulario reactivo.
    */
-  selectedValue: string | number = 'Nuevo'; // Update the type to string | number
+  form!: FormGroup;
+
   /**
-   * @property {string} defaultSelect - El valor seleccionado por defecto.
+   * descripción
+   * @property {Array<{ label: string; value: string }>} producto
+   * @description Contiene la lista de opciones de productos disponibles.
+   */
+  producto: { label: string; value: string }[] = [];
+
+  /**
+   * descripción
+   * @property {string | number} selectedValue
+   * @description Especifica la opción preseleccionada en el selector de productos.
+   */
+  selectedValue: string | number = 'Nuevo';
+
+  /**
+   * descripción
+   * @property {string} defaultSelect
+   * @description Especifica la opción preseleccionada en el selector de productos.
    */
   defaultSelect: string = 'Nuevo';
+
   /**
-   * @property {CatalogosSelect} Unidad - El catálogo de unidades.
+   *  descripción
+   * @property {CatalogosSelect} Unidad
+   * @description Contiene el catálogo de unidades de medida, asegurando que los ID sean de tipo number.
    */
-  Unidad!: CatalogosSelect;
+  Unidad: CatalogosSelect = {
+    ...unidadOptions,
+    catalogos: unidadOptions.catalogos.map((item) => ({
+      id: Number(item.id),
+      descripcion: item.descripcion,
+    })),
+  };
+
   /**
-   * @property {CatalogosSelect} fraccionF - El catálogo de fracciones.
+   * descripción
+   * @property {CatalogosSelect} fraccionF
+   * @description Contiene el catálogo de fracciones arancelarias con ID convertidos a tipo number.
    */
-  fraccionF!: CatalogosSelect;
+  fraccionF: CatalogosSelect = {
+    ...fractionValues,
+    catalogos: fractionValues.catalogos.map((item) => ({
+      id: Number(item.id),
+      descripcion: item.descripcion,
+    })),
+  };
+
   /**
+   * descripción
    * @constructor
-   * @param {HttpClient} http - El cliente HTTP para realizar solicitudes.
+   * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
+   * @param {FormBuilder} fb - Constructor de formularios reactivos.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private fb: FormBuilder) {}
+
   /**
+   *  descripción
    * @method ngOnInit
-   * @description Inicializa el componente obteniendo los datos necesarios.
+   * @description Inicializa el componente y configura el formulario reactivo.
    */
   ngOnInit() {
-    this.fetchUnidadDe();
+    this.form = this.fb.group({
+      descripcion: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(500),
+        ],
+      ],
+      fraccion: ['', [Validators.required]],
+      unidadMedida: ['', [Validators.required]],
+      cantidad: [
+        '',
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.pattern('^[0-9]+$'),
+        ],
+      ],
+      valorFacturaUSD: [
+        '',
+        [
+          Validators.required,
+          Validators.min(0.01),
+          Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
+        ],
+      ],
+    });
     this.fetchProductoOptions();
-    this.fetchFraccionarOptions();
-  }
-  /**
-   * @method onValueChange
-   * @description Maneja el cambio del valor seleccionado.
-   * @param {any} newValue - El nuevo valor.
-   */
-  onValueChange(newValue: any) {
-    this.selectedValue = newValue;
   }
 
   /**
+   *  descripción
+   * @method onValueChange
+   * @description Maneja los cambios en un valor seleccionado.
+   * @param {string | number} value - Nuevo valor seleccionado.
+   */
+  onValueChange(value: string | number) {
+    this.selectedValue = value.toString();
+  }
+
+  /**
+   * descripción
    * @method fetchProductoOptions
-   * @description Obtiene las opciones de productos del servidor.
+   * @description Obtiene las opciones de productos desde el archivo JSON.
    */
   fetchProductoOptions() {
-    this.http
-      .get('/assets/json/130102/producto-otions.json')
-      .subscribe((data: any) => {
-        this.producto = data.options;
-        this.defaultSelect = data.defaultSelect;
-      });
+    this.producto = productoOptions.options;
+    this.defaultSelect = productoOptions.defaultSelect;
   }
-  /**
-   * @method fetchfraccionarancelaria
-   * @description Método de marcador de posición para obtener datos de fracción.
-   * @param {any} e - El parámetro del evento.
-   */
-  fetchfraccionarancelaria(e: any) {}
 
   /**
-   * @method fetchFraccionarOptions
-   * @description Obtiene las opciones de fracción del servidor.
-   */
-  fetchFraccionarOptions() {
-    this.http
-      .get('/assets/json/130102/fraccion_arancelaria.json')
-      .subscribe((data: any) => {
-        this.fraccionF = data;
-      });
-  }
-  /**
-   * @method fetchUnidadDe
-   * @description Obtiene los datos de unidad del servidor.
-   */
-  fetchUnidadDe() {
-    this.http
-      .get('/assets/json/130102/unidad_da.json')
-      .subscribe((data: any) => {
-     
-        this.Unidad = data;
-      });
-  }
-  /**
+   * descripción
    * @method fetchFraccion
    * @description Método de marcador de posición para obtener datos de fracción.
-   * @param {any} e - El parámetro del evento.
+   * @param {Catalogo} e - Datos de la fracción arancelaria.
    */
-  fetchFraccion(e: any) {}
+  fetchFraccion(_e: Catalogo) {
+    // Método vacío para futuras implementaciones
+  }
+
   /**
+   * descripción
    * @method fetchUnidad
    * @description Método de marcador de posición para obtener datos de unidad.
-   * @param {any} e - El parámetro del evento.
+   * @param {Catalogo} e - Datos de la unidad de medida.
    */
-  fetchUnidad(e: any) {}
+  fetchUnidad(_e: Catalogo) {
+    // Método vacío para futuras implementaciones
+  }
 }
