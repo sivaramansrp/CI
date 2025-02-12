@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthPageComponent } from './auth-page/auth-page.component';
+import { NgModule } from '@angular/core';
 
 export const ROUTES_AUTH: Routes = [
   {

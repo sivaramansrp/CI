@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { AuthPageComponent } from './auth-page/auth-page.component';
 import { AuthRoutingModule } from './auth-routing.module';
+import { CommonModule } from '@angular/common';
+import { FirmaElectronicaComponent } from "../shared/components/firma-electronica/firma-electronica.component";
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TituloComponent } from '../shared/components/titulo/titulo.component';
-import { FirmaElectronicaComponent } from "../shared/components/firma-electronica/firma-electronica.component";
 
 
 
@@ -13,11 +13,11 @@ import { FirmaElectronicaComponent } from "../shared/components/firma-electronic
     AuthPageComponent
   ],
   imports: [
-    CommonModule,
     AuthRoutingModule,
+    CommonModule,
+    FirmaElectronicaComponent,
     RouterModule,
     TituloComponent,
-    FirmaElectronicaComponent,
 ]
 })
 export class AuthModule { }
