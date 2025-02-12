@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { DATOS_EXPORTACION, DATOS_EXPORTADOR, DATOS_MERCANCIA, DATOS_PRODUCTOR, DATOS_REALIZAR } from '../../../../shared/constantes/130120/permiso-importacion-modification.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { CatalogoSelectComponent } from "../../../../shared/components/catalogo-select/catalogo-select.component";
+import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
 import { CommonModule } from '@angular/common';
 import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
 import { InputConfig } from '../../../../core/models/130120/permiso-importacion-modification.model';
 import { InputFechaComponent } from "../../../../shared/components/input-fecha/input-fecha.component";
 import { InputRadioComponent } from "../../../../shared/components/input-radio/input-radio.component";
 import { InputTypes } from '../../../../core/models/130120/permiso-importacion-modification.enum';
-import { SelectCatalogosComponent } from "../../../../shared/components/select-catalogos/select-catalogos.component";
 import { TituloComponent } from "../../../../shared/components/titulo/titulo.component";
+import { map } from 'rxjs';
 import tipoDePersonaExportadorOptions from '../../../../../assets/json/130120/tipo-de-persona-exportador.json'
 import tipoDePersonaProductorOptions from '../../../../../assets/json/130120/tipo-de-persona-productor.json'
 
@@ -17,7 +19,7 @@ import tipoDePersonaProductorOptions from '../../../../../assets/json/130120/tip
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, SelectCatalogosComponent, InputFechaComponent, InputRadioComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, InputRadioComponent, CatalogoSelectComponent],
 })
 export class DatosDeLaSolicitudComponent implements OnInit {
   
@@ -337,7 +339,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   fiscal: FormularioDinamico[] = [];
   form!: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private catalogosServices: CatalogosService) {
     this.crearFormulario();
   }
 
@@ -348,9 +350,8 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     this.config[4].menu[0].props.options = tipoDePersonaExportadorOptions;
     this.config[4].menu[0].props.selectedValue = tipoDePersonaExportadorOptions[0].value;
     this.radioSelectedValues.radio4 = tipoDePersonaExportadorOptions[0].value;
-    console.log(this.config[3].menu[0]);
-    this.config.forEach((eachConfig: InputConfig) => {
-      this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName);
+    this.config.forEach((eachConfig: InputConfig, groupIndex: number) => {
+      this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
     });
   }
   
@@ -366,16 +367,33 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     
   inicializarFormGroup(
     config: any[],
-    grupoNombre: string
+    grupoNombre: string,
+    groupIndex: number,
   ): void {
     const grupo = this.form.get(grupoNombre) as FormGroup;
-    config.forEach((campo) => {
+    config.forEach((campo: any, menuIndex: number) => {
       const validators = campo.validators ? this.getValidators(campo.validators) : [Validators.required];
+      const controlName = campo.props.campo ? campo.props.campo : campo.props.labelNombre;
       grupo.addControl(
-        campo.props.campo ? campo.props.campo : campo.props.labelNombre,
+        controlName,
         this.fb.control({ value: '', disabled: campo.disabled }, validators)
       );
+      if (campo.inputType === InputTypes.SELECT) {
+        this.getCatalogoValues(groupIndex, menuIndex,controlName);
+      }
     });
+  }
+
+  getCatalogoValues(groupIndex: number, menuIndex: number, key: string): void {
+    this.catalogosServices
+      .getCatalogo(key)
+      .pipe(
+        map((resp) => {
+          if (resp.length > 0) {
+            this.config[groupIndex].menu[menuIndex].props.catalogs = resp;
+          }
+        })
+      );
   }
   
   getValidators(validators: string[]): ValidatorFn[] {
@@ -396,6 +414,10 @@ export class DatosDeLaSolicitudComponent implements OnInit {
 
   fechaCambiado(event: string): void {
     // 
+  }
+
+  catalogSelection(formControlName: string, event: any): void {
+    this.form.get(formControlName)?.setValue(event);
   }
 
   onValueChange(radioKey: string, event: string | number): void {
