@@ -27,8 +27,14 @@
       </div>
       <div class="col-md-4">
         <div class="form-field">
-          <select-catalogos [catalogosDatos]="tipoContenedor"
-                (valorSeleccion)="tipoContenedorSeleccion($event)" />
+          <app-catalogo-select
+          id="tipoContenedor"
+          [catalogo]="tipoContenedor.catalogos"
+          [label]="tipoContenedor.labelNombre"
+          [placeholder]="tipoContenedor.primerOpcion"
+          [required]="tipoContenedor.required"
+          [isDisabled]="false"
+        ></app-catalogo-select>
         </div>
     </div>
     </div>
