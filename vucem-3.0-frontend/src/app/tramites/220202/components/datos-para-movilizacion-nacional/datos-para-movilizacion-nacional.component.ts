@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Catalogo, RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
@@ -32,13 +31,13 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
 
   /**
    * @description Configuración para el selector de medio de transporte.
-   * @type {CatalogosSelect}
+   * @type {Catalogo}
    */
   transporteList: Catalogo[];
 
   /**
    * @description Configuración para el selector de punto de verificación federal.
-   * @type {CatalogosSelect}
+   * @type {Catalogo}
    */
   puntoList: Catalogo[];
 

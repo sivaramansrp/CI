@@ -1,17 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { FECHA_DE_PAGO } from '../../../../shared/constantes/220202/fitosanitario.enums';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // Import Validators
-import { CatalogosSelect, InputFecha } from '../../../../core/models/shared/components.model';
-import { HttpClient } from '@angular/common/http';
-import { Catalogo, RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
+import { FormBuilder, FormGroup, Validators } from "@angular/forms"
+import { Catalogo, RespuestaCatalogos } from "../../../../core/models/shared/catalogos.model"
+import { HttpClient } from "@angular/common/http"
+import { InputFecha } from "../../../../core/models/shared/components.model"
+import { FECHA_DE_PAGO } from "../../../../shared/constantes/220202/fitosanitario.enums"
+import { Component, OnInit } from "@angular/core"
 
-/**
- * @fileoverview Componente para la gestión del formulario de pago de derechos.
- * Este componente maneja la lógica y la presentación del formulario de pago de derechos,
- * incluyendo la inicialización, la obtención de datos, la gestión de los controles del formulario
- * y la validación de los campos.
- * @module pagoDeDerechos
- */
 
 /**
  * Componente para el formulario de pago de derechos.
@@ -33,13 +26,13 @@ export class PagoDeDerechosComponent implements OnInit {
 
   /**
    * Configuración para el selector de justificación.
-   * @property {CatalogosSelect} justificacionSelector
+   * @property {Catalogo} justificacionSelector
    */
   justificacionSelector: Catalogo[];
 
   /**
    * Configuración para el selector de banco.
-   * @property {CatalogosSelect} bancoSelector
+   * @property {Catalogo} bancoSelector
    */
   bancoSelector: Catalogo[];
 
@@ -49,14 +42,19 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   pagoForm: FormGroup = this.fb.group({
     exentoPago: [''],
-    justificacion: [{ value: '', disabled: false }, Validators.required], // Add Validators.required
+    justificacion: [{ value: '', disabled: false }, Validators.required], // Validators.required añadido
     claveReferencia: [{ value: '', disabled: true }],
     cadenaDependencia: [{ value: '', disabled: true }],
-    banco: [{ value: '', disabled: true }, Validators.required], // Add Validators.required
+    banco: [{ value: '', disabled: true }, Validators.required], // Validators.required añadido
     llavePago: [{ value: '', disabled: false }],
-    importePago: [{ value: '', disabled: true }, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]], // Validators for required and decimal format
-    fechaDePago: [{ value: '', disabled: true }, Validators.required] // Add Validators.required
+    importePago: [{ value: '', disabled: true }, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]], // Validators para required y formato decimal
+    fechaDePago: [{ value: '', disabled: true }, Validators.required] // Validators.required añadido
   });
+
+  /**
+   * Opciones para el radio button de exención de pago.
+   * @property {any[]} radioOptions
+   */
   radioOptions: any[] = [
     {
       "label": "No",
@@ -66,7 +64,12 @@ export class PagoDeDerechosComponent implements OnInit {
       "label": "Sí",
       "value": "Si"
     }
-  ]
+  ];
+
+  /**
+   * Valor seleccionado en el radio button de exención de pago.
+   * @property {string} selectedValue
+   */
   selectedValue: string = 'no';
 
   /**
@@ -134,7 +137,7 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   seleccionarListDatas(e: Catalogo, name: string) {
     this.pagoForm.patchValue({
-      [name]: e.id // Use bracket notation to dynamically set the property
+      [name]: e.id // Se usa notación de corchetes para establecer dinámicamente la propiedad
     });
 
     if (name === 'justificacion') {
