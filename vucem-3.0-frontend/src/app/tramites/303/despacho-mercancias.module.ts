@@ -36,6 +36,8 @@ import { AgregarMiembrosEmpresaComponent } from './components/agregar-miembros-e
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
 import { RepresentanteFiscalComponent } from '../../shared/components/representante-fiscal/representante-fiscal.component';
+import { ConfirmarNotificacionComponent } from './components/confirmar-notificacion/confirmar-notificacion.component';
+import { TestPageComponent } from './pages/test-page/test-page.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,8 @@ import { RepresentanteFiscalComponent } from '../../shared/components/representa
     DatosTransportistaComponent,
     ControlInventariosComponent,
     AgregarMiembrosEmpresaComponent,
+    ConfirmarNotificacionComponent,
+    TestPageComponent,
     
   ],
   imports: [

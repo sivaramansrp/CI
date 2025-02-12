@@ -139,3 +139,38 @@ export const MENSAJEDEALERTA = {
   ADJUNTAR: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro</p>`,
 };
 
+export const TXT_ALERTA_ACUSE = (folio: string) => {
+  return `Tu solicitud ha sido registrada con el siguiente número de folio:  < ${folio} >`;
+}
+
+export const TITULO_ACUSE = 'Acuse(s)';
+
+export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
+  txtAlerta:
+    'Tu solicitud ha sido registrada con el siguiente número de folio:',
+  tituloSeccionAcuse: 'Acuse(s)',
+  encabezadoTablaAcuse: [
+    {
+      key: 'id',
+      valor: 'No.',
+    },
+    {
+      key: 'documento',
+      valor: 'Documento.',
+    },
+  ],
+  datosTablaAcuse: [
+    {
+      id: 1,
+      idDocumento: 'doc12',
+      documento: 'Acuse de recepción de trámite',
+    },
+  ],
+  accionesTablaAcuse: [
+    {
+      tipo: 'descargar',
+      label: 'Descargar',
+      icono: 'bi-arrow-bar-down',
+    },
+  ],
+};
