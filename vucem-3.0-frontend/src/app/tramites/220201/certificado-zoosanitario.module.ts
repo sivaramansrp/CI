@@ -25,9 +25,10 @@ import { SharedModule } from '../../shared/shared.module';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitario-page.component';
-
-import { ServiciosExtraordinariosModule } from '../5701/servicios-extraordinarios.module';
 import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component';
+import { ServiciosExtraordinariosModule } from '../5701/servicios-extraordinarios.module';
+import { InputRadioComponent } from '../../shared/components/input-radio/input-radio.component';
+import { TableComponent } from '../../shared/components/table/table.component';
 import { CatalogoSelectComponent } from '../../shared/components/catalogo-select/catalogo-select.component';
 
 
@@ -41,6 +42,7 @@ import { CatalogoSelectComponent } from '../../shared/components/catalogo-select
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionNacionalComponent,
     PagoDeDerechosComponent,
+
 
   ],
   imports: [
@@ -60,6 +62,8 @@ import { CatalogoSelectComponent } from '../../shared/components/catalogo-select
     FirmaElectronicaComponent,
     SelectCatalogosComponent,
     SolicitanteComponent,
+    InputRadioComponent,
+    TableComponent,
     CatalogoSelectComponent,
     ServiciosExtraordinariosModule
   ]

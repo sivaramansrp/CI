@@ -75,7 +75,7 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
 export const FECHA_DE_PAGO = {
     labelNombre: 'Fecha de pago',
     required: true,
-    habilitado: true,
+    habilitado: false,
 
 };
 export const TEXTOS = 'Para continuar con el trámite, deberá agregar por lo menos una mercancía.';

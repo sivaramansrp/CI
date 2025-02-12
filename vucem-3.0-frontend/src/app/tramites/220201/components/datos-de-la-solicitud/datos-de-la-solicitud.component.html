@@ -32,15 +32,31 @@
       <ng-titulo titulo="Datos del trámite a realizar" />
 
       <div class="col-md-12">
-        <select-catalogos [catalogosDatos]="aduanaDeIngreso"></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="aduanaDeIngreso"
+          formControlName="aduanaIngreso"
+          [label]="'Aduana de ingreso'"
+          [required]="true"
+          name="aduanaIngreso"
+        ></app-catalogo-select>
       </div>
       <div class="col-md-12">
-        <select-catalogos
-          [catalogosDatos]="sanidadAgropecuaria"
-        ></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="sanidadAgropecuaria"
+          formControlName="oficinaInspeccion"
+          [label]="'Oficina de inspección de sanidad Agropecuaria'"
+          [required]="true"
+          name="oficinaInspeccion"
+        ></app-catalogo-select>
       </div>
       <div class="col-md-12">
-        <select-catalogos [catalogosDatos]="puntoInspeccion"></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="puntoInspeccion"
+          formControlName="puntoInspeccion"
+          [label]="'Punto de inspección'"
+          [required]="true"
+          name="puntoInspeccion"
+        ></app-catalogo-select>
       </div>
       <div class="col-md-6">
         <div class="form-group">
@@ -63,12 +79,22 @@
         </div>
       </div>
       <div class="col-md-6">
-        <select-catalogos
-          [catalogosDatos]="establecimientoTIF"
-        ></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="establecimientoTIF"
+          formControlName="establecimientoTIFs"
+          [label]="'Establecimiento TIF'"
+          [required]="false"
+          name="establecimientoTIFs"
+        ></app-catalogo-select>
       </div>
       <div class="col-md-12">
-        <select-catalogos [catalogosDatos]="veterinario"></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="veterinario"
+          formControlName="nombreVeterinario"
+          [label]="'Nombre del médico veterinario'"
+          [required]="false"
+          name="nombreVeterinario"
+        ></app-catalogo-select>
       </div>
       <div class="col-md-6">
         <div class="form-group">
@@ -83,7 +109,13 @@
         </div>
       </div>
       <div class="col-md-6">
-        <select-catalogos [catalogosDatos]="regimen"></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="regimen"
+          formControlName="regimen"
+          [label]="'Régimen'"
+          [required]="true"
+          name="regimen"
+        ></app-catalogo-select>
       </div>
     </div>
 
@@ -93,26 +125,12 @@
         <label for="certficacion_a">Captura de datos de mercancía</label>
       </div>
       <div class="col-md-12">
-        <input
-          class="form-check-input me-3"
-          type="radio"
-          name="certficacion"
-          value="a"
-          id="certficacion_a"
-        />
-        <label class="form-label" for="certficacion_a">Animales Vivos:</label>
-      </div>
-      <div class="col-md-12">
-        <input
-          class="form-check-input me-3"
-          type="radio"
-          name="certficacion"
-          value="aa"
-          id="certficacion_aa"
-        />
-        <label class="form-label" for="certficacion_aa"
-          >Productos Subproductos</label
-        >
+        <app-input-radio
+          [radioOptions]="opcionDeBotonDeRadio"
+          [isRequired]="true"
+          [selectedValue]="selectedValue"
+          [layout]="'vertical'"
+        ></app-input-radio>
       </div>
     </div>
     <div class="row">
@@ -122,33 +140,10 @@
           <label for="mercancia">Mercancía</label>
         </div>
         <div class="col-md-12">
-          <table class="table table-responsive">
-            <thead>
-              <tr>
-                <th>Gafete</th>
-                <th>Nombre</th>
-                <th>Apellido paterno</th>
-                <th>Apellido materno</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <!-- <tr>
-              @for (persona of personas; let i = $index; track i) {
-              <td>{{ persona.gafete }}</td>
-              <td>{{ persona.nombre }}</td>
-              <td>{{ persona.aPaterno }}</td>
-              <td>{{ persona.aMaterno }}</td>
-              <td>
-                <button type="button" class="btn btn-link">
-                  <i class="bi bi-trash3 bi-c"></i>
-                </button>
-              </td>
-              }
-            </tr> -->
-            </tbody>
-          </table>
+          <ng-table
+            [commonTableHeader]="tableData.header"
+            [commonTableBody]="mesaCuerpo"
+          ></ng-table>
         </div>
       </div>
       <div class="row my-5">

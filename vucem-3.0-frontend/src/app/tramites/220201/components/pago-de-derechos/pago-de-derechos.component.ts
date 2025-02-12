@@ -34,23 +34,13 @@ export class PagoDeDerechosComponent implements OnInit {
    * Configuración para el selector de justificación.
    * @property {CatalogosSelect} justificacionSelector
    */
-  justificacionSelector: CatalogosSelect = {
-    labelNombre: 'Justificación',
-    required: true,
-    primerOpcion: 'Selecciona una Justificación',
-    catalogos: [],
-  };
+  justificacionSelector: Catalogo[];
 
   /**
    * Configuración para el selector de banco.
    * @property {CatalogosSelect} bancoSelector
    */
-  bancoSelector: CatalogosSelect = {
-    labelNombre: 'Banco',
-    required: true,
-    primerOpcion: 'Selecciona un banco',
-    catalogos: [],
-  };
+  bancoSelector: Catalogo[];
 
   /**
    * Grupo de formularios para el pago de derechos.
@@ -98,7 +88,7 @@ export class PagoDeDerechosComponent implements OnInit {
   obtenerBancoSelectorList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json').subscribe((data): void => {
       const datos = data?.data;
-      this.bancoSelector['catalogos'] = datos as Catalogo[];
+      this.bancoSelector = datos as Catalogo[];
     });
   }
 
@@ -109,7 +99,7 @@ export class PagoDeDerechosComponent implements OnInit {
   obtenerListaDeJustificaciones() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/Justificación.json').subscribe((data): void => {
       const datos = data?.data;
-      this.justificacionSelector['catalogos'] = datos as Catalogo[];
+      this.justificacionSelector = datos as Catalogo[];
     });
   }
 }

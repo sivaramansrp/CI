@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { TEXTOS } from '../../../../shared/constantes/certificado-zoosanitario.enum';
 
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
-import { RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
+import { Catalogo, RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
 
 import { HttpClient } from '@angular/common/http';
 
@@ -61,67 +61,83 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * Configuración para el select de aduana de ingreso. --220201
    * @property {CatalogosSelect} aduanaDeIngreso
    */
-  aduanaDeIngreso: CatalogosSelect = {
-    labelNombre: 'Aduana de ingreso',
-    required: true,
-    primerOpcion: 'Selecciona una Aduana de ingreso',
-    catalogos: [],
-  };
+  aduanaDeIngreso: Catalogo[];
 
   /**
    * Configuración para el select de sanidad agropecuaria. --220201
    * @property {CatalogosSelect} sanidadAgropecuaria
    */
-  sanidadAgropecuaria: CatalogosSelect = {
-    labelNombre: 'Oficina de inspección de sanidad Agropecuaria',
-    required: true,
-    primerOpcion: 'Selecciona una Agropecuaria',
-    catalogos: [],
-  };
+  sanidadAgropecuaria: Catalogo[];
 
   /**
    * Configuración para el select de punto de inspección.--220201
    * @property {CatalogosSelect} puntoInspeccion
    */
-  puntoInspeccion: CatalogosSelect = {
-    labelNombre: 'Punto de inspección',
-    required: true,
-    primerOpcion: 'Selecciona un Punto',
-    catalogos: [],
-  };
+  puntoInspeccion: Catalogo[];
 
   /**
    * Configuración para el select de establecimiento TIF.--220201
    * @property {CatalogosSelect} establecimientoTIF
    */
-  establecimientoTIF: CatalogosSelect = {
-    labelNombre: `Establecimiento TIF `,
-    required: true,
-    primerOpcion: 'Selecciona un Establecimiento',
-    catalogos: [],
-  };
+  establecimientoTIF!: Catalogo[];
 
   /**
    * Configuración para el select de veterinario.--220201
    * @property {CatalogosSelect} veterinario
    */
-  veterinario: CatalogosSelect = {
-    labelNombre: 'Nombre del médico veterinario',
-    required: true,
-    primerOpcion: 'Selecciona un Nombre',
-    catalogos: [],
-  };
+  veterinario: Catalogo[];
+  id: number;
+  descripcion: string;
+  tam?: string;
+  dpi?: string
 
   /**
    * Configuración para el select de régimen.--220201
    * @property {CatalogosSelect} regimen
    */
-  regimen: CatalogosSelect = {
-    labelNombre: 'Régimen',
-    required: true,
-    primerOpcion: 'Selecciona un Régimen',
-    catalogos: [],
+  regimen: Catalogo[];
+  selectedValue: string = 'no';
+
+  opcionDeBotonDeRadio: any = [
+    {
+      "label": "Animales Vivos",
+      "value": "yes"
+    },
+    {
+      "label": "Productos Subproductos",
+      "value": "no"
+    },
+  ]
+  tableData = {
+    header: [
+      "No. partida",
+      "Tipo de requisito",
+      "Requisito",
+      "Número de Certificado Internacional",
+      "Fracción arancelaria",
+      "Descripción de la fracción",
+      "Nico",
+    ],
+    body: [
+      {
+        tbodyData: [
+          "1",
+          "Número de Oficio con Medidas Zoosanitarias",
+          "023-15-643-ARG",
+          "00102899",
+          "51012102",
+          "Lana esquilada",
+          "00",
+        ]
+      }
+    ]
+
   };
+
+  encabezadoDeTabla: string[] = this.tableData.header;
+  mesaCuerpo: any = this.tableData.body;
+
+
 
   /**
    * Constructor del componente.
@@ -162,7 +178,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       oficinaInspeccion: ['', Validators.required],
       puntoInspeccion: ['', Validators.required],
       claveUCON: ['', [Validators.required]],
-      establecimientoTIF: ['', Validators.required],
+      establecimientoTIFs: [''],
       nombreVeterinario: ['', Validators.required],
       numeroGuia: [''],
       certficacion: [''],
@@ -199,7 +215,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   obtenerIngresoSelectList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/aduana_de_ingreso.json').subscribe((data): void => {
       const datos = data?.data;
-      this.aduanaDeIngreso['catalogos'] = datos;
+      this.aduanaDeIngreso = datos;
     });
   }
 
@@ -210,7 +226,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   obtenerSanidadAgropecuariaList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/oficina_de_inspeccion.json').subscribe((data): void => {
       const datos = data?.data;
-      this.sanidadAgropecuaria['catalogos'] = datos;
+      this.sanidadAgropecuaria = datos;
     });
   }
 
@@ -221,7 +237,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   obtenerPuntoInspeccionList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').subscribe((data): void => {
       const datos = data?.data;
-      this.puntoInspeccion['catalogos'] = datos;
+      this.puntoInspeccion = datos;
     });
   }
 
@@ -232,7 +248,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   obtenerEstablecimientoList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/establecimiento.json').subscribe((data): void => {
       const datos = data?.data;
-      this.establecimientoTIF['catalogos'] = datos;
+      this.establecimientoTIF = datos;
     });
   }
 
@@ -244,7 +260,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   obtenerVeterinarioList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json').subscribe((data): void => {
       const datos = data?.data;
-      this.veterinario['catalogos'] = datos;
+      this.veterinario = datos;
     });
   }
 
@@ -255,7 +271,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   obtenerRegimenList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/regimen.json').subscribe((data): void => {
       const datos = data?.data;
-      this.regimen['catalogos'] = datos;
+      this.regimen = datos;
     });
   }
 }

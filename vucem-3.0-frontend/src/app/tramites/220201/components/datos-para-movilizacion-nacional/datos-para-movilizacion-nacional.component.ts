@@ -2,7 +2,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
+import { Catalogo, RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos para la movilización nacional.
@@ -33,46 +33,25 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
    * Configuración para el selector de medio de transporte.
    * @property {CatalogosSelect} medioTransporteList
    */
-  medioTransporteList: CatalogosSelect = {
-    labelNombre: 'Medio de transporte',
-    required: true,
-    primerOpcion: 'Selecciona un transporte',
-    catalogos: [],
-  };
+  medioTransporteList: Catalogo[];
 
   /**
    * Configuración para el selector de identificación del transporte.
    * @property {CatalogosSelect} identificacionTransporteList
    */
-  identificacionTransporteList: CatalogosSelect = {
-    labelNombre: 'Identificación del transporte',
-    required: true,
-    primerOpcion: 'Selecciona una Identificación',
-    catalogos: [],
-  };
+  identificacionTransporteList: Catalogo[];
 
   /**
    * Configuración para el selector de nombre de la empresa transportista.
    * @property {CatalogosSelect} nombreDeLaEmpresaTransportista
    */
-  nombreDeLaEmpresaTransportista: CatalogosSelect = {
-    labelNombre: ' Nombre de la empresa transportista',
-    required: true,
-    primerOpcion: 'Selecciona un Nombre',
-    catalogos: [],
-  };
+  nombreDeLaEmpresaTransportista: Catalogo[];
 
   /**
    * Configuración para el selector de punto de verificación federal.
    * @property {CatalogosSelect} puntoDeVerificacionFederal
    */
-  puntoDeVerificacionFederal: CatalogosSelect = {
-    labelNombre: ' Punto de verificación federal',
-    required: true,
-    primerOpcion: 'Selecciona un Punto',
-    catalogos: [],
-  };
-
+  puntoDeVerificacionFederal: Catalogo[];
   /**
    * Constructor de la clase DatosParaMovilizacionNacionalComponent.
    * @constructor
@@ -115,7 +94,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
   obtenerTransporteListList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/transporte.json').subscribe((data): void => {
       const datos = data?.data;
-      this.medioTransporteList['catalogos'] = datos;
+      this.medioTransporteList = datos;
     });
   }
 
@@ -126,7 +105,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
   obtenernombreDeLaEmpresaTransportistaList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json').subscribe((data): void => {
       const datos = data?.data;
-      this.nombreDeLaEmpresaTransportista['catalogos'] = datos;
+      this.nombreDeLaEmpresaTransportista = datos;
     });
   }
 
@@ -137,7 +116,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
   obtenerPuntoDeVerificaciónList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').subscribe((data): void => {
       const datos = data?.data;
-      this.puntoDeVerificacionFederal['catalogos'] = datos;
+      this.puntoDeVerificacionFederal = datos;
     });
   }
 
@@ -148,7 +127,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
   obtenerIdentificacionTransporteList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').subscribe((data): void => {
       const datos = data?.data;
-      this.identificacionTransporteList['catalogos'] = datos;
+      this.identificacionTransporteList = datos;
     });
   }
 }

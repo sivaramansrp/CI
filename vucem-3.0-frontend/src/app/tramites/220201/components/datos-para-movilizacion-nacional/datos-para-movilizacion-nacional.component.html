@@ -18,24 +18,43 @@
     <ng-titulo titulo="Medio de transporte" />
     <div class="row">
       <div class="col-md-4">
-        <select-catalogos
-          [catalogosDatos]="medioTransporteList"
-        ></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="medioTransporteList"
+          formControlName="medio"
+          [label]="'Medio de transporte'"
+          [required]="true"
+          name="medio"
+        ></app-catalogo-select>
       </div>
       <div class="col-md-4 form-group">
-        <select-catalogos
-          [catalogosDatos]="identificacionTransporteList"
-        ></select-catalogos>
+        <label class="form-label" for="coordenadas"
+          >Identificación del transporte:</label
+        >
+        <input
+          class="form-control"
+          id="transporte"
+          formControlName="transporte"
+          placeholder=""
+          type="text"
+        />
       </div>
       <div class="col-md-8">
-        <select-catalogos
-          [catalogosDatos]="puntoDeVerificacionFederal"
-        ></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="puntoDeVerificacionFederal"
+          formControlName="punto"
+          [label]="'Punto de verificación federal'"
+          [required]="false"
+          name="punto"
+        ></app-catalogo-select>
       </div>
       <div class="col-md-8">
-        <select-catalogos
-          [catalogosDatos]="nombreDeLaEmpresaTransportista"
-        ></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="nombreDeLaEmpresaTransportista"
+          formControlName="nombre"
+          [label]="'Nombre de la empresa transportista'"
+          [required]="true"
+          name="nombre"
+        ></app-catalogo-select>
       </div>
     </div>
   </form>

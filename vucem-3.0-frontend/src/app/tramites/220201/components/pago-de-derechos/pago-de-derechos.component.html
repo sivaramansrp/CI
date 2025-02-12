@@ -30,9 +30,13 @@
         </div>
       </div>
       <div class="col-md-4">
-        <select-catalogos
-          [catalogosDatos]="justificacionSelector"
-        ></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="justificacionSelector"
+          formControlName="justificacion"
+          [label]="'Justificación'"
+          [required]="true"
+          name="justificacion"
+        ></app-catalogo-select>
       </div>
       <div class="col-md-8"></div>
       <div class="col-md-4">
@@ -69,7 +73,14 @@
         </div>
       </div>
       <div class="col-md-4">
-        <select-catalogos [catalogosDatos]="bancoSelector"></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="bancoSelector"
+          formControlName="banco"
+          [label]="'Banco'"
+          [required]="true"
+          [isDisabled]="true"
+          name="banco"
+        ></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <div class="form-group">
