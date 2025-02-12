@@ -1,4 +1,5 @@
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -12,7 +13,6 @@ import { InputFechaComponent } from '../../../../shared/components/input-fecha/i
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { Validators } from '@angular/forms';
 import { inject } from '@angular/core';
@@ -27,7 +27,7 @@ import { inject } from '@angular/core';
     ReactiveFormsModule,
     CommonModule,
     TituloComponent,
-    SelectCatalogosComponent,
+    CatalogoSelectComponent,
     InputFechaComponent,
   ],
   viewProviders: [
