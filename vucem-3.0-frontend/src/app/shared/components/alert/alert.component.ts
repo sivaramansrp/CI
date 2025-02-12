@@ -6,23 +6,32 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   standalone: true,
   imports: [],
   templateUrl: './alert.component.html',
-  styleUrl: './alert.component.scss'
+  styleUrl: './alert.component.scss',
 })
 export class AlertComponent implements OnInit {
   @Input() CONTENIDO!: string;
 
   textoHTML: SafeHtml = '';
 
-  constructor(
-    private sanitizer: DomSanitizer,
-   ) {}
+  constructor(private sanitizer: DomSanitizer) {}
 
-   ngOnInit(): void {
+  /**
+   * Método del ciclo de vida de Angular que se llama una vez que el componente ha sido inicializado.
+   * Aquí se establece el contenido HTML del componente utilizando el método `setHTML` y la propiedad `CONTENIDO`.
+   *
+   * @returns {void}
+   */
+  ngOnInit(): void {
     this.setHTML(this.CONTENIDO);
-   }
+  }
 
-   setHTML(html: string): void {
+  /**
+   * Establece el contenido HTML de manera segura.
+   * 
+   * @param html - El contenido HTML a establecer.
+   * @returns void
+   */
+  setHTML(html: string): void {
     this.textoHTML = this.sanitizer.bypassSecurityTrustHtml(html);
-   }
-
+  }
 }
