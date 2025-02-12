@@ -135,6 +135,11 @@ export const FECHA_FINAL = {
   habilitado: true,
 };
 
+export const FECHA_INSPECCION = {
+  labelNombre: 'Fecha de inspección',
+  required: true,
+  habilitado: false,
+}
 export const MENSAJEDEALERTA = {
   ADJUNTAR: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro</p>`,
 };

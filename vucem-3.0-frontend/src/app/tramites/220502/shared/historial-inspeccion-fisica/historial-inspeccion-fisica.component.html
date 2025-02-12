@@ -1,0 +1,28 @@
+<ng-titulo titulo="Historial inspección física" />
+<div class="row">
+  <div class="col-md-12">
+    <table class="table">
+      <thead>
+        <tr>
+          @for (item of tablaHeadData; track $index) {
+            <th>{{item}}</th>
+          }
+        </tr>
+      
+      </thead>
+      <tbody>
+        @for (item of tablaFilaDatos; let i = $index; track i) {
+        <tr>
+          <td>{{ item.numeroPartidaMercancia }}</td>
+          <td>{{ item.fraccionArancelaria }}</td>
+          <td>{{ item.nico}}</td>
+          <td>{{ item.cantidadUmt }}</td>
+          <td>{{ item.cantidadInspeccion }}</td>
+          <td>{{ item.saldoPendiente }}</td>
+          <td>{{ item.fechaInspeccionString }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

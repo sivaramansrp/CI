@@ -1,0 +1,35 @@
+  <fieldset [formGroupName]="claveDeControl">
+    <ng-titulo titulo="Responsable inspección en punto" />
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-field">
+          <label for="nombreInsp" class="form-label">Nombre(s):</label>
+          <input class="form-control" type="number" formControlName="nombre" id="nombreInsp" />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-field">
+            <label for="primerapellido" class="form-label">Primer apellido:</label>
+            <input class="form-control" type="text" formControlName="primerapellido" id="primerapellido"/>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-field">
+            <label for="segyndoapellido" class="form-label">Segundo apellido:</label>
+            <input class="form-control" type="text" formControlName="segyndoapellido" id="segyndoapellido" />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-field">
+            <label for="mercancia" class="form-label">Cantidad de contenedores en quearriba la mercancía*:<span class="bi bi-question-circle-fill" title="Número de tolvas, furgones o contenedores en que arriba la mercancía" data-bs-toggle="tooltip"></span></label>
+            <input class="form-control" type="text" formControlName="mercancia" id="mercancia" />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-field">
+          <select-catalogos [catalogosDatos]="tipoContenedor"
+                (valorSeleccion)="tipoContenedorSeleccion($event)" />
+        </div>
+    </div>
+    </div>
+  </fieldset>
