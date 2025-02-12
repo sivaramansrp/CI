@@ -27,6 +27,7 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
 import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitario-page.component';
 
 import { ServiciosExtraordinariosModule } from '../5701/servicios-extraordinarios.module';
+import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import { ServiciosExtraordinariosModule } from '../5701/servicios-extraordinario
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     SelectCatalogosComponent,
+    SolicitanteComponent,
     ServiciosExtraordinariosModule
   ]
 })
