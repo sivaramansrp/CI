@@ -25,7 +25,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitario-page.component';
-import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component';
+
 import { ServiciosExtraordinariosModule } from '../5701/servicios-extraordinarios.module';
 
 
@@ -58,7 +58,6 @@ import { ServiciosExtraordinariosModule } from '../5701/servicios-extraordinario
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     SelectCatalogosComponent,
-    SolicitanteComponent,
     ServiciosExtraordinariosModule
   ]
 })
