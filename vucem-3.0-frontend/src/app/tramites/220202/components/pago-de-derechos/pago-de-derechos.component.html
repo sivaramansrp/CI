@@ -11,7 +11,7 @@
             class="form-check-input me-3"
             type="radio"
             name="exentoPago"
-            value="true"
+            value=""
             id="certficacion_a"
             formControlName="exentoPago"
           />
@@ -22,7 +22,7 @@
             class="form-check-input me-3"
             type="radio"
             name="exentoPago"
-            value="false"
+            value="aa"
             id="certficacion_aa"
             formControlName="exentoPago"
           />
@@ -30,10 +30,14 @@
         </div>
       </div>
       <div class="col-md-4">
-        <select-catalogos
-          [catalogosDatos]="justificacionSelector"
-          (valorSeleccion)="seleccionarListDatas($event, 'justificacion')"
-        ></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="justificacionSelector"
+          formControlName="justificacion"
+          [label]="'Justificación'"
+          [required]="true"
+          [isDisabled]="true"
+          name="justificacion"
+        ></app-catalogo-select>
       </div>
       <div class="col-md-8"></div>
       <div class="col-md-4">
@@ -70,10 +74,14 @@
         </div>
       </div>
       <div class="col-md-4">
-        <select-catalogos
-          [catalogosDatos]="bancoSelector"
-          (valorSeleccion)="seleccionarListDatas($event, 'banco')"
-        ></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="bancoSelector"
+          formControlName="banco"
+          [label]="'Banco'"
+          [required]="true"
+          [isDisabled]="false"
+          name="banco"
+        ></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <div class="form-group">
@@ -86,7 +94,7 @@
             placeholder=""
             type="text"
             appUppercase
-            [disabled]="true"
+            [disabled]="false"
             name="llavePago"
             formControlName="llavePago"
           />
@@ -94,10 +102,7 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <input-fecha
-            [datos]="fechaInicioInput"
-            (valorCambiado)="cambioFechaInicio($event)"
-          ></input-fecha>
+          <input-fecha [datos]="fechaInicioInput"></input-fecha>
         </div>
       </div>
       <div class="col-md-4">
@@ -118,17 +123,4 @@
       </div>
     </div>
   </form>
-  <div class="row mt-5">
-    <div class="col-md-12 d-flex justify-content-end">
-      <button
-        type="button"
-        class="btn btn-primary"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#offcanvasRight"
-        aria-controls="offcanvasRight"
-      >
-        Borrar datos del pago
-      </button>
-    </div>
-  </div>
 </div>

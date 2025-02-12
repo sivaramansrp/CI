@@ -27,6 +27,7 @@ import { SolicitanteComponent } from '../../shared/components/solicitante/solici
 
 import { ServiciosExtraordinariosModule } from '../5701/servicios-extraordinarios.module';
 import { TableComponent } from '../../shared/components/table/table.component';
+import { CatalogoSelectComponent } from '../../shared/components/catalogo-select/catalogo-select.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { TableComponent } from '../../shared/components/table/table.component';
     FirmaElectronicaComponent,
     SolicitanteComponent,
     ServiciosExtraordinariosModule,
+    CatalogoSelectComponent,
     TableComponent
   ]
 })
