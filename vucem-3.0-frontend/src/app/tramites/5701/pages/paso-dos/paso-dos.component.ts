@@ -1,7 +1,7 @@
+import { Component, OnInit } from '@angular/core';
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
-import { Component, OnInit } from '@angular/core';
 import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 
 @Component({
