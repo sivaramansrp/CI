@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { map, merge } from 'rxjs';
+
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { FECHA_SALIDA } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { InputFecha } from '../../../../core/models/shared/components.model';
 import { PeximService } from '../../../../core/services/130118/pexim/pexim.service';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-import { CatalogosSelect, InputFecha } from '../../../../core/models/shared/components.model';
+import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
+import { Solicitud130118State, Tramite130118Store } from '../../../../estados/tramites/tramite130118.store';
+
 
 /**
  * Componente para la vista de la solicitud de la sección de "130118".
@@ -15,55 +20,61 @@ import { CatalogosSelect, InputFecha } from '../../../../core/models/shared/comp
   styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit {
-  /**
-   * Datos del catálogo de régimen de mercancía.
-   */
-  datosRegimenMercancia!: CatalogosSelect;
 
   /**
-   * Datos del catálogo de clasificación de régimen.
+   * Lista de catálogos de régimen de mercancía.
    */
-  datosClasifiRegimen!: CatalogosSelect;
+  regimenMercancia!: Catalogo[];
 
   /**
-   * Datos del catálogo de fracción arancelaria.
+   * Lista de catálogos de clasificación de régimen.
    */
-  datosFraccionArancelaria!: CatalogosSelect;
+  clasifiRegimen!: Catalogo[];
 
   /**
-   * Datos del catálogo de NICO.
+   * Lista de catálogos de fracción arancelaria.
    */
-  datosNico!: CatalogosSelect;
+  fraccionArancelaria!: Catalogo[];
 
   /**
-   * Datos del catálogo de país de origen.
+   * Lista de catálogos de NICO.
    */
-  datosPaisOrigen!: CatalogosSelect;
+  nico!: Catalogo[];
 
   /**
-   * Datos del catálogo de país de destino.
+   * Lista de catálogos de país de origen.
    */
-  datosPaisDestino!: CatalogosSelect;
+  paisOrigen!: Catalogo[];
 
   /**
-   * Datos del catálogo de estado.
+   * Lista de catálogos de país de destino.
    */
-  datosEstado!: CatalogosSelect;
+  paisDestino!: Catalogo[];
 
   /**
-   * Datos del catálogo de molino.
+   * Lista de catálogos de estado.
    */
-  datosMolino!: CatalogosSelect;
+  estado!: Catalogo[];
 
   /**
-   * Datod del catálogo de Unidad Medida Tarifaria
+   * Lista de catálogos de molino.
    */
-  datosUnidadMedidaTarifaria!: CatalogosSelect;
+  molino!: Catalogo[];
 
   /**
-   * Datos del catálogo de Representacion Federal
+   * Lista de catálogos de unidad de medida tarifaria.
    */
-  datosRepresentacionFederal!: CatalogosSelect;
+  unidadMedidaTarifaria!: Catalogo[];
+
+  /**
+   * Lista de catálogos de representación federal.
+   */
+  representacionFederal!: Catalogo[];
+
+  /**
+   * Estado de la solicitud.
+   */
+  public solicitudState: Solicitud130118State;
 
   /**
    * Indica si la persona física es visible.
@@ -74,56 +85,6 @@ export class SolicitudComponent implements OnInit {
    * Indica si la persona moral es visible.
    */
   isVisibleMoral: boolean;
-
-  /**
-   * Régimen de mercancía seleccionado.
-   */
-  regimenMercanciaSeleccionada!: Catalogo;
-
-  /**
-   * Clasificación de régimen seleccionada.
-   */
-  clasifiRegimenSeleccionada!: Catalogo;
-
-  /**
-   * Fracción arancelaria seleccionada.
-   */
-  fraccionArancelariaSeleccionada!: Catalogo;
-
-  /**
-   * NICO seleccionado.
-   */
-  nicoSeleccionada!: Catalogo;
-
-  /**
-   * País de origen seleccionado.
-   */
-  paisOrigenSeleccionado!: Catalogo;
-
-  /**
-   * País de destino seleccionado.
-   */
-  paisDestinoSeleccionado!: Catalogo;
-
-  /**
-   * Estado seleccionado.
-   */
-  estadoSeleccionado!: Catalogo;
-
-  /**
-   * Molino seleccionado.
-   */
-  molinoSeleccionado!: Catalogo;
-
-  /**
-   * Unidad Medida Tarifaria seleccionado.
-   */
-  unidadMedidaTarifariaSeleccionado!: Catalogo;
-
-  /**
-   * Representacion Federal seleccionado.
-   */
-  representacionFederalSeleccionado!: Catalogo;
 
   /**
    * Fecha final de entrada.
@@ -140,34 +101,46 @@ export class SolicitudComponent implements OnInit {
    * @param peximService Servicio para obtener datos de PEXIM.
    * @param fb FormBuilder para crear formularios.
    * @param validacionesService Servicio para validaciones de formularios.
+   * @param tramite130118Store Almacén de estado para el trámite 130118.
    */
   constructor(
     private peximService: PeximService,
     private fb: FormBuilder,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private tramite130118Store: Tramite130118Store
   ) {
     // Inicializar el formulario principal
     this.crearFormSolicitud();
   }
 
   /**
-   * Método que se ejecuta al iniciar el componente.
-   * Obtiene los catálogos necesarios para el formulario.
-   * Muestra los campos correspondientes a la persona seleccionada.
-   * @returns void
+   * Método que se ejecuta al inicializar el componente.
+   * 
+   * Este método realiza las siguientes acciones:
+   * 1. Inicializa los catálogos necesarios para el formulario.
+   * 2. Selecciona los valores iniciales para los catálogos de régimen de mercancía, 
+   *    clasificación de régimen, fracción arancelaria, NICO, país de origen, país de destino, 
+   *    estado, molino, unidad de medida tarifaria y representación federal.
+   * 3. Muestra los campos correspondientes a la persona seleccionada (física o moral).
+   * 
+   * @returns {void}
    */
   ngOnInit(): void {
-    this.getRegimenMercancia();
-    this.getClasifiRegimen();
-    this.getFraccionArancelaria();
-    this.getNico();
-    this.getPaisOrigen();
-    this.getPaisDestino();
-    this.getEstado();
-    this.getMolino();
-    this.getUnidadMedidaTarifaria();
-    this.getRepresentacionFederal();
+    this.inicializaCatalogos();
+
+    this.regimenMercanciaSeleccion();
+    this.clasifiRegimenSeleccion();
+    this.fraccionArancelariaSeleccion();
+    this.nicoSeleccion();
+    this.paisOrigenSeleccion();
+    this.paisDestinoSeleccion();
+    this.estadoSeleccion();
+    this.molinoSeleccion();
+    this.unidadMedidaTarifariaSeleccion();
+    this.representacionFederalSeleccion();
+
     this.muestraCamposPersona();
+
   }
 
   /**
@@ -218,20 +191,37 @@ export class SolicitudComponent implements OnInit {
   crearFormSolicitud(): void {
     this.FormSolicitud = this.fb.group({
       datosRegimen: this.fb.group({
-        regimenMercancia: ['', Validators.required],
-        clasifiRegimen: ['', Validators.required]
+        regimenMercancia: [
+          this.solicitudState?.regimenMercancia,
+          [Validators.required]
+        ],
+        clasifiRegimen: [
+          this.solicitudState?.clasifiRegimen,
+          Validators.required
+        ]
       }),
       datosMercancia: this.fb.group({
-        valueTA: ['',
+        valueTA: [
+          this.solicitudState?.valueTA,
           [
             Validators.required,
             Validators.maxLength(1000)
           ],
         ],
-        fraccionArancelaria: ['', Validators.required],
-        nico: ['', Validators.required],
-        unidadMedidaTarifaria: ['', Validators.required],
-        cantidadTarifaria: ['',
+        fraccionArancelaria: [
+          this.solicitudState?.fraccionArancelaria,
+          Validators.required
+        ],
+        nico: [
+          this.solicitudState?.nico,
+          Validators.required
+        ],
+        unidadMedidaTarifaria: [
+          this.solicitudState?.unidadMedidaTarifaria,
+          Validators.required
+        ],
+        cantidadTarifaria: [
+          this.solicitudState?.cantidadTarifaria,
           [
             Validators.required,
             Validators.maxLength(17),
@@ -240,7 +230,8 @@ export class SolicitudComponent implements OnInit {
             Validators.pattern(/^(\d{1,14})(\.\d{1,2})?$/)
           ]
         ],
-        valorFacturaUSD: ['',
+        valorFacturaUSD: [
+          this.solicitudState?.valorFacturaUSD,
           [
             Validators.required,
             Validators.maxLength(17),
@@ -250,38 +241,266 @@ export class SolicitudComponent implements OnInit {
           ]
         ],
         precioUnitarioUSD: [
-          { value: '', disabled: true }
+          { value: this.solicitudState?.precioUnitarioUSD, disabled: true }
         ],
-        paisOrigen: ['', Validators.required],
-        paisDestino: ['', Validators.required],
-        lote: ['',
+        paisOrigen: [
+          this.solicitudState?.paisOrigen,
+          Validators.required
+        ],
+        paisDestino: [
+          this.solicitudState?.paisDestino,
+          Validators.required
+        ],
+        lote: [
+          this.solicitudState?.lote,
           [
             Validators.required,
             Validators.maxLength(60)
           ]
         ],
         fechaSalida: [
-          { value: '', disabled: true }
+          { value: this.solicitudState?.fechaSalida, disabled: true }
         ],
-        observaciones: ['', [Validators.maxLength(250)]],
-        observacionMerc: ''
+        observaciones: [
+          this.solicitudState?.observaciones,
+          [Validators.maxLength(250)]],
+        observacionMerc: this.solicitudState?.observacionMerc
       }),
       datosProducto: this.fb.group({
-        tipoPersona: ['', Validators.required],
-        nombre: ['', [Validators.required, Validators.maxLength(200)]],
-        apellidoPaterno: ['', [Validators.required, Validators.maxLength(200)]],
-        apellidoMaterno: ['', [Validators.maxLength(200)]],
-        razonSocial: ['', [Validators.required, Validators.maxLength(250)]],
-        molinoSeleccion: [
-          '', [Validators.required],
+        tipoPersona: [
+          this.solicitudState?.tipoPersona,
+          Validators.required
         ],
-        domicilio: ['', [Validators.required, Validators.maxLength(1000)]]
+        nombre: [
+          this.solicitudState?.nombre,
+          [
+            Validators.required,
+            Validators.maxLength(200)
+          ]
+        ],
+        apellidoPaterno: [
+          this.solicitudState?.apellidoPaterno,
+          [
+            Validators.required,
+            Validators.maxLength(200)
+          ]
+        ],
+        apellidoMaterno: [
+          this.solicitudState?.apellidoMaterno,
+          [
+            Validators.maxLength(200)
+          ]
+        ],
+        razonSocial: [
+          this.solicitudState?.razonSocial,
+          [
+            Validators.required,
+            Validators.maxLength(250)
+          ]
+        ],
+        molino: [
+          this.solicitudState?.molino,
+          [
+            Validators.required
+          ],
+        ],
+        domicilio: [
+          this.solicitudState?.domicilio,
+          [
+            Validators.required,
+            Validators.maxLength(1000)
+          ]
+        ]
       }),
       registroFederal: this.fb.group({
-        entidadSolicitud: ['', Validators.required],
-        representacionFederal: ['', Validators.required]
+        estado: [
+          this.solicitudState?.estado,
+          Validators.required
+        ],
+        representacionFederal: [
+          this.solicitudState?.representacionFederal,
+          Validators.required
+        ]
       })
     });
+  }
+
+  /**
+   * Inicializa los catálogos necesarios para el formulario.
+   */
+  private inicializaCatalogos(): void {
+    const regimenMercancia$ = this.peximService
+      .getRegimenMercancia(CATALOGOS_ID.CAT_REGIMEN_MERCANCIA)
+      .pipe(
+        map((resp) => {
+          this.regimenMercancia = resp.data;
+        })
+      );
+
+    const clasifiRegimen$ = this.peximService
+      .getClasifiRegimen(CATALOGOS_ID.CAT_CLASIFI_REGIMEN)
+      .pipe(
+        map((resp) => {
+          this.clasifiRegimen = resp.data;
+        })
+      );
+
+    const fraccionArancelaria$ = this.peximService
+      .getFraccionArancelariaCatalogo(CATALOGOS_ID.CAT_FRACCION_ARANCELARIA)
+      .pipe(
+        map((resp) => {
+          this.fraccionArancelaria = resp.data;
+        })
+      );
+
+    const nico$ = this.peximService
+      .getNicoCatalogo(CATALOGOS_ID.CAT_NICO)
+      .pipe(
+        map((resp) => {
+          this.nico = resp.data;
+        })
+      );
+
+    const unidadMedidaTarifaria$ = this.peximService
+      .getUnidadMedidaTarifariaCatalogo(CATALOGOS_ID.CAT_UNIDAD_MEDIDA_TARIFARIA)
+      .pipe(
+        map((resp) => {
+          this.unidadMedidaTarifaria = resp.data;
+        })
+      );
+
+    const paisOrigen$ = this.peximService
+      .getPaisOrigenCatalogo(CATALOGOS_ID.CAT_PAIS_ORIGEN)
+      .pipe(
+        map((resp) => {
+          this.paisOrigen = resp.data;
+        })
+      );
+
+    const paisDestino$ = this.peximService
+      .getPaisDestinoCatalogo(CATALOGOS_ID.CAT_PAIS_DESTINO)
+      .pipe(
+        map((resp) => {
+          this.paisDestino = resp.data;
+        })
+      );
+
+    const molino$ = this.peximService
+      .getMolinoCatalogo(CATALOGOS_ID.CAT_MOLINO)
+      .pipe(
+        map((resp) => {
+          this.molino = resp.data;
+        })
+      );
+
+    const estado$ = this.peximService
+      .getEstadoCatalogo(CATALOGOS_ID.CAT_ESTADO)
+      .pipe(
+        map((resp) => {
+          this.estado = resp.data;
+        })
+      );
+
+    const representacionFederal$ = this.peximService
+      .getRepresentacionFederal(CATALOGOS_ID.CAT_REPRESENTACION_FEDERAL)
+      .pipe(
+        map((resp) => {
+          this.representacionFederal = resp.data;
+        })
+      );
+
+    merge(
+      regimenMercancia$,
+      clasifiRegimen$,
+      fraccionArancelaria$,
+      nico$,
+      unidadMedidaTarifaria$,
+      paisOrigen$,
+      paisDestino$,
+      molino$,
+      estado$,
+      representacionFederal$
+    ).subscribe();
+  }
+
+  /**
+   * Selecciona el régimen de mercancía.
+   */
+  regimenMercanciaSeleccion(): void {
+    const regimenMercancia = this.FormSolicitud.get('regimenMercancia')?.value;
+    this.tramite130118Store.setRegimenMercancia(regimenMercancia);
+  }
+
+  /**
+   * Selecciona la clasificación de régimen.
+   */
+  clasifiRegimenSeleccion(): void {
+    const clasifiRegimen = this.FormSolicitud.get('clasifiRegimen')?.value;
+    this.tramite130118Store.setClasifiRegimen(clasifiRegimen);
+  }
+
+  /**
+   * Selecciona la fracción arancelaria.
+   */
+  fraccionArancelariaSeleccion(): void {
+    const fraccionArancelaria = this.FormSolicitud.get('fraccionArancelaria')?.value;
+    this.tramite130118Store.setFraccionArancelaria(fraccionArancelaria);
+  }
+
+  /**
+   * Selecciona el NICO.
+   */
+  nicoSeleccion(): void {
+    const nico = this.FormSolicitud.get('nico')?.value;
+    this.tramite130118Store.setNico(nico);
+  }
+
+  /**
+   * Selecciona la unidad de medida tarifaria.
+   */
+  unidadMedidaTarifariaSeleccion(): void {
+    const unidadMedidaTarifaria = this.FormSolicitud.get('unidadMedidaTarifaria')?.value;
+    this.tramite130118Store.setUnidadMedidaTarifaria(unidadMedidaTarifaria);
+  }
+
+  /**
+   * Selecciona el país de origen.
+   */
+  paisOrigenSeleccion(): void {
+    const paisOrigen = this.FormSolicitud.get('paisOrigen')?.value;
+    this.tramite130118Store.setPaisOrigen(paisOrigen);
+  }
+
+  /**
+   * Selecciona el país de destino.
+   */
+  paisDestinoSeleccion(): void {
+    const paisDestino = this.FormSolicitud.get('paisDestino')?.value;
+    this.tramite130118Store.setPaisDestino(paisDestino);
+  }
+
+  /**
+   * Selecciona el molino.
+   */
+  molinoSeleccion(): void {
+    const molino = this.FormSolicitud.get('molino')?.value;
+    this.tramite130118Store.setMolino(molino);
+  }
+
+  /**
+   * Selecciona el estado.
+   */
+  estadoSeleccion(): void {
+    const estado = this.FormSolicitud.get('estado')?.value;
+    this.tramite130118Store.setEstado(estado);
+  }
+
+  /**
+   * Selecciona la representación federal.
+   */
+  representacionFederalSeleccion(): void {
+    const representacionFederal = this.FormSolicitud.get('representacionFederal')?.value;
+    this.tramite130118Store.setRepresentacionFederal(representacionFederal);
   }
 
   /**
@@ -291,7 +510,6 @@ export class SolicitudComponent implements OnInit {
   validarFormulario(): void {
     if (this.FormSolicitud.invalid) {
       this.FormSolicitud.markAllAsTouched();
-      return;
     }
   }
 
@@ -312,10 +530,10 @@ export class SolicitudComponent implements OnInit {
     const razonSocial = this.FormSolicitud.get('datosProducto.razonSocial')?.value;
     const nombre = this.FormSolicitud.get('datosProducto.nombre')?.value;
 
-    if (razonSocial !== '') {
+    if (razonSocial !== '' || razonSocial != null) {
       this.personaMoral();
       this.FormSolicitud.get('datosProducto.tipoPersona')?.setValue('pmoral');
-    } else if (nombre !== '') {
+    } else if (nombre !== '' || razonSocial != null) {
       this.personaFisica();
       this.FormSolicitud.get('datosProducto.tipoPersona')?.setValue('pfisica');
     }
@@ -414,291 +632,11 @@ export class SolicitudComponent implements OnInit {
   }
 
   /**
-   * Método para seleccionar el régimen de mercancía.
-   * @param e Régimen de mercancía seleccionado.
-   */
-  regimenMercancia(e: Catalogo): void {
-    this.regimenMercanciaSeleccionada = e;
-  }
-
-  /**
-   * Método para seleccionar la clasificación de régimen.
-   * @param e Clasificación de régimen seleccionada.
-   */
-  clasifiRegimen(e: Catalogo): void {
-    this.clasifiRegimenSeleccionada = e;
-  }
-
-  /**
-   * Método para seleccionar la fracción arancelaria.
-   * @param e Fracción arancelaria seleccionada.
-   */
-  fraccionArancelaria(e: Catalogo): void {
-    this.fraccionArancelariaSeleccionada = e;
-  }
-
-  /**
-   * Método para seleccionar el NICO.
-   * @param e NICO seleccionado.
-   */
-  nico(e: Catalogo): void {
-    this.nicoSeleccionada = e;
-  }
-
-  /**
-   * Método para seleccionar el país de origen.
-   * @param e País de origen seleccionado.
-   */
-  paisOrigen(e: Catalogo): void {
-    this.paisOrigenSeleccionado = e;
-  }
-
-  /**
-   * Método para seleccionar el país de destino.
-   * @param e País de destino seleccionado.
-   */
-  paisDestino(e: Catalogo): void {
-    this.paisDestinoSeleccionado = e;
-  }
-
-  /**
-   * Método para seleccionar el estado.
-   * @param e Estado seleccionado.
-   */
-  estado(e: Catalogo): void {
-    this.estadoSeleccionado = e;
-  }
-
-  /**
-   * Método para seleccionar el molino.
-   * @param e Molino seleccionado.
-   */
-  molino(e: Catalogo): void {
-    this.molinoSeleccionado = e;
-  }
-
-  /**
-   * Método para seleccionar el unidad Medida Tarifaria
-   * @param e Unidad Medida Tarifaria seleccionado.
-   */
-  unidadMedidaTarifaria(e: Catalogo): void {
-    this.unidadMedidaTarifariaSeleccionado = e;
-  }
-
-  /**
-   * Método para seleccionar el representacion Federal
-   * @param e Representacion Federal seleccionado.
-   */
-  representacionFederal(e: Catalogo): void {
-    this.representacionFederalSeleccionado = e;
-  }
-
-  /**
    * Método para cambiar la fecha final.
    * @param nuevo_valor Nuevo valor de la fecha final.
    */
   cambioFechaFinal(nuevo_valor: string): void {
     this.datosMercancia.get('fechaFinal')?.setValue(nuevo_valor);
     this.datosMercancia.get('fechaFinal')?.markAsUntouched();
-  }
-
-  /**
-   * Método para obtener el catálogo de régimen de mercancía.
-   */
-  getRegimenMercancia(): void {
-    this.peximService
-      .getRegimenMercancia()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
-
-          this.datosRegimenMercancia = {
-            labelNombre: 'Régimen al que se destinará la mercancía',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
-  }
-
-  /**
-   * Método para obtener el catálogo de clasificación de régimen.
-   */
-  getClasifiRegimen(): void {
-    this.peximService
-      .getClasifiRegimen()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
-
-          this.datosClasifiRegimen = {
-            labelNombre: 'Clasificación de régimen',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
-  }
-
-  /**
-   * Método para obtener el catálogo de fracción arancelaria.
-   */
-  getFraccionArancelaria(): void {
-    this.peximService
-      .getFraccionArancelariaCatalogo()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
-
-          this.datosFraccionArancelaria = {
-            labelNombre: 'Fracción arancelaria',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
-  }
-
-  /**
-   * Método para obtener el catálogo de NICO.
-   */
-  getNico(): void {
-    this.peximService
-      .getNicoCatalogo()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
-
-          this.datosNico = {
-            labelNombre: 'NICO',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
-  }
-
-  /**
-   * Método para obtener el catálogo de país de origen.
-   */
-  getPaisOrigen(): void {
-    this.peximService
-      .getPaisOrigenCatalogo()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
-
-          this.datosPaisOrigen = {
-            labelNombre: 'País origen del acero/País origen de la mercancía',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
-  }
-
-  /**
-   * Método para obtener el catálogo de país de destino.
-   */
-  getPaisDestino(): void {
-    this.peximService
-      .getPaisDestinoCatalogo()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
-
-          this.datosPaisDestino = {
-            labelNombre: 'País exportador',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
-  }
-
-  /**
-   * Método para obtener el catálogo de estado.
-   */
-  getEstado(): void {
-    this.peximService
-      .getEstadoCatalogo()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
-
-          this.datosEstado = {
-            labelNombre: 'Estado',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
-  }
-
-  /**
-   * Método para obtener el catálogo de molino.
-   */
-  getMolino(): void {
-    this.peximService
-      .getMolinoCatalogo()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
-
-          this.datosMolino = {
-            labelNombre: 'Molino',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
-  }
-
-  /**
-   * Método para obtener el catálogo de unidad medida tarifaria.
-   */
-  getUnidadMedidaTarifaria(): void {
-    this.peximService
-      .getUnidadMedidaTarifariaCatalogo()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
-
-          this.datosUnidadMedidaTarifaria = {
-            labelNombre: 'Unidad de medida de la tarifa (UMT)',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
-  }
-
-  /**
-   * Método para obtener el catálogo de representacion federal.
-   */
-  getRepresentacionFederal(): void {
-    this.peximService
-      .getRepresentacionFederal()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
-
-          this.datosRepresentacionFederal = {
-            labelNombre: 'Representación Federal',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
   }
 }

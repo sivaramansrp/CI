@@ -11,43 +11,43 @@ export class PeximService {
     private http: HttpClient
   ) { }
 
-  getRegimenMercancia() {
+  getRegimenMercancia(catalogo: string) {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/regimen-mercancia.json');
   }
 
-  getClasifiRegimen() {
+  getClasifiRegimen(catalogo: string) {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/clasifi-regimen.json');
   }
 
-  getFraccionArancelariaCatalogo() {
+  getFraccionArancelariaCatalogo(catalogo: string) {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/fraccion-arancelaria-catalogo.json');
   }
 
-  getNicoCatalogo() {
+  getNicoCatalogo(catalogo: string) {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/nico-catalogo.json');
   }
 
-  getPaisOrigenCatalogo() {
+  getPaisOrigenCatalogo(catalogo: string) {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/pais-origen-catalogo.json');
   }
 
-  getPaisDestinoCatalogo() {
+  getPaisDestinoCatalogo(catalogo: string) {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/pais-destino-catalogo.json');
   }
 
-  getEstadoCatalogo() {
+  getEstadoCatalogo(catalogo: string) {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/estado.json');
   }
 
-  getMolinoCatalogo() {
+  getMolinoCatalogo(catalogo: string) {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/molino.json');
   }
 
-  getUnidadMedidaTarifariaCatalogo() {
+  getUnidadMedidaTarifariaCatalogo(catalogo: string) {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/unidad-medida-tarifaria.json');
   }
 
-  getRepresentacionFederal() {
+  getRepresentacionFederal(catalogo: string) {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/representacion-federal.json');
   }
 }

@@ -6,14 +6,16 @@
             <div class="row mb-3">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <select-catalogos [catalogosDatos]="datosRegimenMercancia"
-                            (valorSeleccion)="regimenMercancia($event)" />
+                        <app-catalogo-select [catalogo]="regimenMercancia" formControlName="regimenMercancia"
+                            [label]="'Régimen al que se destinará la mercancía'" [required]="true"
+                            name="regimenMercancia" (change)="regimenMercanciaSeleccion()"></app-catalogo-select>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group clasifi-regimen-catalogo">
-                        <select-catalogos [catalogosDatos]="datosClasifiRegimen"
-                            (valorSeleccion)="clasifiRegimen($event)" />
+                        <app-catalogo-select [catalogo]="clasifiRegimen" formControlName="clasifiRegimen"
+                            [label]="'Clasificación de régimen'" [required]="true" name="clasifiRegimen"
+                            (change)="clasifiRegimenSeleccion()"></app-catalogo-select>
                     </div>
                 </div>
             </div>
@@ -39,19 +41,22 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-8">
-                    <select-catalogos [catalogosDatos]="datosFraccionArancelaria"
-                        (valorSeleccion)="fraccionArancelaria($event)" />
+                    <app-catalogo-select [catalogo]="fraccionArancelaria" formControlName="fraccionArancelaria"
+                        [label]="'Fracción arancelaria'" [required]="true" name="fraccionArancelaria"
+                        (change)="fraccionArancelariaSeleccion()"></app-catalogo-select>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-8">
-                    <select-catalogos [catalogosDatos]="datosNico" (valorSeleccion)="nico($event)" />
+                    <app-catalogo-select [catalogo]="nico" formControlName="nico" [label]="'NICO'" [required]="true"
+                        name="nico" (change)="nicoSeleccion()"></app-catalogo-select>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-8">
-                    <select-catalogos [catalogosDatos]="datosUnidadMedidaTarifaria"
-                            (valorSeleccion)="unidadMedidaTarifaria($event)" />
+                    <app-catalogo-select [catalogo]="unidadMedidaTarifaria" formControlName="unidadMedidaTarifaria"
+                        [label]="'Unidad de medida de la tarifa (UMT)'" [required]="true" name="unidadMedidaTarifaria"
+                        (change)="unidadMedidaTarifariaSeleccion()"></app-catalogo-select>
                 </div>
             </div>
             <div class="row mb-3">
@@ -84,12 +89,16 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-8">
-                    <select-catalogos [catalogosDatos]="datosPaisOrigen" (valorSeleccion)="paisOrigen($event)" />
+                    <app-catalogo-select [catalogo]="paisOrigen" formControlName="paisOrigen"
+                        [label]="'País origen del acero/País origen de la mercancía'" [required]="true"
+                        name="paisOrigen" (change)="paisOrigenSeleccion()"></app-catalogo-select>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-8">
-                    <select-catalogos [catalogosDatos]="datosPaisDestino" (valorSeleccion)="paisDestino($event)" />
+                    <app-catalogo-select [catalogo]="paisDestino" formControlName="paisDestino"
+                        [label]="'País exportador'" [required]="true" name="paisDestino"
+                        (change)="paisDestinoSeleccion()"></app-catalogo-select>
                 </div>
             </div>
             <div class="row mb-3">
@@ -191,7 +200,8 @@
 
             <div class="row mb-3" id="molino">
                 <div class="col-md-8">
-                    <select-catalogos [catalogosDatos]="datosMolino" (valorSeleccion)="molino($event)" />
+                    <app-catalogo-select [catalogo]="molino" formControlName="molino" [label]="'Molino'"
+                        [required]="true" name="molino" (change)="molinoSeleccion()"></app-catalogo-select>
                     <input type="hidden" id="selectMolino">
                 </div>
             </div>
@@ -217,7 +227,8 @@
             <div class="row mb-3">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <select-catalogos [catalogosDatos]="datosEstado" (valorSeleccion)="estado($event)" />
+                        <app-catalogo-select [catalogo]="estado" formControlName="estado" [label]="'Estado'"
+                            [required]="true" name="estado" (change)="estadoSeleccion()"></app-catalogo-select>
                         <input type="hidden" name="entidadSolicitud" />
                     </div>
                 </div>
@@ -225,7 +236,9 @@
                     <div class="form-group">
                         <input type="hidden" name="idRepresetancionFederalSeleccionado"
                             id="idRepresetancionFederalSeleccionado" />
-                        <select-catalogos [catalogosDatos]="datosRepresentacionFederal" (valorSeleccion)="representacionFederal($event)" />
+                        <app-catalogo-select [catalogo]="representacionFederal" formControlName="representacionFederal"
+                            [label]="'Representación Federal'" [required]="true" name="representacionFederal"
+                            (change)="representacionFederalSeleccion()"></app-catalogo-select>
                     </div>
                 </div>
             </div>
