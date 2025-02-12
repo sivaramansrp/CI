@@ -1,13 +1,16 @@
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
 import { MENSAJE_ALERTA_TRATADOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import tratadosDropdown from '../../../../../assets/json/110101/tratdos-dropdown.json';
 import tratadosTable from '../../../../../assets/json/110101/tratados-table.json';
+
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 /**
  * Componente Tratados que se utiliza para mostrar y gestionar los tratados.
@@ -24,13 +27,31 @@ import tratadosTable from '../../../../../assets/json/110101/tratados-table.json
   standalone: true,
   imports: [
     TituloComponent,
-    SelectCatalogosComponent,
     CommonModule,
     TableComponent,
     AlertComponent,
+    CatalogoSelectComponent,
+    ReactiveFormsModule
   ]
 })
-export class TratadosComponent {
+export class TratadosComponent implements OnInit {
+  tratadosForm: FormGroup;
+
+  constructor(private fb: FormBuilder) { }
+
+
+  ngOnInit(): void {
+    this.initializeTratadosForm();
+  }
+
+  initializeTratadosForm(): void {
+    this.tratadosForm = this.fb.group({
+      pais: ['', Validators.required],
+      tratado: ['', Validators.required],
+      origen: ['', Validators.required]
+    });
+  }
+
   /**
    * Mensaje de alerta para tratados.
    * 
@@ -46,19 +67,10 @@ export class TratadosComponent {
   */
   selectedValues: { pais?: Catalogo; tratado?: Catalogo; origen?: Catalogo } = {};
 
-  /**
-   * Configuración para menús desplegables.
-   * 
-   * @property {Object[]} dropdownConfigs - Array de configuraciones de menús desplegables.
-   * @property {string} dropdownConfigs[].labelNombre - Etiqueta para el menú desplegable.
-   * @property {boolean} dropdownConfigs[].required - Indica si el menú desplegable es obligatorio.
-   * @property {Object[]} dropdownConfigs[].catalogos - Catálogo de opciones para el menú desplegable.
-   * @property {string} dropdownConfigs[].primerOpcion - Primera opción en el menú desplegable.
-   */
   dropdownConfigs = [
-    { labelNombre: 'Pais o bloque', required: true, catalogos: tratadosDropdown.pais, primerOpcion: '' },
-    { labelNombre: 'Tratado o Acuerdo', required: true, catalogos: tratadosDropdown.tratado, primerOpcion: '' },
-    { labelNombre: 'Criterio de origen', required: true, catalogos: tratadosDropdown.origen, primerOpcion: '' }
+    { catalogos: tratadosDropdown.pais },
+    { catalogos: tratadosDropdown.tratado, },
+    { catalogos: tratadosDropdown.origen, }
   ];
 
   /**
@@ -79,7 +91,6 @@ export class TratadosComponent {
    * @property {string[]} commonTableHeaders - Array de cadenas de encabezados de tabla.
    */
   commonTableHeaders = tratadosTable.tableHeader;
-
 
   /**
    * Cuerpo de la tabla de tratados.

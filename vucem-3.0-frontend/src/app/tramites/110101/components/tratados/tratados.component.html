@@ -1,16 +1,24 @@
 <ng-titulo titulo="Datos generales del solicitante" />
 <ng-alert [CONTENIDO]="alert.MENSAJE_ALERTA"></ng-alert>
-
-<div class="row">
-    <div class="col-md-8" *ngFor="let config of dropdownConfigs; let i = index">
-        <select-catalogos [catalogosDatos]="config" (valorSeleccion)="seleccionar($event,i)">
-        </select-catalogos>
+<form [formGroup]="tratadosForm">
+    <div class="row">
+        <div class="col-md-8">
+            <app-catalogo-select [catalogo]="dropdownConfigs[0].catalogos" formControlName="pais"
+                [label]="'Pais o bloque'" [required]="true" name="Pais o bloque"></app-catalogo-select>
+        </div>
+        <div class="col-md-8">
+            <app-catalogo-select [catalogo]="dropdownConfigs[1].catalogos" formControlName="tratado"
+                [label]="'Tratado o Acuerdo'" [required]="true" name="Pais o bloque"></app-catalogo-select>
+        </div>
+        <div class="col-md-8">
+            <app-catalogo-select [catalogo]="dropdownConfigs[2].catalogos" formControlName="origen"
+                [label]="'Criterio de origen'" [required]="true" name="Pais o bloque"></app-catalogo-select>
+        </div>
     </div>
-</div>
-
-<div class="col-12 d-flex justify-content-end mt-3 mb-4">
-    <button class="btn btn-primary" (click)="agregarTratado()">Agregar tratado</button>
-</div>
+    <div class="col-12 d-flex justify-content-end mt-3 mb-4">
+        <button class="btn btn-primary" (click)="agregarTratado()">Agregar tratado</button>
+    </div>
+</form>
 
 <ng-alert [CONTENIDO]="'Para continuar con el trámite, deberá agregar por lo menos un tratado o acuerdo.'"></ng-alert>
 
