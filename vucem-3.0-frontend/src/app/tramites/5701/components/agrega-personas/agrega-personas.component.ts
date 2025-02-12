@@ -22,13 +22,13 @@ export class AgregaPersonasComponent {
 
   personaForm: FormGroup = this.fb.group({
     nombre: [{ value: '', disabled: true }],
-    aPaterno: [{ value: '', disabled: true }],
-    aMaterno: [{ value: '', disabled: true }],
+    primerApellido: [{ value: '', disabled: true }],
+    segundoApellido: [{ value: '', disabled: true }],
   });
 
   persona!: Persona;
 
-  personas: Array<Persona> = [];
+  personas: Persona[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -98,8 +98,8 @@ export class AgregaPersonasComponent {
     const responsable: Persona = {
       gafete: this.gafete.value,
       nombre: this.personaForm.get('nombre')?.value,
-      aPaterno: this.personaForm.get('aPaterno')?.value,
-      aMaterno: this.personaForm.get('aMaterno')?.value,
+      primerApellido: this.personaForm.get('primerApellido')?.value,
+      segundoApellido: this.personaForm.get('segundoApellido')?.value,
     };
 
     this.personas.push(responsable);

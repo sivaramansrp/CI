@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
@@ -22,10 +23,10 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule,Validation
   templateUrl: './datos-generals-animals.component.html',
   styleUrl: './datos-generals-animals.component.scss'
 })
-export class DatosGeneralsAnimalsComponent implements OnInit  {
+export class DatosGeneralsAnimalsComponent  {
     /** Configuración del primer select de aduanas */
     frmMercanciaAnimal!: FormGroup;
-  /** Configuración del primer select de aduanas */
+    /** Configuración del primer select de aduanas */
     aduanas: CatalogosSelect = {
     labelNombre: 'UMC',
     required: true,
@@ -49,19 +50,19 @@ export class DatosGeneralsAnimalsComponent implements OnInit  {
   };
 
   /** Aduana seleccionada en el primer select */
-selectedAduana: Catalogo = { id: 0, descripcion: '' }; // Provide an initial value
+  selectedAduana: Catalogo = { id: 0, descripcion: '' }; // Provide an initial value
   /** Aduana seleccionada en el segundo select */
-selectedAduanaOne: Catalogo = { id: 0, descripcion: '' }; // Provide an initial value
+  selectedAduanaOne: Catalogo = { id: 0, descripcion: '' }; // Provide an initial value
 
   /**
    * Maneja la selección de una aduana en el primer select.
    * @param e - La aduana seleccionada.
    */
   constructor(private fb: FormBuilder) {}
-    /**
-   * Custom validator for special description rule.
-   * @param control - The form control to validate.
-   * @returns A validation error object or null.
+  /**
+   * Validador personalizado para regla de descripción especial.
+   * @param control - El control de formulario a validar.
+   * @returns Un objeto de error de validación o nulo.
    */
     descripcionEspecialesValidatorFalse(control: AbstractControl): ValidationErrors | null {
       const value = control.value;
@@ -74,11 +75,10 @@ selectedAduanaOne: Catalogo = { id: 0, descripcion: '' }; // Provide an initial 
     
       return null;
     }
-    
-    /**
-   * Custom validator for descripcion rule.
-   * @param control - The form control to validate.
-   * @returns A validation error object or null.
+  /**
+   * Validador personalizado para regla de descripción especial.
+   * @param control - El control de formulario a validar.
+   * @returns Un objeto de error de validación o nulo.
    */
     descripcionValidator(control: AbstractControl): ValidationErrors | null {
       const value = control.value;
@@ -89,9 +89,9 @@ selectedAduanaOne: Catalogo = { id: 0, descripcion: '' }; // Provide an initial 
       return { descripcion: true };
     }
   /**
-   * Custom validator for special description rule.
-   * @param control - The form control to validate.
-   * @returns A validation error object or null.
+   * Validador personalizado para regla de descripción especial.
+   * @param control - El control de formulario a validar.
+   * @returns Un objeto de error de validación o nulo.
    */
   descripcionEspecialesValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
@@ -106,10 +106,10 @@ selectedAduanaOne: Catalogo = { id: 0, descripcion: '' }; // Provide an initial 
   }
   
    /**
-   * Custom validator to check if the value is within the specified range.
-   * @param min - The minimum value.
-   * @param max - The maximum value.
-   * @returns A validation function.
+   * Validador personalizado para verificar si el valor está dentro del rango especificado.
+   * @param min - El valor mínimo.
+   * @param max - El valor máximo.
+   * @returns Una función de validación.
    */
    valueRangeValidator(min: number, max: number) {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -121,7 +121,7 @@ selectedAduanaOne: Catalogo = { id: 0, descripcion: '' }; // Provide an initial 
     };
   }
  /**
-   * Initializes the component and sets up the form group with validation rules.
+   * Inicializa el componente y configura el grupo de formularios con reglas de validación.
    */
   ngOnInit(): void {
     this.frmMercanciaAnimal = this.fb.group({
@@ -129,17 +129,17 @@ selectedAduanaOne: Catalogo = { id: 0, descripcion: '' }; // Provide an initial 
         Validators.required,
         Validators.minLength(8),
         Validators.maxLength(8),
-        Validators.pattern('^[0-9]*$') // Only digits
+        Validators.pattern('^[0-9]*$') // Sólo dígitos
       ]],
       tratamiento: ['', [
         Validators.maxLength(1000),
-        this.descripcionEspecialesValidator // Custom validator
+        this.descripcionEspecialesValidator // Validador personalizado
       ]],
       presentacion: ['', [
         Validators.required,
         Validators.maxLength(15),
-        Validators.pattern('^[0-9]*.?[0-9]+$'), // Must be a number
-        this.valueRangeValidator(0.01, 999999999999.99) // Custom validator for value range
+        Validators.pattern('^[0-9]*\.?[0-9]+$'), // debe ser un numero
+        this.valueRangeValidator(0.01, 999999999999.99) // Validador personalizado para rango de valores
       ]],
       marcaEmbarque: ['', [
         Validators.maxLength(30),
@@ -148,29 +148,29 @@ selectedAduanaOne: Catalogo = { id: 0, descripcion: '' }; // Provide an initial 
       fechaCaducidad: ['', [
         Validators.required,
         Validators.maxLength(15),
-        Validators.pattern('^[0-9]*.?[0-9]+$'), // Must be a number
-        this.valueRangeValidator(0.01, 999999999999.99) // Custom validator for value range
+        Validators.pattern('^[0-9]*\.?[0-9]+$'), // debe ser un numero
+        this.valueRangeValidator(0.01, 999999999999.99) // Validador personalizado para rango de valores
       ]],
-      aduana: ['', Validators.required] ,// Add FormControl for the select field
+      aduana: ['', Validators.required] ,// Agregue FormControl para el campo seleccionado
       cites: ['', Validators.maxLength(15)],
       nombreIdentificacion: ['', [
         Validators.required,
         Validators.maxLength(200),
-        this.descripcionEspecialesValidatorFalse // Custom validator
+        this.descripcionEspecialesValidatorFalse // Validador personalizado
       ]],
       numeroAutorizacionCITES: ['', Validators.maxLength(15)],
       raza: ['', [
         Validators.maxLength(50),
-        this.descripcionEspecialesValidator // Custom validator
+        this.descripcionEspecialesValidator // Validador personalizado
       ]],
       edadAnimal: ['', [
         Validators.required,
         Validators.maxLength(50),
-        this.descripcionEspecialesValidator // Custom validator
+        this.descripcionEspecialesValidator // Validador personalizado
       ]],
       color: ['', [
         Validators.maxLength(30),
-        this.descripcionEspecialesValidator // Custom validator
+        this.descripcionEspecialesValidator // Validador personalizado
       ]],
     });
   }

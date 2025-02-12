@@ -28,12 +28,6 @@
           <label for="presentacion" class="form-label">Cantidad UMT:</label>
           <span class="require">*</span>
           <input type="text" class="form-control disabledColor1" id="presentacion" formControlName="presentacion" readonly [disabled]="true">
-          <!-- <div *ngIf="formGroup.get('presentacion')?.invalid && formGroup.get('presentacion')?.touched">
-            <small class="text-danger" *ngIf="formGroup.get('presentacion')?.errors?.['required']">Este campo es obligatorio.</small>
-            <small class="text-danger" *ngIf="formGroup.get('presentacion')?.errors?.['maxlength']">Máximo 15 caracteres.</small>
-            <small class="text-danger" *ngIf="formGroup.get('presentacion')?.errors?.['pattern']">Debe ser un número.</small>
-            <small class="text-danger" *ngIf="formGroup.get('presentacion')?.errors?.['valueRange']">Debe estar entre 0.01 y 999999999999.99.</small>
-          </div> -->
         </div>
       </div>
       <div class="col-md-4">
@@ -133,7 +127,6 @@
         <div class="pull-right">
           <button type="button" class="btn btn-default btn-space" (click)="limpiarDatosCapturaMercancia()">Limpiar</button>
           <button type="button" class="btn btn-default btn-space" (click)="guardarCapturaMercancia()">Modificar</button>
-          <!-- <button type="button" class="btn btn-danger btn-space" (click)="cerrarCapturaMercanciaAnimal()" >Cancelar</button> -->
           <button type="button" class="btn btn-primary btn-space" (click)="guardarCapturaMercancia()">Agregar</button>
         </div>
       </div>

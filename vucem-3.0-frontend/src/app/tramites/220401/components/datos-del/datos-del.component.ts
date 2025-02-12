@@ -45,7 +45,6 @@ export class DatosDelComponent implements OnInit {
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onValueChange(newValue: any) {
-   
     this.selectedValue = newValue;
   }
   form!: FormGroup; // Declare the `form` property
@@ -114,8 +113,9 @@ export class DatosDelComponent implements OnInit {
     },
   ];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  seleccionar(e: any) {}
-
+  seleccionar(e:any){
+  }
+  
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   cargarArchivo() {}
   // eslint-disable-next-line @typescript-eslint/no-empty-function

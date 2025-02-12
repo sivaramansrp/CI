@@ -8,8 +8,8 @@ export interface PantallasFormData {
 
   export interface TransporteFormData  {
     mediodeTransporte: string,
-    identificationDelTransporte: string,
+    identificaciónDelTransporte: string,
     numerodeContenedor: string,
-    fetchdeEmbarque: string,
+    fechaEmbarque: string,
     numerodeFlejes: string
   }
