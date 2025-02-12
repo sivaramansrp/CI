@@ -1,21 +1,26 @@
 /**
- * @fileoverview Este archivo contiene la clase PaisProcendenciaComponent, que es responsable de manejar la lógica del componente País Procedencia.
+ * descripción 
+ * @fileoverview Este archivo contiene la clase PaisProcendenciaComponent, responsable de manejar la lógica del componente País Procedencia.
  *
  * @module PaisProcendenciaComponent
  */
-
-import { Component, OnInit } from '@angular/core';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { CrosslistComponent } from '../../../../shared/components/crosslist/crosslist.component';
 import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { HttpClient } from '@angular/common/http';
 
+import { Component, OnInit } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+
+import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+import { CrosslistComponent } from '../../../../shared/components/crosslist/crosslist.component';
+import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+
 /**
+ * descripción 
  * @class PaisProcendenciaComponent
- * @classdesc Esta clase representa el componente País Procedencia.
+ * @classdesc Componente encargado de gestionar la selección de países de procedencia.
  */
 @Component({
   selector: 'app-pais-procendencia',
@@ -31,64 +36,74 @@ import { HttpClient } from '@angular/common/http';
   styleUrl: './pais-procendencia.component.scss',
 })
 export class PaisProcendenciaComponent implements OnInit {
-  fechasSeleccionadas: string[] = [];
-  fecha: FormControl = new FormControl('');
-  fechaSeleccionada: FormControl = new FormControl('');
-  fechasDatos: string[] = [];
   /**
-   * @property {Array<string>} selectRangoDias - Array para almacenar los rangos de días seleccionados.
+   * descripción
+   * @property {string[]} fechasSeleccionadas - Lista de fechas seleccionadas.
+   */
+  fechasSeleccionadas: string[] = [];
+
+  /**
+   * descripción
+   * @property {FormControl} fecha - Control de formulario para la fecha.
+   */
+  fecha: FormControl = new FormControl('');
+
+  /**
+   * descripción
+   * @property {FormControl} fechaSeleccionada - Control de formulario para la fecha seleccionada.
+   */
+  fechaSeleccionada: FormControl = new FormControl('');
+
+  /**
+   * descripción
+   * @property {string[]} fechasDatos - Lista de datos de fechas disponibles.
+   */
+  fechasDatos: string[] = [];
+
+  /**
+   * descripción
+   * @property {string[]} selectRangoDias - Lista de rangos de días seleccionados.
    */
   selectRangoDias: string[] = [];
 
   /**
-   * @property {CatalogosSelect} paisProc - El catálogo de países.
+   * descripción
+   * @property {CatalogosSelect} paisProc - Catálogo de países.
    */
   paisProc!: CatalogosSelect;
 
   /**
-   * @property {Array<Object>} botonField - Array para almacenar los botones de acción.
+   * descripción
+   * @property {Array<Object>} botonField - Lista de botones de acción disponibles.
    */
   botonField = [
-    {
-      btnNombre: 'Agregar todos',
-      class: 'btn-primary',
-      funcion: () => this.agregar(''),
-    },
-    {
-      btnNombre: 'Agregar seleccion',
-      class: 'btn-default',
-      funcion: () => this.agregar('t'),
-    },
-    {
-      btnNombre: 'Restar Seleccion',
-      class: 'btn-danger',
-      funcion: () => this.quitar(''),
-    },
-    {
-      btnNombre: 'Restar todos',
-      class: 'btn-default',
-      funcion: () => this.quitar('t'),
-    },
+    { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: () => this.agregar('') },
+    { btnNombre: 'Agregar seleccion', class: 'btn-default', funcion: () => this.agregar('t') },
+    { btnNombre: 'Restar Seleccion', class: 'btn-danger', funcion: () => this.quitar('') },
+    { btnNombre: 'Restar todos', class: 'btn-default', funcion: () => this.quitar('t') },
   ];
 
   /**
+   * descripción
    * @constructor
-   * @param {HttpClient} http - El cliente HTTP para realizar solicitudes.
+   * @param {HttpClient} http - Servicio HTTP para obtener datos del servidor.
    */
   constructor(private http: HttpClient) {}
 
   /**
+   * descripción
    * @method ngOnInit
-   * @description Inicializa el componente obteniendo los datos necesarios.
+   * @description Inicializa el componente y carga los datos iniciales.
    */
   ngOnInit() {
     this.fetchPaisOptions();
   }
 
   /**
+   * descripción
    * @method agregar
-   * @description Agrega elementos según el tipo especificado.
-   * @param {string} type - El tipo de acción a realizar.
+   * @description Agrega elementos a la lista según el tipo especificado.
+   * @param {string} type - Tipo de acción a realizar.
    */
   agregar(type: string) {
     if (type === 't') {
@@ -102,13 +117,14 @@ export class PaisProcendenciaComponent implements OnInit {
   }
 
   /**
+   * descripción
    * @method quitar
-   * @description Quita elementos según el tipo especificado.
-   * @param {string} type - El tipo de acción a realizar.
+   * @description Elimina elementos de la lista según el tipo especificado.
+   * @param {string} tipo - Tipo de acción a realizar.
    */
-  quitar(type: string = '') {
-    if (type === 't') {
-      this.fechasDatos = [...this.selectRangoDias];
+  quitar(tipo: string = '') {
+    if (tipo === 't') {
+      this.fechasDatos = [...this.fechasSeleccionadas];
       this.fechasSeleccionadas = [];
     } else {
       const fechaValor = this.fechaSeleccionada.value.map(Number);
@@ -118,20 +134,23 @@ export class PaisProcendenciaComponent implements OnInit {
   }
 
   /**
+   * descripción
    * @method fetchpaisProc
-   * @description Método de marcador de posición para manejar la selección de país.
-   * @param {any} e - El parámetro del evento.
+   * @description Maneja la selección de un país en el catálogo.
+   * @param {Catalogo} e - Evento del catálogo seleccionado.
    */
-  fetchpaisProc(e: any) {}
+  fetchpaisProc(_e: Catalogo) {
+    // Implementación de la lógica para selección de país.
+  }
 
   /**
+   * descripción
    * @method fetchPaisOptions
-   * @description Obtiene las opciones de países del servidor.
+   * @description Obtiene la lista de países desde el servidor.
    */
   fetchPaisOptions() {
-    this.http
-      .get('/assets/json/130102/pais-procenia.json')
-      .subscribe((data: any) => {
+    this.http.get<CatalogosSelect>('/assets/json/130102/pais-procenia.json')
+      .subscribe((data) => {
         this.paisProc = data;
       });
   }

@@ -1,20 +1,25 @@
 /**
- * @fileoverview Este archivo contiene la clase DetosDelTramiteComponent, que es responsable de manejar la lógica del componente Detos Del Trámite.
- *
+ * @fileoverview Este archivo contiene la clase DetosDelTramiteComponent, la cual gestiona la lógica del componente Detos Del Trámite.
  * @module DetosDelTramiteComponent
  */
-import { Component, OnInit } from '@angular/core';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
-import { HttpClient } from '@angular/common/http';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
+import { CatalogosSelect, TiposDocumentosResponse } from '../../../../core/models/shared/components.model';
+import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
+import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+
+import { ProductoOption, ProductoResponse } from '../../../../core/services/130102/octava-temporral.enum';
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+
 /**
+ * descripción 
  * @class DetosDelTramiteComponent
- * @classdesc Esta clase representa el componente Detos Del Trámite.
+ * @classdesc Componente encargado de manejar la selección de solicitudes y tipos de documentos en un trámite.
  */
 @Component({
   selector: 'app-detos-del-tramite',
@@ -31,71 +36,99 @@ import { CommonModule } from '@angular/common';
 })
 export class DetosDelTramiteComponent implements OnInit {
   /**
-   * @property {any[]} solicitude - Array para almacenar las opciones de solicitud.
+   * descripción 
+   * @property {FormGroup} form - Formulario reactivo del componente.
    */
-  solicitude: any[] = [];
+  form!: FormGroup;
+
   /**
-   * @property {CatalogosSelect[]} tiposDocumentosArray - Array para almacenar los tipos de documentos.
+   * descripción 
+   * @property {ProductoOption[]} solicitude - Lista de opciones de solicitud disponibles.
+   */
+  solicitude: ProductoOption[] = [];
+
+  /**
+   * descripción 
+   * @property {CatalogosSelect[]} tiposDocumentosArray - Lista de tipos de documentos disponibles.
    */
   tiposDocumentosArray: CatalogosSelect[] = [];
+
   /**
-   * @property {FormGroup} formGroup - El grupo de formularios reactivos.
+   * descripción 
+   * @property {string | number} selectedValue - Valor seleccionado actualmente.
    */
-  formGroup!: FormGroup;
+  selectedValue: string | number = 'Inicial';
+
   /**
-   * @property {string | number} selectedValue - El valor seleccionado.
-   */
-  selectedValue: string | number = 'Inicial'; // Update the type to string | number
-  /**
-   * @property {string} defaultSelect - El valor seleccionado por defecto.
+   * descripción 
+   * @property {string} defaultSelect - Valor seleccionado por defecto.
    */
   defaultSelect: string = 'Inicial';
+
   /**
+   * descripción 
    * @constructor
-   * @param {HttpClient} http - El cliente HTTP para realizar solicitudes.
+   * @param {HttpClient} http - Servicio para realizar peticiones HTTP.
+   * @param {FormBuilder} fb - Utilidad para la construcción de formularios reactivos.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private fb: FormBuilder) {}
+
   /**
+   * descripción 
    * @method ngOnInit
-   * @description Inicializa el componente obteniendo los datos necesarios.
+   * @description Método de inicialización del componente, configura el formulario y obtiene datos iniciales.
    */
   ngOnInit() {
+    this.form = this.fb.group({
+      solicitud: [''],
+      tipoDocumento: ['']
+    });
     this.fetchSolicitudeOptions();
     this.fetchTiposDocumentos();
   }
+
   /**
+   * descripción 
    * @method onValueChange
-   * @description Maneja el cambio del valor seleccionado.
-   * @param {any} newValue - El nuevo valor.
+   * @description Maneja el cambio en el valor seleccionado.
+   * @param {string | number} value - Nuevo valor seleccionado.
    */
-  onValueChange(newValue: any) {
-    this.selectedValue = newValue;
+  onValueChange(value: string | number) {
+    this.selectedValue = value;
   }
+
   /**
+   * descripción 
    * @method tipoTransporte
    * @description Método de marcador de posición para manejar el tipo de transporte.
-   * @param {any} e - El parámetro del evento.
+   * @param {Catalogo} e - Evento del catálogo seleccionado.
    */
-  tipoTransporte(e: any) {}
+  tipoTransporte(_e: Catalogo) {
+    // Manejo del evento
+  }
+
   /**
+   * descripción 
    * @method fetchTiposDocumentos
-   * @description Obtiene los tipos de documentos del servidor.
+   * @description Obtiene la lista de tipos de documentos desde un archivo JSON.
    */
   fetchTiposDocumentos() {
     this.http
-      .get('/assets/json/130102/solicitude-select.json')
-      .subscribe((data: any) => {
+      .get<TiposDocumentosResponse>('/assets/json/130102/solicitude-select.json')
+      .subscribe((data) => {
         this.tiposDocumentosArray = data.tiposDocumentosArray;
       });
   }
+
   /**
+   * descripción 
    * @method fetchSolicitudeOptions
-   * @description Obtiene las opciones de solicitud del servidor.
+   * @description Obtiene la lista de opciones de solicitud desde un archivo JSON.
    */
   fetchSolicitudeOptions() {
     this.http
-      .get('/assets/json/130102/solicitude-options.json')
-      .subscribe((data: any) => {
+      .get<ProductoResponse>('/assets/json/130102/solicitude-options.json')
+      .subscribe((data) => {
         this.solicitude = data.options;
         this.defaultSelect = data.defaultSelect;
       });

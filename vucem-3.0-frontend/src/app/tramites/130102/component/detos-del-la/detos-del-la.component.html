@@ -25,10 +25,22 @@
           rows="8"
           formControlName="descripcion"
         ></textarea>
-        <div *ngIf="form.controls['descripcion'].invalid && form.controls['descripcion'].touched" class="text-danger">
-          <small *ngIf="form.controls['descripcion'].errors?.['required']">La descripción es obligatoria.</small>
-          <small *ngIf="form.controls['descripcion'].errors?.['minlength']">Debe tener al menos 10 caracteres.</small>
-          <small *ngIf="form.controls['descripcion'].errors?.['maxlength']">No puede exceder 500 caracteres.</small>
+        <div
+          *ngIf="
+            form.controls['descripcion'].invalid &&
+            form.controls['descripcion'].touched
+          "
+          class="text-danger"
+        >
+          <small *ngIf="form.controls['descripcion'].errors?.['required']"
+            >La descripción es obligatoria.</small
+          >
+          <small *ngIf="form.controls['descripcion'].errors?.['minlength']"
+            >Debe tener al menos 10 caracteres.</small
+          >
+          <small *ngIf="form.controls['descripcion'].errors?.['maxlength']"
+            >No puede exceder 500 caracteres.</small
+          >
         </div>
       </div>
     </div>
@@ -37,10 +49,16 @@
         [catalogosDatos]="fraccionF"
         (valorSeleccion)="fetchFraccion($event)"
         [tooltipT]="false"
-        formControlName="fraccion" 
       ></select-catalogos>
-      <div *ngIf="form.controls['fraccion'].invalid && form.controls['fraccion'].touched" class="text-danger">
-        <small *ngIf="form.controls['fraccion'].errors?.['required']">Debe seleccionar un valor.</small>
+      <div
+        *ngIf="
+          form.controls['fraccion'].invalid && form.controls['fraccion'].touched
+        "
+        class="text-danger"
+      >
+        <small *ngIf="form.controls['fraccion'].errors?.['required']"
+          >Debe seleccionar un valor.</small
+        >
       </div>
     </div>
     <div class="row">
@@ -49,21 +67,46 @@
           [catalogosDatos]="Unidad"
           (valorSeleccion)="fetchUnidad($event)"
           [tooltipT]="true"
-          formControlName="unidadMedida"
         ></select-catalogos>
-        <div *ngIf="form.controls['unidadMedida'].invalid && form.controls['unidadMedida'].touched" class="text-danger">
-          <small *ngIf="form.controls['unidadMedida'].errors?.['required']">Debe seleccionar una unidad de medida.</small>
+        <div
+          *ngIf="
+            form.controls['unidadMedida'].invalid &&
+            form.controls['unidadMedida'].touched
+          "
+          class="text-danger"
+        >
+          <small *ngIf="form.controls['unidadMedida'].errors?.['required']"
+            >Debe seleccionar una unidad de medida.</small
+          >
         </div>
       </div>
       <div class="col-md-4 form-group">
         <label class="form-label" for="nombre_imp"
           >Cantidad<span class="require">*</span>:</label
         >
-        <input class="form-control" id="Cantidad" placeholder="" type="text"   formControlName="cantidad" />
-        <div *ngIf="form.controls['cantidad'].invalid && form.controls['cantidad'].touched" class="text-danger">
-          <small *ngIf="form.controls['cantidad'].errors?.['required']">Este campo es obligatorio.</small>
-          <small *ngIf="form.controls['cantidad'].errors?.['pattern']">Solo se permiten números.</small>
-          <small *ngIf="form.controls['cantidad'].errors?.['min']">Debe ser mayor que 0.</small>
+        <input
+          class="form-control"
+          id="Cantidad"
+          placeholder=""
+          type="text"
+          formControlName="cantidad"
+        />
+        <div
+          *ngIf="
+            form.controls['cantidad'].invalid &&
+            form.controls['cantidad'].touched
+          "
+          class="text-danger"
+        >
+          <small *ngIf="form.controls['cantidad'].errors?.['required']"
+            >Este campo es obligatorio.</small
+          >
+          <small *ngIf="form.controls['cantidad'].errors?.['pattern']"
+            >Solo se permiten números.</small
+          >
+          <small *ngIf="form.controls['cantidad'].errors?.['min']"
+            >Debe ser mayor que 0.</small
+          >
         </div>
       </div>
       <div class="col-md-4 form-group">
@@ -81,10 +124,22 @@
           type="text"
           formControlName="valorFacturaUSD"
         />
-        <div *ngIf="form.controls['valorFacturaUSD'].invalid && form.controls['valorFacturaUSD'].touched" class="text-danger">
-          <small *ngIf="form.controls['valorFacturaUSD'].errors?.['required']">Este campo es obligatorio.</small>
-          <small *ngIf="form.controls['valorFacturaUSD'].errors?.['pattern']">Ingrese un valor numérico válido (ej. 100.50).</small>
-          <small *ngIf="form.controls['valorFacturaUSD'].errors?.['min']">Debe ser mayor que 0.</small>
+        <div
+          *ngIf="
+            form.controls['valorFacturaUSD'].invalid &&
+            form.controls['valorFacturaUSD'].touched
+          "
+          class="text-danger"
+        >
+          <small *ngIf="form.controls['valorFacturaUSD'].errors?.['required']"
+            >Este campo es obligatorio.</small
+          >
+          <small *ngIf="form.controls['valorFacturaUSD'].errors?.['pattern']"
+            >Ingrese un valor numérico válido (ej. 100.50).</small
+          >
+          <small *ngIf="form.controls['valorFacturaUSD'].errors?.['min']"
+            >Debe ser mayor que 0.</small
+          >
         </div>
       </div>
     </div>
