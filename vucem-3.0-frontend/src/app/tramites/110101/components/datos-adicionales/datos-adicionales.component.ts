@@ -5,12 +5,10 @@ import { CommonModule } from '@angular/common';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { PROTESTA } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
-
 
 /**
 * Este componente se utiliza para mostrar la forma del datos adicionales. - 110101
@@ -29,7 +27,13 @@ import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-
 })
 export class DatosAdicionalesComponent implements OnInit {
 
-  public form!: FormGroup;
+  /**
+   * Representa el formulario del componente.
+   * Se espera que esta propiedad sea del tipo 'FormGroup'.
+   *
+   * @property {FormGroup} formulario - El formulario del componente.
+   */
+  public formulario!: FormGroup;
   /**
    * Representa la entidad seleccionada del catálogo.
    * Se espera que esta propiedad sea del tipo 'CatalogosSelect'.
@@ -55,6 +59,7 @@ export class DatosAdicionalesComponent implements OnInit {
     * Una constante que contiene el valor del objeto 'PROTESTA'.
     * Se utiliza para almacenar datos adicionales relacionados con el componente.
     */
+
   TEXTOS = PROTESTA;
   /**
    * constructor de la clase
@@ -73,14 +78,16 @@ export class DatosAdicionalesComponent implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.createForm();
+    this.crearFormulario();
     this.getEntidadFederativa();
     this.getRepresentacionFederal();
   }
-
-
-   createForm(): void {
-    this.form = this.fb.group({
+  /**
+   * Crea el formulario con los campos necesarios y sus validaciones.
+   * @returns {void}
+   */
+  crearFormulario(): void {
+    this.formulario = this.fb.group({
       entidad: ['', Validators.required],
       representacion: ['', Validators.required],
     });

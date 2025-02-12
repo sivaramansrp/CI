@@ -1,17 +1,17 @@
 <ng-titulo titulo="Datos generales del solicitante" />
-<ng-alert [CONTENIDO]="alert.MENSAJE_ALERTA"></ng-alert>
-<form [formGroup]="tratadosForm">
+<ng-alert [CONTENIDO]="alerta.MENSAJE_ALERTA"></ng-alert>
+<form [formGroup]="formularioTratados">
     <div class="row">
         <div class="col-md-8">
-            <app-catalogo-select [catalogo]="dropdownConfigs[0].catalogos" formControlName="pais"
+            <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="pais"
                 [label]="'Pais o bloque'" [required]="true" name="Pais o bloque"></app-catalogo-select>
         </div>
         <div class="col-md-8">
-            <app-catalogo-select [catalogo]="dropdownConfigs[1].catalogos" formControlName="tratado"
+            <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="tratado"
                 [label]="'Tratado o Acuerdo'" [required]="true" name="Pais o bloque"></app-catalogo-select>
         </div>
         <div class="col-md-8">
-            <app-catalogo-select [catalogo]="dropdownConfigs[2].catalogos" formControlName="origen"
+            <app-catalogo-select [catalogo]="configuracionesDropdown[2].catalogos" formControlName="origen"
                 [label]="'Criterio de origen'" [required]="true" name="Pais o bloque"></app-catalogo-select>
         </div>
     </div>
@@ -24,7 +24,7 @@
 
 <h6 class="fs-4">Pais/bloque-tratado/acuerdo seleccionados por el solicitante</h6>
 
-<ng-table [commonTableHeader]="commonTableHeaders" [commonTableBody]="tableBody"></ng-table>
+<ng-table [commonTableHeader]="encabezadosComunesTabla" [commonTableBody]="cuerpoTabla"></ng-table>
 
 <div class=" text-end mt-5">
     <button class="btn btn-default me-2">Modificar tratado</button>
