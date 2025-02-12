@@ -32,60 +32,15 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   mesaCuerpo: any = [];
   tablaDeDatosDeCelda: Datos_de_fila[] = []
   procedureData: FormGroup;
-  aduanaList: CatalogosSelect = {
-    labelNombre: 'Aduana de ingreso',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [],
-  };
-  agropecuariaList: CatalogosSelect = {
-    labelNombre: 'Oficina de inspección de Sanidad Agropecuaria',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [],
-  };
-  puntoList: CatalogosSelect = {
-    labelNombre: 'Punto de inspección',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: []
-  }
-  regimeList: CatalogosSelect = {
-    labelNombre: 'Régimen',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: []
-  }
-  productoList: CatalogosSelect = {
-    labelNombre: 'Tipo de producto',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: []
-  }
-  usoList: CatalogosSelect = {
-    labelNombre: 'Uso',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: []
-  }
-  umcList: CatalogosSelect = {
-    labelNombre: 'Umc',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: []
-  }
-  nicoList: CatalogosSelect = {
-    labelNombre: 'Nico',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: []
-  }
-  arancelariaList: CatalogosSelect = {
-    labelNombre: 'Fracción arancelaria',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: []
-  }
+  aduanaList: Catalogo[];
+  agropecuariaList: Catalogo[];
+  puntoList: Catalogo[];
+  regimeList: Catalogo[];
+  productoList: Catalogo[];
+  usoList: Catalogo[];
+  umcList: Catalogo[];
+  nicoList: Catalogo[];
+  arancelariaList: Catalogo[];
   forma: FormGroup;
   mercanciaForma: FormGroup;
   formularioDeTransporte: FormGroup;
@@ -169,25 +124,25 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   getaduanaLista() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/aduana_de_ingreso.json').subscribe((data): void => {
       const datos = data?.data;
-      this.aduanaList['catalogos'] = datos as Catalogo[];
+      this.aduanaList = datos as Catalogo[];
     });
   }
   getagropecuariaLista() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/aduana_de_ingreso.json').subscribe((data): void => {
       const datos = data?.data;
-      this.agropecuariaList['catalogos'] = datos as Catalogo[];
+      this.agropecuariaList = datos as Catalogo[];
     });
   }
   getPuntoLista() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/punto.json').subscribe((data): void => {
       const datos = data?.data;
-      this.puntoList['catalogos'] = datos as Catalogo[];
+      this.puntoList = datos as Catalogo[];
     });
   }
   getRegimenLista() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/regimen.json').subscribe((data): void => {
       const datos = data?.data;
-      this.regimeList['catalogos'] = datos as Catalogo[];
+      this.regimeList = datos as Catalogo[];
     });
   }
   getAduanaLista() {
@@ -199,31 +154,31 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   getArancelariaLista() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/nombre.json').subscribe((data): void => {
       const datos = data?.data;
-      this.arancelariaList['catalogos'] = datos as Catalogo[];
+      this.arancelariaList = datos as Catalogo[];
     });
   }
   getNicoLista() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/nombre.json').subscribe((data): void => {
       const datos = data?.data;
-      this.nicoList['catalogos'] = datos as Catalogo[];
+      this.nicoList = datos as Catalogo[];
     });
   }
   getUmCLista() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/nombre.json').subscribe((data): void => {
       const datos = data?.data;
-      this.umcList['catalogos'] = datos as Catalogo[];
+      this.umcList = datos as Catalogo[];
     });
   }
   getusoLista() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/nombre.json').subscribe((data): void => {
       const datos = data?.data;
-      this.usoList['catalogos'] = datos as Catalogo[];
+      this.usoList = datos as Catalogo[];
     });
   }
   getProductoLista() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/nombre.json').subscribe((data): void => {
       const datos = data?.data;
-      this.productoList['catalogos'] = datos as Catalogo[];
+      this.productoList = datos as Catalogo[];
     });
   }
 }
