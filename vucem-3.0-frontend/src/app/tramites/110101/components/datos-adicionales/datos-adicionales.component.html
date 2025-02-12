@@ -1,18 +1,21 @@
 <div class="container">
     <ng-titulo titulo="Representación federal" />
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <select-catalogos [catalogosDatos]="entidad"
-                            (valorSeleccion)="docSeleccionado($event)">
-            </select-catalogos>
+    <form [formGroup]="formulario">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="entidad" [label]="'Entidad federativa'" [required]="true"
+                    name="entidad" formControlName="entidad" (change)="docSeleccionado($event)">
+                </app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="representacion" [label]="'Representación federal'" [required]="true"
+                    name="representacion" formControlName="representacion"
+                    (change)="validarRepresentacionFederalIDCSECEROR_($event)">
+                </app-catalogo-select>
+            </div>
         </div>
-        <div class="col-md-4">
-            <select-catalogos [catalogosDatos]="representacion"
-                            (valorSeleccion)="validarRepresentacionFederalIDCSECEROR_($event)">
-            </select-catalogos>
-        </div>
-    </div>
-    
+    </form>
+
     <ng-titulo titulo="Protesto de Decir Verdad" />
     <div class="form-check bg-light p-3 border rounded">
         <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="infoAlert"></ng-alert>

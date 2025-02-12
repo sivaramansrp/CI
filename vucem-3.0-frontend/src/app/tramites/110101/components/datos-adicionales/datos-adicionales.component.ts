@@ -5,11 +5,10 @@ import { CommonModule } from '@angular/common';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { PROTESTA } from '../../../../shared/constantes/servicios-extraordinarios.enum';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 
 /**
 * Este componente se utiliza para mostrar la forma del datos adicionales. - 110101
@@ -23,17 +22,25 @@ import { ValidacionesFormularioService } from '../../../../core/services/shared/
     CommonModule,
     AlertComponent,
     SelectCatalogosComponent,
+    CatalogoSelectComponent,
     ReactiveFormsModule]
 })
 export class DatosAdicionalesComponent implements OnInit {
 
+  /**
+   * Representa el formulario del componente.
+   * Se espera que esta propiedad sea del tipo 'FormGroup'.
+   *
+   * @property {FormGroup} formulario - El formulario del componente.
+   */
+  public formulario!: FormGroup;
   /**
    * Representa la entidad seleccionada del catálogo.
    * Se espera que esta propiedad sea del tipo 'CatalogosSelect'.
    *
    * @property {CatalogosSelect} entidad - La entidad seleccionada.
    */
-  public entidad!: CatalogosSelect;
+  public entidad!: Catalogo[];
 
   /**
    * Representa la representación seleccionada del catálogo.
@@ -42,7 +49,7 @@ export class DatosAdicionalesComponent implements OnInit {
    * @property {CatalogosSelect} representacion - La representación seleccionada.
    */
 
-  public representacion!: CatalogosSelect;
+  public representacion!: Catalogo[];
   /**
     * Una cadena que representa la clase CSS para una alerta de información.
     * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
@@ -52,6 +59,7 @@ export class DatosAdicionalesComponent implements OnInit {
     * Una constante que contiene el valor del objeto 'PROTESTA'.
     * Se utiliza para almacenar datos adicionales relacionados con el componente.
     */
+
   TEXTOS = PROTESTA;
   /**
    * constructor de la clase
@@ -70,8 +78,19 @@ export class DatosAdicionalesComponent implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.crearFormulario();
     this.getEntidadFederativa();
     this.getRepresentacionFederal();
+  }
+  /**
+   * Crea el formulario con los campos necesarios y sus validaciones.
+   * @returns {void}
+   */
+  crearFormulario(): void {
+    this.formulario = this.fb.group({
+      entidad: ['', Validators.required],
+      representacion: ['', Validators.required],
+    });
   }
 
   /**
@@ -82,21 +101,16 @@ export class DatosAdicionalesComponent implements OnInit {
    * @returns {void}
    */
   public getEntidadFederativa(): void {
-    this.entidad = {
-      labelNombre: 'Entidad federativa',
-      required: true,
-      primerOpcion: 'Selecciona un valor',
-      catalogos: [
-        {
-          id: 1,
-          descripcion: 'SINALOA',
-        },
-        {
-          id: 2,
-          descripcion: 'Opción 1',
-        }
-      ],
-    };
+    this.entidad = [
+      {
+        id: 1,
+        descripcion: 'SINALOA',
+      },
+      {
+        id: 2,
+        descripcion: 'Opción 1',
+      }
+    ]
   }
 
   /**
@@ -107,21 +121,16 @@ export class DatosAdicionalesComponent implements OnInit {
    * @returns {void}
    */
   public getRepresentacionFederal(): void {
-    this.representacion = {
-      labelNombre: 'Representación federal',
-      required: true,
-      primerOpcion: 'Selecciona un valor',
-      catalogos: [
-        {
-          id: 1,
-          descripcion: 'CULIACAN',
-        },
-        {
-          id: 2,
-          descripcion: 'Opción 1',
-        }
-      ],
-    };
+    this.representacion = [
+      {
+        id: 1,
+        descripcion: 'CULIACAN',
+      },
+      {
+        id: 2,
+        descripcion: 'Opción 1',
+      }
+    ]
   }
 
   /**
@@ -130,7 +139,7 @@ export class DatosAdicionalesComponent implements OnInit {
   * @returns {void}
   */
   // eslint-disable-next-line class-methods-use-this
-  public docSeleccionado(_e: Catalogo): void {
+  public docSeleccionado(_e: Event): void {
     // this is a dynamic function once we get the api will implement it
   }
 
@@ -141,7 +150,7 @@ export class DatosAdicionalesComponent implements OnInit {
    */
 
   // eslint-disable-next-line class-methods-use-this
-  public validarRepresentacionFederalIDCSECEROR_(_e: Catalogo): void {
+  public validarRepresentacionFederalIDCSECEROR_(_e: Event): void {
     // this is a dynamic function once we get the api will implement it
 
   }
