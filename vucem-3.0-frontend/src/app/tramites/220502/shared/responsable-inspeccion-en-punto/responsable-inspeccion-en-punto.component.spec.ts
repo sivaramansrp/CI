@@ -1,10 +1,10 @@
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { ComponentFixture } from '@angular/core/testing';
 import { FormGroup } from '@angular/forms';
 import { FormGroupName } from '@angular/forms';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsableInspeccionEnPuntoComponent } from './responsable-inspeccion-en-punto.component';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TestBed } from '@angular/core/testing';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
@@ -14,7 +14,7 @@ describe('ResponsableInspeccionEnPuntoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ResponsableInspeccionEnPuntoComponent, TituloComponent, SelectCatalogosComponent ],
+      declarations: [ ResponsableInspeccionEnPuntoComponent, TituloComponent, CatalogoSelectComponent ],
       imports: [ ReactiveFormsModule ],
       schemas: [NO_ERRORS_SCHEMA]
     })

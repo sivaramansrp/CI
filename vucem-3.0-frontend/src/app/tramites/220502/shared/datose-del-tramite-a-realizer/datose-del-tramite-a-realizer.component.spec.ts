@@ -1,10 +1,10 @@
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { ComponentFixture } from '@angular/core/testing';
 import { DatoseDelTramiteARealizerComponent } from './datose-del-tramite-a-realizer.component';
 import { FormGroup } from '@angular/forms';
 import { InputFechaComponent } from '../../../../shared/components/input-fecha/input-fecha.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TestBed } from '@angular/core/testing';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
@@ -14,7 +14,7 @@ describe('DatoseDelTramiteARealizerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DatoseDelTramiteARealizerComponent, TituloComponent, SelectCatalogosComponent, InputFechaComponent ],
+      declarations: [ DatoseDelTramiteARealizerComponent, TituloComponent, CatalogoSelectComponent, InputFechaComponent ],
       imports: [ ReactiveFormsModule ],
       schemas: [NO_ERRORS_SCHEMA]
     })
