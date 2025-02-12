@@ -42,7 +42,6 @@ export class PasoDosComponent implements OnInit {
         next: (resp): void => {
           if (resp.length > 0) {
             this.catalogoDocumentos = resp;
-            console.log(this.catalogoDocumentos);
           }
         },
         error: (_error): void => {},
