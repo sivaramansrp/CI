@@ -7,9 +7,7 @@
     ></div>
     <div class="row" formGroupName="datosDelaSolicitud">
       <div class="col-md-8">
-        <label class="form-label" for="foliodel"
-          >Folio del trámite:</label
-        >
+        <label class="form-label" for="foliodel">Folio del trámite:</label>
         <input
           formControlName="foliodel"
           value="1502200200120240301000015"
@@ -26,24 +24,31 @@
       <ng-titulo titulo="Datos del tramite a realizar" />
       <div class="row">
         <div class="col-md-4">
-          <select-catalogos
-            [catalogosDatos]="aduanaIngreso"
-            (valorSeleccion)="aduanaDeIngreso($event)"
-          />
+          <app-catalogo-select
+            id="aduanaIngreso"
+            [catalogo]="aduanaIngreso.catalogos"
+            [label]="aduanaIngreso.labelNombre"
+            [placeholder]="aduanaIngreso.primerOpcion"
+            [isDisabled]="false"
+          ></app-catalogo-select>
         </div>
         <div class="col-md-8">
-          <select-catalogos
-            [catalogosDatos]="oficianaInspeccion"
-            (valorSeleccion)="oficianaDeInspeccion($event)"
-          />
+          <app-catalogo-select
+            [catalogo]="oficianaInspeccion.catalogos"
+            [label]="oficianaInspeccion.labelNombre"
+            [placeholder]="oficianaInspeccion.primerOpcion"
+            [isDisabled]="false"
+          ></app-catalogo-select>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4">
-          <select-catalogos
-            [catalogosDatos]="puntoInspeccion"
-            (valorSeleccion)="puntoDeInspeccion($event)"
-          />
+          <app-catalogo-select
+            [catalogo]="puntoInspeccion.catalogos"
+            [label]="puntoInspeccion.labelNombre"
+            [placeholder]="puntoInspeccion.primerOpcion"
+            [isDisabled]="false"
+          ></app-catalogo-select>
         </div>
       </div>
       <div class="row">
@@ -68,10 +73,12 @@
           </div>
         </div>
         <div class="col-md-4">
-          <select-catalogos
-            [catalogosDatos]="establecimiento"
-            (valorSeleccion)="establecimientoDe($event)"
-          />
+          <app-catalogo-select
+            [catalogo]="establecimiento.catalogos"
+            [label]="establecimiento.labelNombre"
+            [placeholder]="establecimiento.primerOpcion"
+            [isDisabled]="true"
+          ></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <label class="form-label" for="nombreVeterinario"
@@ -80,7 +87,6 @@
           <input
             formControlName="claveUCON"
             readonly
-            
             value=""
             class="form-control"
             id="claveUCON"
@@ -107,10 +113,12 @@
           </div>
         </div>
         <div class="col-md-8">
-          <select-catalogos
-            [catalogosDatos]="regimenDestinaran"
-            (valorSeleccion)="regimenDeDestinaran($event)"
-          />
+          <app-catalogo-select
+            [catalogo]="regimenDestinaran.catalogos"
+            [label]="regimenDestinaran.labelNombre"
+            [placeholder]="regimenDestinaran.primerOpcion"
+            [isDisabled]="false"
+          ></app-catalogo-select>
         </div>
       </div>
     </div>
@@ -231,7 +239,6 @@
                 class="form-control"
                 id="coordenadas"
                 readonly
-                
                 formControlName="coordenadas"
                 placeholder=""
                 type="text"
@@ -241,10 +248,12 @@
           <ng-titulo titulo="Medio de transporte" />
           <div class="row">
             <div class="col-md-4">
-              <select-catalogos
-                [catalogosDatos]="movilizacionNacional"
-                (valorSeleccion)="movilizacionDeNacional($event)"
-              />
+              <app-catalogo-select
+                [catalogo]="movilizacionNacional.catalogos"
+                [label]="movilizacionNacional.labelNombre"
+                [placeholder]="movilizacionNacional.primerOpcion"
+                [isDisabled]="false"
+              ></app-catalogo-select>
             </div>
             <div class="col-md-8 form-group">
               <label class="form-label" for="identificacionTransporte"
@@ -254,23 +263,26 @@
                 class="form-control"
                 id="identificacionTransporte"
                 readonly
-                
                 placeholder=""
                 type="text"
                 formControlName="transporte"
               />
             </div>
             <div class="col-md-4">
-              <select-catalogos
-                [catalogosDatos]="puntoVerificacion"
-                (valorSeleccion)="puntoDeVerificacion($event)"
-              />
+              <app-catalogo-select
+                [catalogo]="puntoVerificacion.catalogos"
+                [label]="puntoVerificacion.labelNombre"
+                [placeholder]="puntoVerificacion.primerOpcion"
+                [isDisabled]="false"
+              ></app-catalogo-select>
             </div>
             <div class="col-md-8">
-              <select-catalogos
-                [catalogosDatos]="empresaTransportista"
-                (valorSeleccion)="empresaDeTransportista($event)"
-              />
+              <app-catalogo-select
+                [catalogo]="empresaTransportista.catalogos"
+                [label]="empresaTransportista.labelNombre"
+                [placeholder]="empresaTransportista.primerOpcion"
+                [isDisabled]="true"
+              ></app-catalogo-select>
             </div>
           </div>
         </form>
