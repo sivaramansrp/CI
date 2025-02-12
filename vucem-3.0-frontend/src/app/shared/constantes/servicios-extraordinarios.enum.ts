@@ -158,3 +158,38 @@ export const PROTESTA = {
   <p>El/la que suscribe manifiesto(a) bajo protesta de decir verdad, que la información declarada en el presente trámite de REGISTRO ÚNICO DE PRODUCTOS ELEGIBLES PARA PREFERENCIAS Y CONCESIONES ARANCELARIAS es copia fiel, íntegra e inalterada de la información y documentación soporte que obra en poder del (de la) solicitante.</p>`,
 }
 
+export const TXT_ALERTA_ACUSE = (folio: string) => {
+  return `Tu solicitud ha sido registrada con el siguiente número de folio:  < ${folio} >`;
+}
+
+export const TITULO_ACUSE = 'Acuse(s)';
+
+export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
+  txtAlerta:
+    'Tu solicitud ha sido registrada con el siguiente número de folio:',
+  tituloSeccionAcuse: 'Acuse(s)',
+  encabezadoTablaAcuse: [
+    {
+      key: 'id',
+      valor: 'No.',
+    },
+    {
+      key: 'documento',
+      valor: 'Documento.',
+    },
+  ],
+  datosTablaAcuse: [
+    {
+      id: 1,
+      idDocumento: 'doc12',
+      documento: 'Acuse de recepción de trámite',
+    },
+  ],
+  accionesTablaAcuse: [
+    {
+      tipo: 'descargar',
+      label: 'Descargar',
+      icono: 'bi-arrow-bar-down',
+    },
+  ],
+};
