@@ -5,7 +5,13 @@
         <ng-titulo titulo="Medio de transporte"></ng-titulo>
       </div>
       <div class="col-md-6">
-        <select-catalogos [catalogosDatos]="transporteList"></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="transporteList"
+          formControlName="transporte"
+          [label]="'Medio de transporte'"
+          [required]="true"
+          name="transporte"
+        ></app-catalogo-select>
       </div>
       <div class="col-md-6 mt-2">
         <label class="control-label" for="transporte"
@@ -21,7 +27,13 @@
         />
       </div>
       <div class="col-md-12">
-        <select-catalogos [catalogosDatos]="puntoList"></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="puntoList"
+          formControlName="punto"
+          [label]="'Punto de verificación federal'"
+          [required]="false"
+          name="punto"
+        ></app-catalogo-select>
       </div>
       <div class="col-md-12 mt-2">
         <label class="control-label" for="empresaTransportista"

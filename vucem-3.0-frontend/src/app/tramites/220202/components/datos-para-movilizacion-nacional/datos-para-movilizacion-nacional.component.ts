@@ -34,23 +34,13 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
    * @description Configuración para el selector de medio de transporte.
    * @type {CatalogosSelect}
    */
-  transporteList: CatalogosSelect = {
-    labelNombre: 'Medio de transporte',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: []
-  };
+  transporteList: Catalogo[];
 
   /**
    * @description Configuración para el selector de punto de verificación federal.
    * @type {CatalogosSelect}
    */
-  puntoList: CatalogosSelect = {
-    labelNombre: 'Punto de verificación federal',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: []
-  };
+  puntoList: Catalogo[];
 
   /**
    * @constructor
@@ -89,7 +79,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
   obtenerListaDeJustificaciones() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/transporte.json').subscribe((data): void => {
       const datos = data?.data;
-      this.transporteList['catalogos'] = datos as Catalogo[];
+      this.transporteList = datos as Catalogo[];
     });
   }
 
@@ -100,7 +90,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
   obtenerListaDePunto() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/punto.json').subscribe((data): void => {
       const datos = data?.data;
-      this.puntoList['catalogos'] = datos as Catalogo[];
+      this.puntoList = datos as Catalogo[];
     });
   }
 }
