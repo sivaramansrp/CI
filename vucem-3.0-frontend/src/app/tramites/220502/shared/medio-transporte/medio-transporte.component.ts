@@ -1,3 +1,4 @@
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -8,7 +9,6 @@ import { Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { Validators } from '@angular/forms';
 import { datosDeMercancias } from '../../../../core/models/220502/solicitud-pantallas.model';
@@ -24,7 +24,7 @@ import { inject } from '@angular/core';
     CommonModule,
     ReactiveFormsModule,
     TituloComponent,
-    SelectCatalogosComponent,
+    CatalogoSelectComponent,
   ],
   viewProviders: [
     {
