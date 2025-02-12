@@ -27,11 +27,7 @@
               <label for="{{item.campo}}">{{item.labelNombre}}:</label>
               <input class="form-control" type="text" name="" id="{{item.campo}}" [formControlName]="item.campo">
             </div>
-          } @else if (item.tipo_input === 'date') {
-            <!-- <input-fecha [datos]="item"></input-fecha> -->
-
-
-          }
+          } 
           @else if (item.tipo_input === 'textarea') {
             <div [ngClass]="item.class" class="mt-3">
               <label for="{{item.campo}}">{{item.labelNombre}}:</label>
