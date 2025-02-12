@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
+
 import { DatosPasos } from '../../../../core/models/shared/components.model';
-import { PASOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
+
+import { PASOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+
 
 @Component({
   selector: 'app-solicitante',
@@ -9,7 +12,7 @@ import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraor
   styleUrl: './solicitante.component.scss'
 })
 export class SolicitanteComponent {
-   pasos: Array<ListaPasosWizard> = PASOS;
+   pasos: ListaPasosWizard[] = PASOS;
     indice: number = 1;
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,

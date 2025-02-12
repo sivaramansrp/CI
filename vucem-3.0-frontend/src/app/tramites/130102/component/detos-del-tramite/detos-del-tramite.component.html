@@ -1,5 +1,5 @@
 <div class="container">
-  <form>
+  <form [formGroup]="form">
     <ng-titulo titulo="Datos del tramite a realizar"> </ng-titulo>
     <div class="row">
       <div class="col-md-4">
@@ -15,11 +15,12 @@
         </div>
       </div>
       <div class="col-md-8">
-        <div *ngFor="let tiposDocumentos of tiposDocumentosArray">
+        <div *ngFor="let tiposDocumentos of tiposDocumentosArray ">
           <select-catalogos
             [catalogosDatos]="tiposDocumentos"
             (valorSeleccion)="tipoTransporte($event)"
           ></select-catalogos>
+        
         </div>
       </div>
     </div>

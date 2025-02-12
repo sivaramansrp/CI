@@ -108,3 +108,6 @@ export interface TableData {
 export interface TableBodyData {
   tbodyData: string[];
 }
+export interface TiposDocumentosResponse {
+  tiposDocumentosArray: CatalogosSelect[];
+}

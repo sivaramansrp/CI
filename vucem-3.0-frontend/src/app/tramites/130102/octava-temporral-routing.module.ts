@@ -1,5 +1,6 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+
 import { OctavaTemporralComponent } from './pages/octava-temporral/octava-temporral.component';
 
 const routes: Routes = [
