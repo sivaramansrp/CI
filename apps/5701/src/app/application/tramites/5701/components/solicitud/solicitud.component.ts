@@ -7,41 +7,41 @@ import {
   FECHA_INICIO,
   HORA_FINAL,
   HORA_INICIO,
-} from '../../../../shared/constantes/servicios-extraordinarios.enum';
+} from '@ng-mf/data-access-user';
 
 import {
   Catalogo,
   CatalogoPaises,
-} from '../../../../core/models/shared/catalogos.model';
+} from '@ng-mf/data-access-user';
 import {
   InputFecha,
   InputHora,
-} from '../../../../core/models/shared/components.model';
+} from '@ng-mf/data-access-user';
 
-import { DatosComponentePedimento } from '../../../../core/models/5701/servicios-extraordinarios.model';
+import { DatosComponentePedimento } from '@ng-mf/data-access-user';
 
-import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 import {
   CATALOGOS_ID,
   TIPO_SOLICITUD,
-} from '../../../../shared/constantes/constantes';
+} from '@ng-mf/data-access-user';
 
 import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../estados/tramites/tramite5701.store';
 import { Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
-import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
+import { CatalogosService } from '@ng-mf/data-access-user';
 
-import { FechasService } from '../../../../core/services/shared/fechas/fechas.service';
-import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
-import { datosAgregarFormulario } from '../../../../core/models/shared/forms-model';
+import { FechasService } from '@ng-mf/data-access-user';
+import { FormulariosService } from '@ng-mf/data-access-user';
+import { datosAgregarFormulario } from '@ng-mf/data-access-user';
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
-import { SeccionQuery } from '../../../../core/queries/seccion.query';
-import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+import { SeccionQuery } from '@ng-mf/data-access-user';
+import { Tramite5701Query } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-solicitud',

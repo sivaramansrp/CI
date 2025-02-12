@@ -1,11 +1,11 @@
 import { Component, Input, output, SimpleChanges } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '../../../../shared/shared.module';
-import { Pedimento } from '../../../../core/models/shared/components.model';
-import { DatosComponentePedimento } from '../../../../core/models/5701/servicios-extraordinarios.model';
-import { BooleanoSiNoPipe } from '../../../../shared/pipes/booleanoSiNo/booleano-si-no.pipe';
+import { SharedModule } from '@ng-mf/data-access-user';
+import { Pedimento } from '@ng-mf/data-access-user';
+import { DatosComponentePedimento } from '@ng-mf/data-access-user';
+import { BooleanoSiNoPipe } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'c-pedimento',

@@ -3,15 +3,16 @@ import { ToastrModule, provideToastr } from 'ngx-toastr';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.component';
-import { FooterComponent } from './shared/components/footer/footer.component';
-import { HeaderComponent } from './shared/components/header/header.component';
-import { InformacionUsuarioComponent } from "./shared/components/informacion-usuario/informacion-usuario.component";
-import { NavComponent } from './shared/components/nav/nav.component';
+import { BreadcrumbComponent } from '@ng-mf/data-access-user';
+import { FooterComponent } from '@ng-mf/data-access-user';
+import { HeaderComponent } from '@ng-mf/data-access-user';
+import { InformacionUsuarioComponent } from "@ng-mf/data-access-user";
+import { NavComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
-import { TituloComponent } from "./shared/components/titulo/titulo.component";
-import { SolicitanteService } from './core/services/shared/solicitante/solicitante.service';
+import { TituloComponent } from "@ng-mf/data-access-user";
+import { SolicitanteService } from '@ng-mf/data-access-user';
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { SolicitanteService } from './core/services/shared/solicitante/solicitan
     provideToastr({
       positionClass: 'toast-top-right',
     }),
+    provideHttpClient(),
     SolicitanteService
   ],
   bootstrap: [AppComponent],

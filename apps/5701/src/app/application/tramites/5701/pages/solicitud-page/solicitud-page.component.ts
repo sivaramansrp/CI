@@ -1,12 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { DatosPasos } from '../../../../core/models/shared/components.model';
-import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
-import { PASOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
-import { SECCIONES_TRAMITE_5701 } from '../../../../shared/constantes/seccionesTramites';
-import { SeccionQuery } from '../../../../core/queries/seccion.query';
-import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
+import { DatosPasos } from '@ng-mf/data-access-user';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from '@ng-mf/data-access-user';
+import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
+import { SeccionQuery } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 interface AccionBoton {
   accion: string;

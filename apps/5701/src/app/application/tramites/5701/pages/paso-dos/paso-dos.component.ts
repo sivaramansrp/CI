@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
-import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
-import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
-import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { TEXTOS } from '@ng-mf/data-access-user';
+import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { CatalogosService } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'paso-dos',

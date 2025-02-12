@@ -14,12 +14,22 @@
         "index": "apps/dashboard/src/index.html",
         "main": "apps/dashboard/src/main.ts",
         "polyfills": ["zone.js"],
-        "tsConfig": "apps/dashboard/tsconfig.app.json",
+        "tsConfig": "apps/dashboard/tsconfig.app.json",        
         "assets": [
           "apps/dashboard/src/favicon.ico",
-          "apps/dashboard/src/assets"
+          "apps/dashboard/src/assets",
+          {
+            "glob": "**.*",
+            "input": "libs/shared/theme/assets",
+            "output": "assets"
+          }
         ],
-        "styles": ["apps/dashboard/src/styles.css"],
+      "styles": [
+            "node_modules/bootstrap/scss/bootstrap.scss",
+            "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+            "node_modules/ngx-toastr/toastr.css",
+            "libs/shared/theme/assets/styles/main.scss"
+          ],
         "scripts": [],
         "customWebpackConfig": {
           "path": "apps/dashboard/webpack.config.ts"

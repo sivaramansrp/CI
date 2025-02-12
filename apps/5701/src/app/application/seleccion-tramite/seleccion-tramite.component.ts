@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AMBIENTES } from '../core/ambientes';
+import { AMBIENTES } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'seleccion-tramite',

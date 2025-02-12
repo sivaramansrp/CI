@@ -29,7 +29,7 @@
              "node_modules/bootstrap/scss/bootstrap.scss",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css",
               "node_modules/ngx-toastr/toastr.css",
-              "apps/5701/src/styles.scss"
+             "libs/shared/theme/assets/styles/main.scss"
             ],
         "scripts": [
           "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"

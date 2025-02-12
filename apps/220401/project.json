@@ -17,12 +17,20 @@
         "tsConfig": "apps/220401/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
+          "apps/220401/src/favicon.ico",
+          "apps/220401/src/assets",
           {
-            "glob": "**/*",
-            "input": "apps/220401/public"
+            "glob": "**.*",
+            "input": "libs/shared/theme/assets",
+            "output": "assets"
           }
         ],
-        "styles": ["apps/220401/src/styles.scss"],
+      "styles": [
+            "node_modules/bootstrap/scss/bootstrap.scss",
+            "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+            "node_modules/ngx-toastr/toastr.css",
+            "libs/shared/theme/assets/styles/main.scss"
+          ],
         "scripts": [],
         "customWebpackConfig": {
           "path": "apps/220401/webpack.config.ts"

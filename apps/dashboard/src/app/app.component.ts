@@ -9,20 +9,15 @@ import { distinctUntilChanged } from 'rxjs/operators';
   imports: [CommonModule, RouterModule],
   selector: 'ng-mf-root',
   template: `
-    <h2 class="dashboard-nav">Admin Dashboard</h2>
-    <div *ngIf="isLoggedIn$ | async; else signIn">
-      You are authenticated so you can see this content.
-      <br />
-      <table>
+    <h2 class="dashboard-nav"> Welcome VUCME3.0</h2>
+    <table border="1" cellpadding="5" cellspacing="5">
+    <tbody>
         <tr>
-          <td><a routerLink="/501">501</a></td>
-          <td><a routerLink="/220401/pago">220401</a></td>
-          <td><a routerLink="/5701/pago">5701</a></td>
+          <td width="30"><a routerLink="5701/pago/seleccion-tramite">Procedure</a></td>
         </tr>
+        </tbody>
       </table>
       <router-outlet></router-outlet>
-    </div>
-    <ng-template #signIn><router-outlet></router-outlet></ng-template>
   `,
 })
 export class AppComponent implements OnInit {
