@@ -41,7 +41,7 @@ export class PasoUnoComponent {
    * @param {number} i - Índice de la pestaña/paso seleccionada.
    * @returns {void}
    */
-  seleccionaTab(i: number): void {
+  seleccionaPestana(i: number): void {
     this.indice = i;
   }
 }
