@@ -8,7 +8,7 @@ import {
   pagoDeDerechos,
 } from '../../../../../models/220201/capturar-solicitud.model';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs'; // Importa Observable
+import { Observable } from 'rxjs';
 
 /**
  * Servicio para la gestión de solicitudes de certificado zoosanitario.
@@ -89,10 +89,10 @@ export class CertificadoZoosanitarioServiceService {
 
   /**
    * Envía la solicitud capturada.
-   * @method CapturarsolicitudEnviar
+   * @method capturarSolicitudEnviar  // Nombre en camelCase
    * @returns {Observable<any>} - Un Observable que emite la respuesta del servidor.
    */
-  CapturarsolicitudEnviar(): Observable<any> { // Especifica el tipo de retorno Observable<any>
+  capturarSolicitudEnviar(): Observable<any> { // Nombre en camelCase
     const _url = 'http://localhost:3000/capturarSolicitud';
     return this.http.post<any>(_url, this.capturarSolicitudCargaUtil);
   }
