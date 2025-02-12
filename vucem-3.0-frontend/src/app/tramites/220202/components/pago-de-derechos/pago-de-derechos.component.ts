@@ -54,9 +54,20 @@ export class PagoDeDerechosComponent implements OnInit {
     cadenaDependencia: [{ value: '', disabled: true }],
     banco: [{ value: '', disabled: true }, Validators.required], // Add Validators.required
     llavePago: [{ value: '', disabled: false }],
-    importePago: [{ value: '', disabled: false }, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]], // Validators for required and decimal format
+    importePago: [{ value: '', disabled: true }, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]], // Validators for required and decimal format
     fechaDePago: [{ value: '', disabled: true }, Validators.required] // Add Validators.required
   });
+  radioOptions: any[] = [
+    {
+      "label": "No",
+      "value": "no"
+    },
+    {
+      "label": "Sí",
+      "value": "Si"
+    }
+  ]
+  selectedValue: string = 'no';
 
   /**
    * @description Método para actualizar la fecha de pago en el formulario.

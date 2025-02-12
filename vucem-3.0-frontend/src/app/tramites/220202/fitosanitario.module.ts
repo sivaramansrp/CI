@@ -28,6 +28,7 @@ import { SolicitanteComponent } from '../../shared/components/solicitante/solici
 import { ServiciosExtraordinariosModule } from '../5701/servicios-extraordinarios.module';
 import { TableComponent } from '../../shared/components/table/table.component';
 import { CatalogoSelectComponent } from '../../shared/components/catalogo-select/catalogo-select.component';
+import { InputRadioComponent } from '../../shared/components/input-radio/input-radio.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { CatalogoSelectComponent } from '../../shared/components/catalogo-select
     SolicitanteComponent,
     ServiciosExtraordinariosModule,
     CatalogoSelectComponent,
-    TableComponent
+    TableComponent,
+    InputRadioComponent
   ]
 })
 export class FitosanitarioModule { }
