@@ -16,11 +16,15 @@
       </div>
       <div class="col-md-8">
         <div *ngFor="let tiposDocumentos of tiposDocumentosArray ">
-          <select-catalogos
+          <!-- <select-catalogos
             [catalogosDatos]="tiposDocumentos"
             (valorSeleccion)="tipoTransporte($event)"
-          ></select-catalogos>
-        
+          ></select-catalogos> -->
+        <app-catalogo-select
+        [catalogo]="tiposDocumentos"
+        >
+
+        </app-catalogo-select>
         </div>
       </div>
     </div>

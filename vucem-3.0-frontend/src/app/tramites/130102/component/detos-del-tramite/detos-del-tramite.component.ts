@@ -15,6 +15,7 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
 
 import { ProductoOption, ProductoResponse } from '../../../../core/services/130102/octava-temporral.enum';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 
 /**
  * descripción 
@@ -29,10 +30,9 @@ import { Catalogo } from '../../../../core/models/shared/catalogos.model';
     CommonModule,
     ReactiveFormsModule,
     InputRadioComponent,
-    SelectCatalogosComponent,
+    CatalogoSelectComponent
   ],
-  templateUrl: './detos-del-tramite.component.html',
-  styleUrl: './detos-del-tramite.component.scss',
+  templateUrl: './detos-del-tramite.component.html'
 })
 export class DetosDelTramiteComponent implements OnInit {
   /**
@@ -51,7 +51,7 @@ export class DetosDelTramiteComponent implements OnInit {
    * descripción 
    * @property {CatalogosSelect[]} tiposDocumentosArray - Lista de tipos de documentos disponibles.
    */
-  tiposDocumentosArray: CatalogosSelect[] = [];
+  tiposDocumentosArray: Catalogo[] = [];
 
   /**
    * descripción 
@@ -103,8 +103,8 @@ export class DetosDelTramiteComponent implements OnInit {
    * @description Método de marcador de posición para manejar el tipo de transporte.
    * @param {Catalogo} e - Evento del catálogo seleccionado.
    */
-  tipoTransporte(_e: Catalogo) {
-    // Manejo del evento
+  tipoTransporte():void {
+    this.selectedValue = 'Nuevo';
   }
 
   /**

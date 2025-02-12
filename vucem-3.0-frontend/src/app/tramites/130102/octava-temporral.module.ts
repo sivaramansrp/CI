@@ -13,6 +13,7 @@ import { RepresentacionComponent } from './component/representacion/representaci
 import { UsoEspicificoComponent } from './component/uso-espicifico/uso-espicifico.component';
 
 import { DatosComponent } from './pages/datos/datos.component';
+
 import { OctavaTemporralComponent } from './pages/octava-temporral/octava-temporral.component';
 import { SolicitanteComponent } from './pages/solicitante/solicitante.component';
 

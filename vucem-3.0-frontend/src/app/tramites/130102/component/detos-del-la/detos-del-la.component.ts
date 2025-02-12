@@ -21,15 +21,17 @@ import {
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 
 import fractionValues from '../../../../../assets/json/130102/fraccion_arancelaria.json';
+
 import productoOptions from '../../../../../assets/json/130102/producto-otions.json';
+
 import unidadOptions from '../../../../../assets/json/130102/unidad_da.json';
+
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 
 /**
  * descripción 
@@ -44,7 +46,7 @@ import unidadOptions from '../../../../../assets/json/130102/unidad_da.json';
     CommonModule,
     ReactiveFormsModule,
     InputRadioComponent,
-    SelectCatalogosComponent,
+    CatalogoSelectComponent
   ],
   templateUrl: './detos-del-la.component.html',
   styleUrl: './detos-del-la.component.scss',
@@ -76,7 +78,7 @@ export class DetosDelLaComponent implements OnInit {
    * @property {string | number} selectedValue
    * @description Especifica la opción preseleccionada en el selector de productos.
    */
-  selectedValue: string | number = 'Nuevo';
+  selectedValue: string = 'Nuevo';
 
   /**
    * descripción
@@ -87,29 +89,23 @@ export class DetosDelLaComponent implements OnInit {
 
   /**
    *  descripción
-   * @property {CatalogosSelect} Unidad
+   * @property {Catalogo} Unidad
    * @description Contiene el catálogo de unidades de medida, asegurando que los ID sean de tipo number.
    */
-  Unidad: CatalogosSelect = {
-    ...unidadOptions,
-    catalogos: unidadOptions.catalogos.map((item) => ({
-      id: Number(item.id),
-      descripcion: item.descripcion,
-    })),
-  };
-
+  Unidad: Catalogo[] = unidadOptions;
+ 
   /**
    * descripción
    * @property {CatalogosSelect} fraccionF
    * @description Contiene el catálogo de fracciones arancelarias con ID convertidos a tipo number.
    */
-  fraccionF: CatalogosSelect = {
-    ...fractionValues,
-    catalogos: fractionValues.catalogos.map((item) => ({
-      id: Number(item.id),
-      descripcion: item.descripcion,
-    })),
-  };
+  // fraccionF: Catalogo = {
+  //   ...fractionValues,
+  //   catalogo: fractionValues.catalogos.map((item) => ({
+  //     id: Number(item.id),
+  //     descripcion: item.descripcion,
+  //   })),
+  // };
 
   /**
    * descripción
@@ -117,7 +113,9 @@ export class DetosDelLaComponent implements OnInit {
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    * @param {FormBuilder} fb - Constructor de formularios reactivos.
    */
-  constructor(private http: HttpClient, private fb: FormBuilder) {}
+  constructor(private http: HttpClient, private fb: FormBuilder) {
+    //construstor
+  }
 
   /**
    *  descripción
@@ -182,9 +180,9 @@ export class DetosDelLaComponent implements OnInit {
    * @description Método de marcador de posición para obtener datos de fracción.
    * @param {Catalogo} e - Datos de la fracción arancelaria.
    */
-  fetchFraccion(_e: Catalogo) {
-    // Método vacío para futuras implementaciones
-  }
+  // fetchFraccion(_e: Catalogo) {
+    
+  // }
 
   /**
    * descripción
@@ -192,7 +190,9 @@ export class DetosDelLaComponent implements OnInit {
    * @description Método de marcador de posición para obtener datos de unidad.
    * @param {Catalogo} e - Datos de la unidad de medida.
    */
-  fetchUnidad(_e: Catalogo) {
-    // Método vacío para futuras implementaciones
-  }
+  fetchUnidad(): void {
+   this.selectedValue = 'Nuevo';
+  
+
+}
 }

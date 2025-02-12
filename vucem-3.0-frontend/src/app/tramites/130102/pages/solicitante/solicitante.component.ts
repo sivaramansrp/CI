@@ -8,8 +8,7 @@ import { PASOS } from '../../../../shared/constantes/servicios-extraordinarios.e
 
 @Component({
   selector: 'app-solicitante',
-  templateUrl: './solicitante.component.html',
-  styleUrl: './solicitante.component.scss'
+  templateUrl: './solicitante.component.html'
 })
 export class SolicitanteComponent {
    pasos: ListaPasosWizard[] = PASOS;

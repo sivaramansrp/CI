@@ -45,11 +45,11 @@
       </div>
     </div>
     <div class="form-group">
-      <select-catalogos
+      <!-- <app-catalogo-select
         [catalogosDatos]="fraccionF"
         (valorSeleccion)="fetchFraccion($event)"
         [tooltipT]="false"
-      ></select-catalogos>
+      ></app-catalogo-select> -->
       <div
         *ngIf="
           form.controls['fraccion'].invalid && form.controls['fraccion'].touched
@@ -63,11 +63,14 @@
     </div>
     <div class="row">
       <div class="col-md-4 form-group">
-        <select-catalogos
-          [catalogosDatos]="Unidad"
-          (valorSeleccion)="fetchUnidad($event)"
-          [tooltipT]="true"
-        ></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="Unidad"
+          [label]="'Unidad de medida'"
+          [required]="true"
+          (change)="fetchUnidad()"
+         [placeholder]="'Seleccione una unidad de medida'"
+         formControlName="unidadMedida"
+        ></app-catalogo-select>
         <div
           *ngIf="
             form.controls['unidadMedida'].invalid &&

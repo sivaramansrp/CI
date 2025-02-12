@@ -37,7 +37,7 @@ export class CatalogoSelectComponent
   @Input() placeholder: string;
   @Input() isDisabled: boolean;
   @Input() required: boolean;
-
+  @Input() tooltipQuestionCircle:boolean = false;
   formSelect: FormGroup;
 
   constructor(private fb: FormBuilder) {

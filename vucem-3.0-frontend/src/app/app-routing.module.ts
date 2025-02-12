@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+
 import { RouterModule, Routes } from '@angular/router';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const routes: Routes = [
@@ -31,6 +32,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tramites/220401/pantallas.module').then(
         (m) => m.PantallasModule
+      ),
+  },
+  {
+    path: 'octava-temporral',
+    loadChildren: () =>
+      import('./tramites/130102/octava-temporral.module').then(
+        (m) => m.OctavaTemporralModule
       ),
   },
 ];

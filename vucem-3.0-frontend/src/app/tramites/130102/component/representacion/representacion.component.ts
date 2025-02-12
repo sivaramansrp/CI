@@ -19,8 +19,7 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
   selector: 'app-representacion',
   standalone: true,
   imports: [TituloComponent, SelectCatalogosComponent, ReactiveFormsModule],
-  templateUrl: './representacion.component.html',
-  styleUrl: './representacion.component.scss',
+  templateUrl: './representacion.component.html'
 })
 export class RepresentacionComponent implements OnInit {
   /**
