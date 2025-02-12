@@ -1,0 +1,119 @@
+{
+  "hMerchandise": [
+    "Fracción arancelaria",
+    "Descripción de la fracción",
+    "Nico",
+    "Descripción Nico",
+    "Cantidad solicitada en UMT",
+    "Unidad de medida de tarifa (UMT)",
+    "Cantidad total UMT",
+    "Saldo pendiente"
+  ],
+  "hHistorialinspeccion": [
+    "Número parcialidad/remesa",
+    "Fracción arancelaria",
+    "Nico",
+    "Cantidad total en UMT",
+    "Cantidad parcial en UTM",
+    "Saldo pendiente",
+    "Fecha de ingreso"
+  ],
+  "hCarroFerrocarril": [
+    "Número de parcialidad/remesa",
+    "Cantidad de carros de ferrocarril"
+  ],
+  "hSolicitud":[
+    "Fecha Creación",
+    "Mercancía",
+    "Cantidad",
+    "Proovedor"
+  ],
+  "dSolicitud":[
+    {
+      "fechaCreacion":"2025-02-02 19:50:08:0",
+      "mercancia":"descripcion",
+      "cantidad":"1000000",
+      "proovedor":"erick"
+    },
+    {
+      "fechaCreacion":"2025-02-02 19:50:08:0",
+      "mercancia":"descripcion",
+      "cantidad":"1000000",
+      "proovedor":"erick"
+    },
+    {
+      "fechaCreacion":"2025-02-02 19:50:08:0",
+      "mercancia":"descripcion",
+      "cantidad":"1000000",
+      "proovedor":"erick"
+    },
+    {
+      "fechaCreacion":"2025-02-02 19:50:08:0",
+      "mercancia":"descripcion",
+      "cantidad":"1000000",
+      "proovedor":"erick"
+    },
+    {
+      "fechaCreacion":"2025-02-02 19:50:08:0",
+      "mercancia":"descripcion",
+      "cantidad":"1000000",
+      "proovedor":"erick"
+    }
+  ],
+  "dMercancia": [
+    {
+      "fraccionArancelaria": "1001.10.10",
+      "descripcionFraccion": "Trigo duro",
+      "nico": "Sí",
+      "nicoDescripcion": "Trigo para molienda",
+      "cantidadSolicitadaUMT": 50,
+      "unidadMedidaUMT": "kg",
+      "cantidadTotalUMT": 500,
+      "saldoPendiente": 100
+    },
+    {
+      "fraccionArancelaria": "2002.90.10",
+      "descripcionFraccion": "Puré de tomate",
+      "nico": "No",
+      "nicoDescripcion": "Concentrado envasado",
+      "cantidadSolicitadaUMT": 50,
+      "unidadMedidaUMT": "kg",
+      "cantidadTotalUMT": 300,
+      "saldoPendiente": 10
+    }
+  ],
+  "dCarrosDeFerrocarril": [
+    {
+      "idInspeccionFisica": 1,
+      "numeroAutorizacion": "12345",
+      "numeroPartidaMercancia": "P001",
+      "numeroTotalCarros": 10
+    },
+    {
+      "idInspeccionFisica": 2,
+      "numeroAutorizacion": "12345",
+      "numeroPartidaMercancia": "P002",
+      "numeroTotalCarros": 15
+    }
+  ],
+  "dHistorialInspecciones": [
+    {
+      "numeroPartidaMercancia": "12345",
+      "fraccionArancelaria": "0101.21.00",
+      "nico": "Si",
+      "cantidadUmt": "1000",
+      "cantidadInspeccion": "500",
+      "saldoPendiente": "500",
+      "fechaInspeccionString": "2023-10-01"
+    },
+    {
+      "numeroPartidaMercancia": "67890",
+      "fraccionArancelaria": "0202.30.00",
+      "nico": "No",
+      "cantidadUmt": "2000",
+      "cantidadInspeccion": "1500",
+      "saldoPendiente": "500",
+      "fechaInspeccionString": "2023-10-02"
+    }
+  ]
+}

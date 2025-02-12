@@ -33,6 +33,13 @@ const routes: Routes = [
         (m) => m.PantallasModule
       ),
   },
+  {
+    path: 'sagarpa',
+    loadChildren: () =>
+      import('./tramites/220501/sagarpa.module').then(
+        (m) => m.SagarpaModule
+      ),
+  }
 ];
 
 @NgModule({

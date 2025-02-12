@@ -1,0 +1,54 @@
+<form [formGroup]="agregarMercanciaForm">
+    <!--Agregar mercancía-->
+    <ng-titulo titulo="Agregar mercancía" />
+    <div formGroupName="agregarMercancia">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="">Fracción arancelaria:</label>
+                <input type="text" class="form-control" formControlName="fraccionArancelaria"/>
+            </div>
+            <div class="col-md-8">
+                <label for="">Descripción de la fracción:</label>
+                <input type="text" class="form-control" formControlName="descripcionFraccion"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="nico">Nico:</label>
+                <input type="text" class="form-control" formControlName="nico"/>
+            </div>
+            <div class="col-md-8">
+                <label for="">Descripción Nico</label>
+                <input type="text" class="form-control" formControlName="descripcion"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="">Cantidad total UMT:</label>
+                <input type="text" class="form-control" formControlName="cantidadTotalUMT"/>
+            </div>
+            <div class="col-md-4">
+                <label for="">Unidad de medida de UMT:</label>
+                <input type="text" class="form-control" formControlName="unidaddeMedidaDeUMT"/>
+            </div>
+            <div class="col-md-4">
+                <label for="">Saldo pendiente:</label>
+                <input type="text" class="form-control" formControlName="saldoPendiente"/>                    
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="">Cantidad Solicitada en UMT
+                    <span class="text-danger">*</span>:
+                </label>
+                <input type="text" class="form-control" formControlName="saldoACapturar"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="text-end">
+                <button type="button" class="btn btn-default" (click)="cerrarModal(true)">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="cerrarModal(false)">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</form>
