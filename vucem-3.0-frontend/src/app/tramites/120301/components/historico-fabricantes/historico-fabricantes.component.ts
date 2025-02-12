@@ -31,8 +31,8 @@ formGroup!: FormGroup;
 /** Opciones de radio cargadas desde un archivo JSON */
 radioOptions = radioOptionsData; // Use imported JSON data
 /** Valor seleccionado actualmente */
-selectedValue: string | number = 'option1'; // Update the type to string | number
-defaultSelect:string | number = 'oficina central';
+selectedValue: string | number = ''; // Update the type to string | number
+defaultSelect:string | number = '';
 
 radioBoton = unidadRadioFields // import data from Json
 

@@ -1,42 +1,10 @@
 <div class="container">
     <form>
         <div class="row">
-  
-            <div class="row">
                 <!-- <h2>Representación-federal</h2> -->
                  <div class="col-md-12">
                 <ng-titulo titulo="Representación federal" />
                 </div>
-                <div class="col-md-4">
-                <div class="form-group">
-                    <label class="form-label" for="Estado"
-                    >Estado:</label>
-                    <input
-                    class="form-control"
-                    value=""
-                    class="form-control"
-                    id="Estado"
-                    placeholder=""
-                    type="text"
-                    appUppercase
-                    name="Estado"
-                    />
-                </div>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label" for="federal"
-                    >Representación federal:</label>
-                <input
-                    value=""
-                    class="form-control"
-                    id="federal"
-                    placeholder=""
-                    type="text"
-                    appUppercase
-                    name="federal"
-                />
-                </div>
-                <form>
                 <div class="col-md-3">
                   <div class="form-check">
                     <input class="form-check-input" type="radio" name="flexRadioRegistro" id="Espacifico">
@@ -57,8 +25,6 @@
                     <button class="btn btn-default me-2">Buscar</button>
                     <!-- <button class="btn btn-primary">Continuar</button> -->
                   </div>
-                </form>
-            </div>
             <div class="col-md-12 mt-5">
               <ng-table [commonTableHeader]="tableColumns" [commonTableBody]="facturas"></ng-table>
             </div>
