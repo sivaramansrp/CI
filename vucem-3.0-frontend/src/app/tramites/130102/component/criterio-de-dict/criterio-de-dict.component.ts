@@ -1,9 +1,14 @@
+/**
+ * CriterioDeDictComponent es un componente que maneja la selección de solicitudes de mercancía.
+ * @packageDocumentation
+ * @module CriterioDeDictComponent
+ */
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
-import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+import SolicitudMercancia from '../../../../../assets/json/130102/solicitud_mercancia.json';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 /**
@@ -16,7 +21,7 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
   templateUrl: './criterio-de-dict.component.html',
   styleUrl: './criterio-de-dict.component.scss',
 })
-export class CriterioDeDictComponent {
+export class CriterioDeDictComponent implements OnInit {
   /**
    * Configuración del formulario de criterio de dictamen.
    */
@@ -34,13 +39,13 @@ export class CriterioDeDictComponent {
   selectedSolicitudMercancia: Catalogo = { id: 0, descripcion: '' };
 
   /**
+   * Inicializa el componente CriterioDeDict.
    * @constructor
    * @param {FormBuilder} fb - El constructor de formularios.
-   * @param {HttpClient} http - El cliente HTTP para realizar solicitudes.
    * @returns void
    * @description Inicializa el componente CriterioDeDict.
    */
-  constructor(private fb: FormBuilder, private http: HttpClient) {}
+  constructor(private fb: FormBuilder) {}
 
   /**
    * Maneja la selección de una solicitud de mercancía.
@@ -69,13 +74,8 @@ export class CriterioDeDictComponent {
    * Obtiene las solicitudes de mercancía.
    * @returns void
    * @description Obtiene las solicitudes de mercancía.
-   * @todo Cambiar la URL por la URL real de la API.
    */
   fetchSolicitudMercancia() {
-    this.http
-      .get('/assets/json/130102/solicitud_mercancia.json')
-      .subscribe((data: any) => {
-        this.solicitudMercancia = data;
-      });
+    this.solicitudMercancia = SolicitudMercancia;
   }
 }

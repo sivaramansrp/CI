@@ -1,8 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
 import { CriterioDeDictComponent } from './criterio-de-dict.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
@@ -11,21 +7,20 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
 describe('CriterioDeDictComponent', () => {
   let component: CriterioDeDictComponent;
   let fixture: ComponentFixture<CriterioDeDictComponent>;
-  let httpMock: HttpTestingController;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, HttpClientTestingModule],
-      declarations: [
-        CriterioDeDictComponent,
+      imports: [
+        ReactiveFormsModule,
         SelectCatalogosComponent,
         TituloComponent,
+        CriterioDeDictComponent,
       ],
+      declarations: [],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CriterioDeDictComponent);
     component = fixture.componentInstance;
-    httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
   });
 
@@ -54,24 +49,11 @@ describe('CriterioDeDictComponent', () => {
     expect(textarea.value).toBe(mockCatalogo.descripcion);
   });
 
-  it('should fetch solicitudMercancia on init', () => {
+  it('should set solicitudMercancia on init', () => {
     component.ngOnInit();
-    const req = httpMock.expectOne(
-      '/assets/json/130102/solicitud_mercancia.json'
-    );
-    expect(req.request.method).toBe('GET');
-    req.flush({
-      catalogos: [
-        {
-          id: 1,
-          descripcion:
-            'La SE autorizará la importación de mercancías de la Regla 8a, cuando se',
-        },
-        { id: 2, descripcion: 'Solicitud mercancia 2' },
-        { id: 3, descripcion: 'Solicitud mercancia 3' },
-      ],
-    });
     expect(component.solicitudMercancia.catalogos.length).toBe(3);
-    httpMock.verify();
+    expect(component.solicitudMercancia.catalogos[0].descripcion).toBe(
+      'La SE autorizará la importación de mercancías de la Regla 8a, cuando se'
+    );
   });
 });

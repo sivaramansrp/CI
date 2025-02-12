@@ -1,3 +1,4 @@
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -6,8 +7,8 @@ import {
 } from '@angular/forms';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
-import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import EntidadFederativaOptions from '../../../../../assets/json/130102/entidad_federativa.json';
+import RepresentacionFederalOptions from '../../../../../assets/json/130102/representacion_federal.json';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
@@ -21,7 +22,7 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
   templateUrl: './representacion.component.html',
   styleUrl: './representacion.component.scss',
 })
-export class RepresentacionComponent {
+export class RepresentacionComponent implements OnInit {
   /**
    * Configuración del formulario de representación.
    */
@@ -51,12 +52,12 @@ export class RepresentacionComponent {
   selectedRepresentacionFederal: Catalogo = { id: 0, descripcion: '' };
 
   /**
+   * Inicializa el componente RepresentacionComponent.
    * @constructor
    * @param {FormBuilder} fb - El constructor de formularios.
-   * @param {HttpClient} http - El cliente HTTP para realizar solicitudes.
    * @returns void
    */
-  constructor(private fb: FormBuilder, private http: HttpClient) {}
+  constructor(private fb: FormBuilder) {}
 
   /**
    * Maneja la selección de una entidad federativa.
@@ -65,6 +66,7 @@ export class RepresentacionComponent {
    */
   entidadFederativaSeleccion(entidad: Catalogo): void {
     this.selectedEntidadFederativa = entidad;
+    this.frmRepresentacion.controls['entidad'].setValue(entidad);
   }
 
   /**
@@ -74,6 +76,7 @@ export class RepresentacionComponent {
    */
   representacionFederalSeleccion(representacion: Catalogo): void {
     this.selectedRepresentacionFederal = representacion;
+    this.frmRepresentacion.controls['representacion'].setValue(representacion);
   }
 
   /**
@@ -93,27 +96,17 @@ export class RepresentacionComponent {
    * Obtiene las entidades federativas.
    * @returns void
    * @description Obtiene las entidades federativas.
-   * @todo Cambiar la URL por la URL real de la API.
    */
   fetchEntidadFederativa() {
-    this.http
-      .get('/assets/json/130102/entidad_federativa.json')
-      .subscribe((data: any) => {
-        this.entidadFederativa = data;
-      });
+    this.entidadFederativa = EntidadFederativaOptions;
   }
 
   /**
    * Obtiene las representaciones federales.
    * @returns void
    * @description Obtiene las representaciones federales.
-   * @todo Cambiar la URL por la URL real de la API.
    */
   fetchRepresentacionFederal() {
-    this.http
-      .get('/assets/json/130102/representacion_federal.json')
-      .subscribe((data: any) => {
-        this.representacionFederal = data;
-      });
+    this.representacionFederal = RepresentacionFederalOptions;
   }
 }
