@@ -1,9 +1,15 @@
+/**
+ * CriterioDeDictComponent es un componente que maneja la selección de solicitudes de mercancía.
+ * @packageDocumentation
+ * @module CriterioDeDictComponent
+ */
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
-import { Component } from '@angular/core';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
-import { TituloComponent } from "../../../../shared/components/titulo/titulo.component";
+import SolicitudMercancia from '../../../../../assets/json/130102/solicitud_mercancia.json';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 /**
  * CriterioDeDictComponent es un componente que maneja la selección de solicitudes de mercancía.
@@ -13,10 +19,9 @@ import { TituloComponent } from "../../../../shared/components/titulo/titulo.com
   standalone: true,
   imports: [TituloComponent, SelectCatalogosComponent],
   templateUrl: './criterio-de-dict.component.html',
-  styleUrl: './criterio-de-dict.component.scss'
+  styleUrl: './criterio-de-dict.component.scss',
 })
-export class CriterioDeDictComponent {
-
+export class CriterioDeDictComponent implements OnInit {
   /**
    * Configuración del formulario de criterio de dictamen.
    */
@@ -24,17 +29,9 @@ export class CriterioDeDictComponent {
 
   /**
    * Configuración del select de solicitudes de mercancía.
+   * @type {CatalogosSelect}
    */
-  solicitudMercancia: CatalogosSelect = {
-    labelNombre: 'Solicitud mercancia esquema regla octava clave',
-    required: true,
-    primerOpcion: 'Seleccione una Solicitud mercancia',
-    catalogos: [
-      { id: 1, descripcion: 'La SE autorizará la importación de mercancías de la Regla 8a, cuando se' },
-      { id: 2, descripcion: 'Solicitud mercancia 2' },
-      { id: 3, descripcion: 'Solicitud mercancia 3' }
-    ]
-  };
+  solicitudMercancia!: CatalogosSelect;
 
   /**
    * Solicitud de mercancía seleccionada.
@@ -42,8 +39,11 @@ export class CriterioDeDictComponent {
   selectedSolicitudMercancia: Catalogo = { id: 0, descripcion: '' };
 
   /**
-   * Maneja la selección de una solicitud de mercancía.
-   * @param e - La solicitud de mercancía seleccionada.
+   * Inicializa el componente CriterioDeDict.
+   * @constructor
+   * @param {FormBuilder} fb - El constructor de formularios.
+   * @returns void
+   * @description Inicializa el componente CriterioDeDict.
    */
   constructor(private fb: FormBuilder) {}
 
@@ -56,13 +56,26 @@ export class CriterioDeDictComponent {
   }
 
   /**
-   * Inicializa el formulario de criterio de dictamen.  
+   * Obtiene las solicitudes de mercancía.
    * @returns void
+   * @description Obtiene las solicitudes de mercancía.
    */
-  ngOnInit(): void {  
+  ngOnInit(): void {
+    this.fetchSolicitudMercancia();
     this.frmCriterioDict = this.fb.group({
-      solicitudMercancia: [this.selectedSolicitudMercancia, Validators.required]
+      solicitudMercancia: [
+        this.selectedSolicitudMercancia,
+        Validators.required,
+      ],
     });
   }
 
+  /**
+   * Obtiene las solicitudes de mercancía.
+   * @returns void
+   * @description Obtiene las solicitudes de mercancía.
+   */
+  fetchSolicitudMercancia() {
+    this.solicitudMercancia = SolicitudMercancia;
+  }
 }
