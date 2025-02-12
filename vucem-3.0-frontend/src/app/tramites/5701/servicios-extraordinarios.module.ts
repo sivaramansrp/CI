@@ -30,6 +30,8 @@ import { TablaComponent } from '../../shared/components/tabla/tabla.component';
 import { TercerosComponent } from '../../shared/components/terceros/terceros.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
+import { GeneraDictamenComponent } from './components/genera-dictamen/genera-dictamen.component';
+import { GenerarDictamenComponent } from './pages/generar-dictamen/generar-dictamen.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +41,9 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
+    GeneraDictamenComponent,
+    GenerarDictamenComponent
+    
   ],
   imports: [
     AgregaPersonasComponent,
@@ -65,7 +70,7 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     SolicitanteComponent,
     TablaComponent,
     TituloComponent,
-    WizardComponent,
+    WizardComponent
   ],
   exports: [SolicitudComponent, TercerosComponent],
 })
