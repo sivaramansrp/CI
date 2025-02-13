@@ -42,13 +42,13 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   pagoForm: FormGroup = this.fb.group({
     exentoPago: [''],
-    justificacion: [{ value: '', disabled: false }, Validators.required], // Validators.required añadido
+    justificacion: [{ value: '', disabled: false }], // Validators.required removed
     claveReferencia: [{ value: '', disabled: true }],
     cadenaDependencia: [{ value: '', disabled: true }],
-    banco: [{ value: '', disabled: true }, Validators.required], // Validators.required añadido
+    banco: [{ value: '', disabled: true }], // Validators.required removed
     llavePago: [{ value: '', disabled: false }],
-    importePago: [{ value: '', disabled: true }, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]], // Validators para required y formato decimal
-    fechaDePago: [{ value: '', disabled: true }, Validators.required] // Validators.required añadido
+    importePago: [{ value: '', disabled: true }], // Validators.required removed
+    fechaDePago: [{ value: '', disabled: true }] // Validators.required removed
   });
 
   /**
@@ -147,5 +147,9 @@ export class PagoDeDerechosComponent implements OnInit {
     if (name === 'banco') {
       this.pagoForm.get('banco')?.enable();
     }
+  }
+  setValoresStore(form: FormGroup, metodoNombre: string): void {
+    console.log(form, metodoNombre, this.pagoForm.value);
+
   }
 }
