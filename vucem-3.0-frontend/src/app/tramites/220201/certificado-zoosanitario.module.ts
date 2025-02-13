@@ -19,7 +19,7 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
+
 import { SharedModule } from '../../shared/shared.module';
 
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
@@ -55,12 +55,10 @@ import { CatalogoSelectComponent } from '../../shared/components/catalogo-select
     ReactiveFormsModule,
     CrosslistComponent,
     InputCheckComponent,
-    SelectCatalogosComponent,
     AlertComponent,
     InputFechaComponent,
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
-    SelectCatalogosComponent,
     SolicitanteComponent,
     InputRadioComponent,
     TableComponent,
