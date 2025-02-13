@@ -41,6 +41,13 @@ const routes: Routes = [
         (m) => m.PantallasModule
       ),
   },
+  {
+    path: 'antecesor',
+    loadChildren: () =>
+      import('./tramites/31601/antecesor/antecesor.module').then(
+        (m) => m.AntecesorModule
+      ),
+  },
 ];
 
 @NgModule({
