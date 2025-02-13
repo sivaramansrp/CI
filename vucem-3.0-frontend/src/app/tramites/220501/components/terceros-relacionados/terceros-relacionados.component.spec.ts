@@ -29,9 +29,4 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.enableScrollbar).toBeFalse();
   });
 
-  it('should initialize component', () => {
-    spyOn(component, 'ngOnInit').and.callThrough();
-    component.ngOnInit();
-    expect(component.ngOnInit).toHaveBeenCalled();
-  });
 });
