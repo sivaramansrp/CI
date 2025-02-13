@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { PASOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { PASOS } from '../../../../shared/constantes/pantallas-captura.enum';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
-import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
+import { ListaPasosWizard } from '../../../../core/models/220402/pantallas-captura.model';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 import { map, Subject, takeUntil } from 'rxjs';
 import { SeccionQuery } from '../../../../core/queries/seccion.query';

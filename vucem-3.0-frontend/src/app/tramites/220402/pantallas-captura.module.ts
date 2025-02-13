@@ -10,10 +10,7 @@ import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
-import { TercerosComponent } from '../../shared/components/terceros/terceros.component';
 import { PasoUnoComponent } from "./pages/paso-uno/paso-uno.component";
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
 import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
@@ -24,8 +21,6 @@ import { InputHoraComponent } from '../../shared/components/input-hora/input-hor
 import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
 import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
 import { AgregarTransporteComponent } from "../../shared/components/agregar-transporte/agregar-transporte.component";
-import { PedimentoComponent } from './components/pedimento/pedimento.component';
-import { AgregaPersonasComponent } from "./components/agrega-personas/agrega-personas.component";
 import { RepresentanteFiscalComponent } from '../../shared/components/representante-fiscal/representante-fiscal.component';
 import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
 
@@ -33,10 +28,7 @@ import { SelectPaisesComponent } from '../../shared/components/select-paises/sel
   declarations: [
     SolicitudPageComponent,
     SolicitudComponent,
-    // TercerosComponent,
-    PasoUnoComponent,
-    PasoDosComponent,
-    PasoTresComponent
+    PasoUnoComponent
  ] ,
   imports: [
     CommonModule,
@@ -58,14 +50,9 @@ import { SelectPaisesComponent } from '../../shared/components/select-paises/sel
     InputFechaComponent,
     CrosslistComponent,
     AgregarTransporteComponent,
-    PedimentoComponent,
-    AgregaPersonasComponent,
     RepresentanteFiscalComponent,
     SelectPaisesComponent
 ],
-exports: [
-  SolicitudComponent,
-  // TercerosComponent
-]
+exports: []
 })
 export class PantallasCapturaModule { }

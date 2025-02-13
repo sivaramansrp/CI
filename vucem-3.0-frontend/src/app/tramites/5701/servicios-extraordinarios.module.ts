@@ -28,7 +28,6 @@ import { PedimentoComponent } from './components/pedimento/pedimento.component';
 import { AgregaPersonasComponent } from "./components/agrega-personas/agrega-personas.component";
 import { RepresentanteFiscalComponent } from '../../shared/components/representante-fiscal/representante-fiscal.component';
 import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
-import { CapturarSolicitudComponent } from '../../tramites/220402/components/capturar-solicitud/capturar-solicitud.component';
 
 
 @NgModule({
@@ -38,8 +37,7 @@ import { CapturarSolicitudComponent } from '../../tramites/220402/components/cap
     TercerosComponent,
     PasoUnoComponent,
     PasoDosComponent,
-    PasoTresComponent,
-    CapturarSolicitudComponent
+    PasoTresComponent
  ] ,
   imports: [
     CommonModule,
@@ -68,8 +66,7 @@ import { CapturarSolicitudComponent } from '../../tramites/220402/components/cap
 ],
 exports: [
   SolicitudComponent,
-  TercerosComponent,
-  CapturarSolicitudComponent
+  TercerosComponent
 ]
 })
 export class ServiciosExtraordinariosModule { }

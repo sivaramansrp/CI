@@ -2,16 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { AcusePageComponent } from '../../shared/pages/acuse-page/acuse-page.component';
-import { CapturarSolicitudComponent } from '../../tramites/220402/components/capturar-solicitud/capturar-solicitud.component';
 
 export const ROUTES_SOLICITUDES: Routes = [
   {
     path: 'solicitud',
     component: SolicitudPageComponent,
-  },
-  {
-    path: 'captura-solicitud',
-    component: CapturarSolicitudComponent,
   },
   {
     path: 'acuse',
