@@ -20,9 +20,10 @@ export class SagarpaService {
 
   /**
    * Método para obtener los medios de transporte.
+   * @param {string} catalogo - El nombre del catálogo a obtener
    * @returns Observable con la respuesta de los catálogos de medios de transporte.
    */
-  getMediodetransporte() {
+  getMediodetransporte(catalogo: string) {
     return this.http.get<RespuestaCatalogos>('assets/json/220501/medio-transporte.json');
   }
 }

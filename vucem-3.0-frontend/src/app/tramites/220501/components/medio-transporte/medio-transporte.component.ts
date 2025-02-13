@@ -2,9 +2,11 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { SagarpaService } from '../../../../core/services/220501/sagarpa/sagarpa.service';
 import { TEXTOS } from '../../../../shared/constantes/220501/texto-enum';
+import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
+import { map, merge } from 'rxjs';
+import { Tramite220501Store } from '../../../../estados/tramites/tramite220501.store';
 
 /**
  * Componente para seleccionar el medio de transporte.
@@ -27,14 +29,9 @@ export class MedioTransporteComponent implements OnInit {
   medioTransporteForm!: FormGroup;
 
   /**
-   * Datos del catálogo de medios de transporte.
+   * Lista de catálogos de medio de transporte
    */
-  datosMediodetransporte!: CatalogosSelect;
-
-  /**
-   * Medio de transporte seleccionado.
-   */
-  medioTransporteSeleccionada!: Catalogo;
+  medioDeTransporte!: Catalogo[];
 
   /**
   * Indica si se debe mostrar una advertencia.
@@ -79,20 +76,32 @@ export class MedioTransporteComponent implements OnInit {
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
    * @param sagarpaService Servicio para obtener datos de SAGARPA.
+   * @param tramite220501Store Almacén de estado para el trámite 220501.
    */
   constructor(
     private fb: FormBuilder,
-    private sagarpaService: SagarpaService
+    private sagarpaService: SagarpaService,
+    private tramite220501Store: Tramite220501Store
   ) {
     this.crearFormulario();
   }
 
   /**
    * Método que se ejecuta al inicializar el componente.
+   * 
+   * Este método realiza las siguientes acciones:
+   * 1. Inicializa los catálogos necesarios para el formulario.
+   * 2. Obtiene los datos de las mercancías.
+   * 3. Selecciona el medio de transporte.
+   * 
+   * @returns {void}
    */
   ngOnInit(): void {
+    this.inicializaCatalogos();
+
     this.obtenerMercanciasDatos();
-    this.getMediodetransporte();
+
+    this.medioDeTransporteSeleccion();
   }
 
   /**
@@ -100,7 +109,7 @@ export class MedioTransporteComponent implements OnInit {
    */
   crearFormulario(): void {
     this.medioTransporteForm = this.fb.group({
-      transporteIdMedio: new FormControl('', [Validators.required]),
+      medioDeTransporte: new FormControl('', [Validators.required]),
       identificacionTransporte: new FormControl('', [Validators.maxLength(30)]),
       esSolicitudFerros: new FormControl('', [Validators.required]),
       totalGuias: new FormControl('')
@@ -108,31 +117,27 @@ export class MedioTransporteComponent implements OnInit {
   }
 
   /**
-   * Método para obtener los datos del catálogo de medios de transporte.
+   * Inicializa los catálogos necesarios para el formulario.
    */
-  getMediodetransporte(): void {
-    this.sagarpaService
-      .getMediodetransporte()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
-
-          this.datosMediodetransporte = {
-            labelNombre: 'Medio de transporte',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
+  private inicializaCatalogos(): void {
+    const medioDeTransporte$ = this.sagarpaService
+      .getMediodetransporte(CATALOGOS_ID.CAT_MEDIO_DE_TRANSPORTE)
+      .pipe(
+        map((resp) => {
+          this.medioDeTransporte = resp.data;
+        })
+      );
+    merge(
+      medioDeTransporte$
+    ).subscribe();
   }
 
   /**
- * Método para seleccionar el medio de transporte.
- * @param e Medio de transporte seleccionado.
- */
-  medioTransporte(e: Catalogo): void {
-    this.medioTransporteSeleccionada = e;
+   * Selecciona la clasificación de régimen.
+   */
+  medioDeTransporteSeleccion(): void {
+    const medioDeTransporte = this.medioTransporteForm.get('medioDeTransporte')?.value;
+    this.tramite220501Store.setMedioDeTransporte(medioDeTransporte);
   }
 
   /**
