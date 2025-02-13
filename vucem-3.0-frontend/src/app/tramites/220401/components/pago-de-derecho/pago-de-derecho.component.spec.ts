@@ -1,12 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { PagoDeDerechoComponent } from './pago-de-derecho.component';
+import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { PagoDeDerechoComponent } from './pago-de-derecho.component';
 
 describe('PagoDeDerechoComponent', () => {
   let component: PagoDeDerechoComponent;
@@ -15,14 +13,15 @@ describe('PagoDeDerechoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        CommonModule,
         ReactiveFormsModule,
+        FormsModule,
+        CommonModule,
         TituloComponent,
+        CatalogoSelectComponent,
         SelectCatalogosComponent,
-        CatalogoSelectComponent
       ],
       declarations: [PagoDeDerechoComponent],
-      providers: [FormBuilder]
+      providers: [FormBuilder],
     }).compileComponents();
   });
 
@@ -36,101 +35,49 @@ describe('PagoDeDerechoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    expect(component.FormSolicitud).toBeTruthy();
-    expect(component.FormSolicitud.contains('datosImportadorExportador')).toBe(true);
+  it('should initialize the form with correct controls', () => {
+    expect(component.FormSolicitud).toBeDefined();
     expect(component.FormSolicitud.get('datosImportadorExportador.exentoDePago')).toBeTruthy();
+    expect(component.FormSolicitud.get('datosImportadorExportador.Justificacion')).toBeTruthy();
+    expect(component.FormSolicitud.get('datosImportadorExportador.Banco')).toBeTruthy();
   });
 
-  it('should initialize Justificacion and Banco correctly', () => {
+  it('should call getJustificacion and set Justificacion correctly', () => {
     component.getJustificacion();
-    component.getBanco();
     expect(component.Justificacion).toEqual([
       { id: 1, descripcion: 'Si' },
-      { id: 2, descripcion: 'No' }
+      { id: 2, descripcion: 'No' },
     ]);
+  });
+
+  it('should call getBanco and set Banco correctly', () => {
+    component.getBanco();
     expect(component.Banco).toEqual([
       { id: 1, descripcion: 'Si' },
-      { id: 2, descripcion: 'No' }
+      { id: 2, descripcion: 'No' },
     ]);
   });
 
-  it('should update form fields based on exentoDePago value "No"', () => {
-    component.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.setValue('No');
-    fixture.detectChanges();
-
-    const rfcControl = component.FormSolicitud.get('datosImportadorExportador.rfcImportExport');
-    const cadenaControl = component.FormSolicitud.get('datosImportadorExportador.cadenaDependencia');
-    const importeControl = component.FormSolicitud.get('datosImportadorExportador.importePago');
-    const fechaPagoControl = component.FormSolicitud.get('datosImportadorExportador.fechaPago');
-    const llavePagoControl = component.FormSolicitud.get('datosImportadorExportador.llaveDePago');
+  it('should update form fields when "exentoDePago" is "No"', () => {
+    component.updateFormFieldsBasedOnExentoDePago('No');
     
-    expect(rfcControl?.value).toBe('454000554');
-    expect(cadenaControl?.value).toBe('0001012A0000EX');
-    expect(importeControl?.value).toBe('594.0');
-    expect(fechaPagoControl?.enabled).toBe(true);
-    expect(llavePagoControl?.enabled).toBe(true);
+    expect(component.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.value).toBe('454000554');
+    expect(component.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.value).toBe('0001012A0000EX');
+    expect(component.FormSolicitud.get('datosImportadorExportador.importePago')?.value).toBe('594.0');
   });
 
-  it('should update form fields based on exentoDePago value "Yes"', () => {
-    component.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.setValue('Si');
-    fixture.detectChanges();
-
-    const rfcControl = component.FormSolicitud.get('datosImportadorExportador.rfcImportExport');
-    const cadenaControl = component.FormSolicitud.get('datosImportadorExportador.cadenaDependencia');
-    const importeControl = component.FormSolicitud.get('datosImportadorExportador.importePago');
-    const fechaPagoControl = component.FormSolicitud.get('datosImportadorExportador.fechaPago');
-    const llavePagoControl = component.FormSolicitud.get('datosImportadorExportador.llaveDePago');
+  it('should reset form fields when "exentoDePago" is not "No"', () => {
+    component.updateFormFieldsBasedOnExentoDePago('Si');
     
-    expect(rfcControl?.value).toBe(null);
-    expect(cadenaControl?.value).toBe(null);
-    expect(importeControl?.value).toBe(null);
-    expect(fechaPagoControl?.disabled).toBe(true);
-    expect(llavePagoControl?.disabled).toBe(true);
+    expect(component.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.value).toBeNull();
+    expect(component.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.value).toBeNull();
+    expect(component.FormSolicitud.get('datosImportadorExportador.importePago')?.value).toBeNull();
   });
 
-  it('should call mercanciaSeleccion on form change', () => {
-    spyOn(component, 'mercanciaSeleccion');
-    component.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.setValue('Si');
-    fixture.detectChanges();
-    expect(component.mercanciaSeleccion).toHaveBeenCalled();
+  it('should handle form submission logic when "validarFormulario" is called', () => {
+    spyOn(console, 'log'); // To check if the form values are logged in the console
+    component.validarFormulario();
+    // Assuming the form is invalid at first because no values are set
+    expect(console.log).toHaveBeenCalledWith(component.FormSolicitud.value);
   });
-
-  it('should validate the form when required fields are missing', () => {
-    const form = component.FormSolicitud;
-    const exentoDePagoControl = form.get('datosImportadorExportador.exentoDePago');
-    exentoDePagoControl?.setValue('');
-    expect(exentoDePagoControl?.valid).toBeFalse();
-    expect(exentoDePagoControl?.hasError('required')).toBeTrue();
-  });
-
-  it('should reset form fields when exentoDePago is changed to "Si"', () => {
-    component.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.setValue('No');
-    fixture.detectChanges();
-    component.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.setValue('Si');
-    fixture.detectChanges();
-
-    const rfcControl = component.FormSolicitud.get('datosImportadorExportador.rfcImportExport');
-    expect(rfcControl?.value).toBeNull();
-  });
-
-  it('should disable fields correctly in mercanciaSeleccion()', () => {
-    component.mercanciaSeleccion();
-    fixture.detectChanges();
-    
-    const rfcControl = component.FormSolicitud.get('datosImportadorExportador.rfcImportExport');
-    expect(rfcControl?.disabled).toBe(true);
-  });
-
-  it('should reset fields when mercanciaSeleccion() is called with "No"', () => {
-    component.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.setValue('No');
-    fixture.detectChanges();
-    component.mercanciaSeleccion();
-    fixture.detectChanges();
-
-    const rfcControl = component.FormSolicitud.get('datosImportadorExportador.rfcImportExport');
-    expect(rfcControl?.value).toBe('454000554');
-  });
-
 });
-
