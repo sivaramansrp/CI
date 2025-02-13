@@ -62,7 +62,7 @@ export class AnexarDocumentosComponent implements OnInit {
     private fb: FormBuilder
   ) {}
 
-  url: string = URL_PRUEBA;
+  readonly url: string = URL_PRUEBA;
 
   ngOnInit() : void {
     this.obtenerToken(this.datosLogin);

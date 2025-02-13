@@ -16,8 +16,8 @@ export class AcuseComponent implements OnChanges {
   @Input() subtitulo!: string;
   @Input() folio!: string;
 
-  encabezadoTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.encabezadoTablaAcuse;
-  datosTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.datosTablaAcuse;
+  readonly encabezadoTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.encabezadoTablaAcuse;
+  readonly datosTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.datosTablaAcuse;
 
   /**
    * Método que se ejecuta cuando uno o más inputs del componente cambian.
