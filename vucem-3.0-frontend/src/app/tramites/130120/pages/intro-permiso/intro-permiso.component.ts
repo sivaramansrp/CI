@@ -3,6 +3,9 @@ import { BtnContinuarComponent } from "../../../../shared/components/btn-continu
 import { DatosPasos } from '../../../../core/models/shared/components.model';
 import { ListaPasosWizard } from '../../../../core/models/130120/permiso-importacion-modification.model';
 import { PASOS } from '../../../../shared/constantes/130120/permiso-importacion-modification.enum';
+import { PasoDosComponent } from "../paso-dos/paso-dos.component";
+import { PasoFourComponent } from "../paso-four/paso-four.component";
+import { PasoTresComponent } from "../paso-tres/paso-tres.component";
 import { PasoUnoComponent } from "../paso-uno/paso-uno.component";
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 
@@ -14,7 +17,7 @@ interface AccionBoton {
   selector: 'app-intro-permiso',
   templateUrl: './intro-permiso.component.html',
   styleUrl: './intro-permiso.component.scss',
-  imports: [WizardComponent, BtnContinuarComponent, PasoUnoComponent],
+  imports: [WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoDosComponent, PasoTresComponent, PasoFourComponent],
   standalone: true,
 })
 export class IntroPermisoComponent {
