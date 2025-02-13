@@ -9,7 +9,8 @@ describe('SolicitudDatosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SolicitudDatosComponent],
+      declarations: [],
+      imports: [SolicitudDatosComponent],
     }).compileComponents();
   });
 

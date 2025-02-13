@@ -10,7 +10,8 @@ describe('CarrosDeFerrocarrilComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CarrosDeFerrocarrilComponent, TituloComponent ],
+      declarations: [ ],
+      imports: [ CarrosDeFerrocarrilComponent, TituloComponent],
       schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();

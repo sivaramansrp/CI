@@ -10,7 +10,8 @@ describe('HistorialInspeccionFisicaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [HistorialInspeccionFisicaComponent, TituloComponent],
+      declarations: [],
+      imports: [HistorialInspeccionFisicaComponent, TituloComponent],
     }).compileComponents();
   });
 

@@ -12,7 +12,8 @@ describe('InspeccionFisicaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InspeccionFisicaComponent, WizardComponent ],
+      declarations: [ InspeccionFisicaComponent ],
+      imports: [ WizardComponent ],
       schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
