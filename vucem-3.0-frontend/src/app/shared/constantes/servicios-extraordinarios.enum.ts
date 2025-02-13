@@ -157,6 +157,11 @@ export const PROTESTA = {
   ADJUNTAR: `<input class="form-check-input" type="checkbox" id="protesta">
   <p>El/la que suscribe manifiesto(a) bajo protesta de decir verdad, que la información declarada en el presente trámite de REGISTRO ÚNICO DE PRODUCTOS ELEGIBLES PARA PREFERENCIAS Y CONCESIONES ARANCELARIAS es copia fiel, íntegra e inalterada de la información y documentación soporte que obra en poder del (de la) solicitante.</p>`,
 }
+export const FECHA_SALIDA = {
+  labelNombre:'Fecha de expedición de certificado de Molino o de calidad',
+  required: true,
+  habilitado: false,
+}
 
 export const TXT_ALERTA_ACUSE = (folio: string) => {
   return `Tu solicitud ha sido registrada con el siguiente número de folio:  < ${folio} >`;
