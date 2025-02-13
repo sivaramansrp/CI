@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { AntecesorRoutingModule } from './antecesor-routing.module';
 import { DatosComponent } from '../pages/datos/datos.component';
 import { PantallasComponent } from '../pages/pantallas/pantallas.component';
+import { WizardComponent } from '../../../shared/components/wizard/wizard.component';
+import { NavComponent } from '../../../shared/components/nav/nav.component';
 
 
 @NgModule({
@@ -14,7 +16,9 @@ import { PantallasComponent } from '../pages/pantallas/pantallas.component';
   ],
   imports: [
     CommonModule,
-    AntecesorRoutingModule
+    AntecesorRoutingModule,
+    WizardComponent,
+    NavComponent
   ]
 })
 export class AntecesorModule { }

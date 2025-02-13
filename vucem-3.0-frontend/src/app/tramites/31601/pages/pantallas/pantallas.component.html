@@ -1,26 +1,10 @@
 <div class="container mt-5">
     <div class="row">
-        <div class="progress-container">
-            <div class="progress-step">
-              <div class="step-number active">1</div>
-              <div class="step-title active">Capturar solicitud</div>
-            </div>
-            <div class="progress-line active"></div>
-            <div class="progress-step">
-              <div class="step-number">2</div>
-              <div class="step-title">Requisitos necesarios</div>
-            </div>
-            <div class="progress-line"></div>
-            <div class="progress-step">
-              <div class="step-number">3</div>
-              <div class="step-title">Anexar requisitos</div>
-            </div>
-            <div class="progress-line"></div>
-            <div class="progress-step">
-              <div class="step-number">4</div>
-              <div class="step-title">Firmar solicitud</div>
-            </div>
-          </div>
+
+        <div class="col-md-6">
+            <h5>IVA e IEPS A</h5>
+        </div>
+        <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
     </div>
     <div class="row">
         @switch (indice) {
