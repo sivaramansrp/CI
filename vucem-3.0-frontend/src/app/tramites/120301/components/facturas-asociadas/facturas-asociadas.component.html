@@ -33,7 +33,7 @@
           <ng-titulo titulo="Asociar facturas a expedición"></ng-titulo>
           <h6>Facturas disponible</h6>
   
-          <ng-table [commonTableHeader]="tableColumns" [commonTableBody]="mercanciasData"></ng-table>
+          <ng-table [commonTableHeader]="tableColumns" [commonTableBody]="facturasDisponible"></ng-table>
   
           <!-- <app-agregar-archivo 
           [archivoBtn]="'Carga por archivo'" 
@@ -54,7 +54,7 @@
           </div>
           <h6>Facturas asociadas</h6>
   
-          <ng-table [commonTableHeader]="asociadastableColumns" [commonTableBody]="asociadastableData"></ng-table>
+          <ng-table [commonTableHeader]="asociadastableColumns" [commonTableBody]="facturasAsociadas"></ng-table>
   </div>
   <!-- <div class="container">
     <div class="row">

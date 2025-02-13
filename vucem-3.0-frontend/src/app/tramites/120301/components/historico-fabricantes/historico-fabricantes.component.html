@@ -34,7 +34,7 @@
           <!-- <ng-titulo titulo="Asociar facturas a expedición"></ng-titulo> -->
           <h6>Fabricantes nacionales</h6>
   
-          <ng-table [commonTableHeader]="febricantescolumnas" [commonTableBody]="febricantesDatos"></ng-table>
+          <ng-table [commonTableHeader]="tableColumns" [commonTableBody]="fabricantesNacionales"></ng-table>
   
           <!-- <app-agregar-archivo 
           [archivoBtn]="'Carga por archivo'" 
@@ -55,7 +55,7 @@
           </div>
           <h6>Fabricante</h6>
   
-          <ng-table [commonTableHeader]="febricantescolumnas2" [commonTableBody]="febricantesDatos2"></ng-table>
+          <ng-table [commonTableHeader]="tableColumns" [commonTableBody]="fabricantesDatos"></ng-table>
 
           <ng-titulo titulo="Datos fabricante nacional"></ng-titulo>
           <div class="col-12 col-xxl-4 col-xl-4 col-md-4 col-sm-4 mb-5">

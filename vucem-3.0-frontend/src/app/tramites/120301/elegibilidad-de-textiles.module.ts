@@ -33,7 +33,6 @@ import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
     PasoDosComponent,
     PasoTresComponent,
     PasoUnoComponent,
-    CapturarFacturasComponent,
     ImportadorEnDestinoComponent,
     PasoCuatroComponent
   ],
@@ -55,6 +54,7 @@ import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     RouterModule,
+    CapturarFacturasComponent,
     FacturasAsociadasComponent,
     HistoricoFabricantesComponent,
     TableComponent,

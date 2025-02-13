@@ -8,16 +8,24 @@
  * @import { TableComponent } from '../../../../shared/components/table/table.component';
  */
 
-import { Component } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { TableComponent } from '../../../../shared/components/table/table.component';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CapturarFacturasService } from '../../../../core/services/120301/capturar-facturas/capturar-facturas.service';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 @Component({
   selector: 'app-capturar-facturas',
   templateUrl: './capturar-facturas.component.html',
   styleUrl: './capturar-facturas.component.scss',
+  standalone: true,
+  imports: [
+    TableComponent,
+    TituloComponent,
+    ReactiveFormsModule
+  ]
 })
-export class CapturarFacturasComponent {
+export class CapturarFacturasComponent implements OnInit {
   /**
    * @property {FormGroup} forma - El grupo de formularios para capturar los datos de las facturas.
    */
@@ -55,12 +63,51 @@ export class CapturarFacturasComponent {
   /**
    * @property {Array} facturas - Array de datos de facturas para mostrar en la tabla.
    */
-  facturas = [
-    {
-      tbodyData: ['prueba107112024', 'RAZON SOCIAL CONSIGNATARIO CONSIGNATARIO', 'CALLE', '2024-11-07 00:00:00.0', '100', '9', 'Kilogramo', '100.0']
-    },
-    {
-      tbodyData: ['3434324', 'FACTURA', 'CALLE', '2024-10-14 00:00:00.0', '999999', '999990', 'Kilogramo', '3213.0']
-    }
-  ];
+  facturas: any[] = [];
+  constructor(
+    private fb: FormBuilder,
+    private capturarFacturasService: CapturarFacturasService
+  ) {}
+
+  ngOnInit(): void {
+    this.fetchData();
+  }
+  fetchData(): void {
+    this.capturarFacturasService.getDatos().subscribe({
+      next: (response: any) => {
+        console.log('Received data:', response);
+
+        if (response && Array.isArray(response.facturas)) {
+
+          this.facturas = response.facturas.map((item) => {
+            var data = {
+              tbodyData: item.tbodyData
+            }
+            return data;
+          }
+          );
+
+          //console.log(this.facturas);
+          this.facturas = [...this.facturas]
+
+        } else {
+          console.error('API response is not in expected format:', response);
+          this.facturas = [];
+        }
+      },
+      error: (error: any) => {
+        console.error('Error while fetching the data:', error);
+        this.facturas = [];
+      }
+    });
+  }
+
+  // facturas = [
+  //   {
+  //     tbodyData: ['prueba107112024', 'RAZON SOCIAL CONSIGNATARIO CONSIGNATARIO', 'CALLE', '2024-11-07 00:00:00.0', '100', '9', 'Kilogramo', '100.0']
+  //   },
+  //   {
+  //     tbodyData: ['3434324', 'FACTURA', 'CALLE', '2024-10-14 00:00:00.0', '999999', '999990', 'Kilogramo', '3213.0']
+  //   }
+  // ];
 }

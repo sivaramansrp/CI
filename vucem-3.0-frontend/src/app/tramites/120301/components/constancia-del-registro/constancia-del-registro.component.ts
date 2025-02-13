@@ -9,7 +9,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ConstanciaDelRegistroService } from '../../../../core/services/120301/constancia-del-registro.service';
+import { ConstanciaDelRegistroService } from '../../../../core/services/120301/constancia-del-registro/constancia-del-registro.service';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 @Component({
   selector: 'app-constancia-del-registro',
@@ -67,15 +67,33 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   ngOnInit(): void {
     this.fetchData();
   }
-  fetchData() : void {
+  fetchData(): void {
     this.constanciaDelRegistroService.getfederal().subscribe({
-      next: (response: any[]) => {
+      next: (response: any) => {
         console.log('Received data:', response);
-        this.federal = response;
+
+        if (response && Array.isArray(response.federal)) {
+
+          this.federal = response.federal.map((item) => {
+            var data = {
+              tbodyData: item.tbodyData
+            }
+            return data;
+          }
+          );
+
+          //console.log(this.federal);
+          this.federal = [...this.federal]
+
+        } else {
+          console.error('API response is not in expected format:', response);
+          this.federal = [];
+        }
       },
       error: (error: any) => {
         console.error('Error while fetching the data:', error);
+        this.federal = [];
       }
-    }); 
+    });
   }
 }
