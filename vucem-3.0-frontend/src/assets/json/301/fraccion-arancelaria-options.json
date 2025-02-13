@@ -1,22 +1,22 @@
 [
   {
-    "label": "Fraccion Arancelaria 1",
-    "Id": 1
+    "descripcion": "Fraccion Arancelaria 1",
+    "id": 1
   },
   {
-    "label": "Fraccion Arancelaria 2",
-    "Id": 2
+    "descripcion": "Fraccion Arancelaria 2",
+    "id": 2
   },
   {
-    "label": "Fraccion Arancelaria 3",
-    "Id": 3
+    "descripcion": "Fraccion Arancelaria 3",
+    "id": 3
   },
   {
-    "label": "Fraccion Arancelaria 4",
-    "Id": 4
+    "descripcion": "Fraccion Arancelaria 4",
+    "id": 4
   },
   {
-    "label": "Fraccion Arancelaria 5",
-    "Id": 5
+    "descripcion": "Fraccion Arancelaria 5",
+    "id": 5
   }
 ]

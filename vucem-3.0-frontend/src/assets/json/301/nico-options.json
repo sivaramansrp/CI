@@ -1,22 +1,22 @@
 [
     {
-        "label": "Nico 1",
-        "Id": "1"
+        "descripcion": "Nico 1",
+        "id": 1
     },
     {
-        "label": "Nico 2",
-        "Id": "2"
+        "descripcion": "Nico 2",
+        "id": 2
     },
     {
-        "label": "Nico 3",
-        "Id": "3"
+        "descripcion": "Nico 3",
+        "id": 3
     },
     {
-        "label": "Nico 4",
-        "Id": "4"
+        "descripcion": "Nico 4",
+        "id": 4
     },
     {
-        "label": "Nico 5",
-        "Id": "5"
+        "descripcion": "Nico 5",
+        "id": 5
     }
 ]

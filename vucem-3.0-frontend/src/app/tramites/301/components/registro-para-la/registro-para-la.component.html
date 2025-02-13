@@ -10,9 +10,11 @@
     </div>
    
    
-       <select-catalogos [catalogosDatos]="registro"
+       <!-- <select-catalogos [catalogosDatos]="registro"
     (valorSeleccion)="docSeleccionado($event)">
-</select-catalogos>
+</select-catalogos> -->
+<app-catalogo-select [catalogo]="registro" formControlName="registro" [label]="'¿Se han realizado previamente importaciones o exportaciones del producto a registrar?'"
+          [required]="true" name="registro"  (change)="registroSeleccion()" ></app-catalogo-select>
 
 </div>
 <div>

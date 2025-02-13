@@ -1,111 +1,78 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+/**
+ * @module InformacionDeLaComponent
+ * @description Este módulo define el componente `InformacionDeLaComponent` que maneja la información de la mercancía.
+ */
+
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ReplaySubject, takeUntil } from 'rxjs';
-
-import { BtnContinuarComponent } from '../../../../shared/components/btn-continuar/btn-continuar.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Validators } from '@angular/forms';
 
 import estadofisico from '../../../../../assets/json/301/estado-fisico-options.json';
 import franccionArancelaria from '../../../../../assets/json/301/fraccion-arancelaria-options.json';
 import nico from '../../../../../assets/json/301/nico-options.json';
 
-/**
- * Componente `InformacionDeLaComponent`
- * 
- * Este componente se encarga de gestionar un formulario con información relevante 
- * sobre productos químicos. Los usuarios deben ingresar datos como fracción arancelaria, 
- * nombre químico, estado físico, etc. El formulario tiene campos con validaciones y 
- * deshabilita o habilita campos adicionales según las selecciones del usuario.
- * 
- * @component
- * @example
- * <app-informacion-de-la></app-informacion-de-la>
- */
+import { BtnContinuarComponent } from '../../../../shared/components/btn-continuar/btn-continuar.component';
+import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+import { SelectCatalogosComponent } from "../../../../shared/components/select-catalogos/select-catalogos.component";
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+
 @Component({
   selector: 'app-informacion-de-la',
   templateUrl: './informacion-de-la.component.html',
-  styleUrls: ['./informacion-de-la.component.scss'],
-  imports: [TituloComponent, ReactiveFormsModule, CommonModule, BtnContinuarComponent],
+  styleUrl: './informacion-de-la.component.scss',
+  imports: [TituloComponent, ReactiveFormsModule, CommonModule, BtnContinuarComponent, SelectCatalogosComponent],
   standalone: true
 })
-export class InformacionDeLaComponent implements OnInit, OnDestroy {
+export class InformacionDeLaComponent implements OnInit {
 
-  /** 
-   * Formulario reactivo para capturar la información del producto químico.
-   * Este formulario contiene múltiples campos con validaciones como 'fraccionArancelaria', 'nombreQuimico', entre otros.
-   * 
-   * @type {FormGroup}
+  /**
+   * @property {FormGroup} informacionDeLaform - Formulario principal del componente.
    */
   informacionDeLaform!: FormGroup;
 
-  /** 
-   * Lista de opciones de fracción arancelaria cargadas desde un archivo JSON.
-   * 
-   * @type {Array}
+  /**
+   * @property {CatalogosSelect} fraccionArancelariaOptions - Opciones del catálogo de fracción arancelaria.
    */
-  fraccionArancelariaOptions = franccionArancelaria;
+  fraccionArancelariaOptions !: CatalogosSelect; 
 
-  /** 
-   * Lista de opciones de NICO cargadas desde un archivo JSON.
-   * 
-   * @type {Array}
+  /**
+   * @property {CatalogosSelect} nicoOptions - Opciones del catálogo de Nico.
    */
-  nicoOptions = nico;
+  nicoOptions! : CatalogosSelect;
 
-  /** 
-   * Lista de opciones de estado físico del producto, cargadas desde un archivo JSON.
-   * 
-   * @type {Array}
+  /**
+   * @property {CatalogosSelect} estadoFisicoOptions - Opciones del catálogo de estado físico.
    */
-  estadoFisicoOptions = estadofisico;
+  estadoFisicoOptions!: CatalogosSelect;
 
-  /** 
-   * Índice del paso actual, utilizado para navegar a través de pasos en el formulario.
-   * 
-   * @type {number}
+  /**
+   * @property {number} indice - Índice del paso actual.
    */
   indice: number = 1;
 
-  /** 
-   * Objeto que contiene la información sobre los pasos de la navegación.
-   * 
-   * @type {Object}
+  /**
+   * @property {any} datosPasos - Datos de los pasos del formulario.
    */
   datosPasos: any = {
     indice: this.indice,
     txtBtnSig: 'Continuar',
   }
 
-  /** 
-   * Sujeto de tipo `ReplaySubject` que se utiliza para gestionar la destrucción del componente.
-   * 
-   * @public
-   * @type {ReplaySubject<boolean>}
-   */
-  public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-
   /**
-   * Constructor del componente `InformacionDeLaComponent`.
-   * 
-   * Inicializa el formulario reactivo a través del servicio `FormBuilder` de Angular.
-   * 
-   * @param {FormBuilder} formbuilt - Instancia de FormBuilder para crear formularios reactivos.
+   * @constructor
+   * @param {FormBuilder} formbuilt - Instancia de FormBuilder para crear formularios.
    */
   constructor(private formbuilt: FormBuilder) { }
 
   /**
-   * Método del ciclo de vida `ngOnInit()`.
-   * Este método se ejecuta cuando el componente se inicializa.
-   * 
-   * - Crea el formulario `informacionDeLaform` y configura sus validaciones.
-   * - Escucha los cambios en los campos `fraccionArancelaria` y `nico` para habilitar o deshabilitar campos asociados.
-   * 
+   * @method ngOnInit
+   * @description Inicializa el componente y configura el formulario con reglas de validación.
    * @memberof InformacionDeLaComponent
    */
   ngOnInit(): void {
-    // Inicializa el formulario reactivo con validaciones
     this.informacionDeLaform = this.formbuilt.group({
       fraccionArancelaria: ['', Validators.required],
       descripcionFraccion: [{ value: '', disabled: true }],
@@ -118,65 +85,107 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
       acondicionamiento: ['', Validators.required]
     });
 
-    // Escucha los cambios en el campo `fraccionArancelaria`
-    this.informacionDeLaform.get('fraccionArancelaria')?.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(value => {
-        if (value) {
-          this.informacionDeLaform.get('descripcionFraccion')?.enable();
-        } else {
-          this.informacionDeLaform.get('descripcionFraccion')?.disable();
-        }
-      });
-
-    // Escucha los cambios en el campo `nico`
-    this.informacionDeLaform.get('nico')?.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(value => {
-        if (value) {
-          this.informacionDeLaform.get('descripcionNico')?.enable();
-        } else {
-          this.informacionDeLaform.get('descripcionNico')?.disable();
-        }
-      });
+    this.getFraccionArancelaria();
+    this.getNico();
+    this.getEstadofisico();
   }
 
   /**
-   * Método para manejar el envío del formulario.
-   * 
-   * Este método verifica si el formulario es válido antes de continuar.
-   * Si el formulario es inválido, no realiza ninguna acción.
-   * 
+   * @method getFraccionArancelaria
+   * @description Configura las opciones del catálogo de fracción arancelaria.
    * @memberof InformacionDeLaComponent
    */
-  onSubmit(): void {
-    if (this.informacionDeLaform.invalid) {
-      return;
+  public getFraccionArancelaria() {
+    this.fraccionArancelariaOptions = {
+      labelNombre: 'Fracción arancelaria',
+      required: true,
+      primerOpcion: 'Selecciona un valor',
+      catalogos: franccionArancelaria
     }
-    // Aquí puede incluirse la lógica para procesar el formulario
   }
 
   /**
-   * Método para registrar el valor del índice (evento de algún paso).
-   * Este método está preparado para manejar un evento y realizar algún procesamiento adicional.
-   * 
-   * @param {unknown} event - El evento a registrar o procesar.
+   * @method getNico
+   * @description Configura las opciones del catálogo de Nico.
+   * @memberof InformacionDeLaComponent
+   */
+  public getNico() {
+    this.nicoOptions = {
+      labelNombre: 'Nico',
+      required: true,
+      primerOpcion: 'Selecciona un valor',
+      catalogos: nico
+    }
+  }
+
+  /**
+   * @method getEstadofisico
+   * @description Configura las opciones del catálogo de estado físico.
+   * @memberof InformacionDeLaComponent
+   */
+  public getEstadofisico() {
+    this.estadoFisicoOptions = {
+      labelNombre: 'Estado Fisico',
+      required: true,
+      primerOpcion: 'Selecciona un valor',
+      catalogos: estadofisico
+    }
+  }
+
+  /**
+   * @method valorSeleccionadoFraccion
+   * @description Maneja el evento de selección de una fracción arancelaria.
+   * @param {any} valor - Valor seleccionado.
+   * @memberof InformacionDeLaComponent
+   */
+  valorSeleccionadoFraccion(valor: any) {
+    this.informacionDeLaform.patchValue({
+      franccionArancelaria: valor.id
+    })
+
+    if (valor.id) {
+      this.informacionDeLaform.get('descripcionFraccion')?.enable();
+    } else {
+      this.informacionDeLaform.get('descripcionFraccion')?.disable();
+    }
+  }
+
+  /**
+   * @method valorSeleccionadoNico
+   * @description Maneja el evento de selección de un Nico.
+   * @param {any} valor - Valor seleccionado.
+   * @memberof InformacionDeLaComponent
+   */
+  valorSeleccionadoNico(valor: any) {
+    this.informacionDeLaform.patchValue({
+      nico: valor.id
+    })
+    if (valor.id) {
+      this.informacionDeLaform.get('descripcionNico')?.enable();
+    } else {
+      this.informacionDeLaform.get('descripcionNico')?.disable();
+    }
+  }
+
+  /**
+   * @method valorSeleccionadoEstado
+   * @description Maneja el evento de selección de un estado físico.
+   * @param {any} valor - Valor seleccionado.
+   * @memberof InformacionDeLaComponent
+   */
+  valorSeleccionadoEstado(valor: any) {
+    this.informacionDeLaform.patchValue({
+      estadoFisico: valor.id
+    })
+  }
+
+  /**
+   * @method getValorIndice
+   * @description Registra el valor del evento en la consola.
+   * @param {unknown} event - El evento a registrar.
    * @memberof InformacionDeLaComponent
    */
   getValorIndice(event: unknown): void {
-    // Lógica para manejar el evento, si es necesario
-    return;
-  }
-
-  /**
-   * Método del ciclo de vida `ngOnDestroy()`.
-   * 
-   * Este método se ejecuta cuando el componente se destruye. Limpia los recursos y
-   * completa el sujeto `destroyed$` para evitar fugas de memoria.
-   * 
-   * @memberof InformacionDeLaComponent
-   */
-  ngOnDestroy(): void {
-    this.destroyed$.next(true);
+    console.log(event);
   }
 }

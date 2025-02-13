@@ -35,19 +35,19 @@ describe('DeLaMuestraComponent', () => {
   it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
     expect(component.Informaciondela).toBeDefined();
-    expect(component.Informaciondela.get('datosImportadorExportador.follo')).toBeTruthy();
+    expect(component.Informaciondela.get('datosImportadorExportador.folio')).toBeTruthy();
   });
 
-  it('should disable the follo field when "No" is selected in docSeleccionado', () => {
+  it('should disable the folio field when "No" is selected in docSeleccionado', () => {
     component.ngOnInit();
     component.docSeleccionado({ descripcion: 'No' });
-    expect(component.Informaciondela.get('datosImportadorExportador.follo')?.disabled).toBeTrue();
+    expect(component.Informaciondela.get('datosImportadorExportador.folio')?.disabled).toBeTrue();
   });
 
-  it('should enable the follo field when "Si" is selected in docSeleccionado', () => {
+  it('should enable the folio field when "Si" is selected in docSeleccionado', () => {
     component.ngOnInit();
     component.docSeleccionado({ descripcion: 'Si' });
-    expect(component.Informaciondela.get('datosImportadorExportador.follo')?.enabled).toBeTrue();
+    expect(component.Informaciondela.get('datosImportadorExportador.folio')?.enabled).toBeTrue();
   });
 
   it('should initialize mercancia data correctly', () => {

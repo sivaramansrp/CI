@@ -4,17 +4,7 @@
 
     <div class="row">
       <div class="col-md-4">
-        <label for="fraccionArancelaria" class="form-label">Fracción arancelaria*:</label>
-        <select class="form-select form-control" formControlName="fraccionArancelaria">
-          <option value="">Selecciona un valor</option>
-          <option *ngFor="let item of fraccionArancelariaOptions" [value]="item.Id">{{ item.label }}</option>
-        </select>
-
-
-        <small class="text-danger"
-          *ngIf="informacionDeLaform.get('fraccionArancelaria')?.hasError('required') && informacionDeLaform.get('fraccionArancelaria')?.touched">
-          Campo obligatorio
-        </small>
+          <select-catalogos (valorSeleccion)="valorSeleccionadoFraccion($event)" [catalogosDatos]="fraccionArancelariaOptions" ></select-catalogos>
       </div>
 
       <div class="col-md-8">
@@ -25,15 +15,7 @@
 
     <div class="row mt-3">
       <div class="col-md-4">
-        <label for="nico" class="form-label">Nico*:</label>
-        <select class="form-control form-select" formControlName="nico">
-          <option value="">Selecciona un valor</option>
-          <option *ngFor="let item of nicoOptions" [value]="item.Id">{{ item.label }}</option>
-        </select>
-        <small class="text-danger"
-          *ngIf="informacionDeLaform.get('nico')?.hasError('required') && informacionDeLaform.get('nico')?.touched">
-          Campo obligatorio
-        </small>
+        <select-catalogos (valorSeleccion)="valorSeleccionadoNico($event)" [catalogosDatos]="nicoOptions" ></select-catalogos>
       </div>
 
       <div class="col-md-8">
@@ -44,7 +26,7 @@
 
     <div class="row mt-3">
       <div class="col-md-4">
-        <label for="nombreQuimico" class="form-label">Nombre químico*:</label>
+        <label for="nombreQuimico" class="form-label">Nombre químico *:</label>
         <input id="nombreQuimico" type="text" class="form-control" formControlName="nombreQuimico">
         <small class="text-danger"
           *ngIf="informacionDeLaform.get('nombreQuimico')?.hasError('required') && informacionDeLaform.get('nombreQuimico')?.touched">
@@ -53,7 +35,7 @@
       </div>
 
       <div class="col-md-8">
-        <label for="nombreComercial" class="form-label">Nombre comercial*:</label>
+        <label for="nombreComercial" class="form-label">Nombre comercial *:</label>
         <input id="nombreComercial" type="text" class="form-control" formControlName="nombreComercial">
         <small class="text-danger"
           *ngIf="informacionDeLaform.get('nombreComercial')?.hasError('required') && informacionDeLaform.get('nombreComercial')?.touched">
@@ -64,7 +46,7 @@
 
     <div class="row mt-3">
       <div class="col-md-8">
-        <label for="numeroCAS" class="form-label">Número de Chemical Abstracts Substance (CAS)*:</label>
+        <label for="numeroCAS" class="form-label">Número de Chemical Abstracts Substance (CAS) *:</label>
         <input id="numeroCAS" type="text" class="form-control" formControlName="numeroCAS">
         <small class="text-danger"
           *ngIf="informacionDeLaform.get('numeroCAS')?.hasError('required') && informacionDeLaform.get('numeroCAS')?.touched">
@@ -73,15 +55,7 @@
       </div>
 
       <div class="col-md-4">
-        <label for="estadoFisico" class="form-label">Estado físico*:</label>
-        <select id="estadoFisico" class="form-control form-select" formControlName="estadoFisico">
-          <option value="">Selecciona un valor</option>
-          <option *ngFor="let item of estadoFisicoOptions" [value]="item.Id">{{ item.label }}</option>
-        </select>
-        <small class="text-danger"
-          *ngIf="informacionDeLaform.get('estadoFisico')?.hasError('required') && informacionDeLaform.get('estadoFisico')?.touched">
-          Campo obligatorio
-        </small>
+        <select-catalogos (valorSeleccion)="valorSeleccionadoEstado($event)" [catalogosDatos]="estadoFisicoOptions" ></select-catalogos>
       </div>
     </div>
 

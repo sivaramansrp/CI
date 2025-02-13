@@ -12,6 +12,8 @@ import { AlertComponent } from '../../../../shared/components/alert/alert.compon
 import { BtnContinuarComponent } from '../../../../shared/components/btn-continuar/btn-continuar.component';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 
 /**
  * Componente para el registro de productos relacionados con importaciones y exportaciones.
@@ -25,8 +27,8 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
 @Component({
   selector: 'app-registro-para-la',
   templateUrl: './registro-para-la.component.html',
-  styleUrls: ['./registro-para-la.component.scss'],  // Corregido de styleUrl a styleUrls
-  imports: [AlertComponent, TituloComponent, SelectCatalogosComponent, BtnContinuarComponent],
+  styleUrls: ['./registro-para-la.component.scss'], // Corregido de styleUrl a styleUrls
+  imports: [AlertComponent, TituloComponent, CatalogoSelectComponent, BtnContinuarComponent],
   standalone: true
 })
 export class RegistroParaLaComponent implements OnInit {
@@ -63,7 +65,7 @@ export class RegistroParaLaComponent implements OnInit {
    * @type {CatalogosSelect}
    * @memberof RegistroParaLaComponent
    */
-  public registro!: CatalogosSelect;
+  public registro!: Catalogo[];
 
   /**
    * Lista de pasos en el flujo del formulario.
@@ -82,10 +84,7 @@ export class RegistroParaLaComponent implements OnInit {
    * @returns {void}
    * @memberof RegistroParaLaComponent
    */
-  public docSeleccionado(e: unknown): void {
-    // Lógica de manejo de documentos aquí si es necesario
-    return;
-  }
+
 
   /**
    * Objeto que contiene los datos del flujo de pasos del formulario.
@@ -120,26 +119,20 @@ export class RegistroParaLaComponent implements OnInit {
    * @memberof RegistroParaLaComponent
    */
   public getRegistro(): void {
-    this.registro = {
-      labelNombre: '¿Se han realizado previamente importaciones o exportaciones del producto a registrar?',
-      required: true, // El campo es obligatorio
-      primerOpcion: 'Selecciona un valor', // Texto de opción predeterminada
-      catalogos: [
-        {
-          id: 1,
-          descripcion: 'Si', // Opción para seleccionar "Sí"
-        },
-        {
-          id: 2,
-          descripcion: 'No', // Opción para seleccionar "No"
-        }
-      ],
-    };
+    this.registro = [
+      { id: 1, descripcion: 'Si' },
+      { id: 2, descripcion: 'No' },
+    ];
+   
 
     // Aquí deberías cargar los pasos reales del flujo de trabajo de tu aplicación
     this.pasos = []; // Llenar la lista `pasos` con los pasos correspondientes
 
     // Actualiza el número de pasos en el objeto `datosPasos` después de cargar la lista de pasos
     this.datosPasos.nroPasos = this.pasos.length;
+  }
+  registroSeleccion(): void {
+    // Este método puede ser extendido para manejar la lógica de selección de documentos
+    return;
   }
 }

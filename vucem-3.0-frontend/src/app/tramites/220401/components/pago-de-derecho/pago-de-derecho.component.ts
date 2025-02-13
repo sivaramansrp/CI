@@ -1,21 +1,18 @@
-
+/* eslint-disable no-empty-function */
 import { Component, OnInit } from '@angular/core';
+import { FormGroup,ReactiveFormsModule,Validators } from '@angular/forms';
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-
-import {  FormGroup,ReactiveFormsModule,Validators } from '@angular/forms';
-
 import { FormBuilder } from '@angular/forms';
-
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+import { FormsModule } from '@angular/forms';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-
 @Component({
   selector: 'app-pago-de-derecho',
   templateUrl: './pago-de-derecho.component.html',
   
-  imports: [CommonModule,TituloComponent,ReactiveFormsModule,SelectCatalogosComponent,FormsModule],
+  imports: [CommonModule,TituloComponent,ReactiveFormsModule,SelectCatalogosComponent,FormsModule,CatalogoSelectComponent],
   styleUrl: './pago-de-derecho.component.scss',
   standalone: true,
 })
@@ -24,7 +21,8 @@ export class PagoDeDerechoComponent implements OnInit {
   
   answer: string = '';
   
-  public mercancia!: CatalogosSelect;
+   public Justificacion!: Catalogo[];
+   public Banco!: Catalogo[];
 
   constructor(private fb: FormBuilder) {
   
@@ -36,16 +34,42 @@ export class PagoDeDerechoComponent implements OnInit {
  * - Llama al método `getMercancia` para inicializar el objeto `mercancia`.
  * - Inicializa el grupo de formularios `FormSolicitud` con controles de formulario anidados y validadores.
  */
+mercanciaSeleccion(): void {
+  if(this.FormSolicitud.get('datosImportadorExportador.mercancia')?.value === '2'){
+    this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.setValue('454000554');
+    this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValue('0001012A0000EX');
+    this.FormSolicitud.get('datosImportadorExportador.importePago')?.setValue('594.0');
 
+  
+    this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.disable();
+    this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disable();
+    this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
+  } else {
+   
+    this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.reset();
+    this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.reset();
+    this.FormSolicitud.get('datosImportadorExportador.importePago')?.reset();
+
+    
+    this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.disable();
+    this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disable();
+    this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
+    this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.disable();
+    this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.disable();
+  }
+  
+  }
   ngOnInit(): void {
-    this.getMercancia();
+    this.getJustificacion();
+    this.getBanco();
     this.FormSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
         exentoDePago: ['No', Validators.required],
+        Justificacion: ['', Validators.required],
         nombreImportExport: ['', Validators.required],
         rfcImportExport: ['', Validators.required],
         cadenaDependencia: ['', Validators.required],
-        banco: ['', Validators.required],
+        Banco: ['', Validators.required],
         llaveDePago: ['', Validators.required],
         fechaPago: [' ', Validators.required],
         importePago: ['', Validators.required],
@@ -79,6 +103,9 @@ export class PagoDeDerechoComponent implements OnInit {
       this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.setValue('454000554');
       this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValue('0001012A0000EX');
       this.FormSolicitud.get('datosImportadorExportador.importePago')?.setValue('594.0');
+      this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.enable();
+      this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.enable();
+     
   
     
       this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.disable();
@@ -110,23 +137,27 @@ export class PagoDeDerechoComponent implements OnInit {
  *   - `descripcion`: Una cadena de texto que describe la opción. Actualmente, ambas opciones tienen la misma descripción 'Opción 1'.
  */
 
-  public getMercancia() { 
-    this.mercancia = { 
-      labelNombre: 'Mercancía',
-      required: true,
-      primerOpcion: 'Selecciona un valor',
-      catalogos: [
-        {
-          id: 1,
-          descripcion: 'Opción 1',
-        },
-        {
-          id: 2,
-          descripcion: 'Opción 1',
-        }
-      ],
-    }
-  }
+public getJustificacion(): void {
+  this.Justificacion = [ { id: 1, descripcion: 'Si' },
+    { id: 2, descripcion: 'No' },
+ 
+  ];
+}
+public getBanco(): void {
+  this.Banco = [ { id: 1, descripcion: 'Si' },
+    { id: 2, descripcion: 'No' },
+ 
+  ];
+}
+JustificacionSeleccion():void{
+  
+
+}
+BancoSeleccion():void{
+  
+
+}
+
   /**
  * Valida el formulario y registra los valores del formulario si el formulario es válido.
  * 
@@ -134,9 +165,7 @@ export class PagoDeDerechoComponent implements OnInit {
  * Si el formulario es válido, registra los valores del formulario en la consola.
  */
   validarFormulario() {
-    if (this.FormSolicitud.valid) {     
-    }
+   
   }
-  public docSeleccionado(e: unknown) {
-  }
+ 
 }

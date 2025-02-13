@@ -4,9 +4,10 @@
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
     "types": [
-      "jasmine"
+      "jasmine",
     ]
-  }, "files": [
+  },
+  "files": [
     "src/test.ts",
     "src/polyfills.ts"
   ],

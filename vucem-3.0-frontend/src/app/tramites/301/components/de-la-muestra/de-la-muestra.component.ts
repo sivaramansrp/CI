@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { AlertComponent } from '../../../../shared/components/alert/alert.component';
+
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 
 /**
  * Componente `DeLaMuestraComponent`
@@ -24,7 +25,7 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
   selector: 'app-de-la-muestra',
   templateUrl: './de-la-muestra.component.html',
   styleUrls: ['./de-la-muestra.component.scss'],
-  imports: [AlertComponent, TituloComponent, SelectCatalogosComponent, ReactiveFormsModule],
+  imports: [ TituloComponent, SelectCatalogosComponent, ReactiveFormsModule,CatalogoSelectComponent],
   standalone: true
 })
 export class DeLaMuestraComponent implements OnInit {
@@ -34,11 +35,11 @@ export class DeLaMuestraComponent implements OnInit {
    * 
    * @type {CatalogosSelect}
    */
-  public mercancia!: CatalogosSelect;
+  public mercancia!: Catalogo[];
 
   /** 
    * Formulario reactivo que contiene los datos de la solicitud.
-   * Incluye el campo obligatorio `follo` dentro de `datosImportadorExportador`.
+   * Incluye el campo obligatorio `folio` dentro de `datosImportadorExportador`.
    * 
    * @type {FormGroup}
    */
@@ -53,25 +54,9 @@ export class DeLaMuestraComponent implements OnInit {
    */
   constructor(private fb: FormBuilder) { }
 
-  /**
-   * Método que se ejecuta cuando se selecciona un valor en el catálogo de la mercancía.
-   * Dependiendo de si el valor seleccionado es "Sí" o "No", habilita o deshabilita
-   * el campo `follo` del formulario.
-   * 
-   * @param {Object} e - El objeto que contiene la descripción del valor seleccionado.
-   * @param {string} e.descripcion - Descripción de la opción seleccionada (puede ser "Sí" o "No").
-   * 
-   * @example
-   * // Deshabilitar el campo `follo` si se selecciona "No"
-   * component.docSeleccionado({ descripcion: 'No' });
-   */
-  public docSeleccionado(e: { descripcion: string }): void {
-    if (e.descripcion === 'No') {
-      this.Informaciondela.get('datosImportadorExportador.follo')?.disable();
-    } else {
-      this.Informaciondela.get('datosImportadorExportador.follo')?.enable();
-    }
-  }
+
+
+ 
 
   /**
    * Método placeholder para la validación del formulario.
@@ -90,13 +75,14 @@ export class DeLaMuestraComponent implements OnInit {
    * Este método se ejecuta una vez que el componente ha sido inicializado.
    * Realiza las siguientes acciones:
    * - Llama al método `getMercancia()` para inicializar el objeto `mercancia`.
-   * - Crea el formulario reactivo `FormSolicitud` y lo inicializa con un campo obligatorio `follo`.
+   * - Crea el formulario reactivo `FormSolicitud` y lo inicializa con un campo obligatorio `folio`.
    */
   ngOnInit(): void {
     this.getMercancia();
     this.Informaciondela = this.fb.group({
       datosImportadorExportador: this.fb.group({
-        follo: ['', Validators.required],
+        folio: ['', Validators.required],
+        mercancia: ['', Validators.required],
       }),
     });
   }
@@ -112,20 +98,21 @@ export class DeLaMuestraComponent implements OnInit {
    * component.getMercancia();
    */
   public getMercancia(): void {
-    this.mercancia = {
-      labelNombre: '¿El producto al que hace referencia a esta solicitud ha sido previamente inscrito en el registro para la toma de muestras?',
-      required: true,
-      primerOpcion: 'Selecciona un valor',
-      catalogos: [
-        {
-          id: 1,
-          descripcion: 'Si',
-        },
-        {
-          id: 2,
-          descripcion: 'No',
-        },
-      ],
-    };
+    this.mercancia = [ { id: 1, descripcion: 'Si' },
+      { id: 2, descripcion: 'No' },
+   
+    ];
   }
+ 
+
+  mercanciaSeleccion(): void {
+if(this.Informaciondela.get('datosImportadorExportador.mercancia')?.value === '2'){
+  this.Informaciondela.get('datosImportadorExportador.folio')?.disable();
+} else {
+  this.Informaciondela.get('datosImportadorExportador.folio')?.enable();
 }
+
+}
+}
+
+
