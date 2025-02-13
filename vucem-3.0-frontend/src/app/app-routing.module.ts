@@ -1,6 +1,6 @@
+import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/auth/login' },
@@ -35,12 +35,6 @@ const routes: Routes = [
       )
   },
   {
-    path: 'certificado-zoosanitario',
-    loadChildren: () =>
-      import('./tramites/220201/certificado-zoosanitario.module').then(
-        (m) => m.CertificadoZoosanitarioModule)
-  },
-  {
     path: 'pantallas-extraordinarios',
     loadChildren: () =>
       import('./tramites/220401/pantallas.module').then(
@@ -48,12 +42,11 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'despacho-mercancias',
+    path: 'certificado-zoosanitario',
     loadChildren: () =>
-      import('./tramites/303/despacho-mercancias.module').then(
-        (m) => m.DespachoMercanciasModule
-      )
-  }
+      import('./tramites/220201/certificado-zoosanitario.module').then(
+        (m) => m.CertificadoZoosanitarioModule)
+  },
 ];
 
 @NgModule({
