@@ -74,4 +74,4 @@ import { GenerarDictamenComponent } from './pages/generar-dictamen/generar-dicta
   ],
   exports: [SolicitudComponent, TercerosComponent],
 })
-export class ServiciosExtraordinariosModule {}
+export class ServiciosExtraordinariosModule { }
