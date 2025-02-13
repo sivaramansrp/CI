@@ -1,5 +1,6 @@
-import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
+
+import { RouterModule, Routes } from '@angular/router';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/auth/login' },
@@ -20,10 +21,10 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'pantallas-extraordinarios',
+    path: 'pexim',
     loadChildren: () =>
-      import('./tramites/220401/pantallas.module').then(
-        (m) => m.PantallasModule
+      import('./tramites/130118/pexim.module').then(
+        (m) => m.PeximModule
       ),
   },
   {
@@ -34,13 +35,12 @@ const routes: Routes = [
       )
   },
   {
-    path: 'certificado-fitosanitario',
+    path: 'pantallas-extraordinarios',
     loadChildren: () =>
-      import('./tramites/220202/fitosanitario.module').then(
-        (m) => m.FitosanitarioModule
-      )
-  }
-
+      import('./tramites/220401/pantallas.module').then(
+        (m) => m.PantallasModule
+      ),
+  },
 ];
 
 @NgModule({
