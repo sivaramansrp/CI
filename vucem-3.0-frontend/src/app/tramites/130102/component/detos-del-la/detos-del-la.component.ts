@@ -1,29 +1,29 @@
 /**
- * descripción
- * @fileoverview Este archivo contiene la clase DetosDelLaComponent, encargada de manejar la lógica del componente Detos Del La.
- *
- * @module DetosDelLaComponent
+ *compo doc
+ * @fileoverview Componente DetosDelLaComponent: maneja la lógica del formulario
+ * para la gestión de productos, fracciones arancelarias y unidades de medida.
  */
-import { CommonModule } from '@angular/common';
-
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import fractionValues from '../../../../../assets/json/130102/fraccion_arancelaria.json';
+import productoOptions from '../../../../../assets/json/130102/producto-otions.json';
+import unidadOptions from '../../../../../assets/json/130102/unidad_da.json';
 
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
-import fractionValues from '../../../../../assets/json/130102/fraccion_arancelaria.json';
-import productoOptions from '../../../../../assets/json/130102/producto-otions.json';
-import unidadOptions from '../../../../../assets/json/130102/unidad_da.json';
 
 /**
- * descripción
+ *compo doc
  * @class DetosDelLaComponent
- * @description Componente responsable de manejar la lógica del Detos Del La.
+ * @description Componente para la gestión de datos relacionados con productos,
+ * fracciones arancelarias y unidades de medida en un formulario reactivo.
  */
 @Component({
   selector: 'app-detos-del-la',
@@ -39,57 +39,50 @@ import unidadOptions from '../../../../../assets/json/130102/unidad_da.json';
   styleUrl: './detos-del-la.component.scss',
 })
 export class DetosDelLaComponent implements OnInit {
-  /** 
-   * descripción
-   * @property {any} prodData
-   * @description Opciones de productos importadas desde un archivo JSON.
+  /**
+   * compo doc
+   * @property {any} prodData - Datos de productos importados desde un archivo JSON.
    */
   public prodData = productoOptions;
 
   /**
-   * descripción
-   * @property {FormGroup} formDelLa
-   * @description Estructura y validaciones del formulario reactivo.
+   * compo doc
+   * @property {FormGroup} formDelLa - Estructura del formulario reactivo.
    */
   formDelLa!: FormGroup;
 
   /**
-   * descripción
-   * @property {Array<{ label: string; value: string }>} producto
-   * @description Lista de opciones de productos disponibles.
+   * compo doc
+   * @property {Array<{ label: string; value: string }>} producto - Lista de productos disponibles.
    */
   producto: { label: string; value: string }[] = [];
 
   /**
-   * descripción
-   * @property {string} selectedValue
-   * @description Opción preseleccionada en el selector de productos.
+   * compo doc
+   * @property {string} selectedValue - Opción seleccionada por defecto.
    */
   selectedValue: string = 'Nuevo';
 
   /**
-   * descripción
-   * @property {string} defaultSelect
-   * @description Opción preseleccionada en el selector de productos.
+   * compo doc
+   * @property {string} defaultSelect - Valor predeterminado para el selector de productos.
    */
   defaultSelect: string = 'Nuevo';
 
   /**
-   * descripción
-   * @property {Catalogo[]} Unidad
-   * @description Catálogo de unidades de medida.
+   * compo doc
+   * @property {Catalogo[]} Unidad - Catálogo de unidades de medida.
    */
   Unidad: Catalogo[] = unidadOptions;
 
   /**
-   * descripción
-   * @property {Catalogo[]} fraccionF
-   * @description Catálogo de fracciones arancelarias.
+   * compo doc
+   * @property {Catalogo[]} fraccionF - Catálogo de fracciones arancelarias.
    */
   fraccionF: Catalogo[] = fractionValues;
 
   /**
-   * descripción
+   * compo doc
    * @constructor
    * @param {HttpClient} http - Cliente HTTP para solicitudes.
    * @param {FormBuilder} fb - Constructor de formularios reactivos.
@@ -97,34 +90,25 @@ export class DetosDelLaComponent implements OnInit {
   constructor(private http: HttpClient, private fb: FormBuilder) {}
 
   /**
-   * descripción
+   * compo doc
    * @method ngOnInit
-   * @description Inicializa el componente y configura el formulario reactivo.
+   * @description Inicializa el formulario con validaciones y carga datos de productos.
    */
   ngOnInit() {
     this.formDelLa = this.fb.group({
-      descripcion: [
-        '',
-        [Validators.required, Validators.minLength(10), Validators.maxLength(500)],
-      ],
+      descripcion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
       fraccion: ['', [Validators.required]],
       unidadMedida: ['', [Validators.required]],
-      cantidad: [
-        '',
-        [Validators.required, Validators.min(1), Validators.pattern('^[0-9]+$')],
-      ],
-      valorFacturaUSD: [
-        '',
-        [Validators.required, Validators.min(0.01), Validators.pattern('^[0-9]+(.[0-9]{1,2})?$')],
-      ],
+      cantidad: ['', [Validators.required, Validators.min(1), Validators.pattern('^[0-9]+$')]],
+      valorFacturaUSD: ['', [Validators.required, Validators.min(0.01), Validators.pattern('^[0-9]+(.[0-9]{1,2})?$')]]
     });
     this.fetchProductoOptions();
   }
 
   /**
-   * descripción
+   * compo doc
    * @method onValueChange
-   * @description Maneja los cambios en el valor seleccionado.
+   * @description Actualiza el valor seleccionado.
    * @param {string | number} value - Nuevo valor seleccionado.
    */
   onValueChange(value: string | number) {
@@ -132,9 +116,9 @@ export class DetosDelLaComponent implements OnInit {
   }
 
   /**
-   * descripción
+   * compo doc
    * @method fetchProductoOptions
-   * @description Obtiene las opciones de productos desde el archivo JSON.
+   * @description Carga las opciones de productos desde el JSON.
    */
   fetchProductoOptions() {
     this.producto = productoOptions.options;
@@ -142,18 +126,18 @@ export class DetosDelLaComponent implements OnInit {
   }
 
   /**
-   * descripción
+   * compo doc
    * @method fetchFraccion
-   * @description Método para obtener datos de fracción arancelaria.
+   * @description Obtiene información de fracción arancelaria.
    */
   fetchFraccion(): void {
     this.selectedValue = 'Nuevo';
   }
 
   /**
-   * descripción
+   * compo doc
    * @method fetchUnidad
-   * @description Método para obtener datos de unidad de medida.
+   * @description Obtiene información de unidad de medida.
    */
   fetchUnidad(): void {
     this.selectedValue = 'Nuevo';
