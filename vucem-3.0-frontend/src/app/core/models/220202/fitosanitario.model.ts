@@ -51,3 +51,62 @@ export interface Datos_de_fila {
     Cantidad: number;
     Proveedor: string;
 }
+
+
+export interface ListaDeDatosFinal {
+    Datos: DatosForma[],
+    Movilizacion: Movilizacion[],
+    Pago: PagoForm[]
+}
+export interface Movilizacion {
+    transporte: string;
+    guiaIdentificacion: string;
+    empresaTransportista: string;
+    punto: string;
+}
+export interface PagoForm {
+    exentoPago: string;
+    justificacion: string;
+    claveReferencia: string;
+    cadenaDependencia: string;
+    banco: string;
+    llavePago: string;
+    importePago: string;
+    fechaDePago: string;
+}
+export interface Mercancia {
+    seleccionado: string; // Checkbox value (can be boolean if required)
+    noPartida: string;
+    tipoRequisito: string;
+    requisito: string;
+    numCertificadoInternacional: string;
+    fraccionArancelaria: string;
+    descFraccion: string;
+    nico: string;
+}
+
+export interface DatosForma {
+    aduana: string;
+    agropecuaria: string;
+    punto: string;
+    guia: string;
+    regimen: string;
+    ferrocarril: string;
+    mercancias: Mercancia[]; // Array of Mercancia objects
+    aduanaMercancia: string;
+    requisito: string;
+    numCertificadoInternacional: string;
+    arancelaria: string;
+    descFraccionArancelaria: string;
+    nico: string;
+    descNico: string;
+    descripcion: string;
+    cantidadUMT: string;
+    umt: string;
+    cantidadUMC: string;
+    umc: string;
+    uso: string;
+    producto: string;
+}
+
+
