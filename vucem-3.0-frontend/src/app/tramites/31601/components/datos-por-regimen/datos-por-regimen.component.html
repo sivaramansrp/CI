@@ -1,0 +1,359 @@
+<div class="container mt-5">
+    <div class="row">
+        <form>
+            <div class="row mb-3">
+                <p class="fw-bold">* Indique si realiza o realizará importaciones temporales de mercancías de las fracciones arancelarias listadas en el Anexo II del Decreto IMMEX y/o de las fracciones arancelarias listadas en el Anexo 28.</p>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="importaciones1" id="importaciones1-si">
+                        <label class="form-check-label" for="importaciones1-si">Sí</label>
+                      </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="importaciones1" id="importaciones1-no">
+                        <label class="form-check-label" for="importaciones1-no">No</label>
+                    </div>
+                </div>
+            </div>
+            <ng-titulo titulo="Importación temporal bajo la modalidad del programa IMMEX (sensibles)" />
+            <div class="row mb-3">
+                <p class="fw-bold">* Indique si cuenta con infraestructura necesaria para realizar la operación del programa IMMEX al proceso industrial o de servicio de conformidad con la modalidad de su programa</p>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="infraestructura" id="infraestructura-si">
+                        <label class="form-check-label" for="infraestructura-si">Sí</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="infraestructura" id="infraestructura-no">
+                        <label class="form-check-label" for="infraestructura-no">No</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <p class="fw-bold">* Indique si durante los últimos doce meses, el valor de la mercancía transformada y retornada, retornada en su mismo estado, o a la que se le prestó un servicio, durante dicho periodo representa al menos el 80% del valor de las importaciones temporales de insumos durante el mismo periodo. (Declare solo aquellos conceptos que le apliquen).</p>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="ultimosMeses" id="ultimosMeses-si">
+                        <label class="form-check-label" for="ultimosMeses-si">Sí</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="ultimosMeses" id="ultimosMeses-no">
+                        <label class="form-check-label" for="ultimosMeses-no">No</label>
+                      </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <p class="fw-bold">* ¿La empresa solicitante ha realizado operaciones al amparo del Programa IMMEX en al menos los 12 meses previos a la solicitud?</p>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="operaciones12meses" id="operaciones12meses-si">
+                        <label class="form-check-label" for="operaciones12meses-si">Sí</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="operaciones12meses" id="operaciones12meses-no">
+                        <label class="form-check-label" for="operaciones12meses-no">No</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold" for="valor">* Capture el valor total</label>
+                    <input type="text" class="form-control" placeholder="100">
+                    
+                </div>
+                <div class="col-md">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                          <tr>
+                            <th>Conceptos</th>
+                            <th>Valor en moneda nacional</th>
+                            <th>Equivalencia en porcentaje</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Transferencias virtuales y/o desperdicios</td>
+                            <td><input type="number" class="form-control" placeholder="80"></td>
+                            <td><input type="number" class="form-control" placeholder="80"></td>
+                          </tr>
+                          <tr>
+                            <td>Retornos</td>
+                            <td><input type="number" class="form-control" placeholder="10"></td>
+                            <td><input type="number" class="form-control" placeholder="10"></td>
+                          </tr>
+                          <tr>
+                            <td>Constancias de transferencia de mercancía CTM</td>
+                            <td><input type="number" class="form-control" placeholder="10"></td>
+                            <td><input type="number" class="form-control" placeholder="10"></td>
+                          </tr>
+                          <tr>
+                            <td>Total</td>
+                            <td><input type="number" class="form-control" placeholder="100"></td>
+                            <td><input type="number" class="form-control" placeholder="100"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </div>
+                <!-- <div class="col-md-3">
+                    
+                </div>
+                <div class="col-md-3">
+                    
+                </div> -->
+            </div>
+            <div class="row mb-3">
+                <p class="fw-bold">* Señale si la empresa cuenta con empleados propios</p>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="empleadosPropios" id="empleadosPropios-si">
+                        <label class="form-check-label" for="empleadosPropios-si">Sí</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="empleadosPropios" id="empleadosPropios-no">
+                        <label class="form-check-label" for="empleadosPropios-no">No</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label" for="numeroEmpleados">Número de empleados</label>
+              <input type="number" class="form-control" id="numeroEmpleados" placeholder="1">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label" for="bimestre">Bimestre</label>
+              <select class="form-select" id="bimestre">
+                <option selected>Septiembre-Octubre</option>
+                <option>Julio-Agosto</option>
+                <option>Mayo-Junio</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <input type="number" class="form-control" placeholder="1">
+            </div>
+            <div class="col-md-6 mb-3">
+              <select class="form-select">
+                <option>Julio-Agosto</option>
+                <option selected>Septiembre-Octubre</option>
+                <option>Mayo-Junio</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <input type="number" class="form-control" placeholder="1">
+            </div>
+            <div class="col-md-6">
+              <select class="form-select">
+                <option>Mayo-Junio</option>
+                <option>Julio-Agosto</option>
+                <option selected>Septiembre-Octubre</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <p class="fw-bold">* Señale si las empresas proveedoras de personal subcontratado en los términos y condiciones que establezcan los artículos 15-A al 15-D de la Ley Federal de Trabajo, se encuentran al corriente en el cumplimiento de sus obligaciones fiscales.</p>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="proveedorCumplimiento" id="proveedorCumplimiento-si">
+                    <label class="form-check-label" for="proveedorCumplimiento-si">Sí</label>
+                  </div>
+            </div>
+              <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="proveedorCumplimiento" id="proveedorCumplimiento-no">
+                    <label class="form-check-label" for="proveedorCumplimiento-no">No</label>
+                  </div>
+              </div> 
+          </div>
+          <div class="row mb-3">
+            <p class="fw-bold">* Indique si los socios y accionistas, representante legal, administrador único o miembros del consejo de administración de la empresa declararon ingresos acumulables en la declaración anual de los dos ejercicios previos ante la autoridad fiscal para los fines del ISR.</p>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="declaracionISR" id="declaracionISR-si">
+                    <label class="form-check-label" for="declaracionISR-si">Sí</label>
+                  </div>
+            </div>
+              <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="declaracionISR" id="declaracionISR-no">
+                    <label class="form-check-label" for="declaracionISR-no">No</label>
+                  </div>
+              </div>
+          </div>
+          <ng-titulo titulo="Depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos" />
+          <div class="row mb-3">
+            <div class="col-md-12">
+                <p>Deberá anexar una copia simple de la autorización para el establecimiento del depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos a empresas de la industria terminal vigente.</p>
+            </div>
+            <p>* Indique si se encuentra sujeto a un procedimiento de cancelación</p>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="cancelacion" id="cancelacion-si">
+                    <label class="form-check-label" for="cancelacion-si">Sí</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="cancelacion" id="cancelacion-no">
+                    <label class="form-check-label" for="cancelacion-no">No</label>
+                </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <p>* Indique si ha cumplido adecuadamente con los requisitos de las reglas 4.5.30 y 4.5.32.</p>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="cumplimientoReglas" id="cumplimientoReglas-si">
+                    <label class="form-check-label" for="cumplimientoReglas-si">Sí</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="cumplimientoReglas" id="cumplimientoReglas-no">
+                    <label class="form-check-label" for="cumplimientoReglas-no">No</label>
+                </div>
+            </div>
+          </div>
+          <ng-titulo titulo="Elaboración, transformación o reparación en recinto fiscalizado"></ng-titulo>
+          <div class="row mb-3">
+            <div class="col-md-12">
+                <p>Deberá anexar copia simple de la autorización vigente emitida por el SAT para la elaboración, transformación o reparación en recinto fiscalizado.</p>
+            </div>
+            <p>* Indique si se encuentra sujeto a un procedimiento de cancelación</p>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="recintoFiscalizado" id="recintoFiscalizado-si">
+                    <label class="form-check-label" for="recintoFiscalizado-si">Sí</label>
+                  </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="recintoFiscalizado" id="recintoFiscalizado-no">
+                    <label class="form-check-label" for="recintoFiscalizado-no">No</label>
+                  </div>
+            </div>
+          </div>
+          
+          <ng-titulo titulo="Recinto fiscalizado estratégico"></ng-titulo>
+          <div class="row mb-3">
+            <div class="col-md-12">
+                <p>Deberá anexar copia simple de la autorización vigente emitida por el SAT para la elaboración, transformación o reparación en recinto fiscalizado estratégico.</p>
+            </div>
+            <p>* Indique si se encuentra sujeto a un procedimiento de cancelación</p>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="recintoEstrategico" id="recintoEstrategico-si">
+                    <label class="form-check-label" for="recintoEstrategico-si">Sí</label>
+                  </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="recintoEstrategico" id="recintoEstrategico-no">
+                    <label class="form-check-label" for="recintoEstrategico-no">No</label>
+                  </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <p>* Indique si cumple con los lineamientos que determinan las autoridades aduaneras para el control, vigilancia y seguridad del recinto y de las mercancías del comercio exterior.</p>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="cumplimientoLineamientosEstrategico" id="cumplimientoLineamientosEstrategico-si">
+                    <label class="form-check-label" for="cumplimientoLineamientosEstrategico-si">Sí</label>
+                  </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="cumplimientoLineamientosEstrategico" id="cumplimientoLineamientosEstrategico-no">
+                    <label class="form-check-label" for="cumplimientoLineamientosEstrategico-no">No</label>
+                  </div>
+            </div>
+          </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- modal screen -->
+
+<!-- <div class="container mt-4">
+        
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      Agregar
+    </button>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Agregar</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label for="rfcInput" class="form-label">RFC</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="rfcInput" placeholder="Ingrese RFC">
+                  <button class="btn btn-secondary" type="button">Buscar</button>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="registroInput" class="form-label">Registro Federal de Contribuyentes</label>
+                <input type="text" class="form-control" id="registroInput" placeholder="Ingrese Registro">
+              </div>
+
+              <div class="mb-3">
+                <label for="razonSocialInput" class="form-label">Razón Social</label>
+                <input type="text" class="form-control" id="razonSocialInput" placeholder="Ingrese Razón Social">
+              </div>
+
+             
+              <div class="mb-3">
+                <label class="form-label">Número de empleados</label>
+                <input type="number" class="form-control mb-2" placeholder="1er Bimestre">
+                <input type="number" class="form-control mb-2" placeholder="2do Bimestre">
+                <input type="number" class="form-control" placeholder="3er Bimestre">
+              </div>
+
+            
+              <div class="row">
+                <div class="col-md-4">
+                  <label for="primerBimestre" class="form-label">1er Bimestre</label>
+                  <select class="form-select" id="primerBimestre">
+                    <option selected>Septiembre-Octubre</option>
+                    <option>Enero-Febrero</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="segundoBimestre" class="form-label">2do Bimestre</label>
+                  <select class="form-select" id="segundoBimestre">
+                    <option selected>Julio-Agosto</option>
+                    <option>Marzo-Abril</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="tercerBimestre" class="form-label">3er Bimestre</label>
+                  <select class="form-select" id="tercerBimestre">
+                    <option selected>Mayo-Junio</option>
+                    <option>Noviembre-Diciembre</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Aceptar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
