@@ -5,13 +5,14 @@ import { DatosComponent } from './pages/datos/datos.component';
 
 import { AvisodematerialesRoutingModule } from './avisodemateriales-routing.module';
 import { SolicitanteComponent } from './components/solicitante/solicitante.component';
-import { DatosComponent } from './components/datos/datos.component';
+import { DatosDelaComponent } from './components/datos-dela/datos-dela.component';
+
 
 
 @NgModule({
   declarations: [
     SolicitanteComponent,
-    DatosComponent
+    DatosDelaComponent
   ],
   imports: [
     CommonModule,
