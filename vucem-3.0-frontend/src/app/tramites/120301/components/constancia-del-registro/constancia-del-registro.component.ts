@@ -6,16 +6,23 @@
  * @import { Component } from '@angular/core';
  * @import { FormBuilder, FormGroup, Validators } from '@angular/forms';
  */
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TableComponent } from '../../../../shared/components/table/table.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ConstanciaDelRegistroService } from '../../../../core/services/120301/constancia-del-registro.service';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 @Component({
   selector: 'app-constancia-del-registro',
   templateUrl: './constancia-del-registro.component.html',
-  styleUrl: './constancia-del-registro.component.scss'
+  styleUrl: './constancia-del-registro.component.scss',
+  standalone: true,
+  imports: [
+    TableComponent,
+    TituloComponent,
+    ReactiveFormsModule
+  ]
 })
-export class ConstanciaDelRegistroComponent {
+export class ConstanciaDelRegistroComponent implements OnInit {
   /**
    * @property {FormGroup} forma - El grupo de formularios para capturar los datos del certificado de registro.
    */
@@ -42,21 +49,33 @@ export class ConstanciaDelRegistroComponent {
   tableColumns = [
     'Número de constancia de registro',
     'Fracción arancelaria',
-    'Classificación del regimen',
+    'Clasificación del regimen',
     'País destino/origen',
-    'Fetcha inicio vigencia',
-    'Fetcha fin vigencia',
+    'Fecha inicio vigencia',
+    'Fecha fin vigencia',
   ];
 
   /**
-   * @property {Array} facturas - Array de datos de facturas para mostrar en la tabla.
+   * @property {Array} federal - Array de datos de federal para mostrar en la tabla.
    */
-  facturas = [
-    {
-      tbodyData: ['prueba107112024', 'RAZON SOCIAL CONSIGNATARIO CONSIGNATARIO', 'CALLE', 'SAN GABRIEL 144 DURANGO', 'SAN GABRIEL', '2024-11-07 00:00:00.0']
-    },
-    {
-      tbodyData: ['3434324', 'FACTURA', 'CALLE', 'SAN GABRIEL 144 DURANGO', 'SAN GABRIEL', '2024-11-07 00:00:00.0']
-    }
-  ];
+  federal: any[] = [];
+  constructor(
+    private fb: FormBuilder,
+    private constanciaDelRegistroService: ConstanciaDelRegistroService
+  ) {}
+
+  ngOnInit(): void {
+    this.fetchData();
+  }
+  fetchData() : void {
+    this.constanciaDelRegistroService.getfederal().subscribe({
+      next: (response: any[]) => {
+        console.log('Received data:', response);
+        this.federal = response;
+      },
+      error: (error: any) => {
+        console.error('Error while fetching the data:', error);
+      }
+    }); 
+  }
 }

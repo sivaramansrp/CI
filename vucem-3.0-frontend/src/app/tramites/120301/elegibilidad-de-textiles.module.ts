@@ -29,7 +29,6 @@ import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 
 @NgModule({
   declarations: [
-    ConstanciaDelRegistroComponent,
     ElegibilidadTextilesComponent,
     PasoDosComponent,
     PasoTresComponent,
@@ -41,6 +40,7 @@ import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
   imports: [
     CommonModule,
     ElegibilidadDeTextilesRoutingModule,
+    ConstanciaDelRegistroComponent,
     WizardComponent,
     SolicitanteComponent,
     TituloComponent,
