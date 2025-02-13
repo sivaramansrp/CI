@@ -1,26 +1,12 @@
-
-{
-    "tiposDocumentosArray": [
-      {
-        "labelNombre": "Regimen al que se destinara la mercancia",
-        "required": true,
-        "primerOpcion": "Seleccione un documento",
-        "catalogos": [
-          { "id": "1", "descripcion": "doc1" },
-          { "id": "2", "descripcion": "doc2" },
-          { "id": "3", "descripcion": "doc3" }
-        ]
-      },
-      {
-        "labelNombre": "Clasificacion del regimen",
-        "required": true,
-        "primerOpcion": "Seleccione un documento",
-        "catalogos": [
-          { "id": "1", "descripcion": "De importacion Para retornar al extranjero en el mismo estado...." },
-          { "id": "2", "descripcion": "docB" },
-          { "id": "3", "descripcion": "docC" }
-        ]
-      }
-    ]
-   
-  }
+[
+  [
+    { "id": 1, "descripcion": "Temorales" },
+    { "id": 2, "descripcion": "doc2" },
+    { "id": 3, "descripcion": "doc3" }
+  ],
+  [
+    { "id": 1, "descripcion": "De importacion Para retornar al extranjero en el mismo estado...." },
+    { "id": 2, "descripcion": "docB" },
+    { "id": 3, "descripcion": "docC" }
+  ]
+]

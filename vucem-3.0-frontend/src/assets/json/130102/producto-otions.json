@@ -1,7 +1,7 @@
 {
     "options": [
       { "label": "Nuevo", "value": "Nuevo" },
-      { "label": "Inicial", "value": "Inicial" }
+      { "label": "Unado", "value": "Unado" }
     ],
-    "defaultSelect": "Inicial"
+    "defaultSelect": "Nuevo"
   }

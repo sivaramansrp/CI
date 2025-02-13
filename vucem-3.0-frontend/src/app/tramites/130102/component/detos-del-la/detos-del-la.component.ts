@@ -64,7 +64,7 @@ export class DetosDelLaComponent implements OnInit {
    * @property {FormGroup} form
    * @description Define la estructura y validaciones del formulario reactivo.
    */
-  form!: FormGroup;
+  formDelLa!: FormGroup;
 
   /**
    * descripción
@@ -96,16 +96,10 @@ export class DetosDelLaComponent implements OnInit {
  
   /**
    * descripción
-   * @property {CatalogosSelect} fraccionF
+    * @property {Catalogo} fraccionF
    * @description Contiene el catálogo de fracciones arancelarias con ID convertidos a tipo number.
    */
-  // fraccionF: Catalogo = {
-  //   ...fractionValues,
-  //   catalogo: fractionValues.catalogos.map((item) => ({
-  //     id: Number(item.id),
-  //     descripcion: item.descripcion,
-  //   })),
-  // };
+  fraccionF: Catalogo[] = fractionValues;
 
   /**
    * descripción
@@ -123,7 +117,7 @@ export class DetosDelLaComponent implements OnInit {
    * @description Inicializa el componente y configura el formulario reactivo.
    */
   ngOnInit() {
-    this.form = this.fb.group({
+    this.formDelLa = this.fb.group({
       descripcion: [
         '',
         [
@@ -180,9 +174,10 @@ export class DetosDelLaComponent implements OnInit {
    * @description Método de marcador de posición para obtener datos de fracción.
    * @param {Catalogo} e - Datos de la fracción arancelaria.
    */
-  // fetchFraccion(_e: Catalogo) {
+  fetchFraccion(): void {
+    this.selectedValue = 'Nuevo';
     
-  // }
+  }
 
   /**
    * descripción
@@ -193,6 +188,5 @@ export class DetosDelLaComponent implements OnInit {
   fetchUnidad(): void {
    this.selectedValue = 'Nuevo';
   
-
 }
 }

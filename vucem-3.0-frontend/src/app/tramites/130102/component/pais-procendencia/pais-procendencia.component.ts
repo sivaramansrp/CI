@@ -1,5 +1,5 @@
 /**
- * descripción 
+ * descripción
  * @fileoverview Este archivo contiene la clase PaisProcendenciaComponent, responsable de manejar la lógica del componente País Procedencia.
  *
  * @module PaisProcendenciaComponent
@@ -8,17 +8,25 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
 import { Component, OnInit } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { CrosslistComponent } from '../../../../shared/components/crosslist/crosslist.component';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import paisProcJson from '../../../../../assets/json/130102/pais-procenia.json';
+
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 
 /**
- * descripción 
+ * descripción
  * @class PaisProcendenciaComponent
  * @classdesc Componente encargado de gestionar la selección de países de procedencia.
  */
@@ -30,12 +38,13 @@ import { Catalogo } from '../../../../core/models/shared/catalogos.model';
     CrosslistComponent,
     CommonModule,
     ReactiveFormsModule,
-    SelectCatalogosComponent,
+    CatalogoSelectComponent,
   ],
   templateUrl: './pais-procendencia.component.html',
   styleUrl: './pais-procendencia.component.scss',
 })
 export class PaisProcendenciaComponent implements OnInit {
+  paisForm!: FormGroup;
   /**
    * descripción
    * @property {string[]} fechasSeleccionadas - Lista de fechas seleccionadas.
@@ -70,17 +79,33 @@ export class PaisProcendenciaComponent implements OnInit {
    * descripción
    * @property {CatalogosSelect} paisProc - Catálogo de países.
    */
-  paisProc!: CatalogosSelect;
+  paisProc: Catalogo[] = paisProcJson;
 
   /**
    * descripción
    * @property {Array<Object>} botonField - Lista de botones de acción disponibles.
    */
   botonField = [
-    { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: () => this.agregar('') },
-    { btnNombre: 'Agregar seleccion', class: 'btn-default', funcion: () => this.agregar('t') },
-    { btnNombre: 'Restar Seleccion', class: 'btn-danger', funcion: () => this.quitar('') },
-    { btnNombre: 'Restar todos', class: 'btn-default', funcion: () => this.quitar('t') },
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: () => this.agregar(''),
+    },
+    {
+      btnNombre: 'Agregar seleccion',
+      class: 'btn-default',
+      funcion: () => this.agregar('t'),
+    },
+    {
+      btnNombre: 'Restar Seleccion',
+      class: 'btn-danger',
+      funcion: () => this.quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: () => this.quitar('t'),
+    },
   ];
 
   /**
@@ -88,7 +113,9 @@ export class PaisProcendenciaComponent implements OnInit {
    * @constructor
    * @param {HttpClient} http - Servicio HTTP para obtener datos del servidor.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private fb: FormBuilder) {
+    //constructor
+  }
 
   /**
    * descripción
@@ -96,7 +123,12 @@ export class PaisProcendenciaComponent implements OnInit {
    * @description Inicializa el componente y carga los datos iniciales.
    */
   ngOnInit() {
-    this.fetchPaisOptions();
+    this.paisForm = this.fb.group({
+      bloque: [''],
+      descripcionJustificacion: ['', [Validators.required]],
+      observaciones: [''],
+    });
+    this.fetchpaisProc();
   }
 
   /**
@@ -133,23 +165,9 @@ export class PaisProcendenciaComponent implements OnInit {
     }
   }
 
-  /**
-   * descripción
-   * @method fetchpaisProc
-   * @description Maneja la selección de un país en el catálogo.
-   * @param {Catalogo} e - Evento del catálogo seleccionado.
-   */
-  fetchpaisProc(_e: Catalogo) {
-    // Implementación de la lógica para selección de país.
-  }
-
-  /**
-   * descripción
-   * @method fetchPaisOptions
-   * @description Obtiene la lista de países desde el servidor.
-   */
-  fetchPaisOptions() {
-    this.http.get<CatalogosSelect>('/assets/json/130102/pais-procenia.json')
+  fetchpaisProc() {
+    this.http
+      .get<Catalogo[]>('/assets/json/130102/pais-procenia.json')
       .subscribe((data) => {
         this.paisProc = data;
       });
