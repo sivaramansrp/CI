@@ -4,16 +4,16 @@ import { Component, OnInit } from '@angular/core';
 import { Aviso, Importante } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 
 // Modelos necesarios para este componente
-import { CatalogosSelect, DatosPasos } from '../../../../core/models/shared/components.model';
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
 
 // Componentes de la UI
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { BtnContinuarComponent } from '../../../../shared/components/btn-continuar/btn-continuar.component';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+import { DatosPasos } from '../../../../core/models/shared/components.model';
 
 /**
  * Componente para el registro de productos relacionados con importaciones y exportaciones.
@@ -77,16 +77,6 @@ export class RegistroParaLaComponent implements OnInit {
   pasos: ListaPasosWizard[] = [];
 
   /**
-   * Método que maneja la selección de un documento.
-   * Este método es un "placeholder" por ahora y puede ser extendido para manejar la lógica de selección de documentos.
-   * 
-   * @param {unknown} e - Evento o información del documento seleccionado.
-   * @returns {void}
-   * @memberof RegistroParaLaComponent
-   */
-
-
-  /**
    * Objeto que contiene los datos del flujo de pasos del formulario.
    * Este objeto es utilizado para mostrar información relevante al usuario como el número de pasos,
    * el paso actual y los textos de los botones de navegación (anterior y siguiente).
@@ -123,7 +113,6 @@ export class RegistroParaLaComponent implements OnInit {
       { id: 1, descripcion: 'Si' },
       { id: 2, descripcion: 'No' },
     ];
-   
 
     // Aquí deberías cargar los pasos reales del flujo de trabajo de tu aplicación
     this.pasos = []; // Llenar la lista `pasos` con los pasos correspondientes
@@ -131,6 +120,15 @@ export class RegistroParaLaComponent implements OnInit {
     // Actualiza el número de pasos en el objeto `datosPasos` después de cargar la lista de pasos
     this.datosPasos.nroPasos = this.pasos.length;
   }
+
+  /**
+   * Método que maneja la selección de un documento.
+   * Este método es un "placeholder" por ahora y puede ser extendido para manejar la lógica de selección de documentos.
+   * 
+   * @param {unknown} e - Evento o información del documento seleccionado.
+   * @returns {void}
+   * @memberof RegistroParaLaComponent
+   */
   registroSeleccion(): void {
     // Este método puede ser extendido para manejar la lógica de selección de documentos
     return;

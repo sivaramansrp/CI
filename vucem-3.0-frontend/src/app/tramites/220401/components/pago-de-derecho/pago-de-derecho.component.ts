@@ -1,67 +1,52 @@
-/* eslint-disable no-empty-function */
 import { Component, OnInit } from '@angular/core';
-import { FormGroup,ReactiveFormsModule,Validators } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+
+/**
+ * Componente que gestiona el formulario de pago de derechos de importación o exportación.
+ * El formulario permite capturar información sobre la mercancía y el pago de derechos, y realiza 
+ * la validación de campos y la habilitación/deshabilitación de ciertos campos según las selecciones del usuario.
+ * 
+ * @export
+ * @class PagoDeDerechoComponent
+ * @implements {OnInit}
+ */
 @Component({
   selector: 'app-pago-de-derecho',
   templateUrl: './pago-de-derecho.component.html',
-  
-  imports: [CommonModule,TituloComponent,ReactiveFormsModule,SelectCatalogosComponent,FormsModule,CatalogoSelectComponent],
-  styleUrl: './pago-de-derecho.component.scss',
+  styleUrls: ['./pago-de-derecho.component.scss'],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, FormsModule, CatalogoSelectComponent],
   standalone: true,
 })
 export class PagoDeDerechoComponent implements OnInit {
-  FormSolicitud!: FormGroup;
+  FormSolicitud!: FormGroup; // Objeto de formulario reactivo para manejar los datos del formulario
   
-  answer: string = '';
+  answer: string = ''; // Respuesta seleccionada por el usuario
   
-   public Justificacion!: Catalogo[];
-   public Banco!: Catalogo[];
+  public Justificacion!: Catalogo[]; // Opciones disponibles para justificar el pago
+  public Banco!: Catalogo[]; // Opciones disponibles para seleccionar el banco
 
-  constructor(private fb: FormBuilder) {
-  
-  }
-/**
- * Hook del ciclo de vida de Angular que se llama después de que la vista del componente se ha inicializado completamente.
- * 
- * Este método realiza las siguientes acciones:
- * - Llama al método `getMercancia` para inicializar el objeto `mercancia`.
- * - Inicializa el grupo de formularios `FormSolicitud` con controles de formulario anidados y validadores.
- */
-mercanciaSeleccion(): void {
-  if(this.FormSolicitud.get('datosImportadorExportador.mercancia')?.value === '2'){
-    this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.setValue('454000554');
-    this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValue('0001012A0000EX');
-    this.FormSolicitud.get('datosImportadorExportador.importePago')?.setValue('594.0');
+  constructor(private fb: FormBuilder) { }
 
-  
-    this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.disable();
-    this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disable();
-    this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
-  } else {
-   
-    this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.reset();
-    this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.reset();
-    this.FormSolicitud.get('datosImportadorExportador.importePago')?.reset();
-
-    
-    this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.disable();
-    this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disable();
-    this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
-    this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.disable();
-    this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.disable();
-  }
-  
-  }
+  /**
+   * Hook de ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * En este método:
+   * - Se inicializan las opciones de justificación y banco llamando a `getJustificacion()` y `getBanco()`.
+   * - Se define el grupo de formulario `FormSolicitud` con sus controles, validadores y valores iniciales.
+   * - Se configura la lógica que habilita o deshabilita campos dependiendo de la selección del valor `exentoDePago`.
+   * 
+   * @memberof PagoDeDerechoComponent
+   */
   ngOnInit(): void {
-    this.getJustificacion();
-    this.getBanco();
+    this.getJustificacion();  // Obtiene las opciones para justificar el pago
+    this.getBanco();           // Obtiene las opciones para seleccionar el banco
     this.FormSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
         exentoDePago: ['No', Validators.required],
@@ -75,48 +60,40 @@ mercanciaSeleccion(): void {
         importePago: ['', Validators.required],
       }),
     });
- // Activa la lógica cuando el formulario se ha inicializado
 
-  this.updateFormFieldsBasedOnExentoDePago('No');
+    // Se activa la lógica para actualizar campos según el valor inicial de 'exentoDePago'
+    this.updateFormFieldsBasedOnExentoDePago('No');
 
- // Escuchar los cambios en el campo 'exentoDePago'
-  this.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.valueChanges.subscribe((value) => {
-    this.updateFormFieldsBasedOnExentoDePago(value);
-  });
-}
+    // Escucha los cambios en el valor de 'exentoDePago' y actualiza los campos del formulario
+    this.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.valueChanges.subscribe((value) => {
+      this.updateFormFieldsBasedOnExentoDePago(value);
+    });
+  }
 
-
-    
-/**
- * Actualiza los campos del formulario en función del valor de 'exentoDePago'.
- * 
- * Si el valor es 'No', establece valores específicos en los campos del formulario y los desactiva.
- * De lo contrario, restablece y desactiva los campos del formulario.
- * 
- * @param value - El valor de 'exentoDePago' para determinar las actualizaciones de los campos del formulario.
- */
-
-  
+  /**
+   * Actualiza los campos del formulario en función del valor de 'exentoDePago'.
+   * 
+   * Si el valor es 'No', se habilitan los campos necesarios y se asignan valores predeterminados.
+   * Si el valor es 'Sí', los campos se deshabilitan y se resetean.
+   * 
+   * @param value - El valor de 'exentoDePago' para determinar cómo actualizar los campos del formulario.
+   * @memberof PagoDeDerechoComponent
+   */
   updateFormFieldsBasedOnExentoDePago(value: string): void {
     if (value === 'No') {
-      
       this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.setValue('454000554');
       this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValue('0001012A0000EX');
       this.FormSolicitud.get('datosImportadorExportador.importePago')?.setValue('594.0');
       this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.enable();
       this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.enable();
-     
-  
-    
+      
       this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.disable();
       this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disable();
       this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
     } else {
-     
       this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.reset();
       this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.reset();
       this.FormSolicitud.get('datosImportadorExportador.importePago')?.reset();
-  
       
       this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.disable();
       this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disable();
@@ -125,47 +102,55 @@ mercanciaSeleccion(): void {
       this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.disable();
     }
   }
-/**
- * Inicializa el objeto `mercancia` con propiedades y valores predefinidos.
- * 
- * El objeto `mercancia` contiene las siguientes propiedades:
- * - `labelNombre`: Una cadena de texto que se establece en 'Mercancía', utilizada como etiqueta o título.
- * - `required`: Un valor booleano que se establece en `true`, indicando que este campo es obligatorio.
- * - `primerOpcion`: Una cadena de texto que se establece en 'Seleccione un valor', utilizada como opción predeterminada o de marcador de posición en un menú desplegable.
- * - `catalogos`: Un arreglo de objetos que representan las opciones en el catálogo. Cada objeto tiene:
- *   - `id`: Un identificador único para la opción.
- *   - `descripcion`: Una cadena de texto que describe la opción. Actualmente, ambas opciones tienen la misma descripción 'Opción 1'.
- */
-
-public getJustificacion(): void {
-  this.Justificacion = [ { id: 1, descripcion: 'Si' },
-    { id: 2, descripcion: 'No' },
- 
-  ];
-}
-public getBanco(): void {
-  this.Banco = [ { id: 1, descripcion: 'Si' },
-    { id: 2, descripcion: 'No' },
- 
-  ];
-}
-JustificacionSeleccion():void{
-  
-
-}
-BancoSeleccion():void{
-  
-
-}
 
   /**
- * Valida el formulario y registra los valores del formulario si el formulario es válido.
- * 
- * Este método verifica si el grupo de formularios FormSolicitud es válido.
- * Si el formulario es válido, registra los valores del formulario en la consola.
- */
-  validarFormulario() {
-   
+   * Obtiene las opciones de justificación para el pago de derechos.
+   * 
+   * En este caso, las opciones son 'Sí' o 'No'.
+   * 
+   * @memberof PagoDeDerechoComponent
+   */
+  public getJustificacion(): void {
+    this.Justificacion = [
+      { id: 1, descripcion: 'Si' },
+      { id: 2, descripcion: 'No' },
+    ];
   }
- 
+
+  /**
+   * Obtiene las opciones de banco disponibles.
+   * 
+   * En este caso, las opciones son 'Sí' o 'No'.
+   * 
+   * @memberof PagoDeDerechoComponent
+   */
+  public getBanco(): void {
+    this.Banco = [
+      { id: 1, descripcion: 'Si' },
+      { id: 2, descripcion: 'No' },
+    ];
+  }
+
+  /**
+   * Método que puede extenderse para manejar la selección de justificación.
+   * 
+   * @memberof PagoDeDerechoComponent
+   */
+  JustificacionSeleccion(): void { }
+
+  /**
+   * Método que puede extenderse para manejar la selección del banco.
+   * 
+   * @memberof PagoDeDerechoComponent
+   */
+  BancoSeleccion(): void { }
+
+  /**
+   * Método para validar el formulario y registrar los valores si el formulario es válido.
+   * 
+   * Este método actualmente no realiza ninguna acción, pero se puede extender para realizar el registro o envío de los datos.
+   * 
+   * @memberof PagoDeDerechoComponent
+   */
+  validarFormulario() { }
 }

@@ -1,12 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DeLaMuestraComponent } from './de-la-muestra.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+import { DeLaMuestraComponent } from './de-la-muestra.component';
+import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+
 
 describe('DeLaMuestraComponent', () => {
   let component: DeLaMuestraComponent;
