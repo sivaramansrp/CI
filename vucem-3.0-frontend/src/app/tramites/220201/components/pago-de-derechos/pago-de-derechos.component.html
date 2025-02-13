@@ -7,26 +7,12 @@
           <label for="certficacion_a">Exento de pago</label>
         </div>
         <div class="col-md-4">
-          <input
-            class="form-check-input me-3"
-            type="radio"
-            name="exentoPago"
-            value=""
-            id="certficacion_a"
-            formControlName="exentoPago"
-          />
-          <label class="form-label" for="certficacion_a">No</label>
-        </div>
-        <div class="col-md-4">
-          <input
-            class="form-check-input me-3"
-            type="radio"
-            name="exentoPago"
-            value="aa"
-            id="certficacion_aa"
-            formControlName="exentoPago"
-          />
-          <label class="form-label" for="certficacion_aa">Sí</label>
+          <app-input-radio
+            [radioOptions]="radioOptions"
+            [selectedValue]="selectedValue"
+            [isRequired]="true"
+            [layout]="'horizontal'"
+          ></app-input-radio>
         </div>
       </div>
       <div class="col-md-4">

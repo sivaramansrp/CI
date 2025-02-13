@@ -56,6 +56,27 @@ export class PagoDeDerechosComponent implements OnInit {
     importePago: [{ value: '', disabled: true }]
   });
 
+
+  /**
+  * Opciones para el radio button de exención de pago.
+  * @property {any[]} radioOptions
+  */
+  radioOptions: any[] = [
+    {
+      "label": "No",
+      "value": "no"
+    },
+    {
+      "label": "Sí",
+      "value": "Si"
+    }
+  ];
+  /**
+     * Valor seleccionado en el radio button de exención de pago.
+     * @property {string} selectedValue
+     */
+  selectedValue: string = 'no';
+
   /**
    * Constructor del componente.
    * @constructor
