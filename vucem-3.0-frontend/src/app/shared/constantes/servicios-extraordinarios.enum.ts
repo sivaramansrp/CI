@@ -18,9 +18,11 @@ export const PASOS = [
     completado: false,
   },
 ];
+
 export const CONSTANTES = {
   EXP_CORREO: /^[\w-]+(?:\.[\w-]+)*@(?:[\w-]+\.)+[a-zA-Z]{2,7}$/,
 };
+
 export const TEXTOS = {
   INSTRUCCIONES: `<h6>Instrucciones</h6>
   <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
@@ -28,6 +30,7 @@ export const TEXTOS = {
   <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista.</p>`,
   ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
 };
+
 export const INDUSTRIA_AUTOMOTRIZ = {
   labelNombre: 'Industria Automotriz',
   maxlength: 25,
@@ -35,6 +38,7 @@ export const INDUSTRIA_AUTOMOTRIZ = {
   required: false,
   alfanumerico: true,
 };
+
 export const PROGRAMA_FOMENTO = {
   labelNombre: 'Programa de fomento',
   maxlength: 25,
@@ -42,6 +46,7 @@ export const PROGRAMA_FOMENTO = {
   required: false,
   alfanumerico: true,
 };
+
 export const IMMEX = {
   labelNombre: 'IMMEX (Número/aaaa)',
   maxlength: 25,
@@ -49,6 +54,7 @@ export const IMMEX = {
   required: false,
   alfanumerico: true,
 };
+
 export const SOCIO_COMERCIAL = {
   labelNombre: 'ID Socio comercial',
   maxlength: 10,
@@ -56,6 +62,7 @@ export const SOCIO_COMERCIAL = {
   required: false,
   alfanumerico: true,
 };
+
 export const DESPACHO_LDA = {
   labelNombre: 'RFC autorización LDA',
   maxlength: 10,
@@ -63,6 +70,7 @@ export const DESPACHO_LDA = {
   required: false,
   alfanumerico: true,
 };
+
 export const DESPACHO_DD = {
   labelNombre: 'Autorizacion DDEX',
   maxlength: 10,
@@ -70,10 +78,12 @@ export const DESPACHO_DD = {
   required: false,
   alfanumerico: true,
 };
+
 export const HORA_INICIO = {
   labelNombre: 'Hora inicio',
   required: true,
 };
+
 export const HORA_FINAL = {
   labelNombre: 'Hora final',
   required: true,
@@ -92,6 +102,7 @@ export const MESES = [
   { id: '11', mes: 'Noviembre' },
   { id: '12', mes: 'Diciembre' },
 ];
+
 export const SEMANA = [
   'Lunes',
   'Martes',
@@ -101,6 +112,7 @@ export const SEMANA = [
   'Sabado',
   'Domingo',
 ];
+
 export const SEMANA_D = [
   'Domingo',
   'Lunes',
@@ -110,20 +122,41 @@ export const SEMANA_D = [
   'Viernes',
   'Sabado',
 ];
+
 export const FECHA_INICIO = {
   labelNombre: 'Fecha inicio',
   required: true,
   habilitado: true,
 };
+
 export const FECHA_FINAL = {
   labelNombre: 'Fecha final',
   required: true,
   habilitado: true,
 };
-export const MENSAJEDEALERTA = {
-  ADJUNTAR: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro</p>`,
+export const ACUSE_SERVICIOS_EXTRAORDINARIOS={
+
+}
+export const ACUSE = {
+  labelNombre: 'Acuse',
+  required: true,
+  habilitado: true,
+};
+export const ACUSE_SERVICIOS = {
+  labelNombre: 'Acuse',
+  required: true,
+  habilitado: true,
+};
+export const TITULO_ACUSE = {
+  labelNombre: 'Título',
+  required: true,
+  habilitado: true,
 };
 
+
+export const MENSAJEDEALERTA = {
+  ADJUNTAR: `<p>Las tablas con asterisco son obligatorias y debes agregarpor lo menos un registro</p>`,
+};
 export const Importante = {
   Importante: `<p><strong>Importante:</strong> Si existe duda respecto del producto a registrar o al pago correspondiente, favor de comunicarse a los teléfonos 55 5128 2544, 55 5128 2595 y 55 5128 2553</p>`,
 };
@@ -132,3 +165,4 @@ export const Aviso = {
   Aviso: `<p style="text-align: center; font-weight: bold;">Aviso de privacidad simplificado:</p>
   <p>El Servicio de Administración Tributaria (SAT), es el sujeto obligado y responsable del tratamiento de los datos personales que se recaban a través de la Ventanilla Digital Mexicana de Comercio Exterior (VUCEM), los datos personales podrán ser utilizados y transferidos a la autoridades competentes, con la finalidad de llevar a cabo cualquier trámite relacionado con importaciones, exportaciones y tránsito de mercancías de comercio exterior, incluyendo las regulaciones y restricciones no arancelarias que, conforme a la legislación aplicable, sea exigido por las autoridades competentes en materia de comercio </p>`
 };
+

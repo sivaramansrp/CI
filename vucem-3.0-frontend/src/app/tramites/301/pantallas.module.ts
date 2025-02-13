@@ -9,7 +9,7 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
 import { NavComponent } from '../../shared/components/nav/nav.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { DatosComponent } from './pages/datos/datos.component';
-import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 import { RegistroParaLaComponent } from './components/registro-para-la/registro-para-la.component';
 import { InformacionDeLaComponent } from './components/informacion-de-la/informacion-de-la.component';
@@ -30,7 +30,7 @@ import { DeLaMuestraComponent } from './components/de-la-muestra/de-la-muestra.c
     PantallasRoutingModule,
     WizardComponent,
     NavComponent,
-    SolicitanteComponent,PagoDeDerechosComponent,RegistroParaLaComponent,DeLaMuestraComponent, InformacionDeLaComponent
+  PagoDeDerechosComponent,RegistroParaLaComponent,DeLaMuestraComponent, InformacionDeLaComponent
   ]
 })
 export class PantallasModule { }
