@@ -1,18 +1,18 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { map, merge } from 'rxjs';
 
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { SagarpaService } from '../../../../core/services/220501/sagarpa/sagarpa.service';
+import { SagarpaService } from '../../../../core/services/220501/sagarpa/sagarpa.service'
 import { TEXTOS } from '../../../../shared/constantes/220501/texto-enum';
+import { Tramite220501Store } from '../../../../estados/tramites/tramite220501.store';;
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
-import { map, merge } from 'rxjs';
-import { Tramite220501Store } from '../../../../estados/tramites/tramite220501.store';
 
 /**
  * Componente para seleccionar el medio de transporte.
  */
 @Component({
-  selector: 'medio-transporte',
+  selector: 'app-medio-transporte',
   templateUrl: './medio-transporte.component.html',
   styleUrl: './medio-transporte.component.scss'
 })
@@ -112,7 +112,7 @@ export class MedioTransporteComponent implements OnInit {
       medioDeTransporte: new FormControl('', [Validators.required]),
       identificacionTransporte: new FormControl('', [Validators.maxLength(30)]),
       esSolicitudFerros: new FormControl('', [Validators.required]),
-      totalGuias: new FormControl('')
+      totalGuias: new FormControl('', [Validators.maxLength(50)])
     });
   }
 

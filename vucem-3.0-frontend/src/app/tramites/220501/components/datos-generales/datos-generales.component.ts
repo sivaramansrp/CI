@@ -255,7 +255,7 @@ export class DatosGeneralesComponent implements OnInit {
    * 
    * @returns {void}
    */
-  initActionFormBuild() {
+  initActionFormBuild(): void {
     this.datosDelaSolicitud = this.fb.group({
       aduanaIngreso: ['', Validators.required],
       oficinaInspeccion: ['', Validators.required],
@@ -274,8 +274,18 @@ export class DatosGeneralesComponent implements OnInit {
    * Muestra u oculta el contenido colapsable.
    * @returns {void}
    */
-  mostrar_colapsable() {
+  mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
+  }
+
+  /**
+   * Alterna las clases de un elemento.
+   * @param {HTMLElement} x - El elemento al que se le alternarán las clases.
+   * @returns {void}
+   */
+  myFunction(x): void {
+    x.classList.toggle("bi-caret-up-fill");
+    x.classList.toggle("bi-caret-down");
   }
 
   /**
@@ -289,7 +299,7 @@ export class DatosGeneralesComponent implements OnInit {
    * @param {number} direction - La dirección de rotación.
    * @returns {void}
    */
-  rotateRow(direction: number) {
+  rotateRow(direction: number): void {
     const totalRows = this.rows.length;
     this.currentDirection = direction;
     this.currentIndex = (this.currentIndex + direction + totalRows) % totalRows;

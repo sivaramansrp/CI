@@ -22,9 +22,24 @@ export function createInitialState(): Solicitud220501State {
     }
 }
 
+/**
+ * Decorador que marca una clase como disponible para ser inyectada como una dependencia.
+ * 
+ * @Injectable indica que la clase Tramite220501Store puede ser inyectada en otros componentes o servicios.
+ * El parámetro providedIn: 'root' especifica que el servicio debe ser un singleton y estar disponible
+ * en toda la aplicación.
+ */
 @Injectable({
     providedIn: 'root',
 })
+
+/**
+ * Decorador que configura el store de Akita.
+ * 
+ * @StoreConfig se utiliza para proporcionar configuraciones específicas para el store.
+ * El parámetro name: 'tramite220501' establece el nombre del store.
+ * El parámetro resettable: true permite que el estado del store pueda ser restablecido.
+ */
 @StoreConfig({ name: 'tramite220501', resettable: true })
 export class Tramite220501Store extends Store<Solicitud220501State> {
     /**

@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Solicitud } from '../../../../core/models/220501/sagarpa.model';
 import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
 import { TEXTOS } from '../../../../shared/constantes/220501/texto-enum';
+
 import { cargarDatosIniciales, carrosDeFerrocarril, historialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
 
 
@@ -11,7 +12,7 @@ import { cargarDatosIniciales, carrosDeFerrocarril, historialInspeccionFisica } 
  * Componente para gestionar los datos de la solicitud.
  */
 @Component({
-  selector: 'datos-de-la-solicitud',
+  selector: 'app-datos-de-la-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss'
 })
