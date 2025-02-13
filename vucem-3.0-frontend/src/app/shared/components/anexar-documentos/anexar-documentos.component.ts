@@ -1,24 +1,21 @@
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
 import {
   CatalogosSelect,
   DocumentosCargados,
 } from '../../../core/models/shared/components.model';
-import { ServiciosExtraordinariosService } from '../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import {
   CATALOGOS_ID,
-  KB,
   MB,
-  UNIDADES,
   PDF,
   DPI,
 } from '../../constantes/constantes';
 import { Login } from '../../../core/models/shared/inicio-sesion.model';
 import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
-import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
+import { DocumentoService } from '../../../core/services/shared/documento/documento.service';
 import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
 
 declare const bootstrap: any; // Importación para manejar Bootstrap en TS
@@ -30,7 +27,7 @@ declare const bootstrap: any; // Importación para manejar Bootstrap en TS
   templateUrl: './anexar-documentos.component.html',
   styleUrl: './anexar-documentos.component.scss',
 })
-export class AnexarDocumentosComponent {
+export class AnexarDocumentosComponent implements OnInit {
   PDF = PDF;
   MB = MB;
   DPI = DPI;
@@ -57,9 +54,8 @@ export class AnexarDocumentosComponent {
   constructor(
     private catalogosServices: CatalogosService,
     private toastr: ToastrService,
-    private renderer: Renderer2,
     private inicioSesionService: InicioSesionService,
-    private subirDocumentoService: SubirDocumentoService
+    private DocumentoService: DocumentoService
   ) {}
 
   ngOnInit() {
@@ -92,9 +88,7 @@ export class AnexarDocumentosComponent {
       next: (resp): void => {
         this.token = resp.jwt;
       },
-      error: (error): void => {
-        console.log(error);
-      },
+      error: (_error): void => {},
     });
   }
 
@@ -115,9 +109,7 @@ export class AnexarDocumentosComponent {
             };
           }
         },
-        error: (error): void => {
-          console.log(error);
-        },
+        error: (_error): void => {},
       });
   }
 
@@ -164,15 +156,13 @@ export class AnexarDocumentosComponent {
         return;
       }
 
-      this.subirDocumentoService
+      this.DocumentoService
         .subirDocumento(this.token, informacionArchivo)
         .subscribe({
           next: (): void => {
             alert('Documento subido');
           },
-          error: (error): void => {
-            console.log(error);
-          },
+          error: (_error): void => {},
         });
 
       this.documentosCargados.push({

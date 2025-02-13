@@ -1,18 +1,5 @@
-import { Component } from '@angular/core';
-import {
-  Catalogo,
-  CatalogoPaises,
-} from '../../../../core/models/shared/catalogos.model';
-import {
-  CatalogosSelect,
-  CatalogosSelectPaises,
-  DatosInputCheck,
-  InputCheck,
-  InputFecha,
-  InputHora,
-} from '../../../../core/models/shared/components.model';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+
 import {
   DESPACHO_DD,
   DESPACHO_LDA,
@@ -20,50 +7,58 @@ import {
   FECHA_INICIO,
   HORA_FINAL,
   HORA_INICIO,
-  IMMEX,
-  INDUSTRIA_AUTOMOTRIZ,
-  PROGRAMA_FOMENTO,
-  SOCIO_COMERCIAL,
 } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+
+import {
+  Catalogo,
+  CatalogoPaises,
+} from '../../../../core/models/shared/catalogos.model';
+import {
+  InputFecha,
+  InputHora,
+} from '../../../../core/models/shared/components.model';
+
+import { DatosComponentePedimento } from '../../../../core/models/5701/servicios-extraordinarios.model';
+
+import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+
 import {
   CATALOGOS_ID,
   TIPO_SOLICITUD,
 } from '../../../../shared/constantes/constantes';
+
+import {
+  Solicitud5701State,
+  Tramite5701Store,
+} from '../../../../estados/tramites/tramite5701.store';
+import { Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
+import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
+
+import { FechasService } from '../../../../core/services/shared/fechas/fechas.service';
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
 import { datosAgregarFormulario } from '../../../../core/models/shared/forms-model';
-import { DatosComponentePedimento } from '../../../../core/models/5701/servicios-extraordinarios.model';
-import { FechasService } from '../../../../core/services/shared/fechas/fechas.service';
-import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.model';
-import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
-import {
-  delay,
-  distinctUntilChanged,
-  map,
-  Subject,
-  takeUntil,
-  tap,
-} from 'rxjs';
+
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SeccionQuery } from '../../../../core/queries/seccion.query';
+import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
 @Component({
-  selector: 'solicitud',
+  selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
 })
-export class SolicitudComponent {
-  datosTiposSolicitud!: CatalogosSelect;
-  paisesOrigen!: CatalogosSelectPaises;
-  paisesProcedencia!: CatalogosSelectPaises;
-  aduanas!: CatalogosSelect;
-  seccionAduanera!: CatalogosSelect;
+export class SolicitudComponent implements OnInit, OnDestroy {
+  @Input({ required: true }) tabindex!: number;
 
-  tipoSolSeleccionada!: Catalogo;
+  tiposSolicitud!: Catalogo[];
+  paisesOrigen!: CatalogoPaises[];
+  paisesProcedencia!: CatalogoPaises[];
+  aduanas!: Catalogo[];
+  seccionAduanera!: Catalogo[];
+  tipoOperacion: Catalogo[];
 
-  programaFomento: InputCheck = PROGRAMA_FOMENTO;
-  immex: InputCheck = IMMEX;
-  industriaAutomotriz: InputCheck = INDUSTRIA_AUTOMOTRIZ;
-  socioComercial: InputCheck = SOCIO_COMERCIAL;
+  tipoSolicitudSeleccionada: number;
 
   despachoDD = DESPACHO_DD;
   despachoLDA = DESPACHO_LDA;
@@ -78,36 +73,42 @@ export class SolicitudComponent {
 
   colapsable: boolean = false;
 
-  selectRangoDias: Array<string> = [];
+  selectRangoDias: string[] = [];
 
   // Pedimento -crea una señal para validar
   validacionPedimento: boolean = false;
   datosPedimentoComponente!: DatosComponentePedimento;
 
-  solIndividual!: boolean;
+  diaMinimo: string;
+
   private destroyNotifier$: Subject<void> = new Subject();
   private seccion: SeccionState;
+  public solicitudState: Solicitud5701State;
 
   constructor(
     private seccionQuery: SeccionQuery,
     private seccionStore: SeccionStore,
+    private tramite5701Store: Tramite5701Store,
+    private tramite5701Query: Tramite5701Query,
     private fechaService: FechasService,
     private fb: FormBuilder,
-    private fService: FormulariosService,
+    private formulariosService: FormulariosService,
     private catalogosServices: CatalogosService,
     private validacionesService: ValidacionesFormularioService
-  ) {
-    this.crearFormSolicitud();
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.getTiposSolicitud();
-    this.getPaises();
-    this.getAduanas();
-    this.getSeccionAduanera();
+    // Peticiones a las apis
+    this.inicializaCatalogos();
 
-    // Aqui se busca el nro de patente o autorizacion
-    this.obtenerPatente();
+    this.tramite5701Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
 
     this.seccionQuery.selectSeccionState$
       .pipe(
@@ -118,14 +119,21 @@ export class SolicitudComponent {
       )
       .subscribe();
 
-    this.FormSolicitud.statusChanges.pipe(
+    this.crearFormSolicitud();
+
+    this.FormSolicitud.statusChanges
+      .pipe(
         takeUntil(this.destroyNotifier$),
         delay(10),
-        tap((value) => {
-          let seccion:  number;
+        tap((_value) => {
+          let seccion: number;
           const formasValidadas = this.seccion.formaValida;
+
           for (let i = 0; i < this.seccion.seccion.length; i++) {
-            if ( this.seccion.seccion[i] === true && this.seccion.formaValida[i] === false ) {
+            if (
+              this.seccion.seccion[i] === true &&
+              this.seccion.formaValida[i] === false
+            ) {
               seccion = i;
               break;
             }
@@ -140,7 +148,11 @@ export class SolicitudComponent {
         })
       )
       .subscribe();
-    }
+
+    // Aqui se busca el nro de patente o autorizacion
+    this.obtenerPatente();
+    this.tipoSolicitudSeleccion();
+  }
 
   /**
    * Obtiene el grupo de formulario 'datosImportadorExportador' del formulario principal 'FormSolicitud'.
@@ -157,7 +169,7 @@ export class SolicitudComponent {
    * @returns {FormGroup} El grupo de formulario 'datosServicio'.
    */
   get datosServicio(): FormGroup {
-    return this.FormSolicitud.get('datosServicio') as FormGroup;
+    return this.FormSolicitud?.get('datosServicio') as FormGroup;
   }
 
   /**
@@ -201,305 +213,334 @@ export class SolicitudComponent {
     return this.FormSolicitud.get('pagoCaptura') as FormGroup;
   }
 
-  // * Peticiones a las apis
+  /**
+   * Verifica si la solicitud seleccionada es de tipo individual.
+   *
+   * @returns {boolean} - Retorna `true` si la solicitud seleccionada es de tipo individual, de lo contrario retorna `false`.
+   */
+  individual(): boolean {
+    return this.tipoSolicitudSeleccionada &&
+      this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
+      ? true
+      : false;
+  }
 
   /**
-   * Obtiene los tipos de solicitud desde el catálogo y los asigna a `datosTiposSolicitud`.
+   * Verifica si un campo específico en un formulario es válido.
    *
-   * Este método realiza una solicitud al servicio `catalogosServices` para obtener el catálogo de tipos de solicitud identificado por `CATALOGOS_ID.CAT_TIPO_SOL`. Una vez que recibe la  respuesta, verifica si la respuesta contiene elementos. Si es así, asigna los datos recibidos a la propiedad `datosTiposSolicitud` con la estructura adecuada.
-   *
-   * @returns {void} No retorna ningún valor.
+   * @param {FormGroup} form - El formulario que contiene el campo a validar.
+   * @param {string} field - El nombre del campo a validar.
+   * @returns {boolean} - Retorna `true` si el campo es válido, de lo contrario `false`.
    */
-  getTiposSolicitud(): void {
-    this.catalogosServices
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field);
+  }
+
+  /**
+   * Verifica si hay un error de intervalo de fecha en los datos del servicio.
+   * @returns {boolean} - `true` si hay un error de intervalo de fecha y el campo ha sido tocado, de lo contrario `false`.
+   */
+  intervaloFechaError(): boolean {
+    return (
+      this.datosServicio.hasError('invalidIntervalo') &&
+      this.datosServicio.touched
+    );
+  }
+
+  private inicializaCatalogos(): void {
+    /**
+     * Obtiene los tipos de solicitud desde el catálogo y los asigna a `datosTiposSolicitud`.
+     *
+     * Este método realiza una solicitud al servicio `catalogosServices` para obtener el catálogo de tipos de solicitud identificado por `CATALOGOS_ID.CAT_TIPO_SOL`. Una vez que recibe la  respuesta, verifica si la respuesta contiene elementos. Si es así, asigna los datos recibidos a la propiedad `datosTiposSolicitud` con la estructura adecuada.
+     */
+    const catTipoSolicitud$ = this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_SOL)
-      .subscribe((resp) => {
-        if (resp.length > 0) {
-          this.datosTiposSolicitud = {
-            labelNombre: 'Tipo de solicitud',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: resp,
-          };
-        }
-      });
-  }
+      .pipe(
+        map((resp) => {
+          this.tiposSolicitud = resp;
+        }),
+        takeUntil(this.destroyNotifier$)
+      );
 
-  getPaises(): void {
-    this.catalogosServices
+    const catalogoPaises$ = this.catalogosServices
       .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
-      .subscribe((resp) => {
-        if (resp.length > 0) {
-          this.paisesOrigen = {
-            labelNombre: 'País de origen',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: resp,
-          };
+      .pipe(
+        map((resp) => {
+          if (resp.length > 0) {
+            this.paisesOrigen = resp;
+            this.paisesProcedencia = resp;
+          }
+        })
+      );
 
-          this.paisesProcedencia = {
-            labelNombre: 'País de procedencia',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: resp,
-          };
-        }
-      });
-  }
-
-  getAduanas(): void {
-    this.catalogosServices
+    const catalogoAduanas$ = this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_ADUANAS)
-      .subscribe((resp) => {
-        if (resp.length > 0) {
-          this.aduanas = {
-            labelNombre: 'Aduana',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: resp,
-          };
-        }
-      });
+      .pipe(
+        map((resp) => {
+          if (resp.length > 0) {
+            this.aduanas = resp;
+          }
+        })
+      );
+
+    const seccionesAduaneras$ = this.catalogosServices
+      .getCatalogoById(CATALOGOS_ID.CAT_SECCION_ADUANAS)
+      .pipe(
+        map((resp) => {
+          this.seccionAduanera = JSON.parse(resp.data);
+        })
+      );
+
+    const tipoOperacion$ = this.catalogosServices
+      .getCatalogoById(CATALOGOS_ID.CAT_TIPO_OPERACION)
+      .pipe(
+        map((resp) => {
+          this.tipoOperacion = JSON.parse(resp.data);
+        })
+      );
+
+    merge(
+      catTipoSolicitud$,
+      catalogoPaises$,
+      catalogoAduanas$,
+      catalogoAduanas$,
+      seccionesAduaneras$,
+      tipoOperacion$
+    ).subscribe();
   }
 
-  getSeccionAduanera(): void {}
-
-  obtenerPatente() {
+  private obtenerPatente(): void {
     // Busqueda de la patente a algun endpoint
     const datosPatente: datosAgregarFormulario = {
       form: this.despacho,
       field: 'patente',
       valor: '3061',
     };
-    this.fService.agregarValorCamposDesactivados(datosPatente);
+    this.formulariosService.agregarValorCamposDesactivados(datosPatente);
   }
 
-  // ************************************************************
-
-  individual(): boolean {
-    return this.tipoSolSeleccionada &&
-      this.tipoSolSeleccionada.id === TIPO_SOLICITUD.INDIVIDUAL
-      ? true
-      : false;
-  }
-
-  isValid(form: FormGroup, field: string) {
-    return this.validacionesService.isValid(form, field);
-  }
-
-  crearFormSolicitud() {
+  /**
+   * Crea el formulario de solicitud.
+   * @return {void} No retorna ningún valor.
+   */
+  crearFormSolicitud(): void {
     this.FormSolicitud = this.fb.group({
-      tipoSolicitud: [{ value: '', requerid: true }, [Validators.required]],
+      tipoSolicitud: [
+        this.solicitudState?.tipoSolicitud,
+        [Validators.required],
+      ],
       datosImportadorExportador: this.fb.group({
         rfcImportExport: [
-          '',
+          this.solicitudState?.rfcImportExport,
           [
             Validators.required,
             Validators.pattern(this.validacionesService.rfcPattern),
           ],
         ],
-        nombreImportExport: [{ value: '', disabled: true }],
-        nroRegistro: ['', [Validators.maxLength(25)]],
-        programaFomento: [false],
-        programaFomentoValue: [''],
-        immex: [false],
-        immexValue: [''],
-        industriaAutomotriz: [false],
-        industriaAutomotrizValue: [''],
-        tipoEmpresaCertificada: [''],
-        idSocioComercial: [''],
-        socioComercial: [false],
-        opEconomicoAut: [false],
-        revisionOrigen: [false],
+        nombreImportExport: [
+          { value: this.solicitudState?.nombreImportExport, disabled: true },
+        ],
+        nroRegistro: [
+          this.solicitudState?.nroRegistro,
+          [Validators.maxLength(25)],
+        ],
+        programaFomento: [this.solicitudState?.programaFomento],
+        immex: [this.solicitudState?.immex],
+        industriaAutomotriz: [this.solicitudState?.industriaAutomotriz],
+        tipoEmpresaCertificada: [this.solicitudState?.tipoEmpresaCertificada],
+        socioComercial: [this.solicitudState?.socioComercial],
+        opEconomicoAut: [this.solicitudState?.opEconomicoAut],
+        revisionOrigen: [this.solicitudState?.revisionOrigen],
+        idSocioComercial: [
+          { value: this.solicitudState?.idSocioComercial, disabled: true },
+        ],
       }),
 
       datosServicio: this.fb.group({
-        fechaInicio: [{ value: '', disabled: true }, [Validators.required]],
-        fechaFinal: [[{ value: '', disabled: true }, [Validators.required]]],
-        horaInicio: ['', Validators.required],
-        horaFinal: ['', Validators.required],
+        fechaInicio: [
+          this.solicitudState?.fechaInicio,
+          [Validators.required, this.validacionesService.validaFechaNoHoy],
+        ],
+        fechaFinal: [
+          this.solicitudState?.fechaFinal,
+          [Validators.required, this.validacionesService.validaFechaNoHoy],
+        ],
+        horaInicio: [this.solicitudState?.horaInicio, Validators.required],
+        horaFinal: [this.solicitudState?.horaFinal, Validators.required],
+        fechasSeleccionadas: this.fb.array([]),
       }),
 
       despacho: this.fb.group({
-        tipo: [''],
-        autorizacion: [''],
-        idAduana: [null, [Validators.required]],
-        descripcionAduana: ['', [Validators.required]],
-        seccionAduanera: [''],
-        nombreRecinto: [''],
-        tipoOperacion: [''],
-        patente: [{ value: '', disabled: true }],
-        relacionSociedad: [],
-        encargoConferido: [],
-        domicilio: [''],
+        despacho: [this.solicitudState?.despacho],
+        autorizacion: [this.solicitudState?.rfcAutorizacion],
+        idAduana: [this.solicitudState?.idAduana, [Validators.required]],
+        descripcionAduana: [
+          this.solicitudState?.descripcionAduana,
+          [Validators.required],
+        ],
+        idSeccionAduanera: [this.solicitudState?.idSeccionAduanera],
+        seccionAduanera: [this.solicitudState?.seccionAduanera],
+        nombreRecinto: [this.solicitudState?.nombreRecinto],
+        tipoOperacion: [this.solicitudState?.tipoOperacion],
+        patente: [{ value: this.solicitudState?.patente, disabled: true }],
+        relacionSociedad: [this.solicitudState?.relacionSociedad],
+        encargoConferido: [this.solicitudState?.encargoConferido],
+        domicilio: [this.solicitudState?.domicilio],
       }),
 
       mercancia: this.fb.group({
-        paisOrigen: ['', Validators.required],
-        paisProcedencia: ['', Validators.required],
-        descripcion: ['', Validators.required],
-        justificacion: ['', Validators.required],
+        paisOrigen: [this.solicitudState?.paisOrigen, Validators.required],
+        paisProcedencia: [
+          this.solicitudState?.paisProcedencia,
+          Validators.required,
+        ],
+        descripcion: [this.solicitudState?.descripcion, Validators.required],
+        justificacion: [
+          this.solicitudState?.justificacion,
+          Validators.required,
+        ],
       }),
 
       pedimento: this.fb.group({
-        idPedimento: [''],
+        idPedimento: [this.solicitudState?.idPedimento],
         datosPedimento: this.fb.group({
-          patente: [],
-          pedimento: [],
-          aduana: [],
-          tipoPedimento: [],
-          numeros: [],
-          comprobanteValor: [],
-          pedimentoValidado: [],
+          patentePedimento: [this.solicitudState?.patente],
+          pedimento: [this.solicitudState?.pedimento],
+          aduana: [this.solicitudState?.aduana],
+          tipoPedimento: [this.solicitudState?.tipoPedimento],
+          numeros: [this.solicitudState?.numero],
+          comprobanteValor: [this.solicitudState?.comprobanteValor],
+          pedimentoValidado: [this.solicitudState?.pedimentoValidado],
         }),
       }),
 
       personasResponsablesDespacho: this.fb.array([]),
 
+      transporte: this.fb.group({}),
+
       pagoCaptura: this.fb.group({
-        montoAPagar: [{ value: '', disabled: true }],
-        lineaCaptura: ['', [Validators.required]],
-        monto: ['', [Validators.required]],
+        montoAPagar: [
+          { value: this.solicitudState?.montoPagar, disabled: true },
+        ],
+        lineaCaptura: [
+          this.solicitudState?.lineaCaptura,
+          [Validators.required],
+        ],
+        monto: [this.solicitudState?.monto, [Validators.required]],
       }),
     });
   }
 
-  fechaInicio() {
-    const fechaInicio = this.datosServicio.get('fechaInicio')?.value;
-    return fechaInicio;
+  /**
+   * Este validador verifica que el intervalo entre las fechas y horas de inicio y finalización
+   * cumpla con las restricciones específicas según el tipo de solicitud seleccionada.
+   * @returns {Function} Una función que toma un `FormGroup` y devuelve un objeto con una clave booleana indicando si el intervalo es inválido, o `null` si el intervalo es válido.
+   */
+  fechaIntervaloValidator(): void {
+    // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
+    const fechaInicio = new Date(this.datosServicio.get('fechaInicio').value);
+    const fechaFinal = new Date(this.datosServicio.get('fechaFinal').value);
+    const horaInicio = this.datosServicio.get('horaInicio').value;
+    const horaFinal = this.datosServicio.get('horaFinal').value;
+    const intervalDays = this.getIntervaloDias(this.tipoSolicitudSeleccionada);
+    if (
+      fechaInicio &&
+      fechaFinal &&
+      horaInicio &&
+      horaFinal &&
+      intervalDays !== null
+    ) {
+      fechaInicio.setHours(
+        parseInt(horaInicio.split(':')[0], 10),
+        parseInt(horaInicio.split(':')[1], 10)
+      );
+      fechaFinal.setHours(
+        parseInt(horaFinal.split(':')[0], 10),
+        parseInt(horaFinal.split(':')[1], 10)
+      );
+      const differenceInTime = fechaFinal.getTime() - fechaInicio.getTime();
+      const differenceInHours = differenceInTime / (1000 * 3600);
+
+      if (
+        this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL &&
+        differenceInHours > 24
+      ) {
+        this.datosServicio.setErrors({ invalidIntervalo: true });
+        // return { invalidIntervalo: true };
+      }
+
+      const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+      if (
+        (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL &&
+          differenceInDays > 7) ||
+        (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.MENSUAL &&
+          differenceInDays > 30)
+      ) {
+        this.datosServicio
+          .get('fechaFinal')
+          .setErrors({ invalidIntervalo: true });
+        // return { invalidIntervalo: true };
+      }
+
+      if (differenceInTime < 0) {
+        this.datosServicio.setErrors({ endDateBeforeStartDate: true });
+      }
+    }
   }
 
-  cambioFechaInicio(nuevo_valor: string) {
-    this.datosServicio.get('fechaInicio')?.setValue(nuevo_valor);
-    this.datosServicio.get('fechaInicio')?.markAsUntouched();
-  }
-
-  cambioFechaFinal(nuevo_valor: string) {
-    this.datosServicio.get('fechaFinal')?.setValue(nuevo_valor);
-    this.datosServicio.get('fechaFinal')?.markAsUntouched();
+  /**
+   * Devuelve el número de días correspondiente a un intervalo específico.
+   *
+   * @param {number} intervalo - El tipo de intervalo, que puede ser uno de los valores definidos en TIPO_SOLICITUD.
+   * @returns {number | null} El número de días correspondiente al intervalo proporcionado, o null si el intervalo no es válido.
+   */
+  getIntervaloDias(intervalo: number): number | null {
+    switch (intervalo) {
+      case TIPO_SOLICITUD.INDIVIDUAL:
+        return 1;
+      case TIPO_SOLICITUD.SEMANAL:
+        return 7;
+      case TIPO_SOLICITUD.MENSUAL:
+        return 30;
+      default:
+        return null;
+    }
   }
 
   // *Eventos de los componentes hijos
-  paisOrigen(pais: CatalogoPaises) {
-    this.mercancia.get('paisOrigen')?.setValue(pais.id);
-  }
-
-  paisProcedencia(pais: CatalogoPaises) {
-    this.mercancia.get('paisProcedencia')?.setValue(pais.id);
-    pais;
-  }
-
-  busqueda_rfc() {
-    const rfc = this.datosImportadorExportador.get('rfcImportExport')?.value;
+  busqueda_rfc(): void {
+    const rfcImportExport =
+      this.datosImportadorExportador.get('rfcImportExport')?.value;
     // Aqui se hará la busqueda del rfc, para obtener el nombre
-
     this.llenarCamposDesactivados(
       this.datosImportadorExportador,
       'nombreImportExport'
     );
+
+    const nombreImportExport =
+      this.datosImportadorExportador.get('nombreImportExport')?.value;
+    this.tramite5701Store.setRfcImportExport(rfcImportExport);
+    this.tramite5701Store.setNombreImportExport(nombreImportExport);
   }
 
-  llenarCamposDesactivados(form: FormGroup, field: string) {
+  // eslint-disable-next-line class-methods-use-this
+  llenarCamposDesactivados(form: FormGroup, field: string): void {
     form.get(field)?.enable();
     form.get(field)?.setValue('DAYNIZ YAEL VELASCO CORONEL');
     form.get(field)?.disable();
   }
 
-  tipoSolicitud(e: Catalogo) {
-    this.tipoSolSeleccionada = e;
-    this.solIndividual = this.individual();
+  tipoSolicitudSeleccion(): void {
+    this.tipoSolicitudSeleccionada = parseInt(
+      this.FormSolicitud.get('tipoSolicitud')?.value,
+      10
+    );
+
+    const tipoSolicitud = this.FormSolicitud.get('tipoSolicitud')?.value;
+    this.tramite5701Store.setTipoSolicitud(tipoSolicitud);
   }
 
-  /**
-   * Valida el formulario
-   */
-  validarFormulario(): void {
-    if (this.FormSolicitud.invalid) {
-      this.FormSolicitud.markAllAsTouched();
-      return;
-    }
-  }
-
-  programaFomentoF(e: DatosInputCheck) {
-    this.datosImportadorExportador.get('programaFomento')?.setValue(e.check);
-    this.datosImportadorExportador
-      .get('programaFomentoValue')
-      ?.setValue(e.valor);
-  }
-
-  immexSeleccion(e: DatosInputCheck) {
-    this.datosImportadorExportador.get('immex')?.setValue(e.check);
-    this.datosImportadorExportador.get('immexValue')?.setValue(e.valor);
-  }
-
-  industriaAutomotrizSeleccion(e: DatosInputCheck) {
-    this.datosImportadorExportador
-      .get('industriaAutomotriz')
-      ?.setValue(e.check);
-    this.datosImportadorExportador
-      .get('industriaAutomotrizValue')
-      ?.setValue(e.valor);
-  }
-
-  valorInputCheck(e: DatosInputCheck) {
-    console.log(e);
-  }
-
-  obtenerHora(e: string, tipo: string) {
-    if (tipo === 'i') {
-      this.datosServicio.get('horaInicio')?.setValue(e);
-    } else if (tipo === 'f') {
-      this.datosServicio.get('horaFinal')?.setValue(e);
-
-      const fechaInicial = this.datosServicio.get('fechaInicio')?.value;
-      const fechaFinal = this.datosServicio.get('fechaFinal')?.value;
-      const horaInicial = this.datosServicio.get('horaInicio')?.value;
-      const horaFinal = this.datosServicio.get('horaFinal')?.value;
-
-      const rangoFecha = {
-        fechaInicio: this.fechaService.formatoFechaGuion(fechaInicial, false),
-        horaInicio: horaInicial,
-        fechaFin: this.fechaService.formatoFechaGuion(fechaFinal, false),
-        horaFin: horaFinal,
-      };
-      this.validaRangoFechas(rangoFecha);
-    }
-  }
-
-  validaRangoFechas(datos: DatosParaValidacionFecha): void {
-    switch (this.tipoSolSeleccionada.id) {
-      case TIPO_SOLICITUD.INDIVIDUAL:
-        const rangoFechaValida = this.fechaService.validacion24Horas(datos);
-        if (!rangoFechaValida) {
-          // Aqui se muestra un mensaje de error
-          alert('El rango de fechas no puede ser mayor a 24 horas');
-          return;
-        }
-        this.rango_fechas();
-
-        break;
-      case TIPO_SOLICITUD.SEMANAL:
-        const rangoFechaSemana = this.fechaService.validacionSemana(datos);
-        if (!rangoFechaSemana) {
-          // Aqui se muestra un mensaje de error
-          alert('El rango de fechas no puede ser mayor a una semana');
-          return;
-        }
-        this.rango_fechas();
-        break;
-      case TIPO_SOLICITUD.MENSUAL:
-        const rangoFechaMes = this.fechaService.validacionMes(datos);
-        if (!rangoFechaMes) {
-          // Aqui se muestra un mensaje de error
-          alert('El rango de fechas no puede ser mayor a un mes');
-          return;
-        }
-        this.rango_fechas();
-        break;
-    }
-  }
-
-  rango_fechas() {
+  rango_fechas(): void {
     const fechaInicial = this.datosServicio.get('fechaInicio')?.value;
     const fechaFinal = this.datosServicio.get('fechaFinal')?.value;
 
@@ -515,11 +556,11 @@ export class SolicitudComponent {
     this.colapsable = true;
   }
 
-  mostrar_colapsable() {
+  mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
-  aduanaSeleccion(aduana: Catalogo) {
+  aduanaSeleccion(aduana: Catalogo): void {
     this.darValorCampoFormulario(this.despacho, 'idAduana', aduana.id);
     this.darValorCampoFormulario(
       this.despacho,
@@ -528,12 +569,11 @@ export class SolicitudComponent {
     );
     this.validacionPedimento = true;
 
-    //
-    const patente = this.fService.convertirValorANumero(
+    const patente = this.formulariosService.convertirValorANumero(
       this.despacho,
       'patente'
     );
-    const idAduana = this.fService.convertirValorANumero(
+    const idAduana = this.formulariosService.convertirValorANumero(
       this.despacho,
       'idAduana'
     );
@@ -544,16 +584,89 @@ export class SolicitudComponent {
     };
   }
 
-  validaCampoPedimento() {
+  validaCampoPedimento(): void {
     const aduanaValidacion = this.isValid(this.despacho, 'descripcionAduana');
-    if (aduanaValidacion === null) this.validacionPedimento = true;
+    if (aduanaValidacion === null) {
+      this.validacionPedimento = true;
+    }
   }
 
   darValorCampoFormulario(
     form: FormGroup,
     field: string,
     valor: string | number
-  ) {
+  ): void {
     form.get(field)?.setValue(valor);
+  }
+
+  socioComercialChange(): void {
+    const socioComercial =
+      this.datosImportadorExportador.get('socioComercial')?.value;
+    if (socioComercial) {
+      this.datosImportadorExportador.get('idSocioComercial')?.enable();
+    } else {
+      this.datosImportadorExportador.get('idSocioComercial')?.disable();
+    }
+
+    this.setValoresStore(
+      this.datosImportadorExportador,
+      'idSocioComercial',
+      'setIdSocioComercial'
+    );
+    this.setValoresStore(
+      this.datosImportadorExportador,
+      'socioComercial',
+      'setSocioComercial'
+    );
+  }
+
+  /**
+   * Establece los valores en el store de tramite5701.
+   *
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   * @returns {void}
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
+    const valor = form.get(campo)?.value;
+    this.tramite5701Store[metodoNombre](valor);
+  }
+
+  /**
+   * Cambia la fecha final del servicio.
+   * Esta función actualiza la validez de los datos del servicio y establece
+   * los valores correspondientes en el store.
+   * @returns {void} No retorna ningún valor.
+   */
+  changeFechaFinal(): void {
+    this.datosServicio.updateValueAndValidity();
+    this.fechaIntervaloValidator();
+    this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
+  }
+
+  /**
+   * Cambia la hora de inicio del servicio.
+   * Esta función actualiza la validez de los datos del servicio y establece
+   * los valores correspondientes en el store. Valida el intervalo de las fechas.
+   * @returns {void} No retorna ningún valor.
+   */
+  changeHoraFinal(): void {
+    this.datosServicio.updateValueAndValidity();
+    this.fechaIntervaloValidator();
+    this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
