@@ -37,7 +37,7 @@ export const DATOS_GENERALES_SOLICITANTE = [
         placeholder: '',
     },
     {
-        labelNombre: 'Denominacion o razon social:',
+        labelNombre: 'Denominación o razón social',
         campo: 'Denominacion o razon social',
         class: 'col-md-8',
         tipo_input: 'text',
@@ -56,8 +56,8 @@ export const DATOS_GENERALES_SOLICITANTE = [
         placeholder: '',
     },
     {
-        labelNombre: 'Correo electronic',
-        campo: 'Correo electronic',
+        labelNombre: 'Correo electrónico',
+        campo: 'Correo electrónico',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -97,8 +97,8 @@ export const DOMICILIO_FISCAL_SOLICITANTE = [
         placeholder: '',
     },
     {
-        labelNombre: 'Municipio o alcaldia:',
-        campo: 'Municipio o alcaldia:',
+        labelNombre: 'Municipio o alcaldía:',
+        campo: 'Municipio o alcaldía:',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -133,8 +133,8 @@ export const DOMICILIO_FISCAL_SOLICITANTE = [
         placeholder: '',
     },
     {
-        labelNombre: 'Numero exterior:',
-        campo: 'Numero exterior:',
+        labelNombre: 'Número exterior:',
+        campo: 'Número exterior:',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -142,8 +142,8 @@ export const DOMICILIO_FISCAL_SOLICITANTE = [
         placeholder: '',
     },
     {
-        labelNombre: 'Numero interior:',
-        campo: 'Numero interior:',
+        labelNombre: 'Número interior:',
+        campo: 'Número interior:',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -172,13 +172,13 @@ export const DOMICILIO_FISCAL_SOLICITANTE = [
 
 export const DATOS_REALIZAR = [
     {
-        labelNombre: 'Régimen al que destinara la mercanica:',
+        labelNombre: 'Régimen al que destinará la mercancía:',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
     },
     {
-        labelNombre: 'Classification de regimen:',
+        labelNombre: 'Clasificación de regimen:',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
@@ -187,8 +187,8 @@ export const DATOS_REALIZAR = [
 
 export const DATOS_MERCANCIA = [
     {
-        labelNombre: 'Description de la mercancia:',
-        campo: 'Description de la mercancia:',
+        labelNombre: 'Descripción de la mercancía',
+        campo: 'Descripción de la mercancía',
         class: 'col-md-8',
         tipo_input: 'text',
         disabled: true,
@@ -211,7 +211,7 @@ export const DATOS_MERCANCIA = [
         catalogos: [],
     },
     {
-        labelNombre: 'Fraccion arancelaria:',
+        labelNombre: 'Fracción arancelaria:',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
@@ -229,8 +229,8 @@ export const DATOS_MERCANCIA = [
         catalogos: [],
     },
     {
-        labelNombre: 'Numero de factura:',
-        campo: 'Numero de factura:',
+        labelNombre: 'Número de factura:',
+        campo: 'Número de factura:',
         class: 'col-md-8',
         tipo_input: 'text',
         disabled: true,
@@ -243,7 +243,7 @@ export const DATOS_MERCANCIA = [
         habilitado: true,
     },
     {
-        labelNombre: 'Unidad de medida de comercializacion(UMC):',
+        labelNombre: 'Unidad de medida de comercialización(UMC):',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
@@ -267,8 +267,8 @@ export const DATOS_MERCANCIA = [
         placeholder: '',
     },
     {
-        labelNombre: 'Factor de conversion:',
-        campo: 'Factor de conversion:',
+        labelNombre: 'Factor de conversión:',
+        campo: 'Factor de conversión:',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -285,8 +285,8 @@ export const DATOS_MERCANCIA = [
         placeholder: '',
     },
     {
-        labelNombre: 'Valar de la factura de la mercancia a importar en terminos de la Moneda de comercializacion:',
-        campo: 'Valar de la factura de la mercancia a importar en terminos de la Moneda de comercializacion:',
+        labelNombre: 'Valor de la factura de la mercancía a importar en términos de la Moneda de comercialización:',
+        campo: 'Valor de la factura de la mercancía a importar en términos de la Moneda de comercialización:',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -294,14 +294,14 @@ export const DATOS_MERCANCIA = [
         placeholder: '',
     },
     {
-        labelNombre: 'Moneda de comercializacion:',
+        labelNombre: 'Moneda de comercialización:',
         required: true,
         primerOpcion: 'Selecciona una opcion',
         catalogos: [],
     },
     {
-        labelNombre: 'Valar de la factura en USD de la mercancia a importar:',
-        campo: 'Valar de la factura en USD de la mercancia a importar:',
+        labelNombre: 'Valor de la factura en USD de la mercancía a importar:',
+        campo: 'Valor de la factura en USD de la mercancía a importar:',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -318,20 +318,20 @@ export const DATOS_MERCANCIA = [
         placeholder: '',
     },
     {
-        labelNombre: 'Pais exportador:',
+        labelNombre: 'País exportador:',
         required: true,
-        primerOpcion: 'Selecciona el pais',
+        primerOpcion: 'Selecciona el País',
         catalogos: [],
     },
     {
-        labelNombre: 'Pais origen:',
+        labelNombre: 'País origen:',
         required: true,
-        primerOpcion: 'Selecciona el pais',
+        primerOpcion: 'Selecciona el País',
         catalogos: [],
     },
     {
-        labelNombre: 'valor total de la factura en terminos de la Moneda de comercializacion:',
-        campo: 'valor total de la factura en terminos de la Moneda de comercializacion:',
+        labelNombre: 'valor total de la factura en terminos de la Moneda de comercialización:',
+        campo: 'valor total de la factura en terminos de la Moneda de comercialización:',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -339,8 +339,8 @@ export const DATOS_MERCANCIA = [
         placeholder: '',
     },
     {
-        labelNombre: 'valor total de la factura USD de la mercancia a importar:',
-        campo: 'valor total de la factura USD de la mercancia a importar:',
+        labelNombre: 'valor total de la factura USD de la mercancía a importar:',
+        campo: 'valor total de la factura USD de la mercancía a importar:',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -351,8 +351,8 @@ export const DATOS_MERCANCIA = [
 
 export const DATOS_EXPORTACION = [
     {
-        labelNombre: 'Numero de documento:',
-        campo: 'Numero de documento:',
+        labelNombre: 'Número de documento:',
+        campo: 'Número de documento:',
         class: 'col-md-8',
         tipo_input: 'text',
         disabled: true,
@@ -365,8 +365,8 @@ export const DATOS_EXPORTACION = [
         habilitado: true,
     },
     {
-        labelNombre: 'Description de la mercancia:',
-        campo: 'Description de la mercancia:',
+        labelNombre: 'Descripción de la mercancía',
+        campo: 'Descripción de la mercancía',
         class: 'col-md-8',
         tipo_input: 'text',
         disabled: true,
@@ -374,8 +374,8 @@ export const DATOS_EXPORTACION = [
         placeholder: '',
     },
     {
-        labelNombre: 'Codigo arancelario:',
-        campo: 'Codigo arancelario:',
+        labelNombre: 'código arancelario:',
+        campo: 'código arancelario:',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -392,8 +392,8 @@ export const DATOS_EXPORTACION = [
         placeholder: '',
     },
     {
-        labelNombre: 'Valar en USD de la mercancia a importar:',
-        campo: 'Valar en USD de la mercancia a importar:',
+        labelNombre: 'Valor en USD de la mercancía a importar',
+        campo: 'Valor en USD de la mercancía a importar',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -426,7 +426,7 @@ export const DATOS_PRODUCTOR = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
-        availableRadioOptions: ['Fisica',],
+        availableRadioOptions: ['Física',],
     },
     {
         labelNombre: 'Primer apellido:',
@@ -436,7 +436,7 @@ export const DATOS_PRODUCTOR = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
-        availableRadioOptions: ['Fisica',],
+        availableRadioOptions: ['Física',],
     },
     {
         labelNombre: 'Segundo apellido:',
@@ -446,11 +446,11 @@ export const DATOS_PRODUCTOR = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
-        availableRadioOptions: ['Fisica',],
+        availableRadioOptions: ['Física',],
     },
     {
-        labelNombre: 'Denominacion o razon social:',
-        campo: 'Denominacion o razon social:',
+        labelNombre: 'Denominación o razón social',
+        campo: 'Denominación o razón social',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -466,7 +466,7 @@ export const DATOS_PRODUCTOR = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
-        availableRadioOptions: ['Fisica', 'Moral', 'Ninguno'],
+        availableRadioOptions: ['Física', 'Moral', 'Ninguno'],
         
     },
 ];
@@ -486,7 +486,7 @@ export const DATOS_EXPORTADOR = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
-        availableRadioOptions: ['Fisica',],
+        availableRadioOptions: ['Física',],
     },
     {
         labelNombre: 'Primer apellido:',
@@ -496,7 +496,7 @@ export const DATOS_EXPORTADOR = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
-        availableRadioOptions: ['Fisica',],
+        availableRadioOptions: ['Física',],
     },
     {
         labelNombre: 'Segundo apellido:',
@@ -506,11 +506,11 @@ export const DATOS_EXPORTADOR = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
-        availableRadioOptions: ['Fisica',],
+        availableRadioOptions: ['Física',],
     },
     {
-        labelNombre: 'Denominacion o razon social:',
-        campo: 'Denominacion o razon social:',
+        labelNombre: 'Denominación o razón social',
+        campo: 'Denominación o razón social',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -526,7 +526,7 @@ export const DATOS_EXPORTADOR = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
-        availableRadioOptions: ['Fisica', 'Moral'], 
+        availableRadioOptions: ['Física', 'Moral'], 
     },
     {
         labelNombre: 'Observaciones:',
@@ -536,6 +536,6 @@ export const DATOS_EXPORTADOR = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
-        availableRadioOptions: ['Fisica', 'Moral'], 
+        availableRadioOptions: ['Física', 'Moral'], 
     },
 ];
