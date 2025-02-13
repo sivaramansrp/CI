@@ -31,7 +31,10 @@ import { TercerosComponent } from '../../shared/components/terceros/terceros.com
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 import { GeneraDictamenComponent } from './components/genera-dictamen/genera-dictamen.component';
-import { GenerarDictamenComponent } from './pages/generar-dictamen/generar-dictamen.component';
+import { EvaluarDictamenComponent } from './pages/evaluar-dictamen/evaluar-dictamen.component';
+import { DetalleTramiteComponent } from './components/detalle-tramite/detalle-tramite.component';
+import { RequerimientoInformacionComponent } from './components/requerimiento-informacion/requerimiento-informacion.component';
+
 
 @NgModule({
   declarations: [
@@ -42,7 +45,9 @@ import { GenerarDictamenComponent } from './pages/generar-dictamen/generar-dicta
     PasoDosComponent,
     PasoTresComponent,
     GeneraDictamenComponent,
-    GenerarDictamenComponent
+    EvaluarDictamenComponent,
+    DetalleTramiteComponent,
+    RequerimientoInformacionComponent
     
   ],
   imports: [
