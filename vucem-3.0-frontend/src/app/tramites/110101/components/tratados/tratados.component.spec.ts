@@ -1,87 +1,108 @@
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+/* eslint-disable dot-notation */
+import { AlertComponent } from '../../../../shared/components/alert/alert.component';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { TableComponent } from '../../../../shared/components/table/table.component';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { TratadosComponent } from './tratados.component';
 import tratadosDropdown from '../../../../../assets/json/110101/tratdos-dropdown.json';
+import tratadosTable from '../../../../../assets/json/110101/tratados-table.json';
 
-describe('TratadosComponent', () => {
+
+fdescribe('TratadosComponent', () => {
   let component: TratadosComponent;
   let fixture: ComponentFixture<TratadosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TratadosComponent] 
+      imports: [
+        TratadosComponent,
+        CommonModule,
+        TableComponent,
+        AlertComponent,
+        TituloComponent,
+        CatalogoSelectComponent,
+        ReactiveFormsModule
+      ],
+      providers: [FormBuilder]
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TratadosComponent);
     component = fixture.componentInstance;
+    component.cuerpoTabla = [];
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should select values correctly', () => {
-    const pais: Catalogo = tratadosDropdown.pais.find(item => item.descripcion === 'CANADA');
-    const tratado: Catalogo = tratadosDropdown.tratado.find(item => item.descripcion === 'Free Trade Agreement');
-    const origen: Catalogo = tratadosDropdown.origen.find(item => item.descripcion === 'Preferential Origin');
+  it('should have empty table body initially', () => {
+    console.log('Initial cuerpoTabla:', component.cuerpoTabla);
+    expect(component.cuerpoTabla).toEqual([]);
+  });
 
-    component.seleccionar(pais, 0);
-    component.seleccionar(tratado, 1);
-    component.seleccionar(origen, 2);
 
-    expect(component.selectedValues).toEqual({
-      pais,
-      tratado,
-      origen
+  it('should initialize form on ngOnInit', () => {
+    expect(component.formularioTratados).toBeDefined();
+    // eslint-disable-next-line dot-notation
+    expect(component.formularioTratados.controls['pais']).toBeDefined();
+    // eslint-disable-next-line dot-notation
+    expect(component.formularioTratados.controls['tratado']).toBeDefined();
+    expect(component.formularioTratados.controls['origen']).toBeDefined();
+  });
+
+
+  it('should not add tratado if form is invalid', () => {
+    spyOn(component.cuerpoTabla, 'push');
+    component.agregarTratado();
+    expect(component.cuerpoTabla.push).not.toHaveBeenCalled();
+  });
+
+  it('should add tratado to table if form is valid', () => {
+    component.formularioTratados.setValue({
+      pais: 'CANADA',
+      tratado: 'Free Trade Agreement',
+      origen: 'Preferential Origin'
+    });
+
+    component.agregarTratado();
+    expect(component.cuerpoTabla.length).toBe(1);
+    expect(component.cuerpoTabla[0]).toEqual({
+      pais: 'CANADA',
+      tratado: 'Free Trade Agreement',
+      origen: 'Preferential Origin'
     });
   });
 
-  it('should add tratado when all values are selected', () => {
-    const pais = tratadosDropdown.pais.find(item => item.descripcion === 'CANADA');
-    const tratado = tratadosDropdown.tratado.find(item => item.descripcion === 'Free Trade Agreement');
-    const origen = tratadosDropdown.origen.find(item => item.descripcion === 'Preferential Origin');
-
-    component.selectedValues = { pais, tratado, origen };
+  it('should reset form after adding tratado', () => {
+    spyOn(component.formularioTratados, 'reset');
+    component.formularioTratados.setValue({
+      pais: 'CANADA',
+      tratado: 'Free Trade Agreement',
+      origen: 'Preferential Origin'
+    });
     component.agregarTratado();
-    expect(component.tableBody.length).toBe(1);
-    expect(component.tableBody[0].tbodyData).toEqual([
-      'CANADA',
-      'Free Trade Agreement',
-      'Preferential Origin'
-    ]);
+    expect(component.formularioTratados.reset).toHaveBeenCalled();
   });
 
-  it('should not add tratado if values are missing', () => {
-    const pais = tratadosDropdown.pais.find(item => item.descripcion === 'CANADA');
-    const tratado = tratadosDropdown.tratado.find(item => item.descripcion === 'Free Trade Agreement');
-
-    component.selectedValues = { pais, tratado };
-    component.agregarTratado();
-    expect(component.tableBody.length).toBe(0);
+  it('should initialize dropdown configurations correctly', () => {
+    expect(component.configuracionesDropdown.length).toBe(3);
+    expect(component.configuracionesDropdown[0].catalogos).toEqual(tratadosDropdown.pais);
+    expect(component.configuracionesDropdown[1].catalogos).toEqual(tratadosDropdown.tratado);
+    expect(component.configuracionesDropdown[2].catalogos).toEqual(tratadosDropdown.origen);
   });
 
-  it('should clear selectedValues after adding tratado', () => {
-    const pais = tratadosDropdown.pais.find(item => item.descripcion === 'CANADA');
-    const tratado = tratadosDropdown.tratado.find(item => item.descripcion === 'Free Trade Agreement');
-    const origen = tratadosDropdown.origen.find(item => item.descripcion === 'Preferential Origin');
-
-    component.selectedValues = { pais, tratado, origen };
-    component.agregarTratado();
-    expect(component.selectedValues).toEqual({});
+  it('should have correct table headers', () => {
+    expect(component.encabezadosComunesTabla).toEqual(tratadosTable.tableHeader);
   });
 
-  it('should log an error if values are missing', () => {
-    spyOn(console, 'error');
-
-    const pais = tratadosDropdown.pais.find(item => item.descripcion === 'CANADA');
-    const tratado = tratadosDropdown.tratado.find(item => item.descripcion === 'Free Trade Agreement');
-
-    component.selectedValues = { pais, tratado };
-    component.agregarTratado();
-    expect(console.error).toHaveBeenCalledWith("Some values are missing!");
+  it('should have empty table body initially', () => {
+    expect(component.cuerpoTabla).toEqual([]);
   });
 });

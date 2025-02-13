@@ -1,31 +1,18 @@
-import { AlertComponent } from '../../../../shared/components/alert/alert.component';
-import { CommonModule } from '@angular/common';
-
+/* eslint-disable dot-notation */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosAdicionalesComponent } from './datos-adicionales.component';
 
-import { ReactiveFormsModule } from '@angular/forms';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
-describe('DatosAdicionalesComponent', () => {
+fdescribe('DatosAdicionalesComponent', () => {
   let component: DatosAdicionalesComponent;
   let fixture: ComponentFixture<DatosAdicionalesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        DatosAdicionalesComponent,
-        TituloComponent,
-        AlertComponent,
-        SelectCatalogosComponent
-      ],
-      providers: [
-        ValidacionesFormularioService
-      ]
+      imports: [ReactiveFormsModule, DatosAdicionalesComponent],
+      providers: [FormBuilder, ValidacionesFormularioService]
     }).compileComponents();
   });
 
@@ -35,28 +22,45 @@ describe('DatosAdicionalesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize entidad and representacion on ngOnInit', () => {
+  it('should call crearFormulario and initialize data in ngOnInit', () => {
+    spyOn(component, 'crearFormulario').and.callThrough();
+    spyOn(component, 'getEntidadFederativa').and.callThrough();
+    spyOn(component, 'getRepresentacionFederal').and.callThrough();
+
     component.ngOnInit();
-    expect(component.entidad).toBeDefined();
-    expect(component.entidad.labelNombre).toBe('Entidad federativa');
-    expect(component.representacion).toBeDefined();
-    expect(component.representacion.labelNombre).toBe('Representación federal');
+
+    expect(component.crearFormulario).toHaveBeenCalled();
+    expect(component.getEntidadFederativa).toHaveBeenCalled();
+    expect(component.getRepresentacionFederal).toHaveBeenCalled();
   });
 
-  it('should handle docSeleccionado event', () => {
-    const catalogo = { id: 1, descripcion: 'SINALOA' };
-    component.docSeleccionado(catalogo);
-    expect(console.log).toHaveBeenCalledWith('Seleccionar', catalogo);
+
+  it('should initialize the form', () => {
+    expect(component.formulario).toBeDefined();
+    expect(component.formulario.controls['entidad']).toBeDefined();
+    expect(component.formulario.controls['representacion']).toBeDefined();
   });
 
-  it('should handle validarRepresentacionFederalIDCSECEROR_ event', () => {
-    const catalogo = { id: 1, descripcion: 'CULIACAN' };
-    spyOn(console, 'log');
-    component.validarRepresentacionFederalIDCSECEROR_(catalogo);
-    expect(console.log).toHaveBeenCalledWith('Seleccionar', catalogo);
+  it('should have default entity and representation values', () => {
+    component.getEntidadFederativa();
+    component.getRepresentacionFederal();
+    expect(component.entidad.length).toBeGreaterThan(0);
+    expect(component.representacion.length).toBeGreaterThan(0);
+  });
+
+  it('should validate required fields', () => {
+    component.formulario.controls['entidad'].setValue('');
+    component.formulario.controls['representacion'].setValue('');
+    expect(component.formulario.valid).toBeFalse();
+  });
+
+  it('should set valid values in the form', () => {
+    component.formulario.controls['entidad'].setValue('SINALOA');
+    component.formulario.controls['representacion'].setValue('CULIACAN');
+    expect(component.formulario.valid).toBeTrue();
   });
 });

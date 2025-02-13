@@ -70,7 +70,7 @@ export class DatosAdicionalesComponent implements OnInit {
    */
   constructor(private fb: FormBuilder,
     // eslint-disable-next-line no-empty-function
-    private validacionesService: ValidacionesFormularioService) {
+) {
   }
 
   /**
