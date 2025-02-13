@@ -15,15 +15,16 @@ import franccionArancelaria from '../../../../../assets/json/301/fraccion-arance
 import nico from '../../../../../assets/json/301/nico-options.json';
 
 import { BtnContinuarComponent } from '../../../../shared/components/btn-continuar/btn-continuar.component';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
-import { SelectCatalogosComponent } from "../../../../shared/components/select-catalogos/select-catalogos.component";
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+
 
 @Component({
   selector: 'app-informacion-de-la',
   templateUrl: './informacion-de-la.component.html',
   styleUrl: './informacion-de-la.component.scss',
-  imports: [TituloComponent, ReactiveFormsModule, CommonModule, BtnContinuarComponent, SelectCatalogosComponent],
+  imports: [TituloComponent, ReactiveFormsModule, CommonModule, BtnContinuarComponent, CatalogoSelectComponent],
   standalone: true
 })
 export class InformacionDeLaComponent implements OnInit {
@@ -36,17 +37,17 @@ export class InformacionDeLaComponent implements OnInit {
   /**
    * @property {CatalogosSelect} fraccionArancelariaOptions - Opciones del catálogo de fracción arancelaria.
    */
-  fraccionArancelariaOptions !: CatalogosSelect; 
+  fraccionArancelariaOptions: Catalogo[] = franccionArancelaria;
 
   /**
    * @property {CatalogosSelect} nicoOptions - Opciones del catálogo de Nico.
    */
-  nicoOptions! : CatalogosSelect;
+  nicoOptions: Catalogo[] = nico;
 
   /**
    * @property {CatalogosSelect} estadoFisicoOptions - Opciones del catálogo de estado físico.
    */
-  estadoFisicoOptions!: CatalogosSelect;
+  estadoFisicoOptions: Catalogo[] = estadofisico;
 
   /**
    * @property {number} indice - Índice del paso actual.
@@ -65,7 +66,7 @@ export class InformacionDeLaComponent implements OnInit {
    * @constructor
    * @param {FormBuilder} formbuilt - Instancia de FormBuilder para crear formularios.
    */
-  constructor(private formbuilt: FormBuilder) { }
+  constructor(private formbuilt: FormBuilder) {}
 
   /**
    * @method ngOnInit
@@ -84,52 +85,6 @@ export class InformacionDeLaComponent implements OnInit {
       estadoFisico: ['', Validators.required],
       acondicionamiento: ['', Validators.required]
     });
-
-    this.getFraccionArancelaria();
-    this.getNico();
-    this.getEstadofisico();
-  }
-
-  /**
-   * @method getFraccionArancelaria
-   * @description Configura las opciones del catálogo de fracción arancelaria.
-   * @memberof InformacionDeLaComponent
-   */
-  public getFraccionArancelaria() {
-    this.fraccionArancelariaOptions = {
-      labelNombre: 'Fracción arancelaria',
-      required: true,
-      primerOpcion: 'Selecciona un valor',
-      catalogos: franccionArancelaria
-    }
-  }
-
-  /**
-   * @method getNico
-   * @description Configura las opciones del catálogo de Nico.
-   * @memberof InformacionDeLaComponent
-   */
-  public getNico() {
-    this.nicoOptions = {
-      labelNombre: 'Nico',
-      required: true,
-      primerOpcion: 'Selecciona un valor',
-      catalogos: nico
-    }
-  }
-
-  /**
-   * @method getEstadofisico
-   * @description Configura las opciones del catálogo de estado físico.
-   * @memberof InformacionDeLaComponent
-   */
-  public getEstadofisico() {
-    this.estadoFisicoOptions = {
-      labelNombre: 'Estado Fisico',
-      required: true,
-      primerOpcion: 'Selecciona un valor',
-      catalogos: estadofisico
-    }
   }
 
   /**
@@ -138,12 +93,8 @@ export class InformacionDeLaComponent implements OnInit {
    * @param {any} valor - Valor seleccionado.
    * @memberof InformacionDeLaComponent
    */
-  valorSeleccionadoFraccion(valor: any) {
-    this.informacionDeLaform.patchValue({
-      franccionArancelaria: valor.id
-    })
-
-    if (valor.id) {
+  valorSeleccionadoFraccion() {
+    if (this.informacionDeLaform.get('fraccionArancelaria')?.value) {
       this.informacionDeLaform.get('descripcionFraccion')?.enable();
     } else {
       this.informacionDeLaform.get('descripcionFraccion')?.disable();
@@ -156,27 +107,12 @@ export class InformacionDeLaComponent implements OnInit {
    * @param {any} valor - Valor seleccionado.
    * @memberof InformacionDeLaComponent
    */
-  valorSeleccionadoNico(valor: any) {
-    this.informacionDeLaform.patchValue({
-      nico: valor.id
-    })
-    if (valor.id) {
+  valorSeleccionadoNico() {
+    if (this.informacionDeLaform.get('nico')?.value) {
       this.informacionDeLaform.get('descripcionNico')?.enable();
     } else {
       this.informacionDeLaform.get('descripcionNico')?.disable();
     }
-  }
-
-  /**
-   * @method valorSeleccionadoEstado
-   * @description Maneja el evento de selección de un estado físico.
-   * @param {any} valor - Valor seleccionado.
-   * @memberof InformacionDeLaComponent
-   */
-  valorSeleccionadoEstado(valor: any) {
-    this.informacionDeLaform.patchValue({
-      estadoFisico: valor.id
-    })
   }
 
   /**

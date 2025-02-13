@@ -1,30 +1,33 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { DeLaMuestraComponent } from './de-la-muestra.component';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 
 describe('DeLaMuestraComponent', () => {
   let component: DeLaMuestraComponent;
   let fixture: ComponentFixture<DeLaMuestraComponent>;
-  let _fb: FormBuilder;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        ReactiveFormsModule,
+        TituloComponent,
+        SelectCatalogosComponent,
+        CatalogoSelectComponent,DeLaMuestraComponent
+      ],
+      declarations: [],
+      providers: [FormBuilder],
+    }).compileComponents();
+  });
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-   
-      imports: [ReactiveFormsModule,DeLaMuestraComponent,
-        SelectCatalogosComponent,
-        TituloComponent,
-        AlertComponent],
-      providers: [FormBuilder]
-    });
-
     fixture = TestBed.createComponent(DeLaMuestraComponent);
     component = fixture.componentInstance;
-    _fb = TestBed.inject(FormBuilder);
     fixture.detectChanges();
   });
 
@@ -32,37 +35,59 @@ describe('DeLaMuestraComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.Informaciondela).toBeDefined();
+  it('should initialize form on ngOnInit', () => {
+    expect(component.Informaciondela).toBeTruthy();
+    expect(component.Informaciondela.contains('datosImportadorExportador')).toBe(true);
     expect(component.Informaciondela.get('datosImportadorExportador.folio')).toBeTruthy();
+    expect(component.Informaciondela.get('datosImportadorExportador.mercancia')).toBeTruthy();
   });
 
-  it('should disable the folio field when "No" is selected in docSeleccionado', () => {
-    component.ngOnInit();
-    component.docSeleccionado({ descripcion: 'No' });
-    expect(component.Informaciondela.get('datosImportadorExportador.folio')?.disabled).toBeTrue();
+  it('should initialize mercancia with correct values', () => {
+    component.getMercancia();
+    expect(component.mercancia).toEqual([
+      { id: 1, descripcion: 'Si' },
+      { id: 2, descripcion: 'No' },
+    ]);
   });
 
-  it('should enable the folio field when "Si" is selected in docSeleccionado', () => {
-    component.ngOnInit();
-    component.docSeleccionado({ descripcion: 'Si' });
-    expect(component.Informaciondela.get('datosImportadorExportador.folio')?.enabled).toBeTrue();
+  it('should disable "folio" field when "mercancia" is "No"', () => {
+    component.getMercancia();
+    component.Informaciondela.get('datosImportadorExportador.mercancia')?.setValue('2');
+    component.mercanciaSeleccion();
+    fixture.detectChanges();
+    const folioControl = component.Informaciondela.get('datosImportadorExportador.folio');
+    expect(folioControl?.disabled).toBeTruthy();
   });
 
-  it('should initialize mercancia data correctly', () => {
-    component.ngOnInit();
-    expect(component.mercancia).toBeDefined();
-    expect(component.mercancia.labelNombre).toBe('¿El producto al que hace referencia a esta solicitud ha sido previamente inscrito en el registro para la toma de muestras?');
-    expect(component.mercancia.catalogos.length).toBe(2);
-    expect(component.mercancia.catalogos[0].descripcion).toBe('Si');
-    expect(component.mercancia.catalogos[1].descripcion).toBe('No');
+  it('should enable "folio" field when "mercancia" is "Si"', () => {
+    component.getMercancia();
+    component.Informaciondela.get('datosImportadorExportador.mercancia')?.setValue('1');
+    component.mercanciaSeleccion();
+    fixture.detectChanges();
+    const folioControl = component.Informaciondela.get('datosImportadorExportador.folio');
+    expect(folioControl?.enabled).toBeTruthy();
   });
 
-  it('should call getMercancia on ngOnInit', () => {
-    spyOn(component, 'getMercancia');
-    component.ngOnInit();
-    expect(component.getMercancia).toHaveBeenCalled();
+
+  it('should validate the form when folio is empty', () => {
+    const folioControl = component.Informaciondela.get('datosImportadorExportador.folio');
+    folioControl?.setValue('');
+    expect(folioControl?.valid).toBeFalse();
+    expect(folioControl?.hasError('required')).toBeTruthy();
   });
 
+  it('should validate the form when mercancia is empty', () => {
+    const mercanciaControl = component.Informaciondela.get('datosImportadorExportador.mercancia');
+    mercanciaControl?.setValue('');
+    expect(mercanciaControl?.valid).toBeFalse();
+    expect(mercanciaControl?.hasError('required')).toBeTruthy();
+  });
+
+  it('should call validarFormulario()', () => {
+    spyOn(component, 'validarFormulario');
+    component.validarFormulario();
+    expect(component.validarFormulario).toHaveBeenCalled();
+  });
+
+  
 });

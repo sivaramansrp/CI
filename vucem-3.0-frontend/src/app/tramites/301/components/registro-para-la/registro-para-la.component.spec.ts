@@ -1,76 +1,73 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RegistroParaLaComponent } from './registro-para-la.component';
-
-import { AlertComponent } from '../../../../shared/components/alert/alert.component';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { BtnContinuarComponent } from '../../../../shared/components/btn-continuar/btn-continuar.component';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { of } from 'rxjs'; // If you use observables
 
 describe('RegistroParaLaComponent', () => {
   let component: RegistroParaLaComponent;
   let fixture: ComponentFixture<RegistroParaLaComponent>;
-  let fb: FormBuilder;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ReactiveFormsModule,RegistroParaLaComponent, AlertComponent, BtnContinuarComponent, SelectCatalogosComponent, TituloComponent],
-      providers: [FormBuilder]
-    }).compileComponents();
+      imports: [
+        RegistroParaLaComponent,
+        CatalogoSelectComponent,
+        BtnContinuarComponent,
+        AlertComponent,
+        TituloComponent,
+      ]
+    })
+    .compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(RegistroParaLaComponent);
     component = fixture.componentInstance;
-    fb = TestBed.inject(FormBuilder);
-    fixture.detectChanges();
+    fixture.detectChanges(); // Detect changes to initialize component
   });
 
   it('should create the component', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeTruthy(); // Check if component is created successfully
   });
 
-  it('should initialize registro with correct data', () => {
-    component.getRegistro(); // Call the method to initialize the 'registro' data
-
-    // Verify if the registro object has the correct initial values
-    expect(component.registro).toBeTruthy();
-    expect(component.registro.labelNombre).toBe('¿Se han realizado previamente importaciones o exportaciones del producto a registrar?');
-    expect(component.registro.required).toBeTrue();
-    expect(component.registro.catalogos.length).toBe(2);
-    expect(component.registro.catalogos[0].descripcion).toBe('Si');
-    expect(component.registro.catalogos[1].descripcion).toBe('No');
+  it('should initialize the component and set default values', () => {
+    expect(component.indice).toBe(1);
+    expect(component.registro).toEqual([
+      { id: 1, descripcion: 'Si' },
+      { id: 2, descripcion: 'No' }
+    ]);
+    expect(component.pasos).toEqual([]);
+    expect(component.datosPasos.nroPasos).toBe(0); // Default nroPasos should be 0 initially
   });
 
-  it('should initialize datosPasos object with correct values', () => {
-    component.getRegistro(); // Initialize registro data
-
-    // After initializing, check if datosPasos contains correct values
-    expect(component.datosPasos.nroPasos).toBe(0);  // Initial value, assuming pasos is empty initially
-    expect(component.datosPasos.indice).toBe(1); // Default index value
-    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
-    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
+  it('should call getRegistro() during ngOnInit()', () => {
+    spyOn(component, 'getRegistro');
+    component.ngOnInit(); // Call ngOnInit() method
+    expect(component.getRegistro).toHaveBeenCalled(); // Ensure getRegistro was called
   });
 
-  it('should call getRegistro() during ngOnInit', () => {
-    spyOn(component, 'getRegistro'); // Spy on getRegistro method
-
-    component.ngOnInit();
-
-    expect(component.getRegistro).toHaveBeenCalled();
+  it('should populate registro and pasos correctly in getRegistro()', () => {
+    component.getRegistro();
+    expect(component.registro).toEqual([
+      { id: 1, descripcion: 'Si' },
+      { id: 2, descripcion: 'No' }
+    ]);
+    expect(component.pasos).toEqual([]); // Assuming pasos is empty for now
+    expect(component.datosPasos.nroPasos).toBe(0);
   });
 
-  it('should initialize pasos with an empty array', () => {
-    expect(component.pasos).toEqual([]);  // Initially, pasos should be an empty array
+
+  it('should define the method registroSeleccion()', () => {
+    expect(component.registroSeleccion).toBeDefined(); // Ensure the method exists
   });
 
-  it('should call docSeleccionado method (placeholder)', () => {
-    const spy = spyOn(component, 'docSeleccionado'); // Spy on docSeleccionado method
-
-    // Simulate calling docSeleccionado
-    component.docSeleccionado('some event');
-
-    expect(spy).toHaveBeenCalledWith('some event');
+  it('should set TEXTOS and ADVERTENCIA constants correctly', () => {
+    expect(component.TEXTOS).toBeTruthy(); // Should not be null/undefined
+    expect(component.ADVERTENCIA).toBeTruthy(); // Should not be null/undefined
   });
+
+  // Add more tests based on UI interaction and user flows if necessary
 });

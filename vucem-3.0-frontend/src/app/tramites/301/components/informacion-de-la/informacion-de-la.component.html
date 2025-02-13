@@ -4,7 +4,8 @@
 
     <div class="row">
       <div class="col-md-4">
-          <select-catalogos (valorSeleccion)="valorSeleccionadoFraccion($event)" [catalogosDatos]="fraccionArancelariaOptions" ></select-catalogos>
+          <app-catalogo-select [catalogo]="fraccionArancelariaOptions" formControlName="fraccionArancelaria" [label]="'Fracción arancelaria'"
+          [required]="true" name="fraccionArancelaria"  (change)="valorSeleccionadoFraccion()" ></app-catalogo-select>
       </div>
 
       <div class="col-md-8">
@@ -15,7 +16,8 @@
 
     <div class="row mt-3">
       <div class="col-md-4">
-        <select-catalogos (valorSeleccion)="valorSeleccionadoNico($event)" [catalogosDatos]="nicoOptions" ></select-catalogos>
+        <app-catalogo-select [catalogo]="nicoOptions" formControlName="nico" [label]="'Nico'"
+          [required]="true" name="nico"  (change)="valorSeleccionadoNico()" ></app-catalogo-select>
       </div>
 
       <div class="col-md-8">
@@ -28,19 +30,11 @@
       <div class="col-md-4">
         <label for="nombreQuimico" class="form-label">Nombre químico *:</label>
         <input id="nombreQuimico" type="text" class="form-control" formControlName="nombreQuimico">
-        <small class="text-danger"
-          *ngIf="informacionDeLaform.get('nombreQuimico')?.hasError('required') && informacionDeLaform.get('nombreQuimico')?.touched">
-          Campo obligatorio
-        </small>
       </div>
 
       <div class="col-md-8">
         <label for="nombreComercial" class="form-label">Nombre comercial *:</label>
         <input id="nombreComercial" type="text" class="form-control" formControlName="nombreComercial">
-        <small class="text-danger"
-          *ngIf="informacionDeLaform.get('nombreComercial')?.hasError('required') && informacionDeLaform.get('nombreComercial')?.touched">
-          Campo obligatorio
-        </small>
       </div>
     </div>
 
@@ -48,14 +42,11 @@
       <div class="col-md-8">
         <label for="numeroCAS" class="form-label">Número de Chemical Abstracts Substance (CAS) *:</label>
         <input id="numeroCAS" type="text" class="form-control" formControlName="numeroCAS">
-        <small class="text-danger"
-          *ngIf="informacionDeLaform.get('numeroCAS')?.hasError('required') && informacionDeLaform.get('numeroCAS')?.touched">
-          Campo obligatorio
-        </small>
       </div>
 
       <div class="col-md-4">
-        <select-catalogos (valorSeleccion)="valorSeleccionadoEstado($event)" [catalogosDatos]="estadoFisicoOptions" ></select-catalogos>
+        <app-catalogo-select [catalogo]="estadoFisicoOptions" formControlName="estadoFisico" [label]="'Estado Fisico'"
+        [required]="true" name="estadoFisico" ></app-catalogo-select>
       </div>
     </div>
 
@@ -64,10 +55,6 @@
         <label for="acondicionamiento" class="form-label text-start">Indique el acondicionamiento con el que se presenta
           la mercancía al momento del despacho aduanero (sacos, totes, pipas, carro tanque, iso tanque, etc)*:</label>
         <textarea id="acondicionamiento" class="form-control"  style="height: 50%; resize: none;" formControlName="acondicionamiento"></textarea>
-        <small class="text-danger"
-          *ngIf="informacionDeLaform.get('acondicionamiento')?.hasError('required') && informacionDeLaform.get('acondicionamiento')?.touched">
-          Campo obligatorio
-        </small>
       </div>
     </div>
   </form>

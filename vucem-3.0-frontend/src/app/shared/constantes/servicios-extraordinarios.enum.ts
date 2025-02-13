@@ -134,28 +134,51 @@ export const FECHA_FINAL = {
   required: true,
   habilitado: true,
 };
-export const ACUSE_SERVICIOS_EXTRAORDINARIOS={
-
-}
-export const ACUSE = {
-  labelNombre: 'Acuse',
-  required: true,
-  habilitado: true,
-};
-export const ACUSE_SERVICIOS = {
-  labelNombre: 'Acuse',
-  required: true,
-  habilitado: true,
-};
-export const TITULO_ACUSE = {
-  labelNombre: 'Título',
-  required: true,
-  habilitado: true,
-};
-
 
 export const MENSAJEDEALERTA = {
-  ADJUNTAR: `<p>Las tablas con asterisco son obligatorias y debes agregarpor lo menos un registro</p>`,
+  ADJUNTAR: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro</p>`,
+};
+
+export const FECHA_SALIDA = {
+  labelNombre:'Fecha de expedición de certificado de Molino o de calidad',
+  required: true,
+  habilitado: false,
+}
+
+export const TXT_ALERTA_ACUSE = (folio: string) => {
+  return `Tu solicitud ha sido registrada con el siguiente número de folio:  < ${folio} >`;
+}
+
+export const TITULO_ACUSE = 'Acuse(s)';
+
+export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
+  txtAlerta:
+    'Tu solicitud ha sido registrada con el siguiente número de folio:',
+  tituloSeccionAcuse: 'Acuse(s)',
+  encabezadoTablaAcuse: [
+    {
+      key: 'id',
+      valor: 'No.',
+    },
+    {
+      key: 'documento',
+      valor: 'Documento.',
+    },
+  ],
+  datosTablaAcuse: [
+    {
+      id: 1,
+      idDocumento: 'doc12',
+      documento: 'Acuse de recepción de trámite',
+    },
+  ],
+  accionesTablaAcuse: [
+    {
+      tipo: 'descargar',
+      label: 'Descargar',
+      icono: 'bi-arrow-bar-down',
+    },
+  ],
 };
 export const Importante = {
   Importante: `<p><strong>Importante:</strong> Si existe duda respecto del producto a registrar o al pago correspondiente, favor de comunicarse a los teléfonos 55 5128 2544, 55 5128 2595 y 55 5128 2553</p>`,
