@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { AcusePageComponent } from '../../shared/pages/acuse-page/acuse-page.component';
+import { EvaluarDictamenComponent } from './pages/evaluar-dictamen/evaluar-dictamen.component';
+
 
 export const ROUTES_SOLICITUDES: Routes = [
   {
@@ -11,6 +13,10 @@ export const ROUTES_SOLICITUDES: Routes = [
   {
     path: 'acuse',
     component: AcusePageComponent,
+  },
+  {
+    path: 'evaluar-dictamen',
+    component: EvaluarDictamenComponent
   },
   {
     path: '',

@@ -29,6 +29,11 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 import { TercerosComponent } from '../../shared/components/terceros/terceros.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
+import { GeneraDictamenComponent } from './components/genera-dictamen/genera-dictamen.component';
+import { EvaluarDictamenComponent } from './pages/evaluar-dictamen/evaluar-dictamen.component';
+import { DetalleTramiteComponent } from './components/detalle-tramite/detalle-tramite.component';
+import { RequerimientoInformacionComponent } from './components/requerimiento-informacion/requerimiento-informacion.component';
+
 
 @NgModule({
   declarations: [
@@ -38,6 +43,11 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
+    GeneraDictamenComponent,
+    EvaluarDictamenComponent,
+    DetalleTramiteComponent,
+    RequerimientoInformacionComponent
+    
   ],
   imports: [
     AgregaPersonasComponent,
@@ -63,7 +73,7 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     SharedModule,
     SolicitanteComponent,
     TituloComponent,
-    WizardComponent,
+    WizardComponent
   ],
   exports: [SolicitudComponent, TercerosComponent],
 })
