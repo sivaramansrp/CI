@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+
 import { RouterModule, Routes } from '@angular/router';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const routes: Routes = [
@@ -18,6 +19,13 @@ const routes: Routes = [
       import('./tramites/5701/servicios-extraordinarios.module').then(
         (m) => m.ServiciosExtraordinariosModule
       ),
+  },
+  {
+      path: 'pexim',
+      loadChildren: () =>
+        import('./tramites/130118/pexim.module').then(
+          (m) => m.PeximModule
+        ),
   },
   {
     path: 'despacho-mercancias',
