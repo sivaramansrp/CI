@@ -1,5 +1,8 @@
 <div [formGroup]="formSelect">
-    <label for="{id}" class="form-label" *ngIf="label">{{ label }} @if (required) {*}:</label>
+    <label for="{id}" class="form-label" *ngIf="label">{{ label }} @if (required) {*}:
+        @if(tooltipQuestionCircle){ <span class="bi bi-question-circle-fill" title="{{label}}"
+        data-bs-toggle="tooltip"></span>}
+    </label>
     <select class="form-control" [id]="id" formControlName="selectControl" (change)="handleChange($event)" [ngClass]="isInvalid() ? 'required' : ''">
         <option value="" disabled selected>Seleccione una opción</option>
         <option *ngFor="let option of catalogo" [value]="option.id">{{ option.descripcion }}</option>

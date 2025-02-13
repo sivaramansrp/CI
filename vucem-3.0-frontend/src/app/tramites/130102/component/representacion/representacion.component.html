@@ -1,0 +1,24 @@
+<div class="container">
+  <ng-titulo titulo="Representación federal"></ng-titulo>
+  <form>
+    <div class="row">
+      <div class="col-md-4 form-group">
+        <select-catalogos
+          [catalogosDatos]="entidadFederativa"
+          (valorSeleccion)="entidadFederativaSeleccion($event)"
+        ></select-catalogos>
+      </div>
+      <div class="col-md-4 form-group">
+        <select-catalogos
+          [catalogosDatos]="representacionFederal"
+          (valorSeleccion)="representacionFederalSeleccion($event)"
+        ></select-catalogos>
+      </div>
+    </div>
+    <table>
+      <tr>
+        <td colspan="2">&nbsp;</td>
+      </tr>
+    </table>
+  </form>
+</div>
