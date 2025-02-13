@@ -188,6 +188,7 @@ export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
       id: 1,
       idDocumento: 'doc12',
       documento: 'Acuse de recepción de trámite',
+      urlPdf: 'assets/pdf/Test03.pdf',
     },
   ],
   accionesTablaAcuse: [
@@ -198,3 +199,5 @@ export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
     },
   ],
 };
+
+export const URL_PRUEBA = 'assets/pdf/Test03.pdf';
