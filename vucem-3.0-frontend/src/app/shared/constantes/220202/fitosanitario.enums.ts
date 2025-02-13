@@ -37,54 +37,7 @@ export const PASOS = [
     },
 ];
 
-/**
- * @description Constante que define los campos para el solicitante persona física nacional.
- * Cada objeto representa un campo con su etiqueta, nombre de campo, clase CSS, tipo de input,
- * estado disabled, tooltip, validadores y placeholder.
- * @constant {Array<Object>} FITOSANITARIO_SOLICITANTE_FISICA_NACIONAL
- */
-export const FITOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
-    {
-        labelNombre: 'Registro federal de contribuyentes:',
-        campo: 'rfc',
-        class: 'col-md-4',
-        tipo_input: 'text',
-        disabled: true,
-        tooltip: 'Registro federal de contribuyentes:',
-        validators: ['required'],
-        placeholder: '',
-    },
-    {
-        labelNombre: 'Denominacion o razon social:',
-        campo: 'nombreRazonSocial',
-        class: 'col-md-8',
-        tipo_input: 'text',
-        disabled: true,
-        tooltip: 'Denominacion o razon social',
-        validators: ['required'],
-        placeholder: '',
-    },
-    {
-        labelNombre: 'Actividad económica preponderante:',
-        campo: 'actEconomica',
-        class: 'col-md-12',
-        tipo_input: 'text',
-        disabled: true,
-        tooltip: 'Actividad económica preponderante:',
-        validators: ['required'],
-        placeholder: '',
-    },
-    {
-        labelNombre: 'Correo electronic',
-        campo: 'correo',
-        class: 'col-md-4',
-        tipo_input: 'text',
-        disabled: true,
-        tooltip: 'Correo electrónico',
-        validators: ['required'],
-        placeholder: '',
-    }
-];
+
 
 /**
  * @description Constante que define los campos para persona moral o física nacional.
@@ -215,7 +168,7 @@ export const INSTRUCCION_DOBLE_CLIC = 'Al dar doble clic en el registro seleccio
  * @description Constante que define el mensaje para tablas obligatorias.
  * @constant {string} ESREQUIREDTABLESMENSAJE
  */
-export const ESREQUIREDTABLESMENSAJE = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
+export const ES_REQUERIDO_TABLAS_MENSAJE = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
 
 /**
  * @description Constante que define la configuración para el input de fecha de pago.
