@@ -4,6 +4,7 @@ import { HttpClient } from "@angular/common/http"
 import { InputFecha } from "../../../../core/models/shared/components.model"
 import { FECHA_DE_PAGO } from "../../../../shared/constantes/220202/fitosanitario.enums"
 import { Component, OnInit } from "@angular/core"
+import { FitosanitarioAgriculturaService } from "../../../../core/services/220202/fitosanitario-agricultura.service"
 
 
 /**
@@ -88,7 +89,7 @@ export class PagoDeDerechosComponent implements OnInit {
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
    * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient) { }
+  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient, private readonly fitosanitarioService: FitosanitarioAgriculturaService) { }
 
   /**
    * Inicializa el componente.
