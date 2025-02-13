@@ -1,24 +1,23 @@
-import { DPI, MB, PDF } from '../../constantes/constantes';
 import {
   CatalogosSelect,
   DocumentosCargados,
 } from '../../../core/models/shared/components.model';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { Catalogo } from '../../../core/models/shared/catalogos.model';
-import { CommonModule } from '@angular/common';
-import { DocumentoService } from '../../../core/services/shared/documento/documento.service';
-import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
-import { Login } from '../../../core/models/shared/inicio-sesion.model';
-import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
-import { ToastrService } from 'ngx-toastr';
-import { URL_PRUEBA } from '../../constantes/servicios-extraordinarios.enum';
+import { DPI, MB, PDF } from '../../constantes/constantes';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { DocumentoService } from '../../../core/services/shared/documento/documento.service';
+import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
+import { Login } from '../../../core/models/shared/inicio-sesion.model';
+import { ToastrService } from 'ngx-toastr';
+import { URL_PRUEBA } from '../../constantes/servicios-extraordinarios.enum';
 
 declare const bootstrap: any; // Importación para manejar Bootstrap en TS
 
@@ -30,7 +29,7 @@ declare const bootstrap: any; // Importación para manejar Bootstrap en TS
   styleUrl: './anexar-documentos.component.scss',
 })
 export class AnexarDocumentosComponent implements OnInit {
-  @Input({ required: true }) catalogoDocumentos: Catalogo[] = [];
+  @Input() catalogoDocumentos: Catalogo[] = [];
   documentoForma!: FormGroup;
 
   PDF = PDF;

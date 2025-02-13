@@ -11,7 +11,7 @@ import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.
 })
 export class PasoDosComponent implements OnInit {
   TEXTOS = TEXTOS;
-
+  infoAlert = 'alert-info';
   catalogoDocumentos: Catalogo[] = [];
   documentosSeleccionados: Catalogo[] = [];
 
