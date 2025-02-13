@@ -68,10 +68,10 @@ export class DetosDelTramiteComponent implements OnInit {
    */
   solicitude: ProductoOption[] = [];
 
-  /**
-   * descripción
-   * @property  Lista de tipos de documentos disponibles.
-   */
+ /**
+ * Lista de tipos de documentos disponibles.
+ * @type {Catalogo[]}
+ */
   tiposDocumentosArray: Catalogo[] = [];
 
   /**
