@@ -27,8 +27,8 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <select-catalogos [catalogosDatos]="fraccionArancelariaTIGIE"
-                        (valorSeleccion)="fraccionArancelariaTIGIESelection($event)"></select-catalogos>
+                    <app-catalogo-select [catalogo]="fraccionArancelariaTIGIE"
+                    [required]="true" (change)="fraccionArancelariaTIGIESelection()"></app-catalogo-select>
                         <div *ngIf="esInvalido('fraccionArancelariaTIGIE')" class="text-danger">
                             <small>Debe seleccionar una fracción.</small>
                         </div>
@@ -77,15 +77,15 @@
             </div>
         </div>
     </form>
-
+ 
     <div class="row mt-5">
         <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES_PARA_PARTIDAS"></ng-alert>
         <div>
             <h6>Mercancias</h6>
-
+ 
             <ng-table [commonTableHeader]="tableHeaderData" [commonTableBody]="tableBodyData" [enableScrollbar]="true"></ng-table>
-
-            <form [formGroup]="formForTotalCount">   
+ 
+            <form [formGroup]="formForTotalCount">  
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
@@ -102,14 +102,14 @@
                         </div>
                     </div>
                 </div>
-
+ 
                 <div class="row mt-5">
                     <div class="col-md-4"></div>
                     <div class="col-md-8">
                         <hr>
                     </div>
                 </div>
-                
+               
                 <div class="row">
                     <div class="col-md-6 col-sm-6"></div>
                     <div class="col-md-6 col-sm-6 text-end">
@@ -123,3 +123,4 @@
         </div>
     </div>
 </div>
+ 

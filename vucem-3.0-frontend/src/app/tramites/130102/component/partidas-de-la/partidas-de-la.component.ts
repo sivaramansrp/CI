@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-
+ 
 import {
   FormBuilder,
   FormGroup,
@@ -10,16 +10,18 @@ import { AlertComponent } from '../../../../shared/components/alert/alert.compon
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { UppercaseDirective } from '../../../../shared/directives/Uppercase/uppercase.directive';
-
+ 
 import { Component, OnInit } from '@angular/core';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { TEXTOS } from '../../../../shared/constantes/octava-temporral.enum';
 import { TableComponent } from '../../../../shared/components/table/table.component';
-
+ 
 import establecimientoTable from '../../../../../assets/json/130102/partidas-de-la.json';
 import fraccionArancelariaTIGIE from '../../../../../assets/json/130102/partidas-de-la-catalogos-select.json';
-
+ 
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+ 
 @Component({
   selector: 'app-partidas-de-la',
   standalone: true,
@@ -31,6 +33,7 @@ import fraccionArancelariaTIGIE from '../../../../../assets/json/130102/partidas
     AlertComponent,
     SelectCatalogosComponent,
     TableComponent,
+    CatalogoSelectComponent
   ],
   templateUrl: './partidas-de-la.component.html',
   styleUrl: './partidas-de-la.component.scss',
@@ -41,49 +44,49 @@ export class PartidasDeLaComponent implements OnInit {
    * @type {FormGroup}
    */
   form!: FormGroup;
-
+ 
   /**
    * Formulario reactivo utilizado para gestionar los totales de cantidad y valor en USD.
    * @type {FormGroup}
    */
   formForTotalCount!: FormGroup;
-
+ 
   /**
    * Constantes de texto utilizadas en el componente.
    * @type {any}
    */
   TEXTOS = TEXTOS;
-
+ 
   /**
    * Datos del catálogo de fracciones arancelarias TIGIE.
    * @type {CatalogosSelect}
    */
-  fraccionArancelariaTIGIE: CatalogosSelect = fraccionArancelariaTIGIE;
-
+  fraccionArancelariaTIGIE: Catalogo[] = fraccionArancelariaTIGIE.catalogos;
+ 
   /**
    * Datos del encabezado de la tabla.
    * @type {string[]}
    */
   tableHeaderData: string[] = [];
-
+ 
   /**
    * Datos del cuerpo de la tabla.
    * @type {Array<{ tbodyData: string[] }>}
    */
   tableBodyData: { tbodyData: string[] }[] = [];
-
+ 
   /**
    * Datos de la tabla de establecimiento.
    * @type {any}
    */
   public getEstablecimientoTableData = establecimientoTable;
-
+ 
   /**
    * Constructor del formulario reactivo.
    * @param {FormBuilder} fb - Constructor del formulario reactivo.
    */
   constructor(private fb: FormBuilder) {}
-
+ 
   /**
    * Método de inicialización del componente.
    */
@@ -92,11 +95,11 @@ export class PartidasDeLaComponent implements OnInit {
     this.formularioTotalCount();
     this.getEstablecimiento();
     this.calculateTotals();
-
+ 
     this.formForTotalCount.controls['cantidadTotal'].disable();
     this.formForTotalCount.controls['valorTotalUSD'].disable();
   }
-
+ 
   /**
    * Método para crear el formulario reactivo.
    */
@@ -123,7 +126,7 @@ export class PartidasDeLaComponent implements OnInit {
       ],
     });
   }
-
+ 
   /**
    * Método para calcular los totales de cantidad y valor en USD.
    */
@@ -138,11 +141,11 @@ export class PartidasDeLaComponent implements OnInit {
         sum + parseFloat(item.tbodyData[5]),
       0
     );
-
+ 
     this.formForTotalCount.controls['cantidadTotal'].setValue(cantidadTotal);
     this.formForTotalCount.controls['valorTotalUSD'].setValue(valorTotalUSD);
   }
-
+ 
   /**
    * Método para crear el formulario de totales.
    */
@@ -152,15 +155,15 @@ export class PartidasDeLaComponent implements OnInit {
       valorTotalUSD: [{ value: '', disabled: true }],
     });
   }
-
+ 
   /**
    * Método para manejar la selección de fracción arancelaria TIGIE.
    * @param {Catalogo} aduana - Datos del catálogo seleccionado.
    */
-  fraccionArancelariaTIGIESelection(aduana: Catalogo) {
+  fraccionArancelariaTIGIESelection() : void{
     // Implementar el método o eliminarlo si no es necesario
   }
-
+ 
   /**
    * Método para obtener los datos de establecimiento.
    */
@@ -168,7 +171,7 @@ export class PartidasDeLaComponent implements OnInit {
     this.tableHeaderData = this.getEstablecimientoTableData.tableHeader;
     this.tableBodyData = this.getEstablecimientoTableData.tableBody;
   }
-
+ 
   /**
    * Método para validar el formulario al hacer clic en el botón
    */
@@ -182,7 +185,7 @@ export class PartidasDeLaComponent implements OnInit {
       console.log('Formulario enviado con éxito', this.form.value);
     }
   }
-
+ 
   /**
    * Método para verificar si un control del formulario es inválido.
    * @param {string} nombreControl - Nombre del control del formulario.
