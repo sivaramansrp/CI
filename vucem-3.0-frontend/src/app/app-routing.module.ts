@@ -41,6 +41,13 @@ const routes: Routes = [
         (m) => m.PantallasModule
       ),
   },
+  {
+    path: 'avois-de-materiales',
+    loadChildren: () =>
+      import('./tramites/231001/avisodemateriales.module').then(
+        (m) => m.AvisodematerialesModule
+      ),
+  },
 ];
 
 @NgModule({
