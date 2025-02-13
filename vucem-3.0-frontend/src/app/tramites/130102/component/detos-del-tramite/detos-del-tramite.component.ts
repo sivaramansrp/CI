@@ -1,11 +1,12 @@
 /**
- * @fileoverview Este archivo contiene la clase DetosDelTramiteComponent, la cual gestiona la lógica del componente Detos Del Trámite.
+ * compo doc
+ * @fileoverview Componente encargado de gestionar la selección de solicitudes y tipos de documentos en un trámite.
  * @module DetosDelTramiteComponent
  */
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
-import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -13,22 +14,22 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
-
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-
 import {
   ProductoOption,
   ProductoResponse,
 } from '../../../../core/services/130102/octava-temporral.enum';
+
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+
+
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 import solicitudeSelectVal from '../../../../../assets/json/130102/solicitude-select.json';
+
 /**
- * descripción
- * @class DetosDelTramiteComponent
- * @classdesc Componente encargado de manejar la selección de solicitudes y tipos de documentos en un trámite.
+ * Componente para la gestión de solicitudes y tipos de documentos en un trámite.
  */
 @Component({
   selector: 'app-detos-del-tramite',
@@ -43,52 +44,54 @@ import solicitudeSelectVal from '../../../../../assets/json/130102/solicitude-se
   templateUrl: './detos-del-tramite.component.html',
 })
 export class DetosDelTramiteComponent implements OnInit {
+  /**
+   * Lista de campos de entrada utilizados en el formulario.
+   */
   inputFields = [
     {
-      label: 'Regimen al que se destinara la mercancia',
+      label: 'Régimen al que se destinará la mercancía',
       placeholder: 'Seleccione un documento',
       required: true,
     },
     {
-      label: 'Clasificacion del regimen',
+      label: 'Clasificación del régimen',
       placeholder: 'Seleccione un documento',
       required: true,
     },
   ];
-  catalogosArray: Catalogo[][] = solicitudeSelectVal;
+
   /**
-   * descripción
-   * @property {FormGroup} formDelTramite - Formulario reactivo del componente.
+   * Lista de catálogos disponibles para la selección.
+   */
+  catalogosArray: Catalogo[][] = solicitudeSelectVal;
+
+  /**
+   * Formulario reactivo del componente.
    */
   formDelTramite!: FormGroup;
 
   /**
-   * descripción
-   * @property {ProductoOption[]} solicitude - Lista de opciones de solicitud disponibles.
+   * Opciones disponibles para la solicitud.
    */
   solicitude: ProductoOption[] = [];
 
- /**
- * Lista de tipos de documentos disponibles.
- * @type {Catalogo[]}
- */
+  /**
+   * Lista de tipos de documentos disponibles.
+   */
   tiposDocumentosArray: Catalogo[] = [];
 
   /**
-   * descripción
-   * @property {string | number} selectedValue - Valor seleccionado actualmente.
+   * Valor seleccionado actualmente.
    */
   selectedValue: string | number = 'Inicial';
 
   /**
-   * descripción
-   * @property {string} defaultSelect - Valor seleccionado por defecto.
+   * Valor predeterminado en la selección.
    */
   defaultSelect: string = 'Inicial';
 
   /**
-   * descripción
-   * @constructor
+   * Constructor del componente.
    * @param {HttpClient} http - Servicio para realizar peticiones HTTP.
    * @param {FormBuilder} fb - Utilidad para la construcción de formularios reactivos.
    */
@@ -97,9 +100,7 @@ export class DetosDelTramiteComponent implements OnInit {
   }
 
   /**
-   * descripción
-   * @method ngOnInit
-   * @description Método de inicialización del componente, configura el formulario y obtiene datos iniciales.
+   * Inicializa el componente, configura el formulario y obtiene datos iniciales.
    */
   ngOnInit(): void {
     this.formDelTramite = this.fb.group({
@@ -108,13 +109,10 @@ export class DetosDelTramiteComponent implements OnInit {
       fraccion: ['', [Validators.required]],
     });
     this.fetchSolicitudeOptions();
-    // this.fetchTiposDocumentos();
   }
 
   /**
-   * descripción
-   * @method onValueChange
-   * @description Maneja el cambio en el valor seleccionado.
+   * Maneja los cambios en la opción seleccionada.
    * @param {string | number} value - Nuevo valor seleccionado.
    */
   onValueChange(value: string | number) {
@@ -122,19 +120,14 @@ export class DetosDelTramiteComponent implements OnInit {
   }
 
   /**
-   * descripción
-   * @method tipoTransporte
-   * @description Método de marcador de posición para manejar el tipo de transporte.
-   * @param {Catalogo} e - Evento del catálogo seleccionado.
+   * Método de marcador de posición para gestionar el tipo de transporte.
    */
   tipoTransporte(): void {
     this.selectedValue = 'Nuevo';
   }
 
   /**
-   * descripción
-   * @method fetchSolicitudeOptions
-   * @description Obtiene la lista de opciones de solicitud desde un archivo JSON.
+   * Obtiene la lista de opciones de solicitud desde un archivo JSON.
    */
   fetchSolicitudeOptions() {
     this.http

@@ -1,73 +1,87 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { PaisProcendenciaComponent } from './pais-procendencia.component';
+
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
 
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
-import { PaisProcendenciaComponent } from './pais-procendencia.component';
-
-fdescribe('PaisProcendenciaComponent', () => {
+describe('PaisProcendenciaComponent', () => {
   let component: PaisProcendenciaComponent;
   let fixture: ComponentFixture<PaisProcendenciaComponent>;
   let httpClientSpy: jasmine.SpyObj<HttpClient>;
 
-  const mockData: CatalogosSelect = {
-    labelNombre: 'País de Procedencia',
-    required: true,
-    primerOpcion: 'Seleccione un país',
-    catalogos: [
-      { id: 1, descripcion: 'Mexico' },
-      { id: 2, descripcion: 'USA' },
-    ],
-  };
+  const mockPaisProc: Catalogo[] = [
+    { id: 1, descripcion: 'México' },
+    { id: 2, descripcion: 'España' },
+    { id: 3, descripcion: 'Argentina' }
+  ];
+  
 
   beforeEach(async () => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
+    httpClientSpy.get.and.returnValue(of(mockPaisProc));
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule,PaisProcendenciaComponent],
+      imports: [ReactiveFormsModule, HttpClientTestingModule,PaisProcendenciaComponent],
       declarations: [],
       providers: [{ provide: HttpClient, useValue: httpClientSpy }],
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(PaisProcendenciaComponent);
     component = fixture.componentInstance;
-
-    // Mock the HTTP response before detectChanges()
-    httpClientSpy.get.and.returnValue(of(mockData));
-
-    fixture.detectChanges(); // Triggers ngOnInit() safely
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should fetch country options on initialization', () => {
-    expect(component.paisProc).toEqual(mockData);
+  it('should initialize the form with default values', () => {
+    expect(component.paisForm).toBeDefined();
+    expect(component.paisForm.get('bloque')?.value).toBe('');
+    expect(component.paisForm.get('descripcionJustificacion')?.value).toBe('');
+    expect(component.paisForm.get('observaciones')?.value).toBe('');
   });
 
-  it('should add selected dates when agregar is called with "t"', () => {
-    component.selectRangoDias = ['2024-02-10', '2024-02-11'];
+  it('should fetch country list on init', () => {
+    component.fetchPaisProc();
+    expect(httpClientSpy.get).toHaveBeenCalledWith('/assets/json/130102/pais-procenia.json');
+    expect(component.paisProc).toEqual(mockPaisProc);
+  });
+
+  it('should add selected dates correctly', () => {
+    component.fechasDatos = ['2024-01-01', '2024-02-01'];
+    component.fecha.setValue(['0']);
+    component.agregar('');
+    expect(component.fechasSeleccionadas).toContain('2024-01-01');
+    expect(component.fechasDatos.length).toBe(1);
+  });
+
+  it('should add all selected dates when type is "t"', () => {
+    component.selectRangoDias = ['2024-03-01', '2024-04-01'];
     component.agregar('t');
-
-    expect(component.fechasSeleccionadas).toEqual(['2024-02-10', '2024-02-11']);
-    expect(component.fechasDatos).toEqual([]);
+    expect(component.fechasSeleccionadas).toEqual(['2024-03-01', '2024-04-01']);
+    expect(component.fechasDatos.length).toBe(0);
   });
 
-  it('should remove all selected dates when quitar is called with "t"', () => {
-    // Arrange: Set initial selected dates
-    component.fechasSeleccionadas = ['2024-02-10', '2024-02-11'];
-  
-    // Act: Call quitar method
+  it('should remove selected dates correctly', () => {
+    component.fechasSeleccionadas = ['2024-01-01', '2024-02-01'];
+    component.fechaSeleccionada.setValue(['0']);
+    component.quitar('');
+    expect(component.fechasDatos).toContain('2024-01-01');
+    expect(component.fechasSeleccionadas.length).toBe(1);
+  });
+
+  it('should remove all selected dates when type is "t"', () => {
+    component.fechasSeleccionadas = ['2024-03-01', '2024-04-01'];
     component.quitar('t');
-    fixture.detectChanges();  // ✅ Ensure Angular updates the component
-  
-    // Assert: Check if dates are moved correctly
-    expect(component.fechasDatos).toEqual(['2024-02-10', '2024-02-11']);
-    expect(component.fechasSeleccionadas).toEqual([]);  // Ensure the list is emptied
+    expect(component.fechasDatos).toEqual(['2024-03-01', '2024-04-01']);
+    expect(component.fechasSeleccionadas.length).toBe(0);
   });
-  
 });

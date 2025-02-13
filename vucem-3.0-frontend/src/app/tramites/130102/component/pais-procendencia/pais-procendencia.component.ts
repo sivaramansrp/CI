@@ -1,13 +1,12 @@
 /**
- * descripción
- * @fileoverview Este archivo contiene la clase PaisProcendenciaComponent, responsable de manejar la lógica del componente País Procedencia.
- *
+ * compo doc
+ * @fileoverview Componente encargado de gestionar la selección de países de procedencia en un trámite.
  * @module PaisProcendenciaComponent
  */
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
-import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -16,19 +15,15 @@ import {
   Validators,
 } from '@angular/forms';
 
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { CrosslistComponent } from '../../../../shared/components/crosslist/crosslist.component';
-
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import paisProcJson from '../../../../../assets/json/130102/pais-procenia.json';
 
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
-
 /**
- * descripción
- * @class PaisProcendenciaComponent
- * @classdesc Componente encargado de gestionar la selección de países de procedencia.
+ * Componente para la gestión de la selección de países de procedencia.
  */
 @Component({
   selector: 'app-pais-procendencia',
@@ -44,46 +39,43 @@ import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-
   styleUrl: './pais-procendencia.component.scss',
 })
 export class PaisProcendenciaComponent implements OnInit {
-  paisForm!: FormGroup;
   /**
-   * descripción
-   * @property {string[]} fechasSeleccionadas - Lista de fechas seleccionadas.
+   * Formulario reactivo para la gestión de países de procedencia.
+   */
+  paisForm!: FormGroup;
+
+  /**
+   * Lista de fechas seleccionadas.
    */
   fechasSeleccionadas: string[] = [];
 
   /**
-   * descripción
-   * @property {FormControl} fecha - Control de formulario para la fecha.
+   * Control de formulario para la fecha.
    */
   fecha: FormControl = new FormControl('');
 
   /**
-   * descripción
-   * @property {FormControl} fechaSeleccionada - Control de formulario para la fecha seleccionada.
+   * Control de formulario para la fecha seleccionada.
    */
   fechaSeleccionada: FormControl = new FormControl('');
 
   /**
-   * descripción
-   * @property {string[]} fechasDatos - Lista de datos de fechas disponibles.
+   * Lista de datos de fechas disponibles.
    */
   fechasDatos: string[] = [];
 
   /**
-   * descripción
-   * @property {string[]} selectRangoDias - Lista de rangos de días seleccionados.
+   * Lista de rangos de días seleccionados.
    */
   selectRangoDias: string[] = [];
 
   /**
-   * descripción
-   * @property {CatalogosSelect} paisProc - Catálogo de países.
+   * Catálogo de países de procedencia.
    */
   paisProc: Catalogo[] = paisProcJson;
 
   /**
-   * descripción
-   * @property {Array<Object>} botonField - Lista de botones de acción disponibles.
+   * Botones de acción disponibles para gestionar las listas de fechas.
    */
   botonField = [
     {
@@ -92,12 +84,12 @@ export class PaisProcendenciaComponent implements OnInit {
       funcion: () => this.agregar(''),
     },
     {
-      btnNombre: 'Agregar seleccion',
+      btnNombre: 'Agregar selección',
       class: 'btn-default',
       funcion: () => this.agregar('t'),
     },
     {
-      btnNombre: 'Restar Seleccion',
+      btnNombre: 'Restar selección',
       class: 'btn-danger',
       funcion: () => this.quitar(''),
     },
@@ -109,18 +101,14 @@ export class PaisProcendenciaComponent implements OnInit {
   ];
 
   /**
-   * descripción
-   * @constructor
+   * Constructor del componente.
    * @param {HttpClient} http - Servicio HTTP para obtener datos del servidor.
+   * @param {FormBuilder} fb - Utilidad para la construcción de formularios reactivos.
    */
-  constructor(private http: HttpClient, private fb: FormBuilder) {
-    //constructor
-  }
+  constructor(private http: HttpClient, private fb: FormBuilder) {}
 
   /**
-   * descripción
-   * @method ngOnInit
-   * @description Inicializa el componente y carga los datos iniciales.
+   * Inicializa el componente y configura el formulario.
    */
   ngOnInit() {
     this.paisForm = this.fb.group({
@@ -128,17 +116,15 @@ export class PaisProcendenciaComponent implements OnInit {
       descripcionJustificacion: ['', [Validators.required]],
       observaciones: [''],
     });
-    this.fetchpaisProc();
+    this.fetchPaisProc();
   }
 
   /**
-   * descripción
-   * @method agregar
-   * @description Agrega elementos a la lista según el tipo especificado.
-   * @param {string} type - Tipo de acción a realizar.
+   * Agrega elementos a la lista de fechas según el tipo especificado.
+   * @param {string} tipo - Tipo de acción a realizar.
    */
-  agregar(type: string) {
-    if (type === 't') {
+  agregar(tipo: string) {
+    if (tipo === 't') {
       this.fechasSeleccionadas = [...this.selectRangoDias];
       this.fechasDatos = [];
     } else {
@@ -149,9 +135,7 @@ export class PaisProcendenciaComponent implements OnInit {
   }
 
   /**
-   * descripción
-   * @method quitar
-   * @description Elimina elementos de la lista según el tipo especificado.
+   * Elimina elementos de la lista de fechas según el tipo especificado.
    * @param {string} tipo - Tipo de acción a realizar.
    */
   quitar(tipo: string = '') {
@@ -165,7 +149,10 @@ export class PaisProcendenciaComponent implements OnInit {
     }
   }
 
-  fetchpaisProc() {
+  /**
+   * Obtiene la lista de países de procedencia desde un archivo JSON.
+   */
+  fetchPaisProc() {
     this.http
       .get<Catalogo[]>('/assets/json/130102/pais-procenia.json')
       .subscribe((data) => {
