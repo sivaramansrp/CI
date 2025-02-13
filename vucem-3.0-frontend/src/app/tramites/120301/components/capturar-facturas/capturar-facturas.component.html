@@ -1,0 +1,209 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <ng-titulo titulo="Datos de la factura" />
+            </div>
+        <div class="row mt-5">
+          <div class="col-md-12">
+            <label for="mercancia">Facturas asociadas</label>
+          </div>
+          <div class="col-md-12">
+            <ng-table [commonTableHeader]="tableColumns" [commonTableBody]="facturas"></ng-table>
+          </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <ng-titulo titulo="Datos de la factura" />
+            </div>
+        <div class="row mt-5">
+          <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label" for="Número-de-la-factura"
+                >Número de la factura:</label>
+                <input
+                class="form-control"
+                value=""
+                class="form-control"
+                id="Número-de-la-factura"
+                placeholder=""
+                type="text"
+                appUppercase
+                name="Número-de-la-factura"
+                />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label" for="Cantidad-total"
+                >Cantidad total:</label>
+                <input
+                class="form-control"
+                value=""
+                class="form-control"
+                id="Cantidad-total"
+                placeholder=""
+                type="text"
+                appUppercase
+                name="Cantidad-total"
+                />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label" for="Unidad-de-medida"
+                >Unidad de medida:</label>
+                <input
+                class="form-control"
+                value=""
+                class="form-control"
+                id="Unidad-de-medida"
+                placeholder=""
+                type="text"
+                appUppercase
+                name="Unidad-de-medida"
+                />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label" for="Fecha-de-la-factura"
+                >Fecha de expedición de la factura:</label>
+                <input
+                class="form-control"
+                value=""
+                class="form-control"
+                id="Fecha-de-la-factura"
+                placeholder=""
+                type="text"
+                appUppercase
+                name="Fecha-de-la-factura"
+                />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label" for="Valor-en-dólares"
+                >Valor en dólares:</label>
+                <input
+                class="form-control"
+                value=""
+                class="form-control"
+                id="Valor-en-dólares"
+                placeholder=""
+                type="text"
+                appUppercase
+                name="Valor-en-dólares"
+                />
+            </div>
+          </div>
+    </div>
+    <div class="row mb-6">
+        <div class="col-md-12">
+            <ng-titulo titulo="Datos del emisor/consignatario" />
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label" for="tax-id"
+                    >TAX ID:</label>
+                    <input
+                    class="form-control"
+                    value=""
+                    class="form-control"
+                    id="tax-id"
+                    placeholder=""
+                    type="text"
+                    appUppercase
+                    name="tax-id"
+                    />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label" for="Razón-social"
+                    >Razón social:</label>
+                    <input
+                    class="form-control"
+                    value=""
+                    class="form-control"
+                    id="Razón-social"
+                    placeholder=""
+                    type="text"
+                    appUppercase
+                    name="Razón-social"
+                    />
+                </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label" for="Calle"
+                >Calle:</label>
+                <input
+                class="form-control"
+                value=""
+                class="form-control"
+                id="Calle"
+                placeholder=""
+                type="text"
+                appUppercase
+                name="Calle"
+                />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label" for="Ciudad"
+                >Ciudad:</label>
+                <input
+                class="form-control"
+                value=""
+                class="form-control"
+                id="Ciudad"
+                placeholder=""
+                type="text"
+                appUppercase
+                name="Ciudad"
+                />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label" for="CP"
+                >CP:</label>
+                <input
+                class="form-control"
+                value=""
+                class="form-control"
+                id="CP"
+                placeholder=""
+                type="text"
+                appUppercase
+                name="CP"
+                />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label" for="País"
+                >País:</label>
+                <input
+                class="form-control"
+                value=""
+                class="form-control"
+                id="País"
+                placeholder=""
+                type="text"
+                appUppercase
+                name="País"
+                />
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="container text-end mt-5">
+        <button class="btn btn-default me-2">Limpiar</button>
+        <button class="btn btn-default me-2">Modificar</button>
+        <button class="btn btn-primary me-2">Agregar</button>
+    </div>
+    
+</div>

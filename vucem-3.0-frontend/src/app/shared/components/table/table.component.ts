@@ -1,15 +1,15 @@
 /* eslint-disable @angular-eslint/component-selector */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { TableData } from '../../../core/models/shared/components.model';
 
 @Component({
   selector: 'ng-table',
   templateUrl: './table.component.html',
-  styleUrl: './table.component.scss',
+  styleUrls: ['./table.component.scss'],
   standalone: true,
 })
-export class TableComponent {
+export class TableComponent implements OnInit, OnChanges {
 
   /**
    * @description 
@@ -17,21 +17,29 @@ export class TableComponent {
    * commonTableBody se utiliza para obtener datos del cuerpo de la tabla de la componente
    */
   @Input() commonTableHeader: string[] = [];
-  @Input() commonTableBody: any =[];
+  @Input() commonTableBody: any = [];
 
   public tableData: TableData = {
     tableHeader: [],
     tableBody: []
   };
 
-  constructor() {
-  }
+  constructor() {}
 
   ngOnInit(): void {
-    this.tableData = {
-      tableHeader: this.commonTableHeader,
-      tableBody: this.commonTableBody
+    this.updateTableData();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['commonTableHeader'] || changes['commonTableBody']) {
+      this.updateTableData();
     }
   }
 
+  private updateTableData(): void {
+    this.tableData = {
+      tableHeader: this.commonTableHeader,
+      tableBody: this.commonTableBody
+    };
+  }
 }
