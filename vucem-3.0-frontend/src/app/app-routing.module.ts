@@ -1,3 +1,5 @@
+import { NgModule } from '@angular/core';
+
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
@@ -18,6 +20,27 @@ const routes: Routes = [
       import('./tramites/5701/servicios-extraordinarios.module').then(
         (m) => m.ServiciosExtraordinariosModule
       ),
+  },
+  {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/130118/pexim.module').then(
+        (m) => m.PeximModule
+      ),
+  },
+  {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/130118/pexim.module').then(
+        (m) => m.PeximModule
+      ),
+  },
+  {
+    path: 'despacho-mercancias',
+    loadChildren: () =>
+      import('./tramites/303/despacho-mercancias.module').then(
+        (m) => m.DespachoMercanciasModule
+      )
   },
   {
     path: 'certificado-zoosanitario',
