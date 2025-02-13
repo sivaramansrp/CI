@@ -1,14 +1,11 @@
-@if (catalogosPaises) {
-<label for="tipoSolicitud" class="form-label">
-  {{catalogosPaises.labelNombre}}
-  @if (catalogosPaises.required) {*}:
-</label>
-<select class="form-control" id="tipo-solicitud" [formControl]="pais" (change)="seleccion()"
-  [ngClass]="isValid() ? 'required' : ''">
-  <option value=0 disabled>Selecciona un valor</option>
-  @for (item of catalogosPaises.catalogos; track $index)
-  {
-  <option value={{item.id}}>{{item.nombre}}</option>
-  }
-</select>
-}
+<div [formGroup]="formSelect">
+  <label for="{id}" class="form-label" *ngIf="label">{{ label }} @if (required) {*}:</label>
+  <select class="form-control" [id]="id" formControlName="selectControl" (change)="handleChange($event)" [ngClass]="isInvalid() ? 'required' : ''">
+      <option value="" disabled selected>Seleccione una opción</option>
+      <option *ngFor="let option of catalogosPaises" [value]="option.id">{{ option.nombre }}</option>
+  </select>
+  <div *ngIf="isInvalid()" class="mensaje-error">
+      Este campo es obligatorio.
+  </div>
+</div>
+

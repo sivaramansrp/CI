@@ -1,20 +1,17 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import * as CONSTANTES from '../../constantes/formularios-transportes.enums';
+import { Component, Input, OnInit } from '@angular/core';
 import {
-  Form,
-  FormArray,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
-import { ServiciosExtraordinariosService } from './../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
-import { CatalogosSelect } from '../../../core/models/shared/components.model';
-import { Catalogo } from '../../../core/models/shared/catalogos.model';
-import * as CONSTANTES from '../../constantes/formularios-transportes.enums';
 import { CampoForm } from '../../../core/models/shared/forms-model';
-import { InputFechaComponent } from '../input-fecha/input-fecha.component';
+import { Catalogo } from '../../../core/models/shared/catalogos.model';
+import { CatalogosSelect } from '../../../core/models/shared/components.model';
 import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
+import { CommonModule } from '@angular/common';
+import { InputFechaComponent } from '../input-fecha/input-fecha.component';
+import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
 @Component({
   selector: 'agregar-transporte',
   standalone: true,
@@ -27,20 +24,24 @@ import { CatalogosService } from '../../../core/services/shared/catalogos/catalo
   templateUrl: './agregar-transporte.component.html',
   styleUrl: './agregar-transporte.component.scss',
 })
-export class AgregarTransporteComponent {
+export class AgregarTransporteComponent implements OnInit {
   @Input({ required: true }) tipo!: string;
 
   datosTiposTransporte!: CatalogosSelect;
 
   FormTransporte!: FormGroup;
   tipoTransporteSeleccionado!: Catalogo;
-  camposFormulario!: Array<CampoForm>;
+  camposFormulario!: CampoForm[];
 
   constructor(
     private fb: FormBuilder,
     private catalogosServices: CatalogosService
   ) {
     this.crearFormTransporte();
+  }
+
+  ngOnInit():void {
+    this.getTiposTransporte();
   }
 
   crearFormTransporte() {
@@ -77,7 +78,7 @@ export class AgregarTransporteComponent {
     this.agregarCamposAlForm(this.camposFormulario);
   }
 
-  agregarCamposAlForm(campos: Array<CampoForm>) {
+  agregarCamposAlForm(campos: CampoForm[]) {
     campos.forEach((campo: CampoForm) => {
       this.FormTransporte.addControl(campo.campo, this.fb.control(''));
     });
@@ -91,17 +92,13 @@ export class AgregarTransporteComponent {
     // 6 - Otro
   }
 
-  ngOnInit() {
-    this.getTiposTransporte();
-  }
-
   getTiposTransporte() {
     this.catalogosServices
       .getCatalogos('cat-tipo-transporte.json')
       .subscribe((resp) => {
         if (resp.code === 200) {
           const response = resp.data;
-          const tiposTransporte: Array<Catalogo> = [];
+          const tiposTransporte: Catalogo[] = [];
 
 
           response.forEach((el) => {

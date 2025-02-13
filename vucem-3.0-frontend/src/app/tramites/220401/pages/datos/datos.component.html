@@ -19,12 +19,23 @@
         </ul>
         <ng-container>
             @switch (indice) {
+            @case (1) {
+            <p>componente de solicitud aquí</p>
+            }
             @case (2) {
             <app-solicitud></app-solicitud>
             <app-datos-del></app-datos-del>
+            <app-combinacion-requerida></app-combinacion-requerida>
+            <app-datos-generals-animals></app-datos-generals-animals>
             }
             @case (3) {
             <app-transporte></app-transporte>
+            }
+            @case (4) {
+                <app-pago-de-derecho></app-pago-de-derecho>
+            }
+            @case (5) {
+                <app-terceros-relacionados></app-terceros-relacionados>
             }
             }
         </ng-container>

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RegistroPageComponent } from './pages/registro-page/registro-page.component';
+import { TestPageComponent } from './pages/test-page/test-page.component';
 
 export const ROUTES: Routes = [
     {
@@ -17,6 +18,10 @@ export const ROUTES: Routes = [
           },
         ]
     },
+    {
+      path: 'test',
+      component: TestPageComponent
+    }
 ];
 
 @NgModule({

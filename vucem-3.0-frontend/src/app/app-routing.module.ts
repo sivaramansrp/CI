@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+
 import { RouterModule, Routes } from '@angular/router';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const routes: Routes = [
@@ -20,11 +21,18 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/130118/pexim.module').then(
+        (m) => m.PeximModule
+      ),
+  },
+  {
     path: 'despacho-mercancias',
     loadChildren: () =>
       import('./tramites/303/despacho-mercancias.module').then(
         (m) => m.DespachoMercanciasModule
-  )
+      )
   },
   {
     path: 'pantallas-extraordinarios',
@@ -33,10 +41,17 @@ const routes: Routes = [
         (m) => m.PantallasModule
       ),
   },
+  {
+    path: 'certificado-fitosanitario',
+    loadChildren: () =>
+      import('./tramites/220202/fitosanitario.module').then(
+        (m) => m.FitosanitarioModule
+      )
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
