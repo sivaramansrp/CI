@@ -279,16 +279,6 @@ export class DatosGeneralesComponent implements OnInit {
   }
 
   /**
-   * Alterna las clases de un elemento.
-   * @param {HTMLElement} x - El elemento al que se le alternarán las clases.
-   * @returns {void}
-   */
-  myFunction(x) {
-    x.classList.toggle("bi-caret-up-fill");
-    x.classList.toggle("bi-caret-down");
-  }
-
-  /**
    * Índice actual de la fila.
    * @type {number}
    */

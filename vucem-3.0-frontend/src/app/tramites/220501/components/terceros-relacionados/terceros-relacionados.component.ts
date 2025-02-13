@@ -1,18 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 /**
  * Texto de alerta utilizado en el componente.
  * @constant {string}
  */
 const TERCEROR_TEXTO_DE_ALERTA = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.'; // Define the constant
-
-/**
- * Interfaz para definir la estructura de un domicilio.
- */
-interface Domicilio {
-  domicilio: string;
-  pais: string;
-}
 
 /**
  * Interfaz para definir la estructura de las filas.
@@ -46,7 +38,7 @@ interface Rows {
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss'
 })
-export class TercerosRelacionadosComponent implements OnInit {
+export class TercerosRelacionadosComponent {
 
   /**
    * Texto de alerta utilizado en el componente.
@@ -79,13 +71,6 @@ export class TercerosRelacionadosComponent implements OnInit {
     },
   ];
 
-   /**
-   * Inicializa el componente.
-   * @returns {void}
-   */
-  ngOnInit(): void {
-    // Lógica de inicialización del componente
-  }
-
+   
   // Otros miembros de la clase...
 }

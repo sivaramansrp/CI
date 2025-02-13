@@ -2,8 +2,10 @@
     <ng-titulo titulo="Medio de transporte" />
     <div class="row">
         <div class="col-md-4">
-            <select-catalogos [catalogosDatos]="datosMediodetransporte"
-                (valorSeleccion)="medioTransporte($event)" />
+            <!-- <select-catalogos [catalogosDatos]="datosMediodetransporte"
+                (valorSeleccion)="medioTransporte($event)" /> -->
+                <app-catalogo-select id="" [catalogo]="datosMediodetransporte.catalogos" [label]="datosMediodetransporte.labelNombre"
+           [placeholder]="datosMediodetransporte.primerOpcion" [isDisabled]="false" ></app-catalogo-select>
         </div>
         <div class="col-md-4">
             <label for="identificacionTransporte" class="form-label">Identificación del transporte:</label>
