@@ -1,6 +1,6 @@
 <div class="container">
-  <form [formGroup]="form">
-    @for(fieldGroup of config; let groupIndex = $index; track groupIndex) {
+  <form [formGroup]="formulario">
+    @for(fieldGroup of configuracion; let groupIndex = $index; track groupIndex) {
     <div class="form" [formGroupName]="fieldGroup.formGroupName">
       <ng-titulo [titulo]="fieldGroup.title" />
 
@@ -10,9 +10,9 @@
           <div class="form-group">
             @switch (item.inputType) { @case('select') {
             <app-catalogo-select [catalogo]="item.props.catalogos" [label]="item.props.labelNombre"
-            [required]="true" name="tipoSolicitud" (change)="catalogSelection(item.props.labelNombre, $event)"></app-catalogo-select>
+            [required]="true" name="tipoSolicitud" (change)="seleccionCatalogo(item.props.labelNombre, $event)"></app-catalogo-select>
             } @case('text') {
-              @if((!item.props.availableRadioOptions) || (item.props.availableRadioOptions && item.props.availableRadioOptions.includes(radioSelectedValues['radio' + groupIndex]))) {
+              @if((!item.props.availableRadioOptions) || (item.props.availableRadioOptions && item.props.availableRadioOptions.includes(valoresSeleccionadosRadio['radio' + groupIndex]))) {
                 <label class="form-label" [for]="item.props.campo">{{
                   item.props.labelNombre
                 }}</label>
@@ -40,7 +40,7 @@
               [radioOptions]="item.props.options"
               [selectedValue]="item.props.selectedValue"
               [isRequired]="item.props.required"
-              (valueChange)="onValueChange('radio' + groupIndex, $event)"
+              (valueChange)="cambioValorRadio('radio' + groupIndex, $event)"
               [layout]="'horizontal'"
             ></app-input-radio>
             }}

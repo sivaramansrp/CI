@@ -48,22 +48,22 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   it('should initialize form', () => {
     component.ngOnInit();
-    expect(component.form).toBeDefined();
+    expect(component.formulario).toBeDefined();
   });
 
-  it('should set radioSelectedValues', () => {
+  it('should set valoresSeleccionadosRadio', () => {
     const mockValues = { key: 'value' };
-    component.radioSelectedValues = mockValues;
-    expect(component.radioSelectedValues).toEqual(mockValues);
+    component.valoresSeleccionadosRadio = mockValues;
+    expect(component.valoresSeleccionadosRadio).toEqual(mockValues);
   });
 
-  it('should create form with FormBuilder', () => {
+  it('should create formulario with FormBuilder', () => {
     component.ngOnInit();
-    expect(component.form instanceof FormGroup).toBe(true);
+    expect(component.formulario instanceof FormGroup).toBe(true);
   });
 
   it('should have correct input types and props', () => {
-    const inputTypes = component.config[0].menu;
+    const inputTypes = component.configuracion[0].menu;
     expect(inputTypes).toBeDefined();
     expect(inputTypes.length).toBeGreaterThan(0);
     inputTypes.forEach(input => {
@@ -73,11 +73,11 @@ describe('DatosDeLaSolicitudComponent', () => {
     });
   });
 
-  it('should call ngOnInit and initialize form', () => {
+  it('should call ngOnInit and initialize formulario', () => {
     spyOn(component, 'ngOnInit').and.callThrough();
     component.ngOnInit();
     expect(component.ngOnInit).toHaveBeenCalled();
-    expect(component.form).toBeDefined();
+    expect(component.formulario).toBeDefined();
   });
 
   it('should call crearFormulario', () => {

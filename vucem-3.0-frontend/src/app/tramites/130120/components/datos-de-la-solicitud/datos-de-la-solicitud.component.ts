@@ -23,7 +23,7 @@ import tipoDePersonaProductorOptions from '../../../../../assets/json/130120/tip
 })
 export class DatosDeLaSolicitudComponent implements OnInit {
   
-  config: InputConfig[] = [
+  configuracion: InputConfig[] = [
     {
       title: 'Datos del tramite a realizer',
       formGroupName: 'datosRealizer',
@@ -335,28 +335,31 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       ],
     },
   ];
-  radioSelectedValues: any = {};
+  valoresSeleccionadosRadio: any = {};
   fiscal: FormularioDinamico[] = [];
-  form!: FormGroup;
+  formulario!: FormGroup;
 
-  constructor(private fb: FormBuilder, private catalogosServices: CatalogosService) {
+  constructor(private fb: FormBuilder, private catalogosServicios: CatalogosService) {
     this.crearFormulario();
   }
 
   ngOnInit() {
-    this.config[3].menu[0].props.options = tipoDePersonaProductorOptions;
-    this.config[3].menu[0].props.selectedValue = tipoDePersonaProductorOptions[0].value;
-    this.radioSelectedValues.radio3 = tipoDePersonaProductorOptions[0].value;
-    this.config[4].menu[0].props.options = tipoDePersonaExportadorOptions;
-    this.config[4].menu[0].props.selectedValue = tipoDePersonaExportadorOptions[0].value;
-    this.radioSelectedValues.radio4 = tipoDePersonaExportadorOptions[0].value;
-    this.config.forEach((eachConfig: InputConfig, groupIndex: number) => {
+    this.configuracion[3].menu[0].props.options = tipoDePersonaProductorOptions;
+    this.configuracion[3].menu[0].props.selectedValue = tipoDePersonaProductorOptions[0].value;
+    this.valoresSeleccionadosRadio.radio3 = tipoDePersonaProductorOptions[0].value;
+    this.configuracion[4].menu[0].props.options = tipoDePersonaExportadorOptions;
+    this.configuracion[4].menu[0].props.selectedValue = tipoDePersonaExportadorOptions[0].value;
+    this.valoresSeleccionadosRadio.radio4 = tipoDePersonaExportadorOptions[0].value;
+    this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
     });
   }
   
+  /**
+   * Crea el formulario principal e inicializa los subgrupos.
+   */
   crearFormulario(): void {
-    this.form = this.fb.group({
+    this.formulario = this.fb.group({
       datosRealizer: this.fb.group({}),
       datosMercanica: this.fb.group({}),
       datosExporta: this.fb.group({}),
@@ -364,14 +367,20 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       datosExportador: this.fb.group({}),
     });
   }
-    
+  
+  /**
+   * Inicializa un grupo de formularios con controles basados en la configuración proporcionada.
+   * @param configuracion - La configuración para los controles del formulario.
+   * @param nombreGrupo - El nombre del grupo de formularios.
+   * @param indiceGrupo - El índice del grupo en la matriz de configuración.
+   */
   inicializarFormGroup(
-    config: any[],
-    grupoNombre: string,
-    groupIndex: number,
+    configuracion: any[],
+    nombreGrupo: string,
+    indiceGrupo: number,
   ): void {
-    const grupo = this.form.get(grupoNombre) as FormGroup;
-    config.forEach((campo: any, menuIndex: number) => {
+    const grupo = this.formulario.get(nombreGrupo) as FormGroup;
+    configuracion.forEach((campo: any, menuIndex: number) => {
       const validators = campo.validators ? this.getValidators(campo.validators) : [Validators.required];
       const controlName = campo.props.campo ? campo.props.campo : campo.props.labelNombre;
       grupo.addControl(
@@ -379,49 +388,75 @@ export class DatosDeLaSolicitudComponent implements OnInit {
         this.fb.control({ value: '', disabled: campo.disabled }, validators)
       );
       if (campo.inputType === InputTypes.SELECT) {
-        this.getCatalogoValues(groupIndex, menuIndex,controlName);
+        this.obtenerValoresCatalogo(indiceGrupo, menuIndex,controlName);
       }
     });
   }
 
-  getCatalogoValues(groupIndex: number, menuIndex: number, key: string): void {
-    this.catalogosServices
-      .getCatalogo(key)
+  /**
+   * Obtiene los valores del catálogo y actualiza la configuración.
+   * @param indiceGrupo - El índice del grupo en la matriz de configuración.
+   * @param indiceMenu - El índice del menú en el grupo.
+   * @param clave - La clave para obtener los valores del catálogo.
+   */
+  obtenerValoresCatalogo(indiceGrupo: number, indiceMenu: number, clave: string): void {
+    this.catalogosServicios
+      .getCatalogo(clave)
       .pipe(
         map((resp) => {
           if (resp.length > 0) {
-            this.config[groupIndex].menu[menuIndex].props.catalogs = resp;
+            this.configuracion[indiceGrupo].menu[indiceMenu].props.catalogs = resp;
           }
         })
-      );
+      )
+      .subscribe();
   }
-  
-  getValidators(validators: string[]): ValidatorFn[] {
+
+  /**
+   * Genera una matriz de validadores de formularios basada en los patrones proporcionados.
+   * @param validadores - Una matriz de patrones regex que se utilizarán para la validación.
+   * @returns Una matriz de validadores de formularios.
+   */
+  getValidators(validadores: string[]): ValidatorFn[] {
     const formValidators: ValidatorFn[] = [];
-    validators.forEach((validator) => {
-      if (validator === 'required') {
+    validadores.forEach((validadore) => {
+      if (validadore === 'required') {
         formValidators.push(Validators.required);
-      } else if (validator.includes('maxLength')) {
-        const max = validator.split(':')[1];
+      } else if (validadore.includes('maxLength')) {
+        const max = validadore.split(':')[1];
         formValidators.push(Validators.maxLength(Number(max)));
-      } else if (validator.includes('pattern')) {
-        const pattern = validator.split(':')[1];
+      } else if (validadore.includes('pattern')) {
+        const pattern = validadore.split(':')[1];
         formValidators.push(Validators.pattern(pattern));
       }
     });
     return formValidators;
   }
 
-  fechaCambiado(event: string): void {
-    // 
+  /**
+   * Maneja el evento de cambio para la entrada de fecha.
+   * @param evento - El nuevo valor de la fecha como cadena.
+   */
+  fechaCambiado(evento: string): void {
+    // Manejar cambio de fecha
   }
 
-  catalogSelection(formControlName: string, event: any): void {
-    this.form.get(formControlName)?.setValue(event);
+  /**
+   * Maneja el evento de selección para un catálogo.
+   * @param nombreControlFormulario - El nombre del control del formulario a actualizar.
+   * @param evento - El valor seleccionado del catálogo.
+   */
+  seleccionCatalogo(nombreControlFormulario: string, evento: any): void {
+    this.formulario.get(nombreControlFormulario)?.setValue(evento);
   }
 
-  onValueChange(radioKey: string, event: string | number): void {
-    this.config[3].menu[0].props.selectedValue = event;
-    this.radioSelectedValues[radioKey] = event;
+  /**
+   * Maneja el evento de cambio para una entrada de radio.
+   * @param claveRadio - La clave de la entrada de radio.
+   * @param evento - El nuevo valor de la entrada de radio.
+   */
+  cambioValorRadio(claveRadio: string, evento: string | number): void {
+    this.configuracion[3].menu[0].props.selectedValue = evento;
+    this.valoresSeleccionadosRadio[claveRadio] = evento;
   }
 }
