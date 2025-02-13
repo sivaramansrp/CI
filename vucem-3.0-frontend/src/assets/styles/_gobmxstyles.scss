@@ -286,3 +286,59 @@ hr.red {
   border-top: none;
 }
 
+// este css escrito para la pestaña utilizada en el procedimiento 31601
+.progress-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 25%;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  background-color: #ccc;
+}
+
+.step-number.active {
+  background-color: #4caf50;
+}
+
+.step-title {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #888;
+}
+
+.step-title.active {
+  color: #4caf50;
+}
+
+.progress-line {
+  flex-grow: 1;
+  height: 2px;
+  background-color: #ccc;
+  position: relative;
+  top: -15px;
+}
+
+.progress-line.active {
+  background-color: #4caf50;
+}
+
