@@ -27,9 +27,13 @@ import { InputFechaComponent } from '../../shared/components/input-fecha/input-f
 import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
 import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
 import { SharedModule } from '../../shared/shared.module';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 
 @NgModule({
   declarations: [
+    PasoUnoComponent,
+    PasoTresComponent,
     PasoDosComponent,
     PasoCuatroComponent,
     AgriculturaComponent,
