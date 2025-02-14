@@ -8,6 +8,7 @@ import { PantallasComponent } from '../pages/pantallas/pantallas.component';
 import { WizardComponent } from '../../../shared/components/wizard/wizard.component';
 import { NavComponent } from '../../../shared/components/nav/nav.component';
 import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-por-regimen.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -20,7 +21,9 @@ import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-
     AntecesorRoutingModule,
     WizardComponent,
     NavComponent,
-    DatosPorRegimenComponent
+    DatosPorRegimenComponent,
+    ReactiveFormsModule,
+    FormsModule
   ]
 })
 export class AntecesorModule { }
