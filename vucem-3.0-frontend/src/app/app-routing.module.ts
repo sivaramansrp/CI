@@ -1,5 +1,6 @@
-import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
+
+import { RouterModule, Routes } from '@angular/router';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/auth/login' },
@@ -41,10 +42,10 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'permiso-importacion',
+    path: 'importante',
     loadChildren: () =>
-      import('./tramites/130120/permiso-importacion.module').then(
-        (m) => m.PermisoImportacionModule
+      import('./tramites/301/pantallas.module').then(
+        (m) => m.PantallasModule
       ),
   },
   { 
