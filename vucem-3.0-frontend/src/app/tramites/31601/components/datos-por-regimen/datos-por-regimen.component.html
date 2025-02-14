@@ -157,6 +157,27 @@
                   </app-catalogo-select>                 
               </div>
             </div>
+
+            <div class="row mb-3 mt-5">
+              <div class="col-md-12">
+                <ng-table 
+                [commonTableHeader]="regimenTableHeaderData" 
+                [commonTableBody]="regimenTableBodyData">
+                </ng-table>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-6"></div>
+              <div class="col-md-6 d-flex align-items-rigth">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalTransportista">
+                      Agregar
+                    </button>
+                    <button class="btn btn-default ms-2" type="button" >Modificar</button>
+                    <button class="btn btn-default ms-2" type="button" >Eliminar</button>
+                  </div>
+              </div>
+          </div> 
           <div class="row mb-3">
             <p class="fw-bold"><span class="text-danger">*</span> Señale si las empresas proveedoras de personal subcontratado en los términos y condiciones que establezcan los artículos 15-A al 15-D de la Ley Federal de Trabajo, se encuentran al corriente en el cumplimiento de sus obligaciones fiscales.</p>
             <div class="col-md-6">

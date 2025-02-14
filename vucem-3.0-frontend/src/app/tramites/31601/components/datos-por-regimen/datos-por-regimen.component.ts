@@ -5,6 +5,8 @@ import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+import regimenTable from '../../../../../assets/json/31601/datos-por-regimen.json'
+import { TableComponent } from '../../../../shared/components/table/table.component';
 
 @Component({
   selector: 'app-datos-por-regimen',
@@ -14,12 +16,16 @@ import { ValidacionesFormularioService } from '../../../../core/services/shared/
   imports: [TituloComponent,
             CatalogoSelectComponent,
             CommonModule,
-            ReactiveFormsModule],
+            ReactiveFormsModule,
+            TableComponent],
 })
 export class DatosPorRegimenComponent implements OnInit {
 
   public bimestreCatalog!: Catalogo[];
   public regimenForm!: FormGroup;
+  public getRegimenTableData = regimenTable;
+  public regimenTableBodyData: unknown = [];
+  public regimenTableHeaderData: string[] = [];
 
 
 
@@ -31,6 +37,7 @@ export class DatosPorRegimenComponent implements OnInit {
 
   ngOnInit() {
     this.establecervalorcontrolformulario();
+    this.regimenTabData();
   }
 
   /**
@@ -85,6 +92,11 @@ export class DatosPorRegimenComponent implements OnInit {
     this.regimenForm.get('recintoFiscalizado')?.setValue('Yes');
     this.regimenForm.get('recintoEstrategico')?.setValue('Yes');
     this.regimenForm.get('cumplimientoLineamientos')?.setValue('Yes');
+  }
+
+  public regimenTabData() {
+    this.regimenTableHeaderData = this.getRegimenTableData.tableHeader;
+    this.regimenTableBodyData = this.getRegimenTableData.tableBody;
   }
 
   public tipoSolicitudSeleccion() {
