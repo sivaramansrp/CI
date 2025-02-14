@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 
@@ -9,7 +9,7 @@ import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.
  * Componente para gestionar el paso dos del trámite.
  */
 @Component({
-  selector: 'paso-dos',
+  selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })

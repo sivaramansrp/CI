@@ -65,15 +65,18 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit {
    * Método para configurar los datos en el formulario con los valores de mercanciasDatos.
    */
   setFormData(): void {
+    const data = this.mercanciasDatos[0].tbodyData;
+
     this.agregarMercanciaForm.patchValue({
       agregarMercancia: {
-        fraccionArancelaria: '01039201',
-        descripcionFraccion: 'Con pedigree o certificado de alto registro.',
-        nico: '00',
-        descripcion: 'Con pedigree o certificado de alto registro.',
-        unidaddeMedidaDeUMT: 'Cabeza',
-        cantidadTotalUMT: '1000000',
-        saldoPendiente: '1000000'
+        fraccionArancelaria: data[0],
+        descripcionFraccion: data[1],
+        nico: data[2],
+        descripcion: data[3],
+        saldoACapturar: data[4],
+        unidaddeMedidaDeUMT: data[5],
+        saldoPendiente:  data[6],
+        cantidadTotalUMT:  data[7]        
       }
     });
   }

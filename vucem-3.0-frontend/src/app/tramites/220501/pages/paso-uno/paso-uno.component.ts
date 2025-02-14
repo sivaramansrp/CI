@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
  * Componente para gestionar el paso uno del trámite.
  */
 @Component({
-  selector: 'paso-uno',
+  selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styles: ``
 })

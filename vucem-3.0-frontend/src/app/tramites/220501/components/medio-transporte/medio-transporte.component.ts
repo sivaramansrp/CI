@@ -1,16 +1,20 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { map, merge } from 'rxjs';
 
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
-import { SagarpaService } from '../../../../core/services/220501/sagarpa/sagarpa.service';
+import mercanciaTable from '../../../../../assets/json/220501/mercancia-table.json';
+import { SagarpaService } from '../../../../core/services/220501/sagarpa/sagarpa.service'
 import { TEXTOS } from '../../../../shared/constantes/220501/texto-enum';
+import { Tramite220501Store } from '../../../../estados/tramites/tramite220501.store';;
+import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
+
 
 /**
  * Componente para seleccionar el medio de transporte.
  */
 @Component({
-  selector: 'medio-transporte',
+  selector: 'app-medio-transporte',
   templateUrl: './medio-transporte.component.html',
   styleUrl: './medio-transporte.component.scss'
 })
@@ -27,14 +31,9 @@ export class MedioTransporteComponent implements OnInit {
   medioTransporteForm!: FormGroup;
 
   /**
-   * Datos del catálogo de medios de transporte.
+   * Lista de catálogos de medio de transporte
    */
-  datosMediodetransporte!: CatalogosSelect;
-
-  /**
-   * Medio de transporte seleccionado.
-   */
-  medioTransporteSeleccionada!: Catalogo;
+  medioDeTransporte!: Catalogo[];
 
   /**
   * Indica si se debe mostrar una advertencia.
@@ -57,42 +56,52 @@ export class MedioTransporteComponent implements OnInit {
   mostrarAgregarMercancia: boolean = false;
 
   /**
-   * Datos de mercancías.
+   * Array que contiene los datos del encabezado para la tabla de mercancías.
    */
-  mercanciasDatos: any = [];
+  public mercanciaHeaderData: string[] = [];
 
   /**
-   * Columnas de la tabla de mercancías.
+   * Variable que contiene los datos del cuerpo para la tabla de mercancías.
+   * El tipo se establece como unknown para permitir flexibilidad en la estructura de los datos.
    */
-  mercanciaMesaColumnas = [
-    'Fracción arancelaria',
-    'Descripción de la fracción',
-    'Nico',
-    'Descripción nico',
-    'Cantidad Solicitada en UMT',
-    'Unidad de medida de tarifa (UMT)',
-    'Cantidad total UMT',
-    'Saldo pendiente'
-  ];
+  public mercanciaBodyData: unknown = [];
+
+  /**
+   * Variable que contiene los datos para la tabla de mercancías.
+   * Estos datos se importan desde un archivo JSON externo.
+   */
+  public getMercanciaTableData = mercanciaTable;
 
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
    * @param sagarpaService Servicio para obtener datos de SAGARPA.
+   * @param tramite220501Store Almacén de estado para el trámite 220501.
    */
   constructor(
     private fb: FormBuilder,
-    private sagarpaService: SagarpaService
+    private sagarpaService: SagarpaService,
+    private tramite220501Store: Tramite220501Store
   ) {
     this.crearFormulario();
   }
 
   /**
    * Método que se ejecuta al inicializar el componente.
+   * 
+   * Este método realiza las siguientes acciones:
+   * 1. Inicializa los catálogos necesarios para el formulario.
+   * 2. Obtiene los datos de las mercancías.
+   * 3. Selecciona el medio de transporte.
+   * 
+   * @returns {void}
    */
   ngOnInit(): void {
-    this.obtenerMercanciasDatos();
-    this.getMediodetransporte();
+    this.inicializaCatalogos();
+
+    this.obtenerMercancia();
+
+    this.medioDeTransporteSeleccion();
   }
 
   /**
@@ -100,45 +109,54 @@ export class MedioTransporteComponent implements OnInit {
    */
   crearFormulario(): void {
     this.medioTransporteForm = this.fb.group({
-      transporteIdMedio: new FormControl('', [Validators.required]),
+      medioDeTransporte: new FormControl('', [Validators.required]),
       identificacionTransporte: new FormControl('', [Validators.maxLength(30)]),
       esSolicitudFerros: new FormControl('', [Validators.required]),
-      totalGuias: new FormControl('')
+      totalGuias: new FormControl('', [Validators.maxLength(50)])
     });
   }
 
   /**
-   * Método para obtener los datos del catálogo de medios de transporte.
+   * Inicializa los catálogos necesarios para el formulario.
    */
-  getMediodetransporte(): void {
-    this.sagarpaService
-      .getMediodetransporte()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
-
-          this.datosMediodetransporte = {
-            labelNombre: 'Medio de transporte',
-            required: true,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
+  private inicializaCatalogos(): void {
+    const medioDeTransporte$ = this.sagarpaService
+      .getMediodetransporte(CATALOGOS_ID.CAT_MEDIO_DE_TRANSPORTE)
+      .pipe(
+        map((resp) => {
+          this.medioDeTransporte = resp.data;
+        })
+      );
+    merge(
+      medioDeTransporte$
+    ).subscribe();
   }
 
   /**
- * Método para seleccionar el medio de transporte.
- * @param e Medio de transporte seleccionado.
- */
-  medioTransporte(e: Catalogo): void {
-    this.medioTransporteSeleccionada = e;
+   * Método para obtener los datos de las mercancías.
+   * 
+   * Este método asigna los datos del encabezado y del cuerpo de la tabla de mercancías
+   * a las propiedades correspondientes del componente.
+   * 
+   * @returns {void}
+   */
+  public obtenerMercancia(): void {
+    this.mercanciaHeaderData = this.getMercanciaTableData.tableHeader;
+    this.mercanciaBodyData = this.getMercanciaTableData.tableBody;
   }
 
   /**
- * Método para establecer la selección de solicitud de ferrocarril.
- * @param e Evento de cambio del input.
- */
+   * Selecciona la clasificación de régimen.
+   */
+  medioDeTransporteSeleccion(): void {
+    const medioDeTransporte = this.medioTransporteForm.get('medioDeTransporte')?.value;
+    this.tramite220501Store.setMedioDeTransporte(medioDeTransporte);
+  }
+
+  /**
+   * Método para establecer la selección de solicitud de ferrocarril.
+   * @param e Evento de cambio del input.
+   */
   estableceSeleccionSolicitudFerro(e: any): void {
     const target = e.target as HTMLInputElement;
     this.esSolicitudFerrosValor = target.value;
@@ -156,22 +174,8 @@ export class MedioTransporteComponent implements OnInit {
  * Método para modificar los saldos de mercancía.
  */
   modificarSaldosMercancia(): void {
-    this.obtenerMercanciasDatos();
+    this.obtenerMercancia();
     this.mostrarAgregarMercancia = true;
-  }
-
-  /**
- * Método para obtener los datos de mercancías.
- * @returns Datos de mercancías.
- */
-  obtenerMercanciasDatos(): void {
-    this.mercanciasDatos = [
-      {
-        tbodyData:
-          ['01039201', 'Con pedigree o certificado de alto registro', '00', 'Con pedigree o certificado de alto', '', 'Cabeza', '1000000', '1000C'],
-      }
-    ];
-    return this.mercanciasDatos;
   }
 
   /**

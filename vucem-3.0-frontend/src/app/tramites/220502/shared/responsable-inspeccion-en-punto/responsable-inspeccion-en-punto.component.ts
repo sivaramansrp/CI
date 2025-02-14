@@ -1,4 +1,5 @@
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -10,11 +11,13 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { Validators } from '@angular/forms';
 import { inject } from '@angular/core';
-
+/**
+* Componente que representa al responsable de la inspección en un punto.
+* Este componente agrega y administra dinámicamente controles de formulario para los detalles de responsabilidad de inspección.
+*/
 @Component({
   selector: 'app-responsable-inspeccion-en-punto',
   standalone: true,
@@ -23,7 +26,7 @@ import { inject } from '@angular/core';
     RouterModule,
     ReactiveFormsModule,
     TituloComponent,
-    SelectCatalogosComponent,
+    CatalogoSelectComponent,
   ],
   viewProviders: [
     {
@@ -33,32 +36,29 @@ import { inject } from '@angular/core';
     },
   ],
   templateUrl: './responsable-inspeccion-en-punto.component.html',
-  styleUrl: './responsable-inspeccion-en-punto.component.scss',
+  styleUrls: ['./responsable-inspeccion-en-punto.component.scss'],
 })
-export class ResponsableInspeccionEnPuntoComponent
-  implements OnInit, OnDestroy
-{
-  /** Propiedad de entrada para identificar la clave de control en el formulario principal */
+export class ResponsableInspeccionEnPuntoComponent implements OnInit, OnDestroy {
+  /**Entrada de propiedad para identificar la clave de control en el formulario principal */
   @Input() claveDeControl: string = '';
-
-  /** Inyectar el ControlContainer principal para administrar los controles de formulario*/
+  /** Inyecte el ControlContainer principal para administrar los controles de formulario*/
   contenedorPrincipal = inject(ControlContainer);
-
-  /** Getter para acceder al grupo de formularios principal */
-  get grupoformulariopadre() {
+  /**
+   * Getter para acceder al grupo de formulario principal.
+   * Devuelve el grupo de formulario principal al que se agregan controles dinámicos.
+   */
+  get grupoformulariopadre(): FormGroup {
     return this.contenedorPrincipal.control as FormGroup;
   }
-
-  /** Almacena datos del catálogo para el tipo de contenedor */
+  /** Almacena datos del catálogo para el tipo de contenedor. */
   tipoContenedor!: CatalogosSelect;
-
   /**
-   * Gancho de ciclo de vida que inicializa el componente.
+   * Gancho del ciclo de vida que inicializa el componente.
    * Agrega un control de formulario dinámico y carga datos iniciales.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.claveDeControl) {
-      // Agregar un nuevo FormGroup dinámicamente al formulario principal
+      // Agregue un nuevo FormGroup dinámico al formulario principal
       this.grupoformulariopadre.addControl(
         this.claveDeControl,
         new FormGroup({
@@ -69,13 +69,12 @@ export class ResponsableInspeccionEnPuntoComponent
           primerapellido: new FormControl('', [Validators.maxLength(80)]),
           segyndoapellido: new FormControl('', [Validators.maxLength(80)]),
           mercancia: new FormControl('', [Validators.required]),
-          tipocontenedor: new FormControl('', [Validators.maxLength(3)]),
+          tipocontenedor: new FormControl('', []),
         })
       );
     }
     this.cargarDatosIniciales(); // Cargar datos del catálogo inicial
   }
-
   /**
    * Maneja la selección de un artículo del catálogo.
    * Actualiza el formulario con la descripción del catálogo seleccionado.
@@ -88,9 +87,8 @@ export class ResponsableInspeccionEnPuntoComponent
       });
     }
   }
-
   /**
-   * Carga datos del catálogo inicial para el tipo contenedor.
+   * Carga datos del catálogo inicial para el tipo de contenedor.
    */
   cargarDatosIniciales(): void {
     this.tipoContenedor = {
@@ -119,12 +117,11 @@ export class ResponsableInspeccionEnPuntoComponent
       ],
     };
   }
-
   /**
    * Gancho de ciclo de vida que limpia el componente.
    * Elimina el control de formulario del formulario principal.
    */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this.claveDeControl && this.grupoformulariopadre.contains(this.claveDeControl)) {
       this.grupoformulariopadre.removeControl(this.claveDeControl);
     }

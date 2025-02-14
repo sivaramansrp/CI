@@ -1,31 +1,30 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MedioTransporteComponent } from './medio-transporte.component';
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SagarpaService } from '../../../../core/services/220501/sagarpa/sagarpa.service';
 
 describe('MedioTransporteComponent', () => {
   let component: MedioTransporteComponent;
+  let service: SagarpaService;
   let fixture: ComponentFixture<MedioTransporteComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MedioTransporteComponent]
+      declarations: [MedioTransporteComponent],
+      imports: [HttpClientTestingModule],
+      providers: [SagarpaService]
     })
     .compileComponents();
     
     fixture = TestBed.createComponent(MedioTransporteComponent);
+    service = TestBed.inject(SagarpaService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should set medioTransporteSeleccionada when medioTransporte is called', () => {
-    const mockCatalogo: Catalogo = { id: 1, descripcion: 'Transporte 1' };
-    component.medioTransporte(mockCatalogo);
-    expect(component.medioTransporteSeleccionada).toEqual(mockCatalogo);
   });
   
   it('should emit transporteSeleccionado with true when estableceSeleccionSolicitudFerro is called with value 1', () => {
@@ -43,15 +42,10 @@ describe('MedioTransporteComponent', () => {
   });
   
   it('should call obtenerMercanciasDatos and set mostrarAgregarMercancia to true when modificarSaldosMercancia is called', () => {
-    spyOn(component, 'obtenerMercanciasDatos');
+    spyOn(component, 'obtenerMercancia');
     component.modificarSaldosMercancia();
-    expect(component.obtenerMercanciasDatos).toHaveBeenCalled();
+    expect(component.obtenerMercancia).toHaveBeenCalled();
     expect(component.mostrarAgregarMercancia).toBeTrue();
-  });
-  
-  it('should set mercanciasDatos when obtenerMercanciasDatos is called', () => {
-    component.obtenerMercanciasDatos();
-    expect(component.mercanciasDatos.length).toBeGreaterThan(0);
   });
   
   it('should set mostrarAgregarMercancia when obtenerAgregarMercanciaEvent is called', () => {

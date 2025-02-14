@@ -9,6 +9,7 @@ import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';
 import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn-continuar.component';
 import { CarrosDeFerrocarrilComponent } from '../220502/shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
+import { CatalogoSelectComponent } from '../../shared/components/catalogo-select/catalogo-select.component';
 import { DatosGeneralesComponent } from './components/datos-generales/datos-generales.component';
 import { DatoseDelTramiteARealizerComponent } from '../220502/shared/datose-del-tramite-a-realizer/datose-del-tramite-a-realizer.component';
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
@@ -22,16 +23,14 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ResponsableInspeccionEnPuntoComponent } from '../220502/shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
 import { RevisionDocumentalComponent } from './components/revision-documental/revision-documental.component';
 import { SagarpaRoutingModule } from './sagarpa-routing.module';
-import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
 import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudDatosComponent } from '../220502/shared/solicitud-datos/solicitud-datos.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { TableComponent } from '../../shared/components/table/table.component';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
-
-
 
 @NgModule({
   declarations: [
@@ -40,12 +39,12 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    RevisionDocumentalComponent,    
+    RevisionDocumentalComponent,
     MedioTransporteComponent,
     AgregarMercanciaComponent,
     DatosGeneralesComponent,
     TercerosRelacionadosComponent,
-    PagoDeDerechosComponent
+    PagoDeDerechosComponent,
   ],
   imports: [
     CommonModule,
@@ -57,10 +56,8 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     FirmaElectronicaComponent,
     AnexarDocumentosComponent,
     AlertComponent,
-    SelectCatalogosComponent,
     SolicitanteComponent,
     ReactiveFormsModule,
-    SelectCatalogosComponent,
     FormsModule,
     ReactiveFormsModule,
     AlertComponent,
@@ -69,11 +66,10 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     DatoseDelTramiteARealizerComponent,
     ResponsableInspeccionEnPuntoComponent,
     CarrosDeFerrocarrilComponent,
-    HistorialInspeccionFisicaComponent
+    HistorialInspeccionFisicaComponent,
+    CatalogoSelectComponent,
+    TableComponent
   ],
-  exports: [ 
-    SolicitudComponent,
-    SolicitudPageComponent
-  ]
+  exports: [SolicitudComponent, SolicitudPageComponent],
 })
-export class SagarpaModule { }
+export class SagarpaModule {}

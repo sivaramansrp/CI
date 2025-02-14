@@ -1,18 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 /**
  * Texto de alerta utilizado en el componente.
  * @constant {string}
  */
-const TERCEROR_TEXTO_DE_ALERTA = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.'; // Define the constant
-
-/**
- * Interfaz para definir la estructura de un domicilio.
- */
-interface Domicilio {
-  domicilio: string;
-  pais: string;
-}
+const TERCEROS_TEXTO_DE_ALERTA =
+  'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.'; // Define the constant
 
 /**
  * Interfaz para definir la estructura de las filas.
@@ -22,7 +15,7 @@ interface Row {
   telefono: string;
   correo: string;
   domicilio: string;
-  pais: string,
+  pais: string;
 }
 
 /**
@@ -35,7 +28,7 @@ interface Rows {
   calle: string;
   exterior: number;
   interior: number;
-  pais: string,
+  pais: string;
 }
 
 /**
@@ -44,15 +37,14 @@ interface Rows {
 @Component({
   selector: 'app-terceros-relacionados',
   templateUrl: './terceros-relacionados.component.html',
-  styleUrl: './terceros-relacionados.component.scss'
+  styleUrl: './terceros-relacionados.component.scss',
 })
-export class TercerosRelacionadosComponent implements OnInit {
-
+export class TercerosRelacionadosComponent {
   /**
    * Texto de alerta utilizado en el componente.
    * @type {string}
    */
-  TEXTO_DE_ALERTA: string = TERCEROR_TEXTO_DE_ALERTA;
+  TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
 
   /**
    * Indica si la barra de desplazamiento está habilitada.
@@ -65,27 +57,30 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @type {Row[]}
    */
   items: Row[] = [
-    { nombre: 'Miriam Lopez Solis', telefono: '52-2298456543', correo: 'miriam@gmail.com', domicilio: 'este es un domicilio address', pais: 'ANGOLA(REPUBLIC DE)' },
+    {
+      nombre: 'Miriam Lopez Solis',
+      telefono: '52-2298456543',
+      correo: 'miriam@gmail.com',
+      domicilio: 'este es un domicilio address',
+      pais: 'ANGOLA(REPUBLIC DE)',
+    },
   ];
 
-   /**
+  /**
    * Lista de elementos de tipo Rows.
    * @type {Rows[]}
    */
   persona: Rows[] = [
     {
-      nombre: 'Miriam Lopez Solis', telefono: '52-2298456543', correo: 'miriam@gmail.com',
-      calle: '#10', exterior: 856, interior: 1, pais: 'MEXICO(ESTAD UNIDOS MEXICANOS'
+      nombre: 'Miriam Lopez Solis',
+      telefono: '52-2298456543',
+      correo: 'miriam@gmail.com',
+      calle: '#10',
+      exterior: 856,
+      interior: 1,
+      pais: 'MEXICO(ESTAD UNIDOS MEXICANOS',
     },
   ];
-
-   /**
-   * Inicializa el componente.
-   * @returns {void}
-   */
-  ngOnInit(): void {
-    // Lógica de inicialización del componente
-  }
 
   // Otros miembros de la clase...
 }

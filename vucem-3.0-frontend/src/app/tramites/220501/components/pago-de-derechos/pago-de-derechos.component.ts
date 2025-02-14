@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import {CatalogosSelect,InputFecha} from '../../../../core/models/shared/components.model';
+import {
+  CatalogosSelect,
+  InputFecha,
+} from '../../../../core/models/shared/components.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { FECHA_DE_PAGO } from '../../../../shared/constantes/issuance-extension-modification.enum';
 import { RevisionService } from '../../../../core/services/220501/revision.service';
@@ -64,7 +67,7 @@ export class PagoDeDerechosComponent implements OnInit {
 
   /**
    * Constructor del componente.
-   * 
+   *
    * @param {FormBuilder} fb - El servicio FormBuilder de Angular para crear formularios.
    * @param {RevisionService} revisionService - El servicio de revisión para obtener datos relacionados con el pago.
    */
@@ -94,24 +97,6 @@ export class PagoDeDerechosComponent implements OnInit {
 
     this.getJustificacion();
     this.getBanco();
-  }
-
-  /**
-   * Establece la justificación seleccionada.
-   * @param {Catalogo} e - La justificación seleccionada.
-   * @returns {void}
-   */
-  justificacionDe(e: Catalogo): void {
-    this.justificacionde = e;
-  }
-
-  /**
-   * Establece el banco seleccionado.
-   * @param {Catalogo} e - El banco seleccionado.
-   * @returns {void}
-   */
-  bancoDe(e: Catalogo): void {
-    this.bancode = e;
   }
 
   /**

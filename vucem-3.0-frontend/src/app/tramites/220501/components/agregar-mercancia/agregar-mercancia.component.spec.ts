@@ -1,22 +1,39 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 import { AgregarMercanciaComponent } from './agregar-mercancia.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 describe('AgregarMercanciaComponent', () => {
   let component: AgregarMercanciaComponent;
   let fixture: ComponentFixture<AgregarMercanciaComponent>;
+  let toastrService: ToastrService;
+  let formBuilder: FormBuilder;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [AgregarMercanciaComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, ToastrModule.forRoot()],
       providers: [FormBuilder]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(AgregarMercanciaComponent);
+    toastrService = TestBed.inject(ToastrService);
     component = fixture.componentInstance;
+    formBuilder = TestBed.inject(FormBuilder);
+    component.agregarMercanciaForm = formBuilder.group({
+      agregarMercancia: formBuilder.group({
+        fraccionArancelaria: [''],
+        descripcionFraccion: [''],
+        nico: [''],
+        descripcion: [''],
+        unidaddeMedidaDeUMT: [''],
+        cantidadTotalUMT: [''],
+        saldoPendiente: [''],
+        saldoACapturar: ['']
+      })
+    });
     fixture.detectChanges();
   });
 
@@ -32,14 +49,14 @@ describe('AgregarMercanciaComponent', () => {
   it('should patch form value when mercanciasDatos changes', () => {
     const mercanciasDatos = {
       agregarMercancia: {
-        fraccionArancelaria: '1234',
-        descripcionFraccion: 'Test Description',
-        nico: '5678',
-        descripcionNico: 'Test Nico',
-        unidadMedidaTarifa: 'kg',
-        cantidadTotal: '100',
-        saldoPendiente: '50',
-        cantidadSolicitada: '10'
+        fraccionArancelaria: '01039201',
+        descripcionFraccion: 'Con pedigree o certificado de alto registro.',
+        nico: '00',
+        descripcion: 'Con pedigree o certificado de alto registro.',
+        unidaddeMedidaDeUMT: 'Cabeza',
+        cantidadTotalUMT: '1000000',
+        saldoPendiente: '1000000',
+        saldoACapturar: ''
       }
     };
     component.mercanciasDatos = mercanciasDatos;
@@ -51,7 +68,19 @@ describe('AgregarMercanciaComponent', () => {
         isFirstChange: () => true
       }
     });
-    expect(component.agregarMercanciaForm.value).toEqual(mercanciasDatos);
+    const expectedFormValue = {
+      agregarMercancia: {
+        fraccionArancelaria: '01039201',
+        descripcionFraccion: 'Con pedigree o certificado de alto registro.',
+        nico: '00',
+        descripcion: 'Con pedigree o certificado de alto registro.',
+        unidaddeMedidaDeUMT: 'Cabeza',
+        cantidadTotalUMT: '1000000',
+        saldoPendiente: '1000000',
+        saldoACapturar: ''
+      }
+    };
+    expect(component.agregarMercanciaForm.value).toEqual(expectedFormValue);
   });
 
   it('should emit cancelarEvento when cerrarModal is called with true', () => {

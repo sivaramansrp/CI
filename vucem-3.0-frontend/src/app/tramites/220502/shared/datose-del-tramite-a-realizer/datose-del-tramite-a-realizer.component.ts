@@ -1,4 +1,5 @@
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -12,11 +13,13 @@ import { InputFechaComponent } from '../../../../shared/components/input-fecha/i
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { Validators } from '@angular/forms';
 import { inject } from '@angular/core';
 
+/**
+ * Componente para gestionar los datos del trámite a realizar.
+ */
 @Component({
   selector: 'app-datose-del-tramite-a-realizer',
   standalone: true,
@@ -24,7 +27,7 @@ import { inject } from '@angular/core';
     ReactiveFormsModule,
     CommonModule,
     TituloComponent,
-    SelectCatalogosComponent,
+    CatalogoSelectComponent,
     InputFechaComponent,
   ],
   viewProviders: [
@@ -37,6 +40,7 @@ import { inject } from '@angular/core';
   templateUrl: './datose-del-tramite-a-realizer.component.html',
   styleUrl: './datose-del-tramite-a-realizer.component.scss',
 })
+/** Componente para gestionar los datos del trámite a realizar */
 export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
   /**
    * Clave de entrada utilizada para identificar el control dentro del grupo de formulario principal.
@@ -59,9 +63,17 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
    * Opciones de selección de formulario para diferentes datos del catálogo.
    */
   certificadosAutorizados!: CatalogosSelect;
+
+  /** Opciones de selección de formulario para diferentes datos del catálogo. */
   horaDeInspeccion!: CatalogosSelect;
+
+  /** Opciones de selección de formulario para diferentes datos del catálogo. */
   aduanaDeIngreso!: CatalogosSelect;
+
+  /** Opciones de selección de formulario para diferentes datos del catálogo. */
   sanidadAgropecuaria!: CatalogosSelect;
+
+  /** Opciones de selección de formulario para diferentes datos del catálogo. */
   puntoDeInspeccion!: CatalogosSelect;
 
   /**
@@ -135,7 +147,10 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
    * @param value El nuevo valor a establecer.
    */
   private actualizarFormValue(nombreDeControl: string, value: string): void {
-    if (this.claveDeControl && this.grupoformulariopadre.contains(this.claveDeControl)) {
+    if (
+      this.claveDeControl &&
+      this.grupoformulariopadre.contains(this.claveDeControl)
+    ) {
       this.grupoformulariopadre.controls[this.claveDeControl].patchValue({
         [nombreDeControl]: value,
       });
@@ -146,7 +161,11 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
    * Carga datos del catálogo inicial para las selecciones de formulario.
    */
   cargarDatosIniciales(): void {
-    const catalogoTemplate = (label: string, required: boolean, catalogos: Catalogo[]) => ({
+    const catalogoTemplate = (
+      label: string,
+      required: boolean,
+      catalogos: Catalogo[]
+    ) => ({
       labelNombre: label,
       required,
       primerOpcion: 'Selecciona un valor',
@@ -154,39 +173,129 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
     });
 
     const pendientesCertificados = [
-      { id: 1, descripcion: 'Certificado de Exportación', tam: 'A4', dpi: '1234567890' },
-      { id: 2, descripcion: 'Certificado Fitosanitario', tam: 'Carta', dpi: '0987654321' },
-      { id: 3, descripcion: 'Certificado de Origen', tam: 'Legal', dpi: '1122334455' },
+      {
+        id: 1,
+        descripcion: 'Certificado de Exportación',
+        tam: 'A4',
+        dpi: '1234567890',
+      },
+      {
+        id: 2,
+        descripcion: 'Certificado Fitosanitario',
+        tam: 'Carta',
+        dpi: '0987654321',
+      },
+      {
+        id: 3,
+        descripcion: 'Certificado de Origen',
+        tam: 'Legal',
+        dpi: '1122334455',
+      },
     ];
-  
+
     const horaInspeccion = [
-      { id: 1, descripcion: '08:00 AM - 10:00 AM', tam: '2 horas', dpi: 'INS001' },
-      { id: 2, descripcion: '10:00 AM - 12:00 PM', tam: '2 horas', dpi: 'INS002' },
-      { id: 3, descripcion: '01:00 PM - 03:00 PM', tam: '2 horas', dpi: 'INS003' },
+      {
+        id: 1,
+        descripcion: '08:00 AM - 10:00 AM',
+        tam: '2 horas',
+        dpi: 'INS001',
+      },
+      {
+        id: 2,
+        descripcion: '10:00 AM - 12:00 PM',
+        tam: '2 horas',
+        dpi: 'INS002',
+      },
+      {
+        id: 3,
+        descripcion: '01:00 PM - 03:00 PM',
+        tam: '2 horas',
+        dpi: 'INS003',
+      },
     ];
-  
+
     const aduanaIngreso = [
       { id: 1, descripcion: 'Aduana La Aurora', tam: 'Zona 13', dpi: 'ADU001' },
-      { id: 2, descripcion: 'Aduana Puerto Quetzal', tam: 'Escuintla', dpi: 'ADU002' },
-      { id: 3, descripcion: 'Aduana Santo Tomás', tam: 'Izabal', dpi: 'ADU003' },
+      {
+        id: 2,
+        descripcion: 'Aduana Puerto Quetzal',
+        tam: 'Escuintla',
+        dpi: 'ADU002',
+      },
+      {
+        id: 3,
+        descripcion: 'Aduana Santo Tomás',
+        tam: 'Izabal',
+        dpi: 'ADU003',
+      },
     ];
-  
+
     const sanidadAgropecuaria = [
-      { id: 1, descripcion: 'Oficina Central de Sanidad', tam: 'Ciudad Capital', dpi: 'SAN001' },
-      { id: 2, descripcion: 'Sanidad Agropecuaria Zona Norte', tam: 'Petén', dpi: 'SAN002' },
-      { id: 3, descripcion: 'Sanidad Agropecuaria Puerto Barrios', tam: 'Izabal', dpi: 'SAN003' },
+      {
+        id: 1,
+        descripcion: 'Oficina Central de Sanidad',
+        tam: 'Ciudad Capital',
+        dpi: 'SAN001',
+      },
+      {
+        id: 2,
+        descripcion: 'Sanidad Agropecuaria Zona Norte',
+        tam: 'Petén',
+        dpi: 'SAN002',
+      },
+      {
+        id: 3,
+        descripcion: 'Sanidad Agropecuaria Puerto Barrios',
+        tam: 'Izabal',
+        dpi: 'SAN003',
+      },
     ];
-  
+
     const puntoInspección = [
-      { id: 1, descripcion: 'Punto de Inspección Aérea', tam: 'Terminal de Carga', dpi: 'PIN001' },
-      { id: 2, descripcion: 'Punto de Inspección Marítima', tam: 'Muelle Principal', dpi: 'PIN002' },
-      { id: 3, descripcion: 'Punto de Inspección Terrestre', tam: 'Frontera Tecún Umán', dpi: 'PIN003' },
+      {
+        id: 1,
+        descripcion: 'Punto de Inspección Aérea',
+        tam: 'Terminal de Carga',
+        dpi: 'PIN001',
+      },
+      {
+        id: 2,
+        descripcion: 'Punto de Inspección Marítima',
+        tam: 'Muelle Principal',
+        dpi: 'PIN002',
+      },
+      {
+        id: 3,
+        descripcion: 'Punto de Inspección Terrestre',
+        tam: 'Frontera Tecún Umán',
+        dpi: 'PIN003',
+      },
     ];
-    this.certificadosAutorizados = catalogoTemplate('Certificados autorizados pendientes', true, pendientesCertificados);
-    this.horaDeInspeccion = catalogoTemplate('Hora de inspección', true, horaInspeccion);
-    this.aduanaDeIngreso = catalogoTemplate('Aduana de ingreso', false, aduanaIngreso);
-    this.sanidadAgropecuaria = catalogoTemplate('Oficina de inspección de Sanidad Agropecuaria', false, sanidadAgropecuaria);
-    this.puntoDeInspeccion = catalogoTemplate('Punto de inspección', false, puntoInspección);
+    this.certificadosAutorizados = catalogoTemplate(
+      'Certificados autorizados pendientes',
+      true,
+      pendientesCertificados
+    );
+    this.horaDeInspeccion = catalogoTemplate(
+      'Hora de inspección',
+      true,
+      horaInspeccion
+    );
+    this.aduanaDeIngreso = catalogoTemplate(
+      'Aduana de ingreso',
+      false,
+      aduanaIngreso
+    );
+    this.sanidadAgropecuaria = catalogoTemplate(
+      'Oficina de inspección de Sanidad Agropecuaria',
+      false,
+      sanidadAgropecuaria
+    );
+    this.puntoDeInspeccion = catalogoTemplate(
+      'Punto de inspección',
+      false,
+      puntoInspección
+    );
   }
 
   /**
@@ -208,7 +317,10 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
    * Gancho de ciclo de vida para limpiar los controles de formulario cuando se destruye el componente.
    */
   ngOnDestroy(): void {
-    if (this.claveDeControl && this.grupoformulariopadre.contains(this.claveDeControl)) {
+    if (
+      this.claveDeControl &&
+      this.grupoformulariopadre.contains(this.claveDeControl)
+    ) {
       this.grupoformulariopadre.removeControl(this.claveDeControl);
     }
   }

@@ -10,8 +10,11 @@ import { HistorialInspeccionFisicaComponent } from './shared/historial-inspeccio
 import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
 import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
 import { InputHoraComponent } from '../../shared/components/input-hora/input-hora.component';
+import { InspeccionFisicaComponent } from './pages/inspeccion-fisica/inspeccion-fisica.component';
 import { InspeccionFisicaRoutingModule } from './inspeccion-fisica-routing.module';
+import { MedioTransporteComponent } from './shared/medio-transporte/medio-transporte.component';
 import { NgModule } from '@angular/core';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PedimentoComponent } from '../5701/components/pedimento/pedimento.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsableInspeccionEnPuntoComponent } from './shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
@@ -20,11 +23,15 @@ import { SelectCatalogosComponent } from '../../shared/components/select-catalog
 import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
 import { SharedModule } from '../../shared/shared.module';
 import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component';
+import { SolicitudComponent } from './components/solicitud/solicitud.component';
+import { SolicitudDatosComponent } from './shared/solicitud-datos/solicitud-datos.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 
 @NgModule({
   declarations: [
+    InspeccionFisicaComponent,
+    PasoUnoComponent,
   ],
   imports: [
     CommonModule,
@@ -48,9 +55,12 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     AlertComponent,
     InspeccionFisicaRoutingModule,
     SharedModule,
+    SolicitudDatosComponent,
     CarrosDeFerrocarrilComponent,
     HistorialInspeccionFisicaComponent,
+    SolicitudComponent,
     ResponsableInspeccionEnPuntoComponent,
+    MedioTransporteComponent
   ]
 })
 export class InspeccionFisicaModule {}
