@@ -59,8 +59,6 @@ export class FacturasAsociadasComponent implements OnInit {
   fetchData(): void {
     this.facturasAsociadasService.getDatos().subscribe({
       next: (response: any) => {
-        // console.log('Received data:', response);
-
         if (response && Array.isArray(response.facturasDisponible) && Array.isArray(response.facturasAsociadas)) {
           this.facturasDisponible = response.facturasDisponible.map((item) => {
             return { tbodyData: item.tbodyData };
@@ -69,9 +67,6 @@ export class FacturasAsociadasComponent implements OnInit {
           this.facturasAsociadas = response.facturasAsociadas.map((item) => {
             return { tbodyData: item.tbodyData };
           });
-
-          console.log('facturasDisponible:', this.facturasDisponible);
-          console.log('facturasAsociadas:', this.facturasAsociadas);
         } else {
           console.error('API response is not in expected format:', response);
           this.facturasDisponible = [];
