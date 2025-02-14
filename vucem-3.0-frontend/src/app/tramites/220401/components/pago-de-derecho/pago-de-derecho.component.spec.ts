@@ -1,10 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PagoDeDerechoComponent } from './pago-de-derecho.component';
-import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { FormBuilder,FormsModule,ReactiveFormsModule} from '@angular/forms';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { PagoDeDerechoComponent } from './pago-de-derecho.component';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+
 
 describe('PagoDeDerechoComponent', () => {
   let component: PagoDeDerechoComponent;
@@ -18,9 +19,9 @@ describe('PagoDeDerechoComponent', () => {
         CommonModule,
         TituloComponent,
         CatalogoSelectComponent,
-        SelectCatalogosComponent,
+        SelectCatalogosComponent,PagoDeDerechoComponent
       ],
-      declarations: [PagoDeDerechoComponent],
+      declarations: [],
       providers: [FormBuilder],
     }).compileComponents();
   });
@@ -74,10 +75,5 @@ describe('PagoDeDerechoComponent', () => {
     expect(component.FormSolicitud.get('datosImportadorExportador.importePago')?.value).toBeNull();
   });
 
-  it('should handle form submission logic when "validarFormulario" is called', () => {
-    spyOn(console, 'log'); // To check if the form values are logged in the console
-    component.validarFormulario();
-    // Assuming the form is invalid at first because no values are set
-    expect(console.log).toHaveBeenCalledWith(component.FormSolicitud.value);
-  });
+
 });

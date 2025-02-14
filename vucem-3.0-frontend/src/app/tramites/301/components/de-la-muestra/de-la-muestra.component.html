@@ -7,9 +7,7 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="form-group" >
-                <!-- <app-catalogo-select [catalogosDatos]="mercancia"
-                (valorSeleccion)="docSeleccionado($event)">
-                 </app-catalogo-select> -->
+               
                  <app-catalogo-select [catalogo]="mercancia" formControlName="mercancia" [label]="'¿El producto al que hace referencia a esta solicitud ha sido previamente inscrito en el registro para la toma de muestras?'"
           [required]="true" name="mercancia"  (change)="mercanciaSeleccion()" ></app-catalogo-select>
               </div>

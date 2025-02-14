@@ -115,13 +115,5 @@ export class InformacionDeLaComponent implements OnInit {
     }
   }
 
-  /**
-   * @method getValorIndice
-   * @description Registra el valor del evento en la consola.
-   * @param {unknown} event - El evento a registrar.
-   * @memberof InformacionDeLaComponent
-   */
-  getValorIndice(event: unknown): void {
-    console.log(event);
-  }
+ 
 }

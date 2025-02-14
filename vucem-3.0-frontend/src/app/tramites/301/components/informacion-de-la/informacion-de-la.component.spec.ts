@@ -15,13 +15,13 @@ describe('InformacionDeLaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [InformacionDeLaComponent],
+      declarations: [],
       imports: [
         ReactiveFormsModule,
         CommonModule,
         BtnContinuarComponent,
         CatalogoSelectComponent,
-        TituloComponent
+        TituloComponent,InformacionDeLaComponent
       ]
     }).compileComponents();
   });
@@ -73,10 +73,5 @@ describe('InformacionDeLaComponent', () => {
     expect(component.informacionDeLaform.get('descripcionNico')?.disabled).toBeTrue();
   });
 
-  it('should log the event value when getValorIndice is called', () => {
-    spyOn(console, 'log');
-    const event = { value: 'test' };
-    component.getValorIndice(event);
-    expect(console.log).toHaveBeenCalledWith(event);
-  });
+
 });
