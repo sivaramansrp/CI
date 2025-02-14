@@ -7,7 +7,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 import fractionValues from '../../../../../assets/json/130102/fraccion_arancelaria.json';
 import productoOptions from '../../../../../assets/json/130102/producto-otions.json';
@@ -16,29 +21,30 @@ import unidadOptions from '../../../../../assets/json/130102/unidad_da.json';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
+import { Regx } from '../../../../shared/constantes/regex.constants';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 
 /**
  *compo doc
- * @class DetosDelLaComponent
+ * @class DetosDelMarcanciaComponent
  * @description Componente para la gestión de datos relacionados con productos,
  * fracciones arancelarias y unidades de medida en un formulario reactivo.
  */
 @Component({
-  selector: 'app-detos-del-la',
+  selector: 'app-detos-del-marcancia',
   standalone: true,
   imports: [
     TituloComponent,
     CommonModule,
     ReactiveFormsModule,
     InputRadioComponent,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
   ],
-  templateUrl: './detos-del-la.component.html',
-  styleUrl: './detos-del-la.component.scss',
+  templateUrl: './detos-del-marcancia.component.html',
+  styleUrl: './detos-del-marcancia.component.scss',
 })
-export class DetosDelLaComponent implements OnInit {
+export class DetosDelMarcanciaComponent implements OnInit {
   /**
    * compo doc
    * @property {any} prodData - Datos de productos importados desde un archivo JSON.
@@ -87,7 +93,9 @@ export class DetosDelLaComponent implements OnInit {
    * @param {HttpClient} http - Cliente HTTP para solicitudes.
    * @param {FormBuilder} fb - Constructor de formularios reactivos.
    */
-  constructor(private http: HttpClient, private fb: FormBuilder) {}
+  constructor(private http: HttpClient, private fb: FormBuilder) {
+    //constructor
+  }
 
   /**
    * compo doc
@@ -96,11 +104,32 @@ export class DetosDelLaComponent implements OnInit {
    */
   ngOnInit() {
     this.formDelLa = this.fb.group({
-      descripcion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
+      descripcion: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(500),
+        ],
+      ],
       fraccion: ['', [Validators.required]],
       unidadMedida: ['', [Validators.required]],
-      cantidad: ['', [Validators.required, Validators.min(1), Validators.pattern('^[0-9]+$')]],
-      valorFacturaUSD: ['', [Validators.required, Validators.min(0.01), Validators.pattern('^[0-9]+(.[0-9]{1,2})?$')]]
+      cantidad: [
+        '',
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.pattern(Regx.ONLY_NUMBERS), 
+        ],
+      ],
+      valorFacturaUSD: [
+        '',
+        [
+          Validators.required,
+          Validators.min(0.01),
+          Validators.pattern(Regx.DECIMAL_TWO_PLACES),
+        ],
+      ],
     });
     this.fetchProductoOptions();
   }
@@ -110,6 +139,8 @@ export class DetosDelLaComponent implements OnInit {
    * @method onValueChange
    * @description Actualiza el valor seleccionado.
    * @param {string | number} value - Nuevo valor seleccionado.
+   *
+   * Este método es para la etiqueta de radio de producto.
    */
   onValueChange(value: string | number) {
     this.selectedValue = value.toString();

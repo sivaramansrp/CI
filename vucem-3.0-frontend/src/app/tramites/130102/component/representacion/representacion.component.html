@@ -1,18 +1,50 @@
 <div class="container">
   <ng-titulo titulo="Representación federal"></ng-titulo>
-  <form>
+  <form [formGroup]="frmRepresentacion">
     <div class="row">
       <div class="col-md-4 form-group">
-        <select-catalogos
-          [catalogosDatos]="entidadFederativa"
-          (valorSeleccion)="entidadFederativaSeleccion($event)"
-        ></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="entidadFederativaLista"
+          [label]="'Entidad federativa'"
+          [required]="true"
+          (selectionChange)="fetchEntidadFederativa($event)"
+          [placeholder]="'Seleccione un valor'"
+          formControlName="entidad"
+        ></app-catalogo-select>
+        <div
+          *ngIf="
+            frmRepresentacion.controls['entidad'].invalid &&
+            frmRepresentacion.controls['entidad'].touched
+          "
+          class="text-danger"
+        >
+          <small
+            *ngIf="frmRepresentacion.controls['entidad'].errors?.['required']"
+            >Debe seleccionar un valor.</small
+          >
+        </div>
       </div>
       <div class="col-md-4 form-group">
-        <select-catalogos
-          [catalogosDatos]="representacionFederal"
-          (valorSeleccion)="representacionFederalSeleccion($event)"
-        ></select-catalogos>
+        <app-catalogo-select
+          [catalogo]="representacionFederalLista"
+          [label]="'Representación federal'"
+          [required]="true"
+          (selectionChange)="fetchRepresentacionFederal($event)"
+          [placeholder]="'Seleccione un valor'"
+          formControlName="representacion"
+        ></app-catalogo-select>
+        <div
+          *ngIf="
+            frmRepresentacion.controls['representacion'].invalid &&
+            frmRepresentacion.controls['representacion'].touched
+          "
+          class="text-danger"
+        >
+          <small
+            *ngIf="frmRepresentacion.controls['representacion'].errors?.['required']"
+            >Debe seleccionar un valor.</small
+          >
+        </div>
       </div>
     </div>
     <table>

@@ -42,10 +42,10 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'octava-temporral',
+    path: 'octava-temporal',
     loadChildren: () =>
-      import('./tramites/130102/octava-temporral.module').then(
-        (m) => m.OctavaTemporralModule
+      import('./tramites/130102/octava-temporal.module').then(
+        (m) => m.OctavaTemporalModule
       ),
   },
   { 

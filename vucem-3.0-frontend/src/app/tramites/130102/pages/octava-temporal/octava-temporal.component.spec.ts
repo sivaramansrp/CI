@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OctavaTemporralComponent } from './octava-temporral.component';
+import { OctavaTemporalComponent } from './octava-temporal.component';
 
-describe('OctavaTemporralComponent', () => {
-  let component: OctavaTemporralComponent;
-  let fixture: ComponentFixture<OctavaTemporralComponent>;
+describe('OctavaTemporalComponent', () => {
+  let component: OctavaTemporalComponent;
+  let fixture: ComponentFixture<OctavaTemporalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [OctavaTemporralComponent]
+      declarations: [OctavaTemporalComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(OctavaTemporralComponent);
+    fixture = TestBed.createComponent(OctavaTemporalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

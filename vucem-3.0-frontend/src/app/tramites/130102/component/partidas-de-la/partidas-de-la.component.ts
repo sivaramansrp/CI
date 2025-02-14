@@ -7,14 +7,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { UppercaseDirective } from '../../../../shared/directives/Uppercase/uppercase.directive';
  
 import { Component, OnInit } from '@angular/core';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
-import { TEXTOS } from '../../../../shared/constantes/octava-temporral.enum';
+import { TEXTOS } from '../../../../shared/constantes/octava-temporal.enum';
 import { TableComponent } from '../../../../shared/components/table/table.component';
  
 import establecimientoTable from '../../../../../assets/json/130102/partidas-de-la.json';
@@ -31,7 +29,6 @@ import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-
     TituloComponent,
     UppercaseDirective,
     AlertComponent,
-    SelectCatalogosComponent,
     TableComponent,
     CatalogoSelectComponent
   ],

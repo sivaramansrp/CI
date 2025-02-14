@@ -94,13 +94,13 @@ export class UsoEspicificoComponent implements OnInit {
   ngOnInit(): void {
     this.usoEspicificoForm = this.formbuilt.group({
       fracciónarancelaria: ['', Validators.required],
-      descripción: ['Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizara ta mercancia a importar) ', Validators.required]
+      descripción: ['Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar) ', Validators.required]
     });
   }
 
   /**
    * @description Método para obtener el valor seleccionado del componente SelectCatalogosComponent.
-   * @param {Catalogo} valor Valor seleccionado del catálogo.
+ 
    */
   valorseleccionado(valor: Catalogo) {
     console.log(valor)

@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DetosDelLaComponent } from './detos-del-la.component';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+import { DetosDelMarcanciaComponent } from './detos-del-marcancia.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
@@ -10,14 +11,14 @@ import fractionValues from '../../../../../assets/json/130102/fraccion_arancelar
 import productoOptions from '../../../../../assets/json/130102/producto-otions.json';
 import unidadOptions from '../../../../../assets/json/130102/unidad_da.json';
 
-describe('DetosDelLaComponent', () => {
-  let component: DetosDelLaComponent;
-  let fixture: ComponentFixture<DetosDelLaComponent>;
+describe('DetosDelMarcanciaComponent', () => {
+  let component: DetosDelMarcanciaComponent;
+  let fixture: ComponentFixture<DetosDelMarcanciaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, ReactiveFormsModule,
-        DetosDelLaComponent,
+        DetosDelMarcanciaComponent,
         CatalogoSelectComponent,
         InputRadioComponent,
         TituloComponent,
@@ -29,7 +30,7 @@ describe('DetosDelLaComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DetosDelLaComponent);
+    fixture = TestBed.createComponent(DetosDelMarcanciaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,10 +1,5 @@
-{
-  "labelNombre": "Entidad federativa",
-  "required": true,
-  "primerOpcion": "Seleccione una entidad federativa",
-  "catalogos": [
-    { "id": 1, "descripcion": "Sinaloa" },
-    { "id": 2, "descripcion": "Entidad federativa 2" },
-    { "id": 3, "descripcion": "Entidad federativa 3" }
-  ]
-}
+[
+  { "id": 1, "descripcion": "Sinaloa" },
+  { "id": 2, "descripcion": "Entidad federativa 2" },
+  { "id": 3, "descripcion": "Entidad federativa 3" }
+]

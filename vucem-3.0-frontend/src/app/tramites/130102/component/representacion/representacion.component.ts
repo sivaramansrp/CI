@@ -6,10 +6,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
 import EntidadFederativaOptions from '../../../../../assets/json/130102/entidad_federativa.json';
 import RepresentacionFederalOptions from '../../../../../assets/json/130102/representacion_federal.json';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 /**
@@ -18,37 +18,44 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
 @Component({
   selector: 'app-representacion',
   standalone: true,
-  imports: [TituloComponent, SelectCatalogosComponent, ReactiveFormsModule],
-  templateUrl: './representacion.component.html'
+  imports: [
+    TituloComponent,
+    CatalogoSelectComponent,
+    CommonModule,
+    ReactiveFormsModule,
+  ],
+  templateUrl: './representacion.component.html',
 })
 export class RepresentacionComponent implements OnInit {
   /**
    * Configuración del formulario de representación.
+   * @type {FormGroup}
    */
   frmRepresentacion!: FormGroup;
 
   /**
-   * Configuración del select de entidades federativas.
-   * @type {CatalogosSelect}
+   * Entidades federativas disponibles.
+   * @type {Catalogo[]} - Las entidades federativas disponibles.
    */
-  entidadFederativa!: CatalogosSelect;
+  entidadFederativaLista: Catalogo[] = EntidadFederativaOptions;
 
   /**
-   * Configuración del select de representaciones federales.
-   * @type {CatalogosSelect}
-   * @description Configuración del select de representaciones federales.
+   * Representaciones federales disponibles.
+   * @type {Catalogo[]} - Las representaciones federales disponibles.
    */
-  representacionFederal!: CatalogosSelect;
-
-  /**
-   * Entidad federativa seleccionada.
-   */
-  selectedEntidadFederativa: Catalogo = { id: 0, descripcion: '' };
+  representacionFederalLista: Catalogo[] = RepresentacionFederalOptions;
 
   /**
    * Representación federal seleccionada.
+   * @type {Catalogo}
    */
-  selectedRepresentacionFederal: Catalogo = { id: 0, descripcion: '' };
+  seleccionadaEntidadFederativa: Catalogo = { id: 0, descripcion: '' };
+
+  /**
+   * Representación federal seleccionada.
+   * @type {Catalogo}
+   */
+  seleccionadaRepresentacionFederal: Catalogo = { id: 0, descripcion: '' };
 
   /**
    * Inicializa el componente RepresentacionComponent.
@@ -56,56 +63,52 @@ export class RepresentacionComponent implements OnInit {
    * @param {FormBuilder} fb - El constructor de formularios.
    * @returns void
    */
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) {
+    //
+  }
 
   /**
    * Maneja la selección de una entidad federativa.
-   * @param entidad - La entidad federativa seleccionada.
+   * @param e - La entidad federativa seleccionada.
    * @returns void
    */
-  entidadFederativaSeleccion(entidad: Catalogo): void {
-    this.selectedEntidadFederativa = entidad;
-    this.frmRepresentacion.controls['entidad'].setValue(entidad);
+  entidadFederativaSeleccion(e: Catalogo): void {
+    this.seleccionadaEntidadFederativa = e;
   }
 
   /**
    * Maneja la selección de una representación federal.
-   * @param representacion - La representación federal seleccionada.
+   * @param r - La representación federal seleccionada.
    * @returns void
    */
-  representacionFederalSeleccion(representacion: Catalogo): void {
-    this.selectedRepresentacionFederal = representacion;
-    this.frmRepresentacion.controls['representacion'].setValue(representacion);
+  representacionFederalSeleccion(r: Catalogo): void {
+    this.seleccionadaRepresentacionFederal = r;
   }
 
   /**
-   * Obtiene las entidades federativas.
+   * Obtiene las entidades federativas y representaciones federales.
    * @returns void
    */
   ngOnInit(): void {
-    this.fetchEntidadFederativa();
-    this.fetchRepresentacionFederal();
     this.frmRepresentacion = this.fb.group({
-      entidad: [this.selectedEntidadFederativa, Validators.required],
-      representacion: [this.selectedRepresentacionFederal, Validators.required],
+      entidad: ['', Validators.required],
+      representacion: ['', Validators.required],
     });
   }
 
   /**
-   * Obtiene las entidades federativas.
+   * Obtiene las opciones de entidades federativas.
    * @returns void
-   * @description Obtiene las entidades federativas.
    */
-  fetchEntidadFederativa() {
-    this.entidadFederativa = EntidadFederativaOptions;
+  fetchEntidadFederativa(e: Catalogo): void {
+    this.seleccionadaEntidadFederativa = e;
   }
 
   /**
-   * Obtiene las representaciones federales.
+   * Obtiene las opciones de representaciones federales.
    * @returns void
-   * @description Obtiene las representaciones federales.
    */
-  fetchRepresentacionFederal() {
-    this.representacionFederal = RepresentacionFederalOptions;
+  fetchRepresentacionFederal(r: Catalogo): void {
+    this.seleccionadaRepresentacionFederal = r;
   }
 }

@@ -1,12 +1,12 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
-import { OctavaTemporralComponent } from './pages/octava-temporral/octava-temporral.component';
+import { OctavaTemporalComponent } from './pages/octava-temporal/octava-temporal.component';
 
 const routes: Routes = [
   {
       path: 'solicitante',
-      component: OctavaTemporralComponent,
+      component: OctavaTemporalComponent,
     }
 ];
 
@@ -14,4 +14,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
    exports: [RouterModule]
 })
-export class OctavaTemporralRoutingModule { }
+export class OctavaTemporalRoutingModule { }

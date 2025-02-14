@@ -1,20 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { OctavaTemporralRoutingModule } from './octava-temporral-routing.module';
+import { OctavaTemporalRoutingModule } from './octava-temporal-routing.module';
 
 import { CriterioDeDictComponent } from './component/criterio-de-dict/criterio-de-dict.component';
-import { DetosDelLaComponent } from './component/detos-del-la/detos-del-la.component';
+import { DetosDelMarcanciaComponent } from './component/detos-del-marcancia/detos-del-marcancia.component';
 import { DetosDelTramiteComponent } from './component/detos-del-tramite/detos-del-tramite.component';
-import { DetosGenDelComponent } from './component/detos-gen-del/detos-gen-del.component';
 import { PaisProcendenciaComponent } from './component/pais-procendencia/pais-procendencia.component';
+import { SolicitanteOctavaTemporalComponent } from './component/solicitante-octava-temporal/solicitante-octava-temporal.component';
+
 import { PartidasDeLaComponent } from './component/partidas-de-la/partidas-de-la.component';
 import { RepresentacionComponent } from './component/representacion/representacion.component';
 import { UsoEspicificoComponent } from './component/uso-espicifico/uso-espicifico.component';
 
 import { DatosComponent } from './pages/datos/datos.component';
 
-import { OctavaTemporralComponent } from './pages/octava-temporral/octava-temporral.component';
+import { OctavaTemporalComponent } from './pages/octava-temporal/octava-temporal.component';
 import { SolicitanteComponent } from './pages/solicitante/solicitante.component';
 
 import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn-continuar.component';
@@ -26,18 +27,18 @@ import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
-    OctavaTemporralComponent,
+    OctavaTemporalComponent,
     SolicitanteComponent,
     DatosComponent,
   ],
   imports: [
     CommonModule,
-    OctavaTemporralRoutingModule,
+    OctavaTemporalRoutingModule,
     BtnContinuarComponent,
     CriterioDeDictComponent,
-    DetosDelLaComponent,
+    DetosDelMarcanciaComponent,
     DetosDelTramiteComponent,
-    DetosGenDelComponent,
+    SolicitanteOctavaTemporalComponent,
     PaisProcendenciaComponent,
     PartidasDeLaComponent,
     RepresentacionComponent,
@@ -47,4 +48,4 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule
   ]
 })
-export class OctavaTemporralModule { }
+export class OctavaTemporalModule { }

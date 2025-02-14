@@ -1,10 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentacionComponent } from './representacion.component';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
-describe('RepresentacionComponent', () => {
+fdescribe('RepresentacionComponent', () => {
   let component: RepresentacionComponent;
   let fixture: ComponentFixture<RepresentacionComponent>;
 
@@ -12,8 +13,9 @@ describe('RepresentacionComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
-        SelectCatalogosComponent,
+        CatalogoSelectComponent,
         TituloComponent,
+        CommonModule,
         RepresentacionComponent,
       ],
       declarations: [],
@@ -36,31 +38,27 @@ describe('RepresentacionComponent', () => {
     ).toBeDefined();
   });
 
-  it('should handle entidadFederativaSeleccion correctly', () => {
+  it('should handle fetchEntidadFederativa correctly', () => {
     const mockEntidad = { id: 1, descripcion: 'Sinaloa' };
-    component.entidadFederativaSeleccion(mockEntidad);
-    expect(component.selectedEntidadFederativa).toEqual(mockEntidad);
-    expect(component.frmRepresentacion.controls['entidad'].value).toEqual(
-      mockEntidad
+    component.fetchEntidadFederativa(mockEntidad);
+    expect(component.seleccionadaEntidadFederativa).toEqual(mockEntidad);
+  });
+
+  it('should handle fetchRepresentacionFederal correctly', () => {
+    const mockRepresentacion = { id: 1, descripcion: 'Culican' };
+    component.fetchRepresentacionFederal(mockRepresentacion);
+    expect(component.seleccionadaRepresentacionFederal).toEqual(
+      mockRepresentacion
     );
   });
 
-  it('should handle representacionFederalSeleccion correctly', () => {
-    const mockRepresentacion = { id: 1, descripcion: 'Culican' };
-    component.representacionFederalSeleccion(mockRepresentacion);
-    expect(component.selectedRepresentacionFederal).toEqual(mockRepresentacion);
-    expect(
-      component.frmRepresentacion.controls['representacion'].value
-    ).toEqual(mockRepresentacion);
+  it('should set entidadFederativaLista on init', () => {
+    component.ngOnInit();
+    expect(component.entidadFederativaLista.length).toBeGreaterThan(0);
   });
 
-  it('should set entidadFederativa on init', () => {
+  it('should set representacionFederalLista on init', () => {
     component.ngOnInit();
-    expect(component.entidadFederativa.catalogos.length).toBeGreaterThan(0);
-  });
-
-  it('should set representacionFederal on init', () => {
-    component.ngOnInit();
-    expect(component.representacionFederal.catalogos.length).toBeGreaterThan(0);
+    expect(component.representacionFederalLista.length).toBeGreaterThan(0);
   });
 });

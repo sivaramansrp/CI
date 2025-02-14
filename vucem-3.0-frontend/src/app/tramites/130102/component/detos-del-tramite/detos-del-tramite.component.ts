@@ -17,10 +17,9 @@ import {
 import {
   ProductoOption,
   ProductoResponse,
-} from '../../../../core/services/130102/octava-temporral.enum';
+} from '../../../../core/services/130102/octava-temporal.enum';
 
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-
 
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
@@ -113,7 +112,12 @@ export class DetosDelTramiteComponent implements OnInit {
 
   /**
    * Maneja los cambios en la opción seleccionada.
-   * @param {string | number} value - Nuevo valor seleccionado.
+   *
+   * Este método se activa cuando el usuario cambia el valor en el campo correspondiente.
+   *
+   * @param {string | number} value - El nuevo valor seleccionado.
+   *
+   * Este método es para el control de radio de solicitud.
    */
   onValueChange(value: string | number) {
     this.selectedValue = value;

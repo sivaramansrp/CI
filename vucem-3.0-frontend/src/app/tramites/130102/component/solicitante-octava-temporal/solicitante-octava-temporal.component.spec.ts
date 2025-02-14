@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DetosGenDelComponent } from './detos-gen-del.component';
+import { SolicitanteOctavaTemporalComponent } from './solicitante-octava-temporal.component';
 
 describe('DetosGenDelComponent', () => {
-  let component: DetosGenDelComponent;
-  let fixture: ComponentFixture<DetosGenDelComponent>;
+  let component: SolicitanteOctavaTemporalComponent;
+  let fixture: ComponentFixture<SolicitanteOctavaTemporalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DetosGenDelComponent]
+      imports: [SolicitanteOctavaTemporalComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(DetosGenDelComponent);
+    fixture = TestBed.createComponent(SolicitanteOctavaTemporalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

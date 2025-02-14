@@ -5,12 +5,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '../../../../shared/components/solicitante/solicitante.component';
 
 @Component({
-  selector: 'app-detos-gen-del',
+  selector: 'app-solocitante-octava-temporal',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, SolicitanteComponent],
-  templateUrl: './detos-gen-del.component.html',
+  templateUrl: './solicitante-octava-temporal.component.html',
 })
-export class DetosGenDelComponent{
+export class SolicitanteOctavaTemporalComponent {
 
 
 }

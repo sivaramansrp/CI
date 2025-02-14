@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-md-4">
     <div *ngIf="showSearchInput1" class="mb-4">
-      <label>Pais disponible</label>
-      <input type="text" class="form-control mb-2" placeholder="Search..." >
+      <label>País disponible</label>
+      <input type="text" class="form-control mb-2" placeholder="País disponible" >
     </div>
     <select class="form-select" multiple aria-label="Multiple select example" [formControl]="fecha">
       @for (fecha of fechasDatos; let i = $index; track i) {
@@ -32,8 +32,8 @@
   <div class="col-md-4">
 
     <div *ngIf="showSearchInput2" class="mb-4"> 
-      <label>Pais seleccionado</label>
-      <input type="text" class="form-control mb-2" placeholder="Search..." >
+      <label>País seleccionado</label>
+      <input type="text" class="form-control mb-2" placeholder="País seleccionado" >
      </div>
      
     <select class="form-select" multiple aria-label="Multiple select example" [formControl]="fechaSeleccionada">
