@@ -15,7 +15,7 @@ export const ROUTES_SOLICITUDES: Routes = [
     component: AcusePageComponent,
   },
   {
-    path: 'evaluar-dictamen',
+    path: 'evaluar-solicitud',
     component: EvaluarDictamenComponent
   },
   {
