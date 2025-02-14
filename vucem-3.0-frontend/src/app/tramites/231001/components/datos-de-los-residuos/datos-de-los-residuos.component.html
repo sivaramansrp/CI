@@ -1,0 +1,214 @@
+<p>datos-de-los-residuos works!</p>
+
+
+<div id="modalResiduos">
+    <!-- Forma, para agregar mercancias -->
+    <form [formGroup]="materiaPrimaForm" (ngSubmit)="agregarMercancia()" id="materiaPrimaForm">
+      <input type="hidden" formControlName="descUnidadMedida" id="descUnidadMedida" />
+      <input type="hidden" formControlName="descFraccion" id="descFraccion" />
+      <input type="hidden" formControlName="generica1" id="generica1" />
+      <input type="hidden" formControlName="clavePartida" id="clavePartida" />
+      <input type="hidden" formControlName="claveSubPartida" id="claveSubPartida" />
+  
+      <div id="dvMessage" *ngIf="showMessage" class="row">
+        <div class="col-md-12">
+          <div class="alert alert-danger">
+            Faltan campos por capturar.
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Solicitud Semarnat - Materia Prima a Importar</h3>
+          <hr class="red" />
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-md-12">
+          <h4>Agregar Mercancía</h4>
+        </div>
+      </div>
+      <br />
+  
+      <div class="row">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label for="descripcionMercancia">Nombre de la Materia Prima</label>
+            <span class="require">*</span>
+            <span class="puntos">:</span>
+            <input
+              type="text"
+              formControlName="descripcionMercancia"
+              class="form-control"
+              id="descripcionMercancia"
+              maxlength="120"
+              size="80"
+            />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="generica2">Cantidad</label>
+            <span class="require">*</span>
+            <span class="puntos">:</span>
+            <input
+              type="text"
+              formControlName="generica2"
+              class="form-control"
+              id="generica2"
+              maxlength="18.5"
+              (blur)="obtenerLetraCantidad('generica2')"
+              (focus)="mostrarMsgCantSe06 = true"
+            />
+            <!-- <label
+              id="msgCantSe06"
+              *ngIf="mostrarMsgCantSe06"
+              style="margin:0; font-size:15px; font-weight:200; color:red;"
+            >
+              No está permitido capturar "," (coma)
+            </label> -->
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label for="cantidadEnLetra">Cantidad en Letra</label>
+            <span class="puntos">:</span>
+            <input
+              type="text"
+              formControlName="cantidadEnLetra"
+              class="form-control"
+              id="cantidadEnLetra"
+              size="80"
+              maxlength="256"
+              [disabled]="true"
+            />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label for="unidadMedidaComercialClave">Unidad</label>
+          <span class="require">*</span>
+          <span class="puntos">:</span>
+          <select
+            formControlName="unidadMedidaComercial.clave"
+            class="form-control unidadMedidaComercial"
+            (change)="cambiaUnidadMedida()"
+          >
+            <option value="" disabled selected>Selecciona un valor</option>
+            <option *ngFor="let unidad of comboUnidadMedida" [value]="unidad.id">
+              {{ unidad.descripcion }}
+            </option>
+          </select>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="capituloFraccion">Capítulo</label>
+            <span class="require">*</span>
+            <span class="puntos">:</span>
+            <select
+              formControlName="capituloFraccion"
+              class="form-control capituloFraccion"
+              (change)="cambiaCapituloFraccion()"
+            >
+              <option value="" disabled selected>Selecciona un valor</option>
+              <option *ngFor="let capitulo of comboCapituloFraccion" [value]="capitulo.id">
+                {{ capitulo.descripcion }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="partidaFraccion">Partida</label>
+            <span class="require">*</span>
+            <span class="puntos">:</span>
+            <select
+              formControlName="partidaFraccion"
+              class="form-control partidaFraccion"
+              (change)="cambiaPartidaFraccion()"
+            >
+              <option value="" disabled selected>Selecciona un valor</option>
+              <option *ngFor="let partida of comboPartidaFraccion" [value]="partida.id">
+                {{ partida.descripcion }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="subPartidaFraccion">Subpartida</label>
+            <span class="require">*</span>
+            <span class="puntos">:</span>
+            <select
+              formControlName="subPartidaFraccion"
+              class="form-control subPartidaFraccion"
+              (change)="cambiaSubPartidaFraccion()"
+            >
+              <option value="" disabled selected>Selecciona un valor</option>
+              <option *ngFor="let subPartida of comboSubPartidaFraccion" [value]="subPartida.id">
+                {{ subPartida.descripcion }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="form-group">
+            <label for="fraccion">Fracción</label>
+            <span class="require">*</span>
+            <span class="puntos">:</span>
+            <select
+              formControlName="fraccion"
+              class="form-control fraccion"
+              (change)="cambiaFraccion()"
+            >
+              <option value="" disabled selected>Selecciona un valor</option>
+              <option *ngFor="let fraccion of comboFraccionArancelariaParametros" [value]="fraccion.id">
+                {{ fraccion.descripcion }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+  
+      <div style="height:30px"></div>
+      <div class="col-md-4"></div>
+      <!-- <div class="col-md-8">
+        <hr>
+      </div> -->
+  
+      <div class="row">
+        <div class="col-md-12 text-muted">
+          <div id="lblCamposObligatorios">
+            <strong>Nota: Todos los campos son obligatorios.</strong>
+          </div>
+          <button
+            type="submit"
+            class="btn btn-primary pull-right"
+            (click)="guardarMateriaPrima()"
+          >
+            Guardar
+          </button>
+          <button
+            type="button"
+            class="btn btn-default pull-right mr-2"
+            (click)="cerrar()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>

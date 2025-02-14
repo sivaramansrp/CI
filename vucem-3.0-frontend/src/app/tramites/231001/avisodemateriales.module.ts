@@ -6,17 +6,20 @@ import { DatosComponent } from './pages/datos/datos.component';
 import { AvisodematerialesRoutingModule } from './avisodemateriales-routing.module';
 import { SolicitanteComponent } from './components/solicitante/solicitante.component';
 import { DatosDelaComponent } from './components/datos-dela/datos-dela.component';
+import { DatosDeLosResiduosComponent } from './components/datos-de-los-residuos/datos-de-los-residuos.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
 @NgModule({
   declarations: [
-    SolicitanteComponent,
-    DatosDelaComponent
+    PantallasComponent
   ],
   imports: [
     CommonModule,
-    AvisodematerialesRoutingModule
+    DatosDeLosResiduosComponent,
+    AvisodematerialesRoutingModule,
+    ReactiveFormsModule
   ]
 })
 export class AvisodematerialesModule { }
