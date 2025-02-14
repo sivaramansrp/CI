@@ -21,15 +21,21 @@
       </div>
       <div class="col-md-4">
         <div class="form-field">
-            <label for="mercancia" class="form-label">Cantidad de contenedores en quearriba la mercancía*:<span class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span></label>
+            <label for="mercancia" class="form-label">Cantidad de contenedores en quearriba la mercancía*:<span class="bi bi-question-circle-fill" title="Número de tolvas, furgones o contenedores en que arriba la mercancía" data-bs-toggle="tooltip"></span></label>
             <input class="form-control" type="text" formControlName="mercancia" id="mercancia" />
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-field">
-          <select-catalogos [catalogosDatos]="tipoContenedor"
-                (valorSeleccion)="tipoContenedorSeleccion($event)" />
+          <app-catalogo-select
+          id="tipoContenedor"
+          [catalogo]="tipoContenedor.catalogos"
+          [label]="tipoContenedor.labelNombre"
+          [placeholder]="tipoContenedor.primerOpcion"
+          [required]="tipoContenedor.required"
+          [isDisabled]="false"
+        ></app-catalogo-select>
         </div>
     </div>
-  </div>
-</fieldset>
+    </div>
+  </fieldset>

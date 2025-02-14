@@ -1,0 +1,111 @@
+<fieldset [formGroupName]="claveDeControl">
+  <ng-titulo titulo="Medio de transporte" />
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-field">
+        <app-catalogo-select id="Mediodetransporte" [catalogo]="mediodetransporte.catalogos" [label]="mediodetransporte.labelNombre" [placeholder]="mediodetransporte.primerOpcion" [required]="mediodetransporte.required" [isDisabled]="false"></app-catalogo-select>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-field">
+        <label for="puntos" class="form-label"
+          >Identificación del transporte:</label
+        >
+        <input
+          class="form-control"
+          type="text"
+          size="30"
+          formControlName="identificacionTransporte"
+          id="puntos"
+        />
+        <div
+          *ngIf="grupoformulariopadre.get(claveDeControl)?.get('identificacionTransporte')?.errors?.['maxlength'] &&
+          grupoformulariopadre.get(claveDeControl)?.get('identificacionTransporte')?.touched
+  "
+        >
+          Se superó la longitud máxima de 30 caracteres.
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mt-5">
+      <label class="form-label" for="solicituddeInspección"
+        >¿La solicitud de Inspección Física es para trámites que arriban por
+        Ferrocarril o por Partes II?*:</label
+      >
+      <div class="form-check">
+        <input
+          class="form-check-input me-2"
+          type="radio"
+          name="esSolicitudFerros"
+          formControlName="esSolicitudFerros"
+          value="1"
+          id="SiSolicitudFerros"
+        />
+        <label class="form-check-label" for="SiSolicitudFerros">Sí</label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input me-2"
+          type="radio"
+          name="esSolicitudFerros"
+          formControlName="esSolicitudFerros"
+          value="0"
+          id="SiSolicitudFerros"
+        />
+        <label class="form-check-label" for="SiSolicitudFerros">No</label>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="form-field">
+        <label for="Datosdelamercancía" class="form-label"
+          >Datos de la mercancía:</label
+        >
+      </div>
+    </div>
+    <div class="col-md-12">
+      <table class="table table-responsive">
+        <thead>
+          <tr>
+            <th>
+              <input type="checkbox" />
+            </th>
+            @for (item of hMercanciaTabla; track $index) {
+            <th>{{ item }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of dMercanciaBody; let i = $index;
+          track i) {
+          <tr>
+            <td>
+              <input type="checkbox" />
+            </td>
+            <td>{{ item.fraccionArancelaria }}</td>
+            <td>{{ item.descripcionFraccion }}</td>
+            <td>{{ item.nico }}</td>
+            <td>{{ item.nicoDescripcion }}</td>
+            <td>{{ item.cantidadSolicitadaUMT }}</td>
+            <td>{{ item.unidadMedidaUMT }}</td>
+            <td>{{ item.cantidadTotalUMT }}</td>
+            <td>{{ item.saldoPendiente }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-4">
+      <div class="form-field">
+        <label for="totalDeGuiasAmparadas" class="form-label"
+          >Total de guías amparadas:<span class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span></label
+        >
+        <input
+          class="form-control"
+          type="number"
+          formControlName="totalDeGuiasAmparadas"
+          id="totalDeGuiasAmparadas"
+        />
+      </div>
+    </div>
+  </div>
+</fieldset>

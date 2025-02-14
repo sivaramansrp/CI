@@ -3,8 +3,14 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-field">
-          <select-catalogos [catalogosDatos]="certificadosAutorizados"
-                (valorSeleccion)="certificadosSeleccion($event)" />
+          <app-catalogo-select
+          id="certificadosAutorizados"
+          [catalogo]="certificadosAutorizados.catalogos"
+          [label]="certificadosAutorizados.labelNombre"
+          [placeholder]="certificadosAutorizados.primerOpcion"
+          [required]="certificadosAutorizados.required"
+          [isDisabled]="false"
+        ></app-catalogo-select>
         </div>
       </div>
       <div class="col-md-4">
@@ -14,31 +20,51 @@
       </div>
       <div class="col-md-4">
         <div class="form-field">
-            <select-catalogos [catalogosDatos]="horaDeInspeccion"
-                (valorSeleccion)="horaDeSeleccion($event)" />
+           <app-catalogo-select
+           id="horaDeInspeccion"
+           [catalogo]="horaDeInspeccion.catalogos"
+           [label]="horaDeInspeccion.labelNombre"
+           [placeholder]="horaDeInspeccion.primerOpcion"
+           [required]="horaDeInspeccion.required"
+           [isDisabled]="false"
+           ></app-catalogo-select>
         </div>
       </div>
-    </div>
-    <div class="row">
       <div class="col-md-4">
         <div class="form-field">
-            <select-catalogos [catalogosDatos]="aduanaDeIngreso"
-                (valorSeleccion)="aduanaDeSeleccion($event)" />
+          <app-catalogo-select
+          id="aduanaDeIngreso"
+          [catalogo]="aduanaDeIngreso.catalogos"
+          [label]="aduanaDeIngreso.labelNombre"
+          [placeholder]="aduanaDeIngreso.primerOpcion"
+          [required]="aduanaDeIngreso.required"
+          [isDisabled]="false"
+          ></app-catalogo-select>      
         </div>
       </div>
       <div class="col-md-8">
-        <div class="form-field">
-            <select-catalogos [catalogosDatos]="sanidadAgropecuaria"
-                (valorSeleccion)="sanidadSeleccion($event)" />
+        <div class="form-field"> 
+          <app-catalogo-select
+          id="sanidadAgropecuaria"
+          [catalogo]="sanidadAgropecuaria.catalogos"
+          [label]="sanidadAgropecuaria.labelNombre"
+          [placeholder]="sanidadAgropecuaria.primerOpcion"
+          [required]="sanidadAgropecuaria.required"
+          [isDisabled]="false"
+        ></app-catalogo-select>        
         </div>
     </div>
-  </div>
-  <div class="row">
     <div class="col-md-4">
         <div class="form-field">
-            <select-catalogos [catalogosDatos]="puntoDeInspeccion"
-                (valorSeleccion)="puntoDeSeleccion($event)" />
+          <app-catalogo-select
+          id="certificadosAutorizados"
+          [catalogo]="puntoDeInspeccion.catalogos"
+          [label]="puntoDeInspeccion.labelNombre"
+          [placeholder]="puntoDeInspeccion.primerOpcion"
+          [required]="puntoDeInspeccion.required"
+          [isDisabled]="false"
+        ></app-catalogo-select>           
         </div>
     </div>
-  </div>
-</fieldset>
+    </div>
+  </fieldset>
