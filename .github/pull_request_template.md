@@ -37,6 +37,7 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 - [ ] I have added comments to my code, particularly in hard-to-understand areas.
 - [ ] I have linted my changes and resolved all identified issues.
 - [ ] My changes generate no new warnings.
+- [ ] I have removed any messages to the console.
 - [ ] I have validated that all variable and method names in my code are in Spanish.
 - [ ] I have used Spanish special characters where required in any content displayed in UI.
 - [ ] I have added tests that prove my fix is effective or that my feature works.
