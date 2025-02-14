@@ -1,40 +1,44 @@
-import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
 import {
   CatalogosSelect,
   DocumentosCargados,
 } from '../../../core/models/shared/components.model';
-import { Catalogo } from '../../../core/models/shared/catalogos.model';
-import { CommonModule } from '@angular/common';
-import { ToastrService } from 'ngx-toastr';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { DPI, MB, PDF } from '../../constantes/constantes';
 import {
-  CATALOGOS_ID,
-  MB,
-  PDF,
-  DPI,
-} from '../../constantes/constantes';
-import { Login } from '../../../core/models/shared/inicio-sesion.model';
-import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Catalogo } from '../../../core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
 import { DocumentoService } from '../../../core/services/shared/documento/documento.service';
-import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
+import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
+import { Login } from '../../../core/models/shared/inicio-sesion.model';
+import { ToastrService } from 'ngx-toastr';
+import { URL_PRUEBA } from '../../constantes/servicios-extraordinarios.enum';
 
 declare const bootstrap: any; // Importación para manejar Bootstrap en TS
 
 @Component({
-  selector: 'anexar-documentos',
+  selector: 'app-anexar-documentos',
   standalone: true,
-  imports: [SelectCatalogosComponent, CommonModule],
+  imports: [CatalogoSelectComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './anexar-documentos.component.html',
   styleUrl: './anexar-documentos.component.scss',
 })
 export class AnexarDocumentosComponent implements OnInit {
+  @Input() catalogoDocumentos: Catalogo[] = [];
+  documentoForma!: FormGroup;
+
   PDF = PDF;
   MB = MB;
   DPI = DPI;
 
   tamMaximo: number = 0;
   tiposDocumentos!: CatalogosSelect;
-  documentosCargados: Array<DocumentosCargados> = [];
+  documentosCargados: DocumentosCargados[] = [];
   documentoSeleccionado!: Catalogo;
   mostrarModal: boolean = false;
 
@@ -52,22 +56,24 @@ export class AnexarDocumentosComponent implements OnInit {
   @ViewChild('modalConfirmacion') modalConfirmacion!: ElementRef;
 
   constructor(
-    private catalogosServices: CatalogosService,
     private toastr: ToastrService,
     private inicioSesionService: InicioSesionService,
-    private DocumentoService: DocumentoService
+    private DocumentoService: DocumentoService,
+    private fb: FormBuilder
   ) {}
 
-  ngOnInit() {
+  readonly url: string = URL_PRUEBA;
+
+  ngOnInit() : void {
     this.obtenerToken(this.datosLogin);
-    this.getTiposDocumentos();
+    this.crearFormaDocumento();
   }
 
   /**
    * Verifica si hay documentos cargados.
    * @returns {boolean} `true` si hay documentos cargados, de lo contrario `false`.
    */
-  get docCargados() {
+  get docCargados(): boolean {
     return this.documentosCargados.length > 0;
   }
 
@@ -92,50 +98,50 @@ export class AnexarDocumentosComponent implements OnInit {
     });
   }
 
-  /**
-   * Obtiene los tipos de documentos disponibles.
-   */
-  getTiposDocumentos(): void {
-    this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-      .subscribe({
-        next: (resp): void => {
-          if (resp.length > 0) {
-            this.tiposDocumentos = {
-              labelNombre: 'Tipo de documento',
-              required: true,
-              primerOpcion: 'Selecciona un tipo de documento',
-              catalogos: resp,
-            };
-          }
-        },
-        error: (_error): void => {},
-      });
+  crearFormaDocumento(): void {
+    this.documentoForma = this.fb.group({
+      documento: ['', [Validators.required]],
+    });
   }
 
   /**
-   * Maneja la selección de un documento.
-   * @param {Catalogo} e - El documento seleccionado.
+   * Selecciona un documento de la lista de documentos disponibles y actualiza
+   * las propiedades `documentoSeleccionado` y `tamMaximo` en base al documento seleccionado.
+   *
+   * @remarks
+   * - Obtiene el valor del documento desde el formulario `documentoForma`.
+   * - Busca el documento en el catálogo de documentos `catalogoDocumentos` por su ID.
+   * - Si el documento tiene un tamaño definido, lo convierte de kilobytes a megabytes
+   *   y lo asigna a `tamMaximo`. Si no, asigna 0 a `tamMaximo`.
+   *
+   * @returns {void} Esta función no retorna ningún valor.
    */
-  docSeleccionado(e: Catalogo) {
-    this.documentoSeleccionado = e;
-    this.tamMaximo = this.documentoSeleccionado.tam
+  seleccionarDocumento(): void {
+    const documento = this.documentoForma.get('documento')?.value;
+    this.documentoSeleccionado = this.catalogoDocumentos.find(
+      (doc) => doc.id === documento
+    );
+    this.tamMaximo = this.documentoSeleccionado?.tam
       ? this.convertirKilobytesAMegabytes(
-          parseInt(this.documentoSeleccionado.tam)
+          parseInt(this.documentoSeleccionado.tam, 10)
         )
       : 0;
   }
+
 
   /**
    * Maneja la carga de un documento.
    * @param {Event} event - El evento de carga del archivo.
    */
-  async cargarDoc(event: Event) {
+  cargarDoc(event: Event): void {
     const archivo = event.target as HTMLInputElement;
     const informacionArchivo = (archivo.files as FileList)[0];
 
     if (informacionArchivo) {
-      let extArchivo = informacionArchivo.name.split('.').pop()?.toLowerCase();
+      const extArchivo = informacionArchivo.name
+        .split('.')
+        .pop()
+        ?.toLowerCase();
 
       if (extArchivo !== this.PDF.toLowerCase()) {
         this.toastr.error('Solo se aceptan archivos pdf');
@@ -144,7 +150,7 @@ export class AnexarDocumentosComponent implements OnInit {
 
       const tamanioRequerido = this.documentoSeleccionado.tam
         ? this.convertirKilobytesABytes(
-            parseInt(this.documentoSeleccionado.tam)
+            parseInt(this.documentoSeleccionado.tam, 10)
           )
         : 0;
       const tamanioArchivo = informacionArchivo.size;
@@ -156,14 +162,15 @@ export class AnexarDocumentosComponent implements OnInit {
         return;
       }
 
-      this.DocumentoService
-        .subirDocumento(this.token, informacionArchivo)
-        .subscribe({
-          next: (): void => {
-            alert('Documento subido');
-          },
-          error: (_error): void => {},
-        });
+      this.DocumentoService.subirDocumento(
+        this.token,
+        informacionArchivo
+      ).subscribe({
+        next: (): void => {
+          this.toastr.success('Documento subido');
+        },
+        error: (_error): void => {},
+      });
 
       this.documentosCargados.push({
         tipoDocumento: this.documentoSeleccionado,
@@ -191,12 +198,13 @@ export class AnexarDocumentosComponent implements OnInit {
   }
 
   /**
-   * Muestra el modal para ver un documento.
-   * @param {number} i - El índice del documento.
-   * @param {string} accion - La acción a realizar.
+   * Abre un archivo PDF en una nueva pestaña del navegador.
+   *
+   * @param {string} url - La URL del archivo PDF que se va a abrir.
+   * @returns {void}
    */
-  verDocumento(i: number, accion: string) {
-    this.mostrarModal = accion === 'v';
+  verPdf(url: string): void {
+    window.open(url, '_blank');
   }
 
   /**
