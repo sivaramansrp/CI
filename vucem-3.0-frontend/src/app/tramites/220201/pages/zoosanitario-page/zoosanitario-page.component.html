@@ -1,15 +1,19 @@
 <div class="page">
   <div class="container">
     <div class="row">
-      <div class="col-md-10">
-        <h1>Captura del certificado fitosanitario para importación</h1>
+      <div class="col-md-6">
+        <h1>{{ tituloMensaje || null }}</h1>
       </div>
+      <ng-container *ngIf="indice === 2">
+        <ng-alert [CONTENIDO]="mensajeDeTextoDeExito"></ng-alert>
+      </ng-container>
+
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
 
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-uno></app-paso-uno>
+      <app-paso-uno (tabChanged)="enTabChange($event)"></app-paso-uno>
       } @case (2) {
       <app-paso-dos></app-paso-dos>
       } @case (3) {

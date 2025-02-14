@@ -27,7 +27,7 @@ export class PasoUnoComponent {
    * @property {string} title - Título de la pestaña/paso.
    * @property {string} component - Nombre del componente asociado a la pestaña/paso.
    */
-  pestanaListaDatos = [
+  seccionesDeLaSolicitud = [
     { index: 1, title: 'Solicitante', component: 'solicitante' },
     { index: 2, title: 'Datos de la solicitud', component: 'datos-de-la-solicitud' },
     { index: 3, title: 'Datos para movilización nacional', component: 'datos-para-movilizacion-nacional' },
