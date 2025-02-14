@@ -119,6 +119,9 @@ export interface TableData {
 export interface TableBodyData {
   tbodyData: string[];
 }
+export interface TiposDocumentosResponse {
+  tiposDocumentosArray: CatalogosSelect[];
+}
 
 export interface DatosPageAcuse {
   txtAlerta: string;
