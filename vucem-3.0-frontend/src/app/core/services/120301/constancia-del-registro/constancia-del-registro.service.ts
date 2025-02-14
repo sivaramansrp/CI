@@ -11,7 +11,6 @@ export class ConstanciaDelRegistroService {
   constructor(private httpClient: HttpClient) {}
 
   getfederal(): Observable<any> {
-    // console.log('Fetching data from:', this.jsonUrl);
     return this.httpClient.get<any[]>(this.jsonUrl);
   }
 }
