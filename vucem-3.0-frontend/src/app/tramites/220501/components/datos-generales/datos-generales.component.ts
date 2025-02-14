@@ -1,7 +1,7 @@
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder,FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RevisionService } from '../../../../core/services/220501/revision.service';
 import { TEXTOS } from '../../../../shared/constantes/issuance-extension-modification.enum';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
@@ -25,7 +25,7 @@ interface Row {
 @Component({
   selector: 'app-datos-generales',
   templateUrl: './datos-generales.component.html',
-  styleUrls: ['./datos-generales.component.scss']
+  styleUrls: ['./datos-generales.component.scss'],
 })
 export class DatosGeneralesComponent implements OnInit {
   /**
@@ -86,94 +86,96 @@ export class DatosGeneralesComponent implements OnInit {
    * Selección de oficina de inspección.
    * @type {CatalogosSelect}
    */
-  oficianaInspeccion !: CatalogosSelect;
+  oficianaInspeccion!: CatalogosSelect;
 
   /**
    * Selección de punto de inspección.
    * @type {CatalogosSelect}
    */
-  puntoInspeccion !: CatalogosSelect;
+  puntoInspeccion!: CatalogosSelect;
 
   /**
    * Selección de establecimiento.
    * @type {CatalogosSelect}
    */
-  establecimiento !: CatalogosSelect;
+  establecimiento!: CatalogosSelect;
 
   /**
    * Selección de régimen al que se destinarán.
    * @type {CatalogosSelect}
    */
-  regimenDestinaran !: CatalogosSelect;
+  regimenDestinaran!: CatalogosSelect;
 
   /**
    * Selección de movilización nacional.
    * @type {CatalogosSelect}
    */
-  movilizacionNacional !: CatalogosSelect;
+  movilizacionNacional!: CatalogosSelect;
 
   /**
    * Selección de punto de verificación.
    * @type {CatalogosSelect}
    */
-  puntoVerificacion !: CatalogosSelect;
+  puntoVerificacion!: CatalogosSelect;
 
   /**
    * Selección de empresa transportista.
    * @type {CatalogosSelect}
    */
-  empresaTransportista !: CatalogosSelect;
- /**
+  empresaTransportista!: CatalogosSelect;
+  /**
    * Aduana de ingreso seleccionada.
    * @type {Catalogo}
    */
   aduanadeIngreso!: Catalogo;
 
-   /**
+  /**
    * Oficina de inspección seleccionada.
    * @type {Catalogo}
    */
-  oficianadeInspeccion !: Catalogo;
+  oficianadeInspeccion!: Catalogo;
 
-   /**
+  /**
    * Punto de inspección seleccionado.
    * @type {Catalogo}
    */
-  puntodeInspeccion !: Catalogo;
+  puntodeInspeccion!: Catalogo;
 
   /**
    * Establecimiento seleccionado.
    * @type {Catalogo}
    */
-  establecimientode !: Catalogo;
+  establecimientode!: Catalogo;
 
   /**
    * Régimen al que se destinarán las mercancías seleccionado.
    * @type {Catalogo}
    */
-  regimendeDestinaran !: Catalogo;
+  regimendeDestinaran!: Catalogo;
 
   /**
    * Movilización nacional seleccionada.
    * @type {Catalogo}
    */
-  movilizaciondeNacional !: Catalogo;
+  movilizaciondeNacional!: Catalogo;
 
   /**
    * Punto de verificación seleccionado.
    * @type {Catalogo}
    */
-  puntodeVerificacion !: Catalogo;
+  puntodeVerificacion!: Catalogo;
 
   /**
    * Empresa transportista seleccionada.
    * @type {Catalogo}
    */
-  empresadeTransportista !: Catalogo;
+  empresadeTransportista!: Catalogo;
 
-
-  constructor(private readonly fb: FormBuilder, private revisionService: RevisionService,
-    private validacionesService: ValidacionesFormularioService) {
+  constructor(
+    private readonly fb: FormBuilder,
+    private revisionService: RevisionService,
+    private validacionesService: ValidacionesFormularioService
+  ) {
     this.crearFormulario();
     this.initActionFormBuild();
     this.movilizacionForm = this.fb.group({
@@ -181,14 +183,11 @@ export class DatosGeneralesComponent implements OnInit {
       nombre: ['', Validators.required],
       medio: ['Aereo', Validators.required],
       transporte: [{ value: '020202', disabled: true }],
-      punto: ['', [Validators.required]]
+      punto: ['', [Validators.required]],
     });
-
   }
 
   ngOnInit(): void {
-
-
     this.datosDelaSolicitud = this.fb.group({
       aduanaIngreso: ['', Validators.required],
       oficinaInspeccion: ['', Validators.required],
@@ -196,7 +195,7 @@ export class DatosGeneralesComponent implements OnInit {
       claveUCON: [{ value: '', disabled: true }],
       establecimientoTIF: ['', Validators.required],
       regimen: ['', Validators.required],
-      foliodel: [{ value: '1502200200120240301000015', disabled: true }]
+      foliodel: [{ value: '1502200200120240301000015', disabled: true }],
     });
 
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
@@ -216,30 +215,51 @@ export class DatosGeneralesComponent implements OnInit {
    * @type {Row[]}
    */
   rows: Row[] = [
-    { Partida: '1', Tiporequisito: 'Inspección ocular', Requisito: 'Requisito', Certificado: 123456, Fraccion: '01039201', Descripcion: 'Con pedigree o certificado de alto registro.', Nico: '00' },
-    { Partida: '2', Tiporequisito: 'inspección de oído', Requisito: 'Requisito', Certificado: 123456, Fraccion: '01039201', Descripcion: 'Con pedigree o certificado de alto registro.', Nico: '00' },
-    { Partida: '3', Tiporequisito: 'inspección de nariz', Requisito: 'Requisito', Certificado: 123456, Fraccion: '01039201', Descripcion: 'Con pedigree o certificado de alto registro.', Nico: '00' },
-
+    {
+      Partida: '1',
+      Tiporequisito: 'Inspección ocular',
+      Requisito: 'Requisito',
+      Certificado: 123456,
+      Fraccion: '01039201',
+      Descripcion: 'Con pedigree o certificado de alto registro.',
+      Nico: '00',
+    },
+    {
+      Partida: '2',
+      Tiporequisito: 'inspección de oído',
+      Requisito: 'Requisito',
+      Certificado: 123456,
+      Fraccion: '01039201',
+      Descripcion: 'Con pedigree o certificado de alto registro.',
+      Nico: '00',
+    },
+    {
+      Partida: '3',
+      Tiporequisito: 'inspección de nariz',
+      Requisito: 'Requisito',
+      Certificado: 123456,
+      Fraccion: '01039201',
+      Descripcion: 'Con pedigree o certificado de alto registro.',
+      Nico: '00',
+    },
   ];
-
 
   /**
    * Inicializa el grupo de formularios para el componente.
-   * 
+   *
    * Este método crea un grupo de formularios utilizando el servicio FormBuilder de Angular.
    * El grupo de formularios contiene un grupo anidado llamado `datosDelaSolicitud`.
-   * 
+   *
    * @returns {void}
    */
   crearFormulario(): void {
     this.forma = this.fb.group({
       datosDelaSolicitud: this.fb.group({}),
-
     });
   }
   /**
    * Inicializa el grupo de formularios para "datosDelaSolicitud" con varios controles de formulario y sus respectivos validadores.
-   * 
+   *
    * Los controles de formulario incluyen:
    * - `aduanaIngreso`: Un campo requerido para la entrada de aduana.
    * - `oficinaInspeccion`: Un campo requerido para la oficina de inspección.
@@ -250,9 +270,9 @@ export class DatosGeneralesComponent implements OnInit {
    * - `numeroGuia`: Un campo opcional para el número de guía.
    * - `certficacion`: Un campo opcional para la certificación.
    * - `regimen`: Un campo requerido para el régimen.
-   * 
+   *
    * Después de inicializar el grupo de formularios, establece el control 'datosDelaSolicitud' en el formulario principal.
-   * 
+   *
    * @returns {void}
    */
   initActionFormBuild(): void {
@@ -263,31 +283,19 @@ export class DatosGeneralesComponent implements OnInit {
       claveUCON: ['', [Validators.required]],
       establecimientoTIF: ['', Validators.required],
       regimen: ['', Validators.required],
-      foliodel: [{ value: '1502200200120240301000015', disabled: true }]
+      foliodel: [{ value: '1502200200120240301000015', disabled: true }],
     });
 
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
-
   }
 
- /**
+  /**
    * Muestra u oculta el contenido colapsable.
    * @returns {void}
    */
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
-
-  /**
-   * Alterna las clases de un elemento.
-   * @param {HTMLElement} x - El elemento al que se le alternarán las clases.
-   * @returns {void}
-   */
-  myFunction(x): void {
-    x.classList.toggle("bi-caret-up-fill");
-    x.classList.toggle("bi-caret-down");
-  }
-
   /**
    * Índice actual de la fila.
    * @type {number}
@@ -315,121 +323,44 @@ export class DatosGeneralesComponent implements OnInit {
     return this.validacionesService.isValid(form, field);
   }
 
-    /**
-   * Establece la aduana de ingreso.
-   * @param {Catalogo} e - El catálogo de la aduana de ingreso.
-   * @returns {void}
-   */
-  aduanaDeIngreso(e: Catalogo): void {
-    this.aduanadeIngreso = e;
-  }
-
-  /**
-   * Establece la oficina de inspección.
-   * @param {Catalogo} e - El catálogo de la oficina de inspección.
-   * @returns {void}
-   */
-  oficianaDeInspeccion(e: Catalogo): void {
-    this.oficianadeInspeccion = e;
-  }
-
-  /**
-   * Establece el punto de inspección.
-   * @param {Catalogo} e - El catálogo del punto de inspección.
-   * @returns {void}
-   */
-  puntoDeInspeccion(e: Catalogo): void {
-    this.puntodeInspeccion = e;
-  }
-
-   /**
-   * Establece el establecimiento.
-   * @param {Catalogo} e - El catálogo del establecimiento.
-   * @returns {void}
-   */
-  establecimientoDe(e: Catalogo): void {
-    this.establecimientode = e;
-  }
-
-  /**
-   * Establece el régimen al que se destinarán las mercancías.
-   * @param {Catalogo} e - El catálogo del régimen.
-   * @returns {void}
-   */
-  regimenDeDestinaran(e: Catalogo): void {
-    this.regimendeDestinaran = e;
-  }
-
-   /**
-   * Establece la movilización nacional.
-   * @param {Catalogo} e - El catálogo de la movilización nacional.
-   * @returns {void}
-   */
-  movilizacionDeNacional(e: Catalogo): void {
-    this.movilizaciondeNacional = e;
-  }
-
-  /**
-   * Establece el punto de verificación.
-   * @param {Catalogo} e - El catálogo del punto de verificación.
-   * @returns {void}
-   */
-  puntoDeVerificacion(e: Catalogo): void {
-    this.puntodeVerificacion = e;
-  }
-
-   /**
-   * Establece la empresa transportista.
-   * @param {Catalogo} e - El catálogo de la empresa transportista.
-   * @returns {void}
-   */
-  empresaDeTransportista(e: Catalogo): void {
-    this.empresadeTransportista = e;
-  }
-
   /**
    * Obtiene la aduana de ingreso.
    * Este método llama al servicio de revisión para obtener la aduana de ingreso.
    * @returns {void}
    */
   getAduanaIngreso(): void {
-    this.revisionService
-      .getAduanaIngreso()
-      .subscribe((resp) => {
+    this.revisionService.getAduanaIngreso().subscribe((resp) => {
+      if (resp.code == 200) {
+        const response = resp.data;
 
-        if (resp.code == 200) {
-          const response = resp.data;
-
-          this.aduanaIngreso = {
-            labelNombre: 'Aduana de ingreso',
-            required: false,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
+        this.aduanaIngreso = {
+          labelNombre: 'Aduana de ingreso',
+          required: false,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: response,
+        };
+      }
+    });
   }
 
-   /**
+  /**
    * Obtiene la oficina de inspección.
    * Este método llama al servicio de revisión para obtener la oficina de inspección.
    * @returns {void}
    */
   getOficianaInspeccion(): void {
-    this.revisionService
-      .getOficianaInspeccion()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
+    this.revisionService.getOficianaInspeccion().subscribe((resp) => {
+      if (resp.code == 200) {
+        const response = resp.data;
 
-          this.oficianaInspeccion = {
-            labelNombre: 'Oficina de Inspección de Sanidad Agropecuaria',
-            required: false,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
+        this.oficianaInspeccion = {
+          labelNombre: 'Oficina de Inspección de Sanidad Agropecuaria',
+          required: false,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: response,
+        };
+      }
+    });
   }
 
   /**
@@ -438,42 +369,38 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   getPuntoInspeccion(): void {
-    this.revisionService
-      .getPuntoInspeccion()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
+    this.revisionService.getPuntoInspeccion().subscribe((resp) => {
+      if (resp.code == 200) {
+        const response = resp.data;
 
-          this.puntoInspeccion = {
-            labelNombre: 'Punto de inspección',
-            required: false,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
+        this.puntoInspeccion = {
+          labelNombre: 'Punto de inspección',
+          required: false,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: response,
+        };
+      }
+    });
   }
 
-   /**
+  /**
    * Obtiene el establecimiento.
    * Este método llama al servicio de revisión para obtener el establecimiento.
    * @returns {void}
    */
   getEstablecimiento(): void {
-    this.revisionService
-      .getEstablecimiento()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
+    this.revisionService.getEstablecimiento().subscribe((resp) => {
+      if (resp.code == 200) {
+        const response = resp.data;
 
-          this.establecimiento = {
-            labelNombre: 'Establecimiento TIF',
-            required: false,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
+        this.establecimiento = {
+          labelNombre: 'Establecimiento TIF',
+          required: false,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: response,
+        };
+      }
+    });
   }
   /**
    * Obtiene el régimen al que se destinarán las mercancías.
@@ -481,20 +408,18 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   getRegimenDestinaran(): void {
-    this.revisionService
-      .getRegimenDestinaran()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
+    this.revisionService.getRegimenDestinaran().subscribe((resp) => {
+      if (resp.code == 200) {
+        const response = resp.data;
 
-          this.regimenDestinaran = {
-            labelNombre: 'Régimen al que se destinarán las mercancías',
-            required: false,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
+        this.regimenDestinaran = {
+          labelNombre: 'Régimen al que se destinarán las mercancías',
+          required: false,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: response,
+        };
+      }
+    });
   }
 
   /**
@@ -503,42 +428,38 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   getMovilizacionNacional(): void {
-    this.revisionService
-      .getMovilizacionNacional()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
+    this.revisionService.getMovilizacionNacional().subscribe((resp) => {
+      if (resp.code == 200) {
+        const response = resp.data;
 
-          this.movilizacionNacional = {
-            labelNombre: 'Movilización Nacional',
-            required: false,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
+        this.movilizacionNacional = {
+          labelNombre: 'Movilización Nacional',
+          required: false,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: response,
+        };
+      }
+    });
   }
 
-   /**
+  /**
    * Obtiene el punto de verificación.
    * Este método llama al servicio de revisión para obtener el punto de verificación.
    * @returns {void}
    */
   getPuntoVerificacion(): void {
-    this.revisionService
-      .getPuntoVerificacion()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
+    this.revisionService.getPuntoVerificacion().subscribe((resp) => {
+      if (resp.code == 200) {
+        const response = resp.data;
 
-          this.puntoVerificacion = {
-            labelNombre: 'Punto de verificación federal',
-            required: false,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
+        this.puntoVerificacion = {
+          labelNombre: 'Punto de verificación federal',
+          required: false,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: response,
+        };
+      }
+    });
   }
   /**
    * Obtiene la empresa transportista.
@@ -546,20 +467,17 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   getEmpresaTransportista(): void {
-    this.revisionService
-      .getEmpresaTransportista()
-      .subscribe((resp) => {
-        if (resp.code == 200) {
-          const response = resp.data;
+    this.revisionService.getEmpresaTransportista().subscribe((resp) => {
+      if (resp.code == 200) {
+        const response = resp.data;
 
-          this.empresaTransportista = {
-            labelNombre: 'Nombre de la empresa transportista',
-            required: false,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: response,
-          };
-        }
-      });
+        this.empresaTransportista = {
+          labelNombre: 'Nombre de la empresa transportista',
+          required: false,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: response,
+        };
+      }
+    });
   }
-
 }
