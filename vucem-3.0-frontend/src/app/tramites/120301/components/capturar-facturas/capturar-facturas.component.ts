@@ -11,8 +11,15 @@
 import { Component, OnInit } from '@angular/core';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Inject } from '@angular/core';
+import { Expedición_Factura_Fecha } from '../../../../shared/constantes/elegibilidad-de-textiles.enums';
 import { CapturarFacturasService } from '../../../../core/services/120301/capturar-facturas/capturar-facturas.service';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
+import { CatalogosSelect, InputFecha } from '../../../../core/models/shared/components.model';
+import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+import { InputFechaComponent } from '../../../../shared/components/input-fecha/input-fecha.component';
 
 @Component({
   selector: 'app-capturar-facturas',
@@ -22,7 +29,9 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
   imports: [
     TableComponent,
     TituloComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SelectCatalogosComponent,
+    InputFechaComponent
   ]
 })
 export class CapturarFacturasComponent implements OnInit {
@@ -46,6 +55,8 @@ export class CapturarFacturasComponent implements OnInit {
    */
   ConstanciaDelRegistro!: FormGroup;
 
+
+
   /**
    * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
    */
@@ -59,26 +70,25 @@ export class CapturarFacturasComponent implements OnInit {
     'Unidad de medida',
     'Valor en dólares',
   ];
-
-  /**
+   /**
    * @property {Array} facturas - Array de datos de facturas para mostrar en la tabla.
+   *    * @param {FormBuilder} fb - Servicio para la creación de formularios.
+   * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.--120301
    */
   facturas: any[] = [];
   constructor(
-    private fb: FormBuilder,
-    private capturarFacturasService: CapturarFacturasService
+    private capturarFacturasService: CapturarFacturasService,
+    private readonly httpServicios: HttpClient,
   ) {}
 
   ngOnInit(): void {
     this.fetchData();
+    this.obtenerListasDesplegables();
   }
   fetchData(): void {
     this.capturarFacturasService.getDatos().subscribe({
       next: (response: any) => {
-        // console.log('Received data:', response);
-
         if (response && Array.isArray(response.facturas)) {
-
           this.facturas = response.facturas.map((item) => {
             var data = {
               tbodyData: item.tbodyData
@@ -86,10 +96,7 @@ export class CapturarFacturasComponent implements OnInit {
             return data;
           }
           );
-
-          //console.log(this.facturas);
           this.facturas = [...this.facturas]
-
         } else {
           console.error('API response is not in expected format:', response);
           this.facturas = [];
@@ -101,13 +108,44 @@ export class CapturarFacturasComponent implements OnInit {
       }
     });
   }
+    /**
+   * Configuración para el select de unidad de medida.
+   * @property {CatalogosSelect} unidadDeMedida
+   */
+    unidadDeMedida: CatalogosSelect = {
+      labelNombre: 'Unidad De Medida',
+      required: true,
+      primerOpcion: 'Selecciona una Unidad de Medida',
+      catalogos: [],
+    };
+     /**
+   * Configuración para el input de fecha-expedición-factura.
+   * @property {InputFecha} fechaInicioInput
+   */
+  
+  /**
+   * Configuración para el input de fecha de pago.
+   * @property {InputFecha} fechaInicioInput
+   */
+  fechaInicioInput: InputFecha = Expedición_Factura_Fecha;
+     /**
+   * Obtiene las listas desplegables.
+   * @method obtenerListasDesplegables
+   */
+     obtenerListasDesplegables() {
+      this.obtenerIngresoSelectList();
+    }
+  
+    /**
+     * Obtiene la lista para el select de unidad de medida.
+     * @method obtenerIngresoSelectList
+     */
+    
+    obtenerIngresoSelectList() {
+      this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/120301/unidad-de-medida.json').subscribe((data): void => {
+        const datos = data?.data;
+        this.unidadDeMedida.catalogos = datos;
+      });
+    }
 
-  // facturas = [
-  //   {
-  //     tbodyData: ['prueba107112024', 'RAZON SOCIAL CONSIGNATARIO CONSIGNATARIO', 'CALLE', '2024-11-07 00:00:00.0', '100', '9', 'Kilogramo', '100.0']
-  //   },
-  //   {
-  //     tbodyData: ['3434324', 'FACTURA', 'CALLE', '2024-10-14 00:00:00.0', '999999', '999990', 'Kilogramo', '3213.0']
-  //   }
-  // ];
 }

@@ -72,8 +72,8 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
         placeholder: '',
     }
 ];
-export const FECHA_DE_PAGO = {
-    labelNombre: 'Fecha de pago',
+export const Expedición_Factura_Fecha = {
+    labelNombre: 'Fecha de expedición de la factura:',
     required: true,
     habilitado: true,
 

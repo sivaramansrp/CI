@@ -6,6 +6,8 @@ import { CapturarFacturasComponent } from './capturar-facturas.component';
 import { CapturarFacturasService } from '../../../../core/services/120301/capturar-facturas/capturar-facturas.service';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+import { InputFechaComponent } from '../../../../shared/components/input-fecha/input-fecha.component';
 
 describe('CapturarFacturasComponent', () => {
   let component: CapturarFacturasComponent;
@@ -18,7 +20,9 @@ describe('CapturarFacturasComponent', () => {
         HttpClientTestingModule,
         ReactiveFormsModule,
         TableComponent,
-        TituloComponent
+        TituloComponent,
+        SelectCatalogosComponent,
+        InputFechaComponent
       ],
       declarations: [CapturarFacturasComponent],
       providers: [CapturarFacturasService]
@@ -54,5 +58,27 @@ describe('CapturarFacturasComponent', () => {
     component.ngOnInit();
 
     expect(component.facturas).toEqual([]);
+  });
+
+  it('should fetch unidad de medida data', () => {
+    const mockUnidadDeMedida = {
+      data: [
+        { id: 1, descripcion: 'Kilogramo', tam: 'Grande', dpi: 'Nacional', value: 'KG' },
+        { id: 2, descripcion: 'Litro', tam: 'Mediano', dpi: 'Internacional', value: 'L' }
+      ]
+    };
+    spyOn(component['httpServicios'], 'get').and.returnValue(of(mockUnidadDeMedida));
+
+    component.obtenerIngresoSelectList();
+
+    expect(component.unidadDeMedida.catalogos).toEqual(mockUnidadDeMedida.data);
+  });
+
+  it('should handle error while fetching unidad de medida data', () => {
+    spyOn(component['httpServicios'], 'get').and.returnValue(of({}));
+
+    component.obtenerIngresoSelectList();
+
+    expect(component.unidadDeMedida.catalogos).toEqual([]);
   });
 });
