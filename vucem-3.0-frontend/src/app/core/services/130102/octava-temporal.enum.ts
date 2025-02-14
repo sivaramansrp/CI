@@ -1,4 +1,4 @@
-export const OctaTempo = [
+export const OCTA_TEMPO = [
     {
         indice: 1,
         titulo: 'Capturar solicitud',

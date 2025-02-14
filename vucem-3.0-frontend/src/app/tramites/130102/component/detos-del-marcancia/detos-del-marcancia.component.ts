@@ -21,7 +21,7 @@ import unidadOptions from '../../../../../assets/json/130102/unidad_da.json';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
-import { Regx } from '../../../../shared/constantes/regex.constants';
+import { REG_X } from '../../../../shared/constantes/regex.constants';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 
@@ -119,7 +119,7 @@ export class DetosDelMarcanciaComponent implements OnInit {
         [
           Validators.required,
           Validators.min(1),
-          Validators.pattern(Regx.ONLY_NUMBERS), 
+          Validators.pattern(REG_X.ONLY_NUMBERS), 
         ],
       ],
       valorFacturaUSD: [
@@ -127,7 +127,7 @@ export class DetosDelMarcanciaComponent implements OnInit {
         [
           Validators.required,
           Validators.min(0.01),
-          Validators.pattern(Regx.DECIMAL_TWO_PLACES),
+          Validators.pattern(REG_X.DECIMAL_TWO_PLACES),
         ],
       ],
     });
