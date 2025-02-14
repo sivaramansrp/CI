@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PasoFourComponent } from './paso-four.component';
+import { PasoFourComponent } from './paso-cuatro.component';
 
 describe('PasoFourComponent', () => {
   let component: PasoFourComponent;
