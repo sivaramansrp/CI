@@ -6,8 +6,15 @@ import { Component } from '@angular/core';
   styleUrl: './evaluar-dictamen.component.scss'
 })
 export class EvaluarDictamenComponent {
+  /**
+   * Índice de la pestaña seleccionada
+   */
   indice: number = 1;
 
+  /**
+   * Método para seleccionar la pestaña
+   * @param i indica el número de la pestaña seleccionada
+   */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
