@@ -67,4 +67,4 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
   ],
   exports: [SolicitudComponent, TercerosComponent],
 })
-export class ServiciosExtraordinariosModule {}
+export class ServiciosExtraordinariosModule { }

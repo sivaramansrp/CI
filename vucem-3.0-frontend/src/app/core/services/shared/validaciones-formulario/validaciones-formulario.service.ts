@@ -5,7 +5,6 @@ import {
   ValidatorFn,
 } from '@angular/forms';
 import { Injectable } from '@angular/core';
-import { differenceInDays } from 'date-fns';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +13,7 @@ export class ValidacionesFormularioService {
   public rfcPattern =
     /^([A-ZÑ&]{3,4})?(?:\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01]))?[A-Z\d]{2}[A\d]$/;
   public horaPattern = /^([01]\d|2[0-3]):[0-5]\d$/;
+  public patronDeNumero = /^[0-9]\d*$/;
 
   /**
    * Valida si el campo de un formulario no contiene errores
@@ -97,34 +97,5 @@ export class ValidacionesFormularioService {
     hoy.setHours(0, 0, 0, 0);
     const diaSeleccionado = new Date(control.value);
     return diaSeleccionado > hoy ? null : { minDate: true };
-  }
-
-  /**
-   * Valida que la fecha de inicio sea menor a la fecha final
-   * @param {string} groupName : Nombre del grupo de campos a validar
-   * @returns {ValidatorFn} : Retorna una función que valida si la fecha de inicio es menor a la fecha final
-   */
-  validaDiaDiferencia(groupName: string): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const controlGroup = control.get(groupName) as FormGroup;
-
-      if (!controlGroup) {
-        return null;
-      }
-
-      const fechaUno = control.get('fechaInicio')?.value;
-      const fechaDos = control.get('fechaFinal')?.value;
-
-      if (!fechaUno || !fechaDos) {
-        return null;
-      }
-
-      const diaUno = new Date(fechaUno);
-      const diaDos = new Date(fechaDos);
-
-      const diaDiferencia = differenceInDays(diaUno, diaDos);
-
-      return diaDiferencia === 1 ? null : { dateDifference: true };
-    };
   }
 }
