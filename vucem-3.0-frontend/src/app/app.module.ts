@@ -16,10 +16,7 @@ import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite
 import { TituloComponent } from "./shared/components/titulo/titulo.component";
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    SeleccionTramiteComponent
-  ],
+  declarations: [AppComponent, SeleccionTramiteComponent],
   imports: [
     AkitaNgDevtools,
     AppRoutingModule,
