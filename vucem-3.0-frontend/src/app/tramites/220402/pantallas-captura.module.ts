@@ -23,6 +23,7 @@ import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.
 import { AgregarTransporteComponent } from "../../shared/components/agregar-transporte/agregar-transporte.component";
 import { RepresentanteFiscalComponent } from '../../shared/components/representante-fiscal/representante-fiscal.component';
 import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
+import { CatalogoSelectComponent } from './../../shared/components/catalogo-select/catalogo-select.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { SelectPaisesComponent } from '../../shared/components/select-paises/sel
     CrosslistComponent,
     AgregarTransporteComponent,
     RepresentanteFiscalComponent,
-    SelectPaisesComponent
+    SelectPaisesComponent,
+    CatalogoSelectComponent
 ],
 exports: []
 })

@@ -3,27 +3,18 @@ import {
   Catalogo
 } from '../../../../core/models/shared/catalogos.model';
 import {
-  DatosInputCheck,
   InputFecha,
 } from '../../../../core/models/shared/components.model';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import {
   FECHA_FINAL,
   FECHA_INICIO,
 } from '../../../../shared/constantes/servicios-extraordinarios.enum';
-import {
-  TIPO_SOLICITUD,
-} from '../../../../shared/constantes/constantes';
-import { FechasService } from '../../../../core/services/shared/fechas/fechas.service';
-import { DatosParaValidacionFecha } from '../../../../core/models/shared/fechas.model';
-import {
-  delay,
-  Subject,
-  takeUntil,
-  tap,
-} from 'rxjs';
-import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
+
+/**
+ * Componente para la vista de la solicitud de la sección de "220402".
+ */
 
 @Component({
   selector: 'solicitud',
@@ -33,58 +24,78 @@ import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 
 export class SolicitudComponent {
 
-
-  tipoSolSeleccionada!: Catalogo;
-
+  /**
+     * Fecha inicio de entrada.
+     */
   fechaInicioInput: InputFecha = FECHA_INICIO;
+
+  /**
+   * Fecha final de entrada.
+   */
   fechaFinalInput: InputFecha = FECHA_FINAL;
 
+  /**
+   * Formulario principal de la solicitud.
+   */
   FormSolicitud!: FormGroup;
 
-  colapsable: boolean = false;
+  /**
+   * Indica si la persona mercancia es visible.
+   */
   mercanciaCollapsable: boolean = false;
 
-  selectRangoDias: Array<string> = [];
+  /**
+   * Lista de catálogos de Seleccione una opción.
+   */
+  options!: Catalogo[];
 
-  private destroyNotifier$: Subject<void> = new Subject();
-  private seccion: SeccionState;
-
+  /**
+ * Datos Generales de la Mercancía Exhibición de mesa.
+ */
   datosGeneralesArr: any = [];
+
+  /**
+ * Origen Exhibición de mesa.
+ */
   origenArr: any = [];
+
+  /**
+ * federativa Origen Exhibición de mesa.
+ */
   federativaOrigen: string;
 
+  /**
+   * Constructor del componente.
+   * @param fb FormBuilder para crear formularios.
+   * @param validacionesService Servicio para validaciones de formularios.
+   */
   constructor(
-    private seccionStore: SeccionStore,
-    private fechaService: FechasService,
     private fb: FormBuilder,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
   ) {
+    // Inicializar el formulario principal
     this.crearFormSolicitud();
   }
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * 
+   * Este método realiza las siguientes acciones:
+   * 1. Inicializa los catálogos necesarios para el formulario.
+   * 
+   * @returns {void}
+   */
   ngOnInit(): void {
-    this.FormSolicitud.statusChanges.pipe(
-      takeUntil(this.destroyNotifier$),
-      delay(10),
-      tap((value) => {
-        let seccion: number;
-        const formasValidadas = this.seccion.formaValida;
-        for (let i = 0; i < this.seccion.seccion.length; i++) {
-          if (this.seccion.seccion[i] === true && this.seccion.formaValida[i] === false) {
-            seccion = i;
-            break;
-          }
-        }
-        if (this.FormSolicitud.valid) {
-          formasValidadas[seccion] = true;
-          this.seccionStore.establecerFormaValida(formasValidadas);
-        } else {
-          formasValidadas[seccion] = false;
-          this.seccionStore.establecerFormaValida(formasValidadas);
-        }
-      })
-    )
-      .subscribe();
+    this.inicializaCatalogos();
+  }
+
+  /**
+* Obtiene el grupo de formulario 'datosDelTramitRealizer' del formulario principal 'FormSolicitud'.
+*
+* @returns {FormGroup} El grupo de formulario 'datosDelTramitRealizer'.
+*/
+  get datosDelTramitRealizer(): FormGroup {
+    return this.FormSolicitud.get('datosDelTramitRealizer') as FormGroup;
   }
 
   /**
@@ -92,7 +103,6 @@ export class SolicitudComponent {
  *
  * @returns {FormGroup} El grupo de formulario 'datosMercancia'.
  */
-
   get datosMercancia(): FormGroup {
     return this.FormSolicitud.get('datosMercancia') as FormGroup;
   }
@@ -102,16 +112,58 @@ export class SolicitudComponent {
 *
 * @returns {FormGroup} El grupo de formulario 'datosGenerales'.
 */
-
   get datosGenerales(): FormGroup {
     return this.datosMercancia.get('datosGenerales') as FormGroup;
   }
 
-  isValid(form: FormGroup, field: string) {
+  /**
+* Obtiene el grupo de formulario 'numeroDescDeLosEmpaques' del formulario principal 'FormSolicitud'.
+*
+* @returns {FormGroup} El grupo de formulario 'numeroDescDeLosEmpaques'.
+*/
+  get numeroDescDeLosEmpaques(): FormGroup {
+    return this.FormSolicitud.get('numeroDescDeLosEmpaques') as FormGroup;
+  }
+
+  /**
+   * Verifica si un campo específico en un formulario es válido.
+   *
+   * @param {FormGroup} form - El formulario que contiene el campo a validar.
+   * @param {string} field - El nombre del campo a validar.
+   * @returns {boolean} - Retorna `true` si el campo es válido, de lo contrario `false`.
+   */
+  isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field);
   }
 
-  crearFormSolicitud() {
+
+  /**
+     * Inicializa los catálogos necesarios para el formulario.
+     */
+  private inicializaCatalogos(): void {
+
+    this.options = [
+      {
+        id: 1,
+        descripcion: 'Option 1'
+      },
+      {
+        id: 2,
+        descripcion: 'Option 2'
+      },
+      {
+        id: 3,
+        descripcion: 'Option 3'
+      }
+    ]
+
+  }
+
+  /**
+   * Crea el formulario de solicitud.
+   * @return {void} No retorna ningún valor.
+   */
+  crearFormSolicitud(): void {
     this.FormSolicitud = this.fb.group({
       datosDelTramitRealizer: this.fb.group({
         tipoDeCertificado: ['', Validators.required],
@@ -154,130 +206,77 @@ export class SolicitudComponent {
     });
   }
 
-  fechaInicio() {
-    const fechaInicio = this.datosMercancia.get('fechaInicio')?.value;
-    return fechaInicio;
-  }
-
+  /**
+   * Método para cambiar la fecha incio.
+   * @param nuevo_valor Nuevo valor de la fecha incio.
+   */
   cambioFechaInicio(nuevo_valor: string) {
     this.datosMercancia.get('fechaInicio')?.setValue(nuevo_valor);
     this.datosMercancia.get('fechaInicio')?.markAsUntouched();
   }
 
+  /**
+   * Método para cambiar la fecha final.
+   * @param nuevo_valor Nuevo valor de la fecha final.
+   */
   cambioFechaFinal(nuevo_valor: string) {
     this.datosMercancia.get('fechaFinal')?.setValue(nuevo_valor);
     this.datosMercancia.get('fechaFinal')?.markAsUntouched();
   }
 
   /**
-   * Valida el formulario
+   * Método para mostrar los campos correspondientes a una mercancia.
+   * @returns void
    */
-  validarFormulario(): void {
-    if (this.FormSolicitud.invalid) {
-      this.FormSolicitud.markAllAsTouched();
-      return;
-    }
-  }
-
-  valorInputCheck(e: DatosInputCheck) {
-    
-  }
-
-  obtenerHora(e: string, tipo: string) {
-    if (tipo === 'i') {
-      this.datosMercancia.get('horaInicio')?.setValue(e);
-    } else if (tipo === 'f') {
-      this.datosMercancia.get('horaFinal')?.setValue(e);
-
-      const fechaInicial = this.datosMercancia.get('fechaInicio')?.value;
-      const fechaFinal = this.datosMercancia.get('fechaFinal')?.value;
-      const horaInicial = this.datosMercancia.get('horaInicio')?.value;
-      const horaFinal = this.datosMercancia.get('horaFinal')?.value;
-
-      const rangoFecha = {
-        fechaInicio: this.fechaService.formatoFechaGuion(fechaInicial, false),
-        horaInicio: horaInicial,
-        fechaFin: this.fechaService.formatoFechaGuion(fechaFinal, false),
-        horaFin: horaFinal,
-      };
-      this.validaRangoFechas(rangoFecha);
-    }
-  }
-
-  validaRangoFechas(datos: DatosParaValidacionFecha): void {
-    switch (this.tipoSolSeleccionada.id) {
-      case TIPO_SOLICITUD.INDIVIDUAL:
-        const rangoFechaValida = this.fechaService.validacion24Horas(datos);
-        if (!rangoFechaValida) {
-          // Aqui se muestra un mensaje de error
-          alert('El rango de fechas no puede ser mayor a 24 horas');
-          return;
-        }
-        this.rango_fechas();
-
-        break;
-      case TIPO_SOLICITUD.SEMANAL:
-        const rangoFechaSemana = this.fechaService.validacionSemana(datos);
-        if (!rangoFechaSemana) {
-          // Aqui se muestra un mensaje de error
-          alert('El rango de fechas no puede ser mayor a una semana');
-          return;
-        }
-        this.rango_fechas();
-        break;
-      case TIPO_SOLICITUD.MENSUAL:
-        const rangoFechaMes = this.fechaService.validacionMes(datos);
-        if (!rangoFechaMes) {
-          // Aqui se muestra un mensaje de error
-          alert('El rango de fechas no puede ser mayor a un mes');
-          return;
-        }
-        this.rango_fechas();
-        break;
-    }
-  }
-
-  rango_fechas() {
-    const fechaInicial = this.datosMercancia.get('fechaInicio')?.value;
-    const fechaFinal = this.datosMercancia.get('fechaFinal')?.value;
-
-    const formatoFechaInicial =
-      this.fechaService.formatoFechaGuion(fechaInicial);
-    const formatoFechaFinal = this.fechaService.formatoFechaGuion(fechaFinal);
-
-    this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
-      formatoFechaInicial,
-      formatoFechaFinal
-    );
-
-    this.colapsable = true;
-  }
-
   mercancia_colapsable() {
     this.mercanciaCollapsable = !this.mercanciaCollapsable;
   }
 
-  mercancia_delete(i: number) {
+  /**
+   * Método para eliminar una mercancía de la lista.
+   * @param {number} i - Índice de la mercancía a eliminar.
+   * @returns {void}
+   */
+  mercancia_delete(i: number): void {
     this.datosGeneralesArr.splice(i, 1);
   }
 
+  /**
+   * Adds a new item to the `datosGeneralesArr` array by retrieving the value from the `datosMercancia` form's `datosGenerales` control.
+   * After adding the item, it collapses the `mercancia` section.
+   *
+   * @memberof SolicitudComponent
+   */
   mercanciaAgregar() {
     this.datosGeneralesArr.push(this.datosMercancia.get('datosGenerales')?.value);
     this.mercancia_colapsable();
   }
 
+  
+  /**
+   * Adds a municipality to the origin array based on the selected federative entity.
+   * 
+   * This method retrieves the value of 'entidadFederativadeOrigen' from the 'datosGenerales' form group
+   * and assigns it to the 'federativaOrigen' property. If the value is not found, it defaults to 'NA'.
+   * It also retrieves the value of 'municipiodeOrigen' from the 'datosGenerales' form group and assigns
+   * it to the 'origenArr' property. If the value is not found, it defaults to an empty array.
+   */
   municipioAgregar() {
     this.federativaOrigen = this.datosGenerales.get('entidadFederativadeOrigen')?.value || 'NA';
     this.origenArr = this.datosGenerales.get('municipiodeOrigen')?.value || [];
   }
 
+  /**
+   * Removes the selected municipality from the origenArr array.
+   * 
+   * This method retrieves the value of 'municipiodeOrigen' from the datosGenerales form group,
+   * and filters out any items in the origenArr array that match this value.
+   * 
+   * @memberof SolicitudComponent
+   */
   municipioEliminar() {
     const municipioOrigin = this.datosGenerales.get('municipiodeOrigen')?.value;
     this.origenArr = this.origenArr.filter((item: any) => item.indexOf(municipioOrigin) == -1);
-  }
-
-  mostrar_colapsable() {
-    this.colapsable = !this.colapsable;
   }
 
 }

@@ -1,5 +1,4 @@
 <div class="container">
-  <!-- @if(tipoSolSeleccionada) { -->
   <form [formGroup]="FormSolicitud">
 
     <ng-titulo titulo="Datos del trámit a realizar" />
@@ -29,13 +28,8 @@
 
       <div class="row mt-2">
         <div class="col-md-8">
-          <label for="seccionAduanera" class="form-label">Aduana de salida/lugar de embarque*:</label>
-          <select class="form-control" id="seccionAduanera" formControlName="seccionAduanera">
-            <option value='' [defaultSelected]=true>Selecciona un valor</option>
-            <option value=1>Option - 1</option>
-            <option value=2>Option - 2</option>
-            <option value=3>Option - 3</option>
-          </select>
+          <app-catalogo-select [catalogo]="options" formControlName="seccionAduanera"
+            [label]="'Aduana de salida/lugar de embarque'" [required]="true"></app-catalogo-select>
         </div>
       </div>
 
@@ -44,32 +38,22 @@
           <div class="form-group">
             <label class="form-label" for="puntoDestino">Punto de destino*:</label>
             <input class="form-control" id="puntoDestino" placeholder="Punto de destino" type="text"
-              formControlName="puntoDestino" />
+              formControlName="puntoDestino" [ngClass]="isValid(datosDelTramitRealizer,'puntoDestino') ? 'required' : ''" />
           </div>
         </div>
       </div>
 
       <div class="row mt-3">
         <div class="col-md-8">
-          <label for="paisDeDestino" class="form-label">País de destino*:</label>
-          <select class="form-control" id="paisDeDestino" formControlName="paisDeDestino">
-            <option value='' [defaultSelected]=true>Selecciona un valor</option>
-            <option value=1>Option - 1</option>
-            <option value=2>Option - 2</option>
-            <option value=3>Option - 3</option>
-          </select>
+          <app-catalogo-select [catalogo]="options" formControlName="paisDeDestino" [label]="'País de destino'"
+            [required]="true"></app-catalogo-select>
         </div>
       </div>
 
       <div class="row mt-3">
         <div class="col-md-8">
-          <label for="paisDeProcedencia" class="form-label">País de procedencia*:</label>
-          <select class="form-control" id="paisDeProcedencia" formControlName="paisDeProcedencia">
-            <option value='' [defaultSelected]=true>Selecciona un valor</option>
-            <option value=1>Option - 1</option>
-            <option value=2>Option - 2</option>
-            <option value=3>Option - 3</option>
-          </select>
+          <app-catalogo-select [catalogo]="options" formControlName="paisDeProcedencia" [label]="'País de procedencia'"
+            [required]="true"></app-catalogo-select>
         </div>
       </div>
 
@@ -155,14 +139,16 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label class="form-label" for="fraccionArancelaria">Fraccíon arancelaria:</label>
-                                  <input class="form-control" id="fraccionArancelaria" placeholder="Fraccíon arancelaria" type="text"
+                                  <input class="form-control" id="fraccionArancelaria"
+                                    placeholder="Fraccíon arancelaria" type="text"
                                     formControlName="fraccionArancelaria" />
                                 </div>
                               </div>
                               <div class="col-md-8">
                                 <div class="form-group">
                                   <label class="form-label" for="descdelaFraccion">Descripción de la fraccíon:</label>
-                                  <input class="form-control" id="descdelaFraccion" placeholder="Descripción de la fraccíon" type="text"
+                                  <input class="form-control" id="descdelaFraccion"
+                                    placeholder="Descripción de la fraccíon" type="text"
                                     formControlName="descdelaFraccion" />
                                 </div>
                               </div>
@@ -188,42 +174,27 @@
                                 <div class="form-group">
                                   <label class="form-label" for="cantidadUMC">Cantidad UMC*:</label>
                                   <input class="form-control" id="cantidadUMC" placeholder="Cantidad UMC" type="text"
-                                    formControlName="cantidadUMC" />
+                                    formControlName="cantidadUMC" [ngClass]="isValid(datosGenerales,'cantidadUMC') ? 'required' : ''" />
                                 </div>
                               </div>
                               <div class="col-md-4">
                                 <div class="form-group">
-                                  <label class="form-label" for="UMC">UMC*:</label>
-                                  <select class="form-control" id="UMC" formControlName="UMC">
-                                    <option value='' [defaultSelected]=true>Selecciona un valor</option>
-                                    <option value="1" [selected]="1">Option - 1</option>
-                                    <option value=2>Option - 2</option>
-                                    <option value=3>Option - 3</option>
-                                  </select>
+                                  <app-catalogo-select [catalogo]="options" formControlName="UMC" [label]="'UMC'"
+                                    [required]="true"></app-catalogo-select>
                                 </div>
                               </div>
                             </div>
                             <div class="col-md-12">
                               <div class="col-md-8">
-                                <label for="paisdeOrigen" class="form-label">País de origen*:</label>
-                                <select class="form-control" id="paisdeOrigen" formControlName="paisdeOrigen">
-                                  <option value='' [defaultSelected]=true>Selecciona un valor</option>
-                                  <option value=1>Option - 1</option>
-                                  <option value=2>Option - 2</option>
-                                  <option value=3>Option - 3</option>
-                                </select>
+                                <app-catalogo-select [catalogo]="options" formControlName="paisdeOrigen"
+                                  [label]="'País de origen'" [required]="true"></app-catalogo-select>
                               </div>
                             </div>
                             <div class="col-md-12">
                               <div class="col-md-4">
-                                <label for="entidadFederativadeOrigen" class="form-label">Entidad federativa de origen*:</label>
-                                <select class="form-control" id="entidadFederativadeOrigen"
-                                  formControlName="entidadFederativadeOrigen">
-                                  <option value="">Selecciona un valor</option>
-                                  <option value="federativa 1">federativa - 1</option>
-                                  <option value="federativa 2">federativa - 2</option>
-                                  <option value="federativa 3">federativa - 3</option>
-                                </select>
+                                <app-catalogo-select [catalogo]="options" formControlName="entidadFederativadeOrigen"
+                                  [label]="'Entidad federativa de
+                                  origen'" [required]="true"></app-catalogo-select>
                               </div>
                               <div class="col-md-4">
                                 <label for="municipiodeOrigen" class="form-label">Municipio de origen*:</label>
@@ -276,8 +247,8 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label class="form-label" for="marcasDistintivas">Marcas distintivas:</label>
-                                  <input class="form-control" id="marcasDistintivas" placeholder="Marcas distintivas" type="text"
-                                    formControlName="marcasDistintivas" />
+                                  <input class="form-control" id="marcasDistintivas" placeholder="Marcas distintivas"
+                                    type="text" formControlName="marcasDistintivas" />
                                 </div>
                               </div>
                             </div>
@@ -285,13 +256,8 @@
                             <div class="col-md-12">
                               <div class="col-md-4">
                                 <div class="form-group">
-                                  <label class="form-label" for="USO">Uso*:</label>
-                                  <select class="form-control" id="USO" formControlName="USO">
-                                    <option value='' [defaultSelected]=true>Selecciona un valor</option>
-                                    <option value=1 [selected]="1">Option - 1</option>
-                                    <option value=2>Option - 2</option>
-                                    <option value=3>Option - 3</option>
-                                  </select>
+                                  <app-catalogo-select [catalogo]="options" formControlName="USO" [label]="'USO'"
+                                    [required]="true"></app-catalogo-select>
                                 </div>
                               </div>
                             </div>
@@ -335,80 +301,52 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="numero">Número*:</label>
-            <input class="form-control" id="numero" placeholder="numero" type="text"
-              formControlName="numero" />
+            <input class="form-control" id="numero" placeholder="numero" type="number" formControlName="numero" [ngClass]="isValid(numeroDescDeLosEmpaques,'numero') ? 'required' : ''" />
           </div>
         </div>
         <div class="col-md-4">
-          <label for="empaques" class="form-label">Descripción de los empaques*:</label>
-          <select class="form-control" id="empaques" formControlName="empaques">
-            <option value='' [defaultSelected]=true>Selecciona un valor</option>
-            <option value=1>Option - 1</option>
-            <option value=2>Option - 2</option>
-            <option value=3>Option - 3</option>
-          </select>
+          <app-catalogo-select [catalogo]="options" formControlName="empaques" [label]="'Descripción de los empaques'"
+            [required]="true"></app-catalogo-select>
         </div>
       </div>
-      
+
     </ng-container>
 
     <ng-titulo titulo="Datos de la unidad de verificación" />
     <ng-container formGroupName="unidadDeVerificacion">
       <div class="row mt-3">
-        
+
         <div class="col-md-5">
-          <label for="unidadDeVerify" class="form-label">Nombre de la unidad de verificación*:</label>
-          <select class="form-control" id="unidadDeVerify" formControlName="unidadDeVerify">
-            <option value='' [defaultSelected]=true>Selecciona un valor</option>
-            <option value=1>Option - 1</option>
-            <option value=2>Option - 2</option>
-            <option value=3>Option - 3</option>
-          </select>
+          <app-catalogo-select [catalogo]="options" formControlName="unidadDeVerify" [label]="'Nombre de la unidad de verificación'"
+            [required]="true"></app-catalogo-select>
         </div>
 
         <div class="col-md-5">
-          <label for="terceroEspecialista" class="form-label">Nombre del tercero especialista fitasanitario*:</label>
-          <select class="form-control" id="terceroEspecialista" formControlName="terceroEspecialista">
-            <option value='' [defaultSelected]=true>Selecciona un valor</option>
-            <option value=1>Option - 1</option>
-            <option value=2>Option - 2</option>
-            <option value=3>Option - 3</option>
-          </select>
+          <app-catalogo-select [catalogo]="options" formControlName="terceroEspecialista" [label]="'Nombre del tercero especialista fitasanitario'"
+            [required]="true"></app-catalogo-select>
         </div>
-
       </div>
-      
+
     </ng-container>
 
 
     <ng-titulo titulo="Unidad Expedidora del certificado fitosanitario SAGARPA" />
     <ng-container formGroupName="unidadExpedidoraFitosanitario">
       <div class="row mt-3">
-        
+
         <div class="col-md-5">
-          <label for="entidadFederative" class="form-label">Entidad Federative de Unidad Expedidora*:</label>
-          <select class="form-control" id="entidadFederative" formControlName="entidadFederative">
-            <option value='' [defaultSelected]=true>Selecciona un valor</option>
-            <option value=1>Option - 1</option>
-            <option value=2>Option - 2</option>
-            <option value=3>Option - 3</option>
-          </select>
+          <app-catalogo-select [catalogo]="options" formControlName="entidadFederative" [label]="'Entidad Federative de Unidad Expedidora'"
+            [required]="true"></app-catalogo-select>
         </div>
 
         <div class="col-md-5">
-          <label for="terceroEspecialista" class="form-label">Módulo de certificado fitosanitario*:</label>
-          <select class="form-control" id="terceroEspecialista" formControlName="terceroEspecialista">
-            <option value='' [defaultSelected]=true>Selecciona un valor</option>
-            <option value=1>Option - 1</option>
-            <option value=2>Option - 2</option>
-            <option value=3>Option - 3</option>
-          </select>
+          <app-catalogo-select [catalogo]="options" formControlName="terceroEspecialista" [label]="'Módulo de certificado fitosanitario'"
+            [required]="true"></app-catalogo-select>
         </div>
 
       </div>
-      
+
     </ng-container>
 
 
   </form>
-  <!-- } -->
