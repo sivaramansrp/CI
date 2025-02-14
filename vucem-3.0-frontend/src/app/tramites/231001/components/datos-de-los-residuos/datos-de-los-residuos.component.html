@@ -1,214 +1,119 @@
-<p>datos-de-los-residuos works!</p>
-
-
-<div id="modalResiduos">
-    <!-- Forma, para agregar mercancias -->
-    <form [formGroup]="materiaPrimaForm" (ngSubmit)="agregarMercancia()" id="materiaPrimaForm">
-      <input type="hidden" formControlName="descUnidadMedida" id="descUnidadMedida" />
-      <input type="hidden" formControlName="descFraccion" id="descFraccion" />
-      <input type="hidden" formControlName="generica1" id="generica1" />
-      <input type="hidden" formControlName="clavePartida" id="clavePartida" />
-      <input type="hidden" formControlName="claveSubPartida" id="claveSubPartida" />
-  
-      <div id="dvMessage" *ngIf="showMessage" class="row">
-        <div class="col-md-12">
-          <div class="alert alert-danger">
-            Faltan campos por capturar.
-          </div>
-        </div>
-      </div>
-  
-      <div class="row">
-        <div class="col-md-12">
-          <h3>Solicitud Semarnat - Materia Prima a Importar</h3>
-          <hr class="red" />
-        </div>
-      </div>
-  
-      <div class="row">
-        <div class="col-md-12">
-          <h4>Agregar Mercancía</h4>
-        </div>
-      </div>
-      <br />
-  
-      <div class="row">
+<div class="container">
+<ng-titulo [titulo]="'Datos de los residuos y/o materia prima a importar'"></ng-titulo>
+<h4>Agregar materia prima a importar </h4>
+    <form [formGroup]="materiaPrimaForm" id="materiaPrimaForm" class="form-group">
+      <div class="row mt-3">
         <div class="col-md-8">
           <div class="form-group">
-            <label for="descripcionMercancia">Nombre de la Materia Prima</label>
-            <span class="require">*</span>
-            <span class="puntos">:</span>
+            <label for="descripcionMercancia" class="form-label">Nombre de la Materia Prima *:</label>
             <input
               type="text"
               formControlName="descripcionMercancia"
               class="form-control"
               id="descripcionMercancia"
-              maxlength="120"
-              size="80"
             />
+            <div *ngIf="materiaPrimaForm.get('descripcionMercancia')?.invalid && (materiaPrimaForm.get('descripcionMercancia')?.dirty || materiaPrimaForm.get('descripcionMercancia')?.touched)">
+                <div *ngIf="materiaPrimaForm.get('descripcionMercancia')?.errors?.['required']">
+                    <small class="text-danger">Este campo es obligatorio</small>
+                </div>
+            </div>
           </div>
+          
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label for="generica2">Cantidad</label>
-            <span class="require">*</span>
-            <span class="puntos">:</span>
+            <label for="generica2" class="form-label">Cantidad *:</label>
             <input
               type="text"
               formControlName="generica2"
               class="form-control"
               id="generica2"
-              maxlength="18.5"
-              (blur)="obtenerLetraCantidad('generica2')"
-              (focus)="mostrarMsgCantSe06 = true"
+              (blur)="obtenerLetraCantidad(materiaPrimaForm.get('generica2').value)"
             />
-            <!-- <label
-              id="msgCantSe06"
-              *ngIf="mostrarMsgCantSe06"
-              style="margin:0; font-size:15px; font-weight:200; color:red;"
-            >
-              No está permitido capturar "," (coma)
-            </label> -->
+            <div *ngIf="materiaPrimaForm.get('generica2')?.invalid && (materiaPrimaForm.get('generica2')?.dirty || materiaPrimaForm.get('generica2')?.touched)">
+                <div *ngIf="materiaPrimaForm.get('generica2')?.errors?.['required']">
+                    <small class="text-danger">Este campo es obligatorio</small>
+                </div>
+            </div>
           </div>
         </div>
       </div>
   
-      <div class="row">
+      <div class="row mt-3">
         <div class="col-md-8">
           <div class="form-group">
-            <label for="cantidadEnLetra">Cantidad en Letra</label>
-            <span class="puntos">:</span>
+            <label for="cantidadEnLetra" class="form-label">Cantidad (letra) *:</label>
             <input
               type="text"
               formControlName="cantidadEnLetra"
               class="form-control"
               id="cantidadEnLetra"
-              size="80"
-              maxlength="256"
-              [disabled]="true"
             />
           </div>
         </div>
-        <div class="col-md-4">
-          <label for="unidadMedidaComercialClave">Unidad</label>
-          <span class="require">*</span>
-          <span class="puntos">:</span>
-          <select
-            formControlName="unidadMedidaComercial.clave"
-            class="form-control unidadMedidaComercial"
-            (change)="cambiaUnidadMedida()"
-          >
-            <option value="" disabled selected>Selecciona un valor</option>
-            <option *ngFor="let unidad of comboUnidadMedida" [value]="unidad.id">
-              {{ unidad.descripcion }}
-            </option>
-          </select>
+        <div class="col-md-4" formGroupName="unidadMedidaComercial">
+          <app-catalogo-select  (change)="cambiaUnidadMedida()" 
+           formControlName="unidadMedidaComercial.clave" 
+           [catalogo]="comboUnidadMedida" 
+           [label]="'Unidad de medida'"
+           [required]="true"></app-catalogo-select>
         </div>
       </div>
   
-      <div class="row">
+      <div class="row mt-3">
         <div class="col-md-12">
           <div class="form-group">
-            <label for="capituloFraccion">Capítulo</label>
-            <span class="require">*</span>
-            <span class="puntos">:</span>
-            <select
-              formControlName="capituloFraccion"
-              class="form-control capituloFraccion"
-              (change)="cambiaCapituloFraccion()"
-            >
-              <option value="" disabled selected>Selecciona un valor</option>
-              <option *ngFor="let capitulo of comboCapituloFraccion" [value]="capitulo.id">
-                {{ capitulo.descripcion }}
-              </option>
-            </select>
+            <app-catalogo-select  (change)="cambiaCapituloFraccion()"  
+             formControlName="capituloFraccion"
+             [catalogo]="comboCapituloFraccion" 
+             [label]="'Capítulo'"
+             [required]="true">
+            </app-catalogo-select>
           </div>
         </div>
       </div>
   
-      <div class="row">
+      <div class="row mt-3">
         <div class="col-md-12">
           <div class="form-group">
-            <label for="partidaFraccion">Partida</label>
-            <span class="require">*</span>
-            <span class="puntos">:</span>
-            <select
-              formControlName="partidaFraccion"
-              class="form-control partidaFraccion"
-              (change)="cambiaPartidaFraccion()"
-            >
-              <option value="" disabled selected>Selecciona un valor</option>
-              <option *ngFor="let partida of comboPartidaFraccion" [value]="partida.id">
-                {{ partida.descripcion }}
-              </option>
-            </select>
+            <app-catalogo-select  (change)="cambiaPartidaFraccion()"  
+             formControlName="partidaFraccion" 
+             [catalogo]="comboPartidaFraccion" 
+             [label]="'Partida'"
+             [required]="true">
+            </app-catalogo-select>
           </div>
         </div>
       </div>
   
-      <div class="row">
+      <div class="row mt-3">
         <div class="col-md-4">
           <div class="form-group">
-            <label for="subPartidaFraccion">Subpartida</label>
-            <span class="require">*</span>
-            <span class="puntos">:</span>
-            <select
-              formControlName="subPartidaFraccion"
-              class="form-control subPartidaFraccion"
-              (change)="cambiaSubPartidaFraccion()"
-            >
-              <option value="" disabled selected>Selecciona un valor</option>
-              <option *ngFor="let subPartida of comboSubPartidaFraccion" [value]="subPartida.id">
-                {{ subPartida.descripcion }}
-              </option>
-            </select>
+            <app-catalogo-select  (change)="cambiaSubPartidaFraccion()"  
+             formControlName="subPartidaFraccion" 
+             [catalogo]="comboSubPartidaFraccion" 
+             [label]="'Sub partida'"
+             [required]="true">
+           </app-catalogo-select>
           </div>
         </div>
         <div class="col-md-8">
           <div class="form-group">
-            <label for="fraccion">Fracción</label>
-            <span class="require">*</span>
-            <span class="puntos">:</span>
-            <select
-              formControlName="fraccion"
-              class="form-control fraccion"
-              (change)="cambiaFraccion()"
-            >
-              <option value="" disabled selected>Selecciona un valor</option>
-              <option *ngFor="let fraccion of comboFraccionArancelariaParametros" [value]="fraccion.id">
-                {{ fraccion.descripcion }}
-              </option>
-            </select>
+            <app-catalogo-select  (change)="cambiaFraccion()"  
+             formControlName="fraccion" 
+             [catalogo]="comboFraccionArancelariaParametros" 
+             [label]="'Fracción arancelaria'"
+             [required]="true">
+        </app-catalogo-select>
           </div>
         </div>
       </div>
   
-      <div style="height:30px"></div>
-      <div class="col-md-4"></div>
-      <!-- <div class="col-md-8">
-        <hr>
-      </div> -->
-  
-      <div class="row">
-        <div class="col-md-12 text-muted">
-          <div id="lblCamposObligatorios">
-            <strong>Nota: Todos los campos son obligatorios.</strong>
-          </div>
-          <button
-            type="submit"
-            class="btn btn-primary pull-right"
-            (click)="guardarMateriaPrima()"
-          >
-            Guardar
-          </button>
-          <button
-            type="button"
-            class="btn btn-default pull-right mr-2"
-            (click)="cerrar()"
-          >
-            Cancelar
-          </button>
+      <div class="row mt-3">
+        <div class="col-md-12">
+            <btn-continuar [datos]="datosPasosGuardar"></btn-continuar>
         </div>
       </div>
     </form>
   </div>
+
