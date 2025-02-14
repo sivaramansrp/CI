@@ -3,10 +3,12 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { map, merge } from 'rxjs';
 
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import mercanciaTable from '../../../../../assets/json/220501/mercancia-table.json';
 import { SagarpaService } from '../../../../core/services/220501/sagarpa/sagarpa.service'
 import { TEXTOS } from '../../../../shared/constantes/220501/texto-enum';
 import { Tramite220501Store } from '../../../../estados/tramites/tramite220501.store';;
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
+
 
 /**
  * Componente para seleccionar el medio de transporte.
@@ -54,23 +56,21 @@ export class MedioTransporteComponent implements OnInit {
   mostrarAgregarMercancia: boolean = false;
 
   /**
-   * Datos de mercancías.
+   * Array que contiene los datos del encabezado para la tabla de mercancías.
    */
-  mercanciasDatos: any = [];
+  public mercanciaHeaderData: string[] = [];
 
   /**
-   * Columnas de la tabla de mercancías.
+   * Variable que contiene los datos del cuerpo para la tabla de mercancías.
+   * El tipo se establece como unknown para permitir flexibilidad en la estructura de los datos.
    */
-  mercanciaMesaColumnas = [
-    'Fracción arancelaria',
-    'Descripción de la fracción',
-    'Nico',
-    'Descripción nico',
-    'Cantidad Solicitada en UMT',
-    'Unidad de medida de tarifa (UMT)',
-    'Cantidad total UMT',
-    'Saldo pendiente'
-  ];
+  public mercanciaBodyData: unknown = [];
+
+  /**
+   * Variable que contiene los datos para la tabla de mercancías.
+   * Estos datos se importan desde un archivo JSON externo.
+   */
+  public getMercanciaTableData = mercanciaTable;
 
   /**
    * Constructor del componente.
@@ -99,7 +99,7 @@ export class MedioTransporteComponent implements OnInit {
   ngOnInit(): void {
     this.inicializaCatalogos();
 
-    this.obtenerMercanciasDatos();
+    this.obtenerMercancia();
 
     this.medioDeTransporteSeleccion();
   }
@@ -133,6 +133,19 @@ export class MedioTransporteComponent implements OnInit {
   }
 
   /**
+   * Método para obtener los datos de las mercancías.
+   * 
+   * Este método asigna los datos del encabezado y del cuerpo de la tabla de mercancías
+   * a las propiedades correspondientes del componente.
+   * 
+   * @returns {void}
+   */
+  public obtenerMercancia(): void {
+    this.mercanciaHeaderData = this.getMercanciaTableData.tableHeader;
+    this.mercanciaBodyData = this.getMercanciaTableData.tableBody;
+  }
+
+  /**
    * Selecciona la clasificación de régimen.
    */
   medioDeTransporteSeleccion(): void {
@@ -141,9 +154,9 @@ export class MedioTransporteComponent implements OnInit {
   }
 
   /**
- * Método para establecer la selección de solicitud de ferrocarril.
- * @param e Evento de cambio del input.
- */
+   * Método para establecer la selección de solicitud de ferrocarril.
+   * @param e Evento de cambio del input.
+   */
   estableceSeleccionSolicitudFerro(e: any): void {
     const target = e.target as HTMLInputElement;
     this.esSolicitudFerrosValor = target.value;
@@ -161,22 +174,8 @@ export class MedioTransporteComponent implements OnInit {
  * Método para modificar los saldos de mercancía.
  */
   modificarSaldosMercancia(): void {
-    this.obtenerMercanciasDatos();
+    this.obtenerMercancia();
     this.mostrarAgregarMercancia = true;
-  }
-
-  /**
- * Método para obtener los datos de mercancías.
- * @returns Datos de mercancías.
- */
-  obtenerMercanciasDatos(): void {
-    this.mercanciasDatos = [
-      {
-        tbodyData:
-          ['01039201', 'Con pedigree o certificado de alto registro', '00', 'Con pedigree o certificado de alto', '', 'Cabeza', '1000000', '1000C'],
-      }
-    ];
-    return this.mercanciasDatos;
   }
 
   /**

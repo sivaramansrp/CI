@@ -44,30 +44,7 @@
 
     <h6>Datos de la mercancía:</h6>
 
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">
-                        <input type="checkbox" aria-label="Select All">
-                    </th>
-                    @for (item of mercanciaMesaColumnas; track $index) {
-                    <th scope="col">{{item}}</th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                @for (data of mercanciasDatos; track $index) {
-                <tr>
-                    <td><input type="checkbox" aria-label="Select Row"></td>
-                    @for (element of data.tbodyData; track $index) {
-                    <td>{{element}}</td>
-                    }
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+    <ng-table [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"></ng-table>
 
     @if (esSolicitudFerrosValor == 1) {
     <div class="row">
@@ -78,7 +55,7 @@
     </div>
 
     @if (mostrarAgregarMercancia) {
-    <app-agregar-mercancia [mercanciasDatos]="mercanciasDatos"
+    <app-agregar-mercancia [mercanciasDatos]="mercanciaBodyData"
         (cancelarEvento)="obtenerAgregarMercanciaEvent($event)"></app-agregar-mercancia>
     }
     }

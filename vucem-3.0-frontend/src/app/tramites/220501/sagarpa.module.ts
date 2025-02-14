@@ -27,6 +27,7 @@ import { SolicitanteComponent } from '../../shared/components/solicitante/solici
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudDatosComponent } from '../220502/shared/solicitud-datos/solicitud-datos.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { TableComponent } from '../../shared/components/table/table.component';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
@@ -67,6 +68,7 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     CarrosDeFerrocarrilComponent,
     HistorialInspeccionFisicaComponent,
     CatalogoSelectComponent,
+    TableComponent
   ],
   exports: [SolicitudComponent, SolicitudPageComponent],
 })

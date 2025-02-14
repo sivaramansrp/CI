@@ -42,15 +42,10 @@ describe('MedioTransporteComponent', () => {
   });
   
   it('should call obtenerMercanciasDatos and set mostrarAgregarMercancia to true when modificarSaldosMercancia is called', () => {
-    spyOn(component, 'obtenerMercanciasDatos');
+    spyOn(component, 'obtenerMercancia');
     component.modificarSaldosMercancia();
-    expect(component.obtenerMercanciasDatos).toHaveBeenCalled();
+    expect(component.obtenerMercancia).toHaveBeenCalled();
     expect(component.mostrarAgregarMercancia).toBeTrue();
-  });
-  
-  it('should set mercanciasDatos when obtenerMercanciasDatos is called', () => {
-    component.obtenerMercanciasDatos();
-    expect(component.mercanciasDatos.length).toBeGreaterThan(0);
   });
   
   it('should set mostrarAgregarMercancia when obtenerAgregarMercanciaEvent is called', () => {
