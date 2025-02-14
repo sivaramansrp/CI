@@ -12,7 +12,6 @@ import { InputCheckComponent } from '../../shared/components/input-check/input-c
 import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
 
 import { NgModule } from '@angular/core';
-
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from '../../shared/shared.module';
