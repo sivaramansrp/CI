@@ -11,7 +11,7 @@ export class HistoricoFabricantesService {
   constructor(private httpClient: HttpClient) {}
 
   getDatos(): Observable<any> {
-    console.log('Fetching data from:', this.jsonUrl);
+    // console.log('Fetching data from:', this.jsonUrl);
     return this.httpClient.get<any[]>(this.jsonUrl);
   }
 }

@@ -54,7 +54,7 @@ export class HistoricoFabricantesComponent implements OnInit {
   fetchData(): void {
     this.historicoFabricantesService.getDatos().subscribe({
       next: (response: any) => {
-        console.log('Received data:', response);
+        // console.log('Received data:', response);
 
         if (response && Array.isArray(response.fabricantesNacionales) && Array.isArray(response.fabricantesDatos)) {
           this.fabricantesNacionales = response.fabricantesNacionales.map((item) => {
@@ -65,8 +65,8 @@ export class HistoricoFabricantesComponent implements OnInit {
             return { tbodyData: item.tbodyData };
           });
 
-          console.log('fabricantesNacionales:', this.fabricantesNacionales);
-          console.log('fabricantesDatos:', this.fabricantesDatos);
+          // console.log('fabricantesNacionales:', this.fabricantesNacionales);
+          // console.log('fabricantesDatos:', this.fabricantesDatos);
         } else {
           console.error('API response is not in expected format:', response);
           this.fabricantesNacionales = [];

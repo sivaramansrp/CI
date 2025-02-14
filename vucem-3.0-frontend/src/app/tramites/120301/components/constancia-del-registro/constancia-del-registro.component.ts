@@ -70,7 +70,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   fetchData(): void {
     this.constanciaDelRegistroService.getfederal().subscribe({
       next: (response: any) => {
-        console.log('Received data:', response);
+        // console.log('Received data:', response);
 
         if (response && Array.isArray(response.federal)) {
 

@@ -59,7 +59,7 @@ export class FacturasAsociadasComponent implements OnInit {
   fetchData(): void {
     this.facturasAsociadasService.getDatos().subscribe({
       next: (response: any) => {
-        console.log('Received data:', response);
+        // console.log('Received data:', response);
 
         if (response && Array.isArray(response.facturasDisponible) && Array.isArray(response.facturasAsociadas)) {
           this.facturasDisponible = response.facturasDisponible.map((item) => {
