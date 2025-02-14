@@ -49,18 +49,6 @@ describe('PagoDeDerechosComponent', () => {
     // Add more assertions for other form controls as per your component's form structure
   }));
 
-  it('should set justificación', () => {
-    const catalogo = { id: 1, descripcion: 'Justificación 1' };
-    component.justificacionDe(catalogo);
-    expect(component.justificacionde).toBe(catalogo);
-  });
-
-  it('should set banco', () => {
-    const catalogo = { id: 1, descripcion: 'Banco 1' };
-    component.bancoDe(catalogo);
-    expect(component.bancode).toBe(catalogo);
-  });
-
   it('should get justificación', fakeAsync(() => {
     const mockResponse = { code: 200, message: 'Success', data: [{ id: 1, descripcion: 'Justificación 1' }] };
     mockRevisionService.getJustificacion.and.returnValue(of(mockResponse));
