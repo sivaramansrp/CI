@@ -42,4 +42,28 @@ describe('InspeccionFisicaComponent', () => {
     };
     expect(component.datosPasos).toEqual(expectedDatosPasos);
   });
+
+  it('should update indice and call wizardComponent.siguiente on getValorIndice with accion "cont"', () => {
+    component.wizardComponent = jasmine.createSpyObj('WizardComponent', ['siguiente', 'atras']);
+    component.getValorIndice({ valor: 2, accion: 'cont' });
+    expect(component.indice).toBe(2);
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+  });
+
+  it('should update indice and call wizardComponent.atras on getValorIndice with accion "atras"', () => {
+    component.wizardComponent = jasmine.createSpyObj('WizardComponent', ['siguiente', 'atras']);
+    component.getValorIndice({ valor: 2, accion: 'atras' });
+    expect(component.indice).toBe(2);
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
+  });
+
+  it('should not update indice or call wizardComponent methods if valor is out of range', () => {
+    component.wizardComponent = jasmine.createSpyObj('WizardComponent', ['siguiente', 'atras']);
+    component.getValorIndice({ valor: 0, accion: 'cont' });
+    expect(component.indice).toBe(1);
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    component.getValorIndice({ valor: 5, accion: 'atras' });
+    expect(component.indice).toBe(1);
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  });
 });

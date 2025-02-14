@@ -43,25 +43,11 @@ export class InspeccionFisicaComponent {
   };
 
   /**
-   * Método para configurar la pestaña activa según el índice proporcionado
-   * @param i - El índice de la pestaña seleccionada.
-   */
-  seleccionaTab(i: number): void {
-    this.indice = i;
-  }
-
-  /**
    * Maneja la navegación entre los pasos del asistente según las acciones de los botones.
    * @param e - La acción del botón que contiene el tipo de acción y el valor del índice.
    */
-  getValorIndice(e: AccionBoton) {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
+  getValorIndice(evento: AccionBoton): void {
+    this.indice = evento.valor;
+    this.wizardComponent[evento.accion === 'cont' ? 'siguiente' : 'atras']();
   }
 }
