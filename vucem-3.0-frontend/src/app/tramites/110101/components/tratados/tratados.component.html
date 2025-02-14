@@ -1,0 +1,32 @@
+<ng-titulo titulo="Datos generales del solicitante" />
+<ng-alert [CONTENIDO]="alerta.MENSAJE_ALERTA"></ng-alert>
+<form [formGroup]="formularioTratados">
+    <div class="row">
+        <div class="col-md-8">
+            <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="pais"
+                [label]="'Pais o bloque'" [required]="true" name="Pais o bloque"></app-catalogo-select>
+        </div>
+        <div class="col-md-8">
+            <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="tratado"
+                [label]="'Tratado o Acuerdo'" [required]="true" name="Tratado o Acuerdo"></app-catalogo-select>
+        </div>
+        <div class="col-md-8">
+            <app-catalogo-select [catalogo]="configuracionesDropdown[2].catalogos" formControlName="origen"
+                [label]="'Criterio de origen'" [required]="true" name="Criterio de origen"></app-catalogo-select>
+        </div>
+    </div>
+    <div class="col-12 d-flex justify-content-end mt-3 mb-4">
+        <button class="btn btn-primary" (click)="agregarTratado()">Agregar tratado</button>
+    </div>
+</form>
+
+<ng-alert [CONTENIDO]="'Para continuar con el trámite, deberá agregar por lo menos un tratado o acuerdo.'"></ng-alert>
+
+<h6 class="fs-4">Pais/bloque-tratado/acuerdo seleccionados por el solicitante</h6>
+
+<ng-table [commonTableHeader]="encabezadosComunesTabla" [commonTableBody]="cuerpoTabla"></ng-table>
+
+<div class=" text-end mt-5">
+    <button class="btn btn-default me-2">Modificar tratado</button>
+    <button class="btn btn-primary">Eliminar tratado</button>
+</div>

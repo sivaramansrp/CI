@@ -1,0 +1,51 @@
+<div class="container mt-4">
+    <ng-titulo titulo="Mercancía" />
+    <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="warningAlert"></ng-alert>
+    <form [formGroup]="formMercancia">
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <label for="nombreComercial" class="form-label">Nombre comercial de la mercancía (igual que en la factura)*:</label>
+                <input type="text" id="nombreComercial" class="form-control" formControlName="nombreComercial" placeholder="Nombre comercial de la mercancía (igual que en la factura)">
+                @if(formMercancia.get('nombreComercial')?.invalid && formMercancia.get('nombreComercial')?.touched) {
+                    <div>
+                        @if(formMercancia.get('nombreComercial')?.errors?.['required']) {
+                            <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+        <div class=" row mb-3">
+            <div class="col-md-8">
+                <label for="nombreIngles" class="form-label">Nombre en inglés*:</label>
+                <input type="text" id="nombreIngles" class="form-control" formControlName="nombreIngles" placeholder="Nombre en inglés">
+                @if(formMercancia.get('nombreIngles')?.invalid && formMercancia.get('nombreIngles')?.touched) {
+                    <div>
+                        @if(formMercancia.get('nombreIngles')?.errors?.['required']) {
+                            <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-4 mb-3">
+                <label for="fraccionArancelaria" class="form-label">Fracción arancelaria*:</label>
+                <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control"
+                [ngClass]="isValid('fraccionArancelaria') ? 'required' : ''">
+            </div>
+            <div class="col-md-8 mb-3">
+                <label for="descripcion" class="form-label">Descripción:</label>
+                <textarea id="descripcion" class="form-control" formControlName="descripcion" [readonly]="true" [style.backgroundColor]="booleanVariable"></textarea>
+            </div>
+        </div>
+       <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="valorTransaccion" class="form-label">Valor de transacción*:</label>
+            <input type="text" id="valorTransaccion" formControlName="valorTransaccion" class="form-control"
+            [ngClass]="isValid('valorTransaccion') ? 'required' : ''">
+        </div>
+       </div>
+    </form>
+
+</div>
