@@ -3,7 +3,7 @@
     <ul class="nav nav-tabs">
       <ul class="nav nav-tabs">
         <li
-          *ngFor="let tab of pestanaListaDatos"
+          *ngFor="let tab of seccionesDeLaSolicitud"
           [ngClass]="indice === tab.index ? 'active' : ''"
         >
           <a
@@ -23,8 +23,13 @@
       <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
       } @case (3) {
       <app-datos-para-movilizacion-nacional></app-datos-para-movilizacion-nacional>
-      } @case (4) {
+      } @case (4) { <<<<<<<
+      HEAD:vucem-3.0-frontend/src/app/tramites/220202/pages/paso-uno/paso-uno.component.html
       <terceros [tabindex]="3"></terceros>
+      =======
+      <terceros [tabindex]="4"></terceros>
+      >>>>>>>
+      1bb2b2560482b6a09ee562708aaf77a5bfcc0716:vucem-3.0-frontend/src/app/tramites/220201/pages/paso-uno/paso-uno.component.html
       } @case (5) {
       <app-pago-de-derechos></app-pago-de-derechos>
       } }

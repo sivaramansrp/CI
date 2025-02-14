@@ -42,12 +42,25 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'pantallas',
+    loadChildren: () =>
+      import('./tramites/110101/pantallas/pantallas.module').then(
+        (m) => m.PantallasModule
+      ),
+  },
+  {
+    path: 'certificado-zoosanitario',
+    loadChildren: () =>
+      import('./tramites/220201/certificado-zoosanitario.module').then(
+        (m) => m.CertificadoZoosanitarioModule)
+  },
+  {
     path: 'certificado-fitosanitario',
     loadChildren: () =>
       import('./tramites/220202/fitosanitario.module').then(
         (m) => m.FitosanitarioModule
       )
-  }
+  },
 ];
 
 @NgModule({

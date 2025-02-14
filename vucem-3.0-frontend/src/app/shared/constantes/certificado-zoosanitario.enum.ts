@@ -27,9 +27,9 @@ export const PASOS = [
 export const TEXTOS_REQUISITOS = {
     INSTRUCCIONES: `<h6>Instrucciones</h6>
     <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
-    <p>- En caso de que no requieras algún documento, seleccionalo y elíminalo</p>
+    <p>- En caso de que no requieras algún documento, selecciónalo y elimínalo</p>
     <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`,
-    ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
+    ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"</p>`,
 };
 export const SUCECESS_MESSAGE_STAGEONE = `La solicitud ha quedado registrada con el número temporal 202758511. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.`
 export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
@@ -44,12 +44,12 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
         placeholder: '',
     },
     {
-        labelNombre: 'Denominacion o razon social:',
+        labelNombre: 'Denominación o razón social:',
         campo: 'nombreRazonSocial',
         class: 'col-md-8',
         tipo_input: 'text',
         disabled: true,
-        tooltip: 'Denominacion o razon social',
+        tooltip: 'Denominación o razón social',
         validators: ['required'],
         placeholder: '',
     },
@@ -63,7 +63,7 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
         placeholder: '',
     },
     {
-        labelNombre: 'Correo electronic',
+        labelNombre: 'Correo electrónico',
         campo: 'correo',
         class: 'col-md-4',
         tipo_input: 'text',
@@ -75,9 +75,9 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
 export const FECHA_DE_PAGO = {
     labelNombre: 'Fecha de pago',
     required: true,
-    habilitado: true,
+    habilitado: false,
 
 };
-export const TEXTOS = 'Para continuar con el trámite, deberá agregar por lo menos una mercancia.';
+export const TEXTOS = 'Para continuar con el trámite, deberá agregar por lo menos una mercancía.';
 export const TERCEROR_TEXTO_DE_ALERTA = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
 export const IDDEUSUARIO = 21;
