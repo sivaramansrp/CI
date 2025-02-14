@@ -10,7 +10,7 @@ import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
-import { PasoUnoComponent } from "./pages/paso-uno/paso-uno.component";
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
 import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
@@ -20,17 +20,23 @@ import { InputCheckComponent } from '../../shared/components/input-check/input-c
 import { InputHoraComponent } from '../../shared/components/input-hora/input-hora.component';
 import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
 import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
-import { AgregarTransporteComponent } from "../../shared/components/agregar-transporte/agregar-transporte.component";
+import { AgregarTransporteComponent } from '../../shared/components/agregar-transporte/agregar-transporte.component';
 import { RepresentanteFiscalComponent } from '../../shared/components/representante-fiscal/representante-fiscal.component';
 import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
 import { CatalogoSelectComponent } from './../../shared/components/catalogo-select/catalogo-select.component';
+import { TransporteComponent } from './components/transporte/transporte.component';
+import { PagoDeDerechoComponent } from './components/pago-de-derecho/pago-de-derecho.component';
+import { AgregarDestinatoriaComponent } from './components/agregar-destinatoria/agregar-destinatoria.component';
 
 @NgModule({
   declarations: [
     SolicitudPageComponent,
     SolicitudComponent,
-    PasoUnoComponent
- ] ,
+    PasoUnoComponent,
+    TransporteComponent,
+    PagoDeDerechoComponent,
+    AgregarDestinatoriaComponent,
+  ],
   imports: [
     CommonModule,
     SharedModule,
@@ -53,8 +59,8 @@ import { CatalogoSelectComponent } from './../../shared/components/catalogo-sele
     AgregarTransporteComponent,
     RepresentanteFiscalComponent,
     SelectPaisesComponent,
-    CatalogoSelectComponent
-],
-exports: []
+    CatalogoSelectComponent,
+  ],
+  exports: [],
 })
-export class PantallasCapturaModule { }
+export class PantallasCapturaModule {}
