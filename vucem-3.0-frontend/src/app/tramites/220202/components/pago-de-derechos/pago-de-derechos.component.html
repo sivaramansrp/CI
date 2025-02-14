@@ -21,7 +21,6 @@
           formControlName="justificacion"
           [label]="'Justificación'"
           [required]="true"
-          [isDisabled]="true"
           name="justificacion"
         ></app-catalogo-select>
       </div>
@@ -65,7 +64,7 @@
           formControlName="banco"
           [label]="'Banco'"
           [required]="true"
-          [isDisabled]="false"
+          [isDisabled]="true"
           name="banco"
         ></app-catalogo-select>
       </div>
@@ -80,7 +79,7 @@
             placeholder=""
             type="text"
             appUppercase
-            [disabled]="false"
+            [disabled]="true"
             name="llavePago"
             formControlName="llavePago"
           />

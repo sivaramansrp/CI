@@ -28,10 +28,10 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'despacho-mercancias',
+    path: 'certificado-fitosanitario',
     loadChildren: () =>
-      import('./tramites/303/despacho-mercancias.module').then(
-        (m) => m.DespachoMercanciasModule
+      import('./tramites/220202/fitosanitario.module').then(
+        (m) => m.FitosanitarioModule
       )
   },
   {
@@ -42,12 +42,18 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'certificado-fitosanitario',
+    path: 'pantallas',
     loadChildren: () =>
-      import('./tramites/220202/fitosanitario.module').then(
-        (m) => m.FitosanitarioModule
-      )
-  }
+      import('./tramites/110101/pantallas/pantallas.module').then(
+        (m) => m.PantallasModule
+      ),
+  },
+  {
+    path: 'certificado-zoosanitario',
+    loadChildren: () =>
+      import('./tramites/220201/certificado-zoosanitario.module').then(
+        (m) => m.CertificadoZoosanitarioModule)
+  },
 ];
 
 @NgModule({
