@@ -1,22 +1,28 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
-import { DatosComponent } from './pages/datos/datos.component';
 
 import { AvisodematerialesRoutingModule } from './avisodemateriales-routing.module';
 import { SolicitanteComponent } from './components/solicitante/solicitante.component';
-import { DatosDelaComponent } from './components/datos-dela/datos-dela.component';
+
+import { DatosComponent } from './pages/datos/datos.component';
 
 
 
 @NgModule({
   declarations: [
     SolicitanteComponent,
-    DatosDelaComponent
   ],
   imports: [
     CommonModule,
-    AvisodematerialesRoutingModule
+    AvisodematerialesRoutingModule,
+    PantallasComponent,
+    DatosComponent
+  ],
+  exports:[
+    DatosComponent,
+    PantallasComponent
   ]
 })
 export class AvisodematerialesModule { }
