@@ -181,7 +181,7 @@ export const DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL = [
 
 export const PERSONA_MORAL_NACIONAL = [
   {
-    labelNombre: 'RFC',
+    labelNombre: 'RFC:',
     campo: 'rfc',
     class: 'col-md-4',
     tipo_input: 'text',
@@ -191,7 +191,7 @@ export const PERSONA_MORAL_NACIONAL = [
     placeholder: '',
   },
   {
-    labelNombre: 'Denominación o razón social',
+    labelNombre: 'Denominación o razón social:',
     campo: 'nombreRazonSocial',
     class: 'col-md-8',
     tipo_input: 'text',
@@ -200,7 +200,7 @@ export const PERSONA_MORAL_NACIONAL = [
     placeholder: '',
   },
   {
-    labelNombre: 'Actividad económica preponderante',
+    labelNombre: 'Actividad económica preponderante:',
     campo: 'actEconomica',
     class: 'col-md-12',
     tipo_input: 'text',
@@ -209,7 +209,7 @@ export const PERSONA_MORAL_NACIONAL = [
     placeholder: '',
   },
   {
-    labelNombre: 'Correo electrónico',
+    labelNombre: 'Correo electrónico:',
     campo: 'correo',
     class: 'col-md-4',
     tipo_input: 'text',
