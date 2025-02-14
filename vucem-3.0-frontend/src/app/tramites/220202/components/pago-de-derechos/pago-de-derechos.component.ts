@@ -149,8 +149,4 @@ export class PagoDeDerechosComponent implements OnInit {
       this.pagoForm.get('banco')?.enable();
     }
   }
-  setValoresStore(form: FormGroup, metodoNombre: string): void {
-    console.log(form, metodoNombre, this.pagoForm.value);
-
-  }
 }
