@@ -110,3 +110,64 @@ export interface DatosForma {
 }
 
 
+export interface DatosForma {
+    aduana: string;
+    agropecuaria: string;
+    punto: string;
+    guia: string;
+    regimen: string;
+    ferrocarril: string;
+    mercancias: Mercancia[];
+    aduanaMercancia: string;
+    requisito: string;
+    numCertificadoInternacional: string;
+    arancelaria: string;
+    descFraccionArancelaria: string;
+    nico: string;
+    descNico: string;
+    descripcion: string;
+    cantidadUMT: string;
+    umt: string;
+    cantidadUMC: string;
+    umc: string;
+    uso: string;
+    producto: string;
+}
+
+export interface Movilizacion {
+    transporte: string;
+    guiaIdentificacion: string;
+    empresaTransportista: string;
+    punto: string;
+}
+
+export interface PagoForm {
+    exentoPago: string;
+    justificacion: string;
+    claveReferencia: string;
+    cadenaDependencia: string;
+    banco: string;
+    llavePago: string;
+    importePago: string;
+    fechaDePago: string;
+}
+
+export interface ListaDeDatosFinal {
+    Datos: DatosForma[];
+    Movilizacion: Movilizacion[];
+    Pago: PagoForm[];
+}
+
+/**
+ * Create a default state object.
+ */
+export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): ListaDeDatosFinal {
+    return {
+        Datos: params.Datos || [],
+        Movilizacion: params.Movilizacion || [],
+        Pago: params.Pago || []
+    };
+}
+
+
+
