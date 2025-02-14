@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Catalogo, RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
+import { AgriculturaApiService } from '../../../../core/services/220202/agricultura-api.service';
 
 /**
  * @fileoverview Componente para la sección de datos para movilización nacional.
@@ -43,9 +44,9 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
 
   /**
    * @constructor
-   * @param {HttpClient} httpServicios - Servicio HttpClient para realizar peticiones.
+   * @param {AgriculturaApiService} agriculturaApiService - Servicio HttpClient para realizar peticiones.
    */
-  constructor(private readonly httpServicios: HttpClient) { }
+  constructor(private readonly agriculturaApiService: AgriculturaApiService) { }
 
   /**
    * @description Inicializa el componente.
@@ -76,20 +77,20 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
    * @method obtenerListaDeJustificaciones
    */
   obtenerListaDeJustificaciones() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/transporte.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.transporteList = datos as Catalogo[];
-    });
+    this.agriculturaApiService.obtenerSelectorList('transporte.json').subscribe(data => {
+      this.transporteList = data as Catalogo[];
+    })
   }
+
 
   /**
    * @description Obtiene los datos para el selector de punto de verificación federal.
    * @method obtenerListaDePunto
    */
   obtenerListaDePunto() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/punto.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.puntoList = datos as Catalogo[];
-    });
+    this.agriculturaApiService.obtenerSelectorList('punto.json').subscribe(data => {
+      this.puntoList = data as Catalogo[];
+    })
+
   }
 }

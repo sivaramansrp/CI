@@ -1,10 +1,11 @@
-import { FormBuilder, FormGroup, Validators } from "@angular/forms"
+import { FormBuilder, FormGroup } from "@angular/forms"
 import { Catalogo, RespuestaCatalogos } from "../../../../core/models/shared/catalogos.model"
 import { HttpClient } from "@angular/common/http"
 import { InputFecha } from "../../../../core/models/shared/components.model"
 import { FECHA_DE_PAGO } from "../../../../shared/constantes/220202/fitosanitario.enums"
 import { Component, OnInit } from "@angular/core"
-import { FitosanitarioAgriculturaService } from "../../../../core/services/220202/fitosanitario-agricultura.service"
+
+import { AgriculturaApiService } from "../../../../core/services/220202/agricultura-api.service"
 
 
 /**
@@ -87,9 +88,9 @@ export class PagoDeDerechosComponent implements OnInit {
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
-   * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.
+   * @param {AgriculturaApiService} agriculturaApiService - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient, private readonly fitosanitarioService: FitosanitarioAgriculturaService) { }
+  constructor(private readonly fb: FormBuilder, private readonly agriculturaApiService: AgriculturaApiService) { }
 
   /**
    * Inicializa el componente.
@@ -113,10 +114,10 @@ export class PagoDeDerechosComponent implements OnInit {
    * @method obtenerBancoSelectorList
    */
   obtenerBancoSelectorList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/banco.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.bancoSelector = datos as Catalogo[];
-    });
+    this.agriculturaApiService.obtenerSelectorList('banco.json').subscribe(data => {
+      this.bancoSelector = data as Catalogo[];
+    })
+
   }
 
   /**
@@ -124,10 +125,9 @@ export class PagoDeDerechosComponent implements OnInit {
    * @method obtenerListaDeJustificaciones
    */
   obtenerListaDeJustificaciones() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/Justificación.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.justificacionSelector = datos as Catalogo[];
-    });
+    this.agriculturaApiService.obtenerSelectorList('Justificación.json').subscribe(data => {
+      this.justificacionSelector = data as Catalogo[];
+    })
   }
 
   /**
