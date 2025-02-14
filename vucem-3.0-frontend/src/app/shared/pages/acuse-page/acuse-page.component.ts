@@ -1,14 +1,13 @@
-import { Component, OnInit } from '@angular/core';
 import {
   ACUSE_SERVICIOS_EXTRAORDINARIOS,
   TITULO_ACUSE,
   TXT_ALERTA_ACUSE,
 } from '../../constantes/servicios-extraordinarios.enum';
+import { Component, OnInit } from '@angular/core';
 import { AccionesTabla } from '../../../core/models/shared/components.model';
-import { CommonModule } from '@angular/common';
 import { AcuseComponent } from '../../components/acuse/acuse.component';
+import { CommonModule } from '@angular/common';
 import { TramitesQueries } from '../../../core/queries/tramites.queries';
-import { DocumentoService } from '../../../core/services/shared/documento/documento.service';
 
 @Component({
   templateUrl: './acuse-page.component.html',
@@ -26,33 +25,16 @@ export class AcusePageComponent implements OnInit {
 
   folio!: string;
 
-  constructor(
-    private tramiteQueries: TramitesQueries,
-    private documentoService: DocumentoService
-  ) {}
+  constructor(private tramiteQueries: TramitesQueries) {}
 
+  /**
+   * Método de ciclo de vida de Angular que se llama una vez que el componente ha sido inicializado.
+   *
+   * En este método, se obtiene el folio del trámite utilizando el servicio `tramiteQueries` y se asigna a la propiedad `folio`.
+   * Luego, se genera un mensaje de alerta utilizando la función `TXT_ALERTA_ACUSE` con el folio obtenido y se asigna a la propiedad `txtAlerta`.
+   */
   ngOnInit(): void {
     this.folio = this.tramiteQueries.getTramite();
     this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
-
-    this.obtenerAcuse();
-  }
-
-  obtenerAcuse() {
-    const datosAcuse = {
-      templateFullPath: '',
-      data: {
-        '%TITULO%': 'Narnia',
-        '%NOMBRE%': 'Goose',
-        '%TOKEN%': 'XYZ123',
-        '%HORA%': '14',
-        '%MIN%': '58',
-        '%SEG%': '11',
-      },
-    };
-    this.documentoService.generarAcuse(datosAcuse).subscribe(
-      (_resp) => {},
-      (_error) => {}
-    );
   }
 }
