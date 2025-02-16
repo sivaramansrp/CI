@@ -1,7 +1,7 @@
 import { ComponentFixture } from '@angular/core/testing';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
-import { INSPECCIONFISIOPASOS } from '../../../../core/enums/220502/solicitud-pantallas.enum';
 import { InspeccionFisicaComponent } from './inspeccion-fisica.component';
+import { InspeccionFisicaPasos } from '../../../../core/enums/220502/solicitud-pantallas.enum';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
@@ -30,12 +30,12 @@ describe('InspeccionFisicaComponent', () => {
   });
 
   it('should initialize pasos with INSPECCIONFISIOPASOS', () => {
-    expect(component.pasos).toEqual(INSPECCIONFISIOPASOS);
+    expect(component.pasos).toEqual(InspeccionFisicaPasos);
   });
 
   it('should initialize datosPasos correctly', () => {
     const expectedDatosPasos: DatosPasos = {
-      nroPasos: INSPECCIONFISIOPASOS.length,
+      nroPasos: InspeccionFisicaPasos.length,
       indice: 1,
       txtBtnAnt: 'Anterior',
       txtBtnSig: 'Continuar'

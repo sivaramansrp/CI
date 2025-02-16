@@ -1,17 +1,18 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
-import { INSPECCIONFISIOPASOS } from '../../../../core/enums/220502/solicitud-pantallas.enum';
+import { InspeccionFisicaPasos } from '../../../../core/enums/220502/solicitud-pantallas.enum';
 import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
+import { ViewChild } from '@angular/core';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 
-/** Interface to define the structure of button actions */
+/** Interfaz para definir la estructura de las acciones de los botones */
 interface AccionBoton {
   /**
-   * The action to be performed by the button
+   * La acción que se realizará mediante el botón
    */
   accion: string;
   /**
-   * The value of the index
+   * El valor del índice
    */
   valor: number;
 }
@@ -26,7 +27,7 @@ interface AccionBoton {
 /** Componente para gestionar la inspección física de los servicios extraordinarios */
 export class InspeccionFisicaComponent {
   /** Lista de pasos del asistente inicializados desde la enumeración */
-  pasos: ListaPasosWizard[] = INSPECCIONFISIOPASOS;
+  pasos: ListaPasosWizard[] = InspeccionFisicaPasos;
 
   /** Índice de pasos activos actuales*/
   indice: number = 1;

@@ -1,7 +1,7 @@
 import { ComponentFixture } from '@angular/core/testing';
+import { Solicitud } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { SolicitudDatosComponent } from './solicitud-datos.component';
 import { TestBed } from '@angular/core/testing';
-import { solicitud } from '../../../../core/models/220502/solicitud-pantallas.model';
 
 describe('SolicitudDatosComponent', () => {
   let component: SolicitudDatosComponent;
@@ -44,7 +44,7 @@ describe('SolicitudDatosComponent', () => {
   });
 
   it('should have tablaFilaDatos as input', () => {
-    const testFilaDatos: solicitud[] = [
+    const testFilaDatos: Solicitud[] = [
       {
         fechaCreacion: '2025-02-02 19:50:08:0',
         mercancia: 'descripcion',

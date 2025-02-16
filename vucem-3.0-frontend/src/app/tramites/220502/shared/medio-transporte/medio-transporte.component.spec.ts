@@ -8,9 +8,9 @@ import { FormGroup } from '@angular/forms';
 import { MedioTransporteComponent } from './medio-transporte.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SimpleChanges } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { datosDeMercancias } from '../../../../core/models/220502/solicitud-pantallas.model';
 
 @Component({
   selector: 'app-test-host',
@@ -20,43 +20,35 @@ import { datosDeMercancias } from '../../../../core/models/220502/solicitud-pant
 })
 class TestHostComponent {
   form: FormGroup;
-  hMercanciaTabla: string[] = ['Fracción arancelaria', 'Descripción de la fracción', 'Nico', 'Descripción Nico', 'Cantidad solicitada en UMT', 'Unidad de medida de tarifa (UMT)', 'Cantidad total UMT', 'Saldo pendiente'];
-  dMercanciaBody: datosDeMercancias[] = [
-    {
-      fraccionArancelaria: '1001.10.10',
-      descripcionFraccion: 'Trigo duro',
-      nico: 'Sí',
-      nicoDescripcion: 'Trigo para molienda',
-      cantidadSolicitadaUMT: 50,
-      unidadMedidaUMT: 'kg',
-      cantidadTotalUMT: 500,
-      saldoPendiente: 100
-    }
+  hMercanciaTabla: string[] = [
+    'Fracción arancelaria', 'Descripción de la fracción', 'Nico', 'Descripción Nico', 
+    'Cantidad solicitada en UMT', 'Unidad de medida de tarifa (UMT)', 'Cantidad total UMT', 'Saldo pendiente'
   ];
+  
+dMercanciaBody = [
+  {
+    tbodyData: [
+      "1001.10.10",
+      "Trigo duro",
+      "Sí",
+      "Trigo para molienda",
+      50,
+      "kg",
+      500,
+      100
+    ]
+  }
+];
+  
   mediodetransporte: CatalogosSelect = {
     labelNombre: 'Medio de transporte',
     required: true,
     primerOpcion: 'Selecciona un valor',
     catalogos: [
-      {
-        id: 1,
-        descripcion: 'transporte 1',
-        tam: 'transporte 1',
-        dpi: 'transporte 1',
-      },
-      {
-        id: 2,
-        descripcion: 'transporte 2',
-        tam: 'transporte 2',
-        dpi: 'transporte 2',
-      },
-      {
-        id: 3,
-        descripcion: 'transporte 3',
-        tam: 'transporte 3',
-        dpi: 'transporte 3',
-      },
-    ],
+      { id: 1, descripcion: 'transporte 1', tam: 'transporte 1', dpi: 'transporte 1' },
+      { id: 2, descripcion: 'transporte 2', tam: 'transporte 2', dpi: 'transporte 2' },
+      { id: 3, descripcion: 'transporte 3', tam: 'transporte 3', dpi: 'transporte 3' }
+    ]
   };
 
   constructor() {
@@ -70,28 +62,22 @@ describe('MedioTransporteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TestHostComponent],
-      imports: [ReactiveFormsModule, MedioTransporteComponent, TituloComponent, CatalogoSelectComponent],
+      declarations: [TestHostComponent, MedioTransporteComponent, TituloComponent, CatalogoSelectComponent],
+      imports: [ReactiveFormsModule],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
         {
           provide: ControlContainer,
-          useValue: {
-            control: new FormGroup({})
-          }
+          useValue: { control: new FormGroup({}) }
         }
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
-    component = fixture.debugElement.children[0].componentInstance;
     component = fixture.debugElement.query(By.directive(MedioTransporteComponent))?.componentInstance;
-      
-    expect(component).toBeTruthy();
   });
 
   it('should create', () => {
@@ -100,7 +86,9 @@ describe('MedioTransporteComponent', () => {
 
   it('should initialize form controls on ngOnInit', () => {
     component.ngOnInit();
-    const formGroup = component.grupoformulariopadre.get(component.claveDeControl) as FormGroup;
+    expect(component.grupoFormularioPadre).toBeTruthy();
+    
+    const formGroup = component.grupoFormularioPadre.get(component.claveDeControl) as FormGroup;
     expect(formGroup).toBeTruthy();
     expect(formGroup.get('transporteIdMedio')).toBeTruthy();
     expect(formGroup.get('identificacionTransporte')).toBeTruthy();
@@ -110,46 +98,82 @@ describe('MedioTransporteComponent', () => {
 
   it('should remove control on ngOnDestroy', () => {
     component.ngOnInit();
-    expect(component.grupoformulariopadre.contains(component.claveDeControl)).toBeTrue();
+    expect(component.grupoFormularioPadre.contains(component.claveDeControl)).toBeTrue();
+    
     component.ngOnDestroy();
-    expect(component.grupoformulariopadre.contains(component.claveDeControl)).toBeFalse();
+    expect(component.grupoFormularioPadre.contains(component.claveDeControl)).toBeFalse();
   });
 
   it('should handle catalog selection correctly', () => {
     component.ngOnInit();
     const catalogo = { id: 1, descripcion: 'transporte 1', tam: 'transporte 1', dpi: 'transporte 1' };
-    component.selecctionMediodetransporte(catalogo);
-    const formGroup = component.grupoformulariopadre.get(component.claveDeControl) as FormGroup;
+    component.seleccionMedioDeTransporte(catalogo);
+
+    const formGroup = component.grupoFormularioPadre.get(component.claveDeControl) as FormGroup;
     expect(formGroup.get('transporteIdMedio').value).toBe('transporte 1');
   });
 
   it('should render table headers correctly', () => {
     const compiled = fixture.nativeElement;
     const headers = compiled.querySelectorAll('th');
-    expect(headers.length).toBe(9);
-    expect(headers[1].textContent.trim()).toContain('Fracción arancelaria');
-    expect(headers[2].textContent.trim()).toContain('Descripción de la fracción');
-    expect(headers[3].textContent.trim()).toContain('Nico');
-    expect(headers[4].textContent.trim()).toContain('Descripción Nico');
-    expect(headers[5].textContent.trim()).toContain('Cantidad solicitada en UMT');
-    expect(headers[6].textContent.trim()).toContain('Unidad de medida de tarifa (UMT)');
-    expect(headers[7].textContent.trim()).toContain('Cantidad total UMT');
-    expect(headers[8].textContent.trim()).toContain('Saldo pendiente');
+
+    expect(headers.length).toBe(8);
+    expect(headers[0].textContent.trim()).toBe('Fracción arancelaria');
+    expect(headers[1].textContent.trim()).toBe('Descripción de la fracción');
+    expect(headers[2].textContent.trim()).toBe('Nico');
+    expect(headers[3].textContent.trim()).toBe('Descripción Nico');
+    expect(headers[4].textContent.trim()).toBe('Cantidad solicitada en UMT');
+    expect(headers[5].textContent.trim()).toBe('Unidad de medida de tarifa (UMT)');
+    expect(headers[6].textContent.trim()).toBe('Cantidad total UMT');
+    expect(headers[7].textContent.trim()).toBe('Saldo pendiente');
   });
 
   it('should render table rows correctly', () => {
     const compiled = fixture.nativeElement;
     const rows = compiled.querySelectorAll('tbody tr');
+
     expect(rows.length).toBe(1);
+
     const cells = rows[0].querySelectorAll('td');
-    expect(cells.length).toBe(9); // Including the checkbox column
-    expect(cells[1].textContent).toContain('1001.10.10');
-    expect(cells[2].textContent).toContain('Trigo duro');
-    expect(cells[3].textContent).toContain('Sí');
-    expect(cells[4].textContent).toContain('Trigo para molienda');
-    expect(cells[5].textContent).toContain('50');
-    expect(cells[6].textContent).toContain('kg');
-    expect(cells[7].textContent).toContain('500');
-    expect(cells[8].textContent).toContain('100');
+    expect(cells.length).toBe(8);
+    expect(cells[0].textContent.trim()).toBe('1001.10.10');
+    expect(cells[1].textContent.trim()).toBe('Trigo duro');
+    expect(cells[2].textContent.trim()).toBe('Sí');
+    expect(cells[3].textContent.trim()).toBe('Trigo para molienda');
+    expect(cells[4].textContent.trim()).toBe('50');
+    expect(cells[5].textContent.trim()).toBe('kg');
+    expect(cells[6].textContent.trim()).toBe('500');
+    expect(cells[7].textContent.trim()).toBe('100');
+  });
+
+  it('should update tableData on ngOnChanges', () => {
+    const changes: SimpleChanges = {
+      hMercanciaTabla: {
+        currentValue: ['Header1', 'Header2'],
+        previousValue: [],
+        firstChange: true,
+        isFirstChange: () => true,
+      },
+      dMercanciaBody: {
+        currentValue: [{ fraccionArancelaria: '1001.10.10', descripcionFraccion: 'Trigo duro' }],
+        previousValue: [],
+        firstChange: true,
+        isFirstChange: () => true,
+      },
+    };
+  
+    component.ngOnChanges(changes);
+  
+    expect(component.tableData.tableHeader).toEqual(['Header1', 'Header2']);
+    expect(component.tableData.tableBody).toEqual([{ fraccionArancelaria: '1001.10.10', descripcionFraccion: 'Trigo duro' }]);
+  });
+  
+  it('should not update tableData if changes are empty', () => {
+    const changes: SimpleChanges = {};
+  
+    component.ngOnChanges(changes);
+  
+    expect(component.tableData.tableHeader).toEqual([]);
+    expect(component.tableData.tableBody).toEqual([]);
   });
 });
