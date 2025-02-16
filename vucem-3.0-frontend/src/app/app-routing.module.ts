@@ -20,11 +20,18 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/130118/pexim.module').then(
+        (m) => m.PeximModule
+      ),
+  },
+  {
     path: 'despacho-mercancias',
     loadChildren: () =>
       import('./tramites/303/despacho-mercancias.module').then(
         (m) => m.DespachoMercanciasModule
-  )
+      )
   },
   {
     path: 'pantallas-extraordinarios',
@@ -36,14 +43,34 @@ const routes: Routes = [
   {
     path: 'sagarpa',
     loadChildren: () =>
-      import('./tramites/220501/sagarpa.module').then(
-        (m) => m.SagarpaModule
+            import('./tramites/220501/sagarpa.module').then(
+              (m) => m.SagarpaModule
+            ),
+  },
+  {
+    path: 'sagarpa',
+    loadChildren: () =>
+            import('./tramites/220502/inspeccion-fisica.module').then(
+              (m) => m.InspeccionFisicaModule
+            ),
+  },
+  { 
+    path: 'pantallas',
+    loadChildren: () =>
+      import('./tramites/110101/pantallas/pantallas.module').then(
+        (m) => m.PantallasModule
       ),
-  }
+  },
+  {
+    path: 'certificado-zoosanitario',
+    loadChildren: () =>
+      import('./tramites/220201/certificado-zoosanitario.module').then(
+        (m) => m.CertificadoZoosanitarioModule)
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
