@@ -14,6 +14,29 @@ import {
 } from '../../models/120301/elegibilidad-de-textiles.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs'; // Importa Observable
+import { Store, StoreConfig } from '@datorama/akita'; // Import Akita
+
+// Define the state interface
+export interface ElegibilidadDeTextilesState {
+  textileSolicitudCargaUtil: ElegibilidadDeTextiles;
+}
+
+// Create the store
+@Injectable({ providedIn: 'root' })
+@StoreConfig({ name: 'elegibilidadDeTextiles' })
+export class ElegibilidadDeTextilesStore extends Store<ElegibilidadDeTextilesState> {
+  constructor() {
+    super({
+      textileSolicitudCargaUtil: {
+        importadorForm: {} as ImportadorForm,
+        facturaForm: {} as FacturaForm,
+        fitosanitarioForm: {} as FitosanitarioForm,
+        facturaAssociationForm: {} as FacturaAssociationForm,
+        historicoFabricantesForm: {} as HistoricoFabricantesForm
+      }
+    });
+  }
+}
 
 /**
  * Servicio para la gestión de solicitudes elegibilidad de textiles.
@@ -26,42 +49,28 @@ import { Observable } from 'rxjs'; // Importa Observable
 export class ServiciosElegibilidadDeTextilesService {
 
   /**
-   * Objeto que contiene los datos de la solicitud..
-   * @property {textileSolicitud} textileSolicitudCargaUtil - Datos de la solicitud que se enviarán.
-   */
-  public textileSolicitudCargaUtil: ElegibilidadDeTextiles = {
-    importadorForm: {} as ImportadorForm,
-    facturaForm: {} as FacturaForm,
-    fitosanitarioForm: {} as FitosanitarioForm,
-    facturaAssociationForm: {} as FacturaAssociationForm,
-    historicoFabricantesForm: {} as HistoricoFabricantesForm
-  };
-
-  /**
    * Constructor del servicio.
    * @constructor
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private readonly http: HttpClient) { }
-  setSoliciante(name: string, value: any) {
-    this.textileSolicitudCargaUtil[name] = value;
-  }
+  constructor(private readonly http: HttpClient, private elegibilidadDeTextilesStore: ElegibilidadDeTextilesStore) { }
 
+  setSoliciante(name: string, value: any) {
+    this.elegibilidadDeTextilesStore.update(state => ({
+      textileSolicitudCargaUtil: {
+        ...state.textileSolicitudCargaUtil,
+        [name]: value
+      }
+    }));
+  }
 
   /**
    * Envía la solicitud capturada.
    * @method textileSolicitudEnviar
    * @returns {Observable<any>} - Un Observable que emite la respuesta del servidor.
    */
-
-
-
-
-
-
-
   textileSolicitudEnviar(): Observable<any> { // Especifica el tipo de retorno Observable<any>
     const _url = 'http://localhost:3000/textileSolicitud';
-    return this.http.post<any>(_url, this.textileSolicitudCargaUtil);
+    return this.http.post<any>(_url, this.elegibilidadDeTextilesStore.getValue().textileSolicitudCargaUtil);
   }
 }
