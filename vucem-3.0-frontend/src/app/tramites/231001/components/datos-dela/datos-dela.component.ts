@@ -1,8 +1,8 @@
 import { Component, OnInit} from '@angular/core';
-import { FormArray,FormBuilder ,FormGroup,Validator } from '@angular/forms';
+import { FormArray,FormBuilder ,FormGroup,Validators} from '@angular/forms';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
-import {Catalogo, CatalogoPaises} from '../../../../core/models/shared/catalogos.model';
-import { CATALOGOS_ID, TIPO_SOLICITUD } from '../../../../shared/constantes/constantes';
+import {Catalogo} from '../../../../core/models/shared/catalogos.model';
+import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 import { map } from 'rxjs/operators';
 
 
@@ -13,10 +13,9 @@ import { map } from 'rxjs/operators';
 })
 export class DatosDelaComponent implements OnInit{
 
-  //myForm: FormGroup;
-    tiposSolicitud!: Catalogo[];
-    paisesOrigen!: CatalogoPaises[];
-    paisesProcedencia!: CatalogoPaises[];
+  datosForm: FormGroup;
+  aduanas!: Catalogo[];
+  selectedAduana: any;  
 
     constructor(
       private fb: FormBuilder,
@@ -25,15 +24,31 @@ export class DatosDelaComponent implements OnInit{
 
 
     ngOnInit(): void {  
+      this.datosForm = this.fb.group({
+        aduanas: [null, Validators.required]
+      });
+      this.aduanasdata();
+
+    }
+    
+    onAduanaSelect(): void {
+      // Capture the selected value
+     this.selectedAduana = this.datosForm.get('aduanas')?.value;
+     console.log('selectedAduana',this.aduanas)
+     const selectedAduana1 = this.aduanas.find(aduana => aduana.id === this.selectedAduana);
+     console.log('selected', selectedAduana1.descripcion)
+    }
+
+    aduanasdata():void{
       console.log('ngoninit start')
       this.catalogosServices
-      .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
+      .getCatalogo(CATALOGOS_ID.CAT_ADUANAS)
        .subscribe({
         next: (resp) => {
        console.log('API Response:', resp);
-       if (resp.length > 0) {
-       this.paisesOrigen = resp;
-        this.paisesProcedencia = resp;
+            if (resp.length > 0) {
+           this.aduanas = resp;
+  
       }
     },
     error: (err) => console.error('API Error:', err),
@@ -41,5 +56,5 @@ export class DatosDelaComponent implements OnInit{
   });
     }
     
- 
+
 }
