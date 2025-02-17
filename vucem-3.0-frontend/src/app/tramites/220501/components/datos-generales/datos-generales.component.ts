@@ -3,7 +3,6 @@ import { CatalogosSelect } from '../../../../core/models/shared/components.model
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RevisionService } from '../../../../core/services/220501/revision.service';
-import { TEXTOS } from '../../../../shared/constantes/issuance-extension-modification.enum';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 /**
@@ -28,12 +27,6 @@ interface Row {
   styleUrls: ['./datos-generales.component.scss'],
 })
 export class DatosGeneralesComponent implements OnInit {
-  /**
-   * Textos utilizados en el componente.
-   * @type {string}
-   */
-  TEXTOS: string = TEXTOS;
-
   /**
    * Formulario principal.
    * @type {FormGroup}
