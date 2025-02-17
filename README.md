@@ -65,10 +65,30 @@ It will show tasks that you can run with Nx.
 
 - npm install --force
 - npx nx serve dashboard (host)
-- npx nx serve 220401
-- npx nx serve 501
+- npx nx serve aga
+- npx nx serve se
 - npx nx serve login
 - manifest.json for the port
-- Create new application - npx nx g @nx/angular:remote apps/my-app
+- Create new application - npx nx g @nx/angular:remote apps/aga
 - Angular 18.0.3
 - Node version 22.0.0 / 23.4.0
+- Lint : npx nx lint:5701
+- Test : npx nx test:5701
+
+## Steps to create new app
+- Create new application - npx nx g @nx/angular:remote apps/aga
+- configure the assets in project.json, refer aga
+- module-federation.manifest.json - add new port
+- add the custom router in entry.route
+- port and manifest shoud be same in project.json
+
+## Steps to add new procedure
+- Add new procedure like modue
+- Configure that module into the router like lazy
+- Producedure modules are within the applicaiton
+- Refer saga
+
+## Shared Module
+- Shared component / themes within lib
+- Export the shared component in the root lib/index
+- export the lib as context in tsconfig-base.json

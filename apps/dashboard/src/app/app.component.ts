@@ -13,7 +13,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
     <table border="1" cellpadding="5" cellspacing="5">
     <tbody>
         <tr>
-          <td width="30"><a routerLink="5701/pago/seleccion-tramite">Procedure</a></td>
+          <td width="30"><a routerLink="aga/pago/seleccion-tramite">Procedure</a></td>
         </tr>
         </tbody>
       </table>
@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
           if (!loggedIn) {
             //this.router.navigateByUrl('login');
           } else {
-            this.router.navigateByUrl('501');
+            this.router.navigateByUrl('aga');
           }
         });
       });

@@ -1,41 +1,31 @@
 {
-  "name": "5701",
+  "name": "agriculture",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
-  "sourceRoot": "apps/5701/src",
+  "sourceRoot": "apps/agriculture/src",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/angular:webpack-browser",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/5701",
-        "index": "apps/5701/src/index.html",
-        "main": "apps/5701/src/main.ts",
+        "outputPath": "dist/apps/agriculture",
+        "index": "apps/agriculture/src/index.html",
+        "main": "apps/agriculture/src/main.ts",
         "polyfills": ["zone.js"],
-        "tsConfig": "apps/5701/tsconfig.app.json",
+        "tsConfig": "apps/agriculture/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
-          "apps/5701/src/favicon.ico",
-          "apps/5701/src/assets",
           {
-            "glob": "**.*",
-            "input": "libs/shared/theme/assets",
-            "output": "assets"
+            "glob": "**/*",
+            "input": "apps/agriculture/public"
           }
         ],
-        "styles": [
-             "node_modules/bootstrap/scss/bootstrap.scss",
-              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
-              "node_modules/ngx-toastr/toastr.css",
-             "libs/shared/theme/assets/styles/main.scss"
-            ],
-        "scripts": [
-          "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-        ],
+        "styles": ["apps/agriculture/src/styles.scss"],
+        "scripts": [],
         "customWebpackConfig": {
-          "path": "apps/5701/webpack.config.ts"
+          "path": "apps/agriculture/webpack.config.ts"
         }
       },
       "configurations": {
@@ -54,7 +44,7 @@
           ],
           "outputHashing": "all",
           "customWebpackConfig": {
-            "path": "apps/5701/webpack.prod.config.ts"
+            "path": "apps/agriculture/webpack.prod.config.ts"
           }
         },
         "development": {
@@ -71,15 +61,15 @@
     "serve": {
       "executor": "@nx/angular:dev-server",
       "options": {
-        "port": 4202,
-        "publicHost": "http://localhost:4202"
+        "port": 4208,
+        "publicHost": "http://localhost:4208"
       },
       "configurations": {
         "production": {
-          "buildTarget": "5701:build:production"
+          "buildTarget": "agriculture:build:production"
         },
         "development": {
-          "buildTarget": "5701:build:development"
+          "buildTarget": "agriculture:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -87,7 +77,7 @@
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "buildTarget": "5701:build"
+        "buildTarget": "agriculture:build"
       }
     },
     "lint": {
@@ -97,23 +87,23 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/5701/jest.config.ts"
+        "jestConfig": "apps/agriculture/jest.config.ts"
       }
     },
     "serve-static": {
       "executor": "@nx/web:file-server",
       "defaultConfiguration": "production",
       "options": {
-        "buildTarget": "5701:build",
-        "port": 4202,
+        "buildTarget": "agriculture:build",
+        "port": 4208,
         "watch": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "5701:build:development"
+          "buildTarget": "agriculture:build:development"
         },
         "production": {
-          "buildTarget": "5701:build:production"
+          "buildTarget": "agriculture:build:production"
         }
       }
     }
