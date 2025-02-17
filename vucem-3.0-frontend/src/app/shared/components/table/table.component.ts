@@ -1,5 +1,7 @@
 /* eslint-disable @angular-eslint/component-selector */
 /* eslint-disable @typescript-eslint/no-empty-function */
+import { CommonModule } from '@angular/common';
+
 import { Component, Input } from '@angular/core';
 import { TableData } from '../../../core/models/shared/components.model';
 
@@ -8,6 +10,7 @@ import { TableData } from '../../../core/models/shared/components.model';
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
   standalone: true,
+  imports: [CommonModule],
 })
 export class TableComponent {
   /**
@@ -29,6 +32,8 @@ export class TableComponent {
     tableBody: []
   };
   
+  @Input() enableScrollbar: boolean = false;
+
   /**
    * @description
    * ngOnInit se utiliza para inicializar la tabla de la componente

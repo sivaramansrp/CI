@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+
+import { AdministrarResiduosComponent } from '../../components/administrar-residuos/administrar-residuos.component';
 import { DatosComponent } from '../datos/datos.component';
 
 @Component({
@@ -6,7 +8,7 @@ import { DatosComponent } from '../datos/datos.component';
   templateUrl: './pantallas.component.html',
   styles: ``,
   standalone: true,
-  imports: [DatosComponent]
+  imports: [DatosComponent, AdministrarResiduosComponent]
 })
 export class PantallasComponent {
 
