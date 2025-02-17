@@ -7,7 +7,7 @@
                     <div class="form-check">
                         <input class="form-check-input" type="radio" formControlName="importaciones" name="importaciones" id="importaciones1-si" value="Yes">
                         <label class="form-check-label" for="importaciones1-si">Sí</label>
-                      </div>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-check">
@@ -15,6 +15,11 @@
                         <label class="form-check-label" for="importaciones1-no">No</label>
                     </div>
                 </div>
+                @if (regimenForm.get('importaciones')?.invalid && regimenForm.get('importaciones')?.touched) {
+                  <div class="mensaje-error ">
+                    {{ MENSAJE_REQUERIDO}}
+                  </div>
+                }
             </div>
             <ng-titulo titulo="Importación temporal bajo la modalidad del programa IMMEX (sensibles)" />
             <div class="row mb-3">
@@ -31,6 +36,11 @@
                         <label class="form-check-label" for="infraestructura-no">No</label>
                     </div>
                 </div>
+                @if (regimenForm.get('infraestructura')?.invalid && regimenForm.get('infraestructura')?.touched) {
+                  <div class="mensaje-error ">
+                    {{ MENSAJE_REQUERIDO}}
+                  </div>
+                }
             </div>
             <div class="row mb-3">
                 <p class="fw-bold"><span class="text-danger">*</span> Indique si durante los últimos doce meses, el valor de la mercancía transformada y retornada, retornada en su mismo estado, o a la que se le prestó un servicio, durante dicho periodo representa al menos el 80% del valor de las importaciones temporales de insumos durante el mismo periodo. (Declare solo aquellos conceptos que le apliquen).</p>
@@ -46,6 +56,11 @@
                         <label class="form-check-label" for="ultimosMeses-no">No</label>
                       </div>
                 </div>
+                @if (regimenForm.get('ultimosMeses')?.invalid && regimenForm.get('ultimosMeses')?.touched) {
+                  <div class="mensaje-error ">
+                    {{ MENSAJE_REQUERIDO}}
+                  </div>
+                }
             </div>
             <div class="row mb-3">
                 <p class="fw-bold"><span class="text-danger">*</span> ¿La empresa solicitante ha realizado operaciones al amparo del Programa IMMEX en al menos los 12 meses previos a la solicitud?</p>
@@ -61,11 +76,21 @@
                         <label class="form-check-label" for="operaciones12meses-no">No</label>
                     </div>
                 </div>
+                @if (regimenForm.get('operacionesmeses')?.invalid && regimenForm.get('operacionesmeses')?.touched) {
+                  <div class="mensaje-error ">
+                    {{ MENSAJE_REQUERIDO}}
+                  </div>
+                }
             </div>
             <div class="row mb-3">
                 <div class="col-md-3">
                     <label class="form-label fw-bold" for="valor"><span class="text-danger">*</span> Capture el valor total</label>
                     <input type="text" class="form-control" formControlName="valor" placeholder="100">
+                    @if (regimenForm.get('valor')?.invalid && regimenForm.get('valor')?.touched) {
+                      <div class="mensaje-error ">
+                        {{ MENSAJE_REQUERIDO}}
+                      </div>
+                    }
                     
                 </div>
                 <div class="col-md">
@@ -80,18 +105,60 @@
                         <tbody>
                           <tr>
                             <td>Transferencias virtuales y/o desperdicios</td>
-                            <td><input type="number" formControlName="transferencias" class="form-control" placeholder="80"></td>
-                            <td><input type="number" formControlName="transferenciasVir" class="form-control" placeholder="80"></td>
+                            <td>
+                              <input type="number" formControlName="transferencias" class="form-control" placeholder="80">
+                              @if(regimenForm.get('transferencias')?.invalid && regimenForm.get('transferencias')?.touched) {
+                                @if(regimenForm.get('transferencias')?.errors?.['maxlength']) {
+                                  <div class="text-danger">Máximo 20 caracteres</div>
+                                }
+                              }
+                            </td>
+                            <td>
+                              <input type="number" formControlName="transferenciasVir" class="form-control" placeholder="80">
+                              @if(regimenForm.get('transferenciasVir')?.invalid && regimenForm.get('transferenciasVir')?.touched) {
+                                @if(regimenForm.get('transferenciasVir')?.errors?.['maxlength']) {
+                                  <div class="text-danger">Máximo 7 caracteres</div>
+                                }
+                              }
+                            </td>
                           </tr>
                           <tr>
                             <td>Retornos</td>
-                            <td><input type="number" formControlName="retornos" class="form-control" placeholder="10"></td>
-                            <td><input type="number" formControlName="retornosSe" class="form-control" placeholder="10"></td>
+                            <td>
+                              <input type="number" formControlName="retornos" class="form-control" placeholder="10">
+                              @if(regimenForm.get('retornos')?.invalid && regimenForm.get('retornos')?.touched) {
+                                @if(regimenForm.get('retornos')?.errors?.['maxlength']) {
+                                  <div class="text-danger">Máximo 20 caracteres</div>
+                                }
+                              }
+                            </td>
+                            <td>
+                              <input type="number" formControlName="retornosSe" class="form-control" placeholder="10">
+                              @if(regimenForm.get('retornosSe')?.invalid && regimenForm.get('retornosSe')?.touched) {
+                                @if(regimenForm.get('retornosSe')?.errors?.['maxlength']) {
+                                  <div class="text-danger">Máximo 7 caracteres</div>
+                                }
+                              }
+                            </td>
                           </tr>
                           <tr>
                             <td>Constancias de transferencia de mercancía CTM</td>
-                            <td><input type="number" formControlName="constancias" class="form-control" placeholder="10"></td>
-                            <td><input type="number" formControlName="constanciasDe" class="form-control" placeholder="10"></td>
+                            <td>
+                              <input type="number" formControlName="constancias" class="form-control" placeholder="10">
+                              @if(regimenForm.get('constancias')?.invalid && regimenForm.get('constancias')?.touched) {
+                                @if(regimenForm.get('constancias')?.errors?.['maxlength']) {
+                                  <div class="text-danger">Máximo 20 caracteres</div>
+                                }
+                              }
+                            </td>
+                            <td>
+                              <input type="number" formControlName="constanciasDe" class="form-control" placeholder="10">
+                              @if(regimenForm.get('constanciasDe')?.invalid && regimenForm.get('constanciasDe')?.touched) {
+                                @if(regimenForm.get('constanciasDe')?.errors?.['maxlength']) {
+                                  <div class="text-danger">Máximo 7 caracteres</div>
+                                }
+                              }
+                            </td>
                           </tr>
                           <tr>
                             <td>Total</td>
@@ -122,12 +189,22 @@
                         <label class="form-check-label" for="empleadosPropios-no">No</label>
                     </div>
                 </div>
+                @if (regimenForm.get('empleadosPropios')?.invalid && regimenForm.get('empleadosPropios')?.touched) {
+                  <div class="mensaje-error ">
+                    {{ MENSAJE_REQUERIDO}}
+                  </div>
+                }
             </div>
             <div class="row mb-3">
               <p class="fw-bold">¿Cuál es el número de empleados propios con los que contó en los últimos tres bimestres anteriores a su solicitud?</p>
               <div class="col-md-6">
                 <label class="form-label" for="numeroEmpleados"><span class="text-danger">*</span> Número de empleados</label>
                 <input type="number" class="form-control" formControlName="numeroEmpleados" id="numeroEmpleados" placeholder="1">
+                @if (regimenForm.get('numeroEmpleados')?.invalid && regimenForm.get('numeroEmpleados')?.touched) {
+                  <div class="mensaje-error ">
+                    {{ MENSAJE_REQUERIDO}}
+                  </div>
+                }
                 <label class="form-label" for="numeroEmpleados"><span class="text-danger">*</span> Número de empleados</label>
                 <input type="number" class="form-control" id="numeroEmpleados" placeholder="1">
                 <label class="form-label" for="numeroEmpleados"><span class="text-danger">*</span> Número de empleados</label>
@@ -135,25 +212,25 @@
               </div>
               <div class="col-md-6">
                 <app-catalogo-select 
-                      [catalogo]="bimestreCatalog" 
-                      formControlName="bimestre" 
+                      [catalogo]="bimestreOneCatalog" 
+                      formControlName="comboBimestresOne" 
                       [label]="'Bimestre'"
                       [required]="true" 
-                      (change)="tipoSolicitudSeleccion()">
+                      (change)="bimestreOneSeleccion()">
                   </app-catalogo-select>   
                   <app-catalogo-select 
-                      [catalogo]="bimestreCatalog" 
-                      formControlName="bimestre" 
+                      [catalogo]="bimestreTwoCatalog" 
+                      formControlName="comboBimestresTwo" 
                       [label]="'Bimestre'"
                       [required]="true" 
-                      (change)="tipoSolicitudSeleccion()">
+                      (change)="bimestreTwoSeleccion()">
                   </app-catalogo-select>    
                   <app-catalogo-select 
-                      [catalogo]="bimestreCatalog" 
-                      formControlName="bimestre" 
+                      [catalogo]="bimestreThreeCatalog" 
+                      formControlName="comboBimestresThree" 
                       [label]="'Bimestre'"
                       [required]="true" 
-                      (change)="tipoSolicitudSeleccion()">
+                      (change)="bimestreThreeSeleccion()">
                   </app-catalogo-select>                 
               </div>
             </div>
@@ -170,7 +247,7 @@
               <div class="col-md-6"></div>
               <div class="col-md-6 d-flex align-items-rigth">
                   <div class="btn-group">
-                    <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalTransportista">
+                    <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalAgregar" (click)="abrirModal()">
                       Agregar
                     </button>
                     <button class="btn btn-default ms-2" type="button" >Modificar</button>
@@ -191,7 +268,12 @@
                     <input class="form-check-input" type="radio" formControlName="proveedorCumplimiento" name="proveedorCumplimiento" id="proveedorCumplimiento-no" value="No">
                     <label class="form-check-label" for="proveedorCumplimiento-no">No</label>
                   </div>
-              </div> 
+              </div>
+              @if (regimenForm.get('proveedorCumplimiento')?.invalid && regimenForm.get('proveedorCumplimiento')?.touched) {
+                <div class="mensaje-error ">
+                  {{ MENSAJE_REQUERIDO}}
+                </div>
+              } 
           </div>
           <div class="row mb-3">
             <p class="fw-bold"><span class="text-danger">*</span> Indique si los socios y accionistas, representante legal, administrador único o miembros del consejo de administración de la empresa declararon ingresos acumulables en la declaración anual de los dos ejercicios previos ante la autoridad fiscal para los fines del ISR.</p>
@@ -207,6 +289,11 @@
                     <label class="form-check-label" for="declaracionISR-no">No</label>
                   </div>
               </div>
+              @if (regimenForm.get('declaracionISR')?.invalid && regimenForm.get('declaracionISR')?.touched) {
+                <div class="mensaje-error ">
+                  {{ MENSAJE_REQUERIDO}}
+                </div>
+              } 
           </div>
           <ng-titulo titulo="Depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos" />
           <div class="row mb-3">
@@ -226,6 +313,11 @@
                     <label class="form-check-label" for="cancelacion-no">No</label>
                 </div>
             </div>
+            @if (regimenForm.get('cancelacion')?.invalid && regimenForm.get('cancelacion')?.touched) {
+              <div class="mensaje-error ">
+                {{ MENSAJE_REQUERIDO}}
+              </div>
+            } 
           </div>
           <div class="row mb-3">
             <p class="fw-bold"><span class="text-danger">*</span> Indique si ha cumplido adecuadamente con los requisitos de las reglas 4.5.30 y 4.5.32.</p>
@@ -241,6 +333,11 @@
                     <label class="form-check-label" for="cumplimientoReglas-no">No</label>
                 </div>
             </div>
+            @if (regimenForm.get('cumplimientoReglas')?.invalid && regimenForm.get('cumplimientoReglas')?.touched) {
+              <div class="mensaje-error ">
+                {{ MENSAJE_REQUERIDO}}
+              </div>
+            } 
           </div>
           <ng-titulo titulo="Elaboración, transformación o reparación en recinto fiscalizado"></ng-titulo>
           <div class="row mb-3">
@@ -260,6 +357,11 @@
                     <label class="form-check-label" for="recintoFiscalizado-no">No</label>
                   </div>
             </div>
+            @if (regimenForm.get('recintoFiscalizado')?.invalid && regimenForm.get('recintoFiscalizado')?.touched) {
+              <div class="mensaje-error ">
+                {{ MENSAJE_REQUERIDO}}
+              </div>
+            } 
           </div>
           
           <ng-titulo titulo="Recinto fiscalizado estratégico"></ng-titulo>
@@ -280,6 +382,11 @@
                     <label class="form-check-label" for="recintoEstrategico-no">No</label>
                   </div>
             </div>
+            @if (regimenForm.get('recintoEstrategico')?.invalid && regimenForm.get('recintoEstrategico')?.touched) {
+              <div class="mensaje-error ">
+                {{ MENSAJE_REQUERIDO}}
+              </div>
+            } 
           </div>
           <div class="row mb-3">
             <p class="fw-bold"><span class="text-danger">*</span> Indique si cumple con los lineamientos que determinan las autoridades aduaneras para el control, vigilancia y seguridad del recinto y de las mercancías del comercio exterior.</p>
@@ -295,86 +402,102 @@
                     <label class="form-check-label" for="cumplimientoLineamientosEstrategico-no">No</label>
                   </div>
             </div>
+            @if (regimenForm.get('cumplimientoLineamientos')?.invalid && regimenForm.get('cumplimientoLineamientos')?.touched) {
+              <div class="mensaje-error ">
+                {{ MENSAJE_REQUERIDO}}
+              </div>
+            } 
           </div>
         </form>
     </div>
 </div>
 
 
-<!-- modal screen -->
+<!-- Pantalla modal iniciada -->
 
-<!-- <div class="container mt-4">
-        
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-      Agregar
-    </button>
-
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Agregar</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="mb-3">
-                <label for="rfcInput" class="form-label">RFC</label>
-                <div class="input-group">
-                  <input type="text" class="form-control" id="rfcInput" placeholder="Ingrese RFC">
-                  <button class="btn btn-secondary" type="button">Buscar</button>
-                </div>
-              </div>
-
-              <div class="mb-3">
-                <label for="registroInput" class="form-label">Registro Federal de Contribuyentes</label>
-                <input type="text" class="form-control" id="registroInput" placeholder="Ingrese Registro">
-              </div>
-
-              <div class="mb-3">
-                <label for="razonSocialInput" class="form-label">Razón Social</label>
-                <input type="text" class="form-control" id="razonSocialInput" placeholder="Ingrese Razón Social">
-              </div>
-
-             
-              <div class="mb-3">
-                <label class="form-label">Número de empleados</label>
-                <input type="number" class="form-control mb-2" placeholder="1er Bimestre">
-                <input type="number" class="form-control mb-2" placeholder="2do Bimestre">
-                <input type="number" class="form-control" placeholder="3er Bimestre">
-              </div>
-
-            
-              <div class="row">
-                <div class="col-md-4">
-                  <label for="primerBimestre" class="form-label">1er Bimestre</label>
-                  <select class="form-select" id="primerBimestre">
-                    <option selected>Septiembre-Octubre</option>
-                    <option>Enero-Febrero</option>
-                  </select>
-                </div>
-                <div class="col-md-4">
-                  <label for="segundoBimestre" class="form-label">2do Bimestre</label>
-                  <select class="form-select" id="segundoBimestre">
-                    <option selected>Julio-Agosto</option>
-                    <option>Marzo-Abril</option>
-                  </select>
-                </div>
-                <div class="col-md-4">
-                  <label for="tercerBimestre" class="form-label">3er Bimestre</label>
-                  <select class="form-select" id="tercerBimestre">
-                    <option selected>Mayo-Junio</option>
-                    <option>Noviembre-Diciembre</option>
-                  </select>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Aceptar</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          </div>
+<div class="container mt-4">     
+  <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Agregar</h4>
         </div>
-      </div>
-    </div>
-  </div> -->
+        <div class="modal-body">
+          <form [formGroup]="agregarForm">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="rfcInput" class="form-label">RFC</label>
+                  <div class="d-flex">
+                    <input type="text" class="form-control" id="rfcInput" formControlName="rfc"  placeholder="Ingrese RFC">
+                    <button class="btn btn-secondary ms-2" type="button">Buscar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="registroInput" class="form-label text-left">Registro Federal de Contribuyentes</label>
+                  <input type="text" class="form-control" id="registroInput" formControlName="registroInput" readonly="true"  placeholder="Ingrese Registro">
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="razonSocialInput" class="form-label">Razón Social</label>
+                  <input type="text" class="form-control" id="razonSocialInput" formControlName="razonSocialInput" placeholder="Ingrese Razón Social">
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label" for="empleados1">Número de empleados</label>
+                  <input type="number" class="form-control mb-2" formControlName="numero1re" placeholder="1er Bimestre">
+                  <label class="form-label" for="empleados1">Número de empleados</label>
+                  <input type="number" class="form-control mb-2" formControlName="numero2do" placeholder="2do Bimestre">
+                  <label class="form-label" for="empleados1">Número de empleados</label>
+                  <input type="number" class="form-control" formControlName="numero3re" placeholder="3er Bimestre">
+                </div>
+              </div>
+              <div class="col-md-6">
+                  <app-catalogo-select 
+                      [catalogo]="bimestreOneCatalog" 
+                      formControlName="agregarCatalogOne" 
+                      [label]="'1er Bimestre'"
+                      [required]="true" 
+                      (change)="modalBimestreOne()">
+                  </app-catalogo-select>
+                  <app-catalogo-select 
+                      [catalogo]="bimestreTwoCatalog" 
+                      formControlName="agregarCatalogTwo" 
+                      [label]="'2do Bimestre'"
+                      [required]="true" 
+                      (change)="modalBimestreTwo()">
+                  </app-catalogo-select>
+                  <app-catalogo-select 
+                    [catalogo]="bimestreThreeCatalog" 
+                    formControlName="agregarCatalogThree" 
+                    [label]="'3re Bimestre'"
+                    [required]="true" 
+                    (change)="modalBimestreThree()">
+                  </app-catalogo-select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer custom-footer justify-content-center">
+          <button type="button" class="btn btn-primary">Agregar</button>
+          <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Cerrar</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  </div>
+
+  <!-- Fin de pantalla modal -->
