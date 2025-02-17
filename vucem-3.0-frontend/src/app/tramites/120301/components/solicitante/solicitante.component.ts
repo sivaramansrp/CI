@@ -200,7 +200,6 @@ export class SolicitanteComponent implements OnInit {
    */
   ngOnDestroy(): void {
     const sol: solicitante = this.form.value.datosGenerales as solicitante;
-    this.ServiciosElegibilidadDeTextilesService.setSoliciante(sol);
     this.form.reset();
   }
 }

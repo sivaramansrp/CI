@@ -17,6 +17,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import { FacturasAsociadasService } from '../../../../core/services/120301/facturas-asociadas/facturas-asociadas.service';
+import {FACTUS_TBCOL, ASOCIADAS_TBCOl} from '../../../../shared/constantes/elegibilidad-de-textiles.enums'
 
 @Component({
   selector: 'app-facturas-asociadas',
@@ -47,29 +48,12 @@ export class FacturasAsociadasComponent implements OnInit {
   /**
    * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
    */
-  private readonly tableColumns = [
-    'Número de la factura',
-    'Razón social',
-    'Domicilio',
-    'Fecha de expedición de la factura',
-    'Cantidad total',
-    'Cantidad disponible',
-    'Unidad de medida',
-    'Valor en dólares',
-  ];
+  tableColumns = FACTUS_TBCOL
 
   /**
    * @property {string[]} asociadastableColumns - Array de encabezados de columnas de la tabla de facturas asociadas.
    */
-  private readonly asociadastableColumns = [
-    'Candidad asociada',
-    'número de la factura',
-    'razón social',
-    'Domicilio',
-    'Fecha de emisión/expedición de la factura',
-    'Cantidad total',
-    'Cantidad disponible',
-  ];
+  asociadastableColumns = ASOCIADAS_TBCOl;
 
   /**
    * @property {any[]} facturasDisponible - Array de datos de facturas disponibles.

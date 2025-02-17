@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-  textileSolicitud,
   solicitante,
   datosDeLaSolicitud,
   datosParaMovilizacionNacional,
@@ -44,7 +43,7 @@ export class ServiciosElegibilidadDeTextilesService {
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
   constructor(private readonly http: HttpClient) { }
-  setSoliciante<K extends keyof ElegibilidadDeTextiles>(name: K, value: ElegibilidadDeTextiles[K]) {
+  setSoliciante(name: string, value: any) {
     this.textileSolicitudCargaUtil[name] = value;
   }
 

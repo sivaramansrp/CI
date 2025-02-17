@@ -4,7 +4,7 @@ import { ElegibilidadDeTextilesRoutingModule } from './elegibilidad-de-textiles-
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component';
 import { ConstanciaDelRegistroComponent } from './components/constancia-del-registro/constancia-del-registro.component';
 import { ElegibilidadTextilesComponent } from './pages/elegibilidad-textiles/elegibilidad-textiles.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';

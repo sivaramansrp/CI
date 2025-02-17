@@ -21,6 +21,7 @@ import { CatalogosSelect, InputFecha } from '../../../../core/models/shared/comp
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { InputFechaComponent } from '../../../../shared/components/input-fecha/input-fecha.component';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+import {CPATURAR_TBCOL} from '../../../../shared/constantes/elegibilidad-de-textiles.enums'
 
 @Component({
   selector: 'app-capturar-facturas',
@@ -62,16 +63,7 @@ export class CapturarFacturasComponent implements OnInit {
   /**
    * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
    */
-  private readonly tableColumns = [
-    'Número de la factura',
-    'Razón social',
-    'Domicilio',
-    'Fecha de expedición de la factura',
-    'Cantidad total',
-    'Cantidad disponible',
-    'Unidad de medida',
-    'Valor en dólares',
-  ];
+  tableColumns = CPATURAR_TBCOL;
   /**
   * @property {Array} facturas - Array de datos de facturas para mostrar en la tabla.
   *    * @param {FormBuilder} fb - Servicio para la creación de formularios.

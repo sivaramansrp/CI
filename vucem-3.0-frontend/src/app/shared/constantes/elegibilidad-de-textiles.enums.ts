@@ -81,3 +81,42 @@ export const Expedición_Factura_Fecha = {
 export const TEXTOS = 'Para continuar con el trámite, deberá agregar por lo menos una mercancía.';
 export const TERCEROR_TEXTO_DE_ALERTA = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
 export const IDDEUSUARIO = 21;
+export const FACTUS_TBCOL = [
+    'Número de la factura',
+    'Razón social',
+    'Domicilio',
+    'Fecha de expedición de la factura',
+    'Cantidad total',
+    'Cantidad disponible',
+    'Unidad de medida',
+    'Valor en dólares',
+  ];
+
+export const HISTORICO_TBCOL = [
+    'Nombre del fabricante',
+    'Número de registro fiscal',
+    'Dirección',
+    'Correo Electrónico',
+    'Teléfono',
+  ];
+
+export const ASOCIADAS_TBCOl = [
+    'Candidad asociada',
+    'número de la factura',
+    'razón social',
+    'Domicilio',
+    'Fecha de emisión/expedición de la factura',
+    'Cantidad total',
+    'Cantidad disponible',
+  ];
+
+export const CPATURAR_TBCOL = [
+    'Número de la factura',
+    'Razón social',
+    'Domicilio',
+    'Fecha de expedición de la factura',
+    'Cantidad total',
+    'Cantidad disponible',
+    'Unidad de medida',
+    'Valor en dólares',
+  ];
