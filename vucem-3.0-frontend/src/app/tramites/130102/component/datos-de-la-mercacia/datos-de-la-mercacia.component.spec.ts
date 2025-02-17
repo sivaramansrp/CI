@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
-import { DetosDelMarcanciaComponent } from './detos-del-marcancia.component';
+import { DetosDelMarcanciaComponent } from './datos-de-la-mercacia.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 

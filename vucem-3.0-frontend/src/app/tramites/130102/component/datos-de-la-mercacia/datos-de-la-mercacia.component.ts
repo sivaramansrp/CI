@@ -32,7 +32,7 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
  * fracciones arancelarias y unidades de medida en un formulario reactivo.
  */
 @Component({
-  selector: 'app-detos-del-marcancia',
+  selector: 'app-datos-de-la-mercacia',
   standalone: true,
   imports: [
     TituloComponent,
@@ -41,10 +41,10 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
     InputRadioComponent,
     CatalogoSelectComponent,
   ],
-  templateUrl: './detos-del-marcancia.component.html',
-  styleUrl: './detos-del-marcancia.component.scss',
+  templateUrl: './datos-de-la-mercacia.component.html',
+  styleUrl: './datos-de-la-mercacia.component.scss',
 })
-export class DetosDelMarcanciaComponent implements OnInit {
+export class DetosDelLaMarcaciaComponent implements OnInit {
   /**
    * compo doc
    * @property {any} prodData - Datos de productos importados desde un archivo JSON.

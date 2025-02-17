@@ -12,10 +12,10 @@ import { SelectCatalogosComponent } from '../../../../shared/components/select-c
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import unidadRadioFields from '../../../../../assets/json/220401/unidad.json';
 @Component({
-  selector: 'app-datos-del',
-  templateUrl: './datos-del.component.html',
+  selector: 'app-datos-del-certificado',
+  templateUrl: './datos-del-certificado.component.html',
   standalone: true,
-  styleUrl: './datos-del.component.scss',
+  styleUrl: './datos-del-certificado.component.scss',
   imports: [
     TituloComponent,
     CommonModule,
@@ -26,7 +26,7 @@ import unidadRadioFields from '../../../../../assets/json/220401/unidad.json';
     TableComponent,
   ],
 })
-export class DatosDelComponent implements OnInit {
+export class DatosDelCertificadoComponent implements OnInit {
   /** Grupo de formulario para manejar la selección de radio */
   formGroup!: FormGroup;
   /** Opciones de radio cargadas desde un archivo JSON */

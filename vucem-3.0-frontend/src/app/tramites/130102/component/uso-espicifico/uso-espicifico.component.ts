@@ -103,7 +103,7 @@ export class UsoEspicificoComponent implements OnInit {
  
    */
   valorseleccionado(valor: Catalogo) {
-    console.log(valor)
+   //this is the change function
     }
 
 }
