@@ -16,10 +16,11 @@ import { Inject } from '@angular/core';
 import { Expedición_Factura_Fecha } from '../../../../shared/constantes/elegibilidad-de-textiles.enums';
 import { CapturarFacturasService } from '../../../../core/services/120301/capturar-facturas/capturar-facturas.service';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
+import { Catalogo, RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
 import { CatalogosSelect, InputFecha } from '../../../../core/models/shared/components.model';
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { InputFechaComponent } from '../../../../shared/components/input-fecha/input-fecha.component';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 
 @Component({
   selector: 'app-capturar-facturas',
@@ -31,7 +32,8 @@ import { InputFechaComponent } from '../../../../shared/components/input-fecha/i
     TituloComponent,
     ReactiveFormsModule,
     SelectCatalogosComponent,
-    InputFechaComponent
+    InputFechaComponent,
+    CatalogoSelectComponent,
   ]
 })
 export class CapturarFacturasComponent implements OnInit {
@@ -112,12 +114,7 @@ export class CapturarFacturasComponent implements OnInit {
    * Configuración para el select de unidad de medida.
    * @property {CatalogosSelect} unidadDeMedida
    */
-    unidadDeMedida: CatalogosSelect = {
-      labelNombre: 'Unidad De Medida',
-      required: true,
-      primerOpcion: 'Selecciona una Unidad de Medida',
-      catalogos: [],
-    };
+    unidadDeMedida: Catalogo[];
      /**
    * Configuración para el input de fecha-expedición-factura.
    * @property {InputFecha} fechaInicioInput
@@ -144,7 +141,7 @@ export class CapturarFacturasComponent implements OnInit {
     obtenerIngresoSelectList() {
       this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/120301/unidad-de-medida.json').subscribe((data): void => {
         const datos = data?.data;
-        this.unidadDeMedida.catalogos = datos;
+        this.unidadDeMedida = datos;
       });
     }
 

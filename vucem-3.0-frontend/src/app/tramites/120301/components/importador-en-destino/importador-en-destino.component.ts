@@ -31,12 +31,7 @@ export class ImportadorEnDestinoComponent {
    */
   importadorEnDestino!: FormGroup;
 
-  tipo: CatalogosSelect = {
-    labelNombre: 'Tipo I O R(Importer of Record)*:',
-    required: true,
-    primerOpcion: '',
-    catalogos: [],
-  };
+  tipo:  Catalogo[]; 
 
   /**
    * Constructor del componente.
@@ -93,7 +88,7 @@ export class ImportadorEnDestinoComponent {
   obtenerIngresoSelectList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/120301/tipo.json').subscribe((data): void => {
       const datos = data?.data;
-      this.tipo['catalogos'] = datos;
+      this.tipo = datos;
     });
   }
   
