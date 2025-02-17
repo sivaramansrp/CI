@@ -38,7 +38,7 @@ export class CapturarFacturasComponent implements OnInit {
   /**
    * @property {FormGroup} forma - El grupo de formularios para capturar los datos de las facturas.
    */
-  forma!: FormGroup;
+  facturaForm!: FormGroup;
 
   /**
    * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
@@ -70,18 +70,34 @@ export class CapturarFacturasComponent implements OnInit {
     'Unidad de medida',
     'Valor en dólares',
   ];
-   /**
-   * @property {Array} facturas - Array de datos de facturas para mostrar en la tabla.
-   *    * @param {FormBuilder} fb - Servicio para la creación de formularios.
-   * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.--120301
-   */
+  /**
+  * @property {Array} facturas - Array de datos de facturas para mostrar en la tabla.
+  *    * @param {FormBuilder} fb - Servicio para la creación de formularios.
+  * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.--120301
+  */
   facturas: any[] = [];
   constructor(
     private capturarFacturasService: CapturarFacturasService,
     private readonly httpServicios: HttpClient,
-  ) {}
+    private readonly fb: FormBuilder
+  ) { }
 
   ngOnInit(): void {
+    this.facturaForm = this.fb.group({
+      numeroFactura: ['', Validators.required],
+      cantidadTotal: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      unidadDeMedida: ['', Validators.required],
+      fechaInicioInput: ['', Validators.required],
+      valorDolares: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      emisorConsignatario: this.fb.group({
+        taxId: ['', Validators.required],
+        razonSocial: ['', Validators.required],
+        calle: ['', Validators.required],
+        ciudad: ['', Validators.required],
+        cp: ['', [Validators.required, Validators.pattern(/^\d{5}$/)]], // Assuming CP is a 5-digit postal code
+        pais: ['', Validators.required],
+      })
+    });
     this.fetchData();
     this.obtenerListasDesplegables();
   }
@@ -108,44 +124,44 @@ export class CapturarFacturasComponent implements OnInit {
       }
     });
   }
-    /**
-   * Configuración para el select de unidad de medida.
-   * @property {CatalogosSelect} unidadDeMedida
-   */
-    unidadDeMedida: CatalogosSelect = {
-      labelNombre: 'Unidad De Medida',
-      required: true,
-      primerOpcion: 'Selecciona una Unidad de Medida',
-      catalogos: [],
-    };
-     /**
-   * Configuración para el input de fecha-expedición-factura.
-   * @property {InputFecha} fechaInicioInput
-   */
-  
+  /**
+ * Configuración para el select de unidad de medida.
+ * @property {CatalogosSelect} unidadDeMedida
+ */
+  unidadDeMedida: CatalogosSelect = {
+    labelNombre: 'Unidad De Medida',
+    required: true,
+    primerOpcion: 'Selecciona una Unidad de Medida',
+    catalogos: [],
+  };
+  /**
+* Configuración para el input de fecha-expedición-factura.
+* @property {InputFecha} fechaInicioInput
+*/
+
   /**
    * Configuración para el input de fecha de pago.
    * @property {InputFecha} fechaInicioInput
    */
   fechaInicioInput: InputFecha = Expedición_Factura_Fecha;
-     /**
-   * Obtiene las listas desplegables.
-   * @method obtenerListasDesplegables
+  /**
+* Obtiene las listas desplegables.
+* @method obtenerListasDesplegables
+*/
+  obtenerListasDesplegables() {
+    this.obtenerIngresoSelectList();
+  }
+
+  /**
+   * Obtiene la lista para el select de unidad de medida.
+   * @method obtenerIngresoSelectList
    */
-     obtenerListasDesplegables() {
-      this.obtenerIngresoSelectList();
-    }
-  
-    /**
-     * Obtiene la lista para el select de unidad de medida.
-     * @method obtenerIngresoSelectList
-     */
-    
-    obtenerIngresoSelectList() {
-      this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/120301/unidad-de-medida.json').subscribe((data): void => {
-        const datos = data?.data;
-        this.unidadDeMedida.catalogos = datos;
-      });
-    }
+
+  obtenerIngresoSelectList() {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/120301/unidad-de-medida.json').subscribe((data): void => {
+      const datos = data?.data;
+      this.unidadDeMedida.catalogos = datos;
+    });
+  }
 
 }

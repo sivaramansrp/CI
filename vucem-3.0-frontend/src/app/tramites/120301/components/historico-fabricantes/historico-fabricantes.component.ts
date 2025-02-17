@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
 import radioOptionsData from '../../../../../assets/json/120301/tipos-de-fabricante-exportador.json';
 import { AgregarArchivoComponent } from '../../../../shared/components/agregar-archivo/agregar-archivo.component';
@@ -25,7 +25,7 @@ import { HistoricoFabricantesService } from '../../../../core/services/120301/hi
   ]
 })
 export class HistoricoFabricantesComponent implements OnInit {
-  formGroup!: FormGroup;
+  historicoFabricantesForm!: FormGroup;
   radioOptions = radioOptionsData;
   selectedValue: string | number = '';
   defaultSelect: string | number = '';
@@ -42,12 +42,15 @@ export class HistoricoFabricantesComponent implements OnInit {
   fabricantesNacionales: any[] = [];
   fabricantesDatos: any[] = [];
 
-  constructor(private fb: FormBuilder, private historicoFabricantesService: HistoricoFabricantesService) {}
+  constructor(private fb: FormBuilder, private historicoFabricantesService: HistoricoFabricantesService) { }
 
   ngOnInit(): void {
     this.fetchData();
-    this.formGroup = this.fb.group({
-      seleccion: [this.selectedValue]
+    this.historicoFabricantesForm = this.fb.group({
+      exportadorFabricanteMismo: ['', Validators.required],
+      numeroRegistroFiscal: ['', [Validators.required, Validators.minLength(5)]],
+      fabricantesNacionales: [[]],
+      fabricantesDatos: [[]]
     });
   }
 
@@ -98,9 +101,9 @@ export class HistoricoFabricantesComponent implements OnInit {
     ];
   }
 
-  seleccionar(e: any) {}
+  seleccionar(e: any) { }
 
-  cargarArchivo() {}
+  cargarArchivo() { }
 
-  agregar() {}
+  agregar() { }
 }
