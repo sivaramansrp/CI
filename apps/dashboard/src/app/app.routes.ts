@@ -14,18 +14,8 @@ export const appRoutes: Route[] = [
     pathMatch: 'full'
   },
   {
-    path: '501',
+    path: 'aga',
     loadChildren: () =>
-      loadRemoteModule('501', './Routes').then((m) => m.remoteRoutes),
-  },
-  {
-    path: '220401',
-    loadChildren: () =>
-      loadRemoteModule('220401', './Routes').then((m) => m.remoteRoutes),
-  },
-  {
-    path: '5701',
-    loadChildren: () =>
-      loadRemoteModule('5701', './Routes').then((m) => m.remoteRoutes),
+      loadRemoteModule('aga', './Routes').then((m) => m.remoteRoutes),
   }
 ];

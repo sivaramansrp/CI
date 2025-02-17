@@ -1,6 +1,5 @@
 {
   "login": "http://localhost:4201",
-  "220401": "http://localhost:4203",
-  "501": "http://localhost:4204",
-  "5701": "http://localhost:4205"
+  "5701": "http://localhost:4202",
+  "aga": "http://localhost:4203"
 }

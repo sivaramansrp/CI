@@ -17,13 +17,23 @@
         "tsConfig": "apps/aga/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
+          "apps/aga/src/favicon.ico",
+          "apps/aga/src/assets",
           {
-            "glob": "**/*",
-            "input": "apps/aga/public"
+            "glob": "**.*",
+            "input": "libs/shared/theme/assets",
+            "output": "assets"
           }
         ],
-        "styles": ["apps/aga/src/styles.scss"],
-        "scripts": [],
+        "styles": [
+             "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+              "node_modules/ngx-toastr/toastr.css",
+             "libs/shared/theme/assets/styles/main.scss"
+            ],
+        "scripts": [
+          "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+        ],
         "customWebpackConfig": {
           "path": "apps/aga/webpack.config.ts"
         }
@@ -61,8 +71,8 @@
     "serve": {
       "executor": "@nx/angular:dev-server",
       "options": {
-        "port": 4206,
-        "publicHost": "http://localhost:4206"
+        "port": 4203,
+        "publicHost": "http://localhost:4203"
       },
       "configurations": {
         "production": {
@@ -95,7 +105,7 @@
       "defaultConfiguration": "production",
       "options": {
         "buildTarget": "aga:build",
-        "port": 4206,
+        "port": 4203,
         "watch": false
       },
       "configurations": {
