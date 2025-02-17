@@ -1,0 +1,74 @@
+<noscript>
+    <p>
+        <img
+            src="https://b.scorecardresearch.com/p?c1=2&amp;c2=17183199&amp;ns_site=gobmx&amp;name=VUCEM"
+            height="1" width="1" alt="*">
+    </p>
+</noscript>
+<noscript>
+    <div id="main">
+        <br />
+        <div id="noscript">
+            <div class="ml-9em h-35px mb-0">
+                <h2>Atención</h2>
+            </div>
+            <p>
+                Para utilizar la Ventana Única de Comercio Exterior, la configuración del explorador debe permitir la ejecución de scripts.
+                Para obtener información sobre cómo permitir scripts, consulte el enlace siguiente.
+                <br /><br />
+                <a href="http://www.google.com/support/bin/answer.py?answer=23852" target="_blank">
+                    http://www.google.com/support/bin/answer.py?answer=23852
+                </a>
+                <br /><br />
+                Si el navegador no admite scripts, puede descargar una versión más reciente del navegador de su elección.
+            </p>
+        </div>
+        <br/>
+    </div>
+</noscript>
+
+<main class="page">
+    <div class="container">
+        <!-- Breadcrumb Solicitudes Component -->
+        <app-breadcrumb-solicitudes></app-breadcrumb-solicitudes>
+
+        <!-- Header Component -->
+        <app-header></app-header>
+
+        <div id="content_tramite">
+            <div id="workingArea">
+                <div class="row" id="tituloTramite" *ngIf="title">
+                    <div class="col-md-8">
+                        <h1 id="h1_title" *ngIf="title.length < 50; else h2Title" class="mb-0">
+                            {{ title }}
+                        </h1>
+                        <ng-template #h2Title>
+                            <h2 id="h1_title" *ngIf="title.length >= 50 && title.length < 150; else h3Title" class="mb-0">
+                                {{ title }}
+                            </h2>
+                        </ng-template>
+                        <ng-template #h3Title>
+                            <h3 id="h1_title" class="mb-0">
+                                {{ title }}
+                            </h3>
+                        </ng-template>
+                    </div>
+                </div>
+                <br />
+
+                <div class="alert alert-warning" id="businessWarnings" *ngIf="businessWarnings" style="margin-bottom:15px; margin-top:64px;"></div>
+                <div class="alert alert-danger" id="errorCampos" *ngIf="errorCampos" style="margin-bottom:15px; margin-top:64px;"></div>
+
+                <div class="row" *ngIf="hasMessagesOrValidationErrors" style="margin-top:64px;">
+                    <div class="col-md-12 text-center mb-4" id="notification">
+                        <app-notification></app-notification>
+                    </div>
+                </div>
+                <app-working-area></app-working-area>
+            </div>
+        </div>
+        <div id="footer">
+            <app-footer></app-footer>
+        </div>
+    </div>
+</main>

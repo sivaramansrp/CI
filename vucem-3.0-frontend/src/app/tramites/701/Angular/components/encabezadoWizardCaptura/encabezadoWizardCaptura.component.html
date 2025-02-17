@@ -1,0 +1,23 @@
+<div class="row">
+  <div class="col-sm-12 col-md-12">
+    <ul class="wizard-steps">
+      <li *ngFor="let elem of actionBean.elementosWizard" [ngClass]="{'completed': elem.estado === 'active_'}">
+        <h5>
+          pasos.descripcion.paso&nbsp;{{ elem.posicionTmp }}
+        </h5>
+        <span>
+          {{ elem.text }}
+        </span>
+      </li>
+      <li *ngIf="actionBean.elementosWizard.length === 5" style="width:208px;">
+        <i class="glyphicon glyphicon-ok-circle"></i>
+      </li>
+      <li *ngIf="actionBean.elementosWizard.length === 4" style="width:208px;">
+        <i class="glyphicon glyphicon-ok-circle"></i>
+      </li>
+      <li *ngIf="actionBean.elementosWizard.length === 2" style="width:648px;">
+        <i class="glyphicon glyphicon-ok-circle"></i>
+      </li>
+    </ul>
+  </div>
+</div>

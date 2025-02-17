@@ -12,6 +12,12 @@ import { SolicitanteDetosTabsComponent } from './pages/solicitante-detos-tabs/so
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 
+import { CatalogoSelectComponent } from '../../shared/components/catalogo-select/catalogo-select.component';
+import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn-continuar.component';
+import { DatosDeLosResiduosComponent } from './components/datos-de-los-residuos/datos-de-los-residuos.component';
+
+
+import { map } from 'rxjs';
 @NgModule({
   declarations: [
     SolicitanteComponent,
@@ -26,11 +32,12 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     ReactiveFormsModule,
     WizardComponent,
     TituloComponent,
-    AdministrarResiduosComponent
+    AdministrarResiduosComponent,
+    DatosDeLosResiduosComponent,
+    CatalogoSelectComponent,
+    BtnContinuarComponent
   ],
-  exports:[
-    
-    PantallasComponent
-  ]
+  
+  exports: [PantallasComponent]
 })
 export class AvisodematerialesModule { }

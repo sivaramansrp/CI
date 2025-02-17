@@ -1,18 +1,30 @@
-/* eslint-disable sort-imports */
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
+import { BtnContinuarComponent } from '../../../../shared/components/btn-continuar/btn-continuar.component';
+import { PASOS } from '../../../../shared/constantes/303/pasos.enums';
+import { DatosPasos } from '../../../../core/models/shared/components.model';
+import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
+import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
+import { map } from 'rxjs/operators';
 
-/**
- * @file datos-dela.component.ts
- * @brief Componente Angular para el formulario de datos de la solicitud.
- */
-
+interface AccionBoton {
+  accion: string;
+  valor: number;
+}
 @Component({
   selector: 'app-datos-dela',
   templateUrl: './datos-dela.component.html',
-  styleUrls: ['./datos-dela.component.scss'],
+  styleUrl: './datos-dela.component.scss',
 })
-export class DatosDelaComponent {
+export class DatosDelaComponent implements OnInit {
+  datosForm: FormGroup;
+  aduanas!: Catalogo[];
+  selectedAduana: any;
+  pasos: ListaPasosWizard[] = PASOS;
+  indice: number = 1;
 
   /**
    * @property comboAutorizacionIMMEX
@@ -32,7 +44,7 @@ export class DatosDelaComponent {
    * @constructor
    * @param {FormBuilder} fb - Servicio FormBuilder para la creación de formularios.
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private catalogosServices: CatalogosService) {
     /**
      * @description Inicialización del formulario de solicitud con validadores requeridos.
      */
@@ -84,5 +96,50 @@ export class DatosDelaComponent {
     } else {
       console.log('El formulario es inválido');
     }
+  }
+
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  datosPasos: DatosPasos = {
+    nroPasos: this.pasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
+  };
+
+
+  ngOnInit(): void {
+    this.datosForm = this.fb.group({
+      aduanas: [null, Validators.required],
+    });
+    this.aduanasdata();
+  }
+
+  getValorIndice(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
+  }
+  onAduanaSelect(): void {
+    this.selectedAduana = this.datosForm.get('aduanas')?.value;
+  }
+
+  aduanasdata(): void {
+    console.log('ngoninit start');
+    this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_ADUANAS).subscribe({
+      next: (resp) => {
+        console.log('API Response:', resp);
+        if (resp.length > 0) {
+          this.aduanas = resp;
+        }
+      },
+      error: (err) => console.error('API Error:', err),
+      complete: () => console.log('API Call Completed'),
+    });
   }
 }
