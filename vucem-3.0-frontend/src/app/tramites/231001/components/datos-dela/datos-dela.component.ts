@@ -4,11 +4,11 @@ import { CatalogosService } from '../../../../core/services/shared/catalogos/cat
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 import { BtnContinuarComponent } from '../../../../shared/components/btn-continuar/btn-continuar.component';
-import { map } from 'rxjs/operators';
 import { PASOS } from '../../../../shared/constantes/303/pasos.enums';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
 import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
+import { map } from 'rxjs/operators';
 
 interface AccionBoton {
   accion: string;
@@ -20,8 +20,6 @@ interface AccionBoton {
   styleUrl: './datos-dela.component.scss',
 })
 export class DatosDelaComponent implements OnInit {
-
-
   datosForm: FormGroup;
   aduanas!: Catalogo[];
   selectedAduana: any;
@@ -60,7 +58,6 @@ export class DatosDelaComponent implements OnInit {
     }
   }
   onAduanaSelect(): void {
-    // Capture the selected value
     this.selectedAduana = this.datosForm.get('aduanas')?.value;
   }
 
