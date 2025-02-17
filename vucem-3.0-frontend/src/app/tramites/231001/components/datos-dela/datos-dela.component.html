@@ -9,7 +9,8 @@
             <div class="col-md-4 form-group">
                 <label for="numeroRegistroAmbiental">Número de Registro Ambiental:</label>
                 <span class="text-danger">*</span>
-                <input type="text" class="form-control" formControlName="numeroRegistroAmbiental" id="numeroRegistroAmbiental" maxlength="13" size="30" [ngClass]="isInvalid('numeroRegistroAmbiental') ? 'required' : ''" />
+                <input type="text" class="form-control" placeholder="123123"
+                formControlName="numeroRegistroAmbiental" id="numeroRegistroAmbiental" maxlength="13" size="30" [ngClass]="isInvalid('numeroRegistroAmbiental') ? 'required' : ''" />
                 <div *ngIf="isInvalid('numeroRegistroAmbiental')" class="text-danger">
                     Este campo es obligatorio
                   </div>
@@ -17,7 +18,7 @@
             <div class="col-md-8 form-group">
                 <label for="descripcionGenerica1">Giro industrial del importador </label>
                 <span class="text-danger">*</span>
-                <input type="text" class="form-control" formControlName="descripcionGenerica1" id="descripcionGenerica1" maxlength="150" size="105" [ngClass]="isInvalid('descripcionGenerica1') ? 'required' : ''" />
+                <input type="text" class="form-control" placeholder="Giro industrial del importador" formControlName="descripcionGenerica1" id="descripcionGenerica1" maxlength="150" size="105" [ngClass]="isInvalid('descripcionGenerica1') ? 'required' : ''" />
                 <div *ngIf="isInvalid('descripcionGenerica1')" class="text-danger">
                     Este campo es obligatorio
                 </div>
