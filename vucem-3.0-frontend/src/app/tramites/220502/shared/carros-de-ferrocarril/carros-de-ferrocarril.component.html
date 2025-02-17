@@ -1,22 +1,6 @@
 <ng-titulo titulo="Cantidad de carros de ferrocarril" />
 <div class="row">
   <div class="col-md-8">
-    <table class="table table-responsive">
-      <thead>
-        <tr>
-            @for (item of tablaHeadData; track $index) {
-                <th>{{item}}</th>
-              }
-        </tr>
-      </thead>
-      <tbody>
-        @for (row of tablaFilaDatos; let i = $index; track i) {
-        <tr>
-          <td>{{ row.numeroPartidaMercancia }}</td>
-          <td>{{ row.numeroTotalCarros }}</td>
-        </tr>
-        }
-      </tbody>
-    </table>
+    <ng-table [commonTableHeader]="tableData.tableHeader" [commonTableBody]="tableData.tableBody"></ng-table>
   </div>
 </div>

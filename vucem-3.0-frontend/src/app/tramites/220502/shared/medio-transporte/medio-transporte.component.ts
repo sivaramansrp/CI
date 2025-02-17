@@ -3,15 +3,18 @@ import { CatalogosSelect } from '../../../../core/models/shared/components.model
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
+import { DatosDeMercancias } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SimpleChanges } from '@angular/core';
+import { TableComponent } from '../../../../shared/components/table/table.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { Validators } from '@angular/forms';
-import { datosDeMercancias } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { inject } from '@angular/core';
 
 /**
@@ -25,11 +28,12 @@ import { inject } from '@angular/core';
     ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent,
+    TableComponent,
   ],
   viewProviders: [
     {
       provide: ControlContainer,
-      useFactory: () =>
+      useFactory: (): ControlContainer =>
         inject<ControlContainer>(ControlContainer, { skipSelf: true }),
     },
   ],
@@ -39,7 +43,7 @@ import { inject } from '@angular/core';
 /**
  * Componente para gestionar los datos del medio de transporte
  */
-export class MedioTransporteComponent implements OnInit, OnDestroy {
+export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
   /** Propiedad de entrada para identificar la clave de control en el formulario principal */
   @Input() claveDeControl: string = '';
 
@@ -47,7 +51,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   @Input() hMercanciaTabla: string[] = [];
 
   /** Propiedad de entrada para contener datos relacionados con mercancia. */
-  @Input() dMercanciaBody: datosDeMercancias[];
+  @Input() dMercanciaBody: DatosDeMercancias[];
 
   /** Propiedad de entrada para gestionar la selección del método de transporte. */
   @Input() mediodetransporte!: CatalogosSelect;
@@ -56,9 +60,14 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   parentContainer = inject(ControlContainer);
 
   /** Getter para acceder al grupo de formularios principal */
-  get grupoformulariopadre() {
+  get grupoFormularioPadre() {
     return this.parentContainer.control as FormGroup;
   }
+
+  tableData = {
+    tableBody: [],
+    tableHeader: [],
+  };
 
   /**
    * Gancho de ciclo de vida que inicializa el componente.
@@ -67,7 +76,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (this.claveDeControl) {
       // Agregar un nuevo FormGroup dinámicamente al formulario principal
-      this.grupoformulariopadre.addControl(
+      this.grupoFormularioPadre.addControl(
         this.claveDeControl,
         new FormGroup({
           transporteIdMedio: new FormControl('', [Validators.required]),
@@ -75,9 +84,27 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
             Validators.maxLength(30),
           ]),
           esSolicitudFerros: new FormControl('', [Validators.required]),
-          totalDeGuiasAmparadas: new FormControl('', [Validators.maxLength(50)]),
+          totalDeGuiasAmparadas: new FormControl('', [
+            Validators.maxLength(50),
+          ]),
         })
       );
+    }
+  }
+
+  /**
+   * Maneja los cambios en las propiedades de entrada y actualiza los datos de la tabla en consecuencia.
+   * @param {SimpleChanges} changes - Objeto que contiene las propiedades modificadas.
+   *  
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    const tbodyKey = 'hMercanciaTabla';
+    const tbodyData = 'dMercanciaBody';
+    if (changes[tbodyKey]?.currentValue) {
+      this.tableData.tableHeader = changes[tbodyKey]?.currentValue;
+    }
+    if (changes[tbodyData]?.currentValue) {
+      this.tableData.tableBody = changes[tbodyData]?.currentValue;
     }
   }
 
@@ -86,12 +113,12 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    * Actualiza el formulario con la descripción del transporte seleccionado.
    * @param e - El artículo del catálogo seleccionado que representa el método de transporte.
    */
-  selecctionMediodetransporte(e) {
+  seleccionMedioDeTransporte(e) {
     if (
       this.claveDeControl &&
-      this.grupoformulariopadre.contains(this.claveDeControl)
+      this.grupoFormularioPadre.contains(this.claveDeControl)
     ) {
-      this.grupoformulariopadre.controls[this.claveDeControl].patchValue({
+      this.grupoFormularioPadre.controls[this.claveDeControl].patchValue({
         transporteIdMedio: e.descripcion,
       });
     }
@@ -104,9 +131,9 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (
       this.claveDeControl &&
-      this.grupoformulariopadre.contains(this.claveDeControl)
+      this.grupoFormularioPadre.contains(this.claveDeControl)
     ) {
-      this.grupoformulariopadre.removeControl(this.claveDeControl);
+      this.grupoFormularioPadre.removeControl(this.claveDeControl);
     }
   }
 }

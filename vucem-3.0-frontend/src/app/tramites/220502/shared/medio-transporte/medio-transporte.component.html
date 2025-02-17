@@ -19,8 +19,8 @@
           id="puntos"
         />
         <div
-          *ngIf="grupoformulariopadre.get(claveDeControl)?.get('identificacionTransporte')?.errors?.['maxlength'] &&
-          grupoformulariopadre.get(claveDeControl)?.get('identificacionTransporte')?.touched
+          *ngIf="grupoFormularioPadre.get(claveDeControl)?.get('identificacionTransporte')?.errors?.['maxlength'] &&
+          grupoFormularioPadre.get(claveDeControl)?.get('identificacionTransporte')?.touched
   "
         >
           Se superó la longitud máxima de 30 caracteres.
@@ -63,36 +63,8 @@
       </div>
     </div>
     <div class="col-md-12">
-      <table class="table table-responsive">
-        <thead>
-          <tr>
-            <th>
-              <input type="checkbox" />
-            </th>
-            @for (item of hMercanciaTabla; track $index) {
-            <th>{{ item }}</th>
-            }
-          </tr>
-        </thead>
-        <tbody>
-          @for (item of dMercanciaBody; let i = $index;
-          track i) {
-          <tr>
-            <td>
-              <input type="checkbox" />
-            </td>
-            <td>{{ item.fraccionArancelaria }}</td>
-            <td>{{ item.descripcionFraccion }}</td>
-            <td>{{ item.nico }}</td>
-            <td>{{ item.nicoDescripcion }}</td>
-            <td>{{ item.cantidadSolicitadaUMT }}</td>
-            <td>{{ item.unidadMedidaUMT }}</td>
-            <td>{{ item.cantidadTotalUMT }}</td>
-            <td>{{ item.saldoPendiente }}</td>
-          </tr>
-          }
-        </tbody>
-      </table>
+      <ng-table [commonTableHeader]="tableData.tableHeader" [commonTableBody]="tableData.tableBody"></ng-table>
+
     </div>
     <div class="col-md-4">
       <div class="form-field">

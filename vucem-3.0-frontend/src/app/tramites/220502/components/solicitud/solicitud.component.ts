@@ -1,23 +1,23 @@
+import { CargarDatosIniciales } from '../../../../core/models/220502/solicitud-pantallas.model';
+import { CarrosDeFerrocarril } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { CarrosDeFerrocarrilComponent } from '../../shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
-import { Component  } from '@angular/core';
+import { Component } from '@angular/core';
+import { DatosDeMercancias } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { DatoseDelTramiteARealizerComponent } from '../../shared/datose-del-tramite-a-realizer/datose-del-tramite-a-realizer.component';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { HistorialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { HistorialInspeccionFisicaComponent } from '../../shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
 import { MedioTransporteComponent } from '../../shared/medio-transporte/medio-transporte.component';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsableInspeccionEnPuntoComponent } from '../../shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
+import { Solicitud } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { SolicitudDatosComponent } from '../../shared/solicitud-datos/solicitud-datos.component';
 import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
-import { cargarDatosIniciales } from '../../../../core/models/220502/solicitud-pantallas.model';
-import { carrosDeFerrocarril } from '../../../../core/models/220502/solicitud-pantallas.model';
-import { datosDeMercancias } from '../../../../core/models/220502/solicitud-pantallas.model';
-import { historialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
-import { solicitud } from '../../../../core/models/220502/solicitud-pantallas.model';
 /**
  * Componente para gestionar la solicitud de trámite.
  */
@@ -48,13 +48,13 @@ export class SolicitudComponent implements OnInit {
   hMercanciaTabla: string[];
 
   /** Datos de mercancías para mostrar en la tabla. */
-  dMercanciaBody: datosDeMercancias[];
+  dMercanciaBody: DatosDeMercancias[];
 
   /** Encabezados y datos para mostrar información de solicitud */
   hSolicitud: string[];
 
   /** Datos de solicitud para mostrar en la tabla */
-  dSolicitud: solicitud[];
+  dSolicitud: Solicitud[];
 
   /** Información del catálogo para la selección del medio de transporte. */
   mediodetransporte: CatalogosSelect = {
@@ -83,17 +83,23 @@ export class SolicitudComponent implements OnInit {
     ],
   };
 
+   /** Matriz para contener datos para cada fila de la tabla */
+  tableData = {
+    tableBody: [],
+    tableHeader: [],
+  }
+
   /** Datos de vagones e historial de inspección física. */
   hCarroFerrocarril: string[];
 
   /** Datos de vagones e historial de inspección física. */
-  dCarrosDeFerrocarril: carrosDeFerrocarril[];
+  dCarrosDeFerrocarril: CarrosDeFerrocarril[];
 
   /** Encabezados y datos para mostrar información de historial de inspección física. */
   hHistorialinspeccion: string[];
 
   /** Datos de historial de inspección física para mostrar en la tabla. */
-  dHistorialInspecciones: historialInspeccionFisica[];
+  dHistorialInspecciones: HistorialInspeccionFisica[];
 
   /** Constructor para inyectar dependencias */
   constructor(
@@ -106,7 +112,7 @@ export class SolicitudComponent implements OnInit {
   }
 
   /** Gancho de ciclo de vida para cargar datos iniciales cuando se inicializa el componente */
-  ngOnInit() {
+  ngOnInit(): void {
     this.cargarDatosIniciales();
   }
 
@@ -115,7 +121,7 @@ export class SolicitudComponent implements OnInit {
    */
   cargarDatosIniciales(): void {
     this.solicitudService.getData().subscribe({
-      next: (data: cargarDatosIniciales) => {
+      next: (data: CargarDatosIniciales) => {
         this.hHistorialinspeccion = data.hHistorialinspeccion;
         this.dHistorialInspecciones = data.dHistorialInspecciones;
         this.dCarrosDeFerrocarril = data.dCarrosDeFerrocarril;
