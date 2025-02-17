@@ -15,9 +15,7 @@ export class AuthPageComponent {
   constructor(
     private router: Router,
     private usuarioStore: UsuarioStore,
-  ) {
-
-  }
+  ) {}
 
   seleccionaTab(i: number): void {
     this.indice = i;
@@ -37,7 +35,6 @@ export class AuthPageComponent {
       }
       this.usuarioStore.establecerUsuario('LEQI', perfilUsuario, roles, '');
 
-      // this.router.navigateByUrl('/seleccion-tramite');
       this.router.navigateByUrl('/sagarpa/inspeccionfisica');
     }
   }

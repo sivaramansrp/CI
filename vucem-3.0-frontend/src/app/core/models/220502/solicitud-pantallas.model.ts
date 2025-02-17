@@ -1,7 +1,9 @@
+import { Catalogo } from "../shared/catalogos.model";
+
 /** 
  * Interfaz que representa los detalles de la mercancía.
  */
-export interface datosDeMercancias {
+export interface DatosDeMercancias {
   /** Fracción arancelaria aduanera*/
   fraccionArancelaria: string;
   
@@ -33,7 +35,7 @@ export interface datosDeMercancias {
 /** 
  * Interfaz que representa detalles de vagones de ferrocarril.
  */
-export interface carrosDeFerrocarril {
+export interface CarrosDeFerrocarril {
   /** Identificación de inspección física */
   idInspeccionFisica: number;
   
@@ -50,7 +52,7 @@ export interface carrosDeFerrocarril {
 /** 
  * Interfaz que representa el historial de inspecciones físicas.
  */
-export interface historialInspeccionFisica {
+export interface HistorialInspeccionFisica {
   /** Número de artículo de mercancía*/
   numeroPartidaMercancia: string;
   
@@ -76,7 +78,7 @@ export interface historialInspeccionFisica {
 /** 
  * Interfaz que representa una solicitud u orden.
  */
-export interface solicitud {
+export interface Solicitud {
   /** Fecha de creación */
   fechaCreacion: string;
   
@@ -98,21 +100,21 @@ export interface mercanciaTablaData {
   hMercanciaTabla: string[];
   
   /** Datos del cuerpo para la tabla de mercancías. */
-  dMercanciaBody: datosDeMercancias[];
+  dMercanciaBody: DatosDeMercancias[];
 }
 
 /** 
  * Interfaz que representa la estructura de carga de datos inicial.
  */
-export interface cargarDatosIniciales {
+export interface CargarDatosIniciales {
   /** Encabezados para el historial de inspección */
   hHistorialinspeccion: string[];
   
   /** Datos del historial de inspección */
-  dHistorialInspecciones: historialInspeccionFisica[];
+  dHistorialInspecciones: HistorialInspeccionFisica[];
   
   /** Datos de vagones de ferrocarril */
-  dCarrosDeFerrocarril: carrosDeFerrocarril[];
+  dCarrosDeFerrocarril: CarrosDeFerrocarril[];
   
   /** Cabeceras para mesa de vagones de ferrocarril */
   hCarroFerrocarril: string[];
@@ -121,11 +123,26 @@ export interface cargarDatosIniciales {
   hSolicitud: string[];
   
   /** Solicitar datos */
-  dSolicitud: solicitud[];
+  dSolicitud: Solicitud[];
   
   /** Headers for merchandise */
   hMerchandise: string[];
   
   /** encabezados para mercancia */
-  dMercancia: datosDeMercancias[];
+  dMercancia: DatosDeMercancias[];
+}
+/**
+ * Interfaz que representa los datos del trámite realizer.
+ */
+export interface DatoseDelTramiteRealizer {
+  /** Clave de control */
+  pendientesCertificados: Catalogo[];
+  /** Certificados autorizados */
+  horaInspeccion: Catalogo[];
+  /** Hora de inspección */
+  aduanaIngreso: Catalogo[];
+  /** Aduana de ingreso */
+  sanidadAgropecuaria: Catalogo[];
+  /** Oficina de inspección de Sanidad Agropecuaria */
+  puntoInspeccion: Catalogo[];
 }

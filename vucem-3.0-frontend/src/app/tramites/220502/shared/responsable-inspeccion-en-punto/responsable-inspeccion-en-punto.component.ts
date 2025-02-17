@@ -11,13 +11,14 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { Validators } from '@angular/forms';
 import { inject } from '@angular/core';
 /**
-* Componente que representa al responsable de la inspección en un punto.
-* Este componente agrega y administra dinámicamente controles de formulario para los detalles de responsabilidad de inspección.
-*/
+ * Componente que representa al responsable de la inspección en un punto.
+ * Este componente agrega y administra dinámicamente controles de formulario para los detalles de responsabilidad de inspección.
+ */
 @Component({
   selector: 'app-responsable-inspeccion-en-punto',
   standalone: true,
@@ -38,7 +39,9 @@ import { inject } from '@angular/core';
   templateUrl: './responsable-inspeccion-en-punto.component.html',
   styleUrls: ['./responsable-inspeccion-en-punto.component.scss'],
 })
-export class ResponsableInspeccionEnPuntoComponent implements OnInit, OnDestroy {
+export class ResponsableInspeccionEnPuntoComponent
+  implements OnInit, OnDestroy
+{
   /**Entrada de propiedad para identificar la clave de control en el formulario principal */
   @Input() claveDeControl: string = '';
   /** Inyecte el ControlContainer principal para administrar los controles de formulario*/
@@ -52,8 +55,14 @@ export class ResponsableInspeccionEnPuntoComponent implements OnInit, OnDestroy 
   }
   /** Almacena datos del catálogo para el tipo de contenedor. */
   tipoContenedor!: CatalogosSelect;
+
+  constructor(
+    private solicitudService: SolicitudPantallasService /**Servicio para obtener datos de solicitud */
+  ) {
+    /** Inyectar el ControlContainer principal para administrar los controles de formulario */
+  }
   /**
-   * Gancho del ciclo de vida que inicializa el componente.
+   * Ciclo de vida que inicializa el componente.
    * Agrega un control de formulario dinámico y carga datos iniciales.
    */
   ngOnInit(): void {
@@ -67,7 +76,7 @@ export class ResponsableInspeccionEnPuntoComponent implements OnInit, OnDestroy 
             Validators.maxLength(150),
           ]),
           primerapellido: new FormControl('', [Validators.maxLength(80)]),
-          segyndoapellido: new FormControl('', [Validators.maxLength(80)]),
+          segundoapellido: new FormControl('', [Validators.maxLength(80)]),
           mercancia: new FormControl('', [Validators.required]),
           tipocontenedor: new FormControl('', []),
         })
@@ -81,7 +90,10 @@ export class ResponsableInspeccionEnPuntoComponent implements OnInit, OnDestroy 
    * @param e - El artículo del catálogo seleccionado
    */
   tipoContenedorSeleccion(e: Catalogo): void {
-    if (this.claveDeControl && this.grupoformulariopadre.contains(this.claveDeControl)) {
+    if (
+      this.claveDeControl &&
+      this.grupoformulariopadre.contains(this.claveDeControl)
+    ) {
       this.grupoformulariopadre.controls[this.claveDeControl].patchValue({
         tipocontenedor: e.descripcion,
       });
@@ -91,38 +103,21 @@ export class ResponsableInspeccionEnPuntoComponent implements OnInit, OnDestroy 
    * Carga datos del catálogo inicial para el tipo de contenedor.
    */
   cargarDatosIniciales(): void {
-    this.tipoContenedor = {
-      labelNombre: 'Tipo contenedor',
-      required: false,
-      primerOpcion: 'Selecciona un valor',
-      catalogos: [
-        {
-          id: 1,
-          descripcion: 'Tipo contenedor 1',
-          tam: 'Tipo contenedor 1',
-          dpi: 'Tipo contenedor 1',
-        },
-        {
-          id: 2,
-          descripcion: 'Tipo contenedor 2',
-          tam: 'Tipo contenedor 2',
-          dpi: 'Tipo contenedor 2',
-        },
-        {
-          id: 3,
-          descripcion: 'Tipo contenedor 3',
-          tam: 'Tipo contenedor 3',
-          dpi: 'Tipo contenedor 3',
-        },
-      ],
-    };
+    this.solicitudService.getData().subscribe({
+      next: (data: { tipoContenedor: CatalogosSelect }) => {
+        this.tipoContenedor = data.tipoContenedor;
+      },
+    })
   }
   /**
    * Gancho de ciclo de vida que limpia el componente.
    * Elimina el control de formulario del formulario principal.
    */
   ngOnDestroy(): void {
-    if (this.claveDeControl && this.grupoformulariopadre.contains(this.claveDeControl)) {
+    if (
+      this.claveDeControl &&
+      this.grupoformulariopadre.contains(this.claveDeControl)
+    ) {
       this.grupoformulariopadre.removeControl(this.claveDeControl);
     }
   }

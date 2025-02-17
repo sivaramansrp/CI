@@ -1,8 +1,8 @@
 import { ComponentFixture } from '@angular/core/testing';
+import { HistorialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { HistorialInspeccionFisicaComponent } from './historial-inspeccion-fisica.component';
 import { TestBed } from '@angular/core/testing';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { historialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
 
 describe('HistorialInspeccionFisicaComponent', () => {
   let component: HistorialInspeccionFisicaComponent;
@@ -10,7 +10,8 @@ describe('HistorialInspeccionFisicaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [HistorialInspeccionFisicaComponent, TituloComponent],
+      declarations: [],
+      imports: [HistorialInspeccionFisicaComponent, TituloComponent],
     }).compileComponents();
   });
 
@@ -32,7 +33,7 @@ describe('HistorialInspeccionFisicaComponent', () => {
   });
 
   it('should have tablaFilaDatos as input', () => {
-    const testFilaDatos: historialInspeccionFisica[] = [
+    const testFilaDatos: HistorialInspeccionFisica[] = [
       {
         numeroPartidaMercancia: '12345',
         fraccionArancelaria: '0101.21.00',

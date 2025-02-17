@@ -4,6 +4,7 @@ import { CatalogosSelect } from '../../../../core/models/shared/components.model
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
+import { DatoseDelTramiteRealizer } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { FECHA_INSPECCION } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -13,6 +14,7 @@ import { InputFechaComponent } from '../../../../shared/components/input-fecha/i
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { Validators } from '@angular/forms';
 import { inject } from '@angular/core';
@@ -37,6 +39,7 @@ import { inject } from '@angular/core';
         inject<ControlContainer>(ControlContainer, { skipSelf: true }),
     },
   ],
+  providers: [SolicitudPantallasService],
   templateUrl: './datose-del-tramite-a-realizer.component.html',
   styleUrl: './datose-del-tramite-a-realizer.component.scss',
 })
@@ -81,6 +84,11 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
    */
   fechaInicioInput: InputFecha = FECHA_INSPECCION;
 
+  /** Constructor para inyectar el servicio de solicitud de pantallas. */
+  constructor(private solicitudService: SolicitudPantallasService) {
+    // Se puede agregar aquí el código de inicialización si es necesario en el futuro.
+  }
+
   /**
    * Gancho de ciclo de vida que inicializa los controles de formulario cuando se carga el componente.
    */
@@ -98,6 +106,7 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
         })
       );
     }
+    /** Cargar datos iniciales */
     this.cargarDatosIniciales();
   }
 
@@ -165,138 +174,44 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
       label: string,
       required: boolean,
       catalogos: Catalogo[]
-    ) => ({
+    ): CatalogosSelect => ({
       labelNombre: label,
       required,
       primerOpcion: 'Selecciona un valor',
       catalogos: catalogos,
     });
-
-    const pendientesCertificados = [
-      {
-        id: 1,
-        descripcion: 'Certificado de Exportación',
-        tam: 'A4',
-        dpi: '1234567890',
-      },
-      {
-        id: 2,
-        descripcion: 'Certificado Fitosanitario',
-        tam: 'Carta',
-        dpi: '0987654321',
-      },
-      {
-        id: 3,
-        descripcion: 'Certificado de Origen',
-        tam: 'Legal',
-        dpi: '1122334455',
-      },
-    ];
-
-    const horaInspeccion = [
-      {
-        id: 1,
-        descripcion: '08:00 AM - 10:00 AM',
-        tam: '2 horas',
-        dpi: 'INS001',
-      },
-      {
-        id: 2,
-        descripcion: '10:00 AM - 12:00 PM',
-        tam: '2 horas',
-        dpi: 'INS002',
-      },
-      {
-        id: 3,
-        descripcion: '01:00 PM - 03:00 PM',
-        tam: '2 horas',
-        dpi: 'INS003',
-      },
-    ];
-
-    const aduanaIngreso = [
-      { id: 1, descripcion: 'Aduana La Aurora', tam: 'Zona 13', dpi: 'ADU001' },
-      {
-        id: 2,
-        descripcion: 'Aduana Puerto Quetzal',
-        tam: 'Escuintla',
-        dpi: 'ADU002',
-      },
-      {
-        id: 3,
-        descripcion: 'Aduana Santo Tomás',
-        tam: 'Izabal',
-        dpi: 'ADU003',
-      },
-    ];
-
-    const sanidadAgropecuaria = [
-      {
-        id: 1,
-        descripcion: 'Oficina Central de Sanidad',
-        tam: 'Ciudad Capital',
-        dpi: 'SAN001',
-      },
-      {
-        id: 2,
-        descripcion: 'Sanidad Agropecuaria Zona Norte',
-        tam: 'Petén',
-        dpi: 'SAN002',
-      },
-      {
-        id: 3,
-        descripcion: 'Sanidad Agropecuaria Puerto Barrios',
-        tam: 'Izabal',
-        dpi: 'SAN003',
-      },
-    ];
-
-    const puntoInspección = [
-      {
-        id: 1,
-        descripcion: 'Punto de Inspección Aérea',
-        tam: 'Terminal de Carga',
-        dpi: 'PIN001',
-      },
-      {
-        id: 2,
-        descripcion: 'Punto de Inspección Marítima',
-        tam: 'Muelle Principal',
-        dpi: 'PIN002',
-      },
-      {
-        id: 3,
-        descripcion: 'Punto de Inspección Terrestre',
-        tam: 'Frontera Tecún Umán',
-        dpi: 'PIN003',
-      },
-    ];
-    this.certificadosAutorizados = catalogoTemplate(
-      'Certificados autorizados pendientes',
-      true,
-      pendientesCertificados
-    );
-    this.horaDeInspeccion = catalogoTemplate(
-      'Hora de inspección',
-      true,
-      horaInspeccion
-    );
-    this.aduanaDeIngreso = catalogoTemplate(
-      'Aduana de ingreso',
-      false,
-      aduanaIngreso
-    );
-    this.sanidadAgropecuaria = catalogoTemplate(
-      'Oficina de inspección de Sanidad Agropecuaria',
-      false,
-      sanidadAgropecuaria
-    );
-    this.puntoDeInspeccion = catalogoTemplate(
-      'Punto de inspección',
-      false,
-      puntoInspección
-    );
+  
+    this.solicitudService.getData().subscribe({
+      next: (data: DatoseDelTramiteRealizer) => {
+        this.certificadosAutorizados = catalogoTemplate(
+          'Certificados autorizados pendientes',
+          true,
+          data.pendientesCertificados
+        );
+        this.horaDeInspeccion = catalogoTemplate(
+          'Hora de inspección',
+          true,
+          data.horaInspeccion
+        );
+        this.aduanaDeIngreso = catalogoTemplate(
+          'Aduana de ingreso',
+          false,
+          data.aduanaIngreso
+        );
+        this.sanidadAgropecuaria = catalogoTemplate(
+          'Oficina de inspección de Sanidad Agropecuaria',
+          false,
+          data.sanidadAgropecuaria
+        );
+        this.puntoDeInspeccion = catalogoTemplate(
+          'Punto de inspección',
+          false,
+          data.puntoInspeccion
+        );
+      }
+    });
   }
+  
 
   /**
    * Getter para acceder al grupo de formularios 'datosServicio'.
