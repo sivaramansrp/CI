@@ -1,4 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
+
+
 import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
 import { PASOS } from '../../../../shared/constantes/aviso.enum';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
@@ -7,6 +9,7 @@ import { WizardComponent } from '../../../../shared/components/wizard/wizard.com
   selector: 'app-datos',
   templateUrl: './datos.component.html',
   styles: ``,
+  
 })
 export class DatosComponent {
 
