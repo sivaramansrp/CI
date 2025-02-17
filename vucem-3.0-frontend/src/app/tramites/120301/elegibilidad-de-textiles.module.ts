@@ -26,6 +26,7 @@ import { FacturasAsociadasComponent } from './components/facturas-asociadas/fact
 import { HistoricoFabricantesComponent } from './components/historico-fabricantes/historico-fabricantes.component';
 import { TableComponent } from '../../shared/components/table/table.component';
 import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
+import { CatalogoSelectComponent } from '../../shared/components/catalogo-select/catalogo-select.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
     FacturasAsociadasComponent,
     HistoricoFabricantesComponent,
     TableComponent,
+    CatalogoSelectComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -47,9 +47,14 @@
                 </div>
               </div>
               <div class="col-md-4">
-                <div class="form-group">
-                    <select-catalogos [catalogosDatos]="unidadDeMedida" formControlName="unidadDeMedida"></select-catalogos>
-                </div>
+                    <!-- <select-catalogos [catalogosDatos]="unidadDeMedida" formControlName="unidadDeMedida"></select-catalogos> -->
+                    <app-catalogo-select
+                    [catalogo]="unidadDeMedida"
+                    formControlName="unidadDeMedida"
+                    [label]="'Unidad De Medida'"
+                    [required]="true"
+                    name="unidadDeMedida"
+                  ></app-catalogo-select>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
