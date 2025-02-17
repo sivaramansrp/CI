@@ -28,16 +28,23 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'certificado-fitosanitario',
+    path: 'despacho-mercancias',
     loadChildren: () =>
-      import('./tramites/220202/fitosanitario.module').then(
-        (m) => m.FitosanitarioModule
+      import('./tramites/303/despacho-mercancias.module').then(
+        (m) => m.DespachoMercanciasModule
       )
   },
   {
     path: 'pantallas-extraordinarios',
     loadChildren: () =>
       import('./tramites/220401/pantallas.module').then(
+        (m) => m.PantallasModule
+      ),
+  },
+  {
+    path: 'importante',
+    loadChildren: () =>
+      import('./tramites/301/pantallas.module').then(
         (m) => m.PantallasModule
       ),
   },
@@ -53,6 +60,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tramites/220201/certificado-zoosanitario.module').then(
         (m) => m.CertificadoZoosanitarioModule)
+  },
+  {
+    path: 'certificado-fitosanitario',
+    loadChildren: () =>
+      import('./tramites/220202/fitosanitario.module').then(
+        (m) => m.FitosanitarioModule
+      )
   },
 ];
 
