@@ -1,41 +1,254 @@
-<!-- Angular Template: form.component.html -->
 <div class="container mt-4">
-    <form >
-      <div id="preoperativoA" class="w-100 p-3 border rounded shadow-sm">
-        <div class="mb-3">
-          <span class="require">*</span>
-          <label class="form-label fw-bold">
-            ¿Desea obtener la autorización del Esquema Integral modalidad IVA e IEPS, como pre-operativo?
-          </label>
-          <p class="text-muted small">
-            (El período pre-operativo únicamente podrá ser solicitado por única ocasión de conformidad con la regla 7.1.2 y el mismo deberá ser solicitado al momento del llenado de la presente solicitud, no podrá solicitarlo posteriormente.)
-          </p>
-        </div>
-        <div class="d-flex gap-3">
-          <div class="form-check">
-            <input class="form-check-input" type="radio" formControlName="preOperativo" [value]="true" >
-            <label class="form-check-label">Sí</label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" formControlName="preOperativo" [value]="false" >
-            <label class="form-check-label">No</label>
-          </div>
-        </div>
-        <!-- <div *ngIf="errorPreOperativo" class="text-danger mt-2">{{ errorPreOperativo }}</div> -->
+  <form>
+    <!-- Preoperativo Section -->
+    <div id="preoperativoA" class="w-100 p-3 border rounded shadow-sm">
+      <div class="mb-3">
+        <span class="require">*</span>
+        <label class="form-label fw-bold">
+          ¿Desea obtener la autorización del Esquema Integral modalidad IVA e
+          IEPS, como pre-operativo?
+        </label>
+        <p class="text-muted small">
+          (El período pre-operativo únicamente podrá ser solicitado por única
+          ocasión de conformidad con la regla 7.1.2 y el mismo deberá ser
+          solicitado al momento del llenado de la presente solicitud, no podrá
+          solicitarlo posteriormente.)
+        </p>
       </div>
-  
-      <div class="w-100 p-3 border rounded shadow-sm mt-4">
-        <fieldset>
-          <legend class="fs-5 fw-bold">Indique los regímenes aduaneros a los que pertenece</legend>
-          <div class="d-flex flex-column gap-2">
-            <!-- <div *ngFor="let regimen of regimens; let i = index" class="form-check">
-              <input class="form-check-input" type="checkbox" [formControlName]="regimen.controlName" (click)="validarSeleccion(i)">
-              <label class="form-check-label">{{ regimen.label }}</label>
-            </div> -->
+
+      <!-- Input Radio Component -->
+      <app-input-radio
+        [radioOptions]="radioOptions"
+        [isRequired]="true"
+        [layout]="'horizontal'"
+      ></app-input-radio>
+    </div>
+
+    <!-- Fieldsets Section -->
+    <div class="row d-flex align-items-center mt-4">
+      <!-- Centered First Fieldset -->
+      <div class="col-12 col-md-4 d-flex justify-content-center">
+        <fieldset class="border p-3 text-center">
+          <div class="w-auto">
+            Indique los regimenes aduaneros a los que pertenece
           </div>
         </fieldset>
-        <!-- <div *ngIf="errorChecksRegimenes" class="text-danger mt-2">{{ errorChecksRegimenes }}</div> -->
       </div>
-    </form>
+
+      <!-- Régimen Aduanero Fieldset -->
+      <div class="col-12 col-md-8">
+        <fieldset class="border p-3">
+          <legend class="w-auto">Régimen aduanero:</legend>
+
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="regimen_0"
+              value="1"
+            />
+            <label class="form-check-label" for="regimen_0">
+              Importación temporal para la elaboración, transformación o
+              reparación en programas de maquila o de exportación (IMMEX)
+            </label>
+            <div class="d-none">
+              <input
+                type="checkbox"
+                id="regimen_0Def"
+                name="mapDeclaracionSolicitud['3027'].acepto"
+                value="0"
+              />
+            </div>
+          </div>
+
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="regimen_1"
+              value="1"
+            />
+            <label class="form-check-label" for="regimen_1">
+              Depósito fiscal para someterse al proceso de ensamble y
+              fabricación de vehículo a empresas de la industria automotriz
+              terminal
+            </label>
+            <div class="d-none">
+              <input
+                type="checkbox"
+                id="regimen_1Def"
+                name="mapDeclaracionSolicitud['3028'].acepto"
+                value="0"
+              />
+            </div>
+          </div>
+
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="regimen_2"
+              value="1"
+            />
+            <label class="form-check-label" for="regimen_2">
+              Elaboración, transformación o reparación en recinto fiscalizado
+            </label>
+            <div class="d-none">
+              <input
+                type="checkbox"
+                id="regimen_2Def"
+                name="mapDeclaracionSolicitud['3029'].acepto"
+                value="0"
+              />
+            </div>
+          </div>
+
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="regimen_3"
+              value="1"
+            />
+            <label class="form-check-label" for="regimen_3">
+              Recinto Fiscalizado Estratégico
+            </label>
+            <div class="d-none">
+              <input
+                type="checkbox"
+                id="regimen_3Def"
+                name="mapDeclaracionSolicitud['3030'].acepto"
+                value="0"
+              />
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+
+    <div class="w-100 p-3 border rounded shadow-sm mt-4">
+      <label class="form-label fw-bold mb-3">
+        Se&ntilde;ale el sector productivo o servicio al que pertenece
+      </label>
+      <div class="row">
+        <div class="col-md-6">
+          <app-catalogo-select
+            [label]="'Sector Productivo'"
+            [placeholder]="'Seleccione un valor'"
+            [catalogo]="sectorProductivoAgace"
+          >
+          </app-catalogo-select>
+        </div>
+        <div class="col-md-6">
+          <app-catalogo-select
+            [label]="'Servicio'"
+            [placeholder]="'Seleccione un valor'"
+            [catalogo]="serviciosAgace"
+          >
+          </app-catalogo-select>
+        </div>
+      </div>
+      <div class="alert alert-info mt-3">
+        <h6 class="mb-0">
+          <strong>Nota:</strong> Si no encuadra en los sectores o los servicios
+          de los catálogos, deberá seleccionar el más cercano a sus actividades.
+        </h6>
+      </div>
+    </div>
+
+    <div class="w-100 p-3 border rounded shadow-sm mt-4">
+      <div class="mt-4">
+        <label class="fw-bold">
+          <span class="require">* </span>
+          Senale si al momento de ingresar su solicitid si se encuentra al
+          corriente en el cumplomiento de sus onligaciones fiscales y aduaneras
+        </label>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+        ></app-input-radio>
+      </div>
+
+      <div class="mt-4">
+        <label class="fw-bold">
+          <span class="require">* </span>
+          Indique si autorizo al S A T hacer publica su opinion positiva sobre
+          el cumplimiento de obligaciones fiscales
+        </label>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+        ></app-input-radio>
+      </div>
+      <div class="mt-4">
+        <label class="fw-bold">
+          <span class="require">* </span>
+          Senale si cuenta con empleados propios
+        </label>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+        ></app-input-radio>
+      </div>
+      <div class="alert alert-danger mt-3">
+        <h6 class="mb-0">
+          <strong>Nota:</strong> En el caso de la Modalidad de IVA e IEPS,
+          tendra que contar con al meanos 10 trabajadores registrados.
+        </h6>
+      </div>
+      <label class="fw-bold">
+        Cual es el numero de empleados propios con los que conto en el ultimo
+        bimestre anterior a su solicitud
+      </label>
+
+      <div class="row">
+<div class="col-md-1">
+
+</div>
+<div class="col-md-5">
+  <div class="form-group">
+    <label for="empPropios" class="form-label">Número de empleados propios</label>
+  <input 
+    type="text" 
+    class="form-control" 
+    id="empPropios" 
+    name="empleadosPropios"
+    maxlength="8"  
+  />
   </div>
-  
+</div>
+<div class="col-md-5">
+  <app-catalogo-select
+            [label]="'Bimestre'"
+            [placeholder]="'Seleccione un valor'"
+            [catalogo]="comboBimestresIDC"
+          >
+          </app-catalogo-select>
+</div>
+<div class="col-md-1">
+
+</div>
+      </div>
+      <div class="mt-4">
+        <label class="fw-bold">
+          <span class="require">* </span>
+          Se&nale si al momento de ingresar su solicitud la empresa solicitante cuenta con trabajadores subcontratados en los t&erminos y condiciones que establecen 12-A al 15- D de la Ley Federal de Trabajao
+        </label>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+        ></app-input-radio>
+      </div>
+    </div>
+    <ng-table [commonTableHeader]="establecimientoHeaderData" [commonTableBody]="establecimientoBodyData" [enablePagination]="true"></ng-table>
+    <div class=" d-flex justify-content-end">
+        <button type="button" class="btn btn-default btn-space" >Modificar</button>
+        <button type="button" class="btn btn-primary btn-space" >Eliminar</button>
+    </div>
+ 
+  </form>
+</div>

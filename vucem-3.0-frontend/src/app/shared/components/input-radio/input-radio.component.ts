@@ -43,7 +43,9 @@ export class InputRadioComponent implements OnInit {
    * Evento emitido cuando el valor seleccionado cambia.
    */
   @Output() valueChange = new EventEmitter<string | number>();
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {
+    //constructor
+   }
 
   ngOnInit() {
     this.createFormRadio();

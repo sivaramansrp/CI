@@ -8,6 +8,8 @@ import { PantallasComponent } from '../pages/pantallas/pantallas.component';
 import { WizardComponent } from '../../../shared/components/wizard/wizard.component';
 import { NavComponent } from '../../../shared/components/nav/nav.component';
 import { AduaneroComponent } from "../components/aduanero/aduanero.component";
+import { SharedModule } from '../../../shared/shared.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -20,7 +22,9 @@ import { AduaneroComponent } from "../components/aduanero/aduanero.component";
     AntecesorRoutingModule,
     WizardComponent,
     NavComponent,
-    AduaneroComponent
+    AduaneroComponent,
+    FormsModule,
+    ReactiveFormsModule,
 ]
 })
 export class AntecesorModule { }
