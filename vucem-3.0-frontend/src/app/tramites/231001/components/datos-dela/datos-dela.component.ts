@@ -34,7 +34,6 @@ export class DatosDelaComponent implements OnInit{
     onAduanaSelect(): void {
       // Capture the selected value
      this.selectedAduana = this.datosForm.get('aduanas')?.value;
-     console.log('selectedAduana',this.aduanas)
      const selectedAduana1 = this.aduanas.find(aduana => aduana.id === this.selectedAduana);
      console.log('selected', selectedAduana1.descripcion)
     }
