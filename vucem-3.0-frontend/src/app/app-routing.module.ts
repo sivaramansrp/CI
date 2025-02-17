@@ -42,6 +42,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'importante',
+    loadChildren: () =>
+      import('./tramites/301/pantallas.module').then(
+        (m) => m.PantallasModule
+      ),
+  },
+  {
     path: 'pantallas',
     loadChildren: () =>
       import('./tramites/110101/pantallas/pantallas.module').then(
