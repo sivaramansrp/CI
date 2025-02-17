@@ -10,6 +10,7 @@ import { DatosDelaComponent } from './components/datos-dela/datos-dela.component
 import { ReactiveFormsModule } from '@angular/forms';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
+import { SolicitanteDetosTabsComponent } from './pages/solicitante-detos-tabs/solicitante-detos-tabs.component';
 
 
 
@@ -17,7 +18,8 @@ import { TituloComponent } from '../../shared/components/titulo/titulo.component
   declarations: [
     SolicitanteComponent,
     DatosDelaComponent,
-    DatosComponent
+    DatosComponent,
+    SolicitanteDetosTabsComponent
   ],
   imports: [
     CommonModule,

@@ -14,7 +14,5 @@ export class DatosComponent {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   
   indice: number = 1;
-  
- 
 
 }
