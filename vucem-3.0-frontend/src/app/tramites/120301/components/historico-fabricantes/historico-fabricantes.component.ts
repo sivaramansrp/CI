@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
@@ -10,6 +10,7 @@ import { TableComponent } from '../../../../shared/components/table/table.compon
 import unidadRadioFields from '../../../../../assets/json/220401/unidad.json';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { HistoricoFabricantesService } from '../../../../core/services/120301/historico-fabricantes/historico-fabricantes.service';
+import { ServiciosElegibilidadDeTextilesService } from '../../../../core/services/120301/servicios-elegibilidad-de-textiles.service';
 
 @Component({
   selector: 'historico-fabricantes',
@@ -24,7 +25,7 @@ import { HistoricoFabricantesService } from '../../../../core/services/120301/hi
     InputRadioComponent
   ]
 })
-export class HistoricoFabricantesComponent implements OnInit {
+export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   historicoFabricantesForm!: FormGroup;
   radioOptions = radioOptionsData;
   selectedValue: string | number = '';
@@ -42,7 +43,7 @@ export class HistoricoFabricantesComponent implements OnInit {
   fabricantesNacionales: any[] = [];
   fabricantesDatos: any[] = [];
 
-  constructor(private fb: FormBuilder, private historicoFabricantesService: HistoricoFabricantesService) { }
+  constructor(private fb: FormBuilder, private historicoFabricantesService: HistoricoFabricantesService, private readonly serviciosElegibilidadDeTextilesService: ServiciosElegibilidadDeTextilesService) { }
 
   ngOnInit(): void {
     this.fetchData();
@@ -100,10 +101,7 @@ export class HistoricoFabricantesComponent implements OnInit {
       { id: 3, descripcion: 'Option 3' }
     ];
   }
-
-  seleccionar(e: any) { }
-
-  cargarArchivo() { }
-
-  agregar() { }
+  ngOnDestroy(): void {
+    this.serviciosElegibilidadDeTextilesService.setSoliciante('historicoFabricantesForm', this.historicoFabricantesForm.value);
+  }
 }
