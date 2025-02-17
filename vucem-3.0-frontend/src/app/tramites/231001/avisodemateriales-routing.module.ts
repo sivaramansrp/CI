@@ -18,7 +18,7 @@ const routes: Routes = [
     {
       path: '',
       pathMatch: 'full',
-      redirectTo: 'pantallas',
+      redirectTo: 'Solicitante',
     },
 ];
 
