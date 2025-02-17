@@ -58,7 +58,7 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
   /**
    * Getter para acceder al grupo de formularios principal.
    */
-  get grupoformulariopadre(): FormGroup {
+  get grupoFormularioPadre(): FormGroup {
     return this.parentContainer.control as FormGroup;
   }
 
@@ -94,7 +94,7 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     if (this.claveDeControl) {
-      this.grupoformulariopadre.addControl(
+      this.grupoFormularioPadre.addControl(
         this.claveDeControl,
         new FormGroup({
           certificadosAutorizados: new FormControl('', [Validators.required]),
@@ -158,9 +158,9 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
   private actualizarFormValue(nombreDeControl: string, value: string): void {
     if (
       this.claveDeControl &&
-      this.grupoformulariopadre.contains(this.claveDeControl)
+      this.grupoFormularioPadre.contains(this.claveDeControl)
     ) {
-      this.grupoformulariopadre.controls[this.claveDeControl].patchValue({
+      this.grupoFormularioPadre.controls[this.claveDeControl].patchValue({
         [nombreDeControl]: value,
       });
     }
@@ -217,7 +217,7 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
    * Getter para acceder al grupo de formularios 'datosServicio'.
    */
   get datosServicio(): FormGroup {
-    return this.grupoformulariopadre.get('datosServicio') as FormGroup;
+    return this.grupoFormularioPadre.get('datosServicio') as FormGroup;
   }
 
   /**
@@ -234,9 +234,9 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (
       this.claveDeControl &&
-      this.grupoformulariopadre.contains(this.claveDeControl)
+      this.grupoFormularioPadre.contains(this.claveDeControl)
     ) {
-      this.grupoformulariopadre.removeControl(this.claveDeControl);
+      this.grupoFormularioPadre.removeControl(this.claveDeControl);
     }
   }
 }
