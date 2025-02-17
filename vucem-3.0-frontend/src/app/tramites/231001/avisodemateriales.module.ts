@@ -18,6 +18,7 @@ import { DatosDeLosResiduosComponent } from './components/datos-de-los-residuos/
 
 
 import { map } from 'rxjs';
+import { AlertComponent } from '../../shared/components/alert/alert.component';
 @NgModule({
   declarations: [
     SolicitanteComponent,
@@ -35,7 +36,8 @@ import { map } from 'rxjs';
     AdministrarResiduosComponent,
     DatosDeLosResiduosComponent,
     CatalogoSelectComponent,
-    BtnContinuarComponent
+    BtnContinuarComponent,
+    AlertComponent
   ],
   
   exports: [PantallasComponent]

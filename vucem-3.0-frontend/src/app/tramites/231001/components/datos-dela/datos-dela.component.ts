@@ -25,6 +25,7 @@ export class DatosDelaComponent implements OnInit {
   selectedAduana: any;
   pasos: ListaPasosWizard[] = PASOS;
   indice: number = 1;
+  texto:string = 'Aviso de Privacidad simplificado'
 
   /**
    * @property comboAutorizacionIMMEX
