@@ -1,17 +1,14 @@
 <div class="container">
-
-    <form [formGroup]="datosForm" >
-      <div class="row">
-        <div class="col-md-4">
-          <app-catalogo-select [catalogo]='aduanas'  formControlName="aduanas"  [label]="'Aduana de entrada'" [required]="true" (change)="onAduanaSelect()" ></app-catalogo-select>
-        </div>
+  <form [formGroup]="datosForm">
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]='aduanas' formControlName="aduanas" [label]="'Aduana de entrada'"
+          [required]="true" (change)="onAduanaSelect()"></app-catalogo-select>
       </div>
-
-      <div *ngIf="selectedAduana === 'aduana_01'">
-
-        <p>Hello</p>
-      </div>
-        
-    </form>
-   
-  </div>
+    </div>
+    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+    <div *ngIf="selectedAduana">
+      <app-datos-de-los-residuos></app-datos-de-los-residuos>
+    </div>
+  </form>
+</div>
