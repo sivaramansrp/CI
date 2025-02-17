@@ -21,8 +21,9 @@ describe('DatosDeLosResiduosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DatosDeLosResiduosComponent],
+      declarations: [],
       imports: [
+        DatosDeLosResiduosComponent,
         ReactiveFormsModule,
         CommonModule,
         BtnContinuarComponent,
