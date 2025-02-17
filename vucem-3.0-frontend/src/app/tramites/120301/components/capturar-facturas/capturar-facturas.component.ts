@@ -22,6 +22,7 @@ import { SelectCatalogosComponent } from '../../../../shared/components/select-c
 import { InputFechaComponent } from '../../../../shared/components/input-fecha/input-fecha.component';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import {CPATURAR_TBCOL} from '../../../../shared/constantes/elegibilidad-de-textiles.enums'
+import { ElegibilidadTextilesService } from '../../../../core/services/120301/elegibilidad-textiles/elegibilidad-textiles.service';
 
 @Component({
   selector: 'app-capturar-facturas',
@@ -72,6 +73,7 @@ export class CapturarFacturasComponent implements OnInit {
   facturas: any[] = [];
   constructor(
     private capturarFacturasService: CapturarFacturasService,
+    private ElegibilidadTextilesService: ElegibilidadTextilesService,
     private readonly httpServicios: HttpClient,
     private readonly fb: FormBuilder
   ) { }
@@ -147,10 +149,9 @@ export class CapturarFacturasComponent implements OnInit {
    */
 
   obtenerIngresoSelectList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/120301/unidad-de-medida.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.unidadDeMedida = datos;
-    });
+    this.ElegibilidadTextilesService.obtenerMenuDesplegable('unidad-de-medida.json').subscribe(data => {
+      this.unidadDeMedida = data as Catalogo[];
+    })
   }
 
 }

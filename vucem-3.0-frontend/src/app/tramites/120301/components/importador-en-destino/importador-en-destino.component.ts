@@ -11,6 +11,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Catalogo, RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
+import { ElegibilidadTextilesService } from '../../../../core/services/120301/elegibilidad-textiles/elegibilidad-textiles.service';
 
 @Component({
   selector: 'importador-en-destino',
@@ -36,7 +37,7 @@ export class ImportadorEnDestinoComponent {
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
    * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.--220201
    */
-  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient) {
+  constructor(private ElegibilidadTextilesService: ElegibilidadTextilesService, private readonly fb: FormBuilder, private readonly httpServicios: HttpClient) {
     this.crearFormulario();
     this.initActionFormBuild();
   }
@@ -89,10 +90,9 @@ export class ImportadorEnDestinoComponent {
    * @method obtenerIngresoSelectList
    */
   obtenerIngresoSelectList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/120301/tipo.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.tipo = datos;
-    });
+    this.ElegibilidadTextilesService.obtenerMenuDesplegable('tipo.json').subscribe(data => {
+      this.tipo = data as Catalogo[];
+    })
   }
 
 }
