@@ -1,29 +1,25 @@
 /**
  * @module DatosDeLosResiduosComponent
- * @description Este módulo define el componente `DatosDeLosResiduosComponent` que maneja la información de los residuos.
+ * Este módulo define el componente `DatosDeLosResiduosComponent` que maneja la información de los residuos.
  */
 
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
 
-// Importación de componentes compartidos
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
+
 import { BtnContinuarComponent } from "../../../../shared/components/btn-continuar/btn-continuar.component";
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
+import { HttpCoreService } from '../../../../core/services/shared/http/http.service';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
-// Importación de JSON con datos para los catálogos
-import CapituloFraccion from '../../../../../assets/json/231001/comboCapituloFraccion.json';
-import FraccionArancelariaParametros from '../../../../../assets/json/231001/comboFraccionArancelariaParametros.json';
-import PartidaFraccion from '../../../../../assets/json/231001/comboPartidaFraccion.json';
-import SubPartidaFraccion from '../../../../../assets/json/231001/comboSubPartidaFraccion.json';
-import UnidadMedida from '../../../../../assets/json/231001/comboUnidadMedida.json';
-
+/**
+ * 
+ * Componente que maneja los datos relacionados con los residuos, incluidos los formularios y catálogos.
+ */
 @Component({
   selector: 'app-datos-de-los-residuos',
   templateUrl: './datos-de-los-residuos.component.html',
@@ -31,23 +27,23 @@ import UnidadMedida from '../../../../../assets/json/231001/comboUnidadMedida.js
   standalone: true,
   imports: [ReactiveFormsModule, CatalogoSelectComponent, CommonModule, TituloComponent, BtnContinuarComponent]
 })
-export class DatosDeLosResiduosComponent {
+export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
 
   /**
    * @property {FormGroup} materiaPrimaForm
-   * @description Formulario principal del componente para la gestión de datos de residuos.
+   * Formulario principal del componente para la gestión de datos de residuos.
    */
   materiaPrimaForm: FormGroup;
 
   /**
    * @property {boolean} mostrarMsgCantSe06
-   * @description Indica si se debe mostrar el mensaje de cantidad SE06.
+   * Indica si se debe mostrar el mensaje de cantidad SE06.
    */
   mostrarMsgCantSe06: boolean = false;
 
   /**
    * @property {DatosPasos} datosPasosGuardar
-   * @description Objeto que maneja los datos de los pasos del formulario.
+   * Objeto que maneja los datos de los pasos del formulario.
    */
   datosPasosGuardar: DatosPasos = {
     txtBtnSig: "Guardar",
@@ -58,39 +54,47 @@ export class DatosDeLosResiduosComponent {
 
   /**
    * @property {Catalogo[]} comboUnidadMedida
-   * @description Opciones del catálogo de unidad de medida.
+   * Opciones del catálogo de unidad de medida.
    */
-  comboUnidadMedida: Catalogo[] = UnidadMedida;
+  comboUnidadMedida: Catalogo[];
 
   /**
    * @property {Catalogo[]} comboCapituloFraccion
-   * @description Opciones del catálogo de capítulo de fracción.
+   * Opciones del catálogo de capítulo de fracción.
    */
-  comboCapituloFraccion: Catalogo[] = CapituloFraccion;
+  comboCapituloFraccion: Catalogo[];
 
   /**
    * @property {Catalogo[]} comboPartidaFraccion
-   * @description Opciones del catálogo de partida de fracción.
+   * Opciones del catálogo de partida de fracción.
    */
   comboPartidaFraccion!: Catalogo[];
 
   /**
    * @property {Catalogo[]} comboSubPartidaFraccion
-   * @description Opciones del catálogo de subpartida de fracción.
+   * Opciones del catálogo de subpartida de fracción.
    */
   comboSubPartidaFraccion!: Catalogo[];
 
   /**
    * @property {Catalogo[]} comboFraccionArancelariaParametros
-   * @description Opciones del catálogo de fracción arancelaria.
+   * Opciones del catálogo de fracción arancelaria.
    */
   comboFraccionArancelariaParametros!: Catalogo[];
 
   /**
+   * @private
+   * @property {Subject<void>} destroyed$
+   * Subject utilizado para gestionar la destrucción del componente y la cancelación de suscripciones.
+   */
+  private destroyed$ = new Subject<void>();
+
+  /**
    * @constructor
    * @param {FormBuilder} fb - Instancia de FormBuilder para crear formularios.
+   * @param {HttpCoreService} http - Servicio para realizar solicitudes HTTP.
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private http: HttpCoreService) {
     this.materiaPrimaForm = this.fb.group({
       descUnidadMedida: [''],
       descFraccion: [''],
@@ -99,8 +103,8 @@ export class DatosDeLosResiduosComponent {
       claveSubPartida: [''],
       
       descripcionMercancia: ['', [Validators.required, Validators.maxLength(120)]], // Descripción de la mercancía (requerido, máximo 120 caracteres)
-      generica2: ['', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,6})?$'), Validators.maxLength(18)]], //Valor numérico (requerido, número entero o decimal con hasta 6 decimales, máximo 18 caracteres).
-      cantidadEnLetra: [{ value: '', disabled: true }, Validators.maxLength(256)], //Cantidad en letra (deshabilitado, máximo 256 caracteres).
+      generica2: ['', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,6})?$'), Validators.maxLength(18)]], // Valor numérico (requerido, número entero o decimal con hasta 6 decimales, máximo 18 caracteres)
+      cantidadEnLetra: [{ value: '', disabled: true }, Validators.maxLength(256)], // Cantidad en letra (deshabilitado, máximo 256 caracteres)
       unidadMedidaComercial: this.fb.group({
         clave: ['', Validators.required]
       }),
@@ -112,27 +116,76 @@ export class DatosDeLosResiduosComponent {
   }
 
   /**
-   * Carga las opciones del catálogo de partida de fracción.
+   * @ngOnInit
+   * Método que se ejecuta cuando el componente es inicializado. Carga los catálogos de unidad de medida y capítulo de fracción.
+   */
+  ngOnInit(): void {
+    this.loadcomboUnidadMedida();
+    this.loadComboCapituloFraccion();
+  }
+
+  /**
+   * @method loadcomboUnidadMedida
+   * Método que carga las opciones del catálogo de unidad de medida desde un archivo JSON.
+   */
+  loadcomboUnidadMedida(): void {
+    this.http.get('./assets/json/231001/comboUnidadMedida.json').pipe(
+      takeUntil(this.destroyed$) // Se usa takeUntil para asegurarse de que las suscripciones se cancelen al destruirse el componente
+    ).subscribe((data): void => {
+      this.comboUnidadMedida = data as Catalogo[];
+    });
+  }
+
+  /**
+   * @method loadComboCapituloFraccion
+   * Método que carga las opciones del catálogo de capítulo de fracción desde un archivo JSON.
+   */
+  loadComboCapituloFraccion(): void {
+    this.http.get('./assets/json/231001/comboCapituloFraccion.json').pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe((data): void => {
+      this.comboCapituloFraccion = data as Catalogo[];
+    });
+  }
+
+  /**
+   * @method loadComboPartidaFraccion
+   * Método que carga las opciones del catálogo de partida de fracción desde un archivo JSON.
    */
   loadComboPartidaFraccion(): void {
-    this.comboPartidaFraccion = PartidaFraccion;
+    this.http.get('./assets/json/231001/comboPartidaFraccion.json').pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe((data): void => {
+      this.comboPartidaFraccion = data as Catalogo[];
+    });
   }
 
   /**
-   * Carga las opciones del catálogo de subpartida de fracción.
+   * @method loadComboSubPartidaFraccion
+   * Método que carga las opciones del catálogo de subpartida de fracción desde un archivo JSON.
    */
   loadComboSubPartidaFraccion(): void {
-    this.comboSubPartidaFraccion = SubPartidaFraccion;
+    this.http.get('./assets/json/231001/comboSubPartidaFraccion.json').pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe((data): void => {
+      this.comboSubPartidaFraccion = data as Catalogo[];
+    });
   }
 
   /**
-   * Carga las opciones del catálogo de fracción arancelaria.
+   * @method loadcomboFraccionArancelariaParametros
+   * Método que carga las opciones del catálogo de fracción arancelaria desde un archivo JSON.
    */
-  loadComboFraccion(): void {
-    this.comboFraccionArancelariaParametros = FraccionArancelariaParametros;
+  loadcomboFraccionArancelariaParametros(): void {
+    this.http.get('./assets/json/231001/comboFraccionArancelariaParametros.json').pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe((data): void => {
+      this.comboFraccionArancelariaParametros = data as Catalogo[];
+    });
   }
 
   /**
+   * @method obtenerLetraCantidad
    * Convierte la cantidad numérica a su equivalente en texto.
    * @param {string} cantidad - La cantidad a convertir en letra.
    */
@@ -141,7 +194,8 @@ export class DatosDeLosResiduosComponent {
   }
 
   /**
-   * Maneja el cambio de capítulo de fracción.
+   * @method cambiaCapituloFraccion
+   * Maneja el cambio de capítulo de fracción, limpiando los valores relacionados.
    */
   cambiaCapituloFraccion(): void {
     this.materiaPrimaForm.patchValue({
@@ -157,7 +211,8 @@ export class DatosDeLosResiduosComponent {
   }
 
   /**
-   * Maneja el cambio de partida de fracción.
+   * @method cambiaPartidaFraccion
+   * Maneja el cambio de partida de fracción, limpiando los valores relacionados.
    */
   cambiaPartidaFraccion(): void {
     const partidaClave = this.materiaPrimaForm.get('partidaFraccion')?.value;
@@ -173,7 +228,8 @@ export class DatosDeLosResiduosComponent {
   }
 
   /**
-   * Maneja el cambio de subpartida de fracción.
+   * @method cambiaSubPartidaFraccion
+   * Maneja el cambio de subpartida de fracción, limpiando los valores relacionados.
    */
   cambiaSubPartidaFraccion(): void {
     const subPartidaClave = this.materiaPrimaForm.get('subPartidaFraccion')?.value;
@@ -183,10 +239,11 @@ export class DatosDeLosResiduosComponent {
       generica1: ''
     });
     this.comboFraccionArancelariaParametros = [];
-    this.loadComboFraccion();
+    this.loadcomboFraccionArancelariaParametros();
   }
 
   /**
+   * @method cambiaFraccion
    * Maneja el cambio de fracción y valida su vigencia.
    */
   cambiaFraccion(): void {
@@ -201,7 +258,8 @@ export class DatosDeLosResiduosComponent {
   }
 
   /**
-   * Maneja el cambio de unidad de medida.
+   * @method cambiaUnidadMedida
+   * Maneja el cambio de unidad de medida y actualiza la descripción.
    */
   cambiaUnidadMedida(): void {
     const unidadSeleccionada = this.comboUnidadMedida.find(unidad => unidad.id === this.materiaPrimaForm.get('unidadMedidaComercial.clave')?.value);
@@ -211,6 +269,7 @@ export class DatosDeLosResiduosComponent {
   }
 
   /**
+   * @method validaVigenciaFraccion
    * Valida la vigencia de la fracción.
    * @param {number} clvFracion - Clave de la fracción a validar.
    */
@@ -218,8 +277,14 @@ export class DatosDeLosResiduosComponent {
     if (!clvFracion) {
       this.materiaPrimaForm.patchValue({ fraccion: '' });
     }
-    else{
-      // Lógica de validación de vigencia de fracción
-    }
+  }
+
+  /**
+   * @ngOnDestroy
+   * Método que se ejecuta cuando el componente es destruido, limpiando los recursos y cancelando las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

@@ -1,14 +1,18 @@
-
+/* eslint-disable dot-notation */
+import { BtnContinuarComponent } from "../../../../shared/components/btn-continuar/btn-continuar.component";
+import CapituloFraccion from '../../../../../assets/json/231001/comboCapituloFraccion.json';
 import { CommonModule } from '@angular/common';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { BtnContinuarComponent } from "../../../../shared/components/btn-continuar/btn-continuar.component";
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { DatosDeLosResiduosComponent } from './datos-de-los-residuos.component';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+
+import { HttpCoreService } from '../../../../core/services/shared/http/http.service';
+import { of } from 'rxjs';
 
 import FraccionArancelariaParametros from '../../../../../assets/json/231001/comboFraccionArancelariaParametros.json';
 import PartidaFraccion from '../../../../../assets/json/231001/comboPartidaFraccion.json';
@@ -18,24 +22,43 @@ import UnidadMedida from '../../../../../assets/json/231001/comboUnidadMedida.js
 describe('DatosDeLosResiduosComponent', () => {
   let component: DatosDeLosResiduosComponent;
   let fixture: ComponentFixture<DatosDeLosResiduosComponent>;
+  let httpService: HttpCoreService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [],
       imports: [
         DatosDeLosResiduosComponent,
         ReactiveFormsModule,
         CommonModule,
         BtnContinuarComponent,
         CatalogoSelectComponent,
-        TituloComponent
-      ]
+        TituloComponent,
+        HttpClientTestingModule
+      ],
+      providers: [HttpCoreService]
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DatosDeLosResiduosComponent);
     component = fixture.componentInstance;
+    httpService = TestBed.inject(HttpCoreService);
+    spyOn(httpService, 'get').and.callFake((url: string) => {
+      switch (url) {
+        case './assets/json/231001/comboUnidadMedida.json':
+          return of(UnidadMedida);
+        case './assets/json/231001/comboCapituloFraccion.json':
+          return of(CapituloFraccion);
+        case './assets/json/231001/comboPartidaFraccion.json':
+          return of(PartidaFraccion);
+        case './assets/json/231001/comboSubPartidaFraccion.json':
+          return of(SubPartidaFraccion);
+        case './assets/json/231001/comboFraccionArancelariaParametros.json':
+          return of(FraccionArancelariaParametros);
+        default:
+          return of([]);
+      }
+    });
     fixture.detectChanges();
   });
 
@@ -60,6 +83,16 @@ describe('DatosDeLosResiduosComponent', () => {
     expect(component.materiaPrimaForm.get('fraccion')?.value).toBe('');
   });
 
+  it('should load comboUnidadMedida', () => {
+    component.loadcomboUnidadMedida();
+    expect(component.comboUnidadMedida).toEqual(UnidadMedida);
+  });
+
+  it('should load comboCapituloFraccion', () => {
+    component.loadComboCapituloFraccion();
+    expect(component.comboCapituloFraccion).toEqual(CapituloFraccion);
+  });
+
   it('should load comboPartidaFraccion', () => {
     component.loadComboPartidaFraccion();
     expect(component.comboPartidaFraccion).toEqual(PartidaFraccion);
@@ -70,8 +103,8 @@ describe('DatosDeLosResiduosComponent', () => {
     expect(component.comboSubPartidaFraccion).toEqual(SubPartidaFraccion);
   });
 
-  it('should load comboFraccion', () => {
-    component.loadComboFraccion();
+  it('should load comboFraccionArancelariaParametros', () => {
+    component.loadcomboFraccionArancelariaParametros();
     expect(component.comboFraccionArancelariaParametros).toEqual(FraccionArancelariaParametros);
   });
 
@@ -104,7 +137,7 @@ describe('DatosDeLosResiduosComponent', () => {
     expect(component.comboSubPartidaFraccion).toEqual(SubPartidaFraccion);
   });
 
-  it('should reset form fields and load comboFraccion on cambiaSubPartidaFraccion', () => {
+  it('should reset form fields and load comboFraccionArancelariaParametros on cambiaSubPartidaFraccion', () => {
     component.materiaPrimaForm.get('subPartidaFraccion')?.setValue('some value');
     component.cambiaSubPartidaFraccion();
     expect(component.materiaPrimaForm.get('claveSubPartida')?.value).toBe('some value');
@@ -131,5 +164,13 @@ describe('DatosDeLosResiduosComponent', () => {
   it('should reset fraccion field if clvFracion is not valid on validaVigenciaFraccion', () => {
     component.validaVigenciaFraccion(0);
     expect(component.materiaPrimaForm.get('fraccion')?.value).toBe('');
+  });
+
+  it('should clean up resources on ngOnDestroy', () => {
+    spyOn(component['destroyed$'], 'next');
+    spyOn(component['destroyed$'], 'complete');
+    component.ngOnDestroy();
+    expect(component['destroyed$'].next).toHaveBeenCalled();
+    expect(component['destroyed$'].complete).toHaveBeenCalled();
   });
 });
