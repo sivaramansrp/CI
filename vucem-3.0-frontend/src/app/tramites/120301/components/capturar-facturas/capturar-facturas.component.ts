@@ -62,7 +62,7 @@ export class CapturarFacturasComponent implements OnInit {
   /**
    * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
    */
-  tableColumns = [
+  private readonly tableColumns = [
     'Número de la factura',
     'Razón social',
     'Domicilio',

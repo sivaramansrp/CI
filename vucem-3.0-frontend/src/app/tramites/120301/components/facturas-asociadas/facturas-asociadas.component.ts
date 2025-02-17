@@ -1,3 +1,16 @@
+/**
+ * @component FacturasAsociadasComponent
+ * @description Este componente es responsable de manejar las facturas asociadas.
+ * Incluye un formulario para capturar los datos de las facturas y tablas para mostrar las facturas disponibles y asociadas.
+ * 
+ * @import { Component, OnInit } from '@angular/core';
+ * @import { CommonModule } from '@angular/common';
+ * @import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+ * @import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+ * @import { TableComponent } from '../../../../shared/components/table/table.component';
+ * @import { FacturasAsociadasService } from '../../../../core/services/120301/facturas-asociadas/facturas-asociadas.service';
+ */
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -18,12 +31,30 @@ import { FacturasAsociadasService } from '../../../../core/services/120301/factu
   ]
 })
 export class FacturasAsociadasComponent implements OnInit {
+  /**
+   * @property {FormGroup} forma - El grupo de formularios para capturar los datos de las facturas.
+   */
   forma!: FormGroup;
+
+  /**
+   * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
+   */
   selectRangoDias: string[] = [];
+
+  /**
+   * @property {boolean} colapsable - Booleano para controlar el estado colapsable.
+   */
   colapsable: boolean = false;
+
+  /**
+   * @property {FormGroup} ConstanciaDelRegistro - El grupo de formularios para los datos del certificado de registro.
+   */
   ConstanciaDelRegistro!: FormGroup;
 
-  tableColumns = [
+  /**
+   * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
+   */
+  private readonly tableColumns = [
     'Número de la factura',
     'Razón social',
     'Domicilio',
@@ -34,7 +65,10 @@ export class FacturasAsociadasComponent implements OnInit {
     'Valor en dólares',
   ];
 
-  asociadastableColumns = [
+  /**
+   * @property {string[]} asociadastableColumns - Array de encabezados de columnas de la tabla de facturas asociadas.
+   */
+  private readonly asociadastableColumns = [
     'Candidad asociada',
     'número de la factura',
     'razón social',
@@ -44,7 +78,14 @@ export class FacturasAsociadasComponent implements OnInit {
     'Cantidad disponible',
   ];
 
+  /**
+   * @property {any[]} facturasDisponible - Array de datos de facturas disponibles.
+   */
   facturasDisponible: any[] = [];
+
+  /**
+   * @property {any[]} facturasAsociadas - Array de datos de facturas asociadas.
+   */
   facturasAsociadas: any[] = [];
 
   constructor(
@@ -52,10 +93,18 @@ export class FacturasAsociadasComponent implements OnInit {
     private facturasAsociadasService: FacturasAsociadasService
   ) {}
 
+  /**
+   * @method ngOnInit
+   * @description Inicializa el componente y obtiene los datos de las facturas.
+   */
   ngOnInit(): void {
     this.fetchData();
   }
 
+  /**
+   * @method fetchData
+   * @description Obtiene los datos de las facturas disponibles y asociadas desde el servicio.
+   */
   fetchData(): void {
     this.facturasAsociadasService.getDatos().subscribe({
       next: (response: any) => {
@@ -74,7 +123,7 @@ export class FacturasAsociadasComponent implements OnInit {
         }
       },
       error: (error: any) => {
-        console.error('Error while fetching the data:', error);
+        console.error('Error al obtener los datos:', error);
         this.facturasDisponible = [];
         this.facturasAsociadas = [];
       }
