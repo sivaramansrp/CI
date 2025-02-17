@@ -1,0 +1,14 @@
+<form [formGroup]="solicitudForm">
+  <br>
+  <input type="hidden" formControlName="solicitud.idSolicitud" id="idSolicitud">
+  <input type="hidden" formControlName="solicitud.tramite.numFolioTramite" id="estaEnSolicitud">
+  
+  <br>
+  <div
+    id="avisoDePrivacidad"
+    *ngIf="!solicitudForm.get('solicitud.tramite.numFolioTramite').value"
+    class="col-md-12 alert alert-info"
+  >
+    <p>{{ parametroAvisoPrivacidad }}</p>
+  </div>
+</form>

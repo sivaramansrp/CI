@@ -1,0 +1,30 @@
+<div class="row" style="margin-top: 30px;">
+  <div class="form-group">
+    <div class="col-md-12">
+      <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">
+        Campos obligatorios
+      </div>
+      <br><br>
+      <div style="margin-top: -50px;">
+        <button *ngIf="actionBean.requiereGuardadoParcial"
+          type="submit"
+          name="guardarParcial"
+          id="guardarSolicitudParcial"
+          class="btn btn-default pull-right"
+          (click)="tabSeleccionado()">
+          Guardar
+        </button>
+        <button type="submit"
+          name="guardar"
+          id="guardarSolicitud"
+          class="btn btn-primary pull-right">
+          Continuar
+        </button>
+        <input type="hidden"
+          formControlName="solicitud.idSolicitud"
+          id="idSolicitud"
+          name="solicitud.idSolicitud" />
+      </div>
+    </div>
+  </div>
+</div>
