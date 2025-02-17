@@ -1,3 +1,15 @@
+/**
+ * @component ElegibilidadTextilesComponent
+ * @description Este componente es responsable de manejar el flujo de pasos para la elegibilidad de textiles.
+ * Incluye la lógica para la navegación entre pasos y la obtención de títulos.
+ * 
+ * @import { Component, ViewChild } from '@angular/core';
+ * @import { ListaPasosWizard } from '../../../../core/models/120301/elegibilidad-de-textiles-routing.model';
+ * @import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
+ * @import { DatosPasos } from '../../../../core/models/shared/components.model';
+ * @import { PASOS } from '../../../../shared/constantes/elegibilidad-de-textiles.enums';
+ */
+
 import { Component, ViewChild } from '@angular/core';
 import { ListaPasosWizard } from '../../../../core/models/120301/elegibilidad-de-textiles-routing.model';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
@@ -20,75 +32,57 @@ export class ElegibilidadTextilesComponent {
   title(title: any) {
     throw new Error('Método no implementado.');
   }
+
+  /**
+   * @property {Array<ListaPasosWizard>} pasos - Array de pasos del wizard.
+   */
   pasos: Array<ListaPasosWizard> = PASOS;
+
+  /**
+   * @property {string | null} tituloMensaje - El título del mensaje.
+   */
   tituloMensaje: string | null = 'Zoosanitario para importación';
+
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * @property {number} indice - El índice del paso actual.
+   */
   indice: number = 1;
+
+  /**
+   * @property {DatosPasos} datosPasos - Datos de los pasos del wizard.
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-  
-    /**
+
+  /**
    * Maneja la acción del botón y determina la navegación (siguiente o anterior).
    *
-   * @param e - Objeto de acción que contiene la acción y el valor a manejar..
+   * @param e - Objeto de acción que contiene la acción y el valor a manejar.
    * El `valor` representa el índice del paso al que ir.
    * La `accion` determina si avanzar (cont) o retroceder (atras).  --120301
    */
-    getValorIndice(e: AccionBoton) {
-      if (e.valor > 0 && e.valor < 5) {
-        this.indice = e.valor;
-        if (e.accion === 'cont') {
-          this.wizardComponent.siguiente();
-        } else {
-          this.wizardComponent.atras();
-        }
+  getValorIndice(e: AccionBoton) {
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
       }
     }
-      /**
+  }
+
+  /**
    * Obtener un título para todas las páginas.
    * @param valor - valor del índice de página. --120301
    */
   obtenerNombreDelTítulo(valor: number): string {
     throw new Error('Método no implementado.');
-    switch (valor) {
-      case 1:
-        return 'Zoosanitario para importación';
-      case 2:
-        return 'Cargar archivos';
-      case 3:
-        return 'Zoosanitario para importación';
-      case 4:
-        return 'Firmar';
-      default:
-        return 'Zoosanitario para importación';
-    }
-  }
-  onTabChange(selectedTab: number): void {
-    switch (selectedTab) {
-      case 1:
-        this.tituloMensaje = 'Zoosanitario para importación';
-        break;
-      case 2:
-        this.tituloMensaje =
-          'Captura del certificado zoosanitario para importación';
-        break;
-      case 3:
-        this.tituloMensaje = 'Zoosanitario para importación';
-        break;
-      case 4:
-        this.tituloMensaje = 'Zoosanitario para importación';
-        break;
-      case 5:
-        this.tituloMensaje =
-          'Captura del certificado zoosanitario para importación';
-        break;
-      default:
-        this.tituloMensaje = 'Zoosanitario para importación';
-        break;
-    }
   }
 }

@@ -1,3 +1,10 @@
+/**
+ * @component PasoCuatroComponent
+ * @description Este componente es responsable de manejar el cuarto paso del trámite.
+ * 
+ * @import { Component } from '@angular/core';
+ */
+
 import { Component } from '@angular/core';
 
 @Component({
