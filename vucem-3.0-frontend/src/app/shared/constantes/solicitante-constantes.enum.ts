@@ -77,6 +77,87 @@ export const PERSONA_FISICA_NACIONAL = [
   },
 ];
 
+export const PERSONA_FISICA_SACIONAL = [
+  {
+    labelNombre: 'CURP:',
+    campo: 'curp',
+    class: 'col-md-4',
+    tipo_input: 'text',
+    disabled: true,
+    tooltip: 'Clave Única de Registro de Población',
+    validators: ['required', 'maxLength:18', 'minLength:18', 'pattern:curp'],
+    placeholder: '',
+  },
+  {
+    labelNombre: 'RFC:',
+    campo: 'rfc',
+    class: 'col-md-4',
+    tipo_input: 'text',
+    disabled: true,
+    tooltip: 'Regulación Federal de Contribuyentes',
+    validators: ['required', 'maxLength:13', 'minLength:12', 'pattern:rfc'],
+    placeholder: '',
+  },
+  {
+    labelNombre: '',
+    campo: '',
+    class: 'col-md-4',
+    visibility: 'hidden',
+    tipo_input: '',
+    disabled: true,
+    tooltip: '',
+    validators: [''],
+    placeholder: '',
+  },
+  {
+    labelNombre: 'Nombre(s):',
+    campo: 'nombreRazonSocial',
+    class: 'col-md-4',
+    tipo_input: 'text',
+    disabled: true,
+    validators: ['required'],
+    placeholder: '',
+  },
+  {
+    labelNombre: 'Primer apellido:',
+    campo: 'primerApellido',
+    class: 'col-md-4',
+    tipo_input: 'text',
+    disabled: true,
+    validators: ['required'],
+    placeholder: '',
+  },
+  {
+    labelNombre: 'Segundo apellido:',
+    campo: 'segundoApellido',
+    class: 'col-md-4',
+    tipo_input: 'text',
+    disabled: true,
+    validators: ['required'],
+    placeholder: '',
+  },
+  {
+    labelNombre: 'Actividad económica preponderante:',
+    campo: 'actEconomica',
+    class: 'col-md-8',
+    tipo_input: 'text',
+    disabled: true,
+    validators: ['required', 'maxLength:120'],
+    placeholder: '',
+  },
+  {
+    labelNombre: 'Correo electrónico:',
+    campo: 'correo',
+    class: 'col-md-4',
+    tipo_input: 'text',
+    disabled: true,
+    validators: ['required', 'maxLength:30', 'pattern:email'],
+    placeholder: '',
+  },
+];
+
+
+
 export const DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL = [
   {
     labelNombre: 'País',
