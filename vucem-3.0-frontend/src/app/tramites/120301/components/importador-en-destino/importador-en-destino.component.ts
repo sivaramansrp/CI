@@ -9,10 +9,8 @@
 
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
-
 import { HttpClient } from '@angular/common/http';
-import { RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
+import { Catalogo, RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
 
 @Component({
   selector: 'importador-en-destino',
@@ -30,7 +28,7 @@ export class ImportadorEnDestinoComponent {
    */
   importadorEnDestino!: FormGroup;
 
-  tipo:  Catalogo[]; 
+  tipo: Catalogo[];
 
   /**
    * Constructor del componente.
