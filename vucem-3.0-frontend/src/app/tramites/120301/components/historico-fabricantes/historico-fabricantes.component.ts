@@ -32,7 +32,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   defaultSelect: string | number = '';
   radioBoton = unidadRadioFields;
 
-  tableColumns = [
+  private readonly tableColumns = [
     'Nombre del fabricante',
     'Número de registro fiscal',
     'Dirección',
