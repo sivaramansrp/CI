@@ -13,7 +13,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import { FacturasAsociadasService } from '../../../../core/services/120301/facturas-asociadas/facturas-asociadas.service';
@@ -31,14 +31,7 @@ import { FacturasAsociadasService } from '../../../../core/services/120301/factu
   ]
 })
 export class FacturasAsociadasComponent implements OnInit {
-  /**
-   * @property {FormGroup} forma - El grupo de formularios para capturar los datos de las facturas.
-   */
-  forma!: FormGroup;
-
-  /**
-   * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
-   */
+  facturaAssociationForm!: FormGroup;
   selectRangoDias: string[] = [];
 
   /**
@@ -91,13 +84,16 @@ export class FacturasAsociadasComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private facturasAsociadasService: FacturasAsociadasService
-  ) {}
+  ) { }
 
   /**
    * @method ngOnInit
    * @description Inicializa el componente y obtiene los datos de las facturas.
    */
   ngOnInit(): void {
+    this.facturaAssociationForm = this.fb.group({
+      cantidad: ['', [Validators.required]],
+    });
     this.fetchData();
   }
 

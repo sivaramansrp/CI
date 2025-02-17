@@ -26,7 +26,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   /**
    * @property {FormGroup} forma - El grupo de formularios para capturar los datos del certificado de registro.
    */
-  forma!: FormGroup;
+  fitosanitarioForm!: FormGroup;
 
   /**
    * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
@@ -62,15 +62,33 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private constanciaDelRegistroService: ConstanciaDelRegistroService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchData();
+    this.fitosanitarioForm = this.fb.group({
+      flexRadioRegistro: ['Datos'],
+      estado: [''],
+      representacionFederal: [''],
+      fraccionArancelaria: [''],
+      descripcionProducto: [''],
+      tratado: [''],
+      subproducto: [''],
+      mecanismo: [''],
+      typoCategoria: [''],
+      typoRegimen: [''],
+      descripcionCategoriaTextil: [''],
+      pais: [''],
+      unidadMedidaCategoriaTextil: [''],
+      factorConversionCategoriaTextil: [''],
+      fechaInicioVigencia: [''],
+      fechaFinVigencia: ['']
+    });
   }
   fetchData(): void {
     this.constanciaDelRegistroService.getfederal().subscribe({
       next: (response: any) => {
-      if (response && Array.isArray(response.federal)) {
+        if (response && Array.isArray(response.federal)) {
 
           this.federal = response.federal.map((item) => {
             var data = {
