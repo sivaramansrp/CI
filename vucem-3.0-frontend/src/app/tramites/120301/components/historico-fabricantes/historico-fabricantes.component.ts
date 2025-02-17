@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
 import radioOptionsData from '../../../../../assets/json/120301/tipos-de-fabricante-exportador.json';
 import { AgregarArchivoComponent } from '../../../../shared/components/agregar-archivo/agregar-archivo.component';
@@ -10,6 +10,7 @@ import { TableComponent } from '../../../../shared/components/table/table.compon
 import unidadRadioFields from '../../../../../assets/json/220401/unidad.json';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { HistoricoFabricantesService } from '../../../../core/services/120301/historico-fabricantes/historico-fabricantes.service';
+import { ServiciosElegibilidadDeTextilesService } from '../../../../core/services/120301/servicios-elegibilidad-de-textiles.service';
 
 @Component({
   selector: 'historico-fabricantes',
@@ -24,8 +25,8 @@ import { HistoricoFabricantesService } from '../../../../core/services/120301/hi
     InputRadioComponent
   ]
 })
-export class HistoricoFabricantesComponent implements OnInit {
-  formGroup!: FormGroup;
+export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
+  historicoFabricantesForm!: FormGroup;
   radioOptions = radioOptionsData;
   selectedValue: string | number = '';
   defaultSelect: string | number = '';
@@ -42,12 +43,15 @@ export class HistoricoFabricantesComponent implements OnInit {
   fabricantesNacionales: any[] = [];
   fabricantesDatos: any[] = [];
 
-  constructor(private fb: FormBuilder, private historicoFabricantesService: HistoricoFabricantesService) {}
+  constructor(private fb: FormBuilder, private historicoFabricantesService: HistoricoFabricantesService, private readonly serviciosElegibilidadDeTextilesService: ServiciosElegibilidadDeTextilesService) { }
 
   ngOnInit(): void {
     this.fetchData();
-    this.formGroup = this.fb.group({
-      seleccion: [this.selectedValue]
+    this.historicoFabricantesForm = this.fb.group({
+      exportadorFabricanteMismo: ['', Validators.required],
+      numeroRegistroFiscal: ['', [Validators.required, Validators.minLength(5)]],
+      fabricantesNacionales: [[]],
+      fabricantesDatos: [[]]
     });
   }
 
@@ -97,10 +101,7 @@ export class HistoricoFabricantesComponent implements OnInit {
       { id: 3, descripcion: 'Option 3' }
     ];
   }
-
-  seleccionar(e: any) {}
-
-  cargarArchivo() {}
-
-  agregar() {}
+  ngOnDestroy(): void {
+    this.serviciosElegibilidadDeTextilesService.setSoliciante('historicoFabricantesForm', this.historicoFabricantesForm.value);
+  }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import { FacturasAsociadasService } from '../../../../core/services/120301/facturas-asociadas/facturas-asociadas.service';
@@ -18,7 +18,7 @@ import { FacturasAsociadasService } from '../../../../core/services/120301/factu
   ]
 })
 export class FacturasAsociadasComponent implements OnInit {
-  forma!: FormGroup;
+  facturaAssociationForm!: FormGroup;
   selectRangoDias: string[] = [];
   colapsable: boolean = false;
   ConstanciaDelRegistro!: FormGroup;
@@ -50,9 +50,12 @@ export class FacturasAsociadasComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private facturasAsociadasService: FacturasAsociadasService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    this.facturaAssociationForm = this.fb.group({
+      cantidad: ['', [Validators.required]],
+    });
     this.fetchData();
   }
 

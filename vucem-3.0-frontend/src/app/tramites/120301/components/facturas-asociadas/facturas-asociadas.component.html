@@ -1,7 +1,7 @@
-<div class="container">  
-    <!-- <ng-titulo titulo="Unidad expedidora"></ng-titulo>
+<div class="container">
+  <!-- <ng-titulo titulo="Unidad expedidora"></ng-titulo>
     -->
-    <!-- <app-input-radio class="fw-semibold" [radioOptions]="radioBoton" [selectedValue]="defaultSelect" [isRequired]="true"
+  <!-- <app-input-radio class="fw-semibold" [radioOptions]="radioBoton" [selectedValue]="defaultSelect" [isRequired]="true"
         (valueChange)="onValueChange($event)" [layout]="'horizontal'"></app-input-radio>
   
         <div *ngIf="defaultSelect === 'oficina central'">
@@ -11,30 +11,37 @@
                   </div>
               </div>
           </div> -->
-  
-          <ng-titulo titulo="Asociar facturas a expedición"></ng-titulo>
-          <h6>Facturas disponible</h6>
-  
-          <ng-table [commonTableHeader]="tableColumns" [commonTableBody]="facturasDisponible"></ng-table>
-  
-          <!-- <app-agregar-archivo 
+
+  <ng-titulo titulo="Asociar facturas a expedición"></ng-titulo>
+  <h6>Facturas disponible</h6>
+  <form [formGroup]="facturaAssociationForm">
+    <ng-table
+      [commonTableHeader]="tableColumns"
+      [commonTableBody]="facturasDisponible"
+    ></ng-table>
+
+    <!-- <app-agregar-archivo 
           [archivoBtn]="'Carga por archivo'" 
           [agregarBtn]="'Agregar'" 
           (archivoAction)="cargarArchivo()"
           (agregarAction)="agregar()">
           </app-agregar-archivo> -->
-      
-          <div class="col-12 col-xxl-4 col-xl-4 col-md-4 col-sm-4 mb-5">
-              <label for="message" class="form-label">Cantidad*:</label>
-              <input type="text" class="form-control" id="message" placeholder="">
-              <p>Kilogramo</p>
-          </div>
-      
-          <div class="container text-end mt-5">
-              <button class="btn btn-default me-2">Asociar</button>
-              <!-- <button class="btn btn-primary">Continuar</button> -->
-          </div>
-          <h6>Facturas asociadas</h6>
-  
-          <ng-table [commonTableHeader]="asociadastableColumns" [commonTableBody]="facturasAsociadas"></ng-table>
-  </div>
+
+    <div class="col-12 col-xxl-4 col-xl-4 col-md-4 col-sm-4 mb-5">
+      <label for="message" class="form-label">Cantidad*:</label>
+      <input type="text" class="form-control" id="message" placeholder="" />
+      <p>Kilogramo</p>
+    </div>
+
+    <div class="container text-end mt-5">
+      <button class="btn btn-default me-2">Asociar</button>
+      <!-- <button class="btn btn-primary">Continuar</button> -->
+    </div>
+    <h6>Facturas asociadas</h6>
+
+    <ng-table
+      [commonTableHeader]="asociadastableColumns"
+      [commonTableBody]="facturasAsociadas"
+    ></ng-table>
+  </form>
+</div>
