@@ -1,1 +1,28 @@
-<p>datos works!</p>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Aviso de materiales importados de regimen temporal</h1>
+      </div>
+  
+      <app-wizard [listaPasos]="pasos"></app-wizard>
+  
+    </div>
+    <!-- <app-datos-dela></app-datos-dela> -->
+  
+    <div class="row">
+      @switch (indice) {
+      @case (1) {
+        <app-solicitante-detos-tabs></app-solicitante-detos-tabs>
+      }
+      @case (2) {
+      <!-- <paso-dos></paso-dos> -->
+      }
+      @case (3) {
+      <!-- <paso-tres></paso-tres> -->
+      }
+      }
+  
+      <!-- <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar> -->
+    </div>
+  </div>
+  

@@ -1,15 +1,15 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PantallasComponent } from './pages/pantallas/pantallas.component';
-import { DatosComponent } from './pages/datos/datos.component';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AvisodematerialesRoutingModule } from './avisodemateriales-routing.module';
-import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDelaComponent } from './components/datos-dela/datos-dela.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { PantallasComponent } from './pages/pantallas/pantallas.component';
+import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+import { SolicitanteDetosTabsComponent } from './pages/solicitante-detos-tabs/solicitante-detos-tabs.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
-// eslint-disable-next-line sort-imports
-
+import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 
 
 
@@ -19,15 +19,15 @@ import { TituloComponent } from '../../shared/components/titulo/titulo.component
     DatosDelaComponent,
     DatosComponent,
     PantallasComponent,
-    
-    
+    SolicitanteDetosTabsComponent
   ],
   imports: [
     CommonModule,
     AvisodematerialesRoutingModule,
     ReactiveFormsModule,
-    TituloComponent,
-],
-schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    WizardComponent,
+    TituloComponent
+    
+  ]
 })
 export class AvisodematerialesModule { }
