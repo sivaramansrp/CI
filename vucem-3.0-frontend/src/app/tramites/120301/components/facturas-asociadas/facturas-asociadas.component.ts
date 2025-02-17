@@ -68,7 +68,7 @@ export class FacturasAsociadasComponent implements OnInit {
             return { tbodyData: item.tbodyData };
           });
         } else {
-          console.error('API response is not in expected format:', response);
+          console.error('La respuesta de la API no tiene el formato esperado:', response);
           this.facturasDisponible = [];
           this.facturasAsociadas = [];
         }

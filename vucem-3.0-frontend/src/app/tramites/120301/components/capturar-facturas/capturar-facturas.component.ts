@@ -98,7 +98,7 @@ export class CapturarFacturasComponent implements OnInit {
           );
           this.facturas = [...this.facturas]
         } else {
-          console.error('API response is not in expected format:', response);
+          console.error('La respuesta de la API no tiene el formato esperado:', response);
           this.facturas = [];
         }
       },

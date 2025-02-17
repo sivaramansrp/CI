@@ -21,7 +21,7 @@ import { Observable } from 'rxjs'; // Importa Observable
 export class ServiciosElegibilidadDeTextilesService {
 
   /**
-   * Objeto para almacenar los datos de la solicitud.
+   * Objeto que contiene los datos de la solicitud..
    * @property {textileSolicitud} textileSolicitudCargaUtil - Datos de la solicitud que se enviarán.
    */
   public textileSolicitudCargaUtil: textileSolicitud = {

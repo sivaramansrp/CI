@@ -83,7 +83,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
           this.federal = [...this.federal]
 
         } else {
-          console.error('API response is not in expected format:', response);
+          console.error('La respuesta de la API no tiene el formato esperado:', response);
           this.federal = [];
         }
       },

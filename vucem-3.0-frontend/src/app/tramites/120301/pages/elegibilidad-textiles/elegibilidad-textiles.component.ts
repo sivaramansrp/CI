@@ -4,11 +4,6 @@ import { WizardComponent } from '../../../../shared/components/wizard/wizard.com
 import { DatosPasos } from '../../../../core/models/shared/components.model';
 import { PASOS } from '../../../../shared/constantes/elegibilidad-de-textiles.enums';
 
-interface AccionBoton {
-  accion: string;
-  valor: number;
-}
-
 /**
  * Interfaz para definir la acción y el valor del botón. --120301
  */
@@ -23,7 +18,7 @@ interface AccionBoton {
 })
 export class ElegibilidadTextilesComponent {
   title(title: any) {
-    throw new Error('Method not implemented.');
+    throw new Error('Método no implementado.');
   }
   pasos: Array<ListaPasosWizard> = PASOS;
   tituloMensaje: string | null = 'Zoosanitario para importación';
@@ -35,7 +30,7 @@ export class ElegibilidadTextilesComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-  // mensajeDeTextoDeExito: string = SUCECESS_MESSAGE_STAGEONE;
+  
     /**
    * Maneja la acción del botón y determina la navegación (siguiente o anterior).
    *
@@ -58,7 +53,7 @@ export class ElegibilidadTextilesComponent {
    * @param valor - valor del índice de página. --120301
    */
   obtenerNombreDelTítulo(valor: number): string {
-    throw new Error('Method not implemented.');
+    throw new Error('Método no implementado.');
     switch (valor) {
       case 1:
         return 'Zoosanitario para importación';

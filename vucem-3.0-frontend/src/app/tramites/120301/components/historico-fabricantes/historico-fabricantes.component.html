@@ -10,45 +10,10 @@
       </div>
       <app-input-radio [radioOptions]="radioOptions" [selectedValue]="selectedValue" [isRequired]="true"
         (valueChange)="onValueChange($event)" [layout]="'vertical'"></app-input-radio>
-      <!-- <div class="row mt-4">
-        <div class="col-md-12">
-          <label for="message" class="form-label">Tratamiento :</label>
-          <textarea id="message" class="form-control mb-5" placeholder="" readonly="true"></textarea>
-        </div>
-      </div> -->
     </form>
-  
-    <!-- <ng-titulo titulo="Unidad expedidora"></ng-titulo>
-    -->
-    <!-- <app-input-radio class="fw-semibold" [radioOptions]="radioBoton" [selectedValue]="defaultSelect" [isRequired]="true"
-        (valueChange)="onValueChange($event)" [layout]="'horizontal'"></app-input-radio>
-  
-        <div *ngIf="defaultSelect === 'oficina central'">
-              <div class="row">
-                  <div class="col-md-4" *ngFor="let config of dropdownConfigs">
-                      <select-catalogos [catalogosDatos]="config" (valorSeleccion)="seleccionar($event)"></select-catalogos>
-                  </div>
-              </div>
-          </div> -->
-  
-          <!-- <ng-titulo titulo="Asociar facturas a expedición"></ng-titulo> -->
           <h6>Fabricantes nacionales</h6>
   
-          <ng-table [commonTableHeader]="tableColumns" [commonTableBody]="fabricantesNacionales"></ng-table>
-  
-          <!-- <app-agregar-archivo 
-          [archivoBtn]="'Carga por archivo'" 
-          [agregarBtn]="'Agregar'" 
-          (archivoAction)="cargarArchivo()"
-          (agregarAction)="agregar()">
-          </app-agregar-archivo> -->
-      
-          <!-- <div class="col-12 col-xxl-4 col-xl-4 col-md-4 col-sm-4 mb-5">
-              <label for="message" class="form-label">Cantidad*:</label>
-              <input type="text" class="form-control" id="message" placeholder="">
-              <p>Kilogramo</p>
-          </div> -->
-      
+          <ng-table [commonTableHeader]="tableColumns" [commonTableBody]="fabricantesNacionales"></ng-table>    
           <div class="container text-end mt-5">
               <button class="btn btn-default me-2">Seleccionar</button>
               <button class="btn btn-primary">Fabricante nuevo</button>
@@ -63,34 +28,3 @@
             <input type="text" class="form-control" id="message" placeholder="">
         </div>
   </div>
-  <!-- <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <ng-titulo titulo="Asociar facturas a expedición" />
-            </div>
-        <div class="row mt-5">
-          <div class="col-md-12">
-            <label for="mercancia">Facturas disponible</label>
-          </div>
-          <div class="col-md-12">
-            <table class="table table-responsive">
-              <thead>
-                <tr>
-                  <th>Número de la factura</th>
-                  <th>Razón social</th>
-                  <th>Domicilio</th>
-                  <th>Fecha de expedición de la factura</th>
-                  <th>Cantidad total</th>
-                  <th>Cantidad disponible</th>
-                  <th>Unidad de medida</th>
-                  <th>Valor en dólares</th>
-                </tr>
-              </thead>
-    
-              <tbody>
-        
-              </tbody>
-            </table>
-          </div>
-    </div>
-</div> -->
