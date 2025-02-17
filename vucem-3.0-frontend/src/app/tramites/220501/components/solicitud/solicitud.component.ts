@@ -5,7 +5,7 @@ import { Solicitud } from '../../../../core/models/220501/sagarpa.model';
 import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
 import { TEXTOS } from '../../../../shared/constantes/220501/texto-enum';
 
-import { cargarDatosIniciales, carrosDeFerrocarril, historialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
+import { CargarDatosIniciales, CarrosDeFerrocarril, HistorialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
 
 
 /**
@@ -60,7 +60,7 @@ export class SolicitudComponent implements OnInit {
   /**
    * Lista de objetos que representan los carros de ferrocarril.
    */
-  dCarrosDeFerrocarril: carrosDeFerrocarril[];
+  dCarrosDeFerrocarril: CarrosDeFerrocarril[];
 
   /**
    * Lista de identificadores del historial de inspección.
@@ -70,7 +70,7 @@ export class SolicitudComponent implements OnInit {
   /**
    * Lista de objetos que representan el historial de inspecciones físicas.
    */
-  dHistorialInspecciones: historialInspeccionFisica[];
+  dHistorialInspecciones: HistorialInspeccionFisica[];
 
   /**
    * Indica si se debe mostrar la sección.
@@ -108,7 +108,7 @@ export class SolicitudComponent implements OnInit {
     */
   cargarDatosIniciales(): void {
     this.solicitudService.getData().subscribe({
-      next: (data: cargarDatosIniciales) => {
+      next: (data: CargarDatosIniciales) => {
         this.hHistorialinspeccion = data.hHistorialinspeccion;
         this.dHistorialInspecciones = data.dHistorialInspecciones;
         this.dCarrosDeFerrocarril = data.dCarrosDeFerrocarril;

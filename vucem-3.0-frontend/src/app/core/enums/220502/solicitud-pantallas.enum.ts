@@ -1,5 +1,5 @@
 /**  Enumerado para las pantallas de la solicitud de inspección fisica */
-export const INSPECCIONFISIOPASOS = [
+export const InspeccionFisicaPasos = [
     {
       indice: 1,
       titulo: 'Capturar solicitud',
@@ -11,17 +11,5 @@ export const INSPECCIONFISIOPASOS = [
       titulo: 'Requisitos neccesarios',
       activo: true,
       completado: true,
-    },
-    {
-      indice: 3,
-      titulo: 'Anexar requisitos',
-      activo: false,
-      completado: false,
-    },
-    {
-      indice: 4,
-      titulo: 'Firmar solicitud',
-      activo: false,
-      completado: false,
     }
   ];

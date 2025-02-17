@@ -40,6 +40,20 @@ const routes: Routes = [
         (m) => m.PantallasModule
       ),
   },
+  {
+    path: 'sagarpa',
+    loadChildren: () =>
+            import('./tramites/220501/sagarpa.module').then(
+              (m) => m.SagarpaModule
+            ),
+  },
+  {
+    path: 'inspeccion-fisica',
+    loadChildren: () =>
+            import('./tramites/220502/inspeccion-fisica.module').then(
+              (m) => m.InspeccionFisicaModule
+            ),
+  },
   { 
     path: 'pantallas',
     loadChildren: () =>
@@ -53,13 +67,6 @@ const routes: Routes = [
       import('./tramites/220201/certificado-zoosanitario.module').then(
         (m) => m.CertificadoZoosanitarioModule)
   },
-  {
-    path: 'sagarpa',
-    loadChildren: () =>
-      import('./tramites/220501/sagarpa.module').then(
-        (m) => m.SagarpaModule
-      ),
-  }
 ];
 
 @NgModule({

@@ -1,9 +1,9 @@
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { Component } from '@angular/core';
 import { Input } from '@angular/core';
+import { Solicitud } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { TEXTOS } from '../../../../shared/constantes/220502/texto-enum';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { solicitud } from '../../../../core/models/220502/solicitud-pantallas.model';
 
 /**
  * Componente que representa los datos de la solicitud.
@@ -35,12 +35,12 @@ export class SolicitudDatosComponent {
   /**
    * Recibe la lista de solicitudes como datos de fila de la tabla.
    */
-  @Input() tablaFilaDatos: solicitud[];
+  @Input() tablaFilaDatos: Solicitud[];
 
   /**
    * Alterna el panel plegable (expandir/contraer)
    */
-  mostrarColapsable() {
+  mostrarColapsable(): void {
     this.colapsable = !this.colapsable;
   }
 }

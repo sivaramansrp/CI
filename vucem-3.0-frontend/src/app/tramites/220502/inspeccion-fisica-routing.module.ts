@@ -5,7 +5,7 @@ import { Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'inspeccionfisica',
+    path: 'pantallas',
     component: InspeccionFisicaComponent,
   },
 ];
