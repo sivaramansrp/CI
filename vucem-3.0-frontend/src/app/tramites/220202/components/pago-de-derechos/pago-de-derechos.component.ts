@@ -13,6 +13,15 @@ import { AgriculturaApiService } from "../../../../core/services/220202/agricult
  * @class PagoDeDerechosComponent
  * @implements {OnInit}
  */
+
+
+/**
+ * Componente para mostrar el subtítulo del asistente.
+ * @component PagoDeDerechosComponent
+ * @selector app-pago-de-derechos
+ * @templateUrl ./pago-de-derechos.component.html
+ * @styleUrls ./pago-de-derechos.component.scss --220202
+ */
 @Component({
   selector: 'app-pago-de-derechos',
   templateUrl: './pago-de-derechos.component.html',

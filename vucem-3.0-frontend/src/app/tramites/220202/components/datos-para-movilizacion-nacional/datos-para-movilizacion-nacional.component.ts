@@ -17,6 +17,13 @@ import { AgriculturaApiService } from '../../../../core/services/220202/agricult
  * @class DatosParaMovilizacionNacionalComponent
  * @implements {OnInit}
  */
+/**
+ * Componente para mostrar el subtítulo del asistente.
+ * @component DatosParaMovilizacionNacionalComponent
+ * @selector app-datos-para-movilizacion-nacional
+ * @templateUrl ./datos-para-movilizacion-nacional.component.html
+ * @styleUrls ./datos-para-movilizacion-nacional.component.scss --220202
+ */
 @Component({
   selector: 'app-datos-para-movilizacion-nacional',
   templateUrl: './datos-para-movilizacion-nacional.component.html',
