@@ -1,0 +1,1354 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>vucem-3.0-frontend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">vucem-3.0-frontend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  RepresentanteFiscalComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/shared/components/representante-fiscal/representante-fiscal.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>representante-fiscal</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>ReactiveFormsModule</code>
+                            <code>CommonModule</code>
+                                <code><a href="../directives/UppercaseDirective.html" target="_self" >UppercaseDirective</a></code>
+                                <code><a href="../directives/NumeroTelefonicoDirective.html" target="_self" >NumeroTelefonicoDirective</a></code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./representante-fiscal.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./representante-fiscal.component.scss</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#CORREO_INVALIDO" >CORREO_INVALIDO</a>
+                            </li>
+                            <li>
+                                <a href="#MENSAJE_REQUERIDO" >MENSAJE_REQUERIDO</a>
+                            </li>
+                            <li>
+                                <a href="#representanteLegalForm" >representanteLegalForm</a>
+                            </li>
+                            <li>
+                                <a href="#RFC_INVALIDO" >RFC_INVALIDO</a>
+                            </li>
+                            <li>
+                                <a href="#rfcBusqueda" >rfcBusqueda</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#buscarRepresentanteFiscal" >buscarRepresentanteFiscal</a>
+                            </li>
+                            <li>
+                                <a href="#crearRepresentanteLegalForm" >crearRepresentanteLegalForm</a>
+                            </li>
+                            <li>
+                                <a href="#errorEmail" >errorEmail</a>
+                            </li>
+                            <li>
+                                <a href="#errorPattern" >errorPattern</a>
+                            </li>
+                            <li>
+                                <a href="#errorRequerido" >errorRequerido</a>
+                            </li>
+                            <li>
+                                <a href="#isValid" >isValid</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#datosRepresentanteLegal" >datosRepresentanteLegal</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(validacionesService: <a href="../injectables/ValidacionesFormularioService.html" target="_self">ValidacionesFormularioService</a>, fb: FormBuilder, formServices: <a href="../injectables/FormulariosService.html" target="_self">FormulariosService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/shared/components/representante-fiscal/representante-fiscal.component.ts:52</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>validacionesService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ValidacionesFormularioService.html" target="_self" >ValidacionesFormularioService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>fb</td>
+                                                  
+                                                        <td>
+                                                                    <code>FormBuilder</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>formServices</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/FormulariosService.html" target="_self" >FormulariosService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section data-compodoc="block-outputs">
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="datosRepresentanteLegal"></a>
+                        <b>datosRepresentanteLegal</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/DatosRepresentanteLegal.html" target="_self" >EventEmitter&lt;DatosRepresentanteLegal&gt;</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/shared/components/representante-fiscal/representante-fiscal.component.ts:51</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buscarRepresentanteFiscal"></a>
+                    <span class="name">
+                        <span ><b>buscarRepresentanteFiscal</b></span>
+                        <a href="#buscarRepresentanteFiscal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buscarRepresentanteFiscal()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="134"
+                                    class="link-to-prism">src/app/shared/components/representante-fiscal/representante-fiscal.component.ts:134</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Busqueda de representante fiscal por RFC</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="crearRepresentanteLegalForm"></a>
+                    <span class="name">
+                        <span ><b>crearRepresentanteLegalForm</b></span>
+                        <a href="#crearRepresentanteLegalForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>crearRepresentanteLegalForm()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="100"
+                                    class="link-to-prism">src/app/shared/components/representante-fiscal/representante-fiscal.component.ts:100</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Crea el formulario para representante legal</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="errorEmail"></a>
+                    <span class="name">
+                        <span ><b>errorEmail</b></span>
+                        <a href="#errorEmail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>errorEmail(control: AbstractControl, campo?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="84"
+                                    class="link-to-prism">src/app/shared/components/representante-fiscal/representante-fiscal.component.ts:84</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Retorna un booleano si el campo tiene un error de pattern</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>control</td>
+                                            <td>
+                                                        <code>AbstractControl</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>campo</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>boolean | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="errorPattern"></a>
+                    <span class="name">
+                        <span ><b>errorPattern</b></span>
+                        <a href="#errorPattern"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>errorPattern(control: AbstractControl, campo?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="76"
+                                    class="link-to-prism">src/app/shared/components/representante-fiscal/representante-fiscal.component.ts:76</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Retorna un booleano si el campo tiene un error de pattern</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>control</td>
+                                            <td>
+                                                        <code>AbstractControl</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>campo</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>boolean | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="errorRequerido"></a>
+                    <span class="name">
+                        <span ><b>errorRequerido</b></span>
+                        <a href="#errorRequerido"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>errorRequerido(control: AbstractControl, field?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="92"
+                                    class="link-to-prism">src/app/shared/components/representante-fiscal/representante-fiscal.component.ts:92</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Retorna un booleano si el campo tiene un error de requerido</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>control</td>
+                                            <td>
+                                                        <code>AbstractControl</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>field</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>boolean | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isValid"></a>
+                    <span class="name">
+                        <span ><b>isValid</b></span>
+                        <a href="#isValid"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isValid(control: AbstractControl, campo?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="68"
+                                    class="link-to-prism">src/app/shared/components/representante-fiscal/representante-fiscal.component.ts:68</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Retorna un booleano si el campo no contiene errores</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>control</td>
+                                            <td>
+                                                        <code>AbstractControl</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>campo</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>boolean | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="60"
+                                    class="link-to-prism">src/app/shared/components/representante-fiscal/representante-fiscal.component.ts:60</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CORREO_INVALIDO"></a>
+                    <span class="name">
+                        <span ><b>CORREO_INVALIDO</b></span>
+                        <a href="#CORREO_INVALIDO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>CORREO_INVALIDO</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/shared/components/representante-fiscal/representante-fiscal.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MENSAJE_REQUERIDO"></a>
+                    <span class="name">
+                        <span ><b>MENSAJE_REQUERIDO</b></span>
+                        <a href="#MENSAJE_REQUERIDO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>REQUERIDO</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/shared/components/representante-fiscal/representante-fiscal.component.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="representanteLegalForm"></a>
+                    <span class="name">
+                        <span ><b>representanteLegalForm</b></span>
+                        <a href="#representanteLegalForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>FormGroup</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/app/shared/components/representante-fiscal/representante-fiscal.component.ts:49</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="RFC_INVALIDO"></a>
+                    <span class="name">
+                        <span ><b>RFC_INVALIDO</b></span>
+                        <a href="#RFC_INVALIDO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>RFC_INVALIDO</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/shared/components/representante-fiscal/representante-fiscal.component.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rfcBusqueda"></a>
+                    <span class="name">
+                        <span ><b>rfcBusqueda</b></span>
+                        <a href="#rfcBusqueda"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>FormControl</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new FormControl(&#x27;&#x27;, [
+    Validators.required,
+    Validators.pattern(this.validacionesService.rfcPattern),
+  ])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/shared/components/representante-fiscal/representante-fiscal.component.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import { Component, EventEmitter, Output } from &#x27;@angular/core&#x27;;
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from &#x27;@angular/forms&#x27;;
+import { ValidacionesFormularioService } from &#x27;../../../core/services/shared/validaciones-formulario/validaciones-formulario.service&#x27;;
+import { UppercaseDirective } from &#x27;../../directives/Uppercase/uppercase.directive&#x27;;
+import { FormulariosService } from &#x27;../../../core/services/shared/formularios/formularios.service&#x27;;
+import {
+  DatosRepresentanteLegal,
+  DatosRfcResponse,
+} from &#x27;../../../core/models/shared/components.model&#x27;;
+import { NumeroTelefonicoDirective } from &#x27;../../directives/numeroTelefonico/numero-telefonico.directive&#x27;;
+import { CORREO_INVALIDO } from &#x27;../../constantes/mensajes-error-formularios&#x27;;
+import {
+  REQUERIDO,
+  RFC_INVALIDO,
+} from &#x27;../../constantes/mensajes-error-formularios&#x27;;
+
+@Component({
+  selector: &#x27;representante-fiscal&#x27;,
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    UppercaseDirective,
+    NumeroTelefonicoDirective,
+  ],
+  templateUrl: &#x27;./representante-fiscal.component.html&#x27;,
+  styleUrl: &#x27;./representante-fiscal.component.scss&#x27;,
+})
+export class RepresentanteFiscalComponent {
+  // Componente para representante fiscal
+
+  MENSAJE_REQUERIDO &#x3D; REQUERIDO;
+  RFC_INVALIDO &#x3D; RFC_INVALIDO;
+  CORREO_INVALIDO &#x3D; CORREO_INVALIDO;
+
+  rfcBusqueda: FormControl &#x3D; new FormControl(&#x27;&#x27;, [
+    Validators.required,
+    Validators.pattern(this.validacionesService.rfcPattern),
+  ]);
+
+  representanteLegalForm!: FormGroup;
+
+  @Output() datosRepresentanteLegal: EventEmitter&lt;DatosRepresentanteLegal&gt; &#x3D;
+    new EventEmitter();
+
+  constructor(
+    private validacionesService: ValidacionesFormularioService,
+    private fb: FormBuilder,
+    private formServices: FormulariosService
+  ) {}
+
+  ngOnInit(): void {
+    this.crearRepresentanteLegalForm();
+  }
+
+  /**
+   * Retorna un booleano si el campo no contiene errores
+   * @returns {boolean | null}
+   */
+  isValid(control: AbstractControl, campo?: string): boolean | null {
+    return this.validacionesService.isValid(control, campo);
+  }
+
+  /**
+   * Retorna un booleano si el campo tiene un error de pattern
+   * @returns {boolean | null}
+   */
+  errorPattern(control: AbstractControl, campo?: string): boolean | null {
+    return this.validacionesService.errorPattern(control, campo);
+  }
+
+  /**
+   * Retorna un booleano si el campo tiene un error de pattern
+   * @returns {boolean | null}
+   */
+  errorEmail(control: AbstractControl, campo?: string): boolean | null {
+    return this.validacionesService.errorEmail(control, campo);
+  }
+
+  /**
+   * Retorna un booleano si el campo tiene un error de requerido
+   * @returns {boolean | null}
+   */
+  errorRequerido(control: AbstractControl, field?: string): boolean | null {
+    return this.validacionesService.errorCampoRequerido(control, field);
+  }
+
+  /**
+   * Crea el formulario para representante legal
+   * @returns {void}
+   */
+  crearRepresentanteLegalForm(): void {
+    this.representanteLegalForm &#x3D; this.fb.group({
+      rfc: [
+        { value: &#x27;&#x27;, disabled: true },
+        [
+          Validators.required,
+          Validators.maxLength(13),
+          Validators.pattern(this.validacionesService.rfcPattern),
+        ],
+      ],
+      nombre: [
+        { value: &#x27;&#x27;, disabled: true },
+        [Validators.required, Validators.maxLength(250)],
+      ],
+      primerApellido: [
+        { value: &#x27;&#x27;, disabled: true },
+        [Validators.required, Validators.maxLength(250)],
+      ],
+      segundoApellido: [
+        { value: &#x27;&#x27;, disabled: true },
+        [Validators.required, Validators.maxLength(250)],
+      ],
+      telefono: [null, [Validators.required, Validators.maxLength(15)]],
+      correo: [
+        &#x27;&#x27;,
+        [Validators.required, Validators.maxLength(50), Validators.email],
+      ],
+    });
+  }
+
+  /**
+   * Busqueda de representante fiscal por RFC
+   * @returns {void}
+   */
+  buscarRepresentanteFiscal(): void {
+    const rfc &#x3D; this.rfcBusqueda.value;
+    const datosRepresentante: DatosRfcResponse &#x3D; {
+      rfc: &#x27;LEQI810131HDGSXG05&#x27;,
+      nombre: &#x27;IGNACIO EDUARDO&#x27;,
+      primerApellido: &#x27;LEOS&#x27;,
+      segundoApellido: &#x27;QUIÑONES&#x27;,
+    };
+
+    // Obtenemos los campos deactivados de la formulario para el Representante Legal por RFC
+    const camposDisabled &#x3D; this.formServices.obtenerCamposDisabled(
+      this.representanteLegalForm
+    );
+    if (rfc) {
+      //Agregamos los valores a los campos desactivados
+      camposDisabled.forEach((campo) &#x3D;&gt; {
+        if (campo in datosRepresentante) {
+          this.formServices.agregarValorCampoDesactivados(
+            this.representanteLegalForm,
+            campo,
+            datosRepresentante[campo as keyof DatosRfcResponse]
+          );
+        }
+      });
+    } else {
+      // Activamos los campos desactivados en el formulario para que se pueda ingresar la información.
+      camposDisabled.forEach((campo) &#x3D;&gt; {
+        this.representanteLegalForm.controls[campo].enable();
+        this.representanteLegalForm.controls[campo].setValidators([
+          Validators.required,
+        ]);
+        this.representanteLegalForm.controls[campo].updateValueAndValidity();
+      });
+    }
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;row mb-3&quot;&gt;
+  &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+    &lt;div class&#x3D;&quot;form-group&quot;&gt;
+      &lt;div class&#x3D;&quot;input-group&quot;&gt;
+        &lt;input type&#x3D;&quot;text&quot; class&#x3D;&quot;form-control&quot; placeholder&#x3D;&quot;&quot; aria-label&#x3D;&quot;RFC&quot; aria-describedby&#x3D;&quot;button-addon2&quot;
+          id&#x3D;&quot;rfcBusqueda&quot; [formControl]&#x3D;&quot;rfcBusqueda&quot; [ngClass]&#x3D;&quot;isValid(rfcBusqueda) ? &#x27;required&#x27; : &#x27;&#x27;&quot; appUppercase&gt;
+        &lt;button class&#x3D;&quot;btn btn-group-primary&quot; type&#x3D;&quot;button&quot; id&#x3D;&quot;buscarRFC&quot; (click)&#x3D;&quot;buscarRepresentanteFiscal()&quot;&gt;
+          &lt;i class&#x3D;&quot;bi bi-search&quot;&gt;&lt;/i&gt;
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+      &lt;/div&gt;
+      @if (errorRequerido(rfcBusqueda)) {
+      &lt;div class&#x3D;&quot;mensaje-error &quot;&gt;
+        {{ MENSAJE_REQUERIDO}}
+      &lt;/div&gt;
+      }
+      @if(
+      errorPattern(rfcBusqueda)) {
+      &lt;div class&#x3D;&quot;mensaje-error &quot;&gt;
+        {{ RFC_INVALIDO }}
+      &lt;/div&gt;
+      }
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;form [formGroup]&#x3D;&quot;representanteLegalForm&quot;&gt;
+  &lt;div class&#x3D;&quot;row&quot;&gt;
+    &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+      &lt;div class&#x3D;&quot;form-group&quot;&gt;
+        &lt;label for&#x3D;&quot;rfc&quot; class&#x3D;&quot;form-label&quot;&gt;RFC&lt;/label&gt;
+        &lt;input class&#x3D;&quot;form-control&quot; id&#x3D;&quot;rfc&quot; placeholder&#x3D;&quot;RFC&quot; type&#x3D;&quot;text&quot; formControlName&#x3D;&quot;rfc&quot; appUppercase&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+  &lt;/div&gt;
+
+  &lt;div class&#x3D;&quot;row&quot;&gt;
+    &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+      &lt;div class&#x3D;&quot;form-group&quot;&gt;
+        &lt;label for&#x3D;&quot;nombre&quot; class&#x3D;&quot;form-label&quot;&gt;Nombre&lt;/label&gt;
+        &lt;input class&#x3D;&quot;form-control&quot; id&#x3D;&quot;nombre&quot; placeholder&#x3D;&quot;Nombre&quot; type&#x3D;&quot;text&quot; formControlName&#x3D;&quot;nombre&quot; appUppercase&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+      &lt;div class&#x3D;&quot;form-group&quot;&gt;
+        &lt;label for&#x3D;&quot;primerApellido&quot; class&#x3D;&quot;form-label&quot;&gt;Apellido Paterno&lt;/label&gt;
+        &lt;input class&#x3D;&quot;form-control&quot; id&#x3D;&quot;primerApellido&quot; placeholder&#x3D;&quot;Apellido Paterno&quot; type&#x3D;&quot;text&quot; formControlName&#x3D;&quot;primerApellido&quot;
+          appUppercase&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+      &lt;div class&#x3D;&quot;form-group&quot;&gt;
+        &lt;label for&#x3D;&quot;segundoApellido&quot; class&#x3D;&quot;form-label&quot;&gt;Apellido Materno&lt;/label&gt;
+        &lt;input class&#x3D;&quot;form-control&quot; id&#x3D;&quot;segundoApellido&quot; placeholder&#x3D;&quot;Apellido Materno&quot; type&#x3D;&quot;text&quot; formControlName&#x3D;&quot;segundoApellido&quot;
+          [ngClass]&#x3D;&quot;isValid( representanteLegalForm ,&#x27;segundoApellido&#x27;) ? &#x27;required&#x27; : &#x27;&#x27;&quot; appUppercase&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class&#x3D;&quot;row&quot;&gt;
+    &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+      &lt;div class&#x3D;&quot;form-group&quot;&gt;
+        &lt;label for&#x3D;&quot;telefono&quot; class&#x3D;&quot;form-label&quot;&gt;Teléfono&lt;/label&gt;
+        &lt;input class&#x3D;&quot;form-control&quot; id&#x3D;&quot;telefono&quot; placeholder&#x3D;&quot;Teléfono&quot; type&#x3D;&quot;text&quot; formControlName&#x3D;&quot;telefono&quot;
+          appNumeroTelefonico&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+      &lt;div class&#x3D;&quot;form-group&quot;&gt;
+        &lt;label for&#x3D;&quot;correo&quot; class&#x3D;&quot;form-label&quot;&gt;Correo&lt;/label&gt;
+        &lt;input class&#x3D;&quot;form-control&quot; id&#x3D;&quot;correo&quot; placeholder&#x3D;&quot;Correo&quot; type&#x3D;&quot;text&quot; formControlName&#x3D;&quot;correo&quot;
+          [ngClass]&#x3D;&quot;isValid( representanteLegalForm ,&#x27;correo&#x27;) ? &#x27;required&#x27; : &#x27;&#x27;&quot;&gt;
+      &lt;/div&gt;
+      @if(errorRequerido(representanteLegalForm, &#x27;correo&#x27;)) {
+      &lt;div class&#x3D;&quot;mensaje-error &quot;&gt;
+        {{ MENSAJE_REQUERIDO}}
+      &lt;/div&gt;
+      }
+      @if(
+      errorEmail(representanteLegalForm, &#x27;correo&#x27;)) {
+      &lt;div class&#x3D;&quot;mensaje-error &quot;&gt;
+        {{ CORREO_INVALIDO }}
+      &lt;/div&gt;
+      }
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/form&gt;
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="row mb-3">  <div class="col-md-4">    <div class="form-group">      <div class="input-group">        <input type="text" class="form-control" placeholder="" aria-label="RFC" aria-describedby="button-addon2"          id="rfcBusqueda" [formControl]="rfcBusqueda" [ngClass]="isValid(rfcBusqueda) ? \'required\' : \'\'" appUppercase>        <button class="btn btn-group-primary" type="button" id="buscarRFC" (click)="buscarRepresentanteFiscal()">          <i class="bi bi-search"></i>        </button>      </div>      <div>      </div>      @if (errorRequerido(rfcBusqueda)) {      <div class="mensaje-error ">        {{ MENSAJE_REQUERIDO}}      </div>      }      @if(      errorPattern(rfcBusqueda)) {      <div class="mensaje-error ">        {{ RFC_INVALIDO }}      </div>      }    </div>  </div></div><form [formGroup]="representanteLegalForm">  <div class="row">    <div class="col-md-4">      <div class="form-group">        <label for="rfc" class="form-label">RFC</label>        <input class="form-control" id="rfc" placeholder="RFC" type="text" formControlName="rfc" appUppercase>      </div>    </div>  </div>  <div class="row">    <div class="col-md-4">      <div class="form-group">        <label for="nombre" class="form-label">Nombre</label>        <input class="form-control" id="nombre" placeholder="Nombre" type="text" formControlName="nombre" appUppercase>      </div>    </div>    <div class="col-md-4">      <div class="form-group">        <label for="primerApellido" class="form-label">Apellido Paterno</label>        <input class="form-control" id="primerApellido" placeholder="Apellido Paterno" type="text" formControlName="primerApellido"          appUppercase>      </div>    </div>    <div class="col-md-4">      <div class="form-group">        <label for="segundoApellido" class="form-label">Apellido Materno</label>        <input class="form-control" id="segundoApellido" placeholder="Apellido Materno" type="text" formControlName="segundoApellido"          [ngClass]="isValid( representanteLegalForm ,\'segundoApellido\') ? \'required\' : \'\'" appUppercase>      </div>    </div>  </div>  <div class="row">    <div class="col-md-4">      <div class="form-group">        <label for="telefono" class="form-label">Teléfono</label>        <input class="form-control" id="telefono" placeholder="Teléfono" type="text" formControlName="telefono"          appNumeroTelefonico>      </div>    </div>    <div class="col-md-4">      <div class="form-group">        <label for="correo" class="form-label">Correo</label>        <input class="form-control" id="correo" placeholder="Correo" type="text" formControlName="correo"          [ngClass]="isValid( representanteLegalForm ,\'correo\') ? \'required\' : \'\'">      </div>      @if(errorRequerido(representanteLegalForm, \'correo\')) {      <div class="mensaje-error ">        {{ MENSAJE_REQUERIDO}}      </div>      }      @if(      errorEmail(representanteLegalForm, \'correo\')) {      <div class="mensaje-error ">        {{ CORREO_INVALIDO }}      </div>      }    </div>  </div></form></div>'
+    var COMPONENTS = [{'name': 'AcuseComponent', 'selector': 'app-component-acuse'},{'name': 'AcusePageComponent', 'selector': ''},{'name': 'AdministrarResiduosComponent', 'selector': 'app-administrar-residuos'},{'name': 'AgentesAgenciasAduanalesComponent', 'selector': 'agentes-agencias-aduanales'},{'name': 'AgregaPersonasComponent', 'selector': 'agrega-personas'},{'name': 'AgregaPersonasComponent', 'selector': 'agrega-personas'},{'name': 'AgregarArchivoComponent', 'selector': 'app-agregar-archivo'},{'name': 'AgregarDestinatoriaComponent', 'selector': 'app-agregar-destinatoria'},{'name': 'AgregarMiembrosEmpresaComponent', 'selector': 'agregar-miembros-empresa'},{'name': 'AgregarTransporteComponent', 'selector': 'agregar-transporte'},{'name': 'AlertComponent', 'selector': 'ng-alert'},{'name': 'AnexarDocumentosComponent', 'selector': 'app-anexar-documentos'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthPageComponent', 'selector': ''},{'name': 'BreadcrumbComponent', 'selector': 'c-breadcrumb'},{'name': 'BtnContinuarComponent', 'selector': 'btn-continuar'},{'name': 'CatalogoSelectComponent', 'selector': 'app-catalogo-select'},{'name': 'ClientesProveedoresExtrajeroComponent', 'selector': 'app-clientes-proveedores-extrajero'},{'name': 'CombinacionRequeridaComponent', 'selector': 'app-combinacion-requerida'},{'name': 'ConfirmarNotificacionComponent', 'selector': 'confirmar-notificacion'},{'name': 'ControlInventariosComponent', 'selector': 'control-inventarios'},{'name': 'CriterioDeDictComponent', 'selector': 'app-criterio-de-dict'},{'name': 'CrosslistComponent', 'selector': 'crosslist'},{'name': 'DatosAdicionalesComponent', 'selector': 'app-datos-adicionales'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosComponent', 'selector': 'app-pantalla-datos'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosDeLaComponent', 'selector': 'app-datos-de-la'},{'name': 'DatosDelaComponent', 'selector': 'app-datos-dela'},{'name': 'DatosDeLaSolicitudComponent', 'selector': 'app-datos-de-la-solicitud'},{'name': 'DatosDelComponent', 'selector': 'app-datos-del'},{'name': 'DatosDeLosResiduosComponent', 'selector': 'app-datos-de-los-residuos'},{'name': 'DatosGeneralsAnimalsComponent', 'selector': 'app-datos-generals-animals'},{'name': 'DatosParaMovilizacionNacionalComponent', 'selector': 'app-datos-para-movilizacion-nacional'},{'name': 'DatosTransportistaComponent', 'selector': 'datos-transportista'},{'name': 'DespachoMercanciasSolicitudComponent', 'selector': 'despacho-mercancias-solicitud'},{'name': 'DetosDelMarcanciaComponent', 'selector': 'app-detos-del-marcancia'},{'name': 'DetosDelTramiteComponent', 'selector': 'app-detos-del-tramite'},{'name': 'EmpleadosContratadosComponent', 'selector': 'empleados-contratados'},{'name': 'EmpleadosContratadosComponent', 'selector': 'empleados-contratados'},{'name': 'FirmaElectronicaComponent', 'selector': 'firma-electronica'},{'name': 'FooterComponent', 'selector': 'c-footer'},{'name': 'HeaderComponent', 'selector': 'c-header'},{'name': 'InformacionUsuarioComponent', 'selector': 'informacion-usuario'},{'name': 'InputCheckComponent', 'selector': 'input-check'},{'name': 'InputFechaComponent', 'selector': 'input-fecha'},{'name': 'InputHoraComponent', 'selector': 'input-hora'},{'name': 'InputRadioComponent', 'selector': 'app-input-radio'},{'name': 'ModalConfirmarComponent', 'selector': 'app-modal-confirmar'},{'name': 'NavComponent', 'selector': 'c-header-nav'},{'name': 'OctavaTemporalComponent', 'selector': 'app-octava-temporal'},{'name': 'PagoDeDerechoComponent', 'selector': 'app-pago-de-derecho'},{'name': 'PagoDeDerechosComponent', 'selector': 'app-pago-de-derechos'},{'name': 'PagoDerechosComponent', 'selector': 'pago-derechos'},{'name': 'PaisProcendenciaComponent', 'selector': 'app-pais-procendencia'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PartidasDeLaComponent', 'selector': 'app-partidas-de-la'},{'name': 'PasoCuatroComponent', 'selector': 'app-paso-cuatro'},{'name': 'PasoCuatroComponent', 'selector': 'paso-cuatro'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoDosComponent', 'selector': 'paso-dos'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoTresComponent', 'selector': 'app-paso-tres'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'app-paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PedimentoComponent', 'selector': 'c-pedimento'},{'name': 'PedimentoComponent', 'selector': 'c-pedimento'},{'name': 'RegistroPageComponent', 'selector': ''},{'name': 'RepresentacionComponent', 'selector': 'app-representacion'},{'name': 'RepresentanteFiscalComponent', 'selector': 'representante-fiscal'},{'name': 'SeleccionTramiteComponent', 'selector': 'seleccion-tramite'},{'name': 'SelectCatalogosComponent', 'selector': 'select-catalogos'},{'name': 'SelectPaisesComponent', 'selector': 'app-select-paises'},{'name': 'SolicitanteComponent', 'selector': 'solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteDetosTabsComponent', 'selector': 'app-solicitante-detos-tabs'},{'name': 'SolicitanteOctavaTemporalComponent', 'selector': 'app-solocitante-octava-temporal'},{'name': 'SolicitudComponent', 'selector': 'solicitud'},{'name': 'SolicitudComponent', 'selector': 'solicitud'},{'name': 'SolicitudComponent', 'selector': 'app-solicitud'},{'name': 'SolicitudPageComponent', 'selector': ''},{'name': 'SolicitudPageComponent', 'selector': ''},{'name': 'SolicitudPantallasComponent', 'selector': 'app-solicitud'},{'name': 'TableComponent', 'selector': 'ng-table'},{'name': 'TercerosComponent', 'selector': 'terceros'},{'name': 'TercerosRelacionadosComponent', 'selector': 'app-terceros-relacionados'},{'name': 'TestPageComponent', 'selector': 'test-page'},{'name': 'TituloComponent', 'selector': 'ng-titulo'},{'name': 'TransporteComponent', 'selector': 'app-transporte'},{'name': 'TratadosComponent', 'selector': 'app-tratados'},{'name': 'UsoEspicificoComponent', 'selector': 'app-uso-espicifico'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'ZoosanitarioPageComponent', 'selector': 'app-zoosanitario-page'}];
+    var DIRECTIVES = [{'name': 'CalendarioFormatoDirective', 'selector': '[CalendarioFormato]'},{'name': 'HoraFormatoDirective', 'selector': '[HoraFormato]'},{'name': 'NumeroTelefonicoDirective', 'selector': '[appNumeroTelefonico]'},{'name': 'SoloNumerosDirective', 'selector': '[appSoloNumeros]'},{'name': 'UppercaseDirective', 'selector': '[appUppercase]'}];
+    var ACTUAL_COMPONENT = {'name': 'RepresentanteFiscalComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'RepresentanteFiscalComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

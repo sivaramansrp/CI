@@ -1,0 +1,974 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>vucem-3.0-frontend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">vucem-3.0-frontend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  TratadosComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/tramites/110101/components/tratados/tratados.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Componente Tratados que se utiliza para mostrar y gestionar los tratados.</p>
+<p>Este componente utiliza varios subcomponentes como TituloComponent, SelectCatalogosComponent, CommonModule,
+TableComponent y AlertComponent para mostrar información y permitir al usuario seleccionar y agregar tratados.</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-tratados</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                                <code><a href="../components/TituloComponent.html" target="_self" >TituloComponent</a></code>
+                            <code>CommonModule</code>
+                                <code><a href="../components/TableComponent.html" target="_self" >TableComponent</a></code>
+                                <code><a href="../components/AlertComponent.html" target="_self" >AlertComponent</a></code>
+                                <code><a href="../components/CatalogoSelectComponent.html" target="_self" >CatalogoSelectComponent</a></code>
+                            <code>ReactiveFormsModule</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./tratados.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./tratados.component.scss</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#alerta" >alerta</a>
+                            </li>
+                            <li>
+                                <a href="#configuracionesDropdown" >configuracionesDropdown</a>
+                            </li>
+                            <li>
+                                <a href="#cuerpoTabla" >cuerpoTabla</a>
+                            </li>
+                            <li>
+                                <a href="#encabezadosComunesTabla" >encabezadosComunesTabla</a>
+                            </li>
+                            <li>
+                                <a href="#formularioTratados" >formularioTratados</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#agregarTratado" >agregarTratado</a>
+                            </li>
+                            <li>
+                                <a href="#inicializarFormularioTratados" >inicializarFormularioTratados</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#seleccionar" >seleccionar</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(fb: FormBuilder)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/tramites/110101/components/tratados/tratados.component.ts:43</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>fb</td>
+                                                  
+                                                        <td>
+                                                                    <code>FormBuilder</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="agregarTratado"></a>
+                    <span class="name">
+                        <span ><b>agregarTratado</b></span>
+                        <a href="#agregarTratado"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>agregarTratado()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="138"
+                                    class="link-to-prism">src/app/tramites/110101/components/tratados/tratados.component.ts:138</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Agrega un nuevo tratado a la tabla.</p>
+<p>Este método verifica si el formulario es válido, y si lo es, agrega el nuevo tratado
+al cuerpo de la tabla y reinicia el formulario.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="inicializarFormularioTratados"></a>
+                    <span class="name">
+                        <span ><b>inicializarFormularioTratados</b></span>
+                        <a href="#inicializarFormularioTratados"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>inicializarFormularioTratados()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="68"
+                                    class="link-to-prism">src/app/tramites/110101/components/tratados/tratados.component.ts:68</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Inicializa el formulario reactivo para los tratados.</p>
+<p>Este método configura el formulario reactivo con los campos <code>pais</code>, <code>tratado</code> y <code>origen</code>,
+todos ellos con validadores requeridos.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="55"
+                                    class="link-to-prism">src/app/tramites/110101/components/tratados/tratados.component.ts:55</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Método que se ejecuta al inicializar el componente.</p>
+<p>Llama al método <code>inicializarFormularioTratados</code> para configurar el formulario reactivo.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="seleccionar"></a>
+                    <span class="name">
+                        <span ><b>seleccionar</b></span>
+                        <a href="#seleccionar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>seleccionar()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="108"
+                                    class="link-to-prism">src/app/tramites/110101/components/tratados/tratados.component.ts:108</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Método para seleccionar un tratado.</p>
+<p>Este método actualmente no tiene implementación. Puede ser implementado según los requisitos
+o eliminado si no es necesario.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="alerta"></a>
+                    <span class="name">
+                        <span ><b>alerta</b></span>
+                        <a href="#alerta"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>MENSAJE_ALERTA_TRATADOS</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="82" class="link-to-prism">src/app/tramites/110101/components/tratados/tratados.component.ts:82</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Mensaje de alerta para tratados.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="configuracionesDropdown"></a>
+                    <span class="name">
+                        <span ><b>configuracionesDropdown</b></span>
+                        <a href="#configuracionesDropdown"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    { catalogos: tratadosDropdown.pais },
+    { catalogos: tratadosDropdown.tratado },
+    { catalogos: tratadosDropdown.origen }
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="91" class="link-to-prism">src/app/tramites/110101/components/tratados/tratados.component.ts:91</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Configuraciones de los menús desplegables.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cuerpoTabla"></a>
+                    <span class="name">
+                        <span ><b>cuerpoTabla</b></span>
+                        <a href="#cuerpoTabla"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>any[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>tratadosTable.tableBody</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="126" class="link-to-prism">src/app/tramites/110101/components/tratados/tratados.component.ts:126</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Cuerpo de la tabla de tratados.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="encabezadosComunesTabla"></a>
+                    <span class="name">
+                        <span ><b>encabezadosComunesTabla</b></span>
+                        <a href="#encabezadosComunesTabla"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>tratadosTable.tableHeader</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="117" class="link-to-prism">src/app/tramites/110101/components/tratados/tratados.component.ts:117</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Encabezados comunes de la tabla de tratados.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formularioTratados"></a>
+                    <span class="name">
+                        <span ><b>formularioTratados</b></span>
+                        <a href="#formularioTratados"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>FormGroup</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/tramites/110101/components/tratados/tratados.component.ts:43</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Formulario reactivo para gestionar los tratados.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { AlertComponent } from &#x27;../../../../shared/components/alert/alert.component&#x27;;
+import { Catalogo } from &#x27;../../../../core/models/shared/catalogos.model&#x27;;
+import { CatalogoSelectComponent } from &#x27;../../../../shared/components/catalogo-select/catalogo-select.component&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+
+import { Component, OnInit } from &#x27;@angular/core&#x27;;
+import { MENSAJE_ALERTA_TRATADOS } from &#x27;../../../../shared/constantes/servicios-extraordinarios.enum&#x27;;
+import { TableComponent } from &#x27;../../../../shared/components/table/table.component&#x27;;
+import { TituloComponent } from &#x27;../../../../shared/components/titulo/titulo.component&#x27;;
+import tratadosDropdown from &#x27;../../../../../assets/json/110101/tratdos-dropdown.json&#x27;;
+import tratadosTable from &#x27;../../../../../assets/json/110101/tratados-table.json&#x27;;
+
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from &#x27;@angular/forms&#x27;;
+
+/**
+ * Componente Tratados que se utiliza para mostrar y gestionar los tratados.
+ * 
+ * Este componente utiliza varios subcomponentes como TituloComponent, SelectCatalogosComponent, CommonModule,
+ * TableComponent y AlertComponent para mostrar información y permitir al usuario seleccionar y agregar tratados.
+ * 
+ * @component
+ */
+@Component({
+  selector: &#x27;app-tratados&#x27;,
+  templateUrl: &#x27;./tratados.component.html&#x27;,
+  styleUrl: &#x27;./tratados.component.scss&#x27;,
+  standalone: true,
+  imports: [
+    TituloComponent,
+    CommonModule,
+    TableComponent,
+    AlertComponent,
+    CatalogoSelectComponent,
+    ReactiveFormsModule
+  ]
+})
+export class TratadosComponent implements OnInit {
+  /**
+   * Formulario reactivo para gestionar los tratados.
+   * 
+   * @property {FormGroup} formularioTratados - El formulario reactivo que contiene los campos para los tratados.
+   */
+  formularioTratados: FormGroup;
+
+  // eslint-disable-next-line no-empty-function
+  constructor(private fb: FormBuilder) { }
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * 
+   * Llama al método &#x60;inicializarFormularioTratados&#x60; para configurar el formulario reactivo.
+   * 
+   * @method ngOnInit
+   */
+  ngOnInit(): void {
+    this.inicializarFormularioTratados();
+  }
+
+  /**
+   * Inicializa el formulario reactivo para los tratados.
+   * 
+   * Este método configura el formulario reactivo con los campos &#x60;pais&#x60;, &#x60;tratado&#x60; y &#x60;origen&#x60;,
+   * todos ellos con validadores requeridos.
+   * 
+   * @method inicializarFormularioTratados
+   */
+
+  inicializarFormularioTratados(): void {
+    this.formularioTratados &#x3D; this.fb.group({
+      pais: [&#x27;&#x27;, Validators.required],
+      tratado: [&#x27;&#x27;, Validators.required],
+      origen: [&#x27;&#x27;, Validators.required]
+    });
+  }
+
+  /**
+   * Mensaje de alerta para tratados.
+   * 
+   * @property {string} alert - El mensaje de alerta que se mostrará en el componente.
+   */
+
+  alerta &#x3D; MENSAJE_ALERTA_TRATADOS;
+
+
+
+  /**
+   * Configuraciones de los menús desplegables.
+   * 
+   * @property {Array} configuracionesDropdown - Array de objetos que contienen los catálogos para los menús desplegables.
+   */
+  configuracionesDropdown &#x3D; [
+    { catalogos: tratadosDropdown.pais },
+    { catalogos: tratadosDropdown.tratado },
+    { catalogos: tratadosDropdown.origen }
+  ];
+
+ 
+
+  /**
+   * Método para seleccionar un tratado.
+   * 
+   * Este método actualmente no tiene implementación. Puede ser implementado según los requisitos
+   * o eliminado si no es necesario.
+   * 
+   * @method seleccionar
+   */
+    // eslint-disable-next-line class-methods-use-this
+  seleccionar(): void {
+    // Implementar el método o eliminarlo si no es necesario
+  }
+
+  /**
+   * Encabezados comunes de la tabla de tratados.
+   * 
+   * @property {string[]} encabezadosComunesTabla - Array de cadenas de encabezados de tabla.
+   */
+  encabezadosComunesTabla &#x3D; tratadosTable.tableHeader;
+
+  /**
+   * Cuerpo de la tabla de tratados.
+   * 
+   * @property {any[]} cuerpoTabla - Array de datos del cuerpo de la tabla.
+   */
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  cuerpoTabla: any[] &#x3D; tratadosTable.tableBody;
+
+
+  // eslint-disable-next-line class-methods-use-this
+  /**
+   * Agrega un nuevo tratado a la tabla.
+   * 
+   * Este método verifica si el formulario es válido, y si lo es, agrega el nuevo tratado
+   * al cuerpo de la tabla y reinicia el formulario.
+   * 
+   * @method agregarTratado
+   */
+  agregarTratado(): void {
+    if (this.formularioTratados.valid) {
+      const nuevoTratado &#x3D; this.formularioTratados.value;
+      this.cuerpoTabla.push(nuevoTratado);
+      this.formularioTratados.reset();
+    } 
+  }
+
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;ng-titulo titulo&#x3D;&quot;Datos generales del solicitante&quot; /&gt;
+&lt;ng-alert [CONTENIDO]&#x3D;&quot;alerta.MENSAJE_ALERTA&quot;&gt;&lt;/ng-alert&gt;
+&lt;form [formGroup]&#x3D;&quot;formularioTratados&quot;&gt;
+    &lt;div class&#x3D;&quot;row&quot;&gt;
+        &lt;div class&#x3D;&quot;col-md-8&quot;&gt;
+            &lt;app-catalogo-select [catalogo]&#x3D;&quot;configuracionesDropdown[0].catalogos&quot; formControlName&#x3D;&quot;pais&quot;
+                [label]&#x3D;&quot;&#x27;Pais o bloque&#x27;&quot; [required]&#x3D;&quot;true&quot; name&#x3D;&quot;Pais o bloque&quot;&gt;&lt;/app-catalogo-select&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;col-md-8&quot;&gt;
+            &lt;app-catalogo-select [catalogo]&#x3D;&quot;configuracionesDropdown[1].catalogos&quot; formControlName&#x3D;&quot;tratado&quot;
+                [label]&#x3D;&quot;&#x27;Tratado o Acuerdo&#x27;&quot; [required]&#x3D;&quot;true&quot; name&#x3D;&quot;Tratado o Acuerdo&quot;&gt;&lt;/app-catalogo-select&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;col-md-8&quot;&gt;
+            &lt;app-catalogo-select [catalogo]&#x3D;&quot;configuracionesDropdown[2].catalogos&quot; formControlName&#x3D;&quot;origen&quot;
+                [label]&#x3D;&quot;&#x27;Criterio de origen&#x27;&quot; [required]&#x3D;&quot;true&quot; name&#x3D;&quot;Criterio de origen&quot;&gt;&lt;/app-catalogo-select&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;col-12 d-flex justify-content-end mt-3 mb-4&quot;&gt;
+        &lt;button class&#x3D;&quot;btn btn-primary&quot; (click)&#x3D;&quot;agregarTratado()&quot;&gt;Agregar tratado&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/form&gt;
+
+&lt;ng-alert [CONTENIDO]&#x3D;&quot;&#x27;Para continuar con el trámite, deberá agregar por lo menos un tratado o acuerdo.&#x27;&quot;&gt;&lt;/ng-alert&gt;
+
+&lt;h6 class&#x3D;&quot;fs-4&quot;&gt;Pais/bloque-tratado/acuerdo seleccionados por el solicitante&lt;/h6&gt;
+
+&lt;ng-table [commonTableHeader]&#x3D;&quot;encabezadosComunesTabla&quot; [commonTableBody]&#x3D;&quot;cuerpoTabla&quot;&gt;&lt;/ng-table&gt;
+
+&lt;div class&#x3D;&quot; text-end mt-5&quot;&gt;
+    &lt;button class&#x3D;&quot;btn btn-default me-2&quot;&gt;Modificar tratado&lt;/button&gt;
+    &lt;button class&#x3D;&quot;btn btn-primary&quot;&gt;Eliminar tratado&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><ng-titulo titulo="Datos generales del solicitante" /><ng-alert [CONTENIDO]="alerta.MENSAJE_ALERTA"></ng-alert><form [formGroup]="formularioTratados">    <div class="row">        <div class="col-md-8">            <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="pais"                [label]="\'Pais o bloque\'" [required]="true" name="Pais o bloque"></app-catalogo-select>        </div>        <div class="col-md-8">            <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="tratado"                [label]="\'Tratado o Acuerdo\'" [required]="true" name="Tratado o Acuerdo"></app-catalogo-select>        </div>        <div class="col-md-8">            <app-catalogo-select [catalogo]="configuracionesDropdown[2].catalogos" formControlName="origen"                [label]="\'Criterio de origen\'" [required]="true" name="Criterio de origen"></app-catalogo-select>        </div>    </div>    <div class="col-12 d-flex justify-content-end mt-3 mb-4">        <button class="btn btn-primary" (click)="agregarTratado()">Agregar tratado</button>    </div></form><ng-alert [CONTENIDO]="\'Para continuar con el trámite, deberá agregar por lo menos un tratado o acuerdo.\'"></ng-alert><h6 class="fs-4">Pais/bloque-tratado/acuerdo seleccionados por el solicitante</h6><ng-table [commonTableHeader]="encabezadosComunesTabla" [commonTableBody]="cuerpoTabla"></ng-table><div class=" text-end mt-5">    <button class="btn btn-default me-2">Modificar tratado</button>    <button class="btn btn-primary">Eliminar tratado</button></div></div>'
+    var COMPONENTS = [{'name': 'AcuseComponent', 'selector': 'app-component-acuse'},{'name': 'AcusePageComponent', 'selector': ''},{'name': 'AdministrarResiduosComponent', 'selector': 'app-administrar-residuos'},{'name': 'AgentesAgenciasAduanalesComponent', 'selector': 'agentes-agencias-aduanales'},{'name': 'AgregaPersonasComponent', 'selector': 'agrega-personas'},{'name': 'AgregaPersonasComponent', 'selector': 'agrega-personas'},{'name': 'AgregarArchivoComponent', 'selector': 'app-agregar-archivo'},{'name': 'AgregarDestinatoriaComponent', 'selector': 'app-agregar-destinatoria'},{'name': 'AgregarMiembrosEmpresaComponent', 'selector': 'agregar-miembros-empresa'},{'name': 'AgregarTransporteComponent', 'selector': 'agregar-transporte'},{'name': 'AlertComponent', 'selector': 'ng-alert'},{'name': 'AnexarDocumentosComponent', 'selector': 'app-anexar-documentos'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthPageComponent', 'selector': ''},{'name': 'BreadcrumbComponent', 'selector': 'c-breadcrumb'},{'name': 'BtnContinuarComponent', 'selector': 'btn-continuar'},{'name': 'CatalogoSelectComponent', 'selector': 'app-catalogo-select'},{'name': 'ClientesProveedoresExtrajeroComponent', 'selector': 'app-clientes-proveedores-extrajero'},{'name': 'CombinacionRequeridaComponent', 'selector': 'app-combinacion-requerida'},{'name': 'ConfirmarNotificacionComponent', 'selector': 'confirmar-notificacion'},{'name': 'ControlInventariosComponent', 'selector': 'control-inventarios'},{'name': 'CriterioDeDictComponent', 'selector': 'app-criterio-de-dict'},{'name': 'CrosslistComponent', 'selector': 'crosslist'},{'name': 'DatosAdicionalesComponent', 'selector': 'app-datos-adicionales'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosComponent', 'selector': 'app-pantalla-datos'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosDeLaComponent', 'selector': 'app-datos-de-la'},{'name': 'DatosDelaComponent', 'selector': 'app-datos-dela'},{'name': 'DatosDeLaSolicitudComponent', 'selector': 'app-datos-de-la-solicitud'},{'name': 'DatosDelComponent', 'selector': 'app-datos-del'},{'name': 'DatosDeLosResiduosComponent', 'selector': 'app-datos-de-los-residuos'},{'name': 'DatosGeneralsAnimalsComponent', 'selector': 'app-datos-generals-animals'},{'name': 'DatosParaMovilizacionNacionalComponent', 'selector': 'app-datos-para-movilizacion-nacional'},{'name': 'DatosTransportistaComponent', 'selector': 'datos-transportista'},{'name': 'DespachoMercanciasSolicitudComponent', 'selector': 'despacho-mercancias-solicitud'},{'name': 'DetosDelMarcanciaComponent', 'selector': 'app-detos-del-marcancia'},{'name': 'DetosDelTramiteComponent', 'selector': 'app-detos-del-tramite'},{'name': 'EmpleadosContratadosComponent', 'selector': 'empleados-contratados'},{'name': 'EmpleadosContratadosComponent', 'selector': 'empleados-contratados'},{'name': 'FirmaElectronicaComponent', 'selector': 'firma-electronica'},{'name': 'FooterComponent', 'selector': 'c-footer'},{'name': 'HeaderComponent', 'selector': 'c-header'},{'name': 'InformacionUsuarioComponent', 'selector': 'informacion-usuario'},{'name': 'InputCheckComponent', 'selector': 'input-check'},{'name': 'InputFechaComponent', 'selector': 'input-fecha'},{'name': 'InputHoraComponent', 'selector': 'input-hora'},{'name': 'InputRadioComponent', 'selector': 'app-input-radio'},{'name': 'ModalConfirmarComponent', 'selector': 'app-modal-confirmar'},{'name': 'NavComponent', 'selector': 'c-header-nav'},{'name': 'OctavaTemporalComponent', 'selector': 'app-octava-temporal'},{'name': 'PagoDeDerechoComponent', 'selector': 'app-pago-de-derecho'},{'name': 'PagoDeDerechosComponent', 'selector': 'app-pago-de-derechos'},{'name': 'PagoDerechosComponent', 'selector': 'pago-derechos'},{'name': 'PaisProcendenciaComponent', 'selector': 'app-pais-procendencia'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PartidasDeLaComponent', 'selector': 'app-partidas-de-la'},{'name': 'PasoCuatroComponent', 'selector': 'app-paso-cuatro'},{'name': 'PasoCuatroComponent', 'selector': 'paso-cuatro'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoDosComponent', 'selector': 'paso-dos'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoTresComponent', 'selector': 'app-paso-tres'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'app-paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PedimentoComponent', 'selector': 'c-pedimento'},{'name': 'PedimentoComponent', 'selector': 'c-pedimento'},{'name': 'RegistroPageComponent', 'selector': ''},{'name': 'RepresentacionComponent', 'selector': 'app-representacion'},{'name': 'RepresentanteFiscalComponent', 'selector': 'representante-fiscal'},{'name': 'SeleccionTramiteComponent', 'selector': 'seleccion-tramite'},{'name': 'SelectCatalogosComponent', 'selector': 'select-catalogos'},{'name': 'SelectPaisesComponent', 'selector': 'app-select-paises'},{'name': 'SolicitanteComponent', 'selector': 'solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteDetosTabsComponent', 'selector': 'app-solicitante-detos-tabs'},{'name': 'SolicitanteOctavaTemporalComponent', 'selector': 'app-solocitante-octava-temporal'},{'name': 'SolicitudComponent', 'selector': 'solicitud'},{'name': 'SolicitudComponent', 'selector': 'solicitud'},{'name': 'SolicitudComponent', 'selector': 'app-solicitud'},{'name': 'SolicitudPageComponent', 'selector': ''},{'name': 'SolicitudPageComponent', 'selector': ''},{'name': 'SolicitudPantallasComponent', 'selector': 'app-solicitud'},{'name': 'TableComponent', 'selector': 'ng-table'},{'name': 'TercerosComponent', 'selector': 'terceros'},{'name': 'TercerosRelacionadosComponent', 'selector': 'app-terceros-relacionados'},{'name': 'TestPageComponent', 'selector': 'test-page'},{'name': 'TituloComponent', 'selector': 'ng-titulo'},{'name': 'TransporteComponent', 'selector': 'app-transporte'},{'name': 'TratadosComponent', 'selector': 'app-tratados'},{'name': 'UsoEspicificoComponent', 'selector': 'app-uso-espicifico'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'ZoosanitarioPageComponent', 'selector': 'app-zoosanitario-page'}];
+    var DIRECTIVES = [{'name': 'CalendarioFormatoDirective', 'selector': '[CalendarioFormato]'},{'name': 'HoraFormatoDirective', 'selector': '[HoraFormato]'},{'name': 'NumeroTelefonicoDirective', 'selector': '[appNumeroTelefonico]'},{'name': 'SoloNumerosDirective', 'selector': '[appSoloNumeros]'},{'name': 'UppercaseDirective', 'selector': '[appUppercase]'}];
+    var ACTUAL_COMPONENT = {'name': 'TratadosComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'TratadosComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,3776 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>vucem-3.0-frontend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+	   <link rel="stylesheet" href="./styles/style.css">
+        <link rel="stylesheet" href="./styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="./" class="navbar-brand">vucem-3.0-frontend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content coverage">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">Documentation coverage</li>
+</ol>
+
+<div>
+    <img src="./images/coverage-badge-documentation.svg">
+</div>
+
+<table class="table table-bordered coverage" id="coverage-table">
+    <thead class="coverage-header">
+        <tr>
+            <th>File</th>
+            <th>Type</th>
+            <th>Identifier</th>
+            <th style="text-align:right" class="statements" data-sort-default>Statements</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/AppComponent.html">src/app/app.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>AppComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/AuthPageComponent.html">src/app/auth/auth-page/auth-page.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>AuthPageComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/CapturarSolicitud.html">src/app/core/models/220201/capturar-solicitud.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>CapturarSolicitud</td>
+            <td align="right" data-sort="16">
+                <span class="coverage-percent">16 %</span>
+                <span class="coverage-count">(1/6)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosDeLaSolicitud.html">src/app/core/models/220201/capturar-solicitud.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosDeLaSolicitud</td>
+            <td align="right" data-sort="10">
+                <span class="coverage-percent">10 %</span>
+                <span class="coverage-count">(1/10)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosParaMovilizacionNacional.html">src/app/core/models/220201/capturar-solicitud.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosParaMovilizacionNacional</td>
+            <td align="right" data-sort="16">
+                <span class="coverage-percent">16 %</span>
+                <span class="coverage-count">(1/6)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/PagoDeDerechos.html">src/app/core/models/220201/capturar-solicitud.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>PagoDeDerechos</td>
+            <td align="right" data-sort="11">
+                <span class="coverage-percent">11 %</span>
+                <span class="coverage-count">(1/9)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/Solicitante.html">src/app/core/models/220201/capturar-solicitud.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>Solicitante</td>
+            <td align="right" data-sort="20">
+                <span class="coverage-percent">20 %</span>
+                <span class="coverage-count">(1/5)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/TercerosRelacionados.html">src/app/core/models/220201/capturar-solicitud.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>TercerosRelacionados</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(1/1)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/AccionBoton.html">src/app/core/models/220201/certificado-zoosanitario.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>AccionBoton</td>
+            <td align="right" data-sort="33">
+                <span class="coverage-percent">33 %</span>
+                <span class="coverage-count">(1/3)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/Banco.html">src/app/core/models/220201/certificado-zoosanitario.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>Banco</td>
+            <td align="right" data-sort="33">
+                <span class="coverage-percent">33 %</span>
+                <span class="coverage-count">(1/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/ListaPasosWizard.html">src/app/core/models/220201/certificado-zoosanitario.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>ListaPasosWizard</td>
+            <td align="right" data-sort="20">
+                <span class="coverage-percent">20 %</span>
+                <span class="coverage-count">(1/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/RespuestaAPI.html">src/app/core/models/220201/certificado-zoosanitario.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>RespuestaAPI</td>
+            <td align="right" data-sort="25">
+                <span class="coverage-percent">25 %</span>
+                <span class="coverage-count">(1/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/PantallasFormData.html">src/app/core/models/220401/servicios-pantallas.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>PantallasFormData</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/6)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/TransporteFormData.html">src/app/core/models/220401/servicios-pantallas.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>TransporteFormData</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/6)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/Agente.html">src/app/core/models/303/secciones.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>Agente</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/7)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/Inventario.html">src/app/core/models/303/secciones.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>Inventario</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/Miembro.html">src/app/core/models/303/secciones.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>Miembro</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/8)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/Transportista.html">src/app/core/models/303/secciones.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>Transportista</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/9)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosComponentePedimento.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosComponentePedimento</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosDespacho.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosDespacho</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/15)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosGenerales.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosGenerales</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/8)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosImportadorExportador.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosImportadorExportador</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/12)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosMercancia.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosMercancia</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosPago.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosPago</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosPedimento.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosPedimento</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/9)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosServicio.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosServicio</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/6)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosTipoEmpresa.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosTipoEmpresa</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/7)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DomicilioFiscal.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DomicilioFiscal</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/12)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/ListaPasosWizard.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>ListaPasosWizard</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/Persona.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>Persona</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/Personas.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>Personas</td>
+            <td align="right" data-sort="33">
+                <span class="coverage-percent">33 %</span>
+                <span class="coverage-count">(1/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/PersonaTerceros.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>PersonaTerceros</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/ResponsablesDespacho.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>ResponsablesDespacho</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/RespuestaSolicitud.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>RespuestaSolicitud</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/Solicitud5701.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>Solicitud5701</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/11)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/TipoDocumento.html">src/app/core/models/5701/servicios-extraordinarios.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>TipoDocumento</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/2)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/Catalogo.html">src/app/core/models/shared/catalogos.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>Catalogo</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/CatalogoPaises.html">src/app/core/models/shared/catalogos.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>CatalogoPaises</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/catalogoResponse.html">src/app/core/models/shared/catalogos.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>catalogoResponse</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/JSONResponse.html">src/app/core/models/shared/catalogos.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>JSONResponse</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/RespuestaCatalogos.html">src/app/core/models/shared/catalogos.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>RespuestaCatalogos</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/AccionesTabla.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>AccionesTabla</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/CatalogosSelect.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>CatalogosSelect</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/CatalogosSelectPaises.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>CatalogosSelectPaises</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosArchivo.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosArchivo</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosIndice.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosIndice</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosInput.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosInput</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/6)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosInputCheck.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosInputCheck</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosPageAcuse.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosPageAcuse</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/6)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosPasos.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosPasos</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosRepresentanteLegal.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosRepresentanteLegal</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/7)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosRfcResponse.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosRfcResponse</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DocumentosCargados.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DocumentosCargados</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/EncabezadosTabla.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>EncabezadosTabla</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/InputCheck.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>InputCheck</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/6)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/InputFecha.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>InputFecha</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/InputHora.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>InputHora</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/Pedimento.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>Pedimento</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/9)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/TableBodyData.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>TableBodyData</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/2)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/TableData.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>TableData</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/TiposDocumentosResponse.html">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>TiposDocumentosResponse</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/2)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/typealiases.html#ConfiguracionTabla">src/app/core/models/shared/components.model.ts</a>
+            </td>
+            <td>type alias</td>
+            <td>ConfiguracionTabla</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/DatosParaValidacionFecha.html">src/app/core/models/shared/fechas.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>DatosParaValidacionFecha</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/CampoForm.html">src/app/core/models/shared/forms-model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>CampoForm</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/datosAgregarFormulario.html">src/app/core/models/shared/forms-model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>datosAgregarFormulario</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/FormularioDinamico.html">src/app/core/models/shared/forms-model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>FormularioDinamico</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/10)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/Login.html">src/app/core/models/shared/inicio-sesion.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>Login</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/TokenResponse.html">src/app/core/models/shared/inicio-sesion.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>TokenResponse</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/2)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/SubirArchivoBody.html">src/app/core/models/shared/subir-archivos.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>SubirArchivoBody</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/2)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/PerfilUsuario.html">src/app/core/models/usuario/perfilUsuario.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>PerfilUsuario</td>
+            <td align="right" data-sort="12">
+                <span class="coverage-percent">12 %</span>
+                <span class="coverage-count">(1/8)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/Rol.html">src/app/core/models/usuario/rol.model.ts</a>
+            </td>
+            <td>interface</td>
+            <td>Rol</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/SeccionQuery.html">src/app/core/queries/seccion.query.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>SeccionQuery</td>
+            <td align="right" data-sort="33">
+                <span class="coverage-percent">33 %</span>
+                <span class="coverage-count">(1/3)</span>
+            </td>
+        </tr>
+        <tr class="good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/Tramite5701Query.html">src/app/core/queries/tramite5701.query.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>Tramite5701Query</td>
+            <td align="right" data-sort="66">
+                <span class="coverage-percent">66 %</span>
+                <span class="coverage-count">(2/3)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/TramitesQueries.html">src/app/core/queries/tramites.queries.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>TramitesQueries</td>
+            <td align="right" data-sort="33">
+                <span class="coverage-percent">33 %</span>
+                <span class="coverage-count">(2/6)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./classes/SessionQuery.html">src/app/core/queries/usuario.queries.ts</a>
+            </td>
+            <td>class</td>
+            <td>SessionQuery</td>
+            <td align="right" data-sort="50">
+                <span class="coverage-percent">50 %</span>
+                <span class="coverage-count">(3/6)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#PANTAPASOS">src/app/core/services/110101/pantallas-svc.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>PANTAPASOS</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/PantallasSvcService.html">src/app/core/services/110101/pantallas-svc.service.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>PantallasSvcService</td>
+            <td align="right" data-sort="50">
+                <span class="coverage-percent">50 %</span>
+                <span class="coverage-count">(1/2)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/ProductoOption.html">src/app/core/services/130102/octava-temporal.enum.ts</a>
+            </td>
+            <td>interface</td>
+            <td>ProductoOption</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/ProductoResponse.html">src/app/core/services/130102/octava-temporal.enum.ts</a>
+            </td>
+            <td>interface</td>
+            <td>ProductoResponse</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#OctaTempo">src/app/core/services/130102/octava-temporal.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>OctaTempo</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/OctavaTemporalService.html">src/app/core/services/130102/octava-temporal.service.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>OctavaTemporalService</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/PeximService.html">src/app/core/services/130118/pexim/pexim.service.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>PeximService</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/12)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/CertificadoZoosanitarioServiceService.html">src/app/core/services/220201/core/services/220201/certificado-zoosanitario.service.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>CertificadoZoosanitarioServiceService</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(9/9)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#PANTAPASOS">src/app/core/services/220471/servicios-pantallas.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>PANTAPASOS</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/ServiciosPantallasService.html">src/app/core/services/220471/servicios-pantallas.service.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>ServiciosPantallasService</td>
+            <td align="right" data-sort="85">
+                <span class="coverage-percent">85 %</span>
+                <span class="coverage-count">(6/7)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/ServiciosExtraordinariosService.html">src/app/core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>ServiciosExtraordinariosService</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/CatalogosService.html">src/app/core/services/shared/catalogos/catalogos.service.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>CatalogosService</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/8)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/DocumentoService.html">src/app/core/services/shared/documento/documento.service.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>DocumentoService</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/FechasService.html">src/app/core/services/shared/fechas/fechas.service.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>FechasService</td>
+            <td align="right" data-sort="85">
+                <span class="coverage-percent">85 %</span>
+                <span class="coverage-count">(6/7)</span>
+            </td>
+        </tr>
+        <tr class="good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/FormulariosService.html">src/app/core/services/shared/formularios/formularios.service.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>FormulariosService</td>
+            <td align="right" data-sort="75">
+                <span class="coverage-percent">75 %</span>
+                <span class="coverage-count">(6/8)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/HttpCoreService.html">src/app/core/services/shared/http/http.service.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>HttpCoreService</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(9/9)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/InicioSesionService.html">src/app/core/services/shared/inicio-sesion/inicio-sesion.service.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>InicioSesionService</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/ModalConfirmarService.html">src/app/core/services/shared/modal-confirmar/modal-confirmar.service.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>ModalConfirmarService</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/SolicitanteService.html">src/app/core/services/shared/solicitante/solicitante.service.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>SolicitanteService</td>
+            <td align="right" data-sort="25">
+                <span class="coverage-percent">25 %</span>
+                <span class="coverage-count">(1/4)</span>
+            </td>
+        </tr>
+        <tr class="good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/ValidacionesFormularioService.html">src/app/core/services/shared/validaciones-formulario/validaciones-formulario.service.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>ValidacionesFormularioService</td>
+            <td align="right" data-sort="60">
+                <span class="coverage-percent">60 %</span>
+                <span class="coverage-count">(6/10)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/WizardService.html">src/app/core/services/shared/wizard/wizard.service.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>WizardService</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/4)</span>
+            </td>
+        </tr>
+        <tr class="good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/SeccionStore.html">src/app/estados/seccion.store.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>SeccionStore</td>
+            <td align="right" data-sort="60">
+                <span class="coverage-percent">60 %</span>
+                <span class="coverage-count">(3/5)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/SeccionState.html">src/app/estados/seccion.store.ts</a>
+            </td>
+            <td>interface</td>
+            <td>SeccionState</td>
+            <td align="right" data-sort="33">
+                <span class="coverage-percent">33 %</span>
+                <span class="coverage-count">(1/3)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/functions.html#createInitialState">src/app/estados/seccion.store.ts</a>
+            </td>
+            <td>function</td>
+            <td>createInitialState</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(1/1)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/TramiteStore.html">src/app/estados/tramite.store.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>TramiteStore</td>
+            <td align="right" data-sort="50">
+                <span class="coverage-percent">50 %</span>
+                <span class="coverage-count">(2/4)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/TramiteState.html">src/app/estados/tramite.store.ts</a>
+            </td>
+            <td>interface</td>
+            <td>TramiteState</td>
+            <td align="right" data-sort="33">
+                <span class="coverage-percent">33 %</span>
+                <span class="coverage-count">(1/3)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/functions.html#createInitialState">src/app/estados/tramite.store.ts</a>
+            </td>
+            <td>function</td>
+            <td>createInitialState</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(1/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/Tramite130118Store.html">src/app/estados/tramites/tramite130118.store.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>Tramite130118Store</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/12)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/Solicitud130118State.html">src/app/estados/tramites/tramite130118.store.ts</a>
+            </td>
+            <td>interface</td>
+            <td>Solicitud130118State</td>
+            <td align="right" data-sort="4">
+                <span class="coverage-percent">4 %</span>
+                <span class="coverage-count">(1/25)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/functions.html#createInitialState">src/app/estados/tramites/tramite130118.store.ts</a>
+            </td>
+            <td>function</td>
+            <td>createInitialState</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/Tramite5701Store.html">src/app/estados/tramites/tramite5701.store.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>Tramite5701Store</td>
+            <td align="right" data-sort="3">
+                <span class="coverage-percent">3 %</span>
+                <span class="coverage-count">(2/53)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/Solicitud5701State.html">src/app/estados/tramites/tramite5701.store.ts</a>
+            </td>
+            <td>interface</td>
+            <td>Solicitud5701State</td>
+            <td align="right" data-sort="1">
+                <span class="coverage-percent">1 %</span>
+                <span class="coverage-count">(1/52)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/functions.html#createInitialState">src/app/estados/tramites/tramite5701.store.ts</a>
+            </td>
+            <td>function</td>
+            <td>createInitialState</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./injectables/UsuarioStore.html">src/app/estados/usuario.store.ts</a>
+            </td>
+            <td>injectable</td>
+            <td>UsuarioStore</td>
+            <td align="right" data-sort="50">
+                <span class="coverage-percent">50 %</span>
+                <span class="coverage-count">(2/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/UsuarioState.html">src/app/estados/usuario.store.ts</a>
+            </td>
+            <td>interface</td>
+            <td>UsuarioState</td>
+            <td align="right" data-sort="14">
+                <span class="coverage-percent">14 %</span>
+                <span class="coverage-count">(1/7)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/functions.html#createInitialState">src/app/estados/usuario.store.ts</a>
+            </td>
+            <td>function</td>
+            <td>createInitialState</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(1/1)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/SeleccionTramiteComponent.html">src/app/seleccion-tramite/seleccion-tramite.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>SeleccionTramiteComponent</td>
+            <td align="right" data-sort="33">
+                <span class="coverage-percent">33 %</span>
+                <span class="coverage-count">(1/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/AcuseComponent.html">src/app/shared/components/acuse/acuse.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>AcuseComponent</td>
+            <td align="right" data-sort="25">
+                <span class="coverage-percent">25 %</span>
+                <span class="coverage-count">(2/8)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/AgregarArchivoComponent.html">src/app/shared/components/agregar-archivo/agregar-archivo.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>AgregarArchivoComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(7/7)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/AgregarTransporteComponent.html">src/app/shared/components/agregar-transporte/agregar-transporte.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>AgregarTransporteComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/13)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/AlertComponent.html">src/app/shared/components/alert/alert.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>AlertComponent</td>
+            <td align="right" data-sort="28">
+                <span class="coverage-percent">28 %</span>
+                <span class="coverage-count">(2/7)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/AnexarDocumentosComponent.html">src/app/shared/components/anexar-documentos/anexar-documentos.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>AnexarDocumentosComponent</td>
+            <td align="right" data-sort="30">
+                <span class="coverage-percent">30 %</span>
+                <span class="coverage-count">(9/30)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#bootstrap">src/app/shared/components/anexar-documentos/anexar-documentos.component.ts</a>
+            </td>
+            <td>variable</td>
+            <td>bootstrap</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/BreadcrumbComponent.html">src/app/shared/components/breadcrumb/breadcrumb.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>BreadcrumbComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/BtnContinuarComponent.html">src/app/shared/components/btn-continuar/btn-continuar.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>BtnContinuarComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/11)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/AccionBoton.html">src/app/shared/components/btn-continuar/btn-continuar.component.ts</a>
+            </td>
+            <td>interface</td>
+            <td>AccionBoton</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/CatalogoSelectComponent.html">src/app/shared/components/catalogo-select/catalogo-select.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>CatalogoSelectComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/21)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/CrosslistComponent.html">src/app/shared/components/crosslist/crosslist.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>CrosslistComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/14)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/FirmaElectronicaComponent.html">src/app/shared/components/firma-electronica/firma-electronica.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>FirmaElectronicaComponent</td>
+            <td align="right" data-sort="31">
+                <span class="coverage-percent">31 %</span>
+                <span class="coverage-count">(5/16)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/FooterComponent.html">src/app/shared/components/footer/footer.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>FooterComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/HeaderComponent.html">src/app/shared/components/header/header.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>HeaderComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/InformacionUsuarioComponent.html">src/app/shared/components/informacion-usuario/informacion-usuario.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>InformacionUsuarioComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/InputCheckComponent.html">src/app/shared/components/input-check/input-check.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>InputCheckComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/10)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/InputFechaComponent.html">src/app/shared/components/input-fecha/input-fecha.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>InputFechaComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/20)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/InputHoraComponent.html">src/app/shared/components/input-hora/input-hora.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>InputHoraComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/14)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/InputRadioComponent.html">src/app/shared/components/input-radio/input-radio.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>InputRadioComponent</td>
+            <td align="right" data-sort="81">
+                <span class="coverage-percent">81 %</span>
+                <span class="coverage-count">(9/11)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/ModalConfirmarComponent.html">src/app/shared/components/modal-confirmar/modal-confirmar.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>ModalConfirmarComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/10)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/NavComponent.html">src/app/shared/components/nav/nav.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>NavComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/RepresentanteFiscalComponent.html">src/app/shared/components/representante-fiscal/representante-fiscal.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>RepresentanteFiscalComponent</td>
+            <td align="right" data-sort="40">
+                <span class="coverage-percent">40 %</span>
+                <span class="coverage-count">(6/15)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/SelectCatalogosComponent.html">src/app/shared/components/select-catalogos/select-catalogos.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>SelectCatalogosComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/8)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/SelectPaisesComponent.html">src/app/shared/components/select-paises/select-paises.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>SelectPaisesComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/19)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/SolicitanteComponent.html">src/app/shared/components/solicitante/solicitante.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>SolicitanteComponent</td>
+            <td align="right" data-sort="38">
+                <span class="coverage-percent">38 %</span>
+                <span class="coverage-count">(5/13)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/TableComponent.html">src/app/shared/components/table/table.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>TableComponent</td>
+            <td align="right" data-sort="33">
+                <span class="coverage-percent">33 %</span>
+                <span class="coverage-count">(2/6)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/TercerosComponent.html">src/app/shared/components/terceros/terceros.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>TercerosComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/7)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/TituloComponent.html">src/app/shared/components/titulo/titulo.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>TituloComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/2)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/WizardComponent.html">src/app/shared/components/wizard/wizard.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>WizardComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/11)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#PASOS">src/app/shared/constantes/303/pasos.enums.ts</a>
+            </td>
+            <td>variable</td>
+            <td>PASOS</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#TEXTOS">src/app/shared/constantes/303/texto.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>TEXTOS</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#PASOS">src/app/shared/constantes/aviso.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>PASOS</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#FECHA_DE_PAGO">src/app/shared/constantes/certificado-zoosanitario.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>FECHA_DE_PAGO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#IDDEUSUARIO">src/app/shared/constantes/certificado-zoosanitario.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>IDDEUSUARIO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#PASOS">src/app/shared/constantes/certificado-zoosanitario.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>PASOS</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#SUCECESS_MESSAGE_STAGEONE">src/app/shared/constantes/certificado-zoosanitario.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>SUCECESS_MESSAGE_STAGEONE</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#TERCEROR_TEXTO_DE_ALERTA">src/app/shared/constantes/certificado-zoosanitario.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>TERCEROR_TEXTO_DE_ALERTA</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#TEXTOS">src/app/shared/constantes/certificado-zoosanitario.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>TEXTOS</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#TEXTOS_REQUISITOS">src/app/shared/constantes/certificado-zoosanitario.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>TEXTOS_REQUISITOS</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL">src/app/shared/constantes/certificado-zoosanitario.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#CATALOGOS_ID">src/app/shared/constantes/constantes.ts</a>
+            </td>
+            <td>variable</td>
+            <td>CATALOGOS_ID</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#CODIGOS_HTTP">src/app/shared/constantes/constantes.ts</a>
+            </td>
+            <td>variable</td>
+            <td>CODIGOS_HTTP</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#COOKIE">src/app/shared/constantes/constantes.ts</a>
+            </td>
+            <td>variable</td>
+            <td>COOKIE</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#DPI">src/app/shared/constantes/constantes.ts</a>
+            </td>
+            <td>variable</td>
+            <td>DPI</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#KB">src/app/shared/constantes/constantes.ts</a>
+            </td>
+            <td>variable</td>
+            <td>KB</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#LOGIN">src/app/shared/constantes/constantes.ts</a>
+            </td>
+            <td>variable</td>
+            <td>LOGIN</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#MB">src/app/shared/constantes/constantes.ts</a>
+            </td>
+            <td>variable</td>
+            <td>MB</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#MILISEGUNDOS">src/app/shared/constantes/constantes.ts</a>
+            </td>
+            <td>variable</td>
+            <td>MILISEGUNDOS</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#PADDING">src/app/shared/constantes/constantes.ts</a>
+            </td>
+            <td>variable</td>
+            <td>PADDING</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#PDF">src/app/shared/constantes/constantes.ts</a>
+            </td>
+            <td>variable</td>
+            <td>PDF</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#TIPO_PERSONA">src/app/shared/constantes/constantes.ts</a>
+            </td>
+            <td>variable</td>
+            <td>TIPO_PERSONA</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#TIPO_SOLICITUD">src/app/shared/constantes/constantes.ts</a>
+            </td>
+            <td>variable</td>
+            <td>TIPO_SOLICITUD</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#UNIDADES">src/app/shared/constantes/constantes.ts</a>
+            </td>
+            <td>variable</td>
+            <td>UNIDADES</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#AEREO">src/app/shared/constantes/formularios-transportes.enums.ts</a>
+            </td>
+            <td>variable</td>
+            <td>AEREO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#CARRETERO">src/app/shared/constantes/formularios-transportes.enums.ts</a>
+            </td>
+            <td>variable</td>
+            <td>CARRETERO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#FERROVIARIO">src/app/shared/constantes/formularios-transportes.enums.ts</a>
+            </td>
+            <td>variable</td>
+            <td>FERROVIARIO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#MARITIMO">src/app/shared/constantes/formularios-transportes.enums.ts</a>
+            </td>
+            <td>variable</td>
+            <td>MARITIMO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#OTRO">src/app/shared/constantes/formularios-transportes.enums.ts</a>
+            </td>
+            <td>variable</td>
+            <td>OTRO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#PEATONAL">src/app/shared/constantes/formularios-transportes.enums.ts</a>
+            </td>
+            <td>variable</td>
+            <td>PEATONAL</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#CORREO_INVALIDO">src/app/shared/constantes/mensajes-error-formularios.ts</a>
+            </td>
+            <td>variable</td>
+            <td>CORREO_INVALIDO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#INTRODUZCA_NUMERO">src/app/shared/constantes/mensajes-error-formularios.ts</a>
+            </td>
+            <td>variable</td>
+            <td>INTRODUZCA_NUMERO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#REQUERIDO">src/app/shared/constantes/mensajes-error-formularios.ts</a>
+            </td>
+            <td>variable</td>
+            <td>REQUERIDO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#RFC_INVALIDO">src/app/shared/constantes/mensajes-error-formularios.ts</a>
+            </td>
+            <td>variable</td>
+            <td>RFC_INVALIDO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#TELEFONO_INVAIDO">src/app/shared/constantes/mensajes-error-formularios.ts</a>
+            </td>
+            <td>variable</td>
+            <td>TELEFONO_INVAIDO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#TEXTOS">src/app/shared/constantes/octava-temporal.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>TEXTOS</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#Regx">src/app/shared/constantes/regex.constants.ts</a>
+            </td>
+            <td>variable</td>
+            <td>Regx</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#SECCIONES_TRAMITE_5701">src/app/shared/constantes/seccionesTramites.ts</a>
+            </td>
+            <td>variable</td>
+            <td>SECCIONES_TRAMITE_5701</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(1/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#ACUSE_SERVICIOS_EXTRAORDINARIOS">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>ACUSE_SERVICIOS_EXTRAORDINARIOS</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#CONSTANTES">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>CONSTANTES</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#DESPACHO_DD">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>DESPACHO_DD</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#DESPACHO_LDA">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>DESPACHO_LDA</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#ELVALORALERTA">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>ELVALORALERTA</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#FECHA_FINAL">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>FECHA_FINAL</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#FECHA_INICIO">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>FECHA_INICIO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#FECHA_SALIDA">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>FECHA_SALIDA</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#HORA_FINAL">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>HORA_FINAL</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#HORA_INICIO">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>HORA_INICIO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#IMMEX">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>IMMEX</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#INDUSTRIA_AUTOMOTRIZ">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>INDUSTRIA_AUTOMOTRIZ</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#MENSAJE_ALERTA_TRATADOS">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>MENSAJE_ALERTA_TRATADOS</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#MENSAJEDEALERTA">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>MENSAJEDEALERTA</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#MESES">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>MESES</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#PASOS">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>PASOS</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#PROGRAMA_FOMENTO">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>PROGRAMA_FOMENTO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#PROTESTA">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>PROTESTA</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#SEMANA">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>SEMANA</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#SEMANA_D">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>SEMANA_D</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#SOCIO_COMERCIAL">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>SOCIO_COMERCIAL</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#TEXTOS">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>TEXTOS</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#TITULO_ACUSE">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>TITULO_ACUSE</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#TXT_ALERTA_ACUSE">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>TXT_ALERTA_ACUSE</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#URL_PRUEBA">src/app/shared/constantes/servicios-extraordinarios.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>URL_PRUEBA</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA">src/app/shared/constantes/solicitante-constantes.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL">src/app/shared/constantes/solicitante-constantes.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#PERSONA_FISICA_EXTRANJERO">src/app/shared/constantes/solicitante-constantes.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>PERSONA_FISICA_EXTRANJERO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#PERSONA_FISICA_NACIONAL">src/app/shared/constantes/solicitante-constantes.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>PERSONA_FISICA_NACIONAL</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#PERSONA_FISICA_SACIONAL">src/app/shared/constantes/solicitante-constantes.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>PERSONA_FISICA_SACIONAL</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#PERSONA_MORAL_EXTRANJERO">src/app/shared/constantes/solicitante-constantes.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>PERSONA_MORAL_EXTRANJERO</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#PERSONA_MORAL_NACIONAL">src/app/shared/constantes/solicitante-constantes.enum.ts</a>
+            </td>
+            <td>variable</td>
+            <td>PERSONA_MORAL_NACIONAL</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./directives/UppercaseDirective.html">src/app/shared/directives/Uppercase/uppercase.directive.ts</a>
+            </td>
+            <td>directive</td>
+            <td>UppercaseDirective</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./directives/CalendarioFormatoDirective.html">src/app/shared/directives/calendario-formato/calendario-formato.directive.ts</a>
+            </td>
+            <td>directive</td>
+            <td>CalendarioFormatoDirective</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/2)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./directives/HoraFormatoDirective.html">src/app/shared/directives/hora-formato/hora-formato.directive.ts</a>
+            </td>
+            <td>directive</td>
+            <td>HoraFormatoDirective</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./directives/NumeroTelefonicoDirective.html">src/app/shared/directives/numeroTelefonico/numero-telefonico.directive.ts</a>
+            </td>
+            <td>directive</td>
+            <td>NumeroTelefonicoDirective</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./directives/SoloNumerosDirective.html">src/app/shared/directives/solo-numeros/solo-numeros.directive.ts</a>
+            </td>
+            <td>directive</td>
+            <td>SoloNumerosDirective</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/AcusePageComponent.html">src/app/shared/pages/acuse-page/acuse-page.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>AcusePageComponent</td>
+            <td align="right" data-sort="11">
+                <span class="coverage-percent">11 %</span>
+                <span class="coverage-count">(1/9)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./pipes/BooleanoSiNoPipe.html">src/app/shared/pipes/booleanoSiNo/booleano-si-no.pipe.ts</a>
+            </td>
+            <td>pipe</td>
+            <td>BooleanoSiNoPipe</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/DatosAdicionalesComponent.html">src/app/tramites/110101/components/datos-adicionales/datos-adicionales.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>DatosAdicionalesComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(13/13)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/DatosDeLaComponent.html">src/app/tramites/110101/components/datos-de-la/datos-de-la.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>DatosDeLaComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(13/13)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/SolicitanteComponent.html">src/app/tramites/110101/components/solicitante/solicitante.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>SolicitanteComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(5/5)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/TratadosComponent.html">src/app/tramites/110101/components/tratados/tratados.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>TratadosComponent</td>
+            <td align="right" data-sort="90">
+                <span class="coverage-percent">90 %</span>
+                <span class="coverage-count">(10/11)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/DatosComponent.html">src/app/tramites/110101/pages/datos/datos.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>DatosComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(3/3)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PantallasComponent.html">src/app/tramites/110101/pages/pantallas/pantallas.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PantallasComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(3/3)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/CriterioDeDictComponent.html">src/app/tramites/130102/component/criterio-de-dict/criterio-de-dict.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>CriterioDeDictComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(7/7)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/DetosDelMarcanciaComponent.html">src/app/tramites/130102/component/detos-del-marcancia/detos-del-marcancia.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>DetosDelMarcanciaComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(14/14)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/DetosDelTramiteComponent.html">src/app/tramites/130102/component/detos-del-tramite/detos-del-tramite.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>DetosDelTramiteComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(13/13)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PaisProcendenciaComponent.html">src/app/tramites/130102/component/pais-procendencia/pais-procendencia.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PaisProcendenciaComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(14/14)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PartidasDeLaComponent.html">src/app/tramites/130102/component/partidas-de-la/partidas-de-la.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PartidasDeLaComponent</td>
+            <td align="right" data-sort="94">
+                <span class="coverage-percent">94 %</span>
+                <span class="coverage-count">(16/17)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/RepresentacionComponent.html">src/app/tramites/130102/component/representacion/representacion.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>RepresentacionComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(12/12)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/SolicitanteOctavaTemporalComponent.html">src/app/tramites/130102/component/solicitante-octava-temporal/solicitante-octava-temporal.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>SolicitanteOctavaTemporalComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/UsoEspicificoComponent.html">src/app/tramites/130102/component/uso-espicifico/uso-espicifico.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>UsoEspicificoComponent</td>
+            <td align="right" data-sort="25">
+                <span class="coverage-percent">25 %</span>
+                <span class="coverage-count">(2/8)</span>
+            </td>
+        </tr>
+        <tr class="good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/DatosComponent.html">src/app/tramites/130102/pages/datos/datos.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>DatosComponent</td>
+            <td align="right" data-sort="66">
+                <span class="coverage-percent">66 %</span>
+                <span class="coverage-count">(2/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/OctavaTemporalComponent.html">src/app/tramites/130102/pages/octava-temporal/octava-temporal.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>OctavaTemporalComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/SolicitanteComponent.html">src/app/tramites/130102/pages/solicitante/solicitante.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>SolicitanteComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/4)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/SolicitudComponent.html">src/app/tramites/130118/components/solicitud/solicitud.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>SolicitudComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(40/40)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PasoDosComponent.html">src/app/tramites/130118/pages/paso-dos/paso-dos.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PasoDosComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(2/2)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PasoTresComponent.html">src/app/tramites/130118/pages/paso-tres/paso-tres.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PasoTresComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PasoUnoComponent.html">src/app/tramites/130118/pages/paso-uno/paso-uno.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PasoUnoComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/8)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/SolicitudPageComponent.html">src/app/tramites/130118/pages/solicitud-page/solicitud-page.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>SolicitudPageComponent</td>
+            <td align="right" data-sort="85">
+                <span class="coverage-percent">85 %</span>
+                <span class="coverage-count">(6/7)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/AccionBoton.html">src/app/tramites/130118/pages/solicitud-page/solicitud-page.component.ts</a>
+            </td>
+            <td>interface</td>
+            <td>AccionBoton</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(3/3)</span>
+            </td>
+        </tr>
+        <tr class="good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/DatosDeLaSolicitudComponent.html">src/app/tramites/220201/components/datos-de-la-solicitud/datos-de-la-solicitud.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>DatosDeLaSolicitudComponent</td>
+            <td align="right" data-sort="72">
+                <span class="coverage-percent">72 %</span>
+                <span class="coverage-count">(24/33)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/DatosParaMovilizacionNacionalComponent.html">src/app/tramites/220201/components/datos-para-movilizacion-nacional/datos-para-movilizacion-nacional.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>DatosParaMovilizacionNacionalComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(13/13)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PagoDeDerechosComponent.html">src/app/tramites/220201/components/pago-de-derechos/pago-de-derechos.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PagoDeDerechosComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(12/12)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PasoCuatroComponent.html">src/app/tramites/220201/pages/paso-cuatro/paso-cuatro.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PasoCuatroComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(1/1)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PasoDosComponent.html">src/app/tramites/220201/pages/paso-dos/paso-dos.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PasoDosComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(2/2)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PasoTresComponent.html">src/app/tramites/220201/pages/paso-tres/paso-tres.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PasoTresComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(2/2)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PasoUnoComponent.html">src/app/tramites/220201/pages/paso-uno/paso-uno.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PasoUnoComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(5/5)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/ZoosanitarioPageComponent.html">src/app/tramites/220201/pages/zoosanitario-page/zoosanitario-page.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>ZoosanitarioPageComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(10/10)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/AgregarDestinatoriaComponent.html">src/app/tramites/220401/components/agregar-destinatoria/agregar-destinatoria.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>AgregarDestinatoriaComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/9)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/CombinacionRequeridaComponent.html">src/app/tramites/220401/components/combinacion-requerida/combinacion-requerida.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>CombinacionRequeridaComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/27)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/DatosDelComponent.html">src/app/tramites/220401/components/datos-del/datos-del.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>DatosDelComponent</td>
+            <td align="right" data-sort="23">
+                <span class="coverage-percent">23 %</span>
+                <span class="coverage-count">(4/17)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/DatosGeneralsAnimalsComponent.html">src/app/tramites/220401/components/datos-generals-animals/datos-generals-animals.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>DatosGeneralsAnimalsComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(21/21)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PagoDeDerechoComponent.html">src/app/tramites/220401/components/pago-de-derecho/pago-de-derecho.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PagoDeDerechoComponent</td>
+            <td align="right" data-sort="40">
+                <span class="coverage-percent">40 %</span>
+                <span class="coverage-count">(4/10)</span>
+            </td>
+        </tr>
+        <tr class="good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/SolicitudPantallasComponent.html">src/app/tramites/220401/components/solicitud/solicitud.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>SolicitudPantallasComponent</td>
+            <td align="right" data-sort="63">
+                <span class="coverage-percent">63 %</span>
+                <span class="coverage-count">(7/11)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/Solicitude.html">src/app/tramites/220401/components/solicitud/solicitud.component.ts</a>
+            </td>
+            <td>interface</td>
+            <td>Solicitude</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/TercerosRelacionadosComponent.html">src/app/tramites/220401/components/terceros-relacionados/terceros-relacionados.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>TercerosRelacionadosComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/19)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/DatosComponent.html">src/app/tramites/220401/pages/datos/datos.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>DatosComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(3/3)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PantallasComponent.html">src/app/tramites/220401/pages/pantallas/pantallas.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PantallasComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(3/3)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/TransporteComponent.html">src/app/tramites/220401/pages/transporte/transporte.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>TransporteComponent</td>
+            <td align="right" data-sort="90">
+                <span class="coverage-percent">90 %</span>
+                <span class="coverage-count">(9/10)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/AdministrarResiduosComponent.html">src/app/tramites/231001/components/administrar-residuos/administrar-residuos.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>AdministrarResiduosComponent</td>
+            <td align="right" data-sort="90">
+                <span class="coverage-percent">90 %</span>
+                <span class="coverage-count">(9/10)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/DatosDeLosResiduosComponent.html">src/app/tramites/231001/components/datos-de-los-residuos/datos-de-los-residuos.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>DatosDeLosResiduosComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/20)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/DatosDelaComponent.html">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>DatosDelaComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/18)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/AccionBoton.html">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts</a>
+            </td>
+            <td>interface</td>
+            <td>AccionBoton</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="very-good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/SolicitanteComponent.html">src/app/tramites/231001/components/solicitante/solicitante.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>SolicitanteComponent</td>
+            <td align="right" data-sort="100">
+                <span class="coverage-percent">100 %</span>
+                <span class="coverage-count">(11/11)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/DatosComponent.html">src/app/tramites/231001/pages/datos/datos.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>DatosComponent</td>
+            <td align="right" data-sort="25">
+                <span class="coverage-percent">25 %</span>
+                <span class="coverage-count">(1/4)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PantallasComponent.html">src/app/tramites/231001/pages/pantallas/pantallas.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PantallasComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="good">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/SolicitanteDetosTabsComponent.html">src/app/tramites/231001/pages/solicitante-detos-tabs/solicitante-detos-tabs.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>SolicitanteDetosTabsComponent</td>
+            <td align="right" data-sort="66">
+                <span class="coverage-percent">66 %</span>
+                <span class="coverage-count">(2/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/AgentesAgenciasAduanalesComponent.html">src/app/tramites/303/components/agentes-agencias-aduanales/agentes-agencias-aduanales.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>AgentesAgenciasAduanalesComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/11)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#bootstrap">src/app/tramites/303/components/agentes-agencias-aduanales/agentes-agencias-aduanales.component.ts</a>
+            </td>
+            <td>variable</td>
+            <td>bootstrap</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/AgregaPersonasComponent.html">src/app/tramites/303/components/agrega-personas/agrega-personas.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>AgregaPersonasComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/12)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/AgregarMiembrosEmpresaComponent.html">src/app/tramites/303/components/agregar-miembros-empresa/agregar-miembros-empresa.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>AgregarMiembrosEmpresaComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/9)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/ClientesProveedoresExtrajeroComponent.html">src/app/tramites/303/components/clientes-proveedores-extrajero/clientes-proveedores-extrajero.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>ClientesProveedoresExtrajeroComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/ConfirmarNotificacionComponent.html">src/app/tramites/303/components/confirmar-notificacion/confirmar-notificacion.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>ConfirmarNotificacionComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/ControlInventariosComponent.html">src/app/tramites/303/components/control-inventarios/control-inventarios.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>ControlInventariosComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/10)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/DatosTransportistaComponent.html">src/app/tramites/303/components/datos-transportista/datos-transportista.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>DatosTransportistaComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/9)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/DespachoMercanciasSolicitudComponent.html">src/app/tramites/303/components/despacho-mercancias-solicitud/despacho-mercancias-solicitud.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>DespachoMercanciasSolicitudComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/EmpleadosContratadosComponent.html">src/app/tramites/303/components/empleado-subcontratados/empleados-subcontratados.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>EmpleadosContratadosComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/EmpleadosContratadosComponent.html">src/app/tramites/303/components/empleados-contratados/empleados-contratados.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>EmpleadosContratadosComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/5)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PagoDerechosComponent.html">src/app/tramites/303/components/pago-derechos/pago-derechos.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PagoDerechosComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PedimentoComponent.html">src/app/tramites/303/components/pedimento/pedimento.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PedimentoComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/13)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/SolicitudComponent.html">src/app/tramites/303/components/solicitud/solicitud.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>SolicitudComponent</td>
+            <td align="right" data-sort="1">
+                <span class="coverage-percent">1 %</span>
+                <span class="coverage-count">(1/51)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PasoCuatroComponent.html">src/app/tramites/303/pages/paso-cuatro/paso-cuatro.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PasoCuatroComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PasoDosComponent.html">src/app/tramites/303/pages/paso-dos/paso-dos.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PasoDosComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/9)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PasoTresComponent.html">src/app/tramites/303/pages/paso-tres/paso-tres.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PasoTresComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/2)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PasoUnoComponent.html">src/app/tramites/303/pages/paso-uno/paso-uno.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PasoUnoComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/RegistroPageComponent.html">src/app/tramites/303/pages/registro-page/registro-page.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>RegistroPageComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/7)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/AccionBoton.html">src/app/tramites/303/pages/registro-page/registro-page.component.ts</a>
+            </td>
+            <td>interface</td>
+            <td>AccionBoton</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/TestPageComponent.html">src/app/tramites/303/pages/test-page/test-page.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>TestPageComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/AgregaPersonasComponent.html">src/app/tramites/5701/components/agrega-personas/agrega-personas.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>AgregaPersonasComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/12)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PedimentoComponent.html">src/app/tramites/5701/components/pedimento/pedimento.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PedimentoComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/13)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/SolicitudComponent.html">src/app/tramites/5701/components/solicitud/solicitud.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>SolicitudComponent</td>
+            <td align="right" data-sort="21">
+                <span class="coverage-percent">21 %</span>
+                <span class="coverage-count">(10/47)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PasoDosComponent.html">src/app/tramites/5701/pages/paso-dos/paso-dos.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PasoDosComponent</td>
+            <td align="right" data-sort="12">
+                <span class="coverage-percent">12 %</span>
+                <span class="coverage-count">(1/8)</span>
+            </td>
+        </tr>
+        <tr class="medium">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PasoTresComponent.html">src/app/tramites/5701/pages/paso-tres/paso-tres.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PasoTresComponent</td>
+            <td align="right" data-sort="33">
+                <span class="coverage-percent">33 %</span>
+                <span class="coverage-count">(1/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/PasoUnoComponent.html">src/app/tramites/5701/pages/paso-uno/paso-uno.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>PasoUnoComponent</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./components/SolicitudPageComponent.html">src/app/tramites/5701/pages/solicitud-page/solicitud-page.component.ts</a>
+            </td>
+            <td>component</td>
+            <td>SolicitudPageComponent</td>
+            <td align="right" data-sort="8">
+                <span class="coverage-percent">8 %</span>
+                <span class="coverage-count">(1/12)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                <a href="./interfaces/AccionBoton.html">src/app/tramites/5701/pages/solicitud-page/solicitud-page.component.ts</a>
+            </td>
+            <td>interface</td>
+            <td>AccionBoton</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/3)</span>
+            </td>
+        </tr>
+        <tr class="low">
+            <td>
+                <!-- miscellaneous -->
+                        <a href="./miscellaneous/variables.html#enviroment">src/enviroments/enviroment.ts</a>
+            </td>
+            <td>variable</td>
+            <td>enviroment</td>
+            <td align="right" data-sort="0">
+                <span class="coverage-percent">0 %</span>
+                <span class="coverage-count">(0/1)</span>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<script src="js/libs/tablesort.min.js"></script>
+<script src="js/libs/tablesort.number.min.js"></script>
+<script>
+    new Tablesort(document.getElementById('coverage-table'));
+</script>
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 0;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'coverage';
+            var COMPODOC_CURRENT_PAGE_URL = 'coverage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="./js/libs/custom-elements.min.js"></script>
+       <script src="./js/libs/lit-html.js"></script>
+
+       <script src="./js/menu-wc.js" defer></script>
+       <script nomodule src="./js/menu-wc_es5.js" defer></script>
+
+       <script src="./js/libs/bootstrap-native.js"></script>
+
+       <script src="./js/libs/es6-shim.min.js"></script>
+       <script src="./js/libs/EventDispatcher.js"></script>
+       <script src="./js/libs/promise.min.js"></script>
+
+       <script src="./js/compodoc.js"></script>
+
+       <script src="./js/tabs.js"></script>
+       <script src="./js/menu.js"></script>
+       <script src="./js/libs/clipboard.min.js"></script>
+       <script src="./js/libs/prism.js"></script>
+       <script src="./js/sourceCode.js"></script>
+          <script src="./js/search/search.js"></script>
+          <script src="./js/search/lunr.min.js"></script>
+          <script src="./js/search/search-lunr.js"></script>
+          <script src="./js/search/search_index.js"></script>
+       <script src="./js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
