@@ -69,13 +69,13 @@ export class PagoDeDerechoComponent implements OnInit {
     });
     // Activa la lógica cuando el formulario se ha inicializado
 
-    this.updateFormFieldsBasedOnExentoDePago('No');
+    this.actualizarCamposDeFormularioBasadosEnExentoDePago('No');
 
     // Escuchar los cambios en el campo 'exentoDePago'
     this.FormSolicitud.get(
       'datosImportadorExportador.exentoDePago'
     )?.valueChanges.subscribe((value) => {
-      this.updateFormFieldsBasedOnExentoDePago(value);
+      this.actualizarCamposDeFormularioBasadosEnExentoDePago(value);
     });
   }
 
@@ -88,7 +88,7 @@ export class PagoDeDerechoComponent implements OnInit {
    * @param value - El valor de 'exentoDePago' para determinar las actualizaciones de los campos del formulario.
    */
 
-  updateFormFieldsBasedOnExentoDePago(value: string): void {
+  actualizarCamposDeFormularioBasadosEnExentoDePago(value: string): void {
     if (value === 'No') {
       this.FormSolicitud.get(
         'datosImportadorExportador.claveDeReferencia'
