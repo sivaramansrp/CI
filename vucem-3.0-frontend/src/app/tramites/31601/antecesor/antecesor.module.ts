@@ -26,4 +26,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule
   ]
 })
+
+/**
+ * Este módulo se utiliza para configurar los componentes del módulo 31601.
+ * Importar los componentes del módulo.
+ */
 export class AntecesorModule { }

@@ -14,4 +14,9 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
+
+/**
+ * Este módulo se utiliza para configurar las rutas del módulo 31601.
+ * Importar las rutas del módulo.
+ */
 export class AntecesorRoutingModule { }
