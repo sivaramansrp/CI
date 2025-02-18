@@ -24,13 +24,13 @@
 <title>cluster_PeximModule</title>
 <polygon fill="none" stroke="black" stroke-dasharray="1,5" points="8,-70 8,-268 3555,-268 3555,-70 8,-70"/>
 </g>
-<g id="clust9" class="cluster">
-<title>cluster_PeximModule_exports</title>
-<polygon fill="none" stroke="black" points="1595,-208 1595,-260 1747,-260 1747,-208 1595,-208"/>
-</g>
 <g id="clust8" class="cluster">
 <title>cluster_PeximModule_imports</title>
 <polygon fill="none" stroke="black" points="797,-78 797,-130 3547,-130 3547,-78 797,-78"/>
+</g>
+<g id="clust9" class="cluster">
+<title>cluster_PeximModule_exports</title>
+<polygon fill="none" stroke="black" points="1595,-208 1595,-260 1747,-260 1747,-208 1595,-208"/>
 </g>
 <g id="clust2" class="cluster">
 <title>cluster_PeximModule_declarations</title>

@@ -120,6 +120,16 @@
 </p>
 
 
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Decorador que define un componente de Angular.</p>
+<p> app-datos-dela - El selector CSS que identifica este componente en una plantilla.
+./datos-dela.component.html - La URL de la plantilla HTML del componente.
+./datos-dela.component.scss - La URL de la hoja de estilos del componente.</p>
+
+    </p>
 
 
     <p class="comment">
@@ -190,9 +200,6 @@
                         <ul class="index-list">
                             <li>
                                 <a href="#aduanas" >aduanas</a>
-                            </li>
-                            <li>
-                                <a href="#comboAutorizacionIMMEX" >comboAutorizacionIMMEX</a>
                             </li>
                             <li>
                                 <a href="#datosForm" >datosForm</a>
@@ -272,12 +279,15 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:42</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="92" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:92</a></div>
                             </td>
                         </tr>
 
                 <tr>
                     <td class="col-md-4">
+                            <div class="io-description"><p> {FormBuilder} fb - Servicio FormBuilder para la creación de formularios.
+ {CatalogosService} catalogosServices - Servicio para obtener los catálogos.</p>
+</div>
                             <div>
                                     <b>Parameters :</b>
                                     <table class="params">
@@ -286,7 +296,6 @@
                                                 <td>Name</td>
                                                     <td>Type</td>
                                                 <td>Optional</td>
-                                                    <td>Description</td>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -301,12 +310,6 @@
                                                             No
                                                     </td>
                                                     
-                                                        <td>
-                                                                <ul>
-<li>Servicio FormBuilder para la creación de formularios.</li>
-</ul>
-
-                                                        </td>
                                                 </tr>
                                                 <tr>
                                                         <td>catalogosServices</td>
@@ -319,8 +322,6 @@
                                                             No
                                                     </td>
                                                     
-                                                        <td>
-                                                        </td>
                                                 </tr>
                                         </tbody>
                                     </table>
@@ -360,14 +361,17 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="133"
-                                    class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:133</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="190"
+                                    class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:190</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                        <div class="io-description"><p>aduanasdata
+ Obtiene los datos de las aduanas desde el servicio de catálogos.</p>
+</div>
 
                         <div class="io-description">
                             <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
@@ -397,14 +401,18 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="119"
-                                    class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:119</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="167"
+                                    class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:167</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                        <div class="io-description"><p>getValorIndice
+ {AccionBoton} e - Acción del botón.
+ Obtiene el valor del índice del paso actual.</p>
+</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -464,14 +472,18 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="85"
-                                    class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:85</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="115"
+                                    class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:115</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                        <div class="io-description"><p>isInvalid
+ {string} id - Identificador del control del formulario.
+ Verifica si un control del formulario es inválido y ha sido interactuado por el usuario.</p>
+</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -482,7 +494,6 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
-                                                <td>Description</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -497,12 +508,6 @@
                                             </td>
 
 
-                                            <td>
-                                                    <ul>
-<li>Identificador del control del formulario.</li>
-</ul>
-
-                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -512,7 +517,8 @@
 
                         </div>
                             <div class="io-description">
-                                <p>Verdadero si el control es inválido y ha sido tocado, falso en caso contrario.</p>
+                                <p>Verdadero si el control es inválido y ha sido tocado, falso en caso contrario.
+Verifica si un control del formulario es inválido y ha sido interactuado por el usuario.</p>
 
                             </div>
                 </td>
@@ -539,14 +545,17 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="112"
-                                    class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:112</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="155"
+                                    class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:155</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                        <div class="io-description"><p>ngOnInit
+ Inicializa el componente.</p>
+</div>
 
                         <div class="io-description">
                             <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
@@ -576,14 +585,17 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="129"
-                                    class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:129</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="182"
+                                    class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:182</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                        <div class="io-description"><p>onAduanaSelect
+ Maneja la selección de una aduana.</p>
+</div>
 
                         <div class="io-description">
                             <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
@@ -613,14 +625,17 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="94"
-                                    class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:94</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="124"
+                                    class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:124</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                        <div class="io-description"><p>onSubmit
+ Maneja el envío del formulario.</p>
+</div>
 
                         <div class="io-description">
                             <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
@@ -655,41 +670,17 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:24</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:57</a></div>
                         </td>
                     </tr>
 
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="comboAutorizacionIMMEX"></a>
-                    <span class="name">
-                        <span ><b>comboAutorizacionIMMEX</b></span>
-                        <a href="#comboAutorizacionIMMEX"><span class="icon ion-ios-link"></span></a>
-                    </span>
+                    <div class="io-description"><p> aduanas
+ Arreglo que almacena los catálogos de aduanas.</p>
+</div>
                 </td>
             </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>    <code>any[]</code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>[]</code>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:35</a></div>
-                        </td>
-                    </tr>
-
 
         </tbody>
     </table>
@@ -712,10 +703,17 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:23</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:50</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p> datosForm
+ FormGroup que contiene el formulario de datos.</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -748,10 +746,17 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="104" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:104</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="144" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:144</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p> datosPasos
+ Datos de los pasos del wizard.</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -779,10 +784,17 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:27</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:78</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p> indice
+ Índice del paso actual en el wizard.</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -810,10 +822,17 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:26</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="71" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:71</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p> pasos
+ Lista de pasos del wizard.</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -836,10 +855,17 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:25</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:64</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p> selectedAduana
+ Aduana seleccionada en el formulario.</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -862,10 +888,17 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:42</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="92" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:92</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p> solicitudForm
+ FormGroup que contiene el formulario de solicitud.</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -893,10 +926,17 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:28</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="85" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:85</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p> texto
+ Texto del aviso de privacidad.</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -929,10 +969,16 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="102" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:102</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="137" class="link-to-prism">src/app/tramites/231001/components/datos-dela/datos-dela.component.ts:137</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p> wizardComponent</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -944,87 +990,110 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, ViewChild } from &#x27;@angular/core&#x27;;
 import { FormArray, FormBuilder, FormGroup, Validators } from &#x27;@angular/forms&#x27;;
-import { CatalogosService } from &#x27;../../../../core/services/shared/catalogos/catalogos.service&#x27;;
-import { Catalogo } from &#x27;../../../../core/models/shared/catalogos.model&#x27;;
-import { CATALOGOS_ID } from &#x27;../../../../shared/constantes/constantes&#x27;;
+import { map } from &#x27;rxjs/operators&#x27;;
 import { BtnContinuarComponent } from &#x27;../../../../shared/components/btn-continuar/btn-continuar.component&#x27;;
-import { PASOS } from &#x27;../../../../shared/constantes/303/pasos.enums&#x27;;
+import { WizardComponent } from &#x27;../../../../shared/components/wizard/wizard.component&#x27;;
+import { Catalogo } from &#x27;../../../../core/models/shared/catalogos.model&#x27;;
+import { CatalogosService } from &#x27;../../../../core/services/shared/catalogos/catalogos.service&#x27;;
+import { CATALOGOS_ID } from &#x27;../../../../shared/constantes/constantes&#x27;;
 import { DatosPasos } from &#x27;../../../../core/models/shared/components.model&#x27;;
 import { ListaPasosWizard } from &#x27;../../../../core/models/5701/servicios-extraordinarios.model&#x27;;
-import { WizardComponent } from &#x27;../../../../shared/components/wizard/wizard.component&#x27;;
-import { map } from &#x27;rxjs/operators&#x27;;
+import { PASOS } from &#x27;../../../../shared/constantes/303/pasos.enums&#x27;;
 
+/**
+ * Interfaz que define la estructura de un objeto de acción de botón.
+ * 
+ *  AccionBoton
+ *  {string} accion - La acción a realizar.
+ *  {number} valor - El valor asociado a la acción.
+ */
 interface AccionBoton {
   accion: string;
   valor: number;
 }
+
+/**
+ * Decorador que define un componente de Angular.
+ * 
+ *  app-datos-dela - El selector CSS que identifica este componente en una plantilla.
+ * ./datos-dela.component.html - La URL de la plantilla HTML del componente.
+ * ./datos-dela.component.scss - La URL de la hoja de estilos del componente.
+ */
 @Component({
   selector: &#x27;app-datos-dela&#x27;,
   templateUrl: &#x27;./datos-dela.component.html&#x27;,
   styleUrl: &#x27;./datos-dela.component.scss&#x27;,
 })
 export class DatosDelaComponent implements OnInit {
-  datosForm: FormGroup;
-  aduanas!: Catalogo[];
-  selectedAduana: any;
-  pasos: ListaPasosWizard[] &#x3D; PASOS;
-  indice: number &#x3D; 1;
-  texto:string &#x3D; &#x27;Aviso de Privacidad simplificado&#x27;
-
   /**
-   * @property comboAutorizacionIMMEX
-   * @type any[]
-   * @description Arreglo para almacenar las opciones del combo de autorización IMMEX. Actualmente no se utiliza en el código proporcionado, pero se declara.
-   */
-  comboAutorizacionIMMEX: any[] &#x3D; [];
-
-  /**
-   * @property solicitudForm
+   *  datosForm
    * @type {FormGroup}
-   * @description FormGroup que contiene el formulario de solicitud.
+   *  FormGroup que contiene el formulario de datos.
+   */
+  datosForm: FormGroup;
+
+  /**
+   *  aduanas
+   * @type {Catalogo[]}
+   *  Arreglo que almacena los catálogos de aduanas.
+   */
+  aduanas!: Catalogo[];
+
+  /**
+   *  selectedAduana
+   * @type {any}
+   *  Aduana seleccionada en el formulario.
+   */
+  selectedAduana: any;
+
+  /**
+   *  pasos
+   * @type {ListaPasosWizard[]}
+   *  Lista de pasos del wizard.
+   */
+  pasos: ListaPasosWizard[] &#x3D; PASOS;
+
+  /**
+   *  indice
+   * @type {number}
+   *  Índice del paso actual en el wizard.
+   */
+  indice: number &#x3D; 1;
+
+  /**
+   *  texto
+   * @type {string}
+   *  Texto del aviso de privacidad.
+   */
+  texto: string &#x3D; &#x27;Aviso de Privacidad simplificado&#x27;;
+
+  /**
+   *  solicitudForm
+   * @type {FormGroup}
+   *  FormGroup que contiene el formulario de solicitud.
    */
   solicitudForm: FormGroup;
 
   /**
-   * @constructor
-   * @param {FormBuilder} fb - Servicio FormBuilder para la creación de formularios.
+   * 
+   *  {FormBuilder} fb - Servicio FormBuilder para la creación de formularios.
+   *  {CatalogosService} catalogosServices - Servicio para obtener los catálogos.
    */
-  constructor(private fb: FormBuilder,private catalogosServices: CatalogosService) {
-    /**
-     * @description Inicialización del formulario de solicitud con validadores requeridos.
-     */
+  constructor(private fb: FormBuilder, private catalogosServices: CatalogosService) {
     this.solicitudForm &#x3D; this.fb.group({
       datosdelForm: this.fb.group({
-        /**
-         * @property numeroRegistroAmbiental
-         * @type {FormControl}
-         * @description Control para el número de registro ambiental.
-         * @required
-         */
         numeroRegistroAmbiental: [&#x27;&#x27;, Validators.required],
-        /**
-         * @property descripcionGenerica1
-         * @type {FormControl}
-         * @description Control para la descripción genérica 1.
-         * @required
-         */
         descripcionGenerica1: [&#x27;&#x27;, Validators.required],
-        /**
-         * @property numeroProgramaImmex
-         * @type {FormControl}
-         * @description Control para el número de programa IMMEX.
-         * @required
-         */
         numeroProgramaImmex: [&#x27;&#x27;, Validators.required],
       })
     });
   }
 
   /**
-   * @method isInvalid
-   * @param {string} id - Identificador del control del formulario.
+   * isInvalid
+   *  {string} id - Identificador del control del formulario.
    * @returns {boolean | null} Verdadero si el control es inválido y ha sido tocado, falso en caso contrario.
-   * @description Verifica si un control del formulario es inválido y ha sido interactuado por el usuario.
+   *  Verifica si un control del formulario es inválido y ha sido interactuado por el usuario.
    */
   isInvalid(id: string): boolean | null {
     const control &#x3D; this.solicitudForm.get(&#x27;datosdelForm&#x27;).get(id);
@@ -1032,8 +1101,8 @@ export class DatosDelaComponent implements OnInit {
   }
 
   /**
-   * @method onSubmit
-   * @description Maneja el envío del formulario.
+   * onSubmit
+   *  Maneja el envío del formulario.
    */
   onSubmit(): void {
     if (this.solicitudForm.valid) {
@@ -1043,8 +1112,18 @@ export class DatosDelaComponent implements OnInit {
     }
   }
 
+  /**
+ *  wizardComponent
+ * @type {WizardComponent}
+ * @description Referencia al componente del wizard.
+ */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  /**
+   *  datosPasos
+   * @type {DatosPasos}
+   *  Datos de los pasos del wizard.
+   */
   datosPasos: DatosPasos &#x3D; {
     nroPasos: this.pasos.length,
     indice: this.indice,
@@ -1052,7 +1131,10 @@ export class DatosDelaComponent implements OnInit {
     txtBtnSig: &#x27;Continuar&#x27;,
   };
 
-
+  /**
+   * ngOnInit
+   *  Inicializa el componente.
+   */
   ngOnInit(): void {
     this.datosForm &#x3D; this.fb.group({
       aduanas: [null, Validators.required],
@@ -1060,6 +1142,11 @@ export class DatosDelaComponent implements OnInit {
     this.aduanasdata();
   }
 
+  /**
+   * getValorIndice
+   *  {AccionBoton} e - Acción del botón.
+   *  Obtiene el valor del índice del paso actual.
+   */
   getValorIndice(e: AccionBoton): void {
     if (e.valor &gt; 0 &amp;&amp; e.valor &lt; 5) {
       this.indice &#x3D; e.valor;
@@ -1070,10 +1157,19 @@ export class DatosDelaComponent implements OnInit {
       }
     }
   }
+
+  /**
+   * onAduanaSelect
+   *  Maneja la selección de una aduana.
+   */
   onAduanaSelect(): void {
     this.selectedAduana &#x3D; this.datosForm.get(&#x27;aduanas&#x27;)?.value;
   }
 
+  /**
+   * aduanasdata
+   *  Obtiene los datos de las aduanas desde el servicio de catálogos.
+   */
   aduanasdata(): void {
     console.log(&#x27;ngoninit start&#x27;);
     this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_ADUANAS).subscribe({
@@ -1087,8 +1183,7 @@ export class DatosDelaComponent implements OnInit {
       complete: () &#x3D;&gt; console.log(&#x27;API Call Completed&#x27;),
     });
   }
-}
-</code></pre>
+}</code></pre>
     </div>
 
     <div class="tab-pane fade " id="templateData">
@@ -1101,8 +1196,7 @@ export class DatosDelaComponent implements OnInit {
   
         &lt;div class&#x3D;&quot;row mb-3&quot;&gt;
             &lt;div class&#x3D;&quot;col-md-4 form-group&quot;&gt;
-                &lt;label for&#x3D;&quot;numeroRegistroAmbiental&quot;&gt;Número de Registro Ambiental:&lt;/label&gt;
-                &lt;span class&#x3D;&quot;text-danger&quot;&gt;*&lt;/span&gt;
+                &lt;label for&#x3D;&quot;numeroRegistroAmbiental&quot;&gt;Número de Registro Ambiental*:&lt;/label&gt;
                 &lt;input type&#x3D;&quot;text&quot; class&#x3D;&quot;form-control&quot; placeholder&#x3D;&quot;123123&quot;
                 formControlName&#x3D;&quot;numeroRegistroAmbiental&quot; id&#x3D;&quot;numeroRegistroAmbiental&quot; maxlength&#x3D;&quot;13&quot; size&#x3D;&quot;30&quot; [ngClass]&#x3D;&quot;isInvalid(&#x27;numeroRegistroAmbiental&#x27;) ? &#x27;required&#x27; : &#x27;&#x27;&quot; /&gt;
                 &lt;div *ngIf&#x3D;&quot;isInvalid(&#x27;numeroRegistroAmbiental&#x27;)&quot; class&#x3D;&quot;text-danger&quot;&gt;
@@ -1110,8 +1204,7 @@ export class DatosDelaComponent implements OnInit {
                   &lt;/div&gt;
             &lt;/div&gt;
             &lt;div class&#x3D;&quot;col-md-8 form-group&quot;&gt;
-                &lt;label for&#x3D;&quot;descripcionGenerica1&quot;&gt;Giro industrial del importador &lt;/label&gt;
-                &lt;span class&#x3D;&quot;text-danger&quot;&gt;*&lt;/span&gt;
+                &lt;label for&#x3D;&quot;descripcionGenerica1&quot;&gt;Giro industrial del importador*: &lt;/label&gt;
                 &lt;input type&#x3D;&quot;text&quot; class&#x3D;&quot;form-control&quot; placeholder&#x3D;&quot;Giro industrial del importador&quot; formControlName&#x3D;&quot;descripcionGenerica1&quot; id&#x3D;&quot;descripcionGenerica1&quot; maxlength&#x3D;&quot;150&quot; size&#x3D;&quot;105&quot; [ngClass]&#x3D;&quot;isInvalid(&#x27;descripcionGenerica1&#x27;) ? &#x27;required&#x27; : &#x27;&#x27;&quot; /&gt;
                 &lt;div *ngIf&#x3D;&quot;isInvalid(&#x27;descripcionGenerica1&#x27;)&quot; class&#x3D;&quot;text-danger&quot;&gt;
                     Este campo es obligatorio
@@ -1120,12 +1213,9 @@ export class DatosDelaComponent implements OnInit {
             &lt;/div&gt;
             &lt;div class&#x3D;&quot;row mb-3&quot;&gt;
             &lt;div class&#x3D;&quot;col-md-4 form-group&quot;&gt;
-                &lt;label for&#x3D;&quot;numeroProgramaImmex&quot;&gt;Número de authorizacion Immex&lt;/label&gt;
-                &lt;span class&#x3D;&quot;text-danger&quot;&gt;*&lt;/span&gt;
-                &lt;select class&#x3D;&quot;form-control numeroProgramaImmex&quot; formControlName&#x3D;&quot;numeroProgramaImmex&quot; id&#x3D;&quot;numeroProgramaImmex&quot; [ngClass]&#x3D;&quot;isInvalid(&#x27;numeroProgramaImmex&#x27;) ? &#x27;required&#x27; : &#x27;&#x27;&quot;&gt;
-                    &lt;option value&#x3D;&quot;&quot;&gt;Seleccione un valor&lt;/option&gt;
-                    &lt;option *ngFor&#x3D;&quot;let item of comboAutorizacionIMMEX&quot; [value]&#x3D;&quot;item.clave&quot;&gt;{{ item.descripcion }}&lt;/option&gt;
-                &lt;/select&gt;
+                &lt;app-catalogo-select [catalogo]&#x3D;&#x27;aduanas&#x27; formControlName&#x3D;&quot;numeroProgramaImmex&quot; [label]&#x3D;&quot;&#x27;Número de authorizacion Immex&#x27;&quot;
+                  [required]&#x3D;&quot;true&quot;&gt;&lt;/app-catalogo-select&gt;
+              
                 &lt;div *ngIf&#x3D;&quot;isInvalid(&#x27;numeroProgramaImmex&#x27;)&quot; class&#x3D;&quot;text-danger&quot;&gt;
                     Este campo es obligatorio
                 &lt;/div&gt;
@@ -1183,7 +1273,7 @@ export class DatosDelaComponent implements OnInit {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><div class="container mb-5">    <!-- detos de la solicitud -->    <form [formGroup]="solicitudForm" (ngSubmit)="onSubmit()">      <div class="form" formGroupName="datosdelForm">        <ng-titulo titulo="Datos generales del solicitante" />          <div class="row mb-3">            <div class="col-md-4 form-group">                <label for="numeroRegistroAmbiental">Número de Registro Ambiental:</label>                <span class="text-danger">*</span>                <input type="text" class="form-control" placeholder="123123"                formControlName="numeroRegistroAmbiental" id="numeroRegistroAmbiental" maxlength="13" size="30" [ngClass]="isInvalid(\'numeroRegistroAmbiental\') ? \'required\' : \'\'" />                <div *ngIf="isInvalid(\'numeroRegistroAmbiental\')" class="text-danger">                    Este campo es obligatorio                  </div>            </div>            <div class="col-md-8 form-group">                <label for="descripcionGenerica1">Giro industrial del importador </label>                <span class="text-danger">*</span>                <input type="text" class="form-control" placeholder="Giro industrial del importador" formControlName="descripcionGenerica1" id="descripcionGenerica1" maxlength="150" size="105" [ngClass]="isInvalid(\'descripcionGenerica1\') ? \'required\' : \'\'" />                <div *ngIf="isInvalid(\'descripcionGenerica1\')" class="text-danger">                    Este campo es obligatorio                </div>            </div>            </div>            <div class="row mb-3">            <div class="col-md-4 form-group">                <label for="numeroProgramaImmex">Número de authorizacion Immex</label>                <span class="text-danger">*</span>                <select class="form-control numeroProgramaImmex" formControlName="numeroProgramaImmex" id="numeroProgramaImmex" [ngClass]="isInvalid(\'numeroProgramaImmex\') ? \'required\' : \'\'">                    <option value="">Seleccione un valor</option>                    <option *ngFor="let item of comboAutorizacionIMMEX" [value]="item.clave">{{ item.descripcion }}</option>                </select>                <div *ngIf="isInvalid(\'numeroProgramaImmex\')" class="text-danger">                    Este campo es obligatorio                </div>            </div>        </div>      </div>    </form>    <app-administrar-residuos></app-administrar-residuos>  </div><div class="container">  <form [formGroup]="datosForm">    <div class="row">      <div class="col-md-4">        <app-catalogo-select [catalogo]=\'aduanas\' formControlName="aduanas" [label]="\'Aduana de entrada\'"          [required]="true" (change)="onAduanaSelect()"></app-catalogo-select>      </div>    </div>    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>    <div *ngIf="selectedAduana">      <app-datos-de-los-residuos></app-datos-de-los-residuos>    </div>    <div class="row">        <ng-alert [CONTENIDO]="texto"></ng-alert>    </div>  </form></div></div>'
+        var COMPONENT_TEMPLATE = '<div><div class="container mb-5">    <!-- detos de la solicitud -->    <form [formGroup]="solicitudForm" (ngSubmit)="onSubmit()">      <div class="form" formGroupName="datosdelForm">        <ng-titulo titulo="Datos generales del solicitante" />          <div class="row mb-3">            <div class="col-md-4 form-group">                <label for="numeroRegistroAmbiental">Número de Registro Ambiental*:</label>                <input type="text" class="form-control" placeholder="123123"                formControlName="numeroRegistroAmbiental" id="numeroRegistroAmbiental" maxlength="13" size="30" [ngClass]="isInvalid(\'numeroRegistroAmbiental\') ? \'required\' : \'\'" />                <div *ngIf="isInvalid(\'numeroRegistroAmbiental\')" class="text-danger">                    Este campo es obligatorio                  </div>            </div>            <div class="col-md-8 form-group">                <label for="descripcionGenerica1">Giro industrial del importador*: </label>                <input type="text" class="form-control" placeholder="Giro industrial del importador" formControlName="descripcionGenerica1" id="descripcionGenerica1" maxlength="150" size="105" [ngClass]="isInvalid(\'descripcionGenerica1\') ? \'required\' : \'\'" />                <div *ngIf="isInvalid(\'descripcionGenerica1\')" class="text-danger">                    Este campo es obligatorio                </div>            </div>            </div>            <div class="row mb-3">            <div class="col-md-4 form-group">                <app-catalogo-select [catalogo]=\'aduanas\' formControlName="numeroProgramaImmex" [label]="\'Número de authorizacion Immex\'"                  [required]="true"></app-catalogo-select>                              <div *ngIf="isInvalid(\'numeroProgramaImmex\')" class="text-danger">                    Este campo es obligatorio                </div>            </div>        </div>      </div>    </form>    <app-administrar-residuos></app-administrar-residuos>  </div><div class="container">  <form [formGroup]="datosForm">    <div class="row">      <div class="col-md-4">        <app-catalogo-select [catalogo]=\'aduanas\' formControlName="aduanas" [label]="\'Aduana de entrada\'"          [required]="true" (change)="onAduanaSelect()"></app-catalogo-select>      </div>    </div>    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>    <div *ngIf="selectedAduana">      <app-datos-de-los-residuos></app-datos-de-los-residuos>    </div>    <div class="row">        <ng-alert [CONTENIDO]="texto"></ng-alert>    </div>  </form></div></div>'
     var COMPONENTS = [{'name': 'AcuseComponent', 'selector': 'app-component-acuse'},{'name': 'AcusePageComponent', 'selector': ''},{'name': 'AdministrarResiduosComponent', 'selector': 'app-administrar-residuos'},{'name': 'AgentesAgenciasAduanalesComponent', 'selector': 'agentes-agencias-aduanales'},{'name': 'AgregaPersonasComponent', 'selector': 'agrega-personas'},{'name': 'AgregaPersonasComponent', 'selector': 'agrega-personas'},{'name': 'AgregarArchivoComponent', 'selector': 'app-agregar-archivo'},{'name': 'AgregarDestinatoriaComponent', 'selector': 'app-agregar-destinatoria'},{'name': 'AgregarMiembrosEmpresaComponent', 'selector': 'agregar-miembros-empresa'},{'name': 'AgregarTransporteComponent', 'selector': 'agregar-transporte'},{'name': 'AlertComponent', 'selector': 'ng-alert'},{'name': 'AnexarDocumentosComponent', 'selector': 'app-anexar-documentos'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthPageComponent', 'selector': ''},{'name': 'BreadcrumbComponent', 'selector': 'c-breadcrumb'},{'name': 'BtnContinuarComponent', 'selector': 'btn-continuar'},{'name': 'CatalogoSelectComponent', 'selector': 'app-catalogo-select'},{'name': 'ClientesProveedoresExtrajeroComponent', 'selector': 'app-clientes-proveedores-extrajero'},{'name': 'CombinacionRequeridaComponent', 'selector': 'app-combinacion-requerida'},{'name': 'ConfirmarNotificacionComponent', 'selector': 'confirmar-notificacion'},{'name': 'ControlInventariosComponent', 'selector': 'control-inventarios'},{'name': 'CriterioDeDictComponent', 'selector': 'app-criterio-de-dict'},{'name': 'CrosslistComponent', 'selector': 'crosslist'},{'name': 'DatosAdicionalesComponent', 'selector': 'app-datos-adicionales'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosComponent', 'selector': 'app-pantalla-datos'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosDeLaComponent', 'selector': 'app-datos-de-la'},{'name': 'DatosDelaComponent', 'selector': 'app-datos-dela'},{'name': 'DatosDeLaSolicitudComponent', 'selector': 'app-datos-de-la-solicitud'},{'name': 'DatosDelComponent', 'selector': 'app-datos-del'},{'name': 'DatosDeLosResiduosComponent', 'selector': 'app-datos-de-los-residuos'},{'name': 'DatosGeneralsAnimalsComponent', 'selector': 'app-datos-generals-animals'},{'name': 'DatosParaMovilizacionNacionalComponent', 'selector': 'app-datos-para-movilizacion-nacional'},{'name': 'DatosTransportistaComponent', 'selector': 'datos-transportista'},{'name': 'DespachoMercanciasSolicitudComponent', 'selector': 'despacho-mercancias-solicitud'},{'name': 'DetosDelMarcanciaComponent', 'selector': 'app-detos-del-marcancia'},{'name': 'DetosDelTramiteComponent', 'selector': 'app-detos-del-tramite'},{'name': 'EmpleadosContratadosComponent', 'selector': 'empleados-contratados'},{'name': 'EmpleadosContratadosComponent', 'selector': 'empleados-contratados'},{'name': 'FirmaElectronicaComponent', 'selector': 'firma-electronica'},{'name': 'FooterComponent', 'selector': 'c-footer'},{'name': 'HeaderComponent', 'selector': 'c-header'},{'name': 'InformacionUsuarioComponent', 'selector': 'informacion-usuario'},{'name': 'InputCheckComponent', 'selector': 'input-check'},{'name': 'InputFechaComponent', 'selector': 'input-fecha'},{'name': 'InputHoraComponent', 'selector': 'input-hora'},{'name': 'InputRadioComponent', 'selector': 'app-input-radio'},{'name': 'ModalConfirmarComponent', 'selector': 'app-modal-confirmar'},{'name': 'NavComponent', 'selector': 'c-header-nav'},{'name': 'OctavaTemporalComponent', 'selector': 'app-octava-temporal'},{'name': 'PagoDeDerechoComponent', 'selector': 'app-pago-de-derecho'},{'name': 'PagoDeDerechosComponent', 'selector': 'app-pago-de-derechos'},{'name': 'PagoDerechosComponent', 'selector': 'pago-derechos'},{'name': 'PaisProcendenciaComponent', 'selector': 'app-pais-procendencia'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PartidasDeLaComponent', 'selector': 'app-partidas-de-la'},{'name': 'PasoCuatroComponent', 'selector': 'app-paso-cuatro'},{'name': 'PasoCuatroComponent', 'selector': 'paso-cuatro'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoDosComponent', 'selector': 'paso-dos'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoTresComponent', 'selector': 'app-paso-tres'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'app-paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PedimentoComponent', 'selector': 'c-pedimento'},{'name': 'PedimentoComponent', 'selector': 'c-pedimento'},{'name': 'RegistroPageComponent', 'selector': ''},{'name': 'RepresentacionComponent', 'selector': 'app-representacion'},{'name': 'RepresentanteFiscalComponent', 'selector': 'representante-fiscal'},{'name': 'SeleccionTramiteComponent', 'selector': 'seleccion-tramite'},{'name': 'SelectCatalogosComponent', 'selector': 'select-catalogos'},{'name': 'SelectPaisesComponent', 'selector': 'app-select-paises'},{'name': 'SolicitanteComponent', 'selector': 'solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteDetosTabsComponent', 'selector': 'app-solicitante-detos-tabs'},{'name': 'SolicitanteOctavaTemporalComponent', 'selector': 'app-solocitante-octava-temporal'},{'name': 'SolicitudComponent', 'selector': 'solicitud'},{'name': 'SolicitudComponent', 'selector': 'solicitud'},{'name': 'SolicitudComponent', 'selector': 'app-solicitud'},{'name': 'SolicitudPageComponent', 'selector': ''},{'name': 'SolicitudPageComponent', 'selector': ''},{'name': 'SolicitudPantallasComponent', 'selector': 'app-solicitud'},{'name': 'TableComponent', 'selector': 'ng-table'},{'name': 'TercerosComponent', 'selector': 'terceros'},{'name': 'TercerosRelacionadosComponent', 'selector': 'app-terceros-relacionados'},{'name': 'TestPageComponent', 'selector': 'test-page'},{'name': 'TituloComponent', 'selector': 'ng-titulo'},{'name': 'TransporteComponent', 'selector': 'app-transporte'},{'name': 'TratadosComponent', 'selector': 'app-tratados'},{'name': 'UsoEspicificoComponent', 'selector': 'app-uso-espicifico'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'ZoosanitarioPageComponent', 'selector': 'app-zoosanitario-page'}];
     var DIRECTIVES = [{'name': 'CalendarioFormatoDirective', 'selector': '[CalendarioFormato]'},{'name': 'HoraFormatoDirective', 'selector': '[HoraFormato]'},{'name': 'NumeroTelefonicoDirective', 'selector': '[appNumeroTelefonico]'},{'name': 'SoloNumerosDirective', 'selector': '[appSoloNumeros]'},{'name': 'UppercaseDirective', 'selector': '[appUppercase]'}];
     var ACTUAL_COMPONENT = {'name': 'DatosDelaComponent'};

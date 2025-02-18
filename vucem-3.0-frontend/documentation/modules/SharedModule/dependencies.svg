@@ -28,13 +28,13 @@
 <title>cluster_SharedModule_imports</title>
 <polygon fill="none" stroke="black" points="186,-78 186,-130 494,-130 494,-78 186,-78"/>
 </g>
-<g id="clust2" class="cluster">
-<title>cluster_SharedModule_declarations</title>
-<polygon fill="none" stroke="black" points="16,-78 16,-130 178,-130 178,-78 16,-78"/>
-</g>
 <g id="clust5" class="cluster">
 <title>cluster_SharedModule_exports</title>
 <polygon fill="none" stroke="black" points="104,-208 104,-260 417,-260 417,-208 104,-208"/>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_SharedModule_declarations</title>
+<polygon fill="none" stroke="black" points="16,-78 16,-130 178,-130 178,-78 16,-78"/>
 </g>
 <!-- SoloNumerosDirective -->
 <g id="node1" class="node">

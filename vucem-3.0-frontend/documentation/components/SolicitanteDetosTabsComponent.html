@@ -120,6 +120,13 @@
 </p>
 
 
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Decorador que define un componente de Angular.</p>
+
+    </p>
 
 
 
@@ -238,15 +245,15 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="33"
-                                    class="link-to-prism">src/app/tramites/231001/pages/solicitante-detos-tabs/solicitante-detos-tabs.component.ts:33</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="31"
+                                    class="link-to-prism">src/app/tramites/231001/pages/solicitante-detos-tabs/solicitante-detos-tabs.component.ts:31</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Método para seleccionar una pestaña específica.</p>
+                        <div class="io-description"><p>Selecciona una pestaña específica.</p>
 </div>
 
                             <div class="io-description">
@@ -324,13 +331,13 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/tramites/231001/pages/solicitante-detos-tabs/solicitante-detos-tabs.component.ts:27</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/tramites/231001/pages/solicitante-detos-tabs/solicitante-detos-tabs.component.ts:24</a></div>
                         </td>
                     </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>El índice de la pestaña seleccionada.</p>
+                    <div class="io-description"><p>Índice de la pestaña seleccionada.</p>
 </div>
                 </td>
             </tr>
@@ -344,20 +351,27 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component } from &#x27;@angular/core&#x27;;
-
+/**
+ * Decorador que define un componente de Angular.
+ * 
+ * @selector app-solicitante-detos-tabs - El selector CSS que identifica este componente en una plantilla.
+ * @templateUrl ./solicitante-detos-tabs.component.html - La URL de la plantilla HTML del componente.
+ */
 @Component({
   selector: &#x27;app-solicitante-detos-tabs&#x27;,
   templateUrl: &#x27;./solicitante-detos-tabs.component.html&#x27;,
 })
 export class SolicitanteDetosTabsComponent {
+ 
   /**
-   * El índice de la pestaña seleccionada.
+   * Índice de la pestaña seleccionada.
    * @type {number}
    */
   indice: number &#x3D; 1;
 
   /**
-   * Método para seleccionar una pestaña específica.
+   * Selecciona una pestaña específica.
+   * 
    * @param {number} i - El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
