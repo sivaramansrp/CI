@@ -17,7 +17,6 @@ import { HttpCoreService } from '../../../../core/services/shared/http/http.serv
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 /**
- * 
  * Componente que maneja los datos relacionados con los residuos, incluidos los formularios y catálogos.
  */
 @Component({
