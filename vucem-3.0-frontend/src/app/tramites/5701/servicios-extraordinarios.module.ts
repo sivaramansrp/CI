@@ -26,7 +26,6 @@ import { SharedModule } from '../../shared/shared.module';
 import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { TablaComponent } from '../../shared/components/tabla/tabla.component';
 import { TercerosComponent } from '../../shared/components/terceros/terceros.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
@@ -63,10 +62,9 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     ServiciosExtraordinariosRoutingModule,
     SharedModule,
     SolicitanteComponent,
-    TablaComponent,
     TituloComponent,
     WizardComponent,
   ],
   exports: [SolicitudComponent, TercerosComponent],
 })
-export class ServiciosExtraordinariosModule {}
+export class ServiciosExtraordinariosModule { }
