@@ -33,6 +33,13 @@ const routes: Routes = [
         (m) => m.PantallasModule
       ),
   },
+  {
+    path: 'certificado-fitosanitario',
+    loadChildren: () =>
+      import('./tramites/220202/fitosanitario.module').then(
+        (m) => m.FitosanitarioModule
+      )
+  },
 ];
 
 @NgModule({

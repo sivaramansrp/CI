@@ -8,7 +8,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
-import { Catalogo, RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { AgriculturaApiService } from '../../../../core/services/220202/agricultura-api.service';
 
 
 
@@ -175,11 +176,13 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   formularioDeTransporte: FormGroup;
   /**
     * @constructor
-    * @param {HttpClient} httpServicios - Servicio HttpClient para realizar peticiones HTTP.
+    * @param {AgriculturaApiService} agriculturaApiService - Servicio HttpClient para realizar peticiones HTTP.
     * @param {FormBuilder} fb - Servicio FormBuilder para crear y gestionar formularios reactivos.
     */
-  constructor(private readonly httpServicios: HttpClient,
-    private readonly fb: FormBuilder
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly agriculturaApiService: AgriculturaApiService
+
   ) {
     this.mesaColumnasData();
   }
@@ -249,10 +252,8 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     this.getagropecuariaLista();
     this.getPuntoLista();
     this.getRegimenLista();
-    this.getAduanaLista();
     this.getArancelariaLista();
     this.getNicoLista();
-    this.getAduanaLista();
     this.getNicoLista();
     this.getProductoLista();
     this.getUmCLista();
@@ -263,9 +264,10 @@ export class DatosDeLaSolicitudComponent implements OnInit {
  * @method obtenerTablaCelulaValor
  */
   obtenerTablaCelulaValor() {
-    this.httpServicios.get<Datos_De_Tabla>('../../../../../assets/json/220202/solicitud.json').subscribe((data) => {
-      this.tablaDeDatosDeCelda = data?.data;
-    });
+    this.agriculturaApiService.obtenerDatosDeTabla('solicitud.json').subscribe(data => {
+      this.tablaDeDatosDeCelda = data;
+    })
+
   }
   /**
 * @description Obtiene la lista de table desde un archivo JSON.
@@ -273,10 +275,9 @@ export class DatosDeLaSolicitudComponent implements OnInit {
 */
 
   mesaColumnasData() {
-    this.httpServicios.get<any>('../../../../../assets/json/220202/contenidodetabla.json').subscribe((data) => {
-      let val = data.data;
-      this.mesaColumnas = val[0].header;
-    });
+    this.agriculturaApiService.obtenerDatosDeTabla('contenidodetabla.json').subscribe(data => {
+      this.mesaColumnas = data;
+    })
   }
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
@@ -286,60 +287,46 @@ export class DatosDeLaSolicitudComponent implements OnInit {
 * @method getaduanaLista
 */
   getaduanaLista() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/aduana_de_ingreso.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.aduanaList = datos as Catalogo[];
-    });
+    this.agriculturaApiService.obtenerSelectorList('aduana_de_ingreso.json').subscribe(data => {
+      this.aduanaList = data as Catalogo[];
+    })
   }
   /**
 * @description Obtiene la lista de agropecuaria desde un archivo JSON.
 * @method getagropecuariaLista
 */
   getagropecuariaLista() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/aduana_de_ingreso.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.agropecuariaList = datos as Catalogo[];
-    });
+    this.agriculturaApiService.obtenerSelectorList('aduana_de_ingreso.json').subscribe(data => {
+      this.agropecuariaList = data as Catalogo[];
+    })
   }
   /**
 * @description Obtiene la lista de Punto desde un archivo JSON.
 * @method getPuntoLista
 */
   getPuntoLista() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/punto.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.puntoList = datos as Catalogo[];
-    });
+    this.agriculturaApiService.obtenerSelectorList('punto.json').subscribe(data => {
+      this.puntoList = data as Catalogo[];
+    })
   }
   /**
 * @description Obtiene la lista de Regimen desde un archivo JSON.
 * @method getRegimenLista
 */
   getRegimenLista() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/regimen.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.regimeList = datos as Catalogo[];
-    });
+    this.agriculturaApiService.obtenerSelectorList('regimen.json').subscribe(data => {
+      this.regimeList = data as Catalogo[];
+    })
   }
-  /**
-* @description Obtiene la lista de Aduana desde un archivo JSON.
-* @method getAduanaLista
-*/
-  getAduanaLista() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/aduana_de_ingreso.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.aduanaList['catalogos'] = datos as Catalogo[];
-    });
-  }
+
   /**
 * @description Obtiene la lista de Arancelaria desde un archivo JSON.
 * @method getArancelariaLista
 */
   getArancelariaLista() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/nombre.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.arancelariaList = datos as Catalogo[];
-    });
+    this.agriculturaApiService.obtenerSelectorList('nombre.json').subscribe(data => {
+      this.arancelariaList = data as Catalogo[];
+    })
   }
   /**
 * @description Obtiene la lista de NICo desde un archivo JSON.
@@ -347,29 +334,26 @@ export class DatosDeLaSolicitudComponent implements OnInit {
 */
 
   getNicoLista() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/nombre.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.nicoList = datos as Catalogo[];
-    });
+    this.agriculturaApiService.obtenerSelectorList('nombre.json').subscribe(data => {
+      this.nicoList = data as Catalogo[];
+    })
   }
   /**
 * @description Obtiene la lista de Umc desde un archivo JSON.
 * @method getUmCLista
 */
   getUmCLista() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/nombre.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.umcList = datos as Catalogo[];
-    });
+    this.agriculturaApiService.obtenerSelectorList('nombre.json').subscribe(data => {
+      this.umcList = data as Catalogo[];
+    })
   }
   /**
  * @description Obtiene la lista de uso desde un archivo JSON.
  * @method getusoLista
  */
   getusoLista() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/nombre.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.usoList = datos as Catalogo[];
+    this.agriculturaApiService.obtenerSelectorList('nombre.json').subscribe(data => {
+      this.usoList = data as Catalogo[];
     });
   }
   /**
@@ -377,9 +361,8 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * @method getProductoLista
    */
   getProductoLista() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220202/nombre.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.productoList = datos as Catalogo[];
+    this.agriculturaApiService.obtenerSelectorList('nombre.json').subscribe(data => {
+      this.productoList = data as Catalogo[];
     });
   }
 }

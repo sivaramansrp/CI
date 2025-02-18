@@ -16,6 +16,12 @@ import { AccionBoton, ListaPasosWizard } from '../../../../core/models/220202/fi
  * Componente para el formulario de agricultura.
  * @class AgriculturaComponent
  */
+/**
+ * Componente para mostrar el subtítulo del asistente.
+ * @component AgriculturaComponent
+ * @selector app-agricultura
+ * @templateUrl ./agricultura.component.html
+ */
 @Component({
   selector: 'app-agricultura',
   templateUrl: './agricultura.component.html',
