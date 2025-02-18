@@ -1,0 +1,28 @@
+<div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>Tipo de Documentos</th>
+          <th>Documento</th>
+          <th>Ver documento</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr @for="doc of documentos; track doc.tipo">
+          <td>{{ doc.tipo }}</td>
+          <td>
+            <select>
+              <option value="">-- Seleccionar documento --</option>
+              <option *ngFor="let file of availableFiles" [value]="file">{{ file }}</option>
+            </select>
+          </td>
+          <td class="text-center">
+            <a *ngIf="doc.fileUrl" [href]="doc.fileUrl" target="_blank" class="btn btn-outline-primary">
+              <i class="bi bi-file-earmark-text"></i> 
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

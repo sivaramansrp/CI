@@ -7,6 +7,8 @@ import { DatosComponent } from '../pages/datos/datos.component';
 import { PantallasComponent } from '../pages/pantallas/pantallas.component';
 import { WizardComponent } from '../../../shared/components/wizard/wizard.component';
 import { NavComponent } from '../../../shared/components/nav/nav.component';
+import { CapturarIvaeiepsComponent } from '../components/capturar-ivaeieps/capturar-ivaeieps.component';
+import { AnexarEquisitosComponent } from '../components/anexar-equisitos/anexar-equisitos.component';
 
 
 @NgModule({
@@ -18,7 +20,9 @@ import { NavComponent } from '../../../shared/components/nav/nav.component';
     CommonModule,
     AntecesorRoutingModule,
     WizardComponent,
-    NavComponent
+    NavComponent,
+    CapturarIvaeiepsComponent,
+    AnexarEquisitosComponent
   ]
 })
 export class AntecesorModule { }

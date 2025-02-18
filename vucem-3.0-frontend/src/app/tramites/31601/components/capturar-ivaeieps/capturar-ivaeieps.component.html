@@ -1,0 +1,231 @@
+<form [formGroup]="ivaForm">
+  <section class="body-text">
+    <span style="color: red;">*</span> Manifieste si los proveedores nacionales señalados anteriormente,
+    se encuentran a la fecha de presentación de la solicitud, en las publicaciones a que hace referencia el artículo
+    69-B, cuarto párrafo del CFF.
+    si
+  </section>
+
+  <app-input-radio [radioOptions]="radioBtn" [selectedValue]="selectedValue" [isRequired]="true"
+    (valueChange)="onValueChange($event)" [layout]="'horizontal'"></app-input-radio>
+
+  <section class="body-text">
+    <span style="color: red;">*</span> Indique si para efectos del presente trámite se acredita como parte de un mismo
+    grupo de conformidad con la regla .1.7.
+  </section>
+
+  <app-input-radio [radioOptions]="radioBtn" [selectedValue]="defaultSelect" [isRequired]="true"
+    (valueChange)="onValueChangeIndique($event)" [layout]="'horizontal'"></app-input-radio>
+
+  <p>Para acreditar que forma parte de un grupo, posteriormente deberán anexar un diagrama de la estructura accionaria y
+    corporativa, así
+    como copia de las escrituras públicas, en la que conste la participación accionaria de las empresas que formen parte
+    del grupo.</p>
+  <p>Tratándose de las empresas que se mencionan en la regla 7.1.2., apartado B, cuando no se hubiese realizado
+    operaciones
+    en los últimos 12
+    meses previos a la presentación de la solicitud y que quieran acreditar el requisito mediante una de las empresas
+    del
+    grupo, deberán anexar
+    un escrito en el que asuma la responsabilidad solidaria a que se refiere la fracción VIII del artículo 26 del Código
+    Fiscal de la Federación, de
+    los créditos fiscales que llegaran a originarse.</p>
+
+  <ng-titulo titulo="Empresas del grupo certificadas en materia de IVA e IEPS" />
+
+  <section>Indique cual(es) de las empresas que forman parte del grupo cuentan con la Certificación en materia de IVA e IEPS, o en su caso, se encuentran en proceso de solicitud, o se van a certificar de conformidad con el calendario establecido en el articulo Segundo de la Sexta Resolución de Modificaciones a las Reglas de Carácter General en Materia de Comercio Exterior para 2013.</section>
+
+  <div class="table-container">
+
+    <div class="table-header pb-2" style=" display: flex; align-items: center; justify-content: space-between;">
+      <h3>Empresas del grupo certificadas en materia de IVA e IEPS</h3>
+      <button (click)="toggleContent()" class="toggle-btn">
+        <i class="bi" [ngClass]="{'bi-chevron-down': !showContent, 'bi-chevron-up': showContent}"
+          style="font-size: 14px; margin: 2px;"></i>
+      </button>
+    </div>
+
+    <ng-table *ngIf="showContent" [commonTableHeader]="destinatarioHeaderData.tableHeader"
+      [commonTableBody]="destinatarioHeaderData.tableBody">
+    </ng-table>
+  </div>
+
+  <div class="button-container">
+    <button class="btn btn-primary" (click)="openModal()">Agregar</button>
+    <button class="btn btn-default ms-2">Modificar</button>
+    <button class="btn btn-default ms-2">Eliminar</button>
+  </div>
+
+  <section><span style="color: red;">*</span> Señale, en su caso, el tipo de información que la solicitante acredita, a través de alguna de las empresas que forman parte del mismo grupo:</section>
+
+
+  <div class="checkbox-container">
+
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="empleados" formControlName="empleados">
+      <label class="form-check-label" for="empleados">Empleados</label>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="infraestructura" formControlName="infraestructura">
+      <label class="form-check-label" for="infraestructura">Infraestructura</label>
+
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="monto" formControlName="monto">
+      <label class="form-check-label" for="monto">Monto de Inversión</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="antiguedad" formControlName="antiguedad">
+      <label class="form-check-label" for="antiguedad">Antigüedad (Únicamente tratándose de las empresas que se
+        mencionan
+        en el apartado B, regla 7.1.2)</label>
+    </div>
+
+  </div>
+
+  <h6>Indica el monto aproximado de su inversión en territorio nacional.
+  </h6>
+
+  <div class="row">
+    <div class="col-6">
+      <app-catalogo-select [catalogo]="tipoDe" [label]="'Tipo de inversión'" [required]="false" name="tipoDe"
+        (change)="tipoDeInver()" formControlName="tipoDe"></app-catalogo-select>
+    </div>
+    <div class="col-6">
+
+      <label class="form-label">valor en Pesos</label>
+      <input class="form-control" type="text" name="hora" formControlName="valorPesos" />
+    </div>
+    <div class="col-4">
+      <label class="form-label">Description general</label>
+      <input class="form-control" type="text" name="hora" formControlName="descripcion" />
+    </div>
+    <div class="col-8 d-flex align-items-end justify-content-end">
+      <button class="btn btn-primary" (click)="agregarDatos()">Agregar</button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <div class="table-header pb-2" style=" display: flex; align-items: center; justify-content: space-between;">
+      <h3>Datos de la inversión</h3>
+      <button (click)="toggleContent()" class="toggle-btn">
+        <i class="bi" [ngClass]="{'bi-chevron-down': !showContent, 'bi-chevron-up': showContent}"
+          style="font-size: 14px; margin: 2px;"></i>
+      </button>
+    </div>
+
+    <ng-table *ngIf="showContent" [commonTableHeader]="datosDeLe.tableHeader" [commonTableBody]="datosDeLe.tableBody">
+    </ng-table>
+  </div>
+
+  <div class="button-container">
+    <button class="btn btn-default ms-2">Modificar</button>
+    <button class="btn btn-default ms-2">Eliminar</button>
+  </div>
+
+
+  <p><span style="color:red"> *</span>Ha contado previamente con la Certificación en materia de IVA e IEPS, el Registro
+    en
+    el Esquema de Certificación Empresas bajo la modalidad IVA e IEPS o Garantia del interés fiscal del IVA e IEPS</p>
+
+  <app-input-radio [radioOptions]="radioBtn" [selectedValue]="selectedValue" [isRequired]="true"
+    (valueChange)="onValueChange($event)" [layout]="'horizontal'"></app-input-radio>
+
+  <p><span style="color:red"> *</span>En caso afirmativo, señale si se encuentra al corriente en el cumplimiento de las
+    obligaciones relativas al Anexo 30 sobre dicho registro:
+  </p>
+  <app-input-radio [radioOptions]="radioBtn" [selectedValue]="selectedValue" [isRequired]="true"
+    (valueChange)="onValueChange($event)" [layout]="'horizontal'"></app-input-radio>
+
+
+  <div class="row">
+    <form [formGroup]="paymentForm">
+      <div class="col-md-6">
+        <span class="require">*</span><label class="form-label" style="width: unset;">Clave de referencia</label>
+        <input type="text" class="form-control" readonly [disabled]="true" formControlName="claveReferencia"
+          placeholder="Seleccione una opción">
+      </div>
+
+      <div class="col-md-6">
+        <span class="require">*</span><label class="form-label" style="width: unset;">Número de operación</label>
+        <input type="text" class="form-control" placeholder="Seleccione una opción" formControlName="numeroOperacion">
+      </div>
+      <div class="col-md-6">
+        <span class="require">*</span><label class="form-label" style="width: unset;"> Cadena de la dependencia</label>
+        <input type="text" class="form-control" readonly [disabled]="true" placeholder="Seleccione una opción"
+          formControlName="cadenaDependencia">
+      </div>
+      <div class="col-md-6">
+
+        <app-catalogo-select [catalogo]="tipoDe" [label]="'Banco'" [required]="true" name="tipoDe"
+          (change)="tipoDeInver()" formControlName="tipoDe"></app-catalogo-select>
+      </div>
+      <div class="col-md-3">
+        <span class="require">*</span><label class="form-label" style="width: unset;"> Llave de pago</label>
+        <input type="text" class="form-control" placeholder="Seleccione una opción" formControlName="llavePago">
+      </div>
+      <div class="col-md-3">
+        <span class="require">*</span><label class="form-label" style="width: unset;">Fecha de pago</label>
+        <input type="text" class="form-control" readonly [disabled]="true" placeholder="Seleccione una opción"
+          formControlName="fechaPago">
+      </div>
+      <div class="col-md-3">
+        <span class="require">*</span><label class="form-label" style="width: unset;"> Importe de pago</label>
+        <input type="text" class="form-control" readonly [disabled]="true" placeholder="Seleccione una opción"
+          formControlName="importePago">
+      </div>
+
+      <div class="col-md-12 text-end mt-3">
+        <button class="btn btn-danger">Borrar datos del pago</button>
+      </div>
+
+    </form>
+
+  </div>
+
+</form>
+<!-- Modal Structure -->
+<div class="modal fade" tabindex="-1" role="dialog" *ngIf="showModal" id="myModal" [ngClass]="{'show': showModal}"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Instalaciones</h5>
+        <button type="button" class="close position-absolute top-0 end-0 m-3" (click)="closeModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="ivaForm">
+          <div class="form-group">
+            <span style="color: red;">*</span><label for="rfc"> RFC </label>
+            <div class="d-flex align-items-center">
+              <input type="text" id="rfc" class="form-control me-2 w-50" formControlName="rfc">
+              <button class="btn btn-info">Buscar</button>
+            </div>
+            <div *ngIf="rfc.invalid && rfc.touched" class="text-danger">
+              <small>{{ getControlError('rfc') }}</small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="denominacion">Denominación o razón social</label>
+            <input type="text" id="denominacion" class="form-control" formControlName="denominacion" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="domicilio">Domicilio</label>
+            <textarea id="domicilio" class="form-control" formControlName="domicilio" readonly></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="clear()">Limpiar</button>
+        <button type="button" class="btn btn-primary p-2" (click)="accept()">Aceptar</button>
+        <button type="button" class="btn btn-danger p-2" (click)="closeModel()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+.body-text{
+  font-weight: 500;
+}
+p{
+  font-size: 15px;
+}
+
+.table-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background: #fff;
+  }
+  
+  /* New header container for h3 and button */
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .table-header h3 {
+    margin: 0 !important; /* Remove extra margins */
+    font-size: 16px;
+    text-align: left;
+  }
+  
+  
+  .toggle-btn {
+    background-color: #0e4279;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    /* float removed since flex handles the layout */
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    gap: 10px;
+  }
+
+
+
+  .form-group {
+    margin-bottom: 15px;
+}
+label {
+    font-weight: bold;
+    font-size: medium;
+}
+
+
+
