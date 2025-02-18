@@ -11,30 +11,18 @@ import { map } from 'rxjs/operators';
 import { BtnContinuarComponent } from '../../../../shared/components/btn-continuar/btn-continuar.component';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { DatosPasos } from '../../../../core/models/shared/components.model';
-import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
+import { DatosPasos } from '../../../../core/models/shared/components.model';
+import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
 import { PASOS } from '../../../../shared/constantes/303/pasos.enums';
-
-/**
- * Interfaz que define la estructura de un objeto de acción de botón.
- * 
- * @interface AccionBoton
- * @property {string} accion - La acción a realizar.
- * @property {number} valor - El valor asociado a la acción.
- */
-interface AccionBoton {
-  accion: string;
-  valor: number;
-}
 
 /**
  * Decorador que define un componente de Angular.
  * 
- * @selector app-datos-dela - El selector CSS que identifica este componente en una plantilla.
- * @templateUrl ./datos-dela.component.html - La URL de la plantilla HTML del componente.
- * @styleUrl ./datos-dela.component.scss - La URL de la hoja de estilos del componente.
+ *  app-datos-dela - El selector CSS que identifica este componente en una plantilla.
+ * ./datos-dela.component.html - La URL de la plantilla HTML del componente.
+ * ./datos-dela.component.scss - La URL de la hoja de estilos del componente.
  */
 @Component({
   selector: 'app-datos-dela',
@@ -43,56 +31,49 @@ interface AccionBoton {
 })
 export class DatosDelaComponent implements OnInit {
   /**
-   * @property datosForm
+   *  datosForm
    * @type {FormGroup}
    *  FormGroup que contiene el formulario de datos.
    */
   datosForm: FormGroup;
 
   /**
-   * @property aduanas
+   *  aduanas
    * @type {Catalogo[]}
    *  Arreglo que almacena los catálogos de aduanas.
    */
   aduanas!: Catalogo[];
 
   /**
-   * @property selectedAduana
+   *  selectedAduana
    * @type {any}
    *  Aduana seleccionada en el formulario.
    */
   selectedAduana: any;
 
   /**
-   * @property pasos
+   *  pasos
    * @type {ListaPasosWizard[]}
    *  Lista de pasos del wizard.
    */
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
-   * @property indice
+   *  indice
    * @type {number}
    *  Índice del paso actual en el wizard.
    */
   indice: number = 1;
 
   /**
-   * @property texto
+   *  texto
    * @type {string}
    *  Texto del aviso de privacidad.
    */
   texto: string = 'Aviso de Privacidad simplificado';
 
   /**
-   * @property comboAutorizacionIMMEX
-   * @type {any[]}
-   *  Arreglo para almacenar las opciones del combo de autorización IMMEX.
-   */
-  comboAutorizacionIMMEX: any[] = [];
-
-  /**
-   * @property solicitudForm
+   *  solicitudForm
    * @type {FormGroup}
    *  FormGroup que contiene el formulario de solicitud.
    */
@@ -114,7 +95,7 @@ export class DatosDelaComponent implements OnInit {
   }
 
   /**
-   * @method isInvalid
+   * isInvalid
    *  {string} id - Identificador del control del formulario.
    * @returns {boolean | null} Verdadero si el control es inválido y ha sido tocado, falso en caso contrario.
    *  Verifica si un control del formulario es inválido y ha sido interactuado por el usuario.
@@ -125,7 +106,7 @@ export class DatosDelaComponent implements OnInit {
   }
 
   /**
-   * @method onSubmit
+   * onSubmit
    *  Maneja el envío del formulario.
    */
   onSubmit(): void {
@@ -136,10 +117,15 @@ export class DatosDelaComponent implements OnInit {
     }
   }
 
+  /**
+ *  wizardComponent
+ * @type {WizardComponent}
+ * @description Referencia al componente del wizard.
+ */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-   * @property datosPasos
+   *  datosPasos
    * @type {DatosPasos}
    *  Datos de los pasos del wizard.
    */
@@ -151,7 +137,7 @@ export class DatosDelaComponent implements OnInit {
   };
 
   /**
-   * @method ngOnInit
+   * ngOnInit
    *  Inicializa el componente.
    */
   ngOnInit(): void {
@@ -161,24 +147,9 @@ export class DatosDelaComponent implements OnInit {
     this.aduanasdata();
   }
 
-  /**
-   * @method getValorIndice
-   *  {AccionBoton} e - Acción del botón.
-   *  Obtiene el valor del índice del paso actual.
-   */
-  getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
-  }
 
   /**
-   * @method onAduanaSelect
+   * onAduanaSelect
    *  Maneja la selección de una aduana.
    */
   onAduanaSelect(): void {
@@ -186,7 +157,7 @@ export class DatosDelaComponent implements OnInit {
   }
 
   /**
-   * @method aduanasdata
+   * aduanasdata
    *  Obtiene los datos de las aduanas desde el servicio de catálogos.
    */
   aduanasdata(): void {

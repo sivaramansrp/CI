@@ -126,6 +126,16 @@
         </p>
 
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Interfaz que define la estructura de un objeto de acción de botón.</p>
+<p> AccionBoton
+ {string} accion - La acción a realizar.
+ {number} valor - El valor asociado a la acción.</p>
+
+            </p>
 
 
         <section data-compodoc="block-index">
@@ -236,87 +246,110 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, ViewChild } from &#x27;@angular/core&#x27;;
 import { FormArray, FormBuilder, FormGroup, Validators } from &#x27;@angular/forms&#x27;;
-import { CatalogosService } from &#x27;../../../../core/services/shared/catalogos/catalogos.service&#x27;;
-import { Catalogo } from &#x27;../../../../core/models/shared/catalogos.model&#x27;;
-import { CATALOGOS_ID } from &#x27;../../../../shared/constantes/constantes&#x27;;
+import { map } from &#x27;rxjs/operators&#x27;;
 import { BtnContinuarComponent } from &#x27;../../../../shared/components/btn-continuar/btn-continuar.component&#x27;;
-import { PASOS } from &#x27;../../../../shared/constantes/303/pasos.enums&#x27;;
+import { WizardComponent } from &#x27;../../../../shared/components/wizard/wizard.component&#x27;;
+import { Catalogo } from &#x27;../../../../core/models/shared/catalogos.model&#x27;;
+import { CatalogosService } from &#x27;../../../../core/services/shared/catalogos/catalogos.service&#x27;;
+import { CATALOGOS_ID } from &#x27;../../../../shared/constantes/constantes&#x27;;
 import { DatosPasos } from &#x27;../../../../core/models/shared/components.model&#x27;;
 import { ListaPasosWizard } from &#x27;../../../../core/models/5701/servicios-extraordinarios.model&#x27;;
-import { WizardComponent } from &#x27;../../../../shared/components/wizard/wizard.component&#x27;;
-import { map } from &#x27;rxjs/operators&#x27;;
+import { PASOS } from &#x27;../../../../shared/constantes/303/pasos.enums&#x27;;
 
+/**
+ * Interfaz que define la estructura de un objeto de acción de botón.
+ * 
+ *  AccionBoton
+ *  {string} accion - La acción a realizar.
+ *  {number} valor - El valor asociado a la acción.
+ */
 interface AccionBoton {
   accion: string;
   valor: number;
 }
+
+/**
+ * Decorador que define un componente de Angular.
+ * 
+ *  app-datos-dela - El selector CSS que identifica este componente en una plantilla.
+ * ./datos-dela.component.html - La URL de la plantilla HTML del componente.
+ * ./datos-dela.component.scss - La URL de la hoja de estilos del componente.
+ */
 @Component({
   selector: &#x27;app-datos-dela&#x27;,
   templateUrl: &#x27;./datos-dela.component.html&#x27;,
   styleUrl: &#x27;./datos-dela.component.scss&#x27;,
 })
 export class DatosDelaComponent implements OnInit {
-  datosForm: FormGroup;
-  aduanas!: Catalogo[];
-  selectedAduana: any;
-  pasos: ListaPasosWizard[] &#x3D; PASOS;
-  indice: number &#x3D; 1;
-  texto:string &#x3D; &#x27;Aviso de Privacidad simplificado&#x27;
-
   /**
-   * @property comboAutorizacionIMMEX
-   * @type any[]
-   * @description Arreglo para almacenar las opciones del combo de autorización IMMEX. Actualmente no se utiliza en el código proporcionado, pero se declara.
-   */
-  comboAutorizacionIMMEX: any[] &#x3D; [];
-
-  /**
-   * @property solicitudForm
+   *  datosForm
    * @type {FormGroup}
-   * @description FormGroup que contiene el formulario de solicitud.
+   *  FormGroup que contiene el formulario de datos.
+   */
+  datosForm: FormGroup;
+
+  /**
+   *  aduanas
+   * @type {Catalogo[]}
+   *  Arreglo que almacena los catálogos de aduanas.
+   */
+  aduanas!: Catalogo[];
+
+  /**
+   *  selectedAduana
+   * @type {any}
+   *  Aduana seleccionada en el formulario.
+   */
+  selectedAduana: any;
+
+  /**
+   *  pasos
+   * @type {ListaPasosWizard[]}
+   *  Lista de pasos del wizard.
+   */
+  pasos: ListaPasosWizard[] &#x3D; PASOS;
+
+  /**
+   *  indice
+   * @type {number}
+   *  Índice del paso actual en el wizard.
+   */
+  indice: number &#x3D; 1;
+
+  /**
+   *  texto
+   * @type {string}
+   *  Texto del aviso de privacidad.
+   */
+  texto: string &#x3D; &#x27;Aviso de Privacidad simplificado&#x27;;
+
+  /**
+   *  solicitudForm
+   * @type {FormGroup}
+   *  FormGroup que contiene el formulario de solicitud.
    */
   solicitudForm: FormGroup;
 
   /**
-   * @constructor
-   * @param {FormBuilder} fb - Servicio FormBuilder para la creación de formularios.
+   * 
+   *  {FormBuilder} fb - Servicio FormBuilder para la creación de formularios.
+   *  {CatalogosService} catalogosServices - Servicio para obtener los catálogos.
    */
-  constructor(private fb: FormBuilder,private catalogosServices: CatalogosService) {
-    /**
-     * @description Inicialización del formulario de solicitud con validadores requeridos.
-     */
+  constructor(private fb: FormBuilder, private catalogosServices: CatalogosService) {
     this.solicitudForm &#x3D; this.fb.group({
       datosdelForm: this.fb.group({
-        /**
-         * @property numeroRegistroAmbiental
-         * @type {FormControl}
-         * @description Control para el número de registro ambiental.
-         * @required
-         */
         numeroRegistroAmbiental: [&#x27;&#x27;, Validators.required],
-        /**
-         * @property descripcionGenerica1
-         * @type {FormControl}
-         * @description Control para la descripción genérica 1.
-         * @required
-         */
         descripcionGenerica1: [&#x27;&#x27;, Validators.required],
-        /**
-         * @property numeroProgramaImmex
-         * @type {FormControl}
-         * @description Control para el número de programa IMMEX.
-         * @required
-         */
         numeroProgramaImmex: [&#x27;&#x27;, Validators.required],
       })
     });
   }
 
   /**
-   * @method isInvalid
-   * @param {string} id - Identificador del control del formulario.
+   * isInvalid
+   *  {string} id - Identificador del control del formulario.
    * @returns {boolean | null} Verdadero si el control es inválido y ha sido tocado, falso en caso contrario.
-   * @description Verifica si un control del formulario es inválido y ha sido interactuado por el usuario.
+   *  Verifica si un control del formulario es inválido y ha sido interactuado por el usuario.
    */
   isInvalid(id: string): boolean | null {
     const control &#x3D; this.solicitudForm.get(&#x27;datosdelForm&#x27;).get(id);
@@ -324,8 +357,8 @@ export class DatosDelaComponent implements OnInit {
   }
 
   /**
-   * @method onSubmit
-   * @description Maneja el envío del formulario.
+   * onSubmit
+   *  Maneja el envío del formulario.
    */
   onSubmit(): void {
     if (this.solicitudForm.valid) {
@@ -335,8 +368,18 @@ export class DatosDelaComponent implements OnInit {
     }
   }
 
+  /**
+ *  wizardComponent
+ * @type {WizardComponent}
+ * @description Referencia al componente del wizard.
+ */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  /**
+   *  datosPasos
+   * @type {DatosPasos}
+   *  Datos de los pasos del wizard.
+   */
   datosPasos: DatosPasos &#x3D; {
     nroPasos: this.pasos.length,
     indice: this.indice,
@@ -344,7 +387,10 @@ export class DatosDelaComponent implements OnInit {
     txtBtnSig: &#x27;Continuar&#x27;,
   };
 
-
+  /**
+   * ngOnInit
+   *  Inicializa el componente.
+   */
   ngOnInit(): void {
     this.datosForm &#x3D; this.fb.group({
       aduanas: [null, Validators.required],
@@ -352,6 +398,11 @@ export class DatosDelaComponent implements OnInit {
     this.aduanasdata();
   }
 
+  /**
+   * getValorIndice
+   *  {AccionBoton} e - Acción del botón.
+   *  Obtiene el valor del índice del paso actual.
+   */
   getValorIndice(e: AccionBoton): void {
     if (e.valor &gt; 0 &amp;&amp; e.valor &lt; 5) {
       this.indice &#x3D; e.valor;
@@ -362,10 +413,19 @@ export class DatosDelaComponent implements OnInit {
       }
     }
   }
+
+  /**
+   * onAduanaSelect
+   *  Maneja la selección de una aduana.
+   */
   onAduanaSelect(): void {
     this.selectedAduana &#x3D; this.datosForm.get(&#x27;aduanas&#x27;)?.value;
   }
 
+  /**
+   * aduanasdata
+   *  Obtiene los datos de las aduanas desde el servicio de catálogos.
+   */
   aduanasdata(): void {
     console.log(&#x27;ngoninit start&#x27;);
     this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_ADUANAS).subscribe({
@@ -379,8 +439,7 @@ export class DatosDelaComponent implements OnInit {
       complete: () &#x3D;&gt; console.log(&#x27;API Call Completed&#x27;),
     });
   }
-}
-</code></pre>
+}</code></pre>
     </div>
 </div>
 
