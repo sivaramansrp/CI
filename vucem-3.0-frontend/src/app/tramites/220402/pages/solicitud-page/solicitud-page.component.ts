@@ -6,28 +6,62 @@ import { WizardComponent } from '../../../../shared/components/wizard/wizard.com
 import { map, Subject, takeUntil } from 'rxjs';
 import { SeccionQuery } from '../../../../core/queries/seccion.query';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
-import { SECCIONES_TRAMITE_5701 } from '../../../../shared/constantes/seccionesTramites';
 
+/**
+ * Secciones a mostrar dentro de cada Paso de acuerdo al trámite
+ */
+export const SECCIONES_TRAMITE_220402 = {
+  PASO_1: {
+      VALIDACION_SECCION_1: false,
+      VALIDACION_SECCION_2: true,
+      VALIDACION_SECCION_3: false,
+  },
+  PASO_2: {
+      VALIDACION_SECCION: true,
+  },
+  PASO_3: {
+      requiereValidacion: true,
+  },
+};
+
+/**
+ * 
+ * Interfaz que define la estructura de un objeto de acción de botón.
+ */
 interface AccionBoton {
+  /**
+ * @property {string} accion - El accion del paso.
+ */
   accion: string;
+  /**
+ * @property {number} valor - El valor del paso en el asistente.
+ */
   valor: number;
 }
+
+/**
+ * Componente para la vista de la solicitud-page de la sección de "220402".
+ */
 
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
 })
 
+/**
+ * Componente que representa la página de solicitud.
+ */
+
 export class SolicitudPageComponent {
   
   /**
-   * @property {Array<ListaPasosWizard>} pasos - Lista de pasos del wizard.
+   * @property {ListaPasosWizard[]} pasos - Lista de pasos del wizard.
    */
 
   /**
-   * @property {Array<ListaPasosWizard>} pasos - Lista de pasos del wizard.
+   * @property {ListaPasosWizard[]} pasos - Lista de pasos del wizard.
    */
-  pasos: Array<ListaPasosWizard> = PASOS;
+  pasos: ListaPasosWizard[] = PASOS;
 
   /**
    * @property {number} indice - Índice actual del paso.
@@ -122,8 +156,8 @@ export class SolicitudPageComponent {
   private asignarSecciones() {
     let secciones: boolean[] =[];
     let formaValida: boolean[] = [];
-    for (let llaveSeccion in SECCIONES_TRAMITE_5701.PASO_1) {
-      secciones.push(SECCIONES_TRAMITE_5701.PASO_1[llaveSeccion]);
+    for (let llaveSeccion in SECCIONES_TRAMITE_220402.PASO_1) {
+      secciones.push(SECCIONES_TRAMITE_220402.PASO_1[llaveSeccion]);
       formaValida.push(false);
     }
     this.seccionStore.establecerSeccion(secciones);

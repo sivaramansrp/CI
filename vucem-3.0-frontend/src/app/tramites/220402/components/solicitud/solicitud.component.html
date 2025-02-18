@@ -1,8 +1,8 @@
 <div class="container">
   <form [formGroup]="FormSolicitud">
 
-    <ng-titulo titulo="Datos del trámit a realizar" />
-    <ng-container formGroupName="datosDelTramitRealizer">
+    <ng-titulo titulo="Datos del trámite a realizar" />
+    <ng-container formGroupName="datosDelTramiteRealizar">
       <div class="row">
         <div class="col-md-4">
           <label class="form-label" for="tipoDeCertificado">Tipo de certificado*:</label>
@@ -38,7 +38,7 @@
           <div class="form-group">
             <label class="form-label" for="puntoDestino">Punto de destino*:</label>
             <input class="form-control" id="puntoDestino" placeholder="Punto de destino" type="text"
-              formControlName="puntoDestino" [ngClass]="isValid(datosDelTramitRealizer,'puntoDestino') ? 'required' : ''" />
+              formControlName="puntoDestino" [ngClass]="isValid(datosDelTramiteRealizar,'puntoDestino') ? 'required' : ''" />
           </div>
         </div>
       </div>
@@ -95,13 +95,13 @@
                     <thead>
                       <tr>
                         <th>No. partida</th>
-                        <th>Fraccíon arancelaria</th>
-                        <th>Descripción de la fraccíon</th>
+                        <th>Fracción arancelaria</th>
+                        <th>Descripción de la fracción</th>
                         <th>Cantidad UMT</th>
                         <th>Unidad de medida de tarifa (UMT)</th>
                         <th>Cantidad UMC</th>
-                        <th>Unidad de medida de comercialización (UMT)</th>
-                        <th>Action</th>
+                        <th>Unidad de medida de comercialización (UMC)</th>
+                        <th>Acción</th>
                       </tr>
                     </thead>
 
@@ -114,7 +114,7 @@
                         <td class="text-center">{{item.UMT}}</td>
                         <td class="text-center">{{item.cantidadUMC}}</td>
                         <td class="text-center">{{item.cantidadUMT}}</td>
-                        <td class="text-center"><button type="button" (click)="mercancia_delete(i)"><i
+                        <td class="text-center"><button type="button" (click)="mercancia_borrar(i)"><i
                               class="bi-trash"></i></button></td>
                       </tr>
 
@@ -130,7 +130,7 @@
                       <div class="panel panel-default">
                         <div class="panel-heading">
                           <h5 class="panel-title">
-                            Add Mercancía
+                            Agregar Mercancía
                           </h5>
                         </div>
                         <div class="panel-collapse collapse in" id="add-mercancia-colapsable">
@@ -138,17 +138,17 @@
                             <div class="col-md-12">
                               <div class="col-md-4">
                                 <div class="form-group">
-                                  <label class="form-label" for="fraccionArancelaria">Fraccíon arancelaria:</label>
+                                  <label class="form-label" for="fraccionArancelaria">Fracción arancelaria:</label>
                                   <input class="form-control" id="fraccionArancelaria"
-                                    placeholder="Fraccíon arancelaria" type="text"
+                                    placeholder="Fracción arancelaria" type="text"
                                     formControlName="fraccionArancelaria" />
                                 </div>
                               </div>
                               <div class="col-md-8">
                                 <div class="form-group">
-                                  <label class="form-label" for="descdelaFraccion">Descripción de la fraccíon:</label>
+                                  <label class="form-label" for="descdelaFraccion">Descripción de la fracción:</label>
                                   <input class="form-control" id="descdelaFraccion"
-                                    placeholder="Descripción de la fraccíon" type="text"
+                                    placeholder="Descripción de la fracción" type="text"
                                     formControlName="descdelaFraccion" />
                                 </div>
                               </div>
@@ -322,7 +322,7 @@
         </div>
 
         <div class="col-md-5">
-          <app-catalogo-select [catalogo]="options" formControlName="terceroEspecialista" [label]="'Nombre del tercero especialista fitasanitario'"
+          <app-catalogo-select [catalogo]="options" formControlName="terceroEspecialista" [label]="'Nombre del tercero especialista fitosanitario'"
             [required]="true"></app-catalogo-select>
         </div>
       </div>
@@ -335,7 +335,7 @@
       <div class="row mt-3">
 
         <div class="col-md-5">
-          <app-catalogo-select [catalogo]="options" formControlName="entidadFederative" [label]="'Entidad Federative de Unidad Expedidora'"
+          <app-catalogo-select [catalogo]="options" formControlName="entidadFederative" [label]="'Entidad Federativa de Unidad Expedidora'"
             [required]="true"></app-catalogo-select>
         </div>
 
