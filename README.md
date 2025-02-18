@@ -72,8 +72,8 @@ It will show tasks that you can run with Nx.
 - Create new application - npx nx g @nx/angular:remote apps/aga
 - Angular 18.0.3
 - Node version 22.0.0 / 23.4.0
-- Lint : npx nx lint:5701
-- Test : npx nx test:5701
+- Lint : npx nx lint:aga
+- Test : npx nx test:aga
 
 ## Steps to create new app
 - Create new application - npx nx g @nx/angular:remote apps/aga

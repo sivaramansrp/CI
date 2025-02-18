@@ -3,7 +3,7 @@ import { DatosPasos } from '../../../core/models/shared/components.model';
 import { WizardComponent } from '../wizard/wizard.component';
 import { WizardService } from '../../../core/services/shared/wizard/wizard.service';
 import { SeccionQuery } from '../../../core/queries/seccion.query';
-import { SeccionState, SeccionStore } from './../../../../../../../apps/5701/src/app/application/estados/seccion.store';
+import { SeccionState, SeccionStore } from './../../../../../../../apps/aga/src/app/application/estados/seccion.store';
 import { map, Subject, takeUntil } from 'rxjs';
 
 interface AccionBoton {
