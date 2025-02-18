@@ -23,4 +23,5 @@ export interface FormularioDinamico {
   validators: string[];
   tooltip?: string;
   placeholder?: string;
+  AvailableRadioOptions?: string[];
 }
