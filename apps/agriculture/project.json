@@ -17,12 +17,20 @@
         "tsConfig": "apps/agriculture/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
+          "apps/agriculture/src/favicon.ico ",
+          "apps/agriculture/src/assets",
           {
-            "glob": "**/*",
-            "input": "apps/agriculture/public"
+            "glob": "**.*",
+            "input": "libs/shared/theme/assets",
+            "output": "assets"
           }
         ],
-        "styles": ["apps/agriculture/src/styles.scss"],
+        "styles": [
+          "node_modules/bootstrap/scss/bootstrap.scss",
+          "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+          "node_modules/ngx-toastr/toastr.css",
+          "libs/shared/theme/assets/styles/main.scss"
+        ],
         "scripts": [],
         "customWebpackConfig": {
           "path": "apps/agriculture/webpack.config.ts"
@@ -61,8 +69,8 @@
     "serve": {
       "executor": "@nx/angular:dev-server",
       "options": {
-        "port": 4208,
-        "publicHost": "http://localhost:4208"
+        "port": 4204,
+        "publicHost": "http://localhost:4204"
       },
       "configurations": {
         "production": {
@@ -95,7 +103,7 @@
       "defaultConfiguration": "production",
       "options": {
         "buildTarget": "agriculture:build",
-        "port": 4208,
+        "port": 4204,
         "watch": false
       },
       "configurations": {

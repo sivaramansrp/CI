@@ -1,4 +1,5 @@
 {
   "login": "http://localhost:4201",
-  "aga": "http://localhost:4203"
+  "aga": "http://localhost:4203",
+  "agriculture": "http://localhost:4204"
 }

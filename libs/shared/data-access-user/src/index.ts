@@ -67,4 +67,6 @@ export * from './tramites/components/anexar-documentos/anexar-documentos.compone
 export * from './core/models/5701/servicios-extraordinarios.model';
 export * from './core/models/usuario/perfilUsuario.model';
 export * from './core/models/usuario/rol.model';
-
+export * from './core/services/shared/http/http.service';
+export * from './core/services/220471/servicios-pantallas.enum';
+export * from './tramites/constantes/regex.constants';

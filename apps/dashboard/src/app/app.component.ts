@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { UserService } from '@ng-mf/data-access-user';
+import { FooterComponent, HeaderComponent, UserService } from '@ng-mf/data-access-user';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FooterComponent,
+    HeaderComponent,],
   selector: 'ng-mf-root',
   template: `
+  <c-header></c-header>
     <h2 class="dashboard-nav"> Welcome VUCME3.0</h2>
     <table border="1" cellpadding="5" cellspacing="5">
     <tbody>
@@ -18,6 +20,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
         </tbody>
       </table>
       <router-outlet></router-outlet>
+      <c-footer></c-footer>
   `,
 })
 export class AppComponent implements OnInit {
