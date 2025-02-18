@@ -4,7 +4,7 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
   selector: '[HoraFormato]',
   standalone: true,
 })
-export class HoraFormatoDirective {
+export class HoraFormatoDirective {  
   constructor(private el: ElementRef) { }
   @HostListener('input', ['$event']) onInputChange(event: Event) {
     const input = this.el.nativeElement;

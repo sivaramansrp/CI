@@ -24,9 +24,10 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <select-catalogos [catalogosDatos]="mercancia"
-                (valorSeleccion)="docSeleccionado($event)">
-  </select-catalogos>
+               
+
+                <app-catalogo-select [catalogo]="Justificacion" formControlName="Justificacion" [label]="'Justificación*:'"
+                [required]="true" name="Justificacion"  (change)="JustificacionSeleccion()" ></app-catalogo-select>
               </div>
             </div>
           </div>
@@ -50,9 +51,8 @@
             <div class="col-md-4">
               <div class="form-group">
                 
-                <select-catalogos [catalogosDatos]="mercancia"
-                (valorSeleccion)="docSeleccionado($event)">
-  </select-catalogos>
+                <app-catalogo-select [catalogo]="Banco" formControlName="Banco" [label]="'Banco*:'"
+                [required]="true" name="Banco"  (change)="BancoSeleccion()" ></app-catalogo-select>
                
              
              
