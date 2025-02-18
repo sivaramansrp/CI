@@ -18,18 +18,6 @@ import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraor
 import { PASOS } from '../../../../shared/constantes/303/pasos.enums';
 
 /**
- * Interfaz que define la estructura de un objeto de acción de botón.
- * 
- *  AccionBoton
- *  {string} accion - La acción a realizar.
- *  {number} valor - El valor asociado a la acción.
- */
-interface AccionBoton {
-  accion: string;
-  valor: number;
-}
-
-/**
  * Decorador que define un componente de Angular.
  * 
  *  app-datos-dela - El selector CSS que identifica este componente en una plantilla.
@@ -159,21 +147,6 @@ export class DatosDelaComponent implements OnInit {
     this.aduanasdata();
   }
 
-  /**
-   * getValorIndice
-   *  {AccionBoton} e - Acción del botón.
-   *  Obtiene el valor del índice del paso actual.
-   */
-  getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
-  }
 
   /**
    * onAduanaSelect
