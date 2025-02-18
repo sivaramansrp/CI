@@ -1,0 +1,20 @@
+<div class="page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Para UE/AELC,ALADI,SGP,Japon,Peru,Uruguay,Panama y para el certificado de articulos,mexicanos(CAM),y para el caracter de exportador autorizado para UE/AELC, para productor</h5>
+            </div>
+            <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
+        </div>
+        <div class="row">
+            @switch (indice) {
+                @case (1) {
+                    <app-datos></app-datos>
+                }
+                @case (2) {
+                    
+                }
+            }
+        </div>
+    </div>
+</div>

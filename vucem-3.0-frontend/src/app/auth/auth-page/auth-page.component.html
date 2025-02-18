@@ -7,10 +7,12 @@
       <div class="center">
         <ul class="nav nav-tabs">
           <li [ngClass]="indice === 1 ? 'active' : ''">
-            <a data-toggle="tab" (click)="seleccionaTab(1)">Con FIEL</a>
+            <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
+              (keydown.space)="seleccionaTab(1)" role="button" tabindex="0">Con FIEL</a>
           </li>
-          <li [ngClass]="indice === 2 ? 'active' : ''">
-            <a data-toggle="tab" (click)="seleccionaTab(2)">Sin FIEL</a>
+          <li [ngClass]=" indice===2 ? 'active' : ''">
+            <a data-toggle=" tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
+              (keydown.space)="seleccionaTab(2)" role="button" tabindex="1">Sin FIEL</a>
           </li>
         </ul>
 
@@ -24,10 +26,6 @@
           }
           }
         </ng-container>
-
-
-
-
       </div>
     </div>
     <div class="col-md-3"></div>

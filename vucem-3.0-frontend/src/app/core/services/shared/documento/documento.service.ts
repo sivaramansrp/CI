@@ -1,13 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { SubirArchivoBody } from '../../../models/shared/subir-archivos.model';
 import { enviroment } from '../../../../../enviroments/enviroment';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SubirDocumentoService {
+export class DocumentoService {
   private urlServer = enviroment.URL_SERVER_UPLOAD;
 
   constructor(private http: HttpClient) {}
@@ -21,8 +20,24 @@ export class SubirDocumentoService {
     const formData = new FormData();
     formData.append('file', file, file.name);
 
-    return this.http.put<{ message: string }>(this.urlServer, formData, {
+
+    return this.http.put<{ message: string }>(`${this.urlServer}/upload`, formData, {
       headers,
     });
+  }
+
+  /**
+   * @description Función para generar el pdf  del acuse
+   * @param id
+   * @returns JSONResponse
+   */
+  generarAcuse(cuerpoAcuse: any): Observable<any> {
+    return this.http
+      .put<any>(`${this.urlServer}/create-pdf`, cuerpoAcuse)
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
   }
 }

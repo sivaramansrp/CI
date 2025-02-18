@@ -8,7 +8,7 @@ import { PantallasFormData } from '../../models/220401/servicios-pantallas.model
     providedIn: 'root',
 })
 /**
- * Este servicio se utiliza para almacenar los datos del formulario del trámite 220401.
+ * Este servicio se utiliza para almacenar los datos del formulario del trámite 110101.
  * pantallasFormData: almacenar los datos del formulario de los componentes secundarios
  * pantallasFormSubject: almacenar el asunto de los datos del formulario
  */

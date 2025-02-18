@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+
 import { RouterModule, Routes } from '@angular/router';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const routes: Routes = [
@@ -20,6 +21,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/130118/pexim.module').then(
+        (m) => m.PeximModule
+      ),
+  },
+  {
     path: 'despacho-mercancias',
     loadChildren: () =>
       import('./tramites/303/despacho-mercancias.module').then(
@@ -32,6 +40,26 @@ const routes: Routes = [
       import('./tramites/220401/pantallas.module').then(
         (m) => m.PantallasModule
       ),
+  },
+  {
+    path: 'importante',
+    loadChildren: () =>
+      import('./tramites/301/pantallas.module').then(
+        (m) => m.PantallasModule
+      ),
+  },
+  { 
+    path: 'pantallas',
+    loadChildren: () =>
+      import('./tramites/110101/pantallas/pantallas.module').then(
+        (m) => m.PantallasModule
+      ),
+  },
+  {
+    path: 'certificado-zoosanitario',
+    loadChildren: () =>
+      import('./tramites/220201/certificado-zoosanitario.module').then(
+        (m) => m.CertificadoZoosanitarioModule)
   },
 ];
 
