@@ -17,7 +17,6 @@ import { HttpCoreService } from '../../../../core/services/shared/http/http.serv
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 /**
- * 
  * Componente que maneja los datos relacionados con los residuos, incluidos los formularios y catálogos.
  */
 @Component({
@@ -90,9 +89,8 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
 
   /**
-   * @constructor
-   * @param {FormBuilder} fb - Instancia de FormBuilder para crear formularios.
-   * @param {HttpCoreService} http - Servicio para realizar solicitudes HTTP.
+   * Instancia de FormBuilder para crear formularios.
+   *  Servicio para realizar solicitudes HTTP.
    */
   constructor(private fb: FormBuilder, private http: HttpCoreService) {
     this.materiaPrimaForm = this.fb.group({

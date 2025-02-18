@@ -7,8 +7,7 @@
   
         <div class="row mb-3">
             <div class="col-md-4 form-group">
-                <label for="numeroRegistroAmbiental">Número de Registro Ambiental:</label>
-                <span class="text-danger">*</span>
+                <label for="numeroRegistroAmbiental">Número de Registro Ambiental*:</label>
                 <input type="text" class="form-control" placeholder="123123"
                 formControlName="numeroRegistroAmbiental" id="numeroRegistroAmbiental" maxlength="13" size="30" [ngClass]="isInvalid('numeroRegistroAmbiental') ? 'required' : ''" />
                 <div *ngIf="isInvalid('numeroRegistroAmbiental')" class="text-danger">
@@ -16,8 +15,7 @@
                   </div>
             </div>
             <div class="col-md-8 form-group">
-                <label for="descripcionGenerica1">Giro industrial del importador </label>
-                <span class="text-danger">*</span>
+                <label for="descripcionGenerica1">Giro industrial del importador*: </label>
                 <input type="text" class="form-control" placeholder="Giro industrial del importador" formControlName="descripcionGenerica1" id="descripcionGenerica1" maxlength="150" size="105" [ngClass]="isInvalid('descripcionGenerica1') ? 'required' : ''" />
                 <div *ngIf="isInvalid('descripcionGenerica1')" class="text-danger">
                     Este campo es obligatorio
@@ -26,12 +24,9 @@
             </div>
             <div class="row mb-3">
             <div class="col-md-4 form-group">
-                <label for="numeroProgramaImmex">Número de authorizacion Immex</label>
-                <span class="text-danger">*</span>
-                <select class="form-control numeroProgramaImmex" formControlName="numeroProgramaImmex" id="numeroProgramaImmex" [ngClass]="isInvalid('numeroProgramaImmex') ? 'required' : ''">
-                    <option value="">Seleccione un valor</option>
-                    <option *ngFor="let item of comboAutorizacionIMMEX" [value]="item.clave">{{ item.descripcion }}</option>
-                </select>
+                <app-catalogo-select [catalogo]='aduanas' formControlName="numeroProgramaImmex" [label]="'Número de authorizacion Immex'"
+                  [required]="true"></app-catalogo-select>
+              
                 <div *ngIf="isInvalid('numeroProgramaImmex')" class="text-danger">
                     Este campo es obligatorio
                 </div>
