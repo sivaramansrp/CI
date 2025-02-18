@@ -1,0 +1,1542 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>vucem-3.0-frontend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">vucem-3.0-frontend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  InputFechaComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/shared/components/input-fecha/input-fecha.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>input-fecha</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>ReactiveFormsModule</code>
+                            <code>BsDatepickerModule</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./input-fecha.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./input-fecha.component.scss</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#anios" >anios</a>
+                            </li>
+                            <li>
+                                <a href="#Formulario" >Formulario</a>
+                            </li>
+                            <li>
+                                <a href="#meses" >meses</a>
+                            </li>
+                            <li>
+                                <a href="#mostrar" >mostrar</a>
+                            </li>
+                            <li>
+                                <a href="#mountSelect" >mountSelect</a>
+                            </li>
+                            <li>
+                                <a href="#semana" >semana</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#cambioAnio" >cambioAnio</a>
+                            </li>
+                            <li>
+                                <a href="#cambioMes" >cambioMes</a>
+                            </li>
+                            <li>
+                                <a href="#changeMount" >changeMount</a>
+                            </li>
+                            <li>
+                                <a href="#clickDay" >clickDay</a>
+                            </li>
+                            <li>
+                                <a href="#generaanios" >generaanios</a>
+                            </li>
+                            <li>
+                                <a href="#generarFormulario" >generarFormulario</a>
+                            </li>
+                            <li>
+                                <a href="#getDayFromDate" >getDayFromDate</a>
+                            </li>
+                            <li>
+                                <a href="#mostrarCalendario" >mostrarCalendario</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnChanges" >ngOnChanges</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#datos" >datos</a>
+                            </li>
+                            <li>
+                                <a href="#setFecha" >setFecha</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#valorCambiado" >valorCambiado</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#fechaString" >fechaString</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(fb: FormBuilder)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:34</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>fb</td>
+                                                  
+                                                        <td>
+                                                                    <code>FormBuilder</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="datos"></a>
+                        <b>datos</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/InputFecha.html" target="_self" >InputFecha</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Required : </i>&nbsp;<b>true</b>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:25</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="setFecha"></a>
+                        <b>setFecha</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:24</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <section data-compodoc="block-outputs">
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="valorCambiado"></a>
+                        <b>valorCambiado</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;string&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:23</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cambioAnio"></a>
+                    <span class="name">
+                        <span ><b>cambioAnio</b></span>
+                        <a href="#cambioAnio"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>cambioAnio(event: Event)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="80"
+                                    class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:80</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>event</td>
+                                            <td>
+                                                        <code>Event</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cambioMes"></a>
+                    <span class="name">
+                        <span ><b>cambioMes</b></span>
+                        <a href="#cambioMes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>cambioMes(event: Event)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="95"
+                                    class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:95</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>event</td>
+                                            <td>
+                                                        <code>Event</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="changeMount"></a>
+                    <span class="name">
+                        <span ><b>changeMount</b></span>
+                        <a href="#changeMount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>changeMount(flag: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="143"
+                                    class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:143</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>flag</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clickDay"></a>
+                    <span class="name">
+                        <span ><b>clickDay</b></span>
+                        <a href="#clickDay"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>clickDay(day: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="177"
+                                    class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:177</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>day</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generaanios"></a>
+                    <span class="name">
+                        <span ><b>generaanios</b></span>
+                        <a href="#generaanios"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>generaanios()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="110"
+                                    class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:110</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generarFormulario"></a>
+                    <span class="name">
+                        <span ><b>generarFormulario</b></span>
+                        <a href="#generarFormulario"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>generarFormulario(fechaActual: moment.Moment)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="65"
+                                    class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:65</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>fechaActual</td>
+                                            <td>
+                                                        <code>moment.Moment</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDayFromDate"></a>
+                    <span class="name">
+                        <span ><b>getDayFromDate</b></span>
+                        <a href="#getDayFromDate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getDayFromDate(mount: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, year: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="121"
+                                    class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:121</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>mount</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>year</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mostrarCalendario"></a>
+                    <span class="name">
+                        <span ><b>mostrarCalendario</b></span>
+                        <a href="#mostrarCalendario"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>mostrarCalendario()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="195"
+                                    class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:195</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnChanges"></a>
+                    <span class="name">
+                        <span ><b>ngOnChanges</b></span>
+                        <a href="#ngOnChanges"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnChanges()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="48"
+                                    class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="anios"></a>
+                    <span class="name">
+                        <span ><b>anios</b></span>
+                        <a href="#anios"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>number[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Formulario"></a>
+                    <span class="name">
+                        <span ><b>Formulario</b></span>
+                        <a href="#Formulario"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>FormGroup</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="meses"></a>
+                    <span class="name">
+                        <span ><b>meses</b></span>
+                        <a href="#meses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>MESES</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mostrar"></a>
+                    <span class="name">
+                        <span ><b>mostrar</b></span>
+                        <a href="#mostrar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mountSelect"></a>
+                    <span class="name">
+                        <span ><b>mountSelect</b></span>
+                        <a href="#mountSelect"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>any[]</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="semana"></a>
+                    <span class="name">
+                        <span ><b>semana</b></span>
+                        <a href="#semana"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>SEMANA</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="fechaString"></a>
+                        <span class="name"><b>fechaString</b><a href="#fechaString"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>fechaString()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/app/shared/components/input-fecha/input-fecha.component.ts:61</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import { Component, EventEmitter, Input, Output } from &#x27;@angular/core&#x27;;
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from &#x27;@angular/forms&#x27;;
+import { MESES, SEMANA } from &#x27;../../constantes/servicios-extraordinarios.enum&#x27;;
+
+import moment from &#x27;moment&#x27;;
+import { InputFecha } from &#x27;../../../core/models/shared/components.model&#x27;;
+
+import { BsDatepickerModule } from &#x27;ngx-bootstrap/datepicker&#x27;
+
+@Component({
+  selector: &#x27;input-fecha&#x27;,
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    BsDatepickerModule,
+  ],
+  templateUrl: &#x27;./input-fecha.component.html&#x27;,
+  styleUrl: &#x27;./input-fecha.component.scss&#x27;,
+})
+export class InputFechaComponent {
+  @Output() valorCambiado: EventEmitter&lt;string&gt; &#x3D; new EventEmitter();
+  @Input() setFecha!: string;
+  @Input({required: true}) datos!: InputFecha;
+
+
+  meses &#x3D; MESES;
+  semana &#x3D; SEMANA;
+
+  anios: number[] &#x3D; [];
+  mountSelect!: any[];
+  mostrar: boolean &#x3D; false;
+  Formulario!: FormGroup;
+
+
+  constructor(
+    private fb: FormBuilder
+  ) {
+    moment.locale(&#x27;es&#x27;);
+    this.generaanios();
+    const fechaActual &#x3D; moment().format(&#x27;DD/MM/YYYY&#x27;);
+    const fecha &#x3D; fechaActual.split(&#x27;/&#x27;);
+    const ObjectDate &#x3D; moment.utc(&#x60;${fecha[2]}-${fecha[1]}-${fecha[0]}&#x60;);
+    this.generarFormulario(ObjectDate);
+  }
+
+  ngOnChanges() {
+    if (this.setFecha !&#x3D; &#x27;&#x27; &amp;&amp; this.setFecha !&#x3D; null) {
+      const fecha &#x3D; this.setFecha.split(&#x27;/&#x27;);
+      const ObjectDate &#x3D; moment.utc(&#x60;${fecha[2]}-${fecha[1]}-${fecha[0]}&#x60;);
+      this.generarFormulario(ObjectDate);
+      this.Formulario.controls[&#x27;fechaString&#x27;].enable();
+      this.Formulario.get(&#x27;fechaString&#x27;)?.setValue(
+        moment.utc(ObjectDate).format(&#x27;DD/MM/YYYY&#x27;),
+      );
+      this.Formulario.controls[&#x27;fechaString&#x27;].disable();
+    }
+  }
+
+  get fechaString() {
+    return this.Formulario.get(&#x27;fechaString&#x27;)?.value;
+  }
+
+  generarFormulario(fechaActual: moment.Moment) {
+    this.Formulario &#x3D; this.fb.group({
+      dia: [fechaActual.date()],
+      mes: [fechaActual.month() + 1],
+      anio: [fechaActual.year()],
+      fechaString: [],
+      fechaSeleccionada: [fechaActual],
+    });
+    this.Formulario.controls[&#x27;fechaString&#x27;].disable();
+    this.getDayFromDate(
+      this.Formulario.get(&#x27;mes&#x27;)?.value,
+      this.Formulario.get(&#x27;anio&#x27;)?.value,
+    );
+  }
+
+  cambioAnio(event: Event) {
+    this.Formulario.get(&#x27;anio&#x27;)?.setValue(
+      (event.target as HTMLInputElement).value,
+    );
+    const ObjectDate &#x3D; moment.utc(
+      &#x60;${this.Formulario.get(&#x27;anio&#x27;)?.value}-${this.Formulario.get(&#x27;mes&#x27;)?.value.toString().padStart(2, &#x27;0&#x27;)}-01&#x60;,
+    );
+    this.Formulario.get(&#x27;fechaSeleccionada&#x27;)?.setValue(ObjectDate);
+
+    this.getDayFromDate(
+      this.Formulario.get(&#x27;mes&#x27;)?.value,
+      this.Formulario.get(&#x27;anio&#x27;)?.value,
+    );
+  }
+
+  cambioMes(event: Event) {
+    this.Formulario.get(&#x27;mes&#x27;)?.setValue(
+      (event.target as HTMLInputElement).value,
+    );
+    const ObjectDate &#x3D; moment.utc(
+      &#x60;${this.Formulario.get(&#x27;anio&#x27;)?.value}-${this.Formulario.get(&#x27;mes&#x27;)?.value.toString().padStart(2, &#x27;0&#x27;)}-01&#x60;,
+    );
+    this.Formulario.get(&#x27;fechaSeleccionada&#x27;)?.setValue(ObjectDate);
+
+    this.getDayFromDate(
+      this.Formulario.get(&#x27;mes&#x27;)?.value,
+      this.Formulario.get(&#x27;anio&#x27;)?.value,
+    );
+  }
+
+  generaanios() {
+    const year &#x3D; moment().year();
+    const inicio &#x3D; year - 100;
+    const final &#x3D; year + 100;
+    let contador &#x3D; inicio;
+    do {
+      contador++;
+      this.anios.push(contador);
+    } while (contador !&#x3D; final);
+  }
+
+  getDayFromDate(mount: number, year: number) {
+    const startDate &#x3D; moment.utc(
+      &#x60;${year}-${mount.toString().padStart(2, &#x27;0&#x27;)}-01&#x60;,
+    );
+    const endDate &#x3D; startDate.clone().endOf(&#x27;month&#x27;);
+    const diffDays &#x3D; endDate.diff(startDate, &#x27;days&#x27;, true);
+    const numberDays &#x3D; Math.round(diffDays);
+    const arrayDays &#x3D; Object.keys([...Array(numberDays)]).map((a: any) &#x3D;&gt; {
+      a &#x3D; parseInt(a) + 1;
+      const diaFormato &#x3D; a &gt; 9 ? a : &#x27;0&#x27; + a;
+      const dayObject &#x3D; moment(
+        &#x60;${year}-${mount.toString().padStart(2, &#x27;0&#x27;)}-${diaFormato}&#x60;,
+      );
+      return {
+        name: dayObject.format(&#x27;dddd&#x27;),
+        value: a,
+        indexWeek: dayObject.isoWeekday(),
+      };
+    });
+    this.mountSelect &#x3D; arrayDays;
+  }
+
+  changeMount(flag: any) {
+    if (flag &lt; 0) {
+      const prevDate &#x3D; this.Formulario.get(&#x27;fechaSeleccionada&#x27;)
+        ?.value.clone()
+        .subtract(1, &#x27;month&#x27;);
+      this.Formulario.get(&#x27;mes&#x27;)?.setValue(prevDate.format(&#x27;M&#x27;));
+      this.Formulario.get(&#x27;anio&#x27;)?.setValue(prevDate.format(&#x27;YYYY&#x27;));
+      const ObjectDate &#x3D; moment.utc(
+        &#x60;${this.Formulario.get(&#x27;anio&#x27;)?.value}-${this.Formulario.get(&#x27;mes&#x27;)?.value.toString().padStart(2, &#x27;0&#x27;)}-01&#x60;,
+      );
+      this.Formulario.get(&#x27;fechaSeleccionada&#x27;)?.setValue(ObjectDate);
+
+      this.getDayFromDate(
+        this.Formulario.get(&#x27;mes&#x27;)?.value,
+        this.Formulario.get(&#x27;anio&#x27;)?.value,
+      );
+    } else {
+      const nextDate &#x3D; this.Formulario.get(&#x27;fechaSeleccionada&#x27;)
+        ?.value.clone()
+        .add(1, &#x27;month&#x27;);
+      this.Formulario.get(&#x27;mes&#x27;)?.setValue(nextDate.format(&#x27;M&#x27;));
+      this.Formulario.get(&#x27;anio&#x27;)?.setValue(nextDate.format(&#x27;YYYY&#x27;));
+      const ObjectDate &#x3D; moment.utc(
+        &#x60;${this.Formulario.get(&#x27;anio&#x27;)?.value}-${this.Formulario.get(&#x27;mes&#x27;)?.value.toString().padStart(2, &#x27;0&#x27;)}-01&#x60;,
+      );
+      this.Formulario.get(&#x27;fechaSeleccionada&#x27;)?.setValue(ObjectDate);
+
+      this.getDayFromDate(
+        this.Formulario.get(&#x27;mes&#x27;)?.value,
+        this.Formulario.get(&#x27;anio&#x27;)?.value,
+      );
+    }
+  }
+
+  clickDay(day: any) {
+    const mountYear &#x3D;
+      this.Formulario.get(&#x27;fechaSeleccionada&#x27;)?.value.format(&#x27;YYYY-MM&#x27;);
+    const dia &#x3D; day.value &gt; 9 ? day.value : &#x27;0&#x27; + day.value;
+    const parse &#x3D; &#x60;${mountYear}-${dia}&#x60;;
+    const ObjectDate &#x3D; moment(parse);
+    this.Formulario.get(&#x27;dia&#x27;)?.setValue(day.value);
+    this.Formulario.controls[&#x27;fechaString&#x27;].enable();
+    this.Formulario.get(&#x27;fechaString&#x27;)?.setValue(
+      moment.utc(ObjectDate).format(&#x27;DD/MM/YYYY&#x27;),
+    );
+    this.Formulario.controls[&#x27;fechaString&#x27;].disable();
+    this.Formulario.get(&#x27;fechaSeleccionada&#x27;)?.setValue(ObjectDate);
+    this.mostrar &#x3D; false;
+
+    this.valorCambiado.emit(this.Formulario.get(&#x27;fechaString&#x27;)?.value);
+  }
+
+  mostrarCalendario() {
+    if (this.datos.habilitado) {
+      this.mostrar &#x3D; true;
+    }
+  }
+
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;form-group&quot;&gt;
+  &lt;label for&#x3D;&quot;input_fecha&quot; class&#x3D;&quot;form-label&quot; &gt;{{datos.labelNombre}} {{datos.required ? &#x27;*&#x27; : &#x27;&#x27;}}:&lt;/label&gt;
+  &lt;div class&#x3D;&quot;d-flex justify-content-start&quot; [formGroup]&#x3D;&quot;Formulario&quot;&gt;
+    &lt;div class&#x3D;&quot;input-group-text&quot; id&#x3D;&quot;input_fecha&quot;&gt;
+      &lt;div class&#x3D;&quot;fecha&quot;&gt;
+        &lt;span&gt;{{fechaString}}&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;icono&quot;&gt;
+        &lt;span class&#x3D;&quot;d-flex justify-content-end &quot; id&#x3D;&quot;basic-addon2&quot; style&#x3D;&quot;cursor: pointer;&quot;
+          (click)&#x3D;&quot;mostrarCalendario()&quot;&gt;
+          &lt;i class&#x3D;&quot;bi bi-calendar-event&quot;&gt;&lt;/i&gt;&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;border&quot; *ngIf&#x3D;&quot;mostrar&quot;&gt;
+      &lt;div class&#x3D;&quot;contenido-botones&quot;&gt;
+        &lt;div class&#x3D;&quot;izquierda&quot; (click)&#x3D;&quot;changeMount(-1)&quot;&gt;
+          &lt;i class&#x3D;&quot;bi bi-chevron-left&quot;&gt;&lt;/i&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;anios&quot;&gt;
+          &lt;select class&#x3D;&quot;form-select texto_tamano&quot; aria-label&#x3D;&quot;Default select example&quot; formControlName&#x3D;&quot;anio&quot;
+            (change)&#x3D;&quot;cambioAnio($event)&quot;&gt;
+            &lt;option *ngFor&#x3D;&quot;let anio of anios&quot; [value]&#x3D;&quot;anio&quot;&gt;{{ anio }}&lt;/option&gt;
+          &lt;/select&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;meses&quot;&gt;
+          &lt;select class&#x3D;&quot;form-select texto_tamano&quot; aria-label&#x3D;&quot;Default select example&quot; formControlName&#x3D;&quot;mes&quot;
+            (change)&#x3D;&quot;cambioMes($event)&quot;&gt;
+            &lt;option *ngFor&#x3D;&quot;let mes of meses&quot; [value]&#x3D;&quot;mes.id&quot;&gt;{{ mes.mes }}&lt;/option&gt;
+          &lt;/select&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;derecha&quot; (click)&#x3D;&quot;changeMount(1)&quot;&gt;
+          &lt;i class&#x3D;&quot;bi bi-chevron-right&quot;&gt;&lt;/i&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;ol&gt;
+        &lt;li *ngFor&#x3D;&quot;let dia of semana&quot; class&#x3D;&quot;day-name&quot;&gt; {{dia | slice:0:3}}&lt;/li&gt;
+        &lt;li (click)&#x3D;&quot;clickDay(day)&quot; *ngFor&#x3D;&quot;let day of mountSelect;let first &#x3D; first&quot;
+          [style.gridColumnStart]&#x3D;&quot;first ? day?.indexWeek : &#x27;auto&#x27;&quot; class&#x3D;&quot;day&quot;
+          [class.activo]&#x3D;&quot;day?.value &#x3D;&#x3D; this.Formulario.get(&#x27;dia&#x27;)?.value ? &#x27;activo&#x27; : &#x27;&#x27;&quot; class&#x3D;&quot;day&quot;&gt;
+          &lt;span&gt;{{day?.value}}&lt;/span&gt;
+        &lt;/li&gt;
+
+      &lt;/ol&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="form-group">  <label for="input_fecha" class="form-label" >{{datos.labelNombre}} {{datos.required ? \'*\' : \'\'}}:</label>  <div class="d-flex justify-content-start" [formGroup]="Formulario">    <div class="input-group-text" id="input_fecha">      <div class="fecha">        <span>{{fechaString}}</span>      </div>      <div class="icono">        <span class="d-flex justify-content-end " id="basic-addon2" style="cursor: pointer;"          (click)="mostrarCalendario()">          <i class="bi bi-calendar-event"></i></span>      </div>    </div>    <div class="border" *ngIf="mostrar">      <div class="contenido-botones">        <div class="izquierda" (click)="changeMount(-1)">          <i class="bi bi-chevron-left"></i>        </div>        <div class="anios">          <select class="form-select texto_tamano" aria-label="Default select example" formControlName="anio"            (change)="cambioAnio($event)">            <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>          </select>        </div>        <div class="meses">          <select class="form-select texto_tamano" aria-label="Default select example" formControlName="mes"            (change)="cambioMes($event)">            <option *ngFor="let mes of meses" [value]="mes.id">{{ mes.mes }}</option>          </select>        </div>        <div class="derecha" (click)="changeMount(1)">          <i class="bi bi-chevron-right"></i>        </div>      </div>      <ol>        <li *ngFor="let dia of semana" class="day-name"> {{dia | slice:0:3}}</li>        <li (click)="clickDay(day)" *ngFor="let day of mountSelect;let first = first"          [style.gridColumnStart]="first ? day?.indexWeek : \'auto\'" class="day"          [class.activo]="day?.value == this.Formulario.get(\'dia\')?.value ? \'activo\' : \'\'" class="day">          <span>{{day?.value}}</span>        </li>      </ol>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AcuseComponent', 'selector': 'app-component-acuse'},{'name': 'AcusePageComponent', 'selector': ''},{'name': 'AdministrarResiduosComponent', 'selector': 'app-administrar-residuos'},{'name': 'AgentesAgenciasAduanalesComponent', 'selector': 'agentes-agencias-aduanales'},{'name': 'AgregaPersonasComponent', 'selector': 'agrega-personas'},{'name': 'AgregaPersonasComponent', 'selector': 'agrega-personas'},{'name': 'AgregarArchivoComponent', 'selector': 'app-agregar-archivo'},{'name': 'AgregarDestinatoriaComponent', 'selector': 'app-agregar-destinatoria'},{'name': 'AgregarMiembrosEmpresaComponent', 'selector': 'agregar-miembros-empresa'},{'name': 'AgregarTransporteComponent', 'selector': 'agregar-transporte'},{'name': 'AlertComponent', 'selector': 'ng-alert'},{'name': 'AnexarDocumentosComponent', 'selector': 'app-anexar-documentos'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthPageComponent', 'selector': ''},{'name': 'BreadcrumbComponent', 'selector': 'c-breadcrumb'},{'name': 'BtnContinuarComponent', 'selector': 'btn-continuar'},{'name': 'CatalogoSelectComponent', 'selector': 'app-catalogo-select'},{'name': 'ClientesProveedoresExtrajeroComponent', 'selector': 'app-clientes-proveedores-extrajero'},{'name': 'CombinacionRequeridaComponent', 'selector': 'app-combinacion-requerida'},{'name': 'ConfirmarNotificacionComponent', 'selector': 'confirmar-notificacion'},{'name': 'ControlInventariosComponent', 'selector': 'control-inventarios'},{'name': 'CriterioDeDictComponent', 'selector': 'app-criterio-de-dict'},{'name': 'CrosslistComponent', 'selector': 'crosslist'},{'name': 'DatosAdicionalesComponent', 'selector': 'app-datos-adicionales'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosComponent', 'selector': 'app-pantalla-datos'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosDeLaComponent', 'selector': 'app-datos-de-la'},{'name': 'DatosDelaComponent', 'selector': 'app-datos-dela'},{'name': 'DatosDeLaSolicitudComponent', 'selector': 'app-datos-de-la-solicitud'},{'name': 'DatosDelComponent', 'selector': 'app-datos-del'},{'name': 'DatosDeLosResiduosComponent', 'selector': 'app-datos-de-los-residuos'},{'name': 'DatosGeneralsAnimalsComponent', 'selector': 'app-datos-generals-animals'},{'name': 'DatosParaMovilizacionNacionalComponent', 'selector': 'app-datos-para-movilizacion-nacional'},{'name': 'DatosTransportistaComponent', 'selector': 'datos-transportista'},{'name': 'DespachoMercanciasSolicitudComponent', 'selector': 'despacho-mercancias-solicitud'},{'name': 'DetosDelMarcanciaComponent', 'selector': 'app-detos-del-marcancia'},{'name': 'DetosDelTramiteComponent', 'selector': 'app-detos-del-tramite'},{'name': 'EmpleadosContratadosComponent', 'selector': 'empleados-contratados'},{'name': 'EmpleadosContratadosComponent', 'selector': 'empleados-contratados'},{'name': 'FirmaElectronicaComponent', 'selector': 'firma-electronica'},{'name': 'FooterComponent', 'selector': 'c-footer'},{'name': 'HeaderComponent', 'selector': 'c-header'},{'name': 'InformacionUsuarioComponent', 'selector': 'informacion-usuario'},{'name': 'InputCheckComponent', 'selector': 'input-check'},{'name': 'InputFechaComponent', 'selector': 'input-fecha'},{'name': 'InputHoraComponent', 'selector': 'input-hora'},{'name': 'InputRadioComponent', 'selector': 'app-input-radio'},{'name': 'ModalConfirmarComponent', 'selector': 'app-modal-confirmar'},{'name': 'NavComponent', 'selector': 'c-header-nav'},{'name': 'OctavaTemporalComponent', 'selector': 'app-octava-temporal'},{'name': 'PagoDeDerechoComponent', 'selector': 'app-pago-de-derecho'},{'name': 'PagoDeDerechosComponent', 'selector': 'app-pago-de-derechos'},{'name': 'PagoDerechosComponent', 'selector': 'pago-derechos'},{'name': 'PaisProcendenciaComponent', 'selector': 'app-pais-procendencia'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PartidasDeLaComponent', 'selector': 'app-partidas-de-la'},{'name': 'PasoCuatroComponent', 'selector': 'app-paso-cuatro'},{'name': 'PasoCuatroComponent', 'selector': 'paso-cuatro'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoDosComponent', 'selector': 'paso-dos'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoTresComponent', 'selector': 'app-paso-tres'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'app-paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PedimentoComponent', 'selector': 'c-pedimento'},{'name': 'PedimentoComponent', 'selector': 'c-pedimento'},{'name': 'RegistroPageComponent', 'selector': ''},{'name': 'RepresentacionComponent', 'selector': 'app-representacion'},{'name': 'RepresentanteFiscalComponent', 'selector': 'representante-fiscal'},{'name': 'SeleccionTramiteComponent', 'selector': 'seleccion-tramite'},{'name': 'SelectCatalogosComponent', 'selector': 'select-catalogos'},{'name': 'SelectPaisesComponent', 'selector': 'app-select-paises'},{'name': 'SolicitanteComponent', 'selector': 'solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteDetosTabsComponent', 'selector': 'app-solicitante-detos-tabs'},{'name': 'SolicitanteOctavaTemporalComponent', 'selector': 'app-solocitante-octava-temporal'},{'name': 'SolicitudComponent', 'selector': 'solicitud'},{'name': 'SolicitudComponent', 'selector': 'solicitud'},{'name': 'SolicitudComponent', 'selector': 'app-solicitud'},{'name': 'SolicitudPageComponent', 'selector': ''},{'name': 'SolicitudPageComponent', 'selector': ''},{'name': 'SolicitudPantallasComponent', 'selector': 'app-solicitud'},{'name': 'TableComponent', 'selector': 'ng-table'},{'name': 'TercerosComponent', 'selector': 'terceros'},{'name': 'TercerosRelacionadosComponent', 'selector': 'app-terceros-relacionados'},{'name': 'TestPageComponent', 'selector': 'test-page'},{'name': 'TituloComponent', 'selector': 'ng-titulo'},{'name': 'TransporteComponent', 'selector': 'app-transporte'},{'name': 'TratadosComponent', 'selector': 'app-tratados'},{'name': 'UsoEspicificoComponent', 'selector': 'app-uso-espicifico'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'ZoosanitarioPageComponent', 'selector': 'app-zoosanitario-page'}];
+    var DIRECTIVES = [{'name': 'CalendarioFormatoDirective', 'selector': '[CalendarioFormato]'},{'name': 'HoraFormatoDirective', 'selector': '[HoraFormato]'},{'name': 'NumeroTelefonicoDirective', 'selector': '[appNumeroTelefonico]'},{'name': 'SoloNumerosDirective', 'selector': '[appSoloNumeros]'},{'name': 'UppercaseDirective', 'selector': '[appUppercase]'}];
+    var ACTUAL_COMPONENT = {'name': 'InputFechaComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'InputFechaComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

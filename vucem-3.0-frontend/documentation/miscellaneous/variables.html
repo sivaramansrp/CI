@@ -1,0 +1,3368 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>vucem-3.0-frontend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">vucem-3.0-frontend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content miscellaneous-variables">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Miscellaneous</li>
+  <li class="breadcrumb-item">Variables</li>
+</ol>
+
+<section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <ul class="index-list">
+                        <li>
+                            <a href="#ACUSE_SERVICIOS_EXTRAORDINARIOS" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>ACUSE_SERVICIOS_EXTRAORDINARIOS</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AEREO" title="src/app/shared/constantes/formularios-transportes.enums.ts" ><b>AEREO</b>&nbsp;&nbsp;&nbsp;(src/.../formularios-transportes.enums.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#bootstrap" title="src/app/shared/components/anexar-documentos/anexar-documentos.component.ts" ><b>bootstrap</b>&nbsp;&nbsp;&nbsp;(src/.../anexar-documentos.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#bootstrap" title="src/app/tramites/303/components/agentes-agencias-aduanales/agentes-agencias-aduanales.component.ts" ><b>bootstrap</b>&nbsp;&nbsp;&nbsp;(src/.../agentes-agencias-aduanales.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CARRETERO" title="src/app/shared/constantes/formularios-transportes.enums.ts" ><b>CARRETERO</b>&nbsp;&nbsp;&nbsp;(src/.../formularios-transportes.enums.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CATALOGOS_ID" title="src/app/shared/constantes/constantes.ts" ><b>CATALOGOS_ID</b>&nbsp;&nbsp;&nbsp;(src/.../constantes.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CODIGOS_HTTP" title="src/app/shared/constantes/constantes.ts" ><b>CODIGOS_HTTP</b>&nbsp;&nbsp;&nbsp;(src/.../constantes.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CONSTANTES" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>CONSTANTES</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#COOKIE" title="src/app/shared/constantes/constantes.ts" ><b>COOKIE</b>&nbsp;&nbsp;&nbsp;(src/.../constantes.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CORREO_INVALIDO" title="src/app/shared/constantes/mensajes-error-formularios.ts" ><b>CORREO_INVALIDO</b>&nbsp;&nbsp;&nbsp;(src/.../mensajes-error-formularios.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DESPACHO_DD" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>DESPACHO_DD</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DESPACHO_LDA" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>DESPACHO_LDA</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA" title="src/app/shared/constantes/solicitante-constantes.enum.ts" ><b>DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA</b>&nbsp;&nbsp;&nbsp;(src/.../solicitante-constantes.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL" title="src/app/shared/constantes/solicitante-constantes.enum.ts" ><b>DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL</b>&nbsp;&nbsp;&nbsp;(src/.../solicitante-constantes.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DPI" title="src/app/shared/constantes/constantes.ts" ><b>DPI</b>&nbsp;&nbsp;&nbsp;(src/.../constantes.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ELVALORALERTA" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>ELVALORALERTA</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#enviroment" title="src/enviroments/enviroment.ts" ><b>enviroment</b>&nbsp;&nbsp;&nbsp;(src/.../enviroment.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FECHA_DE_PAGO" title="src/app/shared/constantes/certificado-zoosanitario.enum.ts" ><b>FECHA_DE_PAGO</b>&nbsp;&nbsp;&nbsp;(src/.../certificado-zoosanitario.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FECHA_FINAL" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>FECHA_FINAL</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FECHA_INICIO" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>FECHA_INICIO</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FECHA_SALIDA" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>FECHA_SALIDA</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FERROVIARIO" title="src/app/shared/constantes/formularios-transportes.enums.ts" ><b>FERROVIARIO</b>&nbsp;&nbsp;&nbsp;(src/.../formularios-transportes.enums.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#HORA_FINAL" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>HORA_FINAL</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#HORA_INICIO" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>HORA_INICIO</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#IDDEUSUARIO" title="src/app/shared/constantes/certificado-zoosanitario.enum.ts" ><b>IDDEUSUARIO</b>&nbsp;&nbsp;&nbsp;(src/.../certificado-zoosanitario.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#IMMEX" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>IMMEX</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#INDUSTRIA_AUTOMOTRIZ" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>INDUSTRIA_AUTOMOTRIZ</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#INTRODUZCA_NUMERO" title="src/app/shared/constantes/mensajes-error-formularios.ts" ><b>INTRODUZCA_NUMERO</b>&nbsp;&nbsp;&nbsp;(src/.../mensajes-error-formularios.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#KB" title="src/app/shared/constantes/constantes.ts" ><b>KB</b>&nbsp;&nbsp;&nbsp;(src/.../constantes.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#LOGIN" title="src/app/shared/constantes/constantes.ts" ><b>LOGIN</b>&nbsp;&nbsp;&nbsp;(src/.../constantes.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#MARITIMO" title="src/app/shared/constantes/formularios-transportes.enums.ts" ><b>MARITIMO</b>&nbsp;&nbsp;&nbsp;(src/.../formularios-transportes.enums.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#MB" title="src/app/shared/constantes/constantes.ts" ><b>MB</b>&nbsp;&nbsp;&nbsp;(src/.../constantes.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#MENSAJE_ALERTA_TRATADOS" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>MENSAJE_ALERTA_TRATADOS</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#MENSAJEDEALERTA" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>MENSAJEDEALERTA</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#MESES" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>MESES</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#MILISEGUNDOS" title="src/app/shared/constantes/constantes.ts" ><b>MILISEGUNDOS</b>&nbsp;&nbsp;&nbsp;(src/.../constantes.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#OctaTempo" title="src/app/core/services/130102/octava-temporal.enum.ts" ><b>OctaTempo</b>&nbsp;&nbsp;&nbsp;(src/.../octava-temporal.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#OTRO" title="src/app/shared/constantes/formularios-transportes.enums.ts" ><b>OTRO</b>&nbsp;&nbsp;&nbsp;(src/.../formularios-transportes.enums.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PADDING" title="src/app/shared/constantes/constantes.ts" ><b>PADDING</b>&nbsp;&nbsp;&nbsp;(src/.../constantes.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PANTAPASOS" title="src/app/core/services/110101/pantallas-svc.enum.ts" ><b>PANTAPASOS</b>&nbsp;&nbsp;&nbsp;(src/.../pantallas-svc.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PANTAPASOS" title="src/app/core/services/220471/servicios-pantallas.enum.ts" ><b>PANTAPASOS</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-pantallas.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PASOS" title="src/app/shared/constantes/aviso.enum.ts" ><b>PASOS</b>&nbsp;&nbsp;&nbsp;(src/.../aviso.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PASOS" title="src/app/shared/constantes/certificado-zoosanitario.enum.ts" ><b>PASOS</b>&nbsp;&nbsp;&nbsp;(src/.../certificado-zoosanitario.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PASOS" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>PASOS</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PASOS" title="src/app/shared/constantes/303/pasos.enums.ts" ><b>PASOS</b>&nbsp;&nbsp;&nbsp;(src/.../pasos.enums.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PDF" title="src/app/shared/constantes/constantes.ts" ><b>PDF</b>&nbsp;&nbsp;&nbsp;(src/.../constantes.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PEATONAL" title="src/app/shared/constantes/formularios-transportes.enums.ts" ><b>PEATONAL</b>&nbsp;&nbsp;&nbsp;(src/.../formularios-transportes.enums.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PERSONA_FISICA_EXTRANJERO" title="src/app/shared/constantes/solicitante-constantes.enum.ts" ><b>PERSONA_FISICA_EXTRANJERO</b>&nbsp;&nbsp;&nbsp;(src/.../solicitante-constantes.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PERSONA_FISICA_NACIONAL" title="src/app/shared/constantes/solicitante-constantes.enum.ts" ><b>PERSONA_FISICA_NACIONAL</b>&nbsp;&nbsp;&nbsp;(src/.../solicitante-constantes.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PERSONA_FISICA_SACIONAL" title="src/app/shared/constantes/solicitante-constantes.enum.ts" ><b>PERSONA_FISICA_SACIONAL</b>&nbsp;&nbsp;&nbsp;(src/.../solicitante-constantes.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PERSONA_MORAL_EXTRANJERO" title="src/app/shared/constantes/solicitante-constantes.enum.ts" ><b>PERSONA_MORAL_EXTRANJERO</b>&nbsp;&nbsp;&nbsp;(src/.../solicitante-constantes.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PERSONA_MORAL_NACIONAL" title="src/app/shared/constantes/solicitante-constantes.enum.ts" ><b>PERSONA_MORAL_NACIONAL</b>&nbsp;&nbsp;&nbsp;(src/.../solicitante-constantes.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PROGRAMA_FOMENTO" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>PROGRAMA_FOMENTO</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PROTESTA" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>PROTESTA</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Regx" title="src/app/shared/constantes/regex.constants.ts" ><b>Regx</b>&nbsp;&nbsp;&nbsp;(src/.../regex.constants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#REQUERIDO" title="src/app/shared/constantes/mensajes-error-formularios.ts" ><b>REQUERIDO</b>&nbsp;&nbsp;&nbsp;(src/.../mensajes-error-formularios.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#RFC_INVALIDO" title="src/app/shared/constantes/mensajes-error-formularios.ts" ><b>RFC_INVALIDO</b>&nbsp;&nbsp;&nbsp;(src/.../mensajes-error-formularios.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SECCIONES_TRAMITE_5701" title="src/app/shared/constantes/seccionesTramites.ts" ><b>SECCIONES_TRAMITE_5701</b>&nbsp;&nbsp;&nbsp;(src/.../seccionesTramites.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SEMANA" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>SEMANA</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SEMANA_D" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>SEMANA_D</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SOCIO_COMERCIAL" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>SOCIO_COMERCIAL</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SUCECESS_MESSAGE_STAGEONE" title="src/app/shared/constantes/certificado-zoosanitario.enum.ts" ><b>SUCECESS_MESSAGE_STAGEONE</b>&nbsp;&nbsp;&nbsp;(src/.../certificado-zoosanitario.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TELEFONO_INVAIDO" title="src/app/shared/constantes/mensajes-error-formularios.ts" ><b>TELEFONO_INVAIDO</b>&nbsp;&nbsp;&nbsp;(src/.../mensajes-error-formularios.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TERCEROR_TEXTO_DE_ALERTA" title="src/app/shared/constantes/certificado-zoosanitario.enum.ts" ><b>TERCEROR_TEXTO_DE_ALERTA</b>&nbsp;&nbsp;&nbsp;(src/.../certificado-zoosanitario.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TEXTOS" title="src/app/shared/constantes/certificado-zoosanitario.enum.ts" ><b>TEXTOS</b>&nbsp;&nbsp;&nbsp;(src/.../certificado-zoosanitario.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TEXTOS" title="src/app/shared/constantes/octava-temporal.enum.ts" ><b>TEXTOS</b>&nbsp;&nbsp;&nbsp;(src/.../octava-temporal.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TEXTOS" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>TEXTOS</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TEXTOS" title="src/app/shared/constantes/303/texto.enum.ts" ><b>TEXTOS</b>&nbsp;&nbsp;&nbsp;(src/.../texto.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TEXTOS_REQUISITOS" title="src/app/shared/constantes/certificado-zoosanitario.enum.ts" ><b>TEXTOS_REQUISITOS</b>&nbsp;&nbsp;&nbsp;(src/.../certificado-zoosanitario.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TIPO_PERSONA" title="src/app/shared/constantes/constantes.ts" ><b>TIPO_PERSONA</b>&nbsp;&nbsp;&nbsp;(src/.../constantes.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TIPO_SOLICITUD" title="src/app/shared/constantes/constantes.ts" ><b>TIPO_SOLICITUD</b>&nbsp;&nbsp;&nbsp;(src/.../constantes.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TITULO_ACUSE" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>TITULO_ACUSE</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TXT_ALERTA_ACUSE" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>TXT_ALERTA_ACUSE</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UNIDADES" title="src/app/shared/constantes/constantes.ts" ><b>UNIDADES</b>&nbsp;&nbsp;&nbsp;(src/.../constantes.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#URL_PRUEBA" title="src/app/shared/constantes/servicios-extraordinarios.enum.ts" ><b>URL_PRUEBA</b>&nbsp;&nbsp;&nbsp;(src/.../servicios-extraordinarios.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL" title="src/app/shared/constantes/certificado-zoosanitario.enum.ts" ><b>ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL</b>&nbsp;&nbsp;&nbsp;(src/.../certificado-zoosanitario.enum.ts)</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    <h3>src/app/shared/constantes/servicios-extraordinarios.enum.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ACUSE_SERVICIOS_EXTRAORDINARIOS"></a>
+                    <span class="name">
+                        <span ><b>ACUSE_SERVICIOS_EXTRAORDINARIOS</b></span>
+                        <a href="#ACUSE_SERVICIOS_EXTRAORDINARIOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  txtAlerta:
+    &#x27;Tu solicitud ha sido registrada con el siguiente número de folio:&#x27;,
+  tituloSeccionAcuse: &#x27;Acuse(s)&#x27;,
+  encabezadoTablaAcuse: [
+    {
+      key: &#x27;id&#x27;,
+      valor: &#x27;No.&#x27;,
+    },
+    {
+      key: &#x27;documento&#x27;,
+      valor: &#x27;Documento.&#x27;,
+    },
+  ],
+  datosTablaAcuse: [
+    {
+      id: 1,
+      idDocumento: &#x27;doc12&#x27;,
+      documento: &#x27;Acuse de recepción de trámite&#x27;,
+      urlPdf: &#x27;assets/pdf/Test03.pdf&#x27;,
+    },
+  ],
+  accionesTablaAcuse: [
+    {
+      tipo: &#x27;descargar&#x27;,
+      label: &#x27;Descargar&#x27;,
+      icono: &#x27;bi-arrow-bar-down&#x27;,
+    },
+  ],
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CONSTANTES"></a>
+                    <span class="name">
+                        <span ><b>CONSTANTES</b></span>
+                        <a href="#CONSTANTES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  EXP_CORREO: /^[\w-]+(?:\.[\w-]+)*@(?:[\w-]+\.)+[a-zA-Z]{2,7}$/,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DESPACHO_DD"></a>
+                    <span class="name">
+                        <span ><b>DESPACHO_DD</b></span>
+                        <a href="#DESPACHO_DD"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  labelNombre: &#x27;Autorizacion DDEX&#x27;,
+  maxlength: 10,
+  minlenght: 0,
+  required: false,
+  alfanumerico: true,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DESPACHO_LDA"></a>
+                    <span class="name">
+                        <span ><b>DESPACHO_LDA</b></span>
+                        <a href="#DESPACHO_LDA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  labelNombre: &#x27;RFC autorización LDA&#x27;,
+  maxlength: 10,
+  minlenght: 0,
+  required: false,
+  alfanumerico: true,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ELVALORALERTA"></a>
+                    <span class="name">
+                        <span ><b>ELVALORALERTA</b></span>
+                        <a href="#ELVALORALERTA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  ADJUNTAR: &#x60;&lt;p&gt;El valor de la transacción debe ser mayor al valor de dólares para insumos/envases.&lt;/p&gt;&#x60;,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FECHA_FINAL"></a>
+                    <span class="name">
+                        <span ><b>FECHA_FINAL</b></span>
+                        <a href="#FECHA_FINAL"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  labelNombre: &#x27;Fecha final&#x27;,
+  required: true,
+  habilitado: true,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FECHA_INICIO"></a>
+                    <span class="name">
+                        <span ><b>FECHA_INICIO</b></span>
+                        <a href="#FECHA_INICIO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  labelNombre: &#x27;Fecha inicio&#x27;,
+  required: true,
+  habilitado: true,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FECHA_SALIDA"></a>
+                    <span class="name">
+                        <span ><b>FECHA_SALIDA</b></span>
+                        <a href="#FECHA_SALIDA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  labelNombre:&#x27;Fecha de expedición de certificado de Molino o de calidad&#x27;,
+  required: true,
+  habilitado: false,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="HORA_FINAL"></a>
+                    <span class="name">
+                        <span ><b>HORA_FINAL</b></span>
+                        <a href="#HORA_FINAL"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  labelNombre: &#x27;Hora final&#x27;,
+  required: true,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="HORA_INICIO"></a>
+                    <span class="name">
+                        <span ><b>HORA_INICIO</b></span>
+                        <a href="#HORA_INICIO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  labelNombre: &#x27;Hora inicio&#x27;,
+  required: true,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="IMMEX"></a>
+                    <span class="name">
+                        <span ><b>IMMEX</b></span>
+                        <a href="#IMMEX"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  labelNombre: &#x27;IMMEX (Número/aaaa)&#x27;,
+  maxlength: 25,
+  minlenght: 0,
+  required: false,
+  alfanumerico: true,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="INDUSTRIA_AUTOMOTRIZ"></a>
+                    <span class="name">
+                        <span ><b>INDUSTRIA_AUTOMOTRIZ</b></span>
+                        <a href="#INDUSTRIA_AUTOMOTRIZ"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  labelNombre: &#x27;Industria Automotriz&#x27;,
+  maxlength: 25,
+  minlenght: 0,
+  required: false,
+  alfanumerico: true,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MENSAJE_ALERTA_TRATADOS"></a>
+                    <span class="name">
+                        <span ><b>MENSAJE_ALERTA_TRATADOS</b></span>
+                        <a href="#MENSAJE_ALERTA_TRATADOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  MENSAJE_ALERTA:&#x60;
+&lt;ul&gt;
+  Para seleccionar un tratado y criterio, siga los siguientes pasos:
+  &lt;li&gt;Primero seleccione un país o bloque&lt;/li&gt;
+  &lt;li&gt;Después seleccione un tratado o acuerdo&lt;/li&gt;
+  &lt;li&gt;Seleccione el criterio para conferir origen&lt;/li&gt;
+  &lt;li&gt;Finalmente, agregue su selección a la lista de tratados&lt;/li&gt;
+&lt;/ul&gt;
+&#x60;}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MENSAJEDEALERTA"></a>
+                    <span class="name">
+                        <span ><b>MENSAJEDEALERTA</b></span>
+                        <a href="#MENSAJEDEALERTA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  ADJUNTAR: &#x60;&lt;p&gt;Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro&lt;/p&gt;&#x60;,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MESES"></a>
+                    <span class="name">
+                        <span ><b>MESES</b></span>
+                        <a href="#MESES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  { id: &#x27;1&#x27;, mes: &#x27;Enero&#x27; },
+  { id: &#x27;2&#x27;, mes: &#x27;Febrero&#x27; },
+  { id: &#x27;3&#x27;, mes: &#x27;Marzo&#x27; },
+  { id: &#x27;4&#x27;, mes: &#x27;Abril&#x27; },
+  { id: &#x27;5&#x27;, mes: &#x27;Mayo&#x27; },
+  { id: &#x27;6&#x27;, mes: &#x27;Junio&#x27; },
+  { id: &#x27;7&#x27;, mes: &#x27;Julio&#x27; },
+  { id: &#x27;8&#x27;, mes: &#x27;Agosto&#x27; },
+  { id: &#x27;9&#x27;, mes: &#x27;Septiembre&#x27; },
+  { id: &#x27;10&#x27;, mes: &#x27;Octubre&#x27; },
+  { id: &#x27;11&#x27;, mes: &#x27;Noviembre&#x27; },
+  { id: &#x27;12&#x27;, mes: &#x27;Diciembre&#x27; },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PASOS"></a>
+                    <span class="name">
+                        <span ><b>PASOS</b></span>
+                        <a href="#PASOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    indice: 1,
+    titulo: &#x27;Capturar solicitud&#x27;,
+    activo: true,
+    completado: true,
+  },
+  {
+    indice: 2,
+    titulo: &#x27;Anexar necesarios&#x27;,
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 3,
+    titulo: &#x27;Firmar solicitud&#x27;,
+    activo: false,
+    completado: false,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PROGRAMA_FOMENTO"></a>
+                    <span class="name">
+                        <span ><b>PROGRAMA_FOMENTO</b></span>
+                        <a href="#PROGRAMA_FOMENTO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  labelNombre: &#x27;Programa de fomento&#x27;,
+  maxlength: 25,
+  minlenght: 0,
+  required: false,
+  alfanumerico: true,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PROTESTA"></a>
+                    <span class="name">
+                        <span ><b>PROTESTA</b></span>
+                        <a href="#PROTESTA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  ADJUNTAR: &#x60;&lt;input class&#x3D;&quot;form-check-input&quot; type&#x3D;&quot;checkbox&quot; id&#x3D;&quot;protesta&quot;&gt;
+  &lt;p&gt;El/la que suscribe manifiesto(a) bajo protesta de decir verdad, que la información declarada en el presente trámite de REGISTRO ÚNICO DE PRODUCTOS ELEGIBLES PARA PREFERENCIAS Y CONCESIONES ARANCELARIAS es copia fiel, íntegra e inalterada de la información y documentación soporte que obra en poder del (de la) solicitante.&lt;/p&gt;&#x60;,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SEMANA"></a>
+                    <span class="name">
+                        <span ><b>SEMANA</b></span>
+                        <a href="#SEMANA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  &#x27;Lunes&#x27;,
+  &#x27;Martes&#x27;,
+  &#x27;Miercoles&#x27;,
+  &#x27;Jueves&#x27;,
+  &#x27;Viernes&#x27;,
+  &#x27;Sabado&#x27;,
+  &#x27;Domingo&#x27;,
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SEMANA_D"></a>
+                    <span class="name">
+                        <span ><b>SEMANA_D</b></span>
+                        <a href="#SEMANA_D"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  &#x27;Domingo&#x27;,
+  &#x27;Lunes&#x27;,
+  &#x27;Martes&#x27;,
+  &#x27;Miercoles&#x27;,
+  &#x27;Jueves&#x27;,
+  &#x27;Viernes&#x27;,
+  &#x27;Sabado&#x27;,
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SOCIO_COMERCIAL"></a>
+                    <span class="name">
+                        <span ><b>SOCIO_COMERCIAL</b></span>
+                        <a href="#SOCIO_COMERCIAL"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  labelNombre: &#x27;ID Socio comercial&#x27;,
+  maxlength: 10,
+  minlenght: 0,
+  required: false,
+  alfanumerico: true,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TEXTOS"></a>
+                    <span class="name">
+                        <span ><b>TEXTOS</b></span>
+                        <a href="#TEXTOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  INSTRUCCIONES: &#x60;&lt;h6&gt;Instrucciones&lt;/h6&gt;
+  &lt;p&gt;- De acuerdo al caso particular, algunos documentos podrían ser obligatorios&lt;/p&gt;
+  &lt;p&gt;- En caso de que no requieras algún documento, seleccionalo y elíminalo&lt;/p&gt;
+  &lt;p&gt;- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista.&lt;/p&gt;&#x60;,
+  ADJUNTAR: &#x60;&lt;p&gt;Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón &quot;Adjuntar dcumentos&quot;&lt;/p&gt;&#x60;,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TITULO_ACUSE"></a>
+                    <span class="name">
+                        <span ><b>TITULO_ACUSE</b></span>
+                        <a href="#TITULO_ACUSE"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Acuse(s)&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TXT_ALERTA_ACUSE"></a>
+                    <span class="name">
+                        <span ><b>TXT_ALERTA_ACUSE</b></span>
+                        <a href="#TXT_ALERTA_ACUSE"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(folio: string) &#x3D;&gt; {
+  return &#x60;Tu solicitud ha sido registrada con el siguiente número de folio:  &lt; ${folio} &gt;&#x60;;
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="URL_PRUEBA"></a>
+                    <span class="name">
+                        <span ><b>URL_PRUEBA</b></span>
+                        <a href="#URL_PRUEBA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;assets/pdf/Test03.pdf&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/shared/constantes/formularios-transportes.enums.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AEREO"></a>
+                    <span class="name">
+                        <span ><b>AEREO</b></span>
+                        <a href="#AEREO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  &#x27;emp_transportitsa&#x27;,
+  &#x27;n_carta_porte&#x27;,
+  &#x27;f_carta_porte&#x27;,
+  &#x27;marca&#x27;,
+  &#x27;modelo&#x27;,
+  &#x27;placas&#x27;,
+  &#x27;contenedor&#x27;,
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CARRETERO"></a>
+                    <span class="name">
+                        <span ><b>CARRETERO</b></span>
+                        <a href="#CARRETERO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    labelNombre: &#x27;Empresa transportista&#x27;,
+    campo: &#x27;emp_transportista&#x27;,
+    class: &#x27;col-md-6&#x27;,
+    tipo_input: &#x27;text&#x27;
+  },
+  {
+    labelNombre: &#x27;Número carta porte&#x27;,
+    campo: &#x27;n_carta_porte&#x27;,
+    class: &#x27;col-md-6&#x27;,
+    tipo_input: &#x27;text&#x27;
+  },
+  {
+    labelNombre: &#x27;Fecha carta porte&#x27;,
+    campo: &#x27;f_carta_porte&#x27;,
+    class: &#x27;col-md-6&#x27;,
+    tipo_input: &#x27;date&#x27;
+  },
+  {
+    labelNombre: &#x27;Marca&#x27;,
+    campo: &#x27;marca&#x27;,
+    class: &#x27;col-md-6&#x27;,
+    tipo_input: &#x27;text&#x27;
+
+  },
+  {
+    labelNombre: &#x27;Modelo&#x27;,
+    campo: &#x27;modelo&#x27;,
+    class: &#x27;col-md-6&#x27;,
+    tipo_input: &#x27;select&#x27;
+  },
+  {
+    labelNombre: &#x27;Placas&#x27;,
+    campo: &#x27;placas&#x27;,
+    class: &#x27;col-md-6&#x27;,
+    tipo_input: &#x27;text&#x27;
+  },
+  {
+    labelNombre: &#x27;Contenerdor(es)&#x27;,
+    campo: &#x27;contenedor&#x27;,
+    class: &#x27;col-md-12&#x27;,
+    tipo_input: &#x27;textarea&#x27;
+  },
+  {
+    labelNombre: &#x27;Observaciones&#x27;,
+    campo: &#x27;observaciones&#x27;,
+    class: &#x27;col-md-12&#x27;,
+    tipo_input: &#x27;textarea&#x27;
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FERROVIARIO"></a>
+                    <span class="name">
+                        <span ><b>FERROVIARIO</b></span>
+                        <a href="#FERROVIARIO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    labelNombre: &#x27;Número de BL&#x27;,
+    campo: &#x27;n_bl&#x27;,
+    class: &#x27;col-md-6&#x27;,
+    tipo_input: &#x27;text&#x27;
+  },
+  {
+    labelNombre: &#x27;Tipo de equipo&#x27;,
+    campo: &#x27;tipo_equipo&#x27;,
+    class: &#x27;col-md-6&#x27;,
+    tipo_input: &#x27;select&#x27;
+  },
+  {
+    labelNombre: &#x27;Iniciales de equipo&#x27;,
+    campo: &#x27;i_equipo&#x27;,
+    class: &#x27;col-md-6&#x27;,
+    tipo_input: &#x27;text&#x27;
+  },
+  {
+    labelNombre: &#x27;Numero de equipo&#x27;,
+    campo: &#x27;n_equipo&#x27;,
+    class: &#x27;col-md-6&#x27;,
+    tipo_input: &#x27;text&#x27;
+  },
+
+
+  {
+    labelNombre: &#x27;Observaciones&#x27;,
+    campo: &#x27;observaciones&#x27;,
+    class: &#x27;col-md-12&#x27;,
+    tipo_input: &#x27;textarea&#x27;
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MARITIMO"></a>
+                    <span class="name">
+                        <span ><b>MARITIMO</b></span>
+                        <a href="#MARITIMO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  &#x27;emp_transportitsa&#x27;,
+  &#x27;n_carta_porte&#x27;,
+  &#x27;f_carta_porte&#x27;,
+  &#x27;marca&#x27;,
+  &#x27;modelo&#x27;,
+  &#x27;placas&#x27;,
+  &#x27;contenedor&#x27;,
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OTRO"></a>
+                    <span class="name">
+                        <span ><b>OTRO</b></span>
+                        <a href="#OTRO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  &#x27;emp_transportitsa&#x27;,
+  &#x27;n_carta_porte&#x27;,
+  &#x27;f_carta_porte&#x27;,
+  &#x27;marca&#x27;,
+  &#x27;modelo&#x27;,
+  &#x27;placas&#x27;,
+  &#x27;contenedor&#x27;,
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PEATONAL"></a>
+                    <span class="name">
+                        <span ><b>PEATONAL</b></span>
+                        <a href="#PEATONAL"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  &#x27;emp_transportitsa&#x27;,
+  &#x27;n_carta_porte&#x27;,
+  &#x27;f_carta_porte&#x27;,
+  &#x27;marca&#x27;,
+  &#x27;modelo&#x27;,
+  &#x27;placas&#x27;,
+  &#x27;contenedor&#x27;,
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/shared/components/anexar-documentos/anexar-documentos.component.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bootstrap"></a>
+                    <span class="name">
+                        <span ><b>bootstrap</b></span>
+                        <a href="#bootstrap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/tramites/303/components/agentes-agencias-aduanales/agentes-agencias-aduanales.component.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bootstrap"></a>
+                    <span class="name">
+                        <span ><b>bootstrap</b></span>
+                        <a href="#bootstrap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/shared/constantes/constantes.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CATALOGOS_ID"></a>
+                    <span class="name">
+                        <span ><b>CATALOGOS_ID</b></span>
+                        <a href="#CATALOGOS_ID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  CAT_TIPO_SOL: &#x27;tipos-solicitud&#x27;,
+  CAT_PAISES: &#x27;paises&#x27;,
+  CAT_ADUANAS: &#x27;aduanas&#x27;,
+  CAT_SECCION_ADUANAS: 25,
+  DATOS_GNRLS_SOL: 5,
+  CAT_TIPO_DOCUMENTO: &#x27;tipos-documento&#x27;,
+  CAT_TIPO_OPERACION: 26,
+  CAT_REGIMEN_MERCANCIA: &#x27;regimen-mercancia&#x27;,
+  CAT_CLASIFI_REGIMEN: &#x27;clasifi-regimen&#x27;,
+  CAT_FRACCION_ARANCELARIA: &#x27;fraccion-arancelaria&#x27;,
+  CAT_NICO: &#x27;nico&#x27;,
+  CAT_UNIDAD_MEDIDA_TARIFARIA: &#x27;unidad-medida-tarifaria&#x27;,
+  CAT_PAIS_ORIGEN: &#x27;pais-origen&#x27;,
+  CAT_PAIS_DESTINO: &#x27;pais-destino&#x27;,
+  CAT_MOLINO: &#x27;molino&#x27;,
+  CAT_ESTADO: &#x27;estado&#x27;,
+  CAT_REPRESENTACION_FEDERAL: &#x27;representacion-federal&#x27;,
+  DATOS_PERSONA_FISICA: 21,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CODIGOS_HTTP"></a>
+                    <span class="name">
+                        <span ><b>CODIGOS_HTTP</b></span>
+                        <a href="#CODIGOS_HTTP"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  SUCCESS: &quot;200&quot;
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="COOKIE"></a>
+                    <span class="name">
+                        <span ><b>COOKIE</b></span>
+                        <a href="#COOKIE"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  NOMBRE_COOKIE_ID_USUARIO: &#x27;sg-id-user&#x27;,
+  NOMBRE_COOKIE_ROL: &#x27;sg-rol&#x27;,
+  NOMBRE_COOKIE_TOKEN: &#x27;sg-token&#x27;,
+  NOMBRE_COOKIE_USUARIO: &#x27;sg-usuario&#x27;,
+  NOMBRE_COOKIE_RFC: &#x27;sg-rfc&#x27;,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DPI"></a>
+                    <span class="name">
+                        <span ><b>DPI</b></span>
+                        <a href="#DPI"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;DPIs&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="KB"></a>
+                    <span class="name">
+                        <span ><b>KB</b></span>
+                        <a href="#KB"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;KB&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LOGIN"></a>
+                    <span class="name">
+                        <span ><b>LOGIN</b></span>
+                        <a href="#LOGIN"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;login&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MB"></a>
+                    <span class="name">
+                        <span ><b>MB</b></span>
+                        <a href="#MB"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;MB&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MILISEGUNDOS"></a>
+                    <span class="name">
+                        <span ><b>MILISEGUNDOS</b></span>
+                        <a href="#MILISEGUNDOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  DIA: 86400000,
+  SEMANA: 604800000,
+  MES: 2592000000,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PADDING"></a>
+                    <span class="name">
+                        <span ><b>PADDING</b></span>
+                        <a href="#PADDING"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  INICIO: &#x27;-----BEGIN ENCRYPTED PRIVATE KEY-----\n&#x27;,
+  FIN: &#x27;\n-----END ENCRYPTED PRIVATE KEY-----&#x27;,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PDF"></a>
+                    <span class="name">
+                        <span ><b>PDF</b></span>
+                        <a href="#PDF"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;PDF&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TIPO_PERSONA"></a>
+                    <span class="name">
+                        <span ><b>TIPO_PERSONA</b></span>
+                        <a href="#TIPO_PERSONA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  FISICA_NACIONAL: 1,
+  MORAL_NACIONAL: 2,
+  FISICA_EXTRANJERA: 3,
+  MORAL_EXTRANJERA: 4,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TIPO_SOLICITUD"></a>
+                    <span class="name">
+                        <span ><b>TIPO_SOLICITUD</b></span>
+                        <a href="#TIPO_SOLICITUD"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  INDIVIDUAL: 27,
+  SEMANAL: 28,
+  MENSUAL: 29,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UNIDADES"></a>
+                    <span class="name">
+                        <span ><b>UNIDADES</b></span>
+                        <a href="#UNIDADES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  KB: 1024,
+  MB: 1048576,
+  GB: 1073741824,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/shared/constantes/mensajes-error-formularios.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CORREO_INVALIDO"></a>
+                    <span class="name">
+                        <span ><b>CORREO_INVALIDO</b></span>
+                        <a href="#CORREO_INVALIDO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Correo inválido&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="INTRODUZCA_NUMERO"></a>
+                    <span class="name">
+                        <span ><b>INTRODUZCA_NUMERO</b></span>
+                        <a href="#INTRODUZCA_NUMERO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Introduzca un número con una longitud máxima de 8 dígitos&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="REQUERIDO"></a>
+                    <span class="name">
+                        <span ><b>REQUERIDO</b></span>
+                        <a href="#REQUERIDO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Este campo es obligatorio&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="RFC_INVALIDO"></a>
+                    <span class="name">
+                        <span ><b>RFC_INVALIDO</b></span>
+                        <a href="#RFC_INVALIDO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;La nomenclatura del RFC es incorrecta&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TELEFONO_INVAIDO"></a>
+                    <span class="name">
+                        <span ><b>TELEFONO_INVAIDO</b></span>
+                        <a href="#TELEFONO_INVAIDO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Formato de teléfono inválido&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/shared/constantes/solicitante-constantes.enum.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA"></a>
+                    <span class="name">
+                        <span ><b>DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA</b></span>
+                        <a href="#DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    labelNombre: &#x27;País&#x27;,
+    campo: &#x27;pais&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:120&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Código Postal&#x27;,
+    campo: &#x27;codigoPostal&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:10&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Estado&#x27;,
+    campo: &#x27;entidadFederativa&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:50&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Calle&#x27;,
+    campo: &#x27;calle&#x27;,
+    class: &#x27;col-md-8&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:68&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Número y/o letra exterior&#x27;,
+    campo: &#x27;nExt&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:10&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Número interior&#x27;,
+    campo: &#x27;nInt&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;maxLength:15&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL"></a>
+                    <span class="name">
+                        <span ><b>DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL</b></span>
+                        <a href="#DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    labelNombre: &#x27;País&#x27;,
+    campo: &#x27;pais&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:120&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Código Postal&#x27;,
+    campo: &#x27;codigoPostal&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:10&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Estado&#x27;,
+    campo: &#x27;entidadFederativa&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:50&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Municipio o alcaldía&#x27;,
+    campo: &#x27;municipio&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:120&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Localidad&#x27;,
+    campo: &#x27;localidad&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:68&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Colonia&#x27;,
+    campo: &#x27;colonia&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:68&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Calle&#x27;,
+    campo: &#x27;calle&#x27;,
+    class: &#x27;col-md-8&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:68&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Número exterior&#x27;,
+    campo: &#x27;nExt&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:10&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Número interior&#x27;,
+    campo: &#x27;nInt&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;maxLength:15&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Lada&#x27;,
+    campo: &#x27;lada&#x27;,
+    class: &#x27;col-md-1&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:15&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Teléfono&#x27;,
+    campo: &#x27;telefono&#x27;,
+    class: &#x27;col-md-3&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:15&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PERSONA_FISICA_EXTRANJERO"></a>
+                    <span class="name">
+                        <span ><b>PERSONA_FISICA_EXTRANJERO</b></span>
+                        <a href="#PERSONA_FISICA_EXTRANJERO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    labelNombre: &#x27;Nombre(s)&#x27;,
+    campo: &#x27;nombreRazonSocial&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Primer apellido&#x27;,
+    campo: &#x27;primerApellido&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Segundo apellido&#x27;,
+    campo: &#x27;segundoApellido&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Número de identificación fiscal&#x27;,
+    campo: &#x27;nIdentificacionFiscal&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:120&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Número de seguro social&#x27;,
+    campo: &#x27;nSeguroSocial&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:120&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Correo electrónico&#x27;,
+    campo: &#x27;correo&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:30&#x27;, &#x27;pattern:email&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PERSONA_FISICA_NACIONAL"></a>
+                    <span class="name">
+                        <span ><b>PERSONA_FISICA_NACIONAL</b></span>
+                        <a href="#PERSONA_FISICA_NACIONAL"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    labelNombre: &#x27;CURP&#x27;,
+    campo: &#x27;curp&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    tooltip: &#x27;Clave Única de Registro de Población&#x27;,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:18&#x27;, &#x27;minLength:18&#x27;, &#x27;pattern:curp&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;RFC&#x27;,
+    campo: &#x27;rfc&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    tooltip: &#x27;Regulación Federal de Contribuyentes&#x27;,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:13&#x27;, &#x27;minLength:12&#x27;, &#x27;pattern:rfc&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;&#x27;,
+    campo: &#x27;&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    visibility: &#x27;hidden&#x27;,
+    tipo_input: &#x27;&#x27;,
+    disabled: true,
+    tooltip: &#x27;&#x27;,
+    validators: [&#x27;&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Nombre(s)&#x27;,
+    campo: &#x27;nombreRazonSocial&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Primer apellido&#x27;,
+    campo: &#x27;primerApellido&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Segundo apellido&#x27;,
+    campo: &#x27;segundoApellido&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Actividad económica preponderante&#x27;,
+    campo: &#x27;actEconomica&#x27;,
+    class: &#x27;col-md-8&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:120&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Correo electrónico&#x27;,
+    campo: &#x27;correo&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:30&#x27;, &#x27;pattern:email&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PERSONA_FISICA_SACIONAL"></a>
+                    <span class="name">
+                        <span ><b>PERSONA_FISICA_SACIONAL</b></span>
+                        <a href="#PERSONA_FISICA_SACIONAL"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    labelNombre: &#x27;CURP:&#x27;,
+    campo: &#x27;curp&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    tooltip: &#x27;Clave Única de Registro de Población&#x27;,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:18&#x27;, &#x27;minLength:18&#x27;, &#x27;pattern:curp&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;RFC:&#x27;,
+    campo: &#x27;rfc&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    tooltip: &#x27;Regulación Federal de Contribuyentes&#x27;,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:13&#x27;, &#x27;minLength:12&#x27;, &#x27;pattern:rfc&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;&#x27;,
+    campo: &#x27;&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    visibility: &#x27;hidden&#x27;,
+    tipo_input: &#x27;&#x27;,
+    disabled: true,
+    tooltip: &#x27;&#x27;,
+    validators: [&#x27;&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Nombre(s):&#x27;,
+    campo: &#x27;nombreRazonSocial&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Primer apellido:&#x27;,
+    campo: &#x27;primerApellido&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Segundo apellido:&#x27;,
+    campo: &#x27;segundoApellido&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Actividad económica preponderante:&#x27;,
+    campo: &#x27;actEconomica&#x27;,
+    class: &#x27;col-md-8&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:120&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Correo electrónico:&#x27;,
+    campo: &#x27;correo&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:30&#x27;, &#x27;pattern:email&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PERSONA_MORAL_EXTRANJERO"></a>
+                    <span class="name">
+                        <span ><b>PERSONA_MORAL_EXTRANJERO</b></span>
+                        <a href="#PERSONA_MORAL_EXTRANJERO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    labelNombre: &#x27;Nombre(s)&#x27;,
+    campo: &#x27;nombreRazonSocial&#x27;,
+    class: &#x27;col-md-8&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Correo electrónico&#x27;,
+    campo: &#x27;correo&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:30&#x27;, &#x27;pattern:email&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PERSONA_MORAL_NACIONAL"></a>
+                    <span class="name">
+                        <span ><b>PERSONA_MORAL_NACIONAL</b></span>
+                        <a href="#PERSONA_MORAL_NACIONAL"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    labelNombre: &#x27;RFC:&#x27;,
+    campo: &#x27;rfc&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    tooltip: &#x27;Regulación Federal de Contribuyentes&#x27;,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:13&#x27;, &#x27;minLength:12&#x27;, &#x27;pattern:rfc&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Denominación o razón social:&#x27;,
+    campo: &#x27;nombreRazonSocial&#x27;,
+    class: &#x27;col-md-8&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Actividad económica preponderante:&#x27;,
+    campo: &#x27;actEconomica&#x27;,
+    class: &#x27;col-md-12&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:120&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+  {
+    labelNombre: &#x27;Correo electrónico:&#x27;,
+    campo: &#x27;correo&#x27;,
+    class: &#x27;col-md-4&#x27;,
+    tipo_input: &#x27;text&#x27;,
+    disabled: true,
+    validators: [&#x27;required&#x27;, &#x27;maxLength:30&#x27;, &#x27;pattern:email&#x27;],
+    placeholder: &#x27;&#x27;,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/enviroments/enviroment.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="enviroment"></a>
+                    <span class="name">
+                        <span ><b>enviroment</b></span>
+                        <a href="#enviroment"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  URL_SERVER: &#x27;https://dev.v30.ultrasist.net/api&#x27;,
+  URL_SERVER_UPLOAD: &#x27;https://upload.v30.ultrasist.net/api&#x27;,
+  URL_SERVER_JSON_AUXILIAR: &#x27;https://dev.v30.ultrasist.net/api/json-auxiliar&#x27;,
+  MOCK: true
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/shared/constantes/certificado-zoosanitario.enum.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FECHA_DE_PAGO"></a>
+                    <span class="name">
+                        <span ><b>FECHA_DE_PAGO</b></span>
+                        <a href="#FECHA_DE_PAGO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    labelNombre: &#x27;Fecha de pago&#x27;,
+    required: true,
+    habilitado: false,
+
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="IDDEUSUARIO"></a>
+                    <span class="name">
+                        <span ><b>IDDEUSUARIO</b></span>
+                        <a href="#IDDEUSUARIO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>21</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PASOS"></a>
+                    <span class="name">
+                        <span ><b>PASOS</b></span>
+                        <a href="#PASOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    {
+        indice: 1,
+        titulo: &#x27;Capturar solicitud&#x27;,
+        activo: true,
+        completado: true,
+    },
+    {
+        indice: 2,
+        titulo: &#x27;Requisitos necesarios&#x27;,
+        activo: false,
+        completado: false,
+    },
+    {
+        indice: 3,
+        titulo: &#x27;Anexar necesarios&#x27;,
+        activo: false,
+        completado: false,
+    },
+    {
+        indice: 4,
+        titulo: &#x27;Firmar solicitud&#x27;,
+        activo: false,
+        completado: false,
+    },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SUCECESS_MESSAGE_STAGEONE"></a>
+                    <span class="name">
+                        <span ><b>SUCECESS_MESSAGE_STAGEONE</b></span>
+                        <a href="#SUCECESS_MESSAGE_STAGEONE"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x60;La solicitud ha quedado registrada con el número temporal 202758511. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.&#x60;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TERCEROR_TEXTO_DE_ALERTA"></a>
+                    <span class="name">
+                        <span ><b>TERCEROR_TEXTO_DE_ALERTA</b></span>
+                        <a href="#TERCEROR_TEXTO_DE_ALERTA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TEXTOS"></a>
+                    <span class="name">
+                        <span ><b>TEXTOS</b></span>
+                        <a href="#TEXTOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Para continuar con el trámite, deberá agregar por lo menos una mercancía.&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TEXTOS_REQUISITOS"></a>
+                    <span class="name">
+                        <span ><b>TEXTOS_REQUISITOS</b></span>
+                        <a href="#TEXTOS_REQUISITOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    INSTRUCCIONES: &#x60;&lt;h6&gt;Instrucciones&lt;/h6&gt;
+    &lt;p&gt;- De acuerdo al caso particular, algunos documentos podrían ser obligatorios&lt;/p&gt;
+    &lt;p&gt;- En caso de que no requieras algún documento, selecciónalo y elimínalo&lt;/p&gt;
+    &lt;p&gt;- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona &quot;Agregar nuevo&quot;.&lt;/p&gt;&#x60;,
+    ADJUNTAR: &#x60;&lt;p&gt;Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón &quot;Adjuntar documentos&quot;&lt;/p&gt;&#x60;,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL"></a>
+                    <span class="name">
+                        <span ><b>ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL</b></span>
+                        <a href="#ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    {
+        labelNombre: &#x27;Registro federal de contribuyentes:&#x27;,
+        campo: &#x27;rfc&#x27;,
+        class: &#x27;col-md-4&#x27;,
+        tipo_input: &#x27;text&#x27;,
+        disabled: true,
+        tooltip: &#x27;Registro federal de contribuyentes:&#x27;,
+        validators: [&#x27;required&#x27;],
+        placeholder: &#x27;&#x27;,
+    },
+    {
+        labelNombre: &#x27;Denominación o razón social:&#x27;,
+        campo: &#x27;nombreRazonSocial&#x27;,
+        class: &#x27;col-md-8&#x27;,
+        tipo_input: &#x27;text&#x27;,
+        disabled: true,
+        tooltip: &#x27;Denominación o razón social&#x27;,
+        validators: [&#x27;required&#x27;],
+        placeholder: &#x27;&#x27;,
+    },
+    {
+        labelNombre: &#x27;Actividad económica preponderante:&#x27;,
+        campo: &#x27;actEconomica&#x27;,
+        class: &#x27;col-md-12&#x27;,
+        tipo_input: &#x27;text&#x27;,
+        disabled: true,
+        validators: [&#x27;required&#x27;],
+        placeholder: &#x27;&#x27;,
+    },
+    {
+        labelNombre: &#x27;Correo electrónico&#x27;,
+        campo: &#x27;correo&#x27;,
+        class: &#x27;col-md-4&#x27;,
+        tipo_input: &#x27;text&#x27;,
+        disabled: true,
+        validators: [&#x27;required&#x27;],
+        placeholder: &#x27;&#x27;,
+    }
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/core/services/130102/octava-temporal.enum.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OctaTempo"></a>
+                    <span class="name">
+                        <span ><b>OctaTempo</b></span>
+                        <a href="#OctaTempo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    {
+        indice: 1,
+        titulo: &#x27;Capturar solicitud&#x27;,
+        activo: true,
+        completado: false,
+      },
+      {
+        indice: 2,
+        titulo: &#x27;Firmar solicitud&#x27;,
+        activo: false,
+        completado: false,
+      }
+
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/core/services/110101/pantallas-svc.enum.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PANTAPASOS"></a>
+                    <span class="name">
+                        <span ><b>PANTAPASOS</b></span>
+                        <a href="#PANTAPASOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    {
+      indice: 1,
+      titulo: &#x27;Capturar solicitud&#x27;,
+      activo: true,
+      completado: false,
+    },
+    {
+      indice: 2,
+      titulo: &#x27;Firmar solicitud&#x27;,
+      activo: false,
+      completado: false,
+    }
+  ]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/core/services/220471/servicios-pantallas.enum.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PANTAPASOS"></a>
+                    <span class="name">
+                        <span ><b>PANTAPASOS</b></span>
+                        <a href="#PANTAPASOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    {
+      indice: 1,
+      titulo: &#x27;Capturar solicitud&#x27;,
+      activo: false,
+      completado: false,
+    },
+    {
+      indice: 2,
+      titulo: &#x27;Requisitos neccesarios&#x27;,
+      activo: true,
+      completado: true,
+    },
+    {
+      indice: 3,
+      titulo: &#x27;Anexar requisitos&#x27;,
+      activo: false,
+      completado: false,
+    },
+    {
+      indice: 4,
+      titulo: &#x27;Firmar solicitud&#x27;,
+      activo: false,
+      completado: false,
+    }
+  ]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/shared/constantes/aviso.enum.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PASOS"></a>
+                    <span class="name">
+                        <span ><b>PASOS</b></span>
+                        <a href="#PASOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    {
+      indice: 1,
+      titulo: &#x27;Capturar solicitud&#x27;,
+      activo: true,
+      completado: true,
+    },
+    {
+      indice: 2,
+      titulo: &#x27;Firmar solicitud&#x27;,
+      activo: false,
+      completado: false,
+    },
+    
+  ]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/shared/constantes/303/pasos.enums.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PASOS"></a>
+                    <span class="name">
+                        <span ><b>PASOS</b></span>
+                        <a href="#PASOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    {
+      indice: 1,
+      titulo: &#x27;Capturar solicitud&#x27;,
+      activo: true,
+      completado: true,
+    },
+    {
+      indice: 2,
+      titulo: &#x27;Anexar requisitos&#x27;,
+      activo: false,
+      completado: false,
+    },
+    {
+      indice: 3,
+      titulo: &#x27;Firmar solicitud&#x27;,
+      activo: false,
+      completado: false,
+    },
+  ]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/shared/constantes/regex.constants.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Regx"></a>
+                    <span class="name">
+                        <span ><b>Regx</b></span>
+                        <a href="#Regx"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    ONLY_NUMBERS: /^[0-9]+$/, // Permite solo números enteros
+    DECIMAL_TWO_PLACES: /^[0-9]+(\.[0-9]{1,2})?$/, // Permite números con hasta dos decimales
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/shared/constantes/seccionesTramites.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SECCIONES_TRAMITE_5701"></a>
+                    <span class="name">
+                        <span ><b>SECCIONES_TRAMITE_5701</b></span>
+                        <a href="#SECCIONES_TRAMITE_5701"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    PASO_1: {
+        VALIDACION_SECCION_1: false,
+        VALIDACION_SECCION_2: true,
+        VALIDACION_SECCION_3: false,
+    },
+    PASO_2: {
+        VALIDACION_SECCION: true,
+    },
+    PASO_3: {
+        requiereValidacion: true,
+    },
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Secciones a mostrar dentro de cada Paso de acuerdo al trámite</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/shared/constantes/octava-temporal.enum.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TEXTOS"></a>
+                    <span class="name">
+                        <span ><b>TEXTOS</b></span>
+                        <a href="#TEXTOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    INSTRUCCIONES: &#x60;
+    &lt;p&gt;Debes capturar una fraccion arrancelaria en el campo de texto para que se realice la busqueda y se carguen los&lt;/p&gt;
+    &lt;p&gt;datos del catalogo del componente de la lista despegable&lt;/p&gt;
+    &#x60;,
+    INSTRUCCIONES_PARA_PARTIDAS: &#x60;Para continuar con el trámite, debes agregar por lo menos una mercancía.&#x60;,
+  }</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/shared/constantes/303/texto.enum.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TEXTOS"></a>
+                    <span class="name">
+                        <span ><b>TEXTOS</b></span>
+                        <a href="#TEXTOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    DOCS_NECESARIOS: &#x60;&lt;li&gt; Pago de derechos&lt;/li&gt;&#x60;,
+    ADJUNTAR: &#x60;&lt;p&gt;Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón &quot;Adjuntar dcumentos&quot;&lt;/p&gt;&#x60;,
+    TEXTO_AGENTES_ADUANALES: &#x60;&lt;p&gt;&quot;Deberá presentar la documentación que acredite que los agentes aduanales se encuentran al corriente en el cumplimiento de sus obligaciones fiscales y que la patente o autorización se encuentre vigente.&lt;/p&gt;&#x60;,
+    TEXTO_EMPLEADOS_CONTRATADOS: &#x60;&lt;p&gt;¿Cuál es el número de empleados propios con los que contó en los últimos tres bimestres anteriores a la solicitud?.&lt;/p&gt;&#x60;,
+    TEXTO_INVENTARIOS: &#x60;&lt;p&gt;En caso de declarar que se cuenta con un sistema de control de inventarios conforme al anexo 24, deberá anexar un archivo con el reporte de saldos de mercancía de importación temporal de un periodo de un mes que se encuentra dentro de los tres meses anteriores a la fecha de la presente solicitud de certificación&lt;/p&gt;&#x60;
+  }</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'miscellaneous-variables';
+            var COMPODOC_CURRENT_PAGE_URL = 'variables.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
