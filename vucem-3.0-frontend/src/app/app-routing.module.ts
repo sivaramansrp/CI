@@ -32,7 +32,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tramites/303/despacho-mercancias.module').then(
         (m) => m.DespachoMercanciasModule
-  )
+      )
   },
   {
     path: 'pantallas-extraordinarios',
@@ -54,4 +54,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
