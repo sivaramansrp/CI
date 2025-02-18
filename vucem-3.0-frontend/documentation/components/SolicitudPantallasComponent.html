@@ -1,0 +1,956 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>vucem-3.0-frontend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">vucem-3.0-frontend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  SolicitudPantallasComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/tramites/220401/components/solicitud/solicitud.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Este componente se utiliza para mostrar el formulario de solicitud.- 220401
+pantallasFormData: Form data of the screens</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+                <code>OnDestroy</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-solicitud</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>HttpClientModule</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./solicitud.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./solicitud.component.scss</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#destroyed$" >destroyed$</a>
+                            </li>
+                            <li>
+                                <a href="#displayedColumns" >displayedColumns</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#pantallasFormData" >pantallasFormData</a>
+                            </li>
+                            <li>
+                                <a href="#showContent" >showContent</a>
+                            </li>
+                            <li>
+                                <a href="#solicitudes" >solicitudes</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#loadSolicitudesData" >loadSolicitudesData</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#toggleContent" >toggleContent</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(serviciosPantallasService: <a href="../injectables/ServiciosPantallasService.html" target="_self">ServiciosPantallasService</a>, http: HttpClient)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="71" class="link-to-prism">src/app/tramites/220401/components/solicitud/solicitud.component.ts:71</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>serviciosPantallasService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ServiciosPantallasService.html" target="_self" >ServiciosPantallasService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>http</td>
+                                                  
+                                                        <td>
+                                                                    <code>HttpClient</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadSolicitudesData"></a>
+                    <span class="name">
+                        <span ><b>loadSolicitudesData</b></span>
+                        <a href="#loadSolicitudesData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>loadSolicitudesData()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="57"
+                                    class="link-to-prism">src/app/tramites/220401/components/solicitud/solicitud.component.ts:57</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Carga los datos de las solicitudes desde un archivo JSON ubicado en la carpeta de assets.</p>
+<p>Este método realiza una solicitud HTTP GET para obtener los datos de &#39;assets/json/220401/solicitude.json&#39;.
+Al recuperar los datos exitosamente, los asigna a la propiedad <code>solicitudes</code>.
+Si ocurre un error durante la solicitud, registra un mensaje de error en la consola.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="94"
+                                    class="link-to-prism">src/app/tramites/220401/components/solicitud/solicitud.component.ts:94</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Este método se utiliza para destruir la suscripción. - 220401</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="80"
+                                    class="link-to-prism">src/app/tramites/220401/components/solicitud/solicitud.component.ts:80</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Este método se utiliza para inicializar los datos del formulario de las pantallas.
+Suscríbete/escucha los datos del formulario
+Establecer los datos del formulario
+Darse de baja de la suscripción</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleContent"></a>
+                    <span class="name">
+                        <span ><b>toggleContent</b></span>
+                        <a href="#toggleContent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toggleContent()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="69"
+                                    class="link-to-prism">src/app/tramites/220401/components/solicitud/solicitud.component.ts:69</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="destroyed$"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>destroyed$</b></span>
+                        <a href="#destroyed$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>ReplaySubject&lt;boolean&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new ReplaySubject(1)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/tramites/220401/components/solicitud/solicitud.component.ts:37</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Esta variable se utiliza para destruir la suscripción.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="displayedColumns"></a>
+                    <span class="name">
+                        <span ><b>displayedColumns</b></span>
+                        <a href="#displayedColumns"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[&#x27;fechaCreacion&#x27;, &#x27;mercancia&#x27;, &#x27;cantidad&#x27;, &#x27;proovedor&#x27;]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/tramites/220401/components/solicitud/solicitud.component.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pantallasFormData"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>pantallasFormData</b></span>
+                        <a href="#pantallasFormData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/PantallasFormData.html" target="_self" >PantallasFormData</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/tramites/220401/components/solicitud/solicitud.component.ts:41</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Esta variable se utiliza para crear los datos del formulario de las pantallas.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showContent"></a>
+                    <span class="name">
+                        <span ><b>showContent</b></span>
+                        <a href="#showContent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/tramites/220401/components/solicitud/solicitud.component.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="solicitudes"></a>
+                    <span class="name">
+                        <span ><b>solicitudes</b></span>
+                        <a href="#solicitudes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Solicitude.html" target="_self" >Solicitude[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/app/tramites/220401/components/solicitud/solicitud.component.ts:46</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>constructor de la clase</p>
+</div>
+                </td>
+            </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description">
+                                <b>Parameters :</b>
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            <tr>
+                                                    <td>serviciosPantallasService</td>
+                                                    <td>
+                                                            <code><p>: Servicios de tienda de las pantallas.</p>
+</code>
+                                                    </td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                        </div>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnDestroy, OnInit } from &#x27;@angular/core&#x27;;
+import { HttpClient, HttpClientModule } from &#x27;@angular/common/http&#x27;;
+import { ReplaySubject, takeUntil } from &#x27;rxjs&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+
+
+
+import { PantallasFormData } from &#x27;../../../../core/models/220401/servicios-pantallas.model&#x27;;
+import { ServiciosPantallasService } from &#x27;../../../../core/services/220471/servicios-pantallas.service&#x27;;
+
+
+interface Solicitude {
+  fechaCreacion: string;
+  mercancia: string;
+  cantidad: number;
+  proovedor: string;
+}
+/**
+ * Este componente se utiliza para mostrar el formulario de solicitud.- 220401
+ * pantallasFormData: Form data of the screens
+ */
+@Component({
+  selector: &#x27;app-solicitud&#x27;,
+  templateUrl: &#x27;./solicitud.component.html&#x27;,
+  standalone: true,
+  imports: [CommonModule, HttpClientModule],
+  styleUrl: &#x27;./solicitud.component.scss&#x27;
+})
+
+export class SolicitudPantallasComponent implements OnInit, OnDestroy {
+
+  /**
+   * Esta variable se utiliza para destruir la suscripción.
+   */
+  private destroyed$: ReplaySubject&lt;boolean&gt; &#x3D; new ReplaySubject(1);
+  /**
+   * Esta variable se utiliza para crear los datos del formulario de las pantallas.
+   */
+  public pantallasFormData!: PantallasFormData;
+  /**
+   * constructor de la clase
+   * @param serviciosPantallasService: Servicios de tienda de las pantallas.
+   */
+  solicitudes: Solicitude[] &#x3D; [];
+  displayedColumns: string[] &#x3D; [&#x27;fechaCreacion&#x27;, &#x27;mercancia&#x27;, &#x27;cantidad&#x27;, &#x27;proovedor&#x27;];
+  showContent &#x3D; false;
+  /**
+ * Carga los datos de las solicitudes desde un archivo JSON ubicado en la carpeta de assets.
+ * 
+ * Este método realiza una solicitud HTTP GET para obtener los datos de &#x27;assets/json/220401/solicitude.json&#x27;.
+ * Al recuperar los datos exitosamente, los asigna a la propiedad &#x60;solicitudes&#x60;.
+ * Si ocurre un error durante la solicitud, registra un mensaje de error en la consola.
+ */
+
+  loadSolicitudesData() {
+   
+    this.http.get&lt;Solicitude[]&gt;(&#x27;assets/json/220401/solicitude.json&#x27;).subscribe(
+      (data) &#x3D;&gt; {
+        this.solicitudes &#x3D; data;
+        
+      },
+      (error) &#x3D;&gt; {
+        console.error(&#x27;Error loading solicitudes data&#x27;, error);
+      }
+    );
+  }
+  toggleContent() {
+    this.showContent &#x3D; !this.showContent;
+  }
+  constructor(private serviciosPantallasService: ServiciosPantallasService, private http: HttpClient) { }
+    /**
+   * Este método se utiliza para inicializar los datos del formulario de las pantallas.
+   * Suscríbete/escucha los datos del formulario
+   * Establecer los datos del formulario
+   * Darse de baja de la suscripción
+   */
+
+  public ngOnInit(): void {
+    this.serviciosPantallasService.pantallasFormObservable$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((formData: PantallasFormData) &#x3D;&gt; {
+        this.pantallasFormData &#x3D; formData;
+      });
+      // Set the form data
+      this.pantallasFormData[&#x27;solict&#x27;] &#x3D; [];
+      this.serviciosPantallasService.setPantallasFormDataSubject(this.pantallasFormData);
+    this.loadSolicitudesData();
+  }
+   /**
+   * Este método se utiliza para destruir la suscripción. - 220401
+   */
+   ngOnDestroy() {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+   }
+                  
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">
+
+  &lt;div class&#x3D;&quot;container&quot;&gt;
+    &lt;div class&#x3D;&quot;header&quot;&gt;
+      &lt;span class&#x3D;&quot;refresh-button&quot;&gt;
+        &lt;i class&#x3D;&quot;fas fa-sync-alt&quot;&gt;&lt;/i&gt; &lt;!-- Font Awesome Refresh Icon --&gt;
+      &lt;/span&gt;
+      &lt;span class&#x3D;&quot;plus-icon&quot; tabindex&#x3D;&quot;0&quot; (click)&#x3D;&quot;toggleContent()&quot; (keyup.enter)&#x3D;&quot;toggleContent()&quot; (keyup.space)&#x3D;&quot;toggleContent()&quot;&gt;+&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div *ngIf&#x3D;&quot;showContent&quot; class&#x3D;&quot;content&quot;&gt;
+        &lt;div class&#x3D;&quot;info-box&quot;&gt;
+                    Al dar doble clic en el registro seleccionado creará una nueva solicitud con los mismos datos de la solicitud elegida.
+          &lt;/div&gt;
+          
+        &lt;h6&gt;solicitud&lt;/h6&gt;
+        &lt;table class&#x3D;&quot;custom-table&quot;&gt;
+            &lt;thead&gt;
+              &lt;tr&gt;
+                &lt;th&gt;Fecha Creación&lt;/th&gt;
+                &lt;th&gt;Mercancía&lt;/th&gt;
+                &lt;th&gt;Cantidad&lt;/th&gt;
+                &lt;th&gt;Proveedor&lt;/th&gt;
+              &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+              &lt;tr *ngFor&#x3D;&quot;let solicitud of solicitudes&quot;&gt;
+                &lt;td&gt;{{ solicitud.fechaCreacion }}&lt;/td&gt;
+                &lt;td&gt;{{ solicitud.mercancia || &#x27;N/A&#x27; }}&lt;/td&gt;
+                &lt;td&gt;{{ solicitud.cantidad }}&lt;/td&gt;
+                &lt;td&gt;{{ solicitud.proovedor }}&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/tbody&gt;
+          &lt;/table&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div>  <div class="container">    <div class="header">      <span class="refresh-button">        <i class="fas fa-sync-alt"></i> <!-- Font Awesome Refresh Icon -->      </span>      <span class="plus-icon" tabindex="0" (click)="toggleContent()" (keyup.enter)="toggleContent()" (keyup.space)="toggleContent()">+</span>    </div>    <div *ngIf="showContent" class="content">        <div class="info-box">                    Al dar doble clic en el registro seleccionado creará una nueva solicitud con los mismos datos de la solicitud elegida.          </div>                  <h6>solicitud</h6>        <table class="custom-table">            <thead>              <tr>                <th>Fecha Creación</th>                <th>Mercancía</th>                <th>Cantidad</th>                <th>Proveedor</th>              </tr>            </thead>            <tbody>              <tr *ngFor="let solicitud of solicitudes">                <td>{{ solicitud.fechaCreacion }}</td>                <td>{{ solicitud.mercancia || \'N/A\' }}</td>                <td>{{ solicitud.cantidad }}</td>                <td>{{ solicitud.proovedor }}</td>              </tr>            </tbody>          </table>    </div></div>  </div>'
+    var COMPONENTS = [{'name': 'AcuseComponent', 'selector': 'app-component-acuse'},{'name': 'AcusePageComponent', 'selector': ''},{'name': 'AdministrarResiduosComponent', 'selector': 'app-administrar-residuos'},{'name': 'AgentesAgenciasAduanalesComponent', 'selector': 'agentes-agencias-aduanales'},{'name': 'AgregaPersonasComponent', 'selector': 'agrega-personas'},{'name': 'AgregaPersonasComponent', 'selector': 'agrega-personas'},{'name': 'AgregarArchivoComponent', 'selector': 'app-agregar-archivo'},{'name': 'AgregarDestinatoriaComponent', 'selector': 'app-agregar-destinatoria'},{'name': 'AgregarMiembrosEmpresaComponent', 'selector': 'agregar-miembros-empresa'},{'name': 'AgregarTransporteComponent', 'selector': 'agregar-transporte'},{'name': 'AlertComponent', 'selector': 'ng-alert'},{'name': 'AnexarDocumentosComponent', 'selector': 'app-anexar-documentos'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthPageComponent', 'selector': ''},{'name': 'BreadcrumbComponent', 'selector': 'c-breadcrumb'},{'name': 'BtnContinuarComponent', 'selector': 'btn-continuar'},{'name': 'CatalogoSelectComponent', 'selector': 'app-catalogo-select'},{'name': 'ClientesProveedoresExtrajeroComponent', 'selector': 'app-clientes-proveedores-extrajero'},{'name': 'CombinacionRequeridaComponent', 'selector': 'app-combinacion-requerida'},{'name': 'ConfirmarNotificacionComponent', 'selector': 'confirmar-notificacion'},{'name': 'ControlInventariosComponent', 'selector': 'control-inventarios'},{'name': 'CriterioDeDictComponent', 'selector': 'app-criterio-de-dict'},{'name': 'CrosslistComponent', 'selector': 'crosslist'},{'name': 'DatosAdicionalesComponent', 'selector': 'app-datos-adicionales'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosComponent', 'selector': 'app-pantalla-datos'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosDeLaComponent', 'selector': 'app-datos-de-la'},{'name': 'DatosDelaComponent', 'selector': 'app-datos-dela'},{'name': 'DatosDeLaSolicitudComponent', 'selector': 'app-datos-de-la-solicitud'},{'name': 'DatosDelComponent', 'selector': 'app-datos-del'},{'name': 'DatosDeLosResiduosComponent', 'selector': 'app-datos-de-los-residuos'},{'name': 'DatosGeneralsAnimalsComponent', 'selector': 'app-datos-generals-animals'},{'name': 'DatosParaMovilizacionNacionalComponent', 'selector': 'app-datos-para-movilizacion-nacional'},{'name': 'DatosTransportistaComponent', 'selector': 'datos-transportista'},{'name': 'DespachoMercanciasSolicitudComponent', 'selector': 'despacho-mercancias-solicitud'},{'name': 'DetosDelMarcanciaComponent', 'selector': 'app-detos-del-marcancia'},{'name': 'DetosDelTramiteComponent', 'selector': 'app-detos-del-tramite'},{'name': 'EmpleadosContratadosComponent', 'selector': 'empleados-contratados'},{'name': 'EmpleadosContratadosComponent', 'selector': 'empleados-contratados'},{'name': 'FirmaElectronicaComponent', 'selector': 'firma-electronica'},{'name': 'FooterComponent', 'selector': 'c-footer'},{'name': 'HeaderComponent', 'selector': 'c-header'},{'name': 'InformacionUsuarioComponent', 'selector': 'informacion-usuario'},{'name': 'InputCheckComponent', 'selector': 'input-check'},{'name': 'InputFechaComponent', 'selector': 'input-fecha'},{'name': 'InputHoraComponent', 'selector': 'input-hora'},{'name': 'InputRadioComponent', 'selector': 'app-input-radio'},{'name': 'ModalConfirmarComponent', 'selector': 'app-modal-confirmar'},{'name': 'NavComponent', 'selector': 'c-header-nav'},{'name': 'OctavaTemporalComponent', 'selector': 'app-octava-temporal'},{'name': 'PagoDeDerechoComponent', 'selector': 'app-pago-de-derecho'},{'name': 'PagoDeDerechosComponent', 'selector': 'app-pago-de-derechos'},{'name': 'PagoDerechosComponent', 'selector': 'pago-derechos'},{'name': 'PaisProcendenciaComponent', 'selector': 'app-pais-procendencia'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PartidasDeLaComponent', 'selector': 'app-partidas-de-la'},{'name': 'PasoCuatroComponent', 'selector': 'app-paso-cuatro'},{'name': 'PasoCuatroComponent', 'selector': 'paso-cuatro'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoDosComponent', 'selector': 'paso-dos'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoTresComponent', 'selector': 'app-paso-tres'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'app-paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PedimentoComponent', 'selector': 'c-pedimento'},{'name': 'PedimentoComponent', 'selector': 'c-pedimento'},{'name': 'RegistroPageComponent', 'selector': ''},{'name': 'RepresentacionComponent', 'selector': 'app-representacion'},{'name': 'RepresentanteFiscalComponent', 'selector': 'representante-fiscal'},{'name': 'SeleccionTramiteComponent', 'selector': 'seleccion-tramite'},{'name': 'SelectCatalogosComponent', 'selector': 'select-catalogos'},{'name': 'SelectPaisesComponent', 'selector': 'app-select-paises'},{'name': 'SolicitanteComponent', 'selector': 'solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteDetosTabsComponent', 'selector': 'app-solicitante-detos-tabs'},{'name': 'SolicitanteOctavaTemporalComponent', 'selector': 'app-solocitante-octava-temporal'},{'name': 'SolicitudComponent', 'selector': 'solicitud'},{'name': 'SolicitudComponent', 'selector': 'solicitud'},{'name': 'SolicitudComponent', 'selector': 'app-solicitud'},{'name': 'SolicitudPageComponent', 'selector': ''},{'name': 'SolicitudPageComponent', 'selector': ''},{'name': 'SolicitudPantallasComponent', 'selector': 'app-solicitud'},{'name': 'TableComponent', 'selector': 'ng-table'},{'name': 'TercerosComponent', 'selector': 'terceros'},{'name': 'TercerosRelacionadosComponent', 'selector': 'app-terceros-relacionados'},{'name': 'TestPageComponent', 'selector': 'test-page'},{'name': 'TituloComponent', 'selector': 'ng-titulo'},{'name': 'TransporteComponent', 'selector': 'app-transporte'},{'name': 'TratadosComponent', 'selector': 'app-tratados'},{'name': 'UsoEspicificoComponent', 'selector': 'app-uso-espicifico'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'ZoosanitarioPageComponent', 'selector': 'app-zoosanitario-page'}];
+    var DIRECTIVES = [{'name': 'CalendarioFormatoDirective', 'selector': '[CalendarioFormato]'},{'name': 'HoraFormatoDirective', 'selector': '[HoraFormato]'},{'name': 'NumeroTelefonicoDirective', 'selector': '[appNumeroTelefonico]'},{'name': 'SoloNumerosDirective', 'selector': '[appSoloNumeros]'},{'name': 'UppercaseDirective', 'selector': '[appUppercase]'}];
+    var ACTUAL_COMPONENT = {'name': 'SolicitudPantallasComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'SolicitudPantallasComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

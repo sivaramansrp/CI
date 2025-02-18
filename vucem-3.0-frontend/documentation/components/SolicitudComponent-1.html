@@ -1,0 +1,3647 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>vucem-3.0-frontend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">vucem-3.0-frontend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  SolicitudComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/tramites/303/components/solicitud/solicitud.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>solicitud</code></td>
+            </tr>
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./solicitud.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./solicitud.component.scss</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#aduanas" >aduanas</a>
+                            </li>
+                            <li>
+                                <a href="#colapsable" >colapsable</a>
+                            </li>
+                            <li>
+                                <a href="#datosPedimentoComponente" >datosPedimentoComponente</a>
+                            </li>
+                            <li>
+                                <a href="#datosTiposSolicitud" >datosTiposSolicitud</a>
+                            </li>
+                            <li>
+                                <a href="#despachoDD" >despachoDD</a>
+                            </li>
+                            <li>
+                                <a href="#despachoLDA" >despachoLDA</a>
+                            </li>
+                            <li>
+                                <a href="#fechaFinalInput" >fechaFinalInput</a>
+                            </li>
+                            <li>
+                                <a href="#fechaInicioInput" >fechaInicioInput</a>
+                            </li>
+                            <li>
+                                <a href="#FormSolicitud" >FormSolicitud</a>
+                            </li>
+                            <li>
+                                <a href="#horaFinal" >horaFinal</a>
+                            </li>
+                            <li>
+                                <a href="#horaInicio" >horaInicio</a>
+                            </li>
+                            <li>
+                                <a href="#immex" >immex</a>
+                            </li>
+                            <li>
+                                <a href="#industriaAutomotriz" >industriaAutomotriz</a>
+                            </li>
+                            <li>
+                                <a href="#paisesOrigen" >paisesOrigen</a>
+                            </li>
+                            <li>
+                                <a href="#paisesProcedencia" >paisesProcedencia</a>
+                            </li>
+                            <li>
+                                <a href="#programaFomento" >programaFomento</a>
+                            </li>
+                            <li>
+                                <a href="#seccionAduanera" >seccionAduanera</a>
+                            </li>
+                            <li>
+                                <a href="#selectRangoDias" >selectRangoDias</a>
+                            </li>
+                            <li>
+                                <a href="#socioComercial" >socioComercial</a>
+                            </li>
+                            <li>
+                                <a href="#solIndividual" >solIndividual</a>
+                            </li>
+                            <li>
+                                <a href="#tipoSolSeleccionada" >tipoSolSeleccionada</a>
+                            </li>
+                            <li>
+                                <a href="#validacionPedimento" >validacionPedimento</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#aduanaSeleccion" >aduanaSeleccion</a>
+                            </li>
+                            <li>
+                                <a href="#busqueda_rfc" >busqueda_rfc</a>
+                            </li>
+                            <li>
+                                <a href="#cambioFechaFinal" >cambioFechaFinal</a>
+                            </li>
+                            <li>
+                                <a href="#cambioFechaInicio" >cambioFechaInicio</a>
+                            </li>
+                            <li>
+                                <a href="#crearFormSolicitud" >crearFormSolicitud</a>
+                            </li>
+                            <li>
+                                <a href="#darValorCampoFormulario" >darValorCampoFormulario</a>
+                            </li>
+                            <li>
+                                <a href="#fechaInicio" >fechaInicio</a>
+                            </li>
+                            <li>
+                                <a href="#getAduanas" >getAduanas</a>
+                            </li>
+                            <li>
+                                <a href="#getPaises" >getPaises</a>
+                            </li>
+                            <li>
+                                <a href="#getSeccionAduanera" >getSeccionAduanera</a>
+                            </li>
+                            <li>
+                                <a href="#getTiposSolicitud" >getTiposSolicitud</a>
+                            </li>
+                            <li>
+                                <a href="#immexSeleccion" >immexSeleccion</a>
+                            </li>
+                            <li>
+                                <a href="#individual" >individual</a>
+                            </li>
+                            <li>
+                                <a href="#industriaAutomotrizSeleccion" >industriaAutomotrizSeleccion</a>
+                            </li>
+                            <li>
+                                <a href="#isValid" >isValid</a>
+                            </li>
+                            <li>
+                                <a href="#llenarCamposDesactivados" >llenarCamposDesactivados</a>
+                            </li>
+                            <li>
+                                <a href="#mostrar_colapsable" >mostrar_colapsable</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#obtenerHora" >obtenerHora</a>
+                            </li>
+                            <li>
+                                <a href="#obtenerPatente" >obtenerPatente</a>
+                            </li>
+                            <li>
+                                <a href="#programaFomentoF" >programaFomentoF</a>
+                            </li>
+                            <li>
+                                <a href="#rango_fechas" >rango_fechas</a>
+                            </li>
+                            <li>
+                                <a href="#tipoSolicitud" >tipoSolicitud</a>
+                            </li>
+                            <li>
+                                <a href="#validaCampoPedimento" >validaCampoPedimento</a>
+                            </li>
+                            <li>
+                                <a href="#validaRangoFechas" >validaRangoFechas</a>
+                            </li>
+                            <li>
+                                <a href="#validarFormulario" >validarFormulario</a>
+                            </li>
+                            <li>
+                                <a href="#valorInputCheck" >valorInputCheck</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#datosImportadorExportador" >datosImportadorExportador</a>
+                                </li>
+                                <li>
+                                    <a href="#datosServicio" >datosServicio</a>
+                                </li>
+                                <li>
+                                    <a href="#despacho" >despacho</a>
+                                </li>
+                                <li>
+                                    <a href="#pedimento" >pedimento</a>
+                                </li>
+                                <li>
+                                    <a href="#personasResponsablesDespacho" >personasResponsablesDespacho</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(fechaService: <a href="../injectables/FechasService.html" target="_self">FechasService</a>, fb: FormBuilder, fService: <a href="../injectables/FormulariosService.html" target="_self">FormulariosService</a>, catalogosServices: <a href="../injectables/CatalogosService.html" target="_self">CatalogosService</a>, validacionesService: <a href="../injectables/ValidacionesFormularioService.html" target="_self">ValidacionesFormularioService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:79</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>fechaService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/FechasService.html" target="_self" >FechasService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>fb</td>
+                                                  
+                                                        <td>
+                                                                    <code>FormBuilder</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>fService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/FormulariosService.html" target="_self" >FormulariosService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>catalogosServices</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/CatalogosService.html" target="_self" >CatalogosService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>validacionesService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ValidacionesFormularioService.html" target="_self" >ValidacionesFormularioService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="aduanaSeleccion"></a>
+                    <span class="name">
+                        <span ><b>aduanaSeleccion</b></span>
+                        <a href="#aduanaSeleccion"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>aduanaSeleccion(aduana: <a href="../interfaces/Catalogo.html" target="_self">Catalogo</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="438"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:438</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>aduana</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Catalogo.html" target="_self" >Catalogo</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="busqueda_rfc"></a>
+                    <span class="name">
+                        <span ><b>busqueda_rfc</b></span>
+                        <a href="#busqueda_rfc"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>busqueda_rfc()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="311"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:311</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cambioFechaFinal"></a>
+                    <span class="name">
+                        <span ><b>cambioFechaFinal</b></span>
+                        <a href="#cambioFechaFinal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>cambioFechaFinal(nuevo_valor: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="305"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:305</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>nuevo_valor</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cambioFechaInicio"></a>
+                    <span class="name">
+                        <span ><b>cambioFechaInicio</b></span>
+                        <a href="#cambioFechaInicio"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>cambioFechaInicio(nuevo_valor: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="300"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:300</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>nuevo_valor</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="crearFormSolicitud"></a>
+                    <span class="name">
+                        <span ><b>crearFormSolicitud</b></span>
+                        <a href="#crearFormSolicitud"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>crearFormSolicitud()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="221"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:221</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="darValorCampoFormulario"></a>
+                    <span class="name">
+                        <span ><b>darValorCampoFormulario</b></span>
+                        <a href="#darValorCampoFormulario"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>darValorCampoFormulario(form: FormGroup, field: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, valor: string | number)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="468"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:468</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>form</td>
+                                            <td>
+                                                        <code>FormGroup</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>field</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>valor</td>
+                                            <td>
+                                                        <code>string | number</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fechaInicio"></a>
+                    <span class="name">
+                        <span ><b>fechaInicio</b></span>
+                        <a href="#fechaInicio"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>fechaInicio()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="295"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:295</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAduanas"></a>
+                    <span class="name">
+                        <span ><b>getAduanas</b></span>
+                        <a href="#getAduanas"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getAduanas()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="181"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:181</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getPaises"></a>
+                    <span class="name">
+                        <span ><b>getPaises</b></span>
+                        <a href="#getPaises"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getPaises()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="170"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:170</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getSeccionAduanera"></a>
+                    <span class="name">
+                        <span ><b>getSeccionAduanera</b></span>
+                        <a href="#getSeccionAduanera"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getSeccionAduanera()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="196"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:196</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getTiposSolicitud"></a>
+                    <span class="name">
+                        <span ><b>getTiposSolicitud</b></span>
+                        <a href="#getTiposSolicitud"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getTiposSolicitud()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="155"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:155</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene los tipos de solicitud desde el catálogo y los asigna a <code>datosTiposSolicitud</code>.</p>
+<p>Este método realiza una solicitud al servicio <code>catalogosServices</code> para obtener el catálogo de tipos de solicitud identificado por <code>CATALOGOS_ID.CAT_TIPO_SOL</code>. Una vez que recibe la  respuesta, verifica si la respuesta contiene elementos. Si es así, asigna los datos recibidos a la propiedad <code>datosTiposSolicitud</code> con la estructura adecuada.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>No retorna ningún valor.</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="immexSeleccion"></a>
+                    <span class="name">
+                        <span ><b>immexSeleccion</b></span>
+                        <a href="#immexSeleccion"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>immexSeleccion(e: <a href="../interfaces/DatosInputCheck.html" target="_self">DatosInputCheck</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="346"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:346</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>e</td>
+                                            <td>
+                                                            <code><a href="../interfaces/DatosInputCheck.html" target="_self" >DatosInputCheck</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="individual"></a>
+                    <span class="name">
+                        <span ><b>individual</b></span>
+                        <a href="#individual"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>individual()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="210"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:210</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="industriaAutomotrizSeleccion"></a>
+                    <span class="name">
+                        <span ><b>industriaAutomotrizSeleccion</b></span>
+                        <a href="#industriaAutomotrizSeleccion"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>industriaAutomotrizSeleccion(e: <a href="../interfaces/DatosInputCheck.html" target="_self">DatosInputCheck</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="351"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:351</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>e</td>
+                                            <td>
+                                                            <code><a href="../interfaces/DatosInputCheck.html" target="_self" >DatosInputCheck</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isValid"></a>
+                    <span class="name">
+                        <span ><b>isValid</b></span>
+                        <a href="#isValid"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isValid(form: FormGroup, field: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="217"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:217</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>form</td>
+                                            <td>
+                                                        <code>FormGroup</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>field</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="llenarCamposDesactivados"></a>
+                    <span class="name">
+                        <span ><b>llenarCamposDesactivados</b></span>
+                        <a href="#llenarCamposDesactivados"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>llenarCamposDesactivados(form: FormGroup, field: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="321"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:321</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>form</td>
+                                            <td>
+                                                        <code>FormGroup</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>field</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mostrar_colapsable"></a>
+                    <span class="name">
+                        <span ><b>mostrar_colapsable</b></span>
+                        <a href="#mostrar_colapsable"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>mostrar_colapsable()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="434"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:434</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="91"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:91</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="obtenerHora"></a>
+                    <span class="name">
+                        <span ><b>obtenerHora</b></span>
+                        <a href="#obtenerHora"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>obtenerHora(e: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tipo: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="364"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:364</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>e</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tipo</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="obtenerPatente"></a>
+                    <span class="name">
+                        <span ><b>obtenerPatente</b></span>
+                        <a href="#obtenerPatente"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>obtenerPatente()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="198"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:198</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="programaFomentoF"></a>
+                    <span class="name">
+                        <span ><b>programaFomentoF</b></span>
+                        <a href="#programaFomentoF"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>programaFomentoF(e: <a href="../interfaces/DatosInputCheck.html" target="_self">DatosInputCheck</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="339"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:339</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>e</td>
+                                            <td>
+                                                            <code><a href="../interfaces/DatosInputCheck.html" target="_self" >DatosInputCheck</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rango_fechas"></a>
+                    <span class="name">
+                        <span ><b>rango_fechas</b></span>
+                        <a href="#rango_fechas"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>rango_fechas()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="418"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:418</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="tipoSolicitud"></a>
+                    <span class="name">
+                        <span ><b>tipoSolicitud</b></span>
+                        <a href="#tipoSolicitud"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>tipoSolicitud(e: <a href="../interfaces/Catalogo.html" target="_self">Catalogo</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="327"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:327</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>e</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Catalogo.html" target="_self" >Catalogo</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validaCampoPedimento"></a>
+                    <span class="name">
+                        <span ><b>validaCampoPedimento</b></span>
+                        <a href="#validaCampoPedimento"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>validaCampoPedimento()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="463"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:463</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validaRangoFechas"></a>
+                    <span class="name">
+                        <span ><b>validaRangoFechas</b></span>
+                        <a href="#validaRangoFechas"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>validaRangoFechas(datos: <a href="../interfaces/DatosParaValidacionFecha.html" target="_self">DatosParaValidacionFecha</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="385"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:385</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>datos</td>
+                                            <td>
+                                                            <code><a href="../interfaces/DatosParaValidacionFecha.html" target="_self" >DatosParaValidacionFecha</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validarFormulario"></a>
+                    <span class="name">
+                        <span ><b>validarFormulario</b></span>
+                        <a href="#validarFormulario"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>validarFormulario()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="332"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:332</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="valorInputCheck"></a>
+                    <span class="name">
+                        <span ><b>valorInputCheck</b></span>
+                        <a href="#valorInputCheck"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>valorInputCheck(e: <a href="../interfaces/DatosInputCheck.html" target="_self">DatosInputCheck</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="360"
+                                    class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:360</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>e</td>
+                                            <td>
+                                                            <code><a href="../interfaces/DatosInputCheck.html" target="_self" >DatosInputCheck</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="aduanas"></a>
+                    <span class="name">
+                        <span ><b>aduanas</b></span>
+                        <a href="#aduanas"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/CatalogosSelect.html" target="_self" >CatalogosSelect</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="colapsable"></a>
+                    <span class="name">
+                        <span ><b>colapsable</b></span>
+                        <a href="#colapsable"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="71" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:71</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="datosPedimentoComponente"></a>
+                    <span class="name">
+                        <span ><b>datosPedimentoComponente</b></span>
+                        <a href="#datosPedimentoComponente"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/DatosComponentePedimento.html" target="_self" >DatosComponentePedimento</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:77</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="datosTiposSolicitud"></a>
+                    <span class="name">
+                        <span ><b>datosTiposSolicitud</b></span>
+                        <a href="#datosTiposSolicitud"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/CatalogosSelect.html" target="_self" >CatalogosSelect</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="despachoDD"></a>
+                    <span class="name">
+                        <span ><b>despachoDD</b></span>
+                        <a href="#despachoDD"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>DESPACHO_DD</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:60</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="despachoLDA"></a>
+                    <span class="name">
+                        <span ><b>despachoLDA</b></span>
+                        <a href="#despachoLDA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>DESPACHO_LDA</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:61</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fechaFinalInput"></a>
+                    <span class="name">
+                        <span ><b>fechaFinalInput</b></span>
+                        <a href="#fechaFinalInput"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/InputFecha.html" target="_self" >InputFecha</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>FECHA_FINAL</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:67</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fechaInicioInput"></a>
+                    <span class="name">
+                        <span ><b>fechaInicioInput</b></span>
+                        <a href="#fechaInicioInput"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/InputFecha.html" target="_self" >InputFecha</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>FECHA_INICIO</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:66</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FormSolicitud"></a>
+                    <span class="name">
+                        <span ><b>FormSolicitud</b></span>
+                        <a href="#FormSolicitud"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>FormGroup</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="69" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:69</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="horaFinal"></a>
+                    <span class="name">
+                        <span ><b>horaFinal</b></span>
+                        <a href="#horaFinal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/InputHora.html" target="_self" >InputHora</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>HORA_FINAL</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:64</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="horaInicio"></a>
+                    <span class="name">
+                        <span ><b>horaInicio</b></span>
+                        <a href="#horaInicio"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/InputHora.html" target="_self" >InputHora</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>HORA_INICIO</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:63</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="immex"></a>
+                    <span class="name">
+                        <span ><b>immex</b></span>
+                        <a href="#immex"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/InputCheck.html" target="_self" >InputCheck</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>IMMEX</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:56</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="industriaAutomotriz"></a>
+                    <span class="name">
+                        <span ><b>industriaAutomotriz</b></span>
+                        <a href="#industriaAutomotriz"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/InputCheck.html" target="_self" >InputCheck</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>INDUSTRIA_AUTOMOTRIZ</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:57</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="paisesOrigen"></a>
+                    <span class="name">
+                        <span ><b>paisesOrigen</b></span>
+                        <a href="#paisesOrigen"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>CatalogoPaises[]</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="paisesProcedencia"></a>
+                    <span class="name">
+                        <span ><b>paisesProcedencia</b></span>
+                        <a href="#paisesProcedencia"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>CatalogoPaises[]</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:49</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="programaFomento"></a>
+                    <span class="name">
+                        <span ><b>programaFomento</b></span>
+                        <a href="#programaFomento"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/InputCheck.html" target="_self" >InputCheck</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>PROGRAMA_FOMENTO</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:55</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="seccionAduanera"></a>
+                    <span class="name">
+                        <span ><b>seccionAduanera</b></span>
+                        <a href="#seccionAduanera"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/CatalogosSelect.html" target="_self" >CatalogosSelect</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectRangoDias"></a>
+                    <span class="name">
+                        <span ><b>selectRangoDias</b></span>
+                        <a href="#selectRangoDias"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Array&lt;string&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:73</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="socioComercial"></a>
+                    <span class="name">
+                        <span ><b>socioComercial</b></span>
+                        <a href="#socioComercial"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/InputCheck.html" target="_self" >InputCheck</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>SOCIO_COMERCIAL</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:58</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="solIndividual"></a>
+                    <span class="name">
+                        <span ><b>solIndividual</b></span>
+                        <a href="#solIndividual"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:79</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="tipoSolSeleccionada"></a>
+                    <span class="name">
+                        <span ><b>tipoSolSeleccionada</b></span>
+                        <a href="#tipoSolSeleccionada"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Catalogo.html" target="_self" >Catalogo</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validacionPedimento"></a>
+                    <span class="name">
+                        <span ><b>validacionPedimento</b></span>
+                        <a href="#validacionPedimento"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:76</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="datosImportadorExportador"></a>
+                        <span class="name"><b>datosImportadorExportador</b><a href="#datosImportadorExportador"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>datosImportadorExportador()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="106" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:106</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Obtiene el grupo de formulario &#39;datosImportadorExportador&#39; del formulario principal &#39;FormSolicitud&#39;.</p>
+</div>
+
+                                <div>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns : </b>    <code>FormGroup</code>
+
+                                </div>
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="datosServicio"></a>
+                        <span class="name"><b>datosServicio</b><a href="#datosServicio"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>datosServicio()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="115" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:115</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Obtiene el grupo de formulario &#39;datosServicio&#39; del formulario principal &#39;FormSolicitud&#39;.</p>
+</div>
+
+                                <div>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns : </b>    <code>FormGroup</code>
+
+                                </div>
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="despacho"></a>
+                        <span class="name"><b>despacho</b><a href="#despacho"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>despacho()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="124" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:124</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Obtiene el grupo de formulario &#39;despacho&#39; del formulario principal &#39;FormSolicitud&#39;.</p>
+</div>
+
+                                <div>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns : </b>    <code>FormGroup</code>
+
+                                </div>
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="pedimento"></a>
+                        <span class="name"><b>pedimento</b><a href="#pedimento"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>pedimento()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="133" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:133</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Obtiene el grupo de formulario &#39;pedimento&#39; del formulario principal &#39;FormSolicitud&#39;.</p>
+</div>
+
+                                <div>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns : </b>    <code>FormGroup</code>
+
+                                </div>
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="personasResponsablesDespacho"></a>
+                        <span class="name"><b>personasResponsablesDespacho</b><a href="#personasResponsablesDespacho"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>personasResponsablesDespacho()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="142" class="link-to-prism">src/app/tramites/303/components/solicitud/solicitud.component.ts:142</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Obtiene el array del formulario &#39;personasResponsablesDespacho&#39; del formulario principal &#39;FormSolicitud&#39;.</p>
+</div>
+
+                                <div>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns : </b>    <code>FormArray</code>
+
+                                </div>
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Signal, signal, WritableSignal } from &#x27;@angular/core&#x27;;
+import { Catalogo, CatalogoPaises } from &#x27;../../../../core/models/shared/catalogos.model&#x27;;
+import {
+  CatalogosSelect,
+  CatalogosSelectPaises,
+  DatosInputCheck,
+  InputCheck,
+  InputFecha,
+  InputHora,
+} from &#x27;../../../../core/models/shared/components.model&#x27;;
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from &#x27;@angular/forms&#x27;;
+import { ValidacionesFormularioService } from &#x27;../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service&#x27;;
+import {
+  DESPACHO_DD,
+  DESPACHO_LDA,
+  FECHA_FINAL,
+  FECHA_INICIO,
+  HORA_FINAL,
+  HORA_INICIO,
+  IMMEX,
+  INDUSTRIA_AUTOMOTRIZ,
+  PROGRAMA_FOMENTO,
+  SOCIO_COMERCIAL,
+} from &#x27;../../../../shared/constantes/servicios-extraordinarios.enum&#x27;;
+import {
+  CATALOGOS_ID,
+  TIPO_SOLICITUD,
+} from &#x27;../../../../shared/constantes/constantes&#x27;;
+import { FormulariosService } from &#x27;../../../../core/services/shared/formularios/formularios.service&#x27;;
+import { datosAgregarFormulario } from &#x27;../../../../core/models/shared/forms-model&#x27;;
+import { DatosComponentePedimento } from &#x27;../../../../core/models/5701/servicios-extraordinarios.model&#x27;;
+import { FechasService } from &#x27;../../../../core/services/shared/fechas/fechas.service&#x27;;
+import { DatosParaValidacionFecha } from &#x27;../../../../core/models/shared/fechas.model&#x27;;
+import { CatalogosService } from &#x27;../../../../core/services/shared/catalogos/catalogos.service&#x27;;
+
+@Component({
+  selector: &#x27;solicitud&#x27;,
+  templateUrl: &#x27;./solicitud.component.html&#x27;,
+  styleUrl: &#x27;./solicitud.component.scss&#x27;,
+})
+export class SolicitudComponent {
+  datosTiposSolicitud!: CatalogosSelect;
+  paisesOrigen!: CatalogoPaises[];
+  paisesProcedencia!: CatalogoPaises[];
+  aduanas!: CatalogosSelect;
+  seccionAduanera!: CatalogosSelect;
+
+  tipoSolSeleccionada!: Catalogo;
+
+  programaFomento: InputCheck &#x3D; PROGRAMA_FOMENTO;
+  immex: InputCheck &#x3D; IMMEX;
+  industriaAutomotriz: InputCheck &#x3D; INDUSTRIA_AUTOMOTRIZ;
+  socioComercial: InputCheck &#x3D; SOCIO_COMERCIAL;
+
+  despachoDD &#x3D; DESPACHO_DD;
+  despachoLDA &#x3D; DESPACHO_LDA;
+
+  horaInicio: InputHora &#x3D; HORA_INICIO;
+  horaFinal: InputHora &#x3D; HORA_FINAL;
+
+  fechaInicioInput: InputFecha &#x3D; FECHA_INICIO;
+  fechaFinalInput: InputFecha &#x3D; FECHA_FINAL;
+
+  FormSolicitud!: FormGroup;
+
+  colapsable: boolean &#x3D; false;
+
+  selectRangoDias: Array&lt;string&gt; &#x3D; [];
+
+  // Pedimento -crea una señal para validar
+  validacionPedimento: boolean &#x3D; false;
+  datosPedimentoComponente!: DatosComponentePedimento;
+
+  solIndividual!: boolean;
+
+  constructor(
+    private fechaService: FechasService,
+    private fb: FormBuilder,
+    private fService: FormulariosService,
+    private catalogosServices: CatalogosService,
+    private validacionesService: ValidacionesFormularioService
+  ) {
+    this.crearFormSolicitud();
+  }
+
+  ngOnInit(): void {
+    this.getTiposSolicitud();
+    this.getPaises();
+    this.getAduanas();
+    this.getSeccionAduanera();
+
+    // Aqui se busca el nro de patente o autorizacion
+    this.obtenerPatente();
+  }
+
+  /**
+   * Obtiene el grupo de formulario &#x27;datosImportadorExportador&#x27; del formulario principal &#x27;FormSolicitud&#x27;.
+   *
+   * @returns {FormGroup} El grupo de formulario &#x27;datosImportadorExportador&#x27;.
+   */
+  get datosImportadorExportador(): FormGroup {
+    return this.FormSolicitud.get(&#x27;datosImportadorExportador&#x27;) as FormGroup;
+  }
+
+  /**
+   * Obtiene el grupo de formulario &#x27;datosServicio&#x27; del formulario principal &#x27;FormSolicitud&#x27;.
+   *
+   * @returns {FormGroup} El grupo de formulario &#x27;datosServicio&#x27;.
+   */
+  get datosServicio(): FormGroup {
+    return this.FormSolicitud.get(&#x27;datosServicio&#x27;) as FormGroup;
+  }
+
+  /**
+   * Obtiene el grupo de formulario &#x27;despacho&#x27; del formulario principal &#x27;FormSolicitud&#x27;.
+   *
+   * @returns {FormGroup} El grupo de formulario &#x27;despacho&#x27;.
+   */
+  get despacho(): FormGroup {
+    return this.FormSolicitud.get(&#x27;despacho&#x27;) as FormGroup;
+  }
+
+  /**
+   * Obtiene el grupo de formulario &#x27;pedimento&#x27; del formulario principal &#x27;FormSolicitud&#x27;.
+   *
+   * @returns {FormGroup} El grupo de formulario &#x27;pedimento&#x27;.
+   */
+  get pedimento(): FormGroup {
+    return this.FormSolicitud.get(&#x27;pedimento&#x27;) as FormGroup;
+  }
+
+  /**
+   * Obtiene el array del formulario &#x27;personasResponsablesDespacho&#x27; del formulario principal &#x27;FormSolicitud&#x27;.
+   *
+   * @returns {FormArray} El array de formulario &#x27;personasResponsablesDespacho&#x27;.
+   */
+  get personasResponsablesDespacho(): FormArray {
+    return this.FormSolicitud.get(&#x27;personasResponsablesDespacho&#x27;) as FormArray;
+  }
+
+  // * Peticiones a las apis
+
+  /**
+   * Obtiene los tipos de solicitud desde el catálogo y los asigna a &#x60;datosTiposSolicitud&#x60;.
+   *
+   * Este método realiza una solicitud al servicio &#x60;catalogosServices&#x60; para obtener el catálogo de tipos de solicitud identificado por &#x60;CATALOGOS_ID.CAT_TIPO_SOL&#x60;. Una vez que recibe la  respuesta, verifica si la respuesta contiene elementos. Si es así, asigna los datos recibidos a la propiedad &#x60;datosTiposSolicitud&#x60; con la estructura adecuada.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  getTiposSolicitud(): void {
+    this.catalogosServices
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_SOL)
+      .subscribe((resp) &#x3D;&gt; {
+        if (resp.length &gt; 0) {
+          this.datosTiposSolicitud &#x3D; {
+            labelNombre: &#x27;Tipo de solicitud&#x27;,
+            required: true,
+            primerOpcion: &#x27;Selecciona un valor&#x27;,
+            catalogos: resp,
+          };
+        }
+      });
+  }
+
+  getPaises(): void {
+    this.catalogosServices
+      .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
+      .subscribe((resp) &#x3D;&gt; {
+        if (resp.length &gt; 0) {
+          this.paisesOrigen &#x3D; resp;
+          this.paisesProcedencia &#x3D; resp;
+        }
+      });
+  }
+
+  getAduanas(): void {
+    this.catalogosServices
+      .getCatalogo(CATALOGOS_ID.CAT_ADUANAS)
+      .subscribe((resp) &#x3D;&gt; {
+        if (resp.length &gt; 0) {
+          this.aduanas &#x3D; {
+            labelNombre: &#x27;Aduana&#x27;,
+            required: true,
+            primerOpcion: &#x27;Selecciona un valor&#x27;,
+            catalogos: resp,
+          };
+        }
+      });
+  }
+
+  getSeccionAduanera(): void {}
+
+  obtenerPatente() {
+    // Busqueda de la patente a algun endpoint
+    const datosPatente: datosAgregarFormulario &#x3D; {
+      form: this.despacho,
+      field: &#x27;patente&#x27;,
+      valor: &#x27;3061&#x27;,
+    };
+    this.fService.agregarValorCamposDesactivados(datosPatente);
+  }
+
+  // ************************************************************
+
+  individual(): boolean {
+    return this.tipoSolSeleccionada &amp;&amp;
+      this.tipoSolSeleccionada.id &#x3D;&#x3D;&#x3D; TIPO_SOLICITUD.INDIVIDUAL
+      ? true
+      : false;
+  }
+
+  isValid(form: FormGroup, field: string) {
+    return this.validacionesService.isValid(form, field);
+  }
+
+  crearFormSolicitud() {
+    this.FormSolicitud &#x3D; this.fb.group({
+      tipoSolicitud: [{ value: &#x27;&#x27;, requerid: true }, [Validators.required]],
+      datosImportadorExportador: this.fb.group({
+        rfcImportExport: [
+          &#x27;&#x27;,
+          [
+            Validators.required,
+            Validators.pattern(this.validacionesService.rfcPattern),
+          ],
+        ],
+        nombreImportExport: [
+          { value: &#x27;&#x27;, disabled: true },
+          [Validators.required],
+        ],
+        nroRegistro: [&#x27;&#x27;, [Validators.maxLength(25)]],
+        programaFomento: [false],
+        programaFomentoValue: [&#x27;&#x27;],
+        immex: [false],
+        immexValue: [&#x27;&#x27;],
+        industriaAutomotriz: [false],
+        industriaAutomotrizValue: [&#x27;&#x27;],
+        tipoEmpresaCertificada: [&#x27;&#x27;],
+        idSocioComercial: [&#x27;&#x27;],
+        socioComercial: [false],
+        opEconomicoAut: [false],
+        revisionOrigen: [false],
+      }),
+
+      datosServicio: this.fb.group({
+        fechaInicio: [{ value: &#x27;&#x27;, disabled: true }, [Validators.required]],
+        fechaFinal: [[{ value: &#x27;&#x27;, disabled: true }, [Validators.required]]],
+        horaInicio: [&#x27;&#x27;, Validators.required],
+        horaFinal: [&#x27;&#x27;, Validators.required],
+      }),
+
+      despacho: this.fb.group({
+        tipo: [&#x27;&#x27;],
+        autorizacion: [&#x27;&#x27;],
+        idAduana: [null, [Validators.required]],
+        descripcionAduana: [&#x27;&#x27;, [Validators.required]],
+        seccionAduanera: [&#x27;&#x27;],
+        nombreRecinto: [&#x27;&#x27;],
+        tipoOperacion: [&#x27;&#x27;],
+        patente: [{ value: &#x27;&#x27;, disabled: true }],
+        relacionSociedad: [],
+        encargoConferido: [],
+        domicilio: [&#x27;&#x27;, Validators.required],
+      }),
+
+      mercancia: this.fb.group({
+        paisOrigen: [&#x27;&#x27;, Validators.required],
+        paisProcedencia: [&#x27;&#x27;, Validators.required],
+        descripcion: [&#x27;&#x27;, Validators.required],
+        justificacion: [&#x27;&#x27;, Validators.required],
+      }),
+
+      pedimento: this.fb.group({
+        idPedimento: [&#x27;&#x27;],
+        datosPedimento: this.fb.group({
+          patente: [],
+          pedimento: [],
+          aduana: [],
+          tipoPedimento: [],
+          numeros: [],
+          comprobanteValor: [],
+          pedimentoValidado: [],
+        }),
+      }),
+
+      personasResponsablesDespacho: this.fb.array([]),
+    });
+  }
+
+  fechaInicio() {
+    const fechaInicio &#x3D; this.datosServicio.get(&#x27;fechaInicio&#x27;)?.value;
+    return fechaInicio;
+  }
+
+  cambioFechaInicio(nuevo_valor: string) {
+    this.datosServicio.get(&#x27;fechaInicio&#x27;)?.setValue(nuevo_valor);
+    this.datosServicio.get(&#x27;fechaInicio&#x27;)?.markAsUntouched();
+  }
+
+  cambioFechaFinal(nuevo_valor: string) {
+    this.datosServicio.get(&#x27;fechaFinal&#x27;)?.setValue(nuevo_valor);
+    this.datosServicio.get(&#x27;fechaFinal&#x27;)?.markAsUntouched();
+  }
+
+  // *Eventos de los componentes hijos
+  busqueda_rfc() {
+    const rfc &#x3D; this.datosImportadorExportador.get(&#x27;rfcImportExport&#x27;)?.value;
+    // Aqui se hará la busqueda del rfc, para obtener el nombre
+
+    this.llenarCamposDesactivados(
+      this.datosImportadorExportador,
+      &#x27;nombreImportExport&#x27;
+    );
+  }
+
+  llenarCamposDesactivados(form: FormGroup, field: string) {
+    form.get(field)?.enable();
+    form.get(field)?.setValue(&#x27;DAYNIZ YAEL VELASCO CORONEL&#x27;);
+    form.get(field)?.disable();
+  }
+
+  tipoSolicitud(e: Catalogo) {
+    this.tipoSolSeleccionada &#x3D; e;
+    this.solIndividual &#x3D; this.individual();
+  }
+
+  validarFormulario() {
+    if (this.FormSolicitud.invalid) {
+      this.FormSolicitud.markAllAsTouched();
+      return;
+    }
+  }
+
+  programaFomentoF(e: DatosInputCheck) {
+    this.datosImportadorExportador.get(&#x27;programaFomento&#x27;)?.setValue(e.check);
+    this.datosImportadorExportador
+      .get(&#x27;programaFomentoValue&#x27;)
+      ?.setValue(e.valor);
+  }
+
+  immexSeleccion(e: DatosInputCheck) {
+    this.datosImportadorExportador.get(&#x27;immex&#x27;)?.setValue(e.check);
+    this.datosImportadorExportador.get(&#x27;immexValue&#x27;)?.setValue(e.valor);
+  }
+
+  industriaAutomotrizSeleccion(e: DatosInputCheck) {
+    this.datosImportadorExportador
+      .get(&#x27;industriaAutomotriz&#x27;)
+      ?.setValue(e.check);
+    this.datosImportadorExportador
+      .get(&#x27;industriaAutomotrizValue&#x27;)
+      ?.setValue(e.valor);
+  }
+
+  valorInputCheck(e: DatosInputCheck) {
+
+  }
+
+  obtenerHora(e: string, tipo: string) {
+    if (tipo &#x3D;&#x3D;&#x3D; &#x27;i&#x27;) {
+      this.datosServicio.get(&#x27;horaInicio&#x27;)?.setValue(e);
+    } else if (tipo &#x3D;&#x3D;&#x3D; &#x27;f&#x27;) {
+      this.datosServicio.get(&#x27;horaFinal&#x27;)?.setValue(e);
+
+      const fechaInicial &#x3D; this.datosServicio.get(&#x27;fechaInicio&#x27;)?.value;
+      const fechaFinal &#x3D; this.datosServicio.get(&#x27;fechaFinal&#x27;)?.value;
+      const horaInicial &#x3D; this.datosServicio.get(&#x27;horaInicio&#x27;)?.value;
+      const horaFinal &#x3D; this.datosServicio.get(&#x27;horaFinal&#x27;)?.value;
+
+      const rangoFecha &#x3D; {
+        fechaInicio: this.fechaService.formatoFechaGuion(fechaInicial, false),
+        horaInicio: horaInicial,
+        fechaFin: this.fechaService.formatoFechaGuion(fechaFinal, false),
+        horaFin: horaFinal,
+      };
+      this.validaRangoFechas(rangoFecha);
+    }
+  }
+
+  validaRangoFechas(datos: DatosParaValidacionFecha): void {
+    switch (this.tipoSolSeleccionada.id) {
+      case TIPO_SOLICITUD.INDIVIDUAL:
+        const rangoFechaValida &#x3D; this.fechaService.validacion24Horas(datos);
+        if (!rangoFechaValida) {
+          // Aqui se muestra un mensaje de error
+          alert(&#x27;El rango de fechas no puede ser mayor a 24 horas&#x27;);
+          return;
+        }
+        this.rango_fechas();
+
+        break;
+      case TIPO_SOLICITUD.SEMANAL:
+        const rangoFechaSemana &#x3D; this.fechaService.validacionSemana(datos);
+        if (!rangoFechaSemana) {
+          // Aqui se muestra un mensaje de error
+          alert(&#x27;El rango de fechas no puede ser mayor a una semana&#x27;);
+          return;
+        }
+        this.rango_fechas();
+        break;
+      case TIPO_SOLICITUD.MENSUAL:
+        const rangoFechaMes &#x3D; this.fechaService.validacionMes(datos);
+        if (!rangoFechaMes) {
+          // Aqui se muestra un mensaje de error
+          alert(&#x27;El rango de fechas no puede ser mayor a un mes&#x27;);
+          return;
+        }
+        this.rango_fechas();
+        break;
+    }
+  }
+
+  rango_fechas() {
+    const fechaInicial &#x3D; this.datosServicio.get(&#x27;fechaInicio&#x27;)?.value;
+    const fechaFinal &#x3D; this.datosServicio.get(&#x27;fechaFinal&#x27;)?.value;
+
+    const formatoFechaInicial &#x3D;
+      this.fechaService.formatoFechaGuion(fechaInicial);
+    const formatoFechaFinal &#x3D; this.fechaService.formatoFechaGuion(fechaFinal);
+
+    this.selectRangoDias &#x3D; this.fechaService.obtenerDiasEntreFechas(
+      formatoFechaInicial,
+      formatoFechaFinal
+    );
+
+    this.colapsable &#x3D; true;
+  }
+
+  mostrar_colapsable() {
+    this.colapsable &#x3D; !this.colapsable;
+  }
+
+  aduanaSeleccion(aduana: Catalogo) {
+    this.darValorCampoFormulario(this.despacho, &#x27;idAduana&#x27;, aduana.id);
+    this.darValorCampoFormulario(
+      this.despacho,
+      &#x27;descripcionAduana&#x27;,
+      aduana.descripcion
+    );
+    this.validacionPedimento &#x3D; true;
+
+    //
+    const patente &#x3D; this.fService.convertirValorANumero(
+      this.despacho,
+      &#x27;patente&#x27;
+    );
+    const idAduana &#x3D; this.fService.convertirValorANumero(
+      this.despacho,
+      &#x27;idAduana&#x27;
+    );
+
+    this.datosPedimentoComponente &#x3D; {
+      patente: patente,
+      idAduana: idAduana,
+    };
+  }
+
+  validaCampoPedimento() {
+    const aduanaValidacion &#x3D; this.isValid(this.despacho, &#x27;descripcionAduana&#x27;);
+    if (aduanaValidacion &#x3D;&#x3D;&#x3D; null) this.validacionPedimento &#x3D; true;
+  }
+
+  darValorCampoFormulario(
+    form: FormGroup,
+    field: string,
+    valor: string | number
+  ) {
+    form.get(field)?.setValue(valor);
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;container&quot;&gt;
+  &lt;ng-titulo titulo&#x3D;&quot;Tipo de servicio extraordinario&quot; /&gt;
+
+  &lt;div class&#x3D;&quot;row&quot;&gt;
+    &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+      &lt;select-catalogos [catalogosDatos]&#x3D;&quot;datosTiposSolicitud&quot; (valorSeleccion)&#x3D;&quot;tipoSolicitud($event)&quot; /&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  @if(tipoSolSeleccionada) {
+  &lt;form [formGroup]&#x3D;&quot;FormSolicitud&quot; (ngSubmit)&#x3D;&quot;validarFormulario()&quot;&gt;
+    &lt;ng-titulo titulo&#x3D;&quot;Datos del importador/exportador&quot; /&gt;
+    &lt;ng-container formGroupName&#x3D;&quot;datosImportadorExportador&quot;&gt;
+      &lt;div class&#x3D;&quot;row&quot;&gt;
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;div class&#x3D;&quot;form-group&quot;&gt;
+            &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;rfcImportExport&quot;&gt;RFC*:&lt;/label&gt;
+            &lt;input class&#x3D;&quot;form-control&quot; id&#x3D;&quot;rfcImportExport&quot; placeholder&#x3D;&quot;RFC&quot; type&#x3D;&quot;text&quot;
+              formControlName&#x3D;&quot;rfcImportExport&quot;
+              [ngClass]&#x3D;&quot;isValid(datosImportadorExportador,&#x27;rfcImportExport&#x27;) ? &#x27;required&#x27; : &#x27;&#x27;&quot; appUppercase
+              (blur)&#x3D;&quot;busqueda_rfc()&quot;&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;col-md-8&quot;&gt;
+          &lt;div class&#x3D;&quot;form-group&quot;&gt;
+            &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;nombreImportExport&quot;&gt;Nombre*:&lt;/label&gt;
+            &lt;input class&#x3D;&quot;form-control&quot; id&#x3D;&quot;nombreImportExport&quot; formControlName&#x3D;&quot;nombreImportExport&quot;
+              placeholder&#x3D;&quot;Nombre&quot; type&#x3D;&quot;text&quot; appUppercase&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;row&quot;&gt;
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;div class&#x3D;&quot;form-group&quot;&gt;
+            &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;nroRegistro&quot;&gt;Número de registro o programa:&lt;/label&gt;
+            &lt;input class&#x3D;&quot;form-control&quot; id&#x3D;&quot;nroRegistro&quot; placeholder&#x3D;&quot;Numero de registro&quot; type&#x3D;&quot;text&quot;
+              formControlName&#x3D;&quot;nroRegistro&quot; [ngClass]&#x3D;&quot;isValid(datosImportadorExportador, &#x27;nroRegistro&#x27;) ? &#x27;required&#x27; : &#x27;&#x27;&quot;&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;row&quot;&gt;
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;input-check [datos]&#x3D;&quot;programaFomento&quot; (valores)&#x3D;&quot;programaFomentoF($event)&quot;&gt;&lt;/input-check&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;input-check [datos]&#x3D;&quot;immex&quot; (valores)&#x3D;&quot;immexSeleccion($event)&quot;&gt;&lt;/input-check&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;input-check [datos]&#x3D;&quot;industriaAutomotriz&quot; (valores)&#x3D;&quot;industriaAutomotrizSeleccion($event)&quot;&gt;&lt;/input-check&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;row mt-2&quot;&gt;
+        &lt;div class&#x3D;&quot;col-md-12&quot;&gt;
+          &lt;label for&#x3D;&quot;certficacion_a&quot;&gt;Tipo de empresa certificada&lt;/label&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;input class&#x3D;&quot;form-check-input me-3&quot; type&#x3D;&quot;radio&quot; name&#x3D;&quot;certficacion&quot; value&#x3D;&quot;a&quot; id&#x3D;&quot;certficacion_a&quot;&gt;
+          &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;certficacion_a&quot;&gt;I.V.A e I.E.P.S Certificación A:&lt;/label&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;input class&#x3D;&quot;form-check-input me-3&quot; type&#x3D;&quot;radio&quot; name&#x3D;&quot;certficacion&quot; value&#x3D;&quot;aa&quot; id&#x3D;&quot;certficacion_aa&quot;&gt;
+          &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;certficacion_aa&quot;&gt;I.V.A e I.E.P.S Certificación AA:&lt;/label&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;input class&#x3D;&quot;form-check-input me-3&quot; type&#x3D;&quot;radio&quot; name&#x3D;&quot;certficacion&quot; value&#x3D;&quot;aaa&quot; id&#x3D;&quot;certficacion_aaa&quot;&gt;
+          &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;certficacion_aaa&quot;&gt;I.V.A e I.E.P.S Certificación AAA:&lt;/label&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;row mt-3&quot;&gt;
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;input-check [datos]&#x3D;&quot;socioComercial&quot; (valores)&#x3D;&quot;valorInputCheck($event)&quot;&gt;&lt;/input-check&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;input class&#x3D;&quot;form-check-input me-3&quot; type&#x3D;&quot;checkbox&quot; value&#x3D;&quot;&quot; id&#x3D;&quot;opEconomicoAut&quot;&gt;
+          &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;opEconomicoAut&quot;&gt;Operador económico autorizado&lt;/label&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;input class&#x3D;&quot;form-check-input me-3&quot; type&#x3D;&quot;checkbox&quot; value&#x3D;&quot;&quot; id&#x3D;&quot;revisionOrigen&quot;&gt;
+          &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;revisionOrigen&quot;&gt;Revisión en origen&lt;/label&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/ng-container&gt;
+
+    &lt;ng-titulo titulo&#x3D;&quot;Datos del servicio&quot; /&gt;
+    &lt;div class&#x3D;&quot;row&quot;&gt;
+      &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+        &lt;input-fecha [datos]&#x3D;&quot;fechaInicioInput&quot; (valorCambiado)&#x3D;&quot;cambioFechaInicio($event)&quot;&gt;&lt;/input-fecha&gt;
+      &lt;/div&gt;
+
+
+      &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+        &lt;input-hora formControlName&#x3D;&quot;horaInicio&quot; [label]&#x3D;&quot;&#x27;Hora inicio&#x27;&quot; [required]&#x3D;&quot;true&quot; [inputId]&#x3D;&quot;&#x27;horaInicio&#x27;&quot;&gt;&lt;/input-hora&gt;
+      &lt;/div&gt;
+
+    &lt;/div&gt;
+
+    &lt;div class&#x3D;&quot;row&quot;&gt;
+      &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+        &lt;input-fecha [datos]&#x3D;&quot;fechaFinalInput&quot; (valorCambiado)&#x3D;&quot;cambioFechaFinal($event)&quot;&gt;&lt;/input-fecha&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+        &lt;input-hora formControlName&#x3D;&quot;horaFinal&quot; [label]&#x3D;&quot;&#x27;Hora Final&#x27;&quot; [required]&#x3D;&quot;true&quot; [inputId]&#x3D;&quot;&#x27;horaFinal&#x27;&quot;&gt;&lt;/input-hora&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class&#x3D;&quot;row mt-5&quot;&gt;
+      &lt;div class&#x3D;&quot;col-md-12&quot;&gt;
+        &lt;div class&#x3D;&quot;panel-group ficha-collapse&quot; id&#x3D;&quot;accordion&quot;&gt;
+          &lt;div class&#x3D;&quot;panel panel-default&quot;&gt;
+            &lt;div class&#x3D;&quot;panel-heading&quot; (click)&#x3D;&quot;mostrar_colapsable()&quot;&gt;
+              &lt;h4 class&#x3D;&quot;panel-title&quot;&gt;
+                &lt;a&gt;
+                  Especifique los días que se utilizarán dentro del periodo*:
+                &lt;/a&gt;
+              &lt;/h4&gt;
+              &lt;button type&#x3D;&quot;button&quot; class&#x3D;&quot;collpase-button collapsed&quot;&gt;&lt;/button&gt;
+            &lt;/div&gt;
+            @if(colapsable){
+            &lt;div class&#x3D;&quot;panel-collapse collapse in&quot; id&#x3D;&quot;panel-01&quot;&gt;
+              &lt;div class&#x3D;&quot;panel-body&quot;&gt;
+                &lt;crosslist [fechas]&#x3D;&quot;selectRangoDias&quot;&gt;&lt;/crosslist&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            }
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;ng-titulo titulo&#x3D;&quot;Datos del despacho para el servicio extraordinario&quot; /&gt;
+
+    &lt;ng-container formGroupName&#x3D;&quot;despacho&quot;&gt;
+      &lt;div class&#x3D;&quot;row&quot;&gt;
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;input-check [datos]&#x3D;&quot;despachoLDA&quot; (valores)&#x3D;&quot;valorInputCheck($event)&quot;&gt;&lt;/input-check&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;input-check [datos]&#x3D;&quot;despachoDD&quot; (valores)&#x3D;&quot;valorInputCheck($event)&quot;&gt;&lt;/input-check&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;row&quot;&gt;
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;select-catalogos [catalogosDatos]&#x3D;&quot;aduanas&quot; (valorSeleccion)&#x3D;&quot;aduanaSeleccion($event)&quot; /&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;label for&#x3D;&quot;seccionAduanera&quot; class&#x3D;&quot;form-label&quot;&gt;Sección aduanera*:&lt;/label&gt;
+          &lt;select class&#x3D;&quot;form-control&quot; id&#x3D;&quot;seccionAduanera&quot;&gt;
+            &lt;option&gt;Selecciona un valor&lt;/option&gt;
+            &lt;option&gt;32 - 304 - AEROPUERTO INTERNACIONAL GENERAL. LUCIO BLANCO, CIUDAD REYNOSA, TAMAULIPAS.&lt;/option&gt;
+            &lt;option&gt;34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.&lt;/option&gt;
+            &lt;option&gt;31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.&lt;/option&gt;
+          &lt;/select&gt;
+
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;label for&#x3D;&quot;recinto&quot; class&#x3D;&quot;form-label&quot;&gt;Nombre del recinto:&lt;/label&gt;
+          &lt;select class&#x3D;&quot;form-control&quot; id&#x3D;&quot;recinto&quot; disabled&gt;
+            &lt;option&gt;Selecciona un valor&lt;/option&gt;
+            &lt;option&gt;Individual&lt;/option&gt;
+            &lt;option&gt;Semanal&lt;/option&gt;
+            &lt;option&gt;Mensual&lt;/option&gt;
+          &lt;/select&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;row&quot;&gt;
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;label for&#x3D;&quot;operacion&quot; class&#x3D;&quot;form-label&quot;&gt;Tipo de operación*:&lt;/label&gt;
+          &lt;select class&#x3D;&quot;form-control&quot; id&#x3D;&quot;operacion&quot;&gt;
+            &lt;option&gt;Selecciona un valor&lt;/option&gt;
+            &lt;option&gt;Importación&lt;/option&gt;
+            &lt;option&gt;Exportación&lt;/option&gt;
+          &lt;/select&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;label for&#x3D;&quot;patente&quot; class&#x3D;&quot;form-label&quot;&gt;Patente/Número de autorización:&lt;/label&gt;
+          &lt;input class&#x3D;&quot;form-control&quot; type&#x3D;&quot;text&quot; name&#x3D;&quot;patente&quot; id&#x3D;&quot;patente&quot; formControlName&#x3D;&quot;patente&quot;&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+          &lt;div class&#x3D;&quot;form-check&quot;&gt;
+            &lt;div&gt;
+              &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;relacionSociedad&quot;&gt;Relación de sociedad: &lt;/label&gt;
+              &lt;input class&#x3D;&quot;form-check-input ms-3&quot; type&#x3D;&quot;checkbox&quot; value&#x3D;&quot;&quot; id&#x3D;&quot;relacionSociedad&quot;&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+              &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;encargoConferido&quot;&gt;Encargo conferido:&lt;/label&gt;
+              &lt;input class&#x3D;&quot;form-check-input ms-3&quot; type&#x3D;&quot;checkbox&quot; value&#x3D;&quot;&quot; id&#x3D;&quot;encargoConferido&quot;&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/ng-container&gt;
+
+
+
+    @if (solIndividual) {
+    &lt;ng-titulo titulo&#x3D;&quot;Datos del pedimento&quot; /&gt;
+
+    &lt;c-pedimento [validacion]&#x3D;&quot;validacionPedimento&quot; [datosNroPedimento]&#x3D;&quot;datosPedimentoComponente&quot;
+      (validaCampos)&#x3D;&quot;validaCampoPedimento()&quot;&gt;&lt;/c-pedimento&gt;
+    }
+
+
+    &lt;ng-titulo titulo&#x3D;&quot;Mercancía&quot; /&gt;
+    &lt;div class&#x3D;&quot;row&quot;&gt;
+      &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+        &lt;app-select-paises [catalogosPaises]&#x3D;&quot;paisesOrigen&quot; formControlName&#x3D;&quot;paisOrigen&quot; [label]&#x3D;&quot;&#x27;País de origen&#x27;&quot;
+        [required]&#x3D;&quot;true&quot;&gt;&lt;/app-select-paises&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+        &lt;app-select-paises [catalogosPaises]&#x3D;&quot;paisesProcedencia&quot; formControlName&#x3D;&quot;paisProcedencia&quot;
+        [label]&#x3D;&quot;&#x27;País de procedencia&#x27;&quot; [required]&#x3D;&quot;true&quot;&gt;&lt;/app-select-paises&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;col-md-8&quot;&gt;
+        &lt;div class&#x3D;&quot;form-group&quot;&gt;
+          &lt;label for&#x3D;&quot;descripcion&quot; class&#x3D;&quot;form-label&quot;&gt;Descripción genérica*:&lt;/label&gt;
+          &lt;textarea class&#x3D;&quot;form-control&quot; rows&#x3D;&quot;3&quot; id&#x3D;&quot;descripcion&quot;&gt;&lt;/textarea&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;col-md-8&quot;&gt;
+        &lt;div class&#x3D;&quot;form-group&quot;&gt;
+          &lt;label for&#x3D;&quot;justificacion&quot; class&#x3D;&quot;form-label&quot;&gt;Justificación*:&lt;/label&gt;
+          &lt;textarea class&#x3D;&quot;form-control&quot; rows&#x3D;&quot;3&quot; id&#x3D;&quot;justificacion&quot;&gt;&lt;/textarea&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+
+    &lt;ng-titulo titulo&#x3D;&quot;Personas responsables del despacho (máximo 5)&quot; /&gt;
+    &lt;agrega-personas/&gt;
+
+
+
+    &lt;ng-titulo titulo&#x3D;&quot;Pagos&quot; /&gt;
+    &lt;div class&#x3D;&quot;row rf&quot;&gt;
+      &lt;div class&#x3D;&quot;col-md-4 form-group&quot;&gt;
+        &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;montoPagar&quot;&gt;Monto a pagar:&lt;/label&gt;
+        &lt;input class&#x3D;&quot;form-control&quot; id&#x3D;&quot;montoPagar&quot; placeholder&#x3D;&quot;&quot; type&#x3D;&quot;text&quot;&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class&#x3D;&quot;row&quot;&gt;
+      &lt;div class&#x3D;&quot;col-md-4 form-group&quot;&gt;
+        &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;lineaCaptura&quot;&gt;Línea de captura*:&lt;/label&gt;
+        &lt;input class&#x3D;&quot;form-control&quot; id&#x3D;&quot;lineaCaptura&quot; placeholder&#x3D;&quot;&quot; type&#x3D;&quot;text&quot;&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;col-md-4 form-group&quot;&gt;
+        &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;monto&quot;&gt;Monto*:&lt;/label&gt;
+        &lt;input class&#x3D;&quot;form-control&quot; id&#x3D;&quot;monto&quot; placeholder&#x3D;&quot;&quot; type&#x3D;&quot;text&quot;&gt;
+      &lt;/div&gt;
+
+    &lt;/div&gt;
+
+    &lt;div class&#x3D;&quot;row&quot;&gt;
+      &lt;div class&#x3D;&quot;col-md-8&quot;&gt;&lt;/div&gt;
+      &lt;div class&#x3D;&quot;col-md-4&quot;&gt;
+        &lt;div class&#x3D;&quot;btn-group&quot;&gt;
+          &lt;button class&#x3D;&quot;btn btn-primary me-2&quot; type&#x3D;&quot;button&quot;&gt;Consultar&lt;/button&gt;
+          &lt;button class&#x3D;&quot;btn btn-danger&quot; type&#x3D;&quot;button&quot;&gt;Eliminar&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class&#x3D;&quot;row&quot;&gt;
+      &lt;p class&#x3D;&quot;p-bold&quot;&gt;A través del siguiente vinculo puedes ingresar a la página para generar la línea de captura de
+        la
+        constancia que se solicita:&lt;/p&gt;
+      &lt;p&gt;Generar línea de captura&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/form&gt;
+  }
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="container">  <ng-titulo titulo="Tipo de servicio extraordinario" />  <div class="row">    <div class="col-md-4">      <select-catalogos [catalogosDatos]="datosTiposSolicitud" (valorSeleccion)="tipoSolicitud($event)" />    </div>  </div>  @if(tipoSolSeleccionada) {  <form [formGroup]="FormSolicitud" (ngSubmit)="validarFormulario()">    <ng-titulo titulo="Datos del importador/exportador" />    <ng-container formGroupName="datosImportadorExportador">      <div class="row">        <div class="col-md-4">          <div class="form-group">            <label class="form-label" for="rfcImportExport">RFC*:</label>            <input class="form-control" id="rfcImportExport" placeholder="RFC" type="text"              formControlName="rfcImportExport"              [ngClass]="isValid(datosImportadorExportador,\'rfcImportExport\') ? \'required\' : \'\'" appUppercase              (blur)="busqueda_rfc()">          </div>        </div>        <div class="col-md-8">          <div class="form-group">            <label class="form-label" for="nombreImportExport">Nombre*:</label>            <input class="form-control" id="nombreImportExport" formControlName="nombreImportExport"              placeholder="Nombre" type="text" appUppercase>          </div>        </div>      </div>      <div class="row">        <div class="col-md-4">          <div class="form-group">            <label class="form-label" for="nroRegistro">Número de registro o programa:</label>            <input class="form-control" id="nroRegistro" placeholder="Numero de registro" type="text"              formControlName="nroRegistro" [ngClass]="isValid(datosImportadorExportador, \'nroRegistro\') ? \'required\' : \'\'">          </div>        </div>      </div>      <div class="row">        <div class="col-md-4">          <input-check [datos]="programaFomento" (valores)="programaFomentoF($event)"></input-check>        </div>        <div class="col-md-4">          <input-check [datos]="immex" (valores)="immexSeleccion($event)"></input-check>        </div>        <div class="col-md-4">          <input-check [datos]="industriaAutomotriz" (valores)="industriaAutomotrizSeleccion($event)"></input-check>        </div>      </div>      <div class="row mt-2">        <div class="col-md-12">          <label for="certficacion_a">Tipo de empresa certificada</label>        </div>        <div class="col-md-4">          <input class="form-check-input me-3" type="radio" name="certficacion" value="a" id="certficacion_a">          <label class="form-label" for="certficacion_a">I.V.A e I.E.P.S Certificación A:</label>        </div>        <div class="col-md-4">          <input class="form-check-input me-3" type="radio" name="certficacion" value="aa" id="certficacion_aa">          <label class="form-label" for="certficacion_aa">I.V.A e I.E.P.S Certificación AA:</label>        </div>        <div class="col-md-4">          <input class="form-check-input me-3" type="radio" name="certficacion" value="aaa" id="certficacion_aaa">          <label class="form-label" for="certficacion_aaa">I.V.A e I.E.P.S Certificación AAA:</label>        </div>      </div>      <div class="row mt-3">        <div class="col-md-4">          <input-check [datos]="socioComercial" (valores)="valorInputCheck($event)"></input-check>        </div>        <div class="col-md-4">          <input class="form-check-input me-3" type="checkbox" value="" id="opEconomicoAut">          <label class="form-label" for="opEconomicoAut">Operador económico autorizado</label>        </div>        <div class="col-md-4">          <input class="form-check-input me-3" type="checkbox" value="" id="revisionOrigen">          <label class="form-label" for="revisionOrigen">Revisión en origen</label>        </div>      </div>    </ng-container>    <ng-titulo titulo="Datos del servicio" />    <div class="row">      <div class="col-md-4">        <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>      </div>      <div class="col-md-4">        <input-hora formControlName="horaInicio" [label]="\'Hora inicio\'" [required]="true" [inputId]="\'horaInicio\'"></input-hora>      </div>    </div>    <div class="row">      <div class="col-md-4">        <input-fecha [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>      </div>      <div class="col-md-4">        <input-hora formControlName="horaFinal" [label]="\'Hora Final\'" [required]="true" [inputId]="\'horaFinal\'"></input-hora>      </div>    </div>    <div class="row mt-5">      <div class="col-md-12">        <div class="panel-group ficha-collapse" id="accordion">          <div class="panel panel-default">            <div class="panel-heading" (click)="mostrar_colapsable()">              <h4 class="panel-title">                <a>                  Especifique los días que se utilizarán dentro del periodo*:                </a>              </h4>              <button type="button" class="collpase-button collapsed"></button>            </div>            @if(colapsable){            <div class="panel-collapse collapse in" id="panel-01">              <div class="panel-body">                <crosslist [fechas]="selectRangoDias"></crosslist>              </div>            </div>            }          </div>        </div>      </div>    </div>    <ng-titulo titulo="Datos del despacho para el servicio extraordinario" />    <ng-container formGroupName="despacho">      <div class="row">        <div class="col-md-4">          <input-check [datos]="despachoLDA" (valores)="valorInputCheck($event)"></input-check>        </div>        <div class="col-md-4">          <input-check [datos]="despachoDD" (valores)="valorInputCheck($event)"></input-check>        </div>      </div>      <div class="row">        <div class="col-md-4">          <select-catalogos [catalogosDatos]="aduanas" (valorSeleccion)="aduanaSeleccion($event)" />        </div>        <div class="col-md-4">          <label for="seccionAduanera" class="form-label">Sección aduanera*:</label>          <select class="form-control" id="seccionAduanera">            <option>Selecciona un valor</option>            <option>32 - 304 - AEROPUERTO INTERNACIONAL GENERAL. LUCIO BLANCO, CIUDAD REYNOSA, TAMAULIPAS.</option>            <option>34 - 306 - ANZALDUAS, CIUDAD REYNOSA, TAMAULIPAS.</option>            <option>31 - 303 - NUEVO AMANECER, CD. REYNOSA, TAMPS.</option>          </select>        </div>        <div class="col-md-4">          <label for="recinto" class="form-label">Nombre del recinto:</label>          <select class="form-control" id="recinto" disabled>            <option>Selecciona un valor</option>            <option>Individual</option>            <option>Semanal</option>            <option>Mensual</option>          </select>        </div>      </div>      <div class="row">        <div class="col-md-4">          <label for="operacion" class="form-label">Tipo de operación*:</label>          <select class="form-control" id="operacion">            <option>Selecciona un valor</option>            <option>Importación</option>            <option>Exportación</option>          </select>        </div>        <div class="col-md-4">          <label for="patente" class="form-label">Patente/Número de autorización:</label>          <input class="form-control" type="text" name="patente" id="patente" formControlName="patente">        </div>        <div class="col-md-4">          <div class="form-check">            <div>              <label class="form-label" for="relacionSociedad">Relación de sociedad: </label>              <input class="form-check-input ms-3" type="checkbox" value="" id="relacionSociedad">            </div>            <div>              <label class="form-label" for="encargoConferido">Encargo conferido:</label>              <input class="form-check-input ms-3" type="checkbox" value="" id="encargoConferido">            </div>          </div>        </div>      </div>    </ng-container>    @if (solIndividual) {    <ng-titulo titulo="Datos del pedimento" />    <c-pedimento [validacion]="validacionPedimento" [datosNroPedimento]="datosPedimentoComponente"      (validaCampos)="validaCampoPedimento()"></c-pedimento>    }    <ng-titulo titulo="Mercancía" />    <div class="row">      <div class="col-md-4">        <app-select-paises [catalogosPaises]="paisesOrigen" formControlName="paisOrigen" [label]="\'País de origen\'"        [required]="true"></app-select-paises>      </div>      <div class="col-md-4">        <app-select-paises [catalogosPaises]="paisesProcedencia" formControlName="paisProcedencia"        [label]="\'País de procedencia\'" [required]="true"></app-select-paises>      </div>      <div class="col-md-8">        <div class="form-group">          <label for="descripcion" class="form-label">Descripción genérica*:</label>          <textarea class="form-control" rows="3" id="descripcion"></textarea>        </div>      </div>      <div class="col-md-8">        <div class="form-group">          <label for="justificacion" class="form-label">Justificación*:</label>          <textarea class="form-control" rows="3" id="justificacion"></textarea>        </div>      </div>    </div>    <ng-titulo titulo="Personas responsables del despacho (máximo 5)" />    <agrega-personas/>    <ng-titulo titulo="Pagos" />    <div class="row rf">      <div class="col-md-4 form-group">        <label class="form-label" for="montoPagar">Monto a pagar:</label>        <input class="form-control" id="montoPagar" placeholder="" type="text">      </div>    </div>    <div class="row">      <div class="col-md-4 form-group">        <label class="form-label" for="lineaCaptura">Línea de captura*:</label>        <input class="form-control" id="lineaCaptura" placeholder="" type="text">      </div>      <div class="col-md-4 form-group">        <label class="form-label" for="monto">Monto*:</label>        <input class="form-control" id="monto" placeholder="" type="text">      </div>    </div>    <div class="row">      <div class="col-md-8"></div>      <div class="col-md-4">        <div class="btn-group">          <button class="btn btn-primary me-2" type="button">Consultar</button>          <button class="btn btn-danger" type="button">Eliminar</button>        </div>      </div>    </div>    <div class="row">      <p class="p-bold">A través del siguiente vinculo puedes ingresar a la página para generar la línea de captura de        la        constancia que se solicita:</p>      <p>Generar línea de captura</p>    </div>  </form>  }</div></div>'
+    var COMPONENTS = [{'name': 'AcuseComponent', 'selector': 'app-component-acuse'},{'name': 'AcusePageComponent', 'selector': ''},{'name': 'AdministrarResiduosComponent', 'selector': 'app-administrar-residuos'},{'name': 'AgentesAgenciasAduanalesComponent', 'selector': 'agentes-agencias-aduanales'},{'name': 'AgregaPersonasComponent', 'selector': 'agrega-personas'},{'name': 'AgregaPersonasComponent', 'selector': 'agrega-personas'},{'name': 'AgregarArchivoComponent', 'selector': 'app-agregar-archivo'},{'name': 'AgregarDestinatoriaComponent', 'selector': 'app-agregar-destinatoria'},{'name': 'AgregarMiembrosEmpresaComponent', 'selector': 'agregar-miembros-empresa'},{'name': 'AgregarTransporteComponent', 'selector': 'agregar-transporte'},{'name': 'AlertComponent', 'selector': 'ng-alert'},{'name': 'AnexarDocumentosComponent', 'selector': 'app-anexar-documentos'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthPageComponent', 'selector': ''},{'name': 'BreadcrumbComponent', 'selector': 'c-breadcrumb'},{'name': 'BtnContinuarComponent', 'selector': 'btn-continuar'},{'name': 'CatalogoSelectComponent', 'selector': 'app-catalogo-select'},{'name': 'ClientesProveedoresExtrajeroComponent', 'selector': 'app-clientes-proveedores-extrajero'},{'name': 'CombinacionRequeridaComponent', 'selector': 'app-combinacion-requerida'},{'name': 'ConfirmarNotificacionComponent', 'selector': 'confirmar-notificacion'},{'name': 'ControlInventariosComponent', 'selector': 'control-inventarios'},{'name': 'CriterioDeDictComponent', 'selector': 'app-criterio-de-dict'},{'name': 'CrosslistComponent', 'selector': 'crosslist'},{'name': 'DatosAdicionalesComponent', 'selector': 'app-datos-adicionales'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosComponent', 'selector': 'app-pantalla-datos'},{'name': 'DatosComponent', 'selector': 'app-datos'},{'name': 'DatosDeLaComponent', 'selector': 'app-datos-de-la'},{'name': 'DatosDelaComponent', 'selector': 'app-datos-dela'},{'name': 'DatosDeLaSolicitudComponent', 'selector': 'app-datos-de-la-solicitud'},{'name': 'DatosDelComponent', 'selector': 'app-datos-del'},{'name': 'DatosDeLosResiduosComponent', 'selector': 'app-datos-de-los-residuos'},{'name': 'DatosGeneralsAnimalsComponent', 'selector': 'app-datos-generals-animals'},{'name': 'DatosParaMovilizacionNacionalComponent', 'selector': 'app-datos-para-movilizacion-nacional'},{'name': 'DatosTransportistaComponent', 'selector': 'datos-transportista'},{'name': 'DespachoMercanciasSolicitudComponent', 'selector': 'despacho-mercancias-solicitud'},{'name': 'DetosDelMarcanciaComponent', 'selector': 'app-detos-del-marcancia'},{'name': 'DetosDelTramiteComponent', 'selector': 'app-detos-del-tramite'},{'name': 'EmpleadosContratadosComponent', 'selector': 'empleados-contratados'},{'name': 'EmpleadosContratadosComponent', 'selector': 'empleados-contratados'},{'name': 'FirmaElectronicaComponent', 'selector': 'firma-electronica'},{'name': 'FooterComponent', 'selector': 'c-footer'},{'name': 'HeaderComponent', 'selector': 'c-header'},{'name': 'InformacionUsuarioComponent', 'selector': 'informacion-usuario'},{'name': 'InputCheckComponent', 'selector': 'input-check'},{'name': 'InputFechaComponent', 'selector': 'input-fecha'},{'name': 'InputHoraComponent', 'selector': 'input-hora'},{'name': 'InputRadioComponent', 'selector': 'app-input-radio'},{'name': 'ModalConfirmarComponent', 'selector': 'app-modal-confirmar'},{'name': 'NavComponent', 'selector': 'c-header-nav'},{'name': 'OctavaTemporalComponent', 'selector': 'app-octava-temporal'},{'name': 'PagoDeDerechoComponent', 'selector': 'app-pago-de-derecho'},{'name': 'PagoDeDerechosComponent', 'selector': 'app-pago-de-derechos'},{'name': 'PagoDerechosComponent', 'selector': 'pago-derechos'},{'name': 'PaisProcendenciaComponent', 'selector': 'app-pais-procendencia'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PantallasComponent', 'selector': 'app-pantallas'},{'name': 'PartidasDeLaComponent', 'selector': 'app-partidas-de-la'},{'name': 'PasoCuatroComponent', 'selector': 'app-paso-cuatro'},{'name': 'PasoCuatroComponent', 'selector': 'paso-cuatro'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoDosComponent', 'selector': 'paso-dos'},{'name': 'PasoDosComponent', 'selector': 'app-paso-dos'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoTresComponent', 'selector': 'app-paso-tres'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoTresComponent', 'selector': 'paso-tres'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'app-paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PasoUnoComponent', 'selector': 'paso-uno'},{'name': 'PedimentoComponent', 'selector': 'c-pedimento'},{'name': 'PedimentoComponent', 'selector': 'c-pedimento'},{'name': 'RegistroPageComponent', 'selector': ''},{'name': 'RepresentacionComponent', 'selector': 'app-representacion'},{'name': 'RepresentanteFiscalComponent', 'selector': 'representante-fiscal'},{'name': 'SeleccionTramiteComponent', 'selector': 'seleccion-tramite'},{'name': 'SelectCatalogosComponent', 'selector': 'select-catalogos'},{'name': 'SelectPaisesComponent', 'selector': 'app-select-paises'},{'name': 'SolicitanteComponent', 'selector': 'solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteComponent', 'selector': 'app-solicitante'},{'name': 'SolicitanteDetosTabsComponent', 'selector': 'app-solicitante-detos-tabs'},{'name': 'SolicitanteOctavaTemporalComponent', 'selector': 'app-solocitante-octava-temporal'},{'name': 'SolicitudComponent', 'selector': 'solicitud'},{'name': 'SolicitudComponent', 'selector': 'solicitud'},{'name': 'SolicitudComponent', 'selector': 'app-solicitud'},{'name': 'SolicitudPageComponent', 'selector': ''},{'name': 'SolicitudPageComponent', 'selector': ''},{'name': 'SolicitudPantallasComponent', 'selector': 'app-solicitud'},{'name': 'TableComponent', 'selector': 'ng-table'},{'name': 'TercerosComponent', 'selector': 'terceros'},{'name': 'TercerosRelacionadosComponent', 'selector': 'app-terceros-relacionados'},{'name': 'TestPageComponent', 'selector': 'test-page'},{'name': 'TituloComponent', 'selector': 'ng-titulo'},{'name': 'TransporteComponent', 'selector': 'app-transporte'},{'name': 'TratadosComponent', 'selector': 'app-tratados'},{'name': 'UsoEspicificoComponent', 'selector': 'app-uso-espicifico'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'ZoosanitarioPageComponent', 'selector': 'app-zoosanitario-page'}];
+    var DIRECTIVES = [{'name': 'CalendarioFormatoDirective', 'selector': '[CalendarioFormato]'},{'name': 'HoraFormatoDirective', 'selector': '[HoraFormato]'},{'name': 'NumeroTelefonicoDirective', 'selector': '[appNumeroTelefonico]'},{'name': 'SoloNumerosDirective', 'selector': '[appSoloNumeros]'},{'name': 'UppercaseDirective', 'selector': '[appUppercase]'}];
+    var ACTUAL_COMPONENT = {'name': 'SolicitudComponent-1'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'SolicitudComponent-1.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
