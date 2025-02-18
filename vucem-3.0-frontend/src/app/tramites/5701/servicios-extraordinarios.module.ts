@@ -33,6 +33,7 @@ import { GeneraDictamenComponent } from './components/genera-dictamen/genera-dic
 import { EvaluarDictamenComponent } from './pages/evaluar-dictamen/evaluar-dictamen.component';
 import { DetalleTramiteComponent } from './components/detalle-tramite/detalle-tramite.component';
 import { RequerimientoInformacionComponent } from './components/requerimiento-informacion/requerimiento-informacion.component';
+import { DocumentosExistentesComponent } from './components/documentos-existentes/documentos-existentes.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { RequerimientoInformacionComponent } from './components/requerimiento-in
     GeneraDictamenComponent,
     EvaluarDictamenComponent,
     DetalleTramiteComponent,
-    RequerimientoInformacionComponent
+    RequerimientoInformacionComponent,
+    DocumentosExistentesComponent
     
   ],
   imports: [

@@ -10,6 +10,10 @@ export class EvaluarDictamenComponent {
    * Índice de la pestaña seleccionada
    */
   indice: number = 1;
+  /**
+   * Variable para firmar
+   */
+  firmar: boolean = false;
 
   /**
    * Método para seleccionar la pestaña
@@ -18,5 +22,14 @@ export class EvaluarDictamenComponent {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+  /*
+   * Método que se ejecuta para guardar y firmar
+  */
+  guardarFirmar(): void { 
+    this.firmar = true;
+  }
+
+  
 
 }

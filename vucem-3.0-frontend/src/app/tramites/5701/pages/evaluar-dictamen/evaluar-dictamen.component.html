@@ -14,7 +14,7 @@
             </div>
         </div>
         <br>
-        <div class="row margin-top">
+        <div *ngIf="!firmar" class="row margin-top">
             <ul class="nav nav-tabs justify-content-center">
               <li [ngClass]="indice === 1 ? 'active' : ''">
                 <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
@@ -37,11 +37,14 @@
               }
             </ng-container>
         </div>
-        <div class="row margin-top">
+        <div *ngIf="firmar" class="row margin-top">
+          <firma-electronica tipo=""></firma-electronica>
+        </div>
+        <div *ngIf="!firmar" class="row margin-top">
             <div class="col-md-6"></div>
             <div class="col-md-6 d-flex align-items-rigth">
                 <div class="btn-group">
-                  <button class="btn btn-default" type="button" >Guardar y firmar</button>
+                  <button class="btn btn-default" type="button" (click)="guardarFirmar()">Guardar y firmar</button>
                   <button class="btn btn-default" type="button" >Guardar</button>
                   <button type="button" class="btn btn-primary ms-2">Cancelar</button> 
                 </div>
