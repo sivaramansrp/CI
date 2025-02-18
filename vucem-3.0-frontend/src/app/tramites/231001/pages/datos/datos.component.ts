@@ -1,17 +1,20 @@
 import { Component, ViewChild } from '@angular/core';
 
-
+// Importación de la interfaz ListaPasosWizard desde el modelo de servicios extraordinarios.
 import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
-import { PASOS } from '../../../../shared/constantes/aviso.enum';
-import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 
+// Importación de la constante PASOS desde el archivo de constantes de aviso.
+import { PASOS } from '../../../../shared/constantes/aviso.enum';
+
+// Importación del componente WizardComponent desde el componente compartido de wizard.
+import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 /**
- * @component DatosComponent
- * @selector app-datos
- * @templateUrl ./datos.component.html
- * @styles
+ *  DatosComponent
+ * app-datos
+ * ./datos.component.html
  * 
- * @description
+ * 
+ * 
  * Componente Angular para manejar los datos del wizard.
  */
 @Component({
@@ -25,21 +28,21 @@ export class DatosComponent {
   /**
    * @property pasos
    * @type {ListaPasosWizard[]}
-   * @description Arreglo que contiene los pasos del wizard.
+   *  Arreglo que contiene los pasos del wizard.
    */
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
    * @property wizardComponent
    * @type {WizardComponent}
-   * @description Referencia al componente del wizard.
+   *  Referencia al componente del wizard.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   
   /**
    * @property indice
    * @type {number}
-   * @description El índice de la pestaña seleccionada.
+   *  El índice de la pestaña seleccionada.
    */
   indice: number = 1;
 
