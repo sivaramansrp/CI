@@ -7,6 +7,9 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
 
 import administrarResiduosMesa from '../../../../../assets/json/231001/administrar-residuos-mesa.json';
 
+/**
+ * Componente para administrar residuos
+ */
 @Component({
   selector: 'app-administrar-residuos',
   standalone: true,
