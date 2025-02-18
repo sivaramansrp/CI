@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import {data} from '../../../../../assets/json/5701/cat-tipo-requerimiento.json';
 
 @Component({
   selector: 'requerimiento-informacion',
@@ -12,18 +13,13 @@ export class RequerimientoInformacionComponent {
   /**
    * Catálogo de tipo de requerimiento
    */
-  catTipoRequerimiento : Catalogo[]= [
-    {
-      id: 1,
-      descripcion: "Documento y datos"
+  catTipoRequerimiento : Catalogo[];
 
-    },
-    {
-      id: 2,
-      descripcion: "Otros"
 
-    }
-  ]
+  ngOnInit(): void {
+    this.catTipoRequerimiento = data;
+  }
+
   
 
   formRequerimiento: FormGroup = this.fb.group({

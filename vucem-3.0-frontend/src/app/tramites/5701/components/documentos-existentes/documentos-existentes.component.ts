@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { URL_PRUEBA } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { DocumentosCargados } from '../../../../core/models/shared/components.model';
+import { data } from '../../../../../assets/json/5701/documentos-existentes.json';
 
 @Component({
   selector: 'app-documentos-existentes',
@@ -9,19 +10,14 @@ import { DocumentosCargados } from '../../../../core/models/shared/components.mo
 })
 export class DocumentosExistentesComponent {
   constructor() { }
+  /**
+   * Lista de documentos cargados.
+   */
   documentosCargados: DocumentosCargados[] = [];
   readonly url: string = URL_PRUEBA;
 
   ngOnInit(): void {  
-    this.documentosCargados = [
-      {
-        tipoDocumento: {
-          descripcion: 'doc12',
-          id: 1,
-        },
-        nombreArchivo: 'Acuse de recepción de trámite',
-      },
-    ];
+    this.documentosCargados = data
   }
 
 
@@ -39,6 +35,7 @@ export class DocumentosExistentesComponent {
    * Abre el modal para eliminar un documento.
    * @param {number} i - El índice del documento.
    */
+  
   abrirModal(i: number) {
    // this.modal = 'show';
   //  this.indiceDocumento = i;
