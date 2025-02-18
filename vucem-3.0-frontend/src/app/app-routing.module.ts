@@ -41,20 +41,28 @@ const routes: Routes = [
       ),
   },
   {
+
     path: 'sagarpa',
     loadChildren: () =>
-            import('./tramites/220501/sagarpa.module').then(
-              (m) => m.SagarpaModule
-            ),
+      import('./tramites/220501/sagarpa.module').then(
+        (m) => m.SagarpaModule
+      ),
   },
   {
     path: 'inspeccion-fisica',
     loadChildren: () =>
-            import('./tramites/220502/inspeccion-fisica.module').then(
-              (m) => m.InspeccionFisicaModule
-            ),
+      import('./tramites/220502/inspeccion-fisica.module').then(
+        (m) => m.InspeccionFisicaModule
+      ),
   },
-  { 
+  {
+    path: 'importante',
+    loadChildren: () =>
+      import('./tramites/301/pantallas.module').then(
+        (m) => m.PantallasModule
+      ),
+  },
+  {
     path: 'pantallas',
     loadChildren: () =>
       import('./tramites/110101/pantallas/pantallas.module').then(
