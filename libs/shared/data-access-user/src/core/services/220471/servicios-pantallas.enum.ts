@@ -2,13 +2,13 @@ export const PANTAPASOS = [
     {
       indice: 1,
       titulo: 'Capturar solicitud',
-      activo: false,
+      activo: true,
       completado: false,
     },
     {
       indice: 2,
       titulo: 'Requisitos neccesarios',
-      activo: true,
+      activo: false,
       completado: true,
     },
     {
