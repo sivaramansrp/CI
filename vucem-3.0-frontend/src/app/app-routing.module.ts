@@ -41,13 +41,7 @@ const routes: Routes = [
         (m) => m.PantallasModule
       ),
   },
-  {
-    path: 'octava-temporal',
-    loadChildren: () =>
-      import('./tramites/130102/octava-temporal.module').then(
-        (m) => m.OctavaTemporalModule
-      ),
-  },
+ 
   { 
     path: 'pantallas',
     loadChildren: () =>
@@ -60,6 +54,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tramites/220201/certificado-zoosanitario.module').then(
         (m) => m.CertificadoZoosanitarioModule)
+  },
+  {
+    path: 'octava-temporal',
+    loadChildren: () =>
+      import('./tramites/130102/octava-temporal.module').then(
+        (m) => m.OctavaTemporalModule
+      ),
   },
 ];
 
