@@ -1,6 +1,10 @@
+/* eslint-disable sort-imports */
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
+import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+import { DatosComponent } from './pages/datos/datos.component';
+import { DatosDelaComponent } from './components/datos-dela/datos-dela.component';
 
 const routes: Routes = [
   {
@@ -8,10 +12,19 @@ const routes: Routes = [
       component: PantallasComponent,
     },
     {
+      path: 'Solicitante',
+      component: SolicitanteComponent,
+    },
+    {
+      path: 'datos',
+      component: DatosComponent,
+
+    },
+    {
       path: '',
       pathMatch: 'full',
-      redirectTo: 'pantallas',
-    },
+      redirectTo: 'datos',
+    }
 ];
 
 @NgModule({

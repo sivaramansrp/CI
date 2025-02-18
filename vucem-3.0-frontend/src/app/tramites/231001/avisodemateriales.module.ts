@@ -1,25 +1,45 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PantallasComponent } from './pages/pantallas/pantallas.component';
-import { DatosComponent } from './pages/datos/datos.component';
-
-import { AvisodematerialesRoutingModule } from './avisodemateriales-routing.module';
-import { SolicitanteComponent } from './components/solicitante/solicitante.component';
-import { DatosDelaComponent } from './components/datos-dela/datos-dela.component';
-import { DatosDeLosResiduosComponent } from './components/datos-de-los-residuos/datos-de-los-residuos.component';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { AdministrarResiduosComponent } from './components/administrar-residuos/administrar-residuos.component';
+import { AvisodematerialesRoutingModule } from './avisodemateriales-routing.module';
+import { DatosComponent } from './pages/datos/datos.component';
+import { DatosDelaComponent } from './components/datos-dela/datos-dela.component';
+import { PantallasComponent } from './pages/pantallas/pantallas.component';
+import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+import { SolicitanteDetosTabsComponent } from './pages/solicitante-detos-tabs/solicitante-detos-tabs.component';
+import { TituloComponent } from '../../shared/components/titulo/titulo.component';
+import { WizardComponent } from '../../shared/components/wizard/wizard.component';
+
+import { CatalogoSelectComponent } from '../../shared/components/catalogo-select/catalogo-select.component';
+import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn-continuar.component';
+import { DatosDeLosResiduosComponent } from './components/datos-de-los-residuos/datos-de-los-residuos.component';
 
 
+import { map } from 'rxjs';
+import { AlertComponent } from '../../shared/components/alert/alert.component';
 @NgModule({
   declarations: [
-    PantallasComponent
+    SolicitanteComponent,
+    DatosDelaComponent,
+    DatosComponent,
+    PantallasComponent,
+    SolicitanteDetosTabsComponent
   ],
   imports: [
     CommonModule,
-    DatosDeLosResiduosComponent,
     AvisodematerialesRoutingModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+    WizardComponent,
+    TituloComponent,
+    AdministrarResiduosComponent,
+    DatosDeLosResiduosComponent,
+    CatalogoSelectComponent,
+    BtnContinuarComponent,
+    AlertComponent
+  ],
+  
+  exports: [PantallasComponent]
 })
 export class AvisodematerialesModule { }
