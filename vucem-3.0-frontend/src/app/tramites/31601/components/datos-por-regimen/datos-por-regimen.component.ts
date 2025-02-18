@@ -3,7 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import regimenTable from '../../../../../assets/json/31601/datos-por-regimen.json'
@@ -13,6 +13,15 @@ import { ServiciosPantallaService } from '../../../../core/services/31601/servic
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 import { map, merge } from 'rxjs';
 import { Tramite31601Store } from '../../../../estados/tramites/tramites31601.store';
+
+
+/**
+* Componente DatosPorRegimen que se utiliza para mostrar y gestionar los DatosPorRegimen.
+*
+* Este componente utiliza varios subcomponentes como TituloComponent, CatalogoSelectComponent, CommonModule,
+* ReactiveFormsModule,TableComponent  para mostrar información y permitir al usuario seleccionar y agregar tratados.
+* @component
+*/
 
 @Component({
   selector: 'app-datos-por-regimen',
@@ -160,6 +169,14 @@ export class DatosPorRegimenComponent implements OnInit {
     * @private
     */
   private inicializaCatalogos(): void {
+    /**
+     * Observable que recupera el catálogo para el primer bimestre.
+     * Obtiene los datos utilizando el método `getBimestreOneCatalog` del servicio `_pantallaSvc`
+     * con el ID de catálogo `CAT_BIMESTRE_ONE`.
+     * Los datos de la respuesta se asignan a la propiedad `bimestreOneCatalog`.
+     *
+     * @constant {Observable<any>} bimestreOneCatalog$
+     */
     const bimestreOneCatalog$ = this._pantallaSvc
       .getBimestreOneCatalog(CATALOGOS_ID.CAT_BIMESTRE_ONE)
       .pipe(
@@ -169,6 +186,15 @@ export class DatosPorRegimenComponent implements OnInit {
     );
 
 
+    /**
+     * Observable que recupera el catálogo para el segundo bimestre.
+     * Obtiene los datos utilizando el método `getBimestreOneCatalog` del servicio `_pantallaSvc`
+     * con el ID de catálogo `CAT_BIMESTRE_TWO`.
+     * Los datos de la respuesta se asignan a la propiedad `bimestreTwoCatalog`.
+     *
+     * @observable bimestreTwoCatalog$
+     * @returns {Observable<any>} Un observable que emite los datos del catálogo para el segundo bimestre.
+     */
     const bimestreTwoCatalog$ = this._pantallaSvc
       .getBimestreOneCatalog(CATALOGOS_ID.CAT_BIMESTRE_TWO)
       .pipe(
@@ -178,6 +204,15 @@ export class DatosPorRegimenComponent implements OnInit {
     );
 
 
+    /**
+     * Observable que recupera el catálogo para el tercer bimestre.
+     * 
+     * Este observable utiliza el método `getBimestreOneCatalog` del servicio `_pantallaSvc`
+     * para recuperar los datos del catálogo identificados por `CATALOGOS_ID.CAT_BIMESTRE_THREE`. La respuesta
+     * se mapea para extraer la propiedad `data` y asignarla a la propiedad `bimestreThreeCatalog`.
+     * 
+     * @constant {Observable<any>} bimestreThreeCatalog$
+     */
     const bimestreThreeCatalog$ = this._pantallaSvc
       .getBimestreOneCatalog(CATALOGOS_ID.CAT_BIMESTRE_THREE)
       .pipe(
