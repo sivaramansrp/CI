@@ -38,16 +38,23 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tramites/220401/pantallas.module').then(
         (m) => m.PantallasModule
-      ),
+      ), 
   },
   {
     path: 'sagarpa',
     loadChildren: () =>
-            import('./tramites/220502/inspeccion-fisica.module').then(
-              (m) => m.InspeccionFisicaModule
-            ),
+      import('./tramites/220502/inspeccion-fisica.module').then(
+        (m) => m.InspeccionFisicaModule
+      ),
   },
-  { 
+  {
+    path: 'importante',
+    loadChildren: () =>
+      import('./tramites/301/pantallas.module').then(
+        (m) => m.PantallasModule
+      ),
+  }, 
+  {
     path: 'pantallas',
     loadChildren: () =>
       import('./tramites/110101/pantallas/pantallas.module').then(
