@@ -90,9 +90,8 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
 
   /**
-   * @constructor
-   * @param {FormBuilder} fb - Instancia de FormBuilder para crear formularios.
-   * @param {HttpCoreService} http - Servicio para realizar solicitudes HTTP.
+   * Instancia de FormBuilder para crear formularios.
+   *  Servicio para realizar solicitudes HTTP.
    */
   constructor(private fb: FormBuilder, private http: HttpCoreService) {
     this.materiaPrimaForm = this.fb.group({
