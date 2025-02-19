@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { OctavaTemporalRoutingModule } from './octava-temporal-routing.module';
 
 import { CriterioDeDictComponent } from './component/criterio-de-dict/criterio-de-dict.component';
-import { DetosDelMarcanciaComponent } from './component/detos-del-marcancia/detos-del-marcancia.component';
+import { DetosDelLaMarcaciaComponent } from './component/datos-de-la-mercacia/datos-de-la-mercacia.component';
 import { DetosDelTramiteComponent } from './component/detos-del-tramite/detos-del-tramite.component';
 import { PaisProcendenciaComponent } from './component/pais-procendencia/pais-procendencia.component';
 import { SolicitanteOctavaTemporalComponent } from './component/solicitante-octava-temporal/solicitante-octava-temporal.component';
@@ -25,6 +25,7 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
 import { HttpClientModule } from '@angular/common/http';
 
 
+
 @NgModule({
   declarations: [
     OctavaTemporalComponent,
@@ -36,7 +37,7 @@ import { HttpClientModule } from '@angular/common/http';
     OctavaTemporalRoutingModule,
     BtnContinuarComponent,
     CriterioDeDictComponent,
-    DetosDelMarcanciaComponent,
+    DetosDelLaMarcaciaComponent,
     DetosDelTramiteComponent,
     SolicitanteOctavaTemporalComponent,
     PaisProcendenciaComponent,

@@ -5,8 +5,12 @@
     <form [formGroup]="usoEspicificoForm">
         <div class="row">
             <div class="col-8">
-                <select-catalogos [catalogosDatos]="fraccionOption"
-                    (valorSeleccion)="valorseleccionado($event)"></select-catalogos>
+                <app-catalogo-select 
+               [label]="'Fracción arancelaria PROSEC (Especificar la fracción arancelaria del producto en el que se utilizará la mercancía a importar)'" 
+                (change)="obtenerRequisitosFraccionArancelariaEsquema()" 
+                formControlName="fracciónarancelaria"
+                [catalogo]="catalogos"
+               [required]="true"></app-catalogo-select>
             </div>
         </div>
 
@@ -16,7 +20,7 @@
                     Descripción fracción PROSEC (Especificar el nombre comercial o técnico del producto en el que se
                     utilizará la mercancía a importar):*
                 </label>
-                <textarea id="descripcionFraccionProsec" class="form-control" style="height: 70%; resize: none"
+                <textarea id="descripcionFraccionProsec" class="form-control height" rows="3"
                     formControlName="descripción"></textarea>
             </div>
         </div>
