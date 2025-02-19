@@ -9,7 +9,7 @@ export const PANTAPASOS = [
       indice: 2,
       titulo: 'Requisitos neccesarios',
       activo: false,
-      completado: true,
+      completado: false,
     },
     {
       indice: 3,
