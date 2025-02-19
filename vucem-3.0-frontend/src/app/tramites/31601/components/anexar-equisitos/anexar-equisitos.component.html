@@ -1,28 +1,28 @@
 <div class="container">
+  <h2>Anexar Requisitos</h2>
+  <form [formGroup]="anexarForm">
     <table>
       <thead>
         <tr>
-          <th>Tipo de Documentos</th>
+          <th>Tipo de Documento</th>
           <th>Documento</th>
-          <th>Ver documento</th>
+          <th>Ver Documento</th>
         </tr>
       </thead>
       <tbody>
-        <tr @for="doc of documentos; track doc.tipo">
+        <tr *ngFor="let doc of documentos">
           <td>{{ doc.tipo }}</td>
           <td>
-            <select>
-              <option value="">-- Seleccionar documento --</option>
-              <option *ngFor="let file of availableFiles" [value]="file">{{ file }}</option>
-            </select>
+            <app-catalogo-select [catalogo]="[doc.archivoDisponible]" name="selectedFile"
+              (change)="cambioDeArchivo($event)" formControlName="valorSeleccionado
+              ">
+            </app-catalogo-select>
           </td>
           <td class="text-center">
-            <a *ngIf="doc.fileUrl" [href]="doc.fileUrl" target="_blank" class="btn btn-outline-primary">
-              <i class="bi bi-file-earmark-text"></i> 
-            </a>
+            <i class="bi bi-file-earmark-text fs-1"></i>
           </td>
         </tr>
       </tbody>
     </table>
-  </div>
-  
+  </form>
+</div>

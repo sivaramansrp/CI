@@ -1,23 +1,33 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+import documentosTable from '../../../../../assets/json/31601/anexar.json'
 @Component({
   selector: 'app-anexar-equisitos',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CatalogoSelectComponent, ReactiveFormsModule],
   templateUrl: './anexar-equisitos.component.html',
   styleUrl: './anexar-equisitos.component.scss'
 })
-export class AnexarEquisitosComponent {
-  documentos = [
-    { tipo: 'Contrato de maquila, de compraventa, orden de compra o de servicios, o pedidos en firme vigentes.', fileUrl: '' },
-    { tipo: 'Para acreditar el requisito de inversión en territorio nacional...', fileUrl: '' },
-    { tipo: 'Comprobante de pago de derechos', fileUrl: '' },
-    { tipo: 'Diagrama de flujo con una descripción detallada del proceso productivo...', fileUrl: '' },
-    { tipo: 'Comprobante de pago de la contraprestación por el servicio recibido.', fileUrl: '' },
-    { tipo: 'Comprobante de pago de las cuotas obrero patronales de los trabajadores.', fileUrl: '' }
-  ];
+export class AnexarEquisitosComponent implements OnInit {
+  anexarForm: FormGroup;
+  documentos = documentosTable.documentos
 
-  availableFiles = ['documento1.pdf', 'documento2.docx', 'documento3.xlsx'];
+  constructor(private fb: FormBuilder) {
+  }
 
+  ngOnInit(): void {
+    this.anexarEquisitosForm()
+  }
+
+  anexarEquisitosForm() {
+    this.anexarForm = this.fb.group({
+      valorSeleccionado: new FormControl('') 
+    });
+  }
+
+  cambioDeArchivo(event: any): void {
+    this.anexarForm.patchValue({ valorSeleccionado: event.target.value });
+  }
 }
