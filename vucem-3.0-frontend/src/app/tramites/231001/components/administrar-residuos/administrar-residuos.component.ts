@@ -65,8 +65,6 @@ export class AdministrarResiduosComponent implements OnInit {
     this.formForTotalCount = this.fb.group({
       recuentoTotalDeFilas: [{ value: '', disabled: true }],
     });
-    // this.formForTotalCount.controls['recuentoTotalDeFilas'].disable();
-    this.formForTotalCount.controls['recuentoTotalDeFilas'].disable();
   }
 
   /**
