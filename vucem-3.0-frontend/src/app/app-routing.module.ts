@@ -10,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent
+    component: SeleccionTramiteComponent,
   },
   {
     path: 'servicios-extraordinarios',
@@ -22,16 +22,14 @@ const routes: Routes = [
   {
     path: 'pexim',
     loadChildren: () =>
-      import('./tramites/130118/pexim.module').then(
-        (m) => m.PeximModule
-      ),
+      import('./tramites/130118/pexim.module').then((m) => m.PeximModule),
   },
   {
     path: 'despacho-mercancias',
     loadChildren: () =>
       import('./tramites/303/despacho-mercancias.module').then(
         (m) => m.DespachoMercanciasModule
-      )
+      ),
   },
   {
     path: 'pantallas-extraordinarios',
@@ -56,11 +54,16 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'octava-temporal',
+    loadChildren: () =>
+      import('./tramites/130102/octava-temporal.module').then(
+        (m) => m.OctavaTemporalModule
+      ),
+  },
+  {
     path: 'importante',
     loadChildren: () =>
-      import('./tramites/301/pantallas.module').then(
-        (m) => m.PantallasModule
-      ),
+      import('./tramites/301/pantallas.module').then((m) => m.PantallasModule),
   },
   {
     path: 'pantallas',
@@ -73,7 +76,22 @@ const routes: Routes = [
     path: 'certificado-zoosanitario',
     loadChildren: () =>
       import('./tramites/220201/certificado-zoosanitario.module').then(
-        (m) => m.CertificadoZoosanitarioModule)
+        (m) => m.CertificadoZoosanitarioModule
+      ),
+  },
+  {
+    path: 'permiso-importacion',
+    loadChildren: () =>
+      import('./tramites/130120/permiso-importacion.module').then(
+        (m) => m.PermisoImportacionModule
+      ),
+  },
+  {
+    path: 'octava-temporal',
+    loadChildren: () =>
+      import('./tramites/130102/octava-temporal.module').then(
+        (m) => m.OctavaTemporalModule
+      ),
   },
 ];
 
@@ -81,4 +99,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
