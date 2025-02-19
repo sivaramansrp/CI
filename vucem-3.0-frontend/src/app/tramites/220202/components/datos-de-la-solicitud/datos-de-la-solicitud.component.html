@@ -124,22 +124,27 @@
     <div class="col-md-4">
       <app-catalogo-select
         [catalogo]="aduanaList"
-        formControlName="requisito"
+        formControlName="tiporequisito"
         [label]="'Tipo de requisito'"
         [required]="true"
         [isDisabled]="false"
-        name="requisito"
+        name="tiporequisito"
       ></app-catalogo-select>
     </div>
     <div class="col-md-4">
-      <label class="control-label" for="guia">Requisito:</label>
-      <input class="form-control" id="guia" placeholder="" type="text" />
+      <label class="control-label" for="requisito">Requisito:</label>
+      <input class="form-control" id="requisito" placeholder="" type="text" />
     </div>
     <div class="col-md-4">
-      <label class="control-label" for="guia"
+      <label class="control-label" for="internacional"
         >Número de certificado internacional:*:</label
       >
-      <input class="form-control" id="guia" placeholder="" type="text" />
+      <input
+        class="form-control"
+        id="internacional"
+        placeholder=""
+        type="text"
+      />
     </div>
     <div class="col-md-4">
       <app-catalogo-select
@@ -152,12 +157,13 @@
       ></app-catalogo-select>
     </div>
     <div class="col-md-8">
-      <label class="control-label" for="guia"
+      <label class="control-label" for="fraccionArancelaria"
         >Descripción de la fracción arancelaria:*</label
       >
       <input
         class="form-control"
-        id="guia"
+        id="fraccionArancelaria"
+        name="fraccionArancelaria"
         placeholder=""
         type="text"
         disabled="true"
@@ -174,36 +180,36 @@
       ></app-catalogo-select>
     </div>
     <div class="col-md-8 mt-2">
-      <label class="control-label" for="guia">Descripción Nico:*</label>
+      <label class="control-label" for="descFraccion">Descripción Nico:*</label>
       <input
         class="form-control"
-        id="guia"
+        id="descFraccion"
         placeholder=""
         type="text"
         disabled="true"
       />
     </div>
     <div class="col-md-12 mt-2">
-      <label class="control-label" for="guia">Descripción*:</label>
+      <label class="control-label" for="Descripción">Descripción*:</label>
       <textarea class="form-control" name="" rows="12"></textarea>
     </div>
     <div class="col-md-4 mt-2">
-      <label class="control-label" for="guia">Cantidad UMT:*</label>
-      <input class="form-control" id="guia" placeholder="" type="text" />
+      <label class="control-label" for="umc">Cantidad UMT:*</label>
+      <input class="form-control" id="umc" placeholder="" type="text" />
     </div>
     <div class="col-md-4 mt-2">
-      <label class="control-label" for="guia">UMT:*</label>
+      <label class="control-label" for="umt">UMT:*</label>
       <input
         class="form-control"
-        id="guia"
+        id="umt"
         placeholder=""
         type="text"
         disabled="true"
       />
     </div>
     <div class="col-md-4 mt-2">
-      <label class="control-label" for="guia">Cantidad UMC*:</label>
-      <input class="form-control" id="guia" placeholder="" type="text" />
+      <label class="control-label" for="cantidadUMC">Cantidad UMC*:</label>
+      <input class="form-control" id="cantidadUMC" placeholder="" type="text" />
     </div>
     <div class="col-md-4">
       <app-catalogo-select

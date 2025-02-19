@@ -237,7 +237,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       numCertificadoInternacional: [''],
       fraccionArancelaria: [''],
       descFraccion: [''],
-      nico: ['']
+      nico: [''],
     }));
   }
   /**
