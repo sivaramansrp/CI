@@ -5,6 +5,12 @@ import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraor
 import { PANTAPASOS } from '../../../../core/services/31601/servicios-pantallas.enum';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 
+/**
+ * Este componente se utiliza para mostrar los pasos del asistente - 31601
+ * Lista de pasos
+ * Índice del paso
+ */
+
 @Component({
   selector: 'app-pantallas',
   templateUrl: './pantallas.component.html',
