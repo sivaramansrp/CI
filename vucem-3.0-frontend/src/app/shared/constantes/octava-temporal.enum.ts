@@ -5,3 +5,5 @@ export const TEXTOS = {
     `,
     INSTRUCCIONES_PARA_PARTIDAS: `Para continuar con el trámite, debes agregar por lo menos una mercancía.`,
   };
+
+  
