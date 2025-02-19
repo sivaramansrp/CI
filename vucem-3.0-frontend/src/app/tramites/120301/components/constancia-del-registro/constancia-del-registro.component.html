@@ -1,41 +1,6 @@
 <div class="container">
   <form [formGroup]="fitosanitarioForm">
     <div class="row">
-      <div class="col-md-12">
-        <ng-titulo titulo="Representación federal"></ng-titulo>
-      </div>
-      <div class="col-md-3">
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="flexRadioRegistro"
-            id="Específico"
-          />
-          <label class="form-check-label" for="Específico"> Específico </label>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="flexRadioRegistro"
-            id="Tados"
-            checked
-          />
-          <label class="form-check-label" for="Tados"> Datos </label>
-        </div>
-      </div>
-      <div class="container text-end mt-5">
-        <button class="btn btn-default me-2">Buscar</button>
-      </div>
-      <div class="col-md-12 mt-5">
-        <ng-table
-          [commonTableHeader]="tableColumns"
-          [commonTableBody]="federal"
-        ></ng-table>
-      </div>
       <div class="row pb-5">
         <ng-titulo titulo="Representación-federal"></ng-titulo>
         <div class="col-md-4">
