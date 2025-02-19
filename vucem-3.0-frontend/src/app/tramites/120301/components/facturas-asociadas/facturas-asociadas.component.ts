@@ -1,5 +1,5 @@
 /**
- * @component FacturasAsociadasComponent
+ * @component formularioAsociacionFactura
  * @description Este componente es responsable de manejar las facturas asociadas.
  * Incluye un formulario para capturar los datos de las facturas y tablas para mostrar las facturas disponibles y asociadas.
  * 
@@ -31,7 +31,7 @@ import {FACTUS_TBCOL, ASOCIADAS_TBCOl} from '../../../../shared/constantes/elegi
     TableComponent
   ]
 })
-export class FacturasAsociadasComponent implements OnInit {
+export class formularioAsociacionFactura implements OnInit {
   facturaAssociationForm!: FormGroup;
   selectRangoDias: string[] = [];
 

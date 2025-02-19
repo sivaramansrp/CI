@@ -2,14 +2,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
-import { FacturasAsociadasComponent } from './facturas-asociadas.component';
+import { formularioAsociacionFactura } from './facturas-asociadas.component';
 import { FacturasAsociadasService } from '../../../../core/services/120301/facturas-asociadas/facturas-asociadas.service';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
-describe('FacturasAsociadasComponent', () => {
-  let component: FacturasAsociadasComponent;
-  let fixture: ComponentFixture<FacturasAsociadasComponent>;
+describe('formularioAsociacionFactura', () => {
+  let component: formularioAsociacionFactura;
+  let fixture: ComponentFixture<formularioAsociacionFactura>;
   let facturasAsociadasService: FacturasAsociadasService;
 
   beforeEach(async () => {
@@ -20,11 +20,11 @@ describe('FacturasAsociadasComponent', () => {
         TableComponent,
         TituloComponent
       ],
-      declarations: [FacturasAsociadasComponent],
+      declarations: [formularioAsociacionFactura],
       providers: [FacturasAsociadasService]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(FacturasAsociadasComponent);
+    fixture = TestBed.createComponent(formularioAsociacionFactura);
     component = fixture.componentInstance;
     facturasAsociadasService = TestBed.inject(FacturasAsociadasService);
     fixture.detectChanges();

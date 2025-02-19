@@ -22,7 +22,7 @@ import { FirmaElectronicaComponent } from '../../shared/components/firma-electro
 import { RouterModule } from '@angular/router';
 import { CapturarFacturasComponent } from './components/capturar-facturas/capturar-facturas.component';
 import { ImportadorEnDestinoComponent } from './components/importador-en-destino/importador-en-destino.component';
-import { FacturasAsociadasComponent } from './components/facturas-asociadas/facturas-asociadas.component';
+import { formularioAsociacionFactura } from './components/facturas-asociadas/facturas-asociadas.component';
 import { HistoricoFabricantesComponent } from './components/historico-fabricantes/historico-fabricantes.component';
 import { TableComponent } from '../../shared/components/table/table.component';
 import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
@@ -56,7 +56,7 @@ import { CatalogoSelectComponent } from '../../shared/components/catalogo-select
     FirmaElectronicaComponent,
     RouterModule,
     CapturarFacturasComponent,
-    FacturasAsociadasComponent,
+    formularioAsociacionFactura,
     HistoricoFabricantesComponent,
     TableComponent,
     CatalogoSelectComponent,
