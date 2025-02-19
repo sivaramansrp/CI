@@ -1,0 +1,44 @@
+<div class="container">
+  <ng-titulo titulo="Criterio de dictámen de regla octava"></ng-titulo>
+  <form [formGroup]="frmCriterioDictamen">
+    <div class="row">
+      <div class="col-md-7 form-group">
+        <app-catalogo-select
+          [catalogo]="solicitudMercanciaLista"
+          [label]="'Solicitud mercancia esquema regla octava clave'"
+          [required]="true"
+          (selectionChange)="fetchSolicitudMercancia($event)"
+          [placeholder]="'Seleccione un valor'"
+          formControlName="solicitudMercancia"
+        ></app-catalogo-select>
+        <div
+          *ngIf="
+            frmCriterioDictamen.controls['solicitudMercancia'].invalid &&
+            frmCriterioDictamen.controls['solicitudMercancia'].touched
+          "
+          class="text-danger"
+        >
+          <small
+            *ngIf="frmCriterioDictamen.controls['solicitudMercancia'].errors?.['required']"
+            >Debe seleccionar un valor.</small
+          >
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-7 mb-3">
+        <label class="form-label" for="domicilio"
+          >Criterio de dictamen de regla octava seleccionado*:</label
+        >
+        <textarea
+          class="form-control textarea-h"
+          id="domicilio"
+          rows="2"
+          [value]="seleccionadaSolicitudMercancia.descripcion"
+          placeholder=""
+          disabled
+        ></textarea>
+      </div>
+    </div>
+  </form>
+</div>
