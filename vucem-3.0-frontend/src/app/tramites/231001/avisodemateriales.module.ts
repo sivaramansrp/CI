@@ -13,10 +13,12 @@ import { TituloComponent } from '../../shared/components/titulo/titulo.component
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 
 import { CatalogoSelectComponent } from '../../shared/components/catalogo-select/catalogo-select.component';
+
 import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn-continuar.component';
 import { DatosDeLosResiduosComponent } from './components/datos-de-los-residuos/datos-de-los-residuos.component';
 
 import { AlertComponent } from '../../shared/components/alert/alert.component';
+
 @NgModule({
   declarations: [
     SolicitanteComponent,
