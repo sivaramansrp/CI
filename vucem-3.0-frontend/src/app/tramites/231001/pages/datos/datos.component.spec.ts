@@ -9,7 +9,8 @@ describe('DatosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DatosComponent, WizardComponent]
+      declarations: [DatosComponent],
+      imports: [WizardComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosComponent);
