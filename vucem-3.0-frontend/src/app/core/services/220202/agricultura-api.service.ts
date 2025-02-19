@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Catalogo, RespuestaCatalogos } from '../../models/shared/catalogos.model';
-import { Datos_De_Tabla } from '../../models/220202/fitosanitario.model';
+import { DatosDeTabla } from '../../models/220202/fitosanitario.model';
+
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class AgriculturaApiService {
       */
   obtenerDatosDeTabla(fileName: string): Observable<any[]> {
     const baseUrl = this.url + fileName;
-    return this.http.get<Datos_De_Tabla>(baseUrl).pipe(
+    return this.http.get<DatosDeTabla>(baseUrl).pipe(
       map(response => response.data)
     );
   }

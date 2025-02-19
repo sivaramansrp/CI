@@ -29,35 +29,35 @@ export interface AccionBoton {
 }
 
 /**
- * @interface Datos_De_Tabla
+ * @interface DatosDeTabla
  * @description 
  * Interfaz que define la estructura de los datos para una tabla.
  * 
  * @property {number} code - Código de respuesta.
- * @property {Datos_de_fila[]} data - Array de datos de las filas de la tabla.
+ * @property {DatosDeFila[]} data - Array de datos de las filas de la tabla.
  * @property {string} message - Mensaje de respuesta.
  */
-export interface Datos_De_Tabla {
+export interface DatosDeTabla {
     code: number;
-    data: Datos_de_fila[];
+    data: DatosDeFila[];
     message: string;
 }
 
 /**
- * @interface Datos_de_fila
+ * @interface DatosDeFila
  * @description 
  * Interfaz que define la estructura de los datos de una fila en la tabla.
  * 
- * @property {string} Fecha_Creacion - Fecha en la que se creó el registro.
- * @property {string} Mercancia - Nombre de la mercancía.
- * @property {number} Cantidad - Cantidad de la mercancía.
- * @property {string} Proveedor - Nombre del proveedor de la mercancía.
+ * @property {string} fechaCreacion - Fecha en la que se creó el registro.
+ * @property {string} mercancia - Nombre de la mercancía.
+ * @property {number} cantidad - Cantidad de la mercancía.
+ * @property {string} proveedor - Nombre del proveedor de la mercancía.
  */
-export interface Datos_de_fila {
-    Fecha_Creacion: string;
-    Mercancia: string;
-    Cantidad: number;
-    Proveedor: string;
+export interface DatosDeFila {
+    fechaCreacion: string;
+    mercancia: string;
+    cantidad: number;
+    proveedor: string;
 }
 
 /**
@@ -65,14 +65,14 @@ export interface Datos_de_fila {
  * @description 
  * Interfaz que agrupa los datos principales, información de movilización y pago.
  * 
- * @property {DatosForma[]} Datos - Información de los productos y mercancías.
- * @property {Movilizacion[]} Movilizacion - Datos relacionados con el transporte.
- * @property {PagoForm[]} Pago - Datos de pago asociados a la transacción.
+ * @property {DatosForma[]} datos - Información de los productos y mercancías.
+ * @property {Movilizacion[]} movilizacion - Datos relacionados con el transporte.
+ * @property {PagoForm[]} pago - Datos de pago asociados a la transacción.
  */
 export interface ListaDeDatosFinal {
-    Datos: DatosForma[];
-    Movilizacion: Movilizacion[];
-    Pago: PagoForm[];
+    datos: DatosForma[];
+    movilizacion: Movilizacion[];
+    pago: PagoForm[];
 }
 
 /**
@@ -203,8 +203,8 @@ export interface DatosForma {
  */
 export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): ListaDeDatosFinal {
     return {
-        Datos: params.Datos || [],
-        Movilizacion: params.Movilizacion || [],
-        Pago: params.Pago || []
+        datos: params.datos || [],
+        movilizacion: params.movilizacion || [],
+        pago: params.pago || []
     };
 }

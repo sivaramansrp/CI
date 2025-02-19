@@ -1,6 +1,5 @@
 import { FormBuilder, FormGroup } from "@angular/forms"
-import { Catalogo, RespuestaCatalogos } from "../../../../core/models/shared/catalogos.model"
-import { HttpClient } from "@angular/common/http"
+import { Catalogo } from "../../../../core/models/shared/catalogos.model"
 import { InputFecha } from "../../../../core/models/shared/components.model"
 import { FECHA_DE_PAGO } from "../../../../shared/constantes/220202/fitosanitario.enums"
 import { Component, OnInit } from "@angular/core"

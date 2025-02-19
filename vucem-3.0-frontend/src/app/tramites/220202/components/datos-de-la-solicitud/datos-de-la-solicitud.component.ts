@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Datos_De_Tabla, Datos_de_fila } from '../../../../core/models/220202/fitosanitario.model';
+import { DatosDeFila } from '../../../../core/models/220202/fitosanitario.model';
 
 import { INSTRUCCION_DOBLE_CLIC } from '../../../../shared/constantes/220202/fitosanitario.enums';
 
@@ -68,9 +68,9 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * Este array de objetos contiene la información de cada fila de la tabla.
    * Cada objeto representa una fila y contiene las propiedades necesarias
    * para mostrar los datos en las celdas.
-   * @type {Datos_de_fila[]}
+   * @type {DatosDeFila[]}
    */
-  tablaDeDatosDeCelda: Datos_de_fila[] = [];
+  tablaDeDatosDeCelda: DatosDeFila[] = [];
 
   /**
    * @description Formulario para los datos del trámite.
