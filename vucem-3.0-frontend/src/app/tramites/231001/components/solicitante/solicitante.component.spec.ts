@@ -25,7 +25,9 @@ describe('SolicitanteComponent', () => {
   beforeEach(async () => {
     const solicitanteServiceSpy = jasmine.createSpyObj('SolicitanteService', ['getDatosGenerales']);
     const formulariosServiceSpy = jasmine.createSpyObj('FormulariosService', ['obtenerNombresCamposForm', 'agregarValorCampoDesactivados']);
-
+  
+    solicitanteServiceSpy.getDatosGenerales.and.returnValue(of({ id: 1, descripcion: 'desc', codigo: 'code', data: JSON.stringify({ datosGenerales: { nombre: 'John' } }) }));
+  
     await TestBed.configureTestingModule({
       declarations: [SolicitanteComponent],
       imports: [ReactiveFormsModule],
@@ -36,7 +38,7 @@ describe('SolicitanteComponent', () => {
       ]
     })
     .compileComponents();
-
+  
     fixture = TestBed.createComponent(SolicitanteComponent);
     component = fixture.componentInstance;
     solicitanteService = TestBed.inject(SolicitanteService) as jasmine.SpyObj<SolicitanteService>;
