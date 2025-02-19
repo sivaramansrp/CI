@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-// eslint-disable-next-line sort-imports
+
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 import { TIPO_PERSONA } from '../../../../shared/constantes/constantes';
-// eslint-disable-next-line sort-imports
+
 import{ 
 PERSONA_FISICA_NACIONAL,
 }from '../../../../shared/constantes/solicitante-constantes.enum'
 import { PERSONA_FISICA_SACIONAL } from '../../../../shared/constantes/solicitante-constantes.enum';
 import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
-// eslint-disable-next-line sort-imports
+
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
 import { tap } from 'rxjs';
 
@@ -26,7 +26,7 @@ import { tap } from 'rxjs';
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss'
 })
-export class SolicitanteComponent {
+export class SolicitanteComponent implements OnInit {
   /**
    * Formulario reactivo del solicitante.
    */
