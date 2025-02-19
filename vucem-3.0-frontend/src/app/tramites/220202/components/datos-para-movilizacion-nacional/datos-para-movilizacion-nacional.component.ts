@@ -63,6 +63,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
   ngOnInit(): void {
     this.forma = new FormGroup({
       transporte: new FormControl('', Validators.required),
+      medioTransporte: new FormControl('', Validators.required),
       guiaIdentificacion: new FormControl('', Validators.required),
       empresaTransportista: new FormControl('', Validators.required),
       punto: new FormControl('', Validators.required)
