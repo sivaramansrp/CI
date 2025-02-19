@@ -1,7 +1,6 @@
 <div class="container">
   <form [formGroup]="fitosanitarioForm">
     <div class="row">
-      <!-- <h2>Representación-federal</h2> -->
       <div class="col-md-12">
         <ng-titulo titulo="Representación federal"></ng-titulo>
       </div>
@@ -30,7 +29,6 @@
       </div>
       <div class="container text-end mt-5">
         <button class="btn btn-default me-2">Buscar</button>
-        <!-- <button class="btn btn-primary">Continuar</button> -->
       </div>
       <div class="col-md-12 mt-5">
         <ng-table
@@ -42,31 +40,31 @@
         <ng-titulo titulo="Representación-federal"></ng-titulo>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="Fracción-arancelaria">Estado:</label>
+            <label class="form-label" for="Estado">Estado:</label>
             <input
               value=""
               class="form-control"
-              id="Fracción-arancelaria"
+              id="Estado"
               placeholder=""
               type="text"
               appUppercase
-              name="Fracción-arancelaria"
+              name="Estado"
             />
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="producto"
+            <label class="form-label" for="Representacion-federal"
               >Representación federal:</label
             >
             <input
               value=""
               class="form-control"
-              id="producto"
+              id="Representacion-federal"
               placeholder=""
               type="text"
               appUppercase
-              name="producto"
+              name="Representacion-federal"
             />
           </div>
         </div>
@@ -75,7 +73,7 @@
         <ng-titulo titulo="Descripción del cupo"></ng-titulo>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="Fracción-arancelaria"
+            <label class="form-label" for="Fraccion-arancelaria"
               >Fracción arancelaria:</label
             >
             <input
@@ -153,21 +151,21 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="textil">TYPO: Categoría:</label>
+            <label class="form-label" for="Categoria_textil">Categoría textil:</label>
             <input
               value=""
               class="form-control"
-              id="textil"
+              id="Categoria_textil"
               placeholder=""
               type="text"
               appUppercase
-              name="textil"
+              name="Categoria_textil"
             />
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="regimen">TYPO: régimen:</label>
+            <label class="form-label" for="regimen">Clasificación de regimen:</label>
             <input
               value=""
               class="form-control"
@@ -181,7 +179,7 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="categoría-textil"
+            <label class="form-label" for="categoria-textil"
               >Descripción de la categoría textil:</label
             >
             <input
@@ -197,7 +195,7 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="País">País destino/origen:</label>
+            <label class="form-label" for="Pais">País destino/origen:</label>
             <input
               value=""
               class="form-control"
@@ -227,7 +225,7 @@
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label class="form-label" for="categoría"
+            <label class="form-label" for="categoria"
               >Factor de conversión de la categoría textil:</label
             >
             <input
@@ -276,5 +274,4 @@
       </div>
     </div>
   </form>
-  <!-- <strong>*EI monto mostrado ed de car</strong> -->
 </div>

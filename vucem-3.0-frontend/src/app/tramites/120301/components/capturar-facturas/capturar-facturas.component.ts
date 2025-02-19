@@ -13,7 +13,7 @@ import { TableComponent } from '../../../../shared/components/table/table.compon
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
-import { Expedición_Factura_Fecha } from '../../../../shared/constantes/elegibilidad-de-textiles.enums';
+import { EXPEDICION_FACTURA_FECHA } from '../../../../shared/constantes/elegibilidad-de-textiles.enums';
 import { CapturarFacturasService } from '../../../../core/services/120301/capturar-facturas/capturar-facturas.service';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { Catalogo, RespuestaCatalogos } from '../../../../core/models/shared/catalogos.model';
@@ -134,7 +134,7 @@ export class CapturarFacturasComponent implements OnInit {
    * Configuración para el input de fecha de pago.
    * @property {InputFecha} fechaInicioInput
    */
-  fechaInicioInput: InputFecha = Expedición_Factura_Fecha;
+  fechaInicioInput: InputFecha = EXPEDICION_FACTURA_FECHA;
   /**
 * Obtiene las listas desplegables.
 * @method obtenerListasDesplegables

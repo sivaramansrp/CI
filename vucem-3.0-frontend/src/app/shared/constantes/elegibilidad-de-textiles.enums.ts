@@ -72,7 +72,7 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
         placeholder: '',
     }
 ];
-export const Expedición_Factura_Fecha = {
+export const EXPEDICION_FACTURA_FECHA = {
     labelNombre: 'Fecha de expedición de la factura:',
     required: true,
     habilitado: true,
@@ -80,7 +80,7 @@ export const Expedición_Factura_Fecha = {
 };
 export const TEXTOS = 'Para continuar con el trámite, deberá agregar por lo menos una mercancía.';
 export const TERCEROR_TEXTO_DE_ALERTA = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
-export const IDDEUSUARIO = 21;
+export const ID_DE_USUARIO = 21;
 export const FACTUS_TBCOL = [
     'Número de la factura',
     'Razón social',

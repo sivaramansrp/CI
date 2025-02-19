@@ -86,7 +86,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     });
   }
   fetchData(): void {
-    this.constanciaDelRegistroService.getfederal().subscribe({
+    this.constanciaDelRegistroService.getFederal().subscribe({
       next: (response: any) => {
         if (response && Array.isArray(response.federal)) {
 
@@ -106,7 +106,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
         }
       },
       error: (error: any) => {
-        console.error('Error while fetching the data:', error);
+        console.error('Error al recuperar los datos:', error);
         this.federal = [];
       }
     });

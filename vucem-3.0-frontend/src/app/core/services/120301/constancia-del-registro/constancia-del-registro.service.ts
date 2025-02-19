@@ -10,7 +10,7 @@ export class ConstanciaDelRegistroService {
   private jsonUrl = 'assets/json/120301/constancia-del-registro.json';
   constructor(private httpClient: HttpClient) {}
 
-  getfederal(): Observable<any> {
+  getFederal(): Observable<any> {
     return this.httpClient.get<any[]>(this.jsonUrl);
   }
 }
