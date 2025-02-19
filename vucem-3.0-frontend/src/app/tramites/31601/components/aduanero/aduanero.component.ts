@@ -67,24 +67,28 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.getEstablecimiento();
-    setTimeout(() => {
-      if (this.modifyModal) {
-        this.modalInstance = new Modal(this.modifyModal.nativeElement);
-      }
-    });
-    setTimeout(()=>{
-      if (this.instalacionesModal) {
-        this.modalInstanceInstaciones = new Modal(this.instalacionesModal.nativeElement);
-      }
+   
+  }
+  ngAfterViewInit() {
+    // Initialize Modify Modal
+    if (this.modifyModal) {
+      this.modalInstance = new Modal(this.modifyModal.nativeElement);
+      console.log('Modify Modal Initialized:', this.modalInstance);
     }
 
-    );
+    // Initialize Instalaciones Modal
+    if (this.instalacionesModal) {
+      this.modalInstanceInstaciones = new Modal(this.instalacionesModal.nativeElement);
+    }
   }
-  openModal() {
+  openModifyModal() {
     if (this.modalInstance) {
       this.modalInstance.show();
-    } else {
-      //console.error('Modal instance not initialized.');
+    }
+  }
+  closeModifyModal() {
+    if (this.modalInstance) {
+      this.modalInstance.hide();
     }
   }
   openInstacionesModal(){
@@ -95,9 +99,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
 //
     }
   }
-  ngAfterViewInit() {
-    this.modalInstance = new Modal(this.modifyModal.nativeElement);
-  }
+  
 
   public getEstablecimiento() {
     this.establecimientoHeaderData =

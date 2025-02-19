@@ -257,7 +257,7 @@
       <button
         type="button"
         class="btn btn-default btn-space"
-        (click)="openModal()"
+        (click)="openModifyModal()"
       >
         Modificar
       </button>
@@ -494,90 +494,87 @@
     </div>
   </div>
 
-  <div
-    class="modal fade"
-    #modifyModal
-    tabindex="-1"
-    aria-labelledby="modifyModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modifyModalLabel">Agregar</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal-body p-4">
-          <div class="row">
-            <div class="col-6">
-              <div class="form-group">
-                <span class="require">*</span>
-                <label for="numeroAutorizacionCITES" class="form-label"
-                  >RFC</label
-                >
-                <input type="text" class="form-control" id="" />
-              </div>
-            </div>
-            <div class="col-4 d-flex align-items-end">
-              <button type="button" class="btn btn-primary">Buscar</button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-6">
-              <div class="form-group">
-                <span class="require">*</span>
-                <label for="numeroAutorizacionCITES" class="form-label"
-                  >Registro Federal de Contribuyentes</label
-                >
-                <input type="text" class="form-control" id="" />
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-8">
-              <div class="form-group">
-                <span class="require">*</span>
-                <label for="numeroAutorizacionCITES" class="form-label">
-                  Razon Social
-                </label>
-                <input type="text" class="form-control" id="" />
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-6">
-              <div class="form-group">
-                <span class="require">*</span>
-                <label for="numeroAutorizacionCITES" class="form-label"
-                  >N&umero de empleados</label
-                >
-                <input type="text" class="form-control" id="" />
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-6 form-group">
-              <app-catalogo-select
-                [label]="'Bimestre'"
-                [placeholder]="'Seleccione un valor'"
-                [catalogo]="comboBimestresIDC"
-              >
-              </app-catalogo-select>
-            </div>
+
+</div>
+
+<div
+class="modal fade"
+#modifyModal
+tabindex="-1"
+aria-labelledby="modifyModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="modifyModalLabel">Agregar</h5>
+    
+    </div>
+    <div class="modal-body p-4">
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <span class="require">*</span>
+            <label for="numeroAutorizacionCITES" class="form-label"
+              >RFC</label
+            >
+            <input type="text" class="form-control" id="" />
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-            Aceptar
-          </button>
-          <button type="button" class="btn btn-primary">Cancelar</button>
+        <div class="col-4 d-flex align-items-end">
+          <button type="button" class="btn btn-primary">Buscar</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <span class="require">*</span>
+            <label for="numeroAutorizacionCITES" class="form-label"
+              >Registro Federal de Contribuyentes</label
+            >
+            <input type="text" class="form-control" id="" />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-8">
+          <div class="form-group">
+            <span class="require">*</span>
+            <label for="numeroAutorizacionCITES" class="form-label">
+              Razon Social
+            </label>
+            <input type="text" class="form-control" id="" />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <span class="require">*</span>
+            <label for="numeroAutorizacionCITES" class="form-label"
+              >N&umero de empleados</label
+            >
+            <input type="text" class="form-control" id="" />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6 form-group">
+          <app-catalogo-select
+            [label]="'Bimestre'"
+            [placeholder]="'Seleccione un valor'"
+            [catalogo]="comboBimestresIDC"
+          >
+          </app-catalogo-select>
         </div>
       </div>
     </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+        Aceptar
+      </button>
+      <button type="button" class="btn btn-primary">Cancelar</button>
+    </div>
   </div>
+</div>
 </div>
