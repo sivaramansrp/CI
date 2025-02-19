@@ -64,6 +64,27 @@ const routes: Routes = [
       import('./tramites/120301/elegibilidad-de-textiles.module').then(
         (m) => m.ElegibilidadDeTextilesModule
       ),
+    },
+  {
+    path: 'certificado-zoosanitario',
+    loadChildren: () =>
+      import('./tramites/220201/certificado-zoosanitario.module').then(
+        (m) => m.CertificadoZoosanitarioModule
+      ),
+  },
+  {
+    path: 'permiso-importacion',
+    loadChildren: () =>
+      import('./tramites/130120/permiso-importacion.module').then(
+        (m) => m.PermisoImportacionModule
+      ),
+  },
+  {
+    path: 'octava-temporal',
+    loadChildren: () =>
+      import('./tramites/130102/octava-temporal.module').then(
+        (m) => m.OctavaTemporalModule
+      ),
   },
 ];
 
