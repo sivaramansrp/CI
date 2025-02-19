@@ -1,0 +1,95 @@
+
+<div class="container form-container">
+    <ng-titulo titulo="Representante Legal" />
+    <div>
+      <form [formGroup]="represtantante" (ngSubmit)="validarFormulario()">
+        <ng-container formGroupName="datosImportadorExportador">
+            <H6>*Registro Federal de Contribuyentes:</H6>
+            <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    
+                    <input class="form-control" id="resigtro" formControlName="resigtro"  type="text">
+                  </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-label" for="RFC">RFC:</label>
+                    <input class="form-control" id="RFC" formControlName="RFC"  type="text">
+                  </div>
+                </div>
+               
+             
+                <div class="col-md-4 d-flex align-items-center">
+                    <div class="btn-group">
+                          <button class="btn btn-default" type="button">Buscar</button>
+                        </div>
+                      </div>
+                  
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-label" for="Nombre">Nombre:</label>
+                    <input class="form-control" id="Nombre" formControlName="Nombre"  type="text">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label" for="ApellidoPaterno">ApellidoPaterno:</label>
+                      <input class="form-control" id="ApellidoPaterno" formControlName="ApellidoPaterno"  type="text">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label" for="ApellidoMaterno">ApellidoMaterno:</label>
+                      <input class="form-control" id="ApellidoMaterno" formControlName="ApellidoMaterno"  type="text">
+                    </div>
+                  </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                      <label class="form-label" for="Cuidad">Cuidad o Estado de Residencia</label>
+                      <input class="form-control" id="Cuidad" formControlName="Cuidad"  type="text">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label" for="Cargo">Cargo o Puesto</label>
+                      <input class="form-control" id="Cargo" formControlName="Cargo"  type="text">
+                    </div>
+                  </div>
+                </div>
+            <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-label" for="Telefono">Teléfono:</label>
+                    <input class="form-control" id="Telefono" formControlName="Telefono"  type="text">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label" for="Correo">Correo Electrónico:</label>
+                      <input class="form-control" id="Correo" formControlName="Correo"  type="text">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                 
+                        <label class="form-label"  for="suplente">Suplente</label>
+                        <div class="form-check-input-container">
+                          <input class="form-check-input" type="checkbox" value="" id="suplente" formControlName="Suplente">
+                        </div>
+                      </div>
+                </div>
+            </div>
+
+
+        </ng-container>
+    </form>
+    </div>
+
+</div>

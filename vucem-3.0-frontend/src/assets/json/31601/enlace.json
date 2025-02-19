@@ -1,0 +1,20 @@
+{
+    "tableHeader": [
+        "RFC",
+        "Nombre",
+        "Apellido Paterno",
+        "Apellido Materno",
+        "Ciudad o Estado de Residencia",
+        "Cargo o Puesto",
+        "Teléfono",
+        "Correo Electrónico",
+        "Suplente"
+    ],
+    "tableBody": [
+        {
+            "tbodyData": [
+               
+            ]
+        }
+    ]
+}
