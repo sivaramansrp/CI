@@ -106,3 +106,9 @@ export interface TableData {
 export interface TableBodyData {
   tbodyData: string[];
 }
+
+export interface AccionesTabla {
+  tipo: string;
+  label: string;
+  icono: string;
+}

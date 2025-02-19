@@ -1,0 +1,53 @@
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ACUSE_SERVICIOS_EXTRAORDINARIOS } from '../../constantes/servicios-extraordinarios.enum';
+import { AlertComponent } from '../alert/alert.component';
+import { CommonModule } from '@angular/common';
+import { TituloComponent } from '../titulo/titulo.component';
+import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
+
+@Component({
+  selector: 'app-component-acuse',
+  standalone: true,
+  imports: [CommonModule, AlertComponent, TituloComponent],
+  templateUrl: './acuse.component.html',
+  styleUrl: './acuse.component.scss',
+})
+export class AcuseComponent implements OnChanges {
+  @Input() txtAlerta!: string;
+  @Input() subtitulo!: string;
+  @Input() folio!: string;
+
+  readonly encabezadoTablaAcuse: { valor: string, key: keyof BodyTablaAcuse }[] = [
+    {
+      key: 'id',
+      valor: 'No.',
+    },
+    {
+      key: 'documento',
+      valor: 'Documento.',
+    },
+  ];  
+  readonly datosTablaAcuse: BodyTablaAcuse[] = ACUSE_SERVICIOS_EXTRAORDINARIOS.datosTablaAcuse;
+
+  /**
+   * Método que se ejecuta cuando uno o más inputs del componente cambian.
+   *
+   * @param changes - Objeto que contiene los cambios de los inputs del componente.
+   * @returns void
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['txtAlerta'].currentValue) {
+      this.txtAlerta = changes['txtAlerta'].currentValue;
+    }
+  }
+
+  /**
+   * Abre un archivo PDF en una nueva pestaña del navegador.
+   *
+   * @param {string} url - La URL del archivo PDF que se va a abrir.
+   * @returns {void}
+   */
+  verPdf(url: string): void {
+    window.open(url, '_blank');
+  }
+}
