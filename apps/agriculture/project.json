@@ -17,12 +17,16 @@
         "tsConfig": "apps/agriculture/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
-          "apps/agriculture/src/favicon.ico ",
-          "apps/agriculture/src/assets",
           {
-            "glob": "**.*",
-            "input": "libs/shared/theme/assets",
-            "output": "assets"
+            "glob": "**/*",
+            "input": "apps/agriculture/src/assets/",
+            "output": "./assets/"
+          },
+          { "glob": "favicon.ico", "input": "./", "output": "./" },
+          {
+            "glob": "**/*",
+            "input": "libs/shared/theme/assets/",
+            "output": "./assets/"
           }
         ],
         "styles": [

@@ -17,12 +17,16 @@
         "tsConfig": "apps/aga/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
-          "apps/aga/src/favicon.ico",
-          "apps/aga/src/assets",
           {
-            "glob": "**.*",
-            "input": "libs/shared/theme/assets",
-            "output": "assets"
+            "glob": "**/*",
+            "input": "apps/aga/src/assets/",
+            "output": "./assets/"
+          },
+          { "glob": "favicon.ico", "input": "./", "output": "./" },
+          {
+            "glob": "**/*",
+            "input": "libs/shared/theme/assets/",
+            "output": "./assets/"
           }
         ],
         "styles": [

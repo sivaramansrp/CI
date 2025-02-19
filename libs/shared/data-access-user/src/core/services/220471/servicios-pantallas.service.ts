@@ -1,5 +1,4 @@
 import { BehaviorSubject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { PantallasFormData } from '../../models/220401/servicios-pantallas.model';
@@ -35,7 +34,7 @@ export class ServiciosPantallasService {
      * constructor de la clase
      * @param http: constructor de HttpClient
      */
-    constructor(private http: HttpClient) { }
+    constructor() { }
 
     /**
      * Este método se utiliza para configurar todos los datos del formulario de los componentes.
