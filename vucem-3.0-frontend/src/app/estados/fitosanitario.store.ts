@@ -1,6 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { createDatosState, ListaDeDatosFinal } from '../core/models/220202/fitosanitario.model';
+import { createDatosState, DatosForma, ListaDeDatosFinal, Mercancia, Movilizacion, PagoForm } from '../core/models/220202/fitosanitario.model';
 
 
 
@@ -14,31 +14,55 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
     }
 
     /**
-     * Actualiza el estado con la información de la sección.
-     * @param seccion Estado de validación de las secciones.
+     * Actualiza el estado con la información del formulario.
+     * @param datosForma Datos del formulario.
      */
-    public establecerSeccion(seccion: any[]): void {
+    public actualizarDatosForma(datosForma: DatosForma): void {
         this.update(state => ({
             ...state,
-            seccion,
+            datos: [datosForma], // Envuelve los datos en un array
         }));
     }
 
     /**
-     * Establece si cada formulario es válido o no.
-     * @param formaValida Array de booleanos indicando validez de formularios.
+     * Actualiza el estado con la información de movilización.
+     * @param movilizacion Datos de movilización.
      */
-    public establecerFormaValida(formaValida: any[]): void {
+    public actualizarMovilizacion(movilizacion: Movilizacion): void {
         this.update(state => ({
             ...state,
-            formaValida,
+            movilizacion: [movilizacion], // Envuelve los datos en un array
         }));
     }
+
+    /**
+     * Actualiza el estado con la información de pago.
+     * @param pago Datos de pago.
+     */
+    public actualizarPago(pago: PagoForm): void {
+        this.update(state => ({
+            ...state,
+            pago: [pago], // Envuelve los datos en un array
+        }));
+    }
+
+
+    /**
+     * Actualiza las mercancías en el estado.
+     * @param mercancias Array de mercancías.
+     */
+    public actualizarMercancias(mercancias: Mercancia[]): void {
+        this.update(state => ({
+            ...state,
+            datos: [{ ...state.datos[0], mercancias: mercancias }] // Actualiza las mercancías dentro de datos
+        }));
+    }
+
 
     /**
      * Restablece el estado a su estado inicial.
      */
-    public limpiarSeccion(): void {
+    public limpiarFormulario(): void {
         this.reset();
     }
 }
