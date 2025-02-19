@@ -3,8 +3,8 @@ import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { of } from 'rxjs';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
-import { DatosDelaComponent } from './datos-dela.component';
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
+import { DatosDelaComponent } from './datos-dela.component';
 
 describe('DatosDelaComponent', () => {
   let component: DatosDelaComponent;

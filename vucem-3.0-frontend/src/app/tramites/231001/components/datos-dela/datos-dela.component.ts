@@ -7,7 +7,7 @@
  *  ./datos-dela.component.scss
  */
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {  FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map } from 'rxjs/operators';
 import { BtnContinuarComponent } from '../../../../shared/components/btn-continuar/btn-continuar.component';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
