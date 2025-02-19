@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { of } from 'rxjs';
+
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
+
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 import { DatosDelaComponent } from './datos-dela.component';
 

@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { SolicitanteComponent } from './components/solicitante/solicitante.component';
 import { DatosComponent } from './pages/datos/datos.component';
-import { DatosDelaComponent } from './components/datos-dela/datos-dela.component';
 
 const routes: Routes = [
   {
