@@ -1,13 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
+import { AccionBoton } from '../../../../core/models/31601/servicios-pantallas.model';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
 import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
 import { PANTAPASOS } from '../../../../core/services/31601/servicios-pantallas.enum';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
-
-interface AccionBoton {
-  accion: string;
-  valor: number;
-}
 
 @Component({
   selector: 'app-pantallas',

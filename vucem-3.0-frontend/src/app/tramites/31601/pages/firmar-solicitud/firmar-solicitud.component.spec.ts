@@ -5,13 +5,6 @@ import { Router } from '@angular/router';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 import { TramiteStore } from '../../../../estados/tramite.store';
 
-interface JSONResponse {
-  id: number;
-  descripcion: string;
-  codigo: string;
-  data: string;
-}
-
 fdescribe('FirmarSolicitudComponent', () => {
   let component: FirmarSolicitudComponent;
   let fixture: ComponentFixture<FirmarSolicitudComponent>;
@@ -51,7 +44,7 @@ fdescribe('FirmarSolicitudComponent', () => {
   });
 
   it('should navigate to acuse page on successful firma', () => {
-    const mockTramite: JSONResponse = {
+    const mockTramite = {
       id: 1,
       descripcion: 'desc',
       codigo: 'code',
