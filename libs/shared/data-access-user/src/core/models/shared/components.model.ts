@@ -69,14 +69,12 @@ export interface InputFecha {
   habilitado: boolean
 }
 
-export type ConfiguracionTabla = Record<string, string | number | boolean | null>;
-
 export interface Pedimento {
   patente: number;
   pedimento: number;
   aduana: number;
   idTipoPedimento: number;
-  descTipoPedimento: string,
+  descTipoPedimento: string;
   numero: string;
   comprobanteValor: string;
   pedimentoValidado: boolean;
@@ -105,10 +103,4 @@ export interface TableData {
 
 export interface TableBodyData {
   tbodyData: string[];
-}
-
-export interface AccionesTabla {
-  tipo: string;
-  label: string;
-  icono: string;
 }

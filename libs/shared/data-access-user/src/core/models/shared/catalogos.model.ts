@@ -19,6 +19,7 @@ export interface RespuestaCatalogos {
 export interface Catalogo {
   id: number;
   descripcion: string;
+  clave?: string;
   tam?: string;
   dpi?: string
 }
