@@ -7,18 +7,20 @@ import { DatosComponent } from '../pages/datos/datos.component';
 import { PantallasComponent } from '../pages/pantallas/pantallas.component';
 import { WizardComponent } from '../../../shared/components/wizard/wizard.component';
 import { NavComponent } from '../../../shared/components/nav/nav.component';
-
+import { FirmarSolicitudComponent } from '../pages/firmar-solicitud/firmar-solicitud.component';
+import { FirmaElectronicaComponent } from '../../../shared/components/firma-electronica/firma-electronica.component';
+import { BtnContinuarComponent } from '../../../shared/components/btn-continuar/btn-continuar.component';
 
 @NgModule({
-  declarations: [
-    DatosComponent,
-    PantallasComponent
-  ],
+  declarations: [DatosComponent, PantallasComponent, FirmarSolicitudComponent],
   imports: [
     CommonModule,
     AntecesorRoutingModule,
     WizardComponent,
-    NavComponent
-  ]
+    NavComponent,
+    FirmaElectronicaComponent,
+    BtnContinuarComponent,
+    WizardComponent,
+  ],
 })
-export class AntecesorModule { }
+export class AntecesorModule {}
