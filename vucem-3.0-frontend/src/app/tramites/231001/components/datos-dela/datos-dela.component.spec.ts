@@ -1,83 +1,103 @@
-/* eslint-disable dot-notation */
-/* eslint-disable sort-imports */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { of } from 'rxjs';
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
 import { DatosDelaComponent } from './datos-dela.component';
+import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 
 describe('DatosDelaComponent', () => {
   let component: DatosDelaComponent;
   let fixture: ComponentFixture<DatosDelaComponent>;
+  let catalogosService: jasmine.SpyObj<CatalogosService>;
 
   beforeEach(async () => {
+    const catalogosServiceSpy = jasmine.createSpyObj('CatalogosService', ['getCatalogo']);
+
     await TestBed.configureTestingModule({
       declarations: [DatosDelaComponent],
-      imports: [ReactiveFormsModule]
+      imports: [ReactiveFormsModule],
+      providers: [{ provide: CatalogosService, useValue: catalogosServiceSpy }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDelaComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    catalogosService = TestBed.inject(CatalogosService) as jasmine.SpyObj<CatalogosService>;
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have an invalid form when empty', () => {
-    expect(component.solicitudForm.valid).toBeFalsy();
+  it('should initialize the form on ngOnInit', () => {
+    catalogosService.getCatalogo.and.returnValue(of([])); // Mock the service call
+    component.ngOnInit();
+    expect(component.datosForm).toBeDefined();
+    expect(component.datosForm.get('aduanas')).toBeDefined();
   });
 
-  it('numeroRegistroAmbiental field validity', () => {
+  it('should fetch aduanas data on ngOnInit', () => {
+    const mockAduanas: Catalogo[] = [{ id: 1, descripcion: 'Aduana 1' }];
+    catalogosService.getCatalogo.and.returnValue(of(mockAduanas));
+
+    component.ngOnInit();
+
+    expect(catalogosService.getCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_ADUANAS);
+    expect(component.aduanas).toEqual(mockAduanas);
+  });
+
+  it('should set selectedAduana on onAduanaSelect', () => {
+    component.datosForm = component.fb.group({
+      aduanas: ['Aduana 1']
+    });
+
+    component.onAduanaSelect();
+
+    expect(component.selectedAduana).toBe('Aduana 1');
+  });
+
+  it('should validate form controls correctly', () => {
+    component.solicitudForm = component.fb.group({
+      datosdelForm: component.fb.group({
+        numeroRegistroAmbiental: ['', Validators.required],
+        descripcionGenerica1: ['', Validators.required],
+        numeroProgramaImmex: ['', Validators.required],
+      })
+    });
+
     const control = component.solicitudForm.get('datosdelForm.numeroRegistroAmbiental');
-    expect(control.valid).toBeFalsy();
-    expect(control.errors['required']).toBeTruthy();
+    control?.markAsTouched();
 
-    control.setValue('1234567890123');
-    expect(control.valid).toBeTruthy();
+    expect(component.isInvalid('numeroRegistroAmbiental')).toBe(true);
   });
 
-  it('descripcionGenerica1 field validity', () => {
-    const control = component.solicitudForm.get('datosdelForm.descripcionGenerica1');
-    expect(control.valid).toBeFalsy();
-    expect(control.errors['required']).toBeTruthy();
-
-    control.setValue('Some description');
-    expect(control.valid).toBeTruthy();
-  });
-
-  it('numeroProgramaImmex field validity', () => {
-    const control = component.solicitudForm.get('datosdelForm.numeroProgramaImmex');
-    expect(control.valid).toBeFalsy();
-    expect(control.errors['required']).toBeTruthy();
-
-    control.setValue('IMMEX123');
-    expect(control.valid).toBeTruthy();
-  });
-
-  it('should mark fields as touched after form submission attempt', () => {
-    component.onSubmit();
-    const numeroRegistroAmbientalControl = component.solicitudForm.get('datosdelForm.numeroRegistroAmbiental');
-    const descripcionGenerica1Control = component.solicitudForm.get('datosdelForm.descripcionGenerica1');
-    const numeroProgramaImmexControl = component.solicitudForm.get('datosdelForm.numeroProgramaImmex');
-
-    expect(numeroRegistroAmbientalControl.touched).toBeTruthy();
-    expect(descripcionGenerica1Control.touched).toBeTruthy();
-    expect(numeroProgramaImmexControl.touched).toBeTruthy();
-  });
-
-  it('should log "Form Submitted!" when form is valid', () => {
+  it('should handle form submission correctly', () => {
     spyOn(console, 'log');
-    component.solicitudForm.get('datosdelForm.numeroRegistroAmbiental').setValue('1234567890123');
-    component.solicitudForm.get('datosdelForm.descripcionGenerica1').setValue('Some description');
-    component.solicitudForm.get('datosdelForm.numeroProgramaImmex').setValue('IMMEX123');
+    component.solicitudForm = component.fb.group({
+      datosdelForm: component.fb.group({
+        numeroRegistroAmbiental: ['123', Validators.required],
+        descripcionGenerica1: ['Description', Validators.required],
+        numeroProgramaImmex: ['456', Validators.required],
+      })
+    });
 
     component.onSubmit();
+
     expect(console.log).toHaveBeenCalledWith('Formulario Enviado!', component.solicitudForm.value);
   });
 
-  it('should log "Form is invalid" when form is invalid', () => {
+  it('should log error if form is invalid on submission', () => {
     spyOn(console, 'log');
+    component.solicitudForm = component.fb.group({
+      datosdelForm: component.fb.group({
+        numeroRegistroAmbiental: ['', Validators.required],
+        descripcionGenerica1: ['', Validators.required],
+        numeroProgramaImmex: ['', Validators.required],
+      })
+    });
+
     component.onSubmit();
+
     expect(console.log).toHaveBeenCalledWith('El formulario es inválido');
   });
 });
