@@ -5,7 +5,6 @@
  * @property {solicitante} solicitante - Información del solicitante.
  * @property {datosDeLaSolicitud} datosDeLaSolicitud - Datos de la solicitud.
  * @property {datosParaMovilizacionNacional} datosParaMovilizacionNacional - Datos para la movilización nacional.
- * @property {tercerosRelacionados} tercerosRelacionados - Información de terceros relacionados.
  * @property {pagoDeDerechos} pagoDeDerechos - Información de pago de derechos.--120301
  */
 
