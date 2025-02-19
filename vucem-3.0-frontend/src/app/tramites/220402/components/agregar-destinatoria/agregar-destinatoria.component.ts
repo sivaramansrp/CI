@@ -14,35 +14,33 @@ export class AgregarDestinatoriaComponent {
   // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   public moral: boolean = false;
 
+  options!: Catalogo[];
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   conatructor() {}
 
   ngOnInit(): void {
-    this.getPais();
+    this.inicializaCatalogos();
   }
 
   /**
-   * @description getPais se utiliza para obtener los datos de los paises
+   * Inicializa los catálogos necesarios para el formulario.
    */
-
-  public getPais() {
-    this.pais = {
-      labelNombre: 'País',
-      required: true,
-      primerOpcion: 'Selecciona un valor',
-      catalogos: [
-        {
-          id: 1,
-          descripcion: 'Opción 1',
-        },
-        {
-          id: 2,
-          descripcion: 'Opción 1',
-        },
-      ],
-    };
+  private inicializaCatalogos(): void {
+    this.options = [
+      {
+        id: 1,
+        descripcion: 'Option 1',
+      },
+      {
+        id: 2,
+        descripcion: 'Option 2',
+      },
+      {
+        id: 3,
+        descripcion: 'Option 3',
+      },
+    ];
   }
-
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   public docSeleccionado(e: Catalogo) {}
 

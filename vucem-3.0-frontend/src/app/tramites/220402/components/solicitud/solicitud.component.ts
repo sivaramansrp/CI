@@ -22,6 +22,10 @@ import {
   styleUrl: './solicitud.component.scss',
 })
 
+/**
+ * Componente que representa la página de solicitud.
+ */
+
 export class SolicitudComponent {
 
   /**
@@ -90,12 +94,12 @@ export class SolicitudComponent {
   }
 
   /**
-* Obtiene el grupo de formulario 'datosDelTramitRealizer' del formulario principal 'FormSolicitud'.
+* Obtiene el grupo de formulario 'datosDelTramiteRealizar' del formulario principal 'FormSolicitud'.
 *
-* @returns {FormGroup} El grupo de formulario 'datosDelTramitRealizer'.
+* @returns {FormGroup} El grupo de formulario 'datosDelTramiteRealizar'.
 */
-  get datosDelTramitRealizer(): FormGroup {
-    return this.FormSolicitud.get('datosDelTramitRealizer') as FormGroup;
+  get datosDelTramiteRealizar(): FormGroup {
+    return this.FormSolicitud.get('datosDelTramiteRealizar') as FormGroup;
   }
 
   /**
@@ -165,7 +169,7 @@ export class SolicitudComponent {
    */
   crearFormSolicitud(): void {
     this.FormSolicitud = this.fb.group({
-      datosDelTramitRealizer: this.fb.group({
+      datosDelTramiteRealizar: this.fb.group({
         tipoDeCertificado: ['', Validators.required],
         seccionAduanera: ['', Validators.required],
         puntoDestino: ['', Validators.required],
@@ -237,7 +241,7 @@ export class SolicitudComponent {
    * @param {number} i - Índice de la mercancía a eliminar.
    * @returns {void}
    */
-  mercancia_delete(i: number): void {
+  mercancia_borrar(i: number): void {
     this.datosGeneralesArr.splice(i, 1);
   }
 
