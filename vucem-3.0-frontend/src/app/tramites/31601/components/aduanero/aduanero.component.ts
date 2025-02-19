@@ -32,7 +32,7 @@ import importardorTable from '../../../../../assets/json/220401/importador-table
 import { TableComponent } from '../../../../shared/components/table/table.component';
 
 import { Modal } from 'bootstrap';
-
+import { TablePaginationComponent } from '../../../../shared/components/table-pagination/table-pagination.component';
 @Component({
   selector: 'app-aduanero',
   templateUrl: './aduanero.component.html',
@@ -44,6 +44,7 @@ import { Modal } from 'bootstrap';
     InputRadioComponent,
     CatalogoSelectComponent,
     TableComponent,
+    TablePaginationComponent
   ],
 })
 export class AduaneroComponent implements OnInit, AfterViewInit {
@@ -60,10 +61,16 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
   comboBimestresIDC: Catalogo[] = comboBimestres;
   comboIMMEX :Catalogo[]=comboIMMEXJson;
   public establecimientoHeaderData: string[] = [];
+  public fullEstablecimientoBodyData: any[] = [];
   public getEstablecimientoTableData = establecimientoTable;
   public getDestinatarioTableData = destinatarioTable;
   public getImportadorTableData = importardorTable;
+
+  public paginatedEstablecimientoBodyData: any[] = []
   contextPath: string = 'https://your-server.com'; 
+  totalItems: number = 0;
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
 
   ngOnInit() {
     this.getEstablecimiento();
@@ -99,11 +106,28 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
 //
     }
   }
-  
+ 
 
   public getEstablecimiento() {
     this.establecimientoHeaderData =
       this.getEstablecimientoTableData.tableHeader;
     this.establecimientoBodyData = this.getEstablecimientoTableData.tableBody;
+  }
+
+  updatePagination() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    this.establecimientoBodyData = this.fullEstablecimientoBodyData.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  onItemsPerPageChange(itemsPerPage: number) {
+    console.log('Items per page changed to:', itemsPerPage);
+    this.itemsPerPage = itemsPerPage;
+    this.currentPage = 1;
+    this.updatePagination();
   }
 }

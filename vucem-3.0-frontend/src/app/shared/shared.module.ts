@@ -4,8 +4,6 @@ import { NgModule } from '@angular/core';
 import { SoloNumerosDirective } from './directives/solo-numeros/solo-numeros.directive';
 import { UppercaseDirective } from './directives/Uppercase/uppercase.directive';
 
-import { NgxPaginationModule } from 'ngx-pagination';
-
 
 
 
@@ -17,7 +15,6 @@ import { NgxPaginationModule } from 'ngx-pagination';
     CommonModule,
     InputCheckComponent,
     UppercaseDirective,
-    NgxPaginationModule
 ],
   exports: [
     UppercaseDirective,
