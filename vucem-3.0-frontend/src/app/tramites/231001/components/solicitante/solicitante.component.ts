@@ -61,7 +61,7 @@ export class SolicitanteComponent implements OnInit {
   /**
    * Método de inicialización del componente.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.getDatosGenerales();
   }
 
@@ -79,7 +79,7 @@ export class SolicitanteComponent implements OnInit {
   /**
    * Obtiene el grupo de formularios de datos generales.
    */
-  get datosGeneralesForm() {
+  get datosGeneralesForm(): FormGroup {
     return this.form.get('datosGenerales') as FormGroup;
   }
 
@@ -100,7 +100,7 @@ export class SolicitanteComponent implements OnInit {
   inicializarFormGroup(config: FormularioDinamico[], grupoNombre: string): void {
     const grupo = this.form.get(grupoNombre) as FormGroup;
     config.forEach((campo) => {
-      const validators = this.getValidators(campo.validators);
+      const validators = SolicitanteComponent.getValidators(campo.validators);
       grupo.addControl(
         campo.campo,
         this.fb.control({ value: '', disabled: campo.disabled }, validators)
@@ -113,7 +113,7 @@ export class SolicitanteComponent implements OnInit {
    * @param validators - Validadores de los campos de los formularios.
    * @returns ValidatorFn[]
    */
-  getValidators(validators: string[]): ValidatorFn[] {
+  static getValidators(validators: string[]): ValidatorFn[] {
     const formValidators: ValidatorFn[] = [];
     validators.forEach((validator) => {
       if (validator === 'required') {
