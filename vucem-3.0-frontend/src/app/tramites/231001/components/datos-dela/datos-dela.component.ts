@@ -1,3 +1,4 @@
+/* eslint-disable sort-imports */
 /**
  * Componente que representa el formulario de datos de la aduana.
  * 
@@ -6,7 +7,7 @@
  *  ./datos-dela.component.scss
  */
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {  FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map } from 'rxjs/operators';
 import { BtnContinuarComponent } from '../../../../shared/components/btn-continuar/btn-continuar.component';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
@@ -16,6 +17,7 @@ import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
 import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
 import { PASOS } from '../../../../shared/constantes/303/pasos.enums';
+
 
 /**
  * Decorador que define un componente de Angular.
@@ -29,7 +31,9 @@ import { PASOS } from '../../../../shared/constantes/303/pasos.enums';
   templateUrl: './datos-dela.component.html',
   styleUrl: './datos-dela.component.scss',
 })
+
 export class DatosDelaComponent implements OnInit {
+  
   /**
    *  datosForm
    * @type {FormGroup}
@@ -84,7 +88,7 @@ export class DatosDelaComponent implements OnInit {
    *  {FormBuilder} fb - Servicio FormBuilder para la creación de formularios.
    *  {CatalogosService} catalogosServices - Servicio para obtener los catálogos.
    */
-  constructor(private fb: FormBuilder, private catalogosServices: CatalogosService) {
+  constructor(public fb: FormBuilder, private catalogosServices: CatalogosService) {
     this.solicitudForm = this.fb.group({
       datosdelForm: this.fb.group({
         numeroRegistroAmbiental: ['', Validators.required],

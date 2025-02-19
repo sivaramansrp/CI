@@ -7,7 +7,7 @@
 import { Component } from '@angular/core';
 
 import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
-import { OctaTempo } from '../../../../core/services/130102/octava-temporal.enum';
+import { OCTA_TEMPO } from '../../../../core/services/130102/octava-temporal.enum';
 
 
 
@@ -23,7 +23,7 @@ export class OctavaTemporalComponent {
   /**
    * @property {ListaPasosWizard[]} pantallasPasos - Array para almacenar los pasos del wizard.
    */
-  pantallasPasos: ListaPasosWizard[] = OctaTempo;
+  pantallasPasos: ListaPasosWizard[] = OCTA_TEMPO;
 
   /**
    * @property {number} indice - El índice actual del paso.
