@@ -205,37 +205,37 @@
       </label>
 
       <div class="row">
-<div class="col-md-1">
-
-</div>
-<div class="col-md-5">
-  <div class="form-group">
-    <label for="empPropios" class="form-label">Número de empleados propios</label>
-  <input 
-    type="text" 
-    class="form-control" 
-    id="empPropios" 
-    name="empleadosPropios"
-    maxlength="8"  
-  />
-  </div>
-</div>
-<div class="col-md-5">
-  <app-catalogo-select
+        <div class="col-md-1"></div>
+        <div class="col-md-5">
+          <div class="form-group">
+            <label for="empPropios" class="form-label"
+              >Número de empleados propios</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="empPropios"
+              name="empleadosPropios"
+              maxlength="8"
+            />
+          </div>
+        </div>
+        <div class="col-md-5">
+          <app-catalogo-select
             [label]="'Bimestre'"
             [placeholder]="'Seleccione un valor'"
             [catalogo]="comboBimestresIDC"
           >
           </app-catalogo-select>
-</div>
-<div class="col-md-1">
-
-</div>
+        </div>
+        <div class="col-md-1"></div>
       </div>
       <div class="mt-4">
         <label class="fw-bold">
           <span class="require">* </span>
-          Se&nale si al momento de ingresar su solicitud la empresa solicitante cuenta con trabajadores subcontratados en los t&erminos y condiciones que establecen 12-A al 15- D de la Ley Federal de Trabajao
+          Se&nale si al momento de ingresar su solicitud la empresa solicitante
+          cuenta con trabajadores subcontratados en los t&erminos y condiciones
+          que establecen 12-A al 15- D de la Ley Federal de Trabajao
         </label>
         <app-input-radio
           [radioOptions]="radioOptions"
@@ -244,83 +244,338 @@
         ></app-input-radio>
       </div>
     </div>
-    <ng-table [commonTableHeader]="establecimientoHeaderData" [commonTableBody]="establecimientoBodyData" [enablePagination]="true"></ng-table>
-    <div class=" d-flex justify-content-end">
-        <button type="button" class="btn btn-default btn-space" (click)="openModal()" >Modificar</button>
-        <button type="button" class="btn btn-primary btn-space" >Eliminar</button>
+    <label>
+      <span class="require">* </span>
+      Mercion el nombre...............
+    </label>
+    <ng-table
+      [commonTableHeader]="establecimientoHeaderData"
+      [commonTableBody]="establecimientoBodyData"
+      [enablePagination]="true"
+    ></ng-table>
+    <div class="d-flex justify-content-end">
+      <button
+        type="button"
+        class="btn btn-default btn-space"
+        (click)="openModal()"
+      >
+        Modificar
+      </button>
+      <button type="button" class="btn btn-primary btn-space">Eliminar</button>
     </div>
- 
+    <div class="mt-4">
+      <label class="fw-bold">
+        <span class="require">* </span>
+        Se&nale si al momento de ingresar su solicitud la empresa solicitante
+        cuenta ............................
+      </label>
+      <app-input-radio
+        [radioOptions]="radioOptions"
+        [isRequired]="true"
+        [layout]="'horizontal'"
+      ></app-input-radio>
+    </div>
+    <div class="mt-4">
+      <label class="fw-bold">
+        <span class="require">* </span>
+        En su caso acredite cumplir con lo establecido en el articulo 27,
+        fracc&on V, tercer p&arrafo de la Ley del ISR
+      </label>
+      <app-input-radio
+        [radioOptions]="radioOptions"
+        [isRequired]="true"
+        [layout]="'horizontal'"
+      ></app-input-radio>
+    </div>
+    <div class="mt-4">
+      <label class="fw-bold">
+        <span class="require">* </span>
+        Indique si ............................................ Trabajio
+      </label>
+      <app-input-radio
+        [radioOptions]="radioOptions"
+        [isRequired]="true"
+        [layout]="'horizontal'"
+      ></app-input-radio>
+    </div>
+    <div class="w-100 p-3 border rounded shadow-sm">
+      <div class="mb-3">
+        <span class="require">*</span>
+        <label class="form-label fw-bold">
+          Indique si se encuadra ................. Fiscal Federal
+        </label>
+
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+        ></app-input-radio>
+      </div>
+      <div class="mb-3">
+        <span class="require">*</span>
+        <label class="form-label fw-bold">
+          Del mismo modo ...................... Codigo.
+        </label>
+
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+        ></app-input-radio>
+      </div>
+      <div class="mb-3">
+        <span class="require">*</span>
+        <label class="form-label fw-bold">
+          Senale .......................... vigentes.
+        </label>
+
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+        ></app-input-radio>
+      </div>
+      <div class="mb-3">
+        <span class="require">*</span>
+        <label class="form-label fw-bold">
+          En caso --------------------------------la solicitud.
+        </label>
+
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+        ></app-input-radio>
+      </div>
+    </div>
+    <div class="w-100 p-3 border rounded shadow-sm">
+      <div class="col-4 mb-3">
+        <app-catalogo-select
+          [placeholder]="'Seleccione un valor'"
+          [catalogo]="comboBimestresIDC"
+        >
+        </app-catalogo-select>
+      </div>
+      <label class="fw-bold">
+        Indique todos los domicilios registrados ante el RFC del solicitante e
+        indique aquellos en que se desarrollen actividades relacionadas con su
+        proceso productivo y/o la prestaci&oacute;n de servicios.
+      </label>
+      <div class="alert alert-info mt-3">
+        <h6 class="mb-0">
+          <strong>Nota:</strong> De contar con un programa IMMEX activo y
+          vigente al momento de ingresar la solicitud, se mostrar&aacute;n los
+          domicilios registrados ante la Secretaria de Econom&iacute;a.
+          As&iacute; mismo, podr&aacute; incluir otros domicilios que se
+          encuentren relacionados con el RFC del solicitante, dando click en el
+          bot&oacute;n &quot;Agregar&quot; y seleccionado la Entidad Federativa.
+        </h6>
+      </div>
+
+      <ng-table
+        [commonTableHeader]="establecimientoHeaderData"
+        [commonTableBody]="establecimientoBodyData"
+        [enablePagination]="true"
+      ></ng-table>
+      <div class="d-flex justify-content-end">
+        <button
+          type="button"
+          class="btn btn-default btn-space"
+          (click)="openInstacionesModal()"
+        >
+          Modificar
+        </button>
+        <button type="button" class="btn btn-primary btn-space">
+          Eliminar
+        </button>
+        <button type="button" class="btn btn-primary btn-space">Agregar</button>
+      </div>
+    </div>
+    <div class="w-100 p-3 border rounded shadow-sm">
+      <div class="mt-4">
+        <label class="fw-bold">
+          <span class="require">* </span>
+          Senale si al momento de ingresar su solicitid si se encuentra al
+          corriente en el cumplomiento de sus onligaciones fiscales y aduaneras
+        </label>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+        ></app-input-radio>
+      </div>
+      <div class="mt-4">
+        <label class="fw-bold">
+          <span class="require">* </span>
+          Senale si al momento de ingresar su solicitid si se encuentra al
+          corriente en el cumplomiento de sus onligaciones fiscales y aduaneras
+        </label>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+        ></app-input-radio>
+      </div>
+
+      
+    </div>
+    <div class="w-100 p-3 border rounded shadow-sm">
+      <div class=" mb-3">
+        
+          <label for="archivoNacionales" class="form-label fw-bold">Clientes y Proveedores en el Extranjero</label
+          >
+          <div class="row mt-3">
+            <div class="col-12">
+              <p class="text-justify">
+                Anexar archivo con...meses
+              </p>
+              <p class="text-justify">
+                Para descargar la plantilla del archivo de Excel, haga clic 
+                <a [href]="contextPath + '/agace/rubroAIC/registrarSolicitud.action?mostrarArchivoExcelExtranjeros'" 
+                   target="_blank" 
+                   class="text-primary fw-bold">aquí</a>.
+              </p>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between">
+            <div >
+              <input type="file" id="archivoNacionales" class="form-control w-auto" />
+            </div>
+            <div >
+              <button id="uploadNewFileExtranjerosN" class="btn btn-primary">
+                Anexar
+              </button>
+            </div>
+            
+          </div>
+          
+      
+      </div>
+    </div>
   </form>
 </div>
-<div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+
+<div
+  class="modal fade"
+  #instalacionesModal
+  tabindex="-1"
+  aria-labelledby="instalacionesModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modifyModalLabel">Agregar</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title" id="instalacionesModalLabel">Instalaciones</h5>
       </div>
       <div class="modal-body p-4">
         <div class="row">
-          <div class="col-6">
-            <div class="form-group">
-              <span class="require">*</span>
-              <label for="numeroAutorizacionCITES" class="form-label">RFC</label>
-              <input type="text" class="form-control" id="" >
-            </div>
-          </div>
-          <div class="col-4 d-flex align-items-end">
-            <button type="button" class="btn btn-primary">Buscar</button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-6">
-            <div class="form-group">
-              <span class="require ">*</span>
-              <label for="numeroAutorizacionCITES" class="form-label">Registro Federal de Contribuyentes</label>
-              <input type="text" class="form-control" id="" >
-            </div>
-          </div>
-        
-        </div>
-        <div class="row">
-          <div class="col-8">
-            <div class="form-group">
-              <span class="require ">*</span>
-              <label for="numeroAutorizacionCITES" class="form-label">
-                Razon Social
-                </label>
-              <input type="text" class="form-control" id="" >
-            </div>
-          </div>
-        
-        </div>
-        <div class="row">
-          <div class="col-6">
-            <div class="form-group">
-              <span class="require ">*</span>
-              <label for="numeroAutorizacionCITES" class="form-label">N&umero de empleados</label>
-              <input type="text" class="form-control" id="" >
-            </div>
-          </div>
-        
-        </div>
-        <div class="row">
           <div class="col-6 form-group">
-            <!-- <app-catalogo-select
-            [catalogo]="aduanas"
-            [tooltipQuestionCircle]="true"
-            [label]="'UMC*'"
-            [placeholder]="'Seleccione una aduana'"
-            formControlName="aduana"
-          ></app-catalogo-select> -->
+            <app-catalogo-select
+              [label]="'Bimestre'"
+              [placeholder]="'Seleccione un valor'"
+              [catalogo]="comboBimestresIDC"
+            >
+            </app-catalogo-select>
           </div>
-        
+          <ng-table
+            [commonTableHeader]="establecimientoHeaderData"
+            [commonTableBody]="establecimientoBodyData"
+            [enablePagination]="true"
+          ></ng-table>
         </div>
-       
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+            Aceptar
+          </button>
+          <button type="button" class="btn btn-primary">Cancelar</button>
+        </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-primary">Cancelar</button>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    #modifyModal
+    tabindex="-1"
+    aria-labelledby="modifyModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modifyModalLabel">Agregar</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <span class="require">*</span>
+                <label for="numeroAutorizacionCITES" class="form-label"
+                  >RFC</label
+                >
+                <input type="text" class="form-control" id="" />
+              </div>
+            </div>
+            <div class="col-4 d-flex align-items-end">
+              <button type="button" class="btn btn-primary">Buscar</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <span class="require">*</span>
+                <label for="numeroAutorizacionCITES" class="form-label"
+                  >Registro Federal de Contribuyentes</label
+                >
+                <input type="text" class="form-control" id="" />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-8">
+              <div class="form-group">
+                <span class="require">*</span>
+                <label for="numeroAutorizacionCITES" class="form-label">
+                  Razon Social
+                </label>
+                <input type="text" class="form-control" id="" />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <span class="require">*</span>
+                <label for="numeroAutorizacionCITES" class="form-label"
+                  >N&umero de empleados</label
+                >
+                <input type="text" class="form-control" id="" />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 form-group">
+              <app-catalogo-select
+                [label]="'Bimestre'"
+                [placeholder]="'Seleccione un valor'"
+                [catalogo]="comboBimestresIDC"
+              >
+              </app-catalogo-select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+            Aceptar
+          </button>
+          <button type="button" class="btn btn-primary">Cancelar</button>
+        </div>
       </div>
     </div>
   </div>

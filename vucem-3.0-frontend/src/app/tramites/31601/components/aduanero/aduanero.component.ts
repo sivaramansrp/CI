@@ -15,7 +15,11 @@ import { InputRadioComponent } from '../../../../shared/components/input-radio/i
 import productivo from '../../../../../assets/json/31601/productivo.json';
 import serviciosAgace from '../../../../../assets/json/31601/serviciosAgace.json';
 
+import comboIMMEXJson from '../../../../../assets/json/31601/comboIMMEX.json';
+
 import comboBimestres from '../../../../../assets/json/31601/comboBimestres.json';
+
+
 
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 
@@ -26,6 +30,7 @@ import destinatarioTable from '../../../../../assets/json/220401/destinatario-ta
 import importardorTable from '../../../../../assets/json/220401/importador-table.json';
 
 import { TableComponent } from '../../../../shared/components/table/table.component';
+
 import { Modal } from 'bootstrap';
 
 @Component({
@@ -43,7 +48,9 @@ import { Modal } from 'bootstrap';
 })
 export class AduaneroComponent implements OnInit, AfterViewInit {
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+  @ViewChild ('instalacionesModal',{static :false}) instalacionesModal!:ElementRef;
   modalInstance!: Modal;
+  modalInstanceInstaciones!:Modal;
 
   preOperativeForm!: FormGroup;
   radioOptions = preOperativo; // Use imported JSON data
@@ -51,10 +58,13 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
   sectorProductivoAgace: Catalogo[] = productivo;
   serviciosAgace: Catalogo[] = serviciosAgace;
   comboBimestresIDC: Catalogo[] = comboBimestres;
+  comboIMMEX :Catalogo[]=comboIMMEXJson;
   public establecimientoHeaderData: string[] = [];
   public getEstablecimientoTableData = establecimientoTable;
   public getDestinatarioTableData = destinatarioTable;
   public getImportadorTableData = importardorTable;
+  contextPath: string = 'https://your-server.com'; 
+
   ngOnInit() {
     this.getEstablecimiento();
     setTimeout(() => {
@@ -62,12 +72,27 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
         this.modalInstance = new Modal(this.modifyModal.nativeElement);
       }
     });
+    setTimeout(()=>{
+      if (this.instalacionesModal) {
+        this.modalInstanceInstaciones = new Modal(this.instalacionesModal.nativeElement);
+      }
+    }
+
+    );
   }
   openModal() {
     if (this.modalInstance) {
       this.modalInstance.show();
     } else {
-      console.error('Modal instance not initialized.');
+      //console.error('Modal instance not initialized.');
+    }
+  }
+  openInstacionesModal(){
+    if(this.modalInstanceInstaciones){
+      this.modalInstanceInstaciones.show();
+    }
+    else{
+//
     }
   }
   ngAfterViewInit() {
