@@ -7,6 +7,8 @@ import { DatosComponent } from '../pages/datos/datos.component';
 import { PantallasComponent } from '../pages/pantallas/pantallas.component';
 import { WizardComponent } from '../../../shared/components/wizard/wizard.component';
 import { NavComponent } from '../../../shared/components/nav/nav.component';
+import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-por-regimen.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -18,7 +20,15 @@ import { NavComponent } from '../../../shared/components/nav/nav.component';
     CommonModule,
     AntecesorRoutingModule,
     WizardComponent,
-    NavComponent
+    NavComponent,
+    DatosPorRegimenComponent,
+    ReactiveFormsModule,
+    FormsModule
   ]
 })
+
+/**
+ * Este módulo se utiliza para configurar los componentes del módulo 31601.
+ * Importar los componentes del módulo.
+ */
 export class AntecesorModule { }
