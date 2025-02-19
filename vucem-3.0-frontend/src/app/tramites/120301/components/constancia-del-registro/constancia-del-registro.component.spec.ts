@@ -41,7 +41,7 @@ describe('ConstanciaDelRegistroComponent', () => {
         { tbodyData: ['3434324', 'FACTURA', 'CALLE', 'SAN GABRIEL 144 DURANGO', 'SAN GABRIEL', '2024-11-07 00:00:00.0'] }
       ]
     };
-    spyOn(constanciaDelRegistroService, 'getfederal').and.returnValue(of(mockData));
+    spyOn(constanciaDelRegistroService, 'getFederal').and.returnValue(of(mockData));
 
     component.ngOnInit();
 
@@ -49,7 +49,7 @@ describe('ConstanciaDelRegistroComponent', () => {
   });
 
   it('should handle error while fetching data', () => {
-    spyOn(constanciaDelRegistroService, 'getfederal').and.returnValue(of({}));
+    spyOn(constanciaDelRegistroService, 'getFederal').and.returnValue(of({}));
 
     component.ngOnInit();
 

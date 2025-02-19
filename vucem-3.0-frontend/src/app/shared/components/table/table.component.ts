@@ -22,6 +22,7 @@ export class TableComponent implements OnInit, OnChanges {
    */
   @Input() commonTableHeader: string[] = [];
   @Input() commonTableBody: any = [];
+  @Input() enableScrollbar: boolean = false;
 
   public tableData: TableData = {
     tableHeader: [],

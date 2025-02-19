@@ -13,7 +13,7 @@ import { ServiciosElegibilidadDeTextilesService } from '../../../../core/service
 import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
 import { solicitante } from '../../../../core/models/120301/elegibilidad-de-textiles.model';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { IDDEUSUARIO, ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from '../../../../shared/constantes/elegibilidad-de-textiles.enums';
+import { ID_DE_USUARIO, ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from '../../../../shared/constantes/elegibilidad-de-textiles.enums';
 import { CommonModule } from '@angular/common';
 import { tap } from 'rxjs';
 
@@ -111,7 +111,7 @@ export class SolicitanteComponent implements OnInit {
    */
   obtenerDetallesDeUsuario() {
     this.solicitanteServices
-      .getDatosGenerales(IDDEUSUARIO)
+      .getDatosGenerales(ID_DE_USUARIO)
       .pipe(
         tap((response) => {
           if (response) {
