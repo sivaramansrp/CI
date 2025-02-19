@@ -13,6 +13,7 @@ export class ValidacionesFormularioService {
   public rfcPattern =
     /^([A-ZÑ&]{3,4})?(?:\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01]))?[A-Z\d]{2}[A\d]$/;
   public horaPattern = /^([01]\d|2[0-3]):[0-5]\d$/;
+  public patronDeNumero = /^[0-9]\d*$/;
 
   /**
    * Valida si el campo de un formulario no contiene errores
@@ -55,12 +56,15 @@ export class ValidacionesFormularioService {
   }
 
   /**
-   * Obtiene el error de un campo con patterns
-   * @param {AbstractControl} control : Control del formulario
-   * @param {string} campo Nombre del campo a validar, si el control es un FormGroup
-   * @returns {boolean | null} : Retorna true si el campo o control contiene errores de pattern y ha sido tocado, de lo contrario retorna false
-   */
-  public errorEmail(control: AbstractControl, campo?: string): boolean | null {
+  * Obtiene el error de un campo con patterns
+  * @param {AbstractControl} control : Control del formulario
+  * @param {string} campo Nombre del campo a validar, si el control es un FormGroup
+  * @returns {boolean | null} : Retorna true si el campo o control contiene errores de pattern y ha sido tocado, de lo contrario retorna false
+  */
+  public errorEmail(
+    control: AbstractControl,
+    campo?: string
+  ): boolean | null {
     if (control instanceof FormGroup && campo) {
       const campoControl = control.controls[campo];
       return campoControl?.errors?.['email'] && campoControl.touched;
