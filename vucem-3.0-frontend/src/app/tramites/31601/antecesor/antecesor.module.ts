@@ -24,8 +24,7 @@ import { BtnContinuarComponent } from '../../../shared/components/btn-continuar/
     ReactiveFormsModule,
     FormsModule,
     FirmaElectronicaComponent,
-    BtnContinuarComponent,
-    WizardComponent,
+    BtnContinuarComponent
   ],
 })
 

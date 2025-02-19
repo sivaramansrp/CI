@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 import { TramiteStore } from '../../../../estados/tramite.store';
+import { ServiciosPantallaService } from '../../../../core/services/31601/servicios-pantalla.service';
 
 /**
  * Componente para firmar la solicitud.
@@ -10,7 +11,6 @@ import { TramiteStore } from '../../../../estados/tramite.store';
 @Component({
   selector: 'app-firmar-solicitud',
   templateUrl: './firmar-solicitud.component.html',
-  styles: ``,
 })
 export class FirmarSolicitudComponent {
   /**
@@ -21,7 +21,7 @@ export class FirmarSolicitudComponent {
    */
   constructor(
     private router: Router,
-    private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
+    private serviciosExtraordinariosServices: ServiciosPantallaService,
     private tramiteStore: TramiteStore
   ) {
     // Constructor
