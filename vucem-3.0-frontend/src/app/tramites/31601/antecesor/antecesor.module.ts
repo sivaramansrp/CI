@@ -9,13 +9,12 @@ import { WizardComponent } from '../../../shared/components/wizard/wizard.compon
 import { NavComponent } from '../../../shared/components/nav/nav.component';
 import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-por-regimen.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { FirmarSolicitudComponent } from '../pages/firmar-solicitud/firmar-solicitud.component';
+import { FirmaElectronicaComponent } from '../../../shared/components/firma-electronica/firma-electronica.component';
+import { BtnContinuarComponent } from '../../../shared/components/btn-continuar/btn-continuar.component';
 
 @NgModule({
-  declarations: [
-    DatosComponent,
-    PantallasComponent
-  ],
+  declarations: [DatosComponent, PantallasComponent, FirmarSolicitudComponent],
   imports: [
     CommonModule,
     AntecesorRoutingModule,
@@ -23,12 +22,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NavComponent,
     DatosPorRegimenComponent,
     ReactiveFormsModule,
-    FormsModule
-  ]
+    FormsModule,
+    FirmaElectronicaComponent,
+    BtnContinuarComponent,
+    WizardComponent,
+  ],
 })
 
 /**
  * Este módulo se utiliza para configurar los componentes del módulo 31601.
  * Importar los componentes del módulo.
  */
-export class AntecesorModule { }
+export class AntecesorModule {}
