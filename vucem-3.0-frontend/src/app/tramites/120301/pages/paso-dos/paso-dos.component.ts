@@ -27,14 +27,14 @@ export class PasoDosComponent {
   TEXTOS = TEXTOS;
 
   /**
-   * @property {Array<Catalogo>} tiposDocumentos - Array de tipos de documentos disponibles.
+   * @property {Catalogo[]} tiposDocumentos - Array de tipos de documentos disponibles.
    */
-  tiposDocumentos: Array<Catalogo> = [];
+  tiposDocumentos: Catalogo[] = [];
 
   /**
-   * @property {Array<Catalogo>} documentosSeleccionados - Array de documentos seleccionados.
+   * @property {Catalogo[]} documentosSeleccionados - Array de documentos seleccionados.
    */
-  documentosSeleccionados: Array<Catalogo> = [];
+  documentosSeleccionados: Catalogo[] = [];
 
   constructor(
     private catalogosServices: CatalogosService,
