@@ -12,17 +12,31 @@ import { EnlaceComponent } from '../components/enlace/enlace.component';
 import { PersonaComponent } from '../components/persona/persona.component';
 import { RegistroDialogComponent } from '../components/registro-dialog/registro-dialog.component';
 
+import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-por-regimen.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FirmarSolicitudComponent } from '../pages/firmar-solicitud/firmar-solicitud.component';
+import { FirmaElectronicaComponent } from '../../../shared/components/firma-electronica/firma-electronica.component';
+import { BtnContinuarComponent } from '../../../shared/components/btn-continuar/btn-continuar.component';
 
 @NgModule({
-  declarations: [
-    DatosComponent,
-    PantallasComponent
-  ],
+  declarations: [DatosComponent, PantallasComponent, FirmarSolicitudComponent],
   imports: [
     CommonModule,
     AntecesorRoutingModule,
     WizardComponent,
-    NavComponent,ReprestantanteComponent,EnlaceComponent,PersonaComponent,RegistroDialogComponent
-  ]
+    NavComponent,ReprestantanteComponent,EnlaceComponent,PersonaComponent,RegistroDialogComponent,
+  
+    NavComponent,
+    DatosPorRegimenComponent,
+    ReactiveFormsModule,
+    FormsModule,
+    FirmaElectronicaComponent,
+    BtnContinuarComponent
+  ],
 })
-export class AntecesorModule { }
+
+/**
+ * Este módulo se utiliza para configurar los componentes del módulo 31601.
+ * Importar los componentes del módulo.
+ */
+export class AntecesorModule {}

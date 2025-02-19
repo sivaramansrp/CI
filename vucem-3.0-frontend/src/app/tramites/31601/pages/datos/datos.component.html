@@ -1,7 +1,7 @@
 
   <div class="container">
     <div class="row">
-        <ul class="nav nav-tab">
+        <ul class="nav nav-tabs">
             <li [ngClass]="indice === 1 ? 'active' : ''">
                 <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
             </li>
@@ -28,6 +28,14 @@
                     <app-enlace></app-enlace>
                     <app-persona></app-persona>
                     <app-registro-dialog></app-registro-dialog>
+                @case(2) {
+                
+                }
+                @case(3) {
+                    
+                }
+                @case(4) {
+                    <app-datos-por-regimen></app-datos-por-regimen>
                 }
             }
         </ng-container>
