@@ -7,9 +7,7 @@
  *  ./datos-dela.component.scss
  */
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {  FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { map } from 'rxjs/operators';
-import { BtnContinuarComponent } from '../../../../shared/components/btn-continuar/btn-continuar.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
@@ -17,7 +15,6 @@ import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
 import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
 import { PASOS } from '../../../../shared/constantes/303/pasos.enums';
-
 
 /**
  * Decorador que define un componente de Angular.
@@ -53,7 +50,7 @@ export class DatosDelaComponent implements OnInit {
    * @type {any}
    *  Aduana seleccionada en el formulario.
    */
-  selectedAduana: any;
+  selectedAduana: string | number;
 
   /**
    *  pasos

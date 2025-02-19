@@ -16,8 +16,6 @@ import { CatalogoSelectComponent } from '../../shared/components/catalogo-select
 import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn-continuar.component';
 import { DatosDeLosResiduosComponent } from './components/datos-de-los-residuos/datos-de-los-residuos.component';
 
-
-import { map } from 'rxjs';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
 @NgModule({
   declarations: [
