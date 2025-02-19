@@ -1,14 +1,13 @@
 
 {
     "tableHeader": [
+        "Denominacion Social",
         "RFC",
-        "Registro Federal de Contribuyentes",
-        "Razón Social",
-        "Número de empleados",
-        "Número de empleados",
         "Número de empleados",
         "1er Bimestre",
+        "Número de empleados",
         "2do Bimestre",
+        "Número de empleados",
         "3er Bimestre"
     ],
     "tableBody": [
