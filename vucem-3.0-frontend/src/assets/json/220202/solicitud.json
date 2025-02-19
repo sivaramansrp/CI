@@ -2,28 +2,28 @@
   "code": 200,
   "data": [
     {
-      "Fecha_Creacion": "2024-12-05 10:49:52.0",
-      "Mercancia": "Tomate",
-      "Cantidad": 1200,
-      "Proveedor": "Tomato SA DE CV"
+      "fechaCreacion": "2024-12-05 10:49:52.0",
+      "mercancia": "Tomate",
+      "cantidad": 1200,
+      "proveedor": "Tomato SA DE CV"
     },
     {
-      "Fecha_Creacion": "2024-12-04 17:53:49.0",
-      "Mercancia": "dfgdfgfdg",
-      "Cantidad": 3434,
-      "Proveedor": "gdfgfdg"
+      "fechaCreacion": "2024-12-04 17:53:49.0",
+      "mercancia": "dfgdfgfdg",
+      "cantidad": 3434,
+      "proveedor": "gdfgfdg"
     },
     {
-      "Fecha_Creacion": "2024-10-23 12:50:08.0",
-      "Mercancia": "ASDFCHYTRED",
-      "Cantidad": 1234,
-      "Proveedor": "UNILAN TRELEW SA"
+      "fechaCreacion": "2024-10-23 12:50:08.0",
+      "mercancia": "ASDFCHYTRED",
+      "cantidad": 1234,
+      "proveedor": "UNILAN TRELEW SA"
     },
     {
-      "Fecha_Creacion": "2024-10-16 11:19:23.0",
-      "Mercancia": "Alfombra de Caucho",
-      "Cantidad": 2015,
-      "Proveedor": "ADVICS MANUFACTURING"
+      "fechaCreacion": "2024-10-16 11:19:23.0",
+      "mercancia": "Alfombra de Caucho",
+      "cantidad": 2015,
+      "proveedor": "ADVICS MANUFACTURING"
     }
   ],
   "message": "Consulta exitosa"
