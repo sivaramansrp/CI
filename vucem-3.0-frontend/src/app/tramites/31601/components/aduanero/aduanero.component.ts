@@ -33,6 +33,7 @@ import { TableComponent } from '../../../../shared/components/table/table.compon
 
 import { Modal } from 'bootstrap';
 import { TablePaginationComponent } from '../../../../shared/components/table-pagination/table-pagination.component';
+import { AgregarMiembroDeLaEmpresaComponent } from "../agregar-miembro-de-la-empresa/agregar-miembro-de-la-empresa.component";
 @Component({
   selector: 'app-aduanero',
   templateUrl: './aduanero.component.html',
@@ -44,8 +45,9 @@ import { TablePaginationComponent } from '../../../../shared/components/table-pa
     InputRadioComponent,
     CatalogoSelectComponent,
     TableComponent,
-    TablePaginationComponent
-  ],
+    TablePaginationComponent,
+    AgregarMiembroDeLaEmpresaComponent
+],
 })
 export class AduaneroComponent implements OnInit, AfterViewInit {
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
