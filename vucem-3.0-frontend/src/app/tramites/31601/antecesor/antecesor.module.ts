@@ -7,11 +7,19 @@ import { DatosComponent } from '../pages/datos/datos.component';
 import { PantallasComponent } from '../pages/pantallas/pantallas.component';
 import { WizardComponent } from '../../../shared/components/wizard/wizard.component';
 import { NavComponent } from '../../../shared/components/nav/nav.component';
+<<<<<<< HEAD
 import { ReprestantanteComponent } from '../components/represtantante/represtantante.component';
 import { EnlaceComponent } from '../components/enlace/enlace.component';
 import { PersonaComponent } from '../components/persona/persona.component';
 
 
+=======
+import { AduaneroComponent } from "../components/aduanero/aduanero.component";
+import { SharedModule } from '../../../shared/shared.module';
+
+import { CapturarIvaeiepsComponent } from '../components/capturar-ivaeieps/capturar-ivaeieps.component';
+import { AnexarEquisitosComponent } from '../components/anexar-equisitos/anexar-equisitos.component';
+>>>>>>> c04e16eec9329c429df8bd27a6b3d6d8ab4983e9
 import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-por-regimen.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FirmarSolicitudComponent } from '../pages/firmar-solicitud/firmar-solicitud.component';
@@ -28,6 +36,11 @@ import { RequisitosComponent } from '../components/requisitos/requisitos.compone
     NavComponent,ReprestantanteComponent,EnlaceComponent,PersonaComponent,
   
     NavComponent,
+    AduaneroComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    CapturarIvaeiepsComponent,
+    AnexarEquisitosComponent,
     DatosPorRegimenComponent,
     ReactiveFormsModule,
     FormsModule,

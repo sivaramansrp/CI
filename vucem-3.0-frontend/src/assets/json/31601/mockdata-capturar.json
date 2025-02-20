@@ -1,0 +1,10 @@
+{
+    "claveReferencia": "REF123",
+    "numeroOperacion": "OP456",
+    "cadenaDependencia": "ABC123",
+    "tipoDe": "Banco",
+    "llavePago": "PAY789",
+    "fechaPago": "2025-02-18",
+    "importePago": "1500"
+  }
+  

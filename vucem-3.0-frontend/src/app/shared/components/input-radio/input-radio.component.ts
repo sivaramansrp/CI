@@ -18,6 +18,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   styleUrl: './input-radio.component.scss'
 })
 export class InputRadioComponent implements OnInit {
+   @Input() gap: string = '10px'; // Default spacing
  /** Grupo de formulario para los botones de radio */
   FormInputRadio!: FormGroup;
     /**
@@ -43,7 +44,9 @@ export class InputRadioComponent implements OnInit {
    * Evento emitido cuando el valor seleccionado cambia.
    */
   @Output() valueChange = new EventEmitter<string | number>();
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {
+    //constructor
+   }
 
   ngOnInit() {
     this.createFormRadio();
