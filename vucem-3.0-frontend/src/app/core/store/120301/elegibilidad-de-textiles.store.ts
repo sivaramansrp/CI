@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
-import { ElegibilidadDeTextiles, ImportadorForm, FacturaForm, FitosanitarioForm, FacturaAssociationForm, HistoricoFabricantesForm } from '../../models/120301/elegibilidad-de-textiles.model';
+import { ElegibilidadDeTextiles, ImportadorForm, FacturaForm, FitosanitarioForm, formularioAsociacionFactura, HistoricoFabricantesForm } from '../../models/120301/elegibilidad-de-textiles.model';
 
 export interface ElegibilidadDeTextilesState {
   textileSolicitudCargaUtil: ElegibilidadDeTextiles;
@@ -15,7 +15,7 @@ export class ElegibilidadDeTextilesStore extends Store<ElegibilidadDeTextilesSta
         importadorForm: {} as ImportadorForm,
         facturaForm: {} as FacturaForm,
         fitosanitarioForm: {} as FitosanitarioForm,
-        facturaAssociationForm: {} as FacturaAssociationForm,
+        formularioAsociacionFactura: {} as formularioAsociacionFactura,
         historicoFabricantesForm: {} as HistoricoFabricantesForm
       }
     });
