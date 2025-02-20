@@ -10,7 +10,13 @@
             (change)="onSelectionChange(option.value)"
             formControlName="seleccion" 
           />
-          <span class="radio-label">{{ option.label }}</span>
+          <span 
+        class="radio-label"
+        [ngStyle]="{ 'font-weight': isBold ? 'bold' : 'normal',
+          'margin-left': labelMargin
+         }">
+        {{ option.label }}
+      </span>
     
       </div>
       
