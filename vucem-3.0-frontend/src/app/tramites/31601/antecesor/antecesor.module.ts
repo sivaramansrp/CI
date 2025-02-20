@@ -7,6 +7,11 @@ import { DatosComponent } from '../pages/datos/datos.component';
 import { PantallasComponent } from '../pages/pantallas/pantallas.component';
 import { WizardComponent } from '../../../shared/components/wizard/wizard.component';
 import { NavComponent } from '../../../shared/components/nav/nav.component';
+import { ReprestantanteComponent } from '../components/represtantante/represtantante.component';
+import { EnlaceComponent } from '../components/enlace/enlace.component';
+import { PersonaComponent } from '../components/persona/persona.component';
+
+
 import { AduaneroComponent } from "../components/aduanero/aduanero.component";
 import { SharedModule } from '../../../shared/shared.module';
 
@@ -17,6 +22,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FirmarSolicitudComponent } from '../pages/firmar-solicitud/firmar-solicitud.component';
 import { FirmaElectronicaComponent } from '../../../shared/components/firma-electronica/firma-electronica.component';
 import { BtnContinuarComponent } from '../../../shared/components/btn-continuar/btn-continuar.component';
+import { RequisitosComponent } from '../components/requisitos/requisitos.component';
 
 @NgModule({
   declarations: [DatosComponent, PantallasComponent, FirmarSolicitudComponent],
@@ -24,6 +30,8 @@ import { BtnContinuarComponent } from '../../../shared/components/btn-continuar/
     CommonModule,
     AntecesorRoutingModule,
     WizardComponent,
+    NavComponent,ReprestantanteComponent,EnlaceComponent,PersonaComponent,
+  
     NavComponent,
     AduaneroComponent,
     FormsModule,
@@ -34,7 +42,7 @@ import { BtnContinuarComponent } from '../../../shared/components/btn-continuar/
     ReactiveFormsModule,
     FormsModule,
     FirmaElectronicaComponent,
-    BtnContinuarComponent
+    BtnContinuarComponent,RequisitosComponent
   ],
 })
 

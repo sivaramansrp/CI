@@ -1,0 +1,127 @@
+<ng-titulo titulo="Enlace Operativo" />
+<div class="row">
+    <div class="col-md-12">      
+        <ng-table [commonTableHeader]="enlaceHeaderData" [commonTableBody]="enlanceBodyData"></ng-table>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+              <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+          </nav>        
+    </div>
+    <div class="row" style="text-align: right;">        
+        <div>
+            <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalAgregar" (click)="abrirModal()">
+                Agregar
+              </button>
+            <button type="button" class="btn btn-default btn-space">Modificar</button>
+            <button type="button" class="btn btn-danger">Eliminar</button></div>        
+                </div>
+    
+ </div>
+ 
+<div class="container mt-4">     
+    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Instalaciones</h4>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="represtantante" >              
+                    <H6>*Registro Federal de Contribuyentes:</H6>
+                    <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">                            
+                            <input class="form-control" id="resigtro" formControlName="resigtro"  type="text">
+                          </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label class="form-label" for="RFC">RFC:</label>
+                            <input class="form-control" id="RFC" formControlName="RFC"  type="text">
+                          </div>
+                        </div>
+                       
+                     
+                        <div class="col-md-4 d-flex align-items-center">
+                            <div class="btn-group">
+                                  <button class="btn btn-default" type="button">Buscar</button>
+                                </div>
+                              </div>
+                          
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label class="form-label" for="Nombre">Nombre:</label>
+                            <input class="form-control" id="Nombre" formControlName="Nombre"  type="text">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                              <label class="form-label" for="ApellidoPaterno">ApellidoPaterno:</label>
+                              <input class="form-control" id="ApellidoPaterno" formControlName="ApellidoPaterno"  type="text">
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label class="form-label" for="ApellidoMaterno">ApellidoMaterno:</label>
+                              <input class="form-control" id="ApellidoMaterno" formControlName="ApellidoMaterno"  type="text">
+                            </div>
+                          </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                              <label class="form-label" for="Cuidad">Cuidad o Estado de Residencia</label>
+                              <input class="form-control" id="Cuidad" formControlName="Cuidad"  type="text">
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label class="form-label" for="Cargo">Cargo o Puesto</label>
+                              <input class="form-control" id="Cargo" formControlName="Cargo"  type="text">
+                            </div>
+                          </div>
+                        </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label class="form-label" for="Telefono">Teléfono:</label>
+                            <input class="form-control" id="Telefono" formControlName="Telefono"  type="text">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                              <label class="form-label" for="Correo">Correo Electrónico:</label>
+                              <input class="form-control" id="Correo" formControlName="Correo"  type="text">
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="form-group">
+                         
+                                <label class="form-label"  for="suplente">Suplente</label>
+                                <div class="form-check-input-container">
+                                  <input class="form-check-input" type="checkbox" value="" id="suplente" formControlName="Suplente">
+                                </div>
+                              </div>
+                        </div>
+                    </div>      
+        
+               
+            </form>
+          </div>
+          <div class="modal-footer custom-footer justify-content-center">
+            <button type="button" class="btn btn-primary">Agregar</button>
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  
+   
