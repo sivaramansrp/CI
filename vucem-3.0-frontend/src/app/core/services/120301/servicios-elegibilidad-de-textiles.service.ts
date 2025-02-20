@@ -3,13 +3,12 @@ import {
   solicitante,
   datosDeLaSolicitud,
   datosParaMovilizacionNacional,
-  tercerosRelacionados,
   pagoDeDerechos,
   ElegibilidadDeTextiles,
   ImportadorForm,
   FacturaForm,
   FitosanitarioForm,
-  FacturaAssociationForm,
+  formularioAsociacionFactura,
   HistoricoFabricantesForm,
 } from '../../models/120301/elegibilidad-de-textiles.model';
 import { HttpClient } from '@angular/common/http';
@@ -31,7 +30,7 @@ export class ElegibilidadDeTextilesStore extends Store<ElegibilidadDeTextilesSta
         importadorForm: {} as ImportadorForm,
         facturaForm: {} as FacturaForm,
         fitosanitarioForm: {} as FitosanitarioForm,
-        facturaAssociationForm: {} as FacturaAssociationForm,
+        formularioAsociacionFactura: {} as formularioAsociacionFactura,
         historicoFabricantesForm: {} as HistoricoFabricantesForm
       }
     });
