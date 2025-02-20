@@ -20,51 +20,51 @@ import documentosTable from '../../../../../assets/json/31601/anexar.json'
   styleUrl: './anexar-equisitos.component.scss'
 })
 export class AnexarEquisitosComponent implements OnInit {
-/**
-   *Formar grupo para el componente anexar-equisitos.
-   * Este grupo de formulario se utiliza para administrar los controles del formulario y sus valores, 
-   *validación y estatus del componente anexar-equisitos.
-   */
+  /**
+     *Formar grupo para el componente anexar-equisitos.
+     * Este grupo de formulario se utiliza para administrar los controles del formulario y sus valores, 
+     *validación y estatus del componente anexar-equisitos.
+     */
   anexarForm!: FormGroup;
-/**
-   * Relación de documentos del componente anexar-equisitos.
-   * Esta lista se completa a partir de un archivo JSON externo.
-   */
+  /**
+     * Relación de documentos del componente anexar-equisitos.
+     * Esta lista se completa a partir de un archivo JSON externo.
+     */
   documentos = documentosTable.documentos
 
-/**
-   * Constructor para AnexarEquisitosComponent.
-   * @param fb: instancia de FormBuilder utilizada para crear controles de formulario.
-   */
+  /**
+     * Constructor para AnexarEquisitosComponent.
+     * @param fb: instancia de FormBuilder utilizada para crear controles de formulario.
+     */
   constructor(private fb: FormBuilder) {
   }
-/**
-   * Enlace de ciclo de vida que se llama después de que se inicializan las propiedades vinculadas a datos de una directiva.
-   * Inicializa el componente llamando al método `anexarEquisitosForm`.
-   *
-   */
+  /**
+     * Enlace de ciclo de vida que se llama después de que se inicializan las propiedades vinculadas a datos de una directiva.
+     * Inicializa el componente llamando al método `anexarEquisitosForm`.
+     *
+     */
   ngOnInit(): void {
     this.anexarEquisitosForm()
   }
 
-/**
-   * Inicializa el grupo de formularios `anexarForm` con un único control de formulario `valorSeleccionado`.
-   * El control de formulario se inicializa con una cadena vacía como valor predeterminado.
-   *
-   * @returns {nulo}
-   */
+  /**
+     * Inicializa el grupo de formularios `anexarForm` con un único control de formulario `valorSeleccionado`.
+     * El control de formulario se inicializa con una cadena vacía como valor predeterminado.
+     *
+     * @returns {nulo}
+     */
 
-  anexarEquisitosForm():void {
+  anexarEquisitosForm(): void {
     this.anexarForm = this.fb.group({
-      valorSeleccionado: [''] 
-        });
+      valorSeleccionado: ['']
+    });
   }
-/**
-   * Maneja el evento de cambio de un elemento de entrada de archivo.
-   * Actualiza el control del formulario 'valorSeleccionado' con el valor del archivo seleccionado.
-   *
-   * Evento @param: el objeto de evento del evento de cambio de entrada del archivo.
-   */
+  /**
+     * Maneja el evento de cambio de un elemento de entrada de archivo.
+     * Actualiza el control del formulario 'valorSeleccionado' con el valor del archivo seleccionado.
+     *
+     * Evento @param: el objeto de evento del evento de cambio de entrada del archivo.
+     */
   cambioDeArchivo(event: any): void {
     this.anexarForm.patchValue({ valorSeleccionado: event.target.value });
   }
