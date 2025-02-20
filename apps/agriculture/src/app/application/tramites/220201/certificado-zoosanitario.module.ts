@@ -26,7 +26,7 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitario-page.component';
 import { SolicitanteComponent } from 'libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
-import { ServiciosExtraordinariosModule } from '../5701/servicios-extraordinarios.module';
+import { TercerosComponent } from 'libs/shared/data-access-user/src/tramites/components/terceros/terceros.component';
 import { InputRadioComponent } from 'libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
@@ -63,7 +63,7 @@ import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramit
     InputRadioComponent,
     TableComponent,
     CatalogoSelectComponent,
-    ServiciosExtraordinariosModule
+    TercerosComponent
   ]
 })
 export class CertificadoZoosanitarioModule { }

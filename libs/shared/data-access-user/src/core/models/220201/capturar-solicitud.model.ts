@@ -9,11 +9,11 @@
  * @property {PagoDeDerechos} pagoDeDerechos - Información de pago de derechos.
  */
 export interface CapturarSolicitud {
-    solicitante: Solicitante;
-    datosDeLaSolicitud: DatosDeLaSolicitud;
-    datosParaMovilizacionNacional: DatosParaMovilizacionNacional;
-    tercerosRelacionados: TercerosRelacionados;
-    pagoDeDerechos: PagoDeDerechos;
+    solicitante?: Solicitante;
+    datosDeLaSolicitud?: DatosDeLaSolicitud;
+    datosParaMovilizacionNacional?: DatosParaMovilizacionNacional;
+    tercerosRelacionados?: TercerosRelacionados;
+    pagoDeDerechos?: PagoDeDerechos;
   }
   
   /**
