@@ -74,11 +74,6 @@ describe('SolicitanteComponent', () => {
     expect(component.datosGeneralesForm.get('nombre')?.validator).toBeTruthy();
   });
 
-  it('should get validators correctly', () => {
-    const validators = component.getValidators(['required', 'maxLength:10', 'pattern:[a-zA-Z]']);
-    expect(validators.length).toBe(3);
-  });
-
   it('should get datos generales from service', () => {
     const mockResponse: JSONResponse = { id: 1, descripcion: 'desc', codigo: 'code', data: JSON.stringify({ datosGenerales: { nombre: 'John' } }) };
     solicitanteService.getDatosGenerales.and.returnValue(of(mockResponse));

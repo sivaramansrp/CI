@@ -1,4 +1,3 @@
-
 /**
  * Componente que representa el formulario de datos de la aduana.
  * 
@@ -29,7 +28,6 @@ import { WizardComponent } from '../../../../shared/components/wizard/wizard.com
   templateUrl: './datos-dela.component.html',
   styleUrl: './datos-dela.component.scss',
 })
-
 export class DatosDelaComponent implements OnInit {
   
   /**
@@ -48,7 +46,7 @@ export class DatosDelaComponent implements OnInit {
 
   /**
    *  selectedAduana
-   * @type {any}
+   * @type {string | number}
    *  Aduana seleccionada en el formulario.
    */
   selectedAduana: string | number;
@@ -82,9 +80,9 @@ export class DatosDelaComponent implements OnInit {
   solicitudForm: FormGroup;
 
   /**
-   * 
-   *  {FormBuilder} fb - Servicio FormBuilder para la creación de formularios.
-   *  {CatalogosService} catalogosServices - Servicio para obtener los catálogos.
+   * Constructor del componente.
+   * @param {FormBuilder} fb - Servicio FormBuilder para la creación de formularios.
+   * @param {CatalogosService} catalogosServices - Servicio para obtener los catálogos.
    */
   constructor(public fb: FormBuilder, private catalogosServices: CatalogosService) {
     this.solicitudForm = this.fb.group({
@@ -97,10 +95,9 @@ export class DatosDelaComponent implements OnInit {
   }
 
   /**
-   * isInvalid
-   *  {string} id - Identificador del control del formulario.
+   * Verifica si un control del formulario es inválido y ha sido interactuado por el usuario.
+   * @param {string} id - Identificador del control del formulario.
    * @returns {boolean | null} Verdadero si el control es inválido y ha sido tocado, falso en caso contrario.
-   *  Verifica si un control del formulario es inválido y ha sido interactuado por el usuario.
    */
   isInvalid(id: string): boolean | null {
     const control = this.solicitudForm.get('datosdelForm').get(id);
@@ -108,8 +105,7 @@ export class DatosDelaComponent implements OnInit {
   }
 
   /**
-   * onSubmit
-   *  Maneja el envío del formulario.
+   * Maneja el envío del formulario.
    */
   onSubmit(): void {
     if (this.solicitudForm.valid) {
@@ -120,16 +116,14 @@ export class DatosDelaComponent implements OnInit {
   }
 
   /**
- *  wizardComponent
- * @type {WizardComponent}
- * @description Referencia al componente del wizard.
- */
+   * Referencia al componente del wizard.
+   * @type {WizardComponent}
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-   *  datosPasos
+   * Datos de los pasos del wizard.
    * @type {DatosPasos}
-   *  Datos de los pasos del wizard.
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -139,8 +133,7 @@ export class DatosDelaComponent implements OnInit {
   };
 
   /**
-   * ngOnInit
-   *  Inicializa el componente.
+   * Inicializa el componente.
    */
   ngOnInit(): void {
     this.datosForm = this.fb.group({
@@ -149,18 +142,15 @@ export class DatosDelaComponent implements OnInit {
     this.aduanasdata();
   }
 
-
   /**
-   * onAduanaSelect
-   *  Maneja la selección de una aduana.
+   * Maneja la selección de una aduana.
    */
   onAduanaSelect(): void {
     this.selectedAduana = this.datosForm.get('aduanas')?.value;
   }
 
   /**
-   * aduanasdata
-   *  Obtiene los datos de las aduanas desde el servicio de catálogos.
+   * Obtiene los datos de las aduanas desde el servicio de catálogos.
    */
   aduanasdata(): void {
     console.log('ngoninit start');
