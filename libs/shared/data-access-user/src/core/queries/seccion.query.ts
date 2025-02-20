@@ -1,4 +1,4 @@
-import { SeccionState, SeccionStore } from './../../../../../../apps/aga/src/app/application/estados/seccion.store'
+import { SeccionState, SeccionStore } from '../../estados/seccion.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 

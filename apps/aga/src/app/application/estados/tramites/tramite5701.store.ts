@@ -47,7 +47,7 @@ export interface Solicitud5701State {
   encargoConferido: boolean;
   domicilio: string;
 
-  paisOrigen: number;
+  paisOrigen: number | null;
   paisProcedencia: number;
   descripcion: string;
   justificacion: string;

@@ -1,4 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { PantallasFormData } from '../../models/220401/servicios-pantallas.model';
@@ -7,7 +8,7 @@ import { PantallasFormData } from '../../models/220401/servicios-pantallas.model
     providedIn: 'root',
 })
 /**
- * Este servicio se utiliza para almacenar los datos del formulario del trámite 220401.
+ * Este servicio se utiliza para almacenar los datos del formulario del trámite 110101.
  * pantallasFormData: almacenar los datos del formulario de los componentes secundarios
  * pantallasFormSubject: almacenar el asunto de los datos del formulario
  */
@@ -34,7 +35,7 @@ export class ServiciosPantallasService {
      * constructor de la clase
      * @param http: constructor de HttpClient
      */
-    constructor() { }
+    constructor(private http: HttpClient) { }
 
     /**
      * Este método se utiliza para configurar todos los datos del formulario de los componentes.
