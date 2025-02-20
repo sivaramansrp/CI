@@ -1,5 +1,5 @@
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { AnexarDocumentosComponent } from 'libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component';
+
 import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from 'libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
@@ -30,6 +30,7 @@ import { TercerosComponent } from 'libs/shared/data-access-user/src/tramites/com
 import { InputRadioComponent } from 'libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 
 
 @NgModule({

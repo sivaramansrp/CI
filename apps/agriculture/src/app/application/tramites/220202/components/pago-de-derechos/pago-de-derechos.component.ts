@@ -38,13 +38,13 @@ export class PagoDeDerechosComponent implements OnInit {
    * Configuración para el selector de justificación.
    * @property {Catalogo} justificacionSelector
    */
-  justificacionSelector: Catalogo[];
+  justificacionSelector: Catalogo[] = [];
 
   /**
    * Configuración para el selector de banco.
    * @property {Catalogo} bancoSelector
    */
-  bancoSelector: Catalogo[];
+  bancoSelector: Catalogo[] = [];
 
   /**
    * Grupo de formularios para el pago de derechos.

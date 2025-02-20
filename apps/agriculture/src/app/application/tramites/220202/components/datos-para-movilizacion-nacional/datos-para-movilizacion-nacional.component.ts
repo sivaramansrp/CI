@@ -35,19 +35,19 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
    * @description FormGroup que contiene los controles del formulario.
    * @type {FormGroup}
    */
-  forma: FormGroup;
+  forma!: FormGroup;
 
   /**
    * @description Configuración para el selector de medio de transporte.
    * @type {Catalogo}
    */
-  transporteList: Catalogo[];
+  transporteList: Catalogo[] = [];
 
   /**
    * @description Configuración para el selector de punto de verificación federal.
    * @type {Catalogo}
    */
-  puntoList: Catalogo[];
+  puntoList: Catalogo[] = [];
 
   /**
    * @constructor

@@ -1,5 +1,4 @@
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { AnexarDocumentosComponent } from 'libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component';
 import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
@@ -29,6 +28,7 @@ import { CrosslistComponent } from 'libs/shared/data-access-user/src/tramites/co
 import { SharedModule } from 'libs/shared/data-access-user/src/tramites/shared.module';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
   declarations: [

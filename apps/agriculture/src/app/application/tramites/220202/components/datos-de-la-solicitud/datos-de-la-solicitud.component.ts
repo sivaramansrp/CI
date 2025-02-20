@@ -78,7 +78,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * relacionados con los datos del trámite.
    * @type {FormGroup}
    */
-  procedureData: FormGroup;
+  procedureData?: FormGroup;
 
   /**
    * @description Lista de aduanas.
@@ -86,7 +86,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * para poblar el selector de aduanas en el formulario.
    * @type {Catalogo[]}
    */
-  aduanaList: Catalogo[];
+  aduanaList: Catalogo[] = [];
 
   /**
    * @description Lista de establecimientos agropecuarios.
@@ -94,7 +94,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * para poblar el selector de establecimientos agropecuarios en el formulario.
    * @type {Catalogo[]}
    */
-  agropecuariaList: Catalogo[];
+  agropecuariaList: Catalogo[] = [];
 
   /**
    * @description Lista de puntos de verificación.
@@ -102,7 +102,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * para poblar el selector de puntos de verificación en el formulario.
    * @type {Catalogo[]}
    */
-  puntoList: Catalogo[];
+  puntoList: Catalogo[] = [];
 
   /**
    * @description Lista de regímenes.
@@ -110,7 +110,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * para poblar el selector de regímenes en el formulario.
    * @type {Catalogo[]}
    */
-  regimeList: Catalogo[];
+  regimeList: Catalogo[] = [];
 
   /**
    * @description Lista de productos.
@@ -118,7 +118,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * para poblar el selector de productos en el formulario.
    * @type {Catalogo[]}
    */
-  productoList: Catalogo[];
+  productoList: Catalogo[] = [];
 
   /**
    * @description Lista de usos.
@@ -126,7 +126,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * para poblar el selector de usos en el formulario.
    * @type {Catalogo[]}
    */
-  usoList: Catalogo[];
+  usoList: Catalogo[] = [];
 
   /**
    * @description Lista de unidades de medida de cantidad (UMC).
@@ -134,7 +134,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * para poblar el selector de UMC en el formulario.
    * @type {Catalogo[]}
    */
-  umcList: Catalogo[];
+  umcList: Catalogo[] = [];
 
   /**
    * @description Lista de NICO (Número de Identificación Comercial).
@@ -142,7 +142,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * para poblar el selector de NICO en el formulario.
    * @type {Catalogo[]}
    */
-  nicoList: Catalogo[];
+  nicoList: Catalogo[] = [];
 
   /**
    * @description Lista de fracciones arancelarias.
@@ -150,14 +150,14 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * para poblar el selector de fracciones arancelarias en el formulario.
    * @type {Catalogo[]}
    */
-  arancelariaList: Catalogo[];
+  arancelariaList: Catalogo[] = [];
 
   /**
    * @description Formulario principal.
    * Este `FormGroup` contiene todos los controles del formulario.
    * @type {FormGroup}
    */
-  forma: FormGroup;
+  forma?: FormGroup;
 
   /**
    * @description Formulario para las mercancías.
@@ -165,7 +165,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * relacionados con la información de las mercancías.
    * @type {FormGroup}
    */
-  mercanciaForma: FormGroup;
+  mercanciaForma?: FormGroup;
 
   /**
    * @description Formulario para el transporte.
@@ -173,7 +173,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * relacionados con la información de transporte.
    * @type {FormGroup}
    */
-  formularioDeTransporte: FormGroup;
+  formularioDeTransporte?: FormGroup;
   /**
     * @constructor
     * @param {AgriculturaApiService} agriculturaApiService - Servicio HttpClient para realizar peticiones HTTP.

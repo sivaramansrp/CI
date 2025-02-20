@@ -59,35 +59,35 @@ export class DatosDeLaSolicitudComponent implements OnInit {
 
   /**
    * Configuración para el select de aduana de ingreso. --220201
-   * @property {CatalogosSelect} aduanaDeIngreso
+   * @property {Catalogo} aduanaDeIngreso
    */
-  aduanaDeIngreso: Catalogo[];
+  aduanaDeIngreso: Catalogo[] = [];
 
   /**
    * Configuración para el select de sanidad agropecuaria. --220201
    * @property {CatalogosSelect} sanidadAgropecuaria
    */
-  sanidadAgropecuaria: Catalogo[];
+  sanidadAgropecuaria: Catalogo[] = [];
 
   /**
    * Configuración para el select de punto de inspección.--220201
    * @property {CatalogosSelect} puntoInspeccion
    */
-  puntoInspeccion: Catalogo[];
+  puntoInspeccion: Catalogo[] = [];
 
   /**
    * Configuración para el select de establecimiento TIF.--220201
    * @property {CatalogosSelect} establecimientoTIF
    */
-  establecimientoTIF!: Catalogo[];
+  establecimientoTIF: Catalogo[] = [];
 
   /**
    * Configuración para el select de veterinario.--220201
    * @property {CatalogosSelect} veterinario
    */
-  veterinario: Catalogo[];
-  id: number;
-  descripcion: string;
+  veterinario: Catalogo[] = [];
+  id?: number;
+  descripcion: string = '';
   tam?: string;
   dpi?: string
 
@@ -95,7 +95,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * Configuración para el select de régimen.--220201
    * @property {CatalogosSelect} regimen
    */
-  regimen: Catalogo[];
+  regimen: Catalogo[] = [];
   selectedValue: string = 'no';
 
   opcionDeBotonDeRadio: any = [

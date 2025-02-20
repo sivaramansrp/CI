@@ -33,25 +33,25 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
    * Configuración para el selector de medio de transporte.
    * @property {CatalogosSelect} medioTransporteList
    */
-  medioTransporteList: Catalogo[];
+  medioTransporteList: Catalogo[] = [];
 
   /**
    * Configuración para el selector de identificación del transporte.
    * @property {CatalogosSelect} identificacionTransporteList
    */
-  identificacionTransporteList: Catalogo[];
+  identificacionTransporteList: Catalogo[] = [];
 
   /**
    * Configuración para el selector de nombre de la empresa transportista.
    * @property {CatalogosSelect} nombreDeLaEmpresaTransportista
    */
-  nombreDeLaEmpresaTransportista: Catalogo[];
+  nombreDeLaEmpresaTransportista: Catalogo[] = [];
 
   /**
    * Configuración para el selector de punto de verificación federal.
    * @property {CatalogosSelect} puntoDeVerificacionFederal
    */
-  puntoDeVerificacionFederal: Catalogo[];
+  puntoDeVerificacionFederal: Catalogo[] = [];
   /**
    * Constructor de la clase DatosParaMovilizacionNacionalComponent.
    * @constructor
