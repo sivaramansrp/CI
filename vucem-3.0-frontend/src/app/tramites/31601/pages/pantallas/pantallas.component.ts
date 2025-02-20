@@ -23,7 +23,7 @@ export class PantallasComponent {
   /**
    * Esta variable se utiliza para almacenar el índice del paso.
    */
-  indice: number = 1;
+  indice: number = 3;
 
   /**
    * Esta variable se utiliza para almacenar el componente wizard.
