@@ -1,9 +1,9 @@
 
 import { CommonModule } from '@angular/common';
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter,Input,OnInit, Output, forwardRef} from '@angular/core';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators } from '@angular/forms';
 
 
 /**
@@ -15,7 +15,14 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './input-radio.component.html',
-  styleUrl: './input-radio.component.scss'
+  styleUrl: './input-radio.component.scss',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => InputRadioComponent),
+      multi: true
+    }
+  ]
 })
 export class InputRadioComponent implements OnInit {
  /** Grupo de formulario para los botones de radio */
@@ -43,7 +50,9 @@ export class InputRadioComponent implements OnInit {
    * Evento emitido cuando el valor seleccionado cambia.
    */
   @Output() valueChange = new EventEmitter<string | number>();
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {
+    //constructor
+   }
 
   ngOnInit() {
     this.createFormRadio();
