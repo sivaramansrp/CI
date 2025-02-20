@@ -1,0 +1,35 @@
+{
+    "documentos": [
+      {
+        "id": 1,
+        "tipo": "Contrato de maquila, de compraventa, orden de compra o de servicios, o pedidos en firme vigentes.",
+        "archivoDisponible": { "id": 1, "descripcion": "File A"}
+      },
+      {
+        "id": 2,
+        "tipo": "Para acreditar el requisito de inversión en territorio nacional...",
+        "archivoDisponible": { "id": 2, "descripcion": "File B"}
+      },
+      {
+        "id": 3,
+        "tipo": "Comprobante de pago de derechos",
+        "archivoDisponible": { "id": 3, "descripcion": "File C"  }
+      },
+      {
+        "id": 4,
+        "tipo": "Diagrama de flujo con una descripción detallada del proceso productivo...",
+        "archivoDisponible": { "id": 1, "descripcion": "File A" }
+      },
+      {
+        "id": 5,
+        "tipo": "Comprobante de pago de la contraprestación por el servicio recibido.",
+        "archivoDisponible": { "id": 2, "descripcion": "File B"}
+      },
+      {
+        "id": 6,
+        "tipo": "Comprobante de pago de las cuotas obrero patronales de los trabajadores.",
+        "archivoDisponible": { "id": 3, "descripcion": "File C" }
+      }
+    ]
+  }
+  
