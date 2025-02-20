@@ -32,28 +32,13 @@
         >¿La solicitud de Inspección Física es para trámites que arriban por
         Ferrocarril o por Partes II?*:</label
       >
-      <div class="form-check">
-        <input
-          class="form-check-input me-2"
-          type="radio"
-          name="esSolicitudFerros"
-          formControlName="esSolicitudFerros"
-          value="1"
-          id="SiSolicitudFerros"
-        />
-        <label class="form-check-label" for="SiSolicitudFerros">Sí</label>
-      </div>
-      <div class="form-check">
-        <input
-          class="form-check-input me-2"
-          type="radio"
-          name="esSolicitudFerros"
-          formControlName="esSolicitudFerros"
-          value="0"
-          id="SiSolicitudFerros"
-        />
-        <label class="form-check-label" for="SiSolicitudFerros">No</label>
-      </div>
+      <app-input-radio
+          [radioOptions]="opcionDeBotonDeRadio"
+          [isRequired]="true"
+          [selectedValue]="esSolicitudFerrosValor"
+          [layout]="'vertical'"
+          (valueChange)="enCambioDeValor($event)"
+        ></app-input-radio>
     </div>
     <div class="col-md-12">
       <div class="form-field">
@@ -70,7 +55,7 @@
       <div class="form-field">
         <label for="totalDeGuiasAmparadas" class="form-label"
           >Total de guías amparadas:<span class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span></label
-        >
+          >
         <input
           class="form-control"
           type="number"

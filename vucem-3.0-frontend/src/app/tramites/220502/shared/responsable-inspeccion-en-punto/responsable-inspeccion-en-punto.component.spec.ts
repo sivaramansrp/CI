@@ -69,13 +69,13 @@ describe('ResponsableInspeccionEnPuntoComponent', () => {
 
   it('should initialize form controls on ngOnInit', () => {
     component.ngOnInit();
-    const formGroup = component.grupoformulariopadre.get(
+    const formGroup = component.grupoFormularioPadre.get(
       component.claveDeControl
     ) as FormGroup;
     expect(formGroup).toBeTruthy();
     expect(formGroup.get('nombre')).toBeTruthy();
     expect(formGroup.get('primerapellido')).toBeTruthy();
-    expect(formGroup.get('segyndoapellido')).toBeTruthy();
+    expect(formGroup.get('segundoapellido')).toBeTruthy();
     expect(formGroup.get('mercancia')).toBeTruthy();
     expect(formGroup.get('tipocontenedor')).toBeTruthy();
   });
@@ -83,11 +83,11 @@ describe('ResponsableInspeccionEnPuntoComponent', () => {
   it('should remove control on ngOnDestroy', () => {
     component.ngOnInit();
     expect(
-      component.grupoformulariopadre.contains(component.claveDeControl)
+      component.grupoFormularioPadre.contains(component.claveDeControl)
     ).toBeTrue();
     component.ngOnDestroy();
     expect(
-      component.grupoformulariopadre.contains(component.claveDeControl)
+      component.grupoFormularioPadre.contains(component.claveDeControl)
     ).toBeFalse();
   });
 
@@ -100,7 +100,7 @@ describe('ResponsableInspeccionEnPuntoComponent', () => {
       dpi: 'Tipo contenedor 1',
     };
     component.tipoContenedorSeleccion(catalogo);
-    const formGroup = component.grupoformulariopadre.get(
+    const formGroup = component.grupoFormularioPadre.get(
       component.claveDeControl
     ) as FormGroup;
     expect(formGroup.get('tipocontenedor').value).toBe('Tipo contenedor 1');

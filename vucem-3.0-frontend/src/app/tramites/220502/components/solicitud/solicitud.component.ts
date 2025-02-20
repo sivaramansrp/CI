@@ -5,7 +5,7 @@ import { CatalogosSelect } from '../../../../core/models/shared/components.model
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosDeMercancias } from '../../../../core/models/220502/solicitud-pantallas.model';
-import { DatoseDelTramiteARealizerComponent } from '../../shared/datose-del-tramite-a-realizer/datose-del-tramite-a-realizer.component';
+import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
@@ -32,7 +32,7 @@ import { SolicitudPantallasService } from '../../../../core/services/220502/soli
     CarrosDeFerrocarrilComponent,
     SolicitudDatosComponent,
     ResponsableInspeccionEnPuntoComponent,
-    DatoseDelTramiteARealizerComponent,
+    DatosDelTramiteARealizarComponent,
     MedioTransporteComponent,
   ],
   providers: [SolicitudPantallasService],
@@ -57,31 +57,7 @@ export class SolicitudComponent implements OnInit {
   dSolicitud: Solicitud[];
 
   /** Información del catálogo para la selección del medio de transporte. */
-  mediodetransporte: CatalogosSelect = {
-    labelNombre: 'Medio de transporte',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [
-      {
-        id: 1,
-        descripcion: 'transporte 1',
-        tam: 'transporte 1',
-        dpi: 'transporte 1',
-      },
-      {
-        id: 2,
-        descripcion: 'transporte 2',
-        tam: 'transporte 2',
-        dpi: 'transporte 2',
-      },
-      {
-        id: 3,
-        descripcion: 'transporte 3',
-        tam: 'transporte 3',
-        dpi: 'transporte 3',
-      },
-    ],
-  };
+  mediodetransporte: CatalogosSelect;
 
    /** Matriz para contener datos para cada fila de la tabla */
   tableData = {
@@ -130,6 +106,7 @@ export class SolicitudComponent implements OnInit {
         this.dSolicitud = data.dSolicitud;
         this.hMercanciaTabla = data.hMerchandise;
         this.dMercanciaBody = data.dMercancia;
+        this.mediodetransporte = data.medioDeTransporte;
       }
     });
   }
