@@ -16,7 +16,8 @@ interface AccionBoton {
   standalone: true,
   imports: [],
   templateUrl: './btn-continuar.component.html',
-  styleUrl: './btn-continuar.component.scss'
+  styleUrl: './btn-continuar.component.scss',
+  host: { 'hostID': crypto.randomUUID().toString() }
 })
 
 export class BtnContinuarComponent {

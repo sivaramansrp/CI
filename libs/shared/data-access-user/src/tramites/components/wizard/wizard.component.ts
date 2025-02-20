@@ -17,6 +17,7 @@ import { WizardService } from '../../../core/services/shared/wizard/wizard.servi
   imports: [CommonModule],
   templateUrl: './wizard.component.html',
   styleUrl: './wizard.component.scss',
+  host: { 'hostID': crypto.randomUUID().toString() }
 })
 export class WizardComponent {
   @Input() listaPasos: Array<ListaPasosWizard> = [];
