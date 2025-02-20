@@ -58,7 +58,7 @@ fdescribe('CapturarIvaeiepsComponent', () => {
 
   it('should open and close modal', () => {
     expect(component.showModal).toBeFalse();
-    component.openModal();
+    component.agregarOpenModal();
     expect(component.showModal).toBeTrue();
     component.closeModal();
     expect(component.showModal).toBeFalse();
@@ -135,6 +135,16 @@ fdescribe('CapturarIvaeiepsComponent', () => {
     expect(component.formularioDePago.get('fechaPago')?.disabled).toBeTrue();
     expect(component.formularioDePago.get('importePago')?.disabled).toBeTrue();
   });
+
+  it('should return the rfc form control using the getter', () => {
+    expect(component.rfc).toBe(component.ivaForm.get('rfc'));
+  });
+
+  it('should validate the rfc getter with correct value', () => {
+    component.rfc?.setValue('ABC123456XYZ');
+    expect(component.rfc?.valid).toBeTrue();
+  });
+
   
 });
 
