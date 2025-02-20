@@ -15,7 +15,7 @@ import mockData from '../../../../../assets/json/31601/mockdata-capturar.json'
 import dropDown from '../../../../../assets/json/31601/catalog-select-tipo.json'
 
 
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 @Component({
