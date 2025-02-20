@@ -8,7 +8,7 @@
   </section>
 
   <app-input-radio [radioOptions]="radioBtn" [selectedValue]="valorSeleccionado" [isRequired]="true"
-    (valueChange)="cambioDeValor($event)" [layout]="'horizontal'"></app-input-radio>
+    (valueChange)="cambioDeValor($event)" [layout]="'horizontal'" [gap]="'50px'"></app-input-radio>
 
   <section class="body-text fw-bold mb-2 mt-2">
     <span class="text-danger">*</span> Indique si para efectos del presente trámite se acredita como parte de un mismo
@@ -16,7 +16,7 @@
   </section>
 
   <app-input-radio [radioOptions]="radioBtn" [selectedValue]="predeterminadoSeleccionar" [isRequired]="true"
-    (valueChange)="cambioDeValorIndique($event)" [layout]="'horizontal'"></app-input-radio>
+    (valueChange)="cambioDeValorIndique($event)" [layout]="'horizontal'" [gap]="'50px'"></app-input-radio>
 
   <p class="mt-4">Para acreditar que forma parte de un grupo, posteriormente deberán anexar un diagrama de la estructura
     accionaria y
@@ -137,14 +137,14 @@
     el Esquema de Certificación Empresas bajo la modalidad IVA e IEPS o Garantia del interés fiscal del IVA e IEPS</p>
 
   <app-input-radio [radioOptions]="radioBtn" [selectedValue]="valorSeleccionado" [isRequired]="true"
-    (valueChange)="cambioDeValor($event)" [layout]="'horizontal'"></app-input-radio>
+    (valueChange)="cambioDeValor($event)" [layout]="'horizontal'" [gap]="'50px'"></app-input-radio>
 
   <p><span class="text-danger"> *</span>En caso afirmativo, señale si se encuentra al corriente en el cumplimiento de
     las
     obligaciones relativas al Anexo 30 sobre dicho registro:
   </p>
   <app-input-radio [radioOptions]="radioBtn" [selectedValue]="predeterminadoSeleccionar" [isRequired]="true"
-    (valueChange)="cambioDeValorIndique($event)" [layout]="'horizontal'"></app-input-radio>
+    (valueChange)="cambioDeValorIndique($event)" [layout]="'horizontal'" [gap]="'50px'"></app-input-radio>
 
 
   <div class="row">
