@@ -3,6 +3,7 @@ import { ACUSE_SERVICIOS_EXTRAORDINARIOS } from '../../constantes/servicios-extr
 import { AlertComponent } from '../alert/alert.component';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '../titulo/titulo.component';
+import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
 
 @Component({
   selector: 'app-component-acuse',
@@ -16,8 +17,17 @@ export class AcuseComponent implements OnChanges {
   @Input() subtitulo!: string;
   @Input() folio!: string;
 
-  readonly encabezadoTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.encabezadoTablaAcuse;
-  readonly datosTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.datosTablaAcuse;
+  readonly encabezadoTablaAcuse: { valor: string, key: keyof BodyTablaAcuse }[] = [
+    {
+      key: 'id',
+      valor: 'No.',
+    },
+    {
+      key: 'documento',
+      valor: 'Documento.',
+    },
+  ];  
+  readonly datosTablaAcuse: BodyTablaAcuse[] = ACUSE_SERVICIOS_EXTRAORDINARIOS.datosTablaAcuse;
 
   /**
    * Método que se ejecuta cuando uno o más inputs del componente cambian.

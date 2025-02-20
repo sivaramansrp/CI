@@ -1,6 +1,5 @@
 <div class="rows">
   <form action="" [formGroup]="FormCertificado" (ngSubmit)="onSubmit()">
-    <!-- <div class="col-md-4"> -->
     <div class="form-group">
       <label class="form-label" for="cer">Certificado (cer)*:</label>
       <input type="file" class="form-control" id="cer" (change)="handleFile('cer', $event)" accept=".cer">

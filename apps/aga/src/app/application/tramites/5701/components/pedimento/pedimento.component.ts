@@ -50,15 +50,15 @@ export class PedimentoComponent {
       this.datosNroPedimento = changes['datosNroPedimento'].currentValue;
     }
   }
-  agregaPedimento() {
+  agregaPedimento() : void {
     this.validaCampos.emit();
     this.acciones();
   }
 
-  acciones() {
+  acciones() : void {
     if (this.validacion) {
       const nroPedimento = this.pedimentoForm.value
-        ? parseInt(this.pedimentoForm.value)
+        ? parseInt(this.pedimentoForm.value, 10)
         : 0;
 
       if (nroPedimento !== 0) {
@@ -85,7 +85,7 @@ export class PedimentoComponent {
     }
   }
 
-  eliminar(i: number) {
+  eliminar(i: number) : void {
     this.pedimentos.splice(i, 1)
     //modal de confirmacion de elimincacion
   }
