@@ -49,7 +49,7 @@ fdescribe('CapturarIvaeiepsComponent', () => {
     expect(component.mostrarModal).toBeFalse();
     component.agregarOpenModal();
     expect(component.mostrarModal).toBeTrue();
-    component.closeModal();
+    component.cerrarModal();
     expect(component.mostrarModal).toBeFalse();
   });
 

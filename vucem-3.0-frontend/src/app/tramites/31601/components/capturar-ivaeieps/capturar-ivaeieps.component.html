@@ -213,8 +213,8 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Instalaciones</h5>
-        <button type="button" class="close position-absolute top-0 end-0 m-3" (click)="closeModal()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" class="close position-absolute top-0 end-0 m-3" (click)="cerrarModal()" aria-label="Close">
+          <span style='color: white;'aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
@@ -251,7 +251,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary">Limpiar</button>
         <button type="button" class="btn btn-primary p-2" (click)="agregarDatos()">Aceptar</button>
-        <button type="button" class="btn btn-danger p-2">Cancelar</button>
+        <button type="button" class="btn btn-danger p-2" (click)="cerrarModal()" >Cancelar</button>
       </div>
     </div>
   </div>

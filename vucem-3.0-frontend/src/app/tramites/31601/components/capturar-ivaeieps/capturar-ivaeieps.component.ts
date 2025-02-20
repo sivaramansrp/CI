@@ -263,7 +263,7 @@ export class CapturarIvaeiepsComponent {
      * Este método normalmente se llama cuando el usuario desea cerrar el cuadro de diálogo modal.
      */
 
-  closeModal(): void {
+  cerrarModal(): void {
     this.mostrarModal = false;
   }
 
