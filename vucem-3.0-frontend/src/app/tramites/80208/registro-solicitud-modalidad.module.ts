@@ -6,12 +6,12 @@ import { SolicitudModalidadPageComponent } from './pages/solicitud-modalidad-pag
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-import { SolicitudComponent } from './component/solicitud/solicitud.component';
 import { CambioDeModalidadComponent } from './component/cambio-de-modalidad/cambio-de-modalidad.component';
 import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { WizardComponent } from "../../shared/components/wizard/wizard.component";
 import { BtnContinuarComponent } from "../../shared/components/btn-continuar/btn-continuar.component";
 import { AlertComponent } from "../../shared/components/alert/alert.component";
+import { SolicitanteComponent } from "../../shared/components/solicitante/solicitante.component";
 
 
 @NgModule({
@@ -20,7 +20,6 @@ import { AlertComponent } from "../../shared/components/alert/alert.component";
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    SolicitudComponent,
     CambioDeModalidadComponent,
     PasoCuatroComponent
   ],
@@ -29,7 +28,8 @@ import { AlertComponent } from "../../shared/components/alert/alert.component";
     RegistroSolicitudModalidadRoutingModule,
     WizardComponent,
     BtnContinuarComponent,
-    AlertComponent
+    AlertComponent,
+    SolicitanteComponent
 ]
 })
 export class RegistroSolicitudModalidadModule { }
