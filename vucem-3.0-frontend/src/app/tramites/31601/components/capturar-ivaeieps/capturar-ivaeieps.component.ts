@@ -1,19 +1,29 @@
 import { Component } from '@angular/core';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+
 import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
+
 import { CommonModule } from '@angular/common';
+
 import { TableComponent } from '../../../../shared/components/table/table.component';
+
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
+
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 
 import radio_si_no from '../../../../../assets/json/31601/radio_si_no.json'
 import table from '../../../../../assets/json/31601/table.json'
 import tableDetos from '../../../../../assets/json/31601/table-datos.json'
+
 import mockData from '../../../../../assets/json/31601/mockdata-capturar.json'
+
 import dropDown from '../../../../../assets/json/31601/catalog-select-tipo.json'
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+
+import { PagoData } from '../../../../core/models/31601/servicios-pantallas.model';
 
 
 /**
@@ -91,6 +101,7 @@ export class CapturarIvaeiepsComponent {
    * @param fb: una instancia de FormBuilder utilizada para crear controles de formulario.
    * @param validacionesService - Un servicio para validación de formularios.
    */
+  // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder, private validacionesService: ValidacionesFormularioService) { }
 
   /**
@@ -99,6 +110,7 @@ export class CapturarIvaeiepsComponent {
    *
    * @returns {void}
    */
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit(): void {
     this.inicializarForms();
     this.poblarPagoForm(mockData);
@@ -150,7 +162,7 @@ export class CapturarIvaeiepsComponent {
       numeroOperacion: [''],
       cadenaDependencia: [{ value: '', disabled: true }, Validators.maxLength(50)],
       banco: ['', Validators.required],
-      llavePago: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]*$/), Validators.maxLength(20)]],
+      llavePago: ['', [Validators.required, Validators.pattern(this.validacionesService.llavePagoPattern), Validators.maxLength(20)]],
       fechaPago: [{ value: '', disabled: true }],
       importePago: [{ value: '', disabled: true }]
     });
@@ -168,12 +180,12 @@ export class CapturarIvaeiepsComponent {
      * @param data.fechaPago - La fecha de pago.
      * @param data.importePago - El monto del pago.
      */
-  poblarPagoForm(data: any): void {
+  poblarPagoForm(data: PagoData): void {
     this.formularioDePago.patchValue({
       claveReferencia: data.claveReferencia,
       numeroOperacion: data.numeroOperacion,
       cadenaDependencia: data.cadenaDependencia,
-      banco: data.tipoDe,
+      banco: data.banco,
       llavePago: data.llavePago,
       fechaPago: data.fechaPago,
       importePago: data.importePago
@@ -185,7 +197,7 @@ export class CapturarIvaeiepsComponent {
      *
      * Valor @param: el nuevo valor que se establecerá.
      */
-  cambioDeValor(value: any): void {
+  cambioDeValor(value): void {
     this.valorSeleccionado = value;
   }
 
@@ -196,7 +208,7 @@ export class CapturarIvaeiepsComponent {
      * @retornos nulos
      */
 
-  cambioDeValorIndique(value: any): void {
+  cambioDeValorIndique(value): void {
     this.predeterminadoSeleccionar = value;
   }
 
@@ -253,34 +265,6 @@ export class CapturarIvaeiepsComponent {
 
   closeModal(): void {
     this.mostrarModal = false;
-  }
-
-  /**
-     * Recupera el mensaje de error de un control de formulario específico.
-     *
-     * @param controlName: el nombre del control de formulario para comprobar si hay errores.
-     * @returns Una cadena que contiene el mensaje de error, o nula si no se encuentran errores.
-     */
-
-  getControlError(controlName: string): string | null {
-    const control = this.ivaForm.get(controlName);
-    if (control?.invalid && control?.touched) {
-      if (control.errors?.['required']) {
-        return 'This field is required';
-      } else if (control.errors?.['pattern']) {
-        return 'Invalid RFC format';
-      }
-    }
-    return null;
-  }
-
-  /**
-     * Getter para el campo RFC (Registro Federal de Contribuyentes) del ivaForm.
-     * 
-     * @returns El control de formulario para el campo 'rfc'.
-     */
-  get rfc() {
-    return this.ivaForm.get('rfc');
   }
 
 }

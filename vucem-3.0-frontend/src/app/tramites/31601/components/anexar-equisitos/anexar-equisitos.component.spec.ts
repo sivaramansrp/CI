@@ -1,8 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AnexarEquisitosComponent } from './anexar-equisitos.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 fdescribe('AnexarEquisitosComponent', () => {
   let component: AnexarEquisitosComponent;
