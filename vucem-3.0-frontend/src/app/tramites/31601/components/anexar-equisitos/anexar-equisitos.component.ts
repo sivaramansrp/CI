@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import documentosTable from '../../../../../assets/json/31601/anexar.json'
 
@@ -36,6 +37,7 @@ export class AnexarEquisitosComponent implements OnInit {
      * Constructor para AnexarEquisitosComponent.
      * @param fb: instancia de FormBuilder utilizada para crear controles de formulario.
      */
+  // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder) {
   }
   /**
@@ -65,7 +67,7 @@ export class AnexarEquisitosComponent implements OnInit {
      *
      * Evento @param: el objeto de evento del evento de cambio de entrada del archivo.
      */
-  cambioDeArchivo(event: any): void {
+  cambioDeArchivo(event): void {
     this.anexarForm.patchValue({ valorSeleccionado: event.target.value });
   }
 }

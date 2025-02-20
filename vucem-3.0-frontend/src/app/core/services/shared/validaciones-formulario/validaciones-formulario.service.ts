@@ -14,6 +14,7 @@ export class ValidacionesFormularioService {
     /^([A-ZÑ&]{3,4})?(?:\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01]))?[A-Z\d]{2}[A\d]$/;
   public horaPattern = /^([01]\d|2[0-3]):[0-5]\d$/;
   public patronDeNumero = /^[0-9]\d*$/;
+  public llavePagoPattern= /^[a-zA-Z0-9]*$/
 
   /**
    * Valida si el campo de un formulario no contiene errores
