@@ -382,7 +382,6 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
     // Inicializa el modal de modificación
     if (this.modifyModal) {
       this.modalInstance = new Modal(this.modifyModal.nativeElement);
-      console.log('Modify Modal Initialized:', this.modalInstance);
     }
 
     // Inicializa el modal de instalaciones
@@ -479,7 +478,6 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
    * @param {number} itemsPerPage - Número de elementos a mostrar por página.
    */
   onItemsPerPageChange(itemsPerPage: number) {
-    console.log('Items per page changed to:', itemsPerPage);
     this.itemsPerPage = itemsPerPage;
     this.currentPage = 1;
     this.updatePagination();
