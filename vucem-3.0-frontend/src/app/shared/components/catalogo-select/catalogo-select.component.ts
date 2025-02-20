@@ -1,7 +1,9 @@
 import {
   Component,
+  EventEmitter,
   Input,
   OnChanges,
+  Output,
   SimpleChanges,
   forwardRef,
 } from '@angular/core';
@@ -37,7 +39,8 @@ export class CatalogoSelectComponent
   @Input() placeholder: string;
   @Input() isDisabled: boolean;
   @Input() required: boolean;
-
+  @Input() tooltipQuestionCircle:boolean = false;
+  @Output() selectionChange = new EventEmitter<Catalogo>();
   formSelect: FormGroup;
 
   constructor(private fb: FormBuilder) {
@@ -73,6 +76,12 @@ export class CatalogoSelectComponent
   value: string = '';
   handleChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
+    const selectedOption = this.catalogo.find(
+      (option) => option.id === Number(value)
+    );
+    if (selectedOption) {
+      this.selectionChange.emit(selectedOption);
+    }
     this.onChange(value);
   }
 

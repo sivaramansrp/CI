@@ -14,6 +14,7 @@ interface AccionBoton {
 }
 
 @Component({
+  selector: 'solicitud-page',
   templateUrl: './solicitud-page.component.html',
   styles: ``,
 })
