@@ -9,6 +9,13 @@ const routes: Routes = [
       import('./tramites/220401/pantallas.module').then(
         (m) => m.PantallasModule
       ),
+  },
+  {
+    path: 'certificado-zoosanitario',
+    loadChildren: () =>
+      import('./tramites/220201/certificado-zoosanitario.module').then(
+        (m) => m.CertificadoZoosanitarioModule
+      ),
   }
 ];
 
