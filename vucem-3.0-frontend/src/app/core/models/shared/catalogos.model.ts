@@ -12,7 +12,7 @@ export interface JSONResponse {
 
 export interface RespuestaCatalogos {
   code: number;
-  data: Array<Catalogo>;
+  data: Catalogo[]
   message: string;
 }
 
@@ -23,9 +23,10 @@ export interface Catalogo {
   dpi?: string
 }
 
-
 export interface CatalogoPaises {
   id: number;
   codigoIso: string;
   nombre: string;
 }
+
+
