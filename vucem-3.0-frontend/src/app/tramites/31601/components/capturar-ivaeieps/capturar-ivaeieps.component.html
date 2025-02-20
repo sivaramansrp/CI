@@ -45,12 +45,12 @@
     <div class="table-header pb-2">
       <h3>Empresas del grupo certificadas en materia de IVA e IEPS</h3>
       <button (click)="alternarContenido()" class="toggle-btn">
-        <i class="bi fs-5 m-1" [ngClass]="{'bi-chevron-down': !showContent, 'bi-chevron-up': showContent}">
+        <i class="bi fs-5 m-1" [ngClass]="{'bi-chevron-down': !mostrarContenido, 'bi-chevron-up': mostrarContenido}">
         </i>
       </button>
     </div>
 
-    <ng-table *ngIf="showContent" [commonTableHeader]="destinatarioHeaderData.tableHeader"
+    <ng-table *ngIf="mostrarContenido" [commonTableHeader]="destinatarioHeaderData.tableHeader"
       [commonTableBody]="destinatarioHeaderData.tableBody">
     </ng-table>
   </div>
@@ -116,11 +116,11 @@
     <div class="table-header pb-2" style=" display: flex; align-items: center; justify-content: space-between;">
       <h3>Datos de la inversión</h3>
       <button (click)="alternarContenido()" class="toggle-btn">
-        <i class="bi fs-5 m-1" [ngClass]="{'bi-chevron-down': !showContent, 'bi-chevron-up': showContent}"></i>
+        <i class="bi fs-5 m-1" [ngClass]="{'bi-chevron-down': !mostrarContenido, 'bi-chevron-up': mostrarContenido}"></i>
       </button>
     </div>
 
-    <ng-table *ngIf="showContent" [commonTableHeader]="datosDeLe.tableHeader" [commonTableBody]="datosDeLe.tableBody">
+    <ng-table *ngIf="mostrarContenido" [commonTableHeader]="datosDeLe.tableHeader" [commonTableBody]="datosDeLe.tableBody">
     </ng-table>
   </div>
 
@@ -205,7 +205,7 @@
 
 </form>
 <!-- Modal Structure -->
-<div class="modal fade" tabindex="-1" role="dialog" *ngIf="showModal" id="myModal" [ngClass]="{'show': showModal}"
+<div class="modal fade" tabindex="-1" role="dialog" *ngIf="mostrarModal" id="myModal" [ngClass]="{'show': mostrarModal}"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">

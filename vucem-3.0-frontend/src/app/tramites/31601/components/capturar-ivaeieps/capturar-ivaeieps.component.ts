@@ -45,7 +45,7 @@ export class CapturarIvaeiepsComponent {
   /**
    *Marcar para mostrar u ocultar contenido
    */
-  showContent = false;
+   mostrarContenido = false;
 
   /**
    * Valor seleccionado para alguna funcionalidad
@@ -60,7 +60,7 @@ export class CapturarIvaeiepsComponent {
   /**
    * Marcar para mostrar u ocultar modal
    */
-  showModal: boolean = false;
+  mostrarModal: boolean = false;
   /**
    * Una variable que contiene el estado de un grupo de botones de opción.
    * A la variable `radioBtn` se le asigna el valor de `radio_si_no`.
@@ -218,11 +218,11 @@ export class CapturarIvaeiepsComponent {
   }
 
   /**
-     * Alterna la visibilidad del contenido invirtiendo el valor de `showContent`.
-     * Cuando se llama, si `showContent` es verdadero, se establecerá en falso y viceversa.
+     * Alterna la visibilidad del contenido invirtiendo el valor de `mostrarContenido`.
+     * Cuando se llama, si `mostrarContenido` es verdadero, se establecerá en falso y viceversa.
      */
   alternarContenido(): void {
-    this.showContent = !this.showContent;
+    this.mostrarContenido = !this.mostrarContenido;
   }
 
   /**
@@ -235,24 +235,24 @@ export class CapturarIvaeiepsComponent {
   }
 
   /**
-     * Abre el modal estableciendo `showModal` en verdadero.
+     * Abre el modal estableciendo `mostrarModal` en verdadero.
      *
      * Este método se utiliza para mostrar el cuadro de diálogo modal en la interfaz de usuario.
-     * Cuando se llama, establece el indicador `showModal` en verdadero, haciendo que el modal sea visible.
+     * Cuando se llama, establece el indicador `mostrarModal` en verdadero, haciendo que el modal sea visible.
      *
      * @returns {nulo}
      */
   agregarOpenModal(): void {
-    this.showModal = true;
+    this.mostrarModal = true;
   }
 
   /**
-     * Cierra el modal estableciendo la propiedad `showModal` en `false`.
+     * Cierra el modal estableciendo la propiedad `mostrarModal` en `false`.
      * Este método normalmente se llama cuando el usuario desea cerrar el cuadro de diálogo modal.
      */
 
   closeModal(): void {
-    this.showModal = false;
+    this.mostrarModal = false;
   }
 
   /**
