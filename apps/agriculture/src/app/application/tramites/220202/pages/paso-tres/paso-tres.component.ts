@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { TEXTOS } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
 
 /**
  * Componente para mostrar el subtítulo del asistente.
