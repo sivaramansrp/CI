@@ -92,13 +92,6 @@ export interface pagoDeDerechos {
   importePago: string;
 }
 
-/**
- * Interface tercerosRelacionados --120301
- * @export
- * @interface tercerosRelacionados
- */
-
-
 export interface ImportadorForm {
   tipo: string;
   cantidadTotal: string;
@@ -114,7 +107,7 @@ export interface HistoricoFabricantesForm {
   fabricantesNacionales: any[]; // Adjust type if there's a specific structure
   fabricantesDatos: any[]; // Adjust type if there's a specific structure
 }
-export interface FacturaAssociationForm {
+export interface formularioAsociacionFactura {
   cantidad: string;
 }
 export interface FitosanitarioForm {
@@ -157,11 +150,6 @@ export interface ElegibilidadDeTextiles {
   importadorForm: ImportadorForm;
   facturaForm: FacturaForm;
   fitosanitarioForm: FitosanitarioForm;
-  facturaAssociationForm: FacturaAssociationForm;
+  formularioAsociacionFactura: formularioAsociacionFactura;
   historicoFabricantesForm: HistoricoFabricantesForm;
 }
-
-
-
-
-export interface tercerosRelacionados { }

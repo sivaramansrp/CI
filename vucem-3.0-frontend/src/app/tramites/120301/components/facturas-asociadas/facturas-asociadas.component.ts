@@ -32,7 +32,8 @@ import {FACTUS_TBCOL, ASOCIADAS_TBCOl} from '../../../../shared/constantes/elegi
   ]
 })
 export class formularioAsociacionFactura implements OnInit {
-  facturaAssociationForm!: FormGroup;
+  
+  formularioAsociacionFactura!: FormGroup;
   selectRangoDias: string[] = [];
 
   /**
@@ -75,7 +76,7 @@ export class formularioAsociacionFactura implements OnInit {
    * @description Inicializa el componente y obtiene los datos de las facturas.
    */
   ngOnInit(): void {
-    this.facturaAssociationForm = this.fb.group({
+    this.formularioAsociacionFactura = this.fb.group({
       cantidad: ['', [Validators.required]],
     });
     this.fetchData();
