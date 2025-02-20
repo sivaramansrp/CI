@@ -20,6 +20,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { DatosDelCertificadoComponent } from './components/datos-del-certificado/datos-del-certificado.component';
 import { DatosGeneralesAnimalesComponent } from './components/datos-generales-animales/datos-generales-animales.component';
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -43,8 +44,11 @@ import { DatosGeneralesAnimalesComponent } from './components/datos-generales-an
     TercerosRelacionadosComponent,
     AgregarDestinatoriaComponent,
     DatosGeneralesAnimalesComponent,
-    SelectCatalogosComponent
-  ]
+    SelectCatalogosComponent 
+  ],
+  providers: [
+      provideHttpClient()
+    ],
 })
 /**
  * Este módulo se utiliza para configurar los componentes del módulo 220401.

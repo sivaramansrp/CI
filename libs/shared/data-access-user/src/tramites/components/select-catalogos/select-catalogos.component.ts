@@ -21,6 +21,7 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './select-catalogos.component.html',
   styleUrl: './select-catalogos.component.scss',
+  host: { 'hostID': crypto.randomUUID().toString() }
 })
 export class SelectCatalogosComponent {
   @Input() catalogosDatos!: CatalogosSelect;

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 import * as forge from 'node-forge';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
@@ -10,10 +10,9 @@ import { LOGIN, PADDING } from '../../constantes/constantes';
 @Component({
   selector: 'firma-electronica',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule ],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './firma-electronica.component.html',
   styleUrl: './firma-electronica.component.scss',
-  providers: []
 })
 export class FirmaElectronicaComponent {
   @Input({ required: true }) tipo: string = '';
@@ -34,7 +33,7 @@ export class FirmaElectronicaComponent {
     private fb: FormBuilder,
     private toastrService: ToastrService,
     private formValidator: ValidacionesFormularioService
-  ) {}
+  ) { }
 
   /**
    * Getter para saber si el componente esta siendo usado para hacer 'login'
@@ -124,29 +123,23 @@ export class FirmaElectronicaComponent {
       const content = paddingStart + btoa(binaryString) + paddingEnd; // añadir paddings al string del certificado, para poder desencriptarlo.
       const privateKey = forge.pki.decryptRsaPrivateKey(content, password);
 
-      if (privateKey && certPublicKey) {
-        if (
-          certPublicKey.n.t === privateKey.n.t &&
-          certPublicKey.e.t === privateKey.e.t
-        ) {
-          this.valido.emit(true);
-          this.toastrService.success(
-            '¡Certificado válido y llave privada coinciden!'
-          );
-          if (!this.login) {
-            const firma = this.firmar('hola', privateKey);
-            this.firma.emit(firma);
-          }
-        } else {
-          this.valido.emit(false);
+      const validaciones =
+        privateKey &&
+        certPublicKey &&
+        certPublicKey.n.t === privateKey.n.t &&
+        certPublicKey.e.t === privateKey.e.t;
 
-          this.toastrService.error(
-            'La llave privada no coincide con el certificado o la contraseña es incorrecta.'
-          );
+      if (validaciones) {
+        this.toastrService.success(
+          '¡Certificado válido y llave privada coinciden!'
+        );
+        this.valido.emit(true);
+        if (!this.login) {
+          const firma = this.firmar('hola', privateKey);
+          this.firma.emit(firma);
         }
       } else {
         this.valido.emit(false);
-
         this.toastrService.error(
           'La llave privada no coincide con el certificado o la contraseña es incorrecta.'
         );

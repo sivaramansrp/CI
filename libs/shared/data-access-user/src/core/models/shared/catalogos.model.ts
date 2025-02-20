@@ -19,15 +19,27 @@ export interface RespuestaCatalogos {
 export interface Catalogo {
   id: number;
   descripcion: string;
+  clave?: string;
   tam?: string;
   dpi?: string
 }
-
 
 export interface CatalogoPaises {
   id: number;
   codigoIso: string;
   nombre: string;
+}
+
+export interface HeaderTablaAcuse {
+  key: keyof BodyTablaAcuse;
+  valor: string;
+}
+
+export interface BodyTablaAcuse {
+  id: number;
+  idDocumento: string;
+  documento: string;
+  urlPdf: string;
 }
 
 

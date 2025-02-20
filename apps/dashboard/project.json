@@ -16,12 +16,16 @@
         "polyfills": ["zone.js"],
         "tsConfig": "apps/dashboard/tsconfig.app.json",        
         "assets": [
-          "apps/dashboard/src/favicon.ico",
-          "apps/dashboard/src/assets",
           {
-            "glob": "**.*",
-            "input": "libs/shared/theme/assets",
-            "output": "assets"
+            "glob": "**/*",
+            "input": "apps/dashboard/src/assets/",
+            "output": "./assets/"
+          },
+          { "glob": "favicon.ico", "input": "./", "output": "./" },
+          {
+            "glob": "**/*",
+            "input": "libs/shared/theme/assets/",
+            "output": "./assets/"
           }
         ],
       "styles": [

@@ -5,7 +5,7 @@ import {
 } from '../../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { enviroment } from './../../../../../../../../apps/aga/src/app/enviroments/enviroment';
+import { enviroment } from '../../../../enviroments/enviroment';
 import { JSONResponse } from '../../../models/shared/catalogos.model';
 
 @Injectable({

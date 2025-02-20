@@ -1,5 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { catchError, map } from 'rxjs';
+import { AcuseStore } from '../../../../estados/acuse.store';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'paso-tres',
@@ -8,14 +11,36 @@ import { Router } from '@angular/router';
 })
 export class PasoTresComponent {
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
+    private acuseStore: AcuseStore
+  ) { }
 
-  obtieneFirma(ev: string){
-    const firma: string = ev;
-    if (firma) {
-      this.router.navigate(['servicios-extraordinarios/acuse']);
-
+  /**
+  * Maneja el evento para obtener la firma y realiza acciones adicionales.
+  * @param ev - La cadena de texto que representa la firma obtenida.
+  */
+  obtieneFirma(ev: string): void {
+    const FIRMA: string = ev;
+    if (FIRMA) {
+      // Obtiene el número de trámite
+      this.serviciosExtraordinariosServices
+        .obtenerTramite(19)
+        .pipe(
+          map((tramite) => {
+            this.acuseStore.establecerTramite(tramite.data, FIRMA);
+            this.router.navigate(['servicios-extraordinarios/acuse']);
+          }),
+          catchError((_error) => {
+            return _error;
+          })
+        )
+        .subscribe();
     }
   }
+
+
+
 
 }
