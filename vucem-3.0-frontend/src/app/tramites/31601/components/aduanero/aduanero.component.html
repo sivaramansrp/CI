@@ -269,7 +269,7 @@
               type="text"
               class="form-control"
               id="empPropios"
-              name="empleadosPropios"
+              name="empPropios"
               maxlength="8"
             />
           </div>
@@ -800,25 +800,29 @@
         <div class="col-md-6">
           <div class="form-group">
             <span class="require">* </span>
-            <label for="inputOne" class="form-label"
+            <label for="nombredel" class="form-label"
               >Nombre del sistema o datos para su iderisificación</label
             >
-            <input type="text" class="form-control" id="inputOne" />
+            <input type="text" class="form-control" id="nombredel" />
             <div
               *ngIf="
-                preOperativeForm.controls['inputOne'].invalid &&
-                preOperativeForm.controls['inputOne'].touched
+                preOperativeForm.controls['nombredel'].invalid &&
+                preOperativeForm.controls['nombredel'].touched
               "
               class="text-danger"
             >
               <span
-                *ngIf="preOperativeForm.controls['inputOne'].errors?.['required']"
+                *ngIf="preOperativeForm.controls['nombredel'].errors?.['required']"
                 >Este campo es obligatorio.</span
               >
               <span
-                *ngIf="preOperativeForm.controls['inputOne'].errors?.['minlength']"
+                *ngIf="preOperativeForm.controls['nombredel'].errors?.['minlength']"
                 >Debe tener al menos 3 caracteres.</span
               >
+              <span
+              *ngIf="preOperativeForm.controls['nombredel'].errors?.['maxlength']"
+              >No puede exceder los 250 caracteres.</span
+            >
             </div>
           </div>
         </div>
@@ -827,23 +831,27 @@
         <div class="col-md-6">
           <div class="form-group">
             <span class="require">* </span>
-            <label for="inputTwo" class="form-label">Lugar de radicación</label>
-            <input type="text" class="form-control" id="inputTwo" />
+            <label for="lugarDeRadicacion" class="form-label">Lugar de radicación</label>
+            <input type="text" class="form-control" id="lugarDeRadicacion" />
             <div
               *ngIf="
-                preOperativeForm.controls['inputTwo'].invalid &&
-                preOperativeForm.controls['inputTwo'].touched
+                preOperativeForm.controls['lugarDeRadicacion'].invalid &&
+                preOperativeForm.controls['lugarDeRadicacion'].touched
               "
               class="text-danger"
             >
               <span
-                *ngIf="preOperativeForm.controls['inputTwo'].errors?.['required']"
+                *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['required']"
                 >Este campo es obligatorio.</span
               >
               <span
-                *ngIf="preOperativeForm.controls['inputTwo'].errors?.['minlength']"
+                *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['minlength']"
                 >Debe tener al menos 3 caracteres.</span
               >
+              <span
+              *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['maxlength']"
+              >No puede exceder los 250 caracteres.</span
+            >
             </div>
           </div>
         </div>
@@ -866,11 +874,7 @@
         <button type="button" class="btn btn-primary">Agregar</button>
       </div>
       <label for=""> Control Inventarios </label>
-      <!-- <ng-table
-        [commonTableHeader]="establecimientoHeaderData"
-        [commonTableBody]="establecimientoBodyData"
-        
-      ></ng-table> -->
+    
       <div class="table-responsive">
         <table class="table table-bordered table-striped">
           <thead>

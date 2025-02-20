@@ -325,8 +325,8 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
       encuentraSus: ['', Validators.required],
       momentoIngresar: ['', Validators.required],
       indiqueCuenta: ['', Validators.required],
-      inputOne: ['', [Validators.required, Validators.minLength(3)]],
-      inputTwo: ['', [Validators.required, Validators.minLength(3)]],
+      nombredel: ['', [Validators.required, Validators.minLength(3),Validators.maxLength(250)]],
+      lugarDeRadicacion: ['', [Validators.required, Validators.minLength(3),Validators.maxLength(250)]],
       contabilidad: ['', Validators.required] ,
       rmfRadio: ['', Validators.required],
       vinculacionRegistroCancelado: ['', Validators.required] ,
@@ -363,6 +363,15 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
           Validators.required, // Required field
           Validators.pattern(/^[0-9]+$/), // Only allows numbers
         
+        ]
+      ],
+      empleadosPropios:[
+        '',[
+          Validators.required,
+          Validators.pattern('^[0-9]+$'), // Only allows numbers
+          Validators.min(1), // Minimum value 1
+          Validators.max(99999999), // Maximum value 8 digits
+          Validators.maxLength(8) // Ensures a maximum of 8 characters
         ]
       ]
       
