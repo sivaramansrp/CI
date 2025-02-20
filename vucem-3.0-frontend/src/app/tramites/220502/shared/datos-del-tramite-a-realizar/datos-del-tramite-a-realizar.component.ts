@@ -4,7 +4,7 @@ import { CatalogosSelect } from '../../../../core/models/shared/components.model
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
-import { DatoseDelTramiteRealizer } from '../../../../core/models/220502/solicitud-pantallas.model';
+import { DatosDelTramiteRealizar } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { FECHA_INSPECCION } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -23,7 +23,7 @@ import { inject } from '@angular/core';
  * Componente para gestionar los datos del trámite a realizar.
  */
 @Component({
-  selector: 'app-datose-del-tramite-a-realizer',
+  selector: 'app-datos-del-tramite-a-realizar',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -40,11 +40,11 @@ import { inject } from '@angular/core';
     },
   ],
   providers: [SolicitudPantallasService],
-  templateUrl: './datose-del-tramite-a-realizer.component.html',
-  styleUrl: './datose-del-tramite-a-realizer.component.scss',
+  templateUrl: './datos-del-tramite-a-realizar.component.html',
+  styleUrl: './datos-del-tramite-a-realizar.component.scss',
 })
 /** Componente para gestionar los datos del trámite a realizar */
-export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
+export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
   /**
    * Clave de entrada utilizada para identificar el control dentro del grupo de formulario principal.
    */
@@ -58,7 +58,7 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
   /**
    * Getter para acceder al grupo de formularios principal.
    */
-  get grupoformulariopadre(): FormGroup {
+  get grupoFormularioPadre(): FormGroup {
     return this.parentContainer.control as FormGroup;
   }
 
@@ -94,7 +94,7 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     if (this.claveDeControl) {
-      this.grupoformulariopadre.addControl(
+      this.grupoFormularioPadre.addControl(
         this.claveDeControl,
         new FormGroup({
           certificadosAutorizados: new FormControl('', [Validators.required]),
@@ -158,9 +158,9 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
   private actualizarFormValue(nombreDeControl: string, value: string): void {
     if (
       this.claveDeControl &&
-      this.grupoformulariopadre.contains(this.claveDeControl)
+      this.grupoFormularioPadre.contains(this.claveDeControl)
     ) {
-      this.grupoformulariopadre.controls[this.claveDeControl].patchValue({
+      this.grupoFormularioPadre.controls[this.claveDeControl].patchValue({
         [nombreDeControl]: value,
       });
     }
@@ -182,7 +182,7 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
     });
   
     this.solicitudService.getData().subscribe({
-      next: (data: DatoseDelTramiteRealizer) => {
+      next: (data: DatosDelTramiteRealizar) => {
         this.certificadosAutorizados = catalogoTemplate(
           'Certificados autorizados pendientes',
           true,
@@ -217,7 +217,7 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
    * Getter para acceder al grupo de formularios 'datosServicio'.
    */
   get datosServicio(): FormGroup {
-    return this.grupoformulariopadre.get('datosServicio') as FormGroup;
+    return this.grupoFormularioPadre.get('datosServicio') as FormGroup;
   }
 
   /**
@@ -234,9 +234,9 @@ export class DatoseDelTramiteARealizerComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (
       this.claveDeControl &&
-      this.grupoformulariopadre.contains(this.claveDeControl)
+      this.grupoFormularioPadre.contains(this.claveDeControl)
     ) {
-      this.grupoformulariopadre.removeControl(this.claveDeControl);
+      this.grupoFormularioPadre.removeControl(this.claveDeControl);
     }
   }
 }
