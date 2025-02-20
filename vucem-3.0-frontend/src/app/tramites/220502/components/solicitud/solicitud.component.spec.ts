@@ -11,7 +11,7 @@ import { of } from 'rxjs';
 import { tick } from '@angular/core/testing';
 
 import { CarrosDeFerrocarrilComponent } from '../../shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
-import { DatoseDelTramiteARealizerComponent } from '../../shared/datose-del-tramite-a-realizer/datose-del-tramite-a-realizer.component';
+import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { HistorialInspeccionFisicaComponent } from '../../shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
 import { MedioTransporteComponent } from '../../shared/medio-transporte/medio-transporte.component';
 import { ResponsableInspeccionEnPuntoComponent } from '../../shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
@@ -100,7 +100,7 @@ describe('SolicitudComponent 220502', () => {
         ReactiveFormsModule,
         HttpClientTestingModule,
         CarrosDeFerrocarrilComponent,
-        DatoseDelTramiteARealizerComponent,
+        DatosDelTramiteARealizarComponent,
         HistorialInspeccionFisicaComponent,
         MedioTransporteComponent,
         ResponsableInspeccionEnPuntoComponent,

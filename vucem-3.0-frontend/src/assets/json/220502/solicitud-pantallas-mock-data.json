@@ -219,5 +219,30 @@
         "dpi": "Tipo contenedor 3"
       }
     ]
-  }
+  },
+  "medioDeTransporte": {
+    "labelNombre": "Medio de transporte",
+    "required": true,
+    "primerOpcion": "Selecciona un valor",
+    "catalogos": [
+      {
+        "id": 1,
+        "descripcion": "transporte 1",
+        "tam": "transporte 1",
+        "dpi": "transporte 1"
+      },
+      {
+        "id": 2,
+        "descripcion": "transporte 2",
+        "tam": "transporte 2",
+        "dpi": "transporte 2"
+      },
+      {
+        "id": 3,
+        "descripcion": "transporte 3",
+        "tam": "transporte 3",
+        "dpi": "transporte 3"
+      }
+    ]
+  }  
 }

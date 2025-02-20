@@ -7,9 +7,11 @@ import { DatosDeMercancias } from '../../../../core/models/220502/solicitud-pant
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
+import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { OpcionesDeBotonDeRadio } from '../../../../core/enums/220502/solicitud-pantallas.enum';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SimpleChanges } from '@angular/core';
 import { TableComponent } from '../../../../shared/components/table/table.component';
@@ -29,6 +31,7 @@ import { inject } from '@angular/core';
     TituloComponent,
     CatalogoSelectComponent,
     TableComponent,
+    InputRadioComponent
   ],
   viewProviders: [
     {
@@ -60,9 +63,11 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
   parentContainer = inject(ControlContainer);
 
   /** Getter para acceder al grupo de formularios principal */
-  get grupoFormularioPadre() {
+  get grupoFormularioPadre(): FormGroup{
     return this.parentContainer.control as FormGroup;
   }
+  esSolicitudFerrosValor: string;
+  opcionDeBotonDeRadio = OpcionesDeBotonDeRadio;
 
   tableData = {
     tableBody: [],
@@ -73,7 +78,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
    * Gancho de ciclo de vida que inicializa el componente.
    * Agrega un control de formulario dinámico al formulario principal
    */
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.claveDeControl) {
       // Agregar un nuevo FormGroup dinámicamente al formulario principal
       this.grupoFormularioPadre.addControl(
@@ -90,6 +95,20 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
         })
       );
     }
+  }
+
+  /**
+   * compo doc
+   * @method enCambioDeValor
+   * @description Actualiza el valor seleccionado.
+   * @param {string | number} value - Nuevo valor seleccionado.
+   *
+   * Este método es para la etiqueta de radio de producto.
+   */
+  enCambioDeValor(value: string | number): void {
+    this.grupoFormularioPadre.controls[this.claveDeControl].patchValue({
+      ['esSolicitudFerros']: value,
+    });
   }
 
   /**
@@ -113,7 +132,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
    * Actualiza el formulario con la descripción del transporte seleccionado.
    * @param e - El artículo del catálogo seleccionado que representa el método de transporte.
    */
-  seleccionMedioDeTransporte(e) {
+  seleccionMedioDeTransporte(e): void {
     if (
       this.claveDeControl &&
       this.grupoFormularioPadre.contains(this.claveDeControl)
@@ -128,7 +147,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
    * Gancho de ciclo de vida que limpia el componente.
    * Elimina el control de formulario dinámico del formulario principal.
    */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (
       this.claveDeControl &&
       this.grupoFormularioPadre.contains(this.claveDeControl)
