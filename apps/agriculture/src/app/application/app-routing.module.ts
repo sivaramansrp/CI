@@ -16,7 +16,14 @@ const routes: Routes = [
       import('./tramites/220201/certificado-zoosanitario.module').then(
         (m) => m.CertificadoZoosanitarioModule
       ),
-  }
+  },
+  {
+    path: 'certificado-fitosanitario',
+    loadChildren: () =>
+      import('./tramites/220202/fitosanitario.module').then(
+        (m) => m.FitosanitarioModule
+      )
+  },
 ];
 
 @NgModule({
