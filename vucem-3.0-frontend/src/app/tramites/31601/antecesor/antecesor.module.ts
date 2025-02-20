@@ -10,13 +10,14 @@ import { NavComponent } from '../../../shared/components/nav/nav.component';
 import { ReprestantanteComponent } from '../components/represtantante/represtantante.component';
 import { EnlaceComponent } from '../components/enlace/enlace.component';
 import { PersonaComponent } from '../components/persona/persona.component';
-import { RegistroDialogComponent } from '../components/registro-dialog/registro-dialog.component';
+
 
 import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-por-regimen.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FirmarSolicitudComponent } from '../pages/firmar-solicitud/firmar-solicitud.component';
 import { FirmaElectronicaComponent } from '../../../shared/components/firma-electronica/firma-electronica.component';
 import { BtnContinuarComponent } from '../../../shared/components/btn-continuar/btn-continuar.component';
+import { RequisitosComponent } from '../components/requisitos/requisitos.component';
 
 @NgModule({
   declarations: [DatosComponent, PantallasComponent, FirmarSolicitudComponent],
@@ -24,14 +25,14 @@ import { BtnContinuarComponent } from '../../../shared/components/btn-continuar/
     CommonModule,
     AntecesorRoutingModule,
     WizardComponent,
-    NavComponent,ReprestantanteComponent,EnlaceComponent,PersonaComponent,RegistroDialogComponent,
+    NavComponent,ReprestantanteComponent,EnlaceComponent,PersonaComponent,
   
     NavComponent,
     DatosPorRegimenComponent,
     ReactiveFormsModule,
     FormsModule,
     FirmaElectronicaComponent,
-    BtnContinuarComponent
+    BtnContinuarComponent,RequisitosComponent
   ],
 })
 

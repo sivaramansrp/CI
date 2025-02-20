@@ -5,16 +5,14 @@
     border-collapse: collapse;   /* Contraer bordes para una apariencia ordenada */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);  /* Añadir una sombra sutil para darle profundidad */
     background-color: #fff;      /* Fondo blanco para la mesa */
+    
   }
   .header {
     display: flex;        /* Use flexbox to layout the child elements */
     justify-content: space-between; /* Space between elements */
     align-items: center;  /* Vertically center the items */
   }
-  .pagination {
-    display: table;
-    margin: 0 auto;
-}
+  
   .header span:first-child {
     text-align: left;      /* Align the first span to the left */
     flex-grow: 1;          /* Allow the first span to take up remaining space */
@@ -90,3 +88,35 @@
   .content {
     margin-top: 10px;
   }
+  /* Estilo para la caja de información */
+.info-box {
+    background-color:#daecf4;
+    color:#6d9ebb;             /* Color de texto azul */
+    padding: 15px;               /* Relleno alrededor del contenido */
+    border-radius: 8px;          /* Bordes ligeramente curvados */
+    border: 1px solid #a0cadd;
+    font-size: 16px;             /* Tamaño de fuente para el texto */
+    margin: 20px 0;              /* Espacio arriba y abajo de la caja */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Sombra ligera para profundidad */
+    text-align: center;          /* Centrar horizontalmente el texto */
+    display: flex;               /* Habilitar flexbox */
+    justify-content: center;     /* Centrar horizontalmente el contenido (para flexbox) */
+    align-items: center;         /* Centrar verticalmente el contenido (para flexbox) */
+  }
+  .refresh-icon {
+    font-size: 20px;             /* Establecer el tamaño del icono */
+    cursor: pointer;             /* Cambiar el cursor a puntero al pasar el ratón por encima */
+    color: #007bff;            /* Color azul para el icono de actualización */
+  }
+  .table-wrapper {
+    max-height: 250px; /* Adjust this value according to your row height (e.g., 50px per row) */
+    overflow-y: auto;  /* Vertical scrolling when the number of rows exceeds 3 */
+    overflow-x: auto;  /* Horizontal scrolling if table is wider than container */
+  }
+  .custom-row {
+    height: 250px;  /* Set to your desired height */
+}
+.pagination {
+    display: table;
+    margin: 0 auto;
+}
