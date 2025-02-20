@@ -21,18 +21,18 @@ const routes: Routes = [
       ),
   },
   {
-      path: 'pexim',
-      loadChildren: () =>
-        import('./tramites/130118/pexim.module').then(
-          (m) => m.PeximModule
-        ),
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/130118/pexim.module').then(
+        (m) => m.PeximModule
+      ),
   },
   {
     path: 'despacho-mercancias',
     loadChildren: () =>
       import('./tramites/303/despacho-mercancias.module').then(
         (m) => m.DespachoMercanciasModule
-  )
+      )
   },
   {
     path: 'pantallas-extraordinarios',
@@ -42,11 +42,34 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'importante',
+    loadChildren: () =>
+      import('./tramites/301/pantallas.module').then(
+        (m) => m.PantallasModule
+      ),
+  },
+  { 
+    path: 'pantallas',
+    loadChildren: () =>
+      import('./tramites/110101/pantallas/pantallas.module').then(
+        (m) => m.PantallasModule
+      ),
+  },
+
+
+  {
     path: 'antecesor',
     loadChildren: () =>
       import('./tramites/31601/antecesor/antecesor.module').then(
         (m) => m.AntecesorModule
       ),
+  },
+
+  {
+    path: 'certificado-zoosanitario',
+    loadChildren: () =>
+      import('./tramites/220201/certificado-zoosanitario.module').then(
+        (m) => m.CertificadoZoosanitarioModule)
   },
 ];
 
@@ -54,4 +77,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

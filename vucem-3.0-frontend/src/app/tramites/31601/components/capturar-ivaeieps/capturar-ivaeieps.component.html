@@ -1,5 +1,5 @@
-<form [formGroup]="ivaForm">
-  <section class="body-text fw-medium">
+<form [formGroup]="ivaForm" class="mt-4">
+  <section class="body-text  fw-medium mb-2">
     <span class="text-danger">*</span> Manifieste si los proveedores nacionales señalados anteriormente,
     se encuentran a la fecha de presentación de la solicitud, en las publicaciones a que hace referencia el artículo
     69-B, cuarto párrafo del CFF.
@@ -9,7 +9,7 @@
   <app-input-radio [radioOptions]="radioBtn" [selectedValue]="valorSeleccionado" [isRequired]="true"
     (valueChange)="cambioDeValor($event)" [layout]="'horizontal'"></app-input-radio>
 
-  <section class="body-text fw-medium">
+  <section class="body-text fw-medium mb-2 mt-2">
     <span class="text-danger">*</span> Indique si para efectos del presente trámite se acredita como parte de un mismo
     grupo de conformidad con la regla .1.7.
   </section>
@@ -17,7 +17,7 @@
   <app-input-radio [radioOptions]="radioBtn" [selectedValue]="predeterminadoSeleccionar" [isRequired]="true"
     (valueChange)="cambioDeValorIndique($event)" [layout]="'horizontal'"></app-input-radio>
 
-  <p>Para acreditar que forma parte de un grupo, posteriormente deberán anexar un diagrama de la estructura accionaria y
+  <p class="mt-4">Para acreditar que forma parte de un grupo, posteriormente deberán anexar un diagrama de la estructura accionaria y
     corporativa, así
     como copia de las escrituras públicas, en la que conste la participación accionaria de las empresas que formen parte
     del grupo.</p>
@@ -33,7 +33,7 @@
 
   <ng-titulo titulo="Empresas del grupo certificadas en materia de IVA e IEPS" />
 
-  <section>Indique cual(es) de las empresas que forman parte del grupo cuentan con la Certificación en materia de IVA e
+  <section class="mb-4">Indique cual(es) de las empresas que forman parte del grupo cuentan con la Certificación en materia de IVA e
     IEPS, o en su caso, se encuentran en proceso de solicitud, o se van a certificar de conformidad con el calendario
     establecido en el articulo Segundo de la Sexta Resolución de Modificaciones a las Reglas de Carácter General en
     Materia de Comercio Exterior para 2013.</section>
@@ -59,28 +59,28 @@
     <button class="btn btn-default ms-2">Eliminar</button>
   </div>
 
-  <section><span class="text-danger">*</span> Señale, en su caso, el tipo de información que la solicitante acredita, a
+  <section class="fw-medium mt-3"><span class="text-danger">*</span> Señale, en su caso, el tipo de información que la solicitante acredita, a
     través de alguna de las empresas que forman parte del mismo grupo:</section>
 
 
   <div class="checkbox-container">
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="empleados" formControlName="empleados">
-      <label class="form-check-label" for="empleados">Empleados</label>
+      <input class="form-check-input " type="checkbox" id="empleados" formControlName="empleados">
+      <label class="fw-normal" for="empleados">Empleados</label>
     </div>
 
     <div class="form-check">
       <input class="form-check-input" type="checkbox" id="infraestructura" formControlName="infraestructura">
-      <label class="form-check-label" for="infraestructura">Infraestructura</label>
+      <label class="fw-normal" for="infraestructura">Infraestructura</label>
 
     </div>
     <div class="form-check">
       <input class="form-check-input" type="checkbox" id="monto" formControlName="monto">
-      <label class="form-check-label" for="monto">Monto de Inversión</label>
+      <label class="fw-normal" for="monto">Monto de Inversión</label>
     </div>
     <div class="form-check">
       <input class="form-check-input" type="checkbox" id="antiguedad" formControlName="antiguedad">
-      <label class="form-check-label" for="antiguedad">Antigüedad (Únicamente tratándose de las empresas que se
+      <label class="fw-normal" for="antiguedad">Antigüedad (Únicamente tratándose de las empresas que se
         mencionan
         en el apartado B, regla 7.1.2)</label>
     </div>
@@ -91,7 +91,7 @@
   </h6>
 
   <div class="row m-0">
-    <div class="col-6">
+    <div class="col-5">
       <app-catalogo-select [catalogo]="tipoDe" [label]="'Tipo de inversión'" [required]="false" name="tipoDe"
         (change)="tipoDeInver()" formControlName="tipoDe"></app-catalogo-select>
     </div>
