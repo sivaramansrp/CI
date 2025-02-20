@@ -26,11 +26,11 @@ import { DatosGeneralesAnimalesComponent } from './components/datos-generales-an
     PantallasComponent,
     DatosComponent,
     TransporteComponent
-   ],
+  ],
   imports: [
     CommonModule,
     PagoDeDerechoComponent,
-    PantallasRoutingModule,    
+    PantallasRoutingModule,
     NavComponent,
     WizardComponent,
     TituloComponent,
