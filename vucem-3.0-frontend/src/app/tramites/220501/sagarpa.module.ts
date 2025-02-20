@@ -11,7 +11,6 @@ import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn
 import { CarrosDeFerrocarrilComponent } from '../220502/shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
 import { CatalogoSelectComponent } from '../../shared/components/catalogo-select/catalogo-select.component';
 import { DatosGeneralesComponent } from './components/datos-generales/datos-generales.component';
-import { DatoseDelTramiteARealizerComponent } from '../220502/shared/datose-del-tramite-a-realizer/datose-del-tramite-a-realizer.component';
 import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
 import { HistorialInspeccionFisicaComponent } from '../220502/shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
 import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
@@ -31,6 +30,7 @@ import { TableComponent } from '../../shared/components/table/table.component';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
+import { DatosDelTramiteARealizarComponent } from '../220502/shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +63,7 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
     AlertComponent,
     InputFechaComponent,
     SolicitudDatosComponent,
-    DatoseDelTramiteARealizerComponent,
+    DatosDelTramiteARealizarComponent,
     ResponsableInspeccionEnPuntoComponent,
     CarrosDeFerrocarrilComponent,
     HistorialInspeccionFisicaComponent,

@@ -36,7 +36,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tramites/220401/pantallas.module').then(
         (m) => m.PantallasModule
-      ),
+      ),  
   },
   {
 
@@ -58,7 +58,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tramites/130102/octava-temporal.module').then(
         (m) => m.OctavaTemporalModule
-      ),
+      ), 
   },
   {
     path: 'importante',

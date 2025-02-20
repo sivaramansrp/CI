@@ -32,7 +32,7 @@ import { inject } from '@angular/core';
   viewProviders: [
     {
       provide: ControlContainer,
-      useFactory: () =>
+      useFactory: (): ControlContainer =>
         inject<ControlContainer>(ControlContainer, { skipSelf: true }),
     },
   ],
@@ -50,7 +50,7 @@ export class ResponsableInspeccionEnPuntoComponent
    * Getter para acceder al grupo de formulario principal.
    * Devuelve el grupo de formulario principal al que se agregan controles dinámicos.
    */
-  get grupoformulariopadre(): FormGroup {
+  get grupoFormularioPadre(): FormGroup {
     return this.contenedorPrincipal.control as FormGroup;
   }
   /** Almacena datos del catálogo para el tipo de contenedor. */
@@ -68,7 +68,7 @@ export class ResponsableInspeccionEnPuntoComponent
   ngOnInit(): void {
     if (this.claveDeControl) {
       // Agregue un nuevo FormGroup dinámico al formulario principal
-      this.grupoformulariopadre.addControl(
+      this.grupoFormularioPadre.addControl(
         this.claveDeControl,
         new FormGroup({
           nombre: new FormControl('', [
@@ -92,9 +92,9 @@ export class ResponsableInspeccionEnPuntoComponent
   tipoContenedorSeleccion(e: Catalogo): void {
     if (
       this.claveDeControl &&
-      this.grupoformulariopadre.contains(this.claveDeControl)
+      this.grupoFormularioPadre.contains(this.claveDeControl)
     ) {
-      this.grupoformulariopadre.controls[this.claveDeControl].patchValue({
+      this.grupoFormularioPadre.controls[this.claveDeControl].patchValue({
         tipocontenedor: e.descripcion,
       });
     }
@@ -116,9 +116,9 @@ export class ResponsableInspeccionEnPuntoComponent
   ngOnDestroy(): void {
     if (
       this.claveDeControl &&
-      this.grupoformulariopadre.contains(this.claveDeControl)
+      this.grupoFormularioPadre.contains(this.claveDeControl)
     ) {
-      this.grupoformulariopadre.removeControl(this.claveDeControl);
+      this.grupoFormularioPadre.removeControl(this.claveDeControl);
     }
   }
 }

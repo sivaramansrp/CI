@@ -1,4 +1,5 @@
 import { Catalogo } from "../shared/catalogos.model";
+import { CatalogosSelect } from "../shared/components.model";
 
 /** 
  * Interfaz que representa los detalles de la mercancía.
@@ -95,7 +96,7 @@ export interface Solicitud {
 /** 
  * Interfaz que representa la estructura de datos de la tabla para mercancías.
  */
-export interface mercanciaTablaData {
+export interface MercanciaTablaData {
   /** Fila de encabezado de la tabla de mercancías. */
   hMercanciaTabla: string[];
   
@@ -130,11 +131,14 @@ export interface CargarDatosIniciales {
   
   /** encabezados para mercancia */
   dMercancia: DatosDeMercancias[];
+
+  /** Medio de transporte */
+  medioDeTransporte: CatalogosSelect;
 }
 /**
- * Interfaz que representa los datos del trámite realizer.
+ * Interfaz que representa los datos del trámite realizar.
  */
-export interface DatoseDelTramiteRealizer {
+export interface DatosDelTramiteRealizar {
   /** Clave de control */
   pendientesCertificados: Catalogo[];
   /** Certificados autorizados */
