@@ -26,12 +26,11 @@ export const PASOS = [
 ];
 export const TEXTOS_REQUISITOS = {
     INSTRUCCIONES: `<h6>Instrucciones</h6>
-    <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
-    <p>- En caso de que no requieras algún documento, selecciónalo y elimínalo</p>
+    <p>- De acuerdo al caso particular, algunos dcumentos podrían ser obligatorios</p>
+    <p>- En caso de que no requieras algún documento, seleccionalo y elíminalo</p>
     <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`,
-    ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"</p>`,
+    ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
 };
-export const MENSAJE_DE_ÉXITO_ETAPA_UNO = `La solicitud ha quedado registrada con el número temporal 202758511. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.`
 export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
     {
         labelNombre: 'Registro federal de contribuyentes:',
@@ -72,12 +71,51 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
         placeholder: '',
     }
 ];
-export const FECHA_DE_PAGO = {
-    labelNombre: 'Fecha de pago',
+export const EXPEDICION_FACTURA_FECHA = {
+    labelNombre: 'Fecha de expedición de la factura:',
     required: true,
-    habilitado: false,
+    habilitado: true,
 
 };
 export const TEXTOS = 'Para continuar con el trámite, deberá agregar por lo menos una mercancía.';
 export const TERCERO_TEXTO_DE_ALERTA = 'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
 export const ID_DE_USUARIO = 21;
+export const FACTUS_TBCOL = [
+    'Número de la factura',
+    'Razón social',
+    'Domicilio',
+    'Fecha de expedición de la factura',
+    'Cantidad total',
+    'Cantidad disponible',
+    'Unidad de medida',
+    'Valor en dólares',
+  ];
+
+export const HISTORICO_TBCOL = [
+    'Nombre del fabricante',
+    'Número de registro fiscal',
+    'Dirección',
+    'Correo Electrónico',
+    'Teléfono',
+  ];
+
+export const ASOCIADAS_TBCOl = [
+    'Candidad asociada',
+    'número de la factura',
+    'razón social',
+    'Domicilio',
+    'Fecha de emisión/expedición de la factura',
+    'Cantidad total',
+    'Cantidad disponible',
+  ];
+
+export const CPATURAR_TBCOL = [
+    'Número de la factura',
+    'Razón social',
+    'Domicilio',
+    'Fecha de expedición de la factura',
+    'Cantidad total',
+    'Cantidad disponible',
+    'Unidad de medida',
+    'Valor en dólares',
+  ];

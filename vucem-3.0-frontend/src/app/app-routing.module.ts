@@ -59,6 +59,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'elegibilidad-de-textiles',
+    loadChildren: () =>
+      import('./tramites/120301/elegibilidad-de-textiles.module').then(
+        (m) => m.ElegibilidadDeTextilesModule
+      ),
+    },
+  {
     path: 'certificado-zoosanitario',
     loadChildren: () =>
       import('./tramites/220201/certificado-zoosanitario.module').then(

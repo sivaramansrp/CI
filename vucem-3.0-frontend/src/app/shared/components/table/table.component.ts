@@ -1,6 +1,6 @@
 /* eslint-disable @angular-eslint/component-selector */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { TableData } from '../../../core/models/shared/components.model';
 
 import { CommonModule } from '@angular/common';
@@ -8,42 +8,43 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'ng-table',
   templateUrl: './table.component.html',
-  styleUrl: './table.component.scss',
+  styleUrls: ['./table.component.scss'],
   standalone: true,
   imports: [
     CommonModule
   ]
 })
-export class TableComponent {
-  @Input() enableScrollbar: boolean = false;
+export class TableComponent implements OnInit, OnChanges {
+
   /**
    * @description 
    * commonTableHeader se utiliza para obtener datos de encabezado de tabla del componente 
    */
   @Input() commonTableHeader: string[] = [];
-  /**
-   * @description 
-   * commonTableBody se utiliza para obtener datos del cuerpo de la tabla de la componente
-   */
-  @Input() commonTableBody: any =[];
-  /**
-   * @description
-   * tableData se utiliza para obtener datos de la tabla de la componente
-   */
+  @Input() commonTableBody: any = [];
+  @Input() enableScrollbar: boolean = false;
+
   public tableData: TableData = {
     tableHeader: [],
     tableBody: []
   };
-  
-  /**
-   * @description
-   * ngOnInit se utiliza para inicializar la tabla de la componente
-   */
+
+  constructor() {}
+
   ngOnInit(): void {
-    this.tableData = {
-      tableHeader: this.commonTableHeader,
-      tableBody: this.commonTableBody
+    this.updateTableData();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['commonTableHeader'] || changes['commonTableBody']) {
+      this.updateTableData();
     }
   }
 
+  private updateTableData(): void {
+    this.tableData = {
+      tableHeader: this.commonTableHeader,
+      tableBody: this.commonTableBody
+    };
+  }
 }
