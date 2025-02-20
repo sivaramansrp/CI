@@ -1,7 +1,7 @@
 
 <div class="form-group">
 <form [formGroup]="FormInputRadio"> 
-    <div *ngFor="let option of radioOptions" [ngClass]="layout">
+    <div *ngFor="let option of radioOptions" [ngClass]="layout" [ngStyle]="{ 'margin-right': gap }">
         
           <input 
             type="radio"

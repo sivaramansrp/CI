@@ -13,6 +13,7 @@ import { ServiciosPantallaService } from '../../../../core/services/31601/servic
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 import { map, merge } from 'rxjs';
 import { Tramite31601Store } from '../../../../estados/tramites/tramites31601.store';
+import { TablePaginationComponent } from '../../../../shared/components/table-pagination/table-pagination.component';
 
 
 /**
@@ -32,7 +33,8 @@ import { Tramite31601Store } from '../../../../estados/tramites/tramites31601.st
             CatalogoSelectComponent,
             CommonModule,
             ReactiveFormsModule,
-            TableComponent],
+            TableComponent,
+            TablePaginationComponent],
 })
 export class DatosPorRegimenComponent implements OnInit {
 
@@ -113,6 +115,31 @@ export class DatosPorRegimenComponent implements OnInit {
    * Este mensaje se utiliza para indicar que un campo es obligatorio.
    */
   public MENSAJE_REQUERIDO = REQUERIDO;
+
+  
+  /**
+   * @property {number} totalItems
+   *  Número total de elementos en la tabla.
+   */
+  public totalItems: number = 0;
+
+  /**
+   * @property {number} currentPage
+   *  Página actual de la tabla paginada.
+   */
+  public currentPage: number = 1;
+
+  /**
+   * @property {number} itemsPerPage
+   *  Cantidad de elementos por página.
+   */
+  public itemsPerPage: number = 5;
+
+    /**
+   * @property {unknown[]} miembrodelaempresaBodyData
+   *  Datos del cuerpo de la tabla de miembros de la empresa.
+   */
+    public miembrodelaempresaBodyData: unknown[] = [];
 
 
 
@@ -447,6 +474,36 @@ export class DatosPorRegimenComponent implements OnInit {
   public modalBimestreThree() {
     const bimestres = this.regimenForm.get('agregarCatalogThree')?.value;
     this.tramite31601Store.setComboBimestresOne(bimestres);
+  }
+
+  /**
+   * @method updatePagination
+   *  Actualiza los datos mostrados en la tabla según la paginación.
+   */
+    public updatePagination(): void {
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      this.miembrodelaempresaBodyData = this.miembrodelaempresaBodyData.slice(startIndex, startIndex + this.itemsPerPage);
+    }
+
+  /**
+   * @method onPageChange
+   * Número de la nueva página seleccionada.
+   *  Cambia la página actual y actualiza la paginación.
+   */
+  public onPageChange(page: number): void {
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+    /**
+   * @method onItemsPerPageChange
+   *  Número de elementos por página seleccionados.
+   *  Cambia la cantidad de elementos por página y actualiza la paginación.
+   */
+  public onItemsPerPageChange(itemsPerPage: number): void {
+    this.itemsPerPage = itemsPerPage;
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
 }

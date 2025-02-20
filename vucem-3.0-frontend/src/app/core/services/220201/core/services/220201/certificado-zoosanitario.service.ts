@@ -24,7 +24,7 @@ export class CertificadoZoosanitarioServiceService {
    * Objeto para almacenar los datos de la solicitud.
    * @property {capturarSolicitud} capturarSolicitudCargaUtil - Datos de la solicitud que se enviarán.
    */
-  public capturarSolicitudCargaUtil: capturarSolicitud = {
+  public capturarSolicitudCargaUtil: CapturarSolicitud = {
     solicitante: undefined,
     datosDeLaSolicitud: undefined,
     datosParaMovilizacionNacional: undefined,
@@ -44,7 +44,7 @@ export class CertificadoZoosanitarioServiceService {
    * @method setSoliciante
    * @param {solicitante} solicitante - La información del solicitante.
    */
-  setSoliciante(solicitante: solicitante) {
+  setSoliciante(solicitante: Solicitante) {
     this.capturarSolicitudCargaUtil.solicitante = solicitante;
   }
 
@@ -53,7 +53,7 @@ export class CertificadoZoosanitarioServiceService {
    * @method setDatosDeLaSolicitud
    * @param {datosDeLaSolicitud} datosDeLaSolicitud - Los datos de la solicitud.
    */
-  setDatosDeLaSolicitud(datosDeLaSolicitud: datosDeLaSolicitud) {
+  setDatosDeLaSolicitud(datosDeLaSolicitud: DatosDeLaSolicitud) {
     this.capturarSolicitudCargaUtil.datosDeLaSolicitud = datosDeLaSolicitud;
   }
 
@@ -63,7 +63,7 @@ export class CertificadoZoosanitarioServiceService {
    * @param {datosParaMovilizacionNacional} datosParaMovilizacionNacional - Los datos para la movilización nacional.
    */
   setDatosParaMovilizacionNacional(
-    datosParaMovilizacionNacional: datosParaMovilizacionNacional
+    datosParaMovilizacionNacional: DatosParaMovilizacionNacional
   ) {
     this.capturarSolicitudCargaUtil.datosParaMovilizacionNacional =
       datosParaMovilizacionNacional;
@@ -74,7 +74,7 @@ export class CertificadoZoosanitarioServiceService {
    * @method setTercerosRelacionados
    * @param {tercerosRelacionados} tercerosRelacionados - La información de terceros relacionados.
    */
-  setTercerosRelacionados(tercerosRelacionados: tercerosRelacionados) {
+  setTercerosRelacionados(tercerosRelacionados: TercerosRelacionados) {
     this.capturarSolicitudCargaUtil.tercerosRelacionados = tercerosRelacionados;
   }
 
@@ -83,7 +83,7 @@ export class CertificadoZoosanitarioServiceService {
    * @method setPagoDeDerechos
    * @param {pagoDeDerechos} pagoDeDerechos - La información de pago de derechos.
    */
-  setPagoDeDerechos(pagoDeDerechos: pagoDeDerechos) {
+  setPagoDeDerechos(pagoDeDerechos: PagoDeDerechos) {
     this.capturarSolicitudCargaUtil.pagoDeDerechos = pagoDeDerechos;
   }
 
