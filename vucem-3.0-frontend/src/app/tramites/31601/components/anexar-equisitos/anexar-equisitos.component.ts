@@ -8,9 +8,9 @@ import documentosTable from '../../../../../assets/json/31601/anexar.json'
 /**
  * @Component - AnexarRequisitosComponent
  *
- * This component provides functionality to attach (anexar) required documents.
- * It includes a form with a dropdown to select a document and a file input field
- * for uploading a file related to the selected document.
+ * Este componente proporciona funcionalidad para adjuntar (anexar) los documentos requeridos.
+ * Incluye un formulario con un desplegable para seleccionar un documento y un campo de entrada de archivo
+ * para cargar un archivo relacionado con el documento seleccionado.
  */
 @Component({
   selector: 'app-anexar-equisitos',
@@ -20,27 +20,27 @@ import documentosTable from '../../../../../assets/json/31601/anexar.json'
   styleUrl: './anexar-equisitos.component.scss'
 })
 export class AnexarEquisitosComponent implements OnInit {
-  /**
-   * Form group for the anexar-equisitos component.
-   * This form group is used to manage the form controls and their values, 
-   * validation, and status for the anexar-equisitos component.
+/**
+   *Formar grupo para el componente anexar-equisitos.
+   * Este grupo de formulario se utiliza para administrar los controles del formulario y sus valores, 
+   *validación y estatus del componente anexar-equisitos.
    */
   anexarForm!: FormGroup;
 /**
-   * List of documents for the anexar-equisitos component.
-   * This list is populated from an external JSON file.
+   * Relación de documentos del componente anexar-equisitos.
+   * Esta lista se completa a partir de un archivo JSON externo.
    */
   documentos = documentosTable.documentos
 
- /**
-   * Constructor for AnexarEquisitosComponent.
-   * @param fb - FormBuilder instance used to create form controls.
+/**
+   * Constructor para AnexarEquisitosComponent.
+   * @param fb: instancia de FormBuilder utilizada para crear controles de formulario.
    */
   constructor(private fb: FormBuilder) {
   }
 /**
-   * Lifecycle hook that is called after data-bound properties of a directive are initialized.
-   * Initializes the component by calling the `anexarEquisitosForm` method.
+   * Enlace de ciclo de vida que se llama después de que se inicializan las propiedades vinculadas a datos de una directiva.
+   * Inicializa el componente llamando al método `anexarEquisitosForm`.
    *
    */
   ngOnInit(): void {
@@ -48,10 +48,10 @@ export class AnexarEquisitosComponent implements OnInit {
   }
 
 /**
-   * Initializes the form group `anexarForm` with a single form control `valorSeleccionado`.
-   * The form control is initialized with an empty string as its default value.
+   * Inicializa el grupo de formularios `anexarForm` con un único control de formulario `valorSeleccionado`.
+   * El control de formulario se inicializa con una cadena vacía como valor predeterminado.
    *
-   * @returns {void}
+   * @returns {nulo}
    */
 
   anexarEquisitosForm():void {
@@ -60,10 +60,10 @@ export class AnexarEquisitosComponent implements OnInit {
         });
   }
 /**
-   * Handles the change event of a file input element.
-   * Updates the form control 'valorSeleccionado' with the selected file's value.
+   * Maneja el evento de cambio de un elemento de entrada de archivo.
+   * Actualiza el control del formulario 'valorSeleccionado' con el valor del archivo seleccionado.
    *
-   * @param event - The event object from the file input change event.
+   * Evento @param: el objeto de evento del evento de cambio de entrada del archivo.
    */
   cambioDeArchivo(event: any): void {
     this.anexarForm.patchValue({ valorSeleccionado: event.target.value });
