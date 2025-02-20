@@ -5,6 +5,8 @@ import { SoloNumerosDirective } from './directives/solo-numeros/solo-numeros.dir
 import { UppercaseDirective } from './directives/Uppercase/uppercase.directive';
 
 
+
+
 @NgModule({
   declarations: [
     SoloNumerosDirective,

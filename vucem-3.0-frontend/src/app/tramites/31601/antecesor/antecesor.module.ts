@@ -7,6 +7,9 @@ import { DatosComponent } from '../pages/datos/datos.component';
 import { PantallasComponent } from '../pages/pantallas/pantallas.component';
 import { WizardComponent } from '../../../shared/components/wizard/wizard.component';
 import { NavComponent } from '../../../shared/components/nav/nav.component';
+import { AduaneroComponent } from "../components/aduanero/aduanero.component";
+import { SharedModule } from '../../../shared/shared.module';
+
 import { CapturarIvaeiepsComponent } from '../components/capturar-ivaeieps/capturar-ivaeieps.component';
 import { AnexarEquisitosComponent } from '../components/anexar-equisitos/anexar-equisitos.component';
 import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-por-regimen.component';
@@ -22,6 +25,9 @@ import { BtnContinuarComponent } from '../../../shared/components/btn-continuar/
     AntecesorRoutingModule,
     WizardComponent,
     NavComponent,
+    AduaneroComponent,
+    FormsModule,
+    ReactiveFormsModule,
     CapturarIvaeiepsComponent,
     AnexarEquisitosComponent,
     DatosPorRegimenComponent,
