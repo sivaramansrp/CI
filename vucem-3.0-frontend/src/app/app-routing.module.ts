@@ -79,10 +79,17 @@ const routes: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
+  {
+    path: 'certificado-fitosanitario',
+    loadChildren: () =>
+      import('./tramites/220202/fitosanitario.module').then(
+        (m) => m.FitosanitarioModule
+      )
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

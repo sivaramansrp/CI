@@ -1,0 +1,299 @@
+<div class="container">
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="panel-group ficha-collapse" id="accordion">
+        <div class="panel panel-default">
+          <div class="panel-heading" (click)="mostrar_colapsable()">
+            <h4 class="panel-title">
+              <a> <i class="bi bi-arrow-repeat"></i>. </a>
+            </h4>
+            <button type="button" class="collpase-button collapsed"></button>
+          </div>
+          @if(colapsable){
+          <div class="panel-collapse collapse in" id="panel-01">
+            <div class="panel-body">
+              <div class="row">
+                <ng-alert [CONTENIDO]="instruccionDobleClic"></ng-alert>
+              </div>
+              <div class="row">
+                <h5>Solicita</h5>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th class="text-center">Fecha Creación</th>
+                          <th class="text-center">Mercancía</th>
+                          <th class="text-center">Cantidad</th>
+                          <th class="text-center">Proveedor</th>
+                        </tr>
+                      </thead>
+
+                      <tbody class="text-center">
+                        @for (persona of tablaDeDatosDeCelda; let i = $index;
+                        track i) {
+                        <tr>
+                          <td id="{{ i }}">{{ persona.fechaCreacion }}</td>
+                          <td id="{{ i }}">{{ persona.mercancia }}</td>
+                          <td id="{{ i }}">{{ persona.cantidad }}</td>
+                          <td id="{{ i }}">{{ persona.proveedor }}</td>
+                        </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <ng-titulo titulo="Datos del trámite a realizar"></ng-titulo>
+    </div>
+    <div class="col-md-12">
+      <app-catalogo-select
+        [catalogo]="aduanaList"
+        formControlName="aduana"
+        [label]="'Aduana de ingreso'"
+        [required]="true"
+        [isDisabled]="false"
+        name="aduana"
+      ></app-catalogo-select>
+    </div>
+    <div class="col-md-12">
+      <app-catalogo-select
+        [catalogo]="agropecuariaList"
+        formControlName="agropecuaria"
+        [label]="'Oficina de inspección de Sanidad Agropecuaria'"
+        [required]="true"
+        [isDisabled]="false"
+        name="agropecuaria"
+      ></app-catalogo-select>
+    </div>
+    <div class="col-md-12">
+      <app-catalogo-select
+        [catalogo]="puntoList"
+        formControlName="punto"
+        [label]="'Punto de inspección'"
+        [required]="true"
+        [isDisabled]="false"
+        name="punto"
+      ></app-catalogo-select>
+    </div>
+    <div class="col-md-6 mt-2">
+      <label class="control-label" for="guia">Número de guía:</label>
+      <input class="form-control" id="guia" placeholder="" type="text" />
+    </div>
+    <div class="col-md-6">
+      <app-catalogo-select
+        [catalogo]="regimeList"
+        formControlName="regimen"
+        [label]="'Régimen'"
+        [required]="true"
+        [isDisabled]="false"
+        name="regimen"
+      ></app-catalogo-select>
+    </div>
+    <div class="col-md-6">
+      <label class="control-label" for="ferrocarril"
+        >Número de Carro de Ferrocarril:</label
+      >
+      <input class="form-control" id="ferrocarril" placeholder="" type="text" />
+    </div>
+    <div class="col-md-12">
+      <h5>Mercancías</h5>
+    </div>
+    <div class="col-md-12">
+      <ng-table
+        [commonTableHeader]="mesaColumnas"
+        [commonTableBody]="mesaCuerpo"
+      ></ng-table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <ng-titulo titulo="Datos mercancía"></ng-titulo>
+    </div>
+    <div class="col-md-4">
+      <app-catalogo-select
+        [catalogo]="aduanaList"
+        formControlName="tiporequisito"
+        [label]="'Tipo de requisito'"
+        [required]="true"
+        [isDisabled]="false"
+        name="tiporequisito"
+      ></app-catalogo-select>
+    </div>
+    <div class="col-md-4">
+      <label class="control-label" for="requisito">Requisito:</label>
+      <input class="form-control" id="requisito" placeholder="" type="text" />
+    </div>
+    <div class="col-md-4">
+      <label class="control-label" for="internacional"
+        >Número de certificado internacional:*:</label
+      >
+      <input
+        class="form-control"
+        id="internacional"
+        placeholder=""
+        type="text"
+      />
+    </div>
+    <div class="col-md-4">
+      <app-catalogo-select
+        [catalogo]="arancelariaList"
+        formControlName="arancelaria"
+        [label]="'Fracción arancelaria'"
+        [required]="true"
+        [isDisabled]="false"
+        name="arancelaria"
+      ></app-catalogo-select>
+    </div>
+    <div class="col-md-8">
+      <label class="control-label" for="fraccionArancelaria"
+        >Descripción de la fracción arancelaria:*</label
+      >
+      <input
+        class="form-control"
+        id="fraccionArancelaria"
+        name="fraccionArancelaria"
+        placeholder=""
+        type="text"
+        disabled="true"
+      />
+    </div>
+    <div class="col-md-4">
+      <app-catalogo-select
+        [catalogo]="nicoList"
+        formControlName="nico"
+        [label]="'Nico'"
+        [required]="true"
+        [isDisabled]="false"
+        name="nico"
+      ></app-catalogo-select>
+    </div>
+    <div class="col-md-8 mt-2">
+      <label class="control-label" for="descFraccion">Descripción Nico:*</label>
+      <input
+        class="form-control"
+        id="descFraccion"
+        placeholder=""
+        type="text"
+        disabled="true"
+      />
+    </div>
+    <div class="col-md-12 mt-2">
+      <label class="control-label" for="Descripción">Descripción*:</label>
+      <textarea class="form-control" name="" rows="12"></textarea>
+    </div>
+    <div class="col-md-4 mt-2">
+      <label class="control-label" for="umc">Cantidad UMT:*</label>
+      <input class="form-control" id="umc" placeholder="" type="text" />
+    </div>
+    <div class="col-md-4 mt-2">
+      <label class="control-label" for="umt">UMT:*</label>
+      <input
+        class="form-control"
+        id="umt"
+        placeholder=""
+        type="text"
+        disabled="true"
+      />
+    </div>
+    <div class="col-md-4 mt-2">
+      <label class="control-label" for="cantidadUMC">Cantidad UMC*:</label>
+      <input class="form-control" id="cantidadUMC" placeholder="" type="text" />
+    </div>
+    <div class="col-md-4">
+      <app-catalogo-select
+        [catalogo]="umcList"
+        formControlName="umc"
+        [label]="'Umc'"
+        [required]="true"
+        [isDisabled]="false"
+        name="umc"
+      ></app-catalogo-select>
+    </div>
+    <div class="col-md-4">
+      <app-catalogo-select
+        [catalogo]="usoList"
+        formControlName="uso"
+        [label]="'Uso'"
+        [required]="true"
+        [isDisabled]="false"
+        name="uso"
+      ></app-catalogo-select>
+    </div>
+    <div class="col-md-4">
+      <app-catalogo-select
+        [catalogo]="productoList"
+        formControlName="producto"
+        [label]="'Tipo de producto'"
+        [required]="true"
+        [isDisabled]="false"
+        name="producto"
+      ></app-catalogo-select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <div class="panel-group ficha-collapse" id="accordion">
+          <div class="panel panel-default">
+            <div class="panel-heading" (click)="mostrar_colapsable()">
+              <h4 class="panel-title">
+                <a> Detalle </a>
+              </h4>
+              <button type="button" class="collpase-button collapsed"></button>
+            </div>
+            @if(colapsable){
+            <div class="panel-collapse collapse in" id="panel-01">
+              <div class="panel-body">
+                <crosslist [fechas]="selectRangoDias"></crosslist>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 d-flex justify-content-end">
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasRight"
+        aria-controls="offcanvasRight"
+      >
+        Limpiar
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasRight"
+        aria-controls="offcanvasRight"
+      >
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasRight"
+        aria-controls="offcanvasRight"
+      >
+        Agregar
+      </button>
+    </div>
+  </div>
+</div>
