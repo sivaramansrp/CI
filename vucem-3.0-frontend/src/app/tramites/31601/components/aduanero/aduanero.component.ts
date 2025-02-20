@@ -26,13 +26,18 @@ import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import establecimientoTable from '../../../../../assets/json/220401/establecimiento-table.json';
 
+import empleadosSubcontratación from '../../../../../assets/json/31601/empleadosSubcontratación.json';
+
+import applicantRegistrados from '../../../../../assets/json/31601/applicantRegistrados.json';
+
 import destinatarioTable from '../../../../../assets/json/220401/destinatario-table.json';
-import importardorTable from '../../../../../assets/json/220401/importador-table.json';
+import entidadFederativa from '../../../../../assets/json/31601/entidadFederative.json';
 
 import { TableComponent } from '../../../../shared/components/table/table.component';
 
 import { Modal } from 'bootstrap';
 import { TablePaginationComponent } from '../../../../shared/components/table-pagination/table-pagination.component';
+import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 @Component({
   selector: 'app-aduanero',
   templateUrl: './aduanero.component.html',
@@ -44,7 +49,8 @@ import { TablePaginationComponent } from '../../../../shared/components/table-pa
     InputRadioComponent,
     CatalogoSelectComponent,
     TableComponent,
-    TablePaginationComponent
+    TablePaginationComponent,
+    TituloComponent
   ],
 })
 export class AduaneroComponent implements OnInit, AfterViewInit {
@@ -59,12 +65,14 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
   sectorProductivoAgace: Catalogo[] = productivo;
   serviciosAgace: Catalogo[] = serviciosAgace;
   comboBimestresIDC: Catalogo[] = comboBimestres;
+  entidadFederativa :Catalogo[] = entidadFederativa;
   comboIMMEX :Catalogo[]=comboIMMEXJson;
   public establecimientoHeaderData: string[] = [];
   public fullEstablecimientoBodyData: any[] = [];
   public getEstablecimientoTableData = establecimientoTable;
   public getDestinatarioTableData = destinatarioTable;
-  public getImportadorTableData = importardorTable;
+  public empleadosSubcontratación = empleadosSubcontratación;
+  public applicantRegistrados =applicantRegistrados;
 
   public paginatedEstablecimientoBodyData: any[] = []
   contextPath: string = 'https://your-server.com'; 
@@ -72,8 +80,15 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
   currentPage: number = 1;
   itemsPerPage: number = 5;
 
+  public empleadosHeaderData :string[]=[];
+  public empleadosBodyData :any[]=[];
+
+public domiciliosHeaderData :string[]=[];
+public domiciliosBodyData :any[]=[];
   ngOnInit() {
     this.getEstablecimiento();
+    this.getEmpleadosData();
+    this.getDomiciliosData();
    
   }
   ngAfterViewInit() {
@@ -107,6 +122,14 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
     }
   }
  
+ public getEmpleadosData(){
+    this.empleadosHeaderData = this.empleadosSubcontratación.tableHeader;
+    this.empleadosBodyData = this.empleadosSubcontratación.tableBody;
+  }
+  public getDomiciliosData(){
+this.domiciliosHeaderData = this.applicantRegistrados.tableHeader;
+this.domiciliosBodyData = this.applicantRegistrados.tableBody;
+  }
 
   public getEstablecimiento() {
     this.establecimientoHeaderData =
