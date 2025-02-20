@@ -1,5 +1,5 @@
 /* eslint-disable @angular-eslint/component-selector */
- 
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { TableData } from '../../../core/models/shared/components.model';
 
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'ng-table',
   templateUrl: './table.component.html',
-  styleUrl: './table.component.scss',
+  styleUrls: ['./table.component.scss'],
   standalone: true,
   imports: [
     CommonModule
