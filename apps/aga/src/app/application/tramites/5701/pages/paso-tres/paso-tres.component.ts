@@ -1,5 +1,5 @@
 import { catchError, map } from 'rxjs';
-import { AcuseStore } from '../../../../estados/acuse.store';
+import { TramiteStore } from '../../../../estados/tramite.store';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
@@ -14,7 +14,7 @@ export class PasoTresComponent {
   constructor(
     private router: Router,
     private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
-    private acuseStore: AcuseStore
+    private tramiteStore: TramiteStore
   ) { }
 
   /**
@@ -29,7 +29,7 @@ export class PasoTresComponent {
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {
-            this.acuseStore.establecerTramite(tramite.data, FIRMA);
+            this.tramiteStore.establecerTramite(tramite.data, FIRMA);
             this.router.navigate(['servicios-extraordinarios/acuse']);
           }),
           catchError((_error) => {
