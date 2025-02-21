@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
-const routes: Routes = [
+const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
@@ -20,11 +20,18 @@ const routes: Routes = [
       import('./tramites/120601/registro-como-empresa.module').then(
         (m) => m.RegistroComoEmpresaModule
       ),
+    },
+    {
+    path: 'pantallas',
+    loadChildren: () =>
+      import('./tramites/110101/pantallas/pantallas.module').then(
+        (m) => m.Pantallas110101Module
+      ),
   },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

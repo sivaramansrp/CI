@@ -1,24 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
-import { DetosDelMarcanciaComponent } from './datos-de-la-mercacia.component';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { DetosDelLaMarcaciaComponent } from './datos-de-la-mercacia.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
-import fractionValues from '../../../../../assets/json/130102/fraccion_arancelaria.json';
-import productoOptions from '../../../../../assets/json/130102/producto-otions.json';
-import unidadOptions from '../../../../../assets/json/130102/unidad_da.json';
+import fractionValues from 'libs/shared/theme/assets/json/130102/fraccion_arancelaria.json';
+import productoOptions from 'libs/shared/theme/assets/json/130102/producto-otions.json';
+import unidadOptions from 'libs/shared/theme/assets/json/130102/unidad_da.json';
 
 describe('DetosDelMarcanciaComponent', () => {
-  let component: DetosDelMarcanciaComponent;
-  let fixture: ComponentFixture<DetosDelMarcanciaComponent>;
+  let component: DetosDelLaMarcaciaComponent;
+  let fixture: ComponentFixture<DetosDelLaMarcaciaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, ReactiveFormsModule,
-        DetosDelMarcanciaComponent,
+        DetosDelLaMarcaciaComponent,
         CatalogoSelectComponent,
         InputRadioComponent,
         TituloComponent,
@@ -30,7 +30,7 @@ describe('DetosDelMarcanciaComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DetosDelMarcanciaComponent);
+    fixture = TestBed.createComponent(DetosDelLaMarcaciaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
