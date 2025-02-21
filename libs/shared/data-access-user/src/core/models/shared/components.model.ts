@@ -66,7 +66,23 @@ export interface InputHora {
 export interface InputFecha {
   labelNombre: string;
   required: boolean;
-  habilitado: boolean
+  habilitado: boolean;
+}
+
+export type ConfiguracionTabla = Record<
+  string,
+  string | number | boolean | null
+>;
+
+export interface EncabezadosTabla {
+  key: string;
+  valor: string;
+}
+
+export interface AccionesTabla {
+  tipo: string;
+  label: string;
+  icono: string;
 }
 
 export interface Pedimento {
@@ -78,7 +94,6 @@ export interface Pedimento {
   numero: string;
   comprobanteValor: string;
   pedimentoValidado: boolean;
-
 }
 
 export interface DatosRfcResponse {
@@ -103,4 +118,12 @@ export interface TableData {
 
 export interface TableBodyData {
   tbodyData: string[];
+}
+
+export interface DatosPageAcuse {
+  txtAlerta: string;
+  tituloSeccionAcuse: string;
+  encabezadoTablaAcuse: EncabezadosTabla[];
+  datosTablaAcuse: ConfiguracionTabla[];
+  accionesTablaAcuse: AccionesTabla[];
 }

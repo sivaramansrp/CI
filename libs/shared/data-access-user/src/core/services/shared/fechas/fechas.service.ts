@@ -1,7 +1,7 @@
 import { DatosParaValidacionFecha } from '../../../models/shared/fechas.model';
 import { Injectable } from '@angular/core';
-import { MILISEGUNDOS } from '@ng-mf/data-access-user';
-import { SEMANA_D } from '@ng-mf/data-access-user';
+import { MILISEGUNDOS } from 'libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { SEMANA_D } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
 
 @Injectable({
   providedIn: 'root',

@@ -1,8 +1,8 @@
-import { catchError, Observable, throwError } from 'rxjs';
-import { enviroment } from '../../../../../../../../apps/aga/src/app/enviroments/enviroment';
+import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JSONResponse } from '../../../models/shared/catalogos.model';
+import { enviroment } from '../../../../enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root',
@@ -24,5 +24,4 @@ export class ServiciosExtraordinariosService {
       })
     );
   }
-
 }

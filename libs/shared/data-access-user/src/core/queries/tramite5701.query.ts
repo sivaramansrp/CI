@@ -1,4 +1,4 @@
-import { Solicitud5701State, Tramite5701Store } from './../../../../../../apps/aga/src/app/application/estados/tramites/tramite5701.store';
+import { Solicitud5701State, Tramite5701Store } from 'apps/aga/src/app/application/estados/tramites/tramite5701.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 

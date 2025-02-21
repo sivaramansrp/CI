@@ -7,15 +7,15 @@ import { BooleanoSiNoPipe } from './pipes/booleanoSiNo/booleano-si-no.pipe';
 
 @NgModule({
   declarations: [
-    SoloNumerosDirective,
+    forwardRef(() => SoloNumerosDirective),
   ],
   imports: [
     CommonModule,
-    InputCheckComponent,
-    forwardRef(() => UppercaseDirective),
+    forwardRef(() =>InputCheckComponent),    
+    forwardRef(() => UppercaseDirective)
    ],
   exports: [
-    SoloNumerosDirective,
+    forwardRef(() => SoloNumerosDirective),
   ]
 })
 export class SharedModule { }

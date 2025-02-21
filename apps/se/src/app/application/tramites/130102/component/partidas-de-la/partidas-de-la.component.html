@@ -1,0 +1,126 @@
+<div class="container">
+    <form [formGroup]="form">
+        <div>
+            <ng-titulo titulo="Partidas de la mercancía"></ng-titulo>
+            <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label" for="cantidad">Cantidad*:</label>
+                        <input class="form-control" type="text" id="cantidad" formControlName="cantidad" appUppercase
+                            aria-labelledby="cantidad">
+                            <div *ngIf="esInvalido('cantidad')" class="text-danger">
+                                <small *ngIf="form.controls['cantidad'].hasError('required')">Cantidad es obligatoria.</small>
+                                <small *ngIf="form.controls['cantidad'].hasError('pattern')">Solo se permiten números.</small>
+                                <small *ngIf="form.controls['cantidad'].hasError('maxlength')">Máximo 18 caracteres.</small>
+                            </div>    
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label" for="fraccionArancelariaTIGIE">Fracción Arancelaria TIGIE*:</label>
+                        <input class="form-control" type="text" id="fraccionArancelariaTIGIE"
+                            formControlName="fraccionArancelariaTIGIE" aria-labelledby="fraccionArancelariaTIGIE">
+                            <div *ngIf="esInvalido('fraccionArancelariaTIGIE')" class="text-danger">
+                                <small>Debe seleccionar una fracción.</small>
+                            </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <app-catalogo-select [catalogo]="fraccionArancelariaTIGIE"
+                    [required]="true" (change)="fraccionArancelariaTIGIESelection()"></app-catalogo-select>
+                        <div *ngIf="esInvalido('fraccionArancelariaTIGIE')" class="text-danger">
+                            <small>Debe seleccionar una fracción.</small>
+                        </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label class="form-label" for="descripcion">Descripción*:</label>
+                        <textarea class="form-control height" rows="3" id="descripcion" formControlName="descripcion"
+                            aria-labelledby="descripcion"></textarea>
+                            <div *ngIf="esInvalido('descripcion')" class="text-danger">
+                                <small *ngIf="form.controls['descripcion'].hasError('required')">Descripción es obligatoria.</small>
+                                <small *ngIf="form.controls['descripcion'].hasError('maxlength')">Máximo 255 caracteres.</small>
+                            </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
+                        <input class="form-control" type="number" id="valorPartidaUSD" formControlName="valorPartidaUSD"
+                            aria-labelledby="valorPartidaUSD">
+                            <div *ngIf="esInvalido('valorPartidaUSD')" class="text-danger">
+                                <small *ngIf="form.controls['valorPartidaUSD'].hasError('required')">Este campo es obligatorio.</small>
+                                <small *ngIf="form.controls['valorPartidaUSD'].hasError('pattern')">Ingrese un número válido.</small>
+                                <small *ngIf="form.controls['valorPartidaUSD'].hasError('min')">El valor debe ser mayor o igual a 0.</small>
+                                <small *ngIf="form.controls['valorPartidaUSD'].hasError('maxlength')">Máximo 20 caracteres permitidos.</small>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-4"></div>
+                <div class="col-md-8">
+                    <hr>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8"></div>
+                <div class="col-md-4 text-end">
+                    <div class="btn-group">
+                        <button class="btn btn-primary me-2" type="button">Cargar archivo</button>
+                        <button class="btn btn-danger" type="button" (click)="validarYEnviarFormulario()">Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+ 
+    <div class="row mt-5">
+        <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES_PARA_PARTIDAS"></ng-alert>
+        <div>
+            <h6>Mercancias</h6>
+ 
+            <ng-table [commonTableHeader]="tableHeaderData" [commonTableBody]="tableBodyData" [enableScrollbar]="true"></ng-table>
+ 
+            <form [formGroup]="formForTotalCount">  
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="cantidadTotal">Cantidad total:</label>
+                            <input class="form-control" type="number" id="cantidadTotal" formControlName="cantidadTotal"
+                                aria-labelledby="cantidadTotal" [disabled]="true">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="valorTotalUSD">Valor Total USD:</label>
+                            <input class="form-control" type="number" id="valorTotalUSD"
+                                formControlName="valorTotalUSD" aria-labelledby="valorTotalUSD" [disabled]="true">
+                        </div>
+                    </div>
+                </div>
+ 
+                <div class="row mt-5">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-8">
+                        <hr>
+                    </div>
+                </div>
+               
+                <div class="row">
+                    <div class="col-md-6 col-sm-6"></div>
+                    <div class="col-md-6 col-sm-6 text-end">
+                        <div class="btn-group">
+                            <button class="btn btn-primary me-2" type="button">Elimina Partida</button>
+                            <button class="btn btn-danger" type="button">Mofificar partida mercancia</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+ 

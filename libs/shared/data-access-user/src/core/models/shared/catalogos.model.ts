@@ -24,7 +24,6 @@ export interface Catalogo {
   dpi?: string
 }
 
-
 export interface CatalogoPaises {
   id: number;
   codigoIso: string;

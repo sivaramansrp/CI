@@ -1,7 +1,7 @@
 import { Login, TokenResponse } from '../../../models/shared/inicio-sesion.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { enviroment } from './../../../../../../../../apps/aga/src/app/enviroments/enviroment';
+import { enviroment } from '../../../../enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root',

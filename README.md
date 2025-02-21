@@ -80,7 +80,7 @@ It will show tasks that you can run with Nx.
 - configure the assets in project.json, refer aga
 - module-federation.manifest.json - add new port
 - add the custom router in entry.route
-- port and manifest shoud be same in project.json
+- port and manifest.json shoud be same in project.json
 
 ## Steps to add new procedure
 - Add new procedure like modue

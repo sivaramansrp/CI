@@ -15,7 +15,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './input-radio.component.html',
-  styleUrl: './input-radio.component.scss'
+  styleUrl: './input-radio.component.scss',
+  host: { 'hostID': crypto.randomUUID().toString() }
 })
 export class InputRadioComponent implements OnInit {
  /** Grupo de formulario para los botones de radio */

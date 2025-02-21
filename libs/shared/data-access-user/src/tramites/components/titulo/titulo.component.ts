@@ -5,7 +5,8 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './titulo.component.html',
-  styleUrl: './titulo.component.scss'
+  styleUrl: './titulo.component.scss',
+  host: { 'hostID': crypto.randomUUID().toString() }
 })
 export class TituloComponent {
   @Input() titulo!: string;
