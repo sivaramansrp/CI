@@ -10,7 +10,7 @@ import { TIPO_PERSONA } from '../../../../shared/constantes/constantes';
 import{ 
 PERSONA_FISICA_NACIONAL,
 }from '../../../../shared/constantes/solicitante-constantes.enum'
-import { PERSONA_FISICA_SACIONAL } from '../../../../shared/constantes/solicitante-constantes.enum';
+
 import { SolicitanteService } from '../../../../core/services/shared/solicitante/solicitante.service';
 
 import { FormulariosService } from '../../../../core/services/shared/formularios/formularios.service';
@@ -72,7 +72,7 @@ export class SolicitanteComponent implements OnInit {
   obtenerTipoPersona(tipo: number): void {
     this.tipoPersona = tipo;
     if (tipo === TIPO_PERSONA.FISICA_NACIONAL) {
-      this.persona = PERSONA_FISICA_SACIONAL;
+      this.persona = PERSONA_FISICA_NACIONAL;
     }
   }
 
