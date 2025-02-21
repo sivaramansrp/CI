@@ -21,7 +21,14 @@ const routes: Routes = [
       import('./tramites/110102/exportadorautorizado.module').then(
         (m)=>m.ExportadorautorizadoModule
       )
-  }
+  },
+  {
+    path: 'pantallas',
+    loadChildren: () =>
+      import('./tramites/110101/pantallas/pantallas.module').then(
+        (m) => m.Pantallas110101Module
+      ),
+  },
 ];
 
 @NgModule({

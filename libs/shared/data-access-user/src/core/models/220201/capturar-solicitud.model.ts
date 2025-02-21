@@ -99,10 +99,52 @@ export interface PagoDeDerechos {
   llavePago: string;
   importePago: string;
 }
-
+export function createDatosState(params: Partial<CapturarSolicitud> = {}): CapturarSolicitud {
+  return {
+    solicitante: params.solicitante || { // Initialize as an object
+      rfc: '',
+      nombreRazonSocial: '',
+      aPaterno: '',
+      correo: ''
+    },
+    datosDeLaSolicitud: params.datosDeLaSolicitud || { // Initialize as an object
+      aduanaIngreso: '',
+      oficinaInspeccion: '',
+      puntoInspeccion: '',
+      claveUCON: '',
+      establecimientoTIF: '',
+      nombreVeterinario: '',
+      numeroGuia: '',
+      certificacion: '',
+      regimen: ''
+    },
+    datosParaMovilizacionNacional: params.datosParaMovilizacionNacional || { // Initialize as an object
+      coordenadas: '',
+      nombre: '',
+      medio: '',
+      transporte: '',
+      punto: '',
+    },
+    tercerosRelacionados: params.tercerosRelacionados || { // Initialize as an object with an array
+      terceros: []
+    },
+    pagoDeDerechos: params.pagoDeDerechos || { // Initialize as an object
+      exentoPagoNo: '',
+      exentoPagoSi: '',
+      justificacion: '',
+      claveReferencia: '',
+      cadenaDependencia: '',
+      banco: '',
+      llavePago: '',
+      importePago: ''
+    },
+  };
+}
 /**
  * Interface TercerosRelacionados
  * @export
  * @interface TercerosRelacionados
  */
-export interface TercerosRelacionados { }
+export interface TercerosRelacionados {
+  terceros: []
+}
