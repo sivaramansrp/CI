@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { TEXTOS } from '@ng-mf/data-access-user';
 /**
  * Este componente se muestra en PasaDos
  */

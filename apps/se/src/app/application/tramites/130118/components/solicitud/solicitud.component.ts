@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, merge } from 'rxjs';
 
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { FECHA_SALIDA } from '../../../../shared/constantes/servicios-extraordinarios.enum';
-import { InputFecha } from '../../../../core/models/shared/components.model';
-import { PeximService } from '../../../../core/services/130118/pexim/pexim.service';
-import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
-import { Solicitud130118State, Tramite130118Store } from '../../../../estados/tramites/tramite130118.store';
+// import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+// import { FECHA_SALIDA } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+// import { InputFecha } from '../../../../core/models/shared/components.model';
+// import { PeximService } from '../../../../core/services/130118/pexim/pexim.service';
+// import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+// import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
+// import { Solicitud130118State, Tramite130118Store } from '../../../../estados/tramites/tramite130118.store';
+import { Catalogo, CATALOGOS_ID, FECHA_SALIDA, InputFecha, PeximService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
 
 
 /**
@@ -74,17 +76,17 @@ export class SolicitudComponent implements OnInit {
   /**
    * Estado de la solicitud.
    */
-  public solicitudState: Solicitud130118State;
+  public solicitudState: Solicitud130118State | undefined;
 
   /**
    * Indica si la persona física es visible.
    */
-  isVisibleFisica: boolean;
+  isVisibleFisica: boolean = false;
 
   /**
    * Indica si la persona moral es visible.
    */
-  isVisibleMoral: boolean;
+  isVisibleMoral: boolean = false;
 
   /**
    * Fecha final de entrada.
@@ -182,7 +184,7 @@ export class SolicitudComponent implements OnInit {
    * @returns {boolean} Regresa un booleano si el campo es válido o no.
    */
   isValid(form: FormGroup, field: string): boolean {
-    return this.validacionesService.isValid(form, field);
+    return this.validacionesService.isValid(form, field) === true;
   }
 
   /**

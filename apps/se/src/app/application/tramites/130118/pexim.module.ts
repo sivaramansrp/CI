@@ -4,28 +4,15 @@ import { RouterModule } from '@angular/router';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { AgregaPersonasComponent } from '../5701/components/agrega-personas/agrega-personas.component';
-import { AlertComponent } from '../../shared/components/alert/alert.component';
-import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';
-import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn-continuar.component';
-import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
-import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
-import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
-import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
-import { InputHoraComponent } from '../../shared/components/input-hora/input-hora.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { PedimentoComponent } from '../5701/components/pedimento/pedimento.component';
 import { PeximRoutingModule } from './pexim-routing.module';
-import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
-import { SharedModule } from '../../shared/shared.module';
-import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component'; 
-import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { TituloComponent } from '../../shared/components/titulo/titulo.component';
-import { WizardComponent } from '../../shared/components/wizard/wizard.component';
-import { CatalogoSelectComponent } from '../../shared/components/catalogo-select/catalogo-select.component';
+import { SolicitudComponent } from './components/solicitud/solicitud.component';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, SelectPaisesComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { ToastrService } from 'ngx-toastr';
+// import { ToastrService } from 'ngx-toastr/toastr/toastr.service';
 
 @NgModule({
   declarations: [
@@ -48,8 +35,6 @@ import { CatalogoSelectComponent } from '../../shared/components/catalogo-select
     InputFechaComponent,
     InputHoraComponent,
     CrosslistComponent,
-    PedimentoComponent,
-    AgregaPersonasComponent,
     ReactiveFormsModule,
     TituloComponent,
     SelectPaisesComponent,
@@ -60,6 +45,9 @@ import { CatalogoSelectComponent } from '../../shared/components/catalogo-select
   ],
   exports: [
     SolicitudComponent
+  ],
+  providers: [
+    ToastrService
   ]
 })
 export class PeximModule { }
