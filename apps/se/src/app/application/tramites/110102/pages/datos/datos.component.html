@@ -1,0 +1,35 @@
+
+<div class="page">
+<div class="container">
+    <div class="row">
+        <h3>
+            Para UE/AELC, ALADI, SGP, Japón, Perú, Uruguay, Panamá y para el certificado de 
+            artículos mexicanos (CAM), y para el carácter de exportador autorizado 
+            para UE/AELC, para comercializador 
+        </h3>
+    </div>
+    <div class="row">
+      <ul class="nav nav-tabs">
+        <li [ngClass]="indice === 1 ? 'active' : ''">
+          <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
+            (keydown.space)="seleccionaTab(1)" role="button" tabindex="1">Solicitante</a>
+        </li>
+        <li [ngClass]="indice === 2 ? 'active' : ''">
+          <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
+            (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Datos de la Mercancía</a>
+        </li>
+      </ul>
+  
+      <ng-container>
+        @switch (indice) {
+        @case (1) {
+        <solicitante [tabindex]="1"></solicitante>
+        }
+        @case (2) {
+          <app-dataos-de-la-mercancia></app-dataos-de-la-mercancia>
+          }
+        }
+      </ng-container>
+    </div>
+  </div>
+</div>

@@ -14,6 +14,14 @@ const routes: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
+
+  {
+    path:'exportadorautorizado',
+    loadChildren:()=>
+      import('./tramites/110102/exportadorautorizado.module').then(
+        (m)=>m.ExportadorautorizadoModule
+      )
+  }
 ];
 
 @NgModule({
