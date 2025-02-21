@@ -7,9 +7,8 @@ import {
   TercerosRelacionados,
   PagoDeDerechos,
 } from 'libs/shared/data-access-user/src/core/models/220201/capturar-solicitud.model';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { ZoosanitarioStore } from '../../../../../../../apps/agriculture/src/app/application/estados/220201/zoosanitario.store'
 /**
  * Servicio para la gestión de solicitudes de certificado zoosanitario.
  * Este servicio proporciona métodos para configurar y enviar la información de la solicitud.
@@ -19,81 +18,59 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CertificadoZoosanitarioServiceService {
-
-  /**
-   * Objeto para almacenar los datos de la solicitud.
-   * @property {capturarSolicitud} capturarSolicitudCargaUtil - Datos de la solicitud que se enviarán.
-   */
-  public capturarSolicitudCargaUtil: CapturarSolicitud = {
-    solicitante: undefined,
-    datosDeLaSolicitud: undefined,
-    datosParaMovilizacionNacional: undefined,
-    tercerosRelacionados: undefined,
-    pagoDeDerechos: undefined,
-  };
-
-  /**
-   * Constructor del servicio.
-   * @constructor
-   * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
-   */
-  constructor(private readonly http: HttpClient) { }
-
-  /**
-   * Establece la información del solicitante.
-   * @method setSoliciante
-   * @param {solicitante} solicitante - La información del solicitante.
-   */
-  setSoliciante(solicitante: Solicitante) {
-    this.capturarSolicitudCargaUtil.solicitante = solicitante;
+  constructor(private zoosanitarioStore: ZoosanitarioStore) { }
+  updateSolicitante(solicitante: Solicitante): void {
+    this.zoosanitarioStore.actualizarSolicitante(solicitante);
   }
 
-  /**
-   * Establece los datos de la solicitud.
-   * @method setDatosDeLaSolicitud
-   * @param {datosDeLaSolicitud} datosDeLaSolicitud - Los datos de la solicitud.
-   */
-  setDatosDeLaSolicitud(datosDeLaSolicitud: DatosDeLaSolicitud) {
-    this.capturarSolicitudCargaUtil.datosDeLaSolicitud = datosDeLaSolicitud;
+  updateDatosDeLaSolicitud(datosDeLaSolicitud: DatosDeLaSolicitud): void {
+    this.zoosanitarioStore.actualizarDatosDeLaSolicitud(datosDeLaSolicitud);
   }
 
-  /**
-   * Establece los datos para la movilización nacional.
-   * @method setDatosParaMovilizacionNacional
-   * @param {datosParaMovilizacionNacional} datosParaMovilizacionNacional - Los datos para la movilización nacional.
-   */
-  setDatosParaMovilizacionNacional(
-    datosParaMovilizacionNacional: DatosParaMovilizacionNacional
-  ) {
-    this.capturarSolicitudCargaUtil.datosParaMovilizacionNacional =
-      datosParaMovilizacionNacional;
+  updateDatosParaMovilizacionNacional(datosParaMovilizacionNacional: DatosParaMovilizacionNacional): void {
+    this.zoosanitarioStore.actualizarDatosParaMovilizacionNacional(datosParaMovilizacionNacional);
   }
 
-  /**
-   * Establece la información de terceros relacionados.
-   * @method setTercerosRelacionados
-   * @param {tercerosRelacionados} tercerosRelacionados - La información de terceros relacionados.
-   */
-  setTercerosRelacionados(tercerosRelacionados: TercerosRelacionados) {
-    this.capturarSolicitudCargaUtil.tercerosRelacionados = tercerosRelacionados;
+  updateTercerosRelacionados(tercerosRelacionados: TercerosRelacionados): void {
+    this.zoosanitarioStore.actualizarTercerosRelacionados(tercerosRelacionados);
   }
 
-  /**
-   * Establece la información de pago de derechos.
-   * @method setPagoDeDerechos
-   * @param {pagoDeDerechos} pagoDeDerechos - La información de pago de derechos.
-   */
-  setPagoDeDerechos(pagoDeDerechos: PagoDeDerechos) {
-    this.capturarSolicitudCargaUtil.pagoDeDerechos = pagoDeDerechos;
+  updatePagoDeDerechos(pagoDeDerechos: PagoDeDerechos): void {
+    this.zoosanitarioStore.actualizarPagoDeDerechos(pagoDeDerechos);
   }
 
-  /**
-   * Envía la solicitud capturada.
-   * @method capturarSolicitudEnviar  // Nombre en camelCase
-   * @returns {Observable<any>} - Un Observable que emite la respuesta del servidor.
-   */
-  capturarSolicitudEnviar(): Observable<any> { // Nombre en camelCase
-    const _url = 'http://localhost:3000/capturarSolicitud';
-    return this.http.post<any>(_url, this.capturarSolicitudCargaUtil);
+  limpiarFormulario(): void {
+    this.zoosanitarioStore.limpiarFormulario();
   }
+
+  // --- Getting Data ---
+
+  getSolicitante(): Observable<Solicitante> {
+    return this.zoosanitarioStore._select(state => state.solicitante); // Use _select for observable
+  }
+
+  getDatosDeLaSolicitud(): Observable<DatosDeLaSolicitud> {
+    return this.zoosanitarioStore._select(state => state.datosDeLaSolicitud);
+  }
+
+  getDatosParaMovilizacionNacional(): Observable<DatosParaMovilizacionNacional> {
+    return this.zoosanitarioStore._select(state => state.datosParaMovilizacionNacional);
+  }
+
+  getTercerosRelacionados(): Observable<TercerosRelacionados> {
+    return this.zoosanitarioStore._select(state => state.tercerosRelacionados);
+  }
+
+  getTerceros(): Observable<any> { // Or Observable<Tercero[]> if you have a Tercero interface
+    return this.zoosanitarioStore._select(state => state.tercerosRelacionados.terceros);
+  }
+
+  getPagoDeDerechos(): Observable<PagoDeDerechos> {
+    return this.zoosanitarioStore._select(state => state.pagoDeDerechos);
+  }
+
+  getFormData(): Observable<CapturarSolicitud> {
+    return this.zoosanitarioStore._select(state => state);
+  }
+
 }

@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
-import { ListaDeDatosFinal } from "../models/220202/fitosanitario.model";
+
 import { Query } from "@datorama/akita";
-import { FitosanitarioStore } from "../../../../../../apps/agriculture/src/app/application/estados/fitosanitario.store";
+import { CapturarSolicitud } from "../../models/220201/capturar-solicitud.model";
+import { ZoosanitarioStore } from "../../../../../../../apps/agriculture/src/app/application/estados/220201/zoosanitario.store"
 /**
  * @summary Servicio de consulta para el estado de fitosanitarios.
  * 
@@ -13,7 +14,7 @@ import { FitosanitarioStore } from "../../../../../../apps/agriculture/src/app/a
  * @injectable
  */
 @Injectable({ providedIn: 'root' })
-export class FitosanitarioQuery extends Query<ListaDeDatosFinal> {
+export class ZoosanitarioQuery extends Query<CapturarSolicitud> {
 
     /**
      * @summary Constructor del servicio.
@@ -21,7 +22,7 @@ export class FitosanitarioQuery extends Query<ListaDeDatosFinal> {
      * @param store Instancia del `FitosanitarioStore` utilizada para 
      * inicializar la consulta.
      */
-    constructor(protected override store: FitosanitarioStore) {
+    constructor(protected override store: ZoosanitarioStore) {
         super(store);
     }
 }
