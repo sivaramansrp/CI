@@ -39,7 +39,15 @@ const routes: Routes = [
       ),  
   },
   {
-    path: 'inspeccion-fisica', 
+
+    path: 'sagarpa',
+    loadChildren: () =>
+      import('./tramites/220501/sagarpa.module').then(
+        (m) => m.SagarpaModule
+      ),
+  },
+  {
+    path: 'inspeccion-fisica',
     loadChildren: () =>
       import('./tramites/220502/inspeccion-fisica.module').then(
         (m) => m.InspeccionFisicaModule

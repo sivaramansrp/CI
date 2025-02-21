@@ -25,7 +25,7 @@ export class TableComponent implements OnInit, OnChanges {
    * @description
    * commonTableBody se utiliza para obtener datos del cuerpo de la tabla de la componente
    */
-  @Input() commonTableBody: any =[];
+  @Input() commonTableBody: any = [];
   /**
    * @description
    * tableData se utiliza para obtener datos de la tabla de la componente
@@ -42,8 +42,8 @@ export class TableComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.tableData = {
       tableHeader: this.commonTableHeader,
-      tableBody: this.commonTableBody
-    }
+      tableBody: this.commonTableBody,
+    };
   }
 
   /** 

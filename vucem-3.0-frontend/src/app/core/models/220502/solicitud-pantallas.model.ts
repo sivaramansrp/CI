@@ -136,7 +136,7 @@ export interface CargarDatosIniciales {
   medioDeTransporte: CatalogosSelect;
 }
 /**
- * Interfaz que representa los datos del trámite realizer.
+ * Interfaz que representa los datos del trámite realizar.
  */
 export interface DatosDelTramiteRealizar {
   /** Clave de control */
