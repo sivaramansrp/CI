@@ -66,6 +66,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'permiso-importacion',
+    loadChildren: () =>
+      import('./tramites/130120/permiso-importacion.module').then(
+        (m) => m.PermisoImportacionModule
+      ),
+  },
+  {
     path: 'octava-temporal',
     loadChildren: () =>
       import('./tramites/130102/octava-temporal.module').then(
@@ -73,7 +80,7 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'avois-de-materiales',
+    path: 'aviso-de-materiales',
     loadChildren: () =>
       import('./tramites/231001/avisodemateriales.module').then(
         (m) => m.AvisodematerialesModule

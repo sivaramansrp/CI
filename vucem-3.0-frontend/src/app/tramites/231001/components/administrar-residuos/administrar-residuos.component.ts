@@ -33,7 +33,7 @@ export class AdministrarResiduosComponent implements OnInit {
   /**
    * Formulario para el recuento total de filas
    */
-  formForTotalCount!: FormGroup;
+  formularioParaRecuentoTotal!: FormGroup;
   /**
    * Constructor de la clase
    * @param fb - FormBuilder para crear formularios reactivos
@@ -46,7 +46,7 @@ export class AdministrarResiduosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.getEstablecimiento();
-    this.formularioTotalCount();
+    this.crearFormularioParaRecuentoTotal();
     this.actualizarRecuentoTotalDeFilas();
   }
 
@@ -61,8 +61,8 @@ export class AdministrarResiduosComponent implements OnInit {
   /**
    * Crea el formulario para el recuento total de filas
    */
-  formularioTotalCount(): void {
-    this.formForTotalCount = this.fb.group({
+  crearFormularioParaRecuentoTotal(): void {
+    this.formularioParaRecuentoTotal = this.fb.group({
       recuentoTotalDeFilas: [{ value: '', disabled: true }],
     });
   }
@@ -72,6 +72,6 @@ export class AdministrarResiduosComponent implements OnInit {
    */
   public actualizarRecuentoTotalDeFilas(): void {
     const totalRowCount = this.tableBodyData.length;
-    this.formForTotalCount.patchValue({ recuentoTotalDeFilas: totalRowCount });
+    this.formularioParaRecuentoTotal.patchValue({ recuentoTotalDeFilas: totalRowCount });
   }
 }
