@@ -7,7 +7,7 @@ import { PASOS } from 'libs/shared/data-access-user/src/tramites/constantes/serv
 
 
 @Component({
-  selector: 'app-solicitante',
+  selector: 'app-130102solicitante',
   templateUrl: './solicitante.component.html'
 })
 export class Solicitante130102Component {

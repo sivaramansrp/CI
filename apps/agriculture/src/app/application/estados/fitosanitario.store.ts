@@ -1,6 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { createDatosState, DatosForma, ListaDeDatosFinal, Mercancia, Movilizacion, PagoForm } from '../core/models/220202/fitosanitario.model';
+import { createDatosState, DatosForma, ListaDeDatosFinal, Mercancia, Movilizacion, PagoForm } from 'libs/shared/data-access-user/src/core/models/220202/fitosanitario.model';
 
 
 
