@@ -21,6 +21,13 @@ const routes: Routes = [
         (m) => m.Pantallas110101Module
       ),
   },
+  {
+    path: 'expansion-de-productores',
+    loadChildren: () =>
+      import('./tramites/90201/expansion-de-productores/expansion-de-productores.module').then(
+        (m) => m.ExpansionDeProductoresModule
+      ),
+  },
 ];
 
 @NgModule({
