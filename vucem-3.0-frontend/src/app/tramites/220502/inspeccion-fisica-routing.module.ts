@@ -1,0 +1,17 @@
+import { InspeccionFisicaComponent } from './pages/inspeccion-fisica/inspeccion-fisica.component';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: 'pantallas',
+    component: InspeccionFisicaComponent,
+  },
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class InspeccionFisicaRoutingModule { }
