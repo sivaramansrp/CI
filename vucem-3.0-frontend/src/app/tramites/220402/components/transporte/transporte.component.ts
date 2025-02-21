@@ -6,6 +6,7 @@ import { HttpCoreService } from '../../../../core/services/shared/http/http.serv
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { MediodetransporteService } from '../../../../core/services/220402/mediodetransporte.service';
 
 @Component({
   selector: 'app-transporte',
@@ -33,7 +34,8 @@ export class TransporteComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-    private httpCoreService: HttpCoreService
+    private httpCoreService: HttpCoreService,
+    private mediodetransporteService: MediodetransporteService
   ) {
     this.fetchtiposDocumentos();
     this.crearFormTransporte();
@@ -71,12 +73,12 @@ export class TransporteComponent implements OnDestroy {
   /**
    * Este método se utiliza para obtener los datos de los medios de transporte.
    */
-  fetchtiposDocumentos() {
-    this.httpCoreService
-      .get('./assets/json/220401/mediodetransporte.json')
+  fetchtiposDocumentos(): void {
+    this.mediodetransporteService
+      .getMedioDeTransporte()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data): void => {
-        this.tiposDocumentos['catalogos'] = data as Catalogo[];
+        this.tiposDocumentos.catalogos = data as Catalogo[];
       });
   }
   /**

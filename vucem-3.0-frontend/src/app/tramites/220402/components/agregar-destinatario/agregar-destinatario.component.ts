@@ -1,13 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { TipoPersona } from '../../../../core/enums/tipoPersona.enum';
 
 @Component({
-  selector: 'app-agregar-destinatoria',
-  templateUrl: './agregar-destinatoria.component.html',
-  styleUrl: './agregar-destinatoria.component.scss',
+  selector: 'app-agregar-destinatario',
+  templateUrl: './agregar-destinatario.component.html',
+  styleUrl: './agregar-destinatario.component.scss',
 })
-export class AgregarDestinatoriaComponent {
+export class AgregarDestinatarioComponent implements OnInit {
   public pais!: CatalogosSelect;
   // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   public fisica: boolean = true;
@@ -16,7 +17,7 @@ export class AgregarDestinatoriaComponent {
 
   options!: Catalogo[];
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  conatructor() {}
+  constructor() {}
 
   ngOnInit(): void {
     this.inicializaCatalogos();
@@ -42,15 +43,15 @@ export class AgregarDestinatoriaComponent {
     ];
   }
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public docSeleccionado(e: Catalogo) {}
+  public static docSeleccionado(e: Catalogo): void {}
 
   /**
    *
    * @param  checkBoxName, que acepta datos de tipo cadena
    * @description inputChecked se utiliza para verificar si el checkbox está seleccionado
    */
-  public inputChecked(checkBoxName: string) {
-    if (checkBoxName === 'fisica') {
+  inputChecked(checkBoxName: string): void {
+    if (checkBoxName === TipoPersona.FISICA) {
       this.fisica = true;
       this.moral = false;
     } else {
