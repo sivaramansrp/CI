@@ -33,7 +33,8 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
-  },
+      ),
+  }
 ];
 
 @NgModule({

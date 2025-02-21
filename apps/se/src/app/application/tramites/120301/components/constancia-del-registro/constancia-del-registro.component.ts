@@ -90,7 +90,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
       next: (response: any) => {
         if (response && Array.isArray(response.federal)) {
 
-          this.federal = response.federal.map((item) => {
+          this.federal = response.federal.map((item: any) => {
             var data = {
               tbodyData: item.tbodyData
             }

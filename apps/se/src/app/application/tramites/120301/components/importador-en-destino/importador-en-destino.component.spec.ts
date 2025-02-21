@@ -1,32 +1,27 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ImportadorEnDestinoComponent } from './importador-en-destino.component';
-import { ImportadorEnDestinoService } from 'libs/shared/data-access-user/src/core/services/120301/importador-en-destino/importador-en-destino.service';
-import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { ElegibilidadTextilesService } from '../../../../../../../../../libs/shared/data-access-user/src/core/services/120301/elegibilidad-textiles/elegibilidad-textiles.service';
+import { of } from 'rxjs';
 
 describe('ImportadorEnDestinoComponent', () => {
   let component: ImportadorEnDestinoComponent;
   let fixture: ComponentFixture<ImportadorEnDestinoComponent>;
-  let importadorEnDestinoService: ImportadorEnDestinoService;
+  let elegibilidadTextilesService: ElegibilidadTextilesService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        ReactiveFormsModule,
-        TableComponent,
-        TituloComponent
-      ],
       declarations: [ImportadorEnDestinoComponent],
-      providers: [ImportadorEnDestinoService]
+      imports: [ReactiveFormsModule, HttpClientTestingModule],
+      providers: [ElegibilidadTextilesService]
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(ImportadorEnDestinoComponent);
     component = fixture.componentInstance;
-    importadorEnDestinoService = TestBed.inject(ImportadorEnDestinoService);
+    elegibilidadTextilesService = TestBed.inject(ElegibilidadTextilesService);
     fixture.detectChanges();
   });
 
@@ -34,25 +29,52 @@ describe('ImportadorEnDestinoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should fetch data on init', () => {
-    const mockData = {
-      importadores: [
-        { tbodyData: ['Importador 1', 'Dirección 1', 'País 1', '2024-11-07 00:00:00.0'] },
-        { tbodyData: ['Importador 2', 'Dirección 2', 'País 2', '2024-10-14 00:00:00.0'] }
-      ]
-    };
-    spyOn(importadorEnDestinoService, 'getDatos').and.returnValue(of(mockData));
-
-    component.ngOnInit();
-
-    expect(component.importadores).toEqual(mockData.importadores);
+  it('should create importadorForm with default values', () => {
+    expect(component.importadorForm).toBeDefined();
+    expect(component.importadorForm.get('tipo')?.value).toBe('');
+    expect(component.importadorForm.get('cantidadTotal')?.value).toBe('');
+    expect(component.importadorForm.get('razonSocial')?.value).toBe('');
+    expect(component.importadorForm.get('domicilio')?.value).toBe('');
+    expect(component.importadorForm.get('ciudad')?.value).toBe('');
+    expect(component.importadorForm.get('cp')?.value).toBe('');
+    expect(component.importadorForm.get('pais')?.value).toBe('');
   });
 
-  it('should handle error while fetching data', () => {
-    spyOn(importadorEnDestinoService, 'getDatos').and.returnValue(of({}));
+  it('should create importadorEnDestino form with default values', () => {
+    expect(component.importadorEnDestino).toBeDefined();
+    expect(component.importadorEnDestino.get('tipo')?.value).toBe('');
+  });
 
-    component.ngOnInit();
+  it('should call obtenerIngresoSelectList and set tipo', () => {
+    const mockData = [{ id: 1, descripcion: 'Tipo 1' }];
+    spyOn(elegibilidadTextilesService, 'obtenerMenuDesplegable').and.returnValue(of(mockData));
 
-    expect(component.importadores).toEqual([]);
+    component.obtenerIngresoSelectList();
+
+    expect(elegibilidadTextilesService.obtenerMenuDesplegable).toHaveBeenCalledWith('tipo.json');
+    expect(component.tipo).toEqual(mockData);
+  });
+
+  it('should validate importadorForm fields', () => {
+    const form = component.importadorForm;
+    form.get('tipo')?.setValue('');
+    form.get('cantidadTotal')?.setValue('abc');
+    form.get('razonSocial')?.setValue('');
+    form.get('domicilio')?.setValue('');
+    form.get('ciudad')?.setValue('');
+    form.get('cp')?.setValue('1234');
+    form.get('pais')?.setValue('');
+
+    expect(form.valid).toBeFalsy();
+
+    form.get('tipo')?.setValue('Tipo 1');
+    form.get('cantidadTotal')?.setValue('100');
+    form.get('razonSocial')?.setValue('Empresa S.A.');
+    form.get('domicilio')?.setValue('Calle 123');
+    form.get('ciudad')?.setValue('Ciudad');
+    form.get('cp')?.setValue('12345');
+    form.get('pais')?.setValue('País');
+
+    expect(form.valid).toBeTruthy();
   });
 });

@@ -153,3 +153,7 @@ export interface solicitante {
     formularioAsociacionFactura: formularioAsociacionFactura;
     historicoFabricantesForm: HistoricoFabricantesForm;
   }
+
+  export interface ElegibilidadDeTextilesState {
+    textileSolicitudCargaUtil: ElegibilidadDeTextiles;
+  }

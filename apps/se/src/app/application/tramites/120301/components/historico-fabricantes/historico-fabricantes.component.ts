@@ -116,11 +116,11 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     this.historicoFabricantesService.getDatos().subscribe({
       next: (response: any) => {
         if (response && Array.isArray(response.fabricantesNacionales) && Array.isArray(response.fabricantesDatos)) {
-          this.fabricantesNacionales = response.fabricantesNacionales.map((item) => {
+          this.fabricantesNacionales = response.fabricantesNacionales.map((item: any) => {
             return { tbodyData: item.tbodyData };
           });
 
-          this.fabricantesDatos = response.fabricantesDatos.map((item) => {
+          this.fabricantesDatos = response.fabricantesDatos.map((item: any) => {
             return { tbodyData: item.tbodyData };
           });
         } else {

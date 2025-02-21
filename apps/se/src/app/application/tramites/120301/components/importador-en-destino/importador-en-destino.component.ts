@@ -29,7 +29,7 @@ export class ImportadorEnDestinoComponent {
    */
   importadorEnDestino!: FormGroup;
 
-  tipo: Catalogo[];
+  tipo: Catalogo[] = [];
 
   /**
    * Constructor del componente.

@@ -101,13 +101,12 @@ export class CapturarFacturasComponent implements OnInit {
     this.capturarFacturasService.getDatos().subscribe({
       next: (response: any) => {
         if (response && Array.isArray(response.facturas)) {
-          this.facturas = response.facturas.map((item) => {
+          this.facturas = response.facturas.map((item: any) => {
             var data = {
               tbodyData: item.tbodyData
             }
             return data;
-          }
-          );
+          });
           this.facturas = [...this.facturas]
         } else {
           console.error('La respuesta de la API no tiene el formato esperado:', response);
@@ -124,7 +123,7 @@ export class CapturarFacturasComponent implements OnInit {
  * Configuración para el select de unidad de medida.
  * @property {CatalogosSelect} unidadDeMedida
  */
-  unidadDeMedida: Catalogo[];
+  unidadDeMedida: Catalogo[] = [];
   /**
 * Configuración para el input de fecha-expedición-factura.
 * @property {InputFecha} fechaInicioInput

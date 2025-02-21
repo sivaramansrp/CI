@@ -90,11 +90,11 @@ export class formularioAsociacionFactura implements OnInit {
     this.facturasAsociadasService.getDatos().subscribe({
       next: (response: any) => {
         if (response && Array.isArray(response.facturasDisponible) && Array.isArray(response.facturasAsociadas)) {
-          this.facturasDisponible = response.facturasDisponible.map((item) => {
+          this.facturasDisponible = response.facturasDisponible.map((item: any) => {
             return { tbodyData: item.tbodyData };
           });
 
-          this.facturasAsociadas = response.facturasAsociadas.map((item) => {
+          this.facturasAsociadas = response.facturasAsociadas.map((item: any) => {
             return { tbodyData: item.tbodyData };
           });
         } else {
