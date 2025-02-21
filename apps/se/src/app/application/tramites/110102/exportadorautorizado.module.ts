@@ -5,6 +5,7 @@ import { ExportadorautorizadoRoutingModule } from './exportadorautorizado-routin
 import { DatosComponent } from './pages/datos/datos.component';
 import { SolicitanteComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component";
 import { DataosDeLaMercanciaComponent } from "./pages/datos-de-la-mercancia/dataos-de-la-mercancia.component";
+import { DatosTratadosAcuerdosComponent } from "./components/datosTratadosAcuerdos/datosTratadosAcuerdos.component";
 
 
 @NgModule({
@@ -13,7 +14,7 @@ import { DataosDeLaMercanciaComponent } from "./pages/datos-de-la-mercancia/data
     CommonModule,
     ExportadorautorizadoRoutingModule,
     SolicitanteComponent,
-    
+    DatosTratadosAcuerdosComponent
 ]
 })
 export class ExportadorautorizadoModule { }

@@ -1,0 +1,22 @@
+{
+    "tableHeader": [
+      "País/Bloque",
+      "Tratado/Acuerdo",
+      "Criterio de origen",
+      "Norma",
+      "Otras instancias",
+      "Juegos Surtidos"
+    ],
+    "tableBody": [
+      {
+        "tbodyData": [
+          "Asociación Europea de Libre Comercio",
+          "Tratado de Libre Comercio México-Asociación Europea de Libre Comercio ",
+          "No Aplica",
+          "N/A",
+          "",
+          ""
+        ]
+      }
+    ]
+  }
