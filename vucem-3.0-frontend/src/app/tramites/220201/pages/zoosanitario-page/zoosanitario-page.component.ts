@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
 import { AccionBoton, ListaPasosWizard } from '../../../../core/models/220201/certificado-zoosanitario.model';
 import { PASOS } from '../../../../shared/constantes/certificado-zoosanitario.enum';
-import { SUCECESS_MESSAGE_STAGEONE } from '../../../../shared/constantes/certificado-zoosanitario.enum';
+import { MENSAJE_DE_ÉXITO_ETAPA_UNO } from '../../../../shared/constantes/certificado-zoosanitario.enum';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 
 /**
@@ -58,7 +58,7 @@ export class ZoosanitarioPageComponent {
    * Mensaje de éxito para el primer paso.
    * @property {string} mensajeDeTextoDeExito - Mensaje que se muestra si el primer paso se completa con éxito.
    */
-  mensajeDeTextoDeExito: string = SUCECESS_MESSAGE_STAGEONE;
+  mensajeDeTextoDeExito: string = MENSAJE_DE_ÉXITO_ETAPA_UNO;
 
   /**
    * Maneja la acción del botón y navega entre los pasos.

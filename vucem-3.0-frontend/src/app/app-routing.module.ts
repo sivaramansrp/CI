@@ -59,10 +59,24 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'elegibilidad-de-textiles',
+    loadChildren: () =>
+      import('./tramites/120301/elegibilidad-de-textiles.module').then(
+        (m) => m.ElegibilidadDeTextilesModule
+      ),
+    },
+  {
     path: 'certificado-zoosanitario',
     loadChildren: () =>
       import('./tramites/220201/certificado-zoosanitario.module').then(
         (m) => m.CertificadoZoosanitarioModule
+      ),
+  },
+  {
+    path: 'permiso-importacion',
+    loadChildren: () =>
+      import('./tramites/130120/permiso-importacion.module').then(
+        (m) => m.PermisoImportacionModule
       ),
   },
   {
@@ -79,10 +93,17 @@ const routes: Routes = [
         (m) => m.PantallasCapturaModule
       ),
   },
+  {
+    path: 'certificado-fitosanitario',
+    loadChildren: () =>
+      import('./tramites/220202/fitosanitario.module').then(
+        (m) => m.FitosanitarioModule
+      )
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
