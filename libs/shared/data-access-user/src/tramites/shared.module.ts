@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { forwardRef, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UppercaseDirective } from './directives/Uppercase/uppercase.directive';
 import { InputCheckComponent } from './components/input-check/input-check.component';
@@ -12,10 +12,9 @@ import { BooleanoSiNoPipe } from './pipes/booleanoSiNo/booleano-si-no.pipe';
   imports: [
     CommonModule,
     InputCheckComponent,
-    UppercaseDirective
+    forwardRef(() => UppercaseDirective),
    ],
   exports: [
-    UppercaseDirective,
     SoloNumerosDirective,
   ]
 })
