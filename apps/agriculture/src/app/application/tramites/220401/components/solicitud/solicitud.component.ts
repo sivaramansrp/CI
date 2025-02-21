@@ -1,11 +1,9 @@
 
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-
-
 
 import { PantallasFormData } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/220401/servicios-pantallas.model';
 import { ServiciosPantallasService } from '../../../../../../../../../libs/shared/data-access-user/src/core/services/220471/servicios-pantallas.service';
@@ -22,10 +20,11 @@ interface Solicitude {
  * pantallasFormData: Form data of the screens
  */
 @Component({
-  selector: 'app-solicitud',
+  selector: 'app-220401solicitud',
   templateUrl: './solicitud.component.html',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule],
+  providers : [ ],
   styleUrl: './solicitud.component.scss'
 })
 

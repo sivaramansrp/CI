@@ -126,7 +126,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         delay(10),
         tap((_value) => {
-          let seccion: number = -1;
+          let seccion: number = 0;
           const formasValidadas = this.seccion.formaValida;
 
           for (let i = 0; i < this.seccion.seccion.length; i++) {

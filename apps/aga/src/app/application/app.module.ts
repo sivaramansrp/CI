@@ -13,6 +13,7 @@ import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { SolicitanteService } from '@ng-mf/data-access-user';
 import { provideHttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { provideHttpClient } from '@angular/common/http';
   imports: [
     AkitaNgDevtools,
     AppRoutingModule,
+    CommonModule,
     BreadcrumbComponent,
     FooterComponent,
     HeaderComponent,

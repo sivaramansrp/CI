@@ -9,7 +9,7 @@ import {
   PERSONA_MORAL_NACIONAL,
 } from '../../constantes/solicitante-constantes.enum';
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, forwardRef, Input, OnInit } from '@angular/core';
 
 import {
   FormBuilder,
@@ -35,7 +35,7 @@ import { tap } from 'rxjs';
     TituloComponent,
     ReactiveFormsModule,
     CommonModule,
-    UppercaseDirective,
+    forwardRef(() => UppercaseDirective),
   ],
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',

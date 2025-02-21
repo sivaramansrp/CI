@@ -11,7 +11,7 @@ import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputHoraComponent } from '@ng-mf/data-access-user';
 import { NavComponent } from '@ng-mf/data-access-user';
-import { NgModule } from '@angular/core';
+import { forwardRef, NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -40,34 +40,34 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     PasoTresComponent,
   ],
   imports: [
-    TercerosComponent,
-    AgregaPersonasComponent,
-    AgregarTransporteComponent,
-    AlertComponent,
-    AnexarDocumentosComponent,
-    BtnContinuarComponent,
-    CatalogoSelectComponent,
+    forwardRef(() => TercerosComponent),
+    forwardRef(() => AgregaPersonasComponent),
+    forwardRef(() =>AgregarTransporteComponent),
+    forwardRef(() =>AlertComponent),
+    forwardRef(() => AnexarDocumentosComponent),
+    forwardRef(() => BtnContinuarComponent),
+    forwardRef(() => CatalogoSelectComponent),
     CommonModule,
-    CrosslistComponent,
-    FirmaElectronicaComponent,
-    InputCheckComponent,
-    InputFechaComponent,
-    InputHoraComponent,
-    NavComponent,
-    PedimentoComponent,
+    forwardRef(() => CrosslistComponent),
+    forwardRef(() => FirmaElectronicaComponent),
+    forwardRef(() => InputCheckComponent),
+    forwardRef(() => InputFechaComponent),
+    forwardRef(() => InputHoraComponent),
+    forwardRef(() => NavComponent),
+    forwardRef(() => PedimentoComponent),
     ReactiveFormsModule,
-    RepresentanteFiscalComponent,
+    forwardRef(() => RepresentanteFiscalComponent),
     RouterModule,
-    SelectCatalogosComponent,
-    SelectPaisesComponent,
+    forwardRef(() => SelectCatalogosComponent),
+    forwardRef(() => SelectPaisesComponent),
     ServiciosExtraordinariosRoutingModule,
     SharedModule,
-    SolicitanteComponent,
-    TituloComponent,
-    WizardComponent,
+    forwardRef(() => SolicitanteComponent),
+    forwardRef(() => TituloComponent),
+    forwardRef(() => WizardComponent),
     ToastrModule.forRoot()
   ],
-  exports: [SolicitudComponent],
+  exports: [],
   providers: [
     ToastrService,
     CatalogosService
