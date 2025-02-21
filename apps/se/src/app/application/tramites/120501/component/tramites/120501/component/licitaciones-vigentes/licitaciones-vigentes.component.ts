@@ -6,7 +6,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { TableComponent } from '@ng-mf/data-access-user';
 
-// import LicitacionesDisponibles from 'libs/shared/theme/assets/json/220401/licitaciones-disponibles.json';
+//import LicitacionesDisponibles from '../../../../../../../../libs/shared/theme/assets/json/120501/licitaciones-disponibles.json';
 
 
 @Component({
@@ -14,12 +14,12 @@ import { TableComponent } from '@ng-mf/data-access-user';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, TableComponent],
   templateUrl: './licitaciones-vigentes.component.html',
-  styleUrl: './licitaciones-vigentes.component.css',
+  styleUrl: './licitaciones-vigentes.component.scss',
 })
 export class LicitacionesVigentesComponent implements OnInit {
   tableHeaderData: string[] = [];
   tableBodyData: { tbodyData: string[] }[] = [];
-  // public getEstablecimientoTableData = LicitacionesDisponibles;
+  //public getEstablecimientoTableData = LicitacionesDisponibles;
 
   ngOnInit(): void {
     // this.getEstablecimiento();
