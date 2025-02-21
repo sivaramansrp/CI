@@ -11,8 +11,8 @@ import { InputRadioComponent } from "libs/shared/data-access-user/src/tramites/c
 import { InputTypes } from 'libs/shared/data-access-user/src/core/models/130120/permiso-importacion-modification.enum';
 import { TituloComponent } from "libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
 import { map } from 'rxjs';
-import tipoDePersonaExportadorOptions from 'libs/shared/theme/assets/json/130120/tipo-de-persona-exportador.json'
-import tipoDePersonaProductorOptions from 'libs/shared/theme/assets/json/130120/tipo-de-persona-productor.json'
+import tipoDePersonaExportadorOptions from 'libs/shared/theme/assets/json/130120/tipo-de-persona-exportador.json';
+import tipoDePersonaProductorOptions from 'libs/shared/theme/assets/json/130120/tipo-de-persona-productor.json';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -379,16 +379,16 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     nombreGrupo: string,
     indiceGrupo: number,
   ): void {
-    const grupo = this.formulario.get(nombreGrupo) as FormGroup;
+    const GRUPO = this.formulario.get(nombreGrupo) as FormGroup;
     configuracion.forEach((campo: any, menuIndex: number) => {
-      const validators = campo.validators ? this.getValidators(campo.validators) : [Validators.required];
-      const controlName = campo.props.campo ? campo.props.campo : campo.props.labelNombre;
-      grupo.addControl(
-        controlName,
-        this.fb.control({ value: '', disabled: campo.disabled }, validators)
+      const VALIDATORS = campo.validators ? this.getValidators(campo.validators) : [Validators.required];
+      const CONTROL_NAME = campo.props.campo;
+      GRUPO.addControl(
+        CONTROL_NAME,
+        this.fb.control({ value: '', disabled: campo.disabled }, VALIDATORS)
       );
       if (campo.inputType === InputTypes.SELECT) {
-        this.obtenerValoresCatalogo(indiceGrupo, menuIndex,controlName);
+        this.obtenerValoresCatalogo(indiceGrupo, menuIndex, CONTROL_NAME);
       }
     });
   }
@@ -418,19 +418,19 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * @returns Una matriz de validadores de formularios.
    */
   getValidators(validadores: string[]): ValidatorFn[] {
-    const formValidators: ValidatorFn[] = [];
+    const FORM_VALIDATORS: ValidatorFn[] = [];
     validadores.forEach((validadore) => {
       if (validadore === 'required') {
-        formValidators.push(Validators.required);
+        FORM_VALIDATORS.push(Validators.required);
       } else if (validadore.includes('maxLength')) {
-        const max = validadore.split(':')[1];
-        formValidators.push(Validators.maxLength(Number(max)));
+        const MAX = validadore.split(':')[1];
+        FORM_VALIDATORS.push(Validators.maxLength(Number(MAX)));
       } else if (validadore.includes('pattern')) {
-        const pattern = validadore.split(':')[1];
-        formValidators.push(Validators.pattern(pattern));
+        const PATTERN = validadore.split(':')[1];
+        FORM_VALIDATORS.push(Validators.pattern(PATTERN));
       }
     });
-    return formValidators;
+    return FORM_VALIDATORS;
   }
 
   /**

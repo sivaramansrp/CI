@@ -7,7 +7,7 @@ import { Catalogo, RespuestaCatalogos } from '../../../models/shared/catalogos.m
   providedIn: 'root'
 })
 export class ElegibilidadTextilesService {
-  url: string = '../../../../../assets/json/120301/';
+  url = '../../../../../assets/json/120301/';
 
   constructor(private readonly http: HttpClient) { }
   /**
