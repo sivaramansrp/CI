@@ -14,6 +14,11 @@ const routes: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
+  {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/130118/pexim.module').then((m) => m.PeximModule),
+  },
 ];
 
 @NgModule({
