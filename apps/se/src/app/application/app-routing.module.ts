@@ -15,6 +15,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'pantallas',
+    loadChildren: () =>
+      import('./tramites/110101/pantallas/pantallas.module').then(
+        (m) => m.Pantallas110101Module
+      ),
+  },
+  {
     path: 'elegibilidad-de-textiles',
     loadChildren: () =>
       import('./tramites/120301/elegibilidad-de-textiles.module').then(
@@ -26,7 +33,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
-      ),
   },
 ];
 

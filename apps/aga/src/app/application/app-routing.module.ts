@@ -13,7 +13,12 @@ const routes: Routes = [
       import('./tramites/5701/servicios-extraordinarios.module').then(
         (m) => m.ServiciosExtraordinariosModule
       ),
-  }
+  },
+  {
+    path: 'importante',
+    loadChildren: () =>
+      import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
+  },
 ];
 
 @NgModule({
