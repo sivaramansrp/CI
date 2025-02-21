@@ -11,14 +11,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
   selector: 'ng-mf-root',
   template: `
   <c-header></c-header>
-    <h2 class="dashboard-nav"> Welcome VUCME3.0</h2>
-    <table border="1" cellpadding="5" cellspacing="5">
-    <tbody>
-        <tr>
-          <td width="30"><a routerLink="aga/pago/seleccion-tramite">Procedure</a></td>
-        </tr>
-        </tbody>
-      </table>
+    
       <router-outlet></router-outlet>
       <c-footer></c-footer>
   `,
