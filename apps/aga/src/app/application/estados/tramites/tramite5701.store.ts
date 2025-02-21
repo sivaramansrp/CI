@@ -2,7 +2,9 @@ import {
   Personas,
   ResponsablesDespacho,
 } from '@ng-mf/data-access-user';
+
 import { Store, StoreConfig } from '@datorama/akita';
+
 import { Injectable } from '@angular/core';
 
 /**
@@ -47,7 +49,7 @@ export interface Solicitud5701State {
   encargoConferido: boolean;
   domicilio: string;
 
-  paisOrigen: number | null;
+  paisOrigen: number;
   paisProcedencia: number;
   descripcion: string;
   justificacion: string;

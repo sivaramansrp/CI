@@ -1,7 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { PerfilUsuario } from '@ng-mf/data-access-user';
-import { Rol } from '@ng-mf/data-access-user';
+import { PerfilUsuario } from '../core/models/usuario/perfilUsuario.model';
+import { Rol } from '../core/models/usuario/rol.model';
 
 /**
  * Estado para la información de usuario obtenida del inicio de sesión
@@ -11,7 +11,7 @@ export interface UsuarioState {
     idOrganizacion: number;
     logueado: boolean;
     token: string;
-    perfilUsuario?: PerfilUsuario;
+    perfilUsuario: PerfilUsuario;
     roles: Rol[];
 }
 
@@ -21,11 +21,11 @@ export interface UsuarioState {
  */
 export function createInitialState(): UsuarioState {
   return {
-    idUsuario: '',
-    idOrganizacion: 0,
+    idUsuario: null,
+    idOrganizacion: null,
     logueado: false,
     token: '',
-    perfilUsuario: undefined,
+    perfilUsuario: null,
     roles: [],
   };
 }
