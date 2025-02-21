@@ -94,7 +94,7 @@ export const PERSONA_FISICA_SACIONAL = [
     class: 'col-md-4',
     tipo_input: 'text',
     disabled: true,
-    tooltip: 'Regulación Federal de Contribuyentes',
+    tooltip: 'Registro Federal de Contribuyentes',
     validators: ['required', 'maxLength:13', 'minLength:12', 'pattern:rfc'],
     placeholder: '',
   },
