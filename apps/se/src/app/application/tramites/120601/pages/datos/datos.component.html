@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Solicitud empresa de la frontera persona física.</h1>
+      </div>
+    </div>
+
+    <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
+    <div>
+      @switch (indice) {
+      @case (1) {
+      <app-paso-uno></app-paso-uno>
+      }
+      @case (2) {
+      <p>2</p>
+      }
+      @case (3) {
+        <p>3</p>
+      }
+      @case (4) {
+        <p>4</p>
+      }
+    }
+    </div>
+    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+</div>
+

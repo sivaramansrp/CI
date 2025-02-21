@@ -70,3 +70,4 @@ export * from './core/models/usuario/rol.model';
 export * from './core/services/shared/http/http.service';
 export * from './core/services/220471/servicios-pantallas.enum';
 export * from './tramites/constantes/regex.constants';
+export * from './tramites/constantes/registro-como-empresa.enum'
