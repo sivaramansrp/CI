@@ -3,8 +3,9 @@ import { Catalogo } from "libs/shared/data-access-user/src/core/models/shared/ca
 import { InputFecha } from "libs/shared/data-access-user/src/core/models/shared/components.model"
 import { FECHA_DE_PAGO } from "libs/shared/data-access-user/src/tramites/constantes/220202/fitosanitario.enums"
 import { Component, OnInit } from "@angular/core"
-
 import { AgriculturaApiService } from "libs/shared/data-access-user/src/core/services/220202/agricultura-api.service"
+
+
 
 
 /**
@@ -32,7 +33,11 @@ export class PagoDeDerechosComponent implements OnInit {
    * Configuración para el input de fecha de pago.
    * @property {InputFecha} fechaInicioInput
    */
-  fechaInicioInput: InputFecha = FECHA_DE_PAGO;
+  fechaInicioInput: InputFecha = {
+    labelNombre: '',
+    required: false,
+    habilitado: false
+  };
 
   /**
    * Configuración para el selector de justificación.
@@ -50,17 +55,7 @@ export class PagoDeDerechosComponent implements OnInit {
    * Grupo de formularios para el pago de derechos.
    * @property {FormGroup} pagoForm
    */
-  pagoForm: FormGroup = this.fb.group({
-    exentoPago: [''],
-    justificacion: [{ value: '', disabled: false }], // Validators.required removed
-    claveReferencia: [{ value: '', disabled: true }],
-    cadenaDependencia: [{ value: '', disabled: true }],
-    banco: [{ value: '', disabled: true }], // Validators.required removed
-    llavePago: [{ value: '', disabled: false }],
-    importePago: [{ value: '', disabled: true }], // Validators.required removed
-    fechaDePago: [{ value: '', disabled: true }] // Validators.required removed
-  });
-
+  pagoForm!: FormGroup;
   /**
    * Opciones para el radio button de exención de pago.
    * @property {any[]} radioOptions
@@ -105,6 +100,17 @@ export class PagoDeDerechosComponent implements OnInit {
    * @method ngOnInit
    */
   ngOnInit(): void {
+    this.pagoForm = this.fb.group({
+      exentoPago: [''],
+      justificacion: [{ value: '', disabled: false }], // Validators.required removed
+      claveReferencia: [{ value: '', disabled: true }],
+      cadenaDependencia: [{ value: '', disabled: true }],
+      banco: [{ value: '', disabled: true }], // Validators.required removed
+      llavePago: [{ value: '', disabled: false }],
+      importePago: [{ value: '', disabled: true }], // Validators.required removed
+      fechaDePago: [{ value: '', disabled: true }] // Validators.required removed
+    });
+
     this.obtenerDetallesDeListaDeOpciones();
   }
 
@@ -123,7 +129,10 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   obtenerBancoSelectorList() {
     this.agriculturaApiService.obtenerSelectorList('banco.json').subscribe(data => {
-      this.bancoSelector = data as Catalogo[];
+      if (data) {
+        this.bancoSelector = data;
+      }
+
     })
 
   }
@@ -134,7 +143,10 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   obtenerListaDeJustificaciones() {
     this.agriculturaApiService.obtenerSelectorList('Justificación.json').subscribe(data => {
-      this.justificacionSelector = data as Catalogo[];
+      if (data) {
+        this.justificacionSelector = data;
+      }
+
     })
   }
 
