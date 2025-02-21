@@ -13,8 +13,9 @@ import { BtnContinuarComponent } from "../../../../shared/components/btn-continu
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
-import { HttpCoreService } from '../../../../core/services/shared/http/http.service';
+import { MateriaprimaformserviceService } from '../../../../core/services/231001/materiaprimaformservice.service';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+
 
 /**
  * Componente que maneja los datos relacionados con los residuos, incluidos los formularios y catálogos.
@@ -92,7 +93,7 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    * Instancia de FormBuilder para crear formularios.
    *  Servicio para realizar solicitudes HTTP.
    */
-  constructor(private fb: FormBuilder, private http: HttpCoreService) {
+  constructor(private fb: FormBuilder,private service:MateriaprimaformserviceService ) {
     this.materiaPrimaForm = this.fb.group({
       descUnidadMedida: [''],
       descFraccion: [''],
@@ -100,8 +101,8 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
       clavePartida: [''],
       claveSubPartida: [''],
       
-      descripcionMercancia: ['', [Validators.required, Validators.maxLength(120)]], // Descripción de la mercancía (requerido, máximo 120 caracteres)
-      generica2: ['', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,6})?$'), Validators.maxLength(18)]], // Valor numérico (requerido, número entero o decimal con hasta 6 decimales, máximo 18 caracteres)
+      nombreDeLaMateriaPrima: ['', [Validators.required, Validators.maxLength(120)]], // Descripción de la mercancía (requerido, máximo 120 caracteres)
+      cantidad: ['', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,6})?$'), Validators.maxLength(18)]], // Valor numérico (requerido, número entero o decimal con hasta 6 decimales, máximo 18 caracteres)
       cantidadEnLetra: [{ value: '', disabled: true }, Validators.maxLength(256)], // Cantidad en letra (deshabilitado, máximo 256 caracteres)
       unidadMedidaComercial: this.fb.group({
         clave: ['', Validators.required]
@@ -118,16 +119,16 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    * Método que se ejecuta cuando el componente es inicializado. Carga los catálogos de unidad de medida y capítulo de fracción.
    */
   ngOnInit(): void {
-    this.loadcomboUnidadMedida();
+    this.loadComboUnidadMedida();
     this.loadComboCapituloFraccion();
   }
 
   /**
    * @method loadcomboUnidadMedida
-   * Método que carga las opciones del catálogo de unidad de medida desde un archivo JSON.
+   * Método que carga las opciones del catálogo de unidad de medida.
    */
-  loadcomboUnidadMedida(): void {
-    this.http.get('./assets/json/231001/comboUnidadMedida.json').pipe(
+  loadComboUnidadMedida(): void {
+    this.service.getUnidadMedida().pipe(
       takeUntil(this.destroyed$) // Se usa takeUntil para asegurarse de que las suscripciones se cancelen al destruirse el componente
     ).subscribe((data): void => {
       this.comboUnidadMedida = data as Catalogo[];
@@ -136,10 +137,10 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
 
   /**
    * @method loadComboCapituloFraccion
-   * Método que carga las opciones del catálogo de capítulo de fracción desde un archivo JSON.
+   * Método que carga las opciones del catálogo de capítulo de fracción.
    */
   loadComboCapituloFraccion(): void {
-    this.http.get('./assets/json/231001/comboCapituloFraccion.json').pipe(
+    this.service.getCapituloFraccion().pipe(
       takeUntil(this.destroyed$)
     ).subscribe((data): void => {
       this.comboCapituloFraccion = data as Catalogo[];
@@ -148,10 +149,10 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
 
   /**
    * @method loadComboPartidaFraccion
-   * Método que carga las opciones del catálogo de partida de fracción desde un archivo JSON.
+   * Método que carga las opciones del catálogo de partida de fracción
    */
   loadComboPartidaFraccion(): void {
-    this.http.get('./assets/json/231001/comboPartidaFraccion.json').pipe(
+    this.service.getPartidaFraccion().pipe(
       takeUntil(this.destroyed$)
     ).subscribe((data): void => {
       this.comboPartidaFraccion = data as Catalogo[];
@@ -163,7 +164,7 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    * Método que carga las opciones del catálogo de subpartida de fracción desde un archivo JSON.
    */
   loadComboSubPartidaFraccion(): void {
-    this.http.get('./assets/json/231001/comboSubPartidaFraccion.json').pipe(
+    this.service.getSubPartidaFraccion().pipe(
       takeUntil(this.destroyed$)
     ).subscribe((data): void => {
       this.comboSubPartidaFraccion = data as Catalogo[];
@@ -174,8 +175,8 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    * @method loadcomboFraccionArancelariaParametros
    * Método que carga las opciones del catálogo de fracción arancelaria desde un archivo JSON.
    */
-  loadcomboFraccionArancelariaParametros(): void {
-    this.http.get('./assets/json/231001/comboFraccionArancelariaParametros.json').pipe(
+  loadComboFraccionArancelariaParametros(): void {
+    this.service.getFraccionArancelariaParametros().pipe(
       takeUntil(this.destroyed$)
     ).subscribe((data): void => {
       this.comboFraccionArancelariaParametros = data as Catalogo[];
@@ -237,7 +238,7 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
       generica1: ''
     });
     this.comboFraccionArancelariaParametros = [];
-    this.loadcomboFraccionArancelariaParametros();
+    this.loadComboFraccionArancelariaParametros();
   }
 
   /**

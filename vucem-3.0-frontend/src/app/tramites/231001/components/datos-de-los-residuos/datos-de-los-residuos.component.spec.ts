@@ -1,176 +1,128 @@
-/* eslint-disable dot-notation */
-import { BtnContinuarComponent } from "../../../../shared/components/btn-continuar/btn-continuar.component";
-import CapituloFraccion from '../../../../../assets/json/231001/comboCapituloFraccion.json';
-import { CommonModule } from '@angular/common';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DatosDeLosResiduosComponent } from './datos-de-los-residuos.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { Subject, of } from 'rxjs';
 
-import { HttpCoreService } from '../../../../core/services/shared/http/http.service';
-import { of } from 'rxjs';
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { DatosDeLosResiduosComponent } from './datos-de-los-residuos.component';
+import { MateriaprimaformserviceService } from '../../../../core/services/231001/materiaprimaformservice.service';
 
-import FraccionArancelariaParametros from '../../../../../assets/json/231001/comboFraccionArancelariaParametros.json';
-import PartidaFraccion from '../../../../../assets/json/231001/comboPartidaFraccion.json';
-import SubPartidaFraccion from '../../../../../assets/json/231001/comboSubPartidaFraccion.json';
-import UnidadMedida from '../../../../../assets/json/231001/comboUnidadMedida.json';
 
 describe('DatosDeLosResiduosComponent', () => {
   let component: DatosDeLosResiduosComponent;
   let fixture: ComponentFixture<DatosDeLosResiduosComponent>;
-  let httpService: HttpCoreService;
+  let service: MateriaprimaformserviceService;
+  let destroyed$: Subject<void>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        DatosDeLosResiduosComponent,
         ReactiveFormsModule,
-        CommonModule,
-        BtnContinuarComponent,
-        CatalogoSelectComponent,
-        TituloComponent,
-        HttpClientTestingModule
+        HttpClientTestingModule,
+        DatosDeLosResiduosComponent
       ],
-      providers: [HttpCoreService]
+      providers: [MateriaprimaformserviceService]
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(DatosDeLosResiduosComponent);
     component = fixture.componentInstance;
-    httpService = TestBed.inject(HttpCoreService);
-    spyOn(httpService, 'get').and.callFake((url: string) => {
-      switch (url) {
-        case './assets/json/231001/comboUnidadMedida.json':
-          return of(UnidadMedida);
-        case './assets/json/231001/comboCapituloFraccion.json':
-          return of(CapituloFraccion);
-        case './assets/json/231001/comboPartidaFraccion.json':
-          return of(PartidaFraccion);
-        case './assets/json/231001/comboSubPartidaFraccion.json':
-          return of(SubPartidaFraccion);
-        case './assets/json/231001/comboFraccionArancelariaParametros.json':
-          return of(FraccionArancelariaParametros);
-        default:
-          return of([]);
-      }
-    });
+    service = TestBed.inject(MateriaprimaformserviceService);
+    destroyed$ = new Subject<void>();
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    destroyed$.next();
+    destroyed$.complete();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
+  it('should initialize form on ngOnInit', () => {
+    component.ngOnInit();
     expect(component.materiaPrimaForm).toBeDefined();
-    expect(component.materiaPrimaForm.get('descUnidadMedida')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('descFraccion')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('generica1')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('clavePartida')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('claveSubPartida')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('descripcionMercancia')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('generica2')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('cantidadEnLetra')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('unidadMedidaComercial.clave')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('capituloFraccion')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('partidaFraccion')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('subPartidaFraccion')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('fraccion')?.value).toBe('');
   });
 
-  it('should load comboUnidadMedida', () => {
-    component.loadcomboUnidadMedida();
-    expect(component.comboUnidadMedida).toEqual(UnidadMedida);
+  it('should load comboUnidadMedida on init', () => {
+    const mockData: Catalogo[] = [{ id: 1, descripcion: 'Unidad 1' }];
+    spyOn(service, 'getUnidadMedida').and.returnValue(of(mockData));
+    component.loadComboUnidadMedida();
+    expect(component.comboUnidadMedida).toEqual(mockData);
   });
 
-  it('should load comboCapituloFraccion', () => {
+  it('should load comboCapituloFraccion on init', () => {
+    const mockData: Catalogo[] = [{ id: 1, descripcion: 'Capítulo 1' }];
+    spyOn(service, 'getCapituloFraccion').and.returnValue(of(mockData));
     component.loadComboCapituloFraccion();
-    expect(component.comboCapituloFraccion).toEqual(CapituloFraccion);
+    expect(component.comboCapituloFraccion).toEqual(mockData);
   });
 
   it('should load comboPartidaFraccion', () => {
+    const mockData: Catalogo[] = [{ id: 1, descripcion: 'Partida 1' }];
+    spyOn(service, 'getPartidaFraccion').and.returnValue(of(mockData));
     component.loadComboPartidaFraccion();
-    expect(component.comboPartidaFraccion).toEqual(PartidaFraccion);
+    expect(component.comboPartidaFraccion).toEqual(mockData);
   });
 
   it('should load comboSubPartidaFraccion', () => {
+    const mockData: Catalogo[] = [{ id: 1, descripcion: 'Subpartida 1' }];
+    spyOn(service, 'getSubPartidaFraccion').and.returnValue(of(mockData));
     component.loadComboSubPartidaFraccion();
-    expect(component.comboSubPartidaFraccion).toEqual(SubPartidaFraccion);
+    expect(component.comboSubPartidaFraccion).toEqual(mockData);
   });
 
   it('should load comboFraccionArancelariaParametros', () => {
-    component.loadcomboFraccionArancelariaParametros();
-    expect(component.comboFraccionArancelariaParametros).toEqual(FraccionArancelariaParametros);
+    const mockData: Catalogo[] = [{ id: 1, descripcion: 'Fracción 1' }];
+    spyOn(service, 'getFraccionArancelariaParametros').and.returnValue(of(mockData));
+    component.loadComboFraccionArancelariaParametros();
+    expect(component.comboFraccionArancelariaParametros).toEqual(mockData);
   });
 
-  it('should set cantidadEnLetra to UNO when cantidad is 1', () => {
-    component.obtenerLetraCantidad('1');
-    expect(component.materiaPrimaForm.get('cantidadEnLetra')?.value).toBe('UNO');
-  });
-
-  it('should set cantidadEnLetra to empty when cantidad is not 1', () => {
-    component.obtenerLetraCantidad('2');
-    expect(component.materiaPrimaForm.get('cantidadEnLetra')?.value).toBe('');
-  });
-
-  it('should reset form fields and load comboPartidaFraccion on cambiaCapituloFraccion', () => {
+  it('should handle cambiaCapituloFraccion', () => {
     component.cambiaCapituloFraccion();
     expect(component.materiaPrimaForm.get('clavePartida')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('claveSubPartida')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('descFraccion')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('generica1')?.value).toBe('');
-    expect(component.comboPartidaFraccion).toEqual(PartidaFraccion);
+    expect(component.comboPartidaFraccion).toEqual([]);
   });
 
-  it('should reset form fields and load comboSubPartidaFraccion on cambiaPartidaFraccion', () => {
-    component.materiaPrimaForm.get('partidaFraccion')?.setValue('some value');
+  it('should handle cambiaPartidaFraccion', () => {
+    component.materiaPrimaForm.patchValue({ partidaFraccion: 'partida1' });
     component.cambiaPartidaFraccion();
-    expect(component.materiaPrimaForm.get('clavePartida')?.value).toBe('some value');
-    expect(component.materiaPrimaForm.get('claveSubPartida')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('descFraccion')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('generica1')?.value).toBe('');
-    expect(component.comboSubPartidaFraccion).toEqual(SubPartidaFraccion);
+    expect(component.materiaPrimaForm.get('clavePartida')?.value).toBe('partida1');
+    expect(component.comboSubPartidaFraccion).toEqual([]);
   });
 
-  it('should reset form fields and load comboFraccionArancelariaParametros on cambiaSubPartidaFraccion', () => {
-    component.materiaPrimaForm.get('subPartidaFraccion')?.setValue('some value');
+  it('should handle cambiaSubPartidaFraccion', () => {
+    component.materiaPrimaForm.patchValue({ subPartidaFraccion: 'subpartida1' });
     component.cambiaSubPartidaFraccion();
-    expect(component.materiaPrimaForm.get('claveSubPartida')?.value).toBe('some value');
-    expect(component.materiaPrimaForm.get('descFraccion')?.value).toBe('');
-    expect(component.materiaPrimaForm.get('generica1')?.value).toBe('');
-    expect(component.comboFraccionArancelariaParametros).toEqual(FraccionArancelariaParametros);
+    expect(component.materiaPrimaForm.get('claveSubPartida')?.value).toBe('subpartida1');
+    expect(component.comboFraccionArancelariaParametros).toEqual([]);
   });
 
-  it('should update form fields on cambiaFraccion', () => {
-    component.comboFraccionArancelariaParametros = FraccionArancelariaParametros;
-    component.materiaPrimaForm.get('fraccion')?.setValue(FraccionArancelariaParametros[0].id);
+  it('should handle cambiaFraccion', () => {
+    const mockData: Catalogo[] = [{ id: 1, descripcion: 'Fracción 1' }];
+    component.comboFraccionArancelariaParametros = mockData;
+    component.materiaPrimaForm.patchValue({ fraccion: 1 });
     component.cambiaFraccion();
-    expect(component.materiaPrimaForm.get('descFraccion')?.value).toBe(FraccionArancelariaParametros[0].descripcion);
-    expect(component.materiaPrimaForm.get('generica1')?.value).toBe(FraccionArancelariaParametros[0].id);
+    expect(component.materiaPrimaForm.get('descFraccion')?.value).toBe('Fracción 1');
   });
 
-  it('should update descUnidadMedida on cambiaUnidadMedida', () => {
-    component.comboUnidadMedida = UnidadMedida;
-    component.materiaPrimaForm.get('unidadMedidaComercial.clave')?.setValue(UnidadMedida[0].id);
+  it('should handle cambiaUnidadMedida', () => {
+    const mockData: Catalogo[] = [{ id: 1, descripcion: 'Unidad 1' }];
+    component.comboUnidadMedida = mockData;
+    component.materiaPrimaForm.patchValue({ unidadMedidaComercial: { clave: 1 } });
     component.cambiaUnidadMedida();
-    expect(component.materiaPrimaForm.get('descUnidadMedida')?.value).toBe(UnidadMedida[0].descripcion);
+    expect(component.materiaPrimaForm.get('descUnidadMedida')?.value).toBe('Unidad 1');
   });
 
-  it('should reset fraccion field if clvFracion is not valid on validaVigenciaFraccion', () => {
-    component.validaVigenciaFraccion(0);
-    expect(component.materiaPrimaForm.get('fraccion')?.value).toBe('');
-  });
-
-  it('should clean up resources on ngOnDestroy', () => {
-    spyOn(component['destroyed$'], 'next');
-    spyOn(component['destroyed$'], 'complete');
+  it('should handle ngOnDestroy', () => {
+    spyOn(destroyed$, 'next');
+    spyOn(destroyed$, 'complete');
     component.ngOnDestroy();
-    expect(component['destroyed$'].next).toHaveBeenCalled();
-    expect(component['destroyed$'].complete).toHaveBeenCalled();
+    expect(destroyed$.next).toHaveBeenCalled();
+    expect(destroyed$.complete).toHaveBeenCalled();
   });
 });

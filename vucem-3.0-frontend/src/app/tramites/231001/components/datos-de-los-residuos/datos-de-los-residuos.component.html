@@ -5,16 +5,16 @@
         <div class="row mt-3">
           <div class="col-md-8">
             <div class="form-group">
-              <label for="descripcionMercancia" class="form-label">Nombre de la Materia Prima *:</label>
+              <label for="nombreDeLaMateriaPrima" class="form-label">Nombre de la Materia Prima *:</label>
               <input
                 type="text"
-                formControlName="descripcionMercancia"
+                formControlName="nombreDeLaMateriaPrima"
                 class="form-control"
-                id="descripcionMercancia"
+                id="nombreDeLaMateriaPrima"
                 [placeholder]="'Nombre de la materia prima'"
               />
-              <div *ngIf="materiaPrimaForm.get('descripcionMercancia')?.invalid && (materiaPrimaForm.get('descripcionMercancia')?.dirty || materiaPrimaForm.get('descripcionMercancia')?.touched)">
-                  <div *ngIf="materiaPrimaForm.get('descripcionMercancia')?.errors?.['required']">
+              <div *ngIf="materiaPrimaForm.get('nombreDeLaMateriaPrima')?.invalid && (materiaPrimaForm.get('nombreDeLaMateriaPrima')?.dirty || materiaPrimaForm.get('nombreDeLaMateriaPrima')?.touched)">
+                  <div *ngIf="materiaPrimaForm.get('nombreDeLaMateriaPrima')?.errors?.['required']">
                       <small class="text-danger">Este campo es obligatorio</small>
                   </div>
               </div>
@@ -23,17 +23,17 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="generica2" class="form-label">Cantidad *:</label>
+              <label for="cantidad" class="form-label">Cantidad *:</label>
               <input
                 type="text"
-                formControlName="generica2"
+                formControlName="cantidad"
                 class="form-control"
-                id="generica2"
+                id="cantidad"
                 [placeholder]="'1'"
-                (blur)="obtenerLetraCantidad(materiaPrimaForm.get('generica2').value)"
+                (blur)="obtenerLetraCantidad(materiaPrimaForm.get('cantidad').value)"
               />
-              <div *ngIf="materiaPrimaForm.get('generica2')?.invalid && (materiaPrimaForm.get('generica2')?.dirty || materiaPrimaForm.get('generica2')?.touched)">
-                  <div *ngIf="materiaPrimaForm.get('generica2')?.errors?.['required']">
+              <div *ngIf="materiaPrimaForm.get('cantidad')?.invalid && (materiaPrimaForm.get('cantidad')?.dirty || materiaPrimaForm.get('cantidad')?.touched)">
+                  <div *ngIf="materiaPrimaForm.get('cantidad')?.errors?.['required']">
                       <small class="text-danger">Este campo es obligatorio</small>
                   </div>
               </div>
