@@ -14,6 +14,13 @@ const routes: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
+  {
+    path: 'pantallas',
+    loadChildren: () =>
+      import('./tramites/110101/pantallas/pantallas.module').then(
+        (m) => m.Pantallas110101Module
+      ),
+  },
 ];
 
 @NgModule({
