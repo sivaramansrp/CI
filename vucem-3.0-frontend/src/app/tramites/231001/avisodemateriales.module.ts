@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AdministrarResiduosComponent } from './components/administrar-residuos/administrar-residuos.component';
 import { AvisodematerialesRoutingModule } from './avisodemateriales-routing.module';
 import { DatosComponent } from './pages/datos/datos.component';
-import { DatosDelaComponent } from './components/datos-dela/datos-dela.component';
+import { DatosDelaSolicitudeComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { SolicitanteComponent } from './components/solicitante/solicitante.component';
 import { SolicitanteDetosTabsComponent } from './pages/solicitante-detos-tabs/solicitante-detos-tabs.component';
@@ -22,7 +22,7 @@ import { AlertComponent } from '../../shared/components/alert/alert.component';
 @NgModule({
   declarations: [
     SolicitanteComponent,
-    DatosDelaComponent,
+    DatosDelaSolicitudeComponent,
     DatosComponent,
     PantallasComponent,
     SolicitanteDetosTabsComponent

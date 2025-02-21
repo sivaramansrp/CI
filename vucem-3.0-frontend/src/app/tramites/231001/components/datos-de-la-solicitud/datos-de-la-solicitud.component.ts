@@ -25,10 +25,10 @@ import { WizardComponent } from '../../../../shared/components/wizard/wizard.com
  */
 @Component({
   selector: 'app-datos-dela',
-  templateUrl: './datos-dela.component.html',
-  styleUrl: './datos-dela.component.scss',
+  templateUrl: './datos-de-la-solicitud.component.html',
+  styleUrl: './datos-de-la-solicitud.component.scss',
 })
-export class DatosDelaComponent implements OnInit {
+export class DatosDelaSolicitudeComponent implements OnInit {
   
   /**
    *  datosForm
@@ -109,9 +109,7 @@ export class DatosDelaComponent implements OnInit {
    */
   onSubmit(): void {
     if (this.solicitudForm.valid) {
-      console.log('Formulario Enviado!', this.solicitudForm.value);
     } else {
-      console.log('El formulario es inválido');
     }
   }
 
@@ -153,16 +151,15 @@ export class DatosDelaComponent implements OnInit {
    * Obtiene los datos de las aduanas desde el servicio de catálogos.
    */
   aduanasdata(): void {
-    console.log('ngoninit start');
     this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_ADUANAS).subscribe({
       next: (resp) => {
-        console.log('API Response:', resp);
         if (resp.length > 0) {
           this.aduanas = resp;
         }
       },
-      error: (err) => console.error('API Error:', err),
-      complete: () => console.log('API Call Completed'),
+      error: (err) => {
+        console.error('API Error:', err);
+      },
     });
   }
 }

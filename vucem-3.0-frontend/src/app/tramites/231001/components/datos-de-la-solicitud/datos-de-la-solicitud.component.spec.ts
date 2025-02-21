@@ -6,23 +6,23 @@ import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
 
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
-import { DatosDelaComponent } from './datos-dela.component';
+import { DatosDelaSolicitudeComponent } from './datos-de-la-solicitud.component';
 
-describe('DatosDelaComponent', () => {
-  let component: DatosDelaComponent;
-  let fixture: ComponentFixture<DatosDelaComponent>;
+describe('DatosDelaSolicitudeComponent', () => {
+  let component: DatosDelaSolicitudeComponent;
+  let fixture: ComponentFixture<DatosDelaSolicitudeComponent>;
   let catalogosService: jasmine.SpyObj<CatalogosService>;
 
   beforeEach(async () => {
     const catalogosServiceSpy = jasmine.createSpyObj('CatalogosService', ['getCatalogo']);
 
     await TestBed.configureTestingModule({
-      declarations: [DatosDelaComponent],
+      declarations: [DatosDelaSolicitudeComponent],
       imports: [ReactiveFormsModule],
       providers: [{ provide: CatalogosService, useValue: catalogosServiceSpy }]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DatosDelaComponent);
+    fixture = TestBed.createComponent(DatosDelaSolicitudeComponent);
     component = fixture.componentInstance;
     catalogosService = TestBed.inject(CatalogosService) as jasmine.SpyObj<CatalogosService>;
   });
