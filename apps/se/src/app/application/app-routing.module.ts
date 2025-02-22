@@ -18,7 +18,7 @@ const routes: Routes = [
   {
     path:'exportadorautorizado',
     loadChildren:()=>
-      import('./tramites/110102/exportadorautorizado.module').then(
+      import('./tramites/110102/exportador-autorizado.module').then(
         (m)=>m.ExportadorautorizadoModule
       )
   },
