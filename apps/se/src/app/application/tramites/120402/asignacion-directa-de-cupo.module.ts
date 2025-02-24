@@ -5,11 +5,12 @@ import { AsignacionComponent } from './pages/asignacion/asignacion.component';
 import { AsignacionDirectaDeCupoComponent } from './pages/asignacion-directa-de-cupo/asignacion-directa-de-cupo.component';
 import { AsignacionDirectaDeCupoRoutingModule } from './asignacion-directa-de-cupo-routing.module';
 import { CortinaALaItalianaComponent } from './pages/cortina-a-la-italiana/cortina-a-la-italiana.component';
-
 import { provideHttpClient } from '@angular/common/http';
 
 import { RepresentacionFederalComponent } from './components/representacion-federal/representacion-federal.component';
-import { SeleccionDelCupoComponent } from './pages/seleccion-del-cupo/seleccion-del-cupo.component';
+import { SeleccionDelCupoComponent } from './components/seleccion-del-cupo/seleccion-del-cupo.component'
+
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
@@ -21,6 +22,8 @@ import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/compo
   ],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     AsignacionDirectaDeCupoRoutingModule,
     WizardComponent,
     RepresentacionFederalComponent,
