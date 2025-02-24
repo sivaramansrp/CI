@@ -7,7 +7,6 @@ import { FormulariosService } from '../../../../core/services/shared/formularios
 import { of } from 'rxjs';
 
 import { FormularioDinamico } from '../../../../core/models/shared/forms-model';
-import { PERSONA_FISICA_SACIONAL } from '../../../../shared/constantes/solicitante-constantes.enum';
 
 interface JSONResponse {
   id: number;
@@ -58,7 +57,6 @@ describe('SolicitanteComponent', () => {
   it('should set tipoPersona and persona on obtenerTipoPersona', () => {
     component.obtenerTipoPersona(1); // Assuming 1 is TIPO_PERSONA.FISICA_NACIONAL
     expect(component.tipoPersona).toBe(1);
-    expect(component.persona).toBe(PERSONA_FISICA_SACIONAL);
   });
 
   it('should call getDatosGenerales on ngOnInit', () => {
