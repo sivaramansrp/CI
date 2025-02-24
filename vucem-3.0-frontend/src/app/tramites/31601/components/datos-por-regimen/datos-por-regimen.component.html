@@ -236,13 +236,11 @@
                 [commonTableHeader]="regimenTableHeaderData" 
                 [commonTableBody]="regimenTableBodyData">
                 </ng-table>
-                <nav aria-label="Page navigation example">
-                  <ul class="pagination justify-content-center">
-                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                  </ul>
-                </nav>
+                <div class="d-flex justify-content-center">
+                  <app-table-pagination [totalItems]="totalItems" [itemsPerPage]="itemsPerPage" [currentPage]="currentPage"
+                    (pageChange)="onPageChange($event)" (itemsPerPageChange)="onItemsPerPageChange($event)">
+                  </app-table-pagination>
+                </div>
               </div>
           </div>
           <div class="row mb-3">

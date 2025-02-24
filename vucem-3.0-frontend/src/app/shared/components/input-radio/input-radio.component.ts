@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter,Input,OnInit, Output, forwardRef} from '@angular/core';
 
 import {
   FormBuilder,
