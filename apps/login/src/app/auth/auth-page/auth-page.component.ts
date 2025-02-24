@@ -8,6 +8,7 @@ import { UsuarioStore } from './../../estados/usuario.store';
 @Component({
   templateUrl: './auth-page.component.html',
   styleUrl: './auth-page.component.scss',
+  host: { 'hostID': Math.random().toString() }
 })
 export class AuthPageComponent {
   indice: number = 1;
