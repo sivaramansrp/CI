@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="row mb-3 mt-3">
+        <div class="col-md-12">
+            <ng-table
+                [commonTableHeader]="tableHeader"
+                [commonTableBody]="cuerpoTabla">
+            </ng-table>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <form [formGroup]="formDomiciliosDePlantas">
+            <div class="col-md-4">
+                <label for="representacionFederal" class="form-label">Representación federal:</label>
+                <input type="text" id="representacionFederal" class="form-control" formControlName="representacionFederal" placeholder="DELEGACION FEDERAL CULIACAN">
+            </div>
+            <div class="col-md-4">
+                <label for="actividadProductiva" class="form-label">Actividad productiva:</label>
+                <input type="text" id="actividadProductiva" class="form-control" formControlName="actividadProductiva" placeholder="CARROCERIAS, MOTORES, PARTES Y">
+            </div>
+        </form>
+    </div>
+</div>

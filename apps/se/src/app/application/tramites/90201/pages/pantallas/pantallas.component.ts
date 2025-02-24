@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component } from '@angular/core';
 import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
-import { PANTAPASOS } from 'libs/shared/data-access-user/src/core/services/90201/services/expansion-de-productores.enum';
+import { PANTAPASOS } from 'libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.enum';
 
 @Component({
   selector: 'app-pantallas',

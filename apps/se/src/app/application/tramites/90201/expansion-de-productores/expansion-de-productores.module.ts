@@ -7,6 +7,10 @@ import { ExpansionDeProductoresRoutingModule } from './expansion-de-productores-
 import { DatosComponent } from '../pages/datos/datos.component';
 import { PantallasComponent } from '../pages/pantallas/pantallas.component';
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { SolicitanteComponent } from '../components/solicitante/solicitante.component';
+import { SectoresYMercanciasComponent } from '../components/sectores-y-mercancias/sectores-y-mercancias.component';
+import { ProductorIndirectoComponent } from '../components/productor-indirecto/productor-indirecto.component';
+import { DomiciliosDePlantasComponent } from '../components/domicilios-de-plantas/domicilios-de-plantas.component';
 
 
 
@@ -18,7 +22,11 @@ import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/compo
   imports: [
     CommonModule,
     ExpansionDeProductoresRoutingModule,
-    WizardComponent
+    WizardComponent,
+    SolicitanteComponent,
+    SectoresYMercanciasComponent,
+    ProductorIndirectoComponent,
+    DomiciliosDePlantasComponent
   ]
 })
 export class ExpansionDeProductoresModule { }

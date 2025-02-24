@@ -1,0 +1,23 @@
+ {
+    "tableHeader": [
+        "Calle",
+        "Número exterior",
+        "Número interior",
+        "Código postal",
+        "Colonia",
+        "Municipio o alcaldía",
+        "Estado"
+    ],
+    "tableBody": [
+        {
+            "tbodyData": [
+                "CARRETERA INTERNACIONAL NO. 15 SN MEX-NOG KM 203",
+                "81210",
+                "MIGUEL HIDALGO",
+                "AHOME",
+                "one",
+                "tabla"
+            ]
+        }
+    ]
+}
