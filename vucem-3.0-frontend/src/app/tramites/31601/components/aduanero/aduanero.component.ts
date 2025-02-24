@@ -37,6 +37,7 @@ import applicantRegistrados from '../../../../../assets/json/31601/applicantRegi
 
 import destinatarioTable from '../../../../../assets/json/220401/destinatario-table.json';
 import entidadFederativa from '../../../../../assets/json/31601/entidadFederative.json';
+import prejson from '../../../../../assets/json/31601/prejson.json';
 
 import controlInventarios from '../../../../../assets/json/31601/controlInventarios.json';
 
@@ -74,6 +75,17 @@ import { AgregarMiembroDeLaEmpresaComponent } from '../agregar-miembro-de-la-emp
   ],
 })
 export class AduaneroComponent implements OnInit, AfterViewInit {
+/**
+ * Almacena los datos de descripción en un formato predefinido.
+ */
+descriptionData = prejson;
+
+/**
+ * Contiene la descripción en texto.
+ */
+description: string = '';
+
+ 
   /**
    * compo doc
    * @property {ElementRef} modifyModal
@@ -381,8 +393,10 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
     this.getEmpleadosData();
     this.getDomiciliosData();
     this.getInstalaciones();
+
   }
 
+ 
   /**
    * Método del ciclo de vida de Angular que se ejecuta después de que la vista se ha inicializado.
    * Inicializa los modales de modificación e instalaciones.

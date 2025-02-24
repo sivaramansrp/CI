@@ -5,6 +5,7 @@ import { Component, EventEmitter,Input,OnInit, Output, forwardRef} from '@angula
 import {
   FormBuilder,
   FormGroup,
+  NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -19,8 +20,17 @@ import {
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './input-radio.component.html',
   styleUrl: './input-radio.component.scss',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => InputRadioComponent), // ✅ FIX: Wrap with forwardRef()
+      multi: true
+    }
+  ]
 })
 export class InputRadioComponent implements OnInit {
+  @Input() description: string; // Optional description
+  @Input() showDescription: boolean = false;
   @Input() labelMargin: string = '15px'; // Dynamic label margin
   @Input() isBold: boolean = false; // Control bold label
   @Input() gap: string = '10px'; // Default spacing
@@ -65,6 +75,8 @@ export class InputRadioComponent implements OnInit {
       seleccion: [this.selectedValue || '', validators],
     });
   }
+  private onChange: (value: any) => void = () => {};
+  private onTouched: () => void = () => {};
   /**
    * Maneja el evento de cambio de selección y emite el nuevo valor.
    * @param value - El nuevo valor seleccionado.
@@ -72,5 +84,31 @@ export class InputRadioComponent implements OnInit {
   onSelectionChange(value: string | number) {
     this.selectedValue = value;
     this.valueChange.emit(value);
+    this.onChange(value);
+    this.onTouched();
+  }
+
+  // ✅ Implement `ControlValueAccessor`
+  writeValue(value: any): void {
+    this.selectedValue = value;
+    if (this.FormInputRadio) {
+      this.FormInputRadio.patchValue({ seleccion: value });
+    }
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    if (isDisabled) {
+      this.FormInputRadio.disable();
+    } else {
+      this.FormInputRadio.enable();
+    }
   }
 }
