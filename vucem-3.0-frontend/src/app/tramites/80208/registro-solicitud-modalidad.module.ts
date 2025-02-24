@@ -12,6 +12,12 @@ import { WizardComponent } from "../../shared/components/wizard/wizard.component
 import { BtnContinuarComponent } from "../../shared/components/btn-continuar/btn-continuar.component";
 import { AlertComponent } from "../../shared/components/alert/alert.component";
 import { SolicitanteComponent } from "../../shared/components/solicitante/solicitante.component";
+import { ReactiveFormsModule } from '@angular/forms';
+import { CatalogoSelectComponent } from '../../shared/components/catalogo-select/catalogo-select.component';
+import { TituloComponent } from "../../shared/components/titulo/titulo.component";
+import { TableRadioComponent } from '../../shared/components/table-radio/table-radio.component';
+import { AnexarDocumentosComponent } from "../../shared/components/anexar-documentos/anexar-documentos.component";
+import { FirmaElectronicaComponent } from "../../shared/components/firma-electronica/firma-electronica.component";
 
 
 @NgModule({
@@ -29,7 +35,13 @@ import { SolicitanteComponent } from "../../shared/components/solicitante/solici
     WizardComponent,
     BtnContinuarComponent,
     AlertComponent,
-    SolicitanteComponent
-]
+    SolicitanteComponent,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    TituloComponent,
+    TableRadioComponent,
+    AnexarDocumentosComponent,
+    FirmaElectronicaComponent
+  ]
 })
 export class RegistroSolicitudModalidadModule { }

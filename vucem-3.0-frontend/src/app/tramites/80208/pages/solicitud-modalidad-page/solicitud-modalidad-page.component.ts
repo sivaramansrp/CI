@@ -17,7 +17,7 @@ import { ListaPasosWizard } from '../../../../core/models/80208/solicitud-modali
 import { PASOS } from '../../../../shared/constantes/80208/solicitud-modalidad.enums';
 
 /**
- * Interfaz para definir la acción y el valor del botón. --120301
+ * Interfaz para definir la acción y el valor del botón.
  */
 interface AccionBoton {
   accion: string;
@@ -67,7 +67,7 @@ export class SolicitudModalidadPageComponent {
    *
    * @param e - Objeto de acción que contiene la acción y el valor a manejar.
    * El `valor` representa el índice del paso al que ir.
-   * La `accion` determina si avanzar (cont) o retroceder (atras).  --120301
+   * La `accion` determina si avanzar (cont) o retroceder (atras).
    */
   getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
