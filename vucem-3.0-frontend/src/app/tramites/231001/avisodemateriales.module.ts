@@ -7,7 +7,7 @@ import { AvisodematerialesRoutingModule } from './avisodemateriales-routing.modu
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDelaSolicitudeComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
-import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+
 import { SolicitanteDetosTabsComponent } from './pages/solicitante-detos-tabs/solicitante-detos-tabs.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
@@ -18,10 +18,11 @@ import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn
 import { DatosDeLosResiduosComponent } from './components/datos-de-los-residuos/datos-de-los-residuos.component';
 
 import { AlertComponent } from '../../shared/components/alert/alert.component';
+import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component';
 
 @NgModule({
   declarations: [
-    SolicitanteComponent,
+    // SolicitanteComponent,
     DatosDelaSolicitudeComponent,
     DatosComponent,
     PantallasComponent,
@@ -37,7 +38,8 @@ import { AlertComponent } from '../../shared/components/alert/alert.component';
     DatosDeLosResiduosComponent,
     CatalogoSelectComponent,
     BtnContinuarComponent,
-    AlertComponent
+    AlertComponent,
+    SolicitanteComponent
   ],
   
   exports: [PantallasComponent]
