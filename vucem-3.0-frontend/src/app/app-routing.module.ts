@@ -55,6 +55,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'solicitud-modalidad',
+    loadChildren: () =>
+      import('./tramites/80208/registro-solicitud-modalidad.module').then(
+        (m) => m.RegistroSolicitudModalidadModule)
+  },
+
+  {
     path: 'octava-temporal',
     loadChildren: () =>
       import('./tramites/130102/octava-temporal.module').then(
