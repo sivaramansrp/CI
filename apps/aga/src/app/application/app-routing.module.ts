@@ -15,6 +15,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'despacho-mercancias',
+    loadChildren: () =>
+      import('./tramites/303/despacho-mercancias.module').then(
+        (m) => m.DespachoMercanciasModule
+      ),
+  },
+  {
     path: 'importante',
     loadChildren: () =>
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
