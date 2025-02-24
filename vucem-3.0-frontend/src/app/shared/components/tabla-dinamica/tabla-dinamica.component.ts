@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '../../../core/models/shared/configuracio-columna.model';
+import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 import { FormsModule } from '@angular/forms';
+import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
 
 @Component({
   selector: 'app-tabla-dinamica',
@@ -15,9 +16,9 @@ export class TablaDinamicaComponent<T> {
    * indice el tipo de selección para la tabla.
    * Puede ser 'RADIO' para seleccionar una fila con un botón de radio.
    *
-   * @type { 'CHECKBOX' | 'RADIO' | undefined}
+   * @type { TablaSeleccion}
    */
-  @Input() tablaSeleccion: 'CHECKBOX' | 'RADIO' | undefined = undefined;
+  @Input() tablaSeleccion: TablaSeleccion = undefined;
 
   /**
    * Configuración de las columnas de la tabla.
