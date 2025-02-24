@@ -1,19 +1,21 @@
 {
     "tableHeader": [
-        "Nombre materia prima",
-        "Cantidad",
-        "Cantidad letra",
-        "Unidad de medida",
-        "Fraccion"
+        "Número de licitación ",
+        "Fecha de evento de licitación pública ",
+        "Descripción del producto ",
+        "Monto adjudicado ",
+        "Fecha inicio vigencia",
+        "Fecha fin vigencia "
     ],
     "tableBody": [
         {
             "tbodyData": [
-                "Nombre de la materia prima",
-                "1",
-                "UNO",
-                "Tonelada",
-                "19019002"
+                "002/2024 ",
+                "2024-03-22 ",
+                "",
+                "9985",
+                "2024-03-01",
+                "2024-12-31"
             ]
         }
     ]

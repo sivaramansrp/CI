@@ -5,15 +5,20 @@
       ></ng-titulo>
   
       <div>
-        <h6>Datos de lod residuos y/o materia prima a importar*:</h6>
+        <h6>Licitaciones disponibles</h6>
   
+        <!-- <ng-table
+          [commonTableHeader]="tableData.tableHeader"
+          [commonTableBody]="tableData.tableBody"
+          [enableScrollbar]="true" [tableoptions] = "tableoptions"
+        ></ng-table> -->
         <ng-table
-          [commonTableHeader]="tableHeaderData"
-          [commonTableBody]="tableBodyData"
+          [commonTableHeader]="tableData.tableHeader"
+          [commonTableBody]="tableData.tableBody"
           [enableScrollbar]="true"
         ></ng-table>
   
-        <!-- <form [formGroup]="formForTotalCount">
+        <form [formGroup]="formForTotalCount">
           <div class="text-center">
             <div>
               <input
@@ -26,16 +31,119 @@
             </div>
           </div>
         </form>
-  
-        <div class="row mb-5">
-          <div class="col-md-6 col-sm-6"></div>
-          <div class="col-md-6 col-sm-6 text-end">
-            <div class="btn-group">
-              <button class="btn btn-primary me-2" type="button">Borrar</button>
-              <button class="btn btn-danger" type="button">Agregar</button>
+        <!-- Representación federal  -->
+        <div class="container">
+          <ng-titulo titulo="Representación federal" />
+          <form [formGroup]="formulario">
+            <div class="row">
+              <div class="col-md-4">
+                <app-catalogo-select [catalogo]="federalentity" formControlName="federalentity" [label]="'Entidad federativa'"
+                  [required]="true" name="federalent"></app-catalogo-select>
+              </div>
+              <div class="col-md-4">
+                <app-catalogo-select [catalogo]="representationfederal" formControlName="representationfederal" [label]="'Representación federal'"
+                  [required]="true" name="representfederal"></app-catalogo-select>
+              </div>
             </div>
-          </div>
-        </div> -->
+            </form>
+        </div>
+      
+        <!-- Detalle de la licitación y monto adjudicado  -->
+        <div class="container">
+          <ng-titulo titulo="Detalle de la licitación y monto adjudicado" />
+            <form [formGroup]="detalledelalicitacionForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label" for="numeradelicitacion">Número de licitación:</label>
+                    <input type="text" class="form-control" id="numeradelicitacion" formControlName="numeradelicitacion"  readonly>
+                </div>
+        
+                <div class="col-md-4">
+                    <label class="form-label" for="biddingeventdate">Fecha de evento de licitación pública: </label>
+                    <input type="text" class="form-control" id="biddingeventdate" formControlName="biddingeventdate" readonly>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="productdescription">Descripción del producto:</label>
+                  <input type="text" class="form-control" id="productdescription" formControlName="productdescription" readonly>
+              </div>
+                <div class="col-md-8">
+                    <label class="form-label" for="tariffunit">Unidad de medida tarifaria o comercialización:</label>
+                    <input type="text" class="form-control" id="tariffunit" formControlName="tariffunit" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="customsregime">Régimen aduanero:</label>
+                    <input type="text" class="form-control" id="customsregime" formControlName="customsregime" readonly>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label class="form-label" for="tarifffraction">Fracción o fracciones arancelarias: </label>
+                <input type="text" class="form-control" id="tarifffraction" formControlName="tarifffraction" readonly>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label class="form-label" for="quotaeffectivedate">Fecha de inicio de vigencia del cupo </label>
+                <input type="text" class="form-control" id="quotaeffectivedate" formControlName="quotaeffectivedate" readonly>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="quotaenddate">Fecha de fin de vigencia del cupo:  </label>
+                <input type="text" class="form-control" id="quotaenddate" formControlName="quotaenddate" readonly>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <label class="form-label" for="observaciones">Observaciones: </label>
+                <input type="text" class="form-control observaciones" id="observaciones" formControlName="observaciones" readonly>
+              </div>
+              <div class="col-md-12">
+                <label class="form-label" for="bloquecomercial">Bloque comercial: </label>
+                <input type="text" class="form-control" id="bloquecomercial" formControlName="bloquecomercial" readonly>
+              </div>
+              <div class="col-md-12">
+                <label class="form-label" for="Paises">Países: </label>
+                <input type="text" class="form-control observaciones" id="Paises" formControlName="Paises" readonly>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="montoadjudicado">Monto adjudicado: </label>
+                <input type="text" class="form-control" id="montoadjudicado" formControlName="montoadjudicado" readonly>
+              </div><div class="col-md-4">
+                <label class="form-label" for="montodisponible">Monto disponible: </label>
+                <input type="text" class="form-control" id="montodisponible" formControlName="montodisponible" readonly>
+              </div><div class="col-md-4">
+                <label class="form-label" for="montomaximo">Monto máximo: </label>
+                <input type="text" class="form-control" id="montomaximo" formControlName="montomaximo" readonly>
+              </div>
+            </div>
+        </form>
+        
+        </div>
+        <!-- Adquiriente  -->
+        <div class="container">
+          <ng-titulo titulo="Adquiriente" />
+          <form [formGroup]="adquiriente">
+            <div class="row">
+              <div class="col-md-4">
+                <label class="form-label" for="rfc">RFC*:</label>
+                <input type="text" class="form-control" id="rfc" formControlName="rfc"  readonly>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="montodisponible">Monto disponible:</label>
+                <input type="text" class="form-control" id="montodisponible" formControlName="montodisponible"  readonly>
+              </div>
+              <div class="col-md-4">
+                <!-- <btn-continuar [datos]="datosPasos"></btn-continuar> -->
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="montorecibir">Monto a recibir*:</label>
+                <input type="text" class="form-control" id="montorecibir" formControlName="montorecibir" >
+              </div>
+            </div>
+            </form>
+            <!-- <div class="row">
+              <ng-alert [CONTENIDO]="texto"></ng-alert>
+          </div> -->
+        </div>
       </div>
     </div>
   </div>

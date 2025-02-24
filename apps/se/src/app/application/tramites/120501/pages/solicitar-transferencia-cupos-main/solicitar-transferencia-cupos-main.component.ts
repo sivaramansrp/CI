@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -15,14 +15,10 @@ interface AccionBoton {
   selector: 'app-solicitar-transferencia-cupos-main',
   templateUrl: './solicitar-transferencia-cupos-main.component.html',
 })
-export class SolicitarTransferenciaCuposMainComponent implements OnInit {
+export class SolicitarTransferenciaCuposMainComponent{
   pasosSolicitar: ListaPasosWizard[] = SOLICITARPASOS;
   indice: number = 1;
 
-  ngOnInit(): void {
-  
-    console.log("PANTAPASOS", this.pasosSolicitar);
-  }
    @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   datosPasos: DatosPasos = {

@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { SolicitarTransferenciaCuposRoutingModule } from './solicitar-transferencia-cupos-routing.module';
+
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
@@ -13,6 +15,8 @@ import { SolicitarTransferenciaCuposMainComponent } from './pages/solicitar-tran
 
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { LicitacionesVigentesComponent } from './component/tramites/120501/component/licitaciones-vigentes/licitaciones-vigentes.component';
+
+import { AlertComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
   declarations: [
@@ -26,7 +30,9 @@ import { LicitacionesVigentesComponent } from './component/tramites/120501/compo
     TituloComponent,
     LicitacionesVigentesComponent,
     SolicitanteComponent,
-    BtnContinuarComponent
+    BtnContinuarComponent,
+    CatalogoSelectComponent,
+    AlertComponent
   ]
 })
 export class SolicitarTransferenciaCuposModule { }
