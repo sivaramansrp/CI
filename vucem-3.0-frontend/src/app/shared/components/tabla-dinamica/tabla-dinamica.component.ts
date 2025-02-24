@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '../../../tramites/80308/models/configuracio-columna.model';
+import { ConfiguracionColumna } from '../../../core/models/shared/configuracio-columna.model';
 import { FormsModule } from '@angular/forms';
 
 @Component({
