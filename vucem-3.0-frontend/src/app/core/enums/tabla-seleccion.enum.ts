@@ -1,5 +1,6 @@
 export enum TablaSeleccion {
-    'CHECKBOX',
-    "RADIO",
-    undefined
-}
+    CHECKBOX = 'CHECKBOX',
+    RADIO = 'RADIO',
+    UNDEFINED = 'undefined',
+  }
+  

@@ -2,10 +2,10 @@
     <table class="table table-striped table-bordered ">
       <thead>
         <tr>
-          @if(tablaSeleccion === 'RADIO') {
+          @if(tipoSeleccionTabla === TablaSeleccion.RADIO) {
             <th></th>
           }
-          @else if(tablaSeleccion === 'CHECKBOX') {
+          @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
             <th>
               <input 
                 class="cursor-pointer"
@@ -27,7 +27,7 @@
         <!-- Crear las filas de manera dinámica -->
         <tr *ngFor="let fila of datos;let i=index">
           <!-- Botón de radio para seleccionar una fila -->
-           @if(tablaSeleccion === 'RADIO') {
+           @if(tipoSeleccionTabla === TablaSeleccion.RADIO) {
             <td>
               <input 
                 class="cursor-pointer"
@@ -42,7 +42,7 @@
             </td>
     
            }
-           @else if(tablaSeleccion === 'CHECKBOX') {
+           @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
             <td>
               <input 
                 class="cursor-pointer"
