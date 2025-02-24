@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
@@ -23,6 +23,14 @@ registroMercanciaComercializadorFrom: FormGroup;
       cveRegistroProductor: ['', [Validators.required, Validators.maxLength(12)]],
     });
        
+  }
+ 
+
+  esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.registroMercanciaComercializadorFrom.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
   actualizaGridComercializadoresProductos():void{
     // use service logic

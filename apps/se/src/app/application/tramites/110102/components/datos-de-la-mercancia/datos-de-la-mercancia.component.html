@@ -6,8 +6,12 @@
                         <label for="certificadoOrigenProductoNumRegistro" class="form-label">Número de Registro de Productos Elegibles *:</label>
                         <input type="text" id="cveRegistroProductor" formControlName="cveRegistroProductor" 
                             class="form-control" size="30" [placeholder]="'254023028961'"/>
+                            <div *ngIf="esInvalido('cveRegistroProductor')" class="text-danger">
+                                <small *ngIf="registroMercanciaComercializadorFrom.controls['cveRegistroProductor'].hasError('required')">Este campo es obligatorio.</small>
+                                <small *ngIf="registroMercanciaComercializadorFrom.controls['cveRegistroProductor'].hasError('maxlength')">Máximo 12 caracteres.</small>
+                            </div> 
                     </div>
-                    <div class="col-md-4 mt-4">
+                    <div class="col-md-2 mt-4">
                         <button type="button" class="btn btn-primary mt-4"
                             (click)="actualizaGridComercializadoresProductos()">
                             Buscar

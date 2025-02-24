@@ -8,6 +8,7 @@ import { NgModule } from '@angular/core';
 import { RegistroMercanciaComercializadorComponent } from "./components/registro-mercancia-comercializador/registro-mercancia-comercializador.component";
 import { SolicitanteComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component";
 import { DatosDeLaMercanciaComponent } from "./components/datos-de-la-mercancia/datos-de-la-mercancia.component";
+import { RegistroExportadorAutorizadoComponent } from "./components/registro-exportador-autorizado/registro-exportador-autorizado.component";
 
 
 
@@ -19,7 +20,8 @@ import { DatosDeLaMercanciaComponent } from "./components/datos-de-la-mercancia/
     SolicitanteComponent,
     DatosTratadosAcuerdosComponent,
     RegistroMercanciaComercializadorComponent,
-    DatosDeLaMercanciaComponent
+    DatosDeLaMercanciaComponent,
+    RegistroExportadorAutorizadoComponent
 ]
 })
 export class ExportadorautorizadoModule { }
