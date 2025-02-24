@@ -26,7 +26,8 @@ import { SelectPaisesComponent } from '../../shared/components/select-paises/sel
 import { CatalogoSelectComponent } from './../../shared/components/catalogo-select/catalogo-select.component';
 import { TransporteComponent } from './components/transporte/transporte.component';
 import { PagoDeDerechoComponent } from './components/pago-de-derecho/pago-de-derecho.component';
-import { AgregarDestinatoriaComponent } from './components/agregar-destinatoria/agregar-destinatoria.component';
+
+import { AgregarDestinatarioComponent } from './components/agregar-destinatario/agregar-destinatario.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,7 @@ import { AgregarDestinatoriaComponent } from './components/agregar-destinatoria/
     PasoUnoComponent,
     TransporteComponent,
     PagoDeDerechoComponent,
-    AgregarDestinatoriaComponent,
+    AgregarDestinatarioComponent,
   ],
   imports: [
     CommonModule,

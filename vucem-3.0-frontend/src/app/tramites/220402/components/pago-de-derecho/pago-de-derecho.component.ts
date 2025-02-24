@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CapturaSolicitudeService } from '../../../../core/services/220402/captura-solicitude.service';
+
+import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+
 import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -24,14 +26,14 @@ export class PagoDeDerechoComponent implements OnInit {
     private fb: FormBuilder,
     private captuaservice: CapturaSolicitudeService
   ) {
-    this.getBanco();
+    this.fetchBancoData();
   }
 
-  bancoDe(e: Catalogo): void {
+  actualizarBanco(e: Catalogo): void {
     this.bancode = e;
   }
 
-  getBanco(): void {
+  fetchBancoData(): void {
     this.captuaservice.getBanco().subscribe((resp) => {
       if (resp.code === 200) {
         const response = resp.data;
