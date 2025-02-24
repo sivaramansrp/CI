@@ -1,0 +1,45 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md 6">
+      <h1>Acuse de recibo</h1>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <ng-alert [CONTENIDO]="txtAlerta"></ng-alert>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <ng-titulo [titulo]="subtitulo"></ng-titulo>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            @for (item of encabezadoTablaAcuse; track $index) {
+            <th>{{ item.valor }}</th>
+            }
+            <th class="center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of datosTablaAcuse; track $index) {
+          <tr>
+            @for (item of encabezadoTablaAcuse; track item.key; let i = $index) {
+            <td>{{ row[item.key] }}</td>
+            }
+            <td class="center">
+              <button type="button" class="btn btn-link me-2" id="verPdf" data-bs-toggle="button"
+                data-bs-placement="top" title="Ver pdf" (click)="verPdf(row.urlPdf)">
+                <i class="bi bi-arrow-bar-down bi-c"></i>
+              </button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,35 +1,28 @@
 export interface RespuestaSolicitud {
   codigo: number;
-  descripcion: string;
   data: string;
+  descripcion: string;
   message: string;
 }
-export interface Solicitud {
+export interface Solicitud5701 {
   idSolicitud: string;
-  datosSolicitante: {
-    generales: DatosGenerales;
-    domicilioFiscal: DomicilioFiscal;
-  };
-  datosSolicitud: {
-    tipo: number;
-    datosImportadorExportador: DatosImportador;
-    datosServicio: DatosServicio;
-    datosDespacho: DatosDespacho;
-    datosPedimento: DatosPedimento;
-    mercancia: DatosMercancia;
-    responsablesDespacho: Array<ResponsablesDespacho>;
-    pagos: DatosPago;
-  };
-  tercerosRelacionados: Array<Personas>;
-  requisitos: Array<TipoDocumento>;
-}
+  tipoSolicitud: string;
+  datosImportadorExportador: DatosImportadorExportador;
+  datosServicio: DatosServicio;
+  datosDespacho: DatosDespacho;
+  datosPedimento: DatosPedimento;
+  mercancia: DatosMercancia;
+  responsablesDespacho: ResponsablesDespacho[];
+  pagos: DatosPago;
 
+  tercerosRelacionados: Personas[];
+}
 export interface DatosGenerales {
-  curp: string;
-  rfc: string;
-  nombre: string;
-  aPaterno: string;
-  aMaterno: string;
+  curp?: string;
+  rfc?: string;
+  nombreRazonSocial: string;
+  primerApellido?: string;
+  segundoApellido?: string;
   actEconomica: string;
   correo: string;
 }
@@ -50,18 +43,19 @@ export interface PersonaTerceros {
   nombre: string;
   correo: string;
 }
-
-export interface DatosImportador {
-  rfc: string;
-  nombre: string;
+export interface DatosImportadorExportador {
+  rfcImportExport: string;
+  nombreImportExport: string;
   nroRegistro: string;
   programaFomento: string;
   immex: string;
+  immexValue: string;
   industriaAutomotriz: string;
-  tipoEmpresa: DatosTipoEmpresa;
+  tipoEmpresaCertificada: string;
   idSocioComercial: string;
+  opEconomicoAut: boolean;
+  revisionOrigen: boolean;
 }
-
 export interface DatosTipoEmpresa {
   certificacionA: boolean;
   certificacionAA: boolean;
@@ -70,20 +64,24 @@ export interface DatosTipoEmpresa {
   opEconomicoAut: boolean;
   revisionOrigen: boolean;
 }
-
 export interface DatosServicio {
   fechaInicio: string;
   horaInicio: string;
   fechaFinal: string;
   horaFinal: string;
-  fechasSeleccionadas: Array<string>;
+  fechasSeleccionadas: string[];
 }
 export interface DatosDespacho {
-  despacho: DatosDespacho;
+  despacho: string;
   rfcAutorizacion: string;
   ddexAutorizacion: string;
-  aduana: string;
+
+  idAduana: string;
+  descripcionAduana: string;
+
+  idSeccionAduanera: string;
   seccionAduanera: string;
+
   nombreRecinto: string;
   tipoDespacho: string;
   tipoOperacion: string;
@@ -93,13 +91,10 @@ export interface DatosDespacho {
   domicilio: string;
 }
 
-export interface DatosDespacho {
-  lda: boolean;
-  dd: boolean;
-}
 export interface DatosPedimento {
-  patente: number;
-  pedimento: number;
+  idPedimento: number;
+  patentePedimento: number;
+  pedimento: string;
   aduana: number;
   tipoPedimento: string;
   numero: number;
@@ -116,14 +111,15 @@ export interface DatosMercancia {
 export interface ResponsablesDespacho {
   gafete: string;
   nombre: string;
-  aPaterno: string;
-  aMaterno: string;
+  primerApellido: string;
+  segundoApellido: string;
 }
 export interface DatosPago {
   montoPagar: string;
   lineaCaptura: string;
   monto: number;
 }
+/** Hasta aqui terminan las interfaces de la solicitud */
 
 export interface Personas {
   razonSocial: string;
@@ -150,6 +146,6 @@ export interface DatosComponentePedimento {
 export interface Persona {
   gafete?: number;
   nombre: string;
-  aPaterno: string;
-  aMaterno: string;
+  primerApellido: string;
+  segundoApellido: string;
 }

@@ -1,4 +1,5 @@
-import { provideToastr, ToastrModule } from 'ngx-toastr';
+import { ToastrModule, provideToastr } from 'ngx-toastr';
+
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -20,19 +21,19 @@ import { TituloComponent } from "./shared/components/titulo/titulo.component";
     SeleccionTramiteComponent,
   ],
   imports: [
-    BrowserModule,
-    AppRoutingModule,
-    NavComponent,
-    HttpClientModule,
     AkitaNgDevtools,
+    AppRoutingModule,
     BreadcrumbComponent,
-    HeaderComponent,
-    FooterComponent,
-    InformacionUsuarioComponent,
-    ToastrModule.forRoot(),
     BrowserAnimationsModule,
+    BrowserModule,
+    FooterComponent,
+    HeaderComponent,
+    HttpClientModule,
     InformacionUsuarioComponent,
-    TituloComponent
+    InformacionUsuarioComponent,
+    NavComponent,
+    TituloComponent,
+    ToastrModule.forRoot(),
 ],
   providers: [
     provideToastr({

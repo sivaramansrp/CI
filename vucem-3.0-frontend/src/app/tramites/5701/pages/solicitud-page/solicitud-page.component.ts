@@ -1,12 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { PASOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
 import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
-import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
-import { map, Subject, takeUntil } from 'rxjs';
-import { SeccionQuery } from '../../../../core/queries/seccion.query';
-import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
+import { PASOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { SECCIONES_TRAMITE_5701 } from '../../../../shared/constantes/seccionesTramites';
+import { SeccionQuery } from '../../../../core/queries/seccion.query';
+import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 
 interface AccionBoton {
   accion: string;
@@ -14,11 +14,12 @@ interface AccionBoton {
 }
 
 @Component({
+  selector: 'solicitud-page',
   templateUrl: './solicitud-page.component.html',
   styles: ``,
 })
 export class SolicitudPageComponent {
-  pasos: Array<ListaPasosWizard> = PASOS;
+  pasos: ListaPasosWizard[] = PASOS;
   indice: number = 1;
   public seccion: SeccionState;
   private destroyNotifier$: Subject<void> = new Subject();
@@ -34,18 +35,18 @@ export class SolicitudPageComponent {
 
   constructor(
     private seccionQuery: SeccionQuery,
-    private seccionStore: SeccionStore,
-  ){
-
-  }
+    private seccionStore: SeccionStore
+  ) {}
 
   ngOnInit() {
-    this.seccionQuery.selectSeccionState$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map(seccionState => {
-        this.seccion = seccionState;
-      })
-    ).subscribe();
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
 
     this.asignarSecciones();
   }
@@ -69,9 +70,9 @@ export class SolicitudPageComponent {
    * Método para asignar las secciones existentes al stored
    */
   private asignarSecciones() {
-    let secciones: boolean[] =[];
-    let formaValida: boolean[] = [];
-    for (let llaveSeccion in SECCIONES_TRAMITE_5701.PASO_1) {
+    const secciones: boolean[] = [];
+    const formaValida: boolean[] = [];
+    for (const llaveSeccion in SECCIONES_TRAMITE_5701.PASO_1) {
       secciones.push(SECCIONES_TRAMITE_5701.PASO_1[llaveSeccion]);
       formaValida.push(false);
     }

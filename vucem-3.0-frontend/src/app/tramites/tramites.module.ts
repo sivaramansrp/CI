@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
+/* eslint-disable sort-imports */
 import { CommonModule } from '@angular/common';
 
-
-
 @NgModule({
-  declarations: [  ],
+  declarations: [
+
+  ],
   imports: [
     CommonModule,
   ],

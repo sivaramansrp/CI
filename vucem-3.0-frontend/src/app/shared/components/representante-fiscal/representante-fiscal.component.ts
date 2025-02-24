@@ -111,11 +111,11 @@ export class RepresentanteFiscalComponent {
         { value: '', disabled: true },
         [Validators.required, Validators.maxLength(250)],
       ],
-      aPaterno: [
+      primerApellido: [
         { value: '', disabled: true },
         [Validators.required, Validators.maxLength(250)],
       ],
-      aMaterno: [
+      segundoApellido: [
         { value: '', disabled: true },
         [Validators.required, Validators.maxLength(250)],
       ],
@@ -136,8 +136,8 @@ export class RepresentanteFiscalComponent {
     const datosRepresentante: DatosRfcResponse = {
       rfc: 'LEQI810131HDGSXG05',
       nombre: 'IGNACIO EDUARDO',
-      aPaterno: 'LEOS',
-      aMaterno: 'QUIÑONES',
+      primerApellido: 'LEOS',
+      segundoApellido: 'QUIÑONES',
     };
 
     // Obtenemos los campos deactivados de la formulario para el Representante Legal por RFC

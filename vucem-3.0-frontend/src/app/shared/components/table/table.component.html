@@ -1,4 +1,4 @@
-<div class="table-responsive">
+<div class="table-responsive" [ngClass]="{'enable-scrollbar': enableScrollbar}">
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -21,7 +21,6 @@
                     }
                     @for (element of data.tbodyData; track $index) {
                         <td>{{element}}</td>
-    
                     }
                 </tr>
 

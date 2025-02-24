@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { TipoPersona } from '../../core/enums/tipoPersona.enum';
 import { PerfilUsuario } from '../../core/models/usuario/perfilUsuario.model';
 import { Rol } from '../../core/models/usuario/rol.model';
+import { Router } from '@angular/router';
+import { TipoPersona } from '../../core/enums/tipoPersona.enum';
 import { UsuarioStore } from './../../estados/usuario.store';
 
 @Component({
@@ -15,9 +15,7 @@ export class AuthPageComponent {
   constructor(
     private router: Router,
     private usuarioStore: UsuarioStore,
-  ) {
-    
-  }
+  ) {}
 
   seleccionaTab(i: number): void {
     this.indice = i;

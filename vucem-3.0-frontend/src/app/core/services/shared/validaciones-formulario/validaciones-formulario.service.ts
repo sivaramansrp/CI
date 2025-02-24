@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
 import {
   AbstractControl,
   FormGroup,
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +13,7 @@ export class ValidacionesFormularioService {
   public rfcPattern =
     /^([A-ZÑ&]{3,4})?(?:\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01]))?[A-Z\d]{2}[A\d]$/;
   public horaPattern = /^([01]\d|2[0-3]):[0-5]\d$/;
+  public patronDeNumero = /^[0-9]\d*$/;
 
   /**
    * Valida si el campo de un formulario no contiene errores
@@ -23,9 +24,8 @@ export class ValidacionesFormularioService {
   public isValid(control: AbstractControl, campo?: string): boolean | null {
     if (control instanceof FormGroup && campo) {
       return control.controls[campo].errors && control.controls[campo].touched;
-    } else {
-      return control.errors && control.touched;
     }
+    return control.errors && control.touched;
   }
 
   /**
@@ -51,18 +51,17 @@ export class ValidacionesFormularioService {
     if (control instanceof FormGroup && campo) {
       const campoControl = control.controls[campo];
       return campoControl?.errors?.['required'] && campoControl.touched;
-    } else {
-      return control.errors && control.errors['required'] && control.touched;
     }
+    return control.errors && control.errors['required'] && control.touched;
   }
 
-   /**
-   * Obtiene el error de un campo con patterns
-   * @param {AbstractControl} control : Control del formulario
-   * @param {string} campo Nombre del campo a validar, si el control es un FormGroup
-   * @returns {boolean | null} : Retorna true si el campo o control contiene errores de pattern y ha sido tocado, de lo contrario retorna false
-   */
-   public errorEmail(
+  /**
+  * Obtiene el error de un campo con patterns
+  * @param {AbstractControl} control : Control del formulario
+  * @param {string} campo Nombre del campo a validar, si el control es un FormGroup
+  * @returns {boolean | null} : Retorna true si el campo o control contiene errores de pattern y ha sido tocado, de lo contrario retorna false
+  */
+  public errorEmail(
     control: AbstractControl,
     campo?: string
   ): boolean | null {
@@ -87,8 +86,19 @@ export class ValidacionesFormularioService {
     if (control instanceof FormGroup && campo) {
       const campoControl = control.controls[campo];
       return campoControl?.errors?.['pattern'] && campoControl.touched;
-    } else {
-      return control.errors && control.errors['pattern'] && control.touched;
     }
+    return control.errors && control.errors['pattern'] && control.touched;
+  }
+
+  /**
+   * Validacion personalizada para el input fecha, compara la fecha seleccionada con la fecha actual y devuelve un error de validación si la fecha es igual o anterior a hoy.
+   * @param {AbstractControl} control: Este es el control del formulario que contiene el valor de la fecha seleccionada a validar.
+   * @returns {ValidationErrors} | null: La función devuelve un objeto ValidationErrors si la validación falla (es decir, si la fecha es igual o anterior a hoy), o null si la validación es exitosa.
+   */
+  validaFechaNoHoy(control: AbstractControl): ValidationErrors | null {
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    const diaSeleccionado = new Date(control.value);
+    return diaSeleccionado > hoy ? null : { minDate: true };
   }
 }
