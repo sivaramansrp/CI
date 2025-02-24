@@ -68,7 +68,6 @@ export class TablaDinamicaComponent<T> {
    */
   filasSeleccionadas: number[];
 
-
   /**
    * Método para obtener la configuración de las columnas ordenada según el campo "orden".
    *
@@ -88,9 +87,8 @@ export class TablaDinamicaComponent<T> {
    * @returns {void} - No retorna nada, solo emite el evento con la fila seleccionada.
    */
   seleccionarFila(id: number, fila: T): void {
-
-      this.idFilaSeleccionada = id;
-      this.filaSeleccionada.emit(fila); // Emite la fila seleccionada al componente padre
+    this.idFilaSeleccionada = id;
+    this.filaSeleccionada.emit(fila); // Emite la fila seleccionada al componente padre
   }
 
   /**
@@ -98,24 +96,28 @@ export class TablaDinamicaComponent<T> {
    * Verifica si el checkbox está seleccionado o no.
    *
    * @param event - El evento que contiene el elemento del checkbox que activó el cambio.
+   * @param {number} indice - El índice de la fila que se está seleccionando o deseleccionando.
+   * Este índice se usa para identificar la fila correspondiente en la lista de filas seleccionadas.
+   *
    * @returns {void} - No retorna nada,
    */
-  cambiarEstadoCheckbox(event: Event, index: number): void {
+  cambiarEstadoCheckbox(event: Event, indice: number): void {
     // Obtener el checkbox desde el evento
     const checkbox = event.target as HTMLInputElement;
     // Verificamos si el checkbox está seleccionado
     if (checkbox?.checked) {
-      if (!this.filasSeleccionadas.includes(index)) {
-        this.filasSeleccionadas.push(index);
+      if (!this.filasSeleccionadas.includes(indice)) {
+        this.filasSeleccionadas.push(indice);
       }
     } else {
-      const idx = this.filasSeleccionadas.indexOf(index);
+      const idx = this.filasSeleccionadas.indexOf(indice);
       if (idx > -1) {
         this.filasSeleccionadas.splice(idx, 1);
       }
     }
-    this.listaDeFilaSeleccionada.emit(this.datos.filter( (_, indice) => this.filasSeleccionadas.includes(indice)));
-
+    this.listaDeFilaSeleccionada.emit(
+      this.datos.filter((_, indice) => this.filasSeleccionadas.includes(indice))
+    );
   }
 
   /**
