@@ -1,0 +1,19 @@
+<div class="container">
+    <ng-titulo [titulo]="'Datos de la Mercancía'"></ng-titulo>
+        <form [formGroup]="registroMercanciaComercializadorFrom">
+                <div class="row d-flex align-items-center">
+                    <div class="col-md-6 form-group">
+                        <label for="certificadoOrigenProductoNumRegistro" class="form-label">Número de Registro de Productos Elegibles *:</label>
+                        <input type="text" id="cveRegistroProductor" formControlName="cveRegistroProductor" 
+                            class="form-control" size="30" [placeholder]="'254023028961'"/>
+                    </div>
+                    <div class="col-md-4 mt-4">
+                        <button type="button" class="btn btn-primary mt-4"
+                            (click)="actualizaGridComercializadoresProductos()">
+                            Buscar
+                        </button>
+                    </div>
+            </div>
+            </form>
+</div>
+  

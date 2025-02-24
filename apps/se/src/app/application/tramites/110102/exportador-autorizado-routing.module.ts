@@ -1,16 +1,17 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+
 import { DatosComponent } from './pages/datos/datos.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
-    path:'datos',
+    path:'registrar-solicitud',
     component:DatosComponent
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class ExportadorautorizadoRoutingModule { }

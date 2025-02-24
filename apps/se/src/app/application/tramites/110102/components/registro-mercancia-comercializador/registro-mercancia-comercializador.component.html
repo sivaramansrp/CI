@@ -1,0 +1,46 @@
+<div class="container">
+<ng-titulo [titulo]="'Mercancía '"></ng-titulo>
+    <form [formGroup]="mercanciaAsociada">
+        <div class="row">
+            <div class="col-md-8 form-group">
+                <label for="mercanciaAsociadaNombreComercial" class="form-label">
+                    Nombre comercial de la mercancía (igual que en la factura) :</label>
+                <input type="text" id="mercanciaAsociadaNombreComercial" formControlName="nombreComercial"
+                    class="form-control" size="68"  [placeholder]="'Patitos de hule'" />
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-8 form-group">
+                <label for="mercanciaAsociadaNombreIngles" class="form-label">
+                    Nombre en inglés :
+                </label>
+                <input type="text" id="mercanciaAsociadaNombreIngles" formControlName="nombreIngles"
+                    class="form-control" size="68" [placeholder]="'rubber ducklings'" />
+            </div>
+        </div>
+
+        <div class="row mt-4" formGroupName="fraccionArancelaria">
+            <div class="col-md-4 form-group">
+                <label for="mercanciaFraccionArancelaria" class="form-label">
+                    Fracción arancelaria : 
+                </label>
+                <input type="text" id="mercanciaFraccionArancelaria" formControlName="clave" class="form-control"
+                    size="68" [placeholder]="'40021901'" />
+            </div>
+        </div>
+        <div class="row mt-4">
+        <div class="col-md-8 form-group">
+            <label for="nombreTecnico" class="form-label">
+                Nombre Técnico (TIGIE):
+            </label>
+            <textarea  id="nombreTecnico" class="form-control" formControlName="nombreTecnico"
+            [placeholder]="'Poli(butadieno-estireno), con un contenido reaccionado de butadieno superior o igual al 90% pero inferior o igual al 97% y de 10% a 3% respectivamente, de estireno.'"></textarea> 
+        </div>
+    </div>
+    </form>
+ 
+  <app-datos-tratados-acuerdos></app-datos-tratados-acuerdos>
+ 
+
+</div>
