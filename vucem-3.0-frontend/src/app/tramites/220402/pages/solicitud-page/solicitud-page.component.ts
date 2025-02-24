@@ -6,23 +6,7 @@ import { WizardComponent } from '../../../../shared/components/wizard/wizard.com
 import { map, Subject, takeUntil } from 'rxjs';
 import { SeccionQuery } from '../../../../core/queries/seccion.query';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
-
-/**
- * Secciones a mostrar dentro de cada Paso de acuerdo al trámite
- */
-export const SECCIONES_TRAMITE_220402 = {
-  PASO_1: {
-      VALIDACION_SECCION_1: false,
-      VALIDACION_SECCION_2: true,
-      VALIDACION_SECCION_3: false,
-  },
-  PASO_2: {
-      VALIDACION_SECCION: true,
-  },
-  PASO_3: {
-      requiereValidacion: true,
-  },
-};
+import { SECCIONES_TRAMITE_220402 } from '../../../../shared/constantes/seccionesTramites';
 
 /**
  * 
