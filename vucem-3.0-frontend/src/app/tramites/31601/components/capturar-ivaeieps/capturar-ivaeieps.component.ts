@@ -279,8 +279,9 @@ export class CapturarIvaeiepsComponent {
    *
    * @returns {nulo}
    */
-  tipoDeInver(): void {
-    this.ivaForm.get('tipoDe')?.setValue(this.tipoDeInversion);
+  tipoDeInver(event?: Event): void {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    this.ivaForm.get('tipoDe')?.setValue(selectedValue);
   }
 
   /**

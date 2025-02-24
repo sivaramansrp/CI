@@ -36,7 +36,7 @@ import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import establecimientoTable from '../../../../../assets/json/220401/establecimiento-table.json';
 
-import empleadosSubcontratación from '../../../../../assets/json/31601/empleadosSubcontratación.json';
+import empleadosSubcontratacion from '../../../../../assets/json/31601/empleadosSubcontratacion.json';
 
 import applicantRegistrados from '../../../../../assets/json/31601/applicantRegistrados.json';
 
@@ -81,17 +81,16 @@ import { AgregarMiembroDeLaEmpresaComponent } from '../agregar-miembro-de-la-emp
   ],
 })
 export class AduaneroComponent implements OnInit, AfterViewInit {
-/**
- * Almacena los datos de descripción en un formato predefinido.
- */
-descriptionData = prejson;
+  /**
+   * Almacena los datos de descripción en un formato predefinido.
+   */
+  descriptionData = prejson;
 
-/**
- * Contiene la descripción en texto.
- */
-description: string = '';
+  /**
+   * Contiene la descripción en texto.
+   */
+  description: string = '';
 
- 
   /**
    * compo doc
    * @property {ElementRef} modifyModal
@@ -221,10 +220,10 @@ description: string = '';
 
   /**
    *  compo doc
-   * @property {any} empleadosSubcontratación
+   * @property {any} empleadosSubcontratacion
    * Datos de empleados bajo subcontratación.
    */
-  public empleadosSubcontratación = empleadosSubcontratación;
+  public empleadosSubcontratacion = empleadosSubcontratacion;
 
   /**
    *  compo doc
@@ -406,10 +405,8 @@ description: string = '';
     this.getEmpleadosData();
     this.getDomiciliosData();
     this.getInstalaciones();
-
   }
 
- 
   /**
    * Método del ciclo de vida de Angular que se ejecuta después de que la vista se ha inicializado.
    * Inicializa los modales de modificación e instalaciones.
@@ -459,8 +456,8 @@ description: string = '';
    * Obtiene y asigna los datos de empleados desde el JSON.
    */
   public getEmpleadosData() {
-    this.empleadosHeaderData = this.empleadosSubcontratación.tableHeader;
-    this.empleadosBodyData = this.empleadosSubcontratación.tableBody;
+    this.empleadosHeaderData = this.empleadosSubcontratacion.tableHeader;
+    this.empleadosBodyData = this.empleadosSubcontratacion.tableBody;
   }
 
   /**
