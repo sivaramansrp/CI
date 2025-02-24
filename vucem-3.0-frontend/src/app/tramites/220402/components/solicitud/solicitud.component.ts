@@ -11,6 +11,9 @@ import {
   FECHA_FINAL,
   FECHA_INICIO,
 } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { MediodetransporteService } from '../../../../core/services/220402/mediodetransporte.service';
+
+import { map, merge, takeUntil, ReplaySubject } from 'rxjs';
 
 /**
  * Componente para la vista de la solicitud de la sección de "220402".
@@ -32,6 +35,8 @@ export class SolicitudComponent {
      * Fecha inicio de entrada.
      */
   fechaInicioInput: InputFecha = FECHA_INICIO;
+
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
    * Fecha final de entrada.
@@ -76,6 +81,7 @@ export class SolicitudComponent {
   constructor(
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
+    private mediodetransporteService: MediodetransporteService
   ) {
     // Inicializar el formulario principal
     this.crearFormSolicitud();
@@ -145,23 +151,14 @@ export class SolicitudComponent {
      * Inicializa los catálogos necesarios para el formulario.
      */
   private inicializaCatalogos(): void {
-
-    this.options = [
-      {
-        id: 1,
-        descripcion: 'Option 1'
-      },
-      {
-        id: 2,
-        descripcion: 'Option 2'
-      },
-      {
-        id: 3,
-        descripcion: 'Option 3'
-      }
-    ]
-
-  }
+  
+      this.mediodetransporteService
+            .getMedioDeTransporte()
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe((data): void => {
+              this.options = data as Catalogo[];
+            });
+    }
 
   /**
    * Crea el formulario de solicitud.
@@ -256,14 +253,15 @@ export class SolicitudComponent {
     this.mercancia_colapsable();
   }
 
-  
   /**
-   * Adds a municipality to the origin array based on the selected federative entity.
+   * @method municipioAgregar
+   * @description Este método actualiza las propiedades `federativaOrigen` y `origenArr` 
+   * basándose en los valores obtenidos de los controles del formulario `datosGenerales`.
    * 
-   * This method retrieves the value of 'entidadFederativadeOrigen' from the 'datosGenerales' form group
-   * and assigns it to the 'federativaOrigen' property. If the value is not found, it defaults to 'NA'.
-   * It also retrieves the value of 'municipiodeOrigen' from the 'datosGenerales' form group and assigns
-   * it to the 'origenArr' property. If the value is not found, it defaults to an empty array.
+   * - `federativaOrigen` se establece con el valor del control `entidadFederativadeOrigen` 
+   *   o 'NA' si el control no tiene valor.
+   * - `origenArr` se establece con el valor del control `municipiodeOrigen` 
+   *   o un arreglo vacío si el control no tiene valor.
    */
   municipioAgregar() {
     this.federativaOrigen = this.datosGenerales.get('entidadFederativadeOrigen')?.value || 'NA';
@@ -271,16 +269,25 @@ export class SolicitudComponent {
   }
 
   /**
-   * Removes the selected municipality from the origenArr array.
+   * Método para eliminar un municipio del arreglo `origenArr`.
    * 
-   * This method retrieves the value of 'municipiodeOrigen' from the datosGenerales form group,
-   * and filters out any items in the origenArr array that match this value.
+   * Este método obtiene el valor del control `municipiodeOrigen` del formulario `datosGenerales`
+   * y filtra el arreglo `origenArr` para eliminar cualquier elemento que coincida con dicho valor.
    * 
-   * @memberof SolicitudComponent
+   * @returns {void}
    */
   municipioEliminar() {
     const municipioOrigin = this.datosGenerales.get('municipiodeOrigen')?.value;
     this.origenArr = this.origenArr.filter((item: any) => item.indexOf(municipioOrigin) == -1);
+  }
+
+  /**
+   * Este método se utiliza para destruir la suscripción.
+   * @returns destroyed$
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 
 }
