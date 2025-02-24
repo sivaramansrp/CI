@@ -9,17 +9,17 @@ import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SECCIONES_TRAMITE_220402 } from '../../../../shared/constantes/seccionesTramites';
 
 /**
- * 
+ *
  * Interfaz que define la estructura de un objeto de acción de botón.
  */
 interface AccionBoton {
   /**
- * @property {string} accion - El accion del paso.
- */
+   * @property {string} accion - El accion del paso.
+   */
   accion: string;
   /**
- * @property {number} valor - El valor del paso en el asistente.
- */
+   * @property {number} valor - El valor del paso en el asistente.
+   */
   valor: number;
 }
 
@@ -35,9 +35,7 @@ interface AccionBoton {
 /**
  * Componente que representa la página de solicitud.
  */
-
 export class SolicitudPageComponent {
-  
   /**
    * @property {ListaPasosWizard[]} pasos - Lista de pasos del wizard.
    */
@@ -74,21 +72,20 @@ export class SolicitudPageComponent {
     txtBtnSig: 'Continuar',
   };
 
- 
   /**
    * @ignore
    * @private
    * @property {Subject<void>} destroyNotifier$ - Un `Subject` utilizado para notificar la destrucción del componente.
    */
-  /** 
-  * @description Constructor del componente. Inyecta las dependencias necesarias.
+  /**
+   * @description Constructor del componente. Inyecta las dependencias necesarias.
    * @param {SeccionQuery} seccionQuery - Servicio para consultar el estado de la sección.
    * @param {SeccionStore} seccionStore - Servicio para manejar el estado de la sección.
    */
   constructor(
     private seccionQuery: SeccionQuery,
-    private seccionStore: SeccionStore,
-  ){}
+    private seccionStore: SeccionStore
+  ) {}
 
   /**
    * @ignore
@@ -96,12 +93,14 @@ export class SolicitudPageComponent {
    * Suscribe al estado de la sección y asigna las secciones.
    */
   ngOnInit() {
-    this.seccionQuery.selectSeccionState$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map(seccionState => {
-        this.seccion = seccionState;
-      })
-    ).subscribe();
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
 
     this.asignarSecciones();
   }
@@ -116,11 +115,11 @@ export class SolicitudPageComponent {
 
   /**
    * Actualiza el índice basado en el valor de la acción proporcionada y navega en el componente wizard.
-   * 
+   *
    * @param {AccionBoton} e - Objeto que contiene el valor y la acción del botón.
    * @param {number} e.valor - Valor del índice que debe estar entre 1 y 4.
    * @param {string} e.accion - Acción a realizar, puede ser 'cont' para avanzar o cualquier otro valor para retroceder.
-   * 
+   *
    * @returns {void}
    */
   getValorIndice(e: AccionBoton) {
@@ -138,7 +137,7 @@ export class SolicitudPageComponent {
    * Método para asignar las secciones existentes al stored
    */
   private asignarSecciones() {
-    let secciones: boolean[] =[];
+    let secciones: boolean[] = [];
     let formaValida: boolean[] = [];
     for (let llaveSeccion in SECCIONES_TRAMITE_220402.PASO_1) {
       secciones.push(SECCIONES_TRAMITE_220402.PASO_1[llaveSeccion]);
