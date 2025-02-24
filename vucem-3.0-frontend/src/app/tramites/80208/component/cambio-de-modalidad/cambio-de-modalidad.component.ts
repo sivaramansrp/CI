@@ -5,6 +5,8 @@ import serviciosImmsTable from '../../../../../assets/json/80208/servicios-immx-
 import serviciosAutorizados from '../../../../../assets/json/80208/servicios-autorizados.json';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CambioModalidad } from '../../../../core/models/80208/cambio-de-modalidad.modal';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-cambio-de-modalidad',
@@ -13,6 +15,12 @@ import { CambioModalidad } from '../../../../core/models/80208/cambio-de-modalid
 })
 
 export class CambioDeModalidadComponent implements OnInit {
+
+  /**
+   * Subject para manejar la desuscripción de observables.
+   * @type {Subject<void>}
+   */
+  private unsubscribe$ = new Subject<void>();
 
   /**
    * Formulario para el cambio de modalidad.
@@ -117,9 +125,11 @@ export class CambioDeModalidadComponent implements OnInit {
    * @returns {void}
    */
   getcargarDatos(): void {
-    this.modalidadService.getDatosSimulados().subscribe((data) => {
-      this.cambioDeModalidadForm.patchValue(data);
-    });
+    this.modalidadService.getDatosSimulados()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.cambioDeModalidadForm.patchValue(data);
+      });
   }
 
   /**
@@ -185,6 +195,16 @@ export class CambioDeModalidadComponent implements OnInit {
     if (event?.id) {
       this.toggleServiciosImmx(event.id);
     }
+  }
+
+  /**
+   * Método que se ejecuta cuando el componente se destruye.
+   * 
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 }
