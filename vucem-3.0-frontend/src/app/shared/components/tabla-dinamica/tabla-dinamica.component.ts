@@ -12,12 +12,12 @@ import { FormsModule } from '@angular/forms';
 })
 export class TablaDinamicaComponent<T> {
   /**
-   * Indica el tipo de selección para la tabla.
+   * indice el tipo de selección para la tabla.
    * Puede ser 'RADIO' para seleccionar una fila con un botón de radio.
    *
-   * @type {'RADIO' | undefined}
+   * @type { 'CHECKBOX' | 'RADIO' | undefined}
    */
-  @Input() tablaSeleccion: 'RADIO' | undefined = undefined;
+  @Input() tablaSeleccion: 'CHECKBOX' | 'RADIO' | undefined = undefined;
 
   /**
    * Configuración de las columnas de la tabla.
@@ -45,12 +45,29 @@ export class TablaDinamicaComponent<T> {
   @Output() filaSeleccionada: EventEmitter<T> = new EventEmitter<T>(true);
 
   /**
+   * Evento que se emite cuando el usuario selecciona o deselecciona una fila de la tabla.
+   * Este evento envía un array con todas las filas seleccionadas (objetos completos) al componente padre.
+   *
+   * @type {EventEmitter<T[]>}
+   */
+  @Output() listaDeFilaSeleccionada: EventEmitter<T[]> = new EventEmitter<T[]>(true);
+
+  /**
    * Almacena el ID de la fila seleccionada.
    * Este valor se establece cuando el usuario selecciona una fila en la tabla.
    *
    * @type {number}
    */
   idFilaSeleccionada: number;
+
+  /**
+   * Almacena un array de los índices de las filas seleccionadas.
+   * Cada índice corresponde a una fila que ha sido seleccionada por el usuario.
+   *
+   * @type {number[]}
+   */
+  filasSeleccionadas: number[];
+
 
   /**
    * Método para obtener la configuración de las columnas ordenada según el campo "orden".
@@ -71,7 +88,58 @@ export class TablaDinamicaComponent<T> {
    * @returns {void} - No retorna nada, solo emite el evento con la fila seleccionada.
    */
   seleccionarFila(id: number, fila: T): void {
-    this.idFilaSeleccionada = id;
-    this.filaSeleccionada.emit(fila); // Emite la fila seleccionada al componente padre
+
+      this.idFilaSeleccionada = id;
+      this.filaSeleccionada.emit(fila); // Emite la fila seleccionada al componente padre
+  }
+
+  /**
+   * Este método se llama cada vez que cambia el estado del checkbox.
+   * Verifica si el checkbox está seleccionado o no.
+   *
+   * @param event - El evento que contiene el elemento del checkbox que activó el cambio.
+   * @returns {void} - No retorna nada,
+   */
+  cambiarEstadoCheckbox(event: Event, index: number): void {
+    // Obtener el checkbox desde el evento
+    const checkbox = event.target as HTMLInputElement;
+    // Verificamos si el checkbox está seleccionado
+    if (checkbox?.checked) {
+      if (!this.filasSeleccionadas.includes(index)) {
+        this.filasSeleccionadas.push(index);
+      }
+    } else {
+      const idx = this.filasSeleccionadas.indexOf(index);
+      if (idx > -1) {
+        this.filasSeleccionadas.splice(idx, 1);
+      }
+    }
+    this.listaDeFilaSeleccionada.emit(this.datos.filter( (_, indice) => this.filasSeleccionadas.includes(indice)));
+
+  }
+
+  /**
+   * Este método se llama cuando el usuario selecciona o deselecciona el checkbox de "seleccionar/desmarcar todo".
+   * Si el checkbox está marcado, se seleccionan todos los índices. Si está desmarcado, se deseleccionan todos.
+   *
+   * @param event - El evento que contiene el checkbox de "seleccionar/desmarcar todo".
+   * @returns {void} - No retorna nada,
+   */
+  seleccionarDeseleccionarTodos(event: Event): void {
+    const checkbox = event.target as HTMLInputElement; // Obtener el checkbox desde el evento
+
+    if (checkbox.checked) {
+      // Si el checkbox de "seleccionar todo" está marcado, agregamos todos los índices al array
+      this.filasSeleccionadas = this.datos.map((_, indice) => indice);
+      this.listaDeFilaSeleccionada.emit(
+        this.datos.filter((_, indice) =>
+          this.filasSeleccionadas.includes(indice)
+        )
+      );
+    } else {
+      // Si el checkbox de "seleccionar todo" está desmarcado, limpiamos el array de índices seleccionados
+      this.filasSeleccionadas = [];
+      this.listaDeFilaSeleccionada.emit([]);
+    }
   }
 }

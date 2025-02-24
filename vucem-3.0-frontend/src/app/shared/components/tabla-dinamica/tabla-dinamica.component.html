@@ -5,6 +5,18 @@
           @if(tablaSeleccion === 'RADIO') {
             <th></th>
           }
+          @else if(tablaSeleccion === 'CHECKBOX') {
+            <th>
+              <input 
+                class="cursor-pointer"
+                type="checkbox" 
+                name="filaSeleccionada" 
+                (change)="seleccionarDeseleccionarTodos($event)"
+                aria-label="Seleccionar/Deseleccionar todo"
+                [checked]="filasSeleccionadas.length === datos.length"
+              />
+            </th>
+          }
           <!-- Crear el encabezado de manera dinámica -->
           <th *ngFor="let col of obtenerConfiguracionOrdenada()">
             {{ col.encabezado }}
@@ -16,7 +28,7 @@
         <tr *ngFor="let fila of datos;let i=index">
           <!-- Botón de radio para seleccionar una fila -->
            @if(tablaSeleccion === 'RADIO') {
-            <td *ngIf="tablaSeleccion === 'RADIO'">
+            <td>
               <input 
                 class="cursor-pointer"
                 type="radio" 
@@ -25,6 +37,21 @@
                 [value]="i" 
                 (change)="seleccionarFila(i, fila)"
                 [checked]="idFilaSeleccionada === i"
+                aria-label="Seleccionar"
+              />
+            </td>
+    
+           }
+           @else if(tablaSeleccion === 'CHECKBOX') {
+            <td>
+              <input 
+                class="cursor-pointer"
+                type="checkbox" 
+                name="filaSeleccionada" 
+                [value]="i" 
+                (change)="cambiarEstadoCheckbox($event,i )"
+                [checked]="filasSeleccionadas.includes(i)"
+                aria-label="Seleccionar"
               />
             </td>
     
