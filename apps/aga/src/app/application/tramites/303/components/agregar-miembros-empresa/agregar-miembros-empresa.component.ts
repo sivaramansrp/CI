@@ -1,7 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Miembro } from '@ng-mf/data-access-user';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'agregar-miembros-empresa',
@@ -23,7 +22,6 @@ export class AgregarMiembrosEmpresaComponent {
 
   });
   constructor(private fb: FormBuilder,
-    private toastr: ToastrService,
   ) {}
 
   abrirModal() {

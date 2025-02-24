@@ -1,6 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { Inventario } from '@ng-mf/data-access-user';
 import { TEXTOS_303 } from '@ng-mf/data-access-user';
 
@@ -21,7 +20,6 @@ export class ControlInventariosComponent {
 
   });
     constructor(private fb: FormBuilder,
-      private toastr: ToastrService,
     ) {}
   
     abrirModal() {

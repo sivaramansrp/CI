@@ -12,7 +12,6 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, SelectPaisesComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
-// import { ToastrService } from 'ngx-toastr/toastr/toastr.service';
 
 @NgModule({
   declarations: [
