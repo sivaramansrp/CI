@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { ASIGNACION } from 'libs/shared/data-access-user/src/core/services/120402/asignacion-directa-de-cupo.enum';
+import { ASIGNACION, TEXTOS } from 'libs/shared/data-access-user/src/core/services/120402/asignacion-directa-de-cupo.enum';
 import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
 
 // import { ASIGNACION } from '../../../../../../../../../libs/shared/data-access-user/src/core/services/120402/asignacion-directa-de-cupo.enum';
@@ -14,4 +14,6 @@ export class AsignacionDirectaDeCupoComponent {
     pantallasPasos: ListaPasosWizard[] = ASIGNACION;
   
     indice: number = 1;
+
+    TEXTOS = TEXTOS;
 }

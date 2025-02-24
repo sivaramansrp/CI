@@ -4,7 +4,9 @@ import { NgModule } from '@angular/core';
 import { AsignacionComponent } from './pages/asignacion/asignacion.component';
 import { AsignacionDirectaDeCupoComponent } from './pages/asignacion-directa-de-cupo/asignacion-directa-de-cupo.component';
 import { AsignacionDirectaDeCupoRoutingModule } from './asignacion-directa-de-cupo-routing.module';
+import { CantidadSolicitadaComponent } from './components/cantidad-solicitada/cantidad-solicitada.component';
 import { CortinaALaItalianaComponent } from './pages/cortina-a-la-italiana/cortina-a-la-italiana.component';
+import { DescripcionDelCupoComponent } from './components/descripcion-del-cupo/descripcion-del-cupo.component';
 import { provideHttpClient } from '@angular/common/http';
 
 import { RepresentacionFederalComponent } from './components/representacion-federal/representacion-federal.component';
@@ -13,6 +15,7 @@ import { SeleccionDelCupoComponent } from './components/seleccion-del-cupo/selec
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +30,10 @@ import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/compo
     AsignacionDirectaDeCupoRoutingModule,
     WizardComponent,
     RepresentacionFederalComponent,
-    SeleccionDelCupoComponent
+    SeleccionDelCupoComponent,
+    DescripcionDelCupoComponent,
+    CantidadSolicitadaComponent,
+    AlertComponent
   ],
   providers: [provideHttpClient()],
 })

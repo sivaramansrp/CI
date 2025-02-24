@@ -24,3 +24,7 @@ export const ASIGNACION = [
         completado: false,
       }
 ]
+
+export const TEXTOS = {
+  ALERTA: `¡Error de registro! Faltan campos por capturar.`,
+}
