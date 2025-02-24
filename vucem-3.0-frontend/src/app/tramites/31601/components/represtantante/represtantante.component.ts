@@ -1,7 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import RepresentantanteData from '../../../../../assets/json/31601/represtantante-data.json';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 /**
@@ -12,10 +19,9 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
   templateUrl: './represtantante.component.html', // Ruta a la plantilla HTML
   styleUrl: './represtantante.component.scss', // Ruta al archivo de estilos SCSS
   standalone: true, // Define que el componente puede funcionar de forma independiente (sin módulo específico)
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, FormsModule] // Módulos y componentes necesarios
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, FormsModule], // Módulos y componentes necesarios
 })
 export class ReprestantanteComponent implements OnInit {
-
   /**
    * Formulario reactivo para los datos del representante.
    */
@@ -24,21 +30,13 @@ export class ReprestantanteComponent implements OnInit {
   /**
    * Datos predefinidos del representante.
    */
-  representativeData = {
-    resigtro: "HEUE780514BVA",
-    RFC: "HEUE780514BVA",
-    Nombre: " ERNESTO",
-    ApellidoPaterno: "HERNANDEZ",
-    ApellidoMaterno: "URIBE",
-    Telefono: "56457970",
-    Correo: "VUCEMcbp@vuem2_5@hotmail.com.com"
-  };
+  representativeData = RepresentantanteData;
 
   /**
    * Constructor del componente.
    * @param {FormBuilder} fb - Instancia de FormBuilder para la creación de formularios.
    */
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {}
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -49,32 +47,36 @@ export class ReprestantanteComponent implements OnInit {
     this.represtantante = this.fb.group({
       datosImportadorExportador: this.fb.group({
         resigtro: ['', Validators.required],
-        RFC: ['', Validators.required],
-        Nombre: ['', Validators.required],
-        ApellidoPaterno: ['', Validators.required],
-        ApellidoMaterno: ['', Validators.required],
-        Telefono: ['', Validators.required],
-        Correo: ['', Validators.required],
+        rfc: ['', Validators.required],
+        nombre: ['', Validators.required],
+        apellidoPaterno: ['', Validators.required],
+        apellidoMaterno: ['', Validators.required],
+        telefono: ['', Validators.required],
+        correo: ['', Validators.required],
       }),
     });
 
     // Deshabilita los campos que no deben ser modificados
-    this.represtantante.get('datosImportadorExportador.RFC')?.disable();
-    this.represtantante.get('datosImportadorExportador.Nombre')?.disable();
-    this.represtantante.get('datosImportadorExportador.ApellidoPaterno')?.disable();
-    this.represtantante.get('datosImportadorExportador.ApellidoMaterno')?.disable();
+    this.represtantante.get('datosImportadorExportador.rfc')?.disable();
+    this.represtantante.get('datosImportadorExportador.nombre')?.disable();
+    this.represtantante
+      .get('datosImportadorExportador.apellidoPaterno')
+      ?.disable();
+    this.represtantante
+      .get('datosImportadorExportador.apellidoMaterno')
+      ?.disable();
 
     // Rellena el formulario con los datos del representante
     this.represtantante.patchValue({
       datosImportadorExportador: {
         resigtro: this.representativeData.resigtro,
-        RFC: this.representativeData.RFC,
-        Nombre: this.representativeData.Nombre,
-        ApellidoPaterno: this.representativeData.ApellidoPaterno,
-        ApellidoMaterno: this.representativeData.ApellidoMaterno,
-        Telefono: this.representativeData.Telefono,
-        Correo: this.representativeData.Correo
-      }
+        rfc: this.representativeData.rfc,
+        nombre: this.representativeData.nombre,
+        apellidoPaterno: this.representativeData.apellidoPaterno,
+        apellidoMaterno: this.representativeData.apellidoMaterno,
+        telefono: this.representativeData.telefono,
+        correo: this.representativeData.correo,
+      },
     });
   }
 }

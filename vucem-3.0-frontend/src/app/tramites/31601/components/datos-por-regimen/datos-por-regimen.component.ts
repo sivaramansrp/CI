@@ -3,10 +3,15 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-import regimenTable from '../../../../../assets/json/31601/datos-por-regimen.json'
+import regimenTable from '../../../../../assets/json/31601/datos-por-regimen.json';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import { REQUERIDO } from '../../../../shared/constantes/mensajes-error-formularios';
 import { ServiciosPantallaService } from '../../../../core/services/31601/servicios-pantalla.service';
@@ -14,29 +19,38 @@ import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 import { map, merge } from 'rxjs';
 import { Tramite31601Store } from '../../../../estados/tramites/tramites31601.store';
 import { TablePaginationComponent } from '../../../../shared/components/table-pagination/table-pagination.component';
-
+import { TableBodyData } from '../../../../core/models/shared/components.model';
 
 /**
-* Componente DatosPorRegimen que se utiliza para mostrar y gestionar los DatosPorRegimen.
-*
-* Este componente utiliza varios subcomponentes como TituloComponent, CatalogoSelectComponent, CommonModule,
-* ReactiveFormsModule,TableComponent  para mostrar información y permitir al usuario seleccionar y agregar tratados.
-* @component
-*/
+ * Componente DatosPorRegimen que se utiliza para mostrar y gestionar los DatosPorRegimen.
+ *
+ * Este componente utiliza varios subcomponentes como TituloComponent, CatalogoSelectComponent, CommonModule,
+ * ReactiveFormsModule,TableComponent  para mostrar información y permitir al usuario seleccionar y agregar tratados.
+ * @component
+ */
 
 @Component({
   selector: 'app-datos-por-regimen',
   templateUrl: './datos-por-regimen.component.html',
   styleUrl: './datos-por-regimen.component.scss',
   standalone: true,
-  imports: [TituloComponent,
-            CatalogoSelectComponent,
-            CommonModule,
-            ReactiveFormsModule,
-            TableComponent,
-            TablePaginationComponent],
+  imports: [
+    TituloComponent,
+    CatalogoSelectComponent,
+    CommonModule,
+    ReactiveFormsModule,
+    TableComponent,
+    TablePaginationComponent,
+  ],
 })
 export class DatosPorRegimenComponent implements OnInit {
+  /**
+   *Un catálogo de artículos.
+   * Esta propiedad contiene una matriz de objetos 'Catalogo', que representan
+   * Los datos del catálogo.
+   * @type {Catalogo[]}
+   */
+  public bimestreUnoCatalogo!: Catalogo[];
 
   /**
    *Un catálogo de artículos.
@@ -44,23 +58,15 @@ export class DatosPorRegimenComponent implements OnInit {
    * Los datos del catálogo.
    * @type {Catalogo[]}
    */
-  public bimestreOneCatalog!: Catalogo[];
+  public bimestreDosCatalogo!: Catalogo[];
 
-    /**
+  /**
    *Un catálogo de artículos.
    * Esta propiedad contiene una matriz de objetos 'Catalogo', que representan
    * Los datos del catálogo.
    * @type {Catalogo[]}
    */
-  public bimestreTwoCatalog!: Catalogo[];
-
-    /**
-   *Un catálogo de artículos.
-   * Esta propiedad contiene una matriz de objetos 'Catalogo', que representan
-   * Los datos del catálogo.
-   * @type {Catalogo[]}
-   */
-  public bimestreThreeCatalog!: Catalogo[];
+  public bimestreTresCatalogo!: Catalogo[];
 
   /**
    * Una instancia de FormGroup que representa el formulario para el régimen.
@@ -105,10 +111,10 @@ export class DatosPorRegimenComponent implements OnInit {
   @ViewChild('closeModal') closeModal!: ElementRef;
 
   /**
-    * Una propiedad pública que contiene una matriz de objetos Catalogo.
-    * Esta propiedad se utiliza para administrar los datos modales del catálogo.
+   * Una propiedad pública que contiene una matriz de objetos Catalogo.
+   * Esta propiedad se utiliza para administrar los datos modales del catálogo.
    */
-  public catalogModal! : Catalogo[];
+  public catalogModal!: Catalogo[];
 
   /**
    * Una constante que contiene la cadena de mensaje requerida.
@@ -116,7 +122,6 @@ export class DatosPorRegimenComponent implements OnInit {
    */
   public MENSAJE_REQUERIDO = REQUERIDO;
 
-  
   /**
    * @property {number} totalItems
    *  Número total de elementos en la tabla.
@@ -135,13 +140,11 @@ export class DatosPorRegimenComponent implements OnInit {
    */
   public itemsPerPage: number = 5;
 
-    /**
-   * @property {unknown[]} miembrodelaempresaBodyData
+  /**
+   * @property {unknown[]} miembroDeLaEmpresaBodyData
    *  Datos del cuerpo de la tabla de miembros de la empresa.
    */
-    public miembrodelaempresaBodyData: unknown[] = [];
-
-
+  public miembroDeLaEmpresaBodyData: TableBodyData[] = [];
 
   /**
    * constructor de la clase
@@ -150,21 +153,22 @@ export class DatosPorRegimenComponent implements OnInit {
    * @param fb: constructor de formularios
    * @param validacionesService: Validaciones comunes del formulario.
    */
-  constructor(private fb: FormBuilder,
-              private validacionesService: ValidacionesFormularioService,
-              private _pantallaSvc: ServiciosPantallaService,
-              private tramite31601Store: Tramite31601Store) 
-  {
+  constructor(
+    private fb: FormBuilder,
+    private validacionesService: ValidacionesFormularioService,
+    private _pantallaSvc: ServiciosPantallaService,
+    private tramite31601Store: Tramite31601Store
+  ) {
     this.crearRegimenForm();
   }
 
   /**
-    * Gancho de ciclo de vida que se llama después de inicializar las propiedades enlazadas a datos de una directiva.
-    * Este método inicializa catálogos, establece valores de control de formularios, prepara los datos de la pestaña del régimen,
-    * y recupera el formulario que se va a agregar.
-    *
-    * @memberof DatosPorRegimenComponent
-    */
+   * Gancho de ciclo de vida que se llama después de inicializar las propiedades enlazadas a datos de una directiva.
+   * Este método inicializa catálogos, establece valores de control de formularios, prepara los datos de la pestaña del régimen,
+   * y recupera el formulario que se va a agregar.
+   *
+   * @memberof DatosPorRegimenComponent
+   */
   ngOnInit() {
     this.inicializaCatalogos();
     this.establecervalorcontrolformulario();
@@ -172,89 +176,85 @@ export class DatosPorRegimenComponent implements OnInit {
     this.getAgregarForm();
   }
 
-/**
- * Metodo para saber si el campo del formulario es valido.
- * @param field El nombre del campo del formulario que se va a validar.
- * @returns {boolean | null} : Regresa un booleano si el campo es valido o no o puede regresar null si no se ha tocado el campo.
- */
+  /**
+   * Metodo para saber si el campo del formulario es valido.
+   * @param field El nombre del campo del formulario que se va a validar.
+   * @returns {boolean | null} : Regresa un booleano si el campo es valido o no o puede regresar null si no se ha tocado el campo.
+   */
   isValid(field: string): boolean | null {
     return this.validacionesService.isValid(this.regimenForm, field);
   }
 
   /**
-    * Inicializa los catálogos mediante la obtención de datos para tres bimestres diferentes.
-    *
-    * Este método recupera los catálogos de bimestre uno, dos y tres utilizando el método
-    * Servicio '_pantallaSvc'. Cada catálogo se obtiene de forma asincrónica y los resultados
-    * se almacenan en las propiedades de la clase respectiva: 'bimestreOneCatalog',
-    * 'bimestreTwoCatalog' y 'bimestreThreeCatalog'.
-    *
-    * El método utiliza el operador 'merge' de RxJS para combinar los observables para
-    * las tres operaciones de recuperación del catálogo y se suscribe a ellas para iniciar el
-    * Proceso de recuperación de datos.
-    * 
-    * @private
-    */
+   * Inicializa los catálogos mediante la obtención de datos para tres bimestres diferentes.
+   *
+   * Este método recupera los catálogos de bimestre uno, dos y tres utilizando el método
+   * Servicio '_pantallaSvc'. Cada catálogo se obtiene de forma asincrónica y los resultados
+   * se almacenan en las propiedades de la clase respectiva: 'bimestreUnoCatalogo',
+   * 'bimestreDosCatalogo' y 'bimestreTresCatalogo'.
+   *
+   * El método utiliza el operador 'merge' de RxJS para combinar los observables para
+   * las tres operaciones de recuperación del catálogo y se suscribe a ellas para iniciar el
+   * Proceso de recuperación de datos.
+   *
+   * @private
+   */
   private inicializaCatalogos(): void {
     /**
      * Observable que recupera el catálogo para el primer bimestre.
-     * Obtiene los datos utilizando el método `getBimestreOneCatalog` del servicio `_pantallaSvc`
+     * Obtiene los datos utilizando el método `getBimestreUnoCatalogo` del servicio `_pantallaSvc`
      * con el ID de catálogo `CAT_BIMESTRE_ONE`.
-     * Los datos de la respuesta se asignan a la propiedad `bimestreOneCatalog`.
+     * Los datos de la respuesta se asignan a la propiedad `bimestreUnoCatalogo`.
      *
-     * @constant {Observable<any>} bimestreOneCatalog$
+     * @constant {Observable<any>} bimestreUnoCatalogo$
      */
-    const bimestreOneCatalog$ = this._pantallaSvc
-      .getBimestreOneCatalog(CATALOGOS_ID.CAT_BIMESTRE_ONE)
+    const bimestreUnoCatalogo$ = this._pantallaSvc
+      .getBimestreUnoCatalogo(CATALOGOS_ID.CAT_BIMESTRE_ONE)
       .pipe(
         map((resp) => {
-          this.bimestreOneCatalog = resp.data;
-      })
-    );
-
+          this.bimestreUnoCatalogo = resp.data;
+        })
+      );
 
     /**
      * Observable que recupera el catálogo para el segundo bimestre.
-     * Obtiene los datos utilizando el método `getBimestreOneCatalog` del servicio `_pantallaSvc`
+     * Obtiene los datos utilizando el método `getBimestreUnoCatalogo` del servicio `_pantallaSvc`
      * con el ID de catálogo `CAT_BIMESTRE_TWO`.
-     * Los datos de la respuesta se asignan a la propiedad `bimestreTwoCatalog`.
+     * Los datos de la respuesta se asignan a la propiedad `bimestreDosCatalogo`.
      *
-     * @observable bimestreTwoCatalog$
+     * @observable bimestreDosCatalogo$
      * @returns {Observable<any>} Un observable que emite los datos del catálogo para el segundo bimestre.
      */
-    const bimestreTwoCatalog$ = this._pantallaSvc
-      .getBimestreTwoCatalog(CATALOGOS_ID.CAT_BIMESTRE_TWO)
+    const bimestreDosCatalogo$ = this._pantallaSvc
+      .getBimestreDosCatalogo(CATALOGOS_ID.CAT_BIMESTRE_TWO)
       .pipe(
         map((resp) => {
-          this.bimestreTwoCatalog = resp.data;
-      })
-    );
-
+          this.bimestreDosCatalogo = resp.data;
+        })
+      );
 
     /**
      * Observable que recupera el catálogo para el tercer bimestre.
-     * 
-     * Este observable utiliza el método `getBimestreOneCatalog` del servicio `_pantallaSvc`
+     *
+     * Este observable utiliza el método `getBimestreUnoCatalogo` del servicio `_pantallaSvc`
      * para recuperar los datos del catálogo identificados por `CATALOGOS_ID.CAT_BIMESTRE_THREE`. La respuesta
-     * se mapea para extraer la propiedad `data` y asignarla a la propiedad `bimestreThreeCatalog`.
-     * 
-     * @constant {Observable<any>} bimestreThreeCatalog$
+     * se mapea para extraer la propiedad `data` y asignarla a la propiedad `bimestreTresCatalogo`.
+     *
+     * @constant {Observable<any>} bimestreTresCatalogo$
      */
-    const bimestreThreeCatalog$ = this._pantallaSvc
-      .getBimestreThreeCatalog(CATALOGOS_ID.CAT_BIMESTRE_THREE)
+    const bimestreTresCatalogo$ = this._pantallaSvc
+      .getBimestreTresCatalogo(CATALOGOS_ID.CAT_BIMESTRE_THREE)
       .pipe(
         map((resp) => {
-          this.bimestreThreeCatalog = resp.data;
-      })
-    );
-
+          this.bimestreTresCatalogo = resp.data;
+        })
+      );
 
     merge(
-      bimestreOneCatalog$,
-      bimestreTwoCatalog$,
-      bimestreThreeCatalog$,
+      bimestreUnoCatalogo$,
+      bimestreDosCatalogo$,
+      bimestreTresCatalogo$
     ).subscribe();
-
   }
 
   /**
@@ -288,40 +288,37 @@ export class DatosPorRegimenComponent implements OnInit {
    */
   public crearRegimenForm() {
     this.regimenForm = this.fb.group({
-      importaciones: ['',Validators.required],
-      infraestructura: ['',Validators.required],
-      ultimosMeses: ['',Validators.required],
-      operacionesmeses: ['',Validators.required],
-      valor: ['',Validators.required],
-      transferencias: ['',Validators.maxLength(20)],
-      transferenciasVir: ['',Validators.maxLength(7)],
-      retornos: ['',Validators.maxLength(20)],
-      retornosSe: ['',Validators.maxLength(7)],
-      constancias: ['',Validators.maxLength(20)],
-      constanciasDe: ['',Validators.maxLength(7)],
-      total: [{value: '',disabled: true}],
-      totals: [{value: '',disabled: true}],
-      empleadosPropios: ['',Validators.required],
-      numeroEmpleados: ['',Validators.required],
+      importaciones: ['', Validators.required],
+      infraestructura: ['', Validators.required],
+      ultimosMeses: ['', Validators.required],
+      operacionesmeses: ['', Validators.required],
+      valor: ['', Validators.required],
+      transferencias: ['', Validators.maxLength(20)],
+      transferenciasVir: ['', Validators.maxLength(7)],
+      retornos: ['', Validators.maxLength(20)],
+      retornosSe: ['', Validators.maxLength(7)],
+      constancias: ['', Validators.maxLength(20)],
+      constanciasDe: ['', Validators.maxLength(7)],
+      total: [{ value: '', disabled: true }],
+      totals: [{ value: '', disabled: true }],
+      empleadosPropios: ['', Validators.required],
+      numeroEmpleados: ['', Validators.required],
       comboBimestresOne: [''],
       comboBimestresTwo: [''],
       comboBimestresThree: [''],
-      proveedorCumplimiento: ['',Validators.required],
-      declaracionISR: ['',Validators.required],
-      cancelacion: ['',Validators.required],
-      cumplimientoReglas: ['',Validators.required],
-      recintoFiscalizado: ['',Validators.required],
-      recintoEstrategico: ['',Validators.required],
-      cumplimientoLineamientos: ['',Validators.required]
-
+      proveedorCumplimiento: ['', Validators.required],
+      declaracionISR: ['', Validators.required],
+      cancelacion: ['', Validators.required],
+      cumplimientoReglas: ['', Validators.required],
+      recintoFiscalizado: ['', Validators.required],
+      recintoEstrategico: ['', Validators.required],
+      cumplimientoLineamientos: ['', Validators.required],
     });
   }
 
-
-
   /**
    * Establece el valor predeterminado de 'Sí' para varios controles en el grupo de formularios `regimenForm`.
-   * 
+   *
    * Los siguientes controles se establecen en 'Sí':
    * - importaciones
    * - infraestructura
@@ -366,13 +363,12 @@ export class DatosPorRegimenComponent implements OnInit {
     this.regimenTableBodyData = this.getRegimenTableData.tableBody;
   }
 
-
   /**
    * Maneja la selección del primer bimestre (período de dos meses) del formulario.
    * Recupera el valor seleccionado del control 'comboBimestresOne' en el formulario
    * y actualiza la tienda con el bimestre seleccionado.
    */
-  public bimestreOneSeleccion() {
+  public bimestreUnoSeleccion() {
     const bimestres = this.regimenForm.get('comboBimestresOne')?.value;
     this.tramite31601Store.setComboBimestresOne(bimestres);
   }
@@ -386,26 +382,24 @@ export class DatosPorRegimenComponent implements OnInit {
    * Este método se utiliza para sincronizar el valor del bimestre seleccionado del formulario
    * con la tienda de gestión de estado de la aplicación.
    */
-  public bimestreTwoSeleccion() {
+  public bimestreDosSeleccion() {
     const bimestres = this.regimenForm.get('comboBimestresTwo')?.value;
     this.tramite31601Store.setComboBimestresTwo(bimestres);
   }
-
 
   /**
    * Maneja la selección del tercer bimestre (período de dos meses) del formulario.
    * Recupera el valor seleccionado del control 'comboBimestresThree' en el formulario
    * y actualiza la tienda con el bimestre seleccionado.
    */
-  public bimestreThreeSeleccion() {
+  public bimestreTresSeleccion() {
     const bimestres = this.regimenForm.get('comboBimestresThree')?.value;
     this.tramite31601Store.setComboBimestresThree(bimestres);
   }
 
-
   /**
    * Abre el modal e inicializa el formulario.
-   * 
+   *
    * Este método establece el estado del modal en 'show' y llama al método `getAgregarForm`
    * para inicializar el formulario para agregar datos.
    */
@@ -414,10 +408,9 @@ export class DatosPorRegimenComponent implements OnInit {
     this.getAgregarForm();
   }
 
-
   /**
    * Inicializa el grupo de formularios `agregarForm` con valores predeterminados y estados deshabilitados para ciertos controles.
-   * 
+   *
    * El grupo de formularios contiene los siguientes controles:
    * - `rfc`: Una entrada de texto para RFC.
    * - `registroInput`: Una entrada de texto deshabilitada para registro.
@@ -432,15 +425,15 @@ export class DatosPorRegimenComponent implements OnInit {
   public getAgregarForm() {
     this.agregarForm = this.fb.group({
       rfc: [''],
-      registroInput: [{value: '',disabled: true}],
-      razonSocialInput: [{value: '',disabled: true}],
+      registroInput: [{ value: '', disabled: true }],
+      razonSocialInput: [{ value: '', disabled: true }],
       numero1re: [''],
       numero2do: [''],
       numero3re: [''],
       agregarCatalogOne: [''],
       agregarCatalogTwo: [''],
-      agregarCatalogThree: ['']
-    })
+      agregarCatalogThree: [''],
+    });
   }
 
   /**
@@ -448,18 +441,17 @@ export class DatosPorRegimenComponent implements OnInit {
    * Recupera el valor de 'agregarCatalogOne' del formulario de régimen
    * y lo establece en el tramite31601Store utilizando el método setComboBimestresOne.
    */
-  public modalBimestreOne() {
+  public modalBimestreUno() {
     const bimestres = this.regimenForm.get('agregarCatalogOne')?.value;
     this.tramite31601Store.setComboBimestresOne(bimestres);
   }
-
 
   /**
    * Maneja la acción del modal para el segundo bimestre.
    * Recupera el valor de 'agregarCatalogTwo' del formulario de régimen
    * y lo establece en el comboBimestresOne del tramite31601Store.
    */
-  public modalBimestreTwo() {
+  public modalBimestreDos() {
     const bimestres = this.regimenForm.get('agregarCatalogTwo')?.value;
     this.tramite31601Store.setComboBimestresOne(bimestres);
   }
@@ -471,7 +463,7 @@ export class DatosPorRegimenComponent implements OnInit {
    * Este método recupera el valor de 'agregarCatalogThree' del grupo de formularios 'regimenForm'
    * y lo utiliza para actualizar el 'ComboBimestresOne' en el 'tramite31601Store'.
    */
-  public modalBimestreThree() {
+  public modalBimestreTres() {
     const bimestres = this.regimenForm.get('agregarCatalogThree')?.value;
     this.tramite31601Store.setComboBimestresOne(bimestres);
   }
@@ -480,10 +472,13 @@ export class DatosPorRegimenComponent implements OnInit {
    * @method updatePagination
    *  Actualiza los datos mostrados en la tabla según la paginación.
    */
-    public updatePagination(): void {
-      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-      this.miembrodelaempresaBodyData = this.miembrodelaempresaBodyData.slice(startIndex, startIndex + this.itemsPerPage);
-    }
+  public updatePagination(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
+      startIndex,
+      startIndex + this.itemsPerPage
+    );
+  }
 
   /**
    * @method onPageChange
@@ -495,7 +490,7 @@ export class DatosPorRegimenComponent implements OnInit {
     this.updatePagination();
   }
 
-    /**
+  /**
    * @method onItemsPerPageChange
    *  Número de elementos por página seleccionados.
    *  Cambia la cantidad de elementos por página y actualiza la paginación.
@@ -505,5 +500,4 @@ export class DatosPorRegimenComponent implements OnInit {
     this.currentPage = 1;
     this.updatePagination();
   }
-
 }
