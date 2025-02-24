@@ -1,0 +1,25 @@
+
+<div class="container">
+    <ng-titulo titulo="Representación federal" />
+    <form [formGroup]="formulario">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="estado" [label]="'Estado'"
+                    name="estado" formControlName="estado" (change)="docSeleccionado($event)" [placeholder]="'CHIHUAHUA'">
+                </app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="representacion" [label]="'Representación federal'" [required]="true"
+                    name="representacion" formControlName="representacion"
+                    (change)="validarRepresentacionFederalIDCSECEROR_($event)">
+                </app-catalogo-select>
+            </div>
+        </div>
+    </form>
+    <h6>Selección de sucursal</h6>
+    <ng-table
+        [commonTableHeader]="tableHeaderData"
+        [commonTableBody]="tableBodyData"
+        [enableScrollbar]=true
+      ></ng-table>
+</div>
