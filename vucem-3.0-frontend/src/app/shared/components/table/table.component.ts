@@ -30,12 +30,6 @@ export class TableComponent implements OnInit, OnChanges {
    * @description
    * tableData se utiliza para obtener datos de la tabla de la componente
    */
-  /**
-   * Variable para indicar si la tabla debe mostrar o no el elemento checkbox.
-   */
-  @Input()
-  public muestraCheckbox: boolean = false;
-
   public tableData: TableData = {
     tableHeader: [],
     tableBody: [],

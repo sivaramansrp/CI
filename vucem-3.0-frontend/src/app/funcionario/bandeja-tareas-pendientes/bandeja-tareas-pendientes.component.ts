@@ -24,14 +24,6 @@ export class BandejaTareasPendientesComponent {
   public fechaInicioInput: InputFecha = FECHA_INICIO;
   public fechaFinalInput: InputFecha = FECHA_FINAL;
   
-  public readonly tableColumns: string[] = [
-    'Folio trámite',
-    'Tipo de trámite',
-    'Nombre de la tarea',
-    'Fecha de asignación',
-    'Estado de trámite',
-  ];
-
   public readonly tareasPendientesList = [
     {
       tbodyData: ['--','--','--','--','--'],

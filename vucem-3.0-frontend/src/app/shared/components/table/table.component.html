@@ -2,28 +2,22 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                @if (muestraCheckbox) {
                 <th scope="col" >
                     <input type="checkbox" aria-label="Select All">
                 </th>
-                }
                 @for (item of tableData.tableHeader; track $index) {
                     <th scope="col">{{item}}</th>
-    
                 }
             </tr>
         </thead>
         <tbody>
             @for (data of tableData.tableBody; track $index) {
                 <tr>
-                    @if (muestraCheckbox) {
                     <td><input type="checkbox" aria-label="Select Row"></td>
-                    }
                     @for (element of data.tbodyData; track $index) {
                         <td>{{element}}</td>
                     }
                 </tr>
-
             }
         </tbody>
     </table>
