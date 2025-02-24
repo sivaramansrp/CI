@@ -8,6 +8,9 @@ import { CortinaALaItalianaComponent } from './pages/cortina-a-la-italiana/corti
 
 import { provideHttpClient } from '@angular/common/http';
 
+import { RepresentacionFederalComponent } from './components/representacion-federal/representacion-federal.component';
+import { SeleccionDelCupoComponent } from './pages/seleccion-del-cupo/seleccion-del-cupo.component';
+
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 @NgModule({
@@ -20,6 +23,8 @@ import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/compo
     CommonModule,
     AsignacionDirectaDeCupoRoutingModule,
     WizardComponent,
+    RepresentacionFederalComponent,
+    SeleccionDelCupoComponent
   ],
   providers: [provideHttpClient()],
 })
