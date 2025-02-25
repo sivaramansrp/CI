@@ -1,16 +1,29 @@
 
 <div class="form-group">
 <form [formGroup]="FormInputRadio"> 
-    <div *ngFor="let option of radioOptions" [ngClass]="layout">
+  
+  <div *ngIf="showDescription">
+   
+    <label> <span *ngIf="isRequired" class="require">*</span>
+      {{ description }}
+    </label>
+  </div>
+    <div *ngFor="let option of radioOptions" [ngClass]="layout" [ngStyle]="{ 'margin-right': gap }">
         
           <input 
             type="radio"
             [value]="option.value"
             [checked]="selectedValue === option.value"
             (change)="onSelectionChange(option.value)"
-            formControlName="seleccion" 
+            
           />
-          <span class="radio-label">{{ option.label }}</span>
+          <span 
+        class="radio-label"
+        [ngStyle]="{ 'font-weight': isBold ? 'bold' : 'normal',
+          'margin-left': labelMargin
+         }">
+        {{ option.label }}
+      </span>
     
       </div>
       

@@ -1,0 +1,145 @@
+<div class="container form-container">
+  <ng-titulo titulo="Pago de derechos" />
+  <div>
+    <form [formGroup]="FormSolicitud" (ngSubmit)="validarFormulario()">
+      <ng-container formGroupName="datosImportadorExportador">
+        <div>
+          <label for="exentoDePago">Exento de pago*:</label>
+          <div class="radio-container">
+            <div class="radio-option">
+              <input
+                type="radio"
+                id="no"
+                formControlName="exentoDePago"
+                value="No"
+              />
+              <label for="no">No</label>
+            </div>
+            <div class="radio-option">
+              <input
+                type="radio"
+                id="yes"
+                formControlName="exentoDePago"
+                value="Yes"
+              />
+              <label for="yes">Sí</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="justificacion"
+                >Justificación :</label
+              >
+              <input
+                class="form-control"
+                id="rfcImportExport"
+                formControlName="justificacion"
+                type="text"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="claveDeReferencia"
+                >Clave de referencia:</label
+              >
+              <input
+                class="form-control"
+                id="claveDeReferencia"
+                formControlName="claveDeReferencia"
+                type="text"
+              />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="cadenaDependencia"
+                >Cadena de la dependencia*:</label
+              >
+              <input
+                class="form-control"
+                id="cadenaDependencia"
+                formControlName="cadenaDependencia"
+                type="text"
+                appUppercase
+              />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <app-catalogo-select
+                  [catalogo]="banco.catalogos"
+                  [label]="banco.labelNombre"
+                  [placeholder]="banco.primerOpcion"
+                  [isDisabled]="false"
+                ></app-catalogo-select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Llave de pago, Fecha de pago, Importe de pago -->
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="llaveDePago"
+                >Llave de pago*:</label
+              >
+              <input
+                class="form-control"
+                id="llaveDePago"
+                formControlName="llaveDePago"
+                type="text"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="fechaPago">Fecha de pago*:</label>
+              <input
+                class="form-control"
+                id="fechaPago"
+                formControlName="fechaPago"
+                type="date"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="importePago"
+                >Importe de pago*:</label
+              >
+              <input
+                class="form-control"
+                id="importePago"
+                formControlName="importePago"
+                type="text"
+                appUppercase
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-12 text-right">
+            <div class="form-group">
+              <button
+                type="button"
+                class="btn btn-outline-warning custom-button"
+              >
+                Borrar datos del pago
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </form>
+  </div>
+</div>
