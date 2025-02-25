@@ -8,7 +8,6 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 
-
 @NgModule({
   declarations: [
     AuthPageComponent

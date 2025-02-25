@@ -19,7 +19,13 @@ const routes: Routes = [
     path: 'entidad-legal',
     loadChildren: () =>
       import('./tramites/120404/entidad-legal.module').then(
-        (m) => m.EntidadLegalModule
+        (m) => m.EntidadLegalModule)
+      },
+  {
+    path: 'pantallas',
+    loadChildren: () =>
+      import('./tramites/110101/pantallas/pantallas.module').then(
+        (m) => m.Pantallas110101Module
       ),
   },
 ];

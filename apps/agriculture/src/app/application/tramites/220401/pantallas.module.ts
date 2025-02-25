@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { AgregarDestinatoriaComponent } from './components/agregar-destinatoria/agregar-destinatoria.component';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, ServiciosPantallasService } from '@ng-mf/data-access-user';
 import { CombinacionRequeridaComponent } from './components/combinacion-requerida/combinacion-requerida.component';
 import { DatosComponent } from './pages/datos/datos.component';
 import { NavComponent } from '@ng-mf/data-access-user';
@@ -47,7 +47,8 @@ import { provideHttpClient } from '@angular/common/http';
     SelectCatalogosComponent 
   ],
   providers: [
-      provideHttpClient()
+      provideHttpClient(),
+      ServiciosPantallasService
     ],
 })
 /**

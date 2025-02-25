@@ -1,0 +1,112 @@
+<div class="container">
+  <form [formGroup]="pagoForm">
+    <div class="row">
+      <ng-titulo titulo="Pago de derechos"></ng-titulo>
+      <div class="row mt-2">
+        <div class="col-md-12">
+          <label for="paymentExempt">Exento de pago</label>
+        </div>
+        <div class="col-md-4"></div>
+      </div>
+
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="justificacionSelector"
+          formControlName="justificacion"
+          [label]="'Justificación'"
+          [required]="true"
+          name="justificacionSelect"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-8"></div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="referenceKey"
+            >Clave de referencia*</label
+          >
+          <input
+            class="form-control"
+            id="referenceKey"
+            placeholder=""
+            type="text"
+            [disabled]="true"
+            name="referenceKeyInput"
+            formControlName="claveReferencia"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="dependencyChain"
+            >Cadena de la dependencia*</label
+          >
+          <input
+            class="form-control"
+            id="dependencyChain"
+            placeholder=""
+            type="text"
+            appUppercase
+            [disabled]="true"
+            name="dependencyChainInput"
+            formControlName="cadenaDependencia"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="bancoSelector"
+          formControlName="banco"
+          [label]="'Banco'"
+          [required]="true"
+          [isDisabled]="true"
+          name="bankSelect"
+        ></app-catalogo-select>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="paymentKey">Llave de pago</label>
+          <input
+            class="form-control"
+            id="paymentKey"
+            placeholder=""
+            type="text"
+            appUppercase
+            [disabled]="true"
+            name="paymentKeyInput"
+            formControlName="llavePago"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <input-fecha [datos]="fechaInicioInput"></input-fecha>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="paymentAmount"
+            >Importe de pago*:</label
+          >
+          <input
+            class="form-control"
+            id="paymentAmount"
+            placeholder=""
+            type="text"
+            [disabled]="true"
+            name="paymentAmountInput"
+            formControlName="importePago"
+          />
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="col-md-12 d-flex justify-content-end mt-5">
+    <button class="btn btn-primary" type="button">Borrar datos del pago</button>
+  </div>
+</div>
