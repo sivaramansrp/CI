@@ -8,7 +8,6 @@ import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDelaSolicitudeComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 
-import { SolicitanteDetosTabsComponent } from './pages/solicitante-detos-tabs/solicitante-detos-tabs.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 
@@ -19,14 +18,14 @@ import { DatosDeLosResiduosComponent } from './components/datos-de-los-residuos/
 
 import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { SolicitanteComponent } from '../../shared/components/solicitante/solicitante.component';
+import { SolicitanteDatosTabsComponent } from './pages/solicitante-datos-tabs/solicitante-datos-tabs.component';
 
 @NgModule({
   declarations: [
-    // SolicitanteComponent,
     DatosDelaSolicitudeComponent,
     DatosComponent,
     PantallasComponent,
-    SolicitanteDetosTabsComponent
+    SolicitanteDatosTabsComponent
   ],
   imports: [
     CommonModule,
