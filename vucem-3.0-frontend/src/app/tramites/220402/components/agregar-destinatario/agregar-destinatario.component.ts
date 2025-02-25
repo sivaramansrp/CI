@@ -11,7 +11,7 @@ import { ReplaySubject, takeUntil } from 'rxjs';
   templateUrl: './agregar-destinatario.component.html',
   styleUrl: './agregar-destinatario.component.scss',
 })
-export class AgregarDestinatarioComponent implements OnDestroy {
+export class AgregarDestinatarioComponent implements OnDestroy, OnInit {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   public pais!: CatalogosSelect;
@@ -21,6 +21,7 @@ export class AgregarDestinatarioComponent implements OnDestroy {
   public moral: boolean = false;
 
   options!: Catalogo[];
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   public tiposDocumentos: CatalogosSelect = {
     labelNombre: 'Medio de transporte',
@@ -31,6 +32,9 @@ export class AgregarDestinatarioComponent implements OnDestroy {
 
   constructor(private mediodetransporteService: MediodetransporteService) {
     this.fetchtiposDocumentos();
+  }
+  ngOnInit(): void {
+    this.inicializaCatalogos();
   }
 
   /**
@@ -45,6 +49,17 @@ export class AgregarDestinatarioComponent implements OnDestroy {
       });
   }
 
+  /**
+   * Inicializa los catálogos necesarios para el formulario.
+   */
+  private inicializaCatalogos(): void {
+    this.mediodetransporteService
+      .getMedioDeTransporte()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data): void => {
+        this.options = data as Catalogo[];
+      });
+  }
   /**
    *
    * @param  checkBoxName, que acepta datos de tipo cadena
