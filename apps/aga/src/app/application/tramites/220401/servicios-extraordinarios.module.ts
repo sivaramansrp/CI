@@ -22,7 +22,7 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TercerosComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { provideToastr, ToastrModule, ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -52,7 +52,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
         forwardRef(() => SolicitanteComponent),
         forwardRef(() => TituloComponent),
         forwardRef(() => WizardComponent),
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
   ],
   exports: [],
   providers: [
