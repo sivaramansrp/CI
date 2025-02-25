@@ -98,6 +98,12 @@ It will show tasks that you can run with Nx.
 
 ## Compodoc Module
 - npm run compodoc
-- If application specific
+- If application /procedure specific
 - Goto tsconfig.doc.js
-- "include": ["apps/aga/src/**/*.ts"], - change aga into your procedure
+- "include": ["apps/aga/src/**/*.ts"], - change aga into your procedure/dept
+
+## Unittesing Module
+- npm run test:aga
+- If application / procedure specific
+- Goto aga/tsconfig.spec.js
+- "include": ["src/220401/**/*.ts"], - change aga into your procedure/dept

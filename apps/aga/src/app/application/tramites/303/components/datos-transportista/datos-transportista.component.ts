@@ -1,7 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { Transportista } from '@ng-mf/data-access-user';
 
 @Component({
@@ -25,7 +23,6 @@ export class DatosTransportistaComponent {
 
   });
     constructor(private fb: FormBuilder,
-      private toastr: ToastrService,
     ) {}
   
     abrirModal() {
