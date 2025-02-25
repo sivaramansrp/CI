@@ -1,0 +1,41 @@
+{
+ "Formdata":{
+    "nombreComercial": "Patitos de hule",
+    "nombreIngles": "rubber ducklings",
+    "fraccionArancelaria": {
+      "clave": "40021901",
+      "descripcion": "fraccionArancelaria"
+    },
+    "nombreTecnico": "Poli(butadieno-estireno), con un contenido reaccionado de butadieno superior o igual al 90% pero inferior o igual al 97% y de 10% a 3% respectivamente, de estireno.",
+    "fraccionNALADI": {
+      "clave": "Test",
+      "descripcion": "Test"
+    },
+    "fraccionNALADISA93": {
+      "clave": "Test",
+      "descripcion": "Test"
+    },
+    "fraccionNALADISA96": {
+      "clave": "Test",
+      "descripcion": "Test"
+    },
+    "fraccionNALADISA02": {
+      "clave": "Test",
+      "descripcion": "Test"
+    },
+    "descripcionJuego": "Test",
+    "unidadAdministrativaRepresentacionFederal": {
+      "clave": "Test"
+    }
+  },
+"Formvisiblity": {
+    "mostrarDatosMercanciaProductor": true,
+    "mostrarNombreIngles": true,
+    "mostrarClasificacionNaladi": true,
+    "mostrarClasificacionNaladisa93": true,
+    "mostrarClasificacionNaladisa96": true,
+    "mostrarClasificacionNaladisa02": true,
+    "mostrarJuegosSurtidos": true
+}
+
+}

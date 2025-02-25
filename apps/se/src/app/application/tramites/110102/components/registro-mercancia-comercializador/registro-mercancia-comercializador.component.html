@@ -1,42 +1,119 @@
 <div class="container">
-<ng-titulo [titulo]="'Mercancía '"></ng-titulo>
+    <ng-titulo [titulo]="'Mercancía '"></ng-titulo>
     <form [formGroup]="mercanciaAsociada">
-        <div class="row">
-            <div class="col-md-8 form-group">
-                <label for="mercanciaAsociadaNombreComercial" class="form-label">
-                    Nombre comercial de la mercancía (igual que en la factura) :</label>
-                <input type="text" id="mercanciaAsociadaNombreComercial" formControlName="nombreComercial"
-                    class="form-control"   [placeholder]="'Patitos de hule'" />
-            </div>
-        </div>
-
-        <div class="row mt-4">
-            <div class="col-md-8 form-group">
-                <label for="mercanciaAsociadaNombreIngles" class="form-label">
-                    Nombre en inglés :
-                </label>
-                <input type="text" id="mercanciaAsociadaNombreIngles" formControlName="nombreIngles"
-                    class="form-control" [placeholder]="'rubber ducklings'" />
-            </div>
-        </div>
-
-        <div class="row mt-4" formGroupName="fraccionArancelaria">
-            <div class="col-md-4 form-group">
-                <label for="mercanciaFraccionArancelaria" class="form-label">
-                    Fracción arancelaria : 
-                </label>
-                <input type="text" id="mercanciaFraccionArancelaria" formControlName="clave" class="form-control"
-                    size="68" [placeholder]="'40021901'" />
-            </div>
-        </div>
-        <div class="row mt-4">
+      <div class="row" *ngIf="mostrarDatosMercanciaProductor">
         <div class="col-md-8 form-group">
-            <label for="nombreTecnico" class="form-label">
-                Nombre Técnico (TIGIE) :
-            </label>
-            <textarea  id="nombreTecnico" class="form-control" formControlName="nombreTecnico"
-            [placeholder]="'Poli(butadieno-estireno), con un contenido reaccionado de butadieno superior o igual al 90% pero inferior o igual al 97% y de 10% a 3% respectivamente, de estireno.'"></textarea> 
+          <label for="mercanciaAsociadaNombreComercial" class="form-label">
+            Nombre comercial de la mercancía (igual que en la factura) :
+          </label>
+          <input type="text" id="mercanciaAsociadaNombreComercial" formControlName="nombreComercial" class="form-control" />
         </div>
-    </div>
+      </div>
+  
+      <div class="row mt-4" *ngIf="mostrarNombreIngles">
+        <div class="col-md-8 form-group">
+          <label for="mercanciaAsociadaNombreIngles" class="form-label">
+            Nombre en inglés :
+          </label>
+          <input type="text" id="mercanciaAsociadaNombreIngles" formControlName="nombreIngles" class="form-control" />
+        </div>
+      </div>
+  
+      <div class="row mt-4" formGroupName="fraccionArancelaria">
+        <div class="col-md-4 form-group">
+          <label for="mercanciaFraccionArancelaria" class="form-label">
+            Fracción arancelaria :
+          </label>
+          <input type="text" id="mercanciaFraccionArancelaria" formControlName="clave" class="form-control" size="68" />
+        </div>
+      </div>
+  
+      <div class="row mt-4">
+        <div class="col-md-8 form-group">
+          <label for="nombreTecnico" class="form-label">
+            Nombre Técnico (TIGIE) :
+          </label>
+          <textarea id="nombreTecnico" class="form-control" formControlName="nombreTecnico"></textarea>
+        </div>
+      </div>
+  
+      <div *ngIf="mostrarClasificacionNaladi">
+        <div class="row mt-4" formGroupName="fraccionNALADI">
+          <div class="col-md-4 form-group">
+            <label for="mercanciaClasificacionNaladi" class="form-label">
+              Clasificación Naladi :
+            </label>
+            <input type="text" id="mercanciaClasificacionNaladi" formControlName="clave" class="form-control" size="26" readonly />
+          </div>
+          <div class="col-md-8 form-group">
+            <label for="mercanciaDescripcionNaladi" class="form-label">
+              Descripción Naladi :
+            </label>
+            <input type="text" id="mercanciaDescripcionNaladi" formControlName="descripcion" class="form-control" size="68" readonly />
+          </div>
+        </div>
+      </div>
+  
+      <div *ngIf="mostrarClasificacionNaladisa93">
+        <div class="row mt-4" formGroupName="fraccionNALADISA93">
+          <div class="col-md-4 form-group">
+            <label for="mercanciaClasificacionNaladisa93" class="form-label">
+              Clasificación Naladisa93 :
+            </label>
+            <input type="text" id="mercanciaClasificacionNaladisa93" formControlName="clave" class="form-control" size="26" readonly />
+          </div>
+          <div class="col-md-8 form-group">
+            <label for="mercanciaDescripcionNaladisa93" class="form-label">
+              Descripción Naladisa93 :
+            </label>
+            <input type="text" id="mercanciaDescripcionNaladisa93" formControlName="descripcion" class="form-control" size="68" readonly />
+          </div>
+        </div>
+      </div>
+  
+      <div *ngIf="mostrarClasificacionNaladisa96">
+        <div class="row mt-4" formGroupName="fraccionNALADISA96">
+          <div class="col-md-4 form-group">
+            <label for="mercanciaClasificacionNaladisa96" class="form-label">
+              Clasificación Naladisa96 :
+            </label>
+            <input type="text" id="mercanciaClasificacionNaladisa96" formControlName="clave" class="form-control" size="26" readonly />
+          </div>
+          <div class="col-md-8 form-group">
+            <label for="mercanciaDescripcionNaladisa96" class="form-label">
+              Descripción Naladisa96 :
+            </label>
+            <input type="text" id="mercanciaDescripcionNaladisa96" formControlName="descripcion" class="form-control" size="68" readonly />
+          </div>
+        </div>
+      </div>
+  
+      <div *ngIf="mostrarClasificacionNaladisa02">
+        <div class="row mt-4" formGroupName="fraccionNALADISA02">
+          <div class="col-md-4 form-group">
+            <label for="mercanciaClasificacionNaladisa02" class="form-label">
+              Clasificación Naladisa02 :
+            </label>
+            <input type="text" id="mercanciaClasificacionNaladisa02" formControlName="clave" class="form-control" size="26" readonly />
+          </div>
+          <div class="col-md-8 form-group">
+            <label for="mercanciaDescripcionNaladisa02" class="form-label">
+              Descripción Naladisa02 :
+            </label>
+            <input type="text" id="mercanciaDescripcionNaladisa02" formControlName="descripcion" class="form-control" size="68" readonly />
+          </div>
+        </div>
+      </div>
+      <ng-titulo [titulo]="'Juegos Surtidos'"></ng-titulo>
+      <div id="divJuegosSurtidos" *ngIf="mostrarJuegosSurtidos">
+        <div class="row mt-4">
+          <div class="col-md-8 form-group">
+            <label for="descripcionJuego" class="form-label">
+              Descripción Juegos Surtidos :
+            </label>
+            <textarea id="descripcionJuego" class="form-control" formControlName="descripcionJuego"></textarea>
+          </div>
+        </div>
+      </div>
     </form>
-</div>
+  </div>

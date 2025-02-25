@@ -6,13 +6,13 @@ import { HttpCoreService } from '../shared/http/http.service';
 @Injectable({
     providedIn: 'root'
 })
-export class DatostratadosacuerdosService {
+export class MercanciaAsociadaService {
 
 
     constructor(private http: HttpCoreService) { }
 
-    getData(): Observable<any> {
-        return this.http.get('./assets/json/110102/datostratadosacuerdos.json')
+    getMercanciaAsociada(): Observable<any> {
+        return this.http.get('./assets/json/110102/mercanciaasociada.json')
     }
 
    

@@ -21,12 +21,16 @@ registroMercanciaComercializadorFrom: FormGroup;
   {
     this.registroMercanciaComercializadorFrom = this.fb.group({
       cveRegistroProductor: ['', [Validators.required, Validators.maxLength(12)]],
-    });
-       
-  }
- 
+      solicitud: this.fb.group({
+        idSolicitud: [null],
+        idSolicitudProductor: [''],
+    })
+  })
+}
+
 
   esInvalido(nombreControl: string): boolean {
+
     const CONTROL = this.registroMercanciaComercializadorFrom.get(nombreControl);
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
@@ -34,6 +38,13 @@ registroMercanciaComercializadorFrom: FormGroup;
   }
   actualizaGridComercializadoresProductos():void{
     // use service logic
+    const IDSOLICITUD = this.registroMercanciaComercializadorFrom.get('solicitud.idSolicitud')?.value;
+    if(IDSOLICITUD===null){
+      this.registroMercanciaComercializadorFrom.get('cveRegistroProductor')?.enable();
+    }
+    else{
+      this.registroMercanciaComercializadorFrom.get('cveRegistroProductor')?.disable();
+    }
  }
 
 }
