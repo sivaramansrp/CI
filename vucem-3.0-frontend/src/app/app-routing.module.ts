@@ -102,6 +102,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'pantallas-captura',
+    loadChildren: () =>
+      import('./tramites/220402/pantallas-captura.module').then(
+        (m) => m.PantallasCapturaModule
+      ),
+  },
+  {
     path: 'certificado-fitosanitario',
     loadChildren: () =>
       import('./tramites/220202/fitosanitario.module').then(
