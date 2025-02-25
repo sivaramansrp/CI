@@ -1,3 +1,8 @@
+/**
+ * @module SolicitarTransferenciaCuposMainComponent
+ * @description Componente principal para solicitar la transferencia de cupos.
+ */
+
 import { Component, ViewChild } from '@angular/core';
 
 import { DatosPasos } from '@ng-mf/data-access-user';
@@ -6,21 +11,54 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { SOLICITARPASOS } from '@ng-mf/data-access-user';
 
+/**
+ * @interface AccionBoton
+ * @description Interfaz que describe la estructura de un objeto de acción de botón.
+ */
 interface AccionBoton {
   accion: string;
   valor: number;
 }
 
+/**
+ * @component
+ * @selector app-solicitar-transferencia-cupos-main
+ * @templateUrl ./solicitar-transferencia-cupos-main.component.html
+ * @description Componente para manejar la solicitud de transferencia de cupos.
+ */
 @Component({
   selector: 'app-solicitar-transferencia-cupos-main',
   templateUrl: './solicitar-transferencia-cupos-main.component.html',
 })
-export class SolicitarTransferenciaCuposMainComponent{
+export class SolicitarTransferenciaCuposMainComponent {
+  /**
+   * @property {ListaPasosWizard[]} pasosSolicitar
+   * @description Arreglo que contiene los pasos del wizard.
+   */
   pasosSolicitar: ListaPasosWizard[] = SOLICITARPASOS;
+
+  /**
+   * @property {number} indice
+   * @description Índice actual del wizard.
+   */
   indice: number = 1;
 
-   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  /**
+   * @property {string} texto
+   * @description Texto informativo sobre la solicitud.
+   */
+  texto: string = 'La solicitud ha quedado registrada con el número temporal 202758644. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
 
+  /**
+   * @property {WizardComponent} wizardComponent
+   * @description Referencia al componente 'WizardComponent'.
+   */
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * @property {DatosPasos} datosPasos
+   * @description Objeto que contiene los datos de los pasos del wizard.
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasosSolicitar.length,
     indice: this.indice,
@@ -28,6 +66,11 @@ export class SolicitarTransferenciaCuposMainComponent{
     txtBtnSig: 'Continuar',
   };
 
+  /**
+   * @method getValorIndice
+   * @description Método que actualiza el índice del wizard basado en la acción del botón.
+   * @param {AccionBoton} e - Objeto que contiene la acción y el valor del botón.
+   */
   getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;

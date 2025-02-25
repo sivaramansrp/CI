@@ -55,46 +55,46 @@
             <div class="row">
                 <div class="col-md-4">
                     <label class="form-label" for="numeradelicitacion">Número de licitación:</label>
-                    <input type="text" class="form-control" id="numeradelicitacion" formControlName="numeradelicitacion" placeholder="002/2024" readonly>
+                    <input type="text" class="form-control" id="numeradelicitacion" formControlName="numeradelicitacion" placeholder="002/2024" size="30" readonly>
                 </div>
         
                 <div class="col-md-4">
                     <label class="form-label" for="biddingeventdate">Fecha de evento de licitación pública: </label>
-                    <input type="text" class="form-control" id="biddingeventdate" formControlName="biddingeventdate"  placeholder="2024-03-22 " readonly>
+                    <input type="text" class="form-control" id="biddingeventdate" formControlName="biddingeventdate"  placeholder="2024-03-22 " size="30" readonly>
                 </div>
                 <div class="col-md-4">
                   <label class="form-label" for="productdescription">Descripción del producto:</label>
-                  <input type="text" class="form-control" id="productdescription" formControlName="productdescription" placeholder="PANTALONES CON PETO Y TIRANTI " readonly>
+                  <input type="text" class="form-control" id="productdescription" formControlName="productdescription" placeholder="PANTALONES CON PETO Y TIRANTI " size="30" readonly>
               </div>
                 <div class="col-md-8">
                     <label class="form-label" for="tariffunit">Unidad de medida tarifaria o comercialización:</label>
-                    <input type="text" class="form-control" id="tariffunit" formControlName="tariffunit" placeholder="Caja" readonly>
+                    <input type="text" class="form-control" id="tariffunit" formControlName="tariffunit" placeholder="Caja" size="30" readonly>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="customsregime">Régimen aduanero:</label>
-                    <input type="text" class="form-control" id="customsregime" formControlName="customsregime" placeholder="EXPORTACION" readonly>
+                    <input type="text" class="form-control" id="customsregime" formControlName="customsregime" placeholder="EXPORTACION" size="30" readonly>
                 </div>
             </div>
             <div class="row">
               <div class="col-md-4">
                 <label class="form-label" for="tarifffraction">Fracción o fracciones arancelarias: </label>
-                <input type="text" class="form-control" id="tarifffraction" formControlName="tarifffraction" placeholder="61012003, 61013001, 61013099, " readonly>
+                <input type="text" class="form-control" id="tarifffraction" formControlName="tarifffraction" placeholder="61012003, 61013001, 61013099, " size="30" readonly>
               </div>
             </div>
             <div class="row">
               <div class="col-md-4">
                 <label class="form-label" for="quotaeffectivedate">Fecha de inicio de vigencia del cupo </label>
-                <input type="text" class="form-control" id="quotaeffectivedate" formControlName="quotaeffectivedate" placeholder="2024-03-01" readonly>
+                <input type="text" class="form-control" id="quotaeffectivedate" formControlName="quotaeffectivedate" placeholder="2024-03-01"size="30"  readonly>
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="quotaenddate">Fecha de fin de vigencia del cupo:  </label>
-                <input type="text" class="form-control" id="quotaenddate" formControlName="quotaenddate" placeholder="2024-12-31" readonly>
+                <input type="text" class="form-control" id="quotaenddate" formControlName="quotaenddate" placeholder="2024-12-31" size="30" readonly>
               </div>
             </div>
             <div class="row">
               <div class="col-md-12">
                 <label class="form-label" for="observaciones">Observaciones: </label>
-                <input type="text" class="form-control observaciones" id="observaciones" formControlName="observaciones" readonly>
+                <textarea type="text" class="form-control observaciones" rows="3" id="observaciones" formControlName="observaciones" readonly></textarea>
               </div>
               <div class="col-md-12">
                 <label class="form-label" for="bloquecomercial">Bloque comercial: </label>
@@ -102,7 +102,7 @@
               </div>
               <div class="col-md-12">
                 <label class="form-label" for="Paises">Países: </label>
-                <input type="text" class="form-control observaciones" id="Paises" formControlName="Paises" placeholder="ESTADOS UNIDOS DE AMERICA," readonly>
+                <textarea type="text" class="form-control observaciones" id="Paises" formControlName="Paises" placeholder="ESTADOS UNIDOS DE AMERICA," readonly></textarea>
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="montoadjudicado">Monto adjudicado: </label>
@@ -138,12 +138,19 @@
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="montorecibir">Monto a recibir*:</label>
-                <input type="text" class="form-control bg-white" id="montorecibir" formControlName="montorecibir" placeholder="1000">
+                <input type="text" class="form-control bg-white" id="montorecibir" formControlName="montorecibir" placeholder="1000"  [ngClass]="isInvalid('montorecibir') ? 'required' : ''">
+                <div *ngIf="isInvalid('montorecibir')" class="text-danger">
+                  Este campo es obligatorio
+              </div>
               </div>
             </div>
             </form>
             
         </div>
       </div>
+      <!-- <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar> -->
+      <!-- <div class="row">
+        <ng-alert [CONTENIDO]="texto"></ng-alert>
+    </div> -->
     </div>
   </div>
