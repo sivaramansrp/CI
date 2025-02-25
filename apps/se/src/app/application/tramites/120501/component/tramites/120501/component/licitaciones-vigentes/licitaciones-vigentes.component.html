@@ -55,40 +55,40 @@
             <div class="row">
                 <div class="col-md-4">
                     <label class="form-label" for="numeradelicitacion">Número de licitación:</label>
-                    <input type="text" class="form-control" id="numeradelicitacion" formControlName="numeradelicitacion"  readonly>
+                    <input type="text" class="form-control" id="numeradelicitacion" formControlName="numeradelicitacion" placeholder="002/2024" readonly>
                 </div>
         
                 <div class="col-md-4">
                     <label class="form-label" for="biddingeventdate">Fecha de evento de licitación pública: </label>
-                    <input type="text" class="form-control" id="biddingeventdate" formControlName="biddingeventdate" readonly>
+                    <input type="text" class="form-control" id="biddingeventdate" formControlName="biddingeventdate"  placeholder="2024-03-22 " readonly>
                 </div>
                 <div class="col-md-4">
                   <label class="form-label" for="productdescription">Descripción del producto:</label>
-                  <input type="text" class="form-control" id="productdescription" formControlName="productdescription" readonly>
+                  <input type="text" class="form-control" id="productdescription" formControlName="productdescription" placeholder="PANTALONES CON PETO Y TIRANTI " readonly>
               </div>
                 <div class="col-md-8">
                     <label class="form-label" for="tariffunit">Unidad de medida tarifaria o comercialización:</label>
-                    <input type="text" class="form-control" id="tariffunit" formControlName="tariffunit" readonly>
+                    <input type="text" class="form-control" id="tariffunit" formControlName="tariffunit" placeholder="Caja" readonly>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="customsregime">Régimen aduanero:</label>
-                    <input type="text" class="form-control" id="customsregime" formControlName="customsregime" readonly>
+                    <input type="text" class="form-control" id="customsregime" formControlName="customsregime" placeholder="EXPORTACION" readonly>
                 </div>
             </div>
             <div class="row">
               <div class="col-md-4">
                 <label class="form-label" for="tarifffraction">Fracción o fracciones arancelarias: </label>
-                <input type="text" class="form-control" id="tarifffraction" formControlName="tarifffraction" readonly>
+                <input type="text" class="form-control" id="tarifffraction" formControlName="tarifffraction" placeholder="61012003, 61013001, 61013099, " readonly>
               </div>
             </div>
             <div class="row">
               <div class="col-md-4">
                 <label class="form-label" for="quotaeffectivedate">Fecha de inicio de vigencia del cupo </label>
-                <input type="text" class="form-control" id="quotaeffectivedate" formControlName="quotaeffectivedate" readonly>
+                <input type="text" class="form-control" id="quotaeffectivedate" formControlName="quotaeffectivedate" placeholder="2024-03-01" readonly>
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="quotaenddate">Fecha de fin de vigencia del cupo:  </label>
-                <input type="text" class="form-control" id="quotaenddate" formControlName="quotaenddate" readonly>
+                <input type="text" class="form-control" id="quotaenddate" formControlName="quotaenddate" placeholder="2024-12-31" readonly>
               </div>
             </div>
             <div class="row">
@@ -98,21 +98,21 @@
               </div>
               <div class="col-md-12">
                 <label class="form-label" for="bloquecomercial">Bloque comercial: </label>
-                <input type="text" class="form-control" id="bloquecomercial" formControlName="bloquecomercial" readonly>
+                <input type="text" class="form-control" id="bloquecomercial" formControlName="bloquecomercial" placeholder="Tratado entre México, Estados Unidos y Canadá" readonly>
               </div>
               <div class="col-md-12">
                 <label class="form-label" for="Paises">Países: </label>
-                <input type="text" class="form-control observaciones" id="Paises" formControlName="Paises" readonly>
+                <input type="text" class="form-control observaciones" id="Paises" formControlName="Paises" placeholder="ESTADOS UNIDOS DE AMERICA," readonly>
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="montoadjudicado">Monto adjudicado: </label>
-                <input type="text" class="form-control" id="montoadjudicado" formControlName="montoadjudicado" readonly>
+                <input type="text" class="form-control" id="montoadjudicado" formControlName="montoadjudicado" placeholder="9985" readonly>
               </div><div class="col-md-4">
                 <label class="form-label" for="montodisponible">Monto disponible: </label>
-                <input type="text" class="form-control" id="montodisponible" formControlName="montodisponible" readonly>
+                <input type="text" class="form-control" id="montodisponible" formControlName="montodisponible" placeholder="9985" readonly>
               </div><div class="col-md-4">
                 <label class="form-label" for="montomaximo">Monto máximo: </label>
-                <input type="text" class="form-control" id="montomaximo" formControlName="montomaximo" readonly>
+                <input type="text" class="form-control" id="montomaximo" formControlName="montomaximo" placeholder="10000" readonly>
               </div>
             </div>
         </form>
@@ -125,24 +125,24 @@
             <div class="row">
               <div class="col-md-4">
                 <label class="form-label" for="rfc">RFC*:</label>
-                <input type="text" class="form-control" id="rfc" formControlName="rfc"  readonly>
+                <input type="text" class="form-control" id="rfc" formControlName="rfc" placeholder="eeg860212925" readonly>
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="montodisponible">Monto disponible:</label>
-                <input type="text" class="form-control" id="montodisponible" formControlName="montodisponible"  readonly>
+                <input type="text" class="form-control" id="montodisponible" formControlName="montodisponible" placeholder="15" readonly>
               </div>
               <div class="col-md-4">
-                <!-- <btn-continuar [datos]="datosPasos"></btn-continuar> -->
+                <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3">
+                  Seleccionar participante 
+              </button>
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="montorecibir">Monto a recibir*:</label>
-                <input type="text" class="form-control" id="montorecibir" formControlName="montorecibir" >
+                <input type="text" class="form-control bg-white" id="montorecibir" formControlName="montorecibir" placeholder="1000">
               </div>
             </div>
             </form>
-            <!-- <div class="row">
-              <ng-alert [CONTENIDO]="texto"></ng-alert>
-          </div> -->
+            
         </div>
       </div>
     </div>

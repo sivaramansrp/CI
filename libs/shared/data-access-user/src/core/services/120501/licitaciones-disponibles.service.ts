@@ -16,4 +16,7 @@ export class LicitacionesDisponiblesService {
   getEntidadfederativa(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/120501/entidad-federativa.json');
   }
+  getRepresentacionfederal(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/120501/representacion-federal.json');
+  }
 }

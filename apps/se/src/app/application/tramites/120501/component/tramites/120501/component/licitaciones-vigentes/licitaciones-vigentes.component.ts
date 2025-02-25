@@ -7,7 +7,7 @@ import { FormGroup } from '@angular/forms';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { BtnContinuarComponent, Catalogo, ListaPasosWizard, PASOS, TableData } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, Catalogo, ListaPasosWizard, PASOS, TableData } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
 import { TableComponent } from '@ng-mf/data-access-user';
@@ -25,7 +25,7 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-licitaciones-vigentes',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, TableComponent, CatalogoSelectComponent, BtnContinuarComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, TableComponent, CatalogoSelectComponent, BtnContinuarComponent,AlertComponent],
   templateUrl: './licitaciones-vigentes.component.html',
   styleUrls: ['./licitaciones-vigentes.component.scss'],
 })
@@ -53,9 +53,8 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   representationfederal!: Catalogo[];
   public tableData!: TableData;
   private destroyed$ = new Subject<void>();
-  texto: string = 'La solicitud ha quedado registrada con el número temporal 202758644. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
 
-  constructor(private service:LicitacionesDisponiblesService,private fb: FormBuilder, private entidadfederative: LicitacionesDisponiblesService) {
+  constructor(private service:LicitacionesDisponiblesService,private fb: FormBuilder) {
     this.formForTotalCount = this.fb.group({})
     this.formulario = this.fb.group({
       federalentity: [null, Validators.required],
@@ -96,6 +95,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     );
 
     this.entidadFederativa();
+    this.representacionFederal();
 }
 
   formularioTotalCount(): void {
@@ -110,10 +110,18 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   }
 
   entidadFederativa(): void {
-  this.entidadfederative.getEntidadfederativa().subscribe((response) => {
+  this.service.getEntidadfederativa().subscribe((response) => {
     if(response){
       this.federalentity = response.data;
-      console.log("federalentity",this.federalentity)
+    }
+  }
+  );
+}
+
+representacionFederal(): void {
+  this.service.getRepresentacionfederal().subscribe((response) => {
+    if(response){
+      this.representationfederal = response.data;
     }
   }
   );
