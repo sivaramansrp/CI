@@ -22,11 +22,9 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'expansion-de-productores',
+    path: 'pexim',
     loadChildren: () =>
-      import('./tramites/90201/expansion-de-productores/expansion-de-productores.module').then(
-        (m) => m.ExpansionDeProductoresModule
-      ),
+      import('./tramites/130118/pexim.module').then((m) => m.PeximModule),
   },
   {
     path: 'elegibilidad-de-textiles',

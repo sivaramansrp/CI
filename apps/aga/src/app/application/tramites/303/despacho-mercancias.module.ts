@@ -35,6 +35,7 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TestPageComponent } from './pages/test-page/test-page.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -75,8 +76,12 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     SelectPaisesComponent,
     RepresentanteFiscalComponent,
     forwardRef(() => AnexarDocumentosComponent),
+    ToastrModule.forRoot(),
   ],
   exports: [
+  ],
+  providers: [
+    ToastrService
   ]
 })
 export class DespachoMercanciasModule { }

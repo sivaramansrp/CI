@@ -1,7 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Agente } from '@ng-mf/data-access-user';
-import { ToastrService } from 'ngx-toastr';
 import { TEXTOS_303 } from '@ng-mf/data-access-user';
 declare const bootstrap: any; 
 @Component({
@@ -25,7 +24,6 @@ export class AgentesAgenciasAduanalesComponent {
 
   });
   constructor(private fb: FormBuilder,
-    private toastr: ToastrService,
   ) {}
 
   abrirModal() {
