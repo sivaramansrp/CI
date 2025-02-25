@@ -3,25 +3,24 @@ export interface AccionBoton {
   valor: number;
 }
 
-
 export interface PagoData {
   claveReferencia: string;
   numeroOperacion: string;
   cadenaDependencia: string;
-  banco: string;  
+  banco: string;
   llavePago: string;
   fechaPago: string;
   importePago: string | number;
 }
 
-export interface tipos {
-  tiposdata: string; // Tipo de documento.
+export interface Tipos {
+  tiposData: string; // Tipo de documento.
 }
 
-export interface personaparas {
-  RFC: string; // RFC de la persona
-  CURP: string; // CURP de la persona
-  Nombre: string; // Nombre de la persona
-  Apellido_paterno: string; // Apellido paterno de la persona
-  Apellido_materno: string; // Apellido materno de la persona
+export interface Personas {
+  rfc: string; // RFC de la persona
+  curp: string; // CURP de la persona
+  nombre: string; // Nombre de la persona
+  apellidoPaterno: string; // Apellido paterno de la persona
+  apellidoMaterno: string; // Apellido materno de la persona
 }

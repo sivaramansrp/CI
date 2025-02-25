@@ -7,10 +7,7 @@ import {
 } from '../../models/shared/catalogos.model';
 import { enviroment } from '../../../../enviroments/enviroment';
 import { catchError, Observable, throwError } from 'rxjs';
-import {
-  personaparas,
-  tipos,
-} from '../../models/31601/servicios-pantallas.model';
+import { Personas, Tipos } from '../../models/31601/servicios-pantallas.model';
 
 @Injectable({
   providedIn: 'root',
@@ -58,10 +55,10 @@ export class ServiciosPantallaService {
     );
   }
   getPersonapara() {
-    return this.http.get<personaparas[]>('assets/json/31601/personapara.json');
+    return this.http.get<Personas[]>('assets/json/31601/personapara.json');
   }
   getTiposCatalog() {
-    return this.http.get<tipos[]>('assets/json/31601/tipo-di-document.json');
+    return this.http.get<Tipos[]>('assets/json/31601/tipo-di-document.json');
   }
   /**
    * @description Función para obtener el trámite

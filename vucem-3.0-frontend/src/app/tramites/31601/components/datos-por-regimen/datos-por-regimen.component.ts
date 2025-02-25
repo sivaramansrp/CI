@@ -209,7 +209,7 @@ export class DatosPorRegimenComponent implements OnInit {
      * @constant {Observable<any>} bimestreUnoCatalogo$
      */
     const bimestreUnoCatalogo$ = this._pantallaSvc
-      .getBimestreUnoCatalogo(CATALOGOS_ID.CAT_BIMESTRE_ONE)
+      .getBimestreUnoCatalogo(CATALOGOS_ID.CAT_BIMESTRE_UNO)
       .pipe(
         map((resp) => {
           this.bimestreUnoCatalogo = resp.data;
@@ -226,7 +226,7 @@ export class DatosPorRegimenComponent implements OnInit {
      * @returns {Observable<any>} Un observable que emite los datos del catálogo para el segundo bimestre.
      */
     const bimestreDosCatalogo$ = this._pantallaSvc
-      .getBimestreDosCatalogo(CATALOGOS_ID.CAT_BIMESTRE_TWO)
+      .getBimestreDosCatalogo(CATALOGOS_ID.CAT_BIMESTRE_DOS)
       .pipe(
         map((resp) => {
           this.bimestreDosCatalogo = resp.data;
@@ -243,7 +243,7 @@ export class DatosPorRegimenComponent implements OnInit {
      * @constant {Observable<any>} bimestreTresCatalogo$
      */
     const bimestreTresCatalogo$ = this._pantallaSvc
-      .getBimestreTresCatalogo(CATALOGOS_ID.CAT_BIMESTRE_THREE)
+      .getBimestreTresCatalogo(CATALOGOS_ID.CAT_BIMESTRE_TRES)
       .pipe(
         map((resp) => {
           this.bimestreTresCatalogo = resp.data;

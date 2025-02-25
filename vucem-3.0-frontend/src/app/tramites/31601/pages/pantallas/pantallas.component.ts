@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { AccionBoton } from '../../../../core/models/31601/servicios-pantallas.model';
 import { DatosPasos } from '../../../../core/models/shared/components.model';
 import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
-import { PANTAPASOS } from '../../../../core/services/31601/servicios-pantallas.enum';
+import { PANTA_PASOS } from '../../../../core/services/31601/servicios-pantallas.enum';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 
 /**
@@ -19,7 +19,7 @@ export class PantallasComponent {
   /**
    * Esta variable se utiliza para almacenar la lista de pasos.
    */
-  pantallasPasos: ListaPasosWizard[] = PANTAPASOS;
+  pantallasPasos: ListaPasosWizard[] = PANTA_PASOS;
   /**
    * Esta variable se utiliza para almacenar el índice del paso.
    */

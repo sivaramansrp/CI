@@ -5,8 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { map } from 'rxjs';
 
+import { Personas } from '../../../../core/models/31601/servicios-pantallas.model';
 import { ServiciosPantallaService } from '../../../../core/services/31601/servicios-pantalla.service';
-import { personaparas } from '../../../../core/models/31601/servicios-pantallas.model';
 
 /**
  * Componente `PersonaComponent`.
@@ -44,9 +44,9 @@ import { personaparas } from '../../../../core/models/31601/servicios-pantallas.
 export class PersonaComponent implements OnInit {
   /**
    * Array que contiene los datos de las personas cargadas desde el archivo JSON.
-   * @type {personaparas[]}
+   * @type {Personas[]}
    */
-  personaparas: personaparas[] = [];
+  personaparas: Personas[] = [];
 
   /**
    * Controla la visibilidad del contenido adicional.

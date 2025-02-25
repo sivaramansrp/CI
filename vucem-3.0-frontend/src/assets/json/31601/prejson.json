@@ -8,15 +8,15 @@
   "radio3": {
     "description": "Indique si autorizo al S A T hacer pública su opinión positiva sobre el cumplimiento de obligaciones fiscales"
   },
-  "radio4": { "description": "Senale si cuenta con empleados propios" },
+  "radio4": { "description": "Señale si cuenta con empleados propios" },
   "radio5": {
-    "description": "Señale si al momento de ingresar su solicitud la empresa solicitante cuenta con trabajadores subcontratados en los t&eacute;rminos y condiciones que establecen 12-A al 15- D de la Ley Federal de Trabajao"
+    "description": "Señale si al momento de ingresar su solicitud la empresa solicitante cuenta con trabajadores subcontratados en los términos y condiciones que establecen 12-A al 15- D de la Ley Federal de Trabajao"
   },
   "radio6": {
     "description": "Señale si las empresas proveedoras de personal subcontratado en los términos y condiciones que establecen los artículos 15-A al 15-D de la ley Federal de Trabajo,se encuentran al corriente en el cumplimiento de sus obligaciones fiscales."
   },
   "radio7": {
-    "description": "En su caso acredite cumplir con lo establecido en el articulo 27, fracc&oacute;n V, tercer p&aacute;rrafo de la Ley del ISR."
+    "description": "En su caso acredite cumplir con lo establecido en el articulo 27, fraccón V, tercer párrafo de la Ley del ISR."
   },
   "radio8": {
     "description": "Indique si se encuentra en el listado de empresas publicadas por el SAT en términos de los artículos 69 0 69-8 Bis, noveno párrafo, con excepción de lo dispuesto en el 69 fracción VI y 69-B, cuarto párrafo, del Código Fiscal Federal.términos y condiciones que establecen los artículos 15-A al 15- D de la Ley Federal de Trabajo"

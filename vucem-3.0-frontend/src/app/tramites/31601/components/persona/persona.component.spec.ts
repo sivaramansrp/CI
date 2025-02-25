@@ -12,8 +12,20 @@ class MockServiciosPantallaService {
   getPersonapara() {
     // Mock data with the correct structure
     return of([
-      { RFC: 'AAXX010101HNROZZA', CURP: 'AAXX010101HNROZZA', Nombre: 'John Doe', Apellido_paterno: 'Doe', Apellido_materno: 'Smith' },
-      { RFC: 'BBYY020202MCLGZZB', CURP: 'BBYY020202MCLGZZB', Nombre: 'Jane Smith', Apellido_paterno: 'Smith', Apellido_materno: 'Johnson' }
+      {
+        RFC: 'AAXX010101HNROZZA',
+        CURP: 'AAXX010101HNROZZA',
+        Nombre: 'John Doe',
+        Apellido_paterno: 'Doe',
+        Apellido_materno: 'Smith',
+      },
+      {
+        RFC: 'BBYY020202MCLGZZB',
+        CURP: 'BBYY020202MCLGZZB',
+        Nombre: 'Jane Smith',
+        Apellido_paterno: 'Smith',
+        Apellido_materno: 'Johnson',
+      },
     ]);
   }
 }
@@ -29,11 +41,16 @@ fdescribe('PersonaComponent', () => {
       imports: [
         HttpClientModule,
         FormsModule,
-        CommonModule,PersonaComponent, TituloComponent
+        CommonModule,
+        PersonaComponent,
+        TituloComponent,
       ],
       providers: [
-        { provide: ServiciosPantallaService, useClass: MockServiciosPantallaService }
-      ]
+        {
+          provide: ServiciosPantallaService,
+          useClass: MockServiciosPantallaService,
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PersonaComponent);
@@ -52,16 +69,16 @@ fdescribe('PersonaComponent', () => {
 
     // Expect the service's response to populate personaparas
     expect(component.personaparas.length).toBe(2);
-    expect(component.personaparas[0].Nombre).toBe('John Doe');
-    expect(component.personaparas[1].Nombre).toBe('Jane Smith');
+    expect(component.personaparas[0].nombre).toBe('John Doe');
+    expect(component.personaparas[1].nombre).toBe('Jane Smith');
   });
 
   it('should toggle showContent', () => {
-    expect(component.showContent).toBeFalse();  // Initially false
+    expect(component.showContent).toBeFalse(); // Initially false
     component.toggleContent();
-    expect(component.showContent).toBeTrue();  // After toggle, should be true
+    expect(component.showContent).toBeTrue(); // After toggle, should be true
     component.toggleContent();
-    expect(component.showContent).toBeFalse();  // After another toggle, should be false
+    expect(component.showContent).toBeFalse(); // After another toggle, should be false
   });
 
   it('should call loadPersonas and update personaparas', () => {
@@ -70,8 +87,20 @@ fdescribe('PersonaComponent', () => {
 
     // Validate if the service response is correctly assigned to personaparas
     expect(component.personaparas).toEqual([
-      { RFC: 'AAXX010101HNROZZA', CURP: 'AAXX010101HNROZZA', Nombre: 'John Doe', Apellido_paterno: 'Doe', Apellido_materno: 'Smith' },
-      { RFC: 'BBYY020202MCLGZZB', CURP: 'BBYY020202MCLGZZB', Nombre: 'Jane Smith', Apellido_paterno: 'Smith', Apellido_materno: 'Johnson' }
+      {
+        rfc: 'AAXX010101HNROZZA',
+        curp: 'AAXX010101HNROZZA',
+        nombre: 'John Doe',
+        apellidoPaterno: 'Doe',
+        apellidoMaterno: 'Smith',
+      },
+      {
+        rfc: 'BBYY020202MCLGZZB',
+        curp: 'BBYY020202MCLGZZB',
+        nombre: 'Jane Smith',
+        apellidoPaterno: 'Smith',
+        apellidoMaterno: 'Johnson',
+      },
     ]);
   });
 
@@ -84,10 +113,10 @@ fdescribe('PersonaComponent', () => {
 
     // Ensure the service method is called once
     expect(pantallaSvc.getPersonapara).toHaveBeenCalledTimes(1);
-    
+
     // Check if the personaparas data is correctly assigned
     expect(component.personaparas.length).toBe(2);
-    expect(component.personaparas[0].Nombre).toBe('John Doe');
-    expect(component.personaparas[1].Nombre).toBe('Jane Smith');
+    expect(component.personaparas[0].nombre).toBe('John Doe');
+    expect(component.personaparas[1].nombre).toBe('Jane Smith');
   });
 });

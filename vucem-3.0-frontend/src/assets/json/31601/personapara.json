@@ -1,23 +1,23 @@
 [
-    {
-        "RFC":"MAHA790703QW5",
-        "CURP":"MAHA790703HGTTRR09 ",
-        "Nombre":"ARTURO",
-        "Apellido_paterno":"MATA",
-        "Apellido_materno":"HERNANDEZ"
-    },
-    {
-        "RFC":"LEQI8101311457",
-        "CURP":"LEQI810131HDGSXG05 ",
-        "Nombre":"IGNACIO EDUARDO",
-        "Apellido_paterno":"LEOS",
-        "Apellido_materno":"QUINONES"
-    },
-    {
-        "RFC":"MAVL621207C95",
-        "CURP":"MAVL621207HDGRLS06 ",
-        "Nombre":"LUIS AMBROSIO",
-        "Apellido_paterno":"MARTINEZ",
-        "Apellido_materno":"VALENZUELA"
-    }
+  {
+    "rfc": "MAHA790703QW5",
+    "curp": "MAHA790703HGTTRR09 ",
+    "nombre": "ARTURO",
+    "apellidoPaterno": "MATA",
+    "apellidoMaterno": "HERNANDEZ"
+  },
+  {
+    "rfc": "LEQI8101311457",
+    "curp": "LEQI810131HDGSXG05 ",
+    "nombre": "IGNACIO EDUARDO",
+    "apellidoPaterno": "LEOS",
+    "apellidoMaterno": "QUINONES"
+  },
+  {
+    "rfc": "MAVL621207C95",
+    "curp": "MAVL621207HDGRLS06 ",
+    "nombre": "LUIS AMBROSIO",
+    "apellidoPaterno": "MARTINEZ",
+    "apellidoMaterno": "VALENZUELA"
+  }
 ]
