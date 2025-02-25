@@ -16,4 +16,6 @@ export class AsignacionDirectaDeCupoComponent {
     indice: number = 1;
 
     TEXTOS = TEXTOS;
+
+    class= "alert-danger";
 }
