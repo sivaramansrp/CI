@@ -1,17 +1,10 @@
-{
-    "code": 200,
-    "data": [
-        {
-          "id": 1,
-          "descripcion": "Documento y datos"
-    
-        },
-        {
-          "id": 2,
-          "descripcion": "Otros"
-    
-        }
-      ],
-    "message": "Consulta exitosa"
-
-}
+[
+  {
+    "id": 1,
+    "descripcion": "Documento y datos"
+  },
+  {
+    "id": 2,
+    "descripcion": "Otros"
+  }
+]
