@@ -9,28 +9,14 @@
     </div>
     <div *ngIf="showContent" class="content">
                  
-      
-        <table class="custom-table">
-            <thead>
-              <tr>
-                <th>RFC</th>
-                <th>CURP</th>
-                <th>Nombre</th>
-                <th>Apellido paterno</th>
-                <th>Apellido materno</th>
-              
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let persona of personaparas">
-                <td>{{ persona.RFC }}</td>
-                <td>{{ persona.CURP }}</td>
-                <td>{{ persona.Nombre }}</td>
-                <td>{{ persona.Apellido_paterno }}</td>
-                <td>{{ persona.Apellido_materno }}</td>
-              </tr>
-            </tbody>
-          </table>
+      <app-tabla-dinamica 
+  [configuracionTabla]="configuracionTabla"
+  [datos]="personaparas"
+  (filaSeleccionada)="onFilaSeleccionada($event)"
+  (listaDeFilaSeleccionada)="onListaDeFilaSeleccionada($event)">
+</app-tabla-dinamica>
+
+        
         
     </div>
 </div>
