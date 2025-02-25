@@ -81,7 +81,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @type {number[]}
    */
-  filasSeleccionadas: number[];
+  filasSeleccionadas: number[] = [];
 
   /**
    * Método para obtener la configuración de las columnas ordenada según el campo "orden".
