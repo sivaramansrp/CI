@@ -7,7 +7,7 @@ import { FormGroup } from '@angular/forms';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent, BtnContinuarComponent, Catalogo, DatosPasos, ListaPasosWizard, PASOS, TableData, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, Catalogo, DatosPasos, ListaPasosWizard, PASOS, TablaDinamicaComponent, TableData, WizardComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
 import { TableComponent } from '@ng-mf/data-access-user';
@@ -18,6 +18,9 @@ import { LicitacionesDisponiblesService } from 'libs/shared/data-access-user/src
 
 import { Subject, takeUntil } from 'rxjs';
 
+import { TablaSeleccion } from '@ng-mf/data-access-user'
+
+import { CONFIGURACION_ACCIONISTAS } from 'libs/shared/data-access-user/src/tramites/constantes/120501/licitaciones-disponibles-table-data.enum';
 //import { DatosPasos } from '@ng-mf/data-access-user';
 
 interface AccionBoton {
@@ -28,11 +31,12 @@ interface AccionBoton {
 @Component({
   selector: 'app-licitaciones-vigentes',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, TableComponent, CatalogoSelectComponent, BtnContinuarComponent,AlertComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, TableComponent, CatalogoSelectComponent, BtnContinuarComponent,AlertComponent,TablaDinamicaComponent],
   templateUrl: './licitaciones-vigentes.component.html',
   styleUrls: ['./licitaciones-vigentes.component.scss'],
 })
 export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
+  
   tableHeaderData: string[] = [];
   tableBodyData: { tbodyData: string[] }[] = [];
   enableScrollbar: boolean = false;
@@ -42,7 +46,20 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     checkbox : false
   };
   texto: string = 'La solicitud ha quedado registrada con el número temporal 202758644. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
-
+  
+  tableradio = TablaSeleccion.UNDEFINED;
+  selectedRow = 1;
+  configTableArray = CONFIGURACION_ACCIONISTAS;
+  datos = [
+    {
+      numerodelicitacion:"002/2024 ",
+      fechadelicitacion:"2024-03-22 ",
+      descripcion:"",
+      montoadjudicado:"9985",
+      fechainiciovigencia:"2024-03-01",
+      fechafinvigencia:"2024-12-31"
+    }
+  ]
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
@@ -92,13 +109,13 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     this.formularioTotalCount();
     this.actualizarRecuentoTotalDeFilas();
 
-    this.service.getData().pipe(takeUntil(this.destroyed$)
-    ).subscribe(
-      (data: TableData) => {
-        this.tableData = data;
-        console.log("table data",this.tableData)
-      }
-    );
+    // this.service.getData().pipe(takeUntil(this.destroyed$)
+    // ).subscribe(
+    //   (data: TableData) => {
+    //     this.tableData = data;
+    //     console.log("table data",this.tableData)
+    //   }
+    // );
 
     this.entidadFederativa();
     this.representacionFederal();

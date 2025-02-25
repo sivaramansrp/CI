@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SolicitarTransferenciaCuposRoutingModule } from './solicitar-transferencia-cupos-routing.module';
 
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
@@ -32,7 +32,10 @@ import { AlertComponent } from '@ng-mf/data-access-user';
     SolicitanteComponent,
     BtnContinuarComponent,
     CatalogoSelectComponent,
-    AlertComponent
-  ]
+    AlertComponent,
+    TablaDinamicaComponent
+
+  ],
+  exports: [TablaDinamicaComponent]
 })
 export class SolicitarTransferenciaCuposModule { }

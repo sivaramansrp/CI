@@ -19,7 +19,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @type { TablaSeleccion}
    */
-  @Input() tipoSeleccionTabla: TablaSeleccion = undefined;
+  @Input() tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.UNDEFINED;
 
 
   /**
@@ -73,7 +73,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @type {number}
    */
-  idFilaSeleccionada: number;
+  @Input() idFilaSeleccionada: number = -1;
 
   /**
    * Almacena un array de los índices de las filas seleccionadas.
@@ -87,9 +87,13 @@ export class TablaDinamicaComponent<T> {
    * Método para obtener la configuración de las columnas ordenada según el campo "orden".
    *
    * @returns {ConfiguracionColumna<T>[]} La configuración de las columnas ordenada.
+   * 
    */
   obtenerConfiguracionOrdenada(): ConfiguracionColumna<T>[] {
     return this.configuracionTabla.sort((a, b) => a.orden - b.orden);
+  }
+  ngOnInit(): void {
+    console.log("tipoSeleccionTabla",this.tipoSeleccionTabla)
   }
 
   /**

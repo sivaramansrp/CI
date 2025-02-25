@@ -12,13 +12,10 @@
           [commonTableBody]="tableData.tableBody"
           [enableScrollbar]="true" [tableoptions] = "tableoptions"
         ></ng-table> -->
-        <ng-table
-          [commonTableHeader]="tableData.tableHeader"
-          [commonTableBody]="tableData.tableBody"
-          [enableScrollbar]="true"
-        ></ng-table>
+        <app-tabla-dinamica [configuracionTabla]="configTableArray"
+        [datos] = "datos"></app-tabla-dinamica>
   
-        <form [formGroup]="formForTotalCount">
+        <!-- <form [formGroup]="formForTotalCount">
           <div class="text-center">
             <div>
               <input
@@ -30,7 +27,7 @@
               />
             </div>
           </div>
-        </form>
+        </form> -->
         <!-- Representación federal  -->
         <div class="container">
           <ng-titulo titulo="Representación federal" />
@@ -55,40 +52,40 @@
             <div class="row">
                 <div class="col-md-4">
                     <label class="form-label" for="numeradelicitacion">Número de licitación:</label>
-                    <input type="text" class="form-control" id="numeradelicitacion" formControlName="numeradelicitacion" placeholder="002/2024" size="30" readonly>
+                    <input type="text" class="form-control" id="numeradelicitacion" formControlName="numeradelicitacion" size="30" readonly>
                 </div>
         
                 <div class="col-md-4">
                     <label class="form-label" for="biddingeventdate">Fecha de evento de licitación pública: </label>
-                    <input type="text" class="form-control" id="biddingeventdate" formControlName="biddingeventdate"  placeholder="2024-03-22 " size="30" readonly>
+                    <input type="text" class="form-control" id="biddingeventdate" formControlName="biddingeventdate" size="30" readonly>
                 </div>
                 <div class="col-md-4">
                   <label class="form-label" for="productdescription">Descripción del producto:</label>
-                  <input type="text" class="form-control" id="productdescription" formControlName="productdescription" placeholder="PANTALONES CON PETO Y TIRANTI " size="30" readonly>
+                  <input type="text" class="form-control" id="productdescription" formControlName="productdescription" size="30" readonly>
               </div>
                 <div class="col-md-8">
                     <label class="form-label" for="tariffunit">Unidad de medida tarifaria o comercialización:</label>
-                    <input type="text" class="form-control" id="tariffunit" formControlName="tariffunit" placeholder="Caja" size="30" readonly>
+                    <input type="text" class="form-control" id="tariffunit" formControlName="tariffunit" size="30" readonly>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="customsregime">Régimen aduanero:</label>
-                    <input type="text" class="form-control" id="customsregime" formControlName="customsregime" placeholder="EXPORTACION" size="30" readonly>
+                    <input type="text" class="form-control" id="customsregime" formControlName="customsregime" size="30" readonly>
                 </div>
             </div>
             <div class="row">
               <div class="col-md-4">
                 <label class="form-label" for="tarifffraction">Fracción o fracciones arancelarias: </label>
-                <input type="text" class="form-control" id="tarifffraction" formControlName="tarifffraction" placeholder="61012003, 61013001, 61013099, " size="30" readonly>
+                <input type="text" class="form-control" id="tarifffraction" formControlName="tarifffraction" size="30" readonly>
               </div>
             </div>
             <div class="row">
               <div class="col-md-4">
                 <label class="form-label" for="quotaeffectivedate">Fecha de inicio de vigencia del cupo </label>
-                <input type="text" class="form-control" id="quotaeffectivedate" formControlName="quotaeffectivedate" placeholder="2024-03-01"size="30"  readonly>
+                <input type="text" class="form-control" id="quotaeffectivedate" formControlName="quotaeffectivedate" size="30"  readonly>
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="quotaenddate">Fecha de fin de vigencia del cupo:  </label>
-                <input type="text" class="form-control" id="quotaenddate" formControlName="quotaenddate" placeholder="2024-12-31" size="30" readonly>
+                <input type="text" class="form-control" id="quotaenddate" formControlName="quotaenddate" size="30" readonly>
               </div>
             </div>
             <div class="row">
@@ -98,21 +95,21 @@
               </div>
               <div class="col-md-12">
                 <label class="form-label" for="bloquecomercial">Bloque comercial: </label>
-                <input type="text" class="form-control" id="bloquecomercial" formControlName="bloquecomercial" placeholder="Tratado entre México, Estados Unidos y Canadá" readonly>
+                <input type="text" class="form-control" id="bloquecomercial" formControlName="bloquecomercial" readonly>
               </div>
               <div class="col-md-12">
                 <label class="form-label" for="Paises">Países: </label>
-                <textarea type="text" class="form-control observaciones" id="Paises" formControlName="Paises" placeholder="ESTADOS UNIDOS DE AMERICA," readonly></textarea>
+                <textarea type="text" class="form-control observaciones" id="Paises" formControlName="Paises" readonly></textarea>
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="montoadjudicado">Monto adjudicado: </label>
-                <input type="text" class="form-control" id="montoadjudicado" formControlName="montoadjudicado" placeholder="9985" readonly>
+                <input type="text" class="form-control" id="montoadjudicado" formControlName="montoadjudicado" readonly>
               </div><div class="col-md-4">
                 <label class="form-label" for="montodisponible">Monto disponible: </label>
-                <input type="text" class="form-control" id="montodisponible" formControlName="montodisponible" placeholder="9985" readonly>
+                <input type="text" class="form-control" id="montodisponible" formControlName="montodisponible" readonly>
               </div><div class="col-md-4">
                 <label class="form-label" for="montomaximo">Monto máximo: </label>
-                <input type="text" class="form-control" id="montomaximo" formControlName="montomaximo" placeholder="10000" readonly>
+                <input type="text" class="form-control" id="montomaximo" formControlName="montomaximo" readonly>
               </div>
             </div>
         </form>
