@@ -1,7 +1,9 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
-const routes: Routes = [
+
+
+const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
@@ -14,10 +16,16 @@ const routes: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
+  {
+    path: 'registro-como-empresa',
+    loadChildren: () => import('./tramites/120601/registro-como-empresa.module').then(
+      (m) => m.RegistroComoEmpresaModule
+    ),
+  }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { RegistroComoEmpresaRoutingModule } from './registro-como-empresa-routing.module';
 
 
+
 @NgModule({
   declarations: [],
   imports: [
