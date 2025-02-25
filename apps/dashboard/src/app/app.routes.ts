@@ -27,5 +27,10 @@ export const appRoutes: Route[] = [
     path: 'se',
     loadChildren: () =>
       loadRemoteModule('se', './Routes').then((m) => m.remoteRoutes),
+  },
+  {
+    path: 'semarnat',
+    loadChildren: () =>
+      loadRemoteModule('semarnat', './Routes').then((m) => m.remoteRoutes),
   }
 ];
