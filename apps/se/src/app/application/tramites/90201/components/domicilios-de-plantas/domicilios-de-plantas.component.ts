@@ -11,7 +11,7 @@ import DomiciliosDePlantasTabla from 'libs/shared/theme/assets/json/90201/domici
   standalone: true,
   imports: [CommonModule,TableComponent,ReactiveFormsModule],
   templateUrl: './domicilios-de-plantas.component.html',
-  styleUrl: './domicilios-de-plantas.component.css',
+  styleUrl: './domicilios-de-plantas.component.scss',
 })
 export class DomiciliosDePlantasComponent {
 

@@ -1,0 +1,16 @@
+ {
+    "tableHeader": [
+        "Registro federal de contribuyentes",
+        "Denominación o razón social",
+        "Correo"
+    ],
+    "tableBody": [
+        {
+            "tbodyData": [
+                "UOP080724TL9",
+                "UEMAN OPERACIONES SA DE CV",
+                "martinez.eval"
+            ]
+        }
+    ]
+}

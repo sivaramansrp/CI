@@ -2,11 +2,7 @@
     <ng-titulo titulo="Datos de la solicitud" />
     <div class="row mb-3">
         <div class="col-md-4">
-            <app-catalogo-select 
-                [catalogo]="sectorCatalogo" 
-                formControlName="sector"
-                [label]="'Sector'"
-                name="sector"
+            <app-catalogo-select [catalogo]="sectorCatalogo" formControlName="sector" [label]="'Sector'" name="sector"
                 (change)="sectorSeleccion()">
             </app-catalogo-select>
         </div>
@@ -27,7 +23,27 @@
     </div>
     <ng-titulo titulo="Mercancías a producir"></ng-titulo>
     <ng-alert [CONTENIDO]="TEXTOS.alerta"></ng-alert>
-    <div>
+    <div class="row">
+        <div class="mb-3">
+            <label for="fraccion" class="form-label fw-bold">Fracción arancelaria*:</label>
+            <input type="text" class="form-control w-25" id="fraccion" placeholder="Ingresa una fracción">
+        </div>
 
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-danger me-2">Eliminar</button>
+            <button class="btn btn-primary">Agregar</button>
+        </div>
+
+        <table class="mb-3 mt-3">
+            <thead>
+                <tr>
+                    <th>Fracción arancelaria</th>
+                    <th>Clave del sector</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se pueden agregar filas dinámicamente -->
+            </tbody>
+        </table>
     </div>
 </div>

@@ -10,7 +10,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule,TituloComponent,ReactiveFormsModule],
   templateUrl: './solicitante.component.html',
-  styleUrl: './solicitante.component.css',
+  styleUrl: './solicitante.component.scss',
 })
 export class SolicitanteComponent {
 

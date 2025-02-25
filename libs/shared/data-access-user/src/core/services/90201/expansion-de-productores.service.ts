@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '../../models/shared/catalogos.model';
+import { JSONResponse, RespuestaCatalogos } from '../../models/shared/catalogos.model';
+import { catchError, Observable, throwError } from 'rxjs';
+import { enviroment } from '../../../enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +13,8 @@ import { RespuestaCatalogos } from '../../models/shared/catalogos.model';
  */
 
 export class ExpansionDeProductoresService {
+
+  urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
    /**
   * constructor de la clase
   * @param http: constructor de HttpClient
@@ -19,9 +23,21 @@ export class ExpansionDeProductoresService {
 
 
   getSectorCatalog() {
-    // ../../../../../assets/json/220201/aduana_de_ingreso.json
     return this.http.get<RespuestaCatalogos>('assets/json/90201/sector.json');
   }
+
+    /**
+   * @description Función para obtener el trámite
+   * @param id
+   * @returns JSONResponse
+   */
+    obtenerTramite(id: number): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>(`${this.urlServer}/${id}`).pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
 
 
 

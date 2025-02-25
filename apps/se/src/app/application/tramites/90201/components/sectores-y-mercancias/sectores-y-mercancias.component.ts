@@ -20,7 +20,7 @@ import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/compon
     CatalogoSelectComponent,
     AlertComponent],
   templateUrl: './sectores-y-mercancias.component.html',
-  styleUrl: './sectores-y-mercancias.component.css',
+  styleUrl: './sectores-y-mercancias.component.scss',
 })
 export class SectoresYMercanciasComponent {
 

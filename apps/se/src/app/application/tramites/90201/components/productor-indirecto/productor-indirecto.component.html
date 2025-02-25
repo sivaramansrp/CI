@@ -1,1 +1,23 @@
-<p>productor-indirecto works!</p>
+<div class="container mt-4">
+    <ng-titulo titulo="Productor indirecto" />
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <label for="rfc" class="form-label fw-bold">Registro federal de contribuyentes*:</label>
+            <input type="text" class="form-control w-50" id="rfc" placeholder="Ingresa el RFC">
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-danger me-3">Eliminar productor</button>
+      <button class="btn btn-primary">Agregar productor</button>
+    </div>
+
+    <h5 class="mt-4">Solicitud Prosec Productor Indirecto Tabla:</h5>
+    
+    <div class="table-container">
+        <ng-table
+            [commonTableHeader]="tableHeader"
+            [commonTableBody]="cuerpoTabla">
+        </ng-table>
+    </div>
+  </div>

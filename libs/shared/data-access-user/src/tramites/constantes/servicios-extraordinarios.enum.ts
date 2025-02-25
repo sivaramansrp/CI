@@ -222,5 +222,14 @@ export const Sectoresy = {
   alerta: `<p>Para continuar con el trámite, debes agregar por lo menos una mercancía.</p>`,
 }
 
+export const firmar = {
+  alerta: `<p>La solicitud ha sido guardada exitosamente. Tiene 15 días naturales para firmarla, después de ese tiempo desaparecerá
+del listado de solicitudes pendientes por firmar. Número de solicitud [202758747]</p>`,
+}
+
+export const solicitud = {
+  alerta: `<p>Tu solicitud ha sido registrada con el siguiente número de folio <0200900200120242540000002>.</p>`,
+}
+
 
 export const URL_PRUEBA = 'assets/pdf/Test03.pdf';
