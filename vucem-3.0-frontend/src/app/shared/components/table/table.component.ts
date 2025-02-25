@@ -16,6 +16,11 @@ import { CommonModule } from '@angular/common';
 })
 export class TableComponent implements OnInit, OnChanges {
   /**
+   * @description 
+   * enableScrollbar se utiliza para habilitar o deshabilitar la barra de desplazamiento de la tabla de la componente
+   */
+  @Input() enableScrollbar: boolean = false;
+  /**
    * @description
    * commonTableHeader se utiliza para obtener datos de encabezado de tabla del componente
    */
