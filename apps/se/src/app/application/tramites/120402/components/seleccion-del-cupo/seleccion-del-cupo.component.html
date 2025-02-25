@@ -1,1 +1,44 @@
-<p>seleccion-del-cupo works!</p>
+<div class="container">
+    <form [formGroup]="seleccionForm">
+        <h4>Selección del cupo</h4>
+        <hr>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <app-catalogo-select 
+                    [catalogo]="regimen" 
+                    [label]="'Régimen aduanero'"
+                    name="regimen" 
+                    formControlName="regimen" 
+                    (change)="regimenOnChange($event)">
+                </app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+                <app-catalogo-select 
+                    [catalogo]="tratado" 
+                    [label]="'Tratado o bloque comercial'"
+                    name="tratado" 
+                    formControlName="tratado"
+                    (change)="tratadoOnChange($event)">
+                </app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+                <app-catalogo-select 
+                    [catalogo]="producto" 
+                    [label]="'Nombre de producto'"
+                    name="producto" 
+                    formControlName="producto" 
+                    (change)="productoOnChange($event)">
+                </app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+                <app-catalogo-select 
+                    [catalogo]="subproducto" 
+                    [label]="'Nombre del subproducto'"
+                    name="subproducto" 
+                    formControlName="subproducto"
+                    (change)="subproductoOnChange($event)">
+                </app-catalogo-select>
+            </div>
+        </div>
+    </form>
+</div>
