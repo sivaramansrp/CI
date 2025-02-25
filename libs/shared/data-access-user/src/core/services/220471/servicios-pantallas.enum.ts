@@ -25,7 +25,7 @@ export const PANTAPASOS = [
     }
   ];
 
-  export const AANTAPASOS = [
+  export const ASIGNHCION = [
     {
       indice: 1,
       titulo: 'Capturar solicitud',

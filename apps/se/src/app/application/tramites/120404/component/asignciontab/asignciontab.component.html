@@ -1,8 +1,44 @@
-<p>asignciontab works!</p>
-<!-- <div class="col-md-12">
-    <app-input-radio
-      [radioOptions]="opcionDeBotonDeRadio"
-      [selectedValue]="selectedValue"
-      
-></app-input-radio>
-</div> -->
+<div class="col-md-12">
+<app-input-radio
+          [radioOptions]="asigncionRadio"
+          [isRequired]="true"
+          [selectedValue]="selectedValue"
+          [layout]="'vertical'"
+          ></app-input-radio>
+          </div>
+
+<div class="container">
+<form [formGroup]="asignacionForm" (ngSubmit)="buscar()">
+        <div class="form" formGroupName="datosRegimen">
+             <ng-titulo titulo="Nemero de oficio de asignacion" />
+              <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <app-catalogo-select [catalogo]="asigncionendid" [required]="true" name="asignacionsolitud"  [label]="'Ano del oficio de asignacion'" formControlName="asignacionsolitud"  >
+                      </app-catalogo-select>
+                      <div *ngIf="isInvalid('asignacionsolitud')" class="text-danger">
+                        Este campo es obligatorio
+                    </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group clasifi-regimen-catalogo">
+                        <label for="clasificacionRegimen">Numero de oficio de asignacion*</label>
+                        <input type="text" class="form-control" formControlName="numTramite" placeholder="6" id="numTramite" >
+                        <div *ngIf="isInvalid('numTramite')" class="text-danger">
+                                Este campo es obligatorio
+                            </div>
+                    </div>
+                </div>
+            </div>
+        <div class="row mb-5">
+            <div class="col-md-6 col-sm-6"></div>
+            <div class="col-md-6 col-sm-6 text-end">
+              <div class="btn-group">
+                <button class="btn btn-primary me-2" type="button">Buscar</button>
+                </div>
+            </div>
+          </div>
+        </div>
+    <form>
+<app-solicitantetab></app-solicitantetab>
