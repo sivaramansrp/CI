@@ -243,9 +243,10 @@ export class SolicitudComponent {
   }
 
   /**
-   * Adds a new item to the `datosGeneralesArr` array by retrieving the value from the `datosMercancia` form's `datosGenerales` control.
-   * After adding the item, it collapses the `mercancia` section.
+   * Agrega los datos generales de la mercancía al arreglo `datosGeneralesArr`
+   * y colapsa la sección de mercancía.
    *
+   * @method mercanciaAgregar
    * @memberof SolicitudComponent
    */
   mercanciaAgregar() {
