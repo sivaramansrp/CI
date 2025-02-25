@@ -9,8 +9,8 @@ export const COOKIE = {
 };
 
 export const CODIGOS_HTTP = {
-  SUCCESS: "200"
-}
+  SUCCESS: '200',
+};
 
 export const CATALOGOS_ID = {
   CAT_TIPO_SOL: 'tipos-solicitud',
@@ -29,12 +29,12 @@ export const CATALOGOS_ID = {
   CAT_PAIS_DESTINO: 'pais-destino',
   CAT_MOLINO: 'molino',
   CAT_ESTADO: 'estado',
-  CAT_BIMESTRE_ONE: 'bimestre-catalog-one',
-  CAT_BIMESTRE_TWO: 'bimestre-catalog-two',
-  CAT_BIMESTRE_THREE: 'bimestre-catalog-three',
+  CAT_BIMESTRE_UNO: 'bimestre-catalogo-uno',
+  CAT_BIMESTRE_DOS: 'bimestre-catalogo-dos',
+  CAT_BIMESTRE_TRES: 'bimestre-catalogo-tres',
   CAT_REPRESENTACION_FEDERAL: 'representacion-federal',
   DATOS_PERSONA_FISICA: 21,
-}
+};
 
 export const TIPO_PERSONA = {
   FISICA_NACIONAL: 1,
@@ -72,5 +72,3 @@ export const MILISEGUNDOS = {
   SEMANA: 604800000,
   MES: 2592000000,
 };
-
-

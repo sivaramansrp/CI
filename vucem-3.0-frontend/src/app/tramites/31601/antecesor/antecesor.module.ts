@@ -11,12 +11,11 @@ import { ReprestantanteComponent } from '../components/represtantante/represtant
 import { EnlaceComponent } from '../components/enlace/enlace.component';
 import { PersonaComponent } from '../components/persona/persona.component';
 
-
-import { AduaneroComponent } from "../components/aduanero/aduanero.component";
+import { AduaneroComponent } from '../components/aduanero/aduanero.component';
 import { SharedModule } from '../../../shared/shared.module';
 
 import { CapturarIvaeiepsComponent } from '../components/capturar-ivaeieps/capturar-ivaeieps.component';
-import { AnexarEquisitosComponent } from '../components/anexar-equisitos/anexar-equisitos.component';
+import { AnexarRequisitosComponent } from '../components/anexar-requisitos/anexar-requisitos.component';
 import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-por-regimen.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FirmarSolicitudComponent } from '../pages/firmar-solicitud/firmar-solicitud.component';
@@ -30,19 +29,23 @@ import { RequisitosComponent } from '../components/requisitos/requisitos.compone
     CommonModule,
     AntecesorRoutingModule,
     WizardComponent,
-    NavComponent,ReprestantanteComponent,EnlaceComponent,PersonaComponent,
-  
+    NavComponent,
+    ReprestantanteComponent,
+    EnlaceComponent,
+    PersonaComponent,
+
     NavComponent,
     AduaneroComponent,
     FormsModule,
     ReactiveFormsModule,
     CapturarIvaeiepsComponent,
-    AnexarEquisitosComponent,
+    AnexarRequisitosComponent,
     DatosPorRegimenComponent,
     ReactiveFormsModule,
     FormsModule,
     FirmaElectronicaComponent,
-    BtnContinuarComponent,RequisitosComponent
+    BtnContinuarComponent,
+    RequisitosComponent,
   ],
 })
 
