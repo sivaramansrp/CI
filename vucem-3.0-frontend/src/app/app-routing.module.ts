@@ -112,6 +112,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'aviso-de-materiales',
+    loadChildren: () =>
+      import('./tramites/231001/avisodemateriales.module').then(
+        (m) => m.AvisodematerialesModule
+      ),
+    },
+  {
     path: 'pantallas-captura',
     loadChildren: () =>
       import('./tramites/220402/pantallas-captura.module').then(
@@ -130,6 +137,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./funcionario/funcionario.module').then(
         (m) => m.FuncionarioModule
+      ),
+  },
+  {
+    path: 'aviso-de-materiales',
+    loadChildren: () =>
+      import('./tramites/231001/avisodemateriales.module').then(
+        (m) => m.AvisodematerialesModule
       ),
   },
 ];

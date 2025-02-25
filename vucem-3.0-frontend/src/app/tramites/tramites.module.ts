@@ -1,5 +1,8 @@
 /* eslint-disable sort-imports */
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms'; 
+
 
 @NgModule({
   declarations: [
@@ -7,6 +10,7 @@ import { CommonModule } from '@angular/common';
   ],
   imports: [
     CommonModule,
+    ReactiveFormsModule
   ],
   exports: [
   ]
