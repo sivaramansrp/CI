@@ -1,0 +1,45 @@
+<div class="container">
+    <ng-titulo titulo="Histórico fabricantes" />
+    <form [formGroup]="historicoFabricantesForm">
+      <div class="row">
+        <div class="col-md-12">
+          <label for="Tipo_de_Certificado"
+            >&iquest; EI exportador y el fabricante son la misma persona?</label
+          >
+          <span class="require">*</span>
+        </div>
+      </div>
+  
+      <app-input-radio
+        [radioOptions]="radioOptions"
+        [selectedValue]="selectedValue"
+        [isRequired]="true"
+        (valueChange)="onValueChange($event)"
+        [layout]="'vertical'"
+      ></app-input-radio>
+      <h6>Fabricantes nacionales</h6>
+  
+      <ng-table
+        [commonTableHeader]="tableColumns"
+        [commonTableBody]="fabricantesNacionales"
+      ></ng-table>
+      <div class="container text-end mt-5">
+        <button class="btn btn-default me-2">Seleccionar</button>
+        <button class="btn btn-primary">Fabricante nuevo</button>
+      </div>
+      <h6>Fabricante</h6>
+  
+      <ng-table
+        [commonTableHeader]="tableColumns"
+        [commonTableBody]="fabricantesDatos"
+      ></ng-table>
+  
+      <ng-titulo titulo="Datos fabricante nacional"></ng-titulo>
+      <div class="col-12 col-xxl-4 col-xl-4 col-md-4 col-sm-4 mb-5">
+        <label for="message" class="form-label"
+          >Número de registro fiscal*:</label
+        >
+        <input type="text" class="form-control" id="message" placeholder="" />
+      </div>
+    </form>
+  </div>
