@@ -1,7 +1,8 @@
 
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { ProsecModificacionComponent } from './pages/prosec-modificacion.component';
+import { ProsecModificacionComponent } from './pages/prosec-modificacion/prosec-modificacion.component';
+
 
 const routes: Routes = [
   {
