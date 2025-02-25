@@ -1,6 +1,6 @@
 /* eslint-disable @angular-eslint/component-selector */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { TableData } from '../../../core/models/shared/components.model';
 
 import { CommonModule } from '@angular/common';
@@ -15,6 +15,10 @@ import { CommonModule } from '@angular/common';
   ]
 })
 export class TableComponent implements OnInit, OnChanges {
+  /**
+   * @description 
+   * enableScrollbar se utiliza para habilitar o deshabilitar la barra de desplazamiento de la tabla de la componente
+   */
   @Input() enableScrollbar: boolean = false;
   /**
    * @description
