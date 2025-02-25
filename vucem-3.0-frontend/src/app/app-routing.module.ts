@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
-
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
+
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/auth/login' },
 
@@ -37,6 +37,21 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tramites/220401/pantallas.module').then(
         (m) => m.PantallasModule
+      ),  
+  },
+  {
+
+    path: 'sagarpa',
+    loadChildren: () =>
+      import('./tramites/220501/sagarpa.module').then(
+        (m) => m.SagarpaModule
+      ),
+  },
+  {
+    path: 'inspeccion-fisica',
+    loadChildren: () =>
+      import('./tramites/220502/inspeccion-fisica.module').then(
+        (m) => m.InspeccionFisicaModule
       ),
   },
   {
@@ -44,7 +59,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tramites/130102/octava-temporal.module').then(
         (m) => m.OctavaTemporalModule
-      ),
+      ), 
   },
   {
     path: 'importante',
@@ -102,6 +117,13 @@ const routes: Routes = [
       import('./tramites/220202/fitosanitario.module').then(
         (m) => m.FitosanitarioModule
       )
+  },
+  {
+    path: 'bandeja-tareas-pendientes',
+    loadChildren: () =>
+      import('./funcionario/funcionario.module').then(
+        (m) => m.FuncionarioModule
+      ),
   },
 ];
 

@@ -13,20 +13,12 @@
     >
   </div>
   <div *ngIf="showContent" class="content">
-    <div class="table-wrapper">
-      <table class="custom-table">
-        <thead>
-          <tr>
-            <th>Tipo de Documento</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let tipo of tipos">
-            <td>{{ tipo.tiposData }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <app-tabla-dinamica 
+   
+    [configuracionTabla]="configuracionTabla" 
+    [datos]="tipos">
+  </app-tabla-dinamica>
+  
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
         <li class="page-item"><a class="page-link" href="#">Anterior</a></li>

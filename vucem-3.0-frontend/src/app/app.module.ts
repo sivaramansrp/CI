@@ -18,7 +18,7 @@ import { TituloComponent } from "./shared/components/titulo/titulo.component";
 @NgModule({
   declarations: [
     AppComponent,
-    SeleccionTramiteComponent
+    SeleccionTramiteComponent,
   ],
   imports: [
     AkitaNgDevtools,

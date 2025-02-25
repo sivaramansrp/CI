@@ -11,6 +11,11 @@ import { Tipos } from '../../../../core/models/31601/servicios-pantallas.model';
 import { map } from 'rxjs';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
+import { TablaDinamicaComponent } from '../../../../shared/components/tabla-dinamica/tabla-dinamica.component';
+import { ConfiguracionColumna } from '../../../../core/models/shared/configuracion-columna.model';
+
+
+/**
 
 /**
  * Componente `RequisitosComponent`.
@@ -44,19 +49,41 @@ import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
   styleUrl: './requisitos.component.scss', // Ruta al archivo de estilos SCSS
   standalone: true, // Define que el componente puede funcionar de forma independiente (sin módulo específico)
   imports: [
-    HttpClientModule, // Importación de módulo para realizar peticiones HTTP
-    FormsModule, // Importación de módulo para trabajar con formularios
-    CommonModule, // Módulo común de Angular para herramientas generales
-    TituloComponent, // Componente para mostrar el título
-    TableComponent, // Componente para mostrar tablas
-    CatalogoSelectComponent, // Componente para seleccionar de un catálogo
+    HttpClientModule,  // Importación de módulo para realizar peticiones HTTP
+    FormsModule,  // Importación de módulo para trabajar con formularios
+    CommonModule,  // Módulo común de Angular para herramientas generales
+    TituloComponent,  // Componente para mostrar el título
+    TableComponent,  // Componente para mostrar tablas
+    CatalogoSelectComponent,TablaDinamicaComponent  // Componente para seleccionar de un catálogo
   ],
 })
 export class RequisitosComponent implements OnInit {
-  /**
-   * Array que contiene los tipos de documento cargados desde el JSON.
-   */
-  tipos: Tipos[] = [];
+// Se declara una variable llamada 'tipos', la cual es un arreglo (array) de objetos de tipo 'tipos'.
+// Aquí 'tipos' representa la estructura o tipo de datos que se manejarán en este componente.
+// En este caso, 'tipos' es una lista de objetos que contiene información sobre los tipos de documentos.
+tipos: Tipos[] = []; 
+
+// 'configuracionTabla' es una variable que almacena un arreglo de objetos de tipo 'ConfiguracionColumna'.
+// Cada objeto dentro de este arreglo tiene información sobre cómo debe ser configurada cada columna de la tabla.
+// 'ConfiguracionColumna<any>' es una interfaz que define las propiedades necesarias para configurar cada columna.
+
+configuracionTabla: ConfiguracionColumna<any>[] = [
+  {
+    // 'encabezado' es el nombre de la columna que se mostrará en el encabezado de la tabla.
+    encabezado: 'Tipo de Documento',
+
+    // 'clave' es una función que toma un objeto (en este caso un item de tipo 'any')
+    // y devuelve el valor que se mostrará en la celda de esa columna para cada fila.
+    clave: (item: any) => item.tiposdata,
+
+    // 'orden' define el orden de la columna en la tabla.
+    orden: 1
+  }
+];
+
+
+
+
 
   /**
    * Encabezado de la tabla de tipos de documento.

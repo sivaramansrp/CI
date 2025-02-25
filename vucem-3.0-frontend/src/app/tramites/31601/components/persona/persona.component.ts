@@ -8,6 +8,10 @@ import { map } from 'rxjs';
 import { Personas } from '../../../../core/models/31601/servicios-pantallas.model';
 import { ServiciosPantallaService } from '../../../../core/services/31601/servicios-pantalla.service';
 
+import { TablaDinamicaComponent } from '../../../../shared/components/tabla-dinamica/tabla-dinamica.component';
+import { ConfiguracionColumna } from '../../../../core/models/shared/configuracion-columna.model';
+
+
 /**
  * Componente `PersonaComponent`.
  * Este componente es responsable de manejar la interfaz relacionada con la visualización y carga de datos de personas.
@@ -36,7 +40,8 @@ import { ServiciosPantallaService } from '../../../../core/services/31601/servic
     HttpClientModule, // Importación de módulo para realizar peticiones HTTP
     FormsModule, // Importación de módulo para trabajar con formularios
     CommonModule, // Módulo común de Angular para herramientas generales
-    TituloComponent, // Componente para mostrar el título
+    TituloComponent,
+    TablaDinamicaComponent // Componente para mostrar el título
   ],
   templateUrl: './persona.component.html', // Ruta a la plantilla HTML
   styleUrl: './persona.component.scss', // Ruta al archivo de estilos SCSS
@@ -46,7 +51,14 @@ export class PersonaComponent implements OnInit {
    * Array que contiene los datos de las personas cargadas desde el archivo JSON.
    * @type {Personas[]}
    */
-  personaparas: Personas[] = [];
+personaparas: Personas[] = [];
+  configuracionTabla: ConfiguracionColumna<any>[] = [
+    { encabezado: 'RFC', clave: (item: any) => item.RFC, orden: 1 },
+    { encabezado: 'CURP', clave: (item: any) => item.CURP, orden: 2 },
+    { encabezado: 'Nombre', clave: (item: any) => item.Nombre, orden: 3 },
+    { encabezado: 'Apellido Paterno', clave: (item: any) => item.Apellido_paterno, orden: 4 },
+    { encabezado: 'Apellido Materno', clave: (item: any) => item.Apellido_materno, orden: 5 }
+  ];
 
   /**
    * Controla la visibilidad del contenido adicional.
