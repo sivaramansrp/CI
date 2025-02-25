@@ -1,13 +1,12 @@
 /* eslint-disable sort-imports */
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms'; 
 
 
 @NgModule({
-  declarations: [  
-  
+  declarations: [
+
   ],
   imports: [
     CommonModule,
