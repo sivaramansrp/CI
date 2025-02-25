@@ -1,8 +1,9 @@
 /* eslint-disable @angular-eslint/component-selector */
 /* eslint-disable @typescript-eslint/no-empty-function */
+import { CommonModule } from '@angular/common';
+
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { TableData } from '../../../core/models/shared/components.model';
-import { CommonModule } from '@angular/common';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, OnChanges {
   @Input() enableScrollbar: boolean = false;
   /**
    * @description 

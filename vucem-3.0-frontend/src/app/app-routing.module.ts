@@ -139,6 +139,13 @@ const routes: Routes = [
         (m) => m.FuncionarioModule
       ),
   },
+  {
+    path: 'aviso-de-materiales',
+    loadChildren: () =>
+      import('./tramites/231001/avisodemateriales.module').then(
+        (m) => m.AvisodematerialesModule
+      ),
+  },
 ];
 
 @NgModule({
