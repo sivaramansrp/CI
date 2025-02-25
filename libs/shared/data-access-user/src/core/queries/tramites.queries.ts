@@ -1,6 +1,6 @@
 import { Query } from '@datorama/akita';
-import { TramiteStore } from '../../estados/tramite.store';
-import { TramiteState } from '../../estados/tramite.store';
+import { TramiteStore } from 'apps/aga/src/app/application/estados/tramite.store';
+import { TramiteState } from 'apps/aga/src/app/application/estados/tramite.store';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -31,7 +31,7 @@ export class TramitesQueries extends Query<TramiteState> {
    * @returns Un string que contiene el número de trámite.
    */
   getTramite(): string {
-    return this.getValue()?.idTramite;
+    return this.getValue()?.idTramite ?? '';
   }
 
   /**
@@ -39,6 +39,6 @@ export class TramitesQueries extends Query<TramiteState> {
    * @returns Un string que contiene la firma.
    */
   getFirma(): string {
-    return this.getValue()?.firma;
+    return this.getValue()?.firma ?? '';
   }
 }

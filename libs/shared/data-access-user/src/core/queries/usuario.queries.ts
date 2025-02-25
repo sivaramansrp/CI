@@ -1,6 +1,6 @@
 import { Query } from '@datorama/akita';
-import { UsuarioState } from '../../estados/usuario.store';
-import { UsuarioStore } from '../../estados/usuario.store';
+import { UsuarioState } from 'apps/login/src/app/estados/usuario.store';
+import { UsuarioStore } from 'apps/login/src/app/estados/usuario.store';
 
 export class SessionQuery extends Query<UsuarioState> {
 
@@ -36,6 +36,6 @@ export class SessionQuery extends Query<UsuarioState> {
      * @returns Un string que contiene el nombre completo.
      */
     getUserName(): string {
-        return this.getValue()?.perfilUsuario.nombreCompleto;
+        return this.getValue()?.perfilUsuario?.nombreCompleto ?? '';
     }
 }

@@ -11,7 +11,7 @@ import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputHoraComponent } from '@ng-mf/data-access-user';
 import { NavComponent } from '@ng-mf/data-access-user';
-import { NgModule } from '@angular/core';
+import { forwardRef, NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -30,6 +30,11 @@ import { TercerosComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { DetalleTramiteComponent } from './components/detalle-tramite/detalle-tramite.component';
+import { GeneraDictamenComponent } from './components/genera-dictamen/genera-dictamen.component';
+import { RequerimientoInformacionComponent } from './components/requerimiento-informacion/requerimiento-informacion.component';
+import { DocumentosExistentesComponent } from './components/documentos-existentes/documentos-existentes.component';
+import { EvaluarDictamenComponent } from './pages/evaluar-dictamen/evaluar-dictamen.component';
 
 @NgModule({
   declarations: [
@@ -38,36 +43,41 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
+    DetalleTramiteComponent,
+    GeneraDictamenComponent,
+    EvaluarDictamenComponent,
+    RequerimientoInformacionComponent,
+    DocumentosExistentesComponent
   ],
   imports: [
-    TercerosComponent,
-    AgregaPersonasComponent,
-    AgregarTransporteComponent,
-    AlertComponent,
-    AnexarDocumentosComponent,
-    BtnContinuarComponent,
-    CatalogoSelectComponent,
+    forwardRef(() => TercerosComponent),
+    forwardRef(() => AgregaPersonasComponent),
+    forwardRef(() =>AgregarTransporteComponent),
+    forwardRef(() =>AlertComponent),
+    forwardRef(() => AnexarDocumentosComponent),
+    forwardRef(() => BtnContinuarComponent),
+    forwardRef(() => CatalogoSelectComponent),
     CommonModule,
-    CrosslistComponent,
-    FirmaElectronicaComponent,
-    InputCheckComponent,
-    InputFechaComponent,
-    InputHoraComponent,
-    NavComponent,
-    PedimentoComponent,
+    forwardRef(() => CrosslistComponent),
+    forwardRef(() => FirmaElectronicaComponent),
+    forwardRef(() => InputCheckComponent),
+    forwardRef(() => InputFechaComponent),
+    forwardRef(() => InputHoraComponent),
+    forwardRef(() => NavComponent),
+    forwardRef(() => PedimentoComponent),
     ReactiveFormsModule,
-    RepresentanteFiscalComponent,
+    forwardRef(() => RepresentanteFiscalComponent),
     RouterModule,
-    SelectCatalogosComponent,
-    SelectPaisesComponent,
+    forwardRef(() => SelectCatalogosComponent),
+    forwardRef(() => SelectPaisesComponent),
     ServiciosExtraordinariosRoutingModule,
     SharedModule,
-    SolicitanteComponent,
-    TituloComponent,
-    WizardComponent,
+    forwardRef(() => SolicitanteComponent),
+    forwardRef(() => TituloComponent),
+    forwardRef(() => WizardComponent),
     ToastrModule.forRoot()
   ],
-  exports: [SolicitudComponent],
+  exports: [],
   providers: [
     ToastrService,
     CatalogosService

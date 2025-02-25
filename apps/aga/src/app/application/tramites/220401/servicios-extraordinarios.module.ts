@@ -10,7 +10,7 @@ import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputHoraComponent } from '@ng-mf/data-access-user';
 import { NavComponent } from '@ng-mf/data-access-user';
-import { NgModule } from '@angular/core';
+import { forwardRef, NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteFiscalComponent } from '@ng-mf/data-access-user';
 import { RouterModule } from '@angular/router';
@@ -22,36 +22,37 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TercerosComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { provideToastr, ToastrModule, ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
   ],
   imports: [
-    TercerosComponent,
-    AgregarTransporteComponent,
-    AlertComponent,
-    AnexarDocumentosComponent,
-    BtnContinuarComponent,
-    CatalogoSelectComponent,
-    CommonModule,
-    CrosslistComponent,
-    FirmaElectronicaComponent,
-    InputCheckComponent,
-    InputFechaComponent,
-    InputHoraComponent,
-    NavComponent,
-    ReactiveFormsModule,
-    RepresentanteFiscalComponent,
-    RouterModule,
-    SelectCatalogosComponent,
-    SelectPaisesComponent,
-    ServiciosExtraordinariosRoutingModule,
-    SharedModule,
-    SolicitanteComponent,
-    TituloComponent,
-    WizardComponent,
-    ToastrModule.forRoot()
+    forwardRef(() => TercerosComponent),
+        forwardRef(() => AgregarTransporteComponent),
+        forwardRef(() =>AgregarTransporteComponent),
+        forwardRef(() =>AlertComponent),
+        forwardRef(() => AnexarDocumentosComponent),
+        forwardRef(() => BtnContinuarComponent),
+        forwardRef(() => CatalogoSelectComponent),
+        CommonModule,
+        forwardRef(() => CrosslistComponent),
+        forwardRef(() => FirmaElectronicaComponent),
+        forwardRef(() => InputCheckComponent),
+        forwardRef(() => InputFechaComponent),
+        forwardRef(() => InputHoraComponent),
+        forwardRef(() => NavComponent),
+        ReactiveFormsModule,
+        forwardRef(() => RepresentanteFiscalComponent),
+        RouterModule,
+        forwardRef(() => SelectCatalogosComponent),
+        forwardRef(() => SelectPaisesComponent),
+        ServiciosExtraordinariosRoutingModule,
+        SharedModule,
+        forwardRef(() => SolicitanteComponent),
+        forwardRef(() => TituloComponent),
+        forwardRef(() => WizardComponent),
+        ToastrModule.forRoot(),
   ],
   exports: [],
   providers: [

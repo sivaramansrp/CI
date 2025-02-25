@@ -8,8 +8,9 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2015",
+    "target": "ES2022",
     "module": "esnext",
+    "useDefineForClassFields": false,
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
@@ -22,7 +23,8 @@
         "apps/agriculture/src/app/remote-entry/entry.routes.ts"
       ],
       "login/Routes": ["apps/login/src/app/remote-entry/entry.routes.ts"],
-      "se/Routes": ["apps/se/src/app/remote-entry/entry.routes.ts"]
+      "se/Routes": ["apps/se/src/app/remote-entry/entry.routes.ts"],
+      "semarnat/Routes": ["apps/semarnat/src/app/remote-entry/entry.routes.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
