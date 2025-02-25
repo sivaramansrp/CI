@@ -141,18 +141,23 @@ isInvalid(id: string): boolean | null {
     this.destroyed$.complete();
   }
 
-  // getValorIndice(e: AccionBoton) {
-  //   if (e.valor > 0 && e.valor < 5) {
-  //     this.indice = e.valor;
-  //     if (this.wizardComponent) {
-  //       if (e.accion === 'cont') {
-  //         this.wizardComponent.siguiente();
-  //       } else {
-  //         this.wizardComponent.atras();
-  //       }
-  //     } else {
-  //       console.error('wizardComponent is not initialized');
-  //     }
-  //   }
-  // }
+  getValorIndice(e: AccionBoton) {
+    console.log("e",e)
+    console.log("e valor",e.valor)
+
+    if (e.valor > 0 && e.valor < 5) {
+      console.log("first if loop")
+      this.indice = e.valor;
+      if (this.wizardComponent) {
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
+      } else {
+        console.error('wizardComponent is not initialized');
+      }
+    }
+
+  }
 }
