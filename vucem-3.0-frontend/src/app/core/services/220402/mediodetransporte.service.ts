@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class MediodetransporteService {
-  private readonly url = './assets/json/220401/mediodetransporte.json';
+  private readonly url = './assets/json/220402/mediodetransporte.json';
 
   constructor(private http: HttpClient) {}
 
