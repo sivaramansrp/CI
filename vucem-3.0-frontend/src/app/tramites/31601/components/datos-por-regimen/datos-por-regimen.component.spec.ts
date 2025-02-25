@@ -18,30 +18,61 @@ describe('DatosPorRegimenComponent', () => {
   let tramite31601Store: jasmine.SpyObj<Tramite31601Store>;
 
   beforeEach(async () => {
-    const validacionesServiceSpy = jasmine.createSpyObj('ValidacionesFormularioService', ['isValid']);
-    const pantallaSvcSpy = jasmine.createSpyObj('ServiciosPantallaService', ['getBimestreOneCatalog','getBimestreTwoCatalog','getBimestreThreeCatalog']);
-    const tramite31601StoreSpy = jasmine.createSpyObj('Tramite31601Store', ['setComboBimestresOne', 'setComboBimestresTwo', 'setComboBimestresThree']);
+    const validacionesServiceSpy = jasmine.createSpyObj(
+      'ValidacionesFormularioService',
+      ['isValid']
+    );
+    const pantallaSvcSpy = jasmine.createSpyObj('ServiciosPantallaService', [
+      'getBimestreUnoCatalogo',
+      'getBimestreDosCatalogo',
+      'getBimestreTresCatalogo',
+    ]);
+    const tramite31601StoreSpy = jasmine.createSpyObj('Tramite31601Store', [
+      'setComboBimestresOne',
+      'setComboBimestresTwo',
+      'setComboBimestresThree',
+    ]);
 
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [ReactiveFormsModule,DatosPorRegimenComponent,TituloComponent, CatalogoSelectComponent, TableComponent],
+      imports: [
+        ReactiveFormsModule,
+        DatosPorRegimenComponent,
+        TituloComponent,
+        CatalogoSelectComponent,
+        TableComponent,
+      ],
       providers: [
-        { provide: ValidacionesFormularioService, useValue: validacionesServiceSpy },
+        {
+          provide: ValidacionesFormularioService,
+          useValue: validacionesServiceSpy,
+        },
         { provide: ServiciosPantallaService, useValue: pantallaSvcSpy },
-        { provide: Tramite31601Store, useValue: tramite31601StoreSpy }
-      ]
-    })
-    .compileComponents();
+        { provide: Tramite31601Store, useValue: tramite31601StoreSpy },
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DatosPorRegimenComponent);
     component = fixture.componentInstance;
-    validacionesService = TestBed.inject(ValidacionesFormularioService) as jasmine.SpyObj<ValidacionesFormularioService>;
-    pantallaSvc = TestBed.inject(ServiciosPantallaService) as jasmine.SpyObj<ServiciosPantallaService>;
-    tramite31601Store = TestBed.inject(Tramite31601Store) as jasmine.SpyObj<Tramite31601Store>;
+    validacionesService = TestBed.inject(
+      ValidacionesFormularioService
+    ) as jasmine.SpyObj<ValidacionesFormularioService>;
+    pantallaSvc = TestBed.inject(
+      ServiciosPantallaService
+    ) as jasmine.SpyObj<ServiciosPantallaService>;
+    tramite31601Store = TestBed.inject(
+      Tramite31601Store
+    ) as jasmine.SpyObj<Tramite31601Store>;
 
-    pantallaSvc.getBimestreOneCatalog.and.returnValue(of({ code: 200, message: 'Success', data: [] }));
-    pantallaSvc.getBimestreTwoCatalog.and.returnValue(of({ code: 200, message: 'Success', data: [] }));
-    pantallaSvc.getBimestreThreeCatalog.and.returnValue(of({ code: 200, message: 'Success', data: [] }));
+    pantallaSvc.getBimestreUnoCatalogo.and.returnValue(
+      of({ code: 200, message: 'Success', data: [] })
+    );
+    pantallaSvc.getBimestreDosCatalogo.and.returnValue(
+      of({ code: 200, message: 'Success', data: [] })
+    );
+    pantallaSvc.getBimestreTresCatalogo.and.returnValue(
+      of({ code: 200, message: 'Success', data: [] })
+    );
 
     fixture.detectChanges();
   });
@@ -51,7 +82,7 @@ describe('DatosPorRegimenComponent', () => {
   });
 
   it('should initialize one catalogs on init', () => {
-    expect(pantallaSvc.getBimestreOneCatalog).toHaveBeenCalledTimes(3);
+    expect(pantallaSvc.getBimestreUnoCatalogo).toHaveBeenCalledTimes(3);
   });
 
   it('should initialize form on creation', () => {
@@ -72,21 +103,30 @@ describe('DatosPorRegimenComponent', () => {
   it('should validate form fields', () => {
     validacionesService.isValid.and.returnValue(true);
     expect(component.isValid('importaciones')).toBeTrue();
-    expect(validacionesService.isValid).toHaveBeenCalledWith(component.regimenForm, 'importaciones');
+    expect(validacionesService.isValid).toHaveBeenCalledWith(
+      component.regimenForm,
+      'importaciones'
+    );
   });
 
   it('should handle bimestre selections', () => {
     component.regimenForm.get('comboBimestresOne')?.setValue('Bimestre 1');
-    component.bimestreOneSeleccion();
-    expect(tramite31601Store.setComboBimestresOne).toHaveBeenCalledWith('Bimestre 1');
+    component.bimestreUnoSeleccion();
+    expect(tramite31601Store.setComboBimestresOne).toHaveBeenCalledWith(
+      'Bimestre 1'
+    );
 
     component.regimenForm.get('comboBimestresTwo')?.setValue('Bimestre 2');
-    component.bimestreTwoSeleccion();
-    expect(tramite31601Store.setComboBimestresTwo).toHaveBeenCalledWith('Bimestre 2');
+    component.bimestreDosSeleccion();
+    expect(tramite31601Store.setComboBimestresTwo).toHaveBeenCalledWith(
+      'Bimestre 2'
+    );
 
     component.regimenForm.get('comboBimestresThree')?.setValue('Bimestre 3');
-    component.bimestreThreeSeleccion();
-    expect(tramite31601Store.setComboBimestresThree).toHaveBeenCalledWith('Bimestre 3');
+    component.bimestreTresSeleccion();
+    expect(tramite31601Store.setComboBimestresThree).toHaveBeenCalledWith(
+      'Bimestre 3'
+    );
   });
 
   it('should open modal and initialize form', () => {

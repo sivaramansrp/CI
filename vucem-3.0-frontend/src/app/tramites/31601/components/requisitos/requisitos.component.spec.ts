@@ -7,7 +7,7 @@ import { TableComponent } from '../../../../shared/components/table/table.compon
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { tipos } from '../../../../core/models/31601/servicios-pantallas.model';
+import { Tipos } from '../../../../core/models/31601/servicios-pantallas.model';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -15,8 +15,8 @@ import { CommonModule } from '@angular/common';
 class MockServiciosPantallaService {
   getTiposCatalog() {
     return of([
-      { tiposdata: 'Tipo Document 1' },
-      { tiposdata: 'Tipo Document 2' }
+      { tiposData: 'Tipo Document 1' },
+      { tiposData: 'Tipo Document 2' },
     ]);
   }
 
@@ -25,8 +25,8 @@ class MockServiciosPantallaService {
       code: 200,
       message: 'Success',
       data: [
-        { id: 1, descripcion: 'Catalogo 1', tam: 'A4', dpi: '300' } as Catalogo
-      ]
+        { id: 1, descripcion: 'Catalogo 1', tam: 'A4', dpi: '300' } as Catalogo,
+      ],
     });
   }
 }
@@ -42,11 +42,18 @@ fdescribe('RequisitosComponent', () => {
       imports: [
         HttpClientModule,
         FormsModule,
-        CommonModule,RequisitosComponent, TituloComponent, TableComponent, CatalogoSelectComponent
+        CommonModule,
+        RequisitosComponent,
+        TituloComponent,
+        TableComponent,
+        CatalogoSelectComponent,
       ],
       providers: [
-        { provide: ServiciosPantallaService, useClass: MockServiciosPantallaService }
-      ]
+        {
+          provide: ServiciosPantallaService,
+          useClass: MockServiciosPantallaService,
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RequisitosComponent);
@@ -64,15 +71,17 @@ fdescribe('RequisitosComponent', () => {
 
     // Validate the values from mock service
     expect(component.tipos).toEqual([
-      { tiposdata: 'Tipo Document 1' },
-      { tiposdata: 'Tipo Document 2' }
+      { tiposData: 'Tipo Document 1' },
+      { tiposData: 'Tipo Document 2' },
     ]);
 
     expect(component.tipocatlog).toEqual([
-      { id: 1, descripcion: 'Catalogo 1', tam: 'A4', dpi: '300' }
+      { id: 1, descripcion: 'Catalogo 1', tam: 'A4', dpi: '300' },
     ]);
 
-    expect(component.tipoHeaderData).toEqual(component.tipoTableData.tableHeader);
+    expect(component.tipoHeaderData).toEqual(
+      component.tipoTableData.tableHeader
+    );
   });
 
   it('should toggle showContent', () => {

@@ -5,7 +5,7 @@
   overflow-x: auto;  /* Horizontal scrolling if table is wider than container */
 }
 
-::ng-deep table th {
+::ng-deep table th, table td {
   text-align: center;
 }
 
@@ -23,6 +23,7 @@
     border: 1px solid #ccc;
     padding: 10px;
   }
+  
   
   
   .plus-icon {

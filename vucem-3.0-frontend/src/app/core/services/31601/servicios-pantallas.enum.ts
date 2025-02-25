@@ -1,4 +1,4 @@
-export const PANTAPASOS = [
+export const PANTA_PASOS = [
   {
     indice: 1,
     titulo: 'Capturar solicitud',

@@ -14,7 +14,13 @@ fdescribe('EnlaceComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [ReactiveFormsModule, FormsModule,EnlaceComponent, TableComponent, TituloComponent],
+      imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        EnlaceComponent,
+        TableComponent,
+        TituloComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EnlaceComponent);
@@ -31,20 +37,23 @@ fdescribe('EnlaceComponent', () => {
     component.ngOnInit();
     expect(component.represtantante).toBeTruthy();
     expect(component.represtantante.controls['resigtro']).toBeTruthy();
-    expect(component.represtantante.controls['RFC']).toBeTruthy();
-    expect(component.represtantante.controls['Nombre']).toBeTruthy();
+    expect(component.represtantante.controls['rfc']).toBeTruthy();
+    expect(component.represtantante.controls['nombre']).toBeTruthy();
     // check all form controls
   });
-
 
   it('should disable specific form controls when patchData is called', () => {
     component.ngOnInit();
     component.patchData();
-    expect(component.represtantante.get('RFC')?.disabled).toBeTrue();
-    expect(component.represtantante.get('Nombre')?.disabled).toBeTrue();
-    expect(component.represtantante.get('ApellidoPaterno')?.disabled).toBeTrue();
-    expect(component.represtantante.get('ApellidoMaterno')?.disabled).toBeTrue();
-    expect(component.represtantante.get('Cuidad')?.disabled).toBeTrue();
+    expect(component.represtantante.get('rfc')?.disabled).toBeTrue();
+    expect(component.represtantante.get('nombre')?.disabled).toBeTrue();
+    expect(
+      component.represtantante.get('apellidoPaterno')?.disabled
+    ).toBeTrue();
+    expect(
+      component.represtantante.get('apellidoMaterno')?.disabled
+    ).toBeTrue();
+    expect(component.represtantante.get('cuidad')?.disabled).toBeTrue();
   });
 
   it('should set modal value to "show" when abrirModal is called', () => {
@@ -52,15 +61,17 @@ fdescribe('EnlaceComponent', () => {
     expect(component.modal).toBe('show');
   });
 
-  it('should call getregistroForm when abrirModal is called', () => {
-    spyOn(component, 'getregistroForm');
+  it('should call getRegistroForm when abrirModal is called', () => {
+    spyOn(component, 'getRegistroForm');
     component.abrirModal();
-    expect(component.getregistroForm).toHaveBeenCalled();
+    expect(component.getRegistroForm).toHaveBeenCalled();
   });
 
   it('should update enlaceHeaderData when getEnlace is called', () => {
     component.getEnlace();
-    expect(component.enlaceHeaderData).toEqual(component.enlaceTableData.tableHeader);
+    expect(component.enlaceHeaderData).toEqual(
+      component.enlaceTableData.tableHeader
+    );
   });
 
   it('should render the form inputs and buttons correctly', () => {
@@ -72,7 +83,8 @@ fdescribe('EnlaceComponent', () => {
 
   it('should display the modal when "Abrir Modal" button is clicked', () => {
     fixture.detectChanges();
-    const modalButton: HTMLElement = fixture.nativeElement.querySelector('button');
+    const modalButton: HTMLElement =
+      fixture.nativeElement.querySelector('button');
     modalButton.click();
     fixture.detectChanges();
     const modal = fixture.nativeElement.querySelector('.modal');

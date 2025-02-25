@@ -17,7 +17,12 @@ import {
 
 import preOperativo from '../../../../../assets/json/31601/preOperativo.json';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
 import productivo from '../../../../../assets/json/31601/productivo.json';
 import serviciosAgace from '../../../../../assets/json/31601/serviciosAgace.json';
@@ -31,12 +36,13 @@ import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import establecimientoTable from '../../../../../assets/json/220401/establecimiento-table.json';
 
-import empleadosSubcontratación from '../../../../../assets/json/31601/empleadosSubcontratación.json';
+import empleadosSubcontratacion from '../../../../../assets/json/31601/empleadosSubcontratacion.json';
 
 import applicantRegistrados from '../../../../../assets/json/31601/applicantRegistrados.json';
 
 import destinatarioTable from '../../../../../assets/json/220401/destinatario-table.json';
 import entidadFederativa from '../../../../../assets/json/31601/entidadFederative.json';
+import prejson from '../../../../../assets/json/31601/prejson.json';
 
 import controlInventarios from '../../../../../assets/json/31601/controlInventarios.json';
 
@@ -45,6 +51,7 @@ import Instalaciones from '../../../../../assets/json/31601/Instalaciones.json';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 
 import { Modal } from 'bootstrap';
+import { REGEX_RFC } from '../../../../shared/constantes/regex.constants';
 import { TablePaginationComponent } from '../../../../shared/components/table-pagination/table-pagination.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
@@ -74,6 +81,16 @@ import { AgregarMiembroDeLaEmpresaComponent } from '../agregar-miembro-de-la-emp
   ],
 })
 export class AduaneroComponent implements OnInit, AfterViewInit {
+  /**
+   * Almacena los datos de descripción en un formato predefinido.
+   */
+  descriptionData = prejson;
+
+  /**
+   * Contiene la descripción en texto.
+   */
+  description: string = '';
+
   /**
    * compo doc
    * @property {ElementRef} modifyModal
@@ -203,10 +220,10 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
 
   /**
    *  compo doc
-   * @property {any} empleadosSubcontratación
+   * @property {any} empleadosSubcontratacion
    * Datos de empleados bajo subcontratación.
    */
-  public empleadosSubcontratación = empleadosSubcontratación;
+  public empleadosSubcontratacion = empleadosSubcontratacion;
 
   /**
    *  compo doc
@@ -299,8 +316,8 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
    */
   public InstalacionesBodyData: any[] = [];
   /*
-  *constructor
-  */
+   *constructor
+   */
   constructor(private fb: FormBuilder) {}
 
   /**
@@ -310,63 +327,79 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.preOperativeForm = this.fb.group({
       authorizationIVAIEPS: ['', Validators.required],
-      preOperativo:['',Validators.required],
+      preOperativo: ['', Validators.required],
       IndiqueSi: ['', Validators.required],
       Senale: ['', Validators.required],
       SenaleSi: ['', Validators.required],
       seMomento: ['', Validators.required],
-      cumplir: ['', Validators.required] ,
-      indique: ['', Validators.required] ,
+      cumplir: ['', Validators.required],
+      indique: ['', Validators.required],
       encuentra: ['', Validators.required],
-      delMismo: ['', Validators.required] ,
-      senaleMomento: ['', Validators.required] ,
-      enCaso: ['', Validators.required] ,
+      delMismo: ['', Validators.required],
+      senaleMomento: ['', Validators.required],
+      enCaso: ['', Validators.required],
       ingresar: ['', Validators.required],
       encuentraSus: ['', Validators.required],
       momentoIngresar: ['', Validators.required],
       indiqueCuenta: ['', Validators.required],
-      inputOne: ['', [Validators.required, Validators.minLength(3)]],
-      inputTwo: ['', [Validators.required, Validators.minLength(3)]],
-      contabilidad: ['', Validators.required] ,
+      nombredel: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(250),
+        ],
+      ],
+      lugarDeRadicacion: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(250),
+        ],
+      ],
+      contabilidad: ['', Validators.required],
       rmfRadio: ['', Validators.required],
-      vinculacionRegistroCancelado: ['', Validators.required] ,
+      vinculacionRegistroCancelado: ['', Validators.required],
       proveedoresListadoSAT: ['', Validators.required],
       numeroAutorizacionCITES: [
         '',
         [
           Validators.required, // Required field
-          Validators.pattern(
-            /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/ // RFC format validation
-          )
-        ]
+          Validators.pattern(REGEX_RFC),
+        ],
       ],
       rfc: [
         '',
         [
           Validators.required, // Required field
-          Validators.pattern(
-            /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/ // RFC format validation
-          )
-        ]
+          Validators.pattern(REGEX_RFC),
+        ],
       ],
       razonSocial: [
         '',
         [
           Validators.required, // Required field
           Validators.minLength(3), // Minimum length of 3 characters
-          
-        ]
+        ],
       ],
       numeroEmpleados: [
         '',
         [
           Validators.required, // Required field
           Validators.pattern(/^[0-9]+$/), // Only allows numbers
-        
-        ]
-      ]
-      
-
+        ],
+      ],
+      empleadosPropios: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^[0-9]+$'), // Only allows numbers
+          Validators.min(1), // Minimum value 1
+          Validators.max(99999999), // Maximum value 8 digits
+          Validators.maxLength(8), // Ensures a maximum of 8 characters
+        ],
+      ],
     });
     this.getEstablecimiento();
     this.getEmpleadosData();
@@ -382,7 +415,6 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
     // Inicializa el modal de modificación
     if (this.modifyModal) {
       this.modalInstance = new Modal(this.modifyModal.nativeElement);
-      console.log('Modify Modal Initialized:', this.modalInstance);
     }
 
     // Inicializa el modal de instalaciones
@@ -424,8 +456,8 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
    * Obtiene y asigna los datos de empleados desde el JSON.
    */
   public getEmpleadosData() {
-    this.empleadosHeaderData = this.empleadosSubcontratación.tableHeader;
-    this.empleadosBodyData = this.empleadosSubcontratación.tableBody;
+    this.empleadosHeaderData = this.empleadosSubcontratacion.tableHeader;
+    this.empleadosBodyData = this.empleadosSubcontratacion.tableBody;
   }
 
   /**
@@ -479,10 +511,8 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
    * @param {number} itemsPerPage - Número de elementos a mostrar por página.
    */
   onItemsPerPageChange(itemsPerPage: number) {
-    console.log('Items per page changed to:', itemsPerPage);
     this.itemsPerPage = itemsPerPage;
     this.currentPage = 1;
     this.updatePagination();
   }
-
 }

@@ -1,28 +1,19 @@
 <div class="mt-4">
   <form [formGroup]="preOperativeForm">
     <!-- Preoperativo Section -->
-    <div id="preoperativoA" class="w-100 p-3">
+    <div class="w-100 p-3">
       <div class="form-group">
-        <div class="mb-3">
-          <span class="require">*</span>
-          <label class="form-label fw-bold mb-3" for="authorizationIVAIEPS">
-            ¿Desea obtener la autorización del Esquema Integral modalidad IVA e
-            IEPS, como pre-operativo?
-          </label>
-          <label class="text-muted small" for="">
-            (El período pre-operativo únicamente podrá ser solicitado por única
-            ocasión de conformidad con la regla 7.1.2 y el mismo deberá ser
-            solicitado al momento del llenado de la presente solicitud, no podrá
-            solicitarlo posteriormente.)
-          </label>
-        </div>
-
         <!-- Input Radio Component -->
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio1.description"
+          [showDescription]="true"
+          formControlName="authorizationIVAIEPS"
         ></app-input-radio>
         <div
           *ngIf="
@@ -61,7 +52,7 @@
                 value="1"
               />
               <label class="form-check-label" for="regimen_0">
-                Importación temporal para la elaboración, aansformación o
+                Importación temporal para la elaboración, transformación o
                 reparación en programas de maquila o de exportación (IMMEX)
               </label>
               <div class="d-none">
@@ -172,16 +163,16 @@
 
     <div class="w-100 p-3 mt-4">
       <div class="mt-4 form-group">
-        <label class="fw-bold" for="preOperativo">
-          <span class="require">* </span>
-          Senale si al momento de ingresar su solicitid si se encuentra al
-          corriente en el cumplomiento de sus onligaciones fiscales y aduaneras
-        </label>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio2.description"
+          [showDescription]="true"
+          formControlName="preOperativo"
         ></app-input-radio>
         <div
           *ngIf="
@@ -195,16 +186,16 @@
       </div>
 
       <div class="mt-4 form-group">
-        <label class="fw-bold" for="IndiqueSi">
-          <span class="require">* </span>
-          Indique si autorizo al S A T hacer publica su opinion positiva sobre
-          el cumplimiento de obligaciones fiscales
-        </label>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio3.description"
+          [showDescription]="true"
+          formControlName="IndiqueSi"
         ></app-input-radio>
         <div
           *ngIf="
@@ -217,15 +208,16 @@
         </div>
       </div>
       <div class="mt-4 mb-5">
-        <label class="fw-bold form-group" for="Senale">
-          <span class="require">* </span>
-          Senale si cuenta con empleados propios
-        </label>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio4.description"
+          [showDescription]="true"
+          formControlName="Senale"
         ></app-input-radio>
         <div
           *ngIf="
@@ -240,11 +232,11 @@
       <div class="alert alert-danger mt-3 mb-5">
         <h6 class="mb-0">
           <strong>Nota:</strong> En el caso de la Modalidad de IVA e IEPS,
-          tendra que contar con al meanos 10 trabajadores registrados.
+          tendrá que contar con al meanos 10 trabajadores registrados.
         </h6>
       </div>
       <label class="fw-bold mb-5" for="">
-        Cual es el numero de empleados propios con los que conto en el ultimo
+        Cual es el número de empleados propios con los que contó en el último
         bimestre anterior a su solicitud
       </label>
 
@@ -259,7 +251,7 @@
               type="text"
               class="form-control"
               id="empPropios"
-              name="empleadosPropios"
+              name="empPropios"
               maxlength="8"
             />
           </div>
@@ -275,17 +267,16 @@
         <div class="col-md-1"></div>
       </div>
       <div class="mt-4 mb-5">
-        <label class="fw-bold form-group" for="SenaleSi">
-          <span class="require">* </span>
-          Se&nale si al momento de ingresar su solicitud la empresa solicitante
-          cuenta con trabajadores subcontratados en los t&erminos y condiciones
-          que establecen 12-A al 15- D de la Ley Federal de Trabajao
-        </label>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio5.description"
+          [showDescription]="true"
+          formControlName="SenaleSi"
         ></app-input-radio>
         <div
           *ngIf="
@@ -335,17 +326,17 @@
           Eliminar
         </button>
       </div>
-      <div class="mt-4 form-group" for="seMomento">
-        <label class="fw-bold" for="">
-          <span class="require">* </span>
-          Se&nale si al momento de ingresar su solicitud la empresa solicitante
-          cuenta ............................
-        </label>
+      <div class="mt-4 form-group">
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio6.description"
+          [showDescription]="true"
+          formControlName="seMomento"
         ></app-input-radio>
         <div
           *ngIf="
@@ -358,16 +349,16 @@
         </div>
       </div>
       <div class="mt-4 form-group">
-        <label class="fw-bold" for="cumplir">
-          <span class="require">* </span>
-          En su caso acredite cumplir con lo establecido en el articulo 27,
-          fracc&on V, tercer p&arrafo de la Ley del ISR
-        </label>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio7.description"
+          [showDescription]="true"
+          formControlName="cumplir"
         ></app-input-radio>
         <div
           *ngIf="
@@ -382,15 +373,16 @@
     </div>
     <div class="w-100 p-3">
       <div class="mt-4 form-group" for="indique">
-        <label class="fw-bold" for="">
-          <span class="require">* </span>
-          Indique si ............................................ Trabajio
-        </label>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio8.description"
+          [showDescription]="true"
+          formControlName="indique"
         ></app-input-radio>
         <div
           *ngIf="
@@ -406,19 +398,16 @@
 
     <div class="w-100 p-3">
       <div class="mb-3 form-group">
-        <label class="fw-bold" for="encuentra">
-          <span class="require">*</span>
-          Indique si se encuentra en el listado de empresas publicadas por el
-          SAT en términos de los artículos 69 0 69-B Bis, noveno párrafo, con
-          excepción de lo dispuesto en el 69 fracción VI y 69-B, cuarto párrafo,
-          del Código Fiscal Federal.
-        </label>
-
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio9.description"
+          [showDescription]="true"
+          formControlName="encuentra"
         ></app-input-radio>
         <div
           *ngIf="
@@ -431,18 +420,16 @@
         </div>
       </div>
       <div class="mb-3 form-group">
-        <label class="fw-bold" for="delMiso">
-          <span class="require">*</span>
-          Del mismo modo indique si al momento de ingresar su solicitud se
-          encuentra en el listado de empresas publicadas por el SAT en términos
-          de los articulos y 69-B, cuarto párrafo del Código.
-        </label>
-
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio10.description"
+          [showDescription]="true"
+          formControlName="delMismo"
         ></app-input-radio>
         <div
           *ngIf="
@@ -455,17 +442,16 @@
         </div>
       </div>
       <div class="mb-3 form-group">
-        <label class="fw-bold" for="senaleMomento">
-          <span class="require">*</span>
-          Señale si al momento de ingresar su solicitud sus certificados de
-          sellos digitales están vigentes.
-        </label>
-
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio11.description"
+          [showDescription]="true"
+          formControlName="senaleMomento"
         ></app-input-radio>
         <div
           *ngIf="
@@ -478,18 +464,16 @@
         </div>
       </div>
       <div class="mb-3 form-group">
-        <label class="fw-bold" for="enCaso">
-          <span class="require">*</span>
-          En caso afirmativo señale si se infringió alguno de los supuestos
-          previstos en el artículo 17-H, Bis del Código, durante los últimos 12
-          meses, contados a partir de la fecha de presentación de la solicitud.
-        </label>
-
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio12.description"
+          [showDescription]="true"
+          formControlName="enCaso"
         ></app-input-radio>
         <div
           *ngIf="
@@ -519,7 +503,7 @@
         <h6 class="mb-0">
           <strong>Nota:</strong> De contar con un programa IMMEX activo y
           vigente al momento de ingresar la solicitud, se mostrarán los
-          domicilias registrados ante la Secretaria de Economia. Así mismo,
+          domicilios registrados ante la Secretaría de Economía. Así mismo,
           podrá incluir otros domicilios que se encuentren relacionados con el
           RFC del solicitante, dando click en el botón "Agregar" y seleccionado
           la Entidad Federativa.
@@ -556,16 +540,16 @@
     </div>
     <div class="w-100 p-3">
       <div class="mt-4 form-group">
-        <label class="fw-bold" for="ingresar">
-          <span class="require">* </span>
-          Señale si al momento de ingresar sus solicitud tiene actualizado su
-          correo electrónico para efectos del Buzón Tributario
-        </label>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio13.description"
+          [showDescription]="true"
+          formControlName="ingresar"
         ></app-input-radio>
         <div
           *ngIf="
@@ -578,17 +562,16 @@
         </div>
       </div>
       <div class="mt-4 form-group">
-        <label class="fw-bold" for="encuentraSus">
-          <span class="require">* </span>
-          Señale si se encuentra suspendida en el Padrón de Importadores o en el
-          Padrón de Importadores de Sectores Específicos o Padrón de
-          Exportadores Sectorial.
-        </label>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio14.description"
+          [showDescription]="true"
+          formControlName="encuentraSus"
         ></app-input-radio>
         <div
           *ngIf="
@@ -603,11 +586,8 @@
     </div>
     <div class="w-100 p-3">
       <div class="mb-3">
-        <!-- <label for="archivoNacionales" class="form-label fw-bold" for=""
-          >Clientes y Proveedores en el Extranjero</label
-        > -->
         <ng-titulo titulo="Clientes y Proveedores en el Extranjero"></ng-titulo>
-        <div class=" mt-3">
+        <div class="mt-3">
           <div class="col-12">
             <label class="" for=""
               >Anexar archivo con la totalidad de sus clientes y proveedores en
@@ -660,16 +640,16 @@
         > -->
 
         <ng-titulo titulo="Proveedores"></ng-titulo>
-        <div class=" mt-3">
+        <div class="mt-3">
           <div class="col-12">
-            <label class="form-label" for="">
+            <label class="form-label text-justify" for="">
               Anexe un archivo que contenga el RFC de sus proveedores de insumos
-              adquiridos en territorio nacional, vinculados al
+              adquiridos en territorio nacional, vinculados al proceso bajo el
+              régimen que solicita, de los últimos 12 meses.
             </label>
           </div>
           <label class="form-label text-justify" for="">
-            proceso bajo el régimen que solicita, de los últimos 12 meses. Para
-            descargar plantilla del archivo de excel de click
+            Para descargar plantilla del archivo de excel de click
             <a
               [href]="
                 contextPath +
@@ -711,20 +691,16 @@
     <div class="w-100 p-3">
       <ng-titulo titulo="Querella"></ng-titulo>
       <div class="mt-4 form-group">
-        <label class="fw-bold" for="momentoIngresar">
-          <span class="require">* </span>
-          Señale si al momento de ingresar su solicitud el SAT ha interpuesto
-          querella o denuncia penal en contra de los socios, accionistas, según
-          corresponda, representante legal con facultad para actos de dominio, e
-          integrantes de la administración de la empresa solicitante o
-          declaratoria de perjuicio, según corresponda, durante los últimos tres
-          años anteriores a la presentación de la solicitud de certificación.
-        </label>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio15.description"
+          [showDescription]="true"
+          formControlName="momentoIngresar"
         ></app-input-radio>
         <div
           *ngIf="
@@ -740,15 +716,16 @@
     <div class="w-100 p-3">
       <ng-titulo titulo="Controls Inventarios"></ng-titulo>
       <div class="mt-4 form-group">
-        <label class="fw-bold" for="indiqueCuenta">
-          <span class="require">* </span>
-          Indique si cuenta con un sistema de control de inventarios.
-        </label>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio16.description"
+          [showDescription]="true"
+          formControlName="indiqueCuenta"
         ></app-input-radio>
         <div
           *ngIf="
@@ -765,24 +742,28 @@
         <div class="col-md-6">
           <div class="form-group">
             <span class="require">* </span>
-            <label for="inputOne" class="form-label"
-              >Nombre del sistema o datos para su iderisificación</label
+            <label for="nombredel" class="form-label"
+              >Nombre del sistema o datos para su identificación</label
             >
-            <input type="text" class="form-control" id="inputOne" />
+            <input type="text" class="form-control" id="nombredel" />
             <div
               *ngIf="
-                preOperativeForm.controls['inputOne'].invalid &&
-                preOperativeForm.controls['inputOne'].touched
+                preOperativeForm.controls['nombredel'].invalid &&
+                preOperativeForm.controls['nombredel'].touched
               "
               class="text-danger"
             >
               <span
-                *ngIf="preOperativeForm.controls['inputOne'].errors?.['required']"
+                *ngIf="preOperativeForm.controls['nombredel'].errors?.['required']"
                 >Este campo es obligatorio.</span
               >
               <span
-                *ngIf="preOperativeForm.controls['inputOne'].errors?.['minlength']"
+                *ngIf="preOperativeForm.controls['nombredel'].errors?.['minlength']"
                 >Debe tener al menos 3 caracteres.</span
+              >
+              <span
+                *ngIf="preOperativeForm.controls['nombredel'].errors?.['maxlength']"
+                >No puede exceder los 250 caracteres.</span
               >
             </div>
           </div>
@@ -792,22 +773,28 @@
         <div class="col-md-6">
           <div class="form-group">
             <span class="require">* </span>
-            <label for="inputTwo" class="form-label">Lugar de radicación</label>
-            <input type="text" class="form-control" id="inputTwo" />
+            <label for="lugarDeRadicacion" class="form-label"
+              >Lugar de radicación</label
+            >
+            <input type="text" class="form-control" id="lugarDeRadicacion" />
             <div
               *ngIf="
-                preOperativeForm.controls['inputTwo'].invalid &&
-                preOperativeForm.controls['inputTwo'].touched
+                preOperativeForm.controls['lugarDeRadicacion'].invalid &&
+                preOperativeForm.controls['lugarDeRadicacion'].touched
               "
               class="text-danger"
             >
               <span
-                *ngIf="preOperativeForm.controls['inputTwo'].errors?.['required']"
+                *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['required']"
                 >Este campo es obligatorio.</span
               >
               <span
-                *ngIf="preOperativeForm.controls['inputTwo'].errors?.['minlength']"
+                *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['minlength']"
                 >Debe tener al menos 3 caracteres.</span
+              >
+              <span
+                *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['maxlength']"
+                >No puede exceder los 250 caracteres.</span
               >
             </div>
           </div>
@@ -831,11 +818,7 @@
         <button type="button" class="btn btn-primary">Agregar</button>
       </div>
       <label for=""> Control Inventarios </label>
-      <!-- <ng-table
-        [commonTableHeader]="establecimientoHeaderData"
-        [commonTableBody]="establecimientoBodyData"
-        
-      ></ng-table> -->
+
       <div class="table-responsive">
         <table class="table table-bordered table-striped">
           <thead>
@@ -886,26 +869,24 @@
         </button>
       </div>
       <label for="">
-        Debera anexar un archeivo simple de autorizaci&oacute;n para el
-        establecimiento del deposito fiscal para someterse al proceso de
-        ensamble y fabricaci&oacute;n de vehiculos a empresas de la industria
+        Deberá anexar un archivo simple de autorizaci&oacute;n para el
+        establecimiento del depósito fiscal para someterse al proceso de
+        ensamble y fabricaci&oacute;n de vehículos a empresas de la industria
         terminal vigente
       </label>
     </div>
     <div class="w-100 p-3">
       <div class="form-group">
-        <label class="fw-bold" for="contabilidad">
-          <span class="require">* </span>
-          Indique si lleva la contabilidad en medios electrónicos y la ingresa
-          mensualmente a través del portal del SAT, de conformidad con el
-          articulo 28, fracciones III y IV, del CFF y las reglas 2.8.1.6. y la
-          2.8.1.7. de la RMF.
-        </label>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio17.description"
+          [showDescription]="true"
+          formControlName="contabilidad"
         ></app-input-radio>
         <div
           *ngIf="
@@ -920,17 +901,16 @@
     </div>
     <div class="w-100 p-3">
       <div class="form-group">
-        <label class="fw-bold" for="rmfRadio">
-          <span class="require">* </span>
-          Señale si ingresa mensualmente su información contable a través del
-          portal del SAT, de conformidad con el artículo 28, fracciones III y
-          IV, del CFF y las reglas 2.8.1.5. y la 2.8.1.6 de la RMF.
-        </label>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio18.description"
+          [showDescription]="true"
+          formControlName="rmfRadio"
         ></app-input-radio>
         <div
           *ngIf="
@@ -945,21 +925,16 @@
     </div>
     <div class="w-100 p-3">
       <div class="form-group">
-        <label class="fw-bold" for="vinculacionRegistroCancelado">
-          <span class="require">* </span>
-          Manifiesta que los socios, accionistas, representantes legales con
-          facultad para actos de dominio e integrantes de la administración, no
-          se encuentren vinculados con alguna empresa a la que se le hubiere
-          cancelado su Registro en el Esquema de Certificación de Empresas, de
-          conformidad con la regla 7.2.4., apartado A, fracciones V, VI y VII y
-          apartado B, fracciones II, y III y V y/o de la regla 7.2.5.,
-          fracciones VI, VII y XI.
-        </label>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio19.description"
+          [showDescription]="true"
+          formControlName="vinculacionRegistroCancelado"
         ></app-input-radio>
         <div
           *ngIf="
@@ -974,17 +949,16 @@
     </div>
     <div class="w-100 p-3">
       <div class="form-group">
-        <label class="fw-bold" for="proveedoresListadoSAT">
-          <span class="require">* </span>
-          Indique si sus proveedores se encuentran en el listado dempresas
-          publicadas por el SAT, en términos del artículo 69-B, cuarto párrafo
-          del CFF.
-        </label>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio20.description"
+          [showDescription]="true"
+          formControlName="proveedoresListadoSAT"
         ></app-input-radio>
         <div
           *ngIf="
@@ -1133,7 +1107,7 @@
             <div class="form-group">
               <span class="require">*</span>
               <label for="numeroAutorizacionCITES" class="form-label">
-                Razon Social
+                Razón Social
               </label>
               <input type="text" class="form-control" id="" />
             </div>
@@ -1163,7 +1137,7 @@
             <div class="form-group">
               <span class="require">*</span>
               <label for="numeroAutorizacionCITES" class="form-label"
-                >N&umero de empleados</label
+                >N&uacue de empleados</label
               >
               <input type="text" class="form-control" id="" />
               <div

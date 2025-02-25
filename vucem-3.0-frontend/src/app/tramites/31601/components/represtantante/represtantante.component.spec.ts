@@ -12,7 +12,13 @@ fdescribe('ReprestantanteComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [ReactiveFormsModule, FormsModule, CommonModule,ReprestantanteComponent, TituloComponent]
+      imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        CommonModule,
+        ReprestantanteComponent,
+        TituloComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ReprestantanteComponent);
@@ -26,20 +32,40 @@ fdescribe('ReprestantanteComponent', () => {
 
   it('should initialize the form correctly', () => {
     expect(component.represtantante).toBeDefined();
-    expect(component.represtantante.get('datosImportadorExportador.resigtro')).toBeDefined();
-    expect(component.represtantante.get('datosImportadorExportador.RFC')).toBeDefined();
-    expect(component.represtantante.get('datosImportadorExportador.Nombre')).toBeDefined();
-    expect(component.represtantante.get('datosImportadorExportador.ApellidoPaterno')).toBeDefined();
-    expect(component.represtantante.get('datosImportadorExportador.ApellidoMaterno')).toBeDefined();
-    expect(component.represtantante.get('datosImportadorExportador.Telefono')).toBeDefined();
-    expect(component.represtantante.get('datosImportadorExportador.Correo')).toBeDefined();
+    expect(
+      component.represtantante.get('datosImportadorExportador.resigtro')
+    ).toBeDefined();
+    expect(
+      component.represtantante.get('datosImportadorExportador.rfc')
+    ).toBeDefined();
+    expect(
+      component.represtantante.get('datosImportadorExportador.nombre')
+    ).toBeDefined();
+    expect(
+      component.represtantante.get('datosImportadorExportador.apellidoPaterno')
+    ).toBeDefined();
+    expect(
+      component.represtantante.get('datosImportadorExportador.apellidoMaterno')
+    ).toBeDefined();
+    expect(
+      component.represtantante.get('datosImportadorExportador.telefono')
+    ).toBeDefined();
+    expect(
+      component.represtantante.get('datosImportadorExportador.correo')
+    ).toBeDefined();
   });
 
   it('should disable specific form controls', () => {
-    const rfc = component.represtantante.get('datosImportadorExportador.RFC');
-    const nombre = component.represtantante.get('datosImportadorExportador.Nombre');
-    const apellidoPaterno = component.represtantante.get('datosImportadorExportador.ApellidoPaterno');
-    const apellidoMaterno = component.represtantante.get('datosImportadorExportador.ApellidoMaterno');
+    const rfc = component.represtantante.get('datosImportadorExportador.rfc');
+    const nombre = component.represtantante.get(
+      'datosImportadorExportador.nombre'
+    );
+    const apellidoPaterno = component.represtantante.get(
+      'datosImportadorExportador.apellidoPaterno'
+    );
+    const apellidoMaterno = component.represtantante.get(
+      'datosImportadorExportador.apellidoMaterno'
+    );
 
     expect(rfc?.disabled).toBeTrue();
     expect(nombre?.disabled).toBeTrue();
@@ -50,21 +76,33 @@ fdescribe('ReprestantanteComponent', () => {
   it('should patch form values correctly', () => {
     const representativeData = component.representativeData;
 
-    const resigtro = component.represtantante.get('datosImportadorExportador.resigtro');
-    const RFC = component.represtantante.get('datosImportadorExportador.RFC');
-    const Nombre = component.represtantante.get('datosImportadorExportador.Nombre');
-    const ApellidoPaterno = component.represtantante.get('datosImportadorExportador.ApellidoPaterno');
-    const ApellidoMaterno = component.represtantante.get('datosImportadorExportador.ApellidoMaterno');
-    const Telefono = component.represtantante.get('datosImportadorExportador.Telefono');
-    const Correo = component.represtantante.get('datosImportadorExportador.Correo');
+    const resigtro = component.represtantante.get(
+      'datosImportadorExportador.resigtro'
+    );
+    const rfc = component.represtantante.get('datosImportadorExportador.rfc');
+    const nombre = component.represtantante.get(
+      'datosImportadorExportador.nombre'
+    );
+    const apellidoPaterno = component.represtantante.get(
+      'datosImportadorExportador.apellidoPaterno'
+    );
+    const apellidoMaterno = component.represtantante.get(
+      'datosImportadorExportador.apellidoMaterno'
+    );
+    const telefono = component.represtantante.get(
+      'datosImportadorExportador.telefono'
+    );
+    const correo = component.represtantante.get(
+      'datosImportadorExportador.correo'
+    );
 
     expect(resigtro?.value).toBe(representativeData.resigtro);
-    expect(RFC?.value).toBe(representativeData.RFC);
-    expect(Nombre?.value).toBe(representativeData.Nombre);
-    expect(ApellidoPaterno?.value).toBe(representativeData.ApellidoPaterno);
-    expect(ApellidoMaterno?.value).toBe(representativeData.ApellidoMaterno);
-    expect(Telefono?.value).toBe(representativeData.Telefono);
-    expect(Correo?.value).toBe(representativeData.Correo);
+    expect(rfc?.value).toBe(representativeData.rfc);
+    expect(nombre?.value).toBe(representativeData.nombre);
+    expect(apellidoPaterno?.value).toBe(representativeData.apellidoPaterno);
+    expect(apellidoMaterno?.value).toBe(representativeData.apellidoMaterno);
+    expect(telefono?.value).toBe(representativeData.telefono);
+    expect(correo?.value).toBe(representativeData.correo);
   });
 
   it('should call ngOnInit and set up the form correctly', () => {
@@ -74,11 +112,19 @@ fdescribe('ReprestantanteComponent', () => {
 
     // Verify that patching and disabling of form fields happened correctly
     expect(spyPatchValue).toHaveBeenCalled();
-    expect(component.represtantante.get('datosImportadorExportador.RFC')?.disabled).toBeTrue();
-    expect(component.represtantante.get('datosImportadorExportador.Nombre')?.disabled).toBeTrue();
-    expect(component.represtantante.get('datosImportadorExportador.ApellidoPaterno')?.disabled).toBeTrue();
-    expect(component.represtantante.get('datosImportadorExportador.ApellidoMaterno')?.disabled).toBeTrue();
+    expect(
+      component.represtantante.get('datosImportadorExportador.rfc')?.disabled
+    ).toBeTrue();
+    expect(
+      component.represtantante.get('datosImportadorExportador.nombre')?.disabled
+    ).toBeTrue();
+    expect(
+      component.represtantante.get('datosImportadorExportador.apellidoPaterno')
+        ?.disabled
+    ).toBeTrue();
+    expect(
+      component.represtantante.get('datosImportadorExportador.apellidoMaterno')
+        ?.disabled
+    ).toBeTrue();
   });
-
 });
-

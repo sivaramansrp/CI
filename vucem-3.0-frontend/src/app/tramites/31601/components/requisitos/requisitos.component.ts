@@ -7,7 +7,7 @@ import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { ServiciosPantallaService } from '../../../../core/services/31601/servicios-pantalla.service';
-import { tipos } from '../../../../core/models/31601/servicios-pantallas.model';
+import { Tipos } from '../../../../core/models/31601/servicios-pantallas.model';
 import { map } from 'rxjs';
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
@@ -21,14 +21,14 @@ import { ConfiguracionColumna } from '../../../../core/models/shared/configuraci
  * Componente `RequisitosComponent`.
  * Este componente es responsable de manejar la interfaz de requisitos en la aplicación.
  * Permite al usuario seleccionar diferentes opciones de un catálogo y mostrar tablas con los requisitos relacionados.
- * 
+ *
  * El componente utiliza varios subcomponentes, incluyendo:
  * - `CatalogoSelectComponent`: Para seleccionar un elemento desde un catálogo.
  * - `TableComponent`: Para mostrar los datos en una tabla.
  * - `TituloComponent`: Para mostrar un título en la interfaz.
- * 
+ *
  * Además, utiliza el servicio `ServiciosPantallaService` para obtener los datos necesarios de los requisitos.
- * 
+ *
  * @component RequisitosComponent
  * @selector app-requisitos
  * @templateUrl './requisitos.component.html'
@@ -44,10 +44,10 @@ import { ConfiguracionColumna } from '../../../../core/models/shared/configuraci
  */
 
 @Component({
-  selector: 'app-requisitos',  // Selector para usar este componente en plantillas HTML
-  templateUrl: './requisitos.component.html',  // Ruta a la plantilla HTML
-  styleUrl: './requisitos.component.scss',  // Ruta al archivo de estilos SCSS
-  standalone: true,  // Define que el componente puede funcionar de forma independiente (sin módulo específico)
+  selector: 'app-requisitos', // Selector para usar este componente en plantillas HTML
+  templateUrl: './requisitos.component.html', // Ruta a la plantilla HTML
+  styleUrl: './requisitos.component.scss', // Ruta al archivo de estilos SCSS
+  standalone: true, // Define que el componente puede funcionar de forma independiente (sin módulo específico)
   imports: [
     HttpClientModule,  // Importación de módulo para realizar peticiones HTTP
     FormsModule,  // Importación de módulo para trabajar con formularios
@@ -61,7 +61,7 @@ export class RequisitosComponent implements OnInit {
 // Se declara una variable llamada 'tipos', la cual es un arreglo (array) de objetos de tipo 'tipos'.
 // Aquí 'tipos' representa la estructura o tipo de datos que se manejarán en este componente.
 // En este caso, 'tipos' es una lista de objetos que contiene información sobre los tipos de documentos.
-tipos: tipos[] = []; 
+tipos: Tipos[] = []; 
 
 // 'configuracionTabla' es una variable que almacena un arreglo de objetos de tipo 'ConfiguracionColumna'.
 // Cada objeto dentro de este arreglo tiene información sobre cómo debe ser configurada cada columna de la tabla.
@@ -104,8 +104,8 @@ configuracionTabla: ConfiguracionColumna<any>[] = [
    * Datos que definen la estructura de la tabla de tipos de documentos.
    */
   public tipoTableData = {
-    "tableHeader": ["Tipo de Documento"], // Encabezados de la tabla
-    "tableBody": []  // Cuerpo vacío que se llenará con la carga de los datos
+    tableHeader: ['Tipo de Documento'], // Encabezados de la tabla
+    tableBody: [], // Cuerpo vacío que se llenará con la carga de los datos
   };
 
   /**
@@ -124,57 +124,59 @@ configuracionTabla: ConfiguracionColumna<any>[] = [
    * Constructor del componente.
    * @param {HttpClient} http - Instancia del cliente HTTP para realizar peticiones.
    */
-  constructor(public http: HttpClient,private pantallaSvc: ServiciosPantallaService) {}
+  constructor(
+    public http: HttpClient,
+    private pantallaSvc: ServiciosPantallaService
+  ) {}
 
   /**
    * Método que se ejecuta cuando el componente se inicializa.
    * Se encarga de cargar los tipos de documentos desde el archivo JSON.
    */
   ngOnInit(): void {
-    this.loadTipos();  // Carga los tipos de documento al inicializar el componente
+    this.loadTipos(); // Carga los tipos de documento al inicializar el componente
   }
 
-/**
- * Método que realiza la carga de los tipos de documentos desde el archivo JSON.
- * El archivo JSON se encuentra en la ruta `assets/json/31601/tipo-di-document.json`.
- * Este método utiliza dos servicios del `pantallaSvc` para cargar los datos de tipos de documentos y los encabezados de la tabla.
- * 
- * El primer servicio carga los tipos de documentos y los asigna a la propiedad `tipos`.
- * El segundo servicio obtiene un catálogo de tipos de documentos específicos y lo asigna a la propiedad `tipocatlog`.
- * Además, asigna los encabezados de la tabla desde la propiedad `tipoTableData.tableHeader` a la propiedad `tipoHeaderData`.
- *
- * @method loadTipos
- * @returns {void} No devuelve ningún valor. Solo asigna los datos a las propiedades `tipos`, `tipocatlog`, y `tipoHeaderData`.
- */
-loadTipos(): void {
-  // Realiza la solicitud para obtener los tipos de documentos desde el servicio
-  const tipos$ = this.pantallaSvc
-    .getTiposCatalog() // Llama al servicio para obtener los tipos de documento
-    .pipe(
-      map((resp) => {
-        // Asigna los tipos de documento obtenidos a la propiedad 'tipos'
-        this.tipos = resp;
-      })
-    );
-    
-  // Suscribe al observable para que la asignación de los datos se ejecute
-  tipos$.subscribe();
+  /**
+   * Método que realiza la carga de los tipos de documentos desde el archivo JSON.
+   * El archivo JSON se encuentra en la ruta `assets/json/31601/tipo-di-document.json`.
+   * Este método utiliza dos servicios del `pantallaSvc` para cargar los datos de tipos de documentos y los encabezados de la tabla.
+   *
+   * El primer servicio carga los tipos de documentos y los asigna a la propiedad `tipos`.
+   * El segundo servicio obtiene un catálogo de tipos de documentos específicos y lo asigna a la propiedad `tipocatlog`.
+   * Además, asigna los encabezados de la tabla desde la propiedad `tipoTableData.tableHeader` a la propiedad `tipoHeaderData`.
+   *
+   * @method loadTipos
+   * @returns {void} No devuelve ningún valor. Solo asigna los datos a las propiedades `tipos`, `tipocatlog`, y `tipoHeaderData`.
+   */
+  loadTipos(): void {
+    // Realiza la solicitud para obtener los tipos de documentos desde el servicio
+    const tipos$ = this.pantallaSvc
+      .getTiposCatalog() // Llama al servicio para obtener los tipos de documento
+      .pipe(
+        map((resp) => {
+          // Asigna los tipos de documento obtenidos a la propiedad 'tipos'
+          this.tipos = resp;
+        })
+      );
 
-  // Asigna los encabezados de la tabla desde 'tipoTableData'
-  this.tipoHeaderData = this.tipoTableData.tableHeader;
+    // Suscribe al observable para que la asignación de los datos se ejecute
+    tipos$.subscribe();
 
-  // Realiza la solicitud para obtener el catálogo de tipos de documento
-  const tiposcatalog$ = this.pantallaSvc
-    .getTipoCatalog(CATALOGOS_ID.CAT_TIPO_DOCUMENTO) // Llama al servicio con el ID de catálogo para obtener los tipos
-    .pipe(
-      map((resp) => {
-        // Asigna los datos del catálogo de tipos de documento a la propiedad 'tipocatlog'
-        this.tipocatlog = resp.data;
-      })
-    );
-  
-  // Suscribe al observable para que la asignación de los datos se ejecute
-  tiposcatalog$.subscribe();
-}
+    // Asigna los encabezados de la tabla desde 'tipoTableData'
+    this.tipoHeaderData = this.tipoTableData.tableHeader;
 
+    // Realiza la solicitud para obtener el catálogo de tipos de documento
+    const tiposcatalog$ = this.pantallaSvc
+      .getTipoCatalog(CATALOGOS_ID.CAT_TIPO_DOCUMENTO) // Llama al servicio con el ID de catálogo para obtener los tipos
+      .pipe(
+        map((resp) => {
+          // Asigna los datos del catálogo de tipos de documento a la propiedad 'tipocatlog'
+          this.tipocatlog = resp.data;
+        })
+      );
+
+    // Suscribe al observable para que la asignación de los datos se ejecute
+    tiposcatalog$.subscribe();
+  }
 }

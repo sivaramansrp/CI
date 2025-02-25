@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import enlace from '../../../../../assets/json/31601/enlace.json';
+import enlaceData from '../../../../../assets/json/31601/enlace-data.json';
 
 /**
  * Componente para gestionar el enlace de un representante, incluyendo su información en un formulario.
@@ -18,10 +19,9 @@ import enlace from '../../../../../assets/json/31601/enlace.json';
     FormsModule, // Módulo para trabajar con formularios
   ],
   templateUrl: './enlace.component.html', // Ruta a la plantilla HTML
-  styleUrl: './enlace.component.scss' // Ruta al archivo de estilos SCSS
+  styleUrl: './enlace.component.scss', // Ruta al archivo de estilos SCSS
 })
 export class EnlaceComponent implements OnInit {
-
   /**
    * Encabezados de la tabla de enlace.
    */
@@ -45,17 +45,7 @@ export class EnlaceComponent implements OnInit {
   /**
    * Datos predefinidos de un representante, que se cargan en el formulario.
    */
-  representativeData = {
-    resigtro: "HEUE780514BVA",
-    RFC: "HEUE780514BVA",
-    Nombre: " ERNESTO",
-    ApellidoPaterno: "HERNANDEZ",
-    ApellidoMaterno: "URIBE",
-    Cuidad:"CUIDAD DE MEXICO",
-    Cargo:"",
-    Telefono: "56457970",
-    Correo: "VUCEM2.5@hotmail.com"
-  };
+  representativeData = enlaceData;
 
   /**
    * Constructor del componente.
@@ -71,15 +61,15 @@ export class EnlaceComponent implements OnInit {
     // Inicializa el formulario con las validaciones
     this.represtantante = this.fb.group({
       resigtro: ['', Validators.required],
-      RFC: ['', Validators.required],
-      Nombre: ['', Validators.required],
-      ApellidoPaterno: ['', Validators.required],
-      ApellidoMaterno: ['', Validators.required],
-      Cargo: ['', Validators.required],
-      Cuidad: ['', Validators.required],
-      Telefono: ['', Validators.required],
-      Correo: ['', Validators.required],
-      Suplente: ['', Validators.required],
+      rfc: ['', Validators.required],
+      nombre: ['', Validators.required],
+      apellidoPaterno: ['', Validators.required],
+      apellidoMaterno: ['', Validators.required],
+      cargo: ['', Validators.required],
+      cuidad: ['', Validators.required],
+      telefono: ['', Validators.required],
+      correo: ['', Validators.required],
+      suplente: ['', Validators.required],
     });
 
     // Carga los datos de la tabla
@@ -108,24 +98,24 @@ export class EnlaceComponent implements OnInit {
    */
   public abrirModal() {
     this.modal = 'show'; // Muestra el modal
-    this.getregistroForm(); // Carga los datos en el formulario
+    this.getRegistroForm(); // Carga los datos en el formulario
   }
 
   /**
    * Método que configura el formulario con los datos del representante.
    */
-  public getregistroForm() {
+  public getRegistroForm() {
     this.represtantante = this.fb.group({
       resigtro: ['', Validators.required],
-      RFC: ['', Validators.required],
-      Nombre: ['', Validators.required],
-      ApellidoPaterno: ['', Validators.required],
-      ApellidoMaterno: ['', Validators.required],
-      Cargo: ['', Validators.required],
-      Cuidad: ['', Validators.required],
-      Telefono: ['', Validators.required],
-      Correo: ['', Validators.required],
-      Suplente: ['', Validators.required],
+      rfc: ['', Validators.required],
+      nombre: ['', Validators.required],
+      apellidoPaterno: ['', Validators.required],
+      apellidoMaterno: ['', Validators.required],
+      cargo: ['', Validators.required],
+      cuidad: ['', Validators.required],
+      telefono: ['', Validators.required],
+      correo: ['', Validators.required],
+      suplente: ['', Validators.required],
     });
 
     // Rellena el formulario con los datos del representante
@@ -139,21 +129,21 @@ export class EnlaceComponent implements OnInit {
     // Se insertan los valores en los campos del formulario
     this.represtantante.patchValue({
       resigtro: this.representativeData.resigtro,
-      RFC: this.representativeData.RFC,
-      Nombre: this.representativeData.Nombre,
-      ApellidoPaterno: this.representativeData.ApellidoPaterno,
-      ApellidoMaterno: this.representativeData.ApellidoMaterno,
-      Cuidad: this.representativeData.Cuidad,
-      Cargo: this.representativeData.Cargo,
-      Telefono: this.representativeData.Telefono,
-      Correo: this.representativeData.Correo,
+      rfc: this.representativeData.rfc,
+      nombre: this.representativeData.nombre,
+      apellidoPaterno: this.representativeData.apellidoPaterno,
+      apellidoMaterno: this.representativeData.apellidoMaterno,
+      cuidad: this.representativeData.cuidad,
+      cargo: this.representativeData.cargo,
+      telefono: this.representativeData.telefono,
+      correo: this.representativeData.correo,
     });
 
     // Deshabilita los campos que no deben ser modificados
-    this.represtantante.get('RFC')?.disable();
-    this.represtantante.get('Nombre')?.disable();
-    this.represtantante.get('ApellidoPaterno')?.disable();
-    this.represtantante.get('ApellidoMaterno')?.disable();
-    this.represtantante.get('Cuidad')?.disable();
+    this.represtantante.get('rfc')?.disable();
+    this.represtantante.get('nombre')?.disable();
+    this.represtantante.get('apellidoPaterno')?.disable();
+    this.represtantante.get('apellidoMaterno')?.disable();
+    this.represtantante.get('cuidad')?.disable();
   }
 }
