@@ -3,7 +3,7 @@ import { DatosGeneralesComponent } from './datos-generales.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import { RevisionService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import {jasmine} from '@types/jasmine';
+
 
 describe('DatosGeneralesComponent', () => {
   let component: DatosGeneralesComponent;

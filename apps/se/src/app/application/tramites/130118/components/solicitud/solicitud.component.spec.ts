@@ -2,12 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 
-// import { PeximService } from '../../../../core/services/130118/pexim/pexim.service';
 import { SolicitudComponent } from './solicitud.component';
 import { PeximService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Tramite130118Store } from '../../estados/tramites/tramite130118.store';
-// import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-// import { Tramite130118Store } from '../../../../estados/tramites/tramite130118.store';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;

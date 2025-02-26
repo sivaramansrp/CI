@@ -310,7 +310,7 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {boolean} - Verdadero si el campo es válido, falso en caso contrario.
    */
   isValid(form: FormGroup, field: string): boolean {
-    return this.validacionesService.isValid(form, field);
+    return this.validacionesService.isValid(form, field) === true;
   }
 
   /**

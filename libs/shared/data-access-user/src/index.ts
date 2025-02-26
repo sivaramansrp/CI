@@ -82,3 +82,5 @@ export * from './core/services/220502/solicitud-pantallas.service';
 export * from './core/models/220502/solicitud-pantallas.model';
 
 export { TEXTOS as TEXTOS_220501 } from './tramites/constantes/220501/texto-enum';
+
+export {CATALOGOS_ID as CATALOGOS_ID_220501} from './tramites/constantes/220501/constantes';

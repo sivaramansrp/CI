@@ -1,8 +1,9 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Catalogo, TEXTOS_220501 } from '@ng-mf/data-access-user';
+import { Catalogo, CATALOGOS_ID, CATALOGOS_ID_220501, SagarpaService, TEXTOS_220501 } from '@ng-mf/data-access-user';
 import { map, merge } from 'rxjs';
-
+import mercanciaTable from '../../../../../../../../../libs/shared/theme/assets/json/220501/mercancia-table.json';
+import { Tramite220501Store } from '../../../../estados/tramite220501.store';
 
 /**
  * Componente para seleccionar el medio de transporte.
@@ -115,7 +116,7 @@ export class MedioTransporteComponent implements OnInit {
    */
   private inicializaCatalogos(): void {
     const medioDeTransporte$ = this.sagarpaService
-      .getMediodetransporte(CATALOGOS_ID.CAT_MEDIO_DE_TRANSPORTE)
+      .getMediodetransporte(CATALOGOS_ID_220501.CAT_MEDIO_DE_TRANSPORTE)
       .pipe(
         map((resp) => {
           this.medioDeTransporte = resp.data;

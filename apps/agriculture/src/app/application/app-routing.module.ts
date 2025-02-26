@@ -24,6 +24,21 @@ const routes: Routes = [
         (m) => m.FitosanitarioModule
       )
   },
+  {
+
+    path: 'sagarpa',
+    loadChildren: () =>
+      import('./tramites/220501/sagarpa.module').then(
+        (m) => m.SagarpaModule
+      ),
+  },
+  {
+    path: 'inspeccion-fisica',
+    loadChildren: () =>
+      import('./tramites/220502/inspeccion-fisica.module').then(
+        (m) => m.InspeccionFisicaModule
+      ),
+  }
 ];
 
 @NgModule({
