@@ -68,6 +68,7 @@ It will show tasks that you can run with Nx.
 - npx nx serve aga
 - npx nx serve se
 - npx nx serve login
+- npx nx serve funcionario
 - manifest.json for the port
 - Create new application - npx nx g @nx/angular:remote apps/aga
 - Angular 18.0.3
