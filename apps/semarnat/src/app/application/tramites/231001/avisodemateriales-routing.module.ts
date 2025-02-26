@@ -7,20 +7,6 @@ import { SolicitanteDatosTabsComponent } from './pages/solicitante-datos-tabs/so
  import { DatosComponent } from './pages/datos/datos.component'; 
 
 const routes: Routes = [
-  /*{
-    path: 'solicitud',
-    component: SolicitanteDatosTabsComponent,
-  }, 
-  {
-    path: 'datos',
-    component: DatosComponent,
-
-  },
-  {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'datos',
-  }*/
     {
       path: 'pantallas',
       component: PantallasComponent,
