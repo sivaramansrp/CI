@@ -1,66 +1,78 @@
 /**
- * @module DatosTratadosAcuerdosComponent
- *  Este módulo define el componente `DatosTratadosAcuerdosComponent` que maneja la información de los tratados y acuerdos.
+ * Este módulo define el componente `DatosTratadosAcuerdosComponent` que maneja la información de los tratados y acuerdos.
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Subject, takeUntil } from 'rxjs';
-import { TableComponent, TableData } from '@ng-mf/data-access-user';
-import { DatostratadosacuerdosService } from 'libs/shared/data-access-user/src/core/services/110102/datostratadosacuerdos.service';
+import { TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 
+import { CONFIGURACION_ACCIONISTAS } from 'libs/shared/data-access-user/src/tramites/constantes/110102/datos-tratados-acuerdos.enum';
+import { DatostratadosacuerdosService } from 'libs/shared/data-access-user/src/core/services/110102/datostratadosacuerdos/datostratadosacuerdos.service';
+
+/**
+ * Este módulo define el componente `DatosTratadosAcuerdosComponent` que maneja la información de los tratados y acuerdos.
+ */
 @Component({
   selector: 'app-datos-tratados-acuerdos',
   standalone: true,
-  imports: [CommonModule, TableComponent],
+  imports: [CommonModule, TablaDinamicaComponent],
   templateUrl: './datos-tratados-acuerdos.component.html',
   styleUrl: './datos-tratados-acuerdos.component.scss',
 })
 export class DatosTratadosAcuerdosComponent implements OnInit, OnDestroy {
 
-  tableoptions = {
-    checkbox : false
-  };
   /**
-   * @property {TableData} tableData - Datos que se mostrarán en la tabla.
+   * Configuración de la tabla que se utilizará en el componente.
+   * @type {any}
    */
-  public tableData!: TableData;
+  configuracionTabla = CONFIGURACION_ACCIONISTAS;
 
   /**
-   * @property {Subject<void>} destroyed$ - Subject para manejar la desuscripción cuando el componente se destruye.
+   * Selección de la tabla inicializada como indefinida.
+   * @type {TablaSeleccion}
+   */
+  seleccionTabla = TablaSeleccion.UNDEFINED;
+
+  /**
+   * Datos que se mostrarán en la tabla.
+   * @type {any}
+   */
+  public datosTabla!: any;
+
+  /**
+   * Subject para manejar la desuscripción cuando el componente se destruye.
+   * @type {Subject<void>}
    */
   private destroyed$ = new Subject<void>();
 
   /**
-   * @constructor
+   * Constructor del componente.
    * Servicio para obtener datos para el componente.
+   * @param {DatostratadosacuerdosService} service - Servicio para obtener datos de tratados y acuerdos.
    */
   constructor(private service: DatostratadosacuerdosService) {
     // Lógica del constructor puede ser añadida aquí si es necesario
   }
 
   /**
-   * @method ngOnInit
-   *  Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
+   * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
    * Obtiene datos del servicio y los asigna a tableData.
-   * @memberof DatosTratadosAcuerdosComponent
    */
   ngOnInit(): void {
     this.service.getData().pipe(
       takeUntil(this.destroyed$)
     ).subscribe(
-      (data: TableData) => {
-        this.tableData = data;
+      (data: any) => {
+        this.datosTabla = data;
       }
     );
   }
 
   /**
-   * @method ngOnDestroy
-   *  Hook del ciclo de vida que se llama cuando la directiva se destruye.
+   * Hook del ciclo de vida que se llama cuando la directiva se destruye.
    * Completa el subject destroyed$ para desuscribirse de todos los observables.
-   * @memberof DatosTratadosAcuerdosComponent
    */
   ngOnDestroy(): void {
     this.destroyed$.next();

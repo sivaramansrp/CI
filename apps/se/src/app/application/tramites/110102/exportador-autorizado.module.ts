@@ -7,11 +7,13 @@ import { DatosTratadosAcuerdosComponent } from "./components/datos-tratados-acue
 import { DataosDeLaMercanciaComponent } from "./pages/datos-de-la-mercancia/dataos-de-la-mercancia.component";
 import { ExportadorautorizadoRoutingModule } from './exportador-autorizado-routing.module';
 import { NgModule } from '@angular/core';
-import { RegistroMercanciaComercializadorComponent } from "./components/registro-mercancia-comercializador/registro-mercancia-comercializador.component";
-import { SolicitanteComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component";
-
 import { RegistroExportadorAutorizadoComponent } from "./components/registro-exportador-autorizado/registro-exportador-autorizado.component";
+import { RegistroMercanciaComercializadorComponent } from "./components/registro-mercancia-comercializador/registro-mercancia-comercializador.component";
 import { RepresentacionFederalComponent } from "./components/representacion-federal/representacion-federal.component";
+import { SolicitanteComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component";
+import { TablaDinamicaComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component";
+
+
 
 
 
@@ -27,7 +29,8 @@ import { RepresentacionFederalComponent } from "./components/representacion-fede
     DatosDeLaMercanciaComponent,
     RegistroExportadorAutorizadoComponent,
     RepresentacionFederalComponent,
-    BtnContinuarComponent
+    BtnContinuarComponent,
+    TablaDinamicaComponent
 ]
 })
 export class ExportadorautorizadoModule { }

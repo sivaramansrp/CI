@@ -23,7 +23,7 @@
     <div class="row" *ngIf="showDivExportador">
       <div class="col-md-12">
       <label for="exportadorAutorizadoInstrucciones" class="form-label">Instrucciones para Exportador Autorizado</label>
-      <app-input-radio id="exportadorAutorizadoInstrucciones" [radioOptions]="exportadorOptions" [isRequired]="false" [layout]="'vertical'"></app-input-radio>
+      <app-input-radio id="exportadorAutorizadoInstrucciones" [radioOptions]="exportadorOptions" [isRequired]="false" [layout]="'vertical'" (valueChange)="onCambioCondicionExportador($event)"></app-input-radio>
       </div>
     </div>
 
@@ -42,7 +42,7 @@
             <div class="row" *ngIf="showDivExportadorJPN">
             <div class="col-md-12">
               <label for="exportadorAutorizadoJPNInstrucciones" class="form-label">Instrucciones para Exportador Autorizado Japón</label>
-              <app-input-radio id="exportadorAutorizadoJPNInstrucciones" [radioOptions]="exportadorOptionsJPN" [isRequired]="false" [layout]="'vertical'"></app-input-radio>
+                <app-input-radio id="exportadorAutorizadoJPNInstrucciones" [radioOptions]="exportadorOptionsJPN" [isRequired]="false" [layout]="'vertical'" (valueChange)="onCambioCondicionExportadorJPN($event)"></app-input-radio>
             </div>
           </div>
   </form>

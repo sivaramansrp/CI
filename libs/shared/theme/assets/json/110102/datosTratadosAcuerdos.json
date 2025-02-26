@@ -1,32 +1,23 @@
-{
-    "tableHeader": [
-      "País/Bloque",
-      "Tratado/Acuerdo",
-      "Criterio de origen",
-      "Norma",
-      "Otras instancias",
-      "Juegos Surtidos"
-    ],
-    "tableBody": [
-      {
-        "tbodyData": [
-          "Asociación Europea de Libre Comercio",
-          "Tratado de Libre Comercio México-Asociación Europea de Libre Comercio ",
-          "No Aplica",
-          "N/A",
-          "",
-          ""
-        ]
-      },
-      {
-        "tbodyData": [
-          "Union Europea",
-          "Tratado de Libre Comercio México-Unión Europea ",
-          "No Aplica",
-          "N/A",
-          "",
-          ""
-        ]
-      }
-    ]
-  }
+[
+
+        {
+            "paisBloque": "Asociación Europea de Libre Comercio",
+            "tratadoAcuerdo": "Tratado de Libre Comercio México-Asociación Europea de Libre Comercio",
+            "criterioDeOrigen": "No Aplica",
+            "norma": "N/A",
+            "otrasInstancias": "",
+            "juegosSurtidos": ""
+        },
+      
+      
+        
+          {
+            "paisBloque": "Union Europea",
+            "tratadoAcuerdo": "Tratado de Libre Comercio México-Unión Europea",
+            "criterioDeOrigen": "No Aplica",
+            "norma": "N/A",
+            "otrasInstancias": "",
+            "juegosSurtidos": ""
+          }
+        
+]
