@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import {
-  CatalogosSelect
-} from '../../../../core/models/shared/components.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { RevisionService } from '../../../../core/services/220501/revision.service';
+import { Catalogo, CatalogosSelect, RevisionService } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar el pago de derechos.

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { CargarDatosIniciales, DatosDelTramiteRealizar } from '../../models/220502/solicitud-pantallas.model';
 
 /** Servicio para obtener los datos de la solicitud */
 @Injectable({
@@ -20,7 +21,7 @@ export class SolicitudPantallasService {
   /** Método para obtener los datos de la solicitud 
    * @returns Observable<object>
   */
-  getData(): Observable<object> {
-    return this.http.get<object>(this.dataUrl);
+  getData(): Observable<any> {
+    return this.http.get<any>(this.dataUrl);
   }
 }

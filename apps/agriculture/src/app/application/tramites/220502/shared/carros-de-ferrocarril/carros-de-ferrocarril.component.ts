@@ -1,11 +1,9 @@
-// import { CarrosDeFerrocarril } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { Component } from '@angular/core';
 import { Input } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
-import { TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-// import { TableComponent } from '../../../../shared/components/table/table.component';
-// import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { CarrosDeFerrocarril, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+
 /** Componente para gestionar los datos de los carros de ferrocarril */
 @Component({
   selector: 'app-carros-de-ferrocarril',

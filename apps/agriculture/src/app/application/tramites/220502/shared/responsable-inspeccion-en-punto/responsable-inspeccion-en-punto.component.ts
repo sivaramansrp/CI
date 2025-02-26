@@ -1,6 +1,3 @@
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
@@ -11,10 +8,10 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { Validators } from '@angular/forms';
 import { inject } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, SolicitudPantallasService, TituloComponent } from '@ng-mf/data-access-user';
+
 /**
  * Componente que representa al responsable de la inspección en un punto.
  * Este componente agrega y administra dinámicamente controles de formulario para los detalles de responsabilidad de inspección.

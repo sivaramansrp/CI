@@ -13,7 +13,7 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit {
   /**
    * Formulario para agregar mercancía.
    */
-  agregarMercanciaForm: FormGroup;
+  agregarMercanciaForm!: FormGroup;
 
   /**
    * Datos de mercancías recibidos como entrada.

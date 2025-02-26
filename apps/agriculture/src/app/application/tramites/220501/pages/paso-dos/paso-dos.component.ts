@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
-import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { Catalogo, CATALOGOS_ID, CatalogosService, TEXTOS_220501 } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar el paso dos del trámite.
@@ -17,7 +13,7 @@ export class PasoDosComponent implements OnInit {
   /**
  * Constantes de texto utilizadas en el componente.
  */
-  TEXTOS = TEXTOS;
+  TEXTOS = TEXTOS_220501;
 
   /**
    * Lista de tipos de documentos.

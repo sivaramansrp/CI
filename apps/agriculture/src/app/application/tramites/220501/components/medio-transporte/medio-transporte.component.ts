@@ -1,13 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Catalogo, TEXTOS_220501 } from '@ng-mf/data-access-user';
 import { map, merge } from 'rxjs';
-
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import mercanciaTable from '../../../../../assets/json/220501/mercancia-table.json';
-import { SagarpaService } from '../../../../core/services/220501/sagarpa/sagarpa.service'
-import { TEXTOS } from '../../../../shared/constantes/220501/texto-enum';
-import { Tramite220501Store } from '../../../../estados/tramites/tramite220501.store';;
-import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 
 
 /**
@@ -43,12 +37,12 @@ export class MedioTransporteComponent implements OnInit {
   /**
    * Indica si es una solicitud de ferrocarril.
    */
-  esSolicitudFerrosValor;
+  esSolicitudFerrosValor!:any;
 
   /**
    * Constantes de texto.
    */
-  TEXTOS = TEXTOS;
+  TEXTOS = TEXTOS_220501;
 
   /**
    * Indica si se debe mostrar el componente de agregar mercancía.

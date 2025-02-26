@@ -1,23 +1,25 @@
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+// import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+// import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+// import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
-import { DatosDelTramiteRealizar } from '../../../../core/models/220502/solicitud-pantallas.model';
-import { FECHA_INSPECCION } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+// import { DatosDelTramiteRealizar } from '../../../../core/models/220502/solicitud-pantallas.model';
+// import { FECHA_INSPECCION } from '../../../../shared/constantes/servicios-extraordinarios.enum';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
-import { InputFecha } from '../../../../core/models/shared/components.model';
-import { InputFechaComponent } from '../../../../shared/components/input-fecha/input-fecha.component';
+// import { InputFecha } from '../../../../core/models/shared/components.model';
+// import { InputFechaComponent } from '../../../../shared/components/input-fecha/input-fecha.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+// import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
+// import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { Validators } from '@angular/forms';
 import { inject } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, DatosDelTramiteRealizar, InputFecha, InputFechaComponent, SolicitudPantallasService, TituloComponent } from '@ng-mf/data-access-user';
+import { FECHA_INSPECCION_INPUT } from 'libs/shared/data-access-user/src/tramites/constantes/220501/texto-enum';
 
 /**
  * Componente para gestionar los datos del trámite a realizar.
@@ -82,7 +84,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
   /**
    * Campo de entrada de fecha inicializado con la constante FECHA_INSPECCION.
    */
-  fechaInicioInput: InputFecha = FECHA_INSPECCION;
+  fechaInicioInput: InputFecha = FECHA_INSPECCION_INPUT;
 
   /** Constructor para inyectar el servicio de solicitud de pantallas. */
   constructor(private solicitudService: SolicitudPantallasService) {

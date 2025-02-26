@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { HistorialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { Input } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
-import { TableComponent } from '../../../../shared/components/table/table.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { HistorialInspeccionFisica, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+
 /** Componente para gestionar el historial de inspección física */
 @Component({
   selector: 'app-historial-inspeccion-fisica',
@@ -16,10 +15,10 @@ import { TituloComponent } from '../../../../shared/components/titulo/titulo.com
 /** Componente para gestionar el historial de inspección física */
 export class HistorialInspeccionFisicaComponent implements OnChanges {
   /** Matriz para contener etiquetas de encabezado para la tabla */
-  @Input() tablaHeadData: string[];
+  @Input() tablaHeadData: string[] = [];
 
   /** Matriz para contener datos para cada fila de la tabla */
-  @Input() tablaFilaDatos: HistorialInspeccionFisica[];
+  @Input() tablaFilaDatos: HistorialInspeccionFisica[] = [];
 
   /** Matriz para contener datos para cada fila de la tabla */
   tableData = {

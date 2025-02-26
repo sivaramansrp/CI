@@ -1,24 +1,18 @@
-// import { CargarDatosIniciales } from '../../../../core/models/220502/solicitud-pantallas.model';
-// import { CarrosDeFerrocarril } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { CarrosDeFerrocarrilComponent } from '../../shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
-// import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-// import { DatosDeMercancias } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-// import { HistorialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { HistorialInspeccionFisicaComponent } from '../../shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
 import { MedioTransporteComponent } from '../../shared/medio-transporte/medio-transporte.component';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsableInspeccionEnPuntoComponent } from '../../shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
-// import { Solicitud } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { SolicitudDatosComponent } from '../../shared/solicitud-datos/solicitud-datos.component';
 import { CargarDatosIniciales, CarrosDeFerrocarril, CatalogosSelect, DatosDeMercancias, HistorialInspeccionFisica, Solicitud, SolicitudPantallasService } from '@ng-mf/data-access-user';
-// import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
+
 /**
  * Componente para gestionar la solicitud de trámite.
  */

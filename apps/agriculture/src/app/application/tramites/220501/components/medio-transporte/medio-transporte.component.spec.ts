@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MedioTransporteComponent } from './medio-transporte.component';
+import { SagarpaService } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { SagarpaService } from '../../../../core/services/220501/sagarpa/sagarpa.service';
 
 describe('MedioTransporteComponent', () => {
   let component: MedioTransporteComponent;
@@ -45,13 +45,13 @@ describe('MedioTransporteComponent', () => {
     spyOn(component, 'obtenerMercancia');
     component.modificarSaldosMercancia();
     expect(component.obtenerMercancia).toHaveBeenCalled();
-    expect(component.mostrarAgregarMercancia).toBeTrue();
+    expect(component.mostrarAgregarMercancia).toBe(true);
   });
   
   it('should set mostrarAgregarMercancia when obtenerAgregarMercanciaEvent is called', () => {
     component.obtenerAgregarMercanciaEvent(true);
-    expect(component.mostrarAgregarMercancia).toBeTrue();
+    expect(component.mostrarAgregarMercancia).toBe(true);
     component.obtenerAgregarMercanciaEvent(false);
-    expect(component.mostrarAgregarMercancia).toBeFalse();
+    expect(component.mostrarAgregarMercancia).toBe(false);
   });
 });

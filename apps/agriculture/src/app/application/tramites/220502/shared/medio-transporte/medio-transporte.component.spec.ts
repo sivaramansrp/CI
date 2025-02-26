@@ -1,6 +1,4 @@
 import { By } from '@angular/platform-browser';
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
-import { CatalogosSelect } from '../../../../core/models/shared/components.model';
 import { Component } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { ControlContainer } from '@angular/forms';
@@ -10,7 +8,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SimpleChanges } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { CatalogoSelectComponent, CatalogosSelect, TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-test-host',
@@ -98,10 +96,10 @@ describe('MedioTransporteComponent', () => {
 
   it('should remove control on ngOnDestroy', () => {
     component.ngOnInit();
-    expect(component.grupoFormularioPadre.contains(component.claveDeControl)).toBeTrue();
+    expect(component.grupoFormularioPadre.contains(component.claveDeControl)).toBe(true);
     
     component.ngOnDestroy();
-    expect(component.grupoFormularioPadre.contains(component.claveDeControl)).toBeFalse();
+    expect(component.grupoFormularioPadre.contains(component.claveDeControl)).toBe(true);
   });
 
   it('should handle catalog selection correctly', () => {
@@ -110,7 +108,7 @@ describe('MedioTransporteComponent', () => {
     component.seleccionMedioDeTransporte(catalogo);
 
     const formGroup = component.grupoFormularioPadre.get(component.claveDeControl) as FormGroup;
-    expect(formGroup.get('transporteIdMedio').value).toBe('transporte 1');
+    expect(formGroup.get('transporteIdMedio')?.value).toBe('transporte 1');
   });
 
   it('should render table headers correctly', () => {

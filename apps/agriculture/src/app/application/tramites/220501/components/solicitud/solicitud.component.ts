@@ -1,12 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
-import { Solicitud } from '../../../../core/models/220501/sagarpa.model';
-import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
-import { TEXTOS } from '../../../../shared/constantes/220501/texto-enum';
-
-import { CargarDatosIniciales, CarrosDeFerrocarril, HistorialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
-
+import { CargarDatosIniciales, CarrosDeFerrocarril, HistorialInspeccionFisica, Solicitud, SolicitudPantallasService, TEXTOS_220501 } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar los datos de la solicitud.
@@ -20,7 +14,7 @@ export class SolicitudComponent implements OnInit {
   /**
    * Constantes de texto.
    */
-  TEXTOS = TEXTOS;
+  TEXTOS = TEXTOS_220501;
 
   /**
    * Formulario para los datos de la solicitud.
@@ -30,12 +24,12 @@ export class SolicitudComponent implements OnInit {
   /**
    * Historial de solicitudes.
    */
-  hSolicitud: string[];
+  hSolicitud: string[] = [];
 
   /**
    * Datos de las solicitudes.
    */
-  dSolicitud: Solicitud[];
+  dSolicitud: Solicitud[] = [];
 
   /**
    * Rango de días seleccionados.
@@ -55,22 +49,22 @@ export class SolicitudComponent implements OnInit {
   /**
    * Lista de identificadores de carros de ferrocarril.
    */
-  hCarroFerrocarril: string[];
+  hCarroFerrocarril: string[] = [];
 
   /**
    * Lista de objetos que representan los carros de ferrocarril.
    */
-  dCarrosDeFerrocarril: CarrosDeFerrocarril[];
+  dCarrosDeFerrocarril: CarrosDeFerrocarril[] = [];
 
   /**
    * Lista de identificadores del historial de inspección.
    */
-  hHistorialinspeccion: string[];
+  hHistorialinspeccion: string[] = [];
 
   /**
    * Lista de objetos que representan el historial de inspecciones físicas.
    */
-  dHistorialInspecciones: HistorialInspeccionFisica[];
+  dHistorialInspecciones: HistorialInspeccionFisica[] = [];
 
   /**
    * Indica si se debe mostrar la sección.

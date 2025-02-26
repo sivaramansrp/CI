@@ -79,5 +79,6 @@ export * from './core/services/220501/revision.service';
 export * from './core/services/220501/sagarpa/sagarpa.service';
 export * from './core/enums/220502/solicitud-pantallas.enum';
 export * from './core/services/220502/solicitud-pantallas.service';
-export * from './core/models/220501/sagarpa.model';
 export * from './core/models/220502/solicitud-pantallas.model';
+
+export { TEXTOS as TEXTOS_220501 } from './tramites/constantes/220501/texto-enum';

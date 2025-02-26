@@ -1,10 +1,6 @@
 import { Component } from '@angular/core';
-// import { DatosPasos } from '../../../../core/models/shared/components.model';
-// import { InspeccionFisicaPasos } from '../../../../core/enums/220502/solicitud-pantallas.enum';
-// import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
 import { ViewChild } from '@angular/core';
 import { DatosPasos, InspeccionFisicaPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
-// import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 
 /** Interfaz para definir la estructura de las acciones de los botones */
 interface AccionBoton {

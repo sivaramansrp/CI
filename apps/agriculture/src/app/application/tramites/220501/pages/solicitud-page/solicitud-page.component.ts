@@ -1,14 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { DatosPasos } from '../../../../core/models/shared/components.model';
-import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
-import { PASOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
-import { SECCIONES_TRAMITE_5701 } from '../../../../shared/constantes/seccionesTramites';
-import { SeccionQuery } from '../../../../core/queries/seccion.query';
-import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
-
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
+import { DatosPasos, ListaPasosWizard, PASOS, SECCIONES_TRAMITE_5701, SeccionQuery, WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -45,7 +39,7 @@ export class SolicitudPageComponent implements OnInit {
   /**
  * Estado de la sección actual.
  */
-  public seccion: SeccionState;
+  public seccion!: SeccionState;
 
   /**
  * Sujeto para manejar la destrucción de suscripciones.
@@ -123,6 +117,7 @@ export class SolicitudPageComponent implements OnInit {
     const secciones: boolean[] = [];
     const formaValida: boolean[] = [];
     for (const llaveSeccion in SECCIONES_TRAMITE_5701.PASO_1) {
+      // @ts-ignore - fix this
       secciones.push(SECCIONES_TRAMITE_5701.PASO_1[llaveSeccion]);
       formaValida.push(false);
     }

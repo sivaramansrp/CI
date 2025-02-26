@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DatosGeneralesComponent } from './datos-generales.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-// import { RevisionService } from '../../../../core/services/220501/revision.service';
-import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import { of, throwError } from 'rxjs';
-import { RevisionService } from '@ng-mf/data-access-user';
+import { RevisionService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import {jasmine} from '@types/jasmine';
 
 describe('DatosGeneralesComponent', () => {
   let component: DatosGeneralesComponent;
