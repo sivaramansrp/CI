@@ -27,7 +27,7 @@ const ROUTES: Routes = [
       import('./tramites/120402/asignacion-directa-de-cupo.module').then(
         (m) => m.AsignacionDirectaDeCupoModule
       ),
-  }
+  },
   {
     path: 'pexim',
     loadChildren: () =>
