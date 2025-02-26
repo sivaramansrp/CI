@@ -1,9 +1,10 @@
-import { CarrosDeFerrocarril } from '../../../../core/models/220502/solicitud-pantallas.model';
+// import { CarrosDeFerrocarril } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { CarrosDeFerrocarrilComponent } from './carros-de-ferrocarril.component';
 import { ComponentFixture } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { CarrosDeFerrocarril, TituloComponent } from '@ng-mf/data-access-user';
+// import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 describe('CarrosDeFerrocarrilComponent', () => {
   let component: CarrosDeFerrocarrilComponent;

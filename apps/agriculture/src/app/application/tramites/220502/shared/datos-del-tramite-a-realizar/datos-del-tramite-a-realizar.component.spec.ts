@@ -1,17 +1,18 @@
 import { By } from '@angular/platform-browser';
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+// import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+// import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { Component } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { DatosDelTramiteARealizarComponent } from './datos-del-tramite-a-realizar.component';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { InputFechaComponent } from '../../../../shared/components/input-fecha/input-fecha.component';
+// import { InputFechaComponent } from '../../../../shared/components/input-fecha/input-fecha.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TestBed } from '@angular/core/testing';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+// import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 import { Validators } from '@angular/forms';
+import { Catalogo, CatalogoSelectComponent, InputFechaComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-test-host',
@@ -75,9 +76,9 @@ describe('DatosDelTramiteARealizarComponent', () => {
 
   it('should remove control on ngOnDestroy', () => {
     component.ngOnInit();
-    expect(component.grupoFormularioPadre.contains(component.claveDeControl)).toBeTrue();
+    expect(component.grupoFormularioPadre.contains(component.claveDeControl)).toBe(true);
     component.ngOnDestroy();
-    expect(component.grupoFormularioPadre.contains(component.claveDeControl)).toBeFalse();
+    expect(component.grupoFormularioPadre.contains(component.claveDeControl)).toBe(false);
   });
 
   it('should handle certificadosSeleccion correctly', () => {

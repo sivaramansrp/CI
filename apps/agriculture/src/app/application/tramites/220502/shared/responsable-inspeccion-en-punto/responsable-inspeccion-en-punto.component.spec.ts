@@ -1,6 +1,6 @@
 import { By } from '@angular/platform-browser';
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+// import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+// import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { Component } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { ControlContainer } from '@angular/forms';
@@ -9,7 +9,8 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsableInspeccionEnPuntoComponent } from './responsable-inspeccion-en-punto.component';
 import { TestBed } from '@angular/core/testing';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
+// import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 @Component({
   selector: 'app-test-host',
@@ -69,41 +70,41 @@ describe('ResponsableInspeccionEnPuntoComponent', () => {
 
   it('should initialize form controls on ngOnInit', () => {
     component.ngOnInit();
-    const formGroup = component.grupoFormularioPadre.get(
+    const FORMGROUP = component.grupoFormularioPadre.get(
       component.claveDeControl
     ) as FormGroup;
-    expect(formGroup).toBeTruthy();
-    expect(formGroup.get('nombre')).toBeTruthy();
-    expect(formGroup.get('primerapellido')).toBeTruthy();
-    expect(formGroup.get('segundoapellido')).toBeTruthy();
-    expect(formGroup.get('mercancia')).toBeTruthy();
-    expect(formGroup.get('tipocontenedor')).toBeTruthy();
+    expect(FORMGROUP).toBeTruthy();
+    expect(FORMGROUP.get('nombre')).toBeTruthy();
+    expect(FORMGROUP.get('primerapellido')).toBeTruthy();
+    expect(FORMGROUP.get('segundoapellido')).toBeTruthy();
+    expect(FORMGROUP.get('mercancia')).toBeTruthy();
+    expect(FORMGROUP.get('tipocontenedor')).toBeTruthy();
   });
 
   it('should remove control on ngOnDestroy', () => {
     component.ngOnInit();
     expect(
       component.grupoFormularioPadre.contains(component.claveDeControl)
-    ).toBeTrue();
+    ).toBe(true);
     component.ngOnDestroy();
     expect(
       component.grupoFormularioPadre.contains(component.claveDeControl)
-    ).toBeFalse();
+    ).toBe(false);
   });
 
   it('should handle catalog selection correctly', () => {
     component.ngOnInit();
-    const catalogo: Catalogo = {
+    const CATALOGO: Catalogo = {
       id: 1,
       descripcion: 'Tipo contenedor 1',
       tam: 'Tipo contenedor 1',
       dpi: 'Tipo contenedor 1',
     };
-    component.tipoContenedorSeleccion(catalogo);
-    const formGroup = component.grupoFormularioPadre.get(
+    component.tipoContenedorSeleccion(CATALOGO);
+    const FORMGROUP = component.grupoFormularioPadre.get(
       component.claveDeControl
     ) as FormGroup;
-    expect(formGroup.get('tipocontenedor').value).toBe('Tipo contenedor 1');
+    expect(FORMGROUP.get('tipocontenedor')?.value).toBe('Tipo contenedor 1');
   });
 
   it('should load initial catalog data correctly', () => {

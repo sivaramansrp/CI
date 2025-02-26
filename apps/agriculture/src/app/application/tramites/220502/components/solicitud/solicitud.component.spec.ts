@@ -1,14 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitudComponent } from './solicitud.component';
-// import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
-import { TestBed } from '@angular/core/testing';
-import { fakeAsync } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { tick } from '@angular/core/testing';
 
 import { CarrosDeFerrocarrilComponent } from '../../shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
 import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
@@ -25,7 +21,7 @@ describe('SolicitudComponent 220502', () => {
 
   beforeEach(async () => {
     const solicitudServiceMock = {
-      getData: jasmine.createSpy('getData').and.returnValue(
+      getData: jest.fn().mockReturnValue(
         of({
           hMercancia: [
             'Fracción arancelaria',
@@ -45,7 +41,7 @@ describe('SolicitudComponent 220502', () => {
             'Cantidad parcial en UTM',
             'Saldo pendiente',
             'Fecha de ingreso',
-          ],``
+          ],
           hCarroFerrocarril: [
             'Número de parcialidad/remesa',
             'Cantidad de carros de ferrocarril',
@@ -133,7 +129,7 @@ describe('SolicitudComponent 220502', () => {
   });
 
   it('should load initial data on ngOnInit', fakeAsync(() => {
-    spyOn(component, 'cargarDatosIniciales').and.callThrough();
+    jest.spyOn(component, 'cargarDatosIniciales').mockImplementation();
 
     component.ngOnInit();
     tick();

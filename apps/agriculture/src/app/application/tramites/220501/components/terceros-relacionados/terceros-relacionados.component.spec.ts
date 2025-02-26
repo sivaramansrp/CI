@@ -21,12 +21,12 @@ describe('TercerosRelacionadosComponent', () => {
 
   it('should set enableScrollbar to true', () => {
     component.enableScrollbar = true;
-    expect(component.enableScrollbar).toBeTrue();
+    expect(component.enableScrollbar).toBe(true);
   });
 
   it('should set enableScrollbar to false', () => {
     component.enableScrollbar = false;
-    expect(component.enableScrollbar).toBeFalse();
+    expect(component.enableScrollbar).toBe(false);
   });
 
 });

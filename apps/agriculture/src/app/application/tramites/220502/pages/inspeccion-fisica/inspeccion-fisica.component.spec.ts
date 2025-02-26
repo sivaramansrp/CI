@@ -1,10 +1,11 @@
 import { ComponentFixture } from '@angular/core/testing';
-import { DatosPasos } from '../../../../core/models/shared/components.model';
+// import { DatosPasos } from '../../../../core/models/shared/components.model';
 import { InspeccionFisicaComponent } from './inspeccion-fisica.component';
-import { InspeccionFisicaPasos } from '../../../../core/enums/220502/solicitud-pantallas.enum';
+// import { InspeccionFisicaPasos } from '../../../../core/enums/220502/solicitud-pantallas.enum';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
+import { DatosPasos, InspeccionFisicaPasos, WizardComponent } from '@ng-mf/data-access-user';
+// import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 
 describe('InspeccionFisicaComponent', () => {
   let component: InspeccionFisicaComponent;

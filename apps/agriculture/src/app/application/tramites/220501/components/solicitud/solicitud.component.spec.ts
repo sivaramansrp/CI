@@ -50,16 +50,16 @@ describe('SolicitudComponent', () => {
 
   it('should handle transporteSeleccionado event', () => {
     component.onTransporteSeleccionado(true);
-    expect(component.mostrarSeccion).toBeTrue();
+    expect(component.mostrarSeccion).toBe(true);
 
     component.onTransporteSeleccionado(false);
-    expect(component.mostrarSeccion).toBeFalse();
+    expect(component.mostrarSeccion).toBe(false);
   });
   
   it('should set mostrarSeccion when onTransporteSeleccionado is called', () => {
     component.onTransporteSeleccionado(true);
-    expect(component.mostrarSeccion).toBeTrue();
+    expect(component.mostrarSeccion).toBe(true);
     component.onTransporteSeleccionado(false);
-    expect(component.mostrarSeccion).toBeFalse();
+    expect(component.mostrarSeccion).toBe(false);
   });  
 });

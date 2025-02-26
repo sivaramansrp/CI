@@ -1,8 +1,9 @@
 import { ComponentFixture } from '@angular/core/testing';
-import { HistorialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
+// import { HistorialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
 import { HistorialInspeccionFisicaComponent } from './historial-inspeccion-fisica.component';
 import { TestBed } from '@angular/core/testing';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { HistorialInspeccionFisica, TituloComponent } from '@ng-mf/data-access-user';
+// import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 describe('HistorialInspeccionFisicaComponent', () => {
   let component: HistorialInspeccionFisicaComponent;
@@ -26,10 +27,10 @@ describe('HistorialInspeccionFisicaComponent', () => {
   });
 
   it('should have tablaHeadData as input', () => {
-    const testHeadData = ['Número parcialidad/remesa', 'Fracción arancelaria', 'Nico','Cantidad total en UMT','Cantidad parcial en UTM','Saldo pendiente','Fecha de ingreso'];
-    component.tablaHeadData = testHeadData;
+    const TESTHEADDATA = ['Número parcialidad/remesa', 'Fracción arancelaria', 'Nico','Cantidad total en UMT','Cantidad parcial en UTM','Saldo pendiente','Fecha de ingreso'];
+    component.tablaHeadData = TESTHEADDATA;
     fixture.detectChanges();
-    expect(component.tablaHeadData).toEqual(testHeadData);
+    expect(component.tablaHeadData).toEqual(TESTHEADDATA);
   });
 
   it('should have tablaFilaDatos as input', () => {
