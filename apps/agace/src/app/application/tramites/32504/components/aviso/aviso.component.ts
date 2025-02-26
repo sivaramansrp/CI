@@ -12,7 +12,7 @@ import { InputFechaComponent } from "@ng-mf/data-access-user";
 import { InputRadioComponent } from "@ng-mf/data-access-user";
 import { ManualAvisoComponent } from '../manual-aviso/manual-aviso.component';
 import { TableComponent } from "@ng-mf/data-access-user";
-import TipoCarga from '@ng-mf/data-access-user';
+import TipoCarga from '../../../../../../../../../libs/shared/theme/assets/json/32504/tipo-cargo.json';
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { map } from 'rxjs';
 
