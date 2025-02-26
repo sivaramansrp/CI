@@ -1,0 +1,87 @@
+<div class="container">
+  <div class="row d-flex align-items-end">
+    <div class="col-md-4">
+      <form [formGroup]="documentoForma">
+        <app-catalogo-select [catalogo]="catalogoDocumentos" [label]="'Tipo de documento'" [required]="true" formControlName="documento" (change)="seleccionarDocumento()"></app-catalogo-select>
+      </form>
+    </div>
+
+    <div class="col-md-4">
+      <div class="btn-upload">
+        <input type="file" class="form-control" id="file-input" (change)="cargarDoc($event)"
+          [disabled]="btnDesactivado">
+        <label for="file-input" class="btn" [ngClass]="!btnDesactivado ? 'btn-primary' : 'btn-disabled'">
+          <i class="bi bi-cloud-arrow-up"></i>
+          Subir documento
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-4">
+      @if (documentoSeleccionado) {
+      <div class="especificaciones">
+        <span>Tipo documento: {{PDF}}</span>
+        <span>Tamaño(KB): {{tamMaximo}} {{MB}} </span>
+        <span>Resolución(dpi): {{documentoSeleccionado.dpi}}
+          {{DPI}}</span>
+      </div>
+
+      }
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-12">
+      @if (docCargados) {
+      <table class="table table-responsive">
+        <thead>
+          <tr>
+            <th colspan="2">Tipo Documento</th>
+            <th>Documento</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of documentosCargados; track item.tipoDocumento.id; let i = $index) {
+          <tr>
+            <td> {{i+1}} </td>
+            <td>{{ item.tipoDocumento.descripcion}}</td>
+            <td>{{ item.nombreArchivo}}</td>
+            <td>
+              <button type="button" class="btn btn-link" (click)="verPdf(url)">
+                <i class="bi bi-eye bi-c"></i>
+              </button>
+
+              <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
+                (click)="abrirModal(i)">
+                <i class="bi bi-trash3 bi-c"></i>
+              </button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" [ngClass]="modal" id="modalConfirmacion" #modalConfirmacion tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Eliminar archivo</h4>
+      </div>
+      <div class="modal-body">
+        <p>¿Desea eliminar el archivo</p>
+      </div>
+      <div class="modal-footer custom-footer">
+        <button type="button" class="btn btn-default" (click)="cerrarModal()">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="eliminarDocumento(indiceDocumento)">Eliminar</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

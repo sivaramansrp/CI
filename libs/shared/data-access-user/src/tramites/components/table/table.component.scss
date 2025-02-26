@@ -1,0 +1,11 @@
+.table-responsive {
+    font-size: 13px;
+}
+/**
+ * @description Clase utilizada para habilitar la barra de desplazamiento horizontal en elementos que la contienen.
+ * @class
+ */
+ .enable-scrollbar {
+    overflow-x: auto;
+    white-space: nowrap;
+}

@@ -1,0 +1,31 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "esnext",
+    "useDefineForClassFields": false,
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@ng-mf/data-access-user": ["libs/shared/data-access-user/src/index.ts"],
+      "aga/Routes": ["apps/aga/src/app/remote-entry/entry.routes.ts"],
+      "agace/Routes": ["apps/agace/src/app/remote-entry/entry.routes.ts"],
+      "agriculture/Routes": [
+        "apps/agriculture/src/app/remote-entry/entry.routes.ts"
+      ],
+      "login/Routes": ["apps/login/src/app/remote-entry/entry.routes.ts"],
+      "se/Routes": ["apps/se/src/app/remote-entry/entry.routes.ts"],
+      "semarnat/Routes": ["apps/semarnat/src/app/remote-entry/entry.routes.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

@@ -33,6 +33,7 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 - [ ] I have identified and documented the requirements before beginning development.
 - [ ] I have leveraged shared components where applicable.
 - [ ] My code follows the style guidelines of this project.
+- [ ] I have followed microfrontend design principles in implementing my changes.
 - [ ] I have performed a self-review of my own code.
 - [ ] I have added comments to my code, particularly in hard-to-understand areas.
 - [ ] I have linted my changes and resolved all identified issues.
