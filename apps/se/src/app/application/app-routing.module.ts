@@ -14,6 +14,13 @@ const routes: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
+  {
+    path: 'de-pruebas',
+    loadChildren: () =>
+      import('./tramites/120602/de-pruebas.module').then(
+        (m) => m.DePruebasModule
+      ),
+  },
 ];
 
 @NgModule({
