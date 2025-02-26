@@ -21,6 +21,32 @@ const routes: Routes = [
         (m) => m.DePruebasModule
       ),
   },
+  {
+    path: 'pantallas',
+    loadChildren: () =>
+      import('./tramites/110101/pantallas/pantallas.module').then(
+        (m) => m.Pantallas110101Module
+      ),
+  },
+  {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/130118/pexim.module').then((m) => m.PeximModule),
+  },
+  {
+    path: 'elegibilidad-de-textiles',
+    loadChildren: () =>
+      import('./tramites/120301/elegibilidad-de-textiles.module').then(
+        (m) => m.ElegibilidadDeTextilesModule
+      ),
+  },
+  {
+    path: 'permiso-importacion',
+    loadChildren: () =>
+      import('./tramites/130120/permiso-importacion.module').then(
+        (m) => m.PermisoImportacionModule
+      ),
+  }
 ];
 
 @NgModule({

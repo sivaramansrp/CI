@@ -4,13 +4,13 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import radioOptionsData from './../../../../../../../../../libs/shared/theme/assets/json/220401/tipo-de-certifico.json';
+import radioOptionsData from 'libs/shared/theme/assets/json/220401/tipo-de-certifico.json';
 
 import { AgregarArchivoComponent } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
-import unidadRadioFields from './../../../../../../../../../libs/shared/theme/assets/json/220401/unidad.json';
+import unidadRadioFields from 'libs/shared/theme/assets/json/220401/unidad.json';
 @Component({
   selector: 'app-datos-del-certificado',
   templateUrl: './datos-del-certificado.component.html',

@@ -22,7 +22,7 @@ import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 
 
 
@@ -45,8 +45,10 @@ import { HttpClientModule } from '@angular/common/http';
     RepresentacionComponent,
     TituloComponent,
     UsoEspicificoComponent,
-    WizardComponent,
-    HttpClientModule
+    WizardComponent    
+  ],
+  providers: [
+    provideHttpClient(),
   ]
 })
 export class OctavaTemporalModule { }
