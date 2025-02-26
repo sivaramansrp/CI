@@ -19,9 +19,9 @@ export class TablaDinamicaComponent<T> {
    *
    * @type { TablaSeleccion}
    */
-  @Input() tipoSeleccionTabla: TablaSeleccion = undefined;
+  @Input() tipoSeleccion: TablaSeleccion = TablaSeleccion.UNDEFINED;
 
-
+ 
   /**
    * Expone el `enum` `TablaSeleccion` al componente de plantilla HTML.
    * Permite que los valores del `enum` sean accesibles dentro de la plantilla para usarlos en las directivas de Angular como `*ngIf` o `*ngFor`.
@@ -73,7 +73,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @type {number}
    */
-  idFilaSeleccionada: number;
+  idFilaSeleccionada: number = -1;
 
   /**
    * Almacena un array de los índices de las filas seleccionadas.

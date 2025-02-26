@@ -5,10 +5,12 @@ import { CatalogoSelectComponent } from "../../../../../../../../../libs/shared/
 import { Catalogo } from '@ng-mf/data-access-user';
 import estado from "../../../../../../../../../libs/shared/theme/assets/json/90305/estado.json";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 @Component({
   selector: 'app-consultad-domicilios-90305',
   standalone: true,
-  imports: [CommonModule, TituloComponent, CatalogoSelectComponent,TablaDinamicaComponent,ConfiguracionColumna,ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, CatalogoSelectComponent,ReactiveFormsModule,TablaDinamicaComponent],
   templateUrl: './consultad-domicilios-90305.component.html',
   styleUrl: './consultad-domicilios-90305.component.scss',
 })
