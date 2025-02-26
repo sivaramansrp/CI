@@ -2,47 +2,68 @@ import { CommonModule } from '@angular/common';
 
 import { Component, Input, OnInit } from '@angular/core';
 
+import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { tap } from 'rxjs';
+
 import { CATALOGOS_ID, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { FormularioDinamico } from '@ng-mf/data-access-user';
+
+import { FormulariosService } from '@ng-mf/data-access-user';
+import { SolicitanteService } from '@ng-mf/data-access-user';
 
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL
 } from 'libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 
-
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
-
-import { SolicitanteService } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-// eslint-disable-next-line sort-imports
-import { FormularioDinamico } from '@ng-mf/data-access-user';
-import { FormulariosService } from '@ng-mf/data-access-user';
 import { UppercaseDirective } from 'libs/shared/data-access-user/src/tramites/directives/Uppercase/uppercase.directive';
-import { tap } from 'rxjs';
 
+/**
+ * `DomicilioComponent` maneja los datos del formulario relacionados con el domicilio
+ * y gestiona la entrada del usuario para diferentes tipos de personas 
+ * (Física Nacional, Moral Nacional, etc.).
+ */
 @Component({
   selector: 'app-domicilio',
   standalone: true,
-  imports: [CommonModule, SolicitanteComponent, TituloComponent,
-    ReactiveFormsModule,
-    UppercaseDirective],
+  imports: [CommonModule, SolicitanteComponent, TituloComponent, ReactiveFormsModule, UppercaseDirective],
   templateUrl: './Domicilio.component.html',
   styleUrl: './Domicilio.component.scss',
 })
 export class DomicilioComponent implements OnInit {
+  /**
+   * Propiedad de entrada para establecer dinámicamente el tabindex.
+   */
   @Input() tabindex!: number;
 
+  /**
+   * Tipo de persona seleccionada en el formulario.
+   * Puede ser una persona física o moral, nacional o extranjera.
+   */
   tipoPersona!: number;
+
+  /**
+   * Configuración de los campos de formulario dinámicos para el domicilio fiscal.
+   * Se carga según el tipo de persona seleccionada.
+   */
   domicilioFiscal: FormularioDinamico[] = [];
+
+  /**
+   * Formulario principal del componente.
+   * Contiene subgrupos para organizar la estructura del domicilio fiscal.
+   */
   form!: FormGroup;
 
+  /**
+   * Constructor del componente.
+   * 
+   * @param solicitanteServicio - Servicio para obtener los datos del solicitante.
+   * @param fb - Instancia de FormBuilder para la creación de formularios reactivos.
+   * @param formServices - Servicio para manejar operaciones dinámicas del formulario.
+   */
   constructor(
     private solicitanteServicio: SolicitanteService,
     private fb: FormBuilder,
@@ -53,108 +74,98 @@ export class DomicilioComponent implements OnInit {
     this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
   }
 
-  ngOnInit() {
+  /**
+   * Método del ciclo de vida de Angular.
+   * Se ejecuta al inicializar el componente y obtiene los datos generales del solicitante.
+   */
+  ngOnInit(): void {
     this.getDatosGenerales();
   }
 
   /**
-   * Obtiene el tipo de persona que es solicitante, y asigna los campos correspondientes al formulario.
-   * @param tipo - Tipo de persona que es solicitante.
-   * @returns void
+   * Determina el tipo de persona y asigna los campos del formulario correspondientes.
+   * 
+   * @param tipo - El tipo de persona (Física Nacional, Moral Nacional, Extranjera).
    */
   obtenerTipoPersona(tipo: number): void {
     this.tipoPersona = tipo;
-    if (tipo === TIPO_PERSONA.FISICA_NACIONAL) {
+    if (tipo === TIPO_PERSONA.FISICA_NACIONAL || tipo === TIPO_PERSONA.MORAL_NACIONAL) {
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-    } else if (tipo === TIPO_PERSONA.MORAL_NACIONAL) {
-      this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-    } else if (tipo === TIPO_PERSONA.FISICA_EXTRANJERA) {
-      this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
-    } else if (tipo === TIPO_PERSONA.MORAL_EXTRANJERA) {
+    } else {
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
     }
   }
+
   /**
-   * Es un getter que proporciona un acceso más sencillo ala grupo de formularios llamado domicilioFiscal contenido dentr del formulario principal Form.
+   * Getter para acceder al `FormGroup` del domicilio fiscal.
+   * 
+   * @returns FormGroup - Representa la sección del formulario de domicilio fiscal.
    */
-  get domicilioFiscalForm() {
+  get domicilioFiscalForm(): FormGroup {
     return this.form.get('domicilioFiscal') as FormGroup;
   }
 
   /**
-   * Crea un formulario vacío con dos grupos de formularios, datosGenerales y domicilioFiscal.
+   * Crea la estructura del formulario principal con subgrupos anidados.
    */
   crearFormulario(): void {
     this.form = this.fb.group({
+
       domicilioFiscal: this.fb.group({}),
     });
   }
 
   /**
-   * Inicializa los campos del formulario con los campos de la configuración de los campos de los formularios.
-   * @param config - Configuración de los campos de los formularios.
-   * @param grupoNombre - Nombre del grupo de formularios a inicializar.
-   * @returns void
+   * Inicializa los controles del formulario dinámicamente según la configuración proporcionada.
+   * 
+   * @param config - Matriz de configuración para los campos dinámicos.
+   * @param grupoNombre - Nombre del grupo de formulario a inicializar.
    */
-  inicializarFormGroup(
-    config: FormularioDinamico[],
-    grupoNombre: string
-  ): void {
+  inicializarFormGroup(config: FormularioDinamico[], grupoNombre: string): void {
     const grupo = this.form.get(grupoNombre) as FormGroup;
     config.forEach((campo) => {
       const validators = this.getValidators(campo.validators);
-      grupo.addControl(
-        campo.campo,
-        this.fb.control({ value: '', disabled: campo.disabled }, validators)
-      );
+      grupo.addControl(campo.campo, this.fb.control({ value: '', disabled: campo.disabled }, validators));
     });
   }
 
   /**
-   * Obtiene los validadores de los campos de los formularios.
-   * @param validators - Validadores de los campos de los formularios.
-   * @returns ValidatorFn[]
+   * Mapea cadenas de validación a funciones de validadores de Angular.
+   * 
+   * @param validators - Matriz de validadores en formato de cadena (por ejemplo, `['required', 'maxLength:50']`).
+   * @returns {ValidatorFn[]} - Matriz de funciones de validación de Angular.
    */
   getValidators(validators: string[]): ValidatorFn[] {
-    const formValidators: ValidatorFn[] = [];
-    validators.forEach((validator) => {
+    return validators.map((validator) => {
       if (validator === 'required') {
-        formValidators.push(Validators.required);
-      } else if (validator.includes('maxLength')) {
-        const max = validator.split(':')[1];
-        formValidators.push(Validators.maxLength(Number(max)));
-      } else if (validator.includes('pattern')) {
+        return Validators.required;
+      } else if (validator.startsWith('maxLength')) {
+        const max = Number(validator.split(':')[1]);
+        return Validators.maxLength(max);
+      } else if (validator.startsWith('pattern')) {
         const pattern = validator.split(':')[1];
-        formValidators.push(Validators.pattern(pattern));
+        return Validators.pattern(pattern);
       }
-    });
-    return formValidators;
+      return null!;
+    }).filter(Boolean);
   }
 
   /**
-   * Obtiene los datos generales del solicitante con una peticion get.
-   * @returns void
+   * Obtiene los datos generales del solicitante y los asigna al formulario.
    */
   getDatosGenerales(): void {
-    this.solicitanteServicio
-      .getDatosGenerales(CATALOGOS_ID.DATOS_PERSONA_FISICA)
+    this.solicitanteServicio.getDatosGenerales(CATALOGOS_ID.DATOS_PERSONA_FISICA)
       .pipe(
         tap((response) => {
           if (response) {
             const datos = JSON.parse(response.data);
             const datosDomicilioFiscal = datos.domicilioFiscal;
 
-            const camposDatosDomicilioFiscal =
-              this.formServices.obtenerNombresCamposForm(
-                this.domicilioFiscalForm
-              );
+
+            const camposDatosDomicilioFiscal = this.formServices.obtenerNombresCamposForm(this.domicilioFiscalForm);
 
             camposDatosDomicilioFiscal.forEach((campo) => {
-              this.formServices.agregarValorCampoDesactivados(
-                this.domicilioFiscalForm,
-                campo,
-                datosDomicilioFiscal[campo]
-              );
+              this.formServices.agregarValorCampoDesactivados(this.domicilioFiscalForm, campo, datosDomicilioFiscal[campo]);
             });
           }
         })
@@ -162,3 +173,5 @@ export class DomicilioComponent implements OnInit {
       .subscribe();
   }
 }
+
+
