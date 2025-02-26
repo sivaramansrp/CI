@@ -8,6 +8,11 @@ const routes: Routes = [
     path: 'pantallas',
     component: InspeccionFisicaComponent,
   },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'pantallas',
+  }
 ];
 
 @NgModule({
