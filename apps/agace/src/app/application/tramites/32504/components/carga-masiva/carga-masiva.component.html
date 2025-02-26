@@ -1,0 +1,27 @@
+<div class="container">
+  <ng-titulo [titulo]="'Plantilla de carga masiva'"></ng-titulo>
+  <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
+  <div class="d-flex justify-content-between">
+    <div>
+      <input
+        type="file"
+        id="fileInput"
+        (change)="updateFile($event)"
+        hidden
+      />
+      <span for="fileInput" class="custom-upload-btn">{{
+        TEXTOS.FILE_UPLOAD
+      }}</span>
+      <span class="file-name">{{ TEXTOS.FILE_UPLOAD_TEXT }}</span>
+    </div>
+    <div>
+      <button type="button" class="btn btn-primary ms-3" [disabled]="false">
+        Cargar archivo
+      </button>
+      <button type="button" class="btn btn-primary ms-3" [disabled]="false">
+        Limpiar
+      </button>
+    </div>
+  </div>
+</div>
+>

@@ -1,0 +1,120 @@
+<div class="container">
+  <form [formGroup]="formulario">
+    @for(fieldGroup of configuracion; let groupIndex = $index; track groupIndex)
+    {
+    <div
+      class="form"
+      [formGroupName]="fieldGroup.formGroupName"
+      [ngClass]="{ 'd-none': isManualAsivoAgregarClicked }"
+    >
+      <ng-titulo [titulo]="fieldGroup.title" />
+
+      <div class="row align-items-center">
+        @for (item of fieldGroup.menu; let menuIndex = $index; track menuIndex)
+        {
+        <div [ngClass]="item.class" [ngStyle]="{ visibility: item.visibility }">
+          <div class="form-group">
+            @switch (item.inputType) { @case('select') {
+            <app-catalogo-select
+              [catalogo]="item.props.catalogos"
+              [label]="item.props.labelNombre"
+              [required]="true"
+              name="tipoSolicitud"
+              (change)="seleccionCatalogo(item.props.labelNombre, $event)"
+            ></app-catalogo-select>
+            } @case('text') { @if((!item.props.availableRadioOptions) ||
+            (item.props.availableRadioOptions &&
+            item.props.availableRadioOptions.includes(valoresSeleccionadosRadio['radio'
+            + groupIndex]))) {
+            <label class="form-label" [for]="item.props.campo">{{
+              item.props.labelNombre
+            }}</label>
+            <input
+              class="form-control"
+              [type]="item.props.tipo_input"
+              [id]="item.props.campo"
+              [placeholder]="item.props.placeholder"
+              [formControlName]="item.props.campo"
+              appUppercase
+            />
+            } } @case('break-content') {
+            <div class="w-100"></div>
+            } @case ('date') {
+            <input-fecha
+              [datos]="item.props"
+              (valorCambiado)="fechaCambiado($event)"
+            ></input-fecha>
+            } @case ('radio') {
+            <label class="form-label" [for]="item.props.campo">{{
+              item.props.labelNombre
+            }}</label
+            >@if(item.props.required){<span>*</span>}:
+            <app-input-radio
+              [radioOptions]="item.props.options"
+              [selectedValue]="item.props.selectedValue"
+              [isRequired]="item.props.required"
+              (valueChange)="
+                cambioValorRadio(
+                  'radio' + groupIndex,
+                  groupIndex,
+                  menuIndex,
+                  $event
+                )
+              "
+              [layout]="'horizontal'"
+            ></app-input-radio>
+            }}
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    } @if (valoresSeleccionadosRadio.radio1 === 'manual') {
+    <div
+      class="form"
+      formGroupName="manualDatos"
+      [ngClass]="{ 'd-none': isManualAsivoAgregarClicked }"
+    >
+      <ng-titulo titulo="Datos del aviso" />
+      <div class="row">
+        <ng-table
+          [commonTableHeader]="tableData.headers"
+          [commonTableBody]="tableData.data"
+        ></ng-table>
+        <div class="d-flex justify-content-end">
+          <button
+            type="button"
+            class="btn btn-primary ms-3"
+            [disabled]="true"
+            (click)="buttonAcion(buttonActionTypes.ELIMINAR)"
+          >
+            Eliminar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary ms-3"
+            [disabled]="false"
+            (click)="buttonAcion(buttonActionTypes.MODIFICAR)"
+          >
+            Modificar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary ms-3"
+            [disabled]="false"
+            (click)="buttonAcion(buttonActionTypes.AGREGAR)"
+          >
+            Agregar
+          </button>
+        </div>
+      </div>
+    </div>
+    } @if (isManualAsivoAgregarClicked) {
+    <app-manual-aviso
+      (emitButtonAction)="isManualAsivoAgregarClicked = $event"
+    ></app-manual-aviso>
+    } @if (valoresSeleccionadosRadio.radio1 === 'carga_masiva') {
+    <app-carga-masiva></app-carga-masiva>
+    }
+  </form>
+</div>
