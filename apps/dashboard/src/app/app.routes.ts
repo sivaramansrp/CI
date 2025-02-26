@@ -19,6 +19,11 @@ export const appRoutes: Route[] = [
       loadRemoteModule('aga', './Routes').then((m) => m.remoteRoutes),
   },
   {
+    path: 'agace',
+    loadChildren: () =>
+      loadRemoteModule('agace', './Routes').then((m) => m.REMOTE_ROUTES),
+  },
+  {
     path: 'agriculture',
     loadChildren: () =>
       loadRemoteModule('agriculture', './Routes').then((m) => m.remoteRoutes),
