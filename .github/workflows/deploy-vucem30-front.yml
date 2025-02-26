@@ -19,8 +19,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22.0.0
+          node-version: 22.14.0
 
+      - name: Instalar NX globalmente
+        run: npm install -g nx@19.3.1
+      
       - name: Set Sonar Version Number
         run: echo "VERSION=6.2.1.4610-linux-x64" >> $GITHUB_ENV
         
