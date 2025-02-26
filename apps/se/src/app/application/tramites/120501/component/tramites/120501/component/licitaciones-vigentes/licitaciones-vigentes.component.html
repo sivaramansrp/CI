@@ -122,11 +122,11 @@
             <div class="row">
               <div class="col-md-4">
                 <label class="form-label" for="rfc">RFC*:</label>
-                <input type="text" class="form-control" id="rfc" formControlName="rfc" placeholder="eeg860212925" readonly>
+                <input type="text" class="form-control" id="rfc" formControlName="rfc" readonly>
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="montodisponible">Monto disponible:</label>
-                <input type="text" class="form-control" id="montodisponible" formControlName="montodisponible" placeholder="15" readonly>
+                <input type="text" class="form-control" id="montodisponible" formControlName="montodisponible" readonly>
               </div>
               <div class="col-md-4">
                 <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3">
@@ -135,7 +135,7 @@
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="montorecibir">Monto a recibir*:</label>
-                <input type="text" class="form-control bg-white" id="montorecibir" formControlName="montorecibir" placeholder="1000"  [ngClass]="isInvalid('montorecibir') ? 'required' : ''">
+                <input type="text" class="form-control bg-white" id="montorecibir" formControlName="montorecibir" [ngClass]="isInvalid('montorecibir') ? 'required' : ''">
                 <div *ngIf="isInvalid('montorecibir')" class="text-danger">
                   Este campo es obligatorio
               </div>
