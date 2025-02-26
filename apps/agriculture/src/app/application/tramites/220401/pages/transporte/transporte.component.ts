@@ -86,7 +86,7 @@ export class TransporteComponent implements OnDestroy {
  * Este método se utiliza para obtener los datos de los medios de transporte.
  */
   fetchtiposDocumentos() {
-    this.httpCoreService.get('./../../../../../../../../../../libs/shared/theme/assets/json/220401/mediodetransporte.json').pipe(
+    this.httpCoreService.get('assets/json/220401/mediodetransporte.json').pipe(
       takeUntil(this.destroyed$)
     ).subscribe((data): void => {
       this.tiposDocumentos['catalogos'] = data as Catalogo[];

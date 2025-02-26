@@ -30,6 +30,11 @@ import { TercerosComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { DetalleTramiteComponent } from './components/detalle-tramite/detalle-tramite.component';
+import { GeneraDictamenComponent } from './components/genera-dictamen/genera-dictamen.component';
+import { RequerimientoInformacionComponent } from './components/requerimiento-informacion/requerimiento-informacion.component';
+import { DocumentosExistentesComponent } from './components/documentos-existentes/documentos-existentes.component';
+import { EvaluarDictamenComponent } from './pages/evaluar-dictamen/evaluar-dictamen.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +43,11 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
+    DetalleTramiteComponent,
+    GeneraDictamenComponent,
+    EvaluarDictamenComponent,
+    RequerimientoInformacionComponent,
+    DocumentosExistentesComponent
   ],
   imports: [
     forwardRef(() => TercerosComponent),
