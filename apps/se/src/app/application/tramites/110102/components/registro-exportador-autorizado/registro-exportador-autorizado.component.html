@@ -2,7 +2,7 @@
   <ng-titulo [titulo]="'Información opcional para UE y AELC'"></ng-titulo>
   <form [formGroup]="registroExportadorForm">
     <div class="row">
-      <div class="form-group">
+      <div class="col-md-8 form-group">
         <div class="form-check">
           <input class="form-check-input" type="checkbox" id="solicitaSeparacionContable" formControlName="solicitaSeparacionContable" />
           <label class="form-check-label text-justify" for="solicitaSeparacionContable">
@@ -10,7 +10,7 @@
           </label>
         </div>
       </div>
-      <div class="form-group">
+      <div class="col-md-8 form-group">
         <div class="form-check">
           <input class="form-check-input" type="checkbox" id="solicitaExportadorAutorizado" formControlName="solicitaExportadorAutorizado" (change)="onSolicitaExportadorAutorizadoChange($event)" />
           <label class="form-check-label text-justify" for="solicitaExportadorAutorizado">
