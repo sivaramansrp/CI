@@ -14,7 +14,6 @@ import { BandejaTareasPendientesComponent } from './bandejaPendientes/bandeja-ta
   declarations: [
     AppComponent,
     SeleccionModuloComponent,
-    BandejaTareasPendientesComponent,
   ],
   imports: [
     AkitaNgDevtools,
@@ -26,6 +25,7 @@ import { BandejaTareasPendientesComponent } from './bandejaPendientes/bandeja-ta
     NavComponent,
     TituloComponent,
     ToastrModule.forRoot(),
+    BandejaTareasPendientesComponent,
 ],
   providers: [
     provideToastr({
