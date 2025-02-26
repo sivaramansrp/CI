@@ -41,57 +41,57 @@
         </div>
     </div>
 
-<div class="row">
-    <ng-titulo titulo="Domicilio donde se almacenarán las mercancías a importar"></ng-titulo>
+    <div class="row">
+        <ng-titulo titulo="Domicilio donde se almacenarán las mercancías a importar"></ng-titulo>
 
-    <div class="col-md-4">
-        <label for="País" class="form-label">País:</label>
-        <input type="text" id="País" class="form-control" readonly [disabled]="true">
+        <div class="col-md-4">
+            <label for="País" class="form-label">País:</label>
+            <input type="text" id="País" class="form-control" readonly [disabled]="true">
+        </div>
+        <div class="col-md-4">
+            <label for="Código postal" class="form-label">Código postal:
+            </label>
+            <input type="text" id="Código postal" class="form-control" readonly [disabled]="true">
+        </div>
+        <div class="col-md-4">
+            <label for="Estado" class="form-label">Estado</label>
+            <input type="text" id="Estado" class="form-control" readonly [disabled]="true">
+        </div>
+        <div class="col-md-4">
+            <label for="alcaldía:" class="form-label">Municipio o alcaldía:</label>
+            <input type="text" id="alcaldía:" class="form-control" readonly [disabled]="true">
+        </div>
+        <div class="col-md-4">
+            <label for="Localidad" class="form-label">Localidad:</label>
+            <input type="text" id="Localidad" class="form-control" readonly [disabled]="true">
+        </div>
+        <div class="col-md-4">
+            <label for="Colonia" class="form-label">Colonia:</label>
+            <input type="text" id="Colonia" class="form-control" readonly [disabled]="true">
+        </div>
+        <div class="col-md-8">
+            <label for="Calle" class="form-label">Calle:</label>
+            <input type="text" id="Calle" class="form-control" readonly [disabled]="true">
+        </div>
+        <div class="col-md-4">
+            <label for="exterior" class="form-label">Número exterior:</label>
+            <input type="text" id="exterior" class="form-control" readonly [disabled]="true">
+        </div>
+        <div class="col-md-4">
+            <label for="interior" class="form-label">Número interior:</label>
+            <input type="text" id="interior" class="form-control" readonly [disabled]="true">
+        </div>
+        <div class="col-md-2">
+            <label for="Lada" class="form-label">Lada:</label>
+            <input type="text" id="Lada" class="form-control" readonly [disabled]="true">
+        </div>
+        <div class="col-md-3">
+            <label for="Teléfono" class="form-label">Teléfono:</label>
+            <input type="text" id="Teléfono" class="form-control" readonly [disabled]="true">
+        </div>
     </div>
-    <div class="col-md-4">
-        <label for="Código postal" class="form-label">Código postal:
-        </label>
-        <input type="text" id="Código postal" class="form-control" readonly [disabled]="true">
-    </div>
-    <div class="col-md-4">
-        <label for="Estado" class="form-label">Estado</label>
-        <input type="text" id="Estado" class="form-control" readonly [disabled]="true">
-    </div>
-    <div class="col-md-4">
-        <label for="alcaldía:" class="form-label">Municipio o alcaldía:</label>
-        <input type="text" id="alcaldía:" class="form-control" readonly [disabled]="true">
-    </div>
-    <div class="col-md-4">
-        <label for="Localidad" class="form-label">Localidad:</label>
-        <input type="text" id="Localidad" class="form-control" readonly [disabled]="true">
-    </div>
-    <div class="col-md-4">
-        <label for="Colonia" class="form-label">Colonia:</label>
-        <input type="text" id="Colonia" class="form-control" readonly [disabled]="true">
-    </div>
-    <div class="col-md-8">
-        <label for="Calle" class="form-label">Calle:</label>
-        <input type="text" id="Calle" class="form-control" readonly [disabled]="true">
-    </div>
-    <div class="col-md-4">
-        <label for="exterior" class="form-label">Número exterior:</label>
-        <input type="text" id="exterior" class="form-control" readonly [disabled]="true">
-    </div>
-    <div class="col-md-4">
-        <label for="interior" class="form-label">Número interior:</label>
-        <input type="text" id="interior" class="form-control" readonly [disabled]="true">
-    </div>
-    <div class="col-md-2">
-        <label for="Lada" class="form-label">Lada:</label>
-        <input type="text" id="Lada" class="form-control" readonly [disabled]="true">
-    </div>
-    <div class="col-md-3">
-        <label for="Teléfono" class="form-label">Teléfono:</label>
-        <input type="text" id="Teléfono" class="form-control" readonly [disabled]="true">
-    </div>
-</div>
 
-    
+
     <div class="row">
         <ng-titulo titulo="Datos generales socios accionistas"></ng-titulo>
         <div class="col-md-6">
@@ -133,7 +133,6 @@
         </div>
     </div>
 
-<app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla"
-[configuracionTabla]="configuracionTabla"
-[datos]="datos"></app-tabla-dinamica>
+    <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla"
+        [datos]="datos"></app-tabla-dinamica>
 </div>

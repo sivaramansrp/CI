@@ -12,5 +12,5 @@ export class DePruebasComponent {
 
     pantallasPasos: ListaPasosWizard[] = DE_PRUEBAS;
 
-    indice: number = 1;
+    indice: number = 2;
 }

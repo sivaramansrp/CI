@@ -2,10 +2,9 @@ import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent,
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 
-import{ TablaDinamicaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-
-import { ConfiguracionColumna } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
 
@@ -57,7 +56,7 @@ export class DatosEmpresaComponent implements OnInit {
     return _e
   }
 
-  tipoSeleccionTabla: TablaSeleccion=TablaSeleccion.RADIO;
+  tipoSeleccionTabla: TablaSeleccion=TablaSeleccion.CHECKBOX;
 
   configuracionTabla: ConfiguracionColumna<any>[] = [
     { encabezado: 'RFC', clave: (item: any) => item.RFC, orden: 1 },
