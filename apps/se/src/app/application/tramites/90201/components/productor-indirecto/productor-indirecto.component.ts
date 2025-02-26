@@ -1,21 +1,50 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable sort-imports */
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
-import ProductorIndirectoTabla from 'libs/shared/theme/assets/json/90201/productor-indirecto-tabla.json';
+import ProductorTabla from 'libs/shared/theme/assets/json/90201/productor-indirecto-tabla.json';
+import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { ProductorIndirectoTabla } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
+import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+
 
 
 @Component({
   selector: 'app-productor-indirecto',
   standalone: true,
-  imports: [CommonModule,TituloComponent,TableComponent],
+  imports: [CommonModule,TituloComponent,TablaDinamicaComponent],
   templateUrl: './productor-indirecto.component.html',
   styleUrl: './productor-indirecto.component.scss',
 })
 export class ProductorIndirectoComponent {
 
 
-  public tableHeader = ProductorIndirectoTabla.tableHeader;
-  public cuerpoTabla = ProductorIndirectoTabla.tableBody;
+  /**
+   * Configuración para las columnas de la tabla en el componente Productor Indirecto.
+   * Cada configuración de columna incluye el nombre del encabezado, una función clave para extraer el valor de un elemento y el orden de la columna.
+   *
+   * @type {ConfiguracionColumna<any>[]}
+   * @property {string} encabezado - El nombre del encabezado de la columna.
+   * @property {(item: any) => any} clave - Una función para extraer el valor de un elemento para la columna.
+   * @property {number} orden - El orden de la columna en la tabla.
+   */
+  public configuracionTabla: ConfiguracionColumna<any>[] = [
+    { encabezado: 'Registro', clave: (item: any) => item.Registro, orden: 1 },
+    { encabezado: 'Denominación', clave: (item: any) => item.Denominación, orden: 2 },
+    { encabezado: 'Correo', clave: (item: any) => item.Correo, orden: 3 }
+  ];
+
+  /**
+   * Un arreglo de objetos `ProductorIndirectoTabla` que representa los datos para la tabla de productor indirecto.
+   * Se inicializa con los valores de `ProductorTabla`.
+   */
+  public tablaDatos: ProductorIndirectoTabla[] = ProductorTabla;
+  /**
+   * Representa el tipo de selección de checkbox utilizado en el componente.
+   * Esto se establece al valor de `TablaSeleccion.CHECKBOX`.
+   */
+  public checkbox = TablaSeleccion.CHECKBOX;
 }

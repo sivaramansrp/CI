@@ -1,23 +1,12 @@
- {
-    "tableHeader": [
-        "Calle",
-        "Número exterior",
-        "Número interior",
-        "Código postal",
-        "Colonia",
-        "Municipio o alcaldía",
-        "Estado"
-    ],
-    "tableBody": [
-        {
-            "tbodyData": [
-                "CARRETERA INTERNACIONAL NO. 15 SN MEX-NOG KM 203",
-                "81210",
-                "MIGUEL HIDALGO",
-                "AHOME",
-                "one",
-                "tabla"
-            ]
-        }
-    ]
-}
+[
+    {
+        "Calle":"CARRETERA INTERNACIONAL NO. 15 SN MEX-NOG KM 203",
+        "Número exterior":"81210",
+        "Número interior":"MIGUEL HIDALGO",
+        "Código postal":"AHOME",
+        "Colonia":"one",
+        "Municipio o alcaldía":"martinez.eval",
+        "Estado":"tabla"
+    }
+]
+

@@ -19,7 +19,11 @@
         </div>
     </div>
     <div class="row">
-        <h2>new table content</h2>
+        <app-tabla-dinamica 
+            [configuracionTabla]="configuracionTabla" 
+            [datos]="sectores"
+            [tipoSeleccionTabla]="radio">
+        </app-tabla-dinamica>
     </div>
     <ng-titulo titulo="Mercancías a producir"></ng-titulo>
     <ng-alert [CONTENIDO]="TEXTOS.alerta"></ng-alert>
@@ -34,16 +38,6 @@
             <button class="btn btn-primary">Agregar</button>
         </div>
 
-        <table class="mb-3 mt-3">
-            <thead>
-                <tr>
-                    <th>Fracción arancelaria</th>
-                    <th>Clave del sector</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Aquí se pueden agregar filas dinámicamente -->
-            </tbody>
-        </table>
+        
     </div>
 </div>

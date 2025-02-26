@@ -13,11 +13,9 @@ import { ProductorIndirectoComponent } from '../components/productor-indirecto/p
 import { DomiciliosDePlantasComponent } from '../components/domicilios-de-plantas/domicilios-de-plantas.component';
 import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
 import { FirmarSolicitudComponent } from '../pages/firmar-solicitud/firmar-solicitud.component';
-import { FirmaElectronicaComponent } from 'libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
-import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { CatalogosService } from 'libs/shared/data-access-user/src/core/services/shared/catalogos/catalogos.service';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { FirmarSolicitudPasoDosComponent } from '../components/firmar-solicitud-paso-dos/firmar-solicitud-paso-dos.component';
 
 
 
@@ -36,9 +34,7 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
     ProductorIndirectoComponent,
     DomiciliosDePlantasComponent,
     BtnContinuarComponent,
-    FirmaElectronicaComponent,
-    AlertComponent,
-    TituloComponent,
+    FirmarSolicitudPasoDosComponent,
     ToastrModule.forRoot()
   ],
   exports: [],
@@ -47,4 +43,9 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
     CatalogosService
   ]
 })
+
+/**
+ * Este módulo se utiliza para configurar los componentes del módulo 90201.
+ * Importar los componentes del módulo.
+ */
 export class ExpansionDeProductoresModule { }

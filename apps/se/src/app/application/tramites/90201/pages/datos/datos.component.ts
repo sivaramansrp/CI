@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
 
+/**
+ * Este componente se utiliza para mostrar el subtítulo del asistente - 90201
+ * Establecer el índice del subtítulo
+ */ 
+
 @Component({
   selector: 'app-datos',
   templateUrl: './datos.component.html',

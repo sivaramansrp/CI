@@ -15,9 +15,15 @@
     <h5 class="mt-4">Solicitud Prosec Productor Indirecto Tabla:</h5>
     
     <div class="table-container">
-        <ng-table
-            [commonTableHeader]="tableHeader"
-            [commonTableBody]="cuerpoTabla">
-        </ng-table>
+        <app-tabla-dinamica 
+            [configuracionTabla]="configuracionTabla" 
+            [datos]="tablaDatos"
+            [tipoSeleccionTabla]="checkbox">
+        </app-tabla-dinamica>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination d-flex justify-content-center">
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+            </ul>
+        </nav>
     </div>
   </div>

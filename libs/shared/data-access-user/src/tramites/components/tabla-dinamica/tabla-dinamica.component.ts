@@ -19,7 +19,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @type { TablaSeleccion}
    */
-  @Input() tipoSeleccionTabla: TablaSeleccion = undefined;
+  @Input() tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.UNDEFINED;
 
 
   /**
@@ -73,7 +73,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @type {number}
    */
-  idFilaSeleccionada: number;
+  idFilaSeleccionada: number = -1;
 
   /**
    * Almacena un array de los índices de las filas seleccionadas.
