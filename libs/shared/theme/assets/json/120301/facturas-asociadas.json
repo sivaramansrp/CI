@@ -1,0 +1,12 @@
+{
+    "facturasDisponible": [
+      {
+        "tbodyData": ["prueba leav26agosto2024", "ESPERANCITAS.CO", "CALLE PRUEBA", "2024-11-07 00:00:00.0 GMT 06:00", "90", "10", "Kilogramos", "100.0"]
+      }
+    ],
+    "facturasAsociadas": [
+      {
+        "tbodyData": ["5", "prueba leav26agosto2024", "ESPERANCITAS.CO", "CALLE PRUEBA", "2024-11-07 00:00:00.0 GMT 06:00", "1134", "12354"]
+      }
+    ]
+  }
