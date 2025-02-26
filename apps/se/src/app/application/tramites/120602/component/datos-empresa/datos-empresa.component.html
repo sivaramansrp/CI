@@ -41,6 +41,7 @@
         </div>
     </div>
 
+<div class="row">
     <ng-titulo titulo="Domicilio donde se almacenarán las mercancías a importar"></ng-titulo>
 
     <div class="col-md-4">
@@ -88,15 +89,18 @@
         <label for="Teléfono" class="form-label">Teléfono:</label>
         <input type="text" id="Teléfono" class="form-control" readonly [disabled]="true">
     </div>
+</div>
 
     
     <div class="row">
         <ng-titulo titulo="Datos generales socios accionistas"></ng-titulo>
         <div class="col-md-6">
+            <label class="form-label">Nacionalidad mexicana:</label>
             <app-input-radio [radioOptions]="radioBtn" [selectedValue]="valorSeleccionado" [isRequired]="false"
                 (valueChange)="cambioDeValor($event)" [layout]="'horizontal'"></app-input-radio>
         </div>
         <div class="col-md-6">
+            <label class="form-label">Nacionalidad mexicana:</label>
             <app-input-radio [radioOptions]="radioBtn" [selectedValue]="valorSeleccionado" [isRequired]="false"
                 (valueChange)="cambioDeValor($event)" [layout]="'horizontal'"></app-input-radio>
         </div>
@@ -124,10 +128,12 @@
             <label for="Correo electrónico" class="form-label">Correo electrónico:</label>
             <input type="text" id="Correo electrónico" class="form-control">
         </div>
-        <div class="col-md-12 d-flex align-items-end">
-            <button type="button" class="btn btn-primary" (click)="agregaPedimento()">Agregar</button>
+        <div class="col-md-12 d-flex justify-content-end mt-2">
+            <button type="button" class="btn btn-primary">Agregar</button>
         </div>
     </div>
 
-
+<app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla"
+[configuracionTabla]="configuracionTabla"
+[datos]="datos"></app-tabla-dinamica>
 </div>

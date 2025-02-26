@@ -3,6 +3,10 @@ import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent,
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import{ TablaDinamicaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+
+import { ConfiguracionColumna } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
 
 @Component({
@@ -12,7 +16,8 @@ import { CommonModule } from '@angular/common';
     CatalogoSelectComponent,
     TituloComponent,
     TableComponent,
-    InputRadioComponent],
+    InputRadioComponent,
+    TablaDinamicaComponent],
   templateUrl: './datos-empresa.component.html',
   styleUrl: './datos-empresa.component.scss',
 })
@@ -51,5 +56,39 @@ export class DatosEmpresaComponent implements OnInit {
   cambioDeValor(_e: unknown) {
     return _e
   }
+
+  tipoSeleccionTabla: TablaSeleccion=TablaSeleccion.RADIO;
+
+  configuracionTabla: ConfiguracionColumna<any>[] = [
+    { encabezado: 'RFC', clave: (item: any) => item.RFC, orden: 1 },
+    { encabezado: 'CURP', clave: (item: any) => item.CURP, orden: 2 },
+    { encabezado: 'Nombre', clave: (item: any) => item.Nombre, orden: 3 },
+    { encabezado: 'Apellido Paterno', clave: (item: any) => item.Apellido_paterno, orden: 4 },
+    { encabezado: 'Apellido Materno', clave: (item: any) => item.Apellido_materno, orden: 5 }
+  ]
+
+  datos = [
+    {
+      "rfc": "MAHA790703QW5",
+      "curp": "MAHA790703HGTTRR09 ",
+      "nombre": "ARTURO",
+      "apellidoPaterno": "MATA",
+      "apellidoMaterno": "HERNANDEZ"
+    },
+    {
+      "rfc": "LEQI8101311457",
+      "curp": "LEQI810131HDGSXG05 ",
+      "nombre": "IGNACIO EDUARDO",
+      "apellidoPaterno": "LEOS",
+      "apellidoMaterno": "QUINONES"
+    },
+    {
+      "rfc": "MAVL621207C95",
+      "curp": "MAVL621207HDGRLS06 ",
+      "nombre": "LUIS AMBROSIO",
+      "apellidoPaterno": "MARTINEZ",
+      "apellidoMaterno": "VALENZUELA"
+    }
+  ]
 }
 
