@@ -39,7 +39,14 @@ const routes: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
-  }
+  },
+  {
+    path: 'submanufactureras-immex',
+    loadChildren: () =>
+      import('./tramites/80207/submanufactureras-extension.module').then(
+        (m) => m.SubmanufacturerasExtentionModule
+      ),
+    },
 ];
 
 @NgModule({
