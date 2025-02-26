@@ -18,4 +18,17 @@ describe('RepresentacionFederalComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+  it('debería inicializar el formulario correctamente', () => {
+    expect(component.representacionForm).toBeDefined();
+    expect(component.representacionForm.get('entidad')).toBeDefined();
+    expect(component.representacionForm.get('representacion')).toBeDefined();
+  });
+
+  it('debería definir el método entidadoOnChange', () => {
+    expect(component.entidadoOnChange).toBeDefined();
+  });
+
+  it('debería definir el método representacionOnChange', () => {
+    expect(component.representacionOnChange).toBeDefined();
+  });
 });
