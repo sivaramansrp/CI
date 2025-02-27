@@ -1,12 +1,12 @@
-import { BandejaTareasPendientesComponent } from './bandejaPendientes/bandeja-tareas-pendientes.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { SeleccionModuloComponent } from './seleccion-modulo/seleccion-modulo.component';
 
 const ROUTES: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'app-bandeja-tareas-pendientes' },
+  { path: '', pathMatch: 'full', redirectTo: 'app-seleccion-modulo' },
   {
-    path: 'app-bandeja-tareas-pendientes',
-    component: BandejaTareasPendientesComponent
+    path: 'app-seleccion-modulo',
+    component: SeleccionModuloComponent
   },
 ];
 
