@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { Catalogo, CatalogoSelectComponent, DATOS_GENERALES_REPRESENTACION, SelectCatalogosComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
+/**
+ * Component representing the federal representation in a multi-step process.
+ */
 @Component({
   selector: 'app-representacion-federal',
   standalone: true,
@@ -20,28 +23,26 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   styleUrl: './representacion-federal.component.css',
 })
 export class RepresentacionFederalComponent implements OnInit {
-  
+
   /**
-   * Datos del encabezado de la tabla
+   * Datos del encabezado de la tabla.
    */
   tableHeaderData: string[] = [];
+
   /**
-   * Datos del cuerpo de la tabla
+   * Datos del cuerpo de la tabla.
    */
   tableBodyData: { tbodyData: string[] }[] = [];
-  
+
   /**
    * Representa el formulario del componente.
    * Se espera que esta propiedad sea del tipo 'FormGroup'.
-   *
-   * @property {FormGroup} formulario - El formulario del componente.
    */
   public formulario!: FormGroup;
+
   /**
    * Representa la estado seleccionada del catálogo.
-   * Se espera que esta propiedad sea del tipo 'CatalogosSelect'.
-   *
-   * @property {CatalogosSelect} estado - La estado seleccionada.
+   * Se espera que esta propiedad sea del tipo 'Catalogo[]'.
    */
   public estado!: Catalogo[];
 
@@ -49,11 +50,15 @@ export class RepresentacionFederalComponent implements OnInit {
    * Índice de la fila seleccionada en la tabla. Por defecto, se inicializa en 1.
    */
   selectedRow: number = 1;
-  
-    /** Table configuration for partners */
-    configuracionTabla = DATOS_GENERALES_REPRESENTACION;
 
-    /** Data array for partners */
+  /**
+   * Table configuration for partners.
+   */
+  configuracionTabla = DATOS_GENERALES_REPRESENTACION;
+
+  /**
+   * Data array for partners.
+   */
   datos_Socios = [
     {
       calle: "AV PARQUE INDUSTRIAL AZTECAS",
@@ -61,31 +66,22 @@ export class RepresentacionFederalComponent implements OnInit {
       numeroInterior: "",
       codigoPostal: "32679",
       colonia: "PARQUE INDUSTRIAL AZTECA",
-      municipio:"JUAREZ",
-      estado:"CHIHUAHUA"
+      municipio: "JUAREZ",
+      estado: "CHIHUAHUA"
     }
   ];
+
   /**
    * Representa la representación seleccionada del catálogo.
-   * Se espera que esta propiedad sea del tipo 'CatalogosSelect'.
-   *
-   * @property {CatalogosSelect} representacion - La representación seleccionada.
+   * Se espera que esta propiedad sea del tipo 'Catalogo[]'.
    */
-
   public representacion!: Catalogo[];
 
-  
   /**
-   * constructor de la clase
-   * Fetch the fetchtiposDocumentos datos
-   * Crea el formulario
-   * @param fb: constructor de formularios
-   * @param validacionesService: Validaciones comunes del formulario.
+   * Constructor de la clase.
+   * @param fb El servicio FormBuilder.
    */
-  constructor(private fb: FormBuilder,
-    // eslint-disable-next-line no-empty-function
-) {
-  }
+  constructor(private fb: FormBuilder) {}
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -96,6 +92,7 @@ export class RepresentacionFederalComponent implements OnInit {
     this.getEntidadFederativa();
     this.getRepresentacionFederal();
   }
+
   /**
    * Crea el formulario con los campos necesarios y sus validaciones.
    * @returns {void}
@@ -109,9 +106,6 @@ export class RepresentacionFederalComponent implements OnInit {
 
   /**
    * Recupera y establece la información de la estado federativa.
-   * El objeto de estado incluye el nombre de la etiqueta, el estado requerido, la opción predeterminada,
-   * y un catálogo de opciones disponibles.
-   *
    * @returns {void}
    */
   public getEntidadFederativa(): void {
@@ -124,14 +118,11 @@ export class RepresentacionFederalComponent implements OnInit {
         id: 2,
         descripcion: 'Opción 1',
       }
-    ]
+    ];
   }
 
   /**
-   * Recupera y establece la información de la entidad federativa.
-   * El objeto de entidad incluye el nombre de la etiqueta, el estado requerido, la opción predeterminada,
-   * y un catálogo de opciones disponibles.
-   *
+   * Recupera y establece la información de la representación federal.
    * @returns {void}
    */
   public getRepresentacionFederal(): void {
@@ -144,14 +135,14 @@ export class RepresentacionFederalComponent implements OnInit {
         id: 2,
         descripcion: 'Opción 1',
       }
-    ]
+    ];
   }
 
   /**
-  * Método para validar la representación federal.
-  * @param _e - Objeto de tipo 'Catalogo'.
-  * @returns {void}
-  */
+   * Método para validar la representación federal.
+   * @param _e El evento de selección de documento.
+   * @returns {void}
+   */
   // eslint-disable-next-line class-methods-use-this
   public docSeleccionado(_e: Event): void {
     // this is a dynamic function once we get the api will implement it
@@ -159,15 +150,11 @@ export class RepresentacionFederalComponent implements OnInit {
 
   /**
    * Método para validar la representación federal.
-   * @param _e - Objeto de tipo 'Catalogo'.
+   * @param _e El evento de validación de representación federal.
    * @returns {void}
    */
-
   // eslint-disable-next-line class-methods-use-this
   public validarRepresentacionFederalIDCSECEROR_(_e: Event): void {
     // this is a dynamic function once we get the api will implement it
-
   }
-
-  
 }

@@ -7,6 +7,9 @@ import { DatosGeneralesSociosComponent } from '../datos-generales-socios/datos-g
 import { DomicilioComponent } from '../domicilio/domicilio.component';
 import { RepresentacionFederalComponent } from '../representacion-federal/representacion-federal.component';
 
+/**
+ * Component representing the data of the company in a multi-step process.
+ */
 @Component({
   selector: 'app-datos-empresa',
   standalone: true,
@@ -19,8 +22,8 @@ import { RepresentacionFederalComponent } from '../representacion-federal/repres
     CargarArchivosComponent
   ],
   templateUrl: './datos-empresa.component.html',
-  styleUrl: './datos-empresa.component.css',
+  styleUrls: ['./datos-empresa.component.css'],
 })
-export class DatosEmpresaComponent{
- 
+export class DatosEmpresaComponent {
+  // Add any necessary properties and methods here
 }
