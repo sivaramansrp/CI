@@ -3,7 +3,7 @@ import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/5
 import { PAGO_DE_DERECHOS, PASOS4 } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
 import { AccionBoton } from 'libs/shared/data-access-user/src/core/models/220201/certificado-zoosanitario.model';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-paso-capturar-solicitud',
@@ -33,8 +33,12 @@ export class PasoCapturarSolicitudComponent {
   TEXTOS = PAGO_DE_DERECHOS;
 
   constructor() {}
+  /**
+   * Obtiene el valor del índice de la acción del botón.
+   * @param e Acción del botón.
+   */
 
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
