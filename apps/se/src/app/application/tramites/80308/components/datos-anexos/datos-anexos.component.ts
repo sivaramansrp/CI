@@ -9,6 +9,7 @@ import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-datos-anexos',
@@ -16,44 +17,84 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   styleUrl: './datos-anexos.component.scss',
   standalone: true,
   imports: [TablaDinamicaComponent, TituloComponent],
-  providers: [ModificacionSolicitudeService],
+  providers: [ModificacionSolicitudeService, ToastrService],
 })
 export class DatosAnexosComponent implements OnInit, OnDestroy {
+  /**
+   * Subject utilizado para notificar cuando se debe completar y limpiar las suscripciones activas.
+   * Esto evita fugas de memoria al completar las suscripciones al destruir el componente.
+   * @private
+   * @type {Subject<void>}
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Configuración de las columnas de la tabla para los anexos.
+   * @type {ConfiguracionColumna<Anexo>[]}
+   */
   configuracionTablaAnexo: ConfiguracionColumna<Anexo>[] =
     CONFIGURACION_ANEXOS_TABLA;
+
+  /**
+   * Configuración de las columnas de la tabla para los anexos de importación.
+   * @type {ConfiguracionColumna<Anexo>[]}
+   */
   configuracionTablaImportacion: ConfiguracionColumna<Anexo>[] =
     CONFIGURACION_ANEXOS_IMPORTACION;
 
+  /**
+   * Datos de los anexos obtenidos desde el servicio.
+   * @type {Anexo[]}
+   */
   datosAnexo: Anexo[] = [];
+
+  /**
+   * Datos de los anexos de importación obtenidos desde el servicio.
+   * @type {Anexo[]}
+   */
   datosImportacion: Anexo[] = [];
 
-  constructor(private modificionService: ModificacionSolicitudeService) {}
+  /**
+   * Constructor de la clase.
+   * @param {ModificacionSolicitudeService} modificionService - Servicio utilizado para obtener los anexos.
+   */
+  constructor(private modificionService: ModificacionSolicitudeService, 
+    private toastr: ToastrService
+  ) {}
 
-
+  /**
+   * Método que se ejecuta cuando el componente es inicializado.
+   * Carga los datos de los anexos complementarios desde el servicio.
+   */
   ngOnInit(): void {
-    this.obteneComplimentaria()
+    this.obteneComplimentaria(); // Carga los anexos complementarios.
   }
 
+  /**
+   * Método que obtiene los anexos complementarios desde el servicio.
+   * Asigna los datos a las variables `datosAnexo` y `datosImportacion`.
+   */
   obteneComplimentaria(): void {
     this.modificionService
-      .obtenerAnexo()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .obtenerAnexo() // Llama al servicio para obtener los anexos.
+      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
       .subscribe(
         (data: Anexo[]) => {
-          this.datosAnexo = [...data];
-          this.datosImportacion = [...data];
+          this.datosAnexo = [...data]; // Almacena los datos de anexos complementarios.
+          this.datosImportacion = [...data]; // Almacena los datos de anexos de importación.
         },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
+        () => {
+          this.toastr.error('Error al cargar los anexos'); // Manejo de errores.
         }
       );
   }
 
+  /**
+   * Método que se ejecuta cuando el componente es destruido.
+   * Notifica a todos los observables que deben completarse y limpia las suscripciones.
+   */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next()
-    this.destroyNotifier$.complete();
-    this.destroyNotifier$.unsubscribe();
+    this.destroyNotifier$.next(); // Notifica a todos los observables que deben completar.
+    this.destroyNotifier$.complete(); // Finaliza el Subject para evitar fugas de memoria.
   }
 }

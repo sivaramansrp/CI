@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FirmaElectronicaComponent } from "@ng-mf/data-access-user";
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { Router } from '@angular/router';
 
 /**
@@ -12,15 +12,19 @@ import { Router } from '@angular/router';
   styleUrl: './paso-cuatro.component.scss',
   standalone: true,
   imports: [FirmaElectronicaComponent],
-  host: { 'hostID': crypto.randomUUID().toString()}
+  host: { hostID: crypto.randomUUID().toString() },
 })
 export class PasoCuatroComponent {
-constructor(private router: Router) {}
-
-  obtieneFirma(ev: string){
+  constructor(private router: Router) {}
+  /**
+   * Navega a la ruta 'servicios-extraordinarios/acuse' si el parámetro `ev` tiene un valor.
+   *
+   * @param {string} ev - El parámetro que se verifica para determinar si la navegación debe ocurrir.
+   * Si `ev` tiene un valor (no es vacío o nulo), se realiza la navegación.
+   */
+  obtieneFirma(ev: string) {
     if (ev) {
       this.router.navigate(['servicios-extraordinarios/acuse']);
-
     }
   }
 }

@@ -7,6 +7,7 @@ import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-bitacora',
@@ -18,33 +19,63 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     TituloComponent,
     ComplementariaImmexComponent,
   ],
-  providers: [ModificacionSolicitudeService],
+  providers: [ModificacionSolicitudeService, ToastrService],
 })
 export class BitacoraComponent implements OnDestroy, OnInit {
+  /**
+   * Subject utilizado para notificar cuando se debe completar y limpiar las suscripciones activas.
+   * Esto evita fugas de memoria al completar las suscripciones al destruir el componente.
+   * @private
+   * @type {Subject<void>}
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  constructor(private modificionService: ModificacionSolicitudeService) {}
+  /**
+   * Constructor de la clase.
+   * @param {ModificacionSolicitudeService} modificionService - Servicio utilizado para obtener los datos de la bitácora.
+   */
+  constructor(
+    private modificionService: ModificacionSolicitudeService,
+    private toastr: ToastrService
+  ) {}
 
+  /**
+   * Configuración de las columnas de la tabla que muestra la bitácora.
+   * @type {ConfiguracionColumna<Bitacora>[]}
+   */
   configuracionTabla: ConfiguracionColumna<Bitacora>[] =
     CONFIGURACION_BITACORA_TABLA;
+
+  /**
+   * Datos de la bitácora obtenidos desde el servicio.
+   * @type {Bitacora[]}
+   */
   datos: Bitacora[] = [];
 
+  /**
+   * Método que se ejecuta cuando el componente es inicializado.
+   * Carga los datos de la bitácora a través del servicio `ModificacionSolicituteService`.
+   */
   ngOnInit(): void {
     this.modificionService
       .obteberBitacora()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando se destruye el componente.
       .subscribe(
         (data: Bitacora[]) => {
-          this.datos = [...data];
+          this.datos = [...data]; // Almacena los datos de la bitácora en la variable `datos`.
         },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
+        () => {
+          this.toastr.error('Error al cargar los estados'); // Manejo de errores.
         }
       );
   }
 
+  /**
+   * Método que se ejecuta cuando el componente es destruido.
+   * Notifica a todos los observables que deben completarse y limpia las suscripciones.
+   */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.unsubscribe();
+    this.destroyNotifier$.next(); // Notifica a todos los observables que deben completar.
+    this.destroyNotifier$.unsubscribe(); // Cancela cualquier suscripción activa.
   }
 }
