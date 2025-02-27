@@ -39,7 +39,14 @@ const routes: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
-  }
+  },
+  {
+    path: 'immex-registro-solicitud-modality',
+    loadChildren: () =>
+      import('./tramites/80203/immex-registro-de-solicitud-modality.module').then(
+        (m) => m.ImmexRegistroDeSolicitudModalityModule
+      )
+    }
 ];
 
 @NgModule({
