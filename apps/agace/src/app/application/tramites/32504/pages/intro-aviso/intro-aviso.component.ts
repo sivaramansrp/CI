@@ -3,7 +3,7 @@ import { AccionBoton } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from "@ng-mf/data-access-user";
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
+import { PASOS_4_STEPS } from '@ng-mf/data-access-user';
 import { PasoCuatroComponent } from '../paso-cuatro/paso-cuatro.component';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
@@ -20,7 +20,7 @@ import { WizardComponent } from "@ng-mf/data-access-user";
 export class IntroAvisoComponent {
 
   indice = 1;
-  pasos: ListaPasosWizard[] = PASOS;
+  pasos: ListaPasosWizard[] = PASOS_4_STEPS;
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,

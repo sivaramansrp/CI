@@ -78,6 +78,7 @@ export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 export { CARGO_TIPO, DATOS_EMPRESA, DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMANUFACTURA, DATOS_QUIEN_RECIBE, TEXTO_REQUISITOS, TEXTO_ANEXAR_REQUISITOS, TEXTOS } from './core/enums/32504/aviso.enum';
 export { ActionType } from './core/models/32504/aviso.model';
 export { InputTypes, buttonActionTypes } from './core/models/130120/permiso-importacion-modification.enum';
+export { PASOS as PASOS_4_STEPS } from './tramites/constantes/130120/permiso-importacion-modification.enum';
 export { InputConfig } from './core/models/130120/permiso-importacion-modification.model';
 export { AccionBoton } from './core/models/220202/fitosanitario.model';
 export { TablaDinamicaComponent } from './tramites/components/tabla-dinamica/tabla-dinamica.component';
