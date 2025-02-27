@@ -13,4 +13,8 @@ export class DescripcionDelCupoService {
     return this.http.get('assets/json/120402/descripcion-del-cupo.json');
   }
 
+  getSeleccionDelCupo(): Observable<unknown> {
+    return this.http.get('assets/json/120402/seleccion-del-cupo.json');
+  }
+
 }

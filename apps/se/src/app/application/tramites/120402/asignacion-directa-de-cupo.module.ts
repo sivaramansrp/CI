@@ -17,6 +17,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
+
 @NgModule({
   declarations: [
     AsignacionDirectaDeCupoComponent,
@@ -33,7 +35,8 @@ import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/compon
     SeleccionDelCupoComponent,
     DescripcionDelCupoComponent,
     CantidadSolicitadaComponent,
-    AlertComponent
+    AlertComponent,
+    SolicitanteComponent
   ],
   providers: [provideHttpClient()],
 })
