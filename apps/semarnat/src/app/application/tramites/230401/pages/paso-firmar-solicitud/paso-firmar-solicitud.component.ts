@@ -5,5 +5,6 @@ import { Component } from '@angular/core';
   templateUrl: './paso-firmar-solicitud.component.html',
 })
 export class PasoFirmarSolicitudComponent {
+  // Método para firmar la solicitud
 
 }

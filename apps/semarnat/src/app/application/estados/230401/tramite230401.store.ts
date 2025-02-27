@@ -1,60 +1,95 @@
 import { Injectable } from "@angular/core";
 import { Store, StoreConfig } from "@datorama/akita";
 
+/**
+ * Representa el estado de una solicitud específica.
+ * 
+ * @interface Solicitud230401State
+ * 
+ * @property {string} tipoSolicitud - Tipo de solicitud.
+ * @property {boolean} autorizacion - Indica si la solicitud está autorizada.
+ * @property {string} noDePermisocoferprise - Número de permiso de coferprise.
+ * @property {string} nombreComercial - Nombre comercial del producto.
+ * @property {string} cantidadAtorizada - Cantidad autorizada.
+ * @property {string} fraccionArancelaria - Fracción arancelaria.
+ * @property {string} descripcionDeLaFraccion - Descripción de la fracción arancelaria.
+ * @property {string} numeroCas - Número CAS.
+ * @property {string} descripcionNoArancelaria - Descripción no arancelaria.
+ * @property {string} nombreQuimico - Nombre químico.
+ * @property {string} nombreDeLaMercancia - Nombre de la mercancía.
+ * @property {number} unNumero - Número UN.
+ * @property {string} datosNombreComercial - Datos del nombre comercial.
+ * @property {string} datosNumeroComun - Datos del número común.
+ * @property {number} datosPorcentaje - Porcentaje de datos.
+ * @property {string} datosComponentes - Componentes de los datos.
+ * @property {string} clasificacion - Clasificación.
+ * @property {string} estadoFisico - Estado físico.
+ * @property {string} datosObjecto - Datos del objeto.
+ * @property {string} especifique - Especificación adicional.
+ * @property {string} especifiqueDos - Segunda especificación adicional.
+ * @property {number} cantidad - Cantidad.
+ * @property {string} cantidadLetra - Cantidad en letras.
+ * @property {string} unidadDeMedida - Unidad de medida.
+ */
 export interface Solicitud230401State {
-    tipoSolicitud: string;
-    autorizacion: boolean;
-    noDePermisocoferprise: string;
-    nombreComercial: string;
-    cantidadAtorizada: string;
-    fraccionArancelaria: string;
-    descripcionDeLaFraccion: string;
-    numeroCas: string;
-    descripcionNoArancelaria: string;
-    nombreQuimico: string;
-    nombreDeLaMercancia: string;
-    unNumero: number;
-    datosNombreComercial: string;
-    datosNumeroComun: string;
-    datosPorcentaje: number;
-    datosComponentes: string;
-    clasificacion: string;
-    estadoFisico: string;
-    datosObjecto: string;
-    especifique: string;
-    especifiqueDos: string;
-    cantidad: number;
-    cantidadLetra: string;
-    unidadDeMedida: string;
+  tipoSolicitud: string;
+  autorizacion: boolean;
+  noDePermisocoferprise: string;
+  nombreComercial: string;
+  cantidadAtorizada: string;
+  fraccionArancelaria: string;
+  descripcionDeLaFraccion: string;
+  numeroCas: string;
+  descripcionNoArancelaria: string;
+  nombreQuimico: string;
+  nombreDeLaMercancia: string;
+  unNumero: number;
+  datosNombreComercial: string;
+  datosNumeroComun: string;
+  datosPorcentaje: number;
+  datosComponentes: string;
+  clasificacion: string;
+  estadoFisico: string;
+  datosObjecto: string;
+  especifique: string;
+  especifiqueDos: string;
+  cantidad: number;
+  cantidadLetra: string;
+  unidadDeMedida: string;
 }
 
+/**
+ * Inicializa el estado de Solicitud230401.
+ * 
+ * @returns {Solicitud230401State} El estado inicial de Solicitud230401.
+ */
 export function initializeSolicitud230401State(): Solicitud230401State {
-    return {
-        tipoSolicitud: '',
-        autorizacion: false,
-        noDePermisocoferprise: '',
-        nombreComercial: '',
-        cantidadAtorizada: '',
-        fraccionArancelaria: '',
-        descripcionDeLaFraccion: '',
-        numeroCas: '',
-        descripcionNoArancelaria: '',
-        nombreQuimico: '',
-        nombreDeLaMercancia: '',
-        unNumero: 1,
-        datosNombreComercial: '',
-        datosNumeroComun: '',
-        datosPorcentaje: 1,
-        datosComponentes: '',
-        clasificacion: '',
-        estadoFisico: '',
-        datosObjecto: '',
-        especifique: '',
-        especifiqueDos: '',
-        cantidad: 1,
-        cantidadLetra: 'One',
-        unidadDeMedida: '',
-    }
+  return {
+    tipoSolicitud: '',
+    autorizacion: false,
+    noDePermisocoferprise: '',
+    nombreComercial: '',
+    cantidadAtorizada: '',
+    fraccionArancelaria: '',
+    descripcionDeLaFraccion: '',
+    numeroCas: '',
+    descripcionNoArancelaria: '',
+    nombreQuimico: '',
+    nombreDeLaMercancia: '',
+    unNumero: 1,
+    datosNombreComercial: '',
+    datosNumeroComun: '',
+    datosPorcentaje: 1,
+    datosComponentes: '',
+    clasificacion: '',
+    estadoFisico: '',
+    datosObjecto: '',
+    especifique: '',
+    especifiqueDos: '',
+    cantidad: 1,
+    cantidadLetra: 'One',
+    unidadDeMedida: '',
+  }
 };
 
 @Injectable({
@@ -123,54 +158,54 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
  *
  * @param cantidadAtorizada - El tipo de solicitud que se va a guardar.
  */
-  public setCantidadAtorizada(cantidadAtorizada: string) {
+  public setCantidadAtorizada(cantidadAtorizada: string): void {
     this.update((state) => ({
       ...state,
       cantidadAtorizada,
     }));
   }
 
-   /**
- * Guarda el tipo de solicitud en el estado.
- *
- * @param descripcionDeLaFraccion - El tipo de solicitud que se va a guardar.
- */
-  public setDescripcionDeLaFraccion(descripcionDeLaFraccion: string) {
+  /**
+* Guarda el tipo de solicitud en el estado.
+*
+* @param descripcionDeLaFraccion - El tipo de solicitud que se va a guardar.
+*/
+  public setDescripcionDeLaFraccion(descripcionDeLaFraccion: string): void {
     this.update((state) => ({
       ...state,
       descripcionDeLaFraccion,
     }));
-  } 
+  }
 
-    /**
- * Guarda el tipo de solicitud en el estado.
- *
- * @param fraccionArancelaria - El tipo de solicitud que se va a guardar.
- */
-  public setFraccionArancelaria(fraccionArancelaria: string) {
+  /**
+* Guarda el tipo de solicitud en el estado.
+*
+* @param fraccionArancelaria - El tipo de solicitud que se va a guardar.
+*/
+  public setFraccionArancelaria(fraccionArancelaria: string): void {
     this.update((state) => ({
       ...state,
       fraccionArancelaria,
     }));
   }
-   /**
- * Guarda el tipo de solicitud en el estado.
- *
- * @param numeroCas - El tipo de solicitud que se va a guardar.
- */
-  public setNumeroCas(numeroCas: string) {
+  /**
+* Guarda el tipo de solicitud en el estado.
+*
+* @param numeroCas - El tipo de solicitud que se va a guardar.
+*/
+  public setNumeroCas(numeroCas: string): void {
     this.update((state) => ({
       ...state,
       numeroCas,
     }));
   }
 
-   /**
- * Guarda el tipo de solicitud en el estado.
- *
- * @param descripcionNoArancelaria - El tipo de solicitud que se va a guardar.
- */
-  public setDescripcionNoArancelaria(descripcionNoArancelaria: string) {
+  /**
+* Guarda el tipo de solicitud en el estado.
+*
+* @param descripcionNoArancelaria - El tipo de solicitud que se va a guardar.
+*/
+  public setDescripcionNoArancelaria(descripcionNoArancelaria: string): void {
     this.update((state) => ({
       ...state,
       descripcionNoArancelaria,
@@ -182,7 +217,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
  *
  * @param nombreQuimico - El tipo de solicitud que se va a guardar.
  */
-  public setNombreQuimico(nombreQuimico: string) {
+  public setNombreQuimico(nombreQuimico: string): void {
     this.update((state) => ({
       ...state,
       nombreQuimico,
@@ -194,7 +229,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param nombreDeLaMercancia - El nombre de la mercancía que se establecerá en el estado.
    */
-  public setNombreDeLaMercancia(nombreDeLaMercancia: string) {
+  public setNombreDeLaMercancia(nombreDeLaMercancia: string): void {
     this.update((state) => ({
       ...state,
       nombreDeLaMercancia,
@@ -206,7 +241,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param unNumero - El número UN que se va a guardar.
    */
-  public setUnNumero(unNumero: number) {
+  public setUnNumero(unNumero: number): void {
     this.update((state) => ({
       ...state,
       unNumero,
@@ -218,7 +253,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param datosNombreComercial - El nombre comercial de los datos que se va a guardar.
    */
-  public setDatosNombreComercial(datosNombreComercial: string) {
+  public setDatosNombreComercial(datosNombreComercial: string): void {
     this.update((state) => ({
       ...state,
       datosNombreComercial,
@@ -230,7 +265,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param datosNumeroComun - El número común de los datos que se va a guardar.
    */
-  public setDatosNumeroComun(datosNumeroComun: string) {
+  public setDatosNumeroComun(datosNumeroComun: string): void {
     this.update((state) => ({
       ...state,
       datosNumeroComun,
@@ -242,7 +277,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param datosPorcentaje - El porcentaje de los datos que se va a guardar.
    */
-  public setDatosPorcentaje(datosPorcentaje: number) {
+  public setDatosPorcentaje(datosPorcentaje: number): void {
     this.update((state) => ({
       ...state,
       datosPorcentaje,
@@ -254,7 +289,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param datosComponentes - Los componentes de los datos que se van a guardar.
    */
-  public setDatosComponentes(datosComponentes: string) {
+  public setDatosComponentes(datosComponentes: string): void {
     this.update((state) => ({
       ...state,
       datosComponentes,
@@ -266,7 +301,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param clasificacion - La clasificación que se va a guardar.
    */
-  public setClasificacion(clasificacion: string) {
+  public setClasificacion(clasificacion: string): void {
     this.update((state) => ({
       ...state,
       clasificacion,
@@ -278,7 +313,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param estadoFisico - El estado físico que se va a guardar.
    */
-  public setEstadoFisico(estadoFisico: string) {
+  public setEstadoFisico(estadoFisico: string): void {
     this.update((state) => ({
       ...state,
       estadoFisico,
@@ -290,7 +325,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param datosObjecto - El objeto de los datos que se va a guardar.
    */
-  public setDatosObjecto(datosObjecto: string) {
+  public setDatosObjecto(datosObjecto: string): void {
     this.update((state) => ({
       ...state,
       datosObjecto,
@@ -302,7 +337,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param especifique - La especificación que se va a guardar.
    */
-  public setEspecifique(especifique: string) {
+  public setEspecifique(especifique: string): void {
     this.update((state) => ({
       ...state,
       especifique,
@@ -314,7 +349,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param cantidad - La cantidad que se va a guardar.
    */
-  public setCantidad(cantidad: number) {
+  public setCantidad(cantidad: number): void {
     this.update((state) => ({
       ...state,
       cantidad,
@@ -326,7 +361,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param cantidadLetra - La cantidad en letras que se va a guardar.
    */
-  public setCantidadLetra(cantidadLetra: string) {
+  public setCantidadLetra(cantidadLetra: string): void {
     this.update((state) => ({
       ...state,
       cantidadLetra,
@@ -338,7 +373,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param unidadDeMedida - La unidad de medida que se va a guardar.
    */
-  public setUnidadDeMedida(unidadDeMedida: string) {
+  public setUnidadDeMedida(unidadDeMedida: string): void {
     this.update((state) => ({
       ...state,
       unidadDeMedida,
@@ -350,11 +385,11 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param especifiqueDos - La segunda especificación que se va a guardar.
    */
-  public setEspecifiqueDos(especifiqueDos: string) {
+  public setEspecifiqueDos(especifiqueDos: string): void {
     this.update((state) => ({
       ...state,
       especifiqueDos,
     }));
   }
- 
+
 }

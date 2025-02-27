@@ -3,6 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { InvocarActionService } from 'libs/shared/data-access-user/src/core/services/230401/invocar-action.service';
 
+/**
+ * Validador de fecha que verifica si el valor del control sigue el formato dd/mm/yyyy.
+ * 
+ * @returns {ValidatorFn} Una función de validador que toma un AbstractControl y devuelve un objeto de error o null.
+ */
 export function dateValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const isValid = /^\d{2}\/\d{2}\/\d{4}$/.test(control.value);
@@ -31,6 +36,18 @@ export class PagoDeDerechosComponent implements OnInit {
   ngOnInit(): void {
     this.createPagoDerechos();
   }
+  /**
+   * Este método inicializa el formulario `pagoDerechos` con varios campos predefinidos
+   * y sus respectivas validaciones. Algunos campos están deshabilitados y tienen valores
+   * predeterminados.
+   * Campos del formulario:
+   * - clave: Clave del trámite, deshabilitado y con valor predeterminado.
+   * - dependencia: Dependencia correspondiente, deshabilitado y con valor predeterminado.
+   * - banco: Banco donde se realizará el pago, requerido.
+   * - llavePago: Llave de pago, deshabilitado y con valor predeterminado.
+   * - fecha: Fecha del pago, requerido y validado con `dateValidator`.
+   * - importePago: Importe del pago, deshabilitado y con valor predeterminado.
+    */
   createPagoDerechos(): void {
     this.pagoDerechos = this.fb.group({
       clave: [{ value: '084001963', disabled: true }],
