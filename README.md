@@ -64,10 +64,11 @@ It will show tasks that you can run with Nx.
 ## Setup in local
 
 - npm install --force
-- npx nx serve dashboard (host)
 - npx nx serve aga
 - npx nx serve se
 - npx nx serve login
+- npx nx serve funcionario
+- npx nx serve dashboard (host)
 - manifest.json for the port
 - Create new application - npx nx g @nx/angular:remote apps/aga
 - Angular 18.0.3
