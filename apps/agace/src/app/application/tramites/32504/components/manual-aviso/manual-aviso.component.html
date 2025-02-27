@@ -70,10 +70,11 @@
       <div class="form" formGroupName="manualDatos" [ngClass]="{'d-none' : isAgregarClicked}">
         <ng-titulo titulo="Datos del aviso" />
         <div class="row">
-          <ng-table
-            [commonTableHeader]="tableData.headers"
-            [commonTableBody]="tableData.data"
-          ></ng-table>
+          <app-tabla-dinamica 
+            [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" 
+            [configuracionTabla]="tableData.headers" 
+            [datos]="tableData.data" 
+          ></app-tabla-dinamica>
           <div class="d-flex justify-content-end">
             <button
               type="button"

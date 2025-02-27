@@ -10,7 +10,8 @@ import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { InputConfig } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { TableComponent } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 
@@ -18,7 +19,7 @@ import { map } from 'rxjs';
   selector: 'app-manual-aviso',
   templateUrl: './manual-aviso.component.html',
   styleUrl: './manual-aviso.component.scss',
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, InputFechaComponent, InputRadioComponent, TableComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent],
   standalone: true,
 })
 export class ManualAvisoComponent implements OnInit {
@@ -136,21 +137,38 @@ export class ManualAvisoComponent implements OnInit {
   fiscal: FormularioDinamico[] = [];
   formulario!: FormGroup;
   tableData: {
-    headers: string[],
+    headers: { encabezado: string, clave: (ele: any) => any, orden: number }[],
     data: (string | number)[],
   } = {
       headers: [
-        'RFC',
-        'Nombre comercial',
-        'Entidad federativa',
-        'Alcaldío o Municipio',
-        'Colonia'
+        { encabezado: 'RFC', clave: (ele: any) => ele.rfc, orden: 1 },
+        {
+          encabezado: 'Nombre comercial',
+          clave: (ele: any) => ele.nombreComercial,
+          orden: 2,
+        },
+        {
+          encabezado: 'Entidad federativa',
+          clave: (ele: any) => ele.entidadFederativa,
+          orden: 3,
+        },
+        {
+          encabezado: 'Alcaldío o Municipio',
+          clave: (ele: any) => ele.alcaldioOMuncipio,
+          orden: 4,
+        },
+        {
+          encabezado: 'Colonia',
+          clave: (ele: any) => ele.colonia,
+          orden: 5,
+        },
       ],
       data: []
     };
   isAgregarClicked = false;
   buttonActionTypes = buttonActionTypes;
   actionTypes = ActionType;
+  TablaSeleccion = TablaSeleccion;
   
   constructor(private fb: FormBuilder, private catalogosServicios: CatalogosService) {
     this.crearFormulario();

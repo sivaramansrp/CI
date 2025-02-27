@@ -11,18 +11,18 @@ import { InputConfig } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from "@ng-mf/data-access-user";
 import { InputRadioComponent } from "@ng-mf/data-access-user";
 import { ManualAvisoComponent } from '../manual-aviso/manual-aviso.component';
-import { TableComponent } from "@ng-mf/data-access-user";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const TIPO_CARGA = require('../../../../../../../../../libs/shared/theme/assets/json/32504/tipo-cargo.json');
-// import TipoCarga from '../../../../../../../../../libs/shared/theme/assets/json/32504/tipo-cargo.json';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { map } from 'rxjs';
+import TipoCarga from 'libs/shared/theme/assets/json/32504/tipo-cargo.json';
+
 
 @Component({
   selector: 'app-aviso',
   templateUrl: './aviso.component.html',
   styleUrl: './aviso.component.scss',
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, InputFechaComponent, InputRadioComponent, TableComponent, ManualAvisoComponent, CargaMasivaComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, InputFechaComponent, InputRadioComponent, ManualAvisoComponent, CargaMasivaComponent, TablaDinamicaComponent],
   standalone: true,
 })
 export class AvisoComponent implements OnInit {
@@ -69,30 +69,47 @@ export class AvisoComponent implements OnInit {
   fiscal: FormularioDinamico[] = [];
   formulario!: FormGroup;
   tableData: {
-    headers: string[],
+    headers: { encabezado: string, clave: (ele: any) => any, orden: number }[],
     data: (string | number)[],
   } = {
-      headers: [
-        'RFC',
-        'Nombre comercial',
-        'Entidad federativa',
-        'Alcaldío o Municipio',
-        'Colonia'
+      headers:
+      [
+        { encabezado: 'RFC', clave: (ele: any) => ele.rfc, orden: 1 },
+        {
+          encabezado: 'Nombre comercial',
+          clave: (ele: any) => ele.nombreComercial,
+          orden: 2,
+        },
+        {
+          encabezado: 'Entidad federativa',
+          clave: (ele: any) => ele.entidadFederativa,
+          orden: 3,
+        },
+        {
+          encabezado: 'Alcaldío o Municipio',
+          clave: (ele: any) => ele.alcaldioOMuncipio,
+          orden: 4,
+        },
+        {
+          encabezado: 'Colonia',
+          clave: (ele: any) => ele.colonia,
+          orden: 5,
+        },
       ],
       data: []
     };
   isManualAsivoAgregarClicked = false;
   buttonActionTypes = buttonActionTypes;
+  TablaSeleccion = TablaSeleccion;
 
   constructor(private fb: FormBuilder, private catalogosServicios: CatalogosService) {
     this.crearFormulario();
   }
 
   ngOnInit(): void {
-    // const TipoCarga = TIPO_CARGA;
-    this.configuracion[1].menu[0].props.options = TIPO_CARGA;
-    this.configuracion[1].menu[0].props.selectedValue = TIPO_CARGA[0].value;
-    this.valoresSeleccionadosRadio.radio1 = TIPO_CARGA[0].value;
+    this.configuracion[1].menu[0].props.options = TipoCarga;
+    this.configuracion[1].menu[0].props.selectedValue = TipoCarga[0].value;
+    this.valoresSeleccionadosRadio.radio1 = TipoCarga[0].value;
     this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
     });

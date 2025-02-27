@@ -11,7 +11,7 @@ import { SolicitanteComponent } from "@ng-mf/data-access-user";
   standalone: true,
 })
 export class PasoUnoComponent {
-  indice: number = 2;
+  indice: number = 1;
 
   seleccionaTab(i: number): void {
     this.indice = i;

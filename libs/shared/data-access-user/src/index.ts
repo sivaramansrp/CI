@@ -79,4 +79,6 @@ export { CARGO_TIPO, DATOS_EMPRESA, DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMA
 export { ActionType } from './core/models/32504/aviso.model';
 export { InputTypes, buttonActionTypes } from './core/models/130120/permiso-importacion-modification.enum';
 export { InputConfig } from './core/models/130120/permiso-importacion-modification.model';
-export { AccionBoton } from './core/models/220202/fitosanitario.model'
+export { AccionBoton } from './core/models/220202/fitosanitario.model';
+export { TablaDinamicaComponent } from './tramites/components/tabla-dinamica/tabla-dinamica.component';
+export { TablaSeleccion } from './core/enums/tabla-seleccion.enum';
