@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 /**
- * Componente DataosDeLaMercanciaComponent.
+ * Componente DataosMercanciaComponent.
  *
  * Este componente representa la sección de datos de la mercancía.
  * Actualmente, no contiene lógica adicional y sirve como un contenedor

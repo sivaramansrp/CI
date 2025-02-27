@@ -23,14 +23,14 @@ export class DatosDeLaMercanciaComponent {
    * Formulario para el registro de la mercancía del comercializador.
    * @type {FormGroup}
    */
-  registroMercanciaComercializadorFrom: FormGroup;
+  datosDeLamercanciaFrom: FormGroup;
 
   /**
    * Constructor del componente.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
    */
   constructor(private fb: FormBuilder) {
-    this.registroMercanciaComercializadorFrom = this.fb.group({
+    this.datosDeLamercanciaFrom = this.fb.group({
       cveRegistroProductor: ['', [Validators.required, Validators.maxLength(12)]],
       solicitud: this.fb.group({
         idSolicitud: [null],
@@ -45,7 +45,7 @@ export class DatosDeLaMercanciaComponent {
    * @returns {boolean} - Retorna true si el control es inválido, de lo contrario false.
    */
   esInvalido(nombreControl: string): boolean {
-    const CONTROL = this.registroMercanciaComercializadorFrom.get(nombreControl);
+    const CONTROL = this.datosDeLamercanciaFrom.get(nombreControl);
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
@@ -55,11 +55,11 @@ export class DatosDeLaMercanciaComponent {
    * Actualiza el estado del grid de comercializadores de productos.
    */
   actualizaGridComercializadoresProductos(): void {
-    const IDSOLICITUD = this.registroMercanciaComercializadorFrom.get('solicitud.idSolicitud')?.value;
+    const IDSOLICITUD = this.datosDeLamercanciaFrom.get('solicitud.idSolicitud')?.value;
     if (IDSOLICITUD === null) {
-      this.registroMercanciaComercializadorFrom.get('cveRegistroProductor')?.enable();
+      this.datosDeLamercanciaFrom.get('cveRegistroProductor')?.enable();
     } else {
-      this.registroMercanciaComercializadorFrom.get('cveRegistroProductor')?.disable();
+      this.datosDeLamercanciaFrom.get('cveRegistroProductor')?.disable();
     }
   }
 }

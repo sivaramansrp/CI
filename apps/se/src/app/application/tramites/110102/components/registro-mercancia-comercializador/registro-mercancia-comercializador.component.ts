@@ -25,7 +25,7 @@ export class RegistroMercanciaComercializadorComponent implements OnInit, OnDest
 /**
    * FormGroup que contiene los datos de la mercancía asociada.
    */
-mercanciaAsociada: FormGroup;
+registroMercanciaComercializadorFrom: FormGroup;
 
 /**
  * Subject que emite un evento cuando el componente es destruido,
@@ -75,7 +75,7 @@ mostrarJuegosSurtidos: boolean = false;
    * @param {MercanciaasociadaService} service - Servicio para obtener datos de la mercancía asociada.
    */
   constructor(private fb: FormBuilder, private service: MercanciaasociadaService) {
-    this.mercanciaAsociada = this.fb.group({
+    this.registroMercanciaComercializadorFrom = this.fb.group({
       nombreComercial: [{ value: '', disabled: true }],
       nombreIngles: [{ value: '', disabled: true }],
       nombreTecnico: [{ value: '', disabled: true }],
@@ -131,7 +131,7 @@ mostrarJuegosSurtidos: boolean = false;
       takeUntil(this.destroyed$)
     ).subscribe(
       (data: any) => {
-        this.mercanciaAsociada.patchValue({
+        this.registroMercanciaComercializadorFrom.patchValue({
           nombreComercial: data.Formdata.nombreComercial,
           nombreIngles: data.Formdata.nombreIngles,
           nombreTecnico: data.Formdata.nombreTecnico,

@@ -16,7 +16,7 @@ describe('RegistroMercanciaComercializadorComponent', () => {
 
   beforeEach(async () => {
     const SERVICE_MOCK = {
-      getMercanciaAsociada: jest.fn().mockReturnValue(of({
+      getregistroMercanciaComercializadorFrom: jest.fn().mockReturnValue(of({
         Formdata: {
           nombreComercial: 'Comercial',
           nombreIngles: 'English Name',
@@ -62,30 +62,30 @@ describe('RegistroMercanciaComercializadorComponent', () => {
   });
 
   it('should initialize the form with default values', () => {
-    expect(component.mercanciaAsociada).toBeDefined();
-    expect(component.mercanciaAsociada.get('nombreComercial')?.value).toBe('');
-    expect(component.mercanciaAsociada.get('nombreIngles')?.value).toBe('');
-    expect(component.mercanciaAsociada.get('nombreTecnico')?.value).toBe('');
+    expect(component.registroMercanciaComercializadorFrom).toBeDefined();
+    expect(component.registroMercanciaComercializadorFrom.get('nombreComercial')?.value).toBe('');
+    expect(component.registroMercanciaComercializadorFrom.get('nombreIngles')?.value).toBe('');
+    expect(component.registroMercanciaComercializadorFrom.get('nombreTecnico')?.value).toBe('');
   });
 
   it('should fetch and patch form values on init', () => {
     component.ngOnInit();
     expect(service.getMercanciaAsociada).toHaveBeenCalled();
-    expect(component.mercanciaAsociada.get('nombreComercial')?.value).toBe('Comercial');
-    expect(component.mercanciaAsociada.get('nombreIngles')?.value).toBe('English Name');
-    expect(component.mercanciaAsociada.get('nombreTecnico')?.value).toBe('Technical Name');
-    expect(component.mercanciaAsociada.get('fraccionArancelaria.clave')?.value).toBe('1234');
-    expect(component.mercanciaAsociada.get('fraccionArancelaria.descripcion')?.value).toBe('Description');
-    expect(component.mercanciaAsociada.get('fraccionNALADI.clave')?.value).toBe('5678');
-    expect(component.mercanciaAsociada.get('fraccionNALADI.descripcion')?.value).toBe('Description');
-    expect(component.mercanciaAsociada.get('fraccionNALADISA93.clave')?.value).toBe('91011');
-    expect(component.mercanciaAsociada.get('fraccionNALADISA93.descripcion')?.value).toBe('Description');
-    expect(component.mercanciaAsociada.get('fraccionNALADISA96.clave')?.value).toBe('1213');
-    expect(component.mercanciaAsociada.get('fraccionNALADISA96.descripcion')?.value).toBe('Description');
-    expect(component.mercanciaAsociada.get('fraccionNALADISA02.clave')?.value).toBe('1415');
-    expect(component.mercanciaAsociada.get('fraccionNALADISA02.descripcion')?.value).toBe('Description');
-    expect(component.mercanciaAsociada.get('descripcionJuego')?.value).toBe('Game Description');
-    expect(component.mercanciaAsociada.get('unidadAdministrativaRepresentacionFederal.clave')?.value).toBe('Clave');
+    expect(component.registroMercanciaComercializadorFrom.get('nombreComercial')?.value).toBe('Comercial');
+    expect(component.registroMercanciaComercializadorFrom.get('nombreIngles')?.value).toBe('English Name');
+    expect(component.registroMercanciaComercializadorFrom.get('nombreTecnico')?.value).toBe('Technical Name');
+    expect(component.registroMercanciaComercializadorFrom.get('fraccionArancelaria.clave')?.value).toBe('1234');
+    expect(component.registroMercanciaComercializadorFrom.get('fraccionArancelaria.descripcion')?.value).toBe('Description');
+    expect(component.registroMercanciaComercializadorFrom.get('fraccionNALADI.clave')?.value).toBe('5678');
+    expect(component.registroMercanciaComercializadorFrom.get('fraccionNALADI.descripcion')?.value).toBe('Description');
+    expect(component.registroMercanciaComercializadorFrom.get('fraccionNALADISA93.clave')?.value).toBe('91011');
+    expect(component.registroMercanciaComercializadorFrom.get('fraccionNALADISA93.descripcion')?.value).toBe('Description');
+    expect(component.registroMercanciaComercializadorFrom.get('fraccionNALADISA96.clave')?.value).toBe('1213');
+    expect(component.registroMercanciaComercializadorFrom.get('fraccionNALADISA96.descripcion')?.value).toBe('Description');
+    expect(component.registroMercanciaComercializadorFrom.get('fraccionNALADISA02.clave')?.value).toBe('1415');
+    expect(component.registroMercanciaComercializadorFrom.get('fraccionNALADISA02.descripcion')?.value).toBe('Description');
+    expect(component.registroMercanciaComercializadorFrom.get('descripcionJuego')?.value).toBe('Game Description');
+    expect(component.registroMercanciaComercializadorFrom.get('unidadAdministrativaRepresentacionFederal.clave')?.value).toBe('Clave');
   });
 
   it('should configure visibility of fields based on data', () => {

@@ -33,35 +33,35 @@ describe('DatosDeLaMercanciaComponent', () => {
   });
 
   it('should initialize the form with default values', () => {
-    expect(component.registroMercanciaComercializadorFrom).toBeDefined();
-    expect(component.registroMercanciaComercializadorFrom.get('cveRegistroProductor')?.value).toBe('');
-    expect(component.registroMercanciaComercializadorFrom.get('solicitud.idSolicitud')?.value).toBeNull();
-    expect(component.registroMercanciaComercializadorFrom.get('solicitud.idSolicitudProductor')?.value).toBe('');
+    expect(component.datosDeLamercanciaFrom).toBeDefined();
+    expect(component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.value).toBe('');
+    expect(component.datosDeLamercanciaFrom.get('solicitud.idSolicitud')?.value).toBeNull();
+    expect(component.datosDeLamercanciaFrom.get('solicitud.idSolicitudProductor')?.value).toBe('');
   });
 
   it('should return true if a control is invalid', () => {
     const CONTROL_NAME = 'cveRegistroProductor';
-    component.registroMercanciaComercializadorFrom.get(CONTROL_NAME)?.markAsTouched();
-    component.registroMercanciaComercializadorFrom.get(CONTROL_NAME)?.setValue('');
+    component.datosDeLamercanciaFrom.get(CONTROL_NAME)?.markAsTouched();
+    component.datosDeLamercanciaFrom.get(CONTROL_NAME)?.setValue('');
     expect(component.esInvalido(CONTROL_NAME)).toBe(true);
   });
 
   it('should return false if a control is valid', () => {
     const CONTROL_NAME = 'cveRegistroProductor';
-    component.registroMercanciaComercializadorFrom.get(CONTROL_NAME)?.markAsTouched();
-    component.registroMercanciaComercializadorFrom.get(CONTROL_NAME)?.setValue('valid value');
+    component.datosDeLamercanciaFrom.get(CONTROL_NAME)?.markAsTouched();
+    component.datosDeLamercanciaFrom.get(CONTROL_NAME)?.setValue('valid value');
     expect(component.esInvalido(CONTROL_NAME)).toBe(false);
   });
 
   it('should enable cveRegistroProductor if idSolicitud is null', () => {
-    component.registroMercanciaComercializadorFrom.get('solicitud.idSolicitud')?.setValue(null);
+    component.datosDeLamercanciaFrom.get('solicitud.idSolicitud')?.setValue(null);
     component.actualizaGridComercializadoresProductos();
-    expect(component.registroMercanciaComercializadorFrom.get('cveRegistroProductor')?.enabled).toBe(true);
+    expect(component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.enabled).toBe(true);
   });
 
   it('should disable cveRegistroProductor if idSolicitud is not null', () => {
-    component.registroMercanciaComercializadorFrom.get('solicitud.idSolicitud')?.setValue(1);
+    component.datosDeLamercanciaFrom.get('solicitud.idSolicitud')?.setValue(1);
     component.actualizaGridComercializadoresProductos();
-    expect(component.registroMercanciaComercializadorFrom.get('cveRegistroProductor')?.disabled).toBe(true);
+    expect(component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.disabled).toBe(true);
   });
 });

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DataosMercanciaComponent } from './dataos-mercancia.component';
 
-describe('DataosDeLaMercanciaComponent', () => {
+describe('DataosMercanciaComponent', () => {
   let component: DataosMercanciaComponent;
   let fixture: ComponentFixture<DataosMercanciaComponent>;
 
