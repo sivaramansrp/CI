@@ -75,3 +75,6 @@ export * from './tramites/constantes/regex.constants';
 export * from './core/services/130118/pexim/pexim.service';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
+export * from './core/enums/30901/renovaciones-muestras-mercancias.enum';
+export * from './core/models/30901/registro-muestras-mercancias.model';
+export * from './core/services/30901/renovaciones-muestras-mercancias.service';
