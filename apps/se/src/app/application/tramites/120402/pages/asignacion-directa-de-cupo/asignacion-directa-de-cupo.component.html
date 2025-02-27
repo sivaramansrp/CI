@@ -1,20 +1,25 @@
 <div class="Page">
-    <div class="container mt-5">
-        <ng-alert [CONTENIDO]="TEXTOS.ALERTA" [CUSTOMECLASS]="class"></ng-alert>
+  <div class="container mt-5">
+    <ng-alert [CONTENIDO]="TEXTOS.ALERTA" [CUSTOMECLASS]="class"></ng-alert>
 
-        <div class="row">
-            <div class="col-md-12">
-                <h1>Asignación directa de cupo personas morales (primera vez)</h1>
-            </div>
-            <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
-        </div>
-        <div class="row">
-            @switch (indice) {
-            @case (1) {
-           <app-cortina-a-la-italiana></app-cortina-a-la-italiana>
-            }
-            }
-        </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Asignación directa de cupo personas morales (primera vez)</h1>
+      </div>
+      <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
+    </div>
+    <div class="row">
+      @switch (indice) { @case (1) {
+      <app-cortina-a-la-italiana></app-cortina-a-la-italiana>
+      } @case (2) {
+      <p>Firmar solicitud</p>
+      } @case (3) {
+      <p>Anexar requistios</p>
+      } @case (4) {
+      <p>Login Component</p>
+      } }
     </div>
 
+    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+  </div>
 </div>

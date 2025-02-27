@@ -122,7 +122,7 @@ export class RepresentacionFederalComponent implements OnInit {
   }
 
   /**
-   * @method entidadOnChange
+   * @method entidadoOnChange
    * @description
    * Se ejecuta cuando el usuario cambia la entidad federativa seleccionada en el formulario.
    * En el futuro, se integrará con una API para actualizar dinámicamente la lista de representaciones disponibles.
@@ -131,7 +131,7 @@ export class RepresentacionFederalComponent implements OnInit {
    * @returns {void}
    * @access public
    */
-  public entidadOnChange(event: Event): void {
+  public entidadoOnChange(event: Event): void {
     console.log('Cambio en la entidad seleccionada', event);
   }
 

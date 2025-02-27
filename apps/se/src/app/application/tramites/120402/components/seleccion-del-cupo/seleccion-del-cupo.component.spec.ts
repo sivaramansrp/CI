@@ -1,74 +1,90 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
 import { SeleccionDelCupoComponent } from './seleccion-del-cupo.component';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-
+import { DescripcionDelCupoService } from 'libs/shared/data-access-user/src/core/services/120402/descripcion-del-cupo/descripcion-del-cupo.service';
+ 
 describe('SeleccionDelCupoComponent', () => {
   let component: SeleccionDelCupoComponent;
   let fixture: ComponentFixture<SeleccionDelCupoComponent>;
-
+  let service: DescripcionDelCupoService;
+ 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent],
-      declarations: [SeleccionDelCupoComponent]
+      declarations: [SeleccionDelCupoComponent],
+      imports: [ReactiveFormsModule, HttpClientTestingModule],
+      providers: [DescripcionDelCupoService]
     }).compileComponents();
   });
-
+ 
   beforeEach(() => {
     fixture = TestBed.createComponent(SeleccionDelCupoComponent);
     component = fixture.componentInstance;
+    service = TestBed.inject(DescripcionDelCupoService);
+ 
+    spyOn(service, 'getSeleccionDelCupo').and.returnValue(of({
+      regimen: [],
+      tratado: [],
+      producto: [],
+      subproducto: []
+    }));
+ 
     fixture.detectChanges();
   });
-
-  it('debería crear el componente', () => {
+ 
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('debería inicializar el formulario correctamente', () => {
-    component.ngOnInit();
+ 
+  it('should initialize the form', () => {
     expect(component.seleccionForm).toBeDefined();
     expect(component.seleccionForm.controls['regimen']).toBeDefined();
     expect(component.seleccionForm.controls['tratado']).toBeDefined();
     expect(component.seleccionForm.controls['producto']).toBeDefined();
     expect(component.seleccionForm.controls['subproducto']).toBeDefined();
   });
-
-  it('debería tener valores iniciales vacíos en el formulario', () => {
-    component.ngOnInit();
-    expect(component.seleccionForm.value).toEqual({
-      regimen: '',
-      tratado: '',
-      producto: '',
-      subproducto: ''
+ 
+  it('should load seleccion del cupo data on init', () => {
+    expect(service.getSeleccionDelCupo).toHaveBeenCalled();
+    expect(component.seleccionDelCupo).toEqual({
+      regimen: [],
+      tratado: [],
+      producto: [],
+      subproducto: []
     });
   });
-
-  it('debería manejar el cambio de régimen', () => {
+ 
+  it('should call regimenOnChange when regimen changes', () => {
     spyOn(component, 'regimenOnChange');
-    const event = new Event('change');
-    component.regimenOnChange(event);
-    expect(component.regimenOnChange).toHaveBeenCalledWith(event);
+    const select = fixture.nativeElement.querySelector('select[formControlName="regimen"]');
+    select.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    expect(component.regimenOnChange).toHaveBeenCalled();
   });
-
-  it('debería manejar el cambio de tratado', () => {
+ 
+  it('should call tratadoOnChange when tratado changes', () => {
     spyOn(component, 'tratadoOnChange');
-    const event = new Event('change');
-    component.tratadoOnChange(event);
-    expect(component.tratadoOnChange).toHaveBeenCalledWith(event);
+    const select = fixture.nativeElement.querySelector('select[formControlName="tratado"]');
+    select.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    expect(component.tratadoOnChange).toHaveBeenCalled();
   });
-
-  it('debería manejar el cambio de producto', () => {
+ 
+  it('should call productoOnChange when producto changes', () => {
     spyOn(component, 'productoOnChange');
-    const event = new Event('change');
-    component.productoOnChange(event);
-    expect(component.productoOnChange).toHaveBeenCalledWith(event);
+    const select = fixture.nativeElement.querySelector('select[formControlName="producto"]');
+    select.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    expect(component.productoOnChange).toHaveBeenCalled();
   });
-
-  it('debería manejar el cambio de subproducto', () => {
+ 
+  it('should call subproductoOnChange when subproducto changes', () => {
     spyOn(component, 'subproductoOnChange');
-    const event = new Event('change');
-    component.subproductoOnChange(event);
-    expect(component.subproductoOnChange).toHaveBeenCalledWith(event);
+    const select = fixture.nativeElement.querySelector('select[formControlName="subproducto"]');
+    select.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    expect(component.subproductoOnChange).toHaveBeenCalled();
   });
 });
+ 

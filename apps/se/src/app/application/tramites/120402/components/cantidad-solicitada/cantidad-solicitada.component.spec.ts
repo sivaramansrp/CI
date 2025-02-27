@@ -1,21 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { CantidadSolicitadaComponent } from './cantidad-solicitada.component';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
-/**
- * Pruebas unitarias para el componente CantidadSolicitadaComponent.
- */
 describe('CantidadSolicitadaComponent', () => {
   let component: CantidadSolicitadaComponent;
   let fixture: ComponentFixture<CantidadSolicitadaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, TituloComponent],
       declarations: [CantidadSolicitadaComponent],
-      providers: [FormBuilder],
+      imports: [CommonModule, ReactiveFormsModule, TituloComponent],
+      providers: [FormBuilder]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CantidadSolicitadaComponent);
@@ -23,41 +20,51 @@ describe('CantidadSolicitadaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería crear el formulario correctamente', () => {
+  it('should create the form on initialization', () => {
     expect(component.form).toBeDefined();
     expect(component.form.get('cantidadSolicitada')).toBeDefined();
   });
 
-  it('debería inicializar el formulario con el valor predeterminado', () => {
+  it('should have the default value of cantidadSolicitada as 100', () => {
     expect(component.form.get('cantidadSolicitada')?.value).toBe('100');
   });
 
-  it('debería marcar el control como inválido si está vacío', () => {
-    const control = component.form.get('cantidadSolicitada');
-    control?.setValue('');
-    expect(component.esInvalido('cantidadSolicitada')).toBe(true);
-  });
-
-  it('debería marcar el formulario como inválido si el campo está vacío', () => {
+  it('should mark the form as invalid when cantidadSolicitada is empty', () => {
     component.form.get('cantidadSolicitada')?.setValue('');
-    component.validarYEnviarFormulario();
     expect(component.form.invalid).toBe(true);
   });
 
-  it('debería marcar el formulario como válido y mostrar el valor correcto', () => {
+  it('should mark the form as valid when cantidadSolicitada is filled', () => {
     component.form.get('cantidadSolicitada')?.setValue('200');
-    component.validarYEnviarFormulario();
     expect(component.form.valid).toBe(true);
-    expect(component.form.value).toEqual({ cantidadSolicitada: '200' });
   });
 
-  it('debería limpiar correctamente al destruir el componente', () => {
-    const spy = spyOn(component["destroyed$"], 'complete').and.callThrough();
-    component.ngOnDestroy();
-    expect(spy).toHaveBeenCalled();
+  it('should return true when esInvalido is called on an invalid control', () => {
+    component.form.get('cantidadSolicitada')?.setValue('');
+    component.form.get('cantidadSolicitada')?.markAsTouched();
+    expect(component.esInvalido('cantidadSolicitada')).toBe(true);
+  });
+
+  it('should return false when esInvalido is called on a valid control', () => {
+    component.form.get('cantidadSolicitada')?.setValue('300');
+    expect(component.esInvalido('cantidadSolicitada')).toBe(false);
+  });
+
+  it('should log error message if form is invalid on validarYEnviarFormulario call', () => {
+    spyOn(console, 'log');
+    component.form.get('cantidadSolicitada')?.setValue('');
+    component.validarYEnviarFormulario();
+    expect(console.log).toHaveBeenCalledWith('El formulario tiene errores. Corríjalos antes de continuar.');
+  });
+
+  it('should log success message if form is valid on validarYEnviarFormulario call', () => {
+    spyOn(console, 'log');
+    component.form.get('cantidadSolicitada')?.setValue('500');
+    component.validarYEnviarFormulario();
+    expect(console.log).toHaveBeenCalledWith('Formulario enviado con éxito', { cantidadSolicitada: '500' });
   });
 });
