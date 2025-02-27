@@ -14,7 +14,7 @@ export class NicoService {
   /**
    * @property {string} url - URL base para los archivos JSON.
    */
-  url: string = '/assets/json/80203/nico.service.ts';
+  url: string = '/assets/json/80203/';
 
   /**
    * @constructor

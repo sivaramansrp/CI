@@ -169,7 +169,10 @@ export class Anexo1Component implements OnInit, OnDestroy {
         nicoDatos: ['', Validators.required],
         fraccionArancelariaExportacion: ['', Validators.required],
         productoArancelariaExportacion: ['', Validators.required],
+        fraccionArancelariaDesc: ['', Validators.required],
         productoDescExportacion: ['', Validators.required],
+        FraccionDescExportacion: ['', Validators.required],
+        exportacionDescExportacion: ['', Validators.required],
       }),
       importacionForm: this.fb.group({
         permisoImmexDatos: [[]],
@@ -177,6 +180,10 @@ export class Anexo1Component implements OnInit, OnDestroy {
         nicoDatos: ['', Validators.required],
         commodityImportacion: ['', Validators.required],
         commodityDescImportacion: ['', Validators.required],
+        commodityNicoDescImportacion: ['', Validators.required],
+        candiadAnual: ['', Validators.required],
+        capacidadPeriodo: ['', Validators.required],
+        candidadPorPeriodo: ['', Validators.required],
       })
     });
     this.fetchData();
@@ -213,12 +220,15 @@ export class Anexo1Component implements OnInit, OnDestroy {
             this.immexRegistroform.get('exportacionForm')?.patchValue({
               productoArancelariaExportacion: this.fraccionDatos[0].tbodyData[1],
               productoDescExportacion: this.fraccionDatos[0].tbodyData[4],
+              FraccionDescExportacion: this.fraccionDatos[0].tbodyData[4],
+              exportacionDescExportacion: this.fraccionDatos[0].tbodyData[4], 
             });
           }
           if (this.permisoImmexDatos.length > 0) {
             this.immexRegistroform.get('importacionForm')?.patchValue({
               commodityImportacion: this.permisoImmexDatos[0].tbodyData[2],
               commodityDescImportacion: this.permisoImmexDatos[0].tbodyData[3],
+              commodityNicoDescImportacion: this.permisoImmexDatos[0].tbodyData[3],
             });
           }
         } else {
@@ -284,10 +294,11 @@ export class Anexo1Component implements OnInit, OnDestroy {
     this.showCommodityImport = true; 
   }
   disableFormControls(): void {
-    this.immexRegistroform.get('productoArancelariaExportacion')?.disable();
-    this.immexRegistroform.get('productoDescExportacion')?.disable();
-    this.immexRegistroform.get('commodityImportacion')?.disable();
-    this.immexRegistroform.get('commodityDescImportacion')?.disable();
+    this.immexRegistroform.get('exportacionForm.productoArancelariaExportacion')?.disable();
+    this.immexRegistroform.get('exportacionForm.productoDescExportacion')?.disable();
+    this.immexRegistroform.get('importacionForm.commodityImportacion')?.disable();
+    this.immexRegistroform.get('importacionForm.commodityDescImportacion')?.disable();
+    this.immexRegistroform.get('importacionForm.commodityNicoDescImportacion')?.disable();
   }
   /**
    * @method ngOnDestroy

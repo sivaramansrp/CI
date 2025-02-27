@@ -19,9 +19,7 @@ export class PermisoImmexDatosService {
    * @constructor
    * @param {HttpClient} httpClient - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private httpClient: HttpClient) {
-    console.log('Fetching data from:', this.jsonUrl);
-  }
+  constructor(private httpClient: HttpClient) {}
 
   /**
    * @method getDatos
