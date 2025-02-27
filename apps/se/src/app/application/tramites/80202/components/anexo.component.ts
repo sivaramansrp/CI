@@ -1,21 +1,51 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+/**
+ * @title Anexo
+ * @description Componente que permite visualizar el anexo de la solicitud
+ * @summary Componente que permite visualizar el anexo de la solicitud
+ *
+ */
 @Component({
   selector: 'app-anexo',
   templateUrl: './anexo.component.html',
   styleUrl: './anexo.component.scss',
 })
 export class AnexoComponent {
+  /**
+   * Grupo de formularios principal.
+   * @property {FormGroup} forma
+   */
   fraccionForm!: FormGroup;
+
+  /**
+   * Grupo de formularios principal.
+   * @property {FormGroup} forma
+   */
   fraccionArancelaria!: FormGroup;
 
+  /**
+   * Constructor del componente.
+   * @param {FormBuilder} fb
+   * @method constructor
+   * @returns {void}
+   */
   constructor(private readonly fb: FormBuilder) {
     this.initActionFormBuild();
   }
 
+  /**
+   * Método que se ejecuta al iniciar el componente.
+   * @method ngOnInit
+   */
   ngOnInit() {}
 
+  /**
+   * Inicializa el formulario de acción.
+   * @method initActionFormBuild
+   * @returns {void}
+   */
   initActionFormBuild() {
     this.fraccionForm = this.fb.group({
       fraccionArancelaria: ['', Validators.required],
@@ -26,8 +56,10 @@ export class AnexoComponent {
     });
   }
 
-  //add some sample columns to the table
-
+  /**
+   * Configuración de las columnas de la tabla.
+   * @property {any[]} configuracionColumnas
+   */
   configuracionColumnasSensibles = [
     { encabezado: 'No', clave: (ele: any) => ele.no, orden: 1 },
     {
@@ -57,6 +89,11 @@ export class AnexoComponent {
       orden: 7,
     },
   ];
+
+  /**
+   * Configuración de las columnas de la tabla.
+   * @property {any[]} configuracionColumnas
+   */
   configuracionColumnas = [
     { encabezado: 'No.', clave: (ele: any) => ele.no, orden: 1 },
     {
@@ -85,7 +122,11 @@ export class AnexoComponent {
       orden: 6,
     },
   ];
-  //add one row sample data for above columns
+
+  /**
+   * Datos de la tabla.
+   * @property {any[]} datos
+   */
   datos = [
     {
       no: 1,
@@ -97,8 +138,10 @@ export class AnexoComponent {
       encabezado: '2',
     },
   ];
-  //generate for configuracionColumnas
-
+  /**
+   * Datos de la tabla.
+   * @property {any[]} datos2
+   */
   datos2 = [
     {
       no: 1,
