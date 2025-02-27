@@ -73,5 +73,6 @@ export * from './core/services/shared/http/http.service';
 export * from './core/services/220471/servicios-pantallas.enum';
 export * from './tramites/constantes/regex.constants';
 export * from './core/services/130118/pexim/pexim.service';
+export * from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';

@@ -14,15 +14,14 @@
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
-import { PLANTACOLUMNS } from 'libs/shared/data-access-user/src/tramites/constantes/prosec.module';
 import { ProsecService } from 'libs/shared/data-access-user/src/core/services/90101/prosec.module';
 import { TEXTO } from 'libs/shared/data-access-user/src/tramites/constantes/prosec.module';
+import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
 @Component({
   selector: 'app-domicilios-de-plantas',
   templateUrl: './domicilios-de-plantas.component.html',
-  styleUrl: './domicilios-de-plantas.component.scss'
+  styleUrl: './domicilios-de-plantas.component.scss',
 })
 export class DomiciliosDePlantasComponent {
 
@@ -51,15 +50,96 @@ export class DomiciliosDePlantasComponent {
    */
   ActividadProductiva: any[] = [];
 
-  /**
-   * @property {any[]} plantaColumns - Array de columnas de la tabla de plantas.
-   */
-  plantaColumns: any[] = PLANTACOLUMNS;
+  TablaSeleccion = TablaSeleccion;
 
-  /**
-   * @property {any[]} plantas - Array de datos de plantas.
-   */
-  plantas: any[] = [];
+  // configuracionColumnas = [
+  //   { encabezado: 'No. partida', clave: (ele: any) => ele.noPartida, orden: 1 },
+  //   {
+  //     encabezado: 'Tipo de requisito',
+  //     clave: (ele: any) => ele.tipoDeRequisito,
+  //     orden: 2,
+  //   },
+  //   {
+  //     encabezado: 'Requisito',
+  //     clave: (ele: any) => ele.requistio,
+  //     orden: 3,
+  //   },
+  //   {
+  //     encabezado: 'Número de Certificado Internacional',
+  //     clave: (ele: any) => ele.numberoDeCertificadoInternacional,
+  //     orden: 4,
+  //   },
+  //   {
+  //     encabezado: 'Fracción arancelaria',
+  //     clave: (ele: any) => ele.fraccionArancelaria,
+  //     orden: 5,
+  //   },
+  //   {
+  //     encabezado: 'Descripción de la fracción',
+  //     clave: (ele: any) => ele.descripcion,
+  //     orden: 6,
+  //   },
+  //   {
+  //     encabezado: 'Nico',
+  //     clave: (ele: any) => ele.nico,
+  //     orden: 7,
+  //   },
+  // ];
+
+  // datos = [
+  //   {
+  //     noPartida: '1',
+  //     tipoDeRequisito: 'Número de Oficio con Medidas Zoosanitarias',
+  //     requistio: '023-15-643-ARG',
+  //     numberoDeCertificadoInternacional: '00102899',
+  //     fraccionArancelaria: '51012102',
+  //     descripcion: 'Lana esquilada',
+  //     nico: '00',
+  //   },
+  // ];
+
+  plantaColumnsConfiguracion = [
+    { encabezado: 'Calle', clave: (ele: any) => ele.calle, orden: 1 },
+    {
+      encabezado: 'Número exterior',
+      clave: (ele: any) => ele.numeroExterior,
+      orden: 2,
+    },
+    {
+      encabezado: 'Número interior',
+      clave: (ele: any) => ele.numeroInterior,
+      orden: 3,
+    },
+    {
+      encabezado: 'Código postal',
+      clave: (ele: any) => ele.codigoPostal,
+      orden: 4,
+    },
+    {
+      encabezado: 'Colonia',
+      clave: (ele: any) => ele.colonia,
+      orden: 5,
+    },
+    {
+      encabezado: 'Municipio o alcaldía',
+      clave: (ele: any) => ele.municipioOAlcaldia,
+      orden: 6,
+    },
+  ];
+
+  plantasDatos = [
+    {
+      calle: 'CALLE 5',
+      numeroExterior: 'S/N',
+      numeroInterior: '',
+      codigoPostal: '81124',
+      colonia: 'OTRA NO ESPECIFICADA EN EL CATÁLOGO',
+      municipioOAlcaldia: 'GUASAVE'
+    }
+
+  ];
+
+
 
   constructor(private readonly fb: FormBuilder, private ProsecService: ProsecService) {
     this.forma = this.fb.group({
@@ -68,8 +148,6 @@ export class DomiciliosDePlantasComponent {
       RepresentacionFederal: [''],
       ActividadProductiva: [''],
     });
-    this.recuperarDatos();
-    this.datosSeleccionados();
   }
 
   /**
@@ -115,60 +193,6 @@ export class DomiciliosDePlantasComponent {
   obtenserListaActividad(): void {
     this.ProsecService.obtenerMenuDesplegable('actividad_productiva.json').subscribe(data => {
       this.ActividadProductiva = data as Catalogo[];
-    });
-  }
-
-  /**
-   * @method recuperarDatos
-   * @description Recupera los datos de las plantas desde el servicio.
-   */
-  recuperarDatos(): void {
-    this.ProsecService.obtenerTablaDatos('plantasDatos.json').subscribe({
-      next: (response: any) => {
-        if (response && Array.isArray(response.plantas)) {
-          this.plantas = response.plantas.map((item: any) => {
-            const data = {
-              tbodyData: item.tbodyData
-            };
-            return data;
-          });
-          this.plantas = [...this.plantas];
-        } else {
-          console.error('La respuesta de la API no tiene el formato esperado:', response);
-          this.plantas = [];
-        }
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.plantas = [];
-      }
-    });
-  }
-
-  /**
-   * @method datosSeleccionados
-   * @description Recupera los datos seleccionados de las plantas desde el servicio.
-   */
-  datosSeleccionados(): void {
-    this.ProsecService.obtenerTablaDatos('datosSeleccionados.json').subscribe({
-      next: (response: any) => {
-        if (response && Array.isArray(response.plantas)) {
-          this.plantas = response.plantas.map((item: any) => {
-            let data = {
-              tbodyData: item.tbodyData
-            };
-            return data;
-          });
-          this.plantas = [...this.plantas];
-        } else {
-          console.error('La respuesta de la API no tiene el formato esperado:', response);
-          this.plantas = [];
-        }
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.plantas = [];
-      }
     });
   }
 }

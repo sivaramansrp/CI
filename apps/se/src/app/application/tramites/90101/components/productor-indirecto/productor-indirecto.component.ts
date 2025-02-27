@@ -11,9 +11,8 @@
 
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
-import { PRODUCTORCOLUMNS } from 'libs/shared/data-access-user/src/tramites/constantes/prosec.module';
 import { ProsecService } from 'libs/shared/data-access-user/src/core/services/90101/prosec.module';
+import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
 @Component({
   selector: 'app-productor-indirecto',
@@ -27,15 +26,29 @@ export class ProductorIndirectoComponent {
    */
   productorIndirecto!: FormGroup;
 
-  /**
-   * @property {any[]} productorColumns - Array de columnas de la tabla de productores.
-   */
-  productorColumns: any[] = PRODUCTORCOLUMNS;
+  TablaSeleccion = TablaSeleccion;
 
-  /**
-   * @property {any[]} productorDatos - Array de datos de productores.
-   */
-  productorDatos: any[] = [];
+  productorColumnsConfiguracion = [
+    { encabezado: 'Registro federal de contribuyentes', clave: (ele: any) => ele.contribuyentes, orden: 1 },
+    {
+      encabezado: 'Denominación o razón social',
+      clave: (ele: any) => ele.razonSocial,
+      orden: 2,
+    },
+    {
+      encabezado: 'Correo',
+      clave: (ele: any) => ele.Correo,
+      orden: 3,
+    },
+  ];
+
+  productorDato = [
+    {
+      contribuyentes: 'TS0931210493',
+      razonSocial: 'TRW SISTEMAS DE DIRECCIONESS DE AL DE CV',
+      Correo: 'carlos.flores@trw'
+    }
+  ]
 
   constructor(private readonly fb: FormBuilder, private ProsecService: ProsecService) {
     this.productorIndirecto = this.fb.group({
@@ -48,33 +61,7 @@ export class ProductorIndirectoComponent {
    * @description Inicializa el componente y obtiene los datos de los productores.
    */
   ngOnInit(): void {
-    this.recuperarDatos();
+    
   }
 
-  /**
-   * @method recuperarDatos
-   * @description Recupera los datos de los productores desde el servicio.
-   */
-  recuperarDatos(): void {
-    this.ProsecService.obtenerTablaDatos('sectorDatos.json').subscribe({
-      next: (response: any) => {
-        if (response && Array.isArray(response.sectors)) {
-          this.productorDatos = response.sectors.map((item: any) => {
-            const data = {
-              tbodyData: item.tbodyData
-            };
-            return data;
-          });
-          this.productorDatos = [...this.productorDatos];
-        } else {
-          console.error('La respuesta de la API no tiene el formato esperado:', response);
-          this.productorDatos = [];
-        }
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.productorDatos = [];
-      }
-    });
-  }
 }

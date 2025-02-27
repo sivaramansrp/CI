@@ -17,6 +17,6 @@
     </div>
     <div class="row">
         <h6>Solicitud Prosec Productor Indirecto Tabla:</h6>
-        <ng-table [commonTableHeader]="productorColumns" [commonTableBody]="productorDatos" ></ng-table>
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="productorColumnsConfiguracion" [datos]="productorDato" ></app-tabla-dinamica>
     </div>
 </div>

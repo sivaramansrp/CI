@@ -31,7 +31,7 @@
         </div>
         <div class="row">
             <h6>Datos de las plantas donde se realizarán las operaciones PROSEC disponibles:</h6>
-            <ng-table [commonTableHeader]="plantaColumns" [commonTableBody]="plantas"></ng-table>
+            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="plantaColumnsConfiguracion" [datos]="plantasDatos" ></app-tabla-dinamica>
         </div>
         <div class="row mb-5">
             <div class=" text-end mt-5">
@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="row">
-            <ng-table [commonTableHeader]="plantaColumns" [commonTableBody]="plantas"></ng-table>
+            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="plantaColumnsConfiguracion" [datos]="plantasDatos" ></app-tabla-dinamica>
         </div>
         <div class="row mb-5">
             <div class="col-md-4">

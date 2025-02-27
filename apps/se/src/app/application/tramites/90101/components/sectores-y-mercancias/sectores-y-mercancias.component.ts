@@ -15,10 +15,9 @@
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
 import { PARATEXTO } from 'libs/shared/data-access-user/src/tramites/constantes/prosec.module';
 import { ProsecService } from 'libs/shared/data-access-user/src/core/services/90101/prosec.module';
-import { SECTORCOLUMNS } from 'libs/shared/data-access-user/src/tramites/constantes/prosec.module';
+import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
 @Component({
   selector: 'app-sectores-y-mercancias',
@@ -42,15 +41,19 @@ export class SectoresYMercanciasComponent {
    */
   sector: any[] = [];
 
-  /**
-   * @property {any[]} sectorColumns - Array de columnas de la tabla de sectores.
-   */
-  sectorColumns: any[] = SECTORCOLUMNS;
+  TablaSeleccion = TablaSeleccion;
 
-  /**
-   * @property {any[]} sectorsDatos - Array de datos de sectores.
-   */
-  sectorsDatos: any[] = [];
+  sectorColumnsConfiguracion = [
+    { encabezado: 'Lista de sectores', clave: (ele: any) => ele.sectorLista, orden: 1 },
+    { encabezado: 'Clave del sector', clave: (ele: any) => ele.sectorClave, orden: 2 },
+  ];
+
+  sectors = [
+    {
+      sectorLista: 'Sector',
+      sectorClave: 'XIXa - De la Industria Automotriz y'
+    }
+  ]
 
   constructor(private readonly fb: FormBuilder, private ProsecService: ProsecService) {
     this.sectoresYMercancias = this.fb.group({
@@ -65,7 +68,6 @@ export class SectoresYMercanciasComponent {
    */
   ngOnInit(): void {
     this.obtenserLista();
-    this.recuperarDatos();
   }
 
   /**
@@ -83,34 +85,6 @@ export class SectoresYMercanciasComponent {
   obtenserListaEstado(): void {
     this.ProsecService.obtenerMenuDesplegable('sector.json').subscribe(data => {
       this.sector = data as Catalogo[];
-    });
-  }
-
-  /**
-   * @method recuperarDatos
-   * @description Recupera los datos de los sectores desde el servicio.
-   */
-  recuperarDatos(): void {
-    this.ProsecService.obtenerTablaDatos('sectorDatos.json').subscribe({
-      next: (response: any) => {
-        if (response && Array.isArray(response.sectors)) {
-          this.sectorsDatos = response.sectors.map((item: any) => {
-            const data = {
-              tbodyData: item.tbodyData
-            };
-            console.log(data);
-            return data;
-          });
-          this.sectorsDatos = [...this.sectorsDatos];
-        } else {
-          console.error('La respuesta de la API no tiene el formato esperado:', response);
-          this.sectorsDatos = [];
-        }
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.sectorsDatos = [];
-      }
     });
   }
 }
