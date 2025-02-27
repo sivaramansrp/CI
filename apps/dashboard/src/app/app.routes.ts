@@ -33,4 +33,10 @@ export const appRoutes: Route[] = [
     loadChildren: () =>
       loadRemoteModule('semarnat', './Routes').then((m) => m.remoteRoutes),
   }
+  ,
+  {
+    path: 'funcionario',
+    loadChildren: () =>
+      loadRemoteModule('funcionario', './Routes').then((m) => m.remoteRoutes),
+  }
 ];
