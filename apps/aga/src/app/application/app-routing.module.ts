@@ -27,10 +27,16 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
   },
+  {
+    path: 'solicitud-modalidad',
+    loadChildren: () =>
+      import('../../../../se/src/app/application/tramites/80208/registro-solicitudad.module').then(
+        (m) => m.RegistroSolicitudModalidadModule)
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

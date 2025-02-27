@@ -1,6 +1,4 @@
-
-
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CambioModalidadService } from 'libs/shared/data-access-user/src/core/services/80208/cambio-modalidad.service';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
@@ -19,7 +17,7 @@ import { CommonModule } from '@angular/common';
  * 
  * @export
  * @class CombioDeModalidadComponent
- * @implements {OnInit}
+ * @implements {OnInit, OnDestroy}
  */
 @Component({
   selector: 'app-combio-de-modalidad',
@@ -35,7 +33,7 @@ import { CommonModule } from '@angular/common';
   ]
  
 })
-export class CombioDeModalidadComponent implements OnInit {
+export class CombioDeModalidadComponent implements OnInit, OnDestroy {
   /**
    * Tipo de selección de la tabla.
    * @type {TablaSeleccion}
@@ -239,6 +237,5 @@ export class CombioDeModalidadComponent implements OnInit {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-
-
+  
 }

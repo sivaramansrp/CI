@@ -22,7 +22,7 @@ describe('SolicitudModalidadPageComponent', () => {
   });
 
   it('should have default title message', () => {
-    expect(component.tituloMensaje).toBe('Zoosanitario para importación');
+    expect(component).toBe('');
   });
 
   it('should have default step index', () => {

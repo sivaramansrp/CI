@@ -1,14 +1,13 @@
 
 /**
- * @component ElegibilidadTextilesComponent
  * @description Este componente es responsable de manejar el flujo de pasos para la elegibilidad de textiles.
  * Incluye la lógica para la navegación entre pasos y la obtención de títulos.
  * 
  * @import { Component, ViewChild } from '@angular/core';
- * @import { ListaPasosWizard } from '../../../../core/models/80208/solicitud-modalidad.model';
- * @import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
- * @import { DatosPasos } from '../../../../core/models/shared/components.model';
- * @import { PASOS } from '../../../../shared/constantes/80208/solicitud-modalidad.enums';
+ * @import { PASOS } from 'libs/shared/data-access-user/src/tramites/constantes/80208/solicitud-modalidad.enums';
+ * @import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
+ * @import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/80208/solicitud-modalidad.model';
+ * @import { WizardComponent } from '@ng-mf/data-access-user';
  */
 
 import { Component, ViewChild } from '@angular/core';
@@ -43,10 +42,8 @@ export class SolicitudModalidadPageComponent {
   pasos: Array<ListaPasosWizard> = PASOS;
 
   /**
-   * @property {string | null} tituloMensaje - El título del mensaje.
+   * @property {WizardComponent} wizardComponent - Componente de wizard.
    */
-  tituloMensaje: string | null = 'Zoosanitario para importación';
-
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
