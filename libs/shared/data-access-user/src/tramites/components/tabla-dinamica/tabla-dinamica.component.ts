@@ -19,8 +19,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @type { TablaSeleccion}
    */
-  @Input()
-  tipoSeleccionTabla!: TablaSeleccion;
+  @Input() tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.UNDEFINED;
 
   /**
    * Expone el `enum` `TablaSeleccion` al componente de plantilla HTML.
