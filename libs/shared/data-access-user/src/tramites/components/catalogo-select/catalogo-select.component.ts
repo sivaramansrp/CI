@@ -29,7 +29,7 @@ import { CommonModule } from '@angular/common';
       multi: true,
     },
   ],
-  host: { 'hostID': crypto.randomUUID().toString() }
+  host: { 'hostID': Math.random().toString() }
 })
 export class CatalogoSelectComponent
   implements ControlValueAccessor, OnChanges
