@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-
+export interface CrossListLable {
+  tituluDeLaIzquierda: string;
+  derecha: string;
+}
 @Component({
   selector: 'crosslist',
   standalone: true,
@@ -13,40 +16,19 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 export class CrosslistComponent implements OnInit ,OnChanges {
   @Input({ required: true }) fechas!: string[];
   @Input() botonField: any;
+  @Input() botones: any;
+  @Input() label: CrossListLable | undefined;
   fechasDatos: string[] = [];
   fechasSeleccionadas: string[] = [];
   fecha: FormControl = new FormControl('');
   fechaSeleccionada: FormControl = new FormControl('');
   @Input() showSearchInput1: boolean = false;
   @Input() showSearchInput2: boolean = false;
-  botones = [
-    {
-      btnNombre: 'Agregar',
-      class: 'btn-primary',
-      funcion: () => this.agregar(''),
-    },
-    {
-      btnNombre: 'Agregar todas',
-      class: 'btn-default',
-
-      funcion: () => this.agregar('t'),
-    },
-    {
-      btnNombre: 'Quitar',
-      class: 'btn-danger',
-
-      funcion: () => this.quitar(''),
-    },
-    {
-      btnNombre: 'Quitar todas',
-      class: 'btn-default',
-
-      funcion: () => this.quitar('t'),
-    },
-  ];
-
   ngOnInit() {
     this.fechasDatos = [...this.fechas];
+    if(!this.botones){
+      this.setButtonDefault();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -55,6 +37,35 @@ export class CrosslistComponent implements OnInit ,OnChanges {
       this.fechasDatos = [...this.fechas]
     }
   }
+  setButtonDefault() {
+    this.botones = [
+      {
+        btnNombre: 'Agregar',
+        class: 'btn-primary',
+        funcion: () => this.agregar(''),
+      },
+      {
+        btnNombre: 'Agregar todas',
+        class: 'btn-default',
+  
+        funcion: () => this.agregar('t'),
+      },
+      {
+        btnNombre: 'Quitar',
+        class: 'btn-danger',
+  
+        funcion: () => this.quitar(''),
+      },
+      {
+        btnNombre: 'Quitar todas',
+        class: 'btn-default',
+  
+        funcion: () => this.quitar('t'),
+      },
+    ];
+  
+  }
+
 
   agregar(type: string) {
     if (type === 't') {

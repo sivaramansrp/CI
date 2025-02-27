@@ -7,6 +7,6 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, NxWelcomeComponent,RouterModule],
   selector: 'app-semarnat-entry',
-  template: `<app-nx-welcome></app-nx-welcome>`,
+  template: `<router-outlet></router-outlet>`,
 })
 export class RemoteEntryComponent {}

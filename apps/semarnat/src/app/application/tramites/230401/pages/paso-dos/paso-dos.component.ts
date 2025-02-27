@@ -1,0 +1,14 @@
+import { Component } from '@angular/core';
+import { TEXTOS_REQUISITOS } from 'libs/shared/data-access-user/src/tramites/constantes/certificado-zoosanitario.enum';
+
+@Component({
+  selector: 'app-paso-dos',
+  templateUrl: './paso-dos.component.html',
+})
+export class PasoDosComponent {
+  /**
+   * Objeto con los textos de los requisitos.
+   * @property {object} TEXTOS_REQUISITOS
+   */
+  TEXTOS = TEXTOS_REQUISITOS;
+}
