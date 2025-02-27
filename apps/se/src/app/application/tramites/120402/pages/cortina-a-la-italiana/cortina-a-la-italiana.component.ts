@@ -3,7 +3,10 @@
  * Permite la navegación entre diferentes pestañas mediante un índice.
  */
 import { Component } from '@angular/core';
-
+/**
+ * Componente que representa la interfaz de una cortina a la italiana.
+ * Permite la navegación entre diferentes pestañas mediante un índice.
+ */
 @Component({
   selector: 'app-cortina-a-la-italiana',
   templateUrl: './cortina-a-la-italiana.component.html',
@@ -13,26 +16,26 @@ export class CortinaALaItalianaComponent {
    * Índice actual de la pestaña seleccionada.
    */
   indice: number = 1;
-
+ 
   /**
    * Número total de pestañas disponibles.
    */
   totalPestanas: number = 5;
-
+ 
   /**
    * Indica si la pestaña seleccionada es la primera.
    */
   get esPrimeraPestana(): boolean {
     return this.indice === 1;
   }
-
+ 
   /**
    * Indica si la pestaña seleccionada es la última.
    */
   get esUltimaPestana(): boolean {
     return this.indice === this.totalPestanas;
   }
-
+ 
   /**
    * Cambia la pestaña activa según el índice proporcionado.
    * @param i Número de la pestaña a seleccionar.
@@ -42,7 +45,7 @@ export class CortinaALaItalianaComponent {
       this.indice = i;
     }
   }
-
+ 
   /**
    * Avanza a la siguiente pestaña si no es la última.
    */
@@ -51,7 +54,7 @@ export class CortinaALaItalianaComponent {
       this.indice++;
     }
   }
-
+ 
   /**
    * Retrocede a la pestaña anterior si no es la primera.
    */
@@ -60,7 +63,7 @@ export class CortinaALaItalianaComponent {
       this.indice--;
     }
   }
-
+ 
   /**
    * Reinicia la selección de pestañas al valor inicial.
    */

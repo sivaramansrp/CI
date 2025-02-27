@@ -3,7 +3,10 @@
  * Este componente sirve como base para futuras implementaciones relacionadas con asignaciones.
  */
 import { Component } from '@angular/core';
-
+/**
+ * Componente que representa la asignación de recursos o información.
+ * Este componente sirve como base para futuras implementaciones relacionadas con asignaciones.
+ */
 @Component({
   selector: 'app-asignacion',
   templateUrl: './asignacion.component.html',
@@ -13,17 +16,17 @@ export class AsignacionComponent {
    * Índice actual de la asignación.
    */
   indice: number = 0;
-
+ 
   /**
    * Estado que indica si una asignación está activa.
    */
   asignacionActiva: boolean = false;
-
+ 
   /**
    * Mensaje de estado de la asignación.
    */
   mensajeEstado: string = '';
-
+ 
   /**
    * Constructor del componente AsignacionComponent.
    * Inicializa el mensaje de estado.
@@ -31,7 +34,7 @@ export class AsignacionComponent {
   constructor() {
     this.actualizarMensajeEstado();
   }
-
+ 
   /**
    * Selecciona una asignación específica basada en el índice proporcionado.
    * @param i Índice de la asignación a seleccionar.
@@ -41,7 +44,7 @@ export class AsignacionComponent {
     this.asignacionActiva = true;
     this.actualizarMensajeEstado();
   }
-
+ 
   /**
    * Restablece la asignación actual, desactivándola y reiniciando el índice.
    */
@@ -50,7 +53,7 @@ export class AsignacionComponent {
     this.asignacionActiva = false;
     this.actualizarMensajeEstado();
   }
-
+ 
   /**
    * Actualiza el mensaje de estado según el estado de la asignación.
    */
