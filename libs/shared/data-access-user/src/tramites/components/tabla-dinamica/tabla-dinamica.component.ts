@@ -19,7 +19,9 @@ export class TablaDinamicaComponent<T> {
    *
    * @type { TablaSeleccion}
    */
-  @Input() tipoSeleccionTabla!: TablaSeleccion
+
+  @Input() tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.UNDEFINED;
+
 
 
   /**
