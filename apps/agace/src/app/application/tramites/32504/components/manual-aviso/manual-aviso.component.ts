@@ -268,7 +268,7 @@ export class ManualAvisoComponent implements OnInit {
    * @param claveRadio - La clave de la entrada de radio.
    * @param evento - El nuevo valor de la entrada de radio.
    */
-  cambioValorRadio(claveRadio: string, groupIndex, menuIndex, evento: string | number): void {
+  cambioValorRadio(claveRadio: string, groupIndex: number, menuIndex: number, evento: string | number): void {
     this.configuracion[groupIndex].menu[menuIndex].props.selectedValue = evento;
     this.valoresSeleccionadosRadio[claveRadio] = evento;
   }

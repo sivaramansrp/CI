@@ -8,6 +8,13 @@ const ROUTES: Routes = [
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
   },
+  {
+    path: 'aviso',
+    loadChildren: () =>
+      import('./tramites/32504/aviso-procesos.module').then(
+        (m) => m.AvisoProcesosModule
+      ),
+  },
 ];
 
 @NgModule({

@@ -75,7 +75,7 @@ export * from './tramites/constantes/regex.constants';
 export * from './core/services/130118/pexim/pexim.service';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
-export { CARGO_TIPO, DATOS_EMPRESA, DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMANUFACTURA, DATOS_QUIEN_RECIBE, TEXTO_REQUISITOS, TEXTO_ANEXAR_REQUISITOS } from './core/enums/32504/aviso.enum';
+export { CARGO_TIPO, DATOS_EMPRESA, DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMANUFACTURA, DATOS_QUIEN_RECIBE, TEXTO_REQUISITOS, TEXTO_ANEXAR_REQUISITOS, TEXTOS } from './core/enums/32504/aviso.enum';
 export { ActionType } from './core/models/32504/aviso.model';
 export { InputTypes, buttonActionTypes } from './core/models/130120/permiso-importacion-modification.enum';
 export { InputConfig } from './core/models/130120/permiso-importacion-modification.model';

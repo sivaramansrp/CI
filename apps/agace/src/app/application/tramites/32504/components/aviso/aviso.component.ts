@@ -12,7 +12,9 @@ import { InputFechaComponent } from "@ng-mf/data-access-user";
 import { InputRadioComponent } from "@ng-mf/data-access-user";
 import { ManualAvisoComponent } from '../manual-aviso/manual-aviso.component';
 import { TableComponent } from "@ng-mf/data-access-user";
-import TipoCarga from '../../../../../../../../../libs/shared/theme/assets/json/32504/tipo-cargo.json';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const TIPO_CARGA = require('../../../../../../../../../libs/shared/theme/assets/json/32504/tipo-cargo.json');
+// import TipoCarga from '../../../../../../../../../libs/shared/theme/assets/json/32504/tipo-cargo.json';
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { map } from 'rxjs';
 
@@ -87,9 +89,10 @@ export class AvisoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.configuracion[1].menu[0].props.options = TipoCarga;
-    this.configuracion[1].menu[0].props.selectedValue = TipoCarga[0].value;
-    this.valoresSeleccionadosRadio.radio1 = TipoCarga[0].value;
+    // const TipoCarga = TIPO_CARGA;
+    this.configuracion[1].menu[0].props.options = TIPO_CARGA;
+    this.configuracion[1].menu[0].props.selectedValue = TIPO_CARGA[0].value;
+    this.valoresSeleccionadosRadio.radio1 = TIPO_CARGA[0].value;
     this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
     });
@@ -196,7 +199,7 @@ export class AvisoComponent implements OnInit {
    * @param claveRadio - La clave de la entrada de radio.
    * @param evento - El nuevo valor de la entrada de radio.
    */
-  cambioValorRadio(claveRadio: string, groupIndex, menuIndex, evento: string | number): void {
+  cambioValorRadio(claveRadio: string, groupIndex: number, menuIndex: number, evento: string | number): void {
     this.configuracion[groupIndex].menu[menuIndex].props.selectedValue = evento;
     this.valoresSeleccionadosRadio[claveRadio] = evento;
   }
