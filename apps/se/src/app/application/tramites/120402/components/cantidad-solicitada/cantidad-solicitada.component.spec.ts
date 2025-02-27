@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { CantidadSolicitadaComponent } from './cantidad-solicitada.component';
-import { CommonModule } from '@common';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 
 /**
  * Pruebas unitarias para el componente CantidadSolicitadaComponent.
