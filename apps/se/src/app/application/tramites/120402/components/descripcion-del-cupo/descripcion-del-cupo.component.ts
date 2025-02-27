@@ -4,15 +4,16 @@
  */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+
 import { DescripcionDelCupoService } from 'libs/shared/data-access-user/src/core/services/120402/descripcion-del-cupo/descripcion-del-cupo.service';
-import { Subject, takeUntil } from 'rxjs';
+
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
+import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 /**
  * Componente que representa la descripción detallada de un cupo.
  * Se encarga de mostrar información específica sobre el cupo y su configuración.
@@ -29,12 +30,12 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
    * Formulario reactivo que contiene la información de la descripción del cupo.
    */
   form!: FormGroup;
- 
+
   /**
    * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
    */
   private destroyed$ = new Subject<void>();
- 
+
   /**
    * Constructor del componente.
    * @param fb FormBuilder para la creación del formulario.
@@ -44,7 +45,7 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private service: DescripcionDelCupoService
   ) {}
- 
+
   /**
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
    */
@@ -52,7 +53,7 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
     this.crearFormulario();
     this.loadDescripcionDelCupo();
   }
- 
+
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */
@@ -60,7 +61,7 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
- 
+
   /**
    * Crea e inicializa el formulario con campos deshabilitados por defecto.
    */
@@ -78,7 +79,7 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
       paises: [{ value: '', disabled: true }],
     });
   }
- 
+
   /**
    * Carga la información de la descripción del cupo desde el servicio y la asigna al formulario.
    */
@@ -102,4 +103,3 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
       });
   }
 }
- 

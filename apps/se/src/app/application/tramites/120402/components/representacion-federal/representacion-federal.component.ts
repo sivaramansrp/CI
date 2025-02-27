@@ -20,8 +20,11 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
+import { OnInit } from '@angular/core';
+
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
 import entidadValues from 'libs/shared/theme/assets/json/130102/entidad_federativa.json';
 import representacionValues from 'libs/shared/theme/assets/json/130102/representacion_federal.json';
@@ -109,7 +112,7 @@ export class RepresentacionFederalComponent implements OnInit {
        * Campo del formulario para la selección de la entidad federativa.
        * Se inicializa como una cadena vacía.
        */
-      entidad: [''],
+      entidad: ['', [Validators.required]],
 
       /**
        * @property {string} representacion
@@ -117,7 +120,7 @@ export class RepresentacionFederalComponent implements OnInit {
        * Campo del formulario para la selección de la representación federal.
        * Se inicializa como una cadena vacía.
        */
-      representacion: [''],
+      representacion: ['', [Validators.required]],
     });
   }
 
