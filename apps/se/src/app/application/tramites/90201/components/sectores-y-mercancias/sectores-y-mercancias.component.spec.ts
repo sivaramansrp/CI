@@ -18,4 +18,18 @@ describe('SectoresYMercanciasComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should initialize form with default values', () => {
+    expect(component.sectoresForm.value).toEqual({ sector: '', fraccion: '' });
+  });
+
+  it('should have a valid form when fraccion is less than or equal to 8 characters', () => {
+    component.sectoresForm.controls['fraccion'].setValue('12345678');
+    expect(component.sectoresForm.valid).toBe(true);
+  });
+
+  it('should have an invalid form when fraccion is more than 8 characters', () => {
+    component.sectoresForm.controls['fraccion'].setValue('123456789');
+    expect(component.sectoresForm.invalid).toBe(true);
+  });
 });
