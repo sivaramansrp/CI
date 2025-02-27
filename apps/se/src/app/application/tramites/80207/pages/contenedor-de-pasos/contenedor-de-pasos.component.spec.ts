@@ -8,7 +8,8 @@ describe('ContenedorDePasosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ContenedorDePasosComponent, WizardComponent],
+      declarations: [ContenedorDePasosComponent],
+      imports:[WizardComponent]
     }).compileComponents();
   });
 
