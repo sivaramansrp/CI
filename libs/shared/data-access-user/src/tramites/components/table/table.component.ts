@@ -32,11 +32,8 @@ export class TableComponent {
    * @description
    * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero
    */
-  @Input() tableoptions: any = {
-    checkbox : true
-  };
- 
-  public sharedTableObject: any;
+
+
   /**
    * @description
    * tableData se utiliza para obtener datos de la tabla de la componente
@@ -50,8 +47,7 @@ export class TableComponent {
    * @description
    * ngOnInit se utiliza para inicializar la tabla de la componente
    */
-  ngOnInit(): void {
-    this.sharedTableObject = this.tableoptions.checkbox  
+  ngOnInit(): void { 
     this.tableData = {
       tableHeader: this.commonTableHeader,
       tableBody: this.commonTableBody
