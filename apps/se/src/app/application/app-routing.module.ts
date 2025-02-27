@@ -39,6 +39,12 @@ const routes: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
+  },
+  {
+    path: 'certificado-registro',
+    loadChildren: () =>
+      import('./tramites/80205/certificado-registro.module').then(
+        (m) => m.CertificadoRegistroModule)
   }
 ];
 
