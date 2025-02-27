@@ -1,3 +1,7 @@
+/**
+ * Componente que representa la descripción detallada de un cupo.
+ * Se encarga de mostrar información específica sobre el cupo y su configuración.
+ */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -18,23 +22,45 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrl: './descripcion-del-cupo.component.scss',
 })
 export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario reactivo que contiene la información de la descripción del cupo.
+   */
   form!: FormGroup;
+
+  /**
+   * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
+   */
   private destroyed$ = new Subject<void>();
 
-  ngOnInit() {
-    this.crearFormulario();
-    this.loadDescripcionDelCupo();
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
-  }
+  /**
+   * Constructor del componente.
+   * @param fb FormBuilder para la creación del formulario.
+   * @param service Servicio para obtener la información de la descripción del cupo.
+   */
   constructor(
     private fb: FormBuilder,
     private service: DescripcionDelCupoService
   ) {}
 
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   */
+  ngOnInit(): void {
+    this.crearFormulario();
+    this.loadDescripcionDelCupo();
+  }
+
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+
+  /**
+   * Crea e inicializa el formulario con campos deshabilitados por defecto.
+   */
   crearFormulario(): void {
     this.form = this.fb.group({
       claveDelCupo: [{ value: '', disabled: true }],
@@ -50,11 +76,14 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadDescripcionDelCupo() {
+  /**
+   * Carga la información de la descripción del cupo desde el servicio y la asigna al formulario.
+   */
+  loadDescripcionDelCupo(): void {
     this.service
       .getDescripcionDelCupo()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: any) => {        
+      .subscribe((data: any) => {
         this.form.patchValue({
           claveDelCupo: data.claveDelCupo,
           mecanismoDeAsignacion: data.mecanismoDeAsignacion,
@@ -65,7 +94,7 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
           fechaDeFinDeVigenciaDelCupo: data.fechaDeFinDeVigenciaDelCupo,
           fraccionesArancelarias: data.fraccionesArancelarias,
           tratadoAcuerdo: data.tratadoAcuerdo,
-          paises:data.paises
+          paises: data.paises,
         });
       });
   }

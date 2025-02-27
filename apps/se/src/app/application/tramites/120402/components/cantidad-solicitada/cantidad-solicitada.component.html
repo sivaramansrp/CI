@@ -12,9 +12,11 @@
                 id="cantidadSolicitada"
                 formControlName="cantidadSolicitada"
                 appUppercase
-                [disabled]="true"
                 aria-labelledby="cantidadSolicitada"
               />
+              <div *ngIf="esInvalido('cantidadSolicitada')" class="text-danger">
+                <small *ngIf="form.controls['cantidadSolicitada'].hasError('required')">La cantidad solicitada es un campo obligatorio.</small>
+            </div>
             </div>
           </div>
         </div>
@@ -25,7 +27,7 @@
             <div class="col-md-8">Campos obligatorios</div>
             <div class="col-md-4 text-end">
                 <div class="btn-group">
-                    <button class="btn btn-primary me-2" type="button">Continuar</button>
+                    <button class="btn btn-primary me-2" type="button" (click)="validarYEnviarFormulario()">Continuar</button>
                 </div>
             </div>
         </div>
