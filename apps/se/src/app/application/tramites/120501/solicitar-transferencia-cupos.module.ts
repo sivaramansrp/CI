@@ -1,9 +1,13 @@
 import { NgModule } from '@angular/core';
 
+import { NO_ERRORS_SCHEMA} from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { SolicitarTransferenciaCuposRoutingModule } from './solicitar-transferencia-cupos-routing.module';
 
-import { CatalogoSelectComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
@@ -14,6 +18,7 @@ import { PasoSolicitanteComponent } from './pages/paso-solicitante/paso-solicita
 import { SolicitarTransferenciaCuposMainComponent } from './pages/solicitar-transferencia-cupos-main/solicitar-transferencia-cupos-main.component';
 
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+
 import { LicitacionesVigentesComponent } from './component/tramites/120501/component/licitaciones-vigentes/licitaciones-vigentes.component';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
@@ -21,7 +26,7 @@ import { AlertComponent } from '@ng-mf/data-access-user';
 @NgModule({
   declarations: [
     PasoSolicitanteComponent,
-    SolicitarTransferenciaCuposMainComponent
+    SolicitarTransferenciaCuposMainComponent,
   ],
   imports: [
     CommonModule,
@@ -36,6 +41,7 @@ import { AlertComponent } from '@ng-mf/data-access-user';
     TablaDinamicaComponent
 
   ],
-  exports: [TablaDinamicaComponent]
+  exports: [TablaDinamicaComponent],
+  schemas: [NO_ERRORS_SCHEMA]
 })
 export class SolicitarTransferenciaCuposModule { }
