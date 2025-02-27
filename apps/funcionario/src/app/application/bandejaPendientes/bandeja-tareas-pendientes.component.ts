@@ -1,6 +1,7 @@
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Component } from '@angular/core';
-import { InputFecha } from '@ng-mf/data-access-user';
+import { CommonModule } from "@angular/common";
+import { Component } from "@angular/core";
+import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { InputFecha, InputFechaComponent } from "@ng-mf/data-access-user";
 
 export const FECHA_INICIO = {
   labelNombre: 'Fecha inicial',
@@ -15,8 +16,11 @@ export const FECHA_FINAL = {
 };
 
 @Component({
+  selector: 'app-bandeja-tareas-pendientes',
   templateUrl: './bandeja-tareas-pendientes.component.html',
-  styleUrl: './bandeja-tareas-pendientes.component.scss'
+  styleUrl: './bandeja-tareas-pendientes.component.scss',
+  imports: [CommonModule, ReactiveFormsModule, InputFechaComponent],
+  standalone: true,
 })
 export class BandejaTareasPendientesComponent {
 
