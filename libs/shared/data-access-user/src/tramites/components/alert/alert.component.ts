@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'ng-alert',
@@ -8,7 +9,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   imports: [CommonModule],
   templateUrl: './alert.component.html',
   styleUrl: './alert.component.scss',
-  host: { 'hostID': crypto.randomUUID().toString() }
+  host: { 'hostID': Math.random().toString() }
 })
 export class AlertComponent implements OnInit {
   @Input() CONTENIDO!: string;

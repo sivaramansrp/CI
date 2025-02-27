@@ -7,8 +7,11 @@
 
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ASIGNHCION, PANTAPASOS, WizardComponent } from '@ng-mf/data-access-user';
+import { ASIGNHCION, DatosPasos, PANTAPASOS, WizardComponent } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import {ASIGNHCION_REGISTRO} from 'libs/shared/data-access-user/src/tramites/constantes/120404/pasonavigation.enum'
+
+
 
 /**
  * Componente para la gestión de la página de asignación directa.
@@ -16,6 +19,19 @@ import { ListaPasosWizard } from '@ng-mf/data-access-user';
  * @templateUrl ./asignciondirecta-page.component.html
  * @styleUrl ./asignciondirecta-page.component.scss
  */
+
+
+
+interface AccionBoton {
+  /**
+   * The action to be performed.
+   */
+  accion: string;
+  /**
+   * The value associated with the action.
+   */
+  valor: number;
+}
 @Component({
   selector: 'app-asignciondirecta-page',
   templateUrl: './asignciondirecta-page.component.html',
@@ -25,7 +41,9 @@ export class AsignciondirectaPageComponent {
   /**
    * Lista de pasos del wizard.
    */
-  pantallasPasos: ListaPasosWizard[] = ASIGNHCION;
+  pasos: ListaPasosWizard[] = ASIGNHCION;
+  pantallasPasos: ListaPasosWizard[] = ASIGNHCION_REGISTRO ;
+  
 
   /**
    * Índice del paso actual.
@@ -33,7 +51,31 @@ export class AsignciondirectaPageComponent {
   indice: number = 1;
 
   /**
+   * The data for the steps in the wizard.
+   */
+  datosPasos: DatosPasos = {
+    nroPasos: this.pantallasPasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
+  };
+
+  /**
    * Referencia al componente Wizard.
    */
+
+
+  
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  public getValorIndice(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
+  }
 }

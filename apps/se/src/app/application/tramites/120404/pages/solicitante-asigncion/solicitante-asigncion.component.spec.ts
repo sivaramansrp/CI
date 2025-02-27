@@ -7,7 +7,7 @@ describe('SolicitanteAsigncionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SolicitanteAsigncionComponent],
+      declarations: [SolicitanteAsigncionComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitanteAsigncionComponent);
@@ -17,5 +17,19 @@ describe('SolicitanteAsigncionComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have the correct initial tab index', () => {
+    expect(component.indice).toBe(1);
+  });
+
+  it('should select the correct tab', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
+  });
+
+  it('should select the first tab', () => {
+    component.seleccionaTab(0);
+    expect(component.indice).toBe(0);
   });
 });

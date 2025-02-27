@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AsignciondirectaPageComponent } from './asignciondirecta-page.component';
+import { CommonModule } from '@angular/common';
+import { WizardComponent } from '@ng-mf/data-access-user';
+import { ASIGNHCION, ListaPasosWizard } from '@ng-mf/data-access-user';
 
 describe('AsignciondirectaPageComponent', () => {
   let component: AsignciondirectaPageComponent;
@@ -7,7 +10,8 @@ describe('AsignciondirectaPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AsignciondirectaPageComponent],
+      imports: [CommonModule],
+      declarations: [AsignciondirectaPageComponent, WizardComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AsignciondirectaPageComponent);
@@ -17,5 +21,17 @@ describe('AsignciondirectaPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have the correct initial steps', () => {
+    expect(component.pantallasPasos).toEqual(ASIGNHCION);
+  });
+
+  it('should have the correct initial step index', () => {
+    expect(component.indice).toBe(1);
+  });
+
+  it('should have a reference to the WizardComponent', () => {
+    expect(component.wizardComponent).toBeDefined();
   });
 });

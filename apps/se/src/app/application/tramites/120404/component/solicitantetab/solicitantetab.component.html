@@ -29,12 +29,14 @@
                         <p>(kilogramo)</p>
                     </div>
                     <ng-titulo titulo="Monto a ampliar" />
+                    
                     <div class="col-md-4">
                         <label for="ampliar" class="form-label">Monto a ampliar*</label>
                         <input type="text" class="form-control" id="ampliar" formControlName="ampliar">
+                       </div>
                        <span>(kilogramo)</span>
-                    </div>
                 </div>
+            
               <btn-continuar [datos]="datosPasos"></btn-continuar>
                  <div class="row">
                   <ng-alert [CONTENIDO]="texto"></ng-alert>
