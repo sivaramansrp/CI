@@ -33,7 +33,7 @@ export const DATOS_GENERALES_SOCIOS = [
     orden: 1,
   },
   {
-    encabezado: 'Razon social',
+    encabezado: 'Razón social',
     clave: (ele: Socios) => ele.b,
     orden: 2,
   },
@@ -56,12 +56,12 @@ export const DATOS_GENERALES_SOCIOS = [
 
 export const DATOS_GENERALES_EXTRANJEROS = [
   {
-    encabezado: 'TAX ID ',
+    encabezado: 'TAX ID',
     clave: (ele: Extranjeros) => ele.a,
     orden: 1,
   },
   {
-    encabezado: 'Razon social',
+    encabezado: 'Razón social',
     clave: (ele: Extranjeros) => ele.b,
     orden: 2,
   },

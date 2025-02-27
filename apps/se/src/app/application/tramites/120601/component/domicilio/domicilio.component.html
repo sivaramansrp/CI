@@ -1,7 +1,8 @@
 <div class="container">
   <form [formGroup]="form">
     <div class="form" formGroupName="domicilioFiscal">
-      <ng-titulo titulo="Domicilio donde se almacenaran las mercancias a importar" />
+      <ng-titulo titulo="Domicilio donde se almacenarán las mercancías a
+      importer" />
       <div class="row">
         @for (item of domicilioFiscal; track $index) {
         <div [ngClass]="item.class">

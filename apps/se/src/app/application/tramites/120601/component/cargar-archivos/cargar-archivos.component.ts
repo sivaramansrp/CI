@@ -21,5 +21,5 @@ export class CargarArchivosComponent {
    * @property {string} cargararchivos - Message displayed to inform users
    * about the temporary request number.
    */
-  cargararchivos: string = "La solicitud ha quedado registrada ei numero temporal 202759017. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.";
+  cargararchivos: string = "La solicitud ha quedado registrada con el número temporal 202759017. Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.";
 }
