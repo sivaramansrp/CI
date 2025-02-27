@@ -17,9 +17,9 @@
         </div>
     </form>
     <h6>Selección de sucursal</h6>
-    <ng-table
-        [commonTableHeader]="tableHeaderData"
-        [commonTableBody]="tableBodyData"
-        [enableScrollbar]=true
-      ></ng-table>
+      <app-tabla-dinamica
+          [configuracionTabla]="configuracionTabla"
+          [idFilaSeleccionada]="selectedRow"
+          [datos]="datos_Socios"
+        ></app-tabla-dinamica>
 </div>

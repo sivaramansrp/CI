@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { BtnContinuarComponent, CatalogoSelectComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, CatalogoSelectComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosEmpresaComponent } from './component/datos-empresa/datos-empresa.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -21,7 +21,8 @@ import { RegistroComoEmpresaRoutingModule } from './registro-como-empresa-routin
     TituloComponent,
     CatalogoSelectComponent,
     ReactiveFormsModule,
-    BtnContinuarComponent
+    BtnContinuarComponent,
+    TablaDinamicaComponent
   ],
 })
 export class RegistroComoEmpresaModule {}

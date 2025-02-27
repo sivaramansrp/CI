@@ -16,6 +16,16 @@ interface Extranjeros {
   G: string;
 }
 
+interface Representacion {
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  codigoPostal: string;
+  colonia: string;
+  municipio: string;
+  estado: string;
+}
+
 export const DATOS_GENERALES_SOCIOS = [
   {
     encabezado: 'RFC',
@@ -78,6 +88,44 @@ export const DATOS_GENERALES_EXTRANJEROS = [
   {
     encabezado: 'Estado',
     clave: (ele: Extranjeros) => ele.G,
+    orden: 7,
+  },
+];
+
+export const DATOS_GENERALES_REPRESENTACION = [
+  {
+    encabezado: 'Calle',
+    clave: (ele: Representacion) => ele.calle,
+    orden: 1,
+  },
+  {
+    encabezado: 'Número exterior',
+    clave: (ele: Representacion) => ele.numeroExterior,
+    orden: 2,
+  },
+  {
+    encabezado: 'Número interior',
+    clave: (ele: Representacion) => ele.numeroInterior,
+    orden: 3,
+  },
+  {
+    encabezado: 'Código postal',
+    clave: (ele: Representacion) => ele.codigoPostal,
+    orden: 4,
+  },
+  {
+    encabezado: 'Colonia',
+    clave: (ele: Representacion) => ele.colonia,
+    orden: 5,
+  },
+  {
+    encabezado: 'Municipio o alcaldía',
+    clave: (ele: Representacion) => ele.municipio,
+    orden: 6,
+  },
+  {
+    encabezado: 'Estado',
+    clave: (ele: Representacion) => ele.estado,
     orden: 7,
   },
 ];

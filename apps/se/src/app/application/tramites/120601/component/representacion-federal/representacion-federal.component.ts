@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Catalogo, CatalogoSelectComponent, SelectCatalogosComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, DATOS_GENERALES_REPRESENTACION, SelectCatalogosComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
@@ -13,7 +13,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
     SelectCatalogosComponent,
     CatalogoSelectComponent,
     ReactiveFormsModule,
-    TableComponent
+    TableComponent,
+    TablaDinamicaComponent
   ],
   templateUrl: './representacion-federal.component.html',
   styleUrl: './representacion-federal.component.css',
@@ -45,6 +46,26 @@ export class RepresentacionFederalComponent implements OnInit {
   public estado!: Catalogo[];
 
   /**
+   * Índice de la fila seleccionada en la tabla. Por defecto, se inicializa en 1.
+   */
+  selectedRow: number = 1;
+  
+    /** Table configuration for partners */
+    configuracionTabla = DATOS_GENERALES_REPRESENTACION;
+
+    /** Data array for partners */
+  datos_Socios = [
+    {
+      calle: "AV PARQUE INDUSTRIAL AZTECAS",
+      numeroExterior: "1550",
+      numeroInterior: "",
+      codigoPostal: "32679",
+      colonia: "PARQUE INDUSTRIAL AZTECA",
+      municipio:"JUAREZ",
+      estado:"CHIHUAHUA"
+    }
+  ];
+  /**
    * Representa la representación seleccionada del catálogo.
    * Se espera que esta propiedad sea del tipo 'CatalogosSelect'.
    *
@@ -53,30 +74,6 @@ export class RepresentacionFederalComponent implements OnInit {
 
   public representacion!: Catalogo[];
 
-  public getEstablecimientoTableData = {
-    "tableHeader": [
-        "Calle",
-        "Número exterior",
-        "Número interior",
-        "Código postal",
-        "Colonia",
-        "Municipio o alcaldía",
-        "Estado"
-    ],
-    "tableBody": [
-        {
-            "tbodyData": [
-                "AV PARQUE INDUSTRIAL AZTECAS",
-                "1550",
-                "",
-                "32679",
-                "PARQUE INDUSTRIAL AZTECA",
-                "JUAREZ",
-                "CHIHUAHUA"
-            ]
-        }
-    ]
-  };
   
   /**
    * constructor de la clase
@@ -98,7 +95,6 @@ export class RepresentacionFederalComponent implements OnInit {
     this.crearFormulario();
     this.getEntidadFederativa();
     this.getRepresentacionFederal();
-    this.getEstablecimiento();
   }
   /**
    * Crea el formulario con los campos necesarios y sus validaciones.
@@ -171,11 +167,6 @@ export class RepresentacionFederalComponent implements OnInit {
   public validarRepresentacionFederalIDCSECEROR_(_e: Event): void {
     // this is a dynamic function once we get the api will implement it
 
-  }
-
-  public getEstablecimiento(): void {
-    this.tableHeaderData = this.getEstablecimientoTableData.tableHeader;
-    this.tableBodyData = this.getEstablecimientoTableData.tableBody;
   }
 
   
