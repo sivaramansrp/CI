@@ -8,7 +8,7 @@ import { CatalogoSelectComponent, SolicitanteComponent } from '@ng-mf/data-acces
 // import { InputRadioComponent } from '@ng-mf/data-access-user';
 // import{ AsignciontabComponent } from './component/asignciontab/asignciontab.component';
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { AsignciondirectaComponent } from './pages/asignciondirecta/asignciondirecta.component';
+// import { AsignciondirectaComponent } from './pages/asignciondirecta/asignciondirecta.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AsignciontabComponent } from './component/asignciontab/asignciontab.component';
 
@@ -17,7 +17,7 @@ import { SolicitantetabComponent } from './component/solicitantetab/solicitantet
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 @NgModule({
 
-declarations: [SolicitanteAsigncionComponent,AsignciondirectaPageComponent,AsignciondirectaComponent],
+declarations: [SolicitanteAsigncionComponent,AsignciondirectaPageComponent],
   imports: [
     CommonModule,WizardComponent,
     EntidadLegalRoutingModule,SolicitanteComponent,ReactiveFormsModule,AsignciontabComponent, CatalogoSelectComponent,SolicitantetabComponent,BtnContinuarComponent]
