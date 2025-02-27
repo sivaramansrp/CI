@@ -7,7 +7,16 @@ import { FormGroup } from '@angular/forms';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent, BtnContinuarComponent, Catalogo, DatosPasos, ListaPasosWizard, PASOS, TablaDinamicaComponent, TableData, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { DatosPasos } from '@ng-mf/data-access-user';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TableData } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@ng-mf/data-access-user';
+
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
 import { TableComponent } from '@ng-mf/data-access-user';
@@ -130,11 +139,11 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de entidades federativas.
    */
-  federalentity!: Catalogo[];
+  entidadfederativa!: Catalogo[];
   /**
    * Catálogo de representaciones federales.
    */
-  representationfederal!: Catalogo[];
+  representacionfederal!: Catalogo[];
   /**
    * Datos de la tabla.
    */
@@ -156,21 +165,21 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   constructor(private service:LicitacionesDisponiblesService,private fb: FormBuilder) {
     this.formForTotalCount = this.fb.group({})
     this.formulario = this.fb.group({
-      federalentity: [null, Validators.required],
-      representationfederal: [null, Validators.required],
+      entidadfederativa: [null, Validators.required],
+      representacionfederal: [null, Validators.required],
     });
     this.detalledelalicitacionForm = this.fb.group({
       numeradelicitacion: [null, Validators.required],
-      biddingeventdate: [null, Validators.required],
-      productdescription:[null, Validators.required],
-      tariffunit:[null, Validators.required],
-      customsregime: [null, Validators.required],
-      tarifffraction: [null, Validators.required],
-      quotaeffectivedate: [null, Validators.required],
-      quotaenddate:[null, Validators.required],
+      fechadeleventodelicitacion: [null, Validators.required],
+      descripciondelproducto:[null, Validators.required],
+      unidadtarifaria:[null, Validators.required],
+      regimenaduanero: [null, Validators.required],
+      fraccionarancelaria: [null, Validators.required],
+      fechadeiniciodevigenciadelcupo: [null, Validators.required],
+      fechadefindevigenciadelcupo:[null, Validators.required],
       observaciones: [null, Validators.required],
       bloquecomercial: [null, Validators.required],
-      Paises: [null, Validators.required],
+      paises: [null, Validators.required],
       montoadjudicado: [null, Validators.required],
       montodisponible: [null, Validators.required],
       montomaximo: [null, Validators.required],
@@ -214,7 +223,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   entidadFederativa(): void {
     this.service.getEntidadfederativa().subscribe((response) => {
       if(response){
-        this.federalentity = response.data;
+        this.entidadfederativa = response.data;
       }
     }
     );
@@ -225,7 +234,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
 representacionFederal(): void {
   this.service.getRepresentacionfederal().subscribe((response) => {
     if(response){
-      this.representationfederal = response.data;
+      this.representacionfederal = response.data;
     }
   }
   );
@@ -287,16 +296,16 @@ getDetallesdelalicitacion():void{
     (data:any)=>{
       this.detalledelalicitacionForm.patchValue({
         numeradelicitacion:data.numeradelicitacion,
-        biddingeventdate:data.biddingeventdate,
-        productdescription:data.productdescription,
-        tariffunit:data.tariffunit,
-        customsregime:data.customsregime,
-        tarifffraction:data.tarifffraction,
-        quotaeffectivedate:data.quotaeffectivedate,
-        quotaenddate:data.quotaenddate,
+        fechadeleventodelicitacion:data.fechadeleventodelicitacion,
+        descripciondelproducto:data.descripciondelproducto,
+        unidadtarifaria:data.unidadtarifaria,
+        regimenaduanero:data.regimenaduanero,
+        fraccionarancelaria:data.fraccionarancelaria,
+        fechadeiniciodevigenciadelcupo:data.fechadeiniciodevigenciadelcupo,
+        fechadefindevigenciadelcupo:data.fechadefindevigenciadelcupo,
         observaciones:data.observaciones,
         bloquecomercial:data.bloquecomercial,
-        Paises:data.Paises,
+        paises:data.paises,
         montoadjudicado:data.montoadjudicado,
         montodisponible:data.montodisponible,
         montomaximo:data.montomaximo

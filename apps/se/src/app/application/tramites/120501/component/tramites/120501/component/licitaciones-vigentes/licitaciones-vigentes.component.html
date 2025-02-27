@@ -6,12 +6,6 @@
   
       <div>
         <h6>Licitaciones disponibles</h6>
-  
-        <!-- <ng-table
-          [commonTableHeader]="tableData.tableHeader"
-          [commonTableBody]="tableData.tableBody"
-          [enableScrollbar]="true" [tableoptions] = "tableoptions"
-        ></ng-table> -->
         <app-tabla-dinamica [configuracionTabla]="configTableArray"
         [datos] = "datos"></app-tabla-dinamica>
   
@@ -34,11 +28,11 @@
           <form [formGroup]="formulario">
             <div class="row">
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="federalentity" formControlName="federalentity" [label]="'Entidad federativa'"
+                <app-catalogo-select [catalogo]="entidadfederativa" formControlName="entidadfederativa" [label]="'Entidad federativa'"
                   [required]="true" name="federalent"></app-catalogo-select>
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="representationfederal" formControlName="representationfederal" [label]="'Representación federal'"
+                <app-catalogo-select [catalogo]="representacionfederal" formControlName="representacionfederal" [label]="'Representación federal'"
                   [required]="true" name="representfederal"></app-catalogo-select>
               </div>
             </div>
@@ -56,36 +50,36 @@
                 </div>
         
                 <div class="col-md-4">
-                    <label class="form-label" for="biddingeventdate">Fecha de evento de licitación pública: </label>
-                    <input type="text" class="form-control" id="biddingeventdate" formControlName="biddingeventdate" size="30" readonly>
+                    <label class="form-label" for="fechadeleventodelicitacion">Fecha de evento de licitación pública: </label>
+                    <input type="text" class="form-control" id="fechadeleventodelicitacion" formControlName="fechadeleventodelicitacion" size="30" readonly>
                 </div>
                 <div class="col-md-4">
-                  <label class="form-label" for="productdescription">Descripción del producto:</label>
-                  <input type="text" class="form-control" id="productdescription" formControlName="productdescription" size="30" readonly>
+                  <label class="form-label" for="descripciondelproducto">Descripción del producto:</label>
+                  <input type="text" class="form-control" id="descripciondelproducto" formControlName="descripciondelproducto" size="30" readonly>
               </div>
                 <div class="col-md-8">
-                    <label class="form-label" for="tariffunit">Unidad de medida tarifaria o comercialización:</label>
-                    <input type="text" class="form-control" id="tariffunit" formControlName="tariffunit" size="30" readonly>
+                    <label class="form-label" for="unidadtarifaria">Unidad de medida tarifaria o comercialización:</label>
+                    <input type="text" class="form-control" id="unidadtarifaria" formControlName="unidadtarifaria" size="30" readonly>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="customsregime">Régimen aduanero:</label>
-                    <input type="text" class="form-control" id="customsregime" formControlName="customsregime" size="30" readonly>
+                    <label class="form-label" for="regimenaduanero">Régimen aduanero:</label>
+                    <input type="text" class="form-control" id="regimenaduanero" formControlName="regimenaduanero" size="30" readonly>
                 </div>
             </div>
             <div class="row">
               <div class="col-md-4">
-                <label class="form-label" for="tarifffraction">Fracción o fracciones arancelarias: </label>
-                <input type="text" class="form-control" id="tarifffraction" formControlName="tarifffraction" size="30" readonly>
+                <label class="form-label" for="fraccionarancelaria">Fracción o fracciones arancelarias: </label>
+                <input type="text" class="form-control" id="fraccionarancelaria" formControlName="fraccionarancelaria" size="30" readonly>
               </div>
             </div>
             <div class="row">
               <div class="col-md-4">
-                <label class="form-label" for="quotaeffectivedate">Fecha de inicio de vigencia del cupo </label>
-                <input type="text" class="form-control" id="quotaeffectivedate" formControlName="quotaeffectivedate" size="30"  readonly>
+                <label class="form-label" for="fechadeiniciodevigenciadelcupo">Fecha de inicio de vigencia del cupo </label>
+                <input type="text" class="form-control" id="fechadeiniciodevigenciadelcupo" formControlName="fechadeiniciodevigenciadelcupo" size="30"  readonly>
               </div>
               <div class="col-md-4">
-                <label class="form-label" for="quotaenddate">Fecha de fin de vigencia del cupo:  </label>
-                <input type="text" class="form-control" id="quotaenddate" formControlName="quotaenddate" size="30" readonly>
+                <label class="form-label" for="fechadefindevigenciadelcupo">Fecha de fin de vigencia del cupo:  </label>
+                <input type="text" class="form-control" id="fechadefindevigenciadelcupo" formControlName="fechadefindevigenciadelcupo" size="30" readonly>
               </div>
             </div>
             <div class="row">
@@ -98,8 +92,8 @@
                 <input type="text" class="form-control" id="bloquecomercial" formControlName="bloquecomercial" readonly>
               </div>
               <div class="col-md-12">
-                <label class="form-label" for="Paises">Países: </label>
-                <textarea type="text" class="form-control observaciones" id="Paises" formControlName="Paises" readonly></textarea>
+                <label class="form-label" for="paises">Países: </label>
+                <textarea type="text" class="form-control observaciones" id="paises" formControlName="paises" readonly></textarea>
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="montoadjudicado">Monto adjudicado: </label>
