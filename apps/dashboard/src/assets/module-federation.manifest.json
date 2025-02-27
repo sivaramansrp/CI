@@ -3,5 +3,6 @@
   "aga": "http://localhost:4203",
   "agriculture": "http://localhost:4204",
   "se": "http://localhost:4205",
-   "semarnat": "http://localhost:4206"
+  "semarnat": "http://localhost:4206",
+  "funcionario": "http://localhost:4210"
 }
