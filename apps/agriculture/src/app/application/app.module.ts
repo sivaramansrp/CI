@@ -26,11 +26,10 @@ import { provideHttpClient } from '@angular/common/http';
     FooterComponent,
     HeaderComponent,
     InformacionUsuarioComponent,
-    InformacionUsuarioComponent,
     NavComponent,
     TituloComponent,
     ToastrModule.forRoot(),
-],
+  ],
   providers: [
     provideToastr({
       positionClass: 'toast-top-right',
@@ -40,4 +39,4 @@ import { provideHttpClient } from '@angular/common/http';
   ],
   bootstrap: [AppComponent],
 })
-export class App220401Module {}
+export class App220401Module { }

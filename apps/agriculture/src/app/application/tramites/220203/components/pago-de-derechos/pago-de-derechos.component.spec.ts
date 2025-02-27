@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 
-
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
   let fixture: ComponentFixture<PagoDeDerechosComponent>;
@@ -11,8 +10,8 @@ describe('PagoDeDerechosComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [PagoDeDerechosComponent]
     })
-      .compileComponents();
-
+    .compileComponents();
+    
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
