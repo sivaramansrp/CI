@@ -2,7 +2,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { of} from 'rxjs';
+import { of } from 'rxjs';
 
 import { RegistroMercanciaComercializadorComponent } from './registro-mercancia-comercializador.component';
 import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
@@ -16,7 +16,7 @@ describe('RegistroMercanciaComercializadorComponent', () => {
 
   beforeEach(async () => {
     const SERVICE_MOCK = {
-      getMercanciaAsociada: jasmine.createSpy('getMercanciaAsociada').and.returnValue(of({
+      getMercanciaAsociada: jest.fn().mockReturnValue(of({
         Formdata: {
           nombreComercial: 'Comercial',
           nombreIngles: 'English Name',
@@ -42,8 +42,7 @@ describe('RegistroMercanciaComercializadorComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [RegistroMercanciaComercializadorComponent,CommonModule, ReactiveFormsModule, TituloComponent],
+      imports: [RegistroMercanciaComercializadorComponent, CommonModule, ReactiveFormsModule, TituloComponent],
       providers: [
         { provide: MercanciaasociadaService, useValue: SERVICE_MOCK }
       ]
@@ -101,10 +100,10 @@ describe('RegistroMercanciaComercializadorComponent', () => {
   });
 
   it('should complete destroyed$ subject on destroy', () => {
-    spyOn(component['destroyed$'], 'next');
-    spyOn(component['destroyed$'], 'complete');
+    const NEXT_SPY = jest.spyOn(component['destroyed$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
-    expect(component['destroyed$'].next).toHaveBeenCalled();
-    expect(component['destroyed$'].complete).toHaveBeenCalled();
+    expect(NEXT_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });

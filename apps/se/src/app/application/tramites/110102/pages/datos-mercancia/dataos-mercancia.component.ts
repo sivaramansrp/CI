@@ -8,8 +8,8 @@ import { Component } from '@angular/core';
  * para la vista definida en 'dataos-de-la-mercancia.component.html'.
  */
 @Component({
-  selector: 'app-dataos-de-la-mercancia',
-  templateUrl: './dataos-de-la-mercancia.component.html',
+  selector: 'app-dataos-mercancia',
+  templateUrl: './dataos-mercancia.component.html',
   standalone: false, // Indica que este componente no es un componente independiente (standalone).
 })
-export class DataosDeLaMercanciaComponent {}
+export class DataosMercanciaComponent {}

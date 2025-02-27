@@ -14,15 +14,12 @@ describe('DatosTratadosAcuerdosComponent', () => {
 
   beforeEach(async () => {
     const SERVICE_MOCK = {
-      getData: jasmine.createSpy('getData').and.returnValue(of({ key: 'value' }))
+      getData: jest.fn().mockReturnValue(of({ key: 'value' })),
     };
 
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [DatosTratadosAcuerdosComponent,CommonModule, TablaDinamicaComponent],
-      providers: [
-        { provide: DatostratadosacuerdosService, useValue: SERVICE_MOCK }
-      ]
+      imports: [DatosTratadosAcuerdosComponent, CommonModule, TablaDinamicaComponent],
+      providers: [{ provide: DatostratadosacuerdosService, useValue: SERVICE_MOCK }],
     }).compileComponents();
 
     service = TestBed.inject(DatostratadosacuerdosService);
@@ -50,10 +47,10 @@ describe('DatosTratadosAcuerdosComponent', () => {
   });
 
   it('should complete destroyed$ subject on destroy', () => {
-    spyOn(component['destroyed$'], 'next');
-    spyOn(component['destroyed$'], 'complete');
+    const NEXT_SPY = jest.spyOn(component['destroyed$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
-    expect(component['destroyed$'].next).toHaveBeenCalled();
-    expect(component['destroyed$'].complete).toHaveBeenCalled();
+    expect(NEXT_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });
