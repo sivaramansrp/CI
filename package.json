@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "dbg": "npx nx serve dashboard"
+    "dbg": "npx nx serve dashboard",
+    "compodoc": "npx compodoc -p tsconfig.doc.json"
   },
   "private": true,
   "dependencies": {
@@ -40,7 +41,7 @@
     "@angular/cli": "~18.0.0",
     "@angular/compiler-cli": "18.0.4",
     "@angular/language-service": "18.0.4",
-    "@compodoc/compodoc": "1.1.26",
+    "@compodoc/compodoc": "^1.1.26",
     "@nx/cypress": "19.3.1",
     "@nx/eslint": "19.3.1",
     "@nx/eslint-plugin": "19.3.1",
