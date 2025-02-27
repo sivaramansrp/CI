@@ -9,13 +9,21 @@ import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramite
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { ProductorIndirectoTabla } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { FormsModule } from '@angular/forms';
 
 
-
+/**
+ * Componente ProductorIndirecto que se utiliza para mostrar y gestionar los ProductorIndirecto.
+ * 
+ * Este componente utiliza varios subcomponentes como TituloComponent, TablaDinamicaComponent, CommonModule,
+ * FormsModule y AlertComponent para mostrar información y permitir al usuario seleccionar y agregar tratados.
+ * 
+ * @component
+ */
 @Component({
   selector: 'app-productor-indirecto',
   standalone: true,
-  imports: [CommonModule,TituloComponent,TablaDinamicaComponent],
+  imports: [CommonModule,TituloComponent,TablaDinamicaComponent,FormsModule],
   templateUrl: './productor-indirecto.component.html',
   styleUrl: './productor-indirecto.component.scss',
 })
@@ -47,4 +55,10 @@ export class ProductorIndirectoComponent {
    * Esto se establece al valor de `TablaSeleccion.CHECKBOX`.
    */
   public checkbox = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Representa el RFC (Registro Federal de Contribuyentes) de un usuario.
+   * Este es un identificador único utilizado para fines fiscales en México.
+   */
+  public rfc:string = '';
 }

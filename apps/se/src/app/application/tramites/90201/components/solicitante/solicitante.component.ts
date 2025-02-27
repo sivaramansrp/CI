@@ -5,6 +5,16 @@ import { CommonModule } from '@angular/common';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
+
+/**
+ * Componente Solicitante que se utiliza para mostrar y gestionar los Solicitante.
+ * 
+ * Este componente utiliza varios subcomponentes como TituloComponent, CommonModule,
+ * ReactiveFormsModule y AlertComponent para mostrar información y permitir al usuario seleccionar y agregar tratados.
+ * 
+ * @component
+ */
+
 @Component({
   selector: 'app-solicitante',
   standalone: true,

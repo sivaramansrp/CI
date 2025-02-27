@@ -16,7 +16,14 @@ import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramite
 import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
 
-
+/**
+ * Componente SectoresYMercancias que se utiliza para mostrar y gestionar los SectoresYMercancias.
+ * 
+ * Este componente utiliza varios subcomponentes como TituloComponent, CommonModule,
+ * CatalogoSelectComponent,TablaDinamicaComponent y AlertComponent para mostrar información y permitir al usuario seleccionar y agregar tratados.
+ * 
+ * @component
+ */
 @Component({
   selector: 'app-sectores-y-mercancias',
   standalone: true,

@@ -9,6 +9,16 @@ import { DomiciliosDePlantasTabla } from 'libs/shared/data-access-user/src/core/
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 
 
+
+/**
+ * Componente DomiciliosDePlantas que se utiliza para mostrar y gestionar los DomiciliosDePlantas.
+ * 
+ * Este componente utiliza varios subcomponentes como TituloComponent, CommonModule,
+ * ReactiveFormsModule para mostrar información y permitir al usuario seleccionar y agregar tratados.
+ * 
+ * @component
+ */
+
 @Component({
   selector: 'app-domicilios-de-plantas',
   standalone: true,

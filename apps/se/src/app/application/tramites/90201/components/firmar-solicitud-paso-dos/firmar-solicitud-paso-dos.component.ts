@@ -17,6 +17,16 @@ import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramite
 import { FirmaElectronicaComponent } from 'libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 
 
+
+/**
+ * Componente FirmarSolicitudPasoDos que se utiliza para mostrar y gestionar los FirmarSolicitudPasoDos.
+ * 
+ * Este componente utiliza varios subcomponentes como TituloComponent, CommonModule,
+ * FirmaElectronicaComponent,TablaDinamicaComponent y AlertComponent para mostrar información y permitir al usuario seleccionar y agregar tratados.
+ * 
+ * @component
+ */
+
 @Component({
   selector: 'app-firmar-solicitud-paso-dos',
   standalone: true,
