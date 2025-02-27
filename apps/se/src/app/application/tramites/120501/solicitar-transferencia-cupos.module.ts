@@ -19,7 +19,7 @@ import { SolicitarTransferenciaCuposMainComponent } from './pages/solicitar-tran
 
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 
-import { LicitacionesVigentesComponent } from './component/tramites/120501/component/licitaciones-vigentes/licitaciones-vigentes.component';
+import { LicitacionesVigentesComponent } from './component/licitaciones-vigentes/licitaciones-vigentes.component';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 
