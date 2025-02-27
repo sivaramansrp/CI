@@ -15,7 +15,7 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { map } from 'rxjs';
-import TipoCarga from 'libs/shared/theme/assets/json/32504/tipo-cargo.json';
+const TipoCarga = require('libs/shared/theme/assets/json/32504/tipo-cargo.json');
 
 
 @Component({
