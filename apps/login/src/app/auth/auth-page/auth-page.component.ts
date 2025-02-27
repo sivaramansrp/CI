@@ -40,4 +40,8 @@ export class AuthPageComponent {
       this.router.navigateByUrl('/aga/pago/seleccion-tramite');
     }
   }
+
+  miFuncion(){
+    console.log("Este es un mensaje");
+  }
 }
