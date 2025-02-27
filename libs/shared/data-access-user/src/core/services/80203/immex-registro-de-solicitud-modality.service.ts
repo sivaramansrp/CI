@@ -6,5 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ImmexRegistroDeSolicitudModalityService {
+  getDatos() {
+    throw new Error('Method not implemented.');
+  }
 
 }

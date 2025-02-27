@@ -26,8 +26,8 @@ describe('NicoService', () => {
 
   it('should fetch NICO menu desplegable', () => {
     const dummyData: Catalogo[] = [
-      { id: 1, descripcion: 'Kilogramo', dpi: 'Nacional'},
-      { id: 2, descripcion: 'Litro', dpi: 'Internacional'}
+      { id: 1, descripcion: 'Kilogramo', dpi: 'Nacional' },
+      { id: 2, descripcion: 'Litro', dpi: 'Internacional' }
     ];
 
     service.obtenerMenuDesplegable('nico.json').subscribe(data => {
@@ -35,7 +35,7 @@ describe('NicoService', () => {
       expect(data).toEqual(dummyData);
     });
 
-    const req = httpMock.expectOne('libs/shared/theme/assets/json/80203/nico.json');
+    const req = httpMock.expectOne('/assets/json/80203/nico.json');
     expect(req.request.method).toBe('GET');
     req.flush({ data: dummyData });
   });
@@ -50,7 +50,7 @@ describe('NicoService', () => {
       }
     );
 
-    const req = httpMock.expectOne('libs/shared/theme/assets/json/80203/nico.json');
+    const req = httpMock.expectOne('/assets/json/80203/nico.json');
     req.flush(errorMessage, { status: 500, statusText: 'Server Error' });
   });
 });

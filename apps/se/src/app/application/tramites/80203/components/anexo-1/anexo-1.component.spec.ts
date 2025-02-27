@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Anexo1Component } from './anexo-1.component';
-import { PermisoImmexDatosService } from '../../../../core/services/80203/immex/permiso-immex-datos.service';
-import { NicoService } from '../../../../core/services/80203/nico/nico.service';
+import { PermisoImmexDatosService } from 'libs/shared/data-access-user/src/core/services/80203/immex/permiso-immex-datos.service';
+import { NicoService } from 'libs/shared/data-access-user/src/core/services/80203/nico/nico.service';
 import { of, throwError } from 'rxjs';
 
 describe('Anexo1Component', () => {
@@ -76,17 +76,17 @@ describe('Anexo1Component', () => {
 
   it('should show fraccion exportacion', () => {
     component.showFraccionExportacion();
-    expect(component.showFraccionExport).toBeTrue();
+    expect(component.showFraccionExport).toBeTruthy();
   });
 
   it('should show producto importacion', () => {
     component.showProductoImportacion();
-    expect(component.showProductoImport).toBeTrue();
+    expect(component.showProductoImport).toBeTruthy();
   });
 
   it('should show commodity importacion', () => {
     component.showCommodityImportacion();
-    expect(component.showCommodityImport).toBeTrue();
+    expect(component.showCommodityImport).toBeTruthy();
   });
 
   it('should save form state on destroy', () => {

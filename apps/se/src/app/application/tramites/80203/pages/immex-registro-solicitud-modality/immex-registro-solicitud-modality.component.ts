@@ -22,6 +22,7 @@ interface AccionBoton {
   templateUrl: './immex-registro-solicitud-modality.component.html',
 })
 export class ImmexRegistroSolicitudModalityComponent {
+  componenteWizard: any;
 
   title(title: any) {
     throw new Error('Método no implementado.');
