@@ -14,6 +14,7 @@ import sectoresTabla from 'libs/shared/theme/assets/json/90201/sectores-tabla.js
 import { SectoresTabla } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 
 /**
@@ -31,12 +32,19 @@ import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabl
     TituloComponent,
     CatalogoSelectComponent,
     AlertComponent,
-    TablaDinamicaComponent],
+    TablaDinamicaComponent,
+    ReactiveFormsModule],
   templateUrl: './sectores-y-mercancias.component.html',
   styleUrl: './sectores-y-mercancias.component.scss',
 })
 export class SectoresYMercanciasComponent {
 
+
+  /**
+   * Una instancia de FormGroup que representa el formulario para sectores.
+   * Este formulario se utiliza para gestionar y validar los datos de entrada relacionados con sectores y mercancías.
+   */
+  public sectoresForm!: FormGroup;
 /**
  * Indica si un elemento está seleccionado.
  * 
@@ -81,12 +89,16 @@ public sectores: SectoresTabla[] = sectoresTabla;
  */
 public radio = TablaSeleccion.RADIO;
 
+
+
   /**
-   * Construye una instancia de SectoresYMercanciasComponent.
+   * Constructor del componente SectoresYMercanciasComponent.
    * 
    * @param _expansionDesvc - Servicio para manejar la expansión de productores.
+   * @param fb - Instancia de FormBuilder para crear formularios reactivos.
    */
-  constructor(private _expansionDesvc: ExpansionDeProductoresService) {
+  constructor(private _expansionDesvc: ExpansionDeProductoresService,private fb: FormBuilder) {
+    this.establecerFormSectores();
 
   }
 
@@ -96,6 +108,22 @@ public radio = TablaSeleccion.RADIO;
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
+  }
+
+
+
+  /**
+   * Inicializa el `sectoresForm` con valores predeterminados y validadores.
+   * 
+   * El formulario contiene los siguientes controles:
+   * - `sector`: Un control de cadena inicializado con una cadena vacía.
+   * - `fraccion`: Un control de cadena inicializado con una cadena vacía y un validador de longitud máxima de 8 caracteres.
+   */
+  public establecerFormSectores(): void {
+    this.sectoresForm = this.fb.group({
+      sector: [''],
+      fraccion: ['',Validators.maxLength(8)],
+    });
   }
 
 
