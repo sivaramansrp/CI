@@ -11,7 +11,7 @@ import { Catalogo, RespuestaCatalogos } from '../../models/shared/catalogos.mode
 })
 export class ProsecService {
   /** Base URL for JSON files */
-  url: string = '../../../../../assets/json/90101/';
+  url: string = 'libs/shared/theme/assets/json/90101/';
 
   /**
    * Constructor to inject HttpClient.
