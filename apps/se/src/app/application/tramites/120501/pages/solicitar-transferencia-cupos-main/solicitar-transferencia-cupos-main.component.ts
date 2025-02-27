@@ -7,8 +7,9 @@ import { Component, ViewChild } from '@angular/core';
 
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
 import { SOLICITARPASOS } from '@ng-mf/data-access-user';
+
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  *  AccionBoton

@@ -165,29 +165,29 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   constructor(private service:LicitacionesDisponiblesService,private fb: FormBuilder) {
     this.formForTotalCount = this.fb.group({})
     this.formulario = this.fb.group({
-      entidadfederativa: [null, Validators.required],
-      representacionfederal: [null, Validators.required],
+      entidadfederativa: ["", Validators.required],
+      representacionfederal: ["", Validators.required],
     });
     this.detalledelalicitacionForm = this.fb.group({
-      numeradelicitacion: [null, Validators.required],
-      fechadeleventodelicitacion: [null, Validators.required],
-      descripciondelproducto:[null, Validators.required],
-      unidadtarifaria:[null, Validators.required],
-      regimenaduanero: [null, Validators.required],
-      fraccionarancelaria: [null, Validators.required],
-      fechadeiniciodevigenciadelcupo: [null, Validators.required],
-      fechadefindevigenciadelcupo:[null, Validators.required],
-      observaciones: [null, Validators.required],
-      bloquecomercial: [null, Validators.required],
-      paises: [null, Validators.required],
-      montoadjudicado: [null, Validators.required],
-      montodisponible: [null, Validators.required],
-      montomaximo: [null, Validators.required],
+      numeradelicitacion: ["", Validators.required],
+      fechadeleventodelicitacion: ["", Validators.required],
+      descripciondelproducto:["", Validators.required],
+      unidadtarifaria:["", Validators.required],
+      regimenaduanero: ["", Validators.required],
+      fraccionarancelaria: ["", Validators.required],
+      fechadeiniciodevigenciadelcupo: ["", Validators.required],
+      fechadefindevigenciadelcupo:["", Validators.required],
+      observaciones: ["", Validators.required],
+      bloquecomercial: ["", Validators.required],
+      paises: ["", Validators.required],
+      montoadjudicado: ["", Validators.required],
+      montodisponible: ["", Validators.required],
+      montomaximo: ["", Validators.required],
     })
     this.adquiriente = this.fb.group({
-      rfc: [null, Validators.required],
-      montodisponible: [null],
-      montorecibir: [null, Validators.required],
+      rfc: ["", Validators.required],
+      montodisponible: [""],
+      montorecibir: ["", Validators.required],
     })
   }
   /**
