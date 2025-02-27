@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -15,6 +15,7 @@ import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabl
     CatalogoSelectComponent,
     TituloComponent,
     TableComponent,
+    AlertComponent,
     InputRadioComponent,
     TablaDinamicaComponent],
   templateUrl: './datos-empresa.component.html',
@@ -56,37 +57,86 @@ export class DatosEmpresaComponent implements OnInit {
     return _e
   }
 
-  tipoSeleccionTabla: TablaSeleccion=TablaSeleccion.CHECKBOX;
+  tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   configuracionTabla: ConfiguracionColumna<any>[] = [
-    { encabezado: 'RFC', clave: (item: any) => item.RFC, orden: 1 },
-    { encabezado: 'CURP', clave: (item: any) => item.CURP, orden: 2 },
-    { encabezado: 'Nombre', clave: (item: any) => item.Nombre, orden: 3 },
-    { encabezado: 'Apellido Paterno', clave: (item: any) => item.Apellido_paterno, orden: 4 },
-    { encabezado: 'Apellido Materno', clave: (item: any) => item.Apellido_materno, orden: 5 }
+    { encabezado: 'RFC', clave: (item: any) => item.rfc, orden: 1 },
+    { encabezado: 'CURP', clave: (item: any) => item.curp, orden: 2 },
+    { encabezado: 'Nombre', clave: (item: any) => item.nombre, orden: 3 },
+    { encabezado: 'Apellido Paterno', clave: (item: any) => item.apellidoPaterno, orden: 4 },
+    { encabezado: 'Apellido Materno', clave: (item: any) => item.apellidoMaterno, orden: 5 }
   ]
 
-  datos = [
+  datos: any[] = [
     {
-      "rfc": "MAHA790703QW5",
-      "curp": "MAHA790703HGTTRR09 ",
-      "nombre": "ARTURO",
-      "apellidoPaterno": "MATA",
-      "apellidoMaterno": "HERNANDEZ"
+      "rfc": "NEBRASKA DE JESUS",
+      "curp": " ",
+      "nombre": "NEBRASKA DE JESUS",
+      "apellidoPaterno": "DEMPWOLFF",
+      "apellidoMaterno": "CHAIC"
+    }
+  ]
+
+  tableHeader: ConfiguracionColumna<any>[] = [
+    { encabezado: 'Calle', clave: (item: any) => item.calle, orden: 1 },
+    { encabezado: 'Número exterior ', clave: (item: any) => item.númeroExterior, orden: 2 },
+    { encabezado: 'Número interior ', clave: (item: any) => item.númeroInterior, orden: 3 },
+    { encabezado: 'Código postal', clave: (item: any) => item.códigoPostal, orden: 4 },
+    { encabezado: 'Colonia', clave: (item: any) => item.colonia, orden: 5 },
+    { encabezado: 'Municipio o alcaldia', clave: (item: any) => item.municipioAlcaldia, orden: 6 },
+    { encabezado: 'Estado', clave: (item: any) => item.estado, orden: 7 }
+  ]
+
+
+  tableData: any[] = [
+    {
+      "calle": "AV PARQUE INDUSTRIALAZTECAS",
+      "númeroExterior": "1550 ",
+      "númeroInterior": "",
+      "códigoPostal": "32679",
+      "colonia": "PARQUE INDUSTRIAL AZTECA",
+      "municipioAlcaldia": "JUAREZ",
+      "estado": "CHIHUAHUA"
+    }
+  ]
+
+  tableHeaderExtranjeros: ConfiguracionColumna<any>[] = [
+    { encabezado: 'TAX ID', clave: (item: any) => item.taxId, orden: 1 },
+    { encabezado: 'Razón social', clave: (item: any) => item.razonSocial, orden: 2 },
+    { encabezado: 'Nombre ', clave: (item: any) => item.nombre, orden: 3 },
+    { encabezado: ' Apellido paterno', clave: (item: any) => item.apellidoPaterno, orden: 4 },
+    { encabezado: 'Pais', clave: (item: any) => item.pais, orden: 5 },
+    { encabezado: 'CP', clave: (item: any) => item.cp, orden: 6 },
+    { encabezado: 'Estado', clave: (item: any) => item.estado, orden: 7 }
+  ]
+
+  tableDataExtranjeros: any[] = [
+    {
+      "taxId": "TKT852014",
+      "razonSocial": "ssss",
+      "nombre": "",
+      "apellidoPaterno": "",
+      "pais": "",
+      "cp": "78503",
+      "estado": "texas"
     },
     {
-      "rfc": "LEQI8101311457",
-      "curp": "LEQI810131HDGSXG05 ",
-      "nombre": "IGNACIO EDUARDO",
-      "apellidoPaterno": "LEOS",
-      "apellidoMaterno": "QUINONES"
+      "taxId": "PRUEBA",
+      "razonSocial": "P",
+      "nombre": "",
+      "apellidoPaterno": "",
+      "pais": "",
+      "cp": "78503",
+      "estado": "texas"
     },
     {
-      "rfc": "MAVL621207C95",
-      "curp": "MAVL621207HDGRLS06 ",
-      "nombre": "LUIS AMBROSIO",
-      "apellidoPaterno": "MARTINEZ",
-      "apellidoMaterno": "VALENZUELA"
+      "taxId": "F997498874C",
+      "razonSocial": "lobitos",
+      "nombre": "",
+      "apellidoPaterno": "",
+      "pais": "",
+      "cp": "54543545 ",
+      "estado": " madagascar"
     }
   ]
 }

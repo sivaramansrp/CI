@@ -14,8 +14,7 @@
 
     <h6>Selección de sucursal</h6>
 
-    <ng-table [commonTableHeader]="tableHeaderData" [commonTableBody]="tableBodyData"
-        [enableScrollbar]="true"></ng-table>
+    <app-tabla-dinamica [configuracionTabla]="tableHeader" [datos]="tableData"></app-tabla-dinamica>
 
     <ng-titulo titulo="Datos de la solicitud"></ng-titulo>
 
@@ -135,4 +134,20 @@
 
     <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla"
         [datos]="datos"></app-tabla-dinamica>
+
+        <button type="button" class="btn btn-primary">Eliminar</button>
+
+        <h6>Socios y Accionistas Extranjeros</h6>
+        <h6>Datos de los socios y/o accionistas:</h6>
+
+        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="tableHeaderExtranjeros"
+        [datos]="tableDataExtranjeros"></app-tabla-dinamica>
+
+        
+        <div class=" text-end mt-5">
+            <button type="button" class="btn btn-primary">Eliminar</button>
+        </div>
+
+        <ng-alert [CONTENIDO]="'Para continuar con el trámite, deberá agregar por lo menos un tratado o acuerdo.'"></ng-alert>
+
 </div>
