@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, provideHttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -37,7 +37,6 @@ import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/mode
   selector: 'app-persona', // Selector para usar este componente en plantillas HTML
   standalone: true, // Define que el componente puede funcionar de forma independiente (sin módulo específico)
   imports: [
-    HttpClientModule, // Importación de módulo para realizar peticiones HTTP
     FormsModule, // Importación de módulo para trabajar con formularios
     CommonModule, // Módulo común de Angular para herramientas generales
     TituloComponent,

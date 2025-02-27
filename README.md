@@ -69,6 +69,7 @@ It will show tasks that you can run with Nx.
 - npx nx serve login
 - npx nx serve funcionario
 - npx nx serve dashboard (host)
+- npx nx serve dashboard --port 5200
 - manifest.json for the port
 - Create new application - npx nx g @nx/angular:remote apps/aga
 - Angular 18.0.3
@@ -108,3 +109,4 @@ It will show tasks that you can run with Nx.
 - If application / procedure specific
 - Goto aga/tsconfig.spec.js
 - "include": ["src/220401/**/*.ts"], - change aga into your procedure/dept
+- npx nx test se --testPathPattern=apps/se/src/app/application/tramites/120601

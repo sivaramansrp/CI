@@ -22,6 +22,8 @@ import { FirmarSolicitudComponent } from '../pages/firmar-solicitud/firmar-solic
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { RequisitosComponent } from '../components/requisitos/requisitos.component';
+import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [DatosComponent, PantallasComponent, FirmarSolicitudComponent],
@@ -47,6 +49,10 @@ import { RequisitosComponent } from '../components/requisitos/requisitos.compone
     BtnContinuarComponent,
     RequisitosComponent,
   ],
+  providers: [
+    ServiciosPantallaService,
+    provideHttpClient(),
+  ]
 })
 
 /**
