@@ -5,7 +5,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { DescripcionDelCupoService } from 'libs/shared/data-access-user/src/core/services/120402/descripcion-del-cupo/descripcionDelCupo.service';
+import { DescripcionDelCupoService } from '@ng-mf/data-access-user';
 
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -13,7 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { TituloComponent } from '@ng-mf/data-access-user';
 /**
  * Componente que representa la descripción detallada de un cupo.
  * Se encarga de mostrar información específica sobre el cupo y su configuración.
@@ -44,7 +44,9 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private service: DescripcionDelCupoService
-  ) {}
+  ) {
+    // Constructor
+  }
 
   /**
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -87,6 +89,7 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
     this.service
       .getDescripcionDelCupo()
       .pipe(takeUntil(this.destroyed$))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .subscribe((data: any) => {
         this.form.patchValue({
           claveDelCupo: data.claveDelCupo,

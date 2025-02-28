@@ -4,8 +4,10 @@
  */
 import { Component, ViewChild } from '@angular/core';
  
-import { ASIGNACION, TEXTOS } from 'libs/shared/data-access-user/src/core/services/120402/asignacion-directa-de-cupo.enum';
-import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
+import { ALERT, ASIGNACION } from '@ng-mf/data-access-user';
+
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+
 import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 /**
  * Interface representing the action of a button.
@@ -47,7 +49,7 @@ export class AsignacionDirectaDeCupoComponent {
   /**
    * Textos utilizados en el componente.
    */
-  TEXTOS = TEXTOS;
+  TEXTOS = ALERT;
  
   /**
    * Clase CSS para aplicar estilos específicos a los elementos de la interfaz.

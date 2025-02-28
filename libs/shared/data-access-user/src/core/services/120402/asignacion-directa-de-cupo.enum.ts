@@ -25,6 +25,6 @@ export const ASIGNACION = [
       }
 ]
 
-export const TEXTOS = {
+export const ALERT = {
   ALERTA: `¡Error de registro! Faltan campos por capturar.`,
 }

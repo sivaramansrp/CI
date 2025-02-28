@@ -42,7 +42,9 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    * @param fb FormBuilder para la creación y gestión del formulario reactivo.
    */
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) {
+    // Constructor
+  }
 
   /**
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -74,9 +76,9 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
    * @returns Verdadero si el control es inválido, falso en caso contrario.
    */
   esInvalido(nombreControl: string): boolean {
-    const control = this.form.get(nombreControl);
-    return control
-      ? control.invalid && (control.touched || control.dirty)
+    const CONTROL = this.form.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
   }
 

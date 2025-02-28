@@ -14,8 +14,9 @@ import { SeleccionDelCupoComponent } from './components/seleccion-del-cupo/selec
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
+
+import { AlertComponent } from '@ng-mf/data-access-user';
 
 import { BtnContinuarComponent, SolicitanteComponent } from '@ng-mf/data-access-user';
 

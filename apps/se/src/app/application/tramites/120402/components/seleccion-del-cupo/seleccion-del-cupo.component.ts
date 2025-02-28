@@ -20,7 +20,7 @@ import tratdosValues from 'libs/shared/theme/assets/json/110101/tratdos-dropdown
 import nombreValues from 'libs/shared/theme/assets/json/220202/nombre.json';
 import subproductoValues from 'libs/shared/theme/assets/json/220202/nombre.json';
 
-import { DescripcionDelCupoService } from 'libs/shared/data-access-user/src/core/services/120402/descripcion-del-cupo/descripcionDelCupo.service';
+import { DescripcionDelCupoService } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
