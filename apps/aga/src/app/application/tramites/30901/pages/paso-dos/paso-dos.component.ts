@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { ImportanteCatalogoSeleccion } from '@ng-mf/data-access-user';
 import { OnInit } from '@angular/core';
 import { RenovacionesMuestrasMercanciasService } from '@ng-mf/data-access-user';
-import { TableData } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
+import { TableData } from '@ng-mf/data-access-user';
 
 /**  
  * Componente PasoDosComponent que representa el segundo paso del trámite 30901.

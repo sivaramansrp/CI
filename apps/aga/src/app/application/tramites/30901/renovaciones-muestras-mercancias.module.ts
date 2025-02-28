@@ -1,27 +1,26 @@
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { DatosProrrogaMuestrasMercanciasComponent } from './components/datos-prorroga-muestras-mercancias/datos-prorroga-muestras-mercancias.component';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { FormsModule } from '@angular/forms';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
+import { PagoLCComponent } from './components/pago-lc/pago-lc.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RegistroRenovacionesMuestrasMercanciasComponent } from './components/registro-renovaciones-muestras-mercancias/registro-renovaciones-muestras-mercancias.component';
 import { RenovacionesComponent } from './pages/renovaciones/renovaciones.component';
 import { RenovacionesMuestrasMercanciasRoutingModule } from './renovaciones-muestras-mercancias-routing.module';
-import {
-  AlertComponent,
-  AnexarDocumentosComponent,
-  BtnContinuarComponent,
-  CatalogoSelectComponent,
-  FirmaElectronicaComponent,
-  InputFechaComponent,
-  RenovacionesMuestrasMercanciasService,
-  SolicitanteComponent,
-  TableComponent,
-  TituloComponent,
-  WizardComponent,
-} from '@ng-mf/data-access-user';
-import { RegistroRenovacionesMuestrasMercanciasComponent } from './components/registro-renovaciones-muestras-mercancias/registro-renovaciones-muestras-mercancias.component';
-import { PagoLCComponent } from './components/pago-lc/pago-lc.component';
-import { DatosProrrogaMuestrasMercanciasComponent } from './components/datos-prorroga-muestras-mercancias/datos-prorroga-muestras-mercancias.component';
+import { RenovacionesMuestrasMercanciasService } from '@ng-mf/data-access-user';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
   declarations: [

@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { RenovacionesComponent } from './renovaciones.component';
 import { RenovacionesPasos } from '@ng-mf/data-access-user';
 

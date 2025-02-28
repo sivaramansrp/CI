@@ -51,9 +51,9 @@ describe('PagoLCComponent', () => {
 
   it('should initialize form with default values', () => {
     component.ngOnInit();
-    expect(component.formPagoLC.get('lineaCaptura')!.value).toBe('');
-    expect(component.formPagoLC.get('valorPago')!.value).toBe('4845');
-    expect(component.formPagoLC.get('valorPago')!.disabled).toBe(true);
+    expect(component.formPagoLC.get('lineaCaptura')?.value).toBe('');
+    expect(component.formPagoLC.get('valorPago')?.value).toBe('4845');
+    expect(component.formPagoLC.get('valorPago')?.disabled).toBe(true);
   });
 
   it('should call obtenerDatosIniciales on init', () => {

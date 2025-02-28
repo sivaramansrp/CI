@@ -8,7 +8,6 @@ import { ToastrService } from 'ngx-toastr';
 fdescribe('PasoTresComponent', () => {
   let component: PasoTresComponent;
   let router: Router;
-  let navigateSpy: jasmine.Spy;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -32,7 +31,6 @@ fdescribe('PasoTresComponent', () => {
     const FIXTURE = TestBed.createComponent(PasoTresComponent);
     component = FIXTURE.componentInstance;
     router = TestBed.inject(Router);
-    navigateSpy = router.navigate as jasmine.Spy;
   });
 
   it('should create', () => {

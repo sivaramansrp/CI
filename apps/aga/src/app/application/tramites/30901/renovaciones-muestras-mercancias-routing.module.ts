@@ -3,7 +3,7 @@ import { RenovacionesComponent } from './pages/renovaciones/renovaciones.compone
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
     path: 'renovaciones',
     component: RenovacionesComponent,
@@ -11,7 +11,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
 export class RenovacionesMuestrasMercanciasRoutingModule {}
