@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 import { SeleccionDelCupoComponent } from './seleccion-del-cupo.component';
-import { DescripcionDelCupoService } from 'libs/shared/data-access-user/src/core/services/120402/descripcion-del-cupo/descripcion-del-cupo.service';
+import { DescripcionDelCupoService } from 'libs/shared/data-access-user/src/core/services/120402/descripcion-del-cupo/descripcionDelCupo.service';
  
 describe('SeleccionDelCupoComponent', () => {
   let component: SeleccionDelCupoComponent;
