@@ -145,7 +145,7 @@
       }
     },
     {
-      "files": ["*.html"],
+      "files": ["*.html", "*.scss"],
       "extends": ["plugin:@nx/angular-template"],
       "rules": {}
     }

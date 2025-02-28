@@ -31,19 +31,19 @@ describe('CargaMasivaComponent', () => {
   });
 
   it('should call updateFile method', () => {
-    const event = new Event('change');
+    const EVENT = new Event('change');
     jest.spyOn(component, 'updateFile');
-    component.updateFile(event);
-    expect(component.updateFile).toHaveBeenCalledWith(event);
+    component.updateFile(EVENT);
+    expect(component.updateFile).toHaveBeenCalledWith(EVENT);
   });
 
   it('should handle file upload logic in updateFile method', () => {
-    const event = {
+    const EVENT = {
       target: {
         files: [new File([''], 'filename.txt')]
       }
     } as unknown as Event;
-    component.updateFile(event);
+    component.updateFile(EVENT);
     // Add your assertions here based on the file upload logic
   });
 });

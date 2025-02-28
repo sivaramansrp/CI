@@ -69,7 +69,7 @@
         }
       </div>
     </div>
-    } @if (valoresSeleccionadosRadio.radio1 === 'manual') {
+    } @if (valoresSeleccionadosRadio['radio1'] === 'manual') {
     <div
       class="form"
       formGroupName="manualDatos"
@@ -114,7 +114,7 @@
     <app-manual-aviso
       (emitButtonAction)="isManualAsivoAgregarClicked = $event"
     ></app-manual-aviso>
-    } @if (valoresSeleccionadosRadio.radio1 === 'carga_masiva') {
+    } @if (valoresSeleccionadosRadio['radio1'] === 'carga_masiva') {
     <app-carga-masiva></app-carga-masiva>
     }
   </form>

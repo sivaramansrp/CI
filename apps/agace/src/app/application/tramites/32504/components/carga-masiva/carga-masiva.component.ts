@@ -17,6 +17,7 @@ export class CargaMasivaComponent {
    * @property {string} TEXTOS
    */
   TEXTOS = TEXTOS;
+  event = {};
 
   /**
    * Implementar lógica de carga de archivo..
@@ -24,6 +25,7 @@ export class CargaMasivaComponent {
    */
   updateFile(event: Event): void {
     // Implementar lógica de carga de archivo.
+    this.event = event;
   }
     
 }

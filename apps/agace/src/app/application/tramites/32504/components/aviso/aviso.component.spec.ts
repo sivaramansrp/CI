@@ -1,17 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { InputConfig, InputRadioComponent, InputTypes } from '@ng-mf/data-access-user';
 import { AvisoComponent } from './aviso.component';
 import { CargaMasivaComponent } from '../carga-masiva/carga-masiva.component';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { InputConfig, InputTypes, InputRadioComponent } from '@ng-mf/data-access-user';
 import { ManualAvisoComponent } from '../manual-aviso/manual-aviso.component';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { buttonActionTypes } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
+
 
 describe('AvisoComponent', () => {
   let component: AvisoComponent;
@@ -61,9 +62,9 @@ describe('AvisoComponent', () => {
   });
 
   it('should set radioSelectedValues', () => {
-    const mockValues = { key: 'value' };
-    component.valoresSeleccionadosRadio = mockValues;
-    expect(component.valoresSeleccionadosRadio).toEqual(mockValues);
+    const MOCK_VALUES = { key: 'value' };
+    component.valoresSeleccionadosRadio = MOCK_VALUES;
+    expect(component.valoresSeleccionadosRadio).toEqual(MOCK_VALUES);
   });
 
   it('should create form with FormBuilder', () => {
@@ -72,10 +73,10 @@ describe('AvisoComponent', () => {
   });
 
   it('should have correct input types and props', () => {
-    const inputTypes = component.configuracion[0].menu;
-    expect(inputTypes).toBeDefined();
-    expect(inputTypes.length).toBeGreaterThan(0);
-    inputTypes.forEach(input => {
+    const INPUT_TYPES = component.configuracion[0].menu;
+    expect(INPUT_TYPES).toBeDefined();
+    expect(INPUT_TYPES.length).toBeGreaterThan(0);
+    INPUT_TYPES.forEach(input => {
       expect(input.inputType).toBeDefined();
       expect(input.props).toBeDefined();
       expect(input.class).toBe('col-md-4');
@@ -116,19 +117,19 @@ describe('AvisoComponent', () => {
   it('should validate form fields', () => {
     component.ngOnInit();
     component.formulario.addControl('Código postal:', formBuilder.control('', Validators.required));
-    const someField = component.formulario.get('Código postal:');
-    someField?.setValue('');
-    expect(someField?.valid).toBeFalsy();
-    someField?.setValue('130120');
-    expect(someField?.valid).toBeTruthy();
+    const SOME_FIELD = component.formulario.get('Código postal:');
+    SOME_FIELD?.setValue('');
+    expect(SOME_FIELD?.valid).toBeFalsy();
+    SOME_FIELD?.setValue('130120');
+    expect(SOME_FIELD?.valid).toBeTruthy();
   });
 
   it('should generate validators correctly', () => {
-    const validators = component.getValidators(['required', 'maxLength:10', 'pattern:[a-zA-Z]']);
-    expect(validators.length).toBe(3);
-    expect(validators[0]).toBe(Validators.required);
-    expect(validators[1]).toEqual(Validators.maxLength(10));
-    expect(validators[2]).toEqual(Validators.pattern('[a-zA-Z]'));
+    const VALIDATORS = component.getValidators(['required', 'maxLength:10', 'pattern:[a-zA-Z]']);
+    expect(VALIDATORS.length).toBe(3);
+    expect(VALIDATORS[0]).toBe(Validators.required);
+    expect(VALIDATORS[1]).toEqual(Validators.maxLength(10));
+    expect(VALIDATORS[2]).toEqual(Validators.pattern('[a-zA-Z]'));
   });
 
   it('should handle date change', () => {
@@ -152,7 +153,7 @@ describe('AvisoComponent', () => {
   });
 
   it('should initialize form group correctly', () => {
-    const configuracion: InputConfig[] = [
+    const CONFIGURACION: InputConfig[] = [
       {
         title: 'Test Group',
         formGroupName: 'testGroup',
@@ -167,21 +168,21 @@ describe('AvisoComponent', () => {
     ];
     component.crearFormulario();
     component.formulario.addControl('testGroup', formBuilder.group({}));
-    component.inicializarFormGroup(configuracion[0].menu, 'testGroup', 0);
-    const group = component.formulario.get('testGroup') as FormGroup;
-    expect(group).toBeDefined();
-    expect(group.get('testField')).toBeDefined();
-    expect(group.get('testField')?.valid).toBeFalsy();
-    group.get('testField')?.setValue('testValue');
-    expect(group.get('testField')?.valid).toBeTruthy();
+    component.inicializarFormGroup(CONFIGURACION[0].menu, 'testGroup', 0);
+    const GROUP = component.formulario.get('testGroup') as FormGroup;
+    expect(GROUP).toBeDefined();
+    expect(GROUP.get('testField')).toBeDefined();
+    expect(GROUP.get('testField')?.valid).toBeFalsy();
+    GROUP.get('testField')?.setValue('testValue');
+    expect(GROUP.get('testField')?.valid).toBeTruthy();
   });
 
   it('should call obtenerValoresCatalogo and update configuracion', () => {
-    const mockResponse = [{ id: 1, name: 'Test' }];
-    (catalogosService.getCatalogo as jest.Mock).mockReturnValue(of(mockResponse));
+    const MOCK_RESPONSE = [{ id: 1, name: 'Test' }];
+    (catalogosService.getCatalogo as jest.Mock).mockReturnValue(of(MOCK_RESPONSE));
     component.obtenerValoresCatalogo(0, 0, 'someKey');
     expect(catalogosService.getCatalogo).toHaveBeenCalledWith('someKey');
-    expect(component.configuracion[0].menu[0].props.catalogs).toEqual(mockResponse);
+    expect(component.configuracion[0].menu[0].props.catalogs).toEqual(MOCK_RESPONSE);
   });
 
   it('should handle button action AGREGAR', () => {
