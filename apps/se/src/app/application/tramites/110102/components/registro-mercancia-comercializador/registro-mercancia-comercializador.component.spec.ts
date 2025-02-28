@@ -5,9 +5,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 
 import { RegistroMercanciaComercializadorComponent } from './registro-mercancia-comercializador.component';
-import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
+import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { MercanciaasociadaService } from 'libs/shared/data-access-user/src/core/services/110102/mercanciaasociada/mercanciaasociada.service';
+import { MercanciaasociadaService } from 'libs/shared/data-access-user/src/core/services/110102/mercanciaasociada/mercanciaAsociada.service';
 
 describe('RegistroMercanciaComercializadorComponent', () => {
   let component: RegistroMercanciaComercializadorComponent;

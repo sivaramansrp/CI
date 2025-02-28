@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DataosMercanciaComponent } from './dataos-mercancia.component';
+import { DatosMercanciaComponent } from './datos-mercancia.component';
 
 describe('DataosMercanciaComponent', () => {
-  let component: DataosMercanciaComponent;
-  let fixture: ComponentFixture<DataosMercanciaComponent>;
+  let component: DatosMercanciaComponent;
+  let fixture: ComponentFixture<DatosMercanciaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DataosMercanciaComponent],
+      imports: [DatosMercanciaComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DataosMercanciaComponent);
+    fixture = TestBed.createComponent(DatosMercanciaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroExportadorAutorizadoComponent } from './registro-exportador-autorizado.component';
 
-import { InputRadioComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 describe('RegistroExportadorAutorizadoComponent', () => {

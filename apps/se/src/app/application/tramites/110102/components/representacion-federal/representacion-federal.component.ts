@@ -9,10 +9,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { BtnContinuarComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component";
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 
 import { Catalogo, CatalogoSelectComponent, DatosPasos, TituloComponent } from '@ng-mf/data-access-user';
-import { RepresentacionfederalService } from 'libs/shared/data-access-user/src/core/services/110102/representacionfederal/representacionfederal.service';
+import { RepresentacionfederalService } from 'libs/shared/data-access-user/src/core/services/110102/representacionfederal/representacionFederal.service';
 
 /**
  * Este componente maneja la representación federal.

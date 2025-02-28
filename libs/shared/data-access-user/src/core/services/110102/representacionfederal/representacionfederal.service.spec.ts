@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { RepresentacionfederalService } from './representacionfederal.service';
+import { RepresentacionfederalService } from './representacionFederal.service';
 import { HttpCoreService } from '../../shared/http/http.service';
 
 describe('RepresentacionfederalService', () => {

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { MercanciaasociadaService } from './mercanciaasociada.service';
+import { MercanciaasociadaService } from './mercanciaAsociada.service';
 import { HttpCoreService } from '../../shared/http/http.service';
 
 describe('MercanciaasociadaService', () => {

@@ -4,7 +4,7 @@ import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDeLaMercanciaComponent } from "./components/datos-de-la-mercancia/datos-de-la-mercancia.component";
 import { DatosTratadosAcuerdosComponent } from "./components/datos-tratados-acuerdos/datos-tratados-acuerdos.component";
 
-import { DataosMercanciaComponent } from "./pages/datos-mercancia/dataos-mercancia.component";
+import { DatosMercanciaComponent } from "./pages/datos-mercancia/datos-mercancia.component";
 import { ExportadorautorizadoRoutingModule } from './exportador-autorizado-routing.module';
 import { NgModule } from '@angular/core';
 import { RegistroExportadorAutorizadoComponent } from "./components/registro-exportador-autorizado/registro-exportador-autorizado.component";
@@ -19,7 +19,7 @@ import { TablaDinamicaComponent } from "../../../../../../../libs/shared/data-ac
 
 
 @NgModule({
-  declarations: [DatosComponent,DataosMercanciaComponent],
+  declarations: [DatosComponent,DatosMercanciaComponent],
   imports: [
     CommonModule,
     ExportadorautorizadoRoutingModule,

@@ -8,7 +8,7 @@ import { of } from 'rxjs';
 import { BtnContinuarComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component";
 
 import { RepresentacionFederalComponent } from './representacion-federal.component';
-import { RepresentacionfederalService } from 'libs/shared/data-access-user/src/core/services/110102/representacionfederal/representacionfederal.service';
+import { RepresentacionfederalService } from 'libs/shared/data-access-user/src/core/services/110102/representacionfederal/representacionFederal.service';
 
 describe('RepresentacionFederalComponent', () => {
   let component: RepresentacionFederalComponent;

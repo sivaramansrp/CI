@@ -6,7 +6,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
+import { TituloComponent } from '@ng-mf/data-access-user';
+
 /**
  * Este componente maneja los datos de la mercancía.
  */

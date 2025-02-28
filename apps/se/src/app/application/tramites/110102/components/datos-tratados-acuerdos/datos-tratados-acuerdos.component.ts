@@ -6,10 +6,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Subject, takeUntil } from 'rxjs';
+
 import { TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 
 import { CONFIGURACION_ACCIONISTAS } from 'libs/shared/data-access-user/src/tramites/constantes/110102/datos-tratados-acuerdos.enum';
-import { DatostratadosacuerdosService } from 'libs/shared/data-access-user/src/core/services/110102/datostratadosacuerdos/datostratadosacuerdos.service';
+ import { DatostratadosacuerdosService } from 'libs/shared/data-access-user/src/core/services/110102/datostratadosacuerdos/datosTratadosacuerdos.service';
 
 /**
  * Este módulo define el componente `DatosTratadosAcuerdosComponent` que maneja la información de los tratados y acuerdos.

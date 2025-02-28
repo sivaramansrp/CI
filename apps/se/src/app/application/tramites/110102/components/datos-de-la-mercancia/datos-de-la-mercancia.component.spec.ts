@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-
+ 
 import { DatosDeLaMercanciaComponent } from './datos-de-la-mercancia.component';
-import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
+
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 describe('DatosDeLaMercanciaComponent', () => {
   let component: DatosDeLaMercanciaComponent;

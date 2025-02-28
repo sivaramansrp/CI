@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { DatostratadosacuerdosService } from './datostratadosacuerdos.service';
+import { DatostratadosacuerdosService } from './datosTratadosacuerdos.service';
 import { HttpCoreService } from '../../shared/http/http.service';
 
 describe('DatostratadosacuerdosService', () => {

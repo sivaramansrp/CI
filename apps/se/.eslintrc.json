@@ -15,7 +15,7 @@
         ],
         "@typescript-eslint/no-explicit-any": "error",
         "@angular-eslint/directive-selector": [
-          "off",
+          "error",
           {
             "type": "attribute",
             "prefix": "app",
@@ -23,7 +23,7 @@
           }
         ],
         "@angular-eslint/component-selector": [
-          "off",
+          "error",
           {
             "type": "element",
             "prefix": "app",

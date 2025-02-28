@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Subject, takeUntil } from 'rxjs';
 import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
 
-import { MercanciaasociadaService } from 'libs/shared/data-access-user/src/core/services/110102/mercanciaasociada/mercanciaasociada.service';
+import { MercanciaasociadaService } from 'libs/shared/data-access-user/src/core/services/110102/mercanciaasociada/mercanciaAsociada.service';
 /**
  * Este componente maneja el registro de la mercancía del comercializador.
  */
