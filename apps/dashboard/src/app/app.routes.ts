@@ -38,5 +38,10 @@ export const appRoutes: Route[] = [
     path: 'funcionario',
     loadChildren: () =>
       loadRemoteModule('funcionario', './Routes').then((m) => m.remoteRoutes),
-  }
+  },
+  {
+    path: 'agace',
+    loadChildren: () =>
+      loadRemoteModule('agace', './Routes').then((m) => m.remoteRoutes),
+  },
 ];
