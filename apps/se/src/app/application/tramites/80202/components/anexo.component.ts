@@ -61,39 +61,38 @@ export class AnexoComponent {
       orden: 1,
     },
     {
-      encabezado: 'Fracción arancelaria',
+      encabezado: 'Fracción Arancelaria',
       clave: (ele: { fraccionArancelaria: string }): string =>
         ele.fraccionArancelaria,
       orden: 2,
     },
     {
-      encabezado: ' UMT_',
-      clave: (ele: { umt: string }): string => ele.umt,
+      encabezado: 'Descripción',
+      clave: (ele: { descripcion: string }): string => ele.descripcion,
       orden: 3,
     },
     {
-      encabezado: ' Descripción de la TIGIE',
-      clave: (ele: { descripcion: string }): string => ele.descripcion,
+      encabezado: 'Cantidad Anual',
+      clave: (ele: { CantidadAnual: string }): string => ele.CantidadAnual,
       orden: 4,
     },
     {
-      encabezado: 'Cantidad anual',
-      clave: (ele: { CantidadAnual: number }): number => ele.CantidadAnual,
+      encabezado: 'Capacidad Instalada',
+      clave: (ele: { CapacidadInstaladaPorPeriodo: string }): string =>
+        ele.CapacidadInstaladaPorPeriodo,
       orden: 5,
     },
     {
-      encabezado: 'Capacidad instalada por periodo #',
-      clave: (ele: { CapacidadInstaladaPorPeriodo: number }): number =>
-        ele.CapacidadInstaladaPorPeriodo,
+      encabezado: 'UMT',
+      clave: (ele: { umt: string }): string => ele.umt,
       orden: 6,
     },
     {
-      encabezado: ' Cantidad por periodo #',
+      encabezado: 'Encabezado',
       clave: (ele: { encabezado: string }): string => ele.encabezado,
       orden: 7,
     },
   ];
-
   /**
    * Configuración de las columnas de la tabla.
    * @property {any[]} configuracionColumnas

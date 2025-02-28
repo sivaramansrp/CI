@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
+import { PASOS_80202 } from '@ng-mf/data-access-user';
 import { SUCECESS_MESSAGE_STAGEONE } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -49,7 +49,7 @@ export class SolicitudPageComponent {
    * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
    *
    */
-  pasos: ListaPasosWizard[] = PASOS;
+  pasos: ListaPasosWizard[] = PASOS_80202;
 
   /**
    * Índice actual del paso.
