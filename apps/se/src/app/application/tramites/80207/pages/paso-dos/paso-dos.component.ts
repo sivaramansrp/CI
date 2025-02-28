@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { TEXTOS_REQUISITOS } from 'libs/shared/data-access-user/src/tramites/constantes/80207/texto.enum';
+import { TEXTOS_REQUISITOS } from '../../constantes/texto.enum';
+
 
 /**
  * @fileoverview Componente para la gestión del paso dos.

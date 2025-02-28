@@ -1,6 +1,6 @@
-import { SubfacrintaTablaModelo } from "../../../core/models/80207/submanufacturer-extension";
+import { SubfacrintaTablaModelo } from "../modelos/submanufacturer-extension";
 
-export const SubfacrintaTablaConfiguracion = 
+export const SUBFACRINTATABLACONFIGURACION = 
     [
         {
           encabezado: 'Calle',

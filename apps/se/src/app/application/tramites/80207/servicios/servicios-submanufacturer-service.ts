@@ -1,14 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '../../models/shared/catalogos.model';
-import { map, Observable } from 'rxjs';
-import { SubfacrintaTablaModelo, SubManufacturerDatos } from '../../models/80207/submanufacturer-extension';
 
- @Injectable(
-//   {
-//   //providedIn: 'root',
-// }
-)
+import { Observable, map } from 'rxjs';
+import { SubManufacturerDatos, SubfacrintaTablaModelo } from '../modelos/submanufacturer-extension';
+import { RespuestaCatalogos } from '@ng-mf/data-access-user';
+
+
+ @Injectable()
 /**
  * @fileoverview Servicio para la gestión de datos de submanufactureras.
  * Este servicio maneja la obtención de datos relacionados con las submanufactureras,
@@ -16,7 +14,9 @@ import { SubfacrintaTablaModelo, SubManufacturerDatos } from '../../models/80207
  * @module serviciosSubmanufacturerService --80207
  */
 export class SubManufacturerService {
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {
+    //El constructor está intencionadamente vacío ya que solo inyecta el servicio HttpClient.
+  }
 
   /**
    * Obtiene los datos de registro y subcontratista.
@@ -24,7 +24,7 @@ export class SubManufacturerService {
    * @returns {Observable<any>} Observable con los datos de registro y subcontratista.
    */
   getDatos():Observable<SubManufacturerDatos> {
-    return this.http.get<SubManufacturerDatos>('assets/json/80207/submanufacturer-datos.json').pipe(map((response:any) =>response['data']));
+    return this.http.get<SubManufacturerDatos>('assets/json/80207/submanufacturer-datos.json').pipe(map((response:any) =>response.data));
   }
 
   /**
@@ -46,7 +46,7 @@ export class SubManufacturerService {
   getSubfabricantesDisponibles():Observable<SubfacrintaTablaModelo[]> {
     return this.http.get<SubfacrintaTablaModelo[]>(
       'assets/json/80207/submanufactureras-disponibles-datos.json'
-    ).pipe(map((response:any) =>response['data']));
+    ).pipe(map((response:any) =>response.data));
   }
   
 }

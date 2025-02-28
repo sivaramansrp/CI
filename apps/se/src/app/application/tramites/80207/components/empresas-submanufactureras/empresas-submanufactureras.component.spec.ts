@@ -1,21 +1,31 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Observable, of } from 'rxjs';
 import { EmpresasSubmanufacturerasComponent } from './empresas-submanufactureras.component';
-import { BehaviorSubject, of } from 'rxjs';
-import { SubManufacturerService } from 'libs/shared/data-access-user/src/core/services/80207/servicios-submanufacturer-service';
+import { SubManufacturerDatos, SubfacrintaTablaModelo } from '../../modelos/submanufacturer-extension';
+import { SubManufacturerService } from '../../servicios/servicios-submanufacturer-service';
 
-import { SubfacrintaTablaModelo } from 'libs/shared/data-access-user/src/core/models/80207/submanufacturer-extension';
 
 class MockSubManufacturerDatoService {
-  getDatos() {
-    return of({ infoRegistro: {}, datosSubcontratista: {} });
+  getDatos():Observable<SubManufacturerDatos> {
+    const MOCKDATA:SubManufacturerDatos={ infoRegistro:{
+      modalidad: "",
+      folio: "",
+      año: 123
+    }, datosSubcontratista: {
+      rfc: "134",
+      estado : "Mexico"
+    } }
+    return of(MOCKDATA);
   }
 
-  obtenerListaEstado() {
-    return of({ data: [] });
+  obtenerListaEstado():Observable<RespuestaCatalogos> {
+    const MOCKDATA:RespuestaCatalogos={ code:200,data: [],message:"" }
+    return of(MOCKDATA);
   }
 
-  getSubfabricantesDisponibles() {
+  getSubfabricantesDisponibles() :Observable<SubfacrintaTablaModelo[]>{
     return of([]);
   }
 }
@@ -27,7 +37,7 @@ describe('EmpresasSubmanufacturerasComponent', () => {
   let component: EmpresasSubmanufacturerasComponent;
   let fixture: ComponentFixture<EmpresasSubmanufacturerasComponent>;
   let fb: FormBuilder;
-  let subManufacturerServiceMock: jest.Mocked<SubManufacturerService>;
+
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

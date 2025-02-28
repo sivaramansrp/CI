@@ -16,11 +16,11 @@ import {
   DatosSubcontratista,
   InfoRegistro,
   SubfacrintaTablaModelo,
-} from 'libs/shared/data-access-user/src/core/models/80207/submanufacturer-extension';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { SubManufacturerService } from 'libs/shared/data-access-user/src/core/services/80207/servicios-submanufacturer-service';
-import { SubfacrintaTablaConfiguracion } from 'libs/shared/data-access-user/src/tramites/constantes/80207/submanufabricnats-tabla-configuracion.enum';
+} from '../../modelos/submanufacturer-extension';
+import { SUBFACRINTATABLACONFIGURACION } from '../../constantes/submanufabricnats-tabla-configuracion.enum';
+import { SubManufacturerService } from '../../servicios/servicios-submanufacturer-service';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
 /**
@@ -92,7 +92,7 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @property {ConfiguracionColumna<SubfacrintaTablaModelo>[]} configuracionTabla
    */
   configuracionTabla: ConfiguracionColumna<SubfacrintaTablaModelo>[] =
-    SubfacrintaTablaConfiguracion;
+    SUBFACRINTATABLACONFIGURACION;
 
   /**
    * Datos del subfabricante seleccionado.
@@ -166,7 +166,7 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @method getDatos
    */
   getDatos(): void {
-    const suscripción = this.subManufacturerDatoService
+    const SUSCRIPCIÓN = this.subManufacturerDatoService
       .getDatos()
       .subscribe((response) => {
         if (response) {
@@ -177,14 +177,14 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.arregloDeSuscripciones.push(suscripción);
+    this.arregloDeSuscripciones.push(SUSCRIPCIÓN);
   }
 
   /**
    * Inicializa el formulario de información de registro con los datos obtenidos o con valores vacíos si no hay datos disponibles.
    * @method inicializarFormularioInfoRegistro
    */
-  inicializarFormularioInfoRegistro() {
+  inicializarFormularioInfoRegistro(): void {
     if (this.infoRegistro) {
       this.formularioInfoRegistro = this.fb.group({
         modalidad: [{ value: this.infoRegistro.modalidad, disabled: true }],
@@ -204,7 +204,7 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
    * @method inicializarFormularioDatosSubcontratista
    */
-  inicializarFormularioDatosSubcontratista() {
+  inicializarFormularioDatosSubcontratista(): void {
     if (this.datosSubcontratista) {
       this.formularioDatosSubcontratista = this.fb.group({
         rfc: [this.datosSubcontratista.rfc, Validators.required],
@@ -222,23 +222,23 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * Obtiene la lista de estados desde el servicio y actualiza la propiedad estadoCatalogo.
    * @method obtenerListaEstado
    */
-  obtenerListaEstado() {
-    const suscripción = this.subManufacturerDatoService
+  obtenerListaEstado(): void {
+    const SUSCRIPCIÓN = this.subManufacturerDatoService
       .obtenerListaEstado()
       .subscribe((response) => {
         if (response) {
           this.estadoCatalogo = response.data;
         }
       });
-    this.arregloDeSuscripciones.push(suscripción);
+    this.arregloDeSuscripciones.push(SUSCRIPCIÓN);
   }
 
   /**
    * Obtiene la lista de subfabricantes disponibles desde el servicio y actualiza las cabeceras y datos de la tabla correspondiente.
    * @method obtenerSubfabricantesDisponibles
    */
-  obtenerSubfabricantesDisponibles() {
-    const suscripción = this.subManufacturerDatoService
+  obtenerSubfabricantesDisponibles(): void {
+    const SUSCRIPCIÓN = this.subManufacturerDatoService
       .getSubfabricantesDisponibles()
       .subscribe((response: SubfacrintaTablaModelo[]) => {
         if (response) {
@@ -246,7 +246,7 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
           this.mostrarTablaSubfabricantesDisponibles$.next(true);
         }
       });
-    this.arregloDeSuscripciones.push(suscripción);
+    this.arregloDeSuscripciones.push(SUSCRIPCIÓN);
   }
 
   /**
@@ -254,7 +254,7 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @method obtenerRegistroSeleccionado
    * @param {SubfacrintaTablaModelo[]} event - Evento con los datos del registro seleccionado.
    */
-  obtenerRegistroSeleccionado(event: SubfacrintaTablaModelo[]) {
+  obtenerRegistroSeleccionado(event: SubfacrintaTablaModelo[]): void {
     if (event.length > 0) {
       this.datosDelSubfabricanteSeleccionado = event;
     } else {
@@ -267,7 +267,7 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * Realiza una búsqueda de subfabricantes disponibles.
    * @method realizarBusqueda
    */
-  realizarBusqueda() {
+  realizarBusqueda(): void {
     this.obtenerSubfabricantesDisponibles();
   }
 
@@ -275,7 +275,7 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * Agrega plantas a la lista de subfabricantes seleccionados.
    * @method agregarPlantas
    */
-  agregarPlantas() {
+  agregarPlantas(): void {
     this.datosSubfabricanteParaSerAgregados =
       this.datosDelSubfabricanteSeleccionado;
     if (
@@ -283,7 +283,7 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
       this.datosSubfabricanteParaSerAgregados.length > 0
     ) {
       this.mostrarTablaSubfabricantesSeleccionadas = true;
-      //TODO Implementar la llamada a la API posterior para los datos del subfabricante seleccionado
+      //Implementar la llamada a la API posterior para los datos del subfabricante seleccionado
     }
   }
 
@@ -292,16 +292,8 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @method datosDelSubfabricantePorEliminar
    * @param {SubfacrintaTablaModelo[]} event - Evento con los datos del subfabricante por eliminar.
    */
-  datosDelSubfabricantePorEliminar(event: SubfacrintaTablaModelo[]) {
+  datosDelSubfabricantePorEliminar(event: SubfacrintaTablaModelo[]): void {
     this.listaDeSubfabricantesPorEliminar = event;
-  }
-
-  /**
-   * Método pendiente de implementación para eliminar plantas una vez que las API del backend estén listas.
-   * @method eliminarPlantas
-   */
-  eliminarPlantas() {
-    //TODO Necesito implementar una vez que las API del backend estén listas.
   }
 
   /**
@@ -309,7 +301,7 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
    * @method ngOnDestroy
    */
-  ngOnDestroy() {
+  ngOnDestroy():void {
     this.arregloDeSuscripciones.forEach((suscripcion) =>
       suscripcion.unsubscribe()
     );
