@@ -24,6 +24,13 @@ const routes: Routes = [
         (m) => m.FitosanitarioModule
       )
   },
+  {
+    path: 'importacion-acuacultura',
+    loadChildren: () =>
+      import('./tramites/220203/importacion-de-acuicultura.module').then(
+        (m) => m.ImportacionDeAcuiculturaModule
+      ),
+  }
 ];
 
 @NgModule({

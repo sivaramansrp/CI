@@ -10,8 +10,8 @@ describe('PasoUnoComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [PasoUnoComponent]
     })
-      .compileComponents();
-
+    .compileComponents();
+    
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
