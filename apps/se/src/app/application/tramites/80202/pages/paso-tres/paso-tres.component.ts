@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TEXTOS_REQUISITOS } from 'libs/shared/data-access-user/src/tramites/constantes/certificado-zoosanitario.enum';
+import { TEXTOS_REQUISITOS_80202 } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-paso-tres',
@@ -7,5 +7,5 @@ import { TEXTOS_REQUISITOS } from 'libs/shared/data-access-user/src/tramites/con
   styleUrl: './paso-tres.component.scss',
 })
 export class PasoTresComponent {
-  TEXOS = TEXTOS_REQUISITOS.ADJUNTAR;
+  TEXOS = TEXTOS_REQUISITOS_80202.ADJUNTAR;
 }

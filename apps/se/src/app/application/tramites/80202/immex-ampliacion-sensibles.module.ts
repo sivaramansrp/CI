@@ -1,44 +1,46 @@
-import { NgModule } from '@angular/core';
+// Angular Core imports
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 
+// Third-party library imports
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@ng-mf/data-access-user';
+
+// Application imports
+import { AnexoComponent } from './components/anexo.component';
 import { ImmexAmpliacionSensiblesRoutingModule } from './immex-ampliacion-sensibles-routing.module';
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-import { AnexoComponent } from './components/anexo.component';
-import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
-import {
-  AlertComponent,
-  BtnContinuarComponent,
-  FirmaElectronicaComponent,
-  SolicitanteComponent,
-  TituloComponent,
-  WizardComponent,
-  TablaDinamicaComponent,
-} from '@ng-mf/data-access-user';
-import { ReactiveFormsModule } from '@angular/forms';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
 @NgModule({
   declarations: [
-    SolicitudPageComponent,
-    PasoUnoComponent,
+    AnexoComponent,
+    PasoCuatroComponent,
     PasoDosComponent,
     PasoTresComponent,
-    PasoCuatroComponent,
-    AnexoComponent,
+    PasoUnoComponent,
+    SolicitudPageComponent,
   ],
   imports: [
-    CommonModule,
-    ImmexAmpliacionSensiblesRoutingModule,
-    WizardComponent,
-    BtnContinuarComponent,
-    SolicitanteComponent,
-    TituloComponent,
-    ReactiveFormsModule,
-    TablaDinamicaComponent,
     AlertComponent,
+    BtnContinuarComponent,
+    CommonModule,
     FirmaElectronicaComponent,
+    ImmexAmpliacionSensiblesRoutingModule,
+    ReactiveFormsModule,
+    SolicitanteComponent,
+    TablaDinamicaComponent,
+    TituloComponent,
+    WizardComponent,
   ],
 })
 export class ImmexAmpliacionSensiblesModule {}

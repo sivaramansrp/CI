@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
 import { AnexoComponent } from './anexo.component';
+import { ComponentFixture } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TestBed } from '@angular/core/testing';
 
 describe('AnexoComponent', () => {
   let component: AnexoComponent;

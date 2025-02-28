@@ -26,4 +26,7 @@ export interface ImmexAmplicationSensibleDatosDelFormulario {
   anexo: [];
 }
 
-export interface Anexo {}
+export interface Anexo {
+  id: number;
+  description: string;
+}

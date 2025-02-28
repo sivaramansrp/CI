@@ -1,11 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '@ng-mf/data-access-user';
-import { PASOS } from 'libs/shared/data-access-user/src/tramites/constantes/80202/immex-ampliacion-sensibles.enums';
-import { SeccionQuery, WizardComponent } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/80202/immex-ampliacion-sensibles.model';
-import { SUCECESS_MESSAGE_STAGEONE } from 'libs/shared/data-access-user/src/tramites/constantes/certificado-zoosanitario.enum';
-import { SECCIONES_TRAMITE_5701 } from 'libs/shared/data-access-user/src/tramites/constantes/seccionesTramites';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from '@ng-mf/data-access-user';
+import { SUCECESS_MESSAGE_STAGEONE } from '@ng-mf/data-access-user';
+import { Subject } from 'rxjs';
+import { WizardComponent } from '@ng-mf/data-access-user';
+
 /**
  * Interfaz para la acción de los botones
  */
@@ -83,9 +83,6 @@ export class SolicitudPageComponent {
     txtBtnSig: 'Continuar',
   };
 
-  constructor(private seccionQuery: SeccionQuery) {}
-  ngOnInit() {}
-
   seleccionaTab(i: number): void {
     this.indice = i;
   }
@@ -98,10 +95,12 @@ export class SolicitudPageComponent {
    *
    * @param {AccionBoton} e - The action button object containing the `valor` and `accion` properties.
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
-      this.tituloMensaje = this.obtenerNombreDelTítulo(e.valor);
+      this.tituloMensaje = SolicitudPageComponent.obtenerNombreDelTítulo(
+        e.valor
+      );
 
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
@@ -118,7 +117,7 @@ export class SolicitudPageComponent {
    *
    *
    */
-  obtenerNombreDelTítulo(valor: number) {
+  static obtenerNombreDelTítulo(valor: number): string {
     switch (valor) {
       case 1:
         return 'Registro de solicitud IMMEX modalidad ampliación sensibles';
@@ -131,16 +130,6 @@ export class SolicitudPageComponent {
       default:
         return 'Registro de solicitud IMMEX modalidad ampliación sensibles';
     }
-  }
-  /**
-   * Método para asignar las secciones existentes al stored
-   * @method asignarSecciones
-   * @returns {void}
-   *
-   */
-  private asignarSecciones() {
-    const secciones: boolean[] = [];
-    const formaValida: boolean[] = [];
   }
 
   /**

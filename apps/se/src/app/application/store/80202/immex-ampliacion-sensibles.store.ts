@@ -1,9 +1,7 @@
-import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
-import {
-  ImmexAmplicationSensibleDatosDelFormulario,
-  Anexo,
-} from 'libs/shared/data-access-user/src/core/models/80202/immex-ampliacion-sensibles.model';
+import { Anexo } from '@ng-mf/data-access-user';
+import { ImmexAmplicationSensibleDatosDelFormulario } from '@ng-mf/data-access-user';
+import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'immex-ampliacion-sensibles', resettable: true })

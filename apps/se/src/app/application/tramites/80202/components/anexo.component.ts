@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
 
 /**
  * @title Anexo
@@ -36,17 +36,11 @@ export class AnexoComponent {
   }
 
   /**
-   * Método que se ejecuta al iniciar el componente.
-   * @method ngOnInit
-   */
-  ngOnInit() {}
-
-  /**
    * Inicializa el formulario de acción.
    * @method initActionFormBuild
    * @returns {void}
    */
-  initActionFormBuild() {
+  initActionFormBuild(): void {
     this.fraccionForm = this.fb.group({
       fraccionArancelaria: ['', Validators.required],
     });
@@ -61,31 +55,41 @@ export class AnexoComponent {
    * @property {any[]} configuracionColumnas
    */
   configuracionColumnasSensibles = [
-    { encabezado: 'No', clave: (ele: any) => ele.no, orden: 1 },
+    {
+      encabezado: 'No',
+      clave: (ele: { no: number }): number => ele.no,
+      orden: 1,
+    },
     {
       encabezado: 'Fracción arancelaria',
-      clave: (ele: any) => ele.fraccionArancelaria,
+      clave: (ele: { fraccionArancelaria: string }): string =>
+        ele.fraccionArancelaria,
       orden: 2,
     },
-    { encabezado: ' UMT_', clave: (ele: any) => ele.umt, orden: 3 },
+    {
+      encabezado: ' UMT_',
+      clave: (ele: { umt: string }): string => ele.umt,
+      orden: 3,
+    },
     {
       encabezado: ' Descripción de la TIGIE',
-      clave: (ele: any) => ele.descripcion,
+      clave: (ele: { descripcion: string }): string => ele.descripcion,
       orden: 4,
     },
     {
       encabezado: 'Cantidad anual',
-      clave: (ele: any) => ele.CantidadAnual,
+      clave: (ele: { CantidadAnual: number }): number => ele.CantidadAnual,
       orden: 5,
     },
     {
       encabezado: 'Capacidad instalada por periodo #',
-      clave: (ele: any) => ele.CapacidadInstaladaPorPeriodo,
+      clave: (ele: { CapacidadInstaladaPorPeriodo: number }): number =>
+        ele.CapacidadInstaladaPorPeriodo,
       orden: 6,
     },
     {
       encabezado: ' Cantidad por periodo #',
-      clave: (ele: any) => ele.encabezado,
+      clave: (ele: { encabezado: string }): string => ele.encabezado,
       orden: 7,
     },
   ];
@@ -95,30 +99,37 @@ export class AnexoComponent {
    * @property {any[]} configuracionColumnas
    */
   configuracionColumnas = [
-    { encabezado: 'No.', clave: (ele: any) => ele.no, orden: 1 },
+    {
+      encabezado: 'No.',
+      clave: (ele: { no: number }): number => ele.no,
+      orden: 1,
+    },
     {
       encabezado: 'Fracción de importación',
-      clave: (ele: any) => ele.fracciondeImportacion,
+      clave: (ele: { fracciondeImportacion: string }): string =>
+        ele.fracciondeImportacion,
       orden: 2,
     },
     {
       encabezado: ' Fracción de exportación',
-      clave: (ele: any) => ele.fracciondeExportacion,
+      clave: (ele: { fracciondeExportacion: string }): string =>
+        ele.fracciondeExportacion,
       orden: 3,
     },
     {
       encabezado: 'UMT ',
-      clave: (ele: any) => ele.umt,
+      clave: (ele: { umt: string }): string => ele.umt,
       orden: 4,
     },
     {
       encabezado: 'Descripción comercial del producto de exportación',
-      clave: (ele: any) => ele.descripcionComercial,
+      clave: (ele: { descripcionComercial: string }): string =>
+        ele.descripcionComercial,
       orden: 5,
     },
     {
       encabezado: 'Descripción de la',
-      clave: (ele: any) => ele.descripcion,
+      clave: (ele: { descripcion: string }): string => ele.descripcion,
       orden: 6,
     },
   ];

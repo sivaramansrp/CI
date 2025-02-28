@@ -76,3 +76,8 @@ export * from './tramites/constantes/regex.constants';
 export * from './core/services/130118/pexim/pexim.service';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
+export { TEXTOS_REQUISITOS as TEXTOS_REQUISITOS_80202 } from './tramites/constantes/certificado-zoosanitario.enum';
+export {
+  ImmexAmplicationSensibleDatosDelFormulario,
+  Anexo,
+} from './core/models/80202/immex-ampliacion-sensibles.model';
