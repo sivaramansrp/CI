@@ -2,14 +2,17 @@
  * Este componente maneja el registro de exportadores autorizados.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import ExportadorAutorizado from "../../../../../../../../../libs/shared/theme/assets/json/110102/exportadorautorizado.json";
-import ExportadorAutorizadoJPN from "../../../../../../../../../libs/shared/theme/assets/json/110102/exportadorautorizadojpn.json";
-import { InputRadioComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import {ExportadorAutorizadoService} from "@ng-mf/data-access-user";
+import { InputRadioComponent } from "@ng-mf/data-access-user";
 import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { Subject, takeUntil } from 'rxjs';
+
 /**
  * Este componente maneja el registro de exportadores autorizados.
  */
@@ -20,17 +23,18 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   templateUrl: './registro-exportador-autorizado.component.html',
   styleUrl: './registro-exportador-autorizado.component.scss',
 })
-export class RegistroExportadorAutorizadoComponent implements OnInit {
+export class RegistroExportadorAutorizadoComponent implements OnInit,OnDestroy {
 
+  private destroyed$ = new Subject<void>();
 /**
    * Enumeración que representa las opciones de exportador autorizado.
    */
-exportadorOptions = ExportadorAutorizado;
+exportadorOptions!:{ label: string; value: string | number }[];
 
 /**
  * Enumeración que representa las opciones de exportador autorizado para Japón.
  */
-exportadorOptionsJPN = ExportadorAutorizadoJPN;
+exportadorOptionsJPN!:{ label: string; value: string | number }[];
 
 /**
  * FormGroup que contiene los datos del formulario de registro de exportador.
@@ -53,7 +57,7 @@ showDivExportadorJPN: boolean = false;
    * Servicio para la creación de formularios reactivos.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private service: ExportadorAutorizadoService) {
     // Lógica del constructor puede ser añadida aquí si es necesario
   }
 
@@ -69,7 +73,8 @@ showDivExportadorJPN: boolean = false;
       solicitaExportadorAutorizadoJPN: [false],
       condicionExportadorJPN: ['']
     });
-
+    this.getExportadorAutorizado();
+    this.getExportadorAutorizadoJPN();
     this.showDivExportador = this.registroExportadorForm.get('solicitaExportadorAutorizado')?.value;
     this.showDivExportadorJPN = this.registroExportadorForm.get('solicitaExportadorAutorizadoJPN')?.value;
   }
@@ -111,4 +116,32 @@ showDivExportadorJPN: boolean = false;
       condicionExportadorJPN: valor
     });
   }
+
+
+  getExportadorAutorizado(): void {
+    this.service.getExportadorAutorizado().pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(
+      (data) => {
+        this.exportadorOptions = data;
+      }
+    );
+  }
+
+  getExportadorAutorizadoJPN(): void {
+    this.service.getExportadorAutorizadoJPN().pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(
+      (data) => {
+        this.exportadorOptionsJPN = data;
+      }
+    );
+  }
+
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+
 }

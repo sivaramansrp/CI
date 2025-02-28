@@ -12,7 +12,7 @@ import { takeUntil } from 'rxjs/operators';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 
 import { Catalogo, CatalogoSelectComponent, DatosPasos, TituloComponent } from '@ng-mf/data-access-user';
-import { RepresentacionfederalService } from 'libs/shared/data-access-user/src/core/services/110102/representacionfederal/representacionFederal.service';
+import { RepresentacionfederalService } from '@ng-mf/data-access-user';
 
 /**
  * Este componente maneja la representación federal.
@@ -108,6 +108,7 @@ btnData: DatosPasos = {
    * Maneja el cambio de la entidad federativa.
    * @param {any} valor - El valor de la entidad federativa seleccionada.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onEntidadFederativaChange(valor: any): void {
     if (valor !== '-1') {
       this.recuperarRepresentacionFederalSE(valor.id);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Este componente maneja el registro de la mercancía del comercializador.
  */
@@ -7,9 +8,9 @@ import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
+import { TituloComponent } from "@ng-mf/data-access-user";
 
-import { MercanciaasociadaService } from 'libs/shared/data-access-user/src/core/services/110102/mercanciaasociada/mercanciaAsociada.service';
+import { MercanciaasociadaService } from '@ng-mf/data-access-user';
 /**
  * Este componente maneja el registro de la mercancía del comercializador.
  */

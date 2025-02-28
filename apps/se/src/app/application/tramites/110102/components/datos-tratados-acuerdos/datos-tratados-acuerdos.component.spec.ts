@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { DatosTratadosAcuerdosComponent } from './datos-tratados-acuerdos.component';
 
 import { CONFIGURACION_ACCIONISTAS, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
-import { DatostratadosacuerdosService } from 'libs/shared/data-access-user/src/core/services/110102/datostratadosacuerdos/datosTratadosacuerdos.service';
+import { DatostratadosacuerdosService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 
 describe('DatosTratadosAcuerdosComponent', () => {

@@ -5,7 +5,6 @@ import { ReactiveFormsModule } from '@angular/forms';
  
 import { DatosDeLaMercanciaComponent } from './datos-de-la-mercancia.component';
 
-import { TituloComponent } from '@ng-mf/data-access-user';
 
 describe('DatosDeLaMercanciaComponent', () => {
   let component: DatosDeLaMercanciaComponent;
@@ -18,7 +17,6 @@ describe('DatosDeLaMercanciaComponent', () => {
         DatosDeLaMercanciaComponent,
         ReactiveFormsModule,
         CommonModule,
-        TituloComponent
       ]
     }).compileComponents();
   });

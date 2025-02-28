@@ -5,10 +5,10 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 
-import { BtnContinuarComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component";
+import { BtnContinuarComponent } from "@ng-mf/data-access-user";
 
 import { RepresentacionFederalComponent } from './representacion-federal.component';
-import { RepresentacionfederalService } from 'libs/shared/data-access-user/src/core/services/110102/representacionfederal/representacionFederal.service';
+import { RepresentacionfederalService } from '@ng-mf/data-access-user';
 
 describe('RepresentacionFederalComponent', () => {
   let component: RepresentacionFederalComponent;

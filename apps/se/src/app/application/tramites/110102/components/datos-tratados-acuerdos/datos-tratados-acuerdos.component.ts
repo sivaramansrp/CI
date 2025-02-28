@@ -9,8 +9,8 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { CONFIGURACION_ACCIONISTAS } from 'libs/shared/data-access-user/src/tramites/constantes/110102/datos-tratados-acuerdos.enum';
- import { DatostratadosacuerdosService } from 'libs/shared/data-access-user/src/core/services/110102/datostratadosacuerdos/datosTratadosacuerdos.service';
+import { CONFIGURACION_ACCIONISTAS } from '@ng-mf/data-access-user';
+ import { DatostratadosacuerdosService } from '@ng-mf/data-access-user';
 
 /**
  * Este módulo define el componente `DatosTratadosAcuerdosComponent` que maneja la información de los tratados y acuerdos.
@@ -40,7 +40,8 @@ export class DatosTratadosAcuerdosComponent implements OnInit, OnDestroy {
    * Datos que se mostrarán en la tabla.
    * @type {any}
    */
-  public datosTabla!: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public datosTabla!:any;
 
   /**
    * Subject para manejar la desuscripción cuando el componente se destruye.
@@ -65,7 +66,7 @@ export class DatosTratadosAcuerdosComponent implements OnInit, OnDestroy {
     this.service.getData().pipe(
       takeUntil(this.destroyed$)
     ).subscribe(
-      (data: any) => {
+      (data: string[]) => {
         this.datosTabla = data;
       }
     );

@@ -1,4 +1,4 @@
-import { BtnContinuarComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component";
+import { BtnContinuarComponent } from "@ng-mf/data-access-user";
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDeLaMercanciaComponent } from "./components/datos-de-la-mercancia/datos-de-la-mercancia.component";
@@ -10,8 +10,8 @@ import { NgModule } from '@angular/core';
 import { RegistroExportadorAutorizadoComponent } from "./components/registro-exportador-autorizado/registro-exportador-autorizado.component";
 import { RegistroMercanciaComercializadorComponent } from "./components/registro-mercancia-comercializador/registro-mercancia-comercializador.component";
 import { RepresentacionFederalComponent } from "./components/representacion-federal/representacion-federal.component";
-import { SolicitanteComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component";
-import { TablaDinamicaComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component";
+import { SolicitanteComponent } from "@ng-mf/data-access-user";
+import { TablaDinamicaComponent } from "@ng-mf/data-access-user";
 
 
 
