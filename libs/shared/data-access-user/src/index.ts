@@ -2,8 +2,6 @@ export * from './tramites/pages/acuse-page/acuse-page.component';
 
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
 
-export * from './core/queries/tramite5701.query';
-
 export * from './core/services/shared/formularios/formularios.service';
 
 export * from './core/services/shared/fechas/fechas.service';

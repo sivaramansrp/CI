@@ -110,3 +110,9 @@ It will show tasks that you can run with Nx.
 - Goto aga/tsconfig.spec.js
 - "include": ["src/220401/**/*.ts"], - change aga into your procedure/dept
 - npx nx test se --testPathPattern=apps/se/src/app/application/tramites/120601
+
+# Remove cache
+- npx nx reset
+- npx nx clear-cache
+- Remove .nx if required
+- npx nx run serve dashboard --port=4500
