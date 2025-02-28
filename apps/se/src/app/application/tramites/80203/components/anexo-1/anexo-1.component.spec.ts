@@ -44,9 +44,8 @@ describe('Anexo1Component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ Anexo1Component, FormsModule, ReactiveFormsModule ],
       declarations: [
-        Anexo1Component,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],

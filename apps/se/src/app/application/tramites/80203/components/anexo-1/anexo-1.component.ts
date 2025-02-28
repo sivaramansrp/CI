@@ -306,7 +306,6 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     // Guarde el estado del formulario si es necesario
-    localStorage.setItem('exportacionForm', JSON.stringify(this.immexRegistroform.get('exportacionForm')?.value));
-    localStorage.setItem('importacionForm', JSON.stringify(this.immexRegistroform.get('importacionForm')?.value));
+
   }
 }
