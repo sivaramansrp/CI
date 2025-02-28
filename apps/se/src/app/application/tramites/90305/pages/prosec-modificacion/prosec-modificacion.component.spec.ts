@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ProsecModificacionSolicitudComponent } from './prosec-modificacion-solicitud.component';
+import {ProsecModificacionComponent} from './prosec-modificacion.component'
 
-describe('ProsecModificacionSolicitudComponent', () => {
-  let component: ProsecModificacionSolicitudComponent;
-  let fixture: ComponentFixture<ProsecModificacionSolicitudComponent>;
+describe('ProsecModificacionComponent', () => {
+  let component: ProsecModificacionComponent;
+  let fixture: ComponentFixture<ProsecModificacionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProsecModificacionSolicitudComponent],
+      declarations: [ProsecModificacionComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ProsecModificacionSolicitudComponent);
+    fixture = TestBed.createComponent(ProsecModificacionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

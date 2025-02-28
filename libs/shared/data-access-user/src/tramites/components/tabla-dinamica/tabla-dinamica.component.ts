@@ -10,7 +10,7 @@ import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
   styleUrl: './tabla-dinamica.component.scss',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  host: { 'hostID': crypto.randomUUID().toString()}
+ host: { 'hostID': crypto.randomUUID().toString()}
 })
 export class TablaDinamicaComponent<T> {
   /**
@@ -19,7 +19,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @type { TablaSeleccion}
    */
-  @Input() tipoSeleccion: TablaSeleccion = TablaSeleccion.UNDEFINED;
+  @Input() tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.UNDEFINED;
 
  
   /**

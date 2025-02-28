@@ -14,9 +14,12 @@ import { Modification90305Component } from './component/modification-90305/modif
 
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { ConsultadDomicilios90305Component } from './component/consultad-domicilios-90305/consultad-domicilios-90305.component';
+import { Bitacora90305Component } from './component/bitacora-90305/bitacora-90305.component';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
+
 
 @NgModule({
   declarations: [ProsecModificacionComponent, Datoa90305Component],
-  imports: [ CommonModule,FormsModule, ProsecModificacionRoutingModule ,Modification90305Component,WizardComponent,ConsultadDomicilios90305Component],
+  imports: [ CommonModule,FormsModule, ProsecModificacionRoutingModule ,Modification90305Component,WizardComponent,ConsultadDomicilios90305Component,Bitacora90305Component,SolicitanteComponent],
 })
 export class ProsecModificacionModule {}

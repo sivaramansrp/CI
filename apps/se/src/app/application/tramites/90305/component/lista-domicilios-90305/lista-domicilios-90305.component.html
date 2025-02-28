@@ -1,1 +1,28 @@
-<p>lista-domicilios-90305 works!</p>
+<ng-titulo titulo="Lista de domicilios"></ng-titulo>
+<app-tabla-dinamica
+  [configuracionTabla]="configuracionTabla"
+  [datos]="personaparas"
+  [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+>
+</app-tabla-dinamica>
+<div class="d-flex justify-content-end align-items-center mt-5 mb-5">
+  <!-- First button (Initially Visible) -->
+  <button
+    *ngIf="!showSecondButton"
+    type="button"
+    class="btn btn-primary"
+    name="Buscardomicilios"
+    (click)="toggleButtons()" >
+    Agregar plantas
+  </button>
+
+  <!-- Second button (Initially Hidden, Appears After Clicking First Button) -->
+  <button
+    *ngIf="showSecondButton"
+    type="button"
+    class="btn btn-primary"
+    (click)="toggleButtons()">
+    Eliminar plantas
+  </button>
+</div>
+<hr *ngIf="showSecondButton" />

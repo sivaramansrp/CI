@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
   imports: [
     CommonModule
   ],
-  host: { 'hostID': crypto.randomUUID().toString() }
+ host: { 'hostID': crypto.randomUUID().toString() }
 })
 export class TableComponent {
   @Input() enableScrollbar: boolean = false;

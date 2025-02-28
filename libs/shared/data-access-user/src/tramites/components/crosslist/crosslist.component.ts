@@ -8,7 +8,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './crosslist.component.html',
   styleUrl: './crosslist.component.scss',
-  host: { 'hostID': crypto.randomUUID().toString() }
+ host: { 'hostID': crypto.randomUUID().toString() }
 })
 export class CrosslistComponent implements OnInit ,OnChanges {
   @Input({ required: true }) fechas!: string[];

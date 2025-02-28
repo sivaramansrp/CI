@@ -1,0 +1,14 @@
+[
+    {
+        "listaDeSectores": "De la Industria Eléctrica", 
+        "claveDelSector": "I",
+        "eStatus" : "Autorizada "
+        
+    },
+    {
+        "listaDeSectores": "De la Industria Electrónica a)", 
+        "claveDelSector": "IIa",
+        "eStatus" : "Autorizada "
+        
+    }
+  ]
