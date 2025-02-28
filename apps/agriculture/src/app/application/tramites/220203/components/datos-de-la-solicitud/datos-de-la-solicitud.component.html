@@ -25,6 +25,14 @@
                 <div class="col-md-12">
                   <label class="form-label" for="table">Solicitud</label>
                 </div>
+                <div class="col-md-12">
+                  <app-tabla-dinamica
+                    [tipoSeleccionTabla]="tipoSeleccionsoli"
+                    [configuracionTabla]="configuracionColumnasoli"
+                    [datos]="cuerpoTabla"
+                  >
+                  </app-tabla-dinamica>
+                </div>
               </div>
             </div>
           </div>
@@ -92,11 +100,12 @@
         <label class="form-label" for="tabel">Mercancías</label>
       </div>
       <div class="col-md-12">
-        <ng-table
-          [commonTableHeader]="encabezadosComunesTabla"
-          [commonTableBody]="cuerpoTabla"
-          [enableScrollbar]="myScrollbarValue"
-        ></ng-table>
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tipoSeleccion"
+          [configuracionTabla]="configuracionColumnas"
+          [datos]="cuerpoTabla"
+        >
+        </app-tabla-dinamica>
       </div>
       <div class="col-md-12 d-flex justify-content-end">
         <div>

@@ -3,14 +3,47 @@ import { MENSAJE_DOBLE_CLIC } from 'libs/shared/data-access-user/src/core/enums/
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { ImportacionDeAcuiculturaService } from 'libs/shared/data-access-user/src/core/services/220203/importacion-de-acuicultura.service';
-
+import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+interface DatoTabla {
+  solicitud: string;
+  fechaCreacion: string;
+  mercancia: string;
+  cantidad: number; // O string, dependiendo del tipo de dato
+  proveedor: string;
+}
 @Component({
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss'
 })
+
 export class DatosDeLaSolicitudComponent implements OnDestroy {
   alertMessage: string = MENSAJE_DOBLE_CLIC;
+
+
+
+  tipoSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
+  cuerpoTablasoli: DatoTabla[] = []
+  configuracionColumnas: ConfiguracionColumna<any>[] = [
+    { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
+    { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
+    { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
+    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificado, orden: 4 },
+    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
+    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
+    { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
+  ];
+  configuracionColumnasoli: ConfiguracionColumna<any>[] = [
+    { encabezado: 'Solicitud', clave: (fila) => fila.solicitud, orden: 1 },
+    { encabezado: 'Fecha Creación', clave: (fila) => fila.fechaCreacion, orden: 2 },
+    { encabezado: 'Mercancía', clave: (fila) => fila.mercancia, orden: 3 },
+    { encabezado: 'Cantidad', clave: (fila) => fila.cantidad.toString(), orden: 4 }, // Asegúrate de convertir a string si es necesario
+    { encabezado: 'Proveedor', clave: (fila) => fila.proveedor, orden: 5 },
+  ];
+
+
   /**
    * Indica si la sección es colapsable.
    * @property {boolean} colapsable
@@ -43,6 +76,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
     this.createFromGroup();
     this.obtenerCatalogosTransporte();
   }
+
   createFromGroup() {
     this.datosMercanciaFormGroup = this.fb.group({
       realizarGroup: this.fb.group({
@@ -89,11 +123,9 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('transporte.json').subscribe((data => {
       this.aduanaDeIngresoList = data.data as Catalogo[];
     }));
-  }
-  /**
- * @description Obtiene los datos del catálogo de transporte.
- */
-  ngOnDestroy(): void {
+  }  /**
+  * @description Obtiene los datos del catálogo de transporte.
+  */  ngOnDestroy(): void {
     this.importacionDeAcuiculturaServices.actualizarDatosMercancia(this.datosMercanciaFormGroup.value);
   }
   mostrar_colapsable() {
