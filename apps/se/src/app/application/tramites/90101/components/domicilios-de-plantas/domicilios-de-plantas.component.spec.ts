@@ -1,11 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { DomiciliosDePlantasComponent } from './domicilios-de-plantas.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of, throwError } from 'rxjs';
-import { ProsecService } from 'libs/shared/data-access-user/src/core/services/90101/prosec.module';
-
+import { DomiciliosDePlantasComponent } from './domicilios-de-plantas.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ProsecService } from '@ng-mf/data-access-user';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('DomiciliosDePlantasComponent', () => {
   let component: DomiciliosDePlantasComponent;
@@ -42,41 +40,63 @@ describe('DomiciliosDePlantasComponent', () => {
   });
 
   it('should retrieve estado list', () => {
-    const mockData = [{ id: 1, nombre: 'Estado 1', descripcion: 'Estado 1' }];
-    spyOn(prosecService, 'obtenerMenuDesplegable').and.returnValue(of(mockData));
+    const MOCKDATA = [{ id: 1, nombre: 'Estado 1', descripcion: 'Estado 1' }];
+    spyOn(prosecService, 'obtenerMenuDesplegable').and.returnValue(of(MOCKDATA));
     component.obtenserListaEstado();
-    expect(component.estadoSeleccionar).toEqual(mockData);
+    expect(component.estadoSeleccionar).toEqual(MOCKDATA);
   });
 
   it('should handle error when retrieving estado list', () => {
     spyOn(prosecService, 'obtenerMenuDesplegable').and.returnValue(throwError('error'));
     component.obtenserListaEstado();
-    expect(component.estadoSeleccionar).toBeUndefined();
+    expect(component.estadoSeleccionar).toEqual([]);
   });
 
-  it('should retrieve plantas data', () => {
-    const mockResponse = [{ tbodyData: 'data' }];
-    spyOn(prosecService, 'obtenerTablaDatos').and.returnValue(of(mockResponse));
-    component.recuperarDatos();
-    expect(component.plantas).toEqual([{ tbodyData: 'data' }]);
+  it('should retrieve federal list', () => {
+    const MOCKDATA = [{ id: 1, nombre: 'Federal 1', descripcion: 'Federal 1' }];
+    spyOn(prosecService, 'obtenerMenuDesplegable').and.returnValue(of(MOCKDATA));
+    component.obtenserListaFederal();
+    expect(component.RepresentacionFederal).toEqual(MOCKDATA);
   });
 
-  it('should handle error when retrieving plantas data', () => {
-    spyOn(prosecService, 'obtenerTablaDatos').and.returnValue(throwError('error'));
-    component.recuperarDatos();
-    expect(component.plantas).toEqual([]);
+  it('should handle error when retrieving federal list', () => {
+    spyOn(prosecService, 'obtenerMenuDesplegable').and.returnValue(throwError('error'));
+    component.obtenserListaFederal();
+    expect(component.RepresentacionFederal).toEqual([]);
   });
 
-  it('should retrieve selected plantas data', () => {
-    const mockResponse = [{ tbodyData: 'data' }];
-    spyOn(prosecService, 'obtenerTablaDatos').and.returnValue(of(mockResponse));
-    component.datosSeleccionados();
-    expect(component.plantas).toEqual([{ tbodyData: 'data' }]);
+  it('should retrieve actividad productiva list', () => {
+    const mockData = [{ id: 1, nombre: 'Actividad 1', descripcion: 'Actividad 1' }];
+    spyOn(prosecService, 'obtenerMenuDesplegable').and.returnValue(of(mockData));
+    component.obtenserListaActividad();
+    expect(component.ActividadProductiva).toEqual(mockData);
   });
 
-  it('should handle error when retrieving selected plantas data', () => {
-    spyOn(prosecService, 'obtenerTablaDatos').and.returnValue(throwError('error'));
-    component.datosSeleccionados();
-    expect(component.plantas).toEqual([]);
+  it('should handle error when retrieving actividad productiva list', () => {
+    spyOn(prosecService, 'obtenerMenuDesplegable').and.returnValue(throwError('error'));
+    component.obtenserListaActividad();
+    expect(component.ActividadProductiva).toEqual([]);
+  });
+
+  it('should call obtenserListaFederal when obtenserLista is called', () => {
+    spyOn(component, 'obtenserListaFederal');
+    component.obtenserLista();
+    expect(component.obtenserListaFederal).toHaveBeenCalled();
+  });
+
+  it('should call obtenserListaActividad when obtenserLista is called', () => {
+    spyOn(component, 'obtenserListaActividad');
+    component.obtenserLista();
+    expect(component.obtenserListaActividad).toHaveBeenCalled();
+  });
+
+  it('should have plantaColumnsConfiguracion defined', () => {
+    expect(component.plantaColumnsConfiguracion).toBeDefined();
+    expect(component.plantaColumnsConfiguracion.length).toBeGreaterThan(0);
+  });
+
+  it('should have plantasDatos defined', () => {
+    expect(component.plantasDatos).toBeDefined();
+    expect(component.plantasDatos.length).toBeGreaterThan(0);
   });
 });

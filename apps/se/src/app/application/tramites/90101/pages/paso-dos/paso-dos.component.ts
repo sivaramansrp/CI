@@ -7,7 +7,7 @@
  */
 
 import { Component } from '@angular/core';
-import { TEXTOS } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
+import { TEXTOS } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-paso-dos',

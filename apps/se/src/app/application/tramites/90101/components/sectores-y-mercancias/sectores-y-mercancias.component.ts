@@ -12,19 +12,22 @@
  * @import { SECTORCOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { Catalogo } from '@ng-mf/data-access-user';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { PARATEXTO } from 'libs/shared/data-access-user/src/tramites/constantes/prosec.module';
-import { ProsecService } from 'libs/shared/data-access-user/src/core/services/90101/prosec.module';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { filaSectors } from '@ng-mf/data-access-user';
+import { PARATEXTO } from '@ng-mf/data-access-user';
+import { ProsecService } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+
 
 @Component({
   selector: 'app-sectores-y-mercancias',
   templateUrl: './sectores-y-mercancias.component.html',
   styleUrl: './sectores-y-mercancias.component.scss',
 })
-export class SectoresYMercanciasComponent {
+export class SectoresYMercanciasComponent implements OnInit {
 
   /**
    * @property {FormGroup} sectoresYMercancias - El grupo de formularios para capturar los datos de los sectores y mercancías.
@@ -39,13 +42,13 @@ export class SectoresYMercanciasComponent {
   /**
    * @property {Catalogo[]} sector - Array de catálogos de sectores.
    */
-  sector: any[] = [];
+  sector: Catalogo[] = [];
 
   TablaSeleccion = TablaSeleccion;
 
-  sectorColumnsConfiguracion = [
-    { encabezado: 'Lista de sectores', clave: (ele: any) => ele.sectorLista, orden: 1 },
-    { encabezado: 'Clave del sector', clave: (ele: any) => ele.sectorClave, orden: 2 },
+  sectorColumnsConfiguracion: ConfiguracionColumna<filaSectors>[] = [
+    { encabezado: 'Lista de sectores', clave: (fila) => fila.sectorLista, orden: 1 },
+    { encabezado: 'Clave del sector', clave: (fila) => fila.sectorClave, orden: 2 },
   ];
 
   sectors = [

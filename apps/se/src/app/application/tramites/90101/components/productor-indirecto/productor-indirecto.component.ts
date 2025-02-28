@@ -9,10 +9,12 @@
  * @import { ProsecService } from 'libs/shared/data-access-user/src/core/services/90101/prosec.module';
  */
 
-import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ProsecService } from 'libs/shared/data-access-user/src/core/services/90101/prosec.module';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { filaProductos } from '@ng-mf/data-access-user';
+import { ProsecService } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-productor-indirecto',
@@ -28,16 +30,18 @@ export class ProductorIndirectoComponent {
 
   TablaSeleccion = TablaSeleccion;
 
-  productorColumnsConfiguracion = [
-    { encabezado: 'Registro federal de contribuyentes', clave: (ele: any) => ele.contribuyentes, orden: 1 },
+  productorColumnsConfiguracion : ConfiguracionColumna<filaProductos>[] = [
+    { encabezado: 'Registro federal de contribuyentes', 
+      clave: (fila) => fila.contribuyentes, 
+      orden: 1 },
     {
       encabezado: 'Denominación o razón social',
-      clave: (ele: any) => ele.razonSocial,
+      clave: (fila) => fila.razonSocial,
       orden: 2,
     },
     {
       encabezado: 'Correo',
-      clave: (ele: any) => ele.Correo,
+      clave: (fila) => fila.Correo,
       orden: 3,
     },
   ];
@@ -56,12 +60,5 @@ export class ProductorIndirectoComponent {
     });
   }
 
-  /**
-   * @method ngOnInit
-   * @description Inicializa el componente y obtiene los datos de los productores.
-   */
-  ngOnInit(): void {
-    
-  }
 
 }

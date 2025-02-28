@@ -11,19 +11,21 @@
  * @import { PLANTACOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { Catalogo } from '@ng-mf/data-access-user';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ProsecService } from 'libs/shared/data-access-user/src/core/services/90101/prosec.module';
-import { TEXTO } from 'libs/shared/data-access-user/src/tramites/constantes/prosec.module';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { filaPlantas } from '@ng-mf/data-access-user'
+import { ProsecService } from '@ng-mf/data-access-user';
+import { TEXTO } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-domicilios-de-plantas',
   templateUrl: './domicilios-de-plantas.component.html',
   styleUrl: './domicilios-de-plantas.component.scss',
 })
-export class DomiciliosDePlantasComponent {
+export class DomiciliosDePlantasComponent implements OnInit {
 
   /**
    * @property {FormGroup} forma - El grupo de formularios para capturar los datos de las plantas.
@@ -38,91 +40,45 @@ export class DomiciliosDePlantasComponent {
   /**
    * @property {Catalogo[]} estadoSeleccionar - Array de catálogos de estados.
    */
-  estadoSeleccionar: any[] = [];
+  estadoSeleccionar: Catalogo[] = [];
 
   /**
    * @property {Catalogo[]} RepresentacionFederal - Array de catálogos de representación federal.
    */
-  RepresentacionFederal: any[] = [];
+  RepresentacionFederal: Catalogo[] = [];
 
   /**
    * @property {Catalogo[]} ActividadProductiva - Array de catálogos de actividad productiva.
    */
-  ActividadProductiva: any[] = [];
+  ActividadProductiva: Catalogo[] = [];
 
   TablaSeleccion = TablaSeleccion;
 
-  // configuracionColumnas = [
-  //   { encabezado: 'No. partida', clave: (ele: any) => ele.noPartida, orden: 1 },
-  //   {
-  //     encabezado: 'Tipo de requisito',
-  //     clave: (ele: any) => ele.tipoDeRequisito,
-  //     orden: 2,
-  //   },
-  //   {
-  //     encabezado: 'Requisito',
-  //     clave: (ele: any) => ele.requistio,
-  //     orden: 3,
-  //   },
-  //   {
-  //     encabezado: 'Número de Certificado Internacional',
-  //     clave: (ele: any) => ele.numberoDeCertificadoInternacional,
-  //     orden: 4,
-  //   },
-  //   {
-  //     encabezado: 'Fracción arancelaria',
-  //     clave: (ele: any) => ele.fraccionArancelaria,
-  //     orden: 5,
-  //   },
-  //   {
-  //     encabezado: 'Descripción de la fracción',
-  //     clave: (ele: any) => ele.descripcion,
-  //     orden: 6,
-  //   },
-  //   {
-  //     encabezado: 'Nico',
-  //     clave: (ele: any) => ele.nico,
-  //     orden: 7,
-  //   },
-  // ];
-
-  // datos = [
-  //   {
-  //     noPartida: '1',
-  //     tipoDeRequisito: 'Número de Oficio con Medidas Zoosanitarias',
-  //     requistio: '023-15-643-ARG',
-  //     numberoDeCertificadoInternacional: '00102899',
-  //     fraccionArancelaria: '51012102',
-  //     descripcion: 'Lana esquilada',
-  //     nico: '00',
-  //   },
-  // ];
-
-  plantaColumnsConfiguracion = [
-    { encabezado: 'Calle', clave: (ele: any) => ele.calle, orden: 1 },
+  plantaColumnsConfiguracion: ConfiguracionColumna<filaPlantas>[] = [
+    { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 1 },
     {
       encabezado: 'Número exterior',
-      clave: (ele: any) => ele.numeroExterior,
+      clave: (fila) => fila.numeroExterior,
       orden: 2,
     },
     {
       encabezado: 'Número interior',
-      clave: (ele: any) => ele.numeroInterior,
+      clave: (fila) => fila.numeroInterior,
       orden: 3,
     },
     {
       encabezado: 'Código postal',
-      clave: (ele: any) => ele.codigoPostal,
+      clave: (fila) => fila.codigoPostal,
       orden: 4,
     },
     {
       encabezado: 'Colonia',
-      clave: (ele: any) => ele.colonia,
+      clave: (fila) => fila.colonia,
       orden: 5,
     },
     {
       encabezado: 'Municipio o alcaldía',
-      clave: (ele: any) => ele.municipioOAlcaldia,
+      clave: (fila) => fila.municipioOAlcaldia,
       orden: 6,
     },
   ];
@@ -132,7 +88,7 @@ export class DomiciliosDePlantasComponent {
       calle: 'CALLE 5',
       numeroExterior: 'S/N',
       numeroInterior: '',
-      codigoPostal: '81124',
+      codigoPostal: 81124,
       colonia: 'OTRA NO ESPECIFICADA EN EL CATÁLOGO',
       municipioOAlcaldia: 'GUASAVE'
     }

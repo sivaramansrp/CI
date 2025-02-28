@@ -36,6 +36,26 @@ export interface plantas {
   ActividadProductiva: string;
 }
 
+export interface filaPlantas {
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  codigoPostal: number;
+  colonia: string;
+  municipioOAlcaldia: string;
+}
+
+export interface filaProductos {
+  contribuyentes: string;
+  razonSocial: string;
+  Correo: string;
+}
+
+export interface filaSectors {
+  sectorLista: string;
+  sectorClave: string;
+}
+
 /**
  * Interface representing sectors and goods.
  */

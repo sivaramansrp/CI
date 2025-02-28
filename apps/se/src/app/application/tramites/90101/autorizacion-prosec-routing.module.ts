@@ -1,8 +1,8 @@
+import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { ProsecComponent } from './pages/prosec/prosec.component';
-import { RouterModule, Routes } from '@angular/router';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
     path: 'prosec',
     component: ProsecComponent,
@@ -15,7 +15,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class AutorizacionProsecRoutingModule { }
