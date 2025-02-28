@@ -6,16 +6,16 @@ import { Injectable } from '@angular/core';
  * @returns DatosPorRegimen31601
  */
 export interface DatosPorRegimenAgaceState {
-    comboBimestresOne: string | null;
-    comboBimestresTwo: string | null;
-    comboBimestresThree: string | null;
+    comboBimestresUno: string | null;
+    comboBimestresDos: string | null;
+    comboBimestresTres: string | null;
 }
 
-export function createInitialState(): DatosPorRegimenAgaceState {
+export function crearEstadoInicial(): DatosPorRegimenAgaceState {
   return {
-    comboBimestresOne: null,
-    comboBimestresTwo: null,
-    comboBimestresThree: null
+    comboBimestresUno: null,
+    comboBimestresDos: null,
+    comboBimestresTres: null
   };
 }
 
@@ -25,27 +25,27 @@ export function createInitialState(): DatosPorRegimenAgaceState {
 @StoreConfig({ name: 'tramiteAgace', resettable: true })
 export class TramiteAgaceStore extends Store<DatosPorRegimenAgaceState> {
   constructor() {
-    super(createInitialState());
+    super(crearEstadoInicial());
   }
 
-  public setComboBimestresOne(comboBimestresOne: string) {
+  public establecerComboBimestresUno(comboBimestresUno: string) {
     this.update((state) => ({
       ...state,
-      comboBimestresOne,
+      comboBimestresUno,
     }));
   }
 
-  public setComboBimestresTwo(comboBimestresTwo: string) {
+  public establecerComboBimestresDos(comboBimestresDos: string) {
     this.update((state) => ({
       ...state,
-      comboBimestresTwo,
+      comboBimestresDos,
     }));
   }
 
-  public setComboBimestresThree(comboBimestresThree: string) {
+  public establecerComboBimestresTres(comboBimestresTres: string) {
     this.update((state) => ({
       ...state,
-      comboBimestresThree,
+      comboBimestresTres,
     }));
   }
 

@@ -8,7 +8,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import RepresentantanteData from 'libs/shared/theme/assets/json/31601/represtantante-data.json';
+import representanteDatos from 'libs/shared/theme/assets/json/31601/represtantante-data.json';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -30,7 +30,7 @@ export class ReprestantanteComponent implements OnInit {
   /**
    * Datos predefinidos del representante.
    */
-  representativeData = RepresentantanteData;
+  datosRepresentativos = representanteDatos;
 
   /**
    * Constructor del componente.
@@ -69,13 +69,13 @@ export class ReprestantanteComponent implements OnInit {
     // Rellena el formulario con los datos del representante
     this.represtantante.patchValue({
       datosImportadorExportador: {
-        resigtro: this.representativeData.resigtro,
-        rfc: this.representativeData.rfc,
-        nombre: this.representativeData.nombre,
-        apellidoPaterno: this.representativeData.apellidoPaterno,
-        apellidoMaterno: this.representativeData.apellidoMaterno,
-        telefono: this.representativeData.telefono,
-        correo: this.representativeData.correo,
+        resigtro: this.datosRepresentativos.resigtro,
+        rfc: this.datosRepresentativos.rfc,
+        nombre: this.datosRepresentativos.nombre,
+        apellidoPaterno: this.datosRepresentativos.apellidoPaterno,
+        apellidoMaterno: this.datosRepresentativos.apellidoMaterno,
+        telefono: this.datosRepresentativos.telefono,
+        correo: this.datosRepresentativos.correo,
       },
     });
   }

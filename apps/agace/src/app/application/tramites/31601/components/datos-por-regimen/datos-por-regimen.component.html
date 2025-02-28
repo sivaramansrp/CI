@@ -391,7 +391,7 @@
         <div class="col-md-6">
           <app-catalogo-select
             [catalogo]="bimestreUnoCatalogo"
-            formControlName="comboBimestresOne"
+            formControlName="comboBimestresUno"
             [label]="'Bimestre'"
             [required]="true"
             (change)="bimestreUnoSeleccion()"
@@ -399,7 +399,7 @@
           </app-catalogo-select>
           <app-catalogo-select
             [catalogo]="bimestreDosCatalogo"
-            formControlName="comboBimestresTwo"
+            formControlName="comboBimestresDos"
             [label]="'Bimestre'"
             [required]="true"
             (change)="bimestreDosSeleccion()"
@@ -407,7 +407,7 @@
           </app-catalogo-select>
           <app-catalogo-select
             [catalogo]="bimestreTresCatalogo"
-            formControlName="comboBimestresThree"
+            formControlName="comboBimestresTres"
             [label]="'Bimestre'"
             [required]="true"
             (change)="bimestreTresSeleccion()"
@@ -898,7 +898,7 @@
               <div class="col-md-6">
                 <app-catalogo-select
                   [catalogo]="bimestreUnoCatalogo"
-                  formControlName="agregarCatalogOne"
+                  formControlName="agregarCatalogoUno"
                   [label]="'1er Bimestre'"
                   [required]="true"
                   (change)="modalBimestreUno()"
@@ -906,7 +906,7 @@
                 </app-catalogo-select>
                 <app-catalogo-select
                   [catalogo]="bimestreDosCatalogo"
-                  formControlName="agregarCatalogTwo"
+                  formControlName="agregarCatalogoDos"
                   [label]="'2do Bimestre'"
                   [required]="true"
                   (change)="modalBimestreDos()"
@@ -914,7 +914,7 @@
                 </app-catalogo-select>
                 <app-catalogo-select
                   [catalogo]="bimestreTresCatalogo"
-                  formControlName="agregarCatalogThree"
+                  formControlName="agregarCatalogoTres"
                   [label]="'3re Bimestre'"
                   [required]="true"
                   (change)="modalBimestreTres()"
