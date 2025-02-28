@@ -195,12 +195,12 @@
           [labelMargin]="'0px'"
           [description]="descriptionData.radio3.description"
           [showDescription]="true"
-          formControlName="IndiqueSi"
+          formControlName="indiqueSi"
         ></app-input-radio>
         <div
           *ngIf="
-            preOperativeForm.controls['IndiqueSi'].invalid &&
-            preOperativeForm.controls['IndiqueSi'].touched
+            preOperativeForm.controls['indiqueSi'].invalid &&
+            preOperativeForm.controls['indiqueSi'].touched
           "
           class="text-danger"
         >
@@ -217,12 +217,12 @@
           [labelMargin]="'0px'"
           [description]="descriptionData.radio4.description"
           [showDescription]="true"
-          formControlName="Senale"
+          formControlName="senale"
         ></app-input-radio>
         <div
           *ngIf="
-            preOperativeForm.controls['Senale'].invalid &&
-            preOperativeForm.controls['Senale'].touched
+            preOperativeForm.controls['senale'].invalid &&
+            preOperativeForm.controls['senale'].touched
           "
           class="text-danger"
         >
@@ -276,12 +276,12 @@
           [labelMargin]="'0px'"
           [description]="descriptionData.radio5.description"
           [showDescription]="true"
-          formControlName="SenaleSi"
+          formControlName="senaleSi"
         ></app-input-radio>
         <div
           *ngIf="
-            preOperativeForm.controls['SenaleSi'].invalid &&
-            preOperativeForm.controls['SenaleSi'].touched
+            preOperativeForm.controls['senaleSi'].invalid &&
+            preOperativeForm.controls['senaleSi'].touched
           "
           class="text-danger"
         >
@@ -738,27 +738,27 @@
         <div class="col-md-6">
           <div class="form-group">
             <span class="require">* </span>
-            <label for="nombredel" class="form-label"
+            <label for="nombreDel" class="form-label"
               >Nombre del sistema o datos para su identificación</label
             >
-            <input type="text" class="form-control" id="nombredel" />
+            <input type="text" class="form-control" id="nombreDel" />
             <div
               *ngIf="
-                preOperativeForm.controls['nombredel'].invalid &&
-                preOperativeForm.controls['nombredel'].touched
+                preOperativeForm.controls['nombreDel'].invalid &&
+                preOperativeForm.controls['nombreDel'].touched
               "
               class="text-danger"
             >
               <span
-                *ngIf="preOperativeForm.controls['nombredel'].errors?.['required']"
+                *ngIf="preOperativeForm.controls['nombreDel'].errors?.['required']"
                 >Este campo es obligatorio.</span
               >
               <span
-                *ngIf="preOperativeForm.controls['nombredel'].errors?.['minlength']"
+                *ngIf="preOperativeForm.controls['nombreDel'].errors?.['minlength']"
                 >Debe tener al menos 3 caracteres.</span
               >
               <span
-                *ngIf="preOperativeForm.controls['nombredel'].errors?.['maxlength']"
+                *ngIf="preOperativeForm.controls['nombreDel'].errors?.['maxlength']"
                 >No puede exceder los 250 caracteres.</span
               >
             </div>

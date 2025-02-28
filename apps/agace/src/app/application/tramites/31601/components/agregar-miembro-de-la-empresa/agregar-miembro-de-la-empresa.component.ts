@@ -4,14 +4,25 @@
  * Maneja un formulario reactivo y la paginación de una tabla.
  */
 
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from "@ng-mf/data-access-user";
-import { InputRadioComponent } from "@ng-mf/data-access-user";
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
-import { TableComponent } from "@ng-mf/data-access-user";
-import { TablePaginationComponent } from "@ng-mf/data-access-user";
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import enSuCaracterDe from 'libs/shared/theme/assets/json/31601/enSuCaracterDe.json';
 import miembrodelaempresaTable from 'libs/shared/theme/assets/json/31601/miembroDeLaEmpresa .json';
 import nacionalidad from 'libs/shared/theme/assets/json/31601/nacionalidad.json';
@@ -27,10 +38,17 @@ import preOperativo from 'libs/shared/theme/assets/json/31601/preOperativo.json'
   templateUrl: './agregar-miembro-de-la-empresa.component.html',
   styleUrls: ['./agregar-miembro-de-la-empresa.component.scss'],
   standalone: true,
-  imports: [TableComponent, TablePaginationComponent, ReactiveFormsModule, CatalogoSelectComponent, InputRadioComponent]
+  imports: [
+    TableComponent,
+    TablePaginationComponent,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    InputRadioComponent,
+  ],
 })
-export class AgregarMiembroDeLaEmpresaComponent implements OnInit, AfterViewInit {
-  
+export class AgregarMiembroDeLaEmpresaComponent
+  implements OnInit, AfterViewInit
+{
   /**
    * @property {FormGroup} agregarMiembroDeLaEmpresaForm
    *  Formulario reactivo para agregar miembros de la empresa.
@@ -103,23 +121,29 @@ export class AgregarMiembroDeLaEmpresaComponent implements OnInit, AfterViewInit
       ensucarácterde: [1, Validators.required],
       obligadoaTributarenMéxico: [true, Validators.required],
       nacionalidad: [1, Validators.required],
-      registroFederaldeContribuyentes: [{ value: 'HEJE780514BVA', disabled: true }, Validators.required],
+      registroFederaldeContribuyentes: [
+        { value: 'HEJE780514BVA', disabled: true },
+        Validators.required,
+      ],
       rfc: ['HEJE780514BVA', [Validators.required]],
-      nombreCompleto: [{ value: 'ERNESTO HERNÁNDEZ URI', disabled: true }, Validators.required]
+      nombreCompleto: [
+        { value: 'ERNESTO HERNÁNDEZ URI', disabled: true },
+        Validators.required,
+      ],
     });
   }
 
   /**
-   * @property {string[]} miembrodelaempresaHeaderData
+   * @property {string[]} miembroDeLaEmpresaHeaderData
    *  Encabezados de la tabla de miembros de la empresa.
    */
-  public miembrodelaempresaHeaderData: string[] = [];
+  public miembroDeLaEmpresaHeaderData: string[] = [];
 
   /**
-   * @property {unknown[]} miembrodelaempresaBodyData
+   * @property {unknown[]} miembroDeLaEmpresaBodyData
    *  Datos del cuerpo de la tabla de miembros de la empresa.
    */
-  public miembrodelaempresaBodyData: unknown[] = [];
+  public miembroDeLaEmpresaBodyData: unknown[] = [];
 
   /**
    * @property {any} getEstablecimientoTableData
@@ -132,8 +156,10 @@ export class AgregarMiembroDeLaEmpresaComponent implements OnInit, AfterViewInit
    *  Obtiene los datos de la tabla de miembros de la empresa.
    */
   public getEstablecimiento(): void {
-    this.miembrodelaempresaHeaderData = this.getEstablecimientoTableData.tableHeader;
-    this.miembrodelaempresaBodyData = this.getEstablecimientoTableData.tableBody;
+    this.miembroDeLaEmpresaHeaderData =
+      this.getEstablecimientoTableData.tableHeader;
+    this.miembroDeLaEmpresaBodyData =
+      this.getEstablecimientoTableData.tableBody;
   }
 
   /**
@@ -142,7 +168,10 @@ export class AgregarMiembroDeLaEmpresaComponent implements OnInit, AfterViewInit
    */
   updatePagination(): void {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    this.miembrodelaempresaBodyData = this.miembrodelaempresaBodyData.slice(startIndex, startIndex + this.itemsPerPage);
+    this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
+      startIndex,
+      startIndex + this.itemsPerPage
+    );
   }
 
   /**

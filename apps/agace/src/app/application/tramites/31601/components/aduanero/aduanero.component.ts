@@ -328,9 +328,9 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
     this.preOperativeForm = this.fb.group({
       autorizacionIVAIEPS: ['', Validators.required],
       preOperativo: ['', Validators.required],
-      IndiqueSi: ['', Validators.required],
-      Senale: ['', Validators.required],
-      SenaleSi: ['', Validators.required],
+      indiqueSi: ['', Validators.required],
+      senale: ['', Validators.required],
+      senaleSi: ['', Validators.required],
       seMomento: ['', Validators.required],
       cumplir: ['', Validators.required],
       indique: ['', Validators.required],
@@ -342,7 +342,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
       encuentraSus: ['', Validators.required],
       momentoIngresar: ['', Validators.required],
       indiqueCuenta: ['', Validators.required],
-      nombredel: [
+      nombreDel: [
         '',
         [
           Validators.required,

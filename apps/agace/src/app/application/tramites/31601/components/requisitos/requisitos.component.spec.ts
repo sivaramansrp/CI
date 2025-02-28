@@ -11,23 +11,14 @@ import { Tipos } from '../../../../core/models/31601/servicios-pantallas.model';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
+import { MockValue } from 'libs/shared/theme/assets/json/31601/mock-value.json';
 class MockServiciosPantallaService {
   getTiposCatalog() {
-    return of([
-      { tiposData: 'Tipo Document 1' },
-      { tiposData: 'Tipo Document 2' },
-    ]);
+    return of(MockValue.tiposCatalog);
   }
 
   getTipoCatalog(catalogo: string) {
-    return of({
-      code: 200,
-      message: 'Success',
-      data: [
-        { id: 1, descripcion: 'Catalogo 1', tam: 'A4', dpi: '300' } as Catalogo,
-      ],
-    });
+    return of(MockValue.tipoCatalogResponse);
   }
 }
 
