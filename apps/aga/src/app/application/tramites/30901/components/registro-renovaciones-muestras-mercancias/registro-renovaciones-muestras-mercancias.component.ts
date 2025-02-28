@@ -1,12 +1,15 @@
-import { CommonModule } from '@angular/common';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { ImportanteCatalogoSeleccion } from '@ng-mf/data-access-user';
+import { Importante } from '@ng-mf/data-access-user';
 import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { RenovacionesMuestrasMercanciasService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, Importante, ImportanteCatalogoSeleccion, RenovacionesMuestrasMercanciasService, TituloComponent } from '@ng-mf/data-access-user';
+
+
 
 /**
  * Componente para el registro de renovaciones de muestras de mercancías.
@@ -19,16 +22,6 @@ import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, Imp
  */
 @Component({
   selector: 'app-registro-renovaciones-muestras-mercancias',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    AlertComponent,
-    CatalogoSelectComponent,
-    TituloComponent,
-  ],
-  providers: [RenovacionesMuestrasMercanciasService],
   templateUrl: './registro-renovaciones-muestras-mercancias.component.html',
   styleUrl: './registro-renovaciones-muestras-mercancias.component.scss',
 })
@@ -156,9 +149,9 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit {
   mostrarDescFraccArancelaria(valor: Catalogo): void {
     let descripcion = '';
     if (valor) {
-      const parts = valor.descripcion.split(' - ');
-      if (parts.length >= 2) {
-        descripcion = parts[1];
+      const PARTS = valor.descripcion.split(' - ');
+      if (PARTS.length >= 2) {
+        descripcion = PARTS[1];
       }
     }
     this.formRegistroMuestras.patchValue({
@@ -174,8 +167,8 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit {
    * @returns {void}
    */
   mostrarOcultarPanelTramite(event: Catalogo): void {
-    const valor = event.id;
-    if (valor === 1) {
+    const VALOR = event.id;
+    if (VALOR === 1) {
       this.panelDespachoOrMercancia = true;
     } else {
       this.panelDespachoOrMercancia = false;
@@ -193,10 +186,10 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit {
    * - Para cualquier otro valor del id, deshabilita el campo 'descMotivoFaltaMuestra'.
    */
   cambiaEstadoMotivo(event: Catalogo): void {
-    const valor = event.id;
-    if (valor === 1) {
+    const VALOR = event.id;
+    if (VALOR === 1) {
       this.formRegistroMuestras.get('descMotivoFaltaMuestra')?.enable();
-    } else if (valor === 0) {
+    } else if (VALOR === 0) {
       this.formRegistroMuestras.patchValue({ descMotivoFaltaMuestra: '' });
       this.formRegistroMuestras.get('descMotivoFaltaMuestra')?.disable();
     } else {

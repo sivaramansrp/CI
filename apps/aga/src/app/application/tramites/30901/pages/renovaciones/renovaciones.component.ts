@@ -1,17 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { DatosPasos } from '@ng-mf/data-access-user';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { RenovacionesPasos } from '@ng-mf/data-access-user';
 import { ViewChild } from '@angular/core';
-import {
-  BtnContinuarComponent,
-  DatosPasos,
-  ListaPasosWizard,
-  RenovacionesPasos,
-  WizardComponent,
-} from '@ng-mf/data-access-user';
-import { ToastrModule } from 'ngx-toastr';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  * Interfaz que representa el botón de acción.
@@ -33,32 +25,11 @@ interface AccionBoton {
  * Este componente maneja el flujo de pasos para el proceso de renovaciones.
  *
  * @selector 'app-renovaciones'
- * @standalone true
- * @imports [
- *   CommonModule,
- *   WizardComponent,
- *   BtnContinuarComponent,
- *   PasoUnoComponent,
- *   PasoDosComponent,
- *   PasoTresComponent,
- *   BtnContinuarComponent
- * ]
  * @templateUrl './renovaciones.component.html'
  * @styleUrl './renovaciones.component.scss'
  */
 @Component({
   selector: 'app-renovaciones',
-  standalone: true,
-  imports: [
-    CommonModule,
-    WizardComponent,
-    BtnContinuarComponent,
-    PasoUnoComponent,
-    PasoDosComponent,
-    PasoTresComponent,
-    BtnContinuarComponent,
-    ToastrModule
-  ],
   templateUrl: './renovaciones.component.html',
   styleUrl: './renovaciones.component.scss',
 })

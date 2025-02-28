@@ -1,28 +1,15 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ImportanteCatalogoSeleccion } from '@ng-mf/data-access-user';
 import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { AlertComponent, AnexarDocumentosComponent, ImportanteCatalogoSeleccion, RenovacionesMuestrasMercanciasService, TableComponent, TableData, TEXTOS, TituloComponent } from '@ng-mf/data-access-user';
-import { ToastrModule } from 'ngx-toastr';
+import { RenovacionesMuestrasMercanciasService } from '@ng-mf/data-access-user';
+import { TableData } from '@ng-mf/data-access-user';
+import { TEXTOS } from '@ng-mf/data-access-user';
 
 /**  
  * Componente PasoDosComponent que representa el segundo paso del trámite 30901.
  */
 @Component({
   selector: 'app-paso-dos',
-  standalone: true,
-  imports: [
-    TituloComponent,
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    TableComponent,
-    AlertComponent,
-    AnexarDocumentosComponent,
-    ToastrModule,
-  ],
-  providers: [RenovacionesMuestrasMercanciasService],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })

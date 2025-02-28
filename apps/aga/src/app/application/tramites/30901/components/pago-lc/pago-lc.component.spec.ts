@@ -3,38 +3,37 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ImportanteCatalogoSeleccion } from '@ng-mf/data-access-user';
 import { PagoLCComponent } from './pago-lc.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RenovacionesMuestrasMercanciasService } from '@ng-mf/data-access-user';
+import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
-import { ImportanteCatalogoSeleccion, RenovacionesMuestrasMercanciasService, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { throwError } from 'rxjs';
 
-fdescribe('PagoLCComponent', () => {
+describe('PagoLCComponent', () => {
   let component: PagoLCComponent;
   let fixture: ComponentFixture<PagoLCComponent>;
-  let renovacionesService: jasmine.SpyObj<RenovacionesMuestrasMercanciasService>;
+  let renovacionesService: jest.Mocked<RenovacionesMuestrasMercanciasService>;
 
   beforeEach(async () => {
-    const renovacionesServiceSpy = jasmine.createSpyObj(
-      'RenovacionesMuestrasMercanciasService',
-      ['obtenerOpcionesDesplegables']
-    );
+    const RENOVACIONESSERVICEMOCK = {
+      obtenerOpcionesDesplegables: jest.fn(),
+    };
 
     await TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
-        PagoLCComponent,
-        TituloComponent,
         CommonModule,
         FormsModule,
-        TableComponent,
         HttpClientTestingModule
       ],
-      declarations: [],
+      declarations: [PagoLCComponent],
       providers: [
         FormBuilder,
         {
           provide: RenovacionesMuestrasMercanciasService,
-          useValue: renovacionesServiceSpy,
+          useValue: RENOVACIONESSERVICEMOCK,
         },
       ],
     }).compileComponents();
@@ -43,7 +42,7 @@ fdescribe('PagoLCComponent', () => {
     component = fixture.componentInstance;
     renovacionesService = TestBed.inject(
       RenovacionesMuestrasMercanciasService
-    ) as jasmine.SpyObj<RenovacionesMuestrasMercanciasService>;
+    ) as jest.Mocked<RenovacionesMuestrasMercanciasService>;
   });
 
   it('should create', () => {
@@ -58,13 +57,13 @@ fdescribe('PagoLCComponent', () => {
   });
 
   it('should call obtenerDatosIniciales on init', () => {
-    spyOn(component, 'obtenerDatosIniciales');
+    jest.spyOn(component, 'obtenerDatosIniciales');
     component.ngOnInit();
     expect(component.obtenerDatosIniciales).toHaveBeenCalled();
   });
 
   it('should set tableData on obtenerDatosIniciales', () => {
-    const mockResponse: ImportanteCatalogoSeleccion = {
+    const MOCKRESPONSE: ImportanteCatalogoSeleccion = {
       importadorExportadorPrevio: {
         labelNombre:
           '¿Se han realizado previamente importaciones o exportaciones del product a registrar?',
@@ -163,26 +162,48 @@ fdescribe('PagoLCComponent', () => {
         ],
       },
     };
-    renovacionesService.obtenerOpcionesDesplegables.and.returnValue(
-      of(mockResponse)
-    );
+    renovacionesService.obtenerOpcionesDesplegables.mockReturnValue(of(MOCKRESPONSE));
 
     component.obtenerDatosIniciales();
     fixture.detectChanges();
-    expect(component.tableData).toEqual(mockResponse.tablaDeTarifasDePago);
+    expect(component.tableData).toEqual(MOCKRESPONSE.tablaDeTarifasDePago);
   });
 
   it('should validate and format lineaCaptura', () => {
     component.ngOnInit();
-    component.formPagoLC.get('lineaCaptura')!.setValue('abc123!@#');
+    component.formPagoLC.get('lineaCaptura')?.setValue('abc123!@#');
     component.validarLineaCaptura();
-    expect(component.formPagoLC.get('lineaCaptura')!.value).toBe('ABC123');
+    expect(component.formPagoLC.get('lineaCaptura')?.value).toBe('ABC123');
   });
 
   it('should reset lineaCaptura field on limpiarCampos', () => {
     component.ngOnInit();
-    component.formPagoLC.get('lineaCaptura')!.setValue('test');
+    component.formPagoLC.get('lineaCaptura')?.setValue('test');
     component.limpiarCampos();
-    expect(component.formPagoLC.get('lineaCaptura')!.value).toBeNull();
+    expect(component.formPagoLC.get('lineaCaptura')?.value).toBeNull();
+  });
+
+  it('should call validarLineaCaptura on form submit', () => {
+    jest.spyOn(component, 'validarLineaCaptura');
+    component.ngOnInit();
+    component.formPagoLC.get('lineaCaptura')?.setValue('abc123!@#');
+    component.validarLineaCaptura();
+    expect(component.validarLineaCaptura).toHaveBeenCalled();
+    expect(component.formPagoLC.get('lineaCaptura')?.value).toBe('ABC123');
+  });
+
+  it('should handle obtenerOpcionesDesplegables error', () => {
+    const CONSOLESPY = jest.spyOn(console, 'error').mockImplementation();
+    const TOASTERSPY = jest.spyOn(TestBed.inject(ToastrService), 'error');
+  
+    renovacionesService.obtenerOpcionesDesplegables.mockReturnValue(
+      throwError(() => new Error('Error'))
+    );
+  
+    component.obtenerDatosIniciales();
+    fixture.detectChanges();
+  
+    expect(CONSOLESPY).toHaveBeenCalledWith('Error');
+    expect(TOASTERSPY).toHaveBeenCalledWith('Error al obtener datos iniciales', 'Error');
   });
 });

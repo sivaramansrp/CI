@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente PasoTresComponent.
@@ -9,15 +8,11 @@ import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
  * 
  * @component
  * @selector app-paso-tres
- * @standalone true
- * @imports FirmaElectronicaComponent
  * @templateUrl ./paso-tres.component.html
  * @styleUrl ./paso-tres.component.scss
  */
 @Component({
   selector: 'app-paso-tres',
-  standalone: true,
-  imports: [FirmaElectronicaComponent],
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
 })
@@ -38,8 +33,8 @@ export class PasoTresComponent {
    * @returns void
    */
   obtieneFirma(ev: string): void {
-    const firma: string = ev;
-    if (firma) {
+    const FIRMA: string = ev;
+    if (FIRMA) {
       this.router.navigate(['servicios-extraordinarios/acuse']);
     }
   }

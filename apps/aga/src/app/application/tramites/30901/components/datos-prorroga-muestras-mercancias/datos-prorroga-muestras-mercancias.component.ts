@@ -1,11 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { InputFecha } from '@ng-mf/data-access-user';
 import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { InputFecha, InputFechaComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar los datos de prórroga de muestras de mercancías.
@@ -14,21 +11,11 @@ import { InputFecha, InputFechaComponent } from '@ng-mf/data-access-user';
  * de prórroga para muestras de mercancías en el trámite 30901.
  * 
  * @component
- * @selector app-datos-prorroga-muestras-mercancias
- * @standalone true
- * @imports [CommonModule, FormsModule, ReactiveFormsModule, InputFechaComponent]
  * @templateUrl ./datos-prorroga-muestras-mercancias.component.html
  * @styleUrl ./datos-prorroga-muestras-mercancias.component.scss
  */
 @Component({
   selector: 'app-datos-prorroga-muestras-mercancias',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    InputFechaComponent,
-  ],
   templateUrl: './datos-prorroga-muestras-mercancias.component.html',
   styleUrl: './datos-prorroga-muestras-mercancias.component.scss',
 })

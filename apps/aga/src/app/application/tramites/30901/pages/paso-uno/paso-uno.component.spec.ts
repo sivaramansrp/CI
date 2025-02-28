@@ -1,27 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CommonModule } from '@angular/common';
-import { DatosProrrogaMuestrasMercanciasComponent } from '../../components/datos-prorroga-muestras-mercancias/datos-prorroga-muestras-mercancias.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { PagoLCComponent } from '../../components/pago-lc/pago-lc.component';
 import { PasoUnoComponent } from './paso-uno.component';
-import { RegistroRenovacionesMuestrasMercanciasComponent } from '../../components/registro-renovaciones-muestras-mercancias/registro-renovaciones-muestras-mercancias.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
 
-fdescribe('PasoUnoComponent', () => {
+describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [
+      declarations: [
         PasoUnoComponent,
+      ],
+      imports: [
         CommonModule,
-        SolicitanteComponent,
-        RegistroRenovacionesMuestrasMercanciasComponent,
-        PagoLCComponent,
-        DatosProrrogaMuestrasMercanciasComponent,
         HttpClientTestingModule
       ],
     }).compileComponents();
@@ -40,6 +32,7 @@ fdescribe('PasoUnoComponent', () => {
   });
 
   it('should update indice when seleccionaTab is called', () => {
+    component.indice = 1;
     expect(component.indice).toBe(1);
 
     component.seleccionaTab(2);

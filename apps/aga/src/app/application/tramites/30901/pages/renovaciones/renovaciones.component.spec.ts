@@ -5,8 +5,7 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { RenovacionesComponent } from './renovaciones.component';
-import { BtnContinuarComponent, RenovacionesPasos, WizardComponent } from '@ng-mf/data-access-user';
-
+import { RenovacionesPasos } from '@ng-mf/data-access-user';
 
 describe('RenovacionesComponent', () => {
   let component: RenovacionesComponent;
@@ -14,18 +13,13 @@ describe('RenovacionesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        HttpClientTestingModule
-      ],
+      imports: [CommonModule, HttpClientTestingModule],
       declarations: [
         RenovacionesComponent,
-        WizardComponent,
-        BtnContinuarComponent,
         PasoUnoComponent,
         PasoDosComponent,
-        PasoTresComponent
-      ]
+        PasoTresComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RenovacionesComponent);
@@ -50,37 +44,25 @@ describe('RenovacionesComponent', () => {
       nroPasos: component.pasos.length,
       indice: component.indice,
       txtBtnAnt: 'Anterior',
-      txtBtnSig: 'Continuar'
+      txtBtnSig: 'Continuar',
     });
   });
 
   it('should update indice and call wizardComponent.siguiente on getValorIndice with accion "cont"', () => {
-    const spy = jest.spyOn(component.wizardComponent, 'siguiente');
+    const SPY = jest.spyOn(component.wizardComponent, 'siguiente');
     component.getValorIndice({ accion: 'cont', valor: 2 });
     expect(component.indice).toBe(2);
-    expect(spy).toHaveBeenCalled();
+    expect(SPY).toHaveBeenCalled();
   });
 
   it('should update indice and call wizardComponent.atras on getValorIndice with accion "atras"', () => {
-    const spy = jest.spyOn(component.wizardComponent, 'atras');
+    const SPY = jest.spyOn(component.wizardComponent, 'atras');
     component.getValorIndice({ accion: 'atras', valor: 0 });
     expect(component.indice).toBe(0);
-    expect(spy).toHaveBeenCalled();
+    expect(SPY).toHaveBeenCalled();
   });
 
   it('should call ngOnInit and initialize variables correctly', () => {
     expect(component.datosPasos.nroPasos).toBe(component.pasos.length);
   });
-
-  // it('should call continuar when btnContinuar is clicked', () => {
-  //   const spy = jest.spyOn(component, 'continuar');
-  //   component.continuar();
-  //   expect(spy).toHaveBeenCalled();
-  // });
-
-  // it('should call retroceder when btnAtras is clicked', () => {
-  //   const spy = jest.spyOn(component, 'retroceder');
-  //   component.retroceder();
-  //   expect(spy).toHaveBeenCalled();
-  // });
 });

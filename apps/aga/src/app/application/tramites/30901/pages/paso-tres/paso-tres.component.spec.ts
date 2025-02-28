@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
-import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 
 fdescribe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -16,23 +15,22 @@ fdescribe('PasoTresComponent', () => {
       declarations: [],
       imports: [
         PasoTresComponent,
-        FirmaElectronicaComponent,
         HttpClientTestingModule,
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
       ],
       providers: [
-         ToastrService,
+        ToastrService,
         {
           provide: Router,
           useValue: {
-            navigate: jasmine.createSpy('navigate')
-          }
-        }
-      ]
+            navigate: jasmine.createSpy('navigate'),
+          },
+        },
+      ],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(PasoTresComponent);
-    component = fixture.componentInstance;
+    const FIXTURE = TestBed.createComponent(PasoTresComponent);
+    component = FIXTURE.componentInstance;
     router = TestBed.inject(Router);
     navigateSpy = router.navigate as jasmine.Spy;
   });
@@ -41,15 +39,21 @@ fdescribe('PasoTresComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should navigate to "servicios-extraordinarios/acuse" when firma is valid', () => {
-    const firma = 'valid-firma';
-    component.obtieneFirma(firma);
-    expect(navigateSpy).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
+  it('should navigate to "servicios-extraordinarios/acuse" when a valid signature is provided', () => {
+    const ROUTERSPY = jest.spyOn(component.router, 'navigate');
+    const VALIDSIGNATURE = 'validSignature';
+
+    component.obtieneFirma(VALIDSIGNATURE);
+
+    expect(ROUTERSPY).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
-  it('should not navigate when firma is empty', () => {
-    const firma = '';
-    component.obtieneFirma(firma);
-    expect(navigateSpy).not.toHaveBeenCalled();
+  it('should not navigate when an invalid signature is provided', () => {
+    const ROUTERSPY = jest.spyOn(component.router, 'navigate');
+    const INVALIDSIGNATURE = '';
+
+    component.obtieneFirma(INVALIDSIGNATURE);
+
+    expect(ROUTERSPY).not.toHaveBeenCalled();
   });
 });

@@ -1,45 +1,22 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { ImportanteCatalogoSeleccion } from '@ng-mf/data-access-user';
 import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { RenovacionesMuestrasMercanciasService} from '@ng-mf/data-access-user';
+import { TableData } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
-import { ImportanteCatalogoSeleccion, RenovacionesMuestrasMercanciasService, TableComponent, TableData, TituloComponent } from '@ng-mf/data-access-user';
-// import { ImportanteCatalogoSeleccion } from '../../../../core/models/30901/registro-muestras-mercancias.model';
-// import { RenovacionesMuestrasMercanciasService } from '../../../../core/services/30901/renovaciones-muestras-mercancias.service';
-// import { TableComponent } from '../../../../shared/components/table/table.component';
-// import { TableData } from '../../../../core/models/shared/components.model';
-// import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+
 /**
  * Componente para el manejo del pago de la línea de captura.
  *
  * @component
  * @selector 'app-pago-lc'
- * @standalone true
- * @imports [
- *   TituloComponent,
- *   CommonModule,
- *   ReactiveFormsModule,
- *   FormsModule,
- *   TableComponent,
- * ]
- * @providers [RenovacionesMuestrasMercanciasService]
  * @templateUrl './pago-lc.component.html'
  * @styleUrl './pago-lc.component.scss'
  */
 @Component({
   selector: 'app-pago-lc',
-  standalone: true,
-  imports: [
-    TituloComponent,
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    TableComponent,
-  ],
-  providers: [RenovacionesMuestrasMercanciasService],
   templateUrl: './pago-lc.component.html',
   styleUrl: './pago-lc.component.scss',
 })
@@ -113,8 +90,8 @@ export class PagoLCComponent implements OnInit {
   validarLineaCaptura(): void {
     this.formPagoLC.patchValue({
       lineaCaptura: this.formPagoLC
-        .get('lineaCaptura')!
-        .value.replace(/[^a-zA-Z0-9]/g, '')
+        .get('lineaCaptura')
+        ?.value.replace(/[^a-zA-Z0-9]/g, '')
         .toUpperCase(),
     });
   }
