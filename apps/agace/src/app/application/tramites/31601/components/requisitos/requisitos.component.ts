@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,11 +8,10 @@ import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { Tipos } from 'libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
-import { map } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-
 
 /**
 
@@ -48,41 +47,44 @@ import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/mode
   styleUrl: './requisitos.component.scss', // Ruta al archivo de estilos SCSS
   standalone: true, // Define que el componente puede funcionar de forma independiente (sin módulo específico)
   imports: [
-    HttpClientModule,  // Importación de módulo para realizar peticiones HTTP
-    FormsModule,  // Importación de módulo para trabajar con formularios
-    CommonModule,  // Módulo común de Angular para herramientas generales
-    TituloComponent,  // Componente para mostrar el título
-    TableComponent,  // Componente para mostrar tablas
-    CatalogoSelectComponent,TablaDinamicaComponent  // Componente para seleccionar de un catálogo
+    HttpClientModule, // Importación de módulo para realizar peticiones HTTP
+    FormsModule, // Importación de módulo para trabajar con formularios
+    CommonModule, // Módulo común de Angular para herramientas generales
+    TituloComponent, // Componente para mostrar el título
+    TableComponent, // Componente para mostrar tablas
+    CatalogoSelectComponent,
+    TablaDinamicaComponent, // Componente para seleccionar de un catálogo
   ],
 })
-export class RequisitosComponent implements OnInit {
-// Se declara una variable llamada 'tipos', la cual es un arreglo (array) de objetos de tipo 'tipos'.
-// Aquí 'tipos' representa la estructura o tipo de datos que se manejarán en este componente.
-// En este caso, 'tipos' es una lista de objetos que contiene información sobre los tipos de documentos.
-tipos: Tipos[] = []; 
+export class RequisitosComponent implements OnInit, OnDestroy {
+  // Se declara una variable llamada 'tipos', la cual es un arreglo (array) de objetos de tipo 'tipos'.
+  // Aquí 'tipos' representa la estructura o tipo de datos que se manejarán en este componente.
+  // En este caso, 'tipos' es una lista de objetos que contiene información sobre los tipos de documentos.
+  tipos: Tipos[] = [];
 
-// 'configuracionTabla' es una variable que almacena un arreglo de objetos de tipo 'ConfiguracionColumna'.
-// Cada objeto dentro de este arreglo tiene información sobre cómo debe ser configurada cada columna de la tabla.
-// 'ConfiguracionColumna<any>' es una interfaz que define las propiedades necesarias para configurar cada columna.
+  // 'configuracionTabla' es una variable que almacena un arreglo de objetos de tipo 'ConfiguracionColumna'.
+  // Cada objeto dentro de este arreglo tiene información sobre cómo debe ser configurada cada columna de la tabla.
+  // 'ConfiguracionColumna<any>' es una interfaz que define las propiedades necesarias para configurar cada columna.
 
-configuracionTabla: ConfiguracionColumna<any>[] = [
-  {
-    // 'encabezado' es el nombre de la columna que se mostrará en el encabezado de la tabla.
-    encabezado: 'Tipo de Documento',
+  configuracionTabla: ConfiguracionColumna<any>[] = [
+    {
+      // 'encabezado' es el nombre de la columna que se mostrará en el encabezado de la tabla.
+      encabezado: 'Tipo de Documento',
 
-    // 'clave' es una función que toma un objeto (en este caso un item de tipo 'any')
-    // y devuelve el valor que se mostrará en la celda de esa columna para cada fila.
-    clave: (item: any) => item.tiposdata,
+      // 'clave' es una función que toma un objeto (en este caso un item de tipo 'any')
+      // y devuelve el valor que se mostrará en la celda de esa columna para cada fila.
+      clave: (item: any) => item.tiposdata,
 
-    // 'orden' define el orden de la columna en la tabla.
-    orden: 1
-  }
-];
+      // 'orden' define el orden de la columna en la tabla.
+      orden: 1,
+    },
+  ];
 
-
-
-
+  /**
+   * Suscripción al observable que contiene los datos de los tipos de documentos.
+   * @type {Subscription}
+   */
+  private tiposCatalogSubscription: Subscription = new Subscription();
 
   /**
    * Encabezado de la tabla de tipos de documento.
@@ -160,7 +162,7 @@ configuracionTabla: ConfiguracionColumna<any>[] = [
       );
 
     // Suscribe al observable para que la asignación de los datos se ejecute
-    tipos$.subscribe();
+    this.tiposCatalogSubscription = tipos$.subscribe();
 
     // Asigna los encabezados de la tabla desde 'tipoTableData'
     this.tipoHeaderData = this.tipoTableData.tableHeader;
@@ -176,6 +178,18 @@ configuracionTabla: ConfiguracionColumna<any>[] = [
       );
 
     // Suscribe al observable para que la asignación de los datos se ejecute
-    tiposcatalog$.subscribe();
+    this.tiposCatalogSubscription = tiposcatalog$.subscribe();
+  }
+
+  /**
+   * Método que se ejecuta cuando el componente se destruye.
+   * Se encarga de desuscribirse de la suscripción al observable de tipos de documento.
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    // Desuscribirse cuando el componente se destruya
+    if (this.tiposCatalogSubscription) {
+      this.tiposCatalogSubscription.unsubscribe();
+    }
   }
 }

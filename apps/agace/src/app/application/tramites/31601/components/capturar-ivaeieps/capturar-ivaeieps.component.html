@@ -180,12 +180,7 @@
 
     <div class="table-container m-3">
       <div
-        class="table-header pb-2"
-        style="
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        "
+        class="table-header pb-2 d-flex align-items-center justify-content-between"
       >
         <h3>Datos de la inversión</h3>
         <button (click)="alternarContenido()" class="toggle-btn">
@@ -246,7 +241,7 @@
       <form [formGroup]="formularioDePago">
         <div class="col-md-6">
           <span class="require">*</span
-          ><label class="form-label" for="claveReferencia" style="width: unset"
+          ><label class="form-label width-unset" for="claveReferencia"
             >Clave de referencia</label
           >
           <input
@@ -261,7 +256,7 @@
 
         <div class="col-md-6">
           <span class="require">*</span
-          ><label class="form-label" for="numeroOperacion" style="width: unset"
+          ><label class="form-label width-unset" for="numeroOperacion"
             >Número de operación</label
           >
           <input
@@ -273,11 +268,7 @@
         </div>
         <div class="col-md-6">
           <span class="require">*</span
-          ><label
-            class="form-label"
-            for="cadenaDependencia"
-            style="width: unset"
-          >
+          ><label class="form-label width-unset" for="cadenaDependencia">
             Cadena de la dependencia</label
           >
           <input
@@ -300,7 +291,7 @@
         </div>
         <div class="col-md-3">
           <span class="require">*</span
-          ><label class="form-label" for="llavePago" style="width: unset">
+          ><label class="form-label width-unset" for="llavePago">
             Llave de pago</label
           >
           <input
@@ -335,7 +326,7 @@
         </div>
         <div class="col-md-3">
           <span class="require">*</span
-          ><label class="form-label" for="fechaPago" style="width: unset"
+          ><label class="form-label width-unset" for="fechaPago"
             >Fecha de pago</label
           >
           <input
@@ -349,7 +340,7 @@
         </div>
         <div class="col-md-3">
           <span class="require">*</span
-          ><label class="form-label" for="importePago" style="width: unset">
+          ><label class="form-label width-unset" for="importePago">
             Importe de pago</label
           >
           <input
@@ -389,7 +380,7 @@
           (click)="cerrarModal()"
           aria-label="Close"
         >
-          <span style="color: white" aria-hidden="true">&times;</span>
+          <span class="color-white" aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
