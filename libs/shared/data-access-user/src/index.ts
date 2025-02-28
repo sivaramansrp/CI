@@ -19,18 +19,13 @@ export * from './tramites/constantes/seccionesTramites';
 export * from './core/models/shared/components.model';
 export * from './core/models/shared/catalogos.model'
 export * from './tramites/components/catalogo-select/catalogo-select.component';
-
 export * from './core/ambientes';
 export * from './core/enums/tipoPersona.enum';
-
 export * from './core/services/shared/solicitante/solicitante.service';
-
 export * from './tramites/constantes/servicios-extraordinarios.enum';
-
 export * from './core/services/220471/servicios-pantallas.service';
 export * from './core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 export * from './tramites/constantes/constantes';
-
 export * from './tramites/components/crosslist/crosslist.component';
 export * from './tramites/components/firma-electronica/firma-electronica.component';
 export * from './tramites/components/informacion-usuario/informacion-usuario.component';
@@ -76,3 +71,8 @@ export * from './core/services/130118/pexim/pexim.service';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
+export * from './core/models/shared/configuracion-columna.model';
+export * from './core/enums/tabla-seleccion.enum';
+export * from './core/services/220203/importacion-de-acuicultura.service';
+export * from './core/enums/220203/importacion-de-acuicultura.enum';
+export * from './core/models/220203/importacion-de-acuicultura.module';

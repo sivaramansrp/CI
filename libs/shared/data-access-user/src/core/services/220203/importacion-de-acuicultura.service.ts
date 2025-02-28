@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { AcuiculturaStore } from '../../../../../../../apps/agriculture/src/app/application/estados/220203/acuicultura.store';
 import { Observable } from 'rxjs';
 import { Acuicultura, FormularioMovilizacion, FormularioPago } from '../../models/220203/importacion-de-acuicultura.module';
-import { DatosMercancia } from '../../models/5701/servicios-extraordinarios.model';
+import { DatosMercancia, RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 /**
  * @description Servicio para la importación de acuicultura, encargado de obtener datos de catálogos.

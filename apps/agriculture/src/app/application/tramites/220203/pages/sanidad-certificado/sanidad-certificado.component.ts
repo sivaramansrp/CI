@@ -1,15 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
-import { AccionBoton, ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/220203/importacion-de-acuicultura.module';
-import { PASOS } from 'libs/shared/data-access-user/src/core/enums/220203/importacion-de-acuicultura.enum';
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { PASOSACUICULTURA, ListaPasosWizard220203, AccionBoton, WizardComponent, DatosPasos } from '@ng-mf/data-access-user';
+
+
 
 @Component({
   selector: 'app-sanidad-certificado',
   templateUrl: './sanidad-certificado.component.html',
 })
 export class SanidadCertificadoComponent {
-  pasos: ListaPasosWizard[] = PASOS;
+  pasos: ListaPasosWizard220203[] = PASOSACUICULTURA;
   indice: number = 1;
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,

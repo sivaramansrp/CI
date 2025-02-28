@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import { CATALOGOS_ID } from 'libs/shared/data-access-user/src/tramites/constantes/constantes';
-import { TEXTOS } from 'libs/shared/data-access-user/src/tramites/constantes//servicios-extraordinarios.enum';
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { CatalogosService } from 'libs/shared/data-access-user/src/core/services/shared/catalogos/catalogos.service';
+import { CatalogosService, Catalogo, TEXTOS, CATALOGOS_ID } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-paso-tres',

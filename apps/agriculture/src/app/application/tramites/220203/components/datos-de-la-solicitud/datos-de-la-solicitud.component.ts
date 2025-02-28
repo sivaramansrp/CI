@@ -1,10 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
-import { MENSAJE_DOBLE_CLIC } from 'libs/shared/data-access-user/src/core/enums/220203/importacion-de-acuicultura.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { ImportacionDeAcuiculturaService } from 'libs/shared/data-access-user/src/core/services/220203/importacion-de-acuicultura.service';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { Catalogo, ConfiguracionColumna, ImportacionDeAcuiculturaService, TablaSeleccion, MENSAJE_DOBLE_CLIC } from '@ng-mf/data-access-user';
+
+
 
 interface DatoTabla {
   solicitud: string;
@@ -13,6 +11,23 @@ interface DatoTabla {
   cantidad: number; // O string, dependiendo del tipo de dato
   proveedor: string;
 }
+interface Fila {
+  noPartida: string;
+  tipoRequisito: string;
+  requisito: string;
+  numeroCertificado: string;
+  fraccionArancelaria: string;
+  descripcionFraccion: string;
+  nico: string;
+}
+interface FilaSolicitud {
+  solicitud: string;
+  fechaCreacion: string;
+  mercancia: string;
+  cantidad: number;
+  proveedor: string;
+}
+
 
 /**
  * @description Componente para gestionar los datos de la solicitud de importación de acuicultura.
@@ -27,26 +42,22 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
    * @description Mensaje que se muestra en una alerta al hacer doble clic.
    */
   alertMessage: string = MENSAJE_DOBLE_CLIC;
-
   /**
    * @description Tipo de selección para la tabla principal.
    */
   tipoSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
-
   /**
    * @description Tipo de selección para la tabla de solicitudes.
    */
   tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
-
   /**
    * @description Datos de la tabla de solicitudes.
    */
   cuerpoTablasoli: DatoTabla[] = [];
-
   /**
    * @description Configuración de columnas para la tabla principal.
    */
-  configuracionColumnas: ConfiguracionColumna<any>[] = [
+  configuracionColumnas: ConfiguracionColumna<Fila>[] = [
     { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
     { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
     { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
@@ -55,23 +66,20 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
     { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
     { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
   ];
-
   /**
    * @description Configuración de columnas para la tabla de solicitudes.
    */
-  configuracionColumnasoli: ConfiguracionColumna<any>[] = [
+  configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
     { encabezado: 'Solicitud', clave: (fila) => fila.solicitud, orden: 1 },
     { encabezado: 'Fecha Creación', clave: (fila) => fila.fechaCreacion, orden: 2 },
     { encabezado: 'Mercancía', clave: (fila) => fila.mercancia, orden: 3 },
     { encabezado: 'Cantidad', clave: (fila) => fila.cantidad.toString(), orden: 4 },
     { encabezado: 'Proveedor', clave: (fila) => fila.proveedor, orden: 5 },
   ];
-
   /**
    * @description Indica si la sección es colapsable.
    */
   colapsable: boolean = false;
-
   /**
    * @description Grupo de formularios para los datos de la mercancía.
    */
@@ -81,67 +89,50 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
    * @description Lista de catálogos para las aduanas de ingreso.
    */
   aduanaDeIngresoList: Catalogo[] = [];
-
   /**
    * @description Lista de catálogos para las oficinas de inspección.
    */
   oficinaInspeccionList: Catalogo[] = [];
-
   /**
    * @description Lista de catálogos para los puntos de inspección.
    */
   puntoInspeccionList: Catalogo[] = [];
-
   /**
    * @description Lista de catálogos para los tipos de requisitos.
    */
   tipoRequisitoList: Catalogo[] = [];
-
   /**
    * @description Lista de catálogos para las fracciones arancelarias.
    */
   arancelariaList: Catalogo[] = [];
-
   /**
    * @description Lista de catálogos para los regímenes.
    */
   regimenList: Catalogo[] = [];
-
   /**
    * @description Lista de catálogos para los NICO (Números de Identificación Comercial).
    */
   nicoList: Catalogo[] = [];
-
   /**
    * @description Lista de catálogos para las UMC (Unidades de Medida Comercial).
    */
   umcList: Catalogo[] = [];
-
   /**
    * @description Lista de catálogos para los usos.
    */
   usoList: Catalogo[] = [];
-
   /**
    * @description Lista de catálogos para los países de origen.
    */
   paisDeOrigenList: Catalogo[] = [];
-
   /**
    * @description Lista de catálogos para los países de procedencia.
    */
   paisDeProcedenciaList: Catalogo[] = [];
-
-  /**
-   * @description Encabezados comunes para la tabla principal.
-   */
-  encabezadosComunesTabla: string[] = ["No. partida", "Tipo de requisito", "Requisito", "Número de Certificado Internacional", "Fracción arancelaria", "Descripción de la fracción", "Nico"];
-
   /**
    * @description Encabezados de la tabla de detalles.
    */
   detalleTable: string[] = ["Nombre científico"];
-
   /**
    * @description Datos de la tabla de detalles.
    */

@@ -1,7 +1,7 @@
 /**
  * @description Interfaz que define la estructura de los pasos en un componente tipo wizard.
  */
-export interface ListaPasosWizard {
+export interface ListaPasosWizard220203 {
     /**
      * @description Índice del paso.
      */
@@ -54,7 +54,7 @@ export interface OpcionDeRadio {
 }
 
 
-export interface DatosMercancia {
+export interface DatosMercancia220203 {
     realizarGroup: RealizarGroup;
     mercanciaGroup: MercanciaGroup;
     detalles: Detalles;
@@ -113,7 +113,7 @@ export interface FormularioPago {
 export interface Acuicultura {
     formularioPago: FormularioPago;
     formularioMovilizacion: FormularioMovilizacion;
-    datosMercancia: DatosMercancia;
+    datosMercancia: DatosMercancia220203;
 }
 
 export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura {

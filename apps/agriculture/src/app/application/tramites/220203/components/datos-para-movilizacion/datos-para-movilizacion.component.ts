@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ImportacionDeAcuiculturaService } from 'libs/shared/data-access-user/src/core/services/220203/importacion-de-acuicultura.service';
-
+import { ImportacionDeAcuiculturaService, Catalogo } from '@ng-mf/data-access-user';
 /**
  * @title Datos para la Movilización (Data for Mobilization)
  * @description Este componente gestiona la información relacionada con la movilización de la acuicultura.

@@ -1,7 +1,7 @@
 /**
  * @description Constantes con la información de los pasos del wizard.
  */
-export const PASOS = [
+export const PASOSACUICULTURA = [
     {
         indice: 1,
         titulo: 'Capturar solicitud',
@@ -45,7 +45,7 @@ export const TIPO_RADIO = [
 /**
  * @description Constantes con la configuración para el input de fecha de salida.
  */
-export const FECHA_SALIDA = {
+export const FECHA_SALIDA_ACUICULTURA = {
     labelNombre: 'Fecha de pago',
     required: true,
     habilitado: false,

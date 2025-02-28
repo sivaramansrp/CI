@@ -1,11 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { OpcionDeRadio } from 'libs/shared/data-access-user/src/core/models/220203/importacion-de-acuicultura.module';
-import { FECHA_SALIDA, TIPO_RADIO } from 'libs/shared/data-access-user/src/core/enums/220203/importacion-de-acuicultura.enum';
-import { InputFecha } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ImportacionDeAcuiculturaService } from 'libs/shared/data-access-user/src/core/services/220203/importacion-de-acuicultura.service';
-
+import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO, InputFecha, ImportacionDeAcuiculturaService, Catalogo, OpcionDeRadio } from '@ng-mf/data-access-user';
 /**
  * @description Componente para el pago de derechos en la importación de acuicultura.
  */
@@ -14,37 +9,31 @@ import { ImportacionDeAcuiculturaService } from 'libs/shared/data-access-user/sr
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
 })
-export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+export class PagoDeDerechosComponent implements OnInit {
   /**
    * @description Formulario para el pago de derechos.
    */
   formularioPago!: FormGroup;
-
   /**
    * @description Opciones de radio para la exención de pago.
    */
   exentoPagoRadio: OpcionDeRadio[] = TIPO_RADIO;
-
   /**
    * @description Valor seleccionado para la exención de pago.
    */
   exentoPagoValor = 'Si';
-
   /**
    * @description Catálogo de justificaciones para la exención de pago.
    */
   justificacionCatalogo: Catalogo[] = [];
-
   /**
    * @description Catálogo de bancos para el pago.
    */
   bancoCatalogo: Catalogo[] = [];
-
   /**
    * @description Configuración para el input de fecha de salida.
    */
-  fechaFinalInput: InputFecha = FECHA_SALIDA;
-
+  fechaFinalInput: InputFecha = FECHA_SALIDA_ACUICULTURA;
   /**
    * @description Constructor que inicializa el servicio de formularios y el servicio de importación de acuicultura.
    * @param fb FormBuilder para la creación de formularios reactivos.
@@ -54,7 +43,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private readonly importacionAcuiculturaServicio: ImportacionDeAcuiculturaService
   ) { }
-
   /**
    * @description Método de inicialización del componente.
    */
@@ -63,7 +51,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.obtenerListaJustificacion();
     this.obtenerListaBanco();
   }
-
   /**
    * @description Crea el formulario de pago según el valor de `exentoPagoValor`.
    */
@@ -80,7 +67,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       importePago: [{ value: '', disabled: true }],
     });
   }
-
   /**
    * @description Cambia el valor de un campo del formulario.
    * @param nombreControl Nombre del campo del formulario.
@@ -93,7 +79,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.exentoPagoValor = valor;
     this.crearFormularioPago();
   }
-
   /**
    * @description Actualiza la fecha de pago en el formulario.
    * @param nuevoValor Nueva fecha de pago.
@@ -103,7 +88,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       fechaPago: nuevoValor,
     });
   }
-
   /**
    * @description Obtiene la lista de bancos desde el servicio.
    */
@@ -112,23 +96,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       this.bancoCatalogo = data.data as Catalogo[];
     });
   }
-
   /**
    * @description Obtiene la lista de justificaciones desde el servicio.
-   */
+  */
   private obtenerListaJustificacion(): void {
     this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json').subscribe((data) => {
       this.justificacionCatalogo = data.data as Catalogo[];
-    });
-  }
-
-  /**
-   * @description Método de destrucción del componente.
-   */
-  ngOnDestroy(): void {
-    this.importacionAcuiculturaServicio.obtenerDatos().subscribe(() => {
-    }, (error) => {
-
     });
   }
 }
