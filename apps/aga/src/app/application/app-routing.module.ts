@@ -27,6 +27,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
   },
+  {
+    path: 'registro-digitalizar-documentos',
+    loadChildren: () =>
+      import('./tramites/701/registro-digitalizar-documentos.module').then(
+        (m) => m.RegistroDigitalizarDocumentosModule
+      ),
+  },
 ];
 
 @NgModule({

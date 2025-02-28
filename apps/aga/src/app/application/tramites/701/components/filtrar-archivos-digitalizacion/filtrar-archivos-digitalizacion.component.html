@@ -1,0 +1,73 @@
+<div class="row">
+  <div class="col-md-12">
+    <label
+      >Si usted necesita anexar más de un documento del mismo tipo seleccionelo
+      de la lista y presione "Agregar nuevo"</label
+    ><br />
+  </div>
+  <div class="container">
+    <div class="row d-flex align-items-end">
+      <div class="col-md-4">
+        <select-catalogos
+          [catalogosDatos]="tiposDocumentos"
+          (valorSeleccion)="docSeleccionado($event)"
+        ></select-catalogos>
+      </div>
+      <div class="col-md-3">
+        <input
+          type="submit"
+          class="btn-primary"
+          value="Agregar nuevo"
+          (click)="addDoctoEspecifico()"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="table-responsive">
+        @if (docCargados) {
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>
+                <input type="checkbox" (change)="SeleccioneTodo($event)" />
+              </th>
+              <th colspan="2">Tipo de Documento</th>
+              <th>RFC Para Consulta</th>
+              <th>Nombre o Razon Social</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of TipoDocumento; track item.tipoDocumento?.id; let i =
+            $index) {
+            <tr>
+              <td class="grey-column">{{ i + 1 }}</td>
+              <td><input type="checkbox" [(ngModel)]="item.selected" /></td>
+              <td colspan="2">{{ item?.tipoDocumento?.descripcion }}</td>
+              <td>
+                <input
+                  type="text"
+                  [(ngModel)]="item.rfcParaConsulta"
+                  class="form-control"
+                  readonly
+                />
+              </td>
+              <td>{{ item.nombre }}</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+        }
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="col-md-2">
+    <button class="btn btn-danger" (click)="eliminarDoctoEspecifico()">
+      Eliminar
+    </button>
+  </div>
+</div>
