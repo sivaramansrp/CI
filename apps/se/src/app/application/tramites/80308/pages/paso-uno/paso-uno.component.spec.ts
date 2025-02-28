@@ -1,13 +1,12 @@
-import { TestBed } from '@angular/core/testing';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Observable, of as observableOf, throwError } from 'rxjs';
 import { PasoUnoComponent } from './paso-uno.component';
+import { TestBed } from '@angular/core/testing';
 
 
 describe('PasoUnoComponent', () => {
   let fixture;
-  let component;
+  let component: PasoUnoComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -26,20 +25,13 @@ describe('PasoUnoComponent', () => {
   });
 
 
-  it('debería ejecutar #constructor()', async () => {
+  it('debería ejecutar #constructor()', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería ejecutar #ngAfterViewInit()', async () => {
-    component.solicitante = component.solicitante || {};
-    component.solicitante.obtenerTipoPersona = jest.fn();
-    component.ngAfterViewInit();
-    // expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalled();
-  });
+  it('debe ejecutar #seleccionaTab()', () => {
 
-  it('debe ejecutar #seleccionaTab()', async () => {
-
-    component.seleccionaTab({});
+    component.seleccionaTab(1);
 
   });
 

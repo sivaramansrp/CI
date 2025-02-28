@@ -1,14 +1,13 @@
-import { TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Observable, of as observableOf, throwError } from 'rxjs';
 import { DatosCertificacionComponent } from './datos-certificacion.component';
 import { FormBuilder } from '@angular/forms';
+import { TestBed } from '@angular/core/testing';
 
 
 describe('DatosCertificacionComponent', () => {
   let fixture;
-  let component;
+  let component !: DatosCertificacionComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -26,7 +25,7 @@ describe('DatosCertificacionComponent', () => {
   });
 
 
-  it('debería ejecutar #constructor()', async () => {
+  it('debería ejecutar #constructor()', () => {
     expect(component).toBeTruthy();
   });
 

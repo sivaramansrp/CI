@@ -1,17 +1,17 @@
-import { TestBed } from '@angular/core/testing';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Injectable, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Observable, of as observableOf, throwError } from 'rxjs';
 import { DatosAnexosComponent } from './datos-anexos.component';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
+import { of as observableOf } from 'rxjs';
 
 @Injectable()
 class MockModificacionSolicitudeService {}
 
 
 describe('DatosAnexosComponent', () => {
-  let fixture;
-  let component;
+  let fixture !: ComponentFixture<DatosAnexosComponent>;
+  let component!: DatosAnexosComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -29,29 +29,25 @@ describe('DatosAnexosComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
 
-  it('debería ejecutar #constructor()', async () => {
+  it('debería ejecutar #constructor()', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería ejecutar #ngOnInit()', async () => {
+  it('debería ejecutar #ngOnInit()', () => {
     component.obteneComplimentaria = jest.fn();
     component.ngOnInit();
     expect(component.obteneComplimentaria).toHaveBeenCalled();
   });
 
-  it('debe ejecutar #obteneComplimentaria()', async () => {
+  it('debe ejecutar #obteneComplimentaria()', () => {
     component.modificionService = component.modificionService || {};
     component.modificionService.obtenerAnexo = jest.fn().mockReturnValue(observableOf({}));
     component.obteneComplimentaria();
     expect(component.modificionService.obtenerAnexo).toHaveBeenCalled();
   });
 
-  it('debería ejecutar #ngOnDestroy()', async () => {
+  it('debería ejecutar #ngOnDestroy()', () => {
     component.destroyNotifier$ = component.destroyNotifier$ || {};
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();

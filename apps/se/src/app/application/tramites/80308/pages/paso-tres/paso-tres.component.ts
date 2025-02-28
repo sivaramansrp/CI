@@ -4,7 +4,6 @@ import {
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 
 @Component({
@@ -16,7 +15,6 @@ import { TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
   host: { hostID: crypto.randomUUID().toString() },
 })
 export class PasoTresComponent {
-  constructor(private router: Router) {}
   /**
    * Obtener el valor de la instrucción e inicializar la variable
    */

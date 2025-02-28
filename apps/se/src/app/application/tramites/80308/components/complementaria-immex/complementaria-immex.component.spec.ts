@@ -1,12 +1,11 @@
-import { TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Observable, of as observableOf, throwError } from 'rxjs';
 import { ComplementariaImmexComponent } from './complementaria-immex.component';
+import { TestBed } from '@angular/core/testing';
 
 describe('ComplementariaImmexComponent', () => {
   let fixture;
-  let component;
+  let component!: ComplementariaImmexComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -24,13 +23,13 @@ describe('ComplementariaImmexComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  it('debería ejecutar #constructor()', async () => {
+  it('debería ejecutar #constructor()', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe ejecutar #seleccionaTab()', async () => {
+  it('debe ejecutar #seleccionaTab()', () => {
 
-    component.seleccionaTab({});
+    component.seleccionaTab(1);
 
   });
 

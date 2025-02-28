@@ -1,9 +1,11 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -17,8 +19,6 @@ import { ComplementariaImmexComponent } from '../complementaria-immex/complement
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
 import { DomicilioInfo } from '../../models/plantas-consulta.model';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -95,19 +95,18 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
    * @private
    * @type {Subject<void>}
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  destroyNotifier$: Subject<void> = new Subject();
+
+  fb: FormBuilder = Inject(FormBuilder);
+  modificionService: ModificacionSolicitudeService =Inject(ModificacionSolicitudeService)
+  toastr: ToastrService =Inject(ToastrService)
 
   /**
    * Constructor de la clase.
    * @param {FormBuilder} fb - El servicio para construir formularios reactivos.
    * @param {ModificacionSolicitudeService} modificionService - Servicio para la modificación de solicitudes.
    */
-  constructor(
-    private fb: FormBuilder,
-    private modificionService: ModificacionSolicitudeService,
-    private toastr: ToastrService,
-
-  ) {
+  constructor() {
     // Inicialización del formulario para la entidad federativa.
     this.formulario = this.fb.group({
       entidadFederativa: ['-1', Validators.required],
@@ -162,7 +161,7 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
 
     if (entidad && entidad !== '-1') {
       this.modificionService
-        .obtenerDomicilios(entidad)
+        .obtenerDomicilios()
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe(
           (data: DomicilioInfo[]) => {

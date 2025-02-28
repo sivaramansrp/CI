@@ -1,4 +1,4 @@
-import { Catalogo } from '@ng-mf/data-access-user';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Anexo,
   Bitacora,
@@ -8,15 +8,17 @@ import {
   Federetarios,
   Operacions,
 } from '../models/plantas-consulta.model';
+import { Inject, Injectable } from '@angular/core';
+import { Observable, map } from 'rxjs';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ModificacionSolicitudeService {
-  constructor(private http: HttpClient) {}
+
+  http: HttpClient = Inject(HttpClient);
 
   /**
    * Obtiene la lista de estados.
@@ -29,7 +31,7 @@ export class ModificacionSolicitudeService {
       .pipe(map((res: any) => res.data));
   }
 
-  obtenerDomicilios(entidad: number): Observable<DomicilioInfo[]> {
+  obtenerDomicilios(): Observable<DomicilioInfo[]> {
     return this.http
       .get<DomicilioInfo[]>('assets/json/80308/domicilio.json')
       .pipe(map((res: any) => res.data));

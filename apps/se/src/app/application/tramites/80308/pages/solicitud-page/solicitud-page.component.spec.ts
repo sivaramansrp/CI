@@ -1,12 +1,11 @@
-import { TestBed } from '@angular/core/testing';
-import {  CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Observable, of as observableOf, throwError } from 'rxjs';
 import { SolicitudPageComponent } from './solicitud-page.component';
+import { TestBed } from '@angular/core/testing';
 
 describe('SolicitudPageComponent', () => {
   let fixture;
-  let component;
+  let component: SolicitudPageComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -25,17 +24,17 @@ describe('SolicitudPageComponent', () => {
   });
 
 
-  it('debería ejecutar #constructor()', async () => {
+  it('debería ejecutar #constructor()', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe ejecutar #seleccionaTab()', async () => {
+  it('debe ejecutar #seleccionaTab()', () => {
 
-    component.seleccionaTab({});
+    component.seleccionaTab(1);
 
   });
 
-  it('debería ejecutar #getValorIndice()', async () => {
+  it('debería ejecutar #getValorIndice()', () => {
     component.obtenerNombreDelTítulo = jest.fn();
     component.wizardComponent = component.wizardComponent || {};
     component.wizardComponent.siguiente = jest.fn();
@@ -48,9 +47,9 @@ describe('SolicitudPageComponent', () => {
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('debe ejecutar #obtenerNombreDelTítulo()', async () => {
+  it('debe ejecutar #obtenerNombreDelTítulo()', () => {
 
-    component.obtenerNombreDelTítulo({});
+    component.obtenerNombreDelTítulo(1);
 
   });
 

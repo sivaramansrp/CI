@@ -8,12 +8,12 @@ import {
   Federetarios,
   Operacions,
 } from '../../models/plantas-consulta.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
 import { DatosCertificacionComponent } from '../datos-certificacion/datos-certificacion.component';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 
@@ -77,13 +77,9 @@ export class DatosComplimentariaComponent implements OnInit, OnDestroy {
    */
   datosComplimentaria: Complimentaria[] = [];
 
-  /**
-   * Constructor de la clase.
-   * @param {ModificacionSolicitudeService} modificionService - Servicio utilizado para obtener los datos de complimentaria, federetarios y operaciones.
-   */
-  constructor(private modificionService: ModificacionSolicitudeService,
-     private toastr: ToastrService
-  ) {}
+  modificionService: ModificacionSolicitudeService = Inject(ModificacionSolicitudeService)
+  toastr: ToastrService = Inject(ToastrService);
+
 
   /**
    * Método que se ejecuta cuando el componente es inicializado.

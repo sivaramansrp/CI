@@ -1,15 +1,11 @@
-import { AfterViewInit, Component } from '@angular/core';
-import {
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
-  PERSONA_MORAL_NACIONAL,
-} from 'libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { AltaPlantaComponent } from '../../components/alta-planta/alta-planta.component';
 import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { DatosModificacionesComponent } from '../../components/datos-modificaciones/datos-modificaciones.component';
-import { FormularioDinamico } from 'libs/shared/data-access-user/src/core/models/shared/forms-model';
+import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'paso-uno',
@@ -26,18 +22,12 @@ import { ReactiveFormsModule } from '@angular/forms';
   ],
   host: { hostID: crypto.randomUUID().toString() },
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent {
   /**
    * Representa el tipo de persona (por ejemplo, persona moral o física).
    * @type {number}
    */
   tipoPersona!: number;
-
-  /**
-   * Arreglo que contiene los datos dinámicos relacionados con la persona.
-   * @type {FormularioDinamico[]}
-   */
-  persona: FormularioDinamico[] = [];
 
   /**
    * Arreglo que contiene los datos dinámicos relacionados con el domicilio fiscal.
@@ -51,16 +41,6 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   indice: number = 1;
 
-  /**
-   * Se ejecuta después de que la vista del componente se haya inicializado.
-   * En este método se asignan los valores de los arreglos `persona` y `domicilioFiscal`
-   * a partir de las constantes definidas.
-   *
-   */
-  ngAfterViewInit(): void {
-    this.persona = PERSONA_MORAL_NACIONAL;
-    this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-  }
 
   /**
    * Cambia el índice de la pestaña seleccionada.

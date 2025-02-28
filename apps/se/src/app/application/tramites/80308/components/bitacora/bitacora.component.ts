@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Bitacora } from '../../models/plantas-consulta.model';
 import { CONFIGURACION_BITACORA_TABLA } from '../../constantes/modificacion.enum';
 import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 
@@ -28,16 +28,11 @@ export class BitacoraComponent implements OnDestroy, OnInit {
    * @private
    * @type {Subject<void>}
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  destroyNotifier$: Subject<void> = new Subject();
 
-  /**
-   * Constructor de la clase.
-   * @param {ModificacionSolicitudeService} modificionService - Servicio utilizado para obtener los datos de la bitácora.
-   */
-  constructor(
-    private modificionService: ModificacionSolicitudeService,
-    private toastr: ToastrService
-  ) {}
+  modificionService: ModificacionSolicitudeService = Inject(ModificacionSolicitudeService);
+  
+  toastr: ToastrService = Inject(ToastrService);
 
   /**
    * Configuración de las columnas de la tabla que muestra la bitácora.

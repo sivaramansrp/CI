@@ -1,9 +1,9 @@
-import { TestBed } from '@angular/core/testing';
-import {  Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Injectable, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Observable, of as observableOf, throwError } from 'rxjs';
 import { DatosComplimentariaComponent } from './datos-complimentaria.component';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
+import { TestBed } from '@angular/core/testing';
+import { of as observableOf } from 'rxjs';
 
 @Injectable()
 class MockModificacionSolicitudeService {}
@@ -11,7 +11,7 @@ class MockModificacionSolicitudeService {}
 
 describe('DatosComplimentariaComponent', () => {
   let fixture;
-  let component;
+  let component!: DatosComplimentariaComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -31,11 +31,11 @@ describe('DatosComplimentariaComponent', () => {
   });
 
 
-  it('debería ejecutar #constructor()', async () => {
+  it('debería ejecutar #constructor()', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería ejecutar #ngOnInit()', async () => {
+  it('debería ejecutar #ngOnInit()', () => {
     component.obtenerFederetarios = jest.fn();
     component.obtenerOperacions = jest.fn();
     component.obtenerComplimentaria = jest.fn();
@@ -45,21 +45,21 @@ describe('DatosComplimentariaComponent', () => {
     expect(component.obtenerComplimentaria).toHaveBeenCalled();
   });
 
-  it('debe ejecutar #obtenerComplimentaria()', async () => {
+  it('debe ejecutar #obtenerComplimentaria()', () => {
     component.modificionService = component.modificionService || {};
     component.modificionService.obtenerComplimentaria = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerComplimentaria();
     expect(component.modificionService.obtenerComplimentaria).toHaveBeenCalled();
   });
 
-  it('debe ejecutar #obtenerFederetarios()', async () => {
+  it('debe ejecutar #obtenerFederetarios()', () => {
     component.modificionService = component.modificionService || {};
     component.modificionService.obtenerFederetarios = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerFederetarios();
     expect(component.modificionService.obtenerFederetarios).toHaveBeenCalled();
   });
 
-  it('debería ejecutar #obtenerOperacions()', async () => {
+  it('debería ejecutar #obtenerOperacions()', () => {
     component.modificionService = component.modificionService || {};
     component.modificionService.obtenerOperacion = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerOperacions();

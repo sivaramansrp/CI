@@ -1,14 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
-import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
 import { DatosModificacion } from '../../models/plantas-consulta.model';
+import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -33,16 +32,9 @@ export class DatosModificacionesComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  /**
-   * Crea una instancia de la clase.
-   * @param {FormBuilder} fb - El FormBuilder de Angular utilizado para crear el formulario.
-   * @param {ModificacionSolicitudeService} modificionService - Servicio para manejar las solicitudes de modificación.
-   */
-  constructor(
-    private fb: FormBuilder,
-    private modificionService: ModificacionSolicitudeService,
-     private toastr: ToastrService
-  ) {}
+  fb: FormBuilder = Inject(FormBuilder);
+  modificionService: ModificacionSolicitudeService = Inject(ModificacionSolicitudeService)
+  toastr: ToastrService = Inject(ToastrService)
 
   /**
    * Inicializa el componente configurando el formulario y cargando los datos.
@@ -57,7 +49,7 @@ export class DatosModificacionesComponent implements OnInit, OnDestroy {
    * Inicializa el formulario con los valores predeterminados y los campos deshabilitados.
    * 
    */
-  private iniciarFormulario(): void {
+  iniciarFormulario(): void {
     this.formularioDatosGenerales = this.fb.group({
       rfc: [{ value: '', disabled: true }],
       representacionFederal: [{ value: '', disabled: true }],

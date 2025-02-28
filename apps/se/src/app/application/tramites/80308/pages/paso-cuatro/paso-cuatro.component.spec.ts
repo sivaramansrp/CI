@@ -1,19 +1,20 @@
-import {TestBed } from '@angular/core/testing';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from '@angular/core';
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { CUSTOM_ELEMENTS_SCHEMA, Injectable, NO_ERRORS_SCHEMA} from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { ToastrModule, provideToastr } from 'ngx-toastr';
 import { PasoCuatroComponent } from './paso-cuatro.component';
 import { Router } from '@angular/router';
-import { ToastrModule, provideToastr } from 'ngx-toastr';
+import {TestBed } from '@angular/core/testing';
 
 @Injectable()
 class MockRouter {
-  navigate() {};
+  // eslint-disable-next-line no-empty-function, class-methods-use-this
+  navigate():void {}
 }
 
 describe('PasoCuatroComponent', () => {
   let fixture;
-  let component;
+  let component!: PasoCuatroComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -35,14 +36,14 @@ describe('PasoCuatroComponent', () => {
   });
 
 
-  it('debería ejecutar #constructor()', async () => {
+  it('debería ejecutar #constructor()', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe ejecutar #obtieneFirma()', async () => {
+  it('debe ejecutar #obtieneFirma()', () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
-    component.obtieneFirma({});
+    component.obtieneFirma('test');
     expect(component.router.navigate).toHaveBeenCalled();
   });
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { Router } from '@angular/router';
 
@@ -15,14 +15,15 @@ import { Router } from '@angular/router';
   host: { hostID: crypto.randomUUID().toString() },
 })
 export class PasoCuatroComponent {
-  constructor(private router: Router) {}
+  router: Router = Inject(Router)
+
   /**
    * Navega a la ruta 'servicios-extraordinarios/acuse' si el parámetro `ev` tiene un valor.
    *
    * @param {string} ev - El parámetro que se verifica para determinar si la navegación debe ocurrir.
    * Si `ev` tiene un valor (no es vacío o nulo), se realiza la navegación.
    */
-  obtieneFirma(ev: string) {
+  obtieneFirma(ev: string): void {
     if (ev) {
       this.router.navigate(['servicios-extraordinarios/acuse']);
     }

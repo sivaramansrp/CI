@@ -1,24 +1,22 @@
-import { TestBed } from '@angular/core/testing';
 import {
-  
-  Injectable,
   CUSTOM_ELEMENTS_SCHEMA,
+  Injectable,
   NO_ERRORS_SCHEMA,
 } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Observable, of as observableOf } from 'rxjs';
-
 import { AltaPlantaComponent } from './alta-planta.component';
 import { FormBuilder } from '@angular/forms';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
+import { of as observableOf } from 'rxjs';
 
 @Injectable()
 class MockModificacionSolicitudeService {}
 
 
 describe('AltaPlantaComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<AltaPlantaComponent>;
+  let component: AltaPlantaComponent;
 
 
   beforeEach(() => {
@@ -51,24 +49,23 @@ describe('AltaPlantaComponent', () => {
   });
 
 
-  it('debería ejecutar #constructor()', async () => {
+  it('debería ejecutar #constructor()', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería ejecutar GetterDeclaration #formularioControl', async () => {
+  it('debería ejecutar GetterDeclaration #formularioControl', () => {
     component.formulario = component.formulario || {};
     component.formulario.get = jest.fn();
-    const formularioControl = component.formularioControl;
     expect(component.formulario.get).toHaveBeenCalled();
   });
 
-  it('debería ejecutar #ngOnInit()', async () => {
+  it('debería ejecutar #ngOnInit()', () => {
     component.cargarEstados = jest.fn();
     component.ngOnInit();
     expect(component.cargarEstados).toHaveBeenCalled();
   });
 
-  it('debe ejecutar #cargarEstados()', async () => {
+  it('debe ejecutar #cargarEstados()', () => {
     component.modificionService = component.modificionService || {};
     component.modificionService.obtenerListaEstado = jest
       .fn()
@@ -77,8 +74,8 @@ describe('AltaPlantaComponent', () => {
     expect(component.modificionService.obtenerListaEstado).toHaveBeenCalled();
   });
 
-  it('debe ejecutar #buscarDomicilios()', async () => {
-    component.formularioControl.value = 'value';
+  it('debe ejecutar #buscarDomicilios()', () => {
+    component.formularioControl.setValue('value');
     component.modificionService = component.modificionService || {};
     component.modificionService.obtenerDomicilios = jest
       .fn()
@@ -87,19 +84,19 @@ describe('AltaPlantaComponent', () => {
     expect(component.modificionService.obtenerDomicilios).toHaveBeenCalled();
   });
 
-  it('debe ejecutar #seleccionarDomicilios()', async () => {
+  it('debe ejecutar #seleccionarDomicilios()', () => {
     component.seleccionarDomicilios({});
  });
 
-  it('debe ejecutar #aplicarAccion()', async () => {
+  it('debe ejecutar #aplicarAccion()', () => {
     component.aplicarAccion();
   });
 
-  it('debería ejecutar #eliminarPlantas()', async () => {
+  it('debería ejecutar #eliminarPlantas()', () => {
     component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
-    component.domiciliosSeleccionados = ['domiciliosSeleccionados'];
+    component.domiciliosSeleccionados = [{id: 1}];
     component.eliminarPlantas({
-      id: {},
+      id: 1,
     });
   });
 });
