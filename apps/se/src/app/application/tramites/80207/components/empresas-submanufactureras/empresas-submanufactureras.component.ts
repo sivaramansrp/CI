@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,21 +8,21 @@ import {
 } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import {
-  DatosSubcontratista,
-  InfoRegistro,
-  SubfacrintaTablaModelo,
-} from 'libs/shared/data-access-user/src/core/models/80207/submanufacturer-extension';
-import {
   Catalogo,
   CatalogoSelectComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import {
+  DatosSubcontratista,
+  InfoRegistro,
+  SubfacrintaTablaModelo,
+} from 'libs/shared/data-access-user/src/core/models/80207/submanufacturer-extension';
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { SubfacrintaTablaConfiguracion } from 'libs/shared/data-access-user/src/tramites/constantes/80207/submanufabricnats-tabla-configuracion.enum';
 import { SubManufacturerService } from 'libs/shared/data-access-user/src/core/services/80207/servicios-submanufacturer-service';
+import { SubfacrintaTablaConfiguracion } from 'libs/shared/data-access-user/src/tramites/constantes/80207/submanufabricnats-tabla-configuracion.enum';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { CommonModule } from '@angular/common';
+import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+
 /**
  * @fileoverview Componente para la gestión de empresas submanufactureras.
  * Este componente maneja la lógica y la presentación del formulario de empresas submanufactureras,
@@ -48,7 +49,7 @@ import { CommonModule } from '@angular/common';
     TituloComponent,
   ],
 })
-export class EmpresasSubmanufacturerasComponent {
+export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
   /**
    * Formulario para la información de registro.
    * @property {FormGroup} formularioInfoRegistro
@@ -134,7 +135,7 @@ export class EmpresasSubmanufacturerasComponent {
    * Controla la visualización de la tabla de subfabricantes seleccionados.
    * @property {Boolean} mostrarTablaSubfabricantesSeleccionadas
    */
-  mostrarTablaSubfabricantesSeleccionadas: Boolean = false;
+  mostrarTablaSubfabricantesSeleccionadas: boolean = false;
 
   /**
    * Constructor del componente.
@@ -165,7 +166,7 @@ export class EmpresasSubmanufacturerasComponent {
    * @method getDatos
    */
   getDatos(): void {
-    let suscripción = this.subManufacturerDatoService
+    const suscripción = this.subManufacturerDatoService
       .getDatos()
       .subscribe((response) => {
         if (response) {
@@ -222,11 +223,11 @@ export class EmpresasSubmanufacturerasComponent {
    * @method obtenerListaEstado
    */
   obtenerListaEstado() {
-    let suscripción = this.subManufacturerDatoService
+    const suscripción = this.subManufacturerDatoService
       .obtenerListaEstado()
       .subscribe((response) => {
         if (response) {
-          this.estadoCatalogo = response['data'];
+          this.estadoCatalogo = response.data;
         }
       });
     this.arregloDeSuscripciones.push(suscripción);
@@ -237,7 +238,7 @@ export class EmpresasSubmanufacturerasComponent {
    * @method obtenerSubfabricantesDisponibles
    */
   obtenerSubfabricantesDisponibles() {
-    let suscripción = this.subManufacturerDatoService
+    const suscripción = this.subManufacturerDatoService
       .getSubfabricantesDisponibles()
       .subscribe((response: SubfacrintaTablaModelo[]) => {
         if (response) {

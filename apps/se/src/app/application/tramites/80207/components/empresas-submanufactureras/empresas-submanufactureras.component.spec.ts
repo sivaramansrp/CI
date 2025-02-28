@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { EmpresasSubmanufacturerasComponent } from './empresas-submanufactureras.component';
 import { BehaviorSubject, of } from 'rxjs';
 import { SubManufacturerService } from 'libs/shared/data-access-user/src/core/services/80207/servicios-submanufacturer-service';
@@ -94,7 +94,7 @@ describe('EmpresasSubmanufacturerasComponent', () => {
   });
 
   it('should initialize form with empty values if datosSubcontratista is undefined', () => {
-    component.datosSubcontratista = {rfc:'',estado:''};  // Simulate the absence of datosSubcontratista
+    component.datosSubcontratista = {rfc:'',estado:''}; // Simulate the absence of datosSubcontratista
 
     component.inicializarFormularioDatosSubcontratista();
 

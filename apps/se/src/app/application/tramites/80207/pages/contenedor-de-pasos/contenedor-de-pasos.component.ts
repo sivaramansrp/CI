@@ -1,7 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, WizardComponent} from '@ng-mf/data-access-user';
-import { map, Subject, takeUntil } from 'rxjs';
-import {PASOS} from "libs/shared/data-access-user/src/tramites/constantes/80207/pasos.enum";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  DatosPasos,
+  ListaPasosWizard,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
+import { PASOS } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { SeccionState } from 'apps/aga/src/app/application/estados/seccion.store';
 
 /**
@@ -12,7 +16,7 @@ interface AccionBoton {
    * La acción que se realizará.
    */
   accion: string;
-  
+
   /**
    * El valor asociado a la acción.
    */
@@ -81,22 +85,6 @@ export class ContenedorDePasosComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-
-  /**
-   * Constructor del componente.
-   * @constructor
-   * @param {SeccionQuery} seccionQuery - Servicio para consultar el estado de las secciones.
-   * @param {SeccionStore} seccionStore - Servicio para gestionar el estado de las secciones.
-   */
-  constructor(
-  ) {}
-
-  /**
-   * Inicializa el componente.
-   * @method ngOnInit
-   */
-  ngOnInit() {
-  }
 
   /**
    * Obtiene el valor del índice del paso actual.
