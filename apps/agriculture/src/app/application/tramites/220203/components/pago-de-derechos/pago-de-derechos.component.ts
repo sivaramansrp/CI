@@ -12,7 +12,7 @@ import { ImportacionDeAcuiculturaService } from 'libs/shared/data-access-user/sr
 @Component({
   selector: 'app-pago-de-derechos',
   templateUrl: './pago-de-derechos.component.html',
-  styleUrls: ['./pago-de-derechos.component.scss']
+  styleUrls: ['./pago-de-derechos.component.scss'],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
@@ -28,7 +28,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * @description Valor seleccionado para la exención de pago.
    */
-  exentoPagoValor: string = 'Si';
+  exentoPagoValor = 'Si';
 
   /**
    * @description Catálogo de justificaciones para la exención de pago.
@@ -77,7 +77,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       banco: ['', Validators.required],
       llavePago: [{ value: '', disabled: esExento }],
       fechaPago: [{ value: '', disabled: true }],
-      importePago: [{ value: '', disabled: true }]
+      importePago: [{ value: '', disabled: true }],
     });
   }
 
@@ -88,7 +88,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   cambioValorRadio(nombreControl: string, valor: string): void {
     this.formularioPago.patchValue({
-      [nombreControl]: valor
+      [nombreControl]: valor,
     });
     this.exentoPagoValor = valor;
     this.crearFormularioPago();
@@ -100,7 +100,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   cambioFechaFinal(nuevoValor: string): void {
     this.formularioPago.patchValue({
-      fechaPago: nuevoValor
+      fechaPago: nuevoValor,
     });
   }
 
@@ -108,7 +108,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @description Obtiene la lista de bancos desde el servicio.
    */
   private obtenerListaBanco(): void {
-    this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('banco.json').subscribe(data => {
+    this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('banco.json').subscribe((data) => {
       this.bancoCatalogo = data.data as Catalogo[];
     });
   }
@@ -117,15 +117,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @description Obtiene la lista de justificaciones desde el servicio.
    */
   private obtenerListaJustificacion(): void {
-    this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json').subscribe(data => {
+    this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json').subscribe((data) => {
       this.justificacionCatalogo = data.data as Catalogo[];
     });
   }
+
+  /**
+   * @description Método de destrucción del componente.
+   */
   ngOnDestroy(): void {
-    this.importacionAcuiculturaServicio.obtenerDatos().subscribe((data) => {
-      console.log(data);
+    this.importacionAcuiculturaServicio.obtenerDatos().subscribe(() => {
     }, (error) => {
-      console.error(error);
-    })
+
+    });
   }
 }

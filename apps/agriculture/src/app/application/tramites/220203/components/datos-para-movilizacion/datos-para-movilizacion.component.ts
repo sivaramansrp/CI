@@ -28,6 +28,11 @@ export class DatosParaMovilizacionComponent implements OnInit {
    */
   formularioMovilizacion: FormGroup;
 
+  /**
+   * @description Constructor del componente.
+   * @param fb Servicio para construir formularios.
+   * @param importacionDeAcuiculturaServices Servicio para obtener datos de catálogos.
+   */
   constructor(
     private readonly fb: FormBuilder,
     private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService
@@ -40,9 +45,12 @@ export class DatosParaMovilizacionComponent implements OnInit {
     });
   }
 
+  /**
+   * @description Método del ciclo de vida que se ejecuta cuando el componente se inicializa.
+   */
   ngOnInit(): void {
     this.obtenerCatalogosTransporte();
-    this.obtenerCatalogosPuntos(); // Call this method to load points data
+    this.obtenerCatalogosPuntos();
   }
 
   /**
@@ -62,8 +70,4 @@ export class DatosParaMovilizacionComponent implements OnInit {
       this.puntos = data.data as Catalogo[];
     }));
   }
-
-
-
-
 }

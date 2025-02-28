@@ -10,8 +10,8 @@ describe('DatosParaMovilizacionComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [DatosParaMovilizacionComponent]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(DatosParaMovilizacionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -19,5 +19,9 @@ describe('DatosParaMovilizacionComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  it('should create formularioPago FormGroup on ngOnInit', () => {
+    component.ngOnInit();
+    expect(component.formularioMovilizacion).toBeDefined();
   });
 });

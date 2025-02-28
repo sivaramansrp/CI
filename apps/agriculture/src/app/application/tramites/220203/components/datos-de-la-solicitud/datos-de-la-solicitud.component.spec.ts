@@ -10,8 +10,8 @@ describe('DatosDeLaSolicitudComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [DatosDeLaSolicitudComponent]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -19,5 +19,9 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  it('should create formularioPago FormGroup on ngOnInit', () => {
+    component.constructor();
+    expect(component.datosMercanciaFormGroup).toBeDefined();
   });
 });
