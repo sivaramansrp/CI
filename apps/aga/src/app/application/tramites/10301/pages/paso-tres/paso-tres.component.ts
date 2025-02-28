@@ -1,0 +1,68 @@
+import { catchError, map } from 'rxjs';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { FirmaElectronicaComponent, ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
+import { TramiteStore } from '../../../../estados/tramite.store';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+/**
+ * Componente que representa el paso tres del trámite.
+ */
+@Component({
+  selector: 'paso-tres',
+  templateUrl: './paso-tres.component.html',
+  styleUrls: ['./paso-tres.component.scss'],
+  standalone: true,
+  imports:[FirmaElectronicaComponent, CommonModule, FormsModule, ReactiveFormsModule]
+})
+export class PasoTresComponent {
+  /**
+   * Tipo de persona.
+   */
+  tipoPersona!: number;
+
+  /**
+   * Constructor que se utiliza para la inyección de dependencias.
+   * @param router Servicio de enrutamiento.
+   * @param serviciosExtraordinariosServices Servicio de servicios extraordinarios.
+   * @param tramiteStore Almacén de trámites.
+   */
+  constructor(
+    private router: Router,
+    private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
+    private tramiteStore: TramiteStore
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
+
+  /**
+   * Obtiene el tipo de persona.
+   * @param tipo Tipo de persona.
+   */
+  obtenerTipoPersona(tipo: number): void {
+    this.tipoPersona = tipo;
+  }
+
+  /**
+   * Maneja el evento para obtener la firma y realiza acciones adicionales.
+   * @param ev La cadena de texto que representa la firma obtenida.
+   */
+  obtieneFirma(ev: string): void {
+    const firma: string = ev;
+    if (firma) {
+      this.serviciosExtraordinariosServices
+        .obtenerTramite(19)
+        .pipe(
+          map((tramite) => {
+            this.tramiteStore.establecerTramite(tramite.data, firma);
+            this.router.navigate(['servicios-extraordinarios/acuse']);
+          }),
+          catchError((_error) => {
+            return _error;
+          })
+        )
+        .subscribe();
+    }
+  }
+}

@@ -34,6 +34,13 @@ const ROUTES: Routes = [
         (m) => m.FuncionarioModule
       ),
   },
+  {
+    path: 'importador-exportador',
+    loadChildren: () =>
+      import('./tramites/10301/importador-exportador.module').then(
+        (m) => m.ImportadorExportadorModule
+      ),
+  }
 ];
 
 @NgModule({
