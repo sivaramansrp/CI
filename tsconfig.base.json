@@ -22,6 +22,9 @@
       "agriculture/Routes": [
         "apps/agriculture/src/app/remote-entry/entry.routes.ts"
       ],
+      "funcionario/Routes": [
+        "apps/funcionario/src/app/remote-entry/entry.routes.ts"
+      ],
       "login/Routes": ["apps/login/src/app/remote-entry/entry.routes.ts"],
       "se/Routes": ["apps/se/src/app/remote-entry/entry.routes.ts"],
       "semarnat/Routes": ["apps/semarnat/src/app/remote-entry/entry.routes.ts"]
