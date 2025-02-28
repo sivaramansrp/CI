@@ -27,6 +27,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
   },
+  {
+    path: 'muestras-mercancias',
+    loadChildren: () =>
+      import('./tramites/30901/renovaciones-muestras-mercancias.module').then(
+        (m) => m.RenovacionesMuestrasMercanciasModule
+      ),
+  },
 ];
 
 @NgModule({
