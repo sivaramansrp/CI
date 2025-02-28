@@ -73,7 +73,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @type {number}
    */
-  @Input() idFilaSeleccionada: number = -1;
+  idFilaSeleccionada!: number;
 
   /**
    * Almacena un array de los índices de las filas seleccionadas.

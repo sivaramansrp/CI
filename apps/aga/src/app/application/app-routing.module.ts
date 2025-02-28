@@ -27,13 +27,6 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
   },
-  {
-    path: 'bandeja-tareas-pendientes',
-    loadChildren: () =>
-      import('./funcionario/funcionario.module').then(
-        (m) => m.FuncionarioModule
-      ),
-  },
 ];
 
 @NgModule({
