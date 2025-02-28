@@ -16,30 +16,30 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './input-radio.component.html',
   styleUrl: './input-radio.component.scss',
-  host: { 'hostID': crypto.randomUUID().toString() }
+  host: {}
 })
 export class InputRadioComponent implements OnInit {
- /** Grupo de formulario para los botones de radio */
+  /** Grupo de formulario para los botones de radio */
   FormInputRadio!: FormGroup;
-    /**
-   * Array de opciones de radio, cada una con una etiqueta y un valor.
-    */
+  /**
+ * Array de opciones de radio, cada una con una etiqueta y un valor.
+  */
   @Input() radioOptions: { label: string; value: string | number }[] = [];
-   /**
-   * El valor actualmente seleccionado.
-   * @example 'option1'
-   */
+  /**
+  * El valor actualmente seleccionado.
+  * @example 'option1'
+  */
   @Input() selectedValue: string | number | null = null;
   /**
    * Indica si los botones de radio son requeridos.
    * @default false
    */
-  @Input() isRequired: boolean=false;
-   /**
-   * Diseño de los botones de radio, ya sea 'vertical' u 'horizontal'.
-   * @default 'vertical'
-   */
-  @Input() layout: 'vertical' | 'horizontal' = 'vertical'; 
+  @Input() isRequired: boolean = false;
+  /**
+  * Diseño de los botones de radio, ya sea 'vertical' u 'horizontal'.
+  * @default 'vertical'
+  */
+  @Input() layout: 'vertical' | 'horizontal' = 'vertical';
   /**
    * Evento emitido cuando el valor seleccionado cambia.
    */
@@ -50,9 +50,9 @@ export class InputRadioComponent implements OnInit {
     this.createFormRadio();
 
   }
-   /**
-   * Crea el grupo de formulario para los botones de radio con los validadores apropiados.
-   */
+  /**
+  * Crea el grupo de formulario para los botones de radio con los validadores apropiados.
+  */
   createFormRadio() {
     const validators = this.isRequired ? [Validators.required] : [];
     this.FormInputRadio = this.fb.group({

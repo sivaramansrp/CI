@@ -10,7 +10,7 @@ import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
   styleUrl: './tabla-dinamica.component.scss',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  host: { 'hostID': crypto.randomUUID().toString()}
+  host: {}
 })
 export class TablaDinamicaComponent<T> {
   /**

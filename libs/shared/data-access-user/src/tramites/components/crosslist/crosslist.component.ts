@@ -8,9 +8,9 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './crosslist.component.html',
   styleUrl: './crosslist.component.scss',
-  host: { 'hostID': crypto.randomUUID().toString() }
+  host: {}
 })
-export class CrosslistComponent implements OnInit ,OnChanges {
+export class CrosslistComponent implements OnInit, OnChanges {
   @Input({ required: true }) fechas!: string[];
   @Input() botonField: any;
   fechasDatos: string[] = [];
@@ -50,7 +50,7 @@ export class CrosslistComponent implements OnInit ,OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(changes['fechas'].currentValue){
+    if (changes['fechas'].currentValue) {
       this.fechas = [...changes['fechas'].currentValue];
       this.fechasDatos = [...this.fechas]
     }

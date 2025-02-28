@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
   imports: [
     CommonModule
   ],
-  host: { 'hostID': crypto.randomUUID().toString() }
+  host: {}
 })
 export class TableComponent {
   @Input() enableScrollbar: boolean = false;
@@ -26,7 +26,7 @@ export class TableComponent {
    * @description 
    * commonTableBody se utiliza para obtener datos del cuerpo de la tabla de la componente
    */
-  @Input() commonTableBody: any =[];
+  @Input() commonTableBody: any = [];
   /**
    * @description
    * tableData se utiliza para obtener datos de la tabla de la componente
@@ -35,7 +35,7 @@ export class TableComponent {
     tableHeader: [],
     tableBody: []
   };
-  
+
   /**
    * @description
    * ngOnInit se utiliza para inicializar la tabla de la componente

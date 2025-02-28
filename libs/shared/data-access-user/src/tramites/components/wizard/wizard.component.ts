@@ -17,7 +17,7 @@ import { WizardService } from '../../../core/services/shared/wizard/wizard.servi
   imports: [CommonModule],
   templateUrl: './wizard.component.html',
   styleUrl: './wizard.component.scss',
-  host: { 'hostID': crypto.randomUUID().toString() }
+  host: {}
 })
 export class WizardComponent {
   @Input() listaPasos: Array<ListaPasosWizard> = [];
@@ -58,7 +58,7 @@ export class WizardComponent {
     this.indiceActual = this.indiceActual === this.maximo ? this.indiceActual : this.indiceActual + 1;
     this.lista[this.indiceActual].activo = activo;
 
-    if( this.indiceActual === (this.maximo)) {
+    if (this.indiceActual === (this.maximo)) {
       this.lista[this.indiceActual].completado = activo;
     }
   }

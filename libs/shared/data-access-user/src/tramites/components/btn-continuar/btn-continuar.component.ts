@@ -17,14 +17,14 @@ interface AccionBoton {
   imports: [],
   templateUrl: './btn-continuar.component.html',
   styleUrl: './btn-continuar.component.scss',
-  host: { 'hostID': crypto.randomUUID().toString() }
+  host: {}
 })
 
 export class BtnContinuarComponent {
-  @Input({required:true}) datos!: DatosPasos;
+  @Input({ required: true }) datos!: DatosPasos;
   @Output() continuarEvento = new EventEmitter<AccionBoton>();
 
-// @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  // @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   wizardService = inject(WizardService);
   public seccion!: SeccionState;
@@ -33,7 +33,7 @@ export class BtnContinuarComponent {
 
   constructor(
     private seccionQuery: SeccionQuery,
-  ){
+  ) {
 
   }
 
@@ -49,16 +49,16 @@ export class BtnContinuarComponent {
   }
 
   get btnAntVisible() {
-    return (this.datos.indice === 1  ? 'hidden' : 'visible')
+    return (this.datos.indice === 1 ? 'hidden' : 'visible')
   }
 
   get btnContVisible() {
-    return (this.datos.indice === this.datos.nroPasos  ? false : true)
+    return (this.datos.indice === this.datos.nroPasos ? false : true)
   }
 
 
-  continuar() : void {
-    const condicion = this.datos.indice > 0  && this.datos.indice < this.datos.nroPasos;
+  continuar(): void {
+    const condicion = this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
     if (condicion) {
       this.wizardService.cambio_indice(this.datos.indice);
       const datosContinuar: AccionBoton = {
@@ -69,7 +69,7 @@ export class BtnContinuarComponent {
     }
   }
 
-  anterior() : void {
+  anterior(): void {
     const condicion = this.datos.indice > 1 && this.datos.indice < this.datos.nroPasos + 1;
     if (condicion) {
       const datosAnterior: AccionBoton = {

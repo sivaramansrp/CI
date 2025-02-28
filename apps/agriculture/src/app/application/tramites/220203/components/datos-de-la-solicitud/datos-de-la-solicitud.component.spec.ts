@@ -1,13 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
-import { FormBuilder } from '@angular/forms';
-import { ImportacionDeAcuiculturaService } from '@ng-mf/data-access-user';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { AlertComponent, CatalogoSelectComponent, ImportacionDeAcuiculturaService, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;
   let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
+  let httpClient: HttpClient;
+  let httpTestingController: HttpTestingController;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DatosDeLaSolicitudComponent],
+      imports: [HttpClientTestingModule, TituloComponent, AlertComponent, CatalogoSelectComponent, TablaDinamicaComponent, ReactiveFormsModule, TableComponent],
+
       providers: [
         FormBuilder,
         ImportacionDeAcuiculturaService
@@ -17,6 +23,8 @@ describe('DatosDeLaSolicitudComponent', () => {
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    httpClient = TestBed.inject(HttpClient); // Inject the HttpClient
+    httpTestingController = TestBed.inject(HttpTestingController); // Inject HttpTestingController
   });
   it('should create the component', () => {
     expect(component).toBeTruthy();
