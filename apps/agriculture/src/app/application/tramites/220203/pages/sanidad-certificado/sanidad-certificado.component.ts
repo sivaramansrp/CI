@@ -1,14 +1,11 @@
+import { AccionBoton, DatosPasos, ListaPasosWizard, PASOSACUICULTURA, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { PASOSACUICULTURA, ListaPasosWizard220203, AccionBoton, WizardComponent, DatosPasos } from '@ng-mf/data-access-user';
-
-
-
 @Component({
   selector: 'app-sanidad-certificado',
   templateUrl: './sanidad-certificado.component.html',
 })
 export class SanidadCertificadoComponent {
-  pasos: ListaPasosWizard220203[] = PASOSACUICULTURA;
+  pasos: ListaPasosWizard[] = PASOSACUICULTURA;
   indice: number = 1;
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,

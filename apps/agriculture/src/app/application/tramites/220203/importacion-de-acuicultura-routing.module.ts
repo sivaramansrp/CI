@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
-
 import { RouterModule, Routes } from '@angular/router';
 import { SanidadCertificadoComponent } from './pages/sanidad-certificado/sanidad-certificado.component';
-
-const routes: Routes = [
+const ROUTES: Routes = [ // Renamed to UPPER_CASE
   {
     path: 'sanidad',
     component: SanidadCertificadoComponent,
@@ -13,10 +11,8 @@ const routes: Routes = [
     pathMatch: 'full',
     redirectTo: 'sanidad',
   },
-];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
+]; @NgModule({
+  imports: [RouterModule.forChild(ROUTES)], // Used the updated name here
   exports: [RouterModule]
 })
 export class ImportacionDeAcuiculturaRoutingModule { }

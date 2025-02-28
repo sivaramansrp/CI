@@ -1,6 +1,13 @@
+import {
+  Catalogo,
+  FECHA_SALIDA_ACUICULTURA,
+  ImportacionDeAcuiculturaService,
+  InputFecha,
+  OpcionDeRadio,
+  TIPO_RADIO
+} from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO, InputFecha, ImportacionDeAcuiculturaService, Catalogo, OpcionDeRadio } from '@ng-mf/data-access-user';
 /**
  * @description Componente para el pago de derechos en la importación de acuicultura.
  */
@@ -11,8 +18,8 @@ import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO, InputFecha, ImportacionDeAcuicult
 })
 export class PagoDeDerechosComponent implements OnInit {
   /**
-   * @description Formulario para el pago de derechos.
-   */
+ * @description Formulario para el pago de derechos.
+ */
   formularioPago!: FormGroup;
   /**
    * @description Opciones de radio para la exención de pago.
@@ -34,6 +41,7 @@ export class PagoDeDerechosComponent implements OnInit {
    * @description Configuración para el input de fecha de salida.
    */
   fechaFinalInput: InputFecha = FECHA_SALIDA_ACUICULTURA;
+
   /**
    * @description Constructor que inicializa el servicio de formularios y el servicio de importación de acuicultura.
    * @param fb FormBuilder para la creación de formularios reactivos.
@@ -42,7 +50,10 @@ export class PagoDeDerechosComponent implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     private readonly importacionAcuiculturaServicio: ImportacionDeAcuiculturaService
-  ) { }
+  ) {
+    console.log('PAGO DE DERECHOS COMPONENT');
+  }
+
   /**
    * @description Método de inicialización del componente.
    */
@@ -51,22 +62,24 @@ export class PagoDeDerechosComponent implements OnInit {
     this.obtenerListaJustificacion();
     this.obtenerListaBanco();
   }
+
   /**
    * @description Crea el formulario de pago según el valor de `exentoPagoValor`.
    */
   private crearFormularioPago(): void {
-    const esExento = this.exentoPagoValor === 'Si';
+    const ESEXENTO = this.exentoPagoValor === 'Si';  // This is a simple flag, it doesn't need to be upper case
     this.formularioPago = this.fb.group({
       exentoPago: ['', Validators.required],
       justificacion: ['', Validators.required],
       claveReferencia: [{ value: '', disabled: true }],
       cadenaDependencia: [{ value: '', disabled: true }],
       banco: ['', Validators.required],
-      llavePago: [{ value: '', disabled: esExento }],
+      llavePago: [{ value: '', disabled: ESEXENTO }],
       fechaPago: [{ value: '', disabled: true }],
       importePago: [{ value: '', disabled: true }],
     });
   }
+
   /**
    * @description Cambia el valor de un campo del formulario.
    * @param nombreControl Nombre del campo del formulario.
@@ -79,6 +92,7 @@ export class PagoDeDerechosComponent implements OnInit {
     this.exentoPagoValor = valor;
     this.crearFormularioPago();
   }
+
   /**
    * @description Actualiza la fecha de pago en el formulario.
    * @param nuevoValor Nueva fecha de pago.
@@ -88,6 +102,7 @@ export class PagoDeDerechosComponent implements OnInit {
       fechaPago: nuevoValor,
     });
   }
+
   /**
    * @description Obtiene la lista de bancos desde el servicio.
    */
@@ -96,9 +111,10 @@ export class PagoDeDerechosComponent implements OnInit {
       this.bancoCatalogo = data.data as Catalogo[];
     });
   }
+
   /**
    * @description Obtiene la lista de justificaciones desde el servicio.
-  */
+   */
   private obtenerListaJustificacion(): void {
     this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json').subscribe((data) => {
       this.justificacionCatalogo = data.data as Catalogo[];

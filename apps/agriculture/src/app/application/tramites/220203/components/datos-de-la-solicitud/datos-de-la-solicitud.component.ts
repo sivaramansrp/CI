@@ -1,9 +1,6 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Catalogo, ConfiguracionColumna, ImportacionDeAcuiculturaService, MENSAJE_DOBLE_CLIC, TablaSeleccion } from '@ng-mf/data-access-user';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Catalogo, ConfiguracionColumna, ImportacionDeAcuiculturaService, TablaSeleccion, MENSAJE_DOBLE_CLIC } from '@ng-mf/data-access-user';
-
-
-
 interface DatoTabla {
   solicitud: string;
   fechaCreacion: string;
@@ -27,8 +24,6 @@ interface FilaSolicitud {
   cantidad: number;
   proveedor: string;
 }
-
-
 /**
  * @description Componente para gestionar los datos de la solicitud de importación de acuicultura.
  */
@@ -37,7 +32,7 @@ interface FilaSolicitud {
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss'
 })
-export class DatosDeLaSolicitudComponent implements OnDestroy {
+export class DatosDeLaSolicitudComponent {
   /**
    * @description Mensaje que se muestra en una alerta al hacer doble clic.
    */
@@ -84,7 +79,6 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
    * @description Grupo de formularios para los datos de la mercancía.
    */
   datosMercanciaFormGroup!: FormGroup;
-
   /**
    * @description Lista de catálogos para las aduanas de ingreso.
    */
@@ -137,17 +131,14 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
    * @description Datos de la tabla de detalles.
    */
   detallecuerpoTabla: string[] = [];
-
   /**
    * @description Datos de la tabla principal.
    */
   cuerpoTabla: string[] = [];
-
   /**
    * @description Indica si se debe mostrar la barra de desplazamiento.
    */
   myScrollbarValue: boolean = true;
-
   /**
    * @description Constructor del componente.
    * @param fb Servicio para construir formularios.
@@ -157,7 +148,6 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
     this.createFromGroup();
     this.obtenerCatalogosTransporte();
   }
-
   /**
    * @description Crea el grupo de formularios para los datos de la mercancía.
    */
@@ -195,22 +185,14 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
         nombreCientifico: ['', Validators.required]
       })
     })
-
-
-
   }
   /**
   * @description Obtiene los datos del catálogo de transporte.
   */
-
   obtenerCatalogosTransporte() {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('transporte.json').subscribe((data => {
       this.aduanaDeIngresoList = data.data as Catalogo[];
     }));
-  }  /**
-  * @description Obtiene los datos del catálogo de transporte.
-  */  ngOnDestroy(): void {
-    this.importacionDeAcuiculturaServices.actualizarDatosMercancia(this.datosMercanciaFormGroup.value);
   }
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
