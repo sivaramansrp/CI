@@ -251,7 +251,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
    * @property {string} contextPath
    * Ruta base para peticiones al servidor.
    */
-  contextPath: string = 'https://your-server.com';
+  contextPath: string = '';
 
   /**
    *  compo doc
