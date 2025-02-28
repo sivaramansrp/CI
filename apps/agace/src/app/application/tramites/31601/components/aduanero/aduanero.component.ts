@@ -115,10 +115,10 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
 
   /**
    *  compo doc
-   * @property {Modal} modalInstanceInstaciones
+   * @property {Modal} modalInstanceInstalaciones
    * Instancia del modal de instalaciones.
    */
-  modalInstanceInstaciones!: Modal;
+  modalInstanceInstalaciones!: Modal;
 
   /**
    *  compo doc
@@ -251,7 +251,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
    * @property {string} contextPath
    * Ruta base para peticiones al servidor.
    */
-  contextPath: string = 'https://your-server.com';
+  contextPath: string = '';
 
   /**
    *  compo doc
@@ -326,7 +326,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
    */
   ngOnInit() {
     this.preOperativeForm = this.fb.group({
-      authorizationIVAIEPS: ['', Validators.required],
+      autorizacionIVAIEPS: ['', Validators.required],
       preOperativo: ['', Validators.required],
       IndiqueSi: ['', Validators.required],
       Senale: ['', Validators.required],
@@ -419,7 +419,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
 
     // Inicializa el modal de instalaciones
     if (this.instalacionesModal) {
-      this.modalInstanceInstaciones = new Modal(
+      this.modalInstanceInstalaciones = new Modal(
         this.instalacionesModal.nativeElement
       );
     }
@@ -446,9 +446,9 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
   /**
    * Método para abrir el modal de instalaciones.
    */
-  openInstacionesModal() {
-    if (this.modalInstanceInstaciones) {
-      this.modalInstanceInstaciones.show();
+  openInstalacionesModal() {
+    if (this.modalInstanceInstalaciones) {
+      this.modalInstanceInstalaciones.show();
     }
   }
 
