@@ -5,13 +5,13 @@ import { Injectable } from '@angular/core';
  * Creacion del estado inicial para la interfaz de tramite 31601
  * @returns DatosPorRegimen31601
  */
-export interface DatosPorRegimen31601State {
+export interface DatosPorRegimenAgaceState {
     comboBimestresOne: string | null;
     comboBimestresTwo: string | null;
     comboBimestresThree: string | null;
 }
 
-export function createInitialState(): DatosPorRegimen31601State {
+export function createInitialState(): DatosPorRegimenAgaceState {
   return {
     comboBimestresOne: null,
     comboBimestresTwo: null,
@@ -22,8 +22,8 @@ export function createInitialState(): DatosPorRegimen31601State {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite31601', resettable: true })
-export class Tramite31601Store extends Store<DatosPorRegimen31601State> {
+@StoreConfig({ name: 'tramiteAgace', resettable: true })
+export class TramiteAgaceStore extends Store<DatosPorRegimenAgaceState> {
   constructor() {
     super(createInitialState());
   }

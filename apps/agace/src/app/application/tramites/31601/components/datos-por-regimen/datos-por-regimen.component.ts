@@ -17,7 +17,7 @@ import { REQUERIDO } from 'libs/shared/data-access-user/src/tramites/constantes/
 import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { map, merge } from 'rxjs';
-import { Tramite31601Store } from '../../../../estados/tramites/tramites31601.store';
+import { TramiteAgaceStore } from '../../../../estados/tramites/tramitesagace.store';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import { TableBodyData } from '@ng-mf/data-access-user';
 
@@ -157,7 +157,7 @@ export class DatosPorRegimenComponent implements OnInit {
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
     private _pantallaSvc: ServiciosPantallaService,
-    private tramite31601Store: Tramite31601Store
+    private tramiteAgaceStore: TramiteAgaceStore
   ) {
     this.crearRegimenForm();
   }
@@ -370,7 +370,7 @@ export class DatosPorRegimenComponent implements OnInit {
    */
   public bimestreUnoSeleccion() {
     const bimestres = this.regimenForm.get('comboBimestresOne')?.value;
-    this.tramite31601Store.setComboBimestresOne(bimestres);
+    this.tramiteAgaceStore.setComboBimestresOne(bimestres);
   }
 
   /**
@@ -384,7 +384,7 @@ export class DatosPorRegimenComponent implements OnInit {
    */
   public bimestreDosSeleccion() {
     const bimestres = this.regimenForm.get('comboBimestresTwo')?.value;
-    this.tramite31601Store.setComboBimestresTwo(bimestres);
+    this.tramiteAgaceStore.setComboBimestresTwo(bimestres);
   }
 
   /**
@@ -394,7 +394,7 @@ export class DatosPorRegimenComponent implements OnInit {
    */
   public bimestreTresSeleccion() {
     const bimestres = this.regimenForm.get('comboBimestresThree')?.value;
-    this.tramite31601Store.setComboBimestresThree(bimestres);
+    this.tramiteAgaceStore.setComboBimestresThree(bimestres);
   }
 
   /**
@@ -439,21 +439,21 @@ export class DatosPorRegimenComponent implements OnInit {
   /**
    * Maneja la acción del modal para el primer bimestre.
    * Recupera el valor de 'agregarCatalogOne' del formulario de régimen
-   * y lo establece en el tramite31601Store utilizando el método setComboBimestresOne.
+   * y lo establece en el tramiteAgaceStore utilizando el método setComboBimestresOne.
    */
   public modalBimestreUno() {
     const bimestres = this.regimenForm.get('agregarCatalogOne')?.value;
-    this.tramite31601Store.setComboBimestresOne(bimestres);
+    this.tramiteAgaceStore.setComboBimestresOne(bimestres);
   }
 
   /**
    * Maneja la acción del modal para el segundo bimestre.
    * Recupera el valor de 'agregarCatalogTwo' del formulario de régimen
-   * y lo establece en el comboBimestresOne del tramite31601Store.
+   * y lo establece en el comboBimestresOne del tramiteAgaceStore.
    */
   public modalBimestreDos() {
     const bimestres = this.regimenForm.get('agregarCatalogTwo')?.value;
-    this.tramite31601Store.setComboBimestresOne(bimestres);
+    this.tramiteAgaceStore.setComboBimestresOne(bimestres);
   }
 
   /**
@@ -461,11 +461,11 @@ export class DatosPorRegimenComponent implements OnInit {
    * en la tienda para su posterior procesamiento.
    *
    * Este método recupera el valor de 'agregarCatalogThree' del grupo de formularios 'regimenForm'
-   * y lo utiliza para actualizar el 'ComboBimestresOne' en el 'tramite31601Store'.
+   * y lo utiliza para actualizar el 'ComboBimestresOne' en el 'tramiteAgaceStore'.
    */
   public modalBimestreTres() {
     const bimestres = this.regimenForm.get('agregarCatalogThree')?.value;
-    this.tramite31601Store.setComboBimestresOne(bimestres);
+    this.tramiteAgaceStore.setComboBimestresOne(bimestres);
   }
 
   /**

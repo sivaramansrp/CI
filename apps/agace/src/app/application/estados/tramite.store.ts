@@ -4,7 +4,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 /**
  * Estado para el número de trámite
  */
-export interface TramiteState {
+export interface TramiteAgaceState {
   idTramite: string;
   firma: string;
 }
@@ -13,7 +13,7 @@ export interface TramiteState {
  * Creación del estado inicial para el trámite
  * @returns TramiteState
  */
-export function createInitialState(): TramiteState {
+export function createInitialState(): TramiteAgaceState {
   return {
     idTramite: '',
     firma: '',
@@ -24,7 +24,7 @@ export function createInitialState(): TramiteState {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite', resettable: true })
-export class TramiteStore extends Store<TramiteState> {
+export class TramiteAgaceStore extends Store<TramiteAgaceState> {
   constructor() {
     super(createInitialState());
   }

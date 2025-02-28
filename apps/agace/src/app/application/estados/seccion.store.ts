@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 /**
  * Estado para almacenar la información de cada sección contenida dentro de un paso
  */
-export interface SeccionState {
+export interface SeccionAgaceState {
   seccion: boolean[];
   formaValida: boolean[];
 }
@@ -13,7 +13,7 @@ export interface SeccionState {
  * Creación del estado inicial para la interfaz de secciones
  * @returns SeccionState
  */
-export function createInitialState(): SeccionState {
+export function createInitialState(): SeccionAgaceState {
   return {
     seccion: [],
     formaValida: [],
@@ -24,7 +24,7 @@ export function createInitialState(): SeccionState {
   providedIn: 'root'
 })
 @StoreConfig({ name: 'seccion', resettable: true, })
-export class SeccionStore extends Store<SeccionState> {
+export class SeccionAgaceStore extends Store<SeccionAgaceState> {
   constructor() {
     super(createInitialState());
   }

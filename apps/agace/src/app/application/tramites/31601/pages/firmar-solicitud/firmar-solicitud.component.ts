@@ -2,7 +2,7 @@ import { catchError, map } from 'rxjs';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ServiciosExtraordinariosService } from 'libs/shared/data-access-user/src/core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
-import { TramiteStore } from '../../../../estados/tramite.store';
+import { TramiteAgaceStore } from '../../../../estados/tramite.store';
 import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 
 /** 
@@ -17,12 +17,12 @@ export class FirmarSolicitudComponent {
    * Constructor del componente.
    * @param router - El enrutador.
    * @param serviciosExtraordinariosServices - Los servicios extraordinarios.
-   * @param tramiteStore - El almacén de trámites.
+   * @param TramiteAgaceStore - El almacén de trámites.
    */
   constructor(
     private router: Router,
     private serviciosExtraordinariosServices: ServiciosPantallaService,
-    private tramiteStore: TramiteStore
+    private TramiteAgaceStore: TramiteAgaceStore
   ) {
     // Constructor
   }
@@ -39,7 +39,7 @@ export class FirmarSolicitudComponent {
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {
-            this.tramiteStore.establecerTramite(tramite.data, firma);
+            this.TramiteAgaceStore.establecerTramite(tramite.data, firma);
             this.router.navigate(['servicios-extraordinarios/acuse']);
           }),
           catchError((_error) => {
