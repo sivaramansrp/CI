@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { LicitacionesDisponiblesService } from './licitaciones-disponibles.service';
+import { LicitacionesDisponiblesService } from './licitacionesDisponibles.service';
 
 describe('LicitacionesDisponiblesService', () => {
   let service: LicitacionesDisponiblesService;

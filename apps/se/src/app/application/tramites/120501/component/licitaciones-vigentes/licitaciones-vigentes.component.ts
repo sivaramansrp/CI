@@ -23,7 +23,7 @@ import { TableComponent } from '@ng-mf/data-access-user';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { LicitacionesDisponiblesService } from 'libs/shared/data-access-user/src/core/services/120501/licitaciones-disponibles.service';
+import { LicitacionesDisponiblesService } from 'libs/shared/data-access-user/src/core/services/120501/licitacionesDisponibles.service';
 
 import { Subject, takeUntil } from 'rxjs';
 
