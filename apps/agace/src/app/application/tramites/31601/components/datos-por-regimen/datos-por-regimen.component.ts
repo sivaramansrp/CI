@@ -275,9 +275,9 @@ export class DatosPorRegimenComponent implements OnInit {
    * - `totals`: Un campo deshabilitado para totales.
    * - `empleadosPropios`: Un campo requerido para empleados propios.
    * - `numeroEmpleados`: Un campo requerido para el número de empleados.
-   * - `comboBimestresOne`: Un campo opcional para el primer combo bimestral.
-   * - `comboBimestresTwo`: Un campo opcional para el segundo combo bimestral.
-   * - `comboBimestresThree`: Un campo opcional para el tercer combo bimestral.
+   * - `comboBimestresUno`: Un campo opcional para el primer combo bimestral.
+   * - `comboBimestresDos`: Un campo opcional para el segundo combo bimestral.
+   * - `comboBimestresTres`: Un campo opcional para el tercer combo bimestral.
    * - `proveedorCumplimiento`: Un campo requerido para proveedor de cumplimiento.
    * - `declaracionISR`: Un campo requerido para declaración de ISR.
    * - `cancelacion`: Un campo requerido para cancelación.
@@ -303,9 +303,9 @@ export class DatosPorRegimenComponent implements OnInit {
       totals: [{ value: '', disabled: true }],
       empleadosPropios: ['', Validators.required],
       numeroEmpleados: ['', Validators.required],
-      comboBimestresOne: [''],
-      comboBimestresTwo: [''],
-      comboBimestresThree: [''],
+      comboBimestresUno: [''],
+      comboBimestresDos: [''],
+      comboBimestresTres: [''],
       proveedorCumplimiento: ['', Validators.required],
       declaracionISR: ['', Validators.required],
       cancelacion: ['', Validators.required],
@@ -365,17 +365,17 @@ export class DatosPorRegimenComponent implements OnInit {
 
   /**
    * Maneja la selección del primer bimestre (período de dos meses) del formulario.
-   * Recupera el valor seleccionado del control 'comboBimestresOne' en el formulario
+   * Recupera el valor seleccionado del control 'comboBimestresUno' en el formulario
    * y actualiza la tienda con el bimestre seleccionado.
    */
   public bimestreUnoSeleccion() {
-    const bimestres = this.regimenForm.get('comboBimestresOne')?.value;
-    this.tramiteAgaceStore.setComboBimestresOne(bimestres);
+    const bimestres = this.regimenForm.get('comboBimestresUno')?.value;
+    this.tramiteAgaceStore.establecerComboBimestresUno(bimestres);
   }
 
   /**
    * Maneja la selección del segundo bimestre (período de dos meses) del formulario.
-   * Recupera el valor seleccionado del control 'comboBimestresTwo' en el formulario
+   * Recupera el valor seleccionado del control 'comboBimestresDos' en el formulario
    * y actualiza la tienda con el bimestre seleccionado.
    *
    * @remarks
@@ -383,18 +383,18 @@ export class DatosPorRegimenComponent implements OnInit {
    * con la tienda de gestión de estado de la aplicación.
    */
   public bimestreDosSeleccion() {
-    const bimestres = this.regimenForm.get('comboBimestresTwo')?.value;
-    this.tramiteAgaceStore.setComboBimestresTwo(bimestres);
+    const bimestres = this.regimenForm.get('comboBimestresDos')?.value;
+    this.tramiteAgaceStore.establecerComboBimestresDos(bimestres);
   }
 
   /**
    * Maneja la selección del tercer bimestre (período de dos meses) del formulario.
-   * Recupera el valor seleccionado del control 'comboBimestresThree' en el formulario
+   * Recupera el valor seleccionado del control 'comboBimestresTres' en el formulario
    * y actualiza la tienda con el bimestre seleccionado.
    */
   public bimestreTresSeleccion() {
-    const bimestres = this.regimenForm.get('comboBimestresThree')?.value;
-    this.tramiteAgaceStore.setComboBimestresThree(bimestres);
+    const bimestres = this.regimenForm.get('comboBimestresTres')?.value;
+    this.tramiteAgaceStore.establecerComboBimestresTres(bimestres);
   }
 
   /**
@@ -418,9 +418,9 @@ export class DatosPorRegimenComponent implements OnInit {
    * - `numero1re`: Una entrada de texto para el primer número.
    * - `numero2do`: Una entrada de texto para el segundo número.
    * - `numero3re`: Una entrada de texto para el tercer número.
-   * - `agregarCatalogOne`: Una entrada de texto para la primera entrada del catálogo.
-   * - `agregarCatalogTwo`: Una entrada de texto para la segunda entrada del catálogo.
-   * - `agregarCatalogThree`: Una entrada de texto para la tercera entrada del catálogo.
+   * - `agregarCatalogoUno`: Una entrada de texto para la primera entrada del catálogo.
+   * - `agregarCatalogoDos`: Una entrada de texto para la segunda entrada del catálogo.
+   * - `agregarCatalogoTres`: Una entrada de texto para la tercera entrada del catálogo.
    */
   public getAgregarForm() {
     this.agregarForm = this.fb.group({
@@ -430,42 +430,42 @@ export class DatosPorRegimenComponent implements OnInit {
       numero1re: [''],
       numero2do: [''],
       numero3re: [''],
-      agregarCatalogOne: [''],
-      agregarCatalogTwo: [''],
-      agregarCatalogThree: [''],
+      agregarCatalogoUno: [''],
+      agregarCatalogoDos: [''],
+      agregarCatalogoTres: [''],
     });
   }
 
   /**
    * Maneja la acción del modal para el primer bimestre.
-   * Recupera el valor de 'agregarCatalogOne' del formulario de régimen
-   * y lo establece en el tramiteAgaceStore utilizando el método setComboBimestresOne.
+   * Recupera el valor de 'agregarCatalogoUno' del formulario de régimen
+   * y lo establece en el tramiteAgaceStore utilizando el método setcomboBimestresUno.
    */
   public modalBimestreUno() {
-    const bimestres = this.regimenForm.get('agregarCatalogOne')?.value;
-    this.tramiteAgaceStore.setComboBimestresOne(bimestres);
+    const bimestres = this.regimenForm.get('agregarCatalogoUno')?.value;
+    this.tramiteAgaceStore.establecerComboBimestresUno(bimestres);
   }
 
   /**
    * Maneja la acción del modal para el segundo bimestre.
-   * Recupera el valor de 'agregarCatalogTwo' del formulario de régimen
-   * y lo establece en el comboBimestresOne del tramiteAgaceStore.
+   * Recupera el valor de 'agregarCatalogoDos' del formulario de régimen
+   * y lo establece en el comboBimestresUno del tramiteAgaceStore.
    */
   public modalBimestreDos() {
-    const bimestres = this.regimenForm.get('agregarCatalogTwo')?.value;
-    this.tramiteAgaceStore.setComboBimestresOne(bimestres);
+    const bimestres = this.regimenForm.get('agregarCatalogoDos')?.value;
+    this.tramiteAgaceStore.establecerComboBimestresUno(bimestres);
   }
 
   /**
    * Abre un modal para seleccionar bimestres (períodos de dos meses) y establece el valor seleccionado
    * en la tienda para su posterior procesamiento.
    *
-   * Este método recupera el valor de 'agregarCatalogThree' del grupo de formularios 'regimenForm'
-   * y lo utiliza para actualizar el 'ComboBimestresOne' en el 'tramiteAgaceStore'.
+   * Este método recupera el valor de 'agregarCatalogoTres' del grupo de formularios 'regimenForm'
+   * y lo utiliza para actualizar el 'comboBimestresUno' en el 'tramiteAgaceStore'.
    */
   public modalBimestreTres() {
-    const bimestres = this.regimenForm.get('agregarCatalogThree')?.value;
-    this.tramiteAgaceStore.setComboBimestresOne(bimestres);
+    const bimestres = this.regimenForm.get('agregarCatalogoTres')?.value;
+    this.tramiteAgaceStore.establecerComboBimestresUno(bimestres);
   }
 
   /**
