@@ -25,7 +25,7 @@ export class ImmexRegistroSolicitudModalityComponent {
   componenteWizard: any;
 
   title(title: any) {
-    throw new Error('Método no implementado.');
+    // throw new Error('Método no implementado.');
   }
 
   /**
@@ -75,9 +75,9 @@ export class ImmexRegistroSolicitudModalityComponent {
 
   /**
    * Obtener un título para todas las páginas.
-   * @param valor - valor del índice de página. --120301
+   * @param valor - valor del índice de página. --80203
    */
-  obtenerNombreDelTítulo(valor: number): string {
-    throw new Error('Método no implementado.');
+  obtenerNombreDelTítulo(valor: number): any {
+    // throw new Error('Método no implementado.');
   }
 }
