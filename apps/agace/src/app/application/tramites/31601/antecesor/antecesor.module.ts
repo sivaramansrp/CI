@@ -12,7 +12,6 @@ import { EnlaceComponent } from '../components/enlace/enlace.component';
 import { PersonaComponent } from '../components/persona/persona.component';
 
 import { AduaneroComponent } from '../components/aduanero/aduanero.component';
-import { SharedModule } from '@ng-mf/data-access-user';
 
 import { CapturarIvaeiepsComponent } from '../components/capturar-ivaeieps/capturar-ivaeieps.component';
 import { AnexarRequisitosComponent } from '../components/anexar-requisitos/anexar-requisitos.component';
@@ -22,7 +21,7 @@ import { FirmarSolicitudComponent } from '../pages/firmar-solicitud/firmar-solic
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { RequisitosComponent } from '../components/requisitos/requisitos.component';
-import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
+import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({

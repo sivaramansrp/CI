@@ -105,11 +105,14 @@ It will show tasks that you can run with Nx.
 - "include": ["apps/aga/src/**/*.ts"], - change aga into your procedure/dept
 
 ## Unittesing Module
-- npm run test:aga
+- npx nx run test:aga
 - If application / procedure specific
-- Goto aga/tsconfig.spec.js
-- "include": ["src/220401/**/*.ts"], - change aga into your procedure/dept
-- npx nx test se --testPathPattern=apps/se/src/app/application/tramites/120601
+- npx nx test se --testPathPattern=apps/se/src/app/application/tramites/120301
+
+# Lint
+- npx nx run lint:aga
+- If application / procedure specific
+- npx nx lint aga --lint-file-patterns="apps/aga/src/app/application/tramites/120301/**/*"
 
 # Remove cache
 - npx nx reset
