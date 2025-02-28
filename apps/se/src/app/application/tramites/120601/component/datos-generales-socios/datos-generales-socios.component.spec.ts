@@ -1,11 +1,12 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosGeneralesSociosComponent } from './datos-generales-socios.component';
+
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { TituloComponent, BtnContinuarComponent, InputRadioComponent, AlertComponent, TableComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+
+import { AlertComponent, BtnContinuarComponent, InputRadioComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { DATOS_GENERALES_SOCIOS, DATOS_GENERALES_EXTRANJEROS } from 'libs/shared/data-access-user/src/tramites/constantes/120601/datos-generales-socios-tabledata.enum';
 
 describe('DatosGeneralesSociosComponent', () => {
   let component: DatosGeneralesSociosComponent;

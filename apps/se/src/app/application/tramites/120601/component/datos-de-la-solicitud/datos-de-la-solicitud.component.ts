@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Catalogo, CatalogoSelectComponent, SelectCatalogosComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 /**
- * Component representing the data of the request in a multi-step process.
+ * Componente que representa los datos de la solicitud en un proceso de múltiples pasos.
  */
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -23,23 +23,23 @@ import { Catalogo, CatalogoSelectComponent, SelectCatalogosComponent, TituloComp
 export class DatosDeLaSolicitudComponent implements OnInit {
 
   /**
-   * The form group for the request data.
+   * El formulario para los datos de la solicitud.
    */
   public solicitudForm!: FormGroup;
 
   /**
-   * The list of company types.
+   * La lista de tipos de empresa.
    */
   public tipoDeEmpresa!: Catalogo[];
 
   /**
-   * Constructor for DatosDeLaSolicitudComponent.
-   * @param fb The FormBuilder service.
+   * Constructor de DatosDeLaSolicitudComponent.
+   * @param fb El servicio FormBuilder.
    */
   constructor(private fb: FormBuilder) {}
 
   /**
-   * Initializes the component.
+   * Inicializa el componente.
    */
   ngOnInit(): void {
     this.crearFormulario();
@@ -47,7 +47,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   }
 
   /**
-   * Creates the form group for the request data.
+   * Crea el formulario para los datos de la solicitud.
    */
   crearFormulario(): void {
     this.solicitudForm = this.fb.group({
@@ -59,7 +59,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   }
 
   /**
-   * Retrieves the list of company types.
+   * Obtiene la lista de tipos de empresa.
    */
   public getTipoDeEmpresa(): void {
     this.tipoDeEmpresa = [
@@ -75,11 +75,11 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   }
 
   /**
-   * Handles the selection of a document.
-   * @param _e The event object.
+   * Maneja la selección de un documento.
+   * @param _e El objeto del evento.
    */
   // eslint-disable-next-line class-methods-use-this
   public docSeleccionado(_e: Event): void {
-    // this is a dynamic function once we get the api will implement it
+    // Esta es una función dinámica; una vez que tengamos la API, la implementaremos.
   }
 }

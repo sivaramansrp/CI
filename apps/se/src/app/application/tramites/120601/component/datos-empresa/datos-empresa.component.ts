@@ -8,7 +8,7 @@ import { DomicilioComponent } from '../domicilio/domicilio.component';
 import { RepresentacionFederalComponent } from '../representacion-federal/representacion-federal.component';
 
 /**
- * Component representing the data of the company in a multi-step process.
+ * Componente que representa los datos de la empresa en un proceso de múltiples pasos.
  */
 @Component({
   selector: 'app-datos-empresa',
@@ -25,5 +25,5 @@ import { RepresentacionFederalComponent } from '../representacion-federal/repres
   styleUrls: ['./datos-empresa.component.css'],
 })
 export class DatosEmpresaComponent {
-  // Add any necessary properties and methods here
+  // Agrega las propiedades y métodos necesarios aquí
 }

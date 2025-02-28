@@ -5,7 +5,7 @@ import { Catalogo, CatalogoSelectComponent, DATOS_GENERALES_REPRESENTACION, Sele
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 /**
- * Component representing the federal representation in a multi-step process.
+ * Componente que representa la representación federal en un proceso de múltiples pasos.
  */
 @Component({
   selector: 'app-representacion-federal',
@@ -41,7 +41,7 @@ export class RepresentacionFederalComponent implements OnInit {
   public formulario!: FormGroup;
 
   /**
-   * Representa la estado seleccionada del catálogo.
+   * Representa el estado seleccionado del catálogo.
    * Se espera que esta propiedad sea del tipo 'Catalogo[]'.
    */
   public estado!: Catalogo[];
@@ -52,12 +52,12 @@ export class RepresentacionFederalComponent implements OnInit {
   selectedRow: number = 1;
 
   /**
-   * Table configuration for partners.
+   * Configuración de la tabla para los socios.
    */
   configuracionTabla = DATOS_GENERALES_REPRESENTACION;
 
   /**
-   * Data array for partners.
+   * Arreglo de datos para los socios.
    */
   datos_Socios = [
     {
@@ -105,7 +105,7 @@ export class RepresentacionFederalComponent implements OnInit {
   }
 
   /**
-   * Recupera y establece la información de la estado federativa.
+   * Recupera y establece la información de la entidad federativa.
    * @returns {void}
    */
   public getEntidadFederativa(): void {
@@ -143,9 +143,9 @@ export class RepresentacionFederalComponent implements OnInit {
    * @param _e El evento de selección de documento.
    * @returns {void}
    */
-  // eslint-disable-next-line class-methods-use-this
+   // eslint-disable-next-line class-methods-use-this
   public docSeleccionado(_e: Event): void {
-    // this is a dynamic function once we get the api will implement it
+    // Esta es una función dinámica; una vez que obtengamos la API, la implementaremos.
   }
 
   /**
@@ -153,8 +153,8 @@ export class RepresentacionFederalComponent implements OnInit {
    * @param _e El evento de validación de representación federal.
    * @returns {void}
    */
-  // eslint-disable-next-line class-methods-use-this
+   // eslint-disable-next-line class-methods-use-this
   public validarRepresentacionFederalIDCSECEROR_(_e: Event): void {
-    // this is a dynamic function once we get the api will implement it
+    // Esta es una función dinámica; una vez que obtengamos la API, la implementaremos.
   }
 }

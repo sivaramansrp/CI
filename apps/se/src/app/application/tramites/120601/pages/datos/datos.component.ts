@@ -5,21 +5,21 @@ import { PASOS_REGISTRO } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
- * Interface representing the action of a button.
+ * Interfaz que representa la acción de un botón.
  */
 interface AccionBoton {
   /**
-   * The action to be performed.
+   * La acción que se va a realizar.
    */
   accion: string;
   /**
-   * The value associated with the action.
+   * El valor asociado a la acción.
    */
   valor: number;
 }
 
 /**
- * Component representing the data steps in a multi-step process.
+ * Componente que representa los pasos de datos en un proceso de múltiples pasos.
  */
 @Component({
   selector: 'app-datos',
@@ -27,27 +27,27 @@ interface AccionBoton {
 })
 export class DatosComponent {
   /**
-   * The list of steps in the wizard.
+   * Lista de pasos en el asistente.
    */
   pasos: ListaPasosWizard[] = PASOS_REGISTRO;
 
   /**
-   * Reference to the WizardComponent.
+   * Referencia al componente WizardComponent.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-   * This variable is used to store the list of steps.
+   * Variable utilizada para almacenar la lista de pasos.
    */
   pantallasPasos: ListaPasosWizard[] = PASOS_REGISTRO;
 
   /**
-   * This variable is used to store the index of the current step.
+   * Variable utilizada para almacenar el índice del paso actual.
    */
   indice: number = 1;
 
   /**
-   * The data for the steps in the wizard.
+   * Datos para los pasos en el asistente.
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -57,8 +57,8 @@ export class DatosComponent {
   };
 
   /**
-   * Updates the index value based on the action button event.
-   * @param e The action button event containing the action and value.
+   * Actualiza el valor del índice según el evento del botón de acción.
+   * @param e El evento del botón de acción que contiene la acción y el valor.
    */
   public getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {

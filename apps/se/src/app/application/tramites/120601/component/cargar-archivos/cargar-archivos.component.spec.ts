@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
+
+import { CargarArchivosComponent } from './cargar-archivos.component';
+
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { CargarArchivosComponent } from './cargar-archivos.component';
 
 describe('CargarArchivosComponent', () => {
   let component: CargarArchivosComponent;

@@ -27,27 +27,24 @@ import { DATOS_GENERALES_EXTRANJEROS } from 'libs/shared/data-access-user/src/tr
   templateUrl: './datos-generales-socios.component.html',
   styleUrl: './datos-generales-socios.component.scss',
 })
-/**
- * Component for managing general partner data.
- */
 export class DatosGeneralesSociosComponent implements OnInit {
 
-  /** Form for user request submission */
+  /** Formulario para la solicitud del usuario */
   FormSolicitud!: FormGroup;
 
-  /** Form to store total row count */
+  /** Formulario para almacenar el recuento total de filas */
   formForTotalCount!: FormGroup;
 
-  /** Steps for wizard navigation */
+  /** Pasos para la navegación en el asistente */
   pasos: ListaPasosWizard[] = PASOS;
 
-  /** Current step index */
+  /** Índice del paso actual */
   indice: number = 1;
 
   /**
- * Objeto que almacena la configuración de los pasos del formulario.
- * Contiene el número total de pasos, el índice actual y los textos de los botones de navegación.
- */
+   * Objeto que almacena la configuración de los pasos del formulario.
+   * Contiene el número total de pasos, el índice actual y los textos de los botones de navegación.
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
@@ -56,8 +53,8 @@ export class DatosGeneralesSociosComponent implements OnInit {
   };
 
   /**
- * Define el tipo de selección de la tabla como casilla de verificación (checkbox).
- */
+   * Define el tipo de selección de la tabla como casilla de verificación (checkbox).
+   */
   tablecheckbox = TablaSeleccion.CHECKBOX;
 
   /**
@@ -65,13 +62,13 @@ export class DatosGeneralesSociosComponent implements OnInit {
    */
   selectedRow: number = 1;
 
-  /** Table configuration for partners */
+  /** Configuración de la tabla para socios */
   configuracionTabla = DATOS_GENERALES_SOCIOS;
 
-  /** Table configuration for foreign partners */
+  /** Configuración de la tabla para socios extranjeros */
   configuracionTabla_Extranjeros = DATOS_GENERALES_EXTRANJEROS;
 
-  /** Data array for partners */
+  /** Array de datos para socios */
   datos_Socios = [
     {
       a: "DIP150930L51",
@@ -82,17 +79,17 @@ export class DatosGeneralesSociosComponent implements OnInit {
     }
   ];
 
-  /** Data array for foreign partners */
+  /** Array de datos para socios extranjeros */
   datos_Extranjeros = [];
 
   /**
-   * Constructor - initializes form builder.
-   * @param fb - FormBuilder instance
+   * Constructor - inicializa el form builder.
+   * @param fb - Instancia de FormBuilder
    */
   constructor(private fb: FormBuilder) { }
 
   /**
-   * Lifecycle hook - initializes component and forms.
+   * Hook del ciclo de vida - inicializa el componente y los formularios.
    */
   ngOnInit(): void {
     this.FormSolicitud = this.fb.group({
