@@ -25,7 +25,7 @@ export const PANTAPASOS = [
     }
   ];
 
-  export const ASIGNHCION = [
+  export const ASIGNACION = [
     {
       indice: 1,
       titulo: 'Capturar solicitud',
@@ -34,7 +34,7 @@ export const PANTAPASOS = [
     },
     {
       indice: 2,
-      titulo: 'Requisitos neccesarios',
+      titulo: 'Requisitos necesarios',
       activo: false,
       completado: false,
     },

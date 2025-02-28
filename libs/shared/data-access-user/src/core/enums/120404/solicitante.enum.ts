@@ -1,4 +1,4 @@
-export const AANTAPASOS = [
+export const Entidad = [
     {
       indice: 1,
       titulo: 'Capturar solicitud',

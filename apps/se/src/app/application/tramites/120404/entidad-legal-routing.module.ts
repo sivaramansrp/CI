@@ -7,7 +7,7 @@ import { AsignciondirectaPageComponent } from './pages/asignciondirecta-page/asi
 const routes: Routes = [
 
   {
-        path: 'soliciante',
+        path: 'Soliciante',
         component: AsignciondirectaPageComponent,
 }
 ];

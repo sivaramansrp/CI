@@ -5,15 +5,16 @@
  * @module AsignciontabComponent
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CATALOGOS_ID, Catalogo, TituloComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { SolicitantetabComponent } from '../solicitantetab/solicitantetab.component';
+import { SolicitantetabComponent } from '../solicitanteTab/solicitantetab.component';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
-import { SolicitanteasigncionserviceService } from 'libs/shared/data-access-user/src/core/services/120404/solicitanteasigncionservice.service';
+import { SolicitanteasigncionserviceService } from 'libs/shared/data-access-user/src/core/services/120404/solicitanteasigncionService.service';
+import { Catalogo } from '@ng-mf/data-access-user';
 
 /**
  * Componente para la gestión del formulario de asignación.
@@ -27,8 +28,8 @@ import { SolicitanteasigncionserviceService } from 'libs/shared/data-access-user
   selector: 'app-asignciontab',
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, SolicitantetabComponent, InputRadioComponent],
-  templateUrl: './asignciontab.component.html',
-  styleUrls: ['./asignciontab.component.scss'],
+  templateUrl: './asigncion-tab.component.html',
+  styleUrls: ['./asigncion-tab.component.scss'],
 })
 export class AsignciontabComponent implements OnInit, OnDestroy {
   /**
@@ -55,7 +56,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   /**
    * Opciones de radio para la asignación.
    */
-  asigncionRadio = [
+   asignacionRadio = [
     {
       label: 'Amplicacion de monto',
       value: 'yes'
@@ -65,7 +66,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   /**
    * Lista de asignaciones.
    */
-  public asigncionendid!: Catalogo[];
+  public asigncionid!: Catalogo[];
 
   /**
    * Constructor del componente.
@@ -99,9 +100,10 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
    */
   buscar(): void {
     if (this.asignacionForm.valid) {
-      console.log('Formulario enviado:', this.asignacionForm.value);
-    } else {
-      console.log('Formulario no válido');
+
+    } 
+    else {
+      
     }
   }
 
@@ -122,7 +124,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
     this.service.getAsigncion().pipe(
       takeUntil(this.destroyed$)
     ).subscribe((data): void => {
-      this.asigncionendid = data as Catalogo[];
+      this.asigncionid = data as Catalogo[];
     });
   }
 

@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
-import { AsignciontabComponent } from './asignciontab.component';
-import { SolicitanteasigncionserviceService } from 'libs/shared/data-access-user/src/core/services/120404/solicitanteasigncionservice.service';
+import { AsignciontabComponent } from './asigncion-tab.component';
+import { SolicitanteasigncionserviceService } from 'libs/shared/data-access-user/src/core/services/120404/solicitanteasigncionService.service';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/catalogo.model';
 
 describe('AsignciontabComponent', () => {

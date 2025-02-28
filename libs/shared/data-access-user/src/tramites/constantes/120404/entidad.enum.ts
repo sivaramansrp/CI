@@ -1,4 +1,4 @@
-export const ASIGNHCION_REGISTRO = [
+export const ASIGNACION_REGISTRO = [
     {
         indice: 1,
         titulo: 'Capturar solicitud',

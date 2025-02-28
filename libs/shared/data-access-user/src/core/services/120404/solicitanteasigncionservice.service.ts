@@ -28,7 +28,7 @@ export class SolicitanteasigncionserviceService {
    * @returns Observable con los datos de asignación.
    */
   getAsigncion(): Observable<unknown> {
-    return this.http.get('assets/json/120404/asigncionsolicitante.json').pipe(
+    return this.http.get('assets/json/120404/asignacionsolicitante.json').pipe(
       catchError((error: unknown) => {
         return throwError(() => error);
       })
@@ -39,7 +39,7 @@ export class SolicitanteasigncionserviceService {
    * Obtiene los datos del solicitante de asignación.
    * @returns Observable con los datos del solicitante de asignación.
    */
-  getAsigncionsolicitante(): Observable<unknown> {
+  getSolicitante(): Observable<unknown> {
     return this.http.get('assets/json/120404/getsolicitantetab.json');
   }
 }

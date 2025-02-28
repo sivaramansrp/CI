@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { SolicitantetabComponent } from './solicitantetab.component';
-import { SolicitanteasigncionserviceService } from 'libs/shared/data-access-user/src/core/services/120404/solicitanteasigncionservice.service';
+import { SolicitanteasigncionserviceService } from 'libs/shared/data-access-user/src/core/services/120404/solicitanteasigncionService.service';
 import { AsignacionData } from 'libs/shared/data-access-user/src/core/models/120404/asignacionmodel';
 
 describe('SolicitantetabComponent', () => {

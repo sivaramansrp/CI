@@ -7,9 +7,9 @@
 
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ASIGNHCION, DatosPasos, PANTAPASOS, WizardComponent } from '@ng-mf/data-access-user';
+import { ASIGNACION, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import {ASIGNHCION_REGISTRO} from 'libs/shared/data-access-user/src/tramites/constantes/120404/pasonavigation.enum'
+import {ASIGNACION_REGISTRO} from 'libs/shared/data-access-user/src/tramites/constantes/120404/entidad.enum'
 
 
 
@@ -41,8 +41,8 @@ export class AsignciondirectaPageComponent {
   /**
    * Lista de pasos del wizard.
    */
-  pasos: ListaPasosWizard[] = ASIGNHCION;
-  pantallasPasos: ListaPasosWizard[] = ASIGNHCION_REGISTRO ;
+  pasos: ListaPasosWizard[] = ASIGNACION;
+  pantallasPasos: ListaPasosWizard[] = ASIGNACION_REGISTRO;
   
 
   /**
@@ -63,10 +63,7 @@ export class AsignciondirectaPageComponent {
   /**
    * Referencia al componente Wizard.
    */
-
-
-  
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+@ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   public getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {

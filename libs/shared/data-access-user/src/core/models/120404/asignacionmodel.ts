@@ -1,7 +1,7 @@
 export interface AsignacionData {
     especie: string;
     funcionZootecnica: string;
-    authorizado: string;
+    autorizado: string;
     Expendido: string;
     disponible: string;
     ampliar: string;
