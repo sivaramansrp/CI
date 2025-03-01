@@ -5,7 +5,8 @@ import { DE_PRUEBAS } from 'libs/shared/data-access-user/src/core/services/12060
 
 /**
  * @class DePruebasComponent
- * @classdesc Esta clase representa el componente De Pruebas.
+ * @classdesc Este componente gestiona los pasos de un asistente (wizard).
+ * Muestra los pasos definidos en `DE_PRUEBAS` y controla la navegación mediante `indice`.
  */
 @Component({
   selector: 'app-de-pruebas',
@@ -13,12 +14,24 @@ import { DE_PRUEBAS } from 'libs/shared/data-access-user/src/core/services/12060
 })
 export class DePruebasComponent {
   /**
-    * @property {ListaPasosWizard[]} pantallasPasos - Array para almacenar los pasos del wizard.
-    */
+   * @constructor
+   * @description Inicializa una instancia del componente DePruebasComponent.
+   * Actualmente, no realiza ninguna acción adicional.
+   */
+  // eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
+  constructor() { }
+
+  /**
+   * @property {ListaPasosWizard[]} pantallasPasos
+   * @description Contiene la lista de pasos del asistente (wizard).
+   * La información se obtiene de la constante `DE_PRUEBAS`.
+   */
   pantallasPasos: ListaPasosWizard[] = DE_PRUEBAS;
 
   /**
-   * @property {number} indice - El índice actual del paso.
+   * @property {number} indice
+   * @description Representa el índice del paso actual en el asistente.
+   * Se inicializa en 2, lo que significa que el asistente comenzará en el tercer paso.
    */
   indice: number = 2;
 }
