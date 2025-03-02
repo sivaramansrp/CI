@@ -1,7 +1,9 @@
+import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { CargarDatosIniciales } from '@ng-mf/data-access-user';
+import { DatosDelTramiteRealizar } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CargarDatosIniciales, DatosDelTramiteRealizar } from '../../models/220502/solicitud-pantallas.model';
 
 /** Servicio para obtener los datos de la solicitud */
 @Injectable({
@@ -10,18 +12,37 @@ import { CargarDatosIniciales, DatosDelTramiteRealizar } from '../../models/2205
 /** Servicio para obtener los datos de la solicitud */
 export class SolicitudPantallasService {
   /** URL para obtener los datos de la solicitud */
-  private dataUrl = 'assets/json/220502/solicitud-pantallas-mock-data.json'; 
+  private dataUrl =
+    '../../../assets/json/220502/solicitud-pantallas-mock-data.json';
 
   /** Constructor para inyectar el servicio HttpClient */
   constructor(public http: HttpClient) {
     /** Llamar al método para obtener los datos */
-    this.getData()
+    this.getData();
   }
 
-  /** Método para obtener los datos de la solicitud 
-   * @returns Observable<object>
-  */
-  getData(): Observable<any> {
-    return this.http.get<any>(this.dataUrl);
+  /** Método para obtener los datos de la solicitud
+   * @returns Observable<CargarDatosIniciales>
+   */
+  getData(): Observable<CargarDatosIniciales> {
+    return this.http.get<CargarDatosIniciales>(this.dataUrl).pipe();
+  }
+
+  /** Método para obtener los datos de la solicitud
+   * @returns Observable<DatosDelTramiteRealizar>
+   */
+  getDataDatosDelTramite(): Observable<DatosDelTramiteRealizar> {
+    return this.http.get<DatosDelTramiteRealizar>(this.dataUrl).pipe();
+  }
+
+  /** Método para obtener los datos de la solicitud
+   * @returns Observable<CatalogosSelect>
+   */
+  getDataResponsableInspeccion(): Observable<{
+    tipoContenedor: CatalogosSelect;
+  }> {
+    return this.http
+      .get<{ tipoContenedor: CatalogosSelect }>(this.dataUrl)
+      .pipe();
   }
 }

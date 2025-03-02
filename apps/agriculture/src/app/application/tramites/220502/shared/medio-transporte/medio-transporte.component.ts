@@ -1,25 +1,24 @@
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
+import { DatosDeMercancias } from '@ng-mf/data-access-user';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
+import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { OpcionesDeBotonDeRadio } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SimpleChanges } from '@angular/core';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { inject } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, DatosDeMercancias, InputRadioComponent, OpcionesDeBotonDeRadio, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-
-// import { OpcionesDeBotonDeRadio } from '../../../../core/enums/220502/solicitud-pantallas.enum';
-// import { TableComponent } from '../../../../shared/components/table/table.component';
-// import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-// import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
-// import { CatalogosSelect } from '../../../../core/models/shared/components.model';
-// import { DatosDeMercancias } from '../../../../core/models/220502/solicitud-pantallas.model';
-// import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
 /**
  * Componente para gestionar los datos del medio de transporte.
  */
@@ -118,13 +117,13 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
    *  
    */
   ngOnChanges(changes: SimpleChanges): void {
-    const tbodyKey = 'hMercanciaTabla';
-    const tbodyData = 'dMercanciaBody';
-    if (changes[tbodyKey]?.currentValue) {
-      this.tableData.tableHeader = changes[tbodyKey]?.currentValue;
+    const TBODYKEY = 'hMercanciaTabla';
+    const TBODYDATA = 'dMercanciaBody';
+    if (changes[TBODYKEY]?.currentValue) {
+      this.tableData.tableHeader = changes[TBODYKEY]?.currentValue;
     }
-    if (changes[tbodyData]?.currentValue) {
-      this.tableData.tableBody = changes[tbodyData]?.currentValue;
+    if (changes[TBODYDATA]?.currentValue) {
+      this.tableData.tableBody = changes[TBODYDATA]?.currentValue;
     }
   }
 

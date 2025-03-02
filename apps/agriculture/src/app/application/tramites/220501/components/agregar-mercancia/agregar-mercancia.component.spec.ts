@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AgregarMercanciaComponent } from './agregar-mercancia.component';
 
 describe('AgregarMercanciaComponent', () => {
   let component: AgregarMercanciaComponent;
   let fixture: ComponentFixture<AgregarMercanciaComponent>;
-  let toastrService: ToastrService;
   let formBuilder: FormBuilder;
 
   beforeEach(async () => {
@@ -19,7 +19,6 @@ describe('AgregarMercanciaComponent', () => {
       .compileComponents();
 
     fixture = TestBed.createComponent(AgregarMercanciaComponent);
-    toastrService = TestBed.inject(ToastrService);
     component = fixture.componentInstance;
     formBuilder = TestBed.inject(FormBuilder);
     component.agregarMercanciaForm = formBuilder.group({
@@ -47,7 +46,7 @@ describe('AgregarMercanciaComponent', () => {
   });
 
   it('should patch form value when mercanciasDatos changes', () => {
-    const mercanciasDatos = {
+    const MERCANCIASDATOS = {
       agregarMercancia: {
         fraccionArancelaria: '01039201',
         descripcionFraccion: 'Con pedigree o certificado de alto registro.',
@@ -59,16 +58,16 @@ describe('AgregarMercanciaComponent', () => {
         saldoACapturar: ''
       }
     };
-    component.mercanciasDatos = mercanciasDatos;
+    component.mercanciasDatos = MERCANCIASDATOS;
     component.ngOnChanges({
       mercanciasDatos: {
-        currentValue: mercanciasDatos,
+        currentValue: MERCANCIASDATOS,
         previousValue: null,
         firstChange: true,
         isFirstChange: () => true
       }
     });
-    const expectedFormValue = {
+    const EXPECTEDFORMVALUE = {
       agregarMercancia: {
         fraccionArancelaria: '01039201',
         descripcionFraccion: 'Con pedigree o certificado de alto registro.',
@@ -80,7 +79,7 @@ describe('AgregarMercanciaComponent', () => {
         saldoACapturar: ''
       }
     };
-    expect(component.agregarMercanciaForm.value).toEqual(expectedFormValue);
+    expect(component.agregarMercanciaForm.value).toEqual(EXPECTEDFORMVALUE);
   });
 
   it('should emit cancelarEvento when cerrarModal is called with true', () => {

@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import { HistorialInspeccionFisica } from '@ng-mf/data-access-user';
 import { Input } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
-import { HistorialInspeccionFisica, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 /** Componente para gestionar el historial de inspección física */
 @Component({
@@ -32,13 +34,13 @@ export class HistorialInspeccionFisicaComponent implements OnChanges {
    * @param changes
    */
   ngOnChanges(changes: SimpleChanges): void {
-    const tbodyKey = 'tablaHeadData';
-    const tbodyData = 'tablaFilaDatos';
-    if (changes[tbodyKey]?.currentValue) {
-      this.tableData.tableHeader = changes[tbodyKey]?.currentValue;
+    const TBODYKEY = 'tablaHeadData';
+    const TBODYDATA = 'tablaFilaDatos';
+    if (changes[TBODYKEY]?.currentValue) {
+      this.tableData.tableHeader = changes[TBODYKEY]?.currentValue;
     }
-    if (changes[tbodyData]?.currentValue) {
-      this.tableData.tableBody = changes[tbodyData]?.currentValue;
+    if (changes[TBODYDATA]?.currentValue) {
+      this.tableData.tableBody = changes[TBODYDATA]?.currentValue;
     }
   }
 }

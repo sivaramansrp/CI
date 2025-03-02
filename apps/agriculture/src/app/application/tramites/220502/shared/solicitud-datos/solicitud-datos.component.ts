@@ -1,11 +1,9 @@
+import { AlertComponent } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { Input } from '@angular/core';
-import { AlertComponent, Solicitud, TEXTOS_220501, TituloComponent } from '@ng-mf/data-access-user';
-
-// import { AlertComponent } from '../../../../shared/components/alert/alert.component';
-// import { Solicitud } from '../../../../core/models/220502/solicitud-pantallas.model';
-// import { TEXTOS } from '../../../../shared/constantes/220502/texto-enum';
-// import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { Solicitud } from '@ng-mf/data-access-user';
+import { TEXTOS_220501 } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente que representa los datos de la solicitud.

@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { CargarDatosIniciales, CarrosDeFerrocarril, HistorialInspeccionFisica, Solicitud, SolicitudPantallasService, TEXTOS_220501 } from '@ng-mf/data-access-user';
-
+import { CargarDatosIniciales } from '@ng-mf/data-access-user';
+import { CarrosDeFerrocarril } from '@ng-mf/data-access-user';
+import { HistorialInspeccionFisica } from '@ng-mf/data-access-user';
+import { Solicitud } from '@ng-mf/data-access-user';
+import { SolicitudPantallasService } from '@ng-mf/data-access-user';
+import { TEXTOS_220501 } from '@ng-mf/data-access-user';
 /**
  * Componente para gestionar los datos de la solicitud.
  */

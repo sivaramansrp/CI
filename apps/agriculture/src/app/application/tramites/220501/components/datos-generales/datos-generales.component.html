@@ -168,7 +168,7 @@
                     <div class="icon-stack">
                       <i
                         [ngClass]="{
-                          'bi-caret-up-fill': currentDirection == -1,
+                          'bi-caret-up-fill': currentDirection === -1,
                           'bi-caret-up': currentDirection !== -1
                         }"
                         (click)="rotateRow(-1)"
@@ -176,7 +176,7 @@
                       </i>
                       <i
                         [ngClass]="{
-                          'bi-caret-down-fill': currentDirection == 1,
+                          'bi-caret-down-fill': currentDirection === 1,
                           'bi-caret-down': currentDirection !== 1
                         }"
                         (click)="rotateRow(1)"
@@ -196,7 +196,7 @@
               <tbody>
                 <tr
                   *ngFor="let row of rows; let i = index"
-                  [class.visible-row]="i == currentIndex"
+                  [class.visible-row]="i === currentIndex"
                   [class.hidden-row]="i !== currentIndex"
                 >
                   <td

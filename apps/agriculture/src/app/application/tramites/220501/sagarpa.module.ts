@@ -5,9 +5,16 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { AgregarMercanciaComponent } from './components/agregar-mercancia/agregar-mercancia.component';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user'
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CarrosDeFerrocarrilComponent } from '../220502/shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { DatosDelTramiteARealizarComponent } from '../220502/shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { DatosGeneralesComponent } from './components/datos-generales/datos-generales.component';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { HistorialInspeccionFisicaComponent } from '../220502/shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { MedioTransporteComponent } from './components/medio-transporte/medio-transporte.component';
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
@@ -16,13 +23,14 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ResponsableInspeccionEnPuntoComponent } from '../220502/shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
 import { RevisionDocumentalComponent } from './components/revision-documental/revision-documental.component';
 import { SagarpaRoutingModule } from './sagarpa-routing.module';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudDatosComponent } from '../220502/shared/solicitud-datos/solicitud-datos.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { TableComponent } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
-import { DatosDelTramiteARealizarComponent } from '../220502/shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, InputFechaComponent, SolicitanteComponent, TableComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
-
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@ng-mf/data-access-user';
 @NgModule({
   declarations: [
     SolicitudComponent,

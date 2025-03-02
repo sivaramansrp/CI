@@ -1,15 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
-import { of } from 'rxjs';
-
-import { SolicitudComponent } from './solicitud.component';
-import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SolicitudComponent } from './solicitud.component';
+import { SolicitudPantallasService } from '@ng-mf/data-access-user';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let fixture: ComponentFixture<SolicitudComponent>;
-  let solicitudService: SolicitudPantallasService;
   
   beforeEach(async () => {    
     await TestBed.configureTestingModule({
@@ -25,7 +22,6 @@ describe('SolicitudComponent', () => {
 
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
-    solicitudService = TestBed.inject(SolicitudPantallasService);
     fixture.detectChanges();
   });
 

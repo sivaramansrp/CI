@@ -1,25 +1,23 @@
-// import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-// import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
-// import { CatalogosSelect } from '../../../../core/models/shared/components.model';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
-// import { DatosDelTramiteRealizar } from '../../../../core/models/220502/solicitud-pantallas.model';
-// import { FECHA_INSPECCION } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { DatosDelTramiteRealizar } from '@ng-mf/data-access-user';
+import { FECHA_INSPECCION_INPUT_220502 } from '@ng-mf/data-access-user';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
-// import { InputFecha } from '../../../../core/models/shared/components.model';
-// import { InputFechaComponent } from '../../../../shared/components/input-fecha/input-fecha.component';
+import { InputFecha } from '@ng-mf/data-access-user';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-// import { SolicitudPantallasService } from '../../../../core/services/220502/solicitud-pantallas.service';
-// import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { SolicitudPantallasService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { inject } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, DatosDelTramiteRealizar, InputFecha, InputFechaComponent, SolicitudPantallasService, TituloComponent } from '@ng-mf/data-access-user';
-import { FECHA_INSPECCION_INPUT } from 'libs/shared/data-access-user/src/tramites/constantes/220501/texto-enum';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar los datos del trámite a realizar.
@@ -37,7 +35,7 @@ import { FECHA_INSPECCION_INPUT } from 'libs/shared/data-access-user/src/tramite
   viewProviders: [
     {
       provide: ControlContainer,
-      useFactory: () =>
+      useFactory: (): ControlContainer =>
         inject<ControlContainer>(ControlContainer, { skipSelf: true }),
     },
   ],
@@ -84,7 +82,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
   /**
    * Campo de entrada de fecha inicializado con la constante FECHA_INSPECCION.
    */
-  fechaInicioInput: InputFecha = FECHA_INSPECCION_INPUT;
+  fechaInicioInput: InputFecha = FECHA_INSPECCION_INPUT_220502;
 
   /** Constructor para inyectar el servicio de solicitud de pantallas. */
   constructor(private solicitudService: SolicitudPantallasService) {
@@ -172,7 +170,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
    * Carga datos del catálogo inicial para las selecciones de formulario.
    */
   cargarDatosIniciales(): void {
-    const catalogoTemplate = (
+    const CATALOGOTEMPLATE = (
       label: string,
       required: boolean,
       catalogos: Catalogo[]
@@ -183,29 +181,29 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
       catalogos: catalogos,
     });
   
-    this.solicitudService.getData().subscribe({
+    this.solicitudService.getDataDatosDelTramite().subscribe({
       next: (data: DatosDelTramiteRealizar) => {
-        this.certificadosAutorizados = catalogoTemplate(
+        this.certificadosAutorizados = CATALOGOTEMPLATE(
           'Certificados autorizados pendientes',
           true,
           data.pendientesCertificados
         );
-        this.horaDeInspeccion = catalogoTemplate(
+        this.horaDeInspeccion = CATALOGOTEMPLATE(
           'Hora de inspección',
           true,
           data.horaInspeccion
         );
-        this.aduanaDeIngreso = catalogoTemplate(
+        this.aduanaDeIngreso = CATALOGOTEMPLATE(
           'Aduana de ingreso',
           false,
           data.aduanaIngreso
         );
-        this.sanidadAgropecuaria = catalogoTemplate(
+        this.sanidadAgropecuaria = CATALOGOTEMPLATE(
           'Oficina de inspección de Sanidad Agropecuaria',
           false,
           data.sanidadAgropecuaria
         );
-        this.puntoDeInspeccion = catalogoTemplate(
+        this.puntoDeInspeccion = CATALOGOTEMPLATE(
           'Punto de inspección',
           false,
           data.puntoInspeccion

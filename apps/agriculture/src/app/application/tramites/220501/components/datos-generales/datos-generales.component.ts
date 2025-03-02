@@ -1,7 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Catalogo, CatalogosSelect, RevisionService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
-
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { Component } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { OnInit } from '@angular/core';
+import { RevisionService } from '@ng-mf/data-access-user';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { Validators } from '@angular/forms';
 /**
  * Interfaz para definir la estructura de las filas.
  */
@@ -64,7 +69,7 @@ export class DatosGeneralesComponent implements OnInit {
    * Datos del dropdown.
    * @type {any[]}
    */
-  dropdownData: any[] = [];
+  dropdownData = [];
 
   /**
    * Selección de aduana de ingreso.
@@ -298,9 +303,9 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   rotateRow(direction: number): void {
-    const totalRows = this.rows.length;
+    const TOTALROWS = this.rows.length;
     this.currentDirection = direction;
-    this.currentIndex = (this.currentIndex + direction + totalRows) % totalRows;
+    this.currentIndex = (this.currentIndex + direction + TOTALROWS) % TOTALROWS;
   }
 
   /**
@@ -320,14 +325,14 @@ export class DatosGeneralesComponent implements OnInit {
    */
   getAduanaIngreso(): void {
     this.revisionService.getAduanaIngreso().subscribe((resp) => {
-      if (resp.code == 200) {
-        const response = resp.data;
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
 
         this.aduanaIngreso = {
           labelNombre: 'Aduana de ingreso',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: RESPONSE,
         };
       }
     });
@@ -340,14 +345,14 @@ export class DatosGeneralesComponent implements OnInit {
    */
   getOficianaInspeccion(): void {
     this.revisionService.getOficianaInspeccion().subscribe((resp) => {
-      if (resp.code == 200) {
-        const response = resp.data;
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
 
         this.oficianaInspeccion = {
           labelNombre: 'Oficina de Inspección de Sanidad Agropecuaria',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: RESPONSE,
         };
       }
     });
@@ -360,14 +365,14 @@ export class DatosGeneralesComponent implements OnInit {
    */
   getPuntoInspeccion(): void {
     this.revisionService.getPuntoInspeccion().subscribe((resp) => {
-      if (resp.code == 200) {
-        const response = resp.data;
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
 
         this.puntoInspeccion = {
           labelNombre: 'Punto de inspección',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: RESPONSE,
         };
       }
     });
@@ -380,14 +385,14 @@ export class DatosGeneralesComponent implements OnInit {
    */
   getEstablecimiento(): void {
     this.revisionService.getEstablecimiento().subscribe((resp) => {
-      if (resp.code == 200) {
-        const response = resp.data;
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
 
         this.establecimiento = {
           labelNombre: 'Establecimiento TIF',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: RESPONSE,
         };
       }
     });
@@ -399,14 +404,14 @@ export class DatosGeneralesComponent implements OnInit {
    */
   getRegimenDestinaran(): void {
     this.revisionService.getRegimenDestinaran().subscribe((resp) => {
-      if (resp.code == 200) {
-        const response = resp.data;
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
 
         this.regimenDestinaran = {
           labelNombre: 'Régimen al que se destinarán las mercancías',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: RESPONSE,
         };
       }
     });
@@ -419,14 +424,14 @@ export class DatosGeneralesComponent implements OnInit {
    */
   getMovilizacionNacional(): void {
     this.revisionService.getMovilizacionNacional().subscribe((resp) => {
-      if (resp.code == 200) {
-        const response = resp.data;
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
 
         this.movilizacionNacional = {
           labelNombre: 'Movilización Nacional',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: RESPONSE,
         };
       }
     });
@@ -439,14 +444,14 @@ export class DatosGeneralesComponent implements OnInit {
    */
   getPuntoVerificacion(): void {
     this.revisionService.getPuntoVerificacion().subscribe((resp) => {
-      if (resp.code == 200) {
-        const response = resp.data;
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
 
         this.puntoVerificacion = {
           labelNombre: 'Punto de verificación federal',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: RESPONSE,
         };
       }
     });
@@ -458,14 +463,14 @@ export class DatosGeneralesComponent implements OnInit {
    */
   getEmpresaTransportista(): void {
     this.revisionService.getEmpresaTransportista().subscribe((resp) => {
-      if (resp.code == 200) {
-        const response = resp.data;
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
 
         this.empresaTransportista = {
           labelNombre: 'Nombre de la empresa transportista',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: RESPONSE,
         };
       }
     });

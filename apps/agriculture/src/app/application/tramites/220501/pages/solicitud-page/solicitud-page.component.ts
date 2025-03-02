@@ -2,8 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
-import { DatosPasos, ListaPasosWizard, PASOS, SECCIONES_TRAMITE_5701, SeccionQuery, WizardComponent } from '@ng-mf/data-access-user';
-
+import { DatosPasos } from '@ng-mf/data-access-user';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from'@ng-mf/data-access-user';
+import { SECCIONES_TRAMITE_5701 } from'@ng-mf/data-access-user';
+import { SeccionQuery } from'@ng-mf/data-access-user';
+import { WizardComponent } from'@ng-mf/data-access-user';
 /**
  * Interfaz que define la estructura de una acción de botón.
  */
@@ -114,14 +118,15 @@ export class SolicitudPageComponent implements OnInit {
    * Método para asignar las secciones existentes al stored
    */
   private asignarSecciones(): void {
-    const secciones: boolean[] = [];
-    const formaValida: boolean[] = [];
-    for (const llaveSeccion in SECCIONES_TRAMITE_5701.PASO_1) {
-      // @ts-ignore - fix this
-      secciones.push(SECCIONES_TRAMITE_5701.PASO_1[llaveSeccion]);
-      formaValida.push(false);
+    const SECCIONES: boolean[] = [];
+    const FORMAVALIDA: boolean[] = [];
+    // eslint-disable-next-line guard-for-in
+    for (const LLAVESECCION of Object.keys(SECCIONES_TRAMITE_5701.PASO_1) as Array<keyof typeof SECCIONES_TRAMITE_5701.PASO_1>) {
+      
+      SECCIONES.push(SECCIONES_TRAMITE_5701.PASO_1[LLAVESECCION]);
+      FORMAVALIDA.push(false);
     }
-    this.seccionStore.establecerSeccion(secciones);
-    this.seccionStore.establecerFormaValida(formaValida);
+    this.seccionStore.establecerSeccion(SECCIONES);
+    this.seccionStore.establecerFormaValida(FORMAVALIDA);
   }
 }

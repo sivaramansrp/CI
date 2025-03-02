@@ -1,9 +1,19 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Catalogo, CATALOGOS_ID, CATALOGOS_ID_220501, SagarpaService, TEXTOS_220501 } from '@ng-mf/data-access-user';
-import { map, merge } from 'rxjs';
-import mercanciaTable from '../../../../../../../../../libs/shared/theme/assets/json/220501/mercancia-table.json';
+import { CATALOGOS_ID_220501 } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { Component } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
+import { SagarpaService } from '@ng-mf/data-access-user';
+import { TEXTOS_220501 } from '@ng-mf/data-access-user';
 import { Tramite220501Store } from '../../../../estados/tramite220501.store';
+import { Validators } from '@angular/forms';
+import { map, never } from 'rxjs';
+import mercanciaTable from '../../../../../../../../../libs/shared/theme/assets/json/220501/mercancia-table.json';
+import { merge } from 'rxjs';
 
 /**
  * Componente para seleccionar el medio de transporte.
@@ -38,7 +48,7 @@ export class MedioTransporteComponent implements OnInit {
   /**
    * Indica si es una solicitud de ferrocarril.
    */
-  esSolicitudFerrosValor!:any;
+  esSolicitudFerrosValor! : number;
 
   /**
    * Constantes de texto.
@@ -59,7 +69,9 @@ export class MedioTransporteComponent implements OnInit {
    * Variable que contiene los datos del cuerpo para la tabla de mercancías.
    * El tipo se establece como unknown para permitir flexibilidad en la estructura de los datos.
    */
-  public mercanciaBodyData: unknown = [];
+  public mercanciaBodyData = [{
+    tbodyData: [] as string[]
+}];
 
   /**
    * Variable que contiene los datos para la tabla de mercancías.
@@ -115,7 +127,7 @@ export class MedioTransporteComponent implements OnInit {
    * Inicializa los catálogos necesarios para el formulario.
    */
   private inicializaCatalogos(): void {
-    const medioDeTransporte$ = this.sagarpaService
+    const MEDIODETRANSPORTE$ = this.sagarpaService
       .getMediodetransporte(CATALOGOS_ID_220501.CAT_MEDIO_DE_TRANSPORTE)
       .pipe(
         map((resp) => {
@@ -123,7 +135,7 @@ export class MedioTransporteComponent implements OnInit {
         })
       );
     merge(
-      medioDeTransporte$
+      MEDIODETRANSPORTE$
     ).subscribe();
   }
 
@@ -144,19 +156,19 @@ export class MedioTransporteComponent implements OnInit {
    * Selecciona la clasificación de régimen.
    */
   medioDeTransporteSeleccion(): void {
-    const medioDeTransporte = this.medioTransporteForm.get('medioDeTransporte')?.value;
-    this.tramite220501Store.setMedioDeTransporte(medioDeTransporte);
+    const MEDIODETRANSPORTE = this.medioTransporteForm.get('medioDeTransporte')?.value;
+    this.tramite220501Store.setMedioDeTransporte(MEDIODETRANSPORTE);
   }
 
   /**
    * Método para establecer la selección de solicitud de ferrocarril.
    * @param e Evento de cambio del input.
    */
-  estableceSeleccionSolicitudFerro(e: any): void {
-    const target = e.target as HTMLInputElement;
-    this.esSolicitudFerrosValor = target.value;
+  estableceSeleccionSolicitudFerro(e: Event): void {
+    const TARGET = e.target as HTMLInputElement;
+    this.esSolicitudFerrosValor = Number(TARGET.value);
 
-    if (this.esSolicitudFerrosValor == 1) {
+    if (this.esSolicitudFerrosValor === 1) {
       this.transporteSeleccionado.emit(true);
     }
     else {

@@ -1,3 +1,6 @@
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
@@ -8,10 +11,10 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { SolicitudPantallasService } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { inject } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, SolicitudPantallasService, TituloComponent } from '@ng-mf/data-access-user';
-
 /**
  * Componente que representa al responsable de la inspección en un punto.
  * Este componente agrega y administra dinámicamente controles de formulario para los detalles de responsabilidad de inspección.
@@ -100,7 +103,7 @@ export class ResponsableInspeccionEnPuntoComponent
    * Carga datos del catálogo inicial para el tipo de contenedor.
    */
   cargarDatosIniciales(): void {
-    this.solicitudService.getData().subscribe({
+    this.solicitudService.getDataResponsableInspeccion().subscribe({
       next: (data: { tipoContenedor: CatalogosSelect }) => {
         this.tipoContenedor = data.tipoContenedor;
       },

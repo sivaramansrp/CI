@@ -84,3 +84,4 @@ export * from './core/models/220502/solicitud-pantallas.model';
 export { TEXTOS as TEXTOS_220501 } from './tramites/constantes/220501/texto-enum';
 
 export {CATALOGOS_ID as CATALOGOS_ID_220501} from './tramites/constantes/220501/constantes';
+export {FECHA_INSPECCION_INPUT as FECHA_INSPECCION_INPUT_220502} from './tramites/constantes/220502/texto-enum';

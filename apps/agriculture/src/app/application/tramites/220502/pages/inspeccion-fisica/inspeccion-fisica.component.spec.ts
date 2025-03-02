@@ -1,11 +1,11 @@
 import { ComponentFixture } from '@angular/core/testing';
-// import { DatosPasos } from '../../../../core/models/shared/components.model';
+import { DatosPasos } from '@ng-mf/data-access-user';
 import { InspeccionFisicaComponent } from './inspeccion-fisica.component';
-// import { InspeccionFisicaPasos } from '../../../../core/enums/220502/solicitud-pantallas.enum';
+import { InspeccionFisicaPasos } from '@ng-mf/data-access-user';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { DatosPasos, InspeccionFisicaPasos, WizardComponent } from '@ng-mf/data-access-user';
-// import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
+
 
 describe('InspeccionFisicaComponent', () => {
   let component: InspeccionFisicaComponent;
@@ -35,13 +35,13 @@ describe('InspeccionFisicaComponent', () => {
   });
 
   it('should initialize datosPasos correctly', () => {
-    const expectedDatosPasos: DatosPasos = {
+    const EXPECTEDDATOSPASOS: DatosPasos = {
       nroPasos: InspeccionFisicaPasos.length,
       indice: 1,
       txtBtnAnt: 'Anterior',
       txtBtnSig: 'Continuar'
     };
-    expect(component.datosPasos).toEqual(expectedDatosPasos);
+    expect(component.datosPasos).toEqual(EXPECTEDDATOSPASOS);
   });
 
   it('should update indice and call wizardComponent.siguiente on getValorIndice with accion "cont"', () => {

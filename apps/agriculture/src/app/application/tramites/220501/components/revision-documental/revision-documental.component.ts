@@ -17,24 +17,24 @@ export class RevisionDocumentalComponent {
    indice: number = 1;
     /**
    * Indica si el contenido es colapsable.
-   * @type {any}
+   * @type {boolean}
    */
-   colapsable: any;
+   colapsable: boolean = true;
    /**
    * Índice actual de la fila.
-   * @type {any}
+   * @type {number}
    */
-   currentIndex: any;
+   currentIndex: number = 1;
    /**
    * Filas de datos.
    * @type {any[]}
    */
-   rows: any;
+  rows: { [key: string]: string }[] = [];
    /**
    * Formulario principal.
    * @type {any}
    */
-   forma: any;
+   forma: string = '';
  
    /**
     * Selecciona un tab específico.

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -13,6 +13,9 @@ import { MedioTransporteComponent } from '../../shared/medio-transporte/medio-tr
 import { ResponsableInspeccionEnPuntoComponent } from '../../shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
 import { SolicitudDatosComponent } from '../../shared/solicitud-datos/solicitud-datos.component';
 import { SolicitudPantallasService } from '@ng-mf/data-access-user';
+import { TestBed } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
+import { tick } from '@angular/core/testing';
 
 describe('SolicitudComponent 220502', () => {
   let component: SolicitudComponent;
@@ -20,7 +23,7 @@ describe('SolicitudComponent 220502', () => {
   let solicitudService: SolicitudPantallasService;
 
   beforeEach(async () => {
-    const solicitudServiceMock = {
+    const SOLICITUDSERVICEMOCK = {
       getData: jest.fn().mockReturnValue(
         of({
           hMercancia: [
@@ -106,7 +109,7 @@ describe('SolicitudComponent 220502', () => {
       ],
       providers: [
         FormBuilder,
-        { provide: SolicitudPantallasService, useValue: solicitudServiceMock },
+        { provide: SolicitudPantallasService, useValue: SOLICITUDSERVICEMOCK },
       ],
     }).compileComponents();
 

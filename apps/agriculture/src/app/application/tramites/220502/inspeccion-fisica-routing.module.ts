@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
 
-const routes: Routes = [
+const ROUTERS: Routes = [
   {
     path: 'pantallas',
     component: InspeccionFisicaComponent,
@@ -16,7 +16,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTERS)],
   exports: [RouterModule]
 })
 export class InspeccionFisicaRoutingModule { }

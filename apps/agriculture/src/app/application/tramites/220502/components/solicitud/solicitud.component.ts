@@ -1,17 +1,23 @@
+import { CargarDatosIniciales } from '@ng-mf/data-access-user';
+import { CarrosDeFerrocarril } from '@ng-mf/data-access-user';
 import { CarrosDeFerrocarrilComponent } from '../../shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { DatosDeMercancias } from '@ng-mf/data-access-user';
 import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { HistorialInspeccionFisica } from '@ng-mf/data-access-user';
 import { HistorialInspeccionFisicaComponent } from '../../shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
 import { MedioTransporteComponent } from '../../shared/medio-transporte/medio-transporte.component';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsableInspeccionEnPuntoComponent } from '../../shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
+import { Solicitud } from '@ng-mf/data-access-user';
 import { SolicitudDatosComponent } from '../../shared/solicitud-datos/solicitud-datos.component';
-import { CargarDatosIniciales, CarrosDeFerrocarril, CatalogosSelect, DatosDeMercancias, HistorialInspeccionFisica, Solicitud, SolicitudPantallasService } from '@ng-mf/data-access-user';
+import { SolicitudPantallasService } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar la solicitud de trámite.
@@ -67,7 +73,7 @@ export class SolicitudComponent implements OnInit {
   dCarrosDeFerrocarril: CarrosDeFerrocarril[] = [];
 
   /** Encabezados y datos para mostrar información de historial de inspección física. */
-  hHistorialinspeccion: string[]  = [];
+  hHistorialinspeccion: string[] = [];
 
   /** Datos de historial de inspección física para mostrar en la tabla. */
   dHistorialInspecciones: HistorialInspeccionFisica[] = [];

@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { RevisionDocumentalComponent } from './components/revision-documental/revision-documental.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
-const sagarpaRutes: Routes = [
+const SAGARPARUTES: Routes = [
   {
       path: 'datosdelasolicitud',
       component: SolicitudPageComponent,
@@ -22,7 +22,7 @@ const sagarpaRutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(sagarpaRutes)],
+  imports: [RouterModule.forChild(SAGARPARUTES)],
   exports: [RouterModule]
 })
 export class SagarpaRoutingModule { }

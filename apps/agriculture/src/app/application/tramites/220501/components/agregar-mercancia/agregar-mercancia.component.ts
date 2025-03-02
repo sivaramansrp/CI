@@ -18,7 +18,9 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit {
   /**
    * Datos de mercancías recibidos como entrada.
    */
-  @Input() mercanciasDatos: any = [];
+  @Input() mercanciasDatos = [{
+    tbodyData: [] as string[]
+  }];
 
   /**
    * Evento emitido cuando se cancela la acción.
@@ -65,18 +67,18 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit {
    * Método para configurar los datos en el formulario con los valores de mercanciasDatos.
    */
   setFormData(): void {
-    const data = this.mercanciasDatos[0].tbodyData;
+    const DATA = this.mercanciasDatos[0].tbodyData;
 
     this.agregarMercanciaForm.patchValue({
       agregarMercancia: {
-        fraccionArancelaria: data[0],
-        descripcionFraccion: data[1],
-        nico: data[2],
-        descripcion: data[3],
-        saldoACapturar: data[4],
-        unidaddeMedidaDeUMT: data[5],
-        saldoPendiente:  data[6],
-        cantidadTotalUMT:  data[7]        
+        fraccionArancelaria: DATA[0],
+        descripcionFraccion: DATA[1],
+        nico: DATA[2],
+        descripcion: DATA[3],
+        saldoACapturar: DATA[4],
+        unidaddeMedidaDeUMT: DATA[5],
+        saldoPendiente:  DATA[6],
+        cantidadTotalUMT:  DATA[7]        
       }
     });
   }
@@ -86,7 +88,8 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit {
    * @param changes Cambios detectados en las propiedades de entrada.
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['mercanciasDatos'] && this.mercanciasDatos) {
+    const MERCANCIASDATOS = "mercanciasDatos"
+    if (changes[MERCANCIASDATOS] && this.mercanciasDatos) {
       this.setFormData();
     }
   }

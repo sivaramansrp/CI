@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Catalogo, CatalogosSelect, RevisionService } from '@ng-mf/data-access-user';
-
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { Component } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { OnInit } from '@angular/core';
+import { RevisionService } from '@ng-mf/data-access-user';
 /**
  * Componente para gestionar el pago de derechos.
  */
@@ -94,14 +97,14 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   getJustificacion(): void {
     this.revisionService.getJustificacion().subscribe((resp) => {
-      if (resp.code == 200) {
-        const response = resp.data;
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
 
         this.justificacion = {
           labelNombre: 'Justificación',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: RESPONSE,
         };
       }
     });
@@ -114,14 +117,14 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   getBanco(): void {
     this.revisionService.getBanco().subscribe((resp) => {
-      if (resp.code == 200) {
-        const response = resp.data;
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
 
         this.banco = {
           labelNombre: 'Banco',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: RESPONSE,
         };
       }
     });

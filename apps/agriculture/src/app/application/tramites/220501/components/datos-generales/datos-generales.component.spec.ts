@@ -1,9 +1,11 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DatosGeneralesComponent } from './datos-generales.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of, throwError } from 'rxjs';
-import { RevisionService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
-
+import { FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RevisionService } from '@ng-mf/data-access-user';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { of } from 'rxjs';
+import { throwError } from 'rxjs';
 describe('DatosGeneralesComponent', () => {
   let component: DatosGeneralesComponent;
   let fixture: ComponentFixture<DatosGeneralesComponent>;
@@ -80,67 +82,67 @@ describe('DatosGeneralesComponent', () => {
   });
 
   it('should handle error when fetching aduanaIngreso data', fakeAsync(() => {
-    const mockError = { code: 500, error: 'Internal Server Error' };
-    mockRevisionService.getAduanaIngreso.mockReturnValue(throwError(() => mockError));
+    const MOCKERROR = { code: 500, error: 'Internal Server Error' };
+    mockRevisionService.getAduanaIngreso.mockReturnValue(throwError(() => MOCKERROR));
     component.getAduanaIngreso();
     tick();
     expect(component.aduanaIngreso.catalogos).toBeUndefined();
   }));
 
   it('should fetch oficinaInspeccion data successfully', fakeAsync(() => {
-    const mockResponse = { code: 200, message: 'Success', data: [{ id: 2, descripcion: 'Oficina 1' }] };
-    mockRevisionService.getOficianaInspeccion.mockReturnValue(of(mockResponse));
+    const MOCKRESPONSE = { code: 200, message: 'Success', data: [{ id: 2, descripcion: 'Oficina 1' }] };
+    mockRevisionService.getOficianaInspeccion.mockReturnValue(of(MOCKRESPONSE));
     component.getOficianaInspeccion();
     tick();
-    expect(component.oficianaInspeccion.catalogos).toEqual(mockResponse.data);
+    expect(component.oficianaInspeccion.catalogos).toEqual(MOCKRESPONSE.data);
   }));
 
   it('should fetch puntoInspeccion data successfully', fakeAsync(() => {
-    const mockResponse = { code: 200, message: 'Success', data: [{ id: 3, descripcion: 'Punto 1' }] };
-    mockRevisionService.getPuntoInspeccion.mockReturnValue(of(mockResponse));
+    const MOCKRESPONSE = { code: 200, message: 'Success', data: [{ id: 3, descripcion: 'Punto 1' }] };
+    mockRevisionService.getPuntoInspeccion.mockReturnValue(of(MOCKRESPONSE));
     component.getPuntoInspeccion();
     tick();
-    expect(component.puntoInspeccion.catalogos).toEqual(mockResponse.data);
+    expect(component.puntoInspeccion.catalogos).toEqual(MOCKRESPONSE.data);
   }));
 
   it('should fetch establecimiento data successfully', fakeAsync(() => {
-    const mockResponse = { code: 200, message: 'Success', data: [{ id: 4, descripcion: 'Establecimiento 1' }] };
-    mockRevisionService.getEstablecimiento.mockReturnValue(of(mockResponse));
+    const MOCKRESPONSE = { code: 200, message: 'Success', data: [{ id: 4, descripcion: 'Establecimiento 1' }] };
+    mockRevisionService.getEstablecimiento.mockReturnValue(of(MOCKRESPONSE));
     component.getEstablecimiento();
     tick();
-    expect(component.establecimiento.catalogos).toEqual(mockResponse.data);
+    expect(component.establecimiento.catalogos).toEqual(MOCKRESPONSE.data);
   }));
 
   it('should fetch regimenDestinaran data successfully', fakeAsync(() => {
-    const mockResponse = { code: 200, message: 'Success', data: [{ id: 5, descripcion: 'Regimen 1' }] };
-    mockRevisionService.getRegimenDestinaran.mockReturnValue(of(mockResponse));
+    const MOCKRESPONSE = { code: 200, message: 'Success', data: [{ id: 5, descripcion: 'Regimen 1' }] };
+    mockRevisionService.getRegimenDestinaran.mockReturnValue(of(MOCKRESPONSE));
     component.getRegimenDestinaran();
     tick();
-    expect(component.regimenDestinaran.catalogos).toEqual(mockResponse.data);
+    expect(component.regimenDestinaran.catalogos).toEqual(MOCKRESPONSE.data);
   }));
 
   it('should fetch movilizacionNacional data successfully', fakeAsync(() => {
-    const mockResponse = { code: 200, message: 'Success', data: [{ id: 6, descripcion: 'Movilizacion 1' }] };
-    mockRevisionService.getMovilizacionNacional.mockReturnValue(of(mockResponse));
+    const MOCKRESPONSE = { code: 200, message: 'Success', data: [{ id: 6, descripcion: 'Movilizacion 1' }] };
+    mockRevisionService.getMovilizacionNacional.mockReturnValue(of(MOCKRESPONSE));
     component.getMovilizacionNacional();
     tick();
-    expect(component.movilizacionNacional.catalogos).toEqual(mockResponse.data);
+    expect(component.movilizacionNacional.catalogos).toEqual(MOCKRESPONSE.data);
   }));
 
   it('should fetch puntoVerificacion data successfully', fakeAsync(() => {
-    const mockResponse = { code: 200, message: 'Success', data: [{ id: 7, descripcion: 'Punto Verificacion 1' }] };
-    mockRevisionService.getPuntoVerificacion.mockReturnValue(of(mockResponse));
+    const MOCKRESPONSE = { code: 200, message: 'Success', data: [{ id: 7, descripcion: 'Punto Verificacion 1' }] };
+    mockRevisionService.getPuntoVerificacion.mockReturnValue(of(MOCKRESPONSE));
     component.getPuntoVerificacion();
     tick();
-    expect(component.puntoVerificacion.catalogos).toEqual(mockResponse.data);
+    expect(component.puntoVerificacion.catalogos).toEqual(MOCKRESPONSE.data);
   }));
 
   it('should fetch empresaTransportista data successfully', fakeAsync(() => {
-    const mockResponse = { code: 200, message: 'Success', data: [{ id: 8, descripcion: 'Empresa 1' }] };
-    mockRevisionService.getEmpresaTransportista.mockReturnValue(of(mockResponse));
+    const MOCKRESPONSE = { code: 200, message: 'Success', data: [{ id: 8, descripcion: 'Empresa 1' }] };
+    mockRevisionService.getEmpresaTransportista.mockReturnValue(of(MOCKRESPONSE));
     component.getEmpresaTransportista();
     tick();
-    expect(component.empresaTransportista.catalogos).toEqual(mockResponse.data);
+    expect(component.empresaTransportista.catalogos).toEqual(MOCKRESPONSE.data);
   }));
 
   it('should validate entire form when fields are invalid', () => {

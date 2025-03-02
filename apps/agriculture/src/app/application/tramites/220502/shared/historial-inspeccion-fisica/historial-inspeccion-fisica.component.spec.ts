@@ -1,9 +1,8 @@
 import { ComponentFixture } from '@angular/core/testing';
-// import { HistorialInspeccionFisica } from '../../../../core/models/220502/solicitud-pantallas.model';
+import { HistorialInspeccionFisica } from '@ng-mf/data-access-user';
 import { HistorialInspeccionFisicaComponent } from './historial-inspeccion-fisica.component';
 import { TestBed } from '@angular/core/testing';
-import { HistorialInspeccionFisica, TituloComponent } from '@ng-mf/data-access-user';
-// import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 describe('HistorialInspeccionFisicaComponent', () => {
   let component: HistorialInspeccionFisicaComponent;
@@ -34,7 +33,7 @@ describe('HistorialInspeccionFisicaComponent', () => {
   });
 
   it('should have tablaFilaDatos as input', () => {
-    const testFilaDatos: HistorialInspeccionFisica[] = [
+    const TESTFILADATOS: HistorialInspeccionFisica[] = [
       {
         numeroPartidaMercancia: '12345',
         fraccionArancelaria: '0101.21.00',
@@ -54,8 +53,8 @@ describe('HistorialInspeccionFisicaComponent', () => {
         fechaInspeccionString: '2023-10-02',
       },
     ];
-    component.tablaFilaDatos = testFilaDatos;
+    component.tablaFilaDatos = TESTFILADATOS;
     fixture.detectChanges();
-    expect(component.tablaFilaDatos).toEqual(testFilaDatos);
+    expect(component.tablaFilaDatos).toEqual(TESTFILADATOS);
   });
 });

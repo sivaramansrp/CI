@@ -1,6 +1,6 @@
 import { By } from '@angular/platform-browser';
-// import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-// import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
+import { Catalogo} from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { ControlContainer } from '@angular/forms';
@@ -9,8 +9,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsableInspeccionEnPuntoComponent } from './responsable-inspeccion-en-punto.component';
 import { TestBed } from '@angular/core/testing';
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
-// import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-test-host',
