@@ -1,12 +1,10 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Injectable, NO_ERRORS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ToastrModule, provideToastr } from 'ngx-toastr';
 import { BitacoraComponent } from './bitacora.component';
-import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { of as observableOf } from 'rxjs';
-
-@Injectable()
-class MockModificacionSolicitudeService {}
 
 describe('BitacoraComponent', () => {
   let fixture;
@@ -14,30 +12,26 @@ describe('BitacoraComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule, ToastrModule, HttpClientTestingModule ],
       declarations: [ ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: ModificacionSolicitudeService, useClass: MockModificacionSolicitudeService }
+        provideToastr({
+          positionClass: 'toast-top-right',
+        }),
       ]
     }).overrideComponent(BitacoraComponent, {
-
-      set: { providers: [{ provide: ModificacionSolicitudeService, useClass: MockModificacionSolicitudeService }] }    
     }).compileComponents();
     fixture = TestBed.createComponent(BitacoraComponent);
     component = fixture.debugElement.componentInstance;
+    component.modificionService = component.modificionService || {};
+    component.modificionService.obteberBitacora = jest.fn().mockReturnValue(observableOf({}));
   });
 
   it('debería ejecutar #constructor()', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería ejecutar #ngOnInit()', () => {
-    component.modificionService = component.modificionService || {};
-    component.modificionService.obteberBitacora = jest.fn().mockReturnValue(observableOf({}));
-    component.ngOnInit();
-    expect(component.modificionService.obteberBitacora).toHaveBeenCalled();
-  });
 
   it('debería ejecutar #ngOnDestroy()', () => {
     component.destroyNotifier$ = component.destroyNotifier$ || {};

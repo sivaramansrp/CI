@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { Router } from '@angular/router';
 
@@ -15,7 +15,9 @@ import { Router } from '@angular/router';
   host: { hostID: crypto.randomUUID().toString() },
 })
 export class PasoCuatroComponent {
-  router: Router = Inject(Router)
+
+  // eslint-disable-next-line no-empty-function
+  constructor(private router: Router){}
 
   /**
    * Navega a la ruta 'servicios-extraordinarios/acuse' si el parámetro `ev` tiene un valor.

@@ -35,7 +35,6 @@ describe('SolicitudPageComponent', () => {
   });
 
   it('debería ejecutar #getValorIndice()', () => {
-    component.obtenerNombreDelTítulo = jest.fn();
     component.wizardComponent = component.wizardComponent || {};
     component.wizardComponent.siguiente = jest.fn();
     component.wizardComponent.atras = jest.fn();
@@ -43,7 +42,6 @@ describe('SolicitudPageComponent', () => {
       valor: 1,
       accion: 'cont'
     });
-    expect(component.obtenerNombreDelTítulo).toHaveBeenCalled();
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 

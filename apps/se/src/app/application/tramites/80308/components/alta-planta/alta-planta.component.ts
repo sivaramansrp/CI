@@ -5,7 +5,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -85,37 +85,27 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
   datos: DomicilioInfo[] = [];
 
   /**
-   * Formulario para la certificación.
-   * @type {FormGroup}
-   */
-  certificionForm!: FormGroup;
-
-  /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
    * @private
    * @type {Subject<void>}
    */
   destroyNotifier$: Subject<void> = new Subject();
 
-  fb: FormBuilder = Inject(FormBuilder);
-  modificionService: ModificacionSolicitudeService =Inject(ModificacionSolicitudeService)
-  toastr: ToastrService =Inject(ToastrService)
-
   /**
    * Constructor de la clase.
    * @param {FormBuilder} fb - El servicio para construir formularios reactivos.
    * @param {ModificacionSolicitudeService} modificionService - Servicio para la modificación de solicitudes.
    */
-  constructor() {
+  constructor(
+    private fb: FormBuilder,
+    public modificionService: ModificacionSolicitudeService,
+    private toastr: ToastrService
+  ) {
     // Inicialización del formulario para la entidad federativa.
     this.formulario = this.fb.group({
       entidadFederativa: ['-1', Validators.required],
     });
 
-    // Inicialización del formulario de certificación con un valor predeterminado y deshabilitado.
-    this.certificionForm = this.fb.group({
-      certificion: [{ value: 'Si', disabled: true }],
-    });
   }
 
   /**

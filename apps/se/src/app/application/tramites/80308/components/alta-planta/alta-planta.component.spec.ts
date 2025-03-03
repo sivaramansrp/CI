@@ -9,6 +9,7 @@ import { AltaPlantaComponent } from './alta-planta.component';
 import { FormBuilder } from '@angular/forms';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
 import { of as observableOf } from 'rxjs';
+import { provideToastr } from 'ngx-toastr';
 
 @Injectable()
 class MockModificacionSolicitudeService {}
@@ -31,7 +32,10 @@ describe('AltaPlantaComponent', () => {
           provide: ModificacionSolicitudeService,
           useClass: MockModificacionSolicitudeService,
         },
-      ],
+        provideToastr({
+          positionClass: 'toast-top-right',
+        }),
+      ]
     })
       .overrideComponent(AltaPlantaComponent, {
         set: {
@@ -51,12 +55,6 @@ describe('AltaPlantaComponent', () => {
 
   it('debería ejecutar #constructor()', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('debería ejecutar GetterDeclaration #formularioControl', () => {
-    component.formulario = component.formulario || {};
-    component.formulario.get = jest.fn();
-    expect(component.formulario.get).toHaveBeenCalled();
   });
 
   it('debería ejecutar #ngOnInit()', () => {

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { AlertComponent, AnexarDocumentosComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';

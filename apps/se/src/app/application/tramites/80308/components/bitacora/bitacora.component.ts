@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Bitacora } from '../../models/plantas-consulta.model';
 import { CONFIGURACION_BITACORA_TABLA } from '../../constantes/modificacion.enum';
@@ -21,7 +21,7 @@ import { ToastrService } from 'ngx-toastr';
   ],
   providers: [ModificacionSolicitudeService, ToastrService],
 })
-export class BitacoraComponent implements OnDestroy, OnInit {
+export class BitacoraComponent implements OnDestroy {
   /**
    * Subject utilizado para notificar cuando se debe completar y limpiar las suscripciones activas.
    * Esto evita fugas de memoria al completar las suscripciones al destruir el componente.
@@ -29,10 +29,6 @@ export class BitacoraComponent implements OnDestroy, OnInit {
    * @type {Subject<void>}
    */
   destroyNotifier$: Subject<void> = new Subject();
-
-  modificionService: ModificacionSolicitudeService = Inject(ModificacionSolicitudeService);
-  
-  toastr: ToastrService = Inject(ToastrService);
 
   /**
    * Configuración de las columnas de la tabla que muestra la bitácora.
@@ -47,11 +43,7 @@ export class BitacoraComponent implements OnDestroy, OnInit {
    */
   datos: Bitacora[] = [];
 
-  /**
-   * Método que se ejecuta cuando el componente es inicializado.
-   * Carga los datos de la bitácora a través del servicio `ModificacionSolicituteService`.
-   */
-  ngOnInit(): void {
+  constructor( public modificionService: ModificacionSolicitudeService, private toastr: ToastrService ) {
     this.modificionService
       .obteberBitacora()
       .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando se destruye el componente.

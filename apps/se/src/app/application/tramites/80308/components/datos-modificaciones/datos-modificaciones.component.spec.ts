@@ -1,13 +1,11 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Injectable, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ToastrModule, provideToastr } from 'ngx-toastr';
 import { DatosModificacionesComponent } from './datos-modificaciones.component';
 import { FormBuilder } from '@angular/forms';
-import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { of as observableOf } from 'rxjs';
-
-@Injectable()
-class MockModificacionSolicitudeService {}
 
 describe('DatosModificacionesComponent', () => {
   let fixture;
@@ -15,32 +13,26 @@ describe('DatosModificacionesComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule,HttpClientTestingModule ],
       declarations: [ ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, ToastrModule ],
       providers: [
         FormBuilder,
-        { provide: ModificacionSolicitudeService, useClass: MockModificacionSolicitudeService }
+         provideToastr({
+                  positionClass: 'toast-top-right',
+                }),
       ]
     }).overrideComponent(DatosModificacionesComponent, {
-
-      set: { providers: [{ provide: ModificacionSolicitudeService, useClass: MockModificacionSolicitudeService }] }    
     }).compileComponents();
     fixture = TestBed.createComponent(DatosModificacionesComponent);
     component = fixture.debugElement.componentInstance;
+    component.modificionService = component.modificionService || {};
+    component.modificionService.obtenerDatosGenerales = jest.fn().mockReturnValue(observableOf({}));
   });
 
 
   it('debería ejecutar #constructor()', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('debería ejecutar #ngOnInit()', () => {
-    component.iniciarFormulario = jest.fn();
-    component.cargarDatos = jest.fn();
-    component.ngOnInit();
-    expect(component.iniciarFormulario).toHaveBeenCalled();
-    expect(component.cargarDatos).toHaveBeenCalled();
   });
 
   it('debe ejecutar #iniciarFormulario()', () => {

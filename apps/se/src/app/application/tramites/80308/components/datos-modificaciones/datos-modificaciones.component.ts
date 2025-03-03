@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -18,7 +18,7 @@ import { ToastrService } from 'ngx-toastr';
   imports: [FormsModule, ReactiveFormsModule],
   providers: [ModificacionSolicitudeService, ToastrService],
 })
-export class DatosModificacionesComponent implements OnInit, OnDestroy {
+export class DatosModificacionesComponent implements OnDestroy {
   /**
    * Representa el grupo de formularios para los datos generales.
    * @type {FormGroup}
@@ -32,18 +32,11 @@ export class DatosModificacionesComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  fb: FormBuilder = Inject(FormBuilder);
-  modificionService: ModificacionSolicitudeService = Inject(ModificacionSolicitudeService)
-  toastr: ToastrService = Inject(ToastrService)
-
-  /**
-   * Inicializa el componente configurando el formulario y cargando los datos.
-   * Se llama cuando el componente es inicializado.
-   */
-  ngOnInit(): void {
+  constructor(public fb: FormBuilder, public modificionService: ModificacionSolicitudeService, private toastr: ToastrService){
     this.iniciarFormulario();
     this.cargarDatos();
   }
+
 
   /**
    * Inicializa el formulario con los valores predeterminados y los campos deshabilitados.

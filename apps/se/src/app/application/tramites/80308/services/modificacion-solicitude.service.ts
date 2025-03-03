@@ -8,17 +8,18 @@ import {
   Federetarios,
   Operacions,
 } from '../models/plantas-consulta.model';
-import { Inject, Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ModificacionSolicitudeService {
 
-  http: HttpClient = Inject(HttpClient);
+  // eslint-disable-next-line no-empty-function
+  constructor(private http: HttpClient){}
 
   /**
    * Obtiene la lista de estados.

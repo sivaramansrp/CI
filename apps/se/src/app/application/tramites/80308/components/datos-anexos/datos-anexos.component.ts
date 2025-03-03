@@ -2,7 +2,7 @@ import {
   CONFIGURACION_ANEXOS_IMPORTACION,
   CONFIGURACION_ANEXOS_TABLA,
 } from '../../constantes/modificacion.enum';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Anexo } from '../../models/plantas-consulta.model';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
@@ -19,7 +19,7 @@ import { ToastrService } from 'ngx-toastr';
   imports: [TablaDinamicaComponent, TituloComponent],
   providers: [ModificacionSolicitudeService, ToastrService],
 })
-export class DatosAnexosComponent implements OnInit, OnDestroy {
+export class DatosAnexosComponent implements OnDestroy {
   /**
    * Subject utilizado para notificar cuando se debe completar y limpiar las suscripciones activas.
    * Esto evita fugas de memoria al completar las suscripciones al destruir el componente.
@@ -54,15 +54,10 @@ export class DatosAnexosComponent implements OnInit, OnDestroy {
    */
   datosImportacion: Anexo[] = [];
 
-  modificionService: ModificacionSolicitudeService = Inject(ModificacionSolicitudeService);
-
-  toastr: ToastrService = Inject(ToastrService);
-
-  /**
-   * Método que se ejecuta cuando el componente es inicializado.
-   * Carga los datos de los anexos complementarios desde el servicio.
-   */
-  ngOnInit(): void {
+  constructor(
+    public modificionService: ModificacionSolicitudeService,
+    private toastr: ToastrService 
+  ) {
     this.obteneComplimentaria(); // Carga los anexos complementarios.
   }
 

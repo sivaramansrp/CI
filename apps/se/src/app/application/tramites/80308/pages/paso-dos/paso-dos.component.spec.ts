@@ -3,6 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PasoDosComponent } from './paso-dos.component';
 import { TestBed } from '@angular/core/testing';
 import { provideToastr } from 'ngx-toastr';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('PasoDosComponent', () => {
   let fixture;
@@ -10,7 +11,7 @@ describe('PasoDosComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule, HttpClientModule ],
       declarations: [
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],

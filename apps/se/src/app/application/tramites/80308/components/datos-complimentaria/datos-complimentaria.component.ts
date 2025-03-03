@@ -8,7 +8,7 @@ import {
   Federetarios,
   Operacions,
 } from '../../models/plantas-consulta.model';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
 import { DatosCertificacionComponent } from '../datos-certificacion/datos-certificacion.component';
@@ -29,7 +29,7 @@ import { ToastrService } from 'ngx-toastr';
   ],
   providers: [ModificacionSolicitudeService, ToastrService],
 })
-export class DatosComplimentariaComponent implements OnInit, OnDestroy {
+export class DatosComplimentariaComponent implements OnDestroy {
   /**
    * Subject utilizado para notificar cuando se debe completar y limpiar las suscripciones activas.
    * Esto ayuda a prevenir fugas de memoria al completar las suscripciones al destruir el componente.
@@ -77,19 +77,15 @@ export class DatosComplimentariaComponent implements OnInit, OnDestroy {
    */
   datosComplimentaria: Complimentaria[] = [];
 
-  modificionService: ModificacionSolicitudeService = Inject(ModificacionSolicitudeService)
-  toastr: ToastrService = Inject(ToastrService);
-
-
-  /**
-   * Método que se ejecuta cuando el componente es inicializado.
-   * Llama a los métodos para cargar los federetarios, operaciones y complimentaria.
-   */
-  ngOnInit(): void {
+  constructor(
+    public modificionService: ModificacionSolicitudeService,
+    private toastr: ToastrService
+  ) {
     this.obtenerFederetarios(); // Carga los federetarios.
     this.obtenerOperacions(); // Carga las operaciones.
     this.obtenerComplimentaria(); // Carga los datos de complimentaria.
   }
+
 
   /**
    * Método que obtiene los datos de complimentaria desde el servicio.
