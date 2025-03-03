@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AsignciondirectaPageComponent } from './pages/asignciondirecta-page/asignciondirecta-page.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
 
   {
         path: 'Soliciante',
@@ -13,7 +13,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class EntidadLegalRoutingModule { }

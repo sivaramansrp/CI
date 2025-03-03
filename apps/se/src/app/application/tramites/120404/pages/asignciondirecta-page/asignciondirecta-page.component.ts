@@ -6,10 +6,14 @@
  */
 
 import { Component, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ASIGNACION, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import {ASIGNACION_REGISTRO} from 'libs/shared/data-access-user/src/tramites/constantes/120404/entidad.enum'
+
+
+
+import { ASIGNACION_REGISTRO } from '@ng-mf/data-access-user';
+
 
 
 

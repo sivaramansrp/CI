@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AsignciondirectaPageComponent } from './asignciondirecta-page.component';
 import { CommonModule } from '@angular/common';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { ASIGNHCION, ListaPasosWizard } from '@ng-mf/data-access-user';
+
+import { ASIGNACION } from '@ng-mf/data-access-user';
 
 describe('AsignciondirectaPageComponent', () => {
   let component: AsignciondirectaPageComponent;
@@ -24,7 +25,7 @@ describe('AsignciondirectaPageComponent', () => {
   });
 
   it('should have the correct initial steps', () => {
-    expect(component.pantallasPasos).toEqual(ASIGNHCION);
+    expect(component.pantallasPasos).toEqual(ASIGNACION);
   });
 
   it('should have the correct initial step index', () => {

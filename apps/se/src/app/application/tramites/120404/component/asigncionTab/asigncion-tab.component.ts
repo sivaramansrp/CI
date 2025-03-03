@@ -8,12 +8,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { SolicitantetabComponent } from '../solicitanteTab/solicitantetab.component';
+
 import { InputRadioComponent } from '@ng-mf/data-access-user';
+
 import { Subject, takeUntil } from 'rxjs';
+
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { SolicitanteasigncionserviceService } from 'libs/shared/data-access-user/src/core/services/120404/solicitanteasigncionService.service';
+
 import { Catalogo } from '@ng-mf/data-access-user';
 
 /**
@@ -73,7 +80,8 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
    * @param fb FormBuilder para la creación del formulario.
    * @param service Servicio para obtener los datos de asignación.
    */
-  constructor(private fb: FormBuilder, private service: SolicitanteasigncionserviceService) { }
+  // eslint-disable-next-line no-empty-function
+  constructor(private fb: FormBuilder, private service: SolicitanteasigncionserviceService) {}
 
   /**
    * Método de inicialización del componente.
@@ -99,9 +107,11 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
    * Método para manejar el envío del formulario.
    */
   buscar(): void {
+    // eslint-disable-next-line no-empty
     if (this.asignacionForm.valid) {
-
+      
     } 
+    // eslint-disable-next-line no-empty
     else {
       
     }

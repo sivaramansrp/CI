@@ -1,9 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+
+import { Subject, of } from 'rxjs';
+
+
+import { SolicitanteasigncionserviceService } from '@ng-mf/data-access-user';
+// import { SolicitanteasigncionserviceService } from 'libs/shared/data-access-user/src/core/services/120404/solicitanteasigncionService.service';
+
+import { Catalogo } from '@ng-mf/data-access-user';
+
+
+
 import { AsignciontabComponent } from './asigncion-tab.component';
-import { SolicitanteasigncionserviceService } from 'libs/shared/data-access-user/src/core/services/120404/solicitanteasigncionService.service';
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/catalogo.model';
 
 describe('AsignciontabComponent', () => {
   let component: AsignciontabComponent;
@@ -11,7 +19,7 @@ describe('AsignciontabComponent', () => {
   let service: jest.Mocked<SolicitanteasigncionserviceService>;
 
   beforeEach(async () => {
-    const serviceSpy = jest.fn(() => ({
+    const SERVICESPY = jest.fn(() => ({
       getAsigncion: jest.fn()
     }))();
 
@@ -19,7 +27,7 @@ describe('AsignciontabComponent', () => {
       imports: [ReactiveFormsModule],
       declarations: [AsignciontabComponent],
       providers: [
-        { provide: SolicitanteasigncionserviceService, useValue: serviceSpy }
+        { provide: SolicitanteasigncionserviceService, useValue:SERVICESPY}
       ]
     }).compileComponents();
 
@@ -45,19 +53,19 @@ describe('AsignciontabComponent', () => {
   });
 
   it('should load combo unidad medida', () => {
-    const mockData: Catalogo[] = [{ id: 1, descripcion: 'Test' }];
-    service.getAsigncion.mockReturnValue(of(mockData));
+    const MOCKDATA: Catalogo[] = [{ id: 1, descripcion: 'Test' }];
+    service.getAsigncion.mockReturnValue(of(MOCKDATA));
 
     component.loadComboUnidadMedida();
     expect(service.getAsigncion).toHaveBeenCalled();
-    expect(component.asigncionendid).toEqual(mockData);
+    expect(component.asigncionid).toEqual(MOCKDATA);
   });
 
   it('should check if form control is invalid', () => {
     component.ngOnInit();
-    const control = component.asignacionForm.get('datosRegimen.asignacionsolitud');
-    control?.markAsTouched();
-    control?.setErrors({ required: true });
+    const CONTROL = component.asignacionForm.get('datosRegimen.asignacionsolitud');
+    CONTROL?.markAsTouched();
+    CONTROL?.setErrors({ required: true });
 
     expect(component.isInvalid('asignacionsolitud')).toBeTruthy();
   });
@@ -83,14 +91,16 @@ describe('AsignciontabComponent', () => {
   });
 
   it('should clean up on destroy', () => {
-    const destroyed$ = {
-      next: jest.fn(),
-      complete: jest.fn()
-    };
-    (component as any).destroyed$ = destroyed$;
+    // const DESTROYED$ = {
+    //   next: jest.fn(),
+    //   complete: jest.fn()
+    // };
+    const DESTROYED$ = new Subject<void>();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (component as any).DESTROYED$ =DESTROYED$ ;
 
     component.ngOnDestroy();
-    expect(destroyed$.next).toHaveBeenCalled();
-    expect(destroyed$.complete).toHaveBeenCalled();
+    expect(DESTROYED$.next).toHaveBeenCalled();
+    expect(DESTROYED$.complete).toHaveBeenCalled();
   });
 });

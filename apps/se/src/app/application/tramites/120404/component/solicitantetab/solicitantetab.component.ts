@@ -4,15 +4,16 @@
  * incluyendo la inicialización, la obtención de datos y la gestión de los controles del formulario.
  * @module SolicitantetabComponent
  */
-
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TituloComponent, AlertComponent, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
+
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { AlertComponent, DatosPasos, ListaPasosWizard, PASOS, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { SolicitanteasigncionserviceService } from 'libs/shared/data-access-user/src/core/services/120404/solicitanteasigncionService.service';
-// import { AsignacionData } from 'libs/shared/data-access-user/src/core/models/120404/asignacionmodel';
-import { Subject, takeUntil } from 'rxjs';
+import { SolicitanteasigncionserviceService } from '@ng-mf/data-access-user';
 
 /**
  * Componente para la gestión del formulario de solicitante.
@@ -61,6 +62,7 @@ export class SolicitantetabComponent implements OnInit, OnDestroy {
    * @param fb FormBuilder para la creación del formulario.
    * @param service Servicio para obtener los datos de asignación.
    */
+  // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder, private service: SolicitanteasigncionserviceService) { }
 
   /**
@@ -115,6 +117,7 @@ export class SolicitantetabComponent implements OnInit, OnDestroy {
     this.service.getSolicitante().pipe(
       takeUntil(this.destroyed$)
     ).subscribe(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (data:any) => {
         this.formasignacion.patchValue({
           especie: data.especie,
@@ -132,8 +135,10 @@ export class SolicitantetabComponent implements OnInit, OnDestroy {
    * Método para manejar el envío del formulario.
    */
   enviarFormulario(): void {
+    // eslint-disable-next-line no-empty
     if (this.formasignacion.valid) {
       
+    // eslint-disable-next-line no-empty
     } else {
       
     }

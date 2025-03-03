@@ -1,11 +1,16 @@
 import { NgModule } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+
 import { BtnContinuarComponent, CatalogoSelectComponent, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
+
 import { AsignciontabComponent } from './component/asigncionTab/asigncion-tab.component';
 import { SolicitantetabComponent } from './component/solicitanteTab/solicitantetab.component';
+
 import { EntidadLegalRoutingModule } from './entidad-legal-routing.module';
+
 import { AsignciondirectaPageComponent } from './pages/asignciondirecta-page/asignciondirecta-page.component';
 import { SolicitanteAsigncionComponent } from './pages/solicitante-asigncionTab/solicitante-asigncion.component';
 @NgModule({

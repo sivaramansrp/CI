@@ -1,9 +1,19 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
-import { SolicitantetabComponent } from './solicitantetab.component';
-import { SolicitanteasigncionserviceService } from 'libs/shared/data-access-user/src/core/services/120404/solicitanteasigncionService.service';
+// eslint-disable-next-line sort-imports
 import { AsignacionData } from 'libs/shared/data-access-user/src/core/models/120404/asignacionmodel';
+
+
+
+import { SolicitantetabComponent } from './solicitantetab.component';
+
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { SolicitanteasigncionserviceService } from 'libs/shared/data-access-user/src/core/services/120404/solicitanteasigncionService.service';
+
+// eslint-disable-next-line @nx/enforce-module-boundaries
+
 
 describe('SolicitantetabComponent', () => {
   let component: SolicitantetabComponent;
@@ -11,9 +21,10 @@ describe('SolicitantetabComponent', () => {
   let service: jest.Mocked<SolicitanteasigncionserviceService>;
 
   beforeEach(async () => {
-    const serviceSpy = jest.fn(() => ({
-      getAsigncionsolicitante: jest.fn()
-    }))();
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const serviceSpy = {
+      getAsignacionSolicitante: jest.fn()
+    };
 
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
@@ -45,18 +56,19 @@ describe('SolicitantetabComponent', () => {
   });
 
   it('should load asignacion data', () => {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const mockData: AsignacionData = {
       especie: 'Test Especie',
       funcionZootecnica: 'Test Funcion',
-      authorizado: 'Test Authorizado',
+      autorizado: 'Test Autorizado',
       Expendido: 'Test Expendido',
       disponible: 'Test Disponible',
       ampliar: 'Test Ampliar'
     };
-    service.getAsigncionsolicitante.mockReturnValue(of(mockData));
+    (service.getSolicitante as jest.Mock).mockReturnValue(of(mockData));
 
     component.loadAsignacionData();
-    expect(service.getAsigncionsolicitante).toHaveBeenCalled();
+    expect(service.getSolicitante()).toHaveBeenCalled();
     expect(component.formasignacion.value).toEqual({
       especie: 'Test Especie',
       funcionZootecnica: 'Test Funcion',
@@ -90,13 +102,16 @@ describe('SolicitantetabComponent', () => {
   });
 
   it('should clean up on destroy', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     jest.spyOn(component as any, 'destroyed$', 'get').mockReturnValue({
       next: jest.fn(),
       complete: jest.fn()
     });
 
     component.ngOnDestroy();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((component as any).destroyed$.next).toHaveBeenCalled();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((component as any).destroyed$.complete).toHaveBeenCalled();
   });
 });
