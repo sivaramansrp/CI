@@ -40,7 +40,11 @@
         ],
         "customWebpackConfig": {
           "path": "apps/aga/webpack.config.ts"
-        }
+        },
+        "allowedCommonJsDependencies": [
+          "node-forge",
+          "moment"
+       ]
       },
       "configurations": {
         "production": {
