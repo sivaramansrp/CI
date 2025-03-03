@@ -4,13 +4,13 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 
 const ROUTES: Routes = [
   {
-    path: 'sensbles',
+    path: 'solicitud',
     component: SolicitudPageComponent,
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'sensbles',
+    redirectTo: 'solicitud',
   },
 ];
 
