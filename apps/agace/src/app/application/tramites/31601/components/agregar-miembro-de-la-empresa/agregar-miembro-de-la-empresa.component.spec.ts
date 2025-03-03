@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable dot-notation */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';

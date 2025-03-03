@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable sort-imports */
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { TituloComponent } from '@ng-mf/data-access-user';

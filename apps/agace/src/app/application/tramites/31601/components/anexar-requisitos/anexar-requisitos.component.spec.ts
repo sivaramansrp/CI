@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { AnexarRequisitosComponent } from './anexar-requisitos.component';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';

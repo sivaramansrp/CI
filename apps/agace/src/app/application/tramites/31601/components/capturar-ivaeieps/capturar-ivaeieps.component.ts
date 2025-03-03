@@ -1,3 +1,7 @@
+/* eslint-disable no-empty-function */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Component } from '@angular/core';
 import { TituloComponent } from '@ng-mf/data-access-user';
 

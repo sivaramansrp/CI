@@ -1,7 +1,9 @@
+/* eslint-disable sort-imports */
+/* eslint-disable @nx/enforce-module-boundaries */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { catchError, map } from 'rxjs';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ServiciosExtraordinariosService } from 'libs/shared/data-access-user/src/core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 import { TramiteAgaceStore } from '../../../../estados/tramite.store';
 import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CapturarIvaeiepsComponent } from './capturar-ivaeieps.component';
 

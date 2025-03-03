@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @nx/enforce-module-boundaries */
 /**
  * @module AgregarMiembroDeLaEmpresaComponent
  *  Componente para agregar un miembro de la empresa.

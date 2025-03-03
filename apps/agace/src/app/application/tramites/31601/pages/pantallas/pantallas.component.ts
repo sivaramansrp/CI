@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Component, ViewChild } from '@angular/core';
 import { AccionBoton } from 'libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';

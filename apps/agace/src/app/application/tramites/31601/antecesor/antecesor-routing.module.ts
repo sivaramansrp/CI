@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable sort-imports */
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';

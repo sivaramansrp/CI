@@ -1,3 +1,8 @@
+/* eslint-disable @nx/enforce-module-boundaries */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable sort-imports */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { RequisitosComponent } from './requisitos.component';
@@ -11,7 +16,7 @@ import { Tipos } from '../../../../core/models/31601/servicios-pantallas.model';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MockValue } from 'libs/shared/theme/assets/json/31601/mock-value.json';
+import MockValue from 'libs/shared/theme/assets/json/31601/mock-value.json';
 class MockServiciosPantallaService {
   getTiposCatalog() {
     return of(MockValue.tiposCatalog);

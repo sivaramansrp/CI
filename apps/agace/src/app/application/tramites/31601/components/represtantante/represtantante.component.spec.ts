@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable sort-imports */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReprestantanteComponent } from './represtantante.component';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';

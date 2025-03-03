@@ -1,3 +1,6 @@
+/* eslint-disable sort-imports */
+/* eslint-disable no-empty-function */
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 

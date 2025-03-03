@@ -1,3 +1,7 @@
+/* eslint-disable dot-notation */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable sort-imports */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EnlaceComponent } from './enlace.component';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';

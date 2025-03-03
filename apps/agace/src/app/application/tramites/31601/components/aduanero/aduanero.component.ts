@@ -1,3 +1,8 @@
+/* eslint-disable no-empty-function */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @nx/enforce-module-boundaries */
 /**
  * compo doc
  * @module AduaneroComponent

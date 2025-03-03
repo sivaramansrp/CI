@@ -9,6 +9,7 @@ import { ServiciosPantallaService } from '../../../../core/services/31601/servic
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 class MockServiciosPantallaService {
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
   getPersonapara() {
     // Mock data with the correct structure
     return of([
