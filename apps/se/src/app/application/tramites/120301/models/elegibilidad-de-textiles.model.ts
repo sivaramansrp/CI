@@ -23,6 +23,13 @@ export interface solicitante {
     aPaterno: string;
     correo: string;
   }
+
+  export interface ListaPasosWizard {
+    indice: number;
+    titulo: string;
+    activo: boolean;
+    completado: boolean;
+}
   
   /**
    * Modelo de datos de la solicitud

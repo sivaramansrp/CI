@@ -1,5 +1,5 @@
-import { CatalogosSelect } from '../shared/components.model';
-import { FormularioDinamico } from '../shared/forms-model';
+import { CatalogosSelect } from '../../../../../../../../libs/shared/data-access-user/src/core/models/shared/components.model';
+import { FormularioDinamico } from '../../../../../../../../libs/shared/data-access-user/src/core/models/shared/forms-model';
 
 export interface ListaPasosWizard {
     indice: number;

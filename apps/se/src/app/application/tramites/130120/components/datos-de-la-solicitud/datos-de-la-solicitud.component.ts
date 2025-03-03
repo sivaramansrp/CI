@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { DATOS_EXPORTACION, DATOS_EXPORTADOR, DATOS_MERCANCIA, DATOS_PRODUCTOR, DATOS_REALIZAR } from 'libs/shared/data-access-user/src/tramites/constantes/130120/permiso-importacion-modification.enum';
+import { DATOS_EXPORTACION, DATOS_EXPORTADOR, DATOS_MERCANCIA, DATOS_PRODUCTOR, DATOS_REALIZAR } from '../../constants/permiso-importacion-modification.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { CatalogoSelectComponent } from "libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component";
 import { CatalogosService } from 'libs/shared/data-access-user/src/core/services/shared/catalogos/catalogos.service';
 import { CommonModule } from '@angular/common';
 import { FormularioDinamico } from 'libs/shared/data-access-user/src/core/models/shared/forms-model';
-import { InputConfig } from 'libs/shared/data-access-user/src/core/models/130120/permiso-importacion-modification.model';
+import { InputConfig } from '../../models/permiso-importacion-modification.model';
 import { InputFechaComponent } from "libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component";
 import { InputRadioComponent } from "libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
-import { InputTypes } from 'libs/shared/data-access-user/src/core/models/130120/permiso-importacion-modification.enum';
+import { InputTypes } from '../../models/permiso-importacion-modification.enum';
 import { TituloComponent } from "libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
 import { map } from 'rxjs';
 import tipoDePersonaExportadorOptions from 'libs/shared/theme/assets/json/130120/tipo-de-persona-exportador.json';
