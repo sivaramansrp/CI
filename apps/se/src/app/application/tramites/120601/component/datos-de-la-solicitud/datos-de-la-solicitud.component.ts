@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { Catalogo, CatalogoSelectComponent, SelectCatalogosComponent, TituloComponent } from '@ng-mf/data-access-user';
@@ -36,7 +36,9 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * Constructor de DatosDeLaSolicitudComponent.
    * @param fb El servicio FormBuilder.
    */
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) {
+    // Initialization logic can be added here if needed
+  }
 
   /**
    * Inicializa el componente.

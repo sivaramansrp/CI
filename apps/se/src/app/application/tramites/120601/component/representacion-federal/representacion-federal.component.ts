@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Catalogo, CatalogoSelectComponent, DATOS_GENERALES_REPRESENTACION, SelectCatalogosComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 /**
  * Componente que representa la representación federal en un proceso de múltiples pasos.
@@ -81,7 +81,9 @@ export class RepresentacionFederalComponent implements OnInit {
    * Constructor de la clase.
    * @param fb El servicio FormBuilder.
    */
-  constructor(private fb: FormBuilder) {}
+  // constructor(private fb: FormBuilder) {
+  //   Initialization logic can be added here if needed
+  // }
 
   /**
    * Método que se ejecuta al inicializar el componente.

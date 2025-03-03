@@ -17,10 +17,9 @@ import { SolicitanteService } from '@ng-mf/data-access-user';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL
-} from 'libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+} from '@ng-mf/data-access-user';
 
-import { UppercaseDirective } from 'libs/shared/data-access-user/src/tramites/directives/Uppercase/uppercase.directive';
-
+import { UppercaseDirective } from '@ng-mf/data-access-user';
 /**
  * `DomicilioComponent` maneja los datos del formulario relacionados con el domicilio
  * y gestiona la entrada del usuario para diferentes tipos de personas 
@@ -122,10 +121,11 @@ export class DomicilioComponent implements OnInit {
    * @param grupoNombre - Nombre del grupo de formulario a inicializar.
    */
   inicializarFormGroup(config: FormularioDinamico[], grupoNombre: string): void {
-    const grupo = this.form.get(grupoNombre) as FormGroup;
+    const GRUPO = this.form.get(grupoNombre) as FormGroup;
     config.forEach((campo) => {
-      const validators = this.getValidators(campo.validators);
-      grupo.addControl(campo.campo, this.fb.control({ value: '', disabled: campo.disabled }, validators));
+      //const VALIDATORS = DomicilioComponent.getValidators(campo.validators);
+      const VALIDATORS = DomicilioComponent.getValidators(campo.validators);
+      GRUPO.addControl(campo.campo, this.fb.control({ value: '', disabled: campo.disabled }, VALIDATORS));
     });
   }
 
@@ -135,19 +135,19 @@ export class DomicilioComponent implements OnInit {
    * @param validators - Matriz de validadores en formato de cadena (por ejemplo, `['required', 'maxLength:50']`).
    * @returns {ValidatorFn[]} - Matriz de funciones de validación de Angular.
    */
-  getValidators(validators: string[]): ValidatorFn[] {
+  static getValidators(validators: string[]): ValidatorFn[] {
     return validators.map((validator) => {
       if (validator === 'required') {
         return Validators.required;
       } else if (validator.startsWith('maxLength')) {
-        const max = Number(validator.split(':')[1]);
-        return Validators.maxLength(max);
+        const MAX = Number(validator.split(':')[1]);
+        return Validators.maxLength(MAX);
       } else if (validator.startsWith('pattern')) {
-        const pattern = validator.split(':')[1];
-        return Validators.pattern(pattern);
+        const PATTERN = validator.split(':')[1];
+        return Validators.pattern(PATTERN);
       }
-      return null!;
-    }).filter(Boolean);
+      return null;
+    }).filter((validator): validator is ValidatorFn => validator !== null);
   }
 
   /**
@@ -158,14 +158,14 @@ export class DomicilioComponent implements OnInit {
       .pipe(
         tap((response) => {
           if (response) {
-            const datos = JSON.parse(response.data);
-            const datosDomicilioFiscal = datos.domicilioFiscal;
+            const DATOS = JSON.parse(response.data);
+            const DATOS_DOMICILIO_FISCAL = DATOS.domicilioFiscal;
 
 
-            const camposDatosDomicilioFiscal = this.formServices.obtenerNombresCamposForm(this.domicilioFiscalForm);
+            const CAMPOS_DATOS_DOMICILIO_FISCAL = this.formServices.obtenerNombresCamposForm(this.domicilioFiscalForm);
 
-            camposDatosDomicilioFiscal.forEach((campo) => {
-              this.formServices.agregarValorCampoDesactivados(this.domicilioFiscalForm, campo, datosDomicilioFiscal[campo]);
+            CAMPOS_DATOS_DOMICILIO_FISCAL.forEach((campo) => {
+              this.formServices.agregarValorCampoDesactivados(this.domicilioFiscalForm, campo, DATOS_DOMICILIO_FISCAL[campo]);
             });
           }
         })

@@ -11,11 +11,13 @@ import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
+
 import { DatosPasos } from '@ng-mf/data-access-user';
+
+import { DATOS_GENERALES_EXTRANJEROS } from '@ng-mf/data-access-user';
+import { DATOS_GENERALES_SOCIOS } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { DATOS_GENERALES_SOCIOS } from 'libs/shared/data-access-user/src/tramites/constantes/120601/datos-generales-socios-tabledata.enum';
-import { DATOS_GENERALES_EXTRANJEROS } from 'libs/shared/data-access-user/src/tramites/constantes/120601/datos-generales-socios-tabledata.enum';
 
 /**
  * Componente para gestionar los datos generales de socios.
@@ -86,7 +88,9 @@ export class DatosGeneralesSociosComponent implements OnInit {
    * Constructor - inicializa el form builder.
    * @param fb - Instancia de FormBuilder
    */
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {
+    // Constructor logic can be added here if needed
+  }
 
   /**
    * Hook del ciclo de vida - inicializa el componente y los formularios.

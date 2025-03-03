@@ -79,3 +79,8 @@ export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './core/enums/tabla-seleccion.enum';
 export * from './tramites/constantes/120601/datos-generales-socios-tabledata.enum';
+export * from './tramites/constantes/solicitante-constantes.enum';
+export * from './tramites/directives/Uppercase/uppercase.directive';
+
+
+
