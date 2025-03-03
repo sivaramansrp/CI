@@ -32,7 +32,7 @@ module.exports = {
    name: 'agriculture',
    filename: 'remoteAppEntry.js',
    exposes: {
-    './Module': 'apps/agriculture/src/app/remote-entry/entry.module.ts',
+    './Module': 'apps/agriculture/src/app/application/app.module.ts',
    },
    shared: share({
     '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },

@@ -33,9 +33,9 @@ module.exports = {
    name: 'aga',
    filename: 'remoteAppEntry.js',
    exposes: {
-    './Module': 'apps/aga/src/app/remote-entry/entry.module.ts',
+    './Module': 'apps/aga/src/app/application/app.module.ts',
    },
-   shared: share({
+   shared: share({ 
     '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
     '@angular/common': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
     '@angular/common/http': { singleton: true, strictVersion: true, requiredVersion: 'auto' },

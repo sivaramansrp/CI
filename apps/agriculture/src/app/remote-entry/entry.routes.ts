@@ -4,7 +4,7 @@ import { RemoteEntryComponent } from './entry.component';
 export const remoteRoutes: Route[] = [
   { path: '', redirectTo: 'pago', pathMatch: 'full' },
   {
-    path: 'pago', loadChildren: () => import('./../application/app.module').then(module => module.App220401Module)
+    path: 'pago', loadChildren: () => import('./../application/app.module').then(module => module.AppAgriculturaModule)
   }
 ];
  

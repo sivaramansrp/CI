@@ -5,7 +5,7 @@
 /* eslint-disable no-multi-spaces */
 /* eslint-disable sort-imports */
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

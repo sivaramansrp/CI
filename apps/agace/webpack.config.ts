@@ -32,7 +32,7 @@ module.exports = {
    name: 'agace',
    filename: 'remoteAppEntry.js',
    exposes: {
-    './Module': 'apps/agace/src/app/remote-entry/entry.module.ts',
+    './Module': 'apps/agace/src/app/application/app.module.ts',
    },
    shared: share({
     '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
