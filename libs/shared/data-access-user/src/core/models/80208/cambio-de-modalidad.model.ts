@@ -2,7 +2,7 @@
 export interface CambioDeModalidadForm {
     seleccionaLaModalidad: string;
     folio: number;
-    año: number;
+    ano: number;
     seleccionaModalidad: string;
     cambioModalidad: string;
 }
@@ -21,7 +21,7 @@ export interface CambioModalidadResponse {
 export const CONFIGURACION_SERVICIO = [
     {
         encabezado: 'Descripción del servicio',
-        clave: (ele: ServicioInfo) => ele.descripciónDelServicio,
+        clave: (ele: ServicioInfo) => ele.descripcionDelServicio,
         orden: 1
     },
     {
@@ -32,7 +32,7 @@ export const CONFIGURACION_SERVICIO = [
 ]
 
 export interface ServicioInfo {
-    descripciónDelServicio: string;
+    descripcionDelServicio: string;
     tipoDeServicio: string;
     estatus: boolean;
 }

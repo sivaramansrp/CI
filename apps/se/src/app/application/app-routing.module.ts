@@ -43,8 +43,8 @@ const routes: Routes = [
   {
     path: 'solicitud-modalidad',
     loadChildren: () =>
-      import('./tramites/80208/registro-solicitudad.module').then(
-        (m) => m.RegistroSolicitudModalidadModule)
+      import('./tramites/80208/registro-solicitud.module').then(
+        (m) => m.RegistroSolicitudModule)
   }
 ];
 

@@ -51,5 +51,4 @@ export class CambioModalidadService {
   getCambioDeModalidad(): Observable<CambioModalidadResponse> {
     return this.http.get<CambioModalidadResponse>(`${this.datosSimuladosUrl}cambio-de-modalidad.json`);
   }
-
 }

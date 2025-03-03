@@ -1,5 +1,4 @@
-
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CatalogoSelectComponent, FirmaElectronicaComponent, SelectCatalogosComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from "@ng-mf/data-access-user";
 import { SolicitudModalidadPageComponent } from './pages/solicitud-modalidad-page/solicitud-modalidad-page.component';
@@ -12,9 +11,9 @@ import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/compon
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AnexarDocumentosComponent } from 'libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component';
-import { RegistroSolicitudModalidadRoutingModule } from './registro-solicitudad-routing.module';
-import { CombioDeModalidadComponent } from './component/combio-de-modalidad/combio-de-modalidad.component';
+import { CambioDeModalidadComponent } from './component/cambio-de-modalidad/cambio-de-modalidad.component';
 import { ToastrService } from 'ngx-toastr';
+import { RegistroSolicitudRoutingModule } from './registro-solicitud-routing.module';
 
 
 
@@ -31,23 +30,25 @@ import { ToastrService } from 'ngx-toastr';
   ],
   imports: [
     CommonModule,
-    RegistroSolicitudModalidadRoutingModule,
+    RegistroSolicitudRoutingModule,
     WizardComponent,
     BtnContinuarComponent,
     AlertComponent,
     SolicitanteComponent,
     ReactiveFormsModule,
     CatalogoSelectComponent,
-    TituloComponent,  
+    TituloComponent,
     FirmaElectronicaComponent,
     AnexarDocumentosComponent,
     TablaDinamicaComponent,
-    CombioDeModalidadComponent,
+    CambioDeModalidadComponent,
     SelectCatalogosComponent,
     SharedModule
   ],
 
   providers: [ToastrService],
+  
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 
 })
-export class RegistroSolicitudModalidadModule { }
+export class RegistroSolicitudModule { }

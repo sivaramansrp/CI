@@ -20,20 +20,19 @@ import { CommonModule } from '@angular/common';
  * @implements {OnInit, OnDestroy}
  */
 @Component({
-  selector: 'app-combio-de-modalidad',
-  templateUrl: './combio-de-modalidad.component.html',
-  styleUrls: ['./combio-de-modalidad.component.scss'],
+  selector: 'app-cambio-de-modalidad',
+  templateUrl: './cambio-de-modalidad.component.html',
+  styleUrls: ['./cambio-de-modalidad.component.scss'],
   standalone: true,
-  imports:[
+  imports: [
     TablaDinamicaComponent,
     ReactiveFormsModule,
     CommonModule,
     CatalogoSelectComponent,
     TituloComponent
   ]
- 
 })
-export class CombioDeModalidadComponent implements OnInit, OnDestroy {
+export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   /**
    * Tipo de selección de la tabla.
    * @type {TablaSeleccion}
@@ -52,7 +51,7 @@ export class CombioDeModalidadComponent implements OnInit, OnDestroy {
    */
   ServiciosDatos: ServicioInfo[] = [
     {
-      descripciónDelServicio: 'BLINDAJE, MODIFICACION ADAPTACION DE VEHICULO AUTOMOTOR',
+      descripcionDelServicio: 'BLINDAJE, MODIFICACION ADAPTACION DE VEHICULO AUTOMOTOR',
       tipoDeServicio: 'TANGIBLE',
       estatus: true
     }
@@ -64,7 +63,7 @@ export class CombioDeModalidadComponent implements OnInit, OnDestroy {
    */
   autorizadosDatos: ServicioInfo[] = [
     {
-      descripciónDelServicio: 'BLINDAJE, MODIFICACION ADAPTACION DE VEHICULO AUTOMOTOR',
+      descripcionDelServicio: 'BLINDAJE, MODIFICACION ADAPTACION DE VEHICULO AUTOMOTOR',
       tipoDeServicio: 'TANGIBLE',
       estatus: true
     }
@@ -125,7 +124,7 @@ export class CombioDeModalidadComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarForm();
-    this.getcargarDatos();
+    this.getCargarDatos();
     this.disableFormControls();
     this.getCambioDeModalidad();
     this.getServiciosImmx();
@@ -140,7 +139,7 @@ export class CombioDeModalidadComponent implements OnInit, OnDestroy {
     this.cambioDeModalidadForm = this.fb.group({
       seleccionaLaModalidad: ['', Validators.required],
       folio: ['', [Validators.required, Validators.min(1)]],
-      año: ['', [Validators.required, Validators.min(2000), Validators.max(2100)]],
+      ano: ['', [Validators.required, Validators.min(2000), Validators.max(2100)]],
       seleccionaModalidad: ['', Validators.required],
       cambioDeModalidad: ['', Validators.required]
     });
@@ -155,10 +154,10 @@ export class CombioDeModalidadComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  getcargarDatos(): void {
+  getCargarDatos(): void {
     this.modalidadService.getDatosSimulados()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data:any) => {
+      .subscribe((data: any) => {
         this.cambioDeModalidadForm.patchValue(data);
       });
   }
@@ -197,8 +196,9 @@ export class CombioDeModalidadComponent implements OnInit, OnDestroy {
   disableFormControls(): void {
     this.cambioDeModalidadForm.get('seleccionaLaModalidad')?.disable();
     this.cambioDeModalidadForm.get('folio')?.disable();
-    this.cambioDeModalidadForm.get('año')?.disable();
+    this.cambioDeModalidadForm.get('ano')?.disable();
     this.cambioDeModalidadForm.get('seleccionaModalidad')?.disable();
+    this.cambioDeModalidadForm.get('cambioDeModalidad')?.disable();
   }
 
   /**
@@ -237,5 +237,5 @@ export class CombioDeModalidadComponent implements OnInit, OnDestroy {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-  
+
 }

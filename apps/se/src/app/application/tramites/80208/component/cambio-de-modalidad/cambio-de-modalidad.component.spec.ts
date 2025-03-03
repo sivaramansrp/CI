@@ -7,29 +7,29 @@ import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
-import { CombioDeModalidadComponent } from './combio-de-modalidad.component';
+import { CambioDeModalidadComponent } from './cambio-de-modalidad.component';
 import { FormBuilder } from '@angular/forms';
 import { CambioModalidadService } from 'libs/shared/data-access-user/src/core/services/80208/cambio-modalidad.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 
-describe('CombioDeModalidadComponent', () => {
+describe('CambioDeModalidadComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, CombioDeModalidadComponent, HttpClientTestingModule ],
+      imports: [ FormsModule, ReactiveFormsModule, CambioDeModalidadComponent, HttpClientTestingModule ],
       declarations: [
       ],
       providers: [
         FormBuilder,
         CambioModalidadService
       ]
-    }).overrideComponent(CombioDeModalidadComponent, {
+    }).overrideComponent(CambioDeModalidadComponent, {
 
     }).compileComponents();
-    fixture = TestBed.createComponent(CombioDeModalidadComponent);
+    fixture = TestBed.createComponent(CambioDeModalidadComponent);
     component = fixture.debugElement.componentInstance;
   });
 
