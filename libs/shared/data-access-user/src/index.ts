@@ -79,7 +79,7 @@ export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 export { PASOS as PASOS_80202 } from './tramites/constantes/80202/immex-ampliacion-sensibles.enums';
 export {
   TEXTOS_REQUISITOS as TEXTOS_REQUISITOS_80202,
-  SUCECESS_MESSAGE_STAGEONE,
+  MENSAJE_DE_EXITO_ETAPA_UNO,
 } from './tramites/constantes/certificado-zoosanitario.enum';
 export {
   ImmexAmplicationSensibleDatosDelFormulario,

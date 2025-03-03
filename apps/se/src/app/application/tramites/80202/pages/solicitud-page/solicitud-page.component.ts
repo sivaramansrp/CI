@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS_80202 } from '@ng-mf/data-access-user';
-import { SUCECESS_MESSAGE_STAGEONE } from '@ng-mf/data-access-user';
+import { MENSAJE_DE_EXITO_ETAPA_UNO } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -42,7 +42,7 @@ export class SolicitudPageComponent {
    * @property {string} mensajeDeTextoDeExito - Mensaje que se muestra si el primer paso se completa con éxito.
    *
    */
-  mensajeDeTextoDeExito: string = SUCECESS_MESSAGE_STAGEONE;
+  mensajeDeTextoDeExito: string = MENSAJE_DE_EXITO_ETAPA_UNO;
 
   /**
    * Array de pasos del asistente.
