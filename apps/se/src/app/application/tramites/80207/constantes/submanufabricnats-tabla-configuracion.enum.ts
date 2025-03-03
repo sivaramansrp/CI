@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { SubfacrintaTablaModelo } from "../modelos/submanufacturer-extension";
 
 export const SUBFACRINTATABLACONFIGURACION = 

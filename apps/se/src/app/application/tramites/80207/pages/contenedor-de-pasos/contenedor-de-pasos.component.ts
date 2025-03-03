@@ -1,12 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+
+import { Component, ViewChild } from '@angular/core';
 import {
   DatosPasos,
   ListaPasosWizard,
   WizardComponent,
 } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
 import { SeccionState } from 'apps/aga/src/app/application/estados/seccion.store';
+import { Subject} from 'rxjs';
+
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -92,7 +94,7 @@ export class ContenedorDePasosComponent {
    * @param {AccionBoton} e - Acción del botón que contiene el valor del índice.
    */
 
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton):void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

@@ -1,26 +1,28 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import {
   Catalogo,
   CatalogoSelectComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   DatosSubcontratista,
   InfoRegistro,
   SubfacrintaTablaModelo,
 } from '../../modelos/submanufacturer-extension';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+
+import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { SUBFACRINTATABLACONFIGURACION } from '../../constantes/submanufabricnats-tabla-configuracion.enum';
 import { SubManufacturerService } from '../../servicios/servicios-submanufacturer-service';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+
 import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
 /**
