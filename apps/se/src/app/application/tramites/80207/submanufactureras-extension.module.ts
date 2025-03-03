@@ -7,6 +7,7 @@ import {
   SelectCatalogosComponent,
   SharedModule,
   SolicitanteComponent,
+  TablaDinamicaComponent,
   TableComponent,
   TituloComponent,
   WizardComponent,
@@ -23,7 +24,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SubManufacturerService } from './servicios/servicios-submanufacturer-service';
 import { SubmanufacturerasExtentionRoutingModule } from './submanufactureras-extension-routing.module';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+
 import { ToastrService } from 'ngx-toastr';
 
 @NgModule({

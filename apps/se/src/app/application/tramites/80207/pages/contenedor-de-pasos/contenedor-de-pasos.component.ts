@@ -6,8 +6,6 @@ import {
   WizardComponent,
 } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
-import { SeccionState } from 'apps/aga/src/app/application/estados/seccion.store';
-import { Subject} from 'rxjs';
 
 
 /**
@@ -59,17 +57,6 @@ export class ContenedorDePasosComponent {
    */
   indice: number = 1;
 
-  /**
-   * Estado de la sección actual.
-   * @property {SeccionState} seccion
-   */
-  public seccion!: SeccionState;
-
-  /**
-   * Notificador para destruir las suscripciones.
-   * @property {Subject<void>} destroyNotifier$
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Referencia al componente del wizard.

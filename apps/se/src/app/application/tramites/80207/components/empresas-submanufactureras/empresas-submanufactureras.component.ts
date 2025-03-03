@@ -2,6 +2,9 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import {
   Catalogo,
   CatalogoSelectComponent,
+  ConfiguracionColumna,
+  TablaDinamicaComponent,
+  TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -18,12 +21,10 @@ import {
 } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+
 import { SUBFACRINTATABLACONFIGURACION } from '../../constantes/submanufabricnats-tabla-configuracion.enum';
 import { SubManufacturerService } from '../../servicios/servicios-submanufacturer-service';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
 /**
  * @fileoverview Componente para la gestión de empresas submanufactureras.
