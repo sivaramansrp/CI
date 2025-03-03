@@ -1,9 +1,6 @@
-import { TEXTOS } from './tramites/constantes/servicios-extraordinarios.enum';
 export * from './tramites/pages/acuse-page/acuse-page.component';
 
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
-
-export * from './core/queries/tramite5701.query';
 
 export * from './core/services/shared/formularios/formularios.service';
 
@@ -40,7 +37,6 @@ export * from './tramites/components/representante-fiscal/representante-fiscal.c
 export * from './tramites/components/select-paises/select-paises.component';
 export * from './tramites/components/solicitante/solicitante.component';
 export * from './tramites/components/table/table.component';
-export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './tramites/components/terceros/terceros.component';
 export * from './tramites/components/titulo/titulo.component';
 export * from './tramites/components/crosslist/crosslist.component';
@@ -76,6 +72,8 @@ export * from './tramites/constantes/regex.constants';
 export * from './core/services/130118/pexim/pexim.service';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
+export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
+export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';
 export {
   TEXTOS_REQUISITOS as TEXTOS_REQUISITOS_80202,
   MENSAJE_DE_EXITO_ETAPA_UNO,
