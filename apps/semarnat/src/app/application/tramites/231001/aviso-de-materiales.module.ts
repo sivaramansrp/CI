@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AdministrarResiduosComponent } from './components/administrar-residuos/administrar-residuos.component';
-import { AvisodematerialesRoutingModule } from './avisodemateriales-routing.module';
+import { AvisodematerialesRoutingModule } from './aviso-de-materiales-routing.module';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDelaSolicitudeComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';

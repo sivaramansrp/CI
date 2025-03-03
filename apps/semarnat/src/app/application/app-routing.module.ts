@@ -11,7 +11,7 @@ const routes: Routes = [
   {
     path: 'aviso-de-materiales',
     loadChildren: () =>
-      import('./tramites/231001/avisodemateriales.module').then(
+      import('./tramites/231001/aviso-de-materiales.module').then(
         (m) => m.AvisodematerialesModule
       ),
   },

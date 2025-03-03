@@ -6,7 +6,7 @@ import { SolicitanteDatosTabsComponent } from './pages/solicitante-datos-tabs/so
 
  import { DatosComponent } from './pages/datos/datos.component'; 
 
-const routes: Routes = [
+const ROUTES: Routes = [
     {
       path: 'pantallas',
       component: PantallasComponent,
@@ -25,7 +25,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class AvisodematerialesRoutingModule { }

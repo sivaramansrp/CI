@@ -1,7 +1,7 @@
 
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpCoreService } from '../shared/http/http.service';
-import { MateriaprimaformserviceService } from './materiaprimaformservice.service';
+import { MateriaprimaformserviceService } from './materia-prima-formservice.service';
 import { TestBed } from '@angular/core/testing';
 
 

@@ -13,7 +13,7 @@ import { BtnContinuarComponent } from "@ng-mf/data-access-user";
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@ng-mf/data-access-user';
-import { MateriaprimaformserviceService } from 'libs/shared/data-access-user/src/core/services/231001/materiaprimaformservice.service';
+import { MateriaprimaformserviceService } from 'libs/shared/data-access-user/src/core/services/231001/materia-prima-formservice.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 
@@ -214,9 +214,9 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    * Maneja el cambio de partida de fracción, limpiando los valores relacionados.
    */
   cambiaPartidaFraccion(): void {
-    const partidaClave = this.materiaPrimaForm.get('partidaFraccion')?.value;
+    const PARTIDA_CLAVE = this.materiaPrimaForm.get('partidaFraccion')?.value;
     this.materiaPrimaForm.patchValue({
-      clavePartida: partidaClave,
+      clavePartida: PARTIDA_CLAVE,
       claveSubPartida: '',
       descFraccion: '',
       generica1: ''
@@ -231,9 +231,9 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    * Maneja el cambio de subpartida de fracción, limpiando los valores relacionados.
    */
   cambiaSubPartidaFraccion(): void {
-    const subPartidaClave = this.materiaPrimaForm.get('subPartidaFraccion')?.value;
+    const SUB_PARTIDA_CLAVE = this.materiaPrimaForm.get('subPartidaFraccion')?.value;
     this.materiaPrimaForm.patchValue({
-      claveSubPartida: subPartidaClave,
+      claveSubPartida: SUB_PARTIDA_CLAVE,
       descFraccion: '',
       generica1: ''
     });
@@ -246,13 +246,13 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    * Maneja el cambio de fracción y valida su vigencia.
    */
   cambiaFraccion(): void {
-    const fraccionSeleccionada = this.comboFraccionArancelariaParametros.find(fr => fr.id === this.materiaPrimaForm.get('fraccion')?.value);
-    if (fraccionSeleccionada) {
+    const FRACCION_SELECCIONADA = this.comboFraccionArancelariaParametros.find(fr => fr.id === this.materiaPrimaForm.get('fraccion')?.value);
+    if (FRACCION_SELECCIONADA) {
       this.materiaPrimaForm.patchValue({
-        descFraccion: fraccionSeleccionada.descripcion,
-        generica1: fraccionSeleccionada.id
+        descFraccion: FRACCION_SELECCIONADA.descripcion,
+        generica1: FRACCION_SELECCIONADA.id
       });
-      this.validaVigenciaFraccion(fraccionSeleccionada.id);
+      this.validaVigenciaFraccion(FRACCION_SELECCIONADA.id);
     }
   }
 
@@ -261,9 +261,9 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    * Maneja el cambio de unidad de medida y actualiza la descripción.
    */
   cambiaUnidadMedida(): void {
-    const unidadSeleccionada = this.comboUnidadMedida.find(unidad => unidad.id === this.materiaPrimaForm.get('unidadMedidaComercial.clave')?.value);
-    if (unidadSeleccionada) {
-      this.materiaPrimaForm.patchValue({ descUnidadMedida: unidadSeleccionada.descripcion });
+    const UNIDAD_SELECCIONADA = this.comboUnidadMedida.find(unidad => unidad.id === this.materiaPrimaForm.get('unidadMedidaComercial.clave')?.value);
+    if (UNIDAD_SELECCIONADA) {
+      this.materiaPrimaForm.patchValue({ descUnidadMedida: UNIDAD_SELECCIONADA.descripcion });
     }
   }
 
