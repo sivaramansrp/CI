@@ -18,12 +18,12 @@ export interface ListaPasosWizard {
  * Modelo de datos del formulario para ampliación de sensibles IMMEX
  * @export
  * @interface ImmexAmplicationSensibleDatosDelFormulario
- * @property {Array} solict - Arreglo que contiene los datos de la solicitud
- * @property {Array} anexo - Arreglo que contiene los datos de los anexos
+ * @property {Array} solicitante - Arreglo que contiene los datos de la solicitud
+ * @property {Array} anexouno - Arreglo que contiene los datos de los anexos
  */
 export interface ImmexAmplicationSensibleDatosDelFormulario {
-  solict: [];
-  anexo: [];
+  solicitante: [];
+  anexouno: [];
 }
 
 export interface Anexo {
