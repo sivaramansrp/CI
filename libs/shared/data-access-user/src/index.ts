@@ -75,3 +75,5 @@ export * from './tramites/constantes/regex.constants';
 export * from './core/services/130118/pexim/pexim.service';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
+export * from './core/services/10301/importador-exportador.service';
+export * from './tramites/constantes/solicitante-constantes.enum';

@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
 import { AlertComponent, CatalogoSelectComponent, CatalogosSelect, CrosslistComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { ImportadorExportadorService } from 'libs/shared/data-access-user/src/core/services/10301/importador-exportador.service';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ImportadorExportadorService } from '@ng-mf/data-access-user';
 
 /**
  * Texto de adjuntar para terceros.
@@ -15,7 +15,77 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
 @Component({
   selector: 'app-datos-del-tramite',
   templateUrl: './datos-del-tramite.component.html',
-  styleUrl: './datos-del-tramite.component.scss',
+  styles: [`.scrollable-table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: auto;
+    border: 1px solid #ddd;
+    display: block;
+  }
+  
+  .alert-with-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .alert-with-checkbox input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  .table-active {
+    background-color: #e9ecef;
+    cursor: pointer;
+  }
+  
+  .table-hover tr:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+  }
+  
+  .btn {
+    white-space: nowrap;
+  }
+  .table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: scroll;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+  }
+  
+  table td {
+    word-wrap: break-word;
+  }
+  table {
+    margin-bottom: 0;
+    table-layout: fixed;
+  }
+  
+  .transfer-list {
+    height: 200px;
+    border: 2px solid #dee2e6;
+    border-radius: 0.25rem;
+    overflow-y: scroll;
+  }
+  
+  .transfer-list option {
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .transfer-list option:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .transfer-list option:checked {
+    background-color: #e9ecef;
+  }
+  
+  .btn {
+    white-space: nowrap;
+  }
+  `],
   standalone: true,
   imports:[CommonModule,CatalogoSelectComponent,TituloComponent,TableComponent,AlertComponent,CrosslistComponent,InputRadioComponent, FormsModule,ReactiveFormsModule]
 })
@@ -153,9 +223,9 @@ export class DatosDelTramiteComponent implements OnInit {
       this.fechasSeleccionadas = [...this.selectRangoDias];
       this.fechasDatos = [];
     } else {
-      const fechaValor = this.fecha.value.map(Number);
-      this.fechasSeleccionadas.push(this.fechasDatos[fechaValor]);
-      this.fechasDatos.splice(fechaValor, 1);
+      const FECHA_VALOR = this.fecha.value.map(Number);
+      this.fechasSeleccionadas.push(this.fechasDatos[FECHA_VALOR]);
+      this.fechasDatos.splice(FECHA_VALOR, 1);
     }
   }
 
@@ -168,9 +238,9 @@ export class DatosDelTramiteComponent implements OnInit {
       this.fechasDatos = [...this.fechasSeleccionadas];
       this.fechasSeleccionadas = [];
     } else {
-      const fechaValor = this.fechaSeleccionada.value.map(Number);
-      this.fechasDatos.push(this.fechasSeleccionadas[fechaValor]);
-      this.fechasSeleccionadas.splice(fechaValor, 1);
+      const FECHA_VALOR = this.fechaSeleccionada.value.map(Number);
+      this.fechasDatos.push(this.fechasSeleccionadas[FECHA_VALOR]);
+      this.fechasSeleccionadas.splice(FECHA_VALOR, 1);
     }
   }
 
@@ -215,13 +285,13 @@ export class DatosDelTramiteComponent implements OnInit {
   getAduanaIngresara(): void {
     this.importarExportar.getAduanaIngresara().subscribe((resp) => {
       if (resp.code === 200) {
-        const response = resp.data;
+        const RESPONSE = resp.data;
 
         this.aduana = {
           labelNombre: 'Aduana por la que ingresará la mercancía',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: RESPONSE,
         };
       }
     });
@@ -233,13 +303,13 @@ export class DatosDelTramiteComponent implements OnInit {
   getAno(): void {
     this.importarExportar.getAno().subscribe((resp) => {
       if (resp.code === 200) {
-        const response = resp.data;
+        const RESPONSE = resp.data;
 
         this.ano = {
           labelNombre: 'Año',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: RESPONSE,
         };
       }
     });
@@ -251,13 +321,13 @@ export class DatosDelTramiteComponent implements OnInit {
   getCondicion(): void {
     this.importarExportar.getCondicion().subscribe((resp) => {
       if (resp.code === 200) {
-        const response = resp.data;
+        const RESPONSE = resp.data;
 
         this.condicion = {
           labelNombre: 'Condición de la mercancía',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: RESPONSE,
         };
       }
     });
@@ -269,13 +339,13 @@ export class DatosDelTramiteComponent implements OnInit {
   getPais(): void {
     this.importarExportar.getPais().subscribe((resp) => {
       if (resp.code === 200) {
-        const response = resp.data;
+        const RESPONSE = resp.data;
 
         this.pais = {
           labelNombre: 'País',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: RESPONSE,
         };
       }
     });

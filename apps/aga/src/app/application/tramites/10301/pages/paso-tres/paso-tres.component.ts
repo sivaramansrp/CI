@@ -1,10 +1,11 @@
+import { FirmaElectronicaComponent, ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { catchError, map } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { FirmaElectronicaComponent, ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 import { TramiteStore } from '../../../../estados/tramite.store';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 /**
  * Componente que representa el paso tres del trámite.
@@ -49,13 +50,13 @@ export class PasoTresComponent {
    * @param ev La cadena de texto que representa la firma obtenida.
    */
   obtieneFirma(ev: string): void {
-    const firma: string = ev;
-    if (firma) {
+    const FIRMA: string = ev;
+    if (FIRMA) {
       this.serviciosExtraordinariosServices
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {
-            this.tramiteStore.establecerTramite(tramite.data, firma);
+            this.tramiteStore.establecerTramite(tramite.data, FIRMA);
             this.router.navigate(['servicios-extraordinarios/acuse']);
           }),
           catchError((_error) => {

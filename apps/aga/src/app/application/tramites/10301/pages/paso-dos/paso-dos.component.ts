@@ -1,12 +1,15 @@
+import {AlertComponent,  
+  CATALOGOS_ID,  
+  Catalogo,  
+  CatalogoSelectComponent,  
+  CatalogosSelect,  
+  CatalogosService,  
+  TEXTOS,  
+  TituloComponent   } from '@ng-mf/data-access-user';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { AlertComponent, Catalogo, CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CatalogosSelect } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { ImportadorExportadorService } from 'libs/shared/data-access-user/src/core/services/10301/importador-exportador.service';
-import { TEXTOS, CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { CommonModule, NgFor } from '@angular/common';
-import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ImportadorExportadorService } from '@ng-mf/data-access-user';
 /**
  * Texto de adjuntar para terceros.
  */
@@ -24,7 +27,90 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
-  styleUrls: ['./paso-dos.component.scss'],
+  styles: [`.p {
+    font-size: medium;
+  }
+  
+  .th-center {
+    text-align: center;
+  }
+  
+  .btn-list {
+    max-width: 40rem;
+    max-height: 15rem;
+    text-align: justify !important;
+    font-size: 16px;
+    white-space: normal;
+  }
+  
+  .grey-column {
+    background-color: rgb(156, 155, 155);
+  }
+  
+  .visually-hidden-file {
+    opacity: 0;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+  
+  .custome-file-label {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    color: #212529;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+  .custome-file-label:hover {
+    background-color: #a5a8ab;
+    border-color: #a5a8ab;
+  }
+  
+  /* Modal backdrop for the loading pop-up */
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Modal content styling */
+  .custom-modal {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+  }
+  .adjuntar-button:hover {
+    background-color: #611232;
+    color: white;
+  }
+  .adjuntar-button {
+    color: #611232;
+    border-color: #611232;
+  }
+  `],
   standalone: true,
   imports: [TituloComponent, AlertComponent, CatalogoSelectComponent, FormsModule,ReactiveFormsModule, CommonModule]
 })
@@ -124,6 +210,7 @@ export class PasoDosComponent implements OnInit {
    * Resoluciones de los archivos.
    */
   resolucions: string[] = new Array(this.tiposDeDocumentos.length).fill('');
+  ngOnDestroy!: () => void;
 
   /**
    * Constructor que se utiliza para la inyección de dependencias.
@@ -131,8 +218,8 @@ export class PasoDosComponent implements OnInit {
    * @param importarExportar Servicio de importador/exportador.
    */
   constructor(
-    private catalogosServices: CatalogosService,
-    private importarExportar: ImportadorExportadorService
+    public catalogosServices: CatalogosService,
+    public importarExportar: ImportadorExportadorService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -174,13 +261,13 @@ export class PasoDosComponent implements OnInit {
   getTipoDocumento(): void {
     this.importarExportar.getTipoDocumento().subscribe((resp) => {
       if (resp.code === 200) {
-        const response = resp.data;
+        const RESPONSE = resp.data;
 
         this.tipodocumento = {
           labelNombre: 'Tipo de documento',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: RESPONSE,
         };
       }
     });
@@ -198,7 +285,7 @@ export class PasoDosComponent implements OnInit {
    * Método que se llama cuando se selecciona un documento en la lista.
    * @param index Índice del documento seleccionado.
    */
-  enDocumentSelect(index: number): void {
+  static enDocumentSelect(index: number): void {
     // Este método se llama cuando se selecciona un documento en la lista.
     // Aquí se puede agregar la lógica para manejar la selección del documento.
   }
@@ -219,10 +306,10 @@ export class PasoDosComponent implements OnInit {
    * @param index Índice del archivo.
    */
   cambioArchivo(event: any, index: number): void {
-    const file = event.target.files[0];
-    if (file) {
-      const sizeMB = file.size / (1024 * 1024);
-      if (sizeMB > 3) {
+    const FILE = event.target.files[0];
+    if (FILE) {
+      const SIZE_MB = FILE.size / (1024 * 1024);
+      if (SIZE_MB > 3) {
         alert('File size must be less than 3 MB');
         event.target.value = '';
         this.fileSizes[index] = null;
@@ -230,22 +317,22 @@ export class PasoDosComponent implements OnInit {
         this.nombresArchivosSubidos[index] = '';
         return;
       } else {
-        this.fileSizes[index] = parseFloat(sizeMB.toFixed(2));
-        this.nombresArchivosSubidos[index] = file.name;
+        this.fileSizes[index] = parseFloat(SIZE_MB.toFixed(2));
+        this.nombresArchivosSubidos[index] = FILE.name;
       }
 
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const img = new Image();
-        img.onload = () => {
-          this.resolucions[index] = `${img.width}x${img.height}`;
+      const READER = new FileReader();
+      READER.onload = (e: any) => {
+        const IMG = new Image();
+        IMG.onload = () => {
+          this.resolucions[index] = `${IMG.width}x${IMG.height}`;
         };
-        img.onerror = () => {
+        IMG.onerror = () => {
           this.resolucions[index] = 'N/A';
         };
-        img.src = e.target.result;
+        IMG.src = e.target.result;
       };
-      reader.readAsDataURL(file);
+      READER.readAsDataURL(FILE);
     }
   }
 
@@ -256,11 +343,11 @@ export class PasoDosComponent implements OnInit {
     this.cargando = true;
     this.progreso = 0;
 
-    const interval = setInterval(() => {
+    const INTERVAL = setInterval(() => {
       this.progreso += 10;
       if (this.progreso >= 100) {
         this.progreso = 100;
-        clearInterval(interval);
+        clearInterval(INTERVAL);
         this.cargando = false;
 
         this.mostrarTablaArchivosSubidos = true;

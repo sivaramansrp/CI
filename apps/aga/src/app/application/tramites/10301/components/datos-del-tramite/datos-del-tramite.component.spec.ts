@@ -1,9 +1,10 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { of as observableOf } from 'rxjs';
 import { DatosDelTramiteComponent } from './datos-del-tramite.component';
-import { ImportadorExportadorService } from 'libs/shared/data-access-user/src/core/services/10301/importador-exportador.service';
+import { ImportadorExportadorService } from '@ng-mf/data-access-user';
+import { of as observableOf } from 'rxjs';
+
 
 class MockImportadorExportadorService {
   getAduanaIngresara = jest.fn().mockReturnValue(observableOf({ code: 200, data: [] }));

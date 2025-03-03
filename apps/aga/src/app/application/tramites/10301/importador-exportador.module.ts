@@ -1,6 +1,7 @@
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent,FirmaElectronicaComponent, InputRadioComponent, SolicitanteComponent, TableComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 import { DatosDelTramiteComponent } from './components/datos-del-tramite/datos-del-tramite.component';
 import { ImportadorExportadorRoutingModule } from './importador-exportador-routing.module';
@@ -8,12 +9,8 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, InputRadioComponent, SolicitanteComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { FirmaElectronicaComponent} from '@ng-mf/data-access-user';
-import { WizardComponent} from '@ng-mf/data-access-user';
-
-import { BrowserModule } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
+
 
 @NgModule({
   declarations: [
@@ -35,7 +32,6 @@ import { ToastrService } from 'ngx-toastr';
     InputRadioComponent,
     CrosslistComponent,
     ReactiveFormsModule ,
-    AnexarDocumentosComponent,
     PasoUnoComponent,
     SolicitudPageComponent,
     PasoTresComponent,
