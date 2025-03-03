@@ -3,8 +3,7 @@ import { DevolverComponent } from './devolver.component';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { Facturas } from 'libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-import facturasdata from 'libs/shared/theme/assets/json/140103/fracturastable.json';
+
 
 describe('DevolverComponent', () => {
   let component: DevolverComponent;

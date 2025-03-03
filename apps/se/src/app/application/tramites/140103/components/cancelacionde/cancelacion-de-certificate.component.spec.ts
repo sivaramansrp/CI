@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
- // Import your standalone component
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common'; // CommonModule for standalone components
-import { TituloComponent } from '@ng-mf/data-access-user'; // Any other imported components
+import { CommonModule } from '@angular/common'; 
+import { TituloComponent } from '@ng-mf/data-access-user'; 
 import { OficioComponent } from '../oficio/oficio.component';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
@@ -17,16 +17,16 @@ describe('CancelacionDeCertificateComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        CommonModule,  // Import CommonModule for standalone components
-        FormsModule,  // Import FormsModule if you're using template-driven forms
-        ReactiveFormsModule,  // Import ReactiveFormsModule if you're using reactive forms
-        TituloComponent, // Import any other required components
+        CommonModule, 
+        FormsModule, 
+        ReactiveFormsModule, 
+        TituloComponent, 
         OficioComponent,
         TablaDinamicaComponent,
         CatalogoSelectComponent,
-        CancelacionDeCertificateComponent // Import the standalone component directly here
+        CancelacionDeCertificateComponent 
       ],
-      declarations: []  // No need to declare standalone components here
+      declarations: [] 
     }).compileComponents();
   });
 
