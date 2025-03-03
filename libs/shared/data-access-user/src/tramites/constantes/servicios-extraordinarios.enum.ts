@@ -168,7 +168,16 @@ export const TXT_ALERTA_ACUSE = (folio: string) => {
 }
 
 export const TITULO_ACUSE = 'Acuse(s)';
-
+export const ENCABEZADO_TABLA_ACUSE = [
+  {
+    key: 'id',
+    valor: 'No.',
+  },
+  {
+    key: 'documento',
+    valor: 'Documento.',
+  },
+];
 export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
   txtAlerta:
     'Tu solicitud ha sido registrada con el siguiente número de folio:',

@@ -1,9 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
-import { PAGO_DE_DERECHOS, PASOS4 } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
+import { DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, PASOS4, WizardComponent } from '@ng-mf/data-access-user';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { AccionBoton } from 'libs/shared/data-access-user/src/core/models/220201/certificado-zoosanitario.model';
-import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-paso-capturar-solicitud',
@@ -32,7 +30,6 @@ export class PasoCapturarSolicitudComponent {
 
   TEXTOS = PAGO_DE_DERECHOS;
 
-  constructor() {}
   /**
    * Obtiene el valor del índice de la acción del botón.
    * @param e Acción del botón.

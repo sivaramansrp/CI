@@ -1,5 +1,5 @@
-import { Injectable } from "@angular/core";
 import { Store, StoreConfig } from "@datorama/akita";
+import { Injectable } from "@angular/core";
 
 /**
  * Representa el estado de una solicitud específica.
@@ -90,7 +90,7 @@ export function initializeSolicitud230401State(): Solicitud230401State {
     cantidadLetra: 'One',
     unidadDeMedida: '',
   }
-};
+}
 
 @Injectable({
   providedIn: 'root',
@@ -110,7 +110,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
  *
  * @param tipoSolicitud - El tipo de solicitud que se va a guardar.
  */
-  public setTipoSolicitud(tipoSolicitud: string) {
+  public setTipoSolicitud(tipoSolicitud: string):void {
     this.update((state) => ({
       ...state,
       tipoSolicitud,
@@ -122,7 +122,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
  *
  * @param autorizacion - El tipo de solicitud que se va a guardar.
  */
-  public setAutorizacion(autorizacion: boolean) {
+  public setAutorizacion(autorizacion: boolean):void {
     this.update((state) => ({
       ...state,
       autorizacion,
@@ -134,7 +134,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
  *
  * @param noDePermisocoferprise - El tipo de solicitud que se va a guardar.
  */
-  public setNoDePermisocoferprise(noDePermisocoferprise: string) {
+  public setNoDePermisocoferprise(noDePermisocoferprise: string):void {
     this.update((state) => ({
       ...state,
       noDePermisocoferprise,
@@ -146,7 +146,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
  *
  * @param nombreComercial - El tipo de solicitud que se va a guardar.
  */
-  public setNombreComercial(nombreComercial: string) {
+  public setNombreComercial(nombreComercial: string):void {
     this.update((state) => ({
       ...state,
       nombreComercial,

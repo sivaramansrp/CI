@@ -1,17 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AbstractControl, ValidatorFn } from '@angular/forms';
-import { InvocarActionService } from 'libs/shared/data-access-user/src/core/services/230401/invocar-action.service';
-
+import { InvocarActionService } from '../../services/invocar-action.service';
 /**
  * Validador de fecha que verifica si el valor del control sigue el formato dd/mm/yyyy.
  * 
  * @returns {ValidatorFn} Una función de validador que toma un AbstractControl y devuelve un objeto de error o null.
  */
 export function dateValidator(): ValidatorFn {
-  return (control: AbstractControl): { [key: string]: any } | null => {
-    const isValid = /^\d{2}\/\d{2}\/\d{4}$/.test(control.value);
-    return isValid ? null : { 'invalidDate': { value: control.value } };
+  return (control: AbstractControl): { [key: string] : any } | null => {
+    const IS_VALID = /^\d{2}\/\d{2}\/\d{4}$/.test(control.value);
+    return IS_VALID ? null : { 'invalidDate': { value: control.value } };
   };
 }
 

@@ -1,18 +1,11 @@
+/* eslint-disable dot-notation */
+import { AlertComponent, BtnContinuarComponent,CatalogoSelectComponent,CrosslistComponent,TituloComponent } from '@ng-mf/data-access-user';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DatosSolicitudComponent } from './datos-solicitud.component';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { InvocarActionService } from 'libs/shared/data-access-user/src/core/services/230401/invocar-action.service';
+import { DatosSolicitudComponent } from './datos-solicitud.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
-import { SolicitanteComponent } from 'libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
-import { CrosslistComponent } from 'libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
-import { AnexarDocumentosComponent } from 'libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component';
-import { FirmaElectronicaComponent } from 'libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
-
-
+import { InvocarActionService } from '../../services/invocar-action.service';
+import { InvocarModuloModule } from '../../invocar-modulo.module';
 describe('DatosSolicitudComponent', () => {
   let component: DatosSolicitudComponent;
   let fixture: ComponentFixture<DatosSolicitudComponent>;
@@ -22,10 +15,14 @@ describe('DatosSolicitudComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DatosSolicitudComponent],
-      imports: [HttpClientTestingModule, ReactiveFormsModule, TituloComponent, AlertComponent,
-        
+      imports: [
+        AlertComponent,
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+        TituloComponent,
+        InvocarModuloModule,
+        CatalogoSelectComponent, BtnContinuarComponent, CrosslistComponent
       ],
-  
     })
     .compileComponents();
     fixture = TestBed.createComponent(DatosSolicitudComponent);
@@ -120,20 +117,20 @@ describe('DatosSolicitudComponent', () => {
     expect(invocarService.unidadDeMedida.length).toBe(0);
   });
   it('should call ngOnInit', () => {
-    const ngOnInitSpy = jest.spyOn(component, 'ngOnInit').mockImplementation();
+    const NG_ON_INIT_SPY = jest.spyOn(component, 'ngOnInit').mockImplementation();
     component.ngOnInit();
-    expect(ngOnInitSpy).toHaveBeenCalled();
+    expect(NG_ON_INIT_SPY).toHaveBeenCalled();
   });
   it('should call ngOnDestroy', () => {
-    const ngOnDestroySpy = jest.spyOn(component, 'ngOnDestroy').mockImplementation();
+    const NG_ON_DESTROY_SPY = jest.spyOn(component, 'ngOnDestroy').mockImplementation();
     component.ngOnDestroy();
-    expect(ngOnDestroySpy).toHaveBeenCalled();
+    expect(NG_ON_DESTROY_SPY).toHaveBeenCalled();
   });
   it('should format and set cantidad value correctly', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore').mockImplementation();
+    const SET_VALORES_STORE_SPY = jest.spyOn(component, 'setValoresStore').mockImplementation();
     form.get('cantidad')?.setValue('65'); // ASCII code for 'A'
     component.setValoresStore(form, 'cantidad', 'setCantidadLetra');
-    expect(setValoresStoreSpy).toHaveBeenCalled();
+    expect(SET_VALORES_STORE_SPY).toHaveBeenCalled();
     fixture.detectChanges();
     expect(form.get('cantidad')?.value).toEqual('65');
     form.get('cantidad')?.setValue('60'); // ASCII code for 'A'
@@ -142,54 +139,54 @@ describe('DatosSolicitudComponent', () => {
     expect(form.get('cantidad')?.value).not.toEqual('65');
   });
   it('should call tipoSolicitudSeleccion', () => {
-    const tipoSolicitudSeleccionySpy = jest.spyOn(component, 'tipoSolicitudSeleccion').mockImplementation();
+    const TIPO_SOLICITUD_SELECCIONY_SPY = jest.spyOn(component, 'tipoSolicitudSeleccion').mockImplementation();
     component.tipoSolicitudSeleccion();
-    expect(tipoSolicitudSeleccionySpy).toHaveBeenCalled();
+    expect(TIPO_SOLICITUD_SELECCIONY_SPY ).toHaveBeenCalled();
   });
   it('should call noDePermisocoferpriseSeleccion', () => {
-    const noDePermisocoferpriseSeleccionSpy = jest.spyOn(component, 'noDePermisocoferpriseSeleccion').mockImplementation();
+    const NO_DE_PERMISOCOFERPRISE_SELECCION_SPY = jest.spyOn(component, 'noDePermisocoferpriseSeleccion').mockImplementation();
     component.noDePermisocoferpriseSeleccion();
-    expect(noDePermisocoferpriseSeleccionSpy).toHaveBeenCalled();
+    expect(NO_DE_PERMISOCOFERPRISE_SELECCION_SPY ).toHaveBeenCalled();
   });
   it('should call fraccionArancelariaSeleccion', () => {
-    const fraccionArancelariaSeleccionSpy = jest.spyOn(component, 'fraccionArancelariaSeleccion').mockImplementation();
+    const FRACCION_ARANCELARIA_SELECCION_SPY = jest.spyOn(component, 'fraccionArancelariaSeleccion').mockImplementation();
     component.fraccionArancelariaSeleccion();
-    expect(fraccionArancelariaSeleccionSpy).toHaveBeenCalled();
+    expect(FRACCION_ARANCELARIA_SELECCION_SPY).toHaveBeenCalled();
   });
   it('should call seleccioneAutorizacion', () => {
-    const seleccioneAutorizacionSpy = jest.spyOn(component, 'seleccioneAutorizacion').mockImplementation();
+    const SELECCIONE_AUTORIZACION_SPY = jest.spyOn(component, 'seleccioneAutorizacion').mockImplementation();
     component.seleccioneAutorizacion();
-    expect(seleccioneAutorizacionSpy).toHaveBeenCalled();
+    expect(SELECCIONE_AUTORIZACION_SPY ).toHaveBeenCalled();
   });
   it('should call numeroCasSeleccione', () => {
-    const numeroCasSeleccioneSpy = jest.spyOn(component, 'numeroCasSeleccione').mockImplementation();
+    const NUMERO_CAS_SELECCIONE_SPY = jest.spyOn(component, 'numeroCasSeleccione').mockImplementation();
     component.numeroCasSeleccione();
-    expect(numeroCasSeleccioneSpy).toHaveBeenCalled();
+    expect(NUMERO_CAS_SELECCIONE_SPY).toHaveBeenCalled();
   });
   it('should call clasificacionSeleccione', () => {
-    const clasificacionSeleccioneSpy = jest.spyOn(component, 'clasificacionSeleccione').mockImplementation();
+    const CLASIFICACION_SELECCIONE_SPY = jest.spyOn(component, 'clasificacionSeleccione').mockImplementation();
     component.clasificacionSeleccione();
-    expect(clasificacionSeleccioneSpy).toHaveBeenCalled();
+    expect(CLASIFICACION_SELECCIONE_SPY ).toHaveBeenCalled();
   });
   it('should call estadoFisicoSeleccione', () => {
-    const estadoFisicoSeleccioneSpy = jest.spyOn(component, 'estadoFisicoSeleccione').mockImplementation();
+    const ESTADO_FISICO_SELECCIONE_SPY = jest.spyOn(component, 'estadoFisicoSeleccione').mockImplementation();
     component.estadoFisicoSeleccione();
-    expect(estadoFisicoSeleccioneSpy).toHaveBeenCalled();
+    expect(ESTADO_FISICO_SELECCIONE_SPY ).toHaveBeenCalled();
   });
   it('should call datosObjectoSeleccione', () => {
-    const datosObjectoSeleccioneSpy = jest.spyOn(component, 'datosObjectoSeleccione').mockImplementation();
+    const DATOS_OBJECTO_SELECCIONE_SPY = jest.spyOn(component, 'datosObjectoSeleccione').mockImplementation();
     component.datosObjectoSeleccione();
-    expect(datosObjectoSeleccioneSpy).toHaveBeenCalled();
+    expect(DATOS_OBJECTO_SELECCIONE_SPY).toHaveBeenCalled();
   });
   it('should call unidadDeMedidaSeleccione', () => {
-    const unidadDeMedidaSeleccioneSpy = jest.spyOn(component, 'unidadDeMedidaSeleccione').mockImplementation();
+    const UNIDAD_DE_MEDIDA_SELECCION_SPY = jest.spyOn(component, 'unidadDeMedidaSeleccione').mockImplementation();
     component.unidadDeMedidaSeleccione();
-    expect(unidadDeMedidaSeleccioneSpy).toHaveBeenCalled();
+    expect(UNIDAD_DE_MEDIDA_SELECCION_SPY).toHaveBeenCalled();
   });
   it('should call creatFormSolicitud', () => {
-    const creatFormSolicitudSpy = jest.spyOn(component, 'creatFormSolicitud').mockImplementation();
+    const CREATE_FORM_SOLICITUD_SPY = jest.spyOn(component, 'creatFormSolicitud').mockImplementation();
     component.creatFormSolicitud();
-    expect(creatFormSolicitudSpy).toHaveBeenCalled();
+    expect(CREATE_FORM_SOLICITUD_SPY ).toHaveBeenCalled();
   });
   it('should not be empty variable paisDeProcedenciaBotons', () => {
     expect(component.paisDeProcedenciaBotons).toBeDefined();
@@ -215,32 +212,35 @@ describe('DatosSolicitudComponent', () => {
     expect(component.aduanasDeEntradaLabel.tituluDeLaIzquierda).toBeDefined();
     expect(component.aduanasDeEntradaLabel.derecha).toBeDefined();
   });
+  
+  // eslint-disable-next-line complexity
   it('should initialize the form', () => {
     expect(component.FormSolicitud).toBeDefined();
     expect(
-      component.FormSolicitud.controls['tipoSolicitud'] &&
-      component.FormSolicitud.controls['autorizacion'] &&
-      component.FormSolicitud.controls['noDePermisocoferprise'] &&
-      component.FormSolicitud.controls['nombreComercial'] &&
-      component.FormSolicitud.controls['cantidadAtorizada'] &&
-      component.FormSolicitud.controls['cantidad'] &&
-      component.FormSolicitud.controls['fraccionArancelaria'] &&
-      component.FormSolicitud.controls['descripcionDeLaFraccion'] &&
-      component.FormSolicitud.controls['numeroCas'] &&
-      component.FormSolicitud.controls['descripcionNoArancelaria'] &&
-      component.FormSolicitud.controls['nombreQuimico'] &&
-      component.FormSolicitud.controls['nombreDeLaMercancia'] &&
-      component.FormSolicitud.controls['unNumero'] &&
-      component.FormSolicitud.controls['datosNombreComercial'] &&
-      component.FormSolicitud.controls['datosNumeroComun'] &&
-      component.FormSolicitud.controls['datosPorcentaje'] &&
-      component.FormSolicitud.controls['datosComponentes'] &&
-      component.FormSolicitud.controls['clasificacion'] &&
-      component.FormSolicitud.controls['estadoFisico'] &&
-      component.FormSolicitud.controls['datosObjecto'] &&
-      component.FormSolicitud.controls['especifique'] &&
-      component.FormSolicitud.controls['especifiqueDos'] &&
-      component.FormSolicitud.controls['unidadDeMedida']
+      component.FormSolicitud.controls['tipoSolicitud']?.value &&
+      component.FormSolicitud.controls['autorizacion']?.value &&
+      component.FormSolicitud.controls['noDePermisocoferprise']?.value &&
+      component.FormSolicitud.controls['nombreComercial']?.value &&
+      component.FormSolicitud.controls['cantidadAtorizada']?.value &&
+      component.FormSolicitud.controls['cantidad']?.value &&
+      component.FormSolicitud.controls['fraccionArancelaria']?.value &&
+      component.FormSolicitud.controls['descripcionDeLaFraccion']?.value &&
+      component.FormSolicitud.controls['numeroCas']?.value &&
+      component.FormSolicitud.controls['descripcionNoArancelaria']?.value &&
+      component.FormSolicitud.controls['nombreQuimico']?.value &&
+      component.FormSolicitud.controls['nombreDeLaMercancia']?.value &&
+      component.FormSolicitud.controls['unNumero']?.value &&
+      component.FormSolicitud.controls['datosNombreComercial']?.value &&
+      component.FormSolicitud.controls['datosNumeroComun']?.value &&
+      component.FormSolicitud.controls['datosPorcentaje']?.value &&
+      component.FormSolicitud.controls['datosComponentes']?.value &&
+      component.FormSolicitud.controls['clasificacion']?.value &&
+      component.FormSolicitud.controls['estadoFisico']?.value &&
+      component.FormSolicitud.controls['datosObjecto']?.value &&
+      component.FormSolicitud.controls['especifique']?.value &&
+      component.FormSolicitud.controls['especifiqueDos']?.value &&
+      component.FormSolicitud.controls['unidadDeMedida']?.value
     ).toBeDefined();
-  });
+  }); 
+  
 });

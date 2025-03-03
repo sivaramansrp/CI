@@ -1,18 +1,11 @@
+/* eslint-disable dot-notation */
+import { CatalogoSelectComponent,TituloComponent } from '@ng-mf/data-access-user';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { ReactiveFormsModule } from '@angular/forms'; // Add this import
-
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
-import { SolicitanteComponent } from 'libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
-import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { CrosslistComponent } from 'libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
-import { AnexarDocumentosComponent } from 'libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component';
-import { FirmaElectronicaComponent } from 'libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
-import { InvocarActionService } from 'libs/shared/data-access-user/src/core/services/230401/invocar-action.service';
+import { InvocarActionService } from '../../services/invocar-action.service';
+import { InvocarModuloModule } from '../../invocar-modulo.module';
+import { PagoDeDerechosComponent } from './pago-de-derechos.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
@@ -22,8 +15,12 @@ describe('PagoDeDerechosComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PagoDeDerechosComponent],
-      imports: [HttpClientTestingModule, CatalogoSelectComponent,
-         ReactiveFormsModule, TituloComponent], 
+      imports: [
+        CatalogoSelectComponent,
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+        TituloComponent,InvocarModuloModule
+      ], 
     }).compileComponents();
 
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
@@ -41,6 +38,7 @@ describe('PagoDeDerechosComponent', () => {
   it('should initialize the form', () => {
     expect(component.pagoDerechos).toBeDefined();
     expect(
+      // eslint-disable-next-line dot-notation
       component.pagoDerechos.controls['clave'] &&
       component.pagoDerechos.controls['dependencia'] &&
       component.pagoDerechos.controls['banco'] &&
@@ -130,157 +128,157 @@ describe('PagoDeDerechosComponent', () => {
     expect(component.pagoDerechos.get('banco')?.value).toBe('');
   });
   it('should validate the form', () => {
-    const bancoInput = component.pagoDerechos.controls['banco'];
-    const fechaInput = component.pagoDerechos.controls['fecha'];
+    const BANCOINPUT = component.pagoDerechos.controls['banco'];
+    const FECHAINPUT = component.pagoDerechos.controls['fecha'];
 
-    bancoInput.setValue('');
-    fechaInput.setValue('');
-    expect(bancoInput.valid).toBeFalsy();
-    expect(fechaInput.valid).toBeFalsy();
+    BANCOINPUT.setValue('');
+    FECHAINPUT.setValue('');
+    expect(BANCOINPUT.valid).toBeFalsy();
+    expect(FECHAINPUT.valid).toBeFalsy();
 
-    bancoInput.setValue('Bancomer');
-    fechaInput.setValue('12/12/2021');
-    expect(bancoInput.valid).toBeTruthy();
-    expect(fechaInput.valid).toBeTruthy();
+    BANCOINPUT.setValue('Bancomer');
+    FECHAINPUT.setValue('12/12/2021');
+    expect(BANCOINPUT.valid).toBeTruthy();
+    expect(FECHAINPUT.valid).toBeTruthy();
   });
   it('should show validation errors', () => {
-    const fechaInput = component.pagoDerechos.controls['fecha'];
-    fechaInput.setValue('');
+    const FECHAINPUT = component.pagoDerechos.controls['fecha'];
+    FECHAINPUT.setValue('');
     fixture.detectChanges();
   
-    const compiled = fixture.nativeElement;
-    const fechaError = compiled.querySelector('.fecha-error');
+    const COMPILIED = fixture.nativeElement;
+    const FECHA_ERROR = COMPILIED.querySelector('.fecha-error');
 
-    expect(fechaError ? fechaError.textContent : '').toContain('');
+    expect(FECHA_ERROR ? FECHA_ERROR.textContent : '').toContain('');
   });
   it('should validate form clave', () => {
-    const clave = component.pagoDerechos.controls['clave'];
-    clave.enable();
-    clave.setValue('');
-    clave.updateValueAndValidity();
+    const CLAVE = component.pagoDerechos.controls['clave'];
+    CLAVE.enable();
+    CLAVE.setValue('');
+    CLAVE.updateValueAndValidity();
     fixture.detectChanges();
-    expect(clave.valid).toBeTruthy();
-    clave.setValue('084001963');
-    clave.updateValueAndValidity();
+    expect(CLAVE.valid).toBeTruthy();
+    CLAVE.setValue('084001963');
+    CLAVE.updateValueAndValidity();
     fixture.detectChanges();
-    expect(clave.valid).toBeTruthy();
+    expect(CLAVE.valid).toBeTruthy();
   });
   it('should validate form dependencia', () => {
-    const dependencia = component.pagoDerechos.controls['dependencia'];
-    dependencia.enable();
-    dependencia.setValue('');
-    dependencia.updateValueAndValidity();
+    const DEPENDENCIA = component.pagoDerechos.controls['dependencia'];
+    DEPENDENCIA.enable();
+    DEPENDENCIA.setValue('');
+    DEPENDENCIA.updateValueAndValidity();
     fixture.detectChanges();
-    expect(dependencia.valid).toBeTruthy();
-    dependencia.setValue('0100160910791');
-    dependencia.updateValueAndValidity();
+    expect(DEPENDENCIA.valid).toBeTruthy();
+    DEPENDENCIA.setValue('0100160910791');
+    DEPENDENCIA.updateValueAndValidity();
     fixture.detectChanges();
-    expect(dependencia.valid).toBeTruthy();
+    expect(DEPENDENCIA.valid).toBeTruthy();
   });
   it('should validate form llavePago', () => {
-    const llavePago = component.pagoDerechos.controls['llavePago'];
-    llavePago.enable();
-    llavePago.setValue('');
-    llavePago.updateValueAndValidity();
+    const LLAVEPAGO = component.pagoDerechos.controls['llavePago'];
+    LLAVEPAGO.enable();
+    LLAVEPAGO.setValue('');
+    LLAVEPAGO.updateValueAndValidity();
     fixture.detectChanges();
-    expect(llavePago.valid).toBeTruthy();
-    llavePago.setValue('12345LLPCI');
-    llavePago.updateValueAndValidity();
+    expect(LLAVEPAGO.valid).toBeTruthy();
+    LLAVEPAGO.setValue('12345LLPCI');
+    LLAVEPAGO.updateValueAndValidity();
     fixture.detectChanges();
-    expect(llavePago.valid).toBeTruthy();
+    expect(LLAVEPAGO.valid).toBeTruthy();
   });
   it('should validate form importePago', () => {
-    const importePago = component.pagoDerechos.controls['importePago'];
-    importePago.enable();
-    importePago.setValue('');
-    importePago.updateValueAndValidity();
+    const IMPORTEPAGO = component.pagoDerechos.controls['importePago'];
+    IMPORTEPAGO.enable();
+    IMPORTEPAGO.setValue('');
+    IMPORTEPAGO.updateValueAndValidity();
     fixture.detectChanges();
-    expect(importePago.valid).toBeTruthy();
-    importePago.setValue('1842');
-    importePago.updateValueAndValidity();
+    expect(IMPORTEPAGO.valid).toBeTruthy();
+    IMPORTEPAGO.setValue('1842');
+    IMPORTEPAGO.updateValueAndValidity();
     fixture.detectChanges();
-    expect(importePago.valid).toBeTruthy();
+    expect(IMPORTEPAGO.valid).toBeTruthy();
   });
   it('should validate form banco', () => {
-    const banco = component.pagoDerechos.controls['banco'];
-    banco.enable();
-    banco.setValue('');
-    banco.updateValueAndValidity();
+    const BANCO = component.pagoDerechos.controls['banco'];
+    BANCO.enable();
+    BANCO.setValue('');
+    BANCO.updateValueAndValidity();
     fixture.detectChanges();
-    expect(banco.valid).toBeFalsy();
-    banco.setValue('Bancomer');
-    banco.updateValueAndValidity();
+    expect(BANCO.valid).toBeFalsy();
+    BANCO.setValue('Bancomer');
+    BANCO.updateValueAndValidity();
     fixture.detectChanges();
-    expect(banco.valid).toBeTruthy();
+    expect(BANCO.valid).toBeTruthy();
   });
   it('should validate form fecha', () => {
-    const fecha = component.pagoDerechos.controls['fecha'];
-    fecha.enable();
-    fecha.setValue('');
-    fecha.updateValueAndValidity();
+    const FECHA = component.pagoDerechos.controls['fecha'];
+    FECHA.enable();
+    FECHA.setValue('');
+    FECHA.updateValueAndValidity();
     fixture.detectChanges();
-    expect(fecha.valid).toBeFalsy();
-    fecha.setValue('12/12/2021');
-    fecha.updateValueAndValidity();
+    expect(FECHA.valid).toBeFalsy();
+    FECHA.setValue('12/12/2021');
+    FECHA.updateValueAndValidity();
     fixture.detectChanges();
-    expect(fecha.valid).toBeTruthy();
+    expect(FECHA.valid).toBeTruthy();
   });
   it('should validate form importePago', () => {
-    const importePago = component.pagoDerechos.controls['importePago'];
-    importePago.enable();
-    importePago.setValue('');
-    importePago.updateValueAndValidity();
+    const IMPORTEPAGO = component.pagoDerechos.controls['importePago'];
+    IMPORTEPAGO.enable();
+    IMPORTEPAGO.setValue('');
+    IMPORTEPAGO.updateValueAndValidity();
     fixture.detectChanges();
-    expect(importePago.valid).toBeTruthy();
-    importePago.setValue('1842');
-    importePago.updateValueAndValidity();
+    expect(IMPORTEPAGO.valid).toBeTruthy();
+    IMPORTEPAGO.setValue('1842');
+    IMPORTEPAGO.updateValueAndValidity();
     fixture.detectChanges();
-    expect(importePago.valid).toBeTruthy();
+    expect(IMPORTEPAGO.valid).toBeTruthy();
   });
   it('should validate form fecha', () => {
-    const fecha = component.pagoDerechos.controls['fecha'];
-    fecha.enable();
-    fecha.setValue('');
-    fecha.updateValueAndValidity();
+    const FECHA = component.pagoDerechos.controls['fecha'];
+    FECHA.enable();
+    FECHA.setValue('');
+    FECHA.updateValueAndValidity();
     fixture.detectChanges();
-    expect(fecha.valid).toBeFalsy();
-    fecha.setValue('12/12/2021');
-    fecha.updateValueAndValidity();
+    expect(FECHA.valid).toBeFalsy();
+    FECHA.setValue('12/12/2021');
+    FECHA.updateValueAndValidity();
     fixture.detectChanges();
-    expect(fecha.valid).toBeTruthy();
+    expect(FECHA.valid).toBeTruthy();
   });
   it('should validate form banco', () => {
-    const banco = component.pagoDerechos.controls['banco'];
-    banco.enable();
-    banco.setValue('');
-    banco.updateValueAndValidity();
+    const BANCO = component.pagoDerechos.controls['banco'];
+    BANCO.enable();
+    BANCO.setValue('');
+    BANCO.updateValueAndValidity();
     fixture.detectChanges();
-    expect(banco.valid).toBeFalsy();
-    banco.setValue('Bancomer');
-    banco.updateValueAndValidity();
+    expect(BANCO.valid).toBeFalsy();
+    BANCO.setValue('Bancomer');
+    BANCO.updateValueAndValidity();
     fixture.detectChanges();
-    expect(banco.valid).toBeTruthy();
+    expect(BANCO.valid).toBeTruthy();
   });
   
   it('should call clasificacionSeleccione', () => {
-    const clasificacionSpy = jest.spyOn(component, 'clasificacionSeleccione').mockImplementation();
+    const CLASIFICACION_SPY = jest.spyOn(component, 'clasificacionSeleccione').mockImplementation();
     component.clasificacionSeleccione();
-    expect(clasificacionSpy).toHaveBeenCalled();
+    expect(CLASIFICACION_SPY).toHaveBeenCalled();
   });
   it('should call initicializaPagoDerechosCatalogo', () => {
-    const initicializaPagoDerechosCatalogoSpy = jest.spyOn(invocarService, 'initicializaPagoDerechosCatalogo').mockImplementation();
+    const INITICIALIZA_PAGO_DERECHOS_CATALOGO_SPY = jest.spyOn(invocarService, 'initicializaPagoDerechosCatalogo').mockImplementation();
     invocarService.initicializaPagoDerechosCatalogo();
-    expect(initicializaPagoDerechosCatalogoSpy).toHaveBeenCalled();
+    expect(INITICIALIZA_PAGO_DERECHOS_CATALOGO_SPY).toHaveBeenCalled();
   });
   it('should call createPagoDerechos', () => {
-    const createPagoDerechosSpy = jest.spyOn(component, 'createPagoDerechos').mockImplementation();
+    const CREATEPAGODERECHOSSPY = jest.spyOn(component, 'createPagoDerechos').mockImplementation();
     component.createPagoDerechos();
-    expect(createPagoDerechosSpy).toHaveBeenCalled();
+    expect(CREATEPAGODERECHOSSPY).toHaveBeenCalled();
   });
   it('should call ngOnInit', () => {
-    const ngOnInitSpy = jest.spyOn(component, 'ngOnInit').mockImplementation();
+    const NG_ON_INIT_SPY = jest.spyOn(component, 'ngOnInit').mockImplementation();
     component.ngOnInit();
-    expect(ngOnInitSpy).toHaveBeenCalled();
+    expect(NG_ON_INIT_SPY).toHaveBeenCalled();
   });
 
 });

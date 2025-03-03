@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Inicializa los datos de los catálogos para el primer paso.
  *
@@ -12,9 +13,9 @@
  * - `datosObjecto`: Obtiene los datos desde `datosObjecto.json`.
  * - `unidadDeMedida`: Obtiene los datos desde `unidadDeMedida.json`.
  */
-import { Injectable } from '@angular/core';
-import { Catalogo, RespuestaCatalogos } from '../../models/shared/catalogos.model';
+import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,10 @@ export class InvocarActionService {
   // Las siguientes variables se utilizan en el componente pago de derechos
   listoBanco: Catalogo[] = [];
 
-  constructor(public readonly httpServicios: HttpClient) { }
+  constructor(public httpServicios: HttpClient) {
+        // do nothing.
+  }
+
 
   /**
    * Inicializa los datos de los catálogos necesarios para el paso uno.
@@ -74,7 +78,7 @@ export class InvocarActionService {
    * 
    * @returns {void}
    */
-  initicializaPagoDerechosCatalogo() {
+  initicializaPagoDerechosCatalogo():void {
     this.obtenerRespuestaPorUrl(this, 'listoBanco', '/230401/pagoDerechosBanco.json');
   }
 
@@ -91,7 +95,7 @@ export class InvocarActionService {
    * Si la respuesta tiene un código 200 y contiene datos, estos se asignan a la variable especificada.
    * Si la variable o la URL no son válidas, se asigna un arreglo vacío a la variable.
    */
-  obtenerRespuestaPorUrl(self: any, variable: string, url: string) {
+  obtenerRespuestaPorUrl(self: any, variable: string, url: string) :void {
     if (self && variable && url) {
       this.httpServicios.get<RespuestaCatalogos>(`../../../../../assets/json${url}`).subscribe((resp): void => {
         self[variable] = resp?.code === 200 && resp.data ? resp.data : [];
