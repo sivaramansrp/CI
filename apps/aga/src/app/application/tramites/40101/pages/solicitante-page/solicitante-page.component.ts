@@ -75,7 +75,6 @@ export class SolicitantePageComponent {
     }
   }
 
-
   /**
    * Método para asignar las secciones existentes al stored
    */

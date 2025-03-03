@@ -2,24 +2,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TransportistaTerrestreRoutingModule } from './transportista-terrestre-routing.module';
 import { RouterModule } from '@angular/router';
-import { WizardComponent } from '../../shared/components/wizard/wizard.component';
-import { NavComponent } from '../../shared/components/nav/nav.component';
-// import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
+//import { NavComponent } from '../../shared/components/nav/nav.component';
 import { ChoferesComponent } from './components/choferes/choferes.component';
 import { VehiculosComponent } from './components/vehiculos/vehiculos.component';
-import { BtnContinuarComponent } from '../../shared/components/btn-continuar/btn-continuar.component';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-// import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-// import { SolicitudComponent } from './components/solicitud/solicitud.component';
-
-// import { ContendorComponent } from './components/contendor/contendor.component';
-
-// import { TercerosComponent } from '../../shared/components/terceros/terceros.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { AlertComponent } from '../../shared/components/alert/alert.component';
-import { FirmaElectronicaComponent } from '../../shared/components/firma-electronica/firma-electronica.component';
-import { SelectCatalogosComponent } from '../../shared/components/select-catalogos/select-catalogos.component';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';
 import { SharedModule } from '../../shared/shared.module';
 import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
@@ -30,7 +23,6 @@ import { AgregarTransporteComponent } from '../../shared/components/agregar-tran
 import { RepresentanteFiscalComponent } from '../../shared/components/representante-fiscal/representante-fiscal.component';
 import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
-
 import { CatalogoSelectComponent } from '../../shared/components/catalogo-select/catalogo-select.component';
 import { TituloComponent } from '../../shared/components/titulo/titulo.component';
 import { SolicitanteComponent } from './components/solicitante/solicitante.component';
@@ -51,14 +43,14 @@ import { DirectorGeneralComponent } from './components/director-general/director
     SharedModule,
     TransportistaTerrestreRoutingModule,
     RouterModule,
-    NavComponent,
-    WizardComponent,
+    //   NavComponent,
+    forwardRef(() => WizardComponent),
     TituloComponent,
-    BtnContinuarComponent,
+    forwardRef(() => BtnContinuarComponent),
     ReactiveFormsModule,
-    AlertComponent,
-    FirmaElectronicaComponent,
-    SelectCatalogosComponent,
+    forwardRef(() => AlertComponent),
+    forwardRef(() => FirmaElectronicaComponent),
+    forwardRef(() => SelectCatalogosComponent),
     AnexarDocumentosComponent,
     InputCheckComponent,
     InputHoraComponent,

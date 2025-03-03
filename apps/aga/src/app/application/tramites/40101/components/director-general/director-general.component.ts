@@ -13,7 +13,7 @@ export class DirectorGeneralComponent implements OnInit {
     this.setFormValues();
   }
 
-  directorGeneralForm!: FormGroup;
+  directorGeneralForm: FormGroup;
 
   crearFormularioDirectorGeneral(): void {
     this.directorGeneralForm = this.fb.group({
@@ -30,6 +30,7 @@ export class DirectorGeneralComponent implements OnInit {
   }
 
   setFormValues(): void {
+    console.log(mockData);
     this.directorGeneralForm.get('nombre')?.setValue(mockData.nombre);
     this.directorGeneralForm
       .get('primerApellido')

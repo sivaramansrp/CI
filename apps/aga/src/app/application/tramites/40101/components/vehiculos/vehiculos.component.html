@@ -38,9 +38,12 @@
           <div class="row table-responsive">
             <div class="col-md-12">
               <h4 class="extranjeros mt-0">Vehiculos:</h4>
-              <table id="tablaDatosGenerales" class="table w-95 mx-auto mt-3">
+              <table id="dataTable" #dataTable class="table w-95 mx-auto mt-3">
                 <thead>
                   <tr>
+                    <th>
+                      <input type="checkbox" (change)="toggleAll($event)" />
+                    </th>
                     <th>ID</th>
                     <th>Número de identificación vehicular</th>
                     <th>Tipo de vehículo</th>
@@ -62,6 +65,9 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let nacion of nacional; let i = index">
+                    <td>
+                      <input type="checkbox" />
+                    </td>
                     <td>{{ i + 1 }}</td>
                     <td>{{ nacion.solicitudVehiculoVin2 }}</td>
                     <td>{{ nacion.solicitudVehiculoTipoVehiculo }}</td>
@@ -113,7 +119,8 @@
                   </button>
 
                   <!-- fist Modal start here -->
-                  <div id="myModal"
+                  <div
+                    id="myModal"
                     class="modal fade"
                     id="exampleModal"
                     tabindex="-1"
@@ -153,7 +160,6 @@
                                     labelSolicitudVehiculoVin
                                   }}</label>
                                   <span class="require">*</span>
-                                
                                 </div>
                                 <div>
                                   <input
@@ -698,14 +704,17 @@
                                     id="limpiarVehiculo"
                                     name="limpiar"
                                     class="mid btn btn-default me-2"
+                                    (click)="limpiarDatosVEHARR()"
                                   >
                                     Limpiar
                                   </button>
                                   <button
                                     data-bs-dismiss="modal"
+                                    type="button"
                                     id="cancelarVehiculo"
                                     name="cancelar"
-                                    class="cancel btn btn-danger me-2"
+                                    class="cancel btn btn-danger"
+                                    (click)="closeDialogoCaptura()"
                                   >
                                     Cancelar
                                   </button>
@@ -869,6 +878,7 @@
                                     id="solicitudVehiculoArrastreTipoVehiculo"
                                     formControlName="tipoVehiculoArrastreAGA"
                                     class="form-control"
+                                    (change)="validarDescArrastre()"
                                   >
                                     <option value="">
                                       Seleccione un valor
@@ -877,7 +887,14 @@
                                     Populate options dynamically in TypeScript
                                     using the 'tipoVehiculoArrastreAGA' catalog.
                                     Example:
-                                    <!-- <option *ngFor="let tipo of tipoVehiculoArrastreAGA" [value]="tipo.clave">{{ tipo.descripcion }}</option> -->
+                                    <option
+                                      *ngFor="
+                                        let tipo of tipoVehiculoArrastreAGA
+                                      "
+                                      [value]="tipo.clave"
+                                    >
+                                      {{ tipo.descripcion }}
+                                    </option>
                                   </select>
                                 </div>
                               </div>
@@ -894,7 +911,7 @@
                                 <div class="form-group">
                                   <input
                                     type="text"
-                                    id="idDeVehiculoArrastre"
+                                    id="idDeVehiculoArrastre" placeholder="2"
                                     formControlName="idDeVehiculo"
                                     class="form-control"
                                     size="30"
@@ -944,11 +961,15 @@
                                     <option value="">
                                       Seleccione un valor
                                     </option>
-                                    <!-- 
-                          Populate options dynamically in TypeScript using the 'pais' catalog.
-                          Example:
-                          <option *ngFor="let pais of paisCatalogo" [value]="pais.clave">{{ pais.descripcion }}</option>
-                        -->
+
+                                    Populate options dynamically in TypeScript
+                                    using the 'pais' catalog. Example:
+                                    <option
+                                      *ngFor="let pais of paises"
+                                      [value]="pais.clave"
+                                    >
+                                      {{ pais.descripcion }}
+                                    </option>
                                   </select>
                                 </div>
                               </div>
@@ -991,11 +1012,15 @@
                                     <option value="">
                                       Seleccione un valor
                                     </option>
-                                    <!-- 
-                          Populate options dynamically in TypeScript using the 'colorAGA' catalog.
-                          Example:
-                          <option *ngFor="let color of colorCatalogo" [value]="color.clave">{{ color.descripcion }}</option>
-                        -->
+
+                                    Populate options dynamically in TypeScript
+                                    using the 'colorAGA' catalog. Example:
+                                    <option
+                                      *ngFor="let color of colorCatalogo"
+                                      [value]="color.clave"
+                                    >
+                                      {{ color.descripcion }}
+                                    </option>
                                   </select>
                                 </div>
                               </div>
@@ -1076,11 +1101,11 @@
                                     <option value="">
                                       Seleccione un valor
                                     </option>
-                                    <!-- 
+                                    
                           Populate options dynamically in TypeScript using the 'pais' catalog.
                           Example:
                           <option *ngFor="let pais of paisCatalogo" [value]="pais.clave">{{ pais.descripcion }}</option>
-                        -->
+                       
                                   </select>
                                 </div>
                               </div>
@@ -1143,7 +1168,7 @@
                                     name="guardar"
                                     class="btn btn-primary"
                                   >
-                                    Guardar1
+                                    Guardar
                                   </button>
                                 </div>
                               </div>
@@ -1162,11 +1187,6 @@
                       </div>
                     </div>
                   </div>
-
-                  <!-- Button to Open Modal -->
-                  <!-- <button class="btn btn-primary btn-Agregar" (click)="openDialogCapturaSPFisicaValidacion()">
-    Agregar
-  </button> -->
                 </div>
               </td>
             </tr>

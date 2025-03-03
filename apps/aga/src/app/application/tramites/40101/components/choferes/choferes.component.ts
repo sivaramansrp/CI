@@ -13,14 +13,16 @@ import {
   FormGroup,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '../../../../shared/shared.module';
+import { SharedModule } from '@ng-mf/data-access-user';
+
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { Nacional } from '../../../../core/models/40101/transportista-terrestre.model';
 import { extranjero } from '../../../../core/models/40101/transportista-terrestre.model';
 import { HttpClient } from '@angular/common/http';
 import { LayoutChoferNacionalService } from '../../../../core/services/shared/layoutChoferNacional/layout-chofer-nacional.service';
-import { StoreService } from '../../../../core/services/shared/store.service';
+// import { StoreService } from '../../../../core/services/shared/store.service';
+import { StoreService } from 'ngx-toastr';
 import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-choferes',
@@ -59,7 +61,7 @@ export class ChoferesComponent implements OnInit {
   botonGuardar: string = 'Guardar';
   seleccionaUnValor: string = 'Selecciona un valor';
   labelPuntos: string = '...';
-
+  selectedAll: boolean = false;
   modal: string = 'modal';
   nacional: Array<Nacional> = [];
   extranjero: Array<extranjero> = [];
@@ -199,7 +201,7 @@ export class ChoferesComponent implements OnInit {
       }
     });
   }
-  saveData() {
+  Guardar() {
     console.log('Adding a new member...');
     if (this.formChoferes.invalid) {
       // this.toastr.error('Please fill out all required fields.');
@@ -256,16 +258,6 @@ export class ChoferesComponent implements OnInit {
         console.error('Error fetching data:', error);
       }
     );
-
-    // this.http.get<any[]>(this.urlServer).subscribe(
-    //   (data) => {
-    //     this.choferes = data;
-    //     console.log('Fetched Choferes:', this.choferes);
-    //   },
-    //   (error) => {
-    //     console.error('Error fetching choferes:', error);
-    //   }
-    // );
   }
 
   ngAfterViewInit() {
@@ -293,8 +285,8 @@ export class ChoferesComponent implements OnInit {
           return false;
         }
 
-        const cleanedData = chofer.data.trim(); // Remove unnecessary spaces
-        const choferData = JSON.parse(cleanedData); // Attempt to parse JSON
+        const cleanedData = chofer.data.trim();
+        const choferData = JSON.parse(cleanedData);
 
         if (!choferData?.datosGenerales?.curp) {
           console.warn('Missing CURP in choferData:', choferData);
@@ -388,7 +380,7 @@ export class ChoferesComponent implements OnInit {
       (data) => {
         this.municipios = data.municipios.filter(
           (m: any) => m.estadoClave === claveEstado
-        ); // Filter based on selected state
+        );
       },
       (error) => {
         console.error('Error loading municipalities:', error);
@@ -400,7 +392,7 @@ export class ChoferesComponent implements OnInit {
       (data) => {
         this.colonias = data.colonias.filter(
           (c: any) => c.municipioClave === claveMunicipio
-        ); // Filter based on selected municipality
+        );
       },
       (error) => {
         console.error('Error loading colonies:', error);
@@ -432,5 +424,13 @@ export class ChoferesComponent implements OnInit {
       this.colonias = [];
     }
   }
+  limpiarFormulario() {
+    this.formChoferes.reset();
+  }
   buscarChoferEx() {}
+
+  toggleAll(event: any) {
+    this.selectedAll = event.target.checked;
+    // this.nacional.forEach(nacion => nacion.selected = this.selectedAll);
+  }
 }

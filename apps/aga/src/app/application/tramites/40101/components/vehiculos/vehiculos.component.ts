@@ -9,15 +9,10 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class VehiculosComponent implements AfterViewInit {
   @ViewChild('exampleModal', { static: false }) modalElement!: ElementRef;
+  @ViewChild('dataTable', { static: false }) dataTable!: ElementRef;
   private modalInstance!: Modal;
   formVehiculo!: FormGroup;
   nacional: any[] = [];
-
-  // Select option data
-  // tipoVehiculoAGA: any[] = [];
-  // paises: any[] = [];
-  // colorAGA: any[] = [];
-  // anios: any[] = [];
   selectedTab: string = 'Parque vehicular';
   activeTab: string = 'parquevehicular';
   secondTableData: any[] = [];
@@ -45,6 +40,7 @@ export class VehiculosComponent implements AfterViewInit {
   labelSolicitudVehiculoColor: string = 'Color de vehiculo';
   labelSolicitudVehiculoNumeroEconomico: string = 'Número económico';
   labelSolicitudVehiculoNumero2daPlaca: string = 'Número 2da Placa';
+  labelsolicitudVehiculoNumero2daPlaca: string = 'Número 2da Placa';
   labelSolicitudVehiculoEmisor2daPlaca: string = 'Estado emisor de 2da Placa';
   labelSolicitudVehiculoPaisEmisor2daPlaca: string = 'País Emisor 2da Placa';
   labelDescripcionVehiculo: string = 'Descripción del vehículo';
@@ -123,7 +119,7 @@ export class VehiculosComponent implements AfterViewInit {
       solicitudVehiculoDesc: [''],
 
       vin2: ['', [Validators.required, Validators.minLength(5)]],
-      tipoVehiculoArrastreAGA: '',
+      tipoVehiculoArrastreAGA: ['', Validators.required],
       idDeVehiculo: '',
       numeroPlacas: '',
       paisEmisor: '',
@@ -185,11 +181,11 @@ export class VehiculosComponent implements AfterViewInit {
   // }
 
   onSubmit() {
-    // if (this.formVehiculo.invalid) {
-    //   alert('⚠️ Please fill in all required fields correctly.');
-    //   return;
-    // }
-
+    if (this.modalInstance) {
+      this.modalInstance.hide();
+    } else {
+      console.error('Modal instance is not initialized!');
+    }
     const newVehiculo = {
       id: this.nacional.length + 1,
       solicitudVehiculoVin2:
@@ -204,40 +200,57 @@ export class VehiculosComponent implements AfterViewInit {
         this.formVehiculo.value.solicitudVehiculoPaisEmisor?.trim(),
       solicitudDomicilioEstado:
         this.formVehiculo.value.solicitudDomicilioEstado?.trim(),
+      solicitudVehiculoMarca:
+        this.formVehiculo.value.solicitudVehiculoMarca?.trim(),
+      solicitudVehiculoModelo:
+        this.formVehiculo.value.solicitudVehiculoModelo?.trim(),
+      anioVehiculoVEH: this.formVehiculo.value.anioVehiculoVEH?.trim(),
+      solicitudVehiculoTransponder:
+        this.formVehiculo.value.solicitudVehiculoTransponder?.trim(),
+      solicitudVehiculoColor:
+        this.formVehiculo.value.solicitudVehiculoColor?.trim(),
+      solicitudVehiculoNumero2daPlaca:
+        this.formVehiculo.value.solicitudVehiculoNumero2daPlaca?.trim(),
+      solicitudVehiculoEmisor2daPlaca:
+        this.formVehiculo.value.solicitudVehiculoEmisor2daPlaca?.trim(),
+      solicitudVehiculoPaisEmisor2daPlaca:
+        this.formVehiculo.value.solicitudVehiculoPaisEmisor2daPlaca?.trim(),
+      solicitudVehiculoDesc:
+        this.formVehiculo.value.solicitudVehiculoDesc?.trim(),
     };
 
-    // ✅ Prevent empty values after trimming
-    if (Object.values(newVehiculo).some((value) => !value)) {
-      alert('⚠️ Fields cannot be empty.');
-      return;
-    }
+    // if (Object.values(newVehiculo).some((value) => !value)) {
+    //   this.toastr.warning('⚠️ Fields cannot be empty');
+    //   return;
+    // }
+
     const vinExists = this.nacional.some(
       (item) => item.solicitudVehiculoVin2 === newVehiculo.solicitudVehiculoVin2
     );
     if (vinExists) {
-      alert('⚠️ This VIN already exists!');
+      this.toastr.error('⚠️ This VIN already exists!');
       return;
     }
+
     this.nacional.push(newVehiculo);
     localStorage.setItem('vehiculoData', JSON.stringify(this.nacional));
-    console.log('✅ Data added to first table:', this.nacional);
-    const newSecondTableEntry = {
-      vin2: newVehiculo.solicitudVehiculoVin2,
-      tipoVehiculoArrastreAGA: newVehiculo.solicitudVehiculoTipoVehiculo,
-      numeroEconomico: newVehiculo.solicitudVehiculoNumeroEconomico,
-      numeroPlacas: newVehiculo.solicitudVehiculoNumeroPlacas,
-      paisEmisor: newVehiculo.solicitudVehiculoPaisEmisor,
-      estado2: newVehiculo.solicitudDomicilioEstado,
-    };
-    this.secondTableData.push(newSecondTableEntry);
-    localStorage.setItem(
-      'secondTableData',
-      JSON.stringify(this.secondTableData)
-    );
-    console.log('✅ Data added to second table:', this.secondTableData);
+
     this.nacional = [...this.nacional];
-    this.secondTableData = [...this.secondTableData];
+
     this.formVehiculo.reset();
+    this.toastr.success('Vehiculo data added successfully');
+
+    this.closeModal();
+    setTimeout(() => {
+      if (this.dataTable) {
+        this.dataTable.nativeElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      } else {
+        console.error('dataTable not found in DOM');
+      }
+    }, 500);
   }
 
   paises = [
@@ -278,6 +291,39 @@ export class VehiculosComponent implements AfterViewInit {
     { clave: 'ROSA', descripcion: 'Rosa' },
     { clave: 'CAFÉ', descripcion: 'Café' },
   ];
+  tipoVehiculoArrastreAGA = [
+    { clave: 'TR1', descripcion: 'Trailer' },
+    { clave: 'SR2', descripcion: 'Semi-Trailer' },
+    { clave: 'FL3', descripcion: 'Flatbed' },
+    { clave: 'CN4', descripcion: 'Container Carrier' },
+    { clave: 'TN5', descripcion: 'Tanker' },
+    { clave: 'DB6', descripcion: 'Double Trailer' },
+    { clave: 'FR7', descripcion: 'Fridge Trailer' },
+  ];
+  colorCatalogo = [
+    { clave: 'BL', descripcion: 'Blanco' },
+    { clave: 'NG', descripcion: 'Negro' },
+    { clave: 'AZ', descripcion: 'Azul' },
+    { clave: 'RO', descripcion: 'Rojo' },
+    { clave: 'VD', descripcion: 'Verde' },
+    { clave: 'GR', descripcion: 'Gris' },
+    { clave: 'AM', descripcion: 'Amarillo' },
+    { clave: 'MR', descripcion: 'Marrón' },
+    { clave: 'PL', descripcion: 'Plateado' },
+  ];
+  paisCatalogo = [
+  { clave: 'MX', descripcion: 'México' },
+  { clave: 'US', descripcion: 'Estados Unidos' },
+  { clave: 'CA', descripcion: 'Canadá' },
+  { clave: 'ES', descripcion: 'España' },
+  { clave: 'AR', descripcion: 'Argentina' },
+  { clave: 'BR', descripcion: 'Brasil' },
+  { clave: 'CO', descripcion: 'Colombia' },
+  { clave: 'FR', descripcion: 'Francia' },
+  { clave: 'DE', descripcion: 'Alemania' },
+
+  ];
+
 
   get f() {
     return this.formVehiculo.controls;
@@ -300,7 +346,6 @@ export class VehiculosComponent implements AfterViewInit {
       this.modalInstance.show();
     }
   }
-
   closeModal(): void {
     if (this.modalInstance) {
       this.modalInstance.hide();
@@ -308,5 +353,12 @@ export class VehiculosComponent implements AfterViewInit {
   }
 
   closeDialogoCaptura() {}
-  limpiarDatosVEHARR() {}
+  limpiarDatosVEHARR() {
+    this.formVehiculo.reset();
+  }
+  validarDescArrastre() {}
+  toggleAll(event: any) {
+    // this.selectedAll = event.target.checked;
+    // this.nacional.forEach(nacion => nacion.selected = this.selectedAll);
+  }
 }
