@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CambioDeModalidadComponent } from '../cambio-de-modalidad/cambio-de-modalidad.component';
-import { CambioModalidadService } from '@ng-mf/data-access-user';
+import { CambioModalidadService } from '../../service/cambio-modalidad.service';
 import { FormBuilder } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of as observableOf } from 'rxjs';

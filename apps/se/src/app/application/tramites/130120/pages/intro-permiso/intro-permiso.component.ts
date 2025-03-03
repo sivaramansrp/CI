@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { BtnContinuarComponent } from "libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component";
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/130120/permiso-importacion-modification.model';
-import { PASOS } from 'libs/shared/data-access-user/src/tramites/constantes/130120/permiso-importacion-modification.enum';
+import { ListaPasosWizard } from 'apps/se/src/app/application/tramites/130120/models/permiso-importacion-modification.model';
+import { PASOS } from 'apps/se/src/app/application/tramites/130120/constants/permiso-importacion-modification.enum';
 import { PasoCuatroComponent } from "../paso-cuatro/paso-cuatro.component";
 import { PasoDosComponent } from "../paso-dos/paso-dos.component";
 import { PasoTresComponent } from "../paso-tres/paso-tres.component";
