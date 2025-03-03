@@ -13,7 +13,7 @@ class MockSubManufacturerDatoService {
     const MOCKDATA:SubManufacturerDatos={ infoRegistro:{
       modalidad: "",
       folio: "",
-      año: 123
+      ano: 123
     }, datosSubcontratista: {
       rfc: "134",
       estado : "Mexico"
@@ -75,7 +75,7 @@ describe('EmpresasSubmanufacturerasComponent', () => {
     component.infoRegistro = {
       modalidad: 'Test Modalidad',
       folio: '123456',
-      año: 2023
+      ano: 2023
     };
 
     // Call the method
@@ -117,7 +117,7 @@ describe('EmpresasSubmanufacturerasComponent', () => {
 
       numExterior :55400,
       numInterior :347, 
-      códigoPostal:28001,
+      codigoPostal:28001,
       colonia :"SANTA MARIA TULPETLAC"
     }
     ];

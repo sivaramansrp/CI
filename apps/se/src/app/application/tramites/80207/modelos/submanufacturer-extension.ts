@@ -1,7 +1,7 @@
 export interface InfoRegistro {
     modalidad: string;
     folio: string;
-    año: number;
+    ano: number;
   }
 
   export interface DatosSubcontratista {
@@ -12,7 +12,7 @@ export interface InfoRegistro {
     calle :string,
     numExterior :number,
     numInterior :number,
-    códigoPostal:number
+    codigoPostal:number
     colonia :string
   }
   export interface SubManufacturerDatos{

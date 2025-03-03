@@ -6,14 +6,14 @@
           "calle" :"VIA MORELOS",
           "numExterior" :55400,
           "numInterior" :347,
-          "códigoPostal":28001,
+          "codigoPostal":28001,
           "colonia" :"SANTA MARIA TULPETLAC"
         },
         {
           "calle":"DRETA DE L'EIXAMPLE",
           "numExterior":55400,
          "numInterior" :347,
-          "códigoPostal":28001,
+          "codigoPostal":28001,
           "colonia" :"AVENIDA DIAGONAL"
         }
       ]

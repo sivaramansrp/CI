@@ -7,7 +7,7 @@ const mockSubManufacturerDatos: SubManufacturerDatos = {
     infoRegistro: {
       modalidad: 'Modalidad Test',
       folio: 'Folio 12345',
-      año: 2022,
+      ano: 2022,
     },
     datosSubcontratista: {
       rfc: 'RFC12345',

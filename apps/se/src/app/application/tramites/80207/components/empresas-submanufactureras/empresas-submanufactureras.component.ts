@@ -192,7 +192,7 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
       this.formularioInfoRegistro = this.fb.group({
         modalidad: [{ value: this.infoRegistro.modalidad, disabled: true }],
         folio: [{ value: this.infoRegistro.folio, disabled: true }],
-        año: [{ value: this.infoRegistro.año, disabled: true }],
+        año: [{ value: this.infoRegistro.ano, disabled: true }],
       });
     } else {
       this.formularioInfoRegistro = this.fb.group({
