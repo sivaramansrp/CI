@@ -3,9 +3,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DePruebasComponent } from './pages/de-pruebas/de-pruebas.component';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const routes: Routes = [
   {
-      path: 'solicitante',
+      path: 'datos-empresa',
       component: DePruebasComponent,
     }
 ];

@@ -2,25 +2,25 @@
     <ng-titulo titulo="Representación federal"></ng-titulo>
     <div class="row">
         <div class="col-md-3">
-             <app-catalogo-select [catalogo]="federalEstatal" [label]="'Estado'" [required]="false" name="Estado"
+            <app-catalogo-select [catalogo]="federalEstatal" [label]="'Estado'" [required]="false" name="Estado"
                 formControlName="estado"></app-catalogo-select>
         </div>
         <div class="col-md-3">
             <app-catalogo-select [catalogo]="federalEstatal" [label]="'Representación federal'" [required]="true"
-                name="Representación federal" formControlName="representacionFederal"></app-catalogo-select> 
+                name="Representación federal" formControlName="representacionFederal"></app-catalogo-select>
         </div>
     </div>
 
     <h6 class="gap">Selección de sucursal</h6>
 
-     <app-tabla-dinamica [configuracionTabla]="tableHeader" [datos]="tablaDatosSucursal"></app-tabla-dinamica> 
+    <app-tabla-dinamica [configuracionTabla]="tableHeader" [datos]="tablaDatosSucursal"></app-tabla-dinamica>
 
-     <ng-titulo titulo="Datos de la solicitud"></ng-titulo>
+    <ng-titulo titulo="Datos de la solicitud"></ng-titulo>
 
     <div class="row">
         <div class="col-md-4">
-             <app-catalogo-select [catalogo]="federalEstatal" [label]="'Tipo de empresa*:'" [required]="false"
-                name="Tipo de empresa" formControlName="tipoEmpresa"></app-catalogo-select> 
+            <app-catalogo-select [catalogo]="federalEstatal" [label]="'Tipo de empresa*:'" [required]="false"
+                name="Tipo de empresa" formControlName="tipoEmpresa"></app-catalogo-select>
 
         </div>
         <div class="col-md-8">
@@ -41,7 +41,7 @@
     </div>
 
     <div class="row">
-         <ng-titulo titulo="Domicilio donde se almacenarán las mercancías a importar"></ng-titulo> 
+        <ng-titulo titulo="Domicilio donde se almacenarán las mercancías a importar"></ng-titulo>
 
         <div class="col-md-4">
             <label for="País" class="form-label">País:</label>
@@ -97,16 +97,16 @@
 
 
     <div class="row">
-         <ng-titulo titulo="Datos generales socios accionistas"></ng-titulo> 
+        <ng-titulo titulo="Datos generales socios accionistas"></ng-titulo>
         <div class="col-md-6">
             <label class="form-label">Nacionalidad mexicana:</label>
-            <app-input-radio [radioOptions]="opcionSeleccionMexicana" [selectedValue]="valorSeleccionadoNacionalidad" [isRequired]="false"
-                [layout]="'horizontal'"  (valueChange)="nacionalidad(opcionSeleccionMexicana.value)" ></app-input-radio>
+            <app-input-radio [radioOptions]="opcionSeleccionMexicana" [selectedValue]="valorSeleccionadoNacionalidad"
+                [isRequired]="false" [layout]="'horizontal'"></app-input-radio>
         </div>
         <div class="col-md-6">
             <label class="form-label">Tipo de persona:</label>
-            <app-input-radio [radioOptions]="opcionSeleccionPersona" [selectedValue]="valorSeleccionadoPersona" [isRequired]="false"
-                [layout]="'horizontal'" (valueChange)="persona(opcionSeleccionPersona.value)"></app-input-radio> 
+            <app-input-radio [radioOptions]="opcionSeleccionPersona" [selectedValue]="valorSeleccionadoPersona"
+                [isRequired]="false" [layout]="'horizontal'"></app-input-radio>
         </div>
     </div>
     <div class="row">
@@ -143,7 +143,7 @@
     </div>
 
     <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla"
-        [datos]="datosGenerales"></app-tabla-dinamica> 
+        [datos]="datosGenerales"></app-tabla-dinamica>
 
     <div class=" text-end">
         <button type="button" class="btn btn-primary">Eliminar</button>
@@ -160,7 +160,7 @@
         <button type="button" class="btn btn-primary">Eliminar</button>
     </div>
 
-     <btn-continuar [datos]="datosPasos"></btn-continuar>
+    <btn-continuar [datos]="datosPasos"></btn-continuar>
 
-    <ng-alert  [CONTENIDO]="DATOS_EMPRESA" ></ng-alert>
+    <ng-alert [CONTENIDO]="DATOS_EMPRESA"></ng-alert>
 </div>

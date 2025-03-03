@@ -191,24 +191,6 @@ export class DatosEmpresaComponent implements OnInit {
   }
 
   /**
- * Maneja el evento de cambio de valor para la nacionalidad.
- *
- * @param value - El nuevo valor seleccionado para la nacionalidad.
- */
-  nacionalidad(value: string): void {
-    this.valorSeleccionadoNacionalidad = value;
-  }
-
-  /**
- * Maneja el evento de cambio de valor para el tipo de persona.
- *
- * @param value - El nuevo valor seleccionado para el tipo de persona.
- */
-  persona(value: string): void {
-    this.valorSeleccionadoPersona = value;
-  }
-
-  /**
   * Configuración de columnas para la tabla.
   */
   public configuracionTabla: ConfiguracionColumna<{ rfc: string; curp: string; nombre: string; apellidoPaterno: string; apellidoMaterno: string }>[] = [

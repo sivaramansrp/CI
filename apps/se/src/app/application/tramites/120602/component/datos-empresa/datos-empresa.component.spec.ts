@@ -26,7 +26,7 @@ fdescribe('DatosEmpresaComponent', () => {
       ],
       declarations: []
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -57,17 +57,6 @@ fdescribe('DatosEmpresaComponent', () => {
     expect(component.federalEstatal.length).toBeGreaterThan(0);
   });
 
-  it('should handle nationality value change', () => {
-    const nationality = 'Mexicana';
-    component.nacionalidad(nationality);
-    expect(component.valorSeleccionadoNacionalidad).toBe(nationality);
-  });
-
-  it('should handle person type value change', () => {
-    const personType = 'Fisica';
-    component.persona(personType);
-    expect(component.valorSeleccionadoPersona).toBe(personType);
-  });
 
   it('should have table configurations defined', () => {
     expect(component.configuracionTabla.length).toBeGreaterThan(0);
