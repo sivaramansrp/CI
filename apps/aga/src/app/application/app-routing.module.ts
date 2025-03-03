@@ -26,14 +26,7 @@ const ROUTES: Routes = [
     path: 'importante',
     loadChildren: () =>
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
-  },
-  {
-    path: 'submanufactureras-immex',
-    loadChildren: () =>
-      import('../../../../se/src/app/application/tramites/80207/submanufactureras-extension.module').then(
-        (m) => m.SubmanufacturerasExtentionModule
-      ),
-    },
+  }
 ];
 
 @NgModule({
