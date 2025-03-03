@@ -3,14 +3,15 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RespuestaCatalogos, TituloComponent } from '@ng-mf/data-access-user';
 import { Observable, of } from 'rxjs';
 import { EmpresasSubmanufacturerasComponent } from './empresas-submanufactureras.component';
-import { SubManufacturerDatos, SubfacrintaTablaModelo } from '../../modelos/submanufacturer-extension';
-import { SubManufacturerService } from '../../servicios/servicios-submanufacturer-service';
+
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { SubmanufacturerDatos, SubmanufacturerDireccionModelo } from '../../modelos/submanufacturer-modelos';
+import { SubManufacturerService } from '../../servicios/servicios-submanufacturer-servico';
 
 
 class MockSubManufacturerDatoService {
-  getDatos():Observable<SubManufacturerDatos> {
-    const MOCKDATA:SubManufacturerDatos={ infoRegistro:{
+  getDatos():Observable<SubmanufacturerDatos> {
+    const MOCKDATA:SubmanufacturerDatos={ infoRegistro:{
       modalidad: "",
       folio: "",
       ano: 123
@@ -26,7 +27,7 @@ class MockSubManufacturerDatoService {
     return of(MOCKDATA);
   }
 
-  getSubfabricantesDisponibles() :Observable<SubfacrintaTablaModelo[]>{
+  getSubfabricantesDisponibles() :Observable<SubmanufacturerDireccionModelo[]>{
     return of([]);
   }
 }
@@ -112,7 +113,7 @@ describe('EmpresasSubmanufacturerasComponent', () => {
   });
 
   it('should set datosDelSubfabricanteSeleccionado when event has items', () => {
-    const event: SubfacrintaTablaModelo[] = [
+    const event: SubmanufacturerDireccionModelo[] = [
      { calle :"VIA MORELOS",  
 
       numExterior :55400,
@@ -130,7 +131,7 @@ describe('EmpresasSubmanufacturerasComponent', () => {
   });
 
   it('should set datosDelSubfabricanteSeleccionado to an empty array and hide the table when event is empty', () => {
-    const event: SubfacrintaTablaModelo[] = [];
+    const event: SubmanufacturerDireccionModelo[] = [];
 
     component.obtenerRegistroSeleccionado(event);
 

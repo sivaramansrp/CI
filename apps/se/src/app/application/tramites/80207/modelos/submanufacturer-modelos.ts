@@ -8,14 +8,14 @@ export interface InfoRegistro {
     rfc: string;
     estado : string;
   }
-  export interface SubfacrintaTablaModelo{
+  export interface SubmanufacturerDireccionModelo {
     calle :string,
     numExterior :number,
     numInterior :number,
     codigoPostal:number
     colonia :string
   }
-  export interface SubManufacturerDatos{
+  export interface SubmanufacturerDatos{
     infoRegistro: InfoRegistro;
     datosSubcontratista: DatosSubcontratista;
   }

@@ -1,8 +1,8 @@
 import { Observable, map } from 'rxjs';
 import {
-  SubManufacturerDatos,
-  SubfacrintaTablaModelo,
-} from '../modelos/submanufacturer-extension';
+  SubmanufacturerDatos,
+  SubmanufacturerDireccionModelo,
+} from '../modelos/submanufacturer-modelos';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
@@ -24,9 +24,9 @@ export class SubManufacturerService {
    * @method getDatos
    * @returns {Observable<any>} Observable con los datos de registro y subcontratista.
    */
-  getDatos(): Observable<SubManufacturerDatos> {
+  getDatos(): Observable<SubmanufacturerDatos> {
     return this.http
-      .get<SubManufacturerDatos>('assets/json/80207/submanufacturer-datos.json')
+      .get<SubmanufacturerDatos>('assets/json/80207/submanufacturer-datos.json')
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .pipe(map((response: any) => response.data));
   }
@@ -47,9 +47,9 @@ export class SubManufacturerService {
    * @method getSubfabricantesDisponibles
    * @returns {Observable<TableData>} Observable con la lista de subfabricantes disponibles.
    */
-  getSubfabricantesDisponibles(): Observable<SubfacrintaTablaModelo[]> {
+  getSubfabricantesDisponibles(): Observable<SubmanufacturerDireccionModelo[]> {
     return this.http
-      .get<SubfacrintaTablaModelo[]>(
+      .get<SubmanufacturerDireccionModelo[]>(
         'assets/json/80207/submanufactureras-disponibles-datos.json'
       )
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

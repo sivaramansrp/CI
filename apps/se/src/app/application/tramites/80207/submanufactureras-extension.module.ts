@@ -22,7 +22,7 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { SubManufacturerService } from './servicios/servicios-submanufacturer-service';
+import { SubManufacturerService } from './servicios/servicios-submanufacturer-servico';
 import { SubmanufacturerasExtentionRoutingModule } from './submanufactureras-extension-routing.module';
 
 import { ToastrService } from 'ngx-toastr';

@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { SubManufacturerService } from './servicios-submanufacturer-service';
-import { SubManufacturerDatos } from '../modelos/submanufacturer-extension';
+import { SubmanufacturerDatos } from '../modelos/submanufacturer-modelos';
+import { SubManufacturerService } from './servicios-submanufacturer-servico';
 
-const mockSubManufacturerDatos: SubManufacturerDatos = {
+
+const mockSubManufacturerDatos: SubmanufacturerDatos = {
     infoRegistro: {
       modalidad: 'Modalidad Test',
       folio: 'Folio 12345',

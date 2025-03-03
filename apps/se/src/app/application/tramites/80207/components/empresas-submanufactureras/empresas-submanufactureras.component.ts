@@ -11,8 +11,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   DatosSubcontratista,
   InfoRegistro,
-  SubfacrintaTablaModelo,
-} from '../../modelos/submanufacturer-extension';
+  SubmanufacturerDireccionModelo,
+} from '../../modelos/submanufacturer-modelos';
 import {
   FormBuilder,
   FormGroup,
@@ -22,8 +22,9 @@ import {
 
 import { CommonModule } from '@angular/common';
 
-import { SUBFACRINTATABLACONFIGURACION } from '../../constantes/submanufabricnats-tabla-configuracion.enum';
-import { SubManufacturerService } from '../../servicios/servicios-submanufacturer-service';
+
+import { SUBMANUFACTURADORES_TABLA_CONFIGURACION } from '../../constantes/submanufabricnats-tabla-configuracion.enum';
+import { SubManufacturerService } from '../../servicios/servicios-submanufacturer-servico';
 
 
 /**
@@ -92,34 +93,34 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
 
   /**
    * Configuración de las columnas de la tabla de subfabricantes.
-   * @property {ConfiguracionColumna<SubfacrintaTablaModelo>[]} configuracionTabla
+   * @property {ConfiguracionColumna<SubmanufacturerDireccionModelo>[]} configuracionTabla
    */
-  configuracionTabla: ConfiguracionColumna<SubfacrintaTablaModelo>[] =
-    SUBFACRINTATABLACONFIGURACION;
+  configuracionTabla: ConfiguracionColumna<SubmanufacturerDireccionModelo>[] =
+  SUBMANUFACTURADORES_TABLA_CONFIGURACION
 
   /**
    * Datos del subfabricante seleccionado.
-   * @property {SubfacrintaTablaModelo[]} datosDelSubfabricanteSeleccionado
+   * @property {SubmanufacturerDireccionModelo[]} datosDelSubfabricanteSeleccionado
    */
-  datosDelSubfabricanteSeleccionado: SubfacrintaTablaModelo[] = [];
+  datosDelSubfabricanteSeleccionado: SubmanufacturerDireccionModelo[] = [];
 
   /**
    * Agregar los datos del subfabricante seleccionado.
-   * @property {SubfacrintaTablaModelo[]} datosSubfabricanteParaSerAgregados
+   * @property {SubmanufacturerDireccionModelo[]} datosSubfabricanteParaSerAgregados
    */
-  datosSubfabricanteParaSerAgregados: SubfacrintaTablaModelo[] = [];
+  datosSubfabricanteParaSerAgregados: SubmanufacturerDireccionModelo[] = [];
 
   /**
    * Datos de la tabla de subfabricantes disponibles.
-   * @property {SubfacrintaTablaModelo[]} datosTablaSubfabricantesDisponibles
+   * @property {SubmanufacturerDireccionModelo[]} datosTablaSubfabricantesDisponibles
    */
-  datosTablaSubfabricantesDisponibles: SubfacrintaTablaModelo[] = [];
+  datosTablaSubfabricantesDisponibles: SubmanufacturerDireccionModelo[] = [];
 
   /**
    * Lista de subfabricantes por eliminar.
-   * @property {SubfacrintaTablaModelo[]} listaDeSubfabricantesPorEliminar
+   * @property {SubmanufacturerDireccionModelo[]} listaDeSubfabricantesPorEliminar
    */
-  listaDeSubfabricantesPorEliminar: SubfacrintaTablaModelo[] = [];
+  listaDeSubfabricantesPorEliminar: SubmanufacturerDireccionModelo[] = [];
 
   /**
    * Arreglo de suscripciones para gestionar la limpieza de recursos.
@@ -243,7 +244,7 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
   obtenerSubfabricantesDisponibles(): void {
     const SUSCRIPCIÓN = this.subManufacturerDatoService
       .getSubfabricantesDisponibles()
-      .subscribe((response: SubfacrintaTablaModelo[]) => {
+      .subscribe((response: SubmanufacturerDireccionModelo[]) => {
         if (response) {
           this.datosTablaSubfabricantesDisponibles = response;
           this.mostrarTablaSubfabricantesDisponibles$.next(true);
@@ -255,9 +256,9 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
   /**
    * Obtiene el registro seleccionado de la tabla de subfabricantes disponibles.
    * @method obtenerRegistroSeleccionado
-   * @param {SubfacrintaTablaModelo[]} event - Evento con los datos del registro seleccionado.
+   * @param {SubmanufacturerDireccionModelo[]} event - Evento con los datos del registro seleccionado.
    */
-  obtenerRegistroSeleccionado(event: SubfacrintaTablaModelo[]): void {
+  obtenerRegistroSeleccionado(event: SubmanufacturerDireccionModelo[]): void {
     if (event.length > 0) {
       this.datosDelSubfabricanteSeleccionado = event;
     } else {
@@ -293,9 +294,9 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
   /**
    * Obtiene los datos del subfabricante por eliminar.
    * @method datosDelSubfabricantePorEliminar
-   * @param {SubfacrintaTablaModelo[]} event - Evento con los datos del subfabricante por eliminar.
+   * @param {SubmanufacturerDireccionModelo[]} event - Evento con los datos del subfabricante por eliminar.
    */
-  datosDelSubfabricantePorEliminar(event: SubfacrintaTablaModelo[]): void {
+  datosDelSubfabricantePorEliminar(event: SubmanufacturerDireccionModelo[]): void {
     this.listaDeSubfabricantesPorEliminar = event;
   }
 
