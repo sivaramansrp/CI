@@ -1,0 +1,37 @@
+
+
+  <div class="container">
+    <div class="header">
+      <span class="refresh-button">
+        <i class="fas fa-sync-alt"></i> <!-- Font Awesome Refresh Icon -->
+      </span>
+      <span class="plus-icon" tabindex="0" (click)="toggleContent()" (keyup.enter)="toggleContent()" (keyup.space)="toggleContent()">+</span>
+    </div>
+    <div *ngIf="showContent" class="content">
+        <div class="info-box">
+                    Al dar doble clic en el registro seleccionado creará una nueva solicitud con los mismos datos de la solicitud elegida.
+          </div>
+          
+        <h6>solicitud</h6>
+        <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Fecha Creación</th>
+                <th>Mercancía</th>
+                <th>Cantidad</th>
+                <th>Proveedor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let solicitud of solicitudes">
+                <td>{{ solicitud.fechaCreacion }}</td>
+                <td>{{ solicitud.mercancia || 'N/A' }}</td>
+                <td>{{ solicitud.cantidad }}</td>
+                <td>{{ solicitud.proovedor }}</td>
+              </tr>
+ 
+            </tbody>
+          </table>
+    </div>
+</div>
+  

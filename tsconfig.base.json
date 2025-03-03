@@ -19,8 +19,8 @@
       "@ng-mf/data-access-user": ["libs/shared/data-access-user/src/index.ts"],
       "aga/Routes": ["apps/aga/src/app/remote-entry/entry.routes.ts"],
       "agace/Routes": ["apps/agace/src/app/remote-entry/entry.routes.ts"],
-      "agriculture/Routes": [
-        "apps/agriculture/src/app/remote-entry/entry.routes.ts"
+      "agricultura/Routes": [
+        "apps/agricultura/src/app/remote-entry/entry.routes.ts"
       ],
       "funcionario/Routes": [
         "apps/funcionario/src/app/remote-entry/entry.routes.ts"

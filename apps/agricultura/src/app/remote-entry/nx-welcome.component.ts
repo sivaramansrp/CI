@@ -432,7 +432,7 @@ import { CommonModule } from '@angular/common';
         <div id="welcome">
           <h1>
             <span> Hello there, </span>
-            Welcome agriculture 👋
+            Welcome agricultura 👋
           </h1>
         </div>
         <!--  HERO  -->
@@ -836,7 +836,7 @@ nx g &#64;nx/angular:component ui/src/lib/button</pre>
               </svg>
               View project details
             </summary>
-            <pre>nx show project agriculture --web</pre>
+            <pre>nx show project agricultura --web</pre>
           </details>
           <details>
             <summary>

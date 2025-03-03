@@ -1,9 +1,9 @@
 import { ModuleFederationConfig } from '@nx/webpack';
 
 const config: ModuleFederationConfig = {
-  name: 'agriculture',
+  name: 'agricultura',
   exposes: {
-    './Routes': 'apps/agriculture/src/app/remote-entry/entry.routes.ts',
+    './Routes': 'apps/agricultura/src/app/remote-entry/entry.routes.ts',
   },
 };
 
