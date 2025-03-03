@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { Catalogo, RespuestaCatalogos } from '../../../../../../../../libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 @Injectable({
   providedIn: 'root'

@@ -10,7 +10,7 @@ import {
   FitosanitarioForm,
   formularioAsociacionFactura,
   HistoricoFabricantesForm,
-} from '../../../../../../../apps/se/src/app/application/tramites/120301/models/elegibilidad-de-textiles.model';
+} from '../models/elegibilidad-de-textiles.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs'; // Importa Observable
 import { Store, StoreConfig } from '@datorama/akita'; // Import Akita
