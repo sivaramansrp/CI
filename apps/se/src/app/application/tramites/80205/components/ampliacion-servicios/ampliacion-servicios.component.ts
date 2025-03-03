@@ -25,29 +25,6 @@ import { Component} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 
-
-
-
-/**
- * Componente para la ampliación de servicios.
- * @component AmpliacionServiciosComponent
- * @selector ampliacion-servicios
- * @templateUrl ./ampliacion-servicios.component.html
- * @styleUrl ./ampliacion-servicios.component.scss
- */
-
-/*interface Servicio {
-  descripcion: string;
-  tipode: string;
-}
-interface ServicioInmex {
-  Servicio: string;
-  RegistroContribuyentes: string;
-  DenominaciónSocial: string;
-  NumeroIMMEX: string;
-  AñoIMMEX: string;
-}
-*/
 @Component({
   selector: 'ampliacion-servicios',
   standalone: true,
@@ -128,8 +105,8 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.ampliacionServiciosService.getDatos().subscribe((respuesta) => {
         const RESPONSE = respuesta as unknown as ApiResponse; 
-        if (RESPONSE && RESPONSE.code === 200) {
-          this.infoRegistro = RESPONSE.data.infoServicios;
+        if (RESPONSE) {
+          this.infoRegistro = RESPONSE.infoServicios;
           this.inicializarFormularioInfoRegistro();
         }
       })
@@ -192,7 +169,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @method agregarServiciosAmpliacion
    */
   agregarServiciosAmpliacion(): void {
-    const CUERPODATOS = { descripcionDelServicio: this.recibioDatos[0].descripcion, tipode: this.recibioDatos[0].tipode };
+    const CUERPODATOS = { descripiónDelServicio: this.recibioDatos[0].descripcion, tipode: this.recibioDatos[0].tipode };
 this.datosImmex.push(CUERPODATOS);
   }
 

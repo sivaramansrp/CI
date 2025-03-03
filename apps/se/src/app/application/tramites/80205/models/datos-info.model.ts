@@ -1,3 +1,4 @@
+
 export interface ServicioInmex {
     Servicio?: string;
     RegistroContribuyentes?: string;
@@ -30,6 +31,7 @@ export interface ServicioInmex {
      export interface ApiResponse {
         code: number;
         data: ResponseData;
+        infoServicios: InfoServicios;
       }
     export interface AccionBoton {
         accion: string;
