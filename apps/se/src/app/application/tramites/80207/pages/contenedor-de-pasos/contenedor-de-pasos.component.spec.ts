@@ -1,7 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ContenedorDePasosComponent } from './contenedor-de-pasos.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
-
+import {
+  BtnContinuarComponent,
+  SolicitanteComponent,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ContenedorDePasosComponent', () => {
   let component: ContenedorDePasosComponent;
@@ -9,12 +14,9 @@ describe('ContenedorDePasosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ContenedorDePasosComponent],
-      imports:[WizardComponent]
+      declarations: [ContenedorDePasosComponent,PasoUnoComponent],
+      imports: [WizardComponent, BtnContinuarComponent, SolicitanteComponent,HttpClientModule],
     }).compileComponents();
-  });
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(ContenedorDePasosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -1,10 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { RespuestaCatalogos, TituloComponent } from '@ng-mf/data-access-user';
 import { Observable, of } from 'rxjs';
 import { EmpresasSubmanufacturerasComponent } from './empresas-submanufactureras.component';
 import { SubManufacturerDatos, SubfacrintaTablaModelo } from '../../modelos/submanufacturer-extension';
 import { SubManufacturerService } from '../../servicios/servicios-submanufacturer-service';
+import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 
 
 class MockSubManufacturerDatoService {
@@ -30,9 +31,6 @@ class MockSubManufacturerDatoService {
   }
 }
 
-// Mock the service
-jest.mock('libs/shared/data-access-user/src/core/services/80207/servicios-submanufacturer-service');
-
 describe('EmpresasSubmanufacturerasComponent', () => {
   let component: EmpresasSubmanufacturerasComponent;
   let fixture: ComponentFixture<EmpresasSubmanufacturerasComponent>;
@@ -41,7 +39,7 @@ describe('EmpresasSubmanufacturerasComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EmpresasSubmanufacturerasComponent,ReactiveFormsModule],
+      imports: [EmpresasSubmanufacturerasComponent,ReactiveFormsModule,TituloComponent, TablaDinamicaComponent],
       providers: [FormBuilder,
         { provide: SubManufacturerService, useClass: MockSubManufacturerDatoService } 
       ], 
