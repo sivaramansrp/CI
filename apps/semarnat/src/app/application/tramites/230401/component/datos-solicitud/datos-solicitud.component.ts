@@ -20,7 +20,7 @@ import {
   Solicitud230401State,
   Tramite230401Store,
   initializeSolicitud230401State,
-} from '../../../../estados/230401/tramite230401.store';
+} from '../../estados/tramite230401.store';
 import { InvocarActionService } from '../../services/invocar-action.service';
 import { Subject } from 'rxjs';
 

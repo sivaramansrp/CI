@@ -97,7 +97,7 @@ export class InvocarActionService {
    */
   obtenerRespuestaPorUrl(self: any, variable: string, url: string) :void {
     if (self && variable && url) {
-      this.httpServicios.get<RespuestaCatalogos>(`../../../../../assets/json${url}`).subscribe((resp): void => {
+      this.httpServicios.get<RespuestaCatalogos>(`assets/json${url}`).subscribe((resp): void => {
         self[variable] = resp?.code === 200 && resp.data ? resp.data : [];
       });
     }
