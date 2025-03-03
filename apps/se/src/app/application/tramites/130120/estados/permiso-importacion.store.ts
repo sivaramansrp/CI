@@ -1,6 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { createDatosGruposState, DatosGrupos } from 'libs/shared/data-access-user/src/core/models/130120/permiso-importacion-modification.model';
+import { createDatosGruposState, DatosGrupos } from 'apps/se/src/app/application/tramites/130120/models/permiso-importacion-modification.model';
 
 @Injectable({
     providedIn: 'root',
