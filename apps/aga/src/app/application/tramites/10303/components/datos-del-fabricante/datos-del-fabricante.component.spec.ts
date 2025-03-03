@@ -1,20 +1,21 @@
-import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
-import { DatosDelFabricanteComponent } from './datos-del-fabricante.component';
-import { DonacionesExtranjerasService } from 'libs/shared/data-access-user/src/core/services/10303/donaciones-extranjeras/donaciones-extranjeras.service';
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { Contribuyente, ContribuyenteRespuesta } from 'libs/shared/data-access-user/src/core/models/10303/donaciones-extranjeras.model';
-// import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { AlertComponent, CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
-const mockPaises: Catalogo[] = [
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { ContribuyenteRespuesta } from '@ng-mf/data-access-user';
+import { DatosDelFabricanteComponent } from './datos-del-fabricante.component';
+import { DonacionesExtranjerasService } from '@ng-mf/data-access-user';
+
+const MOCK_PAISES: Catalogo[] = [
   { id: 1, descripcion: 'País 1' },
   { id: 2, descripcion: 'País 2' }
 ];
 
-const mockContribuyenteRespuesta: ContribuyenteRespuesta = {
+const MOCK_CONTRIBUYENTE_RESPUESTA: ContribuyenteRespuesta = {
   data: [{
     rfc: 'XAXX010101000',
     razonSocial: 'Empresa Ejemplo',
@@ -63,26 +64,26 @@ describe('DatosDelFabricanteComponent', () => {
   });
 
   it('should initialize the catalogos on ngOnInit', () => {
-    const spy = jest.spyOn(service, 'getPaises').mockReturnValue(of({ code: 200, data: mockPaises, message: 'Success' }));
+    const SPY = jest.spyOn(service, 'getPaises').mockReturnValue(of({ code: 200, data: MOCK_PAISES, message: 'Success' }));
     component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
+    expect(SPY).toHaveBeenCalled();
   });
 
   it('should initialize catalogos', () => {
-    jest.spyOn(service, 'getPaises').mockReturnValue(of({ code: 200, data: mockPaises, message: 'Success' }));
+    jest.spyOn(service, 'getPaises').mockReturnValue(of({ code: 200, data: MOCK_PAISES, message: 'Success' }));
     component.inicializaCatalogos();
-    expect(component.pais).toEqual(mockPaises);
+    expect(component.pais).toEqual(MOCK_PAISES);
   });
 
   it('should search contribuyente by RFC', () => {
-    jest.spyOn(service, 'buscarContribuyente').mockReturnValue(of(mockContribuyenteRespuesta));
+    jest.spyOn(service, 'buscarContribuyente').mockReturnValue(of(MOCK_CONTRIBUYENTE_RESPUESTA));
     component.buscarContribuyenteRfc(6, 'XAXX010101000');
     expect(component.nombreFabricante).toEqual('Nombre Ejemplo Apellido Paterno Apellido Materno');
   });
 
   it('should process the fabricante data', () => {
-    const contribuyente = mockContribuyenteRespuesta.data[0];
-    component.fabricante(contribuyente, true);
+    const CONTRIBUYENTE = MOCK_CONTRIBUYENTE_RESPUESTA.data[0];
+    component.fabricante(CONTRIBUYENTE, true);
     expect(component.nombreFabricante).toEqual('Nombre Ejemplo Apellido Paterno Apellido Materno');
     expect(component.calleFabricante).toEqual('Calle Ejemplo');
   });

@@ -1,10 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
-import { PASOS } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
-// import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
+
+import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  * Interfaz que representa el botón de acción.

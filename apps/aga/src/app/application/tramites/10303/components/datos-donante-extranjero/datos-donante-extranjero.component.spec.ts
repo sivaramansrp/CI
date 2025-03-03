@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { DonacionesExtranjerasService } from 'libs/shared/data-access-user/src/core/services/10303/donaciones-extranjeras/donaciones-extranjeras.service';
-import { DatosDonanteExtranjeroComponent } from './datos-donante-extranjero.component';
-import { CATALOGOS_ID } from 'libs/shared/data-access-user/src/tramites/constantes/constantes';
-// import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+
 import { AlertComponent, CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { DatosDonanteExtranjeroComponent } from './datos-donante-extranjero.component';
+import { DonacionesExtranjerasService } from '@ng-mf/data-access-user';
 
 describe('DatosDonanteExtranjeroComponent', () => {
   let component: DatosDonanteExtranjeroComponent;
@@ -12,7 +12,7 @@ describe('DatosDonanteExtranjeroComponent', () => {
   let donacionesExtranjerasService: jest.Mocked<DonacionesExtranjerasService>;
 
   // Mock del servicio DonacionesExtranjerasService
-  const donacionesExtranjerasServiceMock = {
+  const DONACIONES_EXTRANJERAS_SERVICE_MOCK = {
     getPaises: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'México' }] })),
     getDocumentoResidencia: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'Tarjeta de Residencia' }] }))
   };
@@ -21,7 +21,7 @@ describe('DatosDonanteExtranjeroComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [DatosDonanteExtranjeroComponent, CatalogoSelectComponent, AlertComponent],
       providers: [
-        { provide: DonacionesExtranjerasService, useValue: donacionesExtranjerasServiceMock }
+        { provide: DonacionesExtranjerasService, useValue: DONACIONES_EXTRANJERAS_SERVICE_MOCK }
       ]
     }).compileComponents();
     
@@ -36,7 +36,10 @@ describe('DatosDonanteExtranjeroComponent', () => {
   });
 
   it('should call inicializaCatalogos method once on ngOnInit', () => {
-    jest.spyOn(component, 'inicializaCatalogos').mockImplementation(() => {});
+    jest.spyOn(component, 'inicializaCatalogos').mockImplementation(() => {
+      component.pais = [{ id: 1, descripcion: 'México' }];
+      component.cveDocumentoResidencia = [{ id: 1, descripcion: 'Tarjeta de Residencia' }];
+    });
 
     component.ngOnInit();
 

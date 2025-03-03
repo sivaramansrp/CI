@@ -1,16 +1,16 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { map, merge } from 'rxjs';
+import { Modal } from 'bootstrap';
 
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { DonacionesExtranjerasService } from 'libs/shared/data-access-user/src/core/services/10303/donaciones-extranjeras/donaciones-extranjeras.service';
-import { FECHA_CADUCIDAD, PANELS, TEXTOS } from 'libs/shared/data-access-user/src/tramites/constantes/10303/donaciones-extranjeras.enum';
+import { FECHA_CADUCIDAD, PANELS, TEXTOS_10303 } from '@ng-mf/data-access-user';
+import { DonacionesExtranjerasService } from '@ng-mf/data-access-user';
 import mercanciaTable from 'libs/shared/theme/assets/json/10303/mercancia-table.json';
 
-import { BasicRequerimientos, BasicRequerimientosRespuesta, Manifiestos, ManifiestosRespuesta } from 'libs/shared/data-access-user/src/core/models/10303/donaciones-extranjeras.model';
-import { OpcionesDeBotonDeRadio } from 'libs/shared/data-access-user/src/tramites/constantes/10303/donaciones-extranjeras.enum';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { InputFecha } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { CATALOGOS_ID } from 'libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { BasicRequerimientos, BasicRequerimientosRespuesta, Manifiestos, ManifiestosRespuesta } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { InputFecha } from '@ng-mf/data-access-user';
+import { OpcionesDeBotonDeRadio } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar el registro de donación.
@@ -26,7 +26,7 @@ export class RegistroDeDonacionComponent implements OnInit {
    */
 
   agregarMercanciasForm!: FormGroup;
-  
+
   /**
    * Lista de manifiestos obtenidos desde el servicio.
    */
@@ -130,7 +130,7 @@ export class RegistroDeDonacionComponent implements OnInit {
   /**
    * Textos utilizados en el componente.
    */
-  TEXTOS = TEXTOS;
+  TEXTOS = TEXTOS_10303;
 
   /**
    * Opciones de botón de radio.
@@ -150,7 +150,7 @@ export class RegistroDeDonacionComponent implements OnInit {
   /**
    * Etiqueta del archivo seleccionado.
    */
-  etiquetaDeArchivo: string = TEXTOS.ETIQUETA_DE_ARCHIVO;
+  etiquetaDeArchivo: string = TEXTOS_10303.ETIQUETA_DE_ARCHIVO;
 
   /**
    * Indica si la sección es colapsable.
@@ -185,8 +185,8 @@ export class RegistroDeDonacionComponent implements OnInit {
   /**
    * Getter para obtener el control de formulario
    */
-  get descripcionMercanciaOtro() {
-    return this.agregarMercanciasForm.get('datosMercancia.descripcionMercanciaOtro');
+  get descripcionMercanciaOtro(): FormControl {
+    return this.agregarMercanciasForm.get('datosMercancia.descripcionMercanciaOtro') as FormControl;
   }
 
   /**
@@ -269,7 +269,7 @@ export class RegistroDeDonacionComponent implements OnInit {
    * @returns {void}
    */
   private inicializaCatalogos(): void {
-    const aduana$ = this.donacionesExtranjerasService
+    const ADUANA$ = this.donacionesExtranjerasService
       .getAduana(CATALOGOS_ID.CAT_ADUANA)
       .pipe(
         map((resp) => {
@@ -277,7 +277,7 @@ export class RegistroDeDonacionComponent implements OnInit {
         })
       );
 
-    const destinoDonacion$ = this.donacionesExtranjerasService
+    const DESTINO_DONACION$ = this.donacionesExtranjerasService
       .getDestinoDonacion(CATALOGOS_ID.CAT_DESTINO_DONACION)
       .pipe(
         map((resp) => {
@@ -285,7 +285,7 @@ export class RegistroDeDonacionComponent implements OnInit {
         })
       );
 
-    const tipoDeMercancia$ = this.donacionesExtranjerasService
+    const TIPO_DE_MERCANCIA$ = this.donacionesExtranjerasService
       .getTipoDeMercancia(CATALOGOS_ID.CAT_TIPO_DE_MERCANCIA)
       .pipe(
         map((resp) => {
@@ -293,7 +293,7 @@ export class RegistroDeDonacionComponent implements OnInit {
         })
       );
 
-    const unidadMedida$ = this.donacionesExtranjerasService
+    const UNIDAD_MEDIDA$ = this.donacionesExtranjerasService
       .getUnidadMedida(CATALOGOS_ID.CAT_UMC)
       .pipe(
         map((resp) => {
@@ -301,7 +301,7 @@ export class RegistroDeDonacionComponent implements OnInit {
         })
       );
 
-    const umt$ = this.donacionesExtranjerasService
+    const UMT$ = this.donacionesExtranjerasService
       .getUmt(CATALOGOS_ID.CAT_UMT)
       .pipe(
         map((resp) => {
@@ -309,7 +309,7 @@ export class RegistroDeDonacionComponent implements OnInit {
         })
       );
 
-    const paisProcedenciaOtro$ = this.donacionesExtranjerasService
+    const PAIS_PROCEDENCIA_OTRO$ = this.donacionesExtranjerasService
       .getProcedenciaOtro(CATALOGOS_ID.CAT_PROCEDENCIA_OTRO)
       .pipe(
         map((resp) => {
@@ -317,7 +317,7 @@ export class RegistroDeDonacionComponent implements OnInit {
         })
       );
 
-    const condicionMercancia$ = this.donacionesExtranjerasService
+    const CONDICION_MERCANCIA$ = this.donacionesExtranjerasService
       .getCondicionMercancia(CATALOGOS_ID.CAT_CONDICION_MERCANCIA)
       .pipe(
         map((resp) => {
@@ -325,7 +325,7 @@ export class RegistroDeDonacionComponent implements OnInit {
         })
       );
 
-    const paisOrigenMedicamento$ = this.donacionesExtranjerasService
+    const PAIS_ORIGEN_MEDICAMENTO$ = this.donacionesExtranjerasService
       .getPaisOrigenMedicamento(CATALOGOS_ID.CAT_PAIS_ORIGEN_MEDICAMENTO)
       .pipe(
         map((resp) => {
@@ -333,7 +333,7 @@ export class RegistroDeDonacionComponent implements OnInit {
         })
       );
 
-    const paisProcedenciaMedicamento$ = this.donacionesExtranjerasService
+    const PAIS_PROCEDENCIA_MEDICAMENTO$ = this.donacionesExtranjerasService
       .getPaisProcedenciaMedicamento(CATALOGOS_ID.CAT_PAIS_PROCEDENCIA_MEDICAMENTO)
       .pipe(
         map((resp) => {
@@ -342,15 +342,15 @@ export class RegistroDeDonacionComponent implements OnInit {
       );
 
     merge(
-      aduana$,
-      destinoDonacion$,
-      tipoDeMercancia$,
-      unidadMedida$,
-      umt$,
-      paisProcedenciaOtro$,
-      condicionMercancia$,
-      paisOrigenMedicamento$,
-      paisProcedenciaMedicamento$
+      ADUANA$,
+      DESTINO_DONACION$,
+      TIPO_DE_MERCANCIA$,
+      UNIDAD_MEDIDA$,
+      UMT$,
+      PAIS_PROCEDENCIA_OTRO$,
+      CONDICION_MERCANCIA$,
+      PAIS_ORIGEN_MEDICAMENTO$,
+      PAIS_PROCEDENCIA_MEDICAMENTO$
     ).subscribe();
   }
 
@@ -421,9 +421,9 @@ export class RegistroDeDonacionComponent implements OnInit {
    * @returns {void}
    */
   mostrar_colapsable(index: number): void {
-    const isCurrentlyOpen = this.panels[index].isCollapsed;
+    const IS_CURRENTLY_OPEN = this.panels[index].isCollapsed;
     this.panels.forEach((panel, i) => {
-      panel.isCollapsed = i === index ? !isCurrentlyOpen : true;
+      panel.isCollapsed = i === index ? !IS_CURRENTLY_OPEN : true;
     });
   }
 
@@ -443,7 +443,10 @@ export class RegistroDeDonacionComponent implements OnInit {
    * @returns {void}
    */
   abrirDialogoMercancias(): void {
-    this.modal = 'show';
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
   }
 
   /**
@@ -452,7 +455,9 @@ export class RegistroDeDonacionComponent implements OnInit {
    * @returns {void}
    */
   cerrarModal(): void {
-    this.closeModal.nativeElement.click();
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
+    }
   }
 
   /**
@@ -463,8 +468,8 @@ export class RegistroDeDonacionComponent implements OnInit {
     if (!this.agregarMercanciasForm.valid) {
       return;
     }
-    const mercancia = this.agregarMercanciasForm.value;
-    this.getMercanciaTableData.tableBody.push(mercancia);
+    const MERCANCIA = this.agregarMercanciasForm.value;
+    this.getMercanciaTableData.tableBody.push(MERCANCIA);
     this.agregarMercanciasForm.reset();
     this.cerrarModal();
   }
@@ -476,12 +481,14 @@ export class RegistroDeDonacionComponent implements OnInit {
    * 
    * @returns {void}
    */
-  onCambioDeArchivo(event: any): void {
-    this.archivoMedicamentos = event.target.files[0];
-    if (this.archivoMedicamentos && this.archivoMedicamentos.length > 0) {
+  onCambioDeArchivo(event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+
+    if (TARGET.files && TARGET.files.length > 0) {
+      this.archivoMedicamentos = TARGET.files[0];
       this.etiquetaDeArchivo = this.archivoMedicamentos.name;
     } else {
-      this.etiquetaDeArchivo = TEXTOS.ETIQUETA_DE_ARCHIVO;
+      this.etiquetaDeArchivo = TEXTOS_10303.ETIQUETA_DE_ARCHIVO;
     }
   }
 
@@ -491,7 +498,7 @@ export class RegistroDeDonacionComponent implements OnInit {
    */
   eliminacionMedicamento(): void {
     this.archivoMedicamentos = null;
-    this.etiquetaDeArchivo = TEXTOS.ETIQUETA_DE_ARCHIVO;
+    this.etiquetaDeArchivo = TEXTOS_10303.ETIQUETA_DE_ARCHIVO;
   }
 
   /**
@@ -499,9 +506,9 @@ export class RegistroDeDonacionComponent implements OnInit {
    * @returns {void}
    */
   activarSeleccionArchivo(): void {
-    const entradaArchivo = document.getElementById('archivoMedicamentos') as HTMLInputElement;
-    if (entradaArchivo) {
-      entradaArchivo.click();
+    const ENTRADA_ARCHIVO = document.getElementById('archivoMedicamentos') as HTMLInputElement;
+    if (ENTRADA_ARCHIVO) {
+      ENTRADA_ARCHIVO.click();
     }
   }
 
@@ -527,5 +534,5 @@ export class RegistroDeDonacionComponent implements OnInit {
    * 
    * @param event Evento de cambio de valor.
    */
-  enCambioDeValor(event: any) { }
+  enCambioDeValor(event: any): void { }
 }

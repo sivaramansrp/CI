@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { DonacionesExtranjerasService } from 'libs/shared/data-access-user/src/core/services/10303/donaciones-extranjeras/donaciones-extranjeras.service';
-import { CATALOGOS_ID } from 'libs/shared/data-access-user/src/tramites/constantes/constantes';
-import { map, merge } from 'rxjs';
-import { Contribuyente, ContribuyenteRespuesta } from 'libs/shared/data-access-user/src/core/models/10303/donaciones-extranjeras.model';
+import { Observable, map, merge } from 'rxjs';
+
+import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
+import { Contribuyente, ContribuyenteRespuesta } from '@ng-mf/data-access-user';
+import { DonacionesExtranjerasService } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar los datos del fabricante.
@@ -97,7 +97,7 @@ export class DatosDelFabricanteComponent implements OnInit {
    * Inicializa los catálogos necesarios, como el de países.
    */
   inicializaCatalogos(): void {
-    const pais$ = this.donacionesExtranjerasService
+    const PAIS$: Observable<void> = this.donacionesExtranjerasService
       .getPaises(CATALOGOS_ID.CAT_PAIS)
       .pipe(
         map((resp) => {
@@ -106,7 +106,7 @@ export class DatosDelFabricanteComponent implements OnInit {
       );
 
     merge(
-      pais$
+      PAIS$
     ).subscribe();
   }
 
@@ -120,19 +120,19 @@ export class DatosDelFabricanteComponent implements OnInit {
     //Implementar la lógica para buscar el colaborador por RFC
     this.donacionesExtranjerasService.buscarContribuyente(id).subscribe({
       next: (result: ContribuyenteRespuesta) => {
-        const data = result?.data[0];
-        if (data !== null) {
+        const DATA = result?.data[0];
+        if (DATA !== null) {
           if (valor === 6) {
-            this.fabricante(data, true);
+            this.fabricante(DATA, true);
           }
           else {
-            alert("Valor erronio");
+            console.error("Valor erronio");
           }
         } else {
           if (valor === 6) {
-            this.fabricante(data, false);
+            this.fabricante(DATA, false);
           } else {
-            alert("Valor erronio");
+            console.error("Valor erronio");
           }
         }
       }

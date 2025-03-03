@@ -1,85 +1,50 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
 
-import { Component } from '@angular/core';
+import { AlertComponent } from '@ng-mf/data-access-user';
 import { RegistroSolicitudPageComponent } from './registro-solicitud-page.component';
-import { AlertComponent, WizardComponent } from '@ng-mf/data-access-user';
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 describe('RegistroSolicitudPageComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<RegistroSolicitudPageComponent>;
+  let component: RegistroSolicitudPageComponent;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule],
       declarations: [
         RegistroSolicitudPageComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective,
         WizardComponent,
         AlertComponent
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-
-      ]
-    }).overrideComponent(RegistroSolicitudPageComponent, {
-
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     }).compileComponents();
+
     fixture = TestBed.createComponent(RegistroSolicitudPageComponent);
     component = fixture.debugElement.componentInstance;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #seleccionaTab()', async () => {
-
-    component.seleccionaTab({});
-
+  it('should run #seleccionaTab()', () => {
+    component.seleccionaTab(1);
+    expect(component.indice).toBe(1);
   });
 
-  it('should run #getValorIndice()', async () => {
-    component.wizardComponent = component.wizardComponent || {};
+  it('should run #getValorIndice()', () => {
+    component.wizardComponent = component.wizardComponent || {} as WizardComponent;
     component.wizardComponent.siguiente = jest.fn();
     component.wizardComponent.atras = jest.fn();
-    component.getValorIndice({
-      valor: {},
-      accion: {}
-    });
-    // expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    // expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
+    component.getValorIndice({ valor: 2, accion: 'cont' });
+    expect(component.indice).toBe(2);
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
 
+    component.getValorIndice({ valor: 1, accion: 'prev' });
+    expect(component.indice).toBe(1);
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
+  });
 });

@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { map, merge } from 'rxjs';
 
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { DonacionesExtranjerasService } from 'libs/shared/data-access-user/src/core/services/10303/donaciones-extranjeras/donaciones-extranjeras.service';
+import { DonacionesExtranjerasService } from '@ng-mf/data-access-user';
 
-import { Contribuyente, ContribuyenteRespuesta } from 'libs/shared/data-access-user/src/core/models/10303/donaciones-extranjeras.model';
-import { CATALOGOS_ID } from 'libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
+import { Contribuyente, ContribuyenteRespuesta } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar los datos de la persona autorizada para recibir donaciones.
@@ -100,7 +99,7 @@ export class DatosPersonaOirRecibirComponent implements OnInit {
   * Llama al servicio `donacionesExtranjerasService` para obtener la lista de países.
   */
   inicializaCatalogos(): void {
-    const pais$ = this.donacionesExtranjerasService
+    const PAIS$ = this.donacionesExtranjerasService
       .getPaises(CATALOGOS_ID.CAT_PAIS)
       .pipe(
         map((resp) => {
@@ -109,7 +108,7 @@ export class DatosPersonaOirRecibirComponent implements OnInit {
       );
 
     merge(
-      pais$
+      PAIS$
     ).subscribe();
   }
 
@@ -122,19 +121,19 @@ export class DatosPersonaOirRecibirComponent implements OnInit {
     // Implement the logic to search for the contributor by RFC
     this.donacionesExtranjerasService.buscarContribuyente(id).subscribe({
       next: (result: ContribuyenteRespuesta) => {
-        const data = result?.data[0];
-        if (data !== null) {
+        const DATA = result?.data[0];
+        if (DATA !== null) {
           if (valor === 4) {
-            this.construirPOyR(data, true);
+            this.construirPOyR(DATA, true);
           }
           else {
-            alert("Valor erronio");
+            console.error("Valor erronio");
           }
         } else {
           if (valor === 4) {
-            this.construirPOyR(data, false);
+            this.construirPOyR(DATA, false);
           } else {
-            alert("Valor erronio");
+            console.error("Valor erronio");
           }
         }
       }

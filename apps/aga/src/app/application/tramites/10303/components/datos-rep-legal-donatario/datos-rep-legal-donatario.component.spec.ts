@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
+
+import { AlertComponent, CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { ContribuyenteRespuesta } from '@ng-mf/data-access-user';
 import { DatosRepLegalDonatarioComponent } from './datos-rep-legal-donatario.component';
-import { DonacionesExtranjerasService } from 'libs/shared/data-access-user/src/core/services/10303/donaciones-extranjeras/donaciones-extranjeras.service';
-import { ContribuyenteRespuesta } from 'libs/shared/data-access-user/src/core/models/10303/donaciones-extranjeras.model';
-import { CATALOGOS_ID } from 'libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { DonacionesExtranjerasService } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-// import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { CatalogoSelectComponent, AlertComponent } from '@ng-mf/data-access-user';
 
 describe('DatosRepLegalDonatarioComponent', () => {
   let component: DatosRepLegalDonatarioComponent;
   let fixture: ComponentFixture<DatosRepLegalDonatarioComponent>;
   let donacionesExtranjerasService: DonacionesExtranjerasService;
 
-  const paisMock = { data: [{ id: 1, descripcion: 'México' }] };
-  const contribuyenteMock: ContribuyenteRespuesta = {
+  const PAIS_MOCK = { data: [{ id: 1, descripcion: 'México' }] };
+  const CONTRIBUYENTE_MOCK: ContribuyenteRespuesta = {
     data: [{
       rfc: 'ABC123456789',
       razonSocial: 'Empresa S.A. de C.V.',
@@ -33,19 +33,19 @@ describe('DatosRepLegalDonatarioComponent', () => {
     }]
   };
 
-  const contribuyenteNotFoundMock: ContribuyenteRespuesta = { data: [] };
+  const CONTRIBUYENTE_NOT_FOUND_MOCK: ContribuyenteRespuesta = { data: [] };
 
   beforeEach(async () => {
-    const donacionesExtranjerasServiceMock = {
-      getPaises: jest.fn().mockReturnValue(of(paisMock)),
-      buscarContribuyente: jest.fn().mockReturnValue(of(contribuyenteMock))
+    const DONACIONES_EXTRANJERAS_SERVICE_MOCK = {
+      getPaises: jest.fn().mockReturnValue(of(PAIS_MOCK)),
+      buscarContribuyente: jest.fn().mockReturnValue(of(CONTRIBUYENTE_MOCK))
     };
 
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, CatalogoSelectComponent, AlertComponent],
       declarations: [DatosRepLegalDonatarioComponent],
       providers: [
-        { provide: DonacionesExtranjerasService, useValue: donacionesExtranjerasServiceMock }
+        { provide: DonacionesExtranjerasService, useValue: DONACIONES_EXTRANJERAS_SERVICE_MOCK }
       ]
     })
     .compileComponents();
@@ -85,7 +85,7 @@ describe('DatosRepLegalDonatarioComponent', () => {
   });
 
   it('should reset form fields when contributor is not found', () => {
-    (donacionesExtranjerasService.buscarContribuyente as jest.Mock).mockReturnValue(of(contribuyenteNotFoundMock));
+    (donacionesExtranjerasService.buscarContribuyente as jest.Mock).mockReturnValue(of(CONTRIBUYENTE_NOT_FOUND_MOCK));
     component.buscarContribuyenteRfc(2, 'XYZ987654321');
     expect(component.rfcRepLegalDonatario).toBe('');
     expect(component.nombreRepLegalDonatario).toBe('');
@@ -101,7 +101,7 @@ describe('DatosRepLegalDonatarioComponent', () => {
   });
 
   it('should show alert when an invalid value is passed to `buscarContribuyenteRfc`', () => {
-    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    jest.spyOn(window, 'alert').mockImplementation(() => undefined);
     component.buscarContribuyenteRfc(0, 'ABC123456789'); // Invalid value
     expect(window.alert).toHaveBeenCalledWith('Valor erronio');
   });
@@ -128,7 +128,7 @@ describe('DatosRepLegalDonatarioComponent', () => {
   });
 
   it('should call `restablecerFormulario` when contributor data is not found', () => {
-    (donacionesExtranjerasService.buscarContribuyente as jest.Mock).mockReturnValue(of(contribuyenteNotFoundMock));
+    (donacionesExtranjerasService.buscarContribuyente as jest.Mock).mockReturnValue(of(CONTRIBUYENTE_NOT_FOUND_MOCK));
     jest.spyOn(component, 'restablecerFormulario');
     component.buscarContribuyenteRfc(2, 'XYZ987654321'); // RFC not found
     expect(component.restablecerFormulario).toHaveBeenCalled();

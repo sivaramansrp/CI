@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { map, merge } from 'rxjs';
 
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { DonacionesExtranjerasService } from 'libs/shared/data-access-user/src/core/services/10303/donaciones-extranjeras/donaciones-extranjeras.service';
+import { DonacionesExtranjerasService } from '@ng-mf/data-access-user';
 
-import { CATALOGOS_ID } from 'libs/shared/data-access-user/src/tramites/constantes/constantes';
-import { DATOS_DONATE_EXTRANJERO_LABELS } from 'libs/shared/data-access-user/src/tramites/constantes/10303/donaciones-extranjeras.enum';
+import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
+import { DATOS_DONATE_EXTRANJERO_LABELS } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar los datos del donante extranjero.
@@ -53,7 +52,7 @@ export class DatosDonanteExtranjeroComponent implements OnInit {
    * Inicializa los catálogos de países y documentos de residencia.
    */
   inicializaCatalogos(): void {
-    const pais$ = this.donacionesExtranjerasService
+    const PAIS$ = this.donacionesExtranjerasService
       .getPaises(CATALOGOS_ID.CAT_PAIS)
       .pipe(
         map((resp) => {
@@ -61,7 +60,7 @@ export class DatosDonanteExtranjeroComponent implements OnInit {
         })
       );
 
-    const cveDocumentoResidencia$ = this.donacionesExtranjerasService
+    const CVE_DOCUMENTO_RESIDENCIA$ = this.donacionesExtranjerasService
       .getDocumentoResidencia(CATALOGOS_ID.CAT_DOCUMENTO_RESIDENCIA)
       .pipe(
         map((resp) => {
@@ -70,8 +69,8 @@ export class DatosDonanteExtranjeroComponent implements OnInit {
       );
 
     merge(
-      pais$,
-      cveDocumentoResidencia$
+      PAIS$,
+      CVE_DOCUMENTO_RESIDENCIA$
     ).subscribe();
   }
 }
