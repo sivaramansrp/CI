@@ -88,11 +88,6 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
   validarYEnviarFormulario(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      console.log(
-        'El formulario tiene errores. Corríjalos antes de continuar.'
-      );
-    } else {
-      console.log('Formulario enviado con éxito', this.form.value);
-    }
+    } 
   }
 }

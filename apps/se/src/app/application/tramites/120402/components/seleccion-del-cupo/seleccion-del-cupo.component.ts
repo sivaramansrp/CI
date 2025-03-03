@@ -164,7 +164,6 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.seleccionDelCupo = data;
-        console.log(this.seleccionDelCupo, 'table json');
       });
   }
 }

@@ -135,7 +135,7 @@ export class RepresentacionFederalComponent implements OnInit {
    * @access public
    */
   public entidadoOnChange(event: Event): void {
-    console.log('Cambio en la entidad seleccionada', event);
+    // Cambio en la entidad seleccionada'
   }
 
   /**
