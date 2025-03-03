@@ -11,10 +11,11 @@
  */
 
 import { Component, ViewChild } from '@angular/core';
-import { PASOS } from 'libs/shared/data-access-user/src/tramites/constantes/80208/solicitud-modalidad.enums';
-import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/80208/solicitud-modalidad.model';
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
+import { DatosPasos } from '@ng-mf/data-access-user';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from '../../constantes/solicitud-modalidad.enums';
 import { WizardComponent } from '@ng-mf/data-access-user';
+
 
 
 /**
@@ -31,11 +32,7 @@ interface AccionBoton {
   styleUrl: './solicitud-modalidad-page.component.scss'
 })
 export class SolicitudModalidadPageComponent {
-
-  title(title: any) {
-    throw new Error('Método no implementado.');
-  }
-
+  
   /**
    * @property {Array<ListaPasosWizard>} pasos - Array de pasos del wizard.
    */
@@ -68,6 +65,7 @@ export class SolicitudModalidadPageComponent {
    * El `valor` representa el índice del paso al que ir.
    * La `accion` determina si avanzar (cont) o retroceder (atras).
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
@@ -79,11 +77,11 @@ export class SolicitudModalidadPageComponent {
     }
   }
 
-  /**
-   * Obtener un título para todas las paginas.
-   * @param valor - valor del índice de pagina. --80208
-   */
-  obtenerNombreDelTítulo(valor: number): string {
-    throw new Error('Método no implementado.');
-  }
+  // /**
+  //  * Obtener un título para todas las paginas.
+  //  * @param valor - valor del índice de pagina. --80208
+  //  */
+  //  obtenerNombreDelTítulo(valor: number): string {
+  //   throw new Error('Método no implementado.');
+  // }
 }

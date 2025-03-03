@@ -1,29 +1,25 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { ToastrModule, provideToastr } from 'ngx-toastr';
 import { PasoCuatroComponent } from './paso-cuatro.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 
 
 describe('PasoCuatroComponent', () => {
   let fixture;
-  let component;
+  let component!: PasoCuatroComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
+      imports: [FormsModule, ReactiveFormsModule, ToastrModule],
       declarations: [
-        PasoCuatroComponent,
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-
+        provideToastr({
+          positionClass: 'toast-top-right',
+        }),
       ]
     }).overrideComponent(PasoCuatroComponent, {
 
@@ -32,8 +28,7 @@ describe('PasoCuatroComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  it('should run #constructor()', async () => {
+  it('debería ejecutar #constructor()', () => {
     expect(component).toBeTruthy();
   });
-
 });

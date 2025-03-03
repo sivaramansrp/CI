@@ -1,90 +1,70 @@
-// @ts-nocheck
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA, Directive, Injectable, Input, NO_ERRORS_SCHEMA, Output, Pipe, PipeTransform } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
-import { CambioDeModalidadComponent } from './cambio-de-modalidad.component';
+import { CambioDeModalidadComponent } from '../cambio-de-modalidad/cambio-de-modalidad.component';
+import { CambioModalidadService } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
-import { CambioModalidadService } from 'libs/shared/data-access-user/src/core/services/80208/cambio-modalidad.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-
+import { of as observableOf } from 'rxjs';
 
 describe('CambioDeModalidadComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<CambioDeModalidadComponent>;
+  let component: CambioDeModalidadComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, CambioDeModalidadComponent, HttpClientTestingModule ],
+      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule, CambioDeModalidadComponent],
       declarations: [
+        
       ],
-      providers: [
-        FormBuilder,
-        CambioModalidadService
-      ]
-    }).overrideComponent(CambioDeModalidadComponent, {
-
+      providers: [FormBuilder, CambioModalidadService],
     }).compileComponents();
     fixture = TestBed.createComponent(CambioDeModalidadComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
   });
 
-
-  it('should run #ngOnInit()', async () => {
+  it('should run #ngOnInit()', () => {
     component.inicializarForm = jest.fn();
-    component.getcargarDatos = jest.fn();
+    component.getCargarDatos = jest.fn();
     component.disableFormControls = jest.fn();
     component.getCambioDeModalidad = jest.fn();
     component.getServiciosImmx = jest.fn();
     component.ngOnInit();
     expect(component.inicializarForm).toHaveBeenCalled();
-    expect(component.getcargarDatos).toHaveBeenCalled();
+    expect(component.getCargarDatos).toHaveBeenCalled();
     expect(component.disableFormControls).toHaveBeenCalled();
     expect(component.getCambioDeModalidad).toHaveBeenCalled();
     expect(component.getServiciosImmx).toHaveBeenCalled();
   });
 
-  it('should run #inicializarForm()', async () => {
+  it('should run #inicializarForm()', () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.inicializarForm();
     expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should run #getcargarDatos()', async () => {
+  it('should run #getcargarDatos()', () => {
     component.modalidadService = component.modalidadService || {};
     component.modalidadService.getDatosSimulados = jest.fn().mockReturnValue(observableOf({}));
     component.cambioDeModalidadForm = component.cambioDeModalidadForm || {};
     component.cambioDeModalidadForm.patchValue = jest.fn();
-    component.getcargarDatos();
+    component.getCargarDatos();
     expect(component.modalidadService.getDatosSimulados).toHaveBeenCalled();
     expect(component.cambioDeModalidadForm.patchValue).toHaveBeenCalled();
   });
 
-  it('should run #getServiciosImmx()', async () => {
+  it('should run #getServiciosImmx()', () => {
     component.modalidadService = component.modalidadService || {};
-    component.modalidadService.getServiciosImmx = jest.fn().mockReturnValue(observableOf({
-      data: {}
-    }));
+    component.modalidadService.getServiciosImmx = jest.fn().mockReturnValue(observableOf({ data: {} }));
     component.getServiciosImmx();
     expect(component.modalidadService.getServiciosImmx).toHaveBeenCalled();
   });
 
-  it('should run #getCambioDeModalidad()', async () => {
+  it('should run #getCambioDeModalidad()', () => {
     component.modalidadService = component.modalidadService || {};
-    component.modalidadService.getCambioDeModalidad = jest.fn().mockReturnValue(observableOf({
-      cambioModalidad: {
-        data: {}
-      }
-    }));
+    component.modalidadService.getCambioDeModalidad = jest.fn().mockReturnValue(observableOf({ cambioModalidad: { data: {} } }));
     component.cambioDeModalidadForm = component.cambioDeModalidadForm || {};
-    component.cambioDeModalidadForm.get = jest.fn().mockReturnValue({
-      value: {}
-    });
+    component.cambioDeModalidadForm.get = jest.fn().mockReturnValue({ value: {} });
     component.toggleServiciosImmx = jest.fn();
     component.getCambioDeModalidad();
     expect(component.modalidadService.getCambioDeModalidad).toHaveBeenCalled();
@@ -92,33 +72,27 @@ describe('CambioDeModalidadComponent', () => {
     expect(component.toggleServiciosImmx).toHaveBeenCalled();
   });
 
-  it('should run #disableFormControls()', async () => {
+  it('should run #disableFormControls()', () => {
     component.cambioDeModalidadForm = component.cambioDeModalidadForm || {};
-    component.cambioDeModalidadForm.get = jest.fn().mockReturnValue({
-      disable: function() {}
-    });
+    component.cambioDeModalidadForm.get = jest.fn().mockReturnValue({ disable: jest.fn() });
     component.disableFormControls();
     expect(component.cambioDeModalidadForm.get).toHaveBeenCalled();
   });
 
-  it('should run #toggleServiciosImmx()', async () => {
-    component.cambioDeModalidad = [{ id: 1 }, { id: 2 }];
-    component.cambioDeModalidad.find = jest.fn().mockReturnValue({
-      id: {}
-    });
-    component.toggleServiciosImmx({});
+  it('should run #toggleServiciosImmx()', () => {
+    component.cambioDeModalidad = [{ id: 1, descripcion: 'desc1' }, { id: 2, descripcion: 'desc2' }];
+    component.cambioDeModalidad.find = jest.fn().mockReturnValue({ id: {} });
+    component.toggleServiciosImmx(1);
     expect(component.cambioDeModalidad.find).toHaveBeenCalled();
   });
 
-  it('should run #onDropdownSelect()', async () => {
+  it('should run #onDropdownSelect()', () => {
     component.toggleServiciosImmx = jest.fn();
-    component.onDropdownSelect({
-      id: {}
-    });
+    component.onDropdownSelect({ id: {} });
     expect(component.toggleServiciosImmx).toHaveBeenCalled();
   });
 
-  it('should run #ngOnDestroy()', async () => {
+  it('should run #ngOnDestroy()', () => {
     component.unsubscribe$ = component.unsubscribe$ || {};
     component.unsubscribe$.next = jest.fn();
     component.unsubscribe$.complete = jest.fn();
@@ -126,5 +100,4 @@ describe('CambioDeModalidadComponent', () => {
     expect(component.unsubscribe$.next).toHaveBeenCalled();
     expect(component.unsubscribe$.complete).toHaveBeenCalled();
   });
-
 });

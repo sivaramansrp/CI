@@ -1,13 +1,12 @@
-
+import { CambioDeModalidadForm, CambioModalidadResponse } from '../modelos/cambio-de-modalidad.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RespuestaCatalogos } from '../../models/shared/catalogos.model';
-import { CambioDeModalidadForm, CambioModalidadResponse } from '../../models/80208/cambio-de-modalidad.model';
+import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 @Injectable({
   providedIn: 'root'
-})
+})  
 
 export class CambioModalidadService {
 
@@ -23,7 +22,9 @@ export class CambioModalidadService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    // No se necesita lógica de inicialización adicional.
+  }
 
   /**
    * Obtiene los datos simulados para el formulario de cambio de modalidad.
@@ -51,4 +52,5 @@ export class CambioModalidadService {
   getCambioDeModalidad(): Observable<CambioModalidadResponse> {
     return this.http.get<CambioModalidadResponse>(`${this.datosSimuladosUrl}cambio-de-modalidad.json`);
   }
+
 }

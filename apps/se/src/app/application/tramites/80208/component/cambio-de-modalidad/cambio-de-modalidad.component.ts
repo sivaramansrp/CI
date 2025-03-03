@@ -1,16 +1,35 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CambioModalidadService } from 'libs/shared/data-access-user/src/core/services/80208/cambio-modalidad.service';
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { CambioModalidad, CONFIGURACION_SERVICIO, ServicioInfo } from 'libs/shared/data-access-user/src/core/models/80208/cambio-de-modalidad.model';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Validators } from '@angular/forms';
+
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { ConfiguracionColumna } from '../../modelos/cambio-de-modalidad.model';
+
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+
+import { Subject } from 'rxjs';
+
+import { CONFIGURACION_SERVICIO } from '../../modelos/cambio-de-modalidad.model';
+
+import { takeUntil } from 'rxjs/operators';
+
+import { CambioModalidad } from '../../modelos/cambio-de-modalidad.model';
+import { ServicioInfo } from '../../modelos/cambio-de-modalidad.model';
+
+import { CambioModalidadService } from '../../service/cambio-modalidad.service';
+
 
 /**
  * Componente para gestionar el cambio de modalidad.
@@ -73,7 +92,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * Subject para manejar la desuscripción de observables.
    * @type {Subject<void>}
    */
-  private unsubscribe$ = new Subject<void>();
+  public unsubscribe$ = new Subject<void>();
 
   /**
    * Formulario para el cambio de modalidad.
@@ -112,10 +131,13 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * @param {FormBuilder} fb - Constructor de formularios.
    * @param {CambioModalidadService} modalidadService - Servicio para gestionar los cambios de modalidad.
    */
+
   constructor(
-    private fb: FormBuilder,
-    private modalidadService: CambioModalidadService
-  ) { }
+    public fb: FormBuilder,
+    public modalidadService: CambioModalidadService
+  ) { 
+    // No se necesita lógica de inicialización adicional.
+  }
 
   /**
    * Método de inicialización del componente.
@@ -157,7 +179,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   getCargarDatos(): void {
     this.modalidadService.getDatosSimulados()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data: any) => {
+      .subscribe((data) => {
         this.cambioDeModalidadForm.patchValue(data);
       });
   }
@@ -181,11 +203,11 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   getCambioDeModalidad(): void {
     this.modalidadService.getCambioDeModalidad().subscribe((data) => {
       this.cambioDeModalidad = data.cambioModalidad.data;
-      const seleccionadaId = this.cambioDeModalidadForm.get('cambioDeModalidad')?.value;
-      if (seleccionadaId) {
-        this.toggleServiciosImmx(seleccionadaId);
+      const SELECCIONADAID = this.cambioDeModalidadForm.get('cambioDeModalidad')?.value;
+      if (SELECCIONADAID) {
+        this.toggleServiciosImmx(SELECCIONADAID);
       }
-    });
+    }); 
   }
 
   /**
@@ -204,16 +226,16 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   /**
    * Alterna la visibilidad de los servicios IMMX según la modalidad seleccionada.
    * 
-   * @param {number} seleccionadaId - ID de la modalidad seleccionada.
+   * @param {number} SELECCIONADAID - ID de la modalidad seleccionada.
    * @returns {void}
    */
-  toggleServiciosImmx(seleccionadaId: number): void {
-    if (!seleccionadaId || !this.cambioDeModalidad.length) {
+  toggleServiciosImmx(SELECCIONADAID: number): void {
+    if (!SELECCIONADAID || !this.cambioDeModalidad.length) {
       this.espectaculoServiciosImmx = false;
       return;
     }
-    const opcionSeleccionada = this.cambioDeModalidad.find(item => item.id === seleccionadaId);
-    this.espectaculoServiciosImmx = opcionSeleccionada?.descripcion?.toUpperCase() === 'SERVICIOS';
+    const OPCIONSELECCIONADA = this.cambioDeModalidad.find(item => item.id === SELECCIONADAID);
+    this.espectaculoServiciosImmx = OPCIONSELECCIONADA?.descripcion?.toUpperCase() === 'SERVICIOS';
   }
 
   /**

@@ -1,29 +1,24 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
 import { PasoTresComponent } from './paso-tres.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { provideToastr } from 'ngx-toastr';
 
 
 
 describe('PasoTresComponent', () => {
   let fixture;
-  let component;
+  let component!: PasoTresComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
+      imports: [FormsModule, ReactiveFormsModule],
       declarations: [
-        PasoTresComponent,
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [provideToastr({
+        positionClass: 'toast-top-right',
+      }),
 
       ]
     }).overrideComponent(PasoTresComponent, {
@@ -32,9 +27,10 @@ describe('PasoTresComponent', () => {
     fixture = TestBed.createComponent(PasoTresComponent);
     component = fixture.debugElement.componentInstance;
   });
-
-  it('should run #constructor()', async () => {
+  it('debería ejecutar #constructor()', () => {
     expect(component).toBeTruthy();
   });
 
 });
+
+
