@@ -11,7 +11,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Catalogo, RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { ElegibilidadTextilesService } from 'libs/shared/data-access-user/src/core/services/120301/elegibilidad-textiles/elegibilidad-textiles.service';
+import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
 @Component({
   selector: 'importador-en-destino',
