@@ -5,12 +5,11 @@ import { AsignacionComponent } from './pages/asignacion/asignacion.component';
 import { AsignacionDirectaDeCupoComponent } from './pages/asignacion-directa-de-cupo/asignacion-directa-de-cupo.component';
 import { AsignacionDirectaDeCupoRoutingModule } from './asignacion-directa-de-cupo-routing.module';
 import { CantidadSolicitadaComponent } from './components/cantidad-solicitada/cantidad-solicitada.component';
-import { CortinaALaItalianaComponent } from './pages/cortina-a-la-italiana/cortina-a-la-italiana.component';
 import { DescripcionDelCupoComponent } from './components/descripcion-del-cupo/descripcion-del-cupo.component';
 import { provideHttpClient } from '@angular/common/http';
 
 import { RepresentacionFederalComponent } from './components/representacion-federal/representacion-federal.component';
-import { SeleccionDelCupoComponent } from './components/seleccion-del-cupo/seleccion-del-cupo.component'
+import { SeleccionDelCupoComponent } from './components/seleccion-del-cupo/seleccion-del-cupo.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -18,13 +17,17 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 
-import { BtnContinuarComponent, SolicitanteComponent } from '@ng-mf/data-access-user';
+import {
+  BtnContinuarComponent,
+  SolicitanteComponent,
+} from '@ng-mf/data-access-user';
+import { DatosComponent } from './pages/datos/datos.component';
 
 @NgModule({
   declarations: [
     AsignacionDirectaDeCupoComponent,
     AsignacionComponent,
-    CortinaALaItalianaComponent,
+    DatosComponent,
   ],
   imports: [
     CommonModule,
@@ -38,7 +41,7 @@ import { BtnContinuarComponent, SolicitanteComponent } from '@ng-mf/data-access-
     CantidadSolicitadaComponent,
     AlertComponent,
     SolicitanteComponent,
-    BtnContinuarComponent
+    BtnContinuarComponent,
   ],
   providers: [provideHttpClient()],
 })
