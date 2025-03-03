@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="col-md-12">
+        <label for="nombreDonante" class="form-label">{{datosDonanteExtranjero.nombreLabel}}* :</label>
+        <input type="text" class="form-control" id="nombreDonante" name="razonSocial" maxlength="120">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <label for="calleDonante" class="form-label">{{datosDonanteExtranjero.calleLabel}}* :</label>
+        <input type="text" class="form-control" id="calleDonante" name="calleDonante" maxlength="120">
+    </div>
+    <div class="col-md-4">
+        <label for="numExteriorLabel" class="form-label">{{datosDonanteExtranjero.numExteriorLabel}}* :</label>
+        <input type="text" class="form-control" id="numExteriorLabel" name="numExteriorLabel" maxlength="55">
+    </div>
+    <div class="col-md-4">
+        <label for="numInteriorDonante" class="form-label">{{datosDonanteExtranjero.numInteriorLabel}} :</label>
+        <input type="text" class="form-control" id="numInteriorDonante" name="numInteriorDonante" maxlength="55">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <app-catalogo-select [catalogo]="pais" [label]="'País'" [required]="true" name="pais"></app-catalogo-select>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label" for="codigoPostalDonante">{{ datosDonanteExtranjero.codigoPostalLabel }}*
+            :</label>
+        <input type="text" class="form-control" id="codigoPostalDonante" name="codigoPostal" maxlength="12">
+    </div>
+    <div class="col-md-4">
+        <label class="form-label" for="estadoDonante">{{ datosDonanteExtranjero.estadoLabel }}* :</label>
+        <input type="text" class="form-control" id="estadoDonante" name="informacionExtra" maxlength="55">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <label for="ciudadLabel" class="form-label">{{datosDonanteExtranjero.ciudadLabel}}* :</label>
+        <input type="text" class="form-control" id="coloniaDonante" name="coloniaDonante" maxlength="30">
+    </div>
+    <div class="col-md-4">
+        <label for="correoElectronicoLabel" class="form-label">{{datosDonanteExtranjero.correoElectronicoLabel}}
+            :</label>
+        <input type="text" class="form-control" id="correoElectronicoDonante" name="correoElectronicoDonante"
+            maxlength="50">
+    </div>
+    <div class="col-md-4">
+        <label for="telefonoLabel" class="form-label">{{datosDonanteExtranjero.telefonoLabel}} :</label>
+        <input type="text" class="form-control" id="telefonoDonante" name="telefonoDonante" maxlength="50">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <app-catalogo-select [catalogo]="cveDocumentoResidencia"
+            [label]="'Documento con el que acredita su residencia en el extranjero'" [required]="true"
+            name="cveDocumentoResidencia"></app-catalogo-select>
+    </div>
+</div>

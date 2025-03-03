@@ -1,0 +1,66 @@
+<div class="row">
+    <div class="col-md-4">
+        <label class="form-label" for="rfcRepLegalDonatario">R.F.C.* :</label>
+        <span class="bi bi-question-circle-fill" title="Registro Federal de Contribuyentes"
+            data-bs-toggle="tooltip"></span>
+        <input type="text" class="form-control" id="rfcRepLegalDonatario" name="rfc" maxlength="13"
+            (blur)="buscarContribuyenteRfc(2, 'rfcRepLegalDonatario')">
+    </div>
+    <div class="col-md-8">
+        <label class="form-label" for="nombreRepLegalDonatario">Nombre: </label>
+        <input type="text" class="form-control" id="nombreRepLegalDonatario" name="nombre" [(ngModel)]="nombreRepLegalDonatario"
+            disabled>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <label class="form-label" for="calleRepLegalDonatario">Calle: </label>
+        <input type="text" class="form-control" id="calleRepLegalDonatario" name="alle" [(ngModel)]="calleRepLegalDonatario" disabled>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label" for="numExteriorRepLegalDonatario">Número exterior: </label>
+        <input type="text" class="form-control" id="numExteriorRepLegalDonatario" name="numeroExterior"
+            [(ngModel)]="numExteriorRepLegalDonatario" disabled>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label" for="numInteriorRepLegalDonatario">Número interior: </label>
+        <input type="text" class="form-control" id="numInteriorRepLegalDonatario" name="numeroInterior"
+            [(ngModel)]="numInteriorRepLegalDonatario" disabled>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <app-catalogo-select [catalogo]="pais" [label]="'País'" [isDisabled]="true" name="pais"
+            [(ngModel)]="cvePaisRepLegalDonatario"></app-catalogo-select>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label" for="codigoPostal">Código postal: </label>
+        <input type="text" class="form-control" id="codigoPostalRepLegalDonatario" name="codigoPostal"
+            [(ngModel)]="codigoPostalRepLegalDonatario" disabled>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label" for="informacionExtra" name="estado">Estado: </label>
+        <input type="text" class="form-control" id="estadoRepLegalDonatario" name="informacionExtra"
+            [(ngModel)]="estadoRepLegalDonatario" disabled>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <label class="form-label" for="colonia">Colonia: </label>
+        <input type="text" class="form-control" id="coloniaRepLegalDonatario" name="colonia" [(ngModel)]="coloniaRepLegalDonatario"
+            disabled>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label" for="correoElectronico">Correo electrónico: </label>
+        <input type="text" class="form-control" id="correoElectronicoRepLegalDonatario" name="correoElectronico"
+            [(ngModel)]="correoElectronicoRepLegalDonatario" disabled>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label" for="telefono">Teléfono: </label>
+        <input type="text" class="form-control" id="telefonoRepLegalDonatario" name="telefono" [(ngModel)]="telefonoRepLegalDonatario"
+            disabled>
+    </div>
+</div>
