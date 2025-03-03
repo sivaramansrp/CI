@@ -1,19 +1,32 @@
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { Catalogo, RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Catalogo, 
+  CatalogoSelectComponent,
+  FormularioDinamico,
+  TablaDinamicaComponent, 
+  TablaSeleccion, 
+  UppercaseDirective 
+  } from '@ng-mf/data-access-user';
+
+  import {
+    FormBuilder,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+  } from '@angular/forms';
+
+import { CONFIGURACION_DOMICILIOS, CONFIGURACION_SERVICIO_IMMEX } from "../../constantes/modificacion.enum";
+import { Servicio,ServicioInmex,Servicios} from "../../models/datos-info.model";
+import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
+import { ApiResponse} from "../../models/datos-info.model";
+import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
+
+import{Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { CONFIGURACION_DOMICILIOS, CONFIGURACION_SERVICIO_IMMEX } from '../../constantes/modificacion.enum';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { Component} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AmpliacionServiciosService } from 'libs/shared/data-access-user/src/core/services/80205/ampliacion-servicios.service';
-import { FormularioDinamico } from 'libs/shared/data-access-user/src/core/models/shared/forms-model';
-import { Servicios } from 'libs/shared/data-access-user/src/core/models/80205/ampliacion-servicios.model';
 import { Subscription } from 'rxjs';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { UppercaseDirective } from 'libs/shared/data-access-user/src/tramites/directives/Uppercase/uppercase.directive';
+
+
+
 
 /**
  * Componente para la ampliación de servicios.
@@ -22,6 +35,19 @@ import { UppercaseDirective } from 'libs/shared/data-access-user/src/tramites/di
  * @templateUrl ./ampliacion-servicios.component.html
  * @styleUrl ./ampliacion-servicios.component.scss
  */
+
+/*interface Servicio {
+  descripcion: string;
+  tipode: string;
+}
+interface ServicioInmex {
+  Servicio: string;
+  RegistroContribuyentes: string;
+  DenominaciónSocial: string;
+  NumeroIMMEX: string;
+  AñoIMMEX: string;
+}
+*/
 @Component({
   selector: 'ampliacion-servicios',
   standalone: true,
@@ -36,7 +62,10 @@ import { UppercaseDirective } from 'libs/shared/data-access-user/src/tramites/di
   templateUrl: './ampliacion-servicios.component.html',
   styleUrl: './ampliacion-servicios.component.scss',
 })
-export class AmpliacionServiciosComponent implements OnInit {
+
+export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
+
+  
   /**
    * Índice de la pestaña.
    * @property {number} tabindex
@@ -44,29 +73,22 @@ export class AmpliacionServiciosComponent implements OnInit {
   @Input() tabindex!: number;
 
   private subscription: Subscription = new Subscription();
-
   tipoPersona!: number;
   domicilioFiscal: FormularioDinamico[] = [];
-  tableHeaderData: string[] = [];
   serviciosDropDown: string = "";
-  recibioDatos: any = '';
+  recibioDatos: Servicio[] = [];
   formularioInfoRegistro!: FormGroup;
-  tablaseleccion: any = 'RADIO';
+  tablaSeleccion: TablaSeleccion = TablaSeleccion.RADIO
   rfcEmpresa: string = '';
   numeroPrograma: string = '';
   tiempoPrograma: string = '';
-  configuracionTabla: ConfiguracionColumna<any>[] = CONFIGURACION_DOMICILIOS;
-  configuracionTablaServicio: ConfiguracionColumna<any>[] = CONFIGURACION_SERVICIO_IMMEX;
-  datos: any = [];
-  datosImmex: any = [];
-  domiciliosSeleccionados: any = [];
-  empresasSeleccionados: any = [];
-  /**
-   * Variable para almacenar los datos cuando se hace clic en el botón "Agregar".
-   * @property {any[]} datosEmpresas
-   */
-  datosEmpresas: any[] = [];
-  datosDelaSolicitud!: FormGroup;
+  configuracionTabla: ConfiguracionColumna<ServicioInmex>[]= CONFIGURACION_DOMICILIOS;
+  configuracionTablaServicio: ConfiguracionColumna<Servicio>[] = CONFIGURACION_SERVICIO_IMMEX;
+  datos :ServicioInmex[] = [];
+  datosImmex:Servicio[] = [];
+  domiciliosSeleccionados: Servicio[] = [];
+  empresasSeleccionados: ServicioInmex[] = [];
+  
   forma!: FormGroup;
   aduanaDeIngreso!: Catalogo[];
   autorizadosBodyData: [] = [];
@@ -84,8 +106,7 @@ export class AmpliacionServiciosComponent implements OnInit {
     private ampliacionServiciosService: AmpliacionServiciosService,
     private readonly httpServicios: HttpClient
   ) {
-    this.crearFormulario();
-    this.initActionFormBuild();
+   
     this.inicializarFormularioInfoRegistro();
   }
 
@@ -93,7 +114,7 @@ export class AmpliacionServiciosComponent implements OnInit {
    * Método de inicialización del componente.
    * @method ngOnInit
    */
-  ngOnInit() {
+  ngOnInit():void {
     this.obtenerIngresoSelectList();
     this.inicializarFormularioInfoRegistro();
     this.getDatos();
@@ -105,14 +126,17 @@ export class AmpliacionServiciosComponent implements OnInit {
    */
   getDatos(): void {
     this.subscription.add(
-      this.ampliacionServiciosService.getDatos().subscribe((respuesta: any) => {
-        if (respuesta && respuesta['code'] == 200) {
-          this.infoRegistro = respuesta['data'].infoServicios;
+      this.ampliacionServiciosService.getDatos().subscribe((respuesta) => {
+        const RESPONSE = respuesta as unknown as ApiResponse; 
+        if (RESPONSE && RESPONSE.code === 200) {
+          this.infoRegistro = RESPONSE.data.infoServicios;
           this.inicializarFormularioInfoRegistro();
         }
       })
     );
   }
+  
+  
 
   /**
    * Inicializa el formulario de información de registro.
@@ -138,42 +162,29 @@ export class AmpliacionServiciosComponent implements OnInit {
    * Crea un formulario vacío con dos grupos de formularios, datosGenerales y domicilioFiscal.
    * @method crearFormulario
    */
-  crearFormulario(): void {
-    this.forma = this.fb.group({
-      datosDelaSolicitud: this.fb.group({}),
-    });
-  }
-
+  
   /**
    * Obtiene la lista de selección de ingreso.
    * @method obtenerIngresoSelectList
    */
   obtenerIngresoSelectList(): void {
     this.subscription.add(
-      this.ampliacionServiciosService.obtenerIngresoSelectList().subscribe((data: any): void => {
-        const datos = data?.data;
-        this.aduanaDeIngreso = datos;
+      this.ampliacionServiciosService.obtenerIngresoSelectList().subscribe((data)=> {
+        const DATOS= data as Catalogo[];
+        this.aduanaDeIngreso = DATOS;
       })
+      
     );
   }
 
-  /**
-   * Inicializa el formulario de acción.
-   * @method initActionFormBuild
-   */
-  initActionFormBuild(): void {
-    this.datosDelaSolicitud = this.fb.group({
-      aduanaIngreso: ['', Validators.required],
-    });
-  }
 
   /**
    * Elimina servicios del grid.
    * @method eliminarServiciosGrid
    */
   eliminarServiciosGrid(): void {
-    const indice = this.datosImmex.findIndex((item: any) => item.descripiónDelServicio === this.domiciliosSeleccionados[0].descripiónDelServicio);
-    this.datosImmex.splice(indice, 1);
+    const INDICE = this.datosImmex.findIndex((item:Servicio) => item.descripiónDelServicio === this.domiciliosSeleccionados[0]?.['descripiónDelServicio']);
+    this.datosImmex.splice(INDICE, 1);
   }
 
   /**
@@ -181,8 +192,8 @@ export class AmpliacionServiciosComponent implements OnInit {
    * @method agregarServiciosAmpliacion
    */
   agregarServiciosAmpliacion(): void {
-    let cuerpoDatos = { descripiónDelServicio: this.recibioDatos.descripcion, tipode: this.recibioDatos.tipode };
-    this.datosImmex.push(cuerpoDatos);
+    const CUERPODATOS = { descripcionDelServicio: this.recibioDatos[0].descripcion, tipode: this.recibioDatos[0].tipode };
+this.datosImmex.push(CUERPODATOS);
   }
 
   /**
@@ -190,8 +201,8 @@ export class AmpliacionServiciosComponent implements OnInit {
    * @method eliminarEmpresasNacionales
    */
   eliminarEmpresasNacionales(): void {
-    const indice = this.datos.findIndex((item: any) => item.RegistroContribuyentes === this.empresasSeleccionados[0].RegistroContribuyentes);
-    this.datos.splice(indice, 1);
+    const INDICE = this.datos.findIndex((item:ServicioInmex) => item.RegistroContribuyentes === this.empresasSeleccionados[0]?.RegistroContribuyentes);
+    this.datos.splice(INDICE, 1);
   }
 
   /**
@@ -199,8 +210,8 @@ export class AmpliacionServiciosComponent implements OnInit {
    * @method actualizaGridEmpresasNacionales
    */
   actualizaGridEmpresasNacionales(): void {
-    let cuerpoDatos = { Servicio: "Auditoría de sistemas de seguridad", RegistroContribuyentes: this.rfcEmpresa, DenominaciónSocial: "AAL970927390", NumeroIMMEX: this.numeroPrograma, AñoIMMEX: this.tiempoPrograma };
-    this.datos.push(cuerpoDatos);
+    const CUERPODATOS = { Servicio: "Auditoría de sistemas de seguridad", RegistroContribuyentes: this.rfcEmpresa, DenominaciónSocial: "AAL970927390", NumeroIMMEX: this.numeroPrograma, AñoIMMEX: this.tiempoPrograma };
+    this.datos.push(CUERPODATOS);
     this.rfcEmpresa = '';
     this.numeroPrograma = '';
     this.tiempoPrograma = '';
@@ -220,18 +231,19 @@ export class AmpliacionServiciosComponent implements OnInit {
    * @method procesarDatosDelHijo
    * @param {any} data - Datos recibidos.
    */
-  procesarDatosDelHijo(data: any): void {
-    this.recibioDatos = data;
+  procesarDatosDelHijo(data: Catalogo | Catalogo[]): void {
+   
+    this.recibioDatos = Array.isArray(data) ? data : [data];
   }
+  
 
   /**
    * Selecciona domicilios.
    * @method seleccionarDomicilios
    * @param {any} domicilios - Domicilios seleccionados.
    */
-  seleccionarDomicilios(domicilios: any): void {
+  seleccionarDomicilios(domicilios: Servicio): void {
     this.domiciliosSeleccionados = [{ ...domicilios }];
-    console.log(domicilios);
   }
 
   /**
@@ -239,8 +251,7 @@ export class AmpliacionServiciosComponent implements OnInit {
    * @method seleccionarEmpresas
    * @param {any} empresas - Empresas seleccionadas.
    */
-  seleccionarEmpresas(empresas: any): void {
+  seleccionarEmpresas(empresas: ServicioInmex): void {
     this.empresasSeleccionados = [{ ...empresas }];
-    console.log(empresas);
   }
 }

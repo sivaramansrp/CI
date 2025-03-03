@@ -1,0 +1,39 @@
+export interface ServicioInmex {
+    Servicio?: string;
+    RegistroContribuyentes?: string;
+    DenominaciónSocial?: string;
+    NumeroIMMEX?: string;
+    AñoIMMEX?: string;
+  }
+ export interface Servicio {
+        descripiónDelServicio?:string;
+        descripcion?: string;
+        tipode?: string;
+    }  
+
+    export interface InfoServicios {
+        seleccionaLaModalidad: string;
+        folio: string;
+        año: string;
+      }
+    
+      export interface Servicios{
+        seleccionaLaModalidad: string;
+        folio: string;
+        año:string;
+      }
+     export interface ResponseData {
+        idsubmanufacturer: string;
+        infoServicios: InfoServicios;
+      }
+      
+     export interface ApiResponse {
+        code: number;
+        data: ResponseData;
+      }
+    export interface AccionBoton {
+        accion: string;
+        valor: number;
+      }
+      
+      

@@ -1,4 +1,8 @@
-
+import {
+  Servicio,
+  ServicioInmex
+  
+} from '../models/datos-info.model';
 export const PASOS = [
     {
         indice: 1,
@@ -29,27 +33,27 @@ export const PASOS = [
 export const CONFIGURACION_DOMICILIOS = [
   {
     encabezado: 'Servicio',
-    clave: (ele: any) => ele.Servicio,
+    clave:  (ele: ServicioInmex ): string | undefined => ele.Servicio,
     orden: 1
   },
   {
     encabezado: 'Registro federal de contribuyentes',
-    clave: (ele: any) => ele.RegistroContribuyentes,
+    clave: (ele: ServicioInmex ): string | undefined => ele.RegistroContribuyentes,
     orden: 2
   },
   {
     encabezado: 'Denominación o razón socialNúmero Interior',
-    clave: (ele: any) => ele.DenominaciónSocial,
+    clave:(ele: ServicioInmex ): string | undefined => ele.DenominaciónSocial,
     orden: 3
   },
   {
     encabezado: 'Numero del programa IMMEX',
-    clave: (ele: any) => ele.NumeroIMMEX,
+    clave:(ele: ServicioInmex ): string | undefined => ele.NumeroIMMEX,
     orden: 4
   },
   {
     encabezado: 'Año del programa IMMEXad',
-    clave: (ele: any) => ele.AñoIMMEX,
+    clave: (ele: ServicioInmex ): string | undefined => ele.AñoIMMEX,
     orden: 5
   },
  
@@ -57,12 +61,12 @@ export const CONFIGURACION_DOMICILIOS = [
   export const CONFIGURACION_SERVICIO_IMMEX = [
     {
       encabezado: 'Descripión del servicio',
-      clave: (ele: any) => ele.descripiónDelServicio,
+      clave:(ele: Servicio): string | undefined => ele.descripiónDelServicio,
       orden: 1
     },
     {
-      encabezado: 'Tipo de',
-      clave: (ele: any) => ele.tipode,
+      encabezado: 'Tipo de servicio',
+      clave: (ele: Servicio): string | undefined => ele.tipode,
       orden: 2
     },
    

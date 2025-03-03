@@ -1,4 +1,5 @@
 import { TEXTOS } from './tramites/constantes/servicios-extraordinarios.enum';
+import { UppercaseDirective } from './tramites/directives/Uppercase/uppercase.directive';
 export * from './tramites/pages/acuse-page/acuse-page.component';
 
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
@@ -75,3 +76,8 @@ export * from './tramites/constantes/regex.constants';
 export * from './core/services/130118/pexim/pexim.service';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
+export { PASOS as TODAPASOS } from './tramites/constantes/certificado-zoosanitario.enum';
+export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
+export * from './core/enums/tabla-seleccion.enum';
+export * from './tramites/directives/Uppercase/uppercase.directive'
+

@@ -1,7 +1,6 @@
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';  
 import { NgModule } from '@angular/core';
-import { RegistroPageComponent } from './pages/registro-page/registro-page.component';
-
+import { RegistroPageComponent } from './pages/registro-page/registro-page.component'; 
 /**
  * @fileoverview Módulo de enrutamiento para el registro de certificados zoosanitarios.
  * Define las rutas para la navegación dentro del módulo de registro de certificados.

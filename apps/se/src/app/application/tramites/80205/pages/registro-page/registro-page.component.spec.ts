@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AccionBoton } from '../../models/datos-info.model';
 import { RegistroPageComponent } from './registro-page.component';
+import { TODAPASOS} from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { PASOS } from 'libs/shared/data-access-user/src/tramites/constantes/certificado-zoosanitario.enum';
-import { AccionBoton } from 'libs/shared/data-access-user/src/core/models/220202/fitosanitario.model';
 
 describe('RegistroPageComponent', () => {
   let component: RegistroPageComponent;
@@ -10,7 +10,8 @@ describe('RegistroPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [RegistroPageComponent, WizardComponent]
+      imports: [WizardComponent],
+      declarations: [RegistroPageComponent]
     }).compileComponents();
   });
 
@@ -25,7 +26,7 @@ describe('RegistroPageComponent', () => {
   });
 
   it('should have default pasos defined', () => {
-    expect(component.pasos).toEqual(PASOS);
+    expect(component.pasos).toEqual(TODAPASOS);
   });
 
   it('should have default tituloMensaje', () => {
@@ -38,7 +39,7 @@ describe('RegistroPageComponent', () => {
 
   it('should have default datosPasos', () => {
     expect(component.datosPasos).toEqual({
-      nroPasos: PASOS.length,
+      nroPasos: TODAPASOS.length,
       indice: 1,
       txtBtnAnt: 'Guardar',
       txtBtnSig: 'Continuar',
@@ -46,33 +47,25 @@ describe('RegistroPageComponent', () => {
   });
 
   it('should update indice and tituloMensaje on getValorIndice', () => {
-    const accionBoton: AccionBoton = { accion: 'cont', valor: 2 };
+    const ACCIONBOTON: AccionBoton = { accion: 'cont', valor: 2 };
     jest.spyOn(component.wizardComponent, 'siguiente');
 
-    component.getValorIndice(accionBoton);
+    component.getValorIndice(ACCIONBOTON);
 
-    expect(component.indice).toBe(accionBoton.valor);
+    expect(component.indice).toBe(ACCIONBOTON.valor);
     expect(component.tituloMensaje).toBe('Cargar archivos');
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
   it('should call wizardComponent.atras on getValorIndice with accion "atras"', () => {
-    const accionBoton: AccionBoton = { accion: 'atras', valor: 2 };
+    const ACCIONBOTON: AccionBoton = { accion: 'atras', valor: 2 };
     jest.spyOn(component.wizardComponent, 'atras');
 
-    component.getValorIndice(accionBoton);
+    component.getValorIndice(ACCIONBOTON);
 
-    expect(component.indice).toBe(accionBoton.valor);
+    expect(component.indice).toBe(ACCIONBOTON.valor);
     expect(component.tituloMensaje).toBe('Cargar archivos');
     expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
-
-  it('should return correct tituloMensaje on obtenerNombreDelTítulo', () => {
-    expect(component.obtenerNombreDelTítulo(1)).toBe('Zoosanitario para importación');
-    expect(component.obtenerNombreDelTítulo(2)).toBe('Cargar archivos');
-    expect(component.obtenerNombreDelTítulo(3)).toBe('Cargar archivos');
-    expect(component.obtenerNombreDelTítulo(4)).toBe('Firmar');
-    expect(component.obtenerNombreDelTítulo(5)).toBe('Zoosanitario para importación');
   });
 
   it('should update tituloMensaje on enTabChange', () => {

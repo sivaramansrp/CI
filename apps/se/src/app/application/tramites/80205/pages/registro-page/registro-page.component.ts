@@ -1,9 +1,15 @@
-import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
-
-import { AccionBoton, ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/220202/fitosanitario.model';
-import { PASOS } from 'libs/shared/data-access-user/src/tramites/constantes/certificado-zoosanitario.enum';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { TODAPASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+
+import { Component, ViewChild } from '@angular/core';
+
+
+interface AccionBoton {
+  accion: string;
+  valor: number;
+}
 
 /**
  * @fileoverview Componente principal para el formulario de certificado zoosanitario.
@@ -23,7 +29,7 @@ export class RegistroPageComponent {
    * Array de pasos del asistente.
    * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
    */
-  pasos: ListaPasosWizard[] = PASOS;
+  pasos: ListaPasosWizard[] = TODAPASOS;
 
   /**
    * Título del mensaje principal.
@@ -58,7 +64,7 @@ export class RegistroPageComponent {
    * Mensaje de éxito para el primer paso.
    * @property {string} mensajeDeTextoDeExito - Mensaje que se muestra si el primer paso se completa con éxito.
    */
-  mensajeDeTextoDeExito: string = "SUCECESS_MESSAGE_STAGEONE";
+  mensajeDeTextoDeExito: string = "MENSAJE_DE_ÉXITO_ETAPA_UNO";
 
   /**
    * Maneja la acción del botón y navega entre los pasos.
@@ -68,7 +74,7 @@ export class RegistroPageComponent {
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
-      this.tituloMensaje = this.obtenerNombreDelTítulo(e.valor);
+      this.tituloMensaje =RegistroPageComponent.obtenerNombreDelTítulo(e.valor);
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
@@ -83,7 +89,8 @@ export class RegistroPageComponent {
    * @param {number} valor - El índice de la página.
    * @returns {string} - El título correspondiente.
    */
-  obtenerNombreDelTítulo(valor: number): string {
+   static obtenerNombreDelTítulo(valor: number): string {
+    // eslint-disable-next-line @typescript-eslint/class-methods-use-this
     switch (valor) {
       case 1:
         return 'Zoosanitario para importación';

@@ -62,12 +62,9 @@
   <div class="col-md-8">
    
     <div class="form-group"  >
-       <!--- <label for="serviciosImmexServ">Servicios IMMEX:</label>-->
        <app-catalogo-select
           [catalogo]="aduanaDeIngreso"
-          formControlName="aduanaIngreso"
           [label]="'Servicios IMMEX'"
-          
           name="aduanaIngreso"
           (selectionChange)="procesarDatosDelHijo($event)"
         ></app-catalogo-select> 
@@ -95,7 +92,7 @@
 </div>
 <div class="my-4">
 
-<app-tabla-dinamica  [tipoSeleccionTabla]="tablaseleccion" (filaSeleccionada)="seleccionarDomicilios($event)"  [configuracionTabla]="configuracionTablaServicio"
+<app-tabla-dinamica  [tipoSeleccionTabla]="tablaSeleccion" (filaSeleccionada)="seleccionarDomicilios($event)"  [configuracionTabla]="configuracionTablaServicio"
 [datos]="datosImmex"></app-tabla-dinamica>
 <div class="row">
     <div class="col-md-8">
@@ -105,7 +102,7 @@
     </div>  
 </div>
 <div class="my-4">
- <app-tabla-dinamica  [tipoSeleccionTabla]="tablaseleccion"   [configuracionTabla]="configuracionTablaServicio"
+ <app-tabla-dinamica  [tipoSeleccionTabla]="tablaSeleccion"   [configuracionTabla]="configuracionTablaServicio"
     ></app-tabla-dinamica></div>
 
 <div class="row">
@@ -132,7 +129,7 @@
     </div>
     <div class="col-md-4">
         <div class="form-group">
-            <label for="tiempoPrograma">Ano del Programa IMMEX:</label>
+            <label for="tiempoPrograma">Año del Programa IMMEX:</label>
             <input type="text" id="tiempoPrograma" [(ngModel)]="tiempoPrograma" name="tiempoPrograma" class="form-control" />
         </div>
     </div>
@@ -160,7 +157,7 @@
     </div>  
 </div>
 
-<app-tabla-dinamica [tipoSeleccionTabla]="tablaseleccion" (filaSeleccionada)="seleccionarEmpresas($event)"  [configuracionTabla]="configuracionTabla"
+<app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" (filaSeleccionada)="seleccionarEmpresas($event)"  [configuracionTabla]="configuracionTabla"
 [datos]="datos"></app-tabla-dinamica>
 
 </div>

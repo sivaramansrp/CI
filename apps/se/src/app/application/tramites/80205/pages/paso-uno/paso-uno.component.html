@@ -1,28 +1,35 @@
 <div class="container">
   <div class="row">
     <ul class="nav nav-tabs">
-      <ul class="nav nav-tabs">
-        <li
-          *ngFor="let tab of seccionesDeLaSolicitud"
-          [ngClass]="indice === tab.index ? 'active' : ''"
+      <li [ngClass]="indice === 1 ? 'active' : ''">
+        <a
+          data-toggle="tab"
+          (click)="seleccionaTab(1)"
+          (keydown.enter)="seleccionaTab(1)"
+          (keydown.space)="seleccionaTab(1)"
+          role="button"
+          tabindex="0"
+          >Solicitante</a
         >
-          <a
-            data-toggle="tab"
-            (click)="seleccionaTab(tab.index)"
-            (keydown.enter)="seleccionaTab(tab.index)"
-            tabindex="0"
-            >{{ tab.title }}</a
-          >
-        </li>
-      </ul>
+      </li>
+      <li [ngClass]="indice === 2 ? 'active' : ''">
+        <a
+          data-toggle="tab"
+          (click)="seleccionaTab(2)"
+          (keydown.enter)="seleccionaTab(2)"
+          (keydown.space)="seleccionaTab(2)"
+          role="button"
+          tabindex="2"
+          >Servicios</a
+        >
+      </li>
     </ul>
-
     <ng-container>
       @switch (indice) { @case (1) {
-      <solicitante></solicitante>
+      <solicitante [tabindex]="1"></solicitante>
       } @case (2) {
-        <ampliacion-servicios></ampliacion-servicios>
-      }  }
+      <ampliacion-servicios [tabindex]="2"></ampliacion-servicios>
+      } }
     </ng-container>
   </div>
 </div>

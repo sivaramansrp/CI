@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AlertComponent } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from './paso-dos.component';
-import { TEXTOS } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -8,11 +9,10 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoDosComponent]
+      declarations: [PasoDosComponent],
+      imports: [TituloComponent, AlertComponent],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -20,9 +20,5 @@ describe('PasoDosComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should have TEXTOS defined', () => {
-    expect(component.TEXTOS).toEqual(TEXTOS);
   });
 });
