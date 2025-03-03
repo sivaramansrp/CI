@@ -147,9 +147,9 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
    * Realiza una llamada al servicio para obtener los domicilios de la entidad seleccionada.
    */
   buscarDomicilios(): void {
-    const entidad = this.formularioControl?.value;
+    const ENTIDAD = this.formularioControl?.value;
 
-    if (entidad && entidad !== '-1') {
+    if (ENTIDAD && ENTIDAD !== '-1') {
       this.modificionService
         .obtenerDomicilios()
         .pipe(takeUntil(this.destroyNotifier$))
