@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitarTransferenciaCuposMainComponent } from './solicitar-transferencia-cupos-main.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
+
 import { SOLICITARPASOS } from '@ng-mf/data-access-user';
 
 describe('SolicitarTransferenciaCuposMainComponent', () => {
@@ -42,25 +42,25 @@ describe('SolicitarTransferenciaCuposMainComponent', () => {
   });
 
   it('debería actualizar el índice y llamar a wizardComponent.siguiente() cuando se llama a getValorIndice con la acción "cont"', () => {
-    const e = { accion: 'cont', valor: 2 };
-    component.getValorIndice(e);
+    const E = { accion: 'cont', valor: 2 };
+    component.getValorIndice(E);
     expect(component.indice).toBe(2);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
   it('debería actualizar el índice y llamar a wizardComponent.atras() cuando se llama a getValorIndice con la acción "atras"', () => {
-    const e = { accion: 'atras', valor: 1 };
+    const E = { accion: 'atras', valor: 1 };
     component.indice = 2; // Establecer el índice inicial a 2
-    component.getValorIndice(e);
+    component.getValorIndice(E);
     expect(component.indice).toBe(1);
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
   it('no debería actualizar el índice ni llamar a los métodos de wizardComponent cuando se llama a getValorIndice con un valor inválido', () => {
-    const e = { accion: 'cont', valor: 0 };
-    const initialIndex = component.indice;
-    component.getValorIndice(e);
-    expect(component.indice).toBe(initialIndex);
+    const E = { accion: 'cont', valor: 0 };
+    const INITIALINDEX = component.indice;
+    component.getValorIndice(E);
+    expect(component.indice).toBe(INITIALINDEX);
     expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
     expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });

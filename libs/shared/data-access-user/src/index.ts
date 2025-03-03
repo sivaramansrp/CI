@@ -43,7 +43,7 @@ export * from  './tramites/components/table/table.component';
 export * from  './tramites/components/terceros/terceros.component';
 export * from  './tramites/components/titulo/titulo.component';
 export * from './tramites/components/crosslist/crosslist.component';
-export * from './lib/data-access-user/data-access-user.component';
+// export * from './lib/data-access-user/data-access-user.component';
 export * from './lib/user.service';
 export * from './tramites/shared.module';
 export * from './tramites/components/breadcrumb/breadcrumb.component';
@@ -78,4 +78,5 @@ export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 export * from './core/enums/solicitar-tranfera.enum'; 
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './core/enums/tabla-seleccion.enum'
-export * from './tramites/constantes/120501/licitaciones-disponibles-table-data.enum'
+export * from './tramites/constantes/120501/licitaciones-disponibles-table-data.enum';
+export * from './core/services/120501/licitacionesDisponibles.service'

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
@@ -23,14 +24,13 @@ import { TableComponent } from '@ng-mf/data-access-user';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { LicitacionesDisponiblesService } from 'libs/shared/data-access-user/src/core/services/120501/licitacionesDisponibles.service';
+import { LicitacionesDisponiblesService } from '@ng-mf/data-access-user';
 
 import { Subject, takeUntil } from 'rxjs';
 
 import { TablaSeleccion } from '@ng-mf/data-access-user'
 
-import { CONFIGURACION_ACCIONISTAS } from 'libs/shared/data-access-user/src/tramites/constantes/120501/licitaciones-disponibles-table-data.enum';
-//import { DatosPasos } from '@ng-mf/data-access-user';
+import { CONFIGURACION_ACCIONISTAS } from '@ng-mf/data-access-user';
 
 
 /**
