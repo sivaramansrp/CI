@@ -5,7 +5,8 @@ import {
   ListaPasosWizard,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
+import { PASOS } from '../../constantes/pasos.enum';
+
 
 
 /**
