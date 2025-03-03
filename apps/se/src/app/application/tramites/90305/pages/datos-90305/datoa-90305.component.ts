@@ -28,7 +28,7 @@ export class Datoa90305Component implements AfterViewInit {
    * Llama al método `obtenerTipoPersona` del componente SolicitanteComponent
    * para establecer el tipo de persona como MORAL_NACIONAL.
    */
-  ngAfterViewInit() {
+  ngAfterViewInit() :void{
     this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
 

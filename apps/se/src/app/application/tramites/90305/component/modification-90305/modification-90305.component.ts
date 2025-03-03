@@ -4,17 +4,18 @@
  * Este componente gestiona la modificación de datos en el trámite 90305.
  * Contiene múltiples subcomponentes que representan diferentes secciones del proceso de modificación.
  */
-
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+
+import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, PASOS } from '@ng-mf/data-access-user';
+
 import { ConsultadDomicilios90305Component } from '../consultad-domicilios-90305/consultad-domicilios-90305.component';
 import { ListaDomicilios90305Component } from '../lista-domicilios-90305/lista-domicilios-90305.component';
-import { Plantas90305Component } from '../plantas-90305/plantas-90305.component';
-import { Sector90305Component } from '../sector-90305/sector-90305.component';
 import { Mercancias90305Component } from '../mercancias-90305/mercancias-90305.component';
-import { ProductorIndirecto90305Component } from '../productorIndirecto-90305/productorIndirecto-90305.component';
 import { ModificacionInfo90305Component } from '../modificacion-info-90305/modificacion-info-90305.component';
-import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, PASOS } from '@ng-mf/data-access-user';
+import { Plantas90305Component } from '../plantas-90305/plantas-90305.component';
+import { ProductorIndirecto90305Component } from '../productorIndirecto-90305/productorIndirecto-90305.component';
+import { Sector90305Component } from '../sector-90305/sector-90305.component';
 
 /**
  * selector app-modification-90305

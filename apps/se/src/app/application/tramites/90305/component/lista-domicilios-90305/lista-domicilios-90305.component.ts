@@ -7,15 +7,18 @@
  * y se presentan en una tabla dinámica.
  */
 
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { PROSEC_MODIFICATION_MODEL } from 'libs/shared/data-access-user/src/core/models/90305/prosec-modificacion.model';
-import { ProsecModificacionServiceTsService } from 'libs/shared/data-access-user/src/core/services/90305/prosec-modificacion.service.ts.service';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+
+import {TablaDinamicaComponent, TablaSeleccion,TituloComponent} from '@ng-mf/data-access-user';
+
+import { PROSEC_MODIFICATION_MODEL } from '@ng-mf/data-access-user';
+
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+
+import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
 
 /**
  * compo doc

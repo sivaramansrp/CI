@@ -1,14 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ListaDomicilios90305Component } from './lista-domicilios-90305.component';
-import { ProsecModificacionServiceTsService } from 'libs/shared/data-access-user/src/core/services/90305/prosec-modificacion.service.ts.service';
+import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
+
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
+
 import { ReactiveFormsModule } from '@angular/forms';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { PROSEC_MODIFICATION_MODEL } from 'libs/shared/data-access-user/src/core/models/90305/prosec-modificacion.model';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 describe('ListaDomicilios90305Component', () => {
   let component: ListaDomicilios90305Component;

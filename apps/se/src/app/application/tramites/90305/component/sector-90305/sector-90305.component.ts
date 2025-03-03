@@ -5,15 +5,19 @@
  * Este componente muestra la información de los sectores registrados en el trámite 90305.
  * Utiliza una tabla dinámica para visualizar la información de los sectores.
  */
+import { CommonModule } from '@angular/common';
 
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { SECTOR_MODEL } from 'libs/shared/data-access-user/src/core/models/90305/prosec-modificacion.model';
+
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { ProsecModificacionServiceTsService } from 'libs/shared/data-access-user/src/core/services/90305/prosec-modificacion.service.ts.service';
+
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { SECTOR_MODEL } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+
+import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
+
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 /**
  * compo doc
@@ -36,13 +40,15 @@ export class Sector90305Component implements OnInit {
   /*
   *constructor
   */
-  constructor(private listaDomicilios: ProsecModificacionServiceTsService) {}
+  constructor(private listaDomicilios: ProsecModificacionServiceTsService) {
+    //constructor
+  }
   
   /**
    * Método de inicialización del componente.
    * Carga la información de los sectores al iniciar.
    */
-  ngOnInit() {
+  ngOnInit():void {
     this.loadSector();
   }
   
@@ -56,7 +62,7 @@ export class Sector90305Component implements OnInit {
   /**
    * Método para obtener la lista de sectores desde el servicio.
    */
-  loadSector() {
+  loadSector() :void{
     this.listaDomicilios.getSector().subscribe((resp) => {
       this.sectorData = resp;
     });

@@ -5,15 +5,19 @@
  * Este componente muestra la información de los productores indirectos registrados en el trámite 90305.
  * Utiliza una tabla dinámica para visualizar la información.
  */
+import { CommonModule } from '@angular/common';
 
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { PRODUCTOR_INDIRECTO } from 'libs/shared/data-access-user/src/core/models/90305/prosec-modificacion.model';
-import { ProsecModificacionServiceTsService } from 'libs/shared/data-access-user/src/core/services/90305/prosec-modificacion.service.ts.service';
+
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { PRODUCTOR_INDIRECTO } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+
+import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
+
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 /**
  * compo doc
@@ -35,19 +39,21 @@ export class ProductorIndirecto90305Component implements OnInit{
   /** Lista de productores indirectos obtenidos del servicio */
   productoIndData: PRODUCTOR_INDIRECTO[] = [];
 
-  constructor(private listaDomicilios: ProsecModificacionServiceTsService) {}
+  constructor(private listaDomicilios: ProsecModificacionServiceTsService) {
+    //constructor
+  }
 
   /**
    * Carga la información de los productores indirectos al inicializar el componente.
    */
-  ngOnInit(){
+  ngOnInit(): void {
     this.loadProductoIndirecto();
   }
 
   /**
    * Método para obtener la lista de productores indirectos desde el servicio.
    */
-  loadProductoIndirecto() {
+  loadProductoIndirecto():void {
     this.listaDomicilios.getProductoIndirecto().subscribe((resp) => {
       this.productoIndData = resp;
     });

@@ -5,15 +5,21 @@
  * relacionadas con Prosec. Los datos se obtienen del servicio `ProsecModificacionServiceTsService`.
  */
 
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { MERCANCIAS_MODEL } from 'libs/shared/data-access-user/src/core/models/90305/prosec-modificacion.model';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { ProsecModificacionServiceTsService } from 'libs/shared/data-access-user/src/core/services/90305/prosec-modificacion.service.ts.service';
+
+import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+
+import { MERCANCIAS_MODEL } from '@ng-mf/data-access-user';
+
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+
+import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 /**
  * selector app-mercancias-90305

@@ -6,14 +6,19 @@
  * Utiliza una tabla dinámica para visualizar la información y obtiene los datos desde un servicio.
  */
 
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+
+import { Component, OnInit } from '@angular/core';
+
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { PLANTAS } from 'libs/shared/data-access-user/src/core/models/90305/prosec-modificacion.model';
-import { ProsecModificacionServiceTsService } from 'libs/shared/data-access-user/src/core/services/90305/prosec-modificacion.service.ts.service';
+
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { PLANTAS } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+
+import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
+
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 /**
  * compo doc
@@ -57,7 +62,7 @@ export class Plantas90305Component implements OnInit {
   /**
    * Método que se ejecuta al inicializar el componente y carga la información de las plantas.
    */
-  ngOnInit() {
+  ngOnInit() :void{
     this.loadPlantaComplementaria();
   }
 

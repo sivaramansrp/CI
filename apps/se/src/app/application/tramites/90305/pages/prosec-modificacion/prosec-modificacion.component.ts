@@ -10,7 +10,7 @@ import { Component } from '@angular/core';
 
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 
-import { PROSEC_MODIFICATION } from 'libs/shared/data-access-user/src/core/services/90305/prosec-modificacion.enum';
+import { PROSEC_MODIFICATION } from '@ng-mf/data-access-user';
 
 /**
  * compo doc

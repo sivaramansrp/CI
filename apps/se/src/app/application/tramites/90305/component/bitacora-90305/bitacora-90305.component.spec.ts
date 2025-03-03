@@ -1,12 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Bitacora90305Component } from './bitacora-90305.component';
-import { ProsecModificacionServiceTsService } from 'libs/shared/data-access-user/src/core/services/90305/prosec-modificacion.service.ts.service';
-import { BITACORA_MODEL } from 'libs/shared/data-access-user/src/core/models/90305/prosec-modificacion.model';
+
+import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
+
+import { BITACORA_MODEL } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
+
 import { CommonModule } from '@angular/common';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
+
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+
+import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { AlertComponent } from '@ng-mf/data-access-user';
 
 describe('Bitacora90305Component', () => {
   let component: Bitacora90305Component;

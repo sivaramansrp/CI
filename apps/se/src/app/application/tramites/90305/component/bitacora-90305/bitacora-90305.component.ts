@@ -10,19 +10,19 @@ import { CommonModule } from '@angular/common';
 
 import { Component, OnInit } from '@angular/core';
 
-import { AlertComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/alert/alert.component';
+import { AlertComponent } from '@ng-mf/data-access-user';
 
-import { TituloComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { BITACORA_MODEL } from 'libs/shared/data-access-user/src/core/models/90305/prosec-modificacion.model';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { BITACORA_MODEL } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { ProsecModificacionServiceTsService } from 'libs/shared/data-access-user/src/core/services/90305/prosec-modificacion.service.ts.service';
-import { TEXTO_ALERT } from 'libs/shared/data-access-user/src/core/services/90305/prosec-modificacion.enum';
+import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
+import { TEXTO_ALERT } from '@ng-mf/data-access-user';
 
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 /**
  * compo doc
@@ -55,7 +55,9 @@ export class Bitacora90305Component implements OnInit {
    * constructor
    * @param {ProsecModificacionServiceTsService} listaDomicilios - Servicio para obtener los datos de la bitácora
    */
-  constructor(private listaDomicilios: ProsecModificacionServiceTsService) {}
+  constructor(private listaDomicilios: ProsecModificacionServiceTsService) {
+    //constructor
+  }
 
   /**
    * Método del ciclo de vida de Angular - inicializa el componente

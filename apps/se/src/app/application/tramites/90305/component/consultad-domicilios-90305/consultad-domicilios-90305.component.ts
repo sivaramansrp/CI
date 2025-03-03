@@ -7,17 +7,18 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { CatalogoSelectComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { Catalogo } from '@ng-mf/data-access-user';
-import estado from '../../../../../../../../../libs/shared/theme/assets/json/90305/estado.json';
+
+import {ProsecModificacionServiceTsService, catalogoResponse} from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
 /**
  * @selector app-consultad-domicilios-90305
  * @standalone true
@@ -36,7 +37,7 @@ import {
 })
 export class ConsultadDomicilios90305Component implements OnInit {
   /** Catálogo de estados cargado desde un archivo JSON */
-  estadoJson: Catalogo[] = estado;
+  estadoJson:catalogoResponse[] = [];
 
   /** Formulario reactivo para la consulta de domicilios */
   formConsulta!: FormGroup;
@@ -45,12 +46,17 @@ export class ConsultadDomicilios90305Component implements OnInit {
    * constructor
    * @param {FormBuilder} fb - Constructor de formularios reactivos
    */
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,
+    private listaDomicilios: ProsecModificacionServiceTsService
+  ) {
+    //constructor
+  }
 
   /**
    * Método del ciclo de vida de Angular - inicializa el componente y configura el formulario
    */
   ngOnInit(): void {
+    this.loadEstado();
     this.formConsulta = this.fb.group({
       estadoControl: [
         {
@@ -60,4 +66,11 @@ export class ConsultadDomicilios90305Component implements OnInit {
       ],
     });
   }
+
+  loadEstado() {
+    this.listaDomicilios.getEstadoData().subscribe((resp:catalogoResponse[]) => {
+      this.estadoJson = resp;
+    });
+  }
+  
 }

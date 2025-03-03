@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BITACORA_MODEL, MERCANCIAS_MODEL, MODIFICACAION_INFO, PLANTAS, PRODUCTOR_INDIRECTO, PROSEC_MODIFICATION_MODEL, SECTOR_MODEL } from '../../models/90305/prosec-modificacion.model';
+import { BITACORA_MODEL, ESTADO_DATA, MERCANCIAS_MODEL, MODIFICACAION_INFO, PLANTAS, PRODUCTOR_INDIRECTO, PROSEC_MODIFICATION_MODEL, SECTOR_MODEL } from '../../models/90305/prosec-modificacion.model';
+import { catalogoResponse } from '../../models/shared/catalogos.model';
+import { Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -29,4 +32,11 @@ export class ProsecModificacionServiceTsService {
   getModoficacionInfo(){
     return this.http.get<MODIFICACAION_INFO>('assets/json/90305/modificacionInfo.json')
   }
+  // getEstadoData(){
+  //   return this.http.get<catalogoResponse>('assets/json/90305/estado.json')
+  // }
+  getEstadoData(): Observable<catalogoResponse[]> {
+    return this.http.get<catalogoResponse[]>('assets/json/90305/estado.json');
+  }
+  
 }

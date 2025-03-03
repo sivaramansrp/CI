@@ -1,54 +1,99 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConsultadDomicilios90305Component } from './consultad-domicilios-90305.component';
+
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { CatalogoSelectComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import estado from '../../../../../../../../../libs/shared/theme/assets/json/90305/estado.json';
+
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+
+import {CatalogoSelectComponent, ProsecModificacionServiceTsService ,TituloComponent , catalogoResponse } from '@ng-mf/data-access-user';
+
+import { of } from 'rxjs';
 
 describe('ConsultadDomicilios90305Component', () => {
   let component: ConsultadDomicilios90305Component;
   let fixture: ComponentFixture<ConsultadDomicilios90305Component>;
+  let mockService: jest.Mocked<ProsecModificacionServiceTsService>;
 
   beforeEach(async () => {
+    // Create a complete mock of the service
+    mockService = {
+      getEstadoData: jest.fn(),
+      getListaDomicilios: jest.fn(),
+      getPlantaComplementaria: jest.fn(),
+      getMercancias: jest.fn(),
+      getSector: jest.fn(),
+      getTipoProducto: jest.fn(),
+      getUnidadMedida: jest.fn(),
+    } as unknown as jest.Mocked<ProsecModificacionServiceTsService>;
+
     await TestBed.configureTestingModule({
-      imports: [CommonModule, TituloComponent, CatalogoSelectComponent, ReactiveFormsModule],
-      providers: [FormBuilder],
+      imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent],
       declarations: [ConsultadDomicilios90305Component],
+      providers: [
+        FormBuilder,
+        { provide: ProsecModificacionServiceTsService, useValue: mockService },
+      ],
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ConsultadDomicilios90305Component);
     component = fixture.componentInstance;
-    fixture.detectChanges(); // Triggers ngOnInit()
+    fixture.detectChanges();
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize estadoJson with data from estado.json', () => {
-    expect(component.estadoJson).toEqual(estado);
-  });
-
-  it('should create the form on initialization', () => {
+  it('should initialize the form with default values', () => {
     expect(component.formConsulta).toBeDefined();
-    expect(component.formConsulta.controls['estadoControl']).toBeDefined();
+    expect(component.formConsulta.get('estadoControl')).toBeDefined();
+    expect(component.formConsulta.get('estadoControl')?.disabled).toBe(false);
+    expect(component.formConsulta.get('estadoControl')?.valid).toBe(false);
   });
 
-  it('should have estadoControl disabled by default', () => {
-    expect(component.formConsulta.controls['estadoControl'].disabled).toBe(false); // Instead of toBeFalse()
+  it('should call loadEstado() on init', () => {
+    const SPY = jest.spyOn(component, 'loadEstado');
+    component.ngOnInit();
+    expect(SPY).toHaveBeenCalled();
   });
-  
-  it('should have estadoControl with required validation', () => {
-    const CONTROL = component.formConsulta.controls['estadoControl'];
-    
-    CONTROL.setValue('');
-    expect(CONTROL.valid).toBe(false); // Explicit boolean check
-    
-    CONTROL.setValue('some value');
-    expect(CONTROL.valid).toBe(true); // Explicit boolean check
+
+  it('should populate estadoJson when loadEstado() is called', () => {
+    const MOCK_DATA: catalogoResponse[] = [
+      { id: 1, descripcion: 'Estado 1' },
+      { id: 2, descripcion: 'Estado 2' },
+    ];
+    mockService.getEstadoData.mockReturnValue(of(MOCK_DATA));
+
+    component.loadEstado();
+    expect(mockService.getEstadoData).toHaveBeenCalled();
+    expect(component.estadoJson.length).toBe(2);
+    expect(component.estadoJson).toEqual(MOCK_DATA);
   });
-  
+
+  it('should handle empty API response correctly', () => {
+    mockService.getEstadoData.mockReturnValue(of([]));
+
+    component.loadEstado();
+    expect(mockService.getEstadoData).toHaveBeenCalled();
+    expect(component.estadoJson.length).toBe(0);
+  });
+
+  it('should handle form validation correctly', () => {
+    const ESTADO_CONTROLL = component.formConsulta.get('estadoControl');
+    
+    expect(ESTADO_CONTROLL?.valid).toBeFalsy();
+    
+    ESTADO_CONTROLL?.setValue('Some Value');
+    expect(ESTADO_CONTROLL?.valid).toBeTruthy();
+  });
+
+  it('should subscribe to getEstadoData() when loadEstado() is called', () => {
+    const MOCK_DATA: catalogoResponse[] = [{ id: 1, descripcion: 'Test' }];
+    mockService.getEstadoData.mockReturnValue(of(MOCK_DATA));
+
+    component.loadEstado();
+    expect(mockService.getEstadoData).toHaveBeenCalledTimes(1);
+  });
 });

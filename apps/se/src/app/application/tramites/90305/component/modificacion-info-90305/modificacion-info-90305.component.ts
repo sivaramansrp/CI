@@ -5,15 +5,14 @@
  * Este componente muestra información sobre la modificación de Prosec.
  * Obtiene los datos desde `ProsecModificacionServiceTsService` y los presenta en un formulario.
  */
-
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-
-import { ProsecModificacionServiceTsService } from 'libs/shared/data-access-user/src/core/services/90305/prosec-modificacion.service.ts.service';
-
 import { Subject } from 'rxjs';
+
+import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
+
 
 /**
  * selector app-modificacion-info-90305

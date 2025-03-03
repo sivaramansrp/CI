@@ -53,3 +53,7 @@ export interface PROSEC_MODIFICATION_MODEL {
     tipoModificacion:string;
     modificacionPrograma:string
   }
+  export interface ESTADO_DATA{
+    id :string;
+    descripcion:string;
+  }

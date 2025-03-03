@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModificacionInfo90305Component } from './modificacion-info-90305.component';
+
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { ProsecModificacionServiceTsService } from 'libs/shared/data-access-user/src/core/services/90305/prosec-modificacion.service.ts.service';
+
+import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 
 describe('ModificacionInfo90305Component', () => {
