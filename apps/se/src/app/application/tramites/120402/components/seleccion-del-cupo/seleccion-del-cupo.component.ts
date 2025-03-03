@@ -15,12 +15,7 @@ import {
   TituloComponent,
 } from '@ng-mf/data-access-user';
 
-import regimenValues from 'libs/shared/theme/assets/json/220201/regimen.json';
-import tratdosValues from 'libs/shared/theme/assets/json/110101/tratdos-dropdown.json';
-import nombreValues from 'libs/shared/theme/assets/json/220202/nombre.json';
-import subproductoValues from 'libs/shared/theme/assets/json/220202/nombre.json';
-
-import { DescripcionDelCupoService } from '@ng-mf/data-access-user';
+import { SeleccionDelCupoService } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -55,26 +50,27 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   /**
    * Lista de opciones para el campo de régimen aduanero.
    */
-  regimen: Catalogo[] = regimenValues.data;
+  regimen: Catalogo[] = [];
 
   /**
    * Lista de opciones para el campo de tratado o bloque comercial.
    */
-  tratado: Catalogo[] = tratdosValues.tratado;
+  tratado: Catalogo[] = [];
 
   /**
    * Lista de opciones para el campo de nombre de producto.
    */
-  producto: Catalogo[] = nombreValues.data;
+  producto: Catalogo[] = [];
 
   /**
    * Lista de opciones para el campo de nombre de subproducto.
    */
-  subproducto: Catalogo[] = subproductoValues.data;
+  subproducto: Catalogo[] = [];
 
   /**
    * Datos de la selección del cupo obtenidos desde el servicio.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   seleccionDelCupo: any;
 
   /**
@@ -89,7 +85,7 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private service: DescripcionDelCupoService
+    private service: SeleccionDelCupoService
   ) {}
 
   /**
@@ -99,6 +95,9 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initializeForm();
     this.loadSeleccionDelCupo();
+    this.loadRegimen();
+    this.loadTratado();
+    this.loadProducto();
   }
 
   /**
@@ -126,33 +125,50 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    * Maneja el cambio en el campo de régimen aduanero.
    * @param event - Evento de cambio.
    */
-  public regimenOnChange(event: Event): void {
-    // Lógica para manejar cambio de régimen
+  loadRegimen(): void {
+    this.service
+      .getRegimen()
+      .pipe(takeUntil(this.destroyed$))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .subscribe((data: any) => {
+        this.regimen = data.data;
+      });
   }
 
   /**
    * Maneja el cambio en el campo de tratado o bloque comercial.
    * @param event - Evento de cambio.
    */
-  public tratadoOnChange(event: Event): void {
-    // Lógica para manejar cambio de tratado
+  loadTratado(): void {
+    this.service
+      .getTratado()
+      .pipe(takeUntil(this.destroyed$))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .subscribe((data: any) => {
+        this.tratado = data.tratado;
+      });
   }
 
   /**
    * Maneja el cambio en el campo de nombre del producto.
    * @param event - Evento de cambio.
    */
-  public productoOnChange(event: Event): void {
-    // Lógica para manejar cambio de producto
+  loadProducto(): void {
+    this.service
+      .getProducto()
+      .pipe(takeUntil(this.destroyed$))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .subscribe((data: any) => {
+        this.producto = data.data;
+        this.subproducto = data.data;
+      });
   }
 
   /**
    * Maneja el cambio en el campo de nombre del subproducto.
    * @param event - Evento de cambio.
    */
-  public subproductoOnChange(event: Event): void {
-    // Lógica para manejar cambio de subproducto
-  }
+ 
 
   /**
    * Carga los datos de la selección del cupo desde el servicio.

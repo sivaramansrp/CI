@@ -76,4 +76,7 @@ export * from './core/services/130118/pexim/pexim.service';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 export * from './core/services/120402/descripcion-del-cupo/descripcionDelCupo.service';
+export * from './core/services/120402/seleccion-del-cupo/seleccion-del-cupo.service';
+export * from './core/services/120402/representacionFederal/representacion-federal.service';
 export * from './core/services/120402/asignacion-directa-de-cupo.enum';
+

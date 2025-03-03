@@ -3,31 +3,40 @@
  * @description
  * Este componente gestiona la representación federal dentro de un formulario.
  * Permite al usuario seleccionar una entidad federativa y su respectiva representación federal.
- * 
+ *
  * @since 1.0.0
  * @version 1.0.0
  * @license MIT
- * 
+ *
  * @selector app-representacion-federal
  * @standalone true
  * @requires CommonModule
  * @requires ReactiveFormsModule
  * @requires CatalogoSelectComponent
  * @requires TituloComponent
- * 
+ *
  * @templateUrl ./representacion-federal.component.html
  * @styleUrls ['./representacion-federal.component.scss']
  */
 
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
-import entidadValues from 'libs/shared/theme/assets/json/130102/entidad_federativa.json';
-import representacionValues from 'libs/shared/theme/assets/json/130102/representacion_federal.json';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  RepresentacionFederalService,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
 
 /**
  * @class RepresentacionFederalComponent
@@ -37,62 +46,85 @@ import representacionValues from 'libs/shared/theme/assets/json/130102/represent
 @Component({
   selector: 'app-representacion-federal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, TituloComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    TituloComponent,
+  ],
   templateUrl: './representacion-federal.component.html',
-  styleUrls: ['./representacion-federal.component.scss']
+  styleUrls: ['./representacion-federal.component.scss'],
 })
-export class RepresentacionFederalComponent implements OnInit {
+export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   /**
    * @property {FormGroup} representacionForm
    * @description
    * Formulario reactivo que maneja la selección de entidad federativa y representación federal.
    * Se inicializa en `ngOnInit()`.
-   * 
+   *
    * @access public
    */
   public representacionForm!: FormGroup;
+
+  /**
+   * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
+   */
+  private destroyed$ = new Subject<void>();
 
   /**
    * @property {Catalogo[]} entidad
    * @description
    * Lista de entidades federativas cargadas desde un archivo JSON.
    * Se usa para poblar el select de entidades en el formulario.
-   * 
+   *
    * @access public
    */
-  public entidad: Catalogo[] = entidadValues;
+  public entidad: Catalogo[] = [];
 
   /**
    * @property {Catalogo[]} representacion
    * @description
    * Lista de representaciones federales cargadas desde un archivo JSON.
    * Se usa para poblar el select de representaciones en el formulario.
-   * 
+   *
    * @access public
    */
-  public representacion: Catalogo[] = representacionValues;
+  public representacion: Catalogo[] = [];
 
   /**
    * @constructor
    * @description
    * Constructor que inyecta `FormBuilder` para la creación del formulario reactivo.
-   * 
+   *
    * @param {FormBuilder} fb - Servicio de Angular para construir formularios reactivos.
    * @access public
    */
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private service: RepresentacionFederalService
+  ) {}
 
   /**
    * @method ngOnInit
    * @description
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Llama a `initializeForm()` para configurar el formulario.
-   * 
+   *
    * @returns {void}
    * @access public
    */
   public ngOnInit(): void {
     this.initializeForm();
+    this.loadEntidad();
+    this.loadRepresentacion();
+  }
+
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   /**
@@ -100,7 +132,7 @@ export class RepresentacionFederalComponent implements OnInit {
    * @description
    * Inicializa el formulario reactivo con los campos requeridos.
    * Se establecen valores vacíos por defecto.
-   * 
+   *
    * @returns {void}
    * @access private
    */
@@ -125,30 +157,28 @@ export class RepresentacionFederalComponent implements OnInit {
   }
 
   /**
-   * @method entidadoOnChange
-   * @description
-   * Se ejecuta cuando el usuario cambia la entidad federativa seleccionada en el formulario.
-   * En el futuro, se integrará con una API para actualizar dinámicamente la lista de representaciones disponibles.
-   * 
-   * @param {Event} event - Evento de cambio en la selección de entidad.
-   * @returns {void}
-   * @access public
+   * Carga la información de la entidad desde el servicio y la asigna al formulario.
    */
-  public entidadoOnChange(event: Event): void {
-    // Cambio en la entidad seleccionada'
+  loadEntidad(): void {
+    this.service
+      .getEntidad()
+      .pipe(takeUntil(this.destroyed$))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .subscribe((data: any) => {
+        this.entidad = data;
+      });
   }
 
-  /**
-   * @method representacionOnChange
-   * @description
-   * Se ejecuta cuando el usuario cambia la representación federal seleccionada en el formulario.
-   * En el futuro, se integrará con una API para manejar cambios dinámicos según la entidad seleccionada.
-   * 
-   * @param {Event} event - Evento de cambio en la selección de representación federal.
-   * @returns {void}
-   * @access public
+   /**
+   * Carga la información de la representacion desde el servicio y la asigna al formulario.
    */
-  public representacionOnChange(event: Event): void {
-    console.log('Cambio en la representación seleccionada', event);
+   loadRepresentacion(): void {
+    this.service
+      .getEntidad()
+      .pipe(takeUntil(this.destroyed$))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .subscribe((data: any) => {
+        this.representacion = data;
+      });
   }
 }

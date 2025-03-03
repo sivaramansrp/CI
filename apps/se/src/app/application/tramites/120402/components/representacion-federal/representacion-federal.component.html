@@ -7,8 +7,7 @@
             [catalogo]="entidad" 
             [label]="'Entidad Federativa*'"
             name="entidad" 
-            formControlName="entidad" 
-            (change)="entidadoOnChange($event)">
+            formControlName="entidad" >
           </app-catalogo-select>
         </div>
         <div class="col-md-4">
@@ -18,7 +17,7 @@
             [required]="true"
             name="representacion" 
             formControlName="representacion"
-            (change)="representacionOnChange($event)">
+           >
           </app-catalogo-select>
         </div>
       </div>
