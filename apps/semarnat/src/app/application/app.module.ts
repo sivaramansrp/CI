@@ -40,4 +40,4 @@ import { provideHttpClient } from '@angular/common/http';
   ],
   bootstrap: [AppComponent],
 })
-export class AppSEModule {}
+export class AppSemarnatModule {}
