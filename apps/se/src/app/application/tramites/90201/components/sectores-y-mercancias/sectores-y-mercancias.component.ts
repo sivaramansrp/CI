@@ -1,12 +1,12 @@
 /* eslint-disable sort-imports */
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { ExpansionDeProductoresService } from 'libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
-import { map, merge } from 'rxjs';
+import { map, merge, Subscription } from 'rxjs';
 import { Sectoresy } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
@@ -14,92 +14,111 @@ import sectoresTabla from 'libs/shared/theme/assets/json/90201/sectores-tabla.js
 import { SectoresTabla } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 /**
  * Componente SectoresYMercancias que se utiliza para mostrar y gestionar los SectoresYMercancias.
- * 
+ *
  * Este componente utiliza varios subcomponentes como TituloComponent, CommonModule,
  * CatalogoSelectComponent,TablaDinamicaComponent y AlertComponent para mostrar información y permitir al usuario seleccionar y agregar tratados.
- * 
+ *
  * @component
  */
 @Component({
   selector: 'app-sectores-y-mercancias',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     TituloComponent,
     CatalogoSelectComponent,
     AlertComponent,
     TablaDinamicaComponent,
-    ReactiveFormsModule],
+    ReactiveFormsModule,
+  ],
   templateUrl: './sectores-y-mercancias.component.html',
   styleUrl: './sectores-y-mercancias.component.scss',
 })
-export class SectoresYMercanciasComponent {
-
-
+export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   /**
    * Una instancia de FormGroup que representa el formulario para sectores.
    * Este formulario se utiliza para gestionar y validar los datos de entrada relacionados con sectores y mercancías.
    */
   public sectoresForm!: FormGroup;
-/**
- * Indica si un elemento está seleccionado.
- * 
- * @type {boolean}
- */
-public seleccion: boolean = false;
-/**
- * Un array de objetos Catalogo que representa el catálogo de sectores.
- * Este array está inicialmente vacío y puede ser poblado con elementos Catalogo.
- */
-public sectorCatalogo: Catalogo[] = [];
-/**
- * Una propiedad pública que contiene el contenido de texto para el componente Sectores y Mercancias.
- * El contenido se importa del módulo `Sectoresy`.
- */
-public TEXTOS = Sectoresy;
+  /**
+   * Indica si un elemento está seleccionado.
+   *
+   * @type {boolean}
+   */
+  public seleccion: boolean = false;
+  /**
+   * Un array de objetos Catalogo que representa el catálogo de sectores.
+   * Este array está inicialmente vacío y puede ser poblado con elementos Catalogo.
+   */
+  public sectorCatalogo: Catalogo[] = [];
+  /**
+   * Una propiedad pública que contiene el contenido de texto para el componente Sectores y Mercancias.
+   * El contenido se importa del módulo `Sectoresy`.
+   */
+  public TEXTOS = Sectoresy;
 
-/**
- * Configuración para las columnas de la tabla.
- * 
- * Este array define las columnas para una tabla, incluyendo el nombre del encabezado,
- * la clave para acceder a los datos en cada fila y el orden de las columnas.
- * 
- * @type {ConfiguracionColumna<any>[]}
- * 
- * @property {string} encabezado - El nombre del encabezado de la columna.
- * @property {Function} clave - Una función que toma un elemento y devuelve el valor para la columna.
- * @property {number} orden - El orden de la columna en la tabla.
- */
-public configuracionTabla: ConfiguracionColumna<any>[] = [
-  { encabezado: 'Lista de sectores', clave: (item: any) => item['Lista de sectores'], orden: 1 },
-  { encabezado: 'Clave del sector', clave: (item: any) => item['Clave del sector'], orden: 2 }
-];
+  /**
+   * Configuración para las columnas de la tabla.
+   *
+   * Este array define las columnas para una tabla, incluyendo el nombre del encabezado,
+   * la clave para acceder a los datos en cada fila y el orden de las columnas.
+   *
+   * @type {ConfiguracionColumna<any>[]}
+   *
+   * @property {string} encabezado - El nombre del encabezado de la columna.
+   * @property {Function} clave - Una función que toma un elemento y devuelve el valor para la columna.
+   * @property {number} orden - El orden de la columna en la tabla.
+   */
+  public configuracionTabla: ConfiguracionColumna<any>[] = [
+    {
+      encabezado: 'Lista de sectores',
+      clave: (item: any) => item['Lista de sectores'],
+      orden: 1,
+    },
+    {
+      encabezado: 'Clave del sector',
+      clave: (item: any) => item['Clave del sector'],
+      orden: 2,
+    },
+  ];
 
-/**
- * Un array de objetos `SectoresTabla` que representa los sectores.
- */
-public sectores: SectoresTabla[] = sectoresTabla;
-/**
- * Representa la selección de radio del enumerado TablaSeleccion.
- * Esta propiedad se utiliza para gestionar el estado de selección del botón de radio en el componente.
- */
-public radio = TablaSeleccion.RADIO;
+  /**
+   * Un array de objetos `SectoresTabla` que representa los sectores.
+   */
+  public sectores: SectoresTabla[] = sectoresTabla;
+  /**
+   * Representa la selección de radio del enumerado TablaSeleccion.
+   * Esta propiedad se utiliza para gestionar el estado de selección del botón de radio en el componente.
+   */
+  public radio = TablaSeleccion.RADIO;
 
-
+  /**
+   * Una instancia de Subscription que se utiliza para manejar la suscripción a eventos y liberar recursos.
+   * Esta propiedad se utiliza para gestionar la suscripción a eventos y liberar recursos cuando el componente se destruye.
+   * @type {Subscription}
+   */
+  private subscription: Subscription = new Subscription();
 
   /**
    * Constructor del componente SectoresYMercanciasComponent.
-   * 
+   *
    * @param _expansionDesvc - Servicio para manejar la expansión de productores.
    * @param fb - Instancia de FormBuilder para crear formularios reactivos.
    */
-  constructor(private _expansionDesvc: ExpansionDeProductoresService,private fb: FormBuilder) {
+  constructor(
+    private _expansionDesvc: ExpansionDeProductoresService,
+    private fb: FormBuilder
+  ) {
     this.establecerFormSectores();
-
   }
 
   /**
@@ -110,11 +129,9 @@ public radio = TablaSeleccion.RADIO;
     this.inicializaCatalogos();
   }
 
-
-
   /**
    * Inicializa el `sectoresForm` con valores predeterminados y validadores.
-   * 
+   *
    * El formulario contiene los siguientes controles:
    * - `sector`: Un control de cadena inicializado con una cadena vacía.
    * - `fraccion`: Un control de cadena inicializado con una cadena vacía y un validador de longitud máxima de 8 caracteres.
@@ -122,34 +139,27 @@ public radio = TablaSeleccion.RADIO;
   public establecerFormSectores(): void {
     this.sectoresForm = this.fb.group({
       sector: [''],
-      fraccion: ['',Validators.maxLength(8)],
+      fraccion: ['', Validators.maxLength(8)],
     });
   }
-
 
   /**
    * Inicializa los datos del catálogo obteniendo el catálogo de sectores del servicio.
    * Los datos obtenidos se asignan a la propiedad `sectorCatalogo`.
-   * 
+   *
    * Este método utiliza operadores de RxJS para manejar la obtención de datos asíncronos y
    * su transformación.
-   * 
+   *
    * @private
    */
   private inicializaCatalogos(): void {
-    const CATALOGO$ = this._expansionDesvc
-      .getSectorCatalog()
-      .pipe(
-        map((resp) => {
-          this.sectorCatalogo = resp.data;
+    const CATALOGO$ = this._expansionDesvc.getSectorCatalog().pipe(
+      map((resp) => {
+        this.sectorCatalogo = resp.data;
       })
     );
 
-
-    merge(
-      CATALOGO$,
-    ).subscribe();
-
+    this.subscription.add(merge(CATALOGO$).subscribe());
   }
 
   /**
@@ -158,5 +168,13 @@ public radio = TablaSeleccion.RADIO;
    */
   public sectorSeleccion() {
     this.seleccion = true;
+  }
+
+  /**
+   * Establece la propiedad `seleccion` a `false`.
+   * Este método se utiliza para indicar que no se ha seleccionado un sector.
+   */
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }
