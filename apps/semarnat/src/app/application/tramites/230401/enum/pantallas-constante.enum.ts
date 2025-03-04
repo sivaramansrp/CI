@@ -34,3 +34,6 @@ export const CROSLISTA_DE_PAISES: string[] = [
     "CD. DEL CARMEN, CAMP.",
     "CD. JUAREZ, CHIHUAHUA, CHIH."
   ];
+
+/** "t" se utiliza para continuar el botón que se usa globalmente para el procedimiento 230401 */
+  export const CONTINUAR: string = "t";

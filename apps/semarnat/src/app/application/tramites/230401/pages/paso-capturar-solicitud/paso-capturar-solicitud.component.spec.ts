@@ -2,7 +2,7 @@ import { AlertComponent,BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { InvocarModuloModule } from '../../invocar-modulo.module';
+import { PantallasModuloModule } from '../../pantallas-modulo.module';
 import { PasoCapturarSolicitudComponent } from './paso-capturar-solicitud.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -14,7 +14,7 @@ describe('PasoCapturarSolicitudComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [PasoCapturarSolicitudComponent],
       imports:[HttpClientTestingModule, WizardComponent, FirmaElectronicaComponent, BtnContinuarComponent,
-        AlertComponent, InvocarModuloModule]
+        AlertComponent, PantallasModuloModule]
     })
     .compileComponents();
     

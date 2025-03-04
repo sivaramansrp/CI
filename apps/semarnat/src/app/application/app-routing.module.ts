@@ -8,9 +8,9 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent
   },
   {
-    path: 'invocar',
+    path: 'pantallas',
     loadChildren: () =>
-      import('./tramites/230401/invocar-modulo.module').then((m) => m.InvocarModuloModule),
+      import('./tramites/230401/Pantallas-modulo.module').then((m) => m.PantallasModuloModule),
   },
 ];
 

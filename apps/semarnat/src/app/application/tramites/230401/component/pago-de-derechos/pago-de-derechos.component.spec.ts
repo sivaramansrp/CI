@@ -2,15 +2,15 @@
 import { CatalogoSelectComponent,TituloComponent } from '@ng-mf/data-access-user';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { InvocarActionService } from '../../services/invocar-action.service';
-import { InvocarModuloModule } from '../../invocar-modulo.module';
+import { PantallasActionService } from '../../services/pantallas-action.service';
+import { PantallasModuloModule } from '../../pantallas-modulo.module';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
   let fixture: ComponentFixture<PagoDeDerechosComponent>;
-  let invocarService: InvocarActionService;
+  let pantallasActionService: PantallasActionService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -19,13 +19,13 @@ describe('PagoDeDerechosComponent', () => {
         CatalogoSelectComponent,
         HttpClientTestingModule,
         ReactiveFormsModule,
-        TituloComponent,InvocarModuloModule
+        TituloComponent,PantallasModuloModule
       ], 
     }).compileComponents();
 
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
-    invocarService = TestBed.inject(InvocarActionService);
+    pantallasActionService = TestBed.inject(PantallasActionService);
     fixture.detectChanges();
   });
 
@@ -48,76 +48,76 @@ describe('PagoDeDerechosComponent', () => {
     ).toBeDefined();
   });
   it('should have defined a variable listoBanco', () => {  
-    expect(invocarService.listoBanco).toBeDefined();
+    expect(pantallasActionService.listoBanco).toBeDefined();
   });
   it('should have defined listoBanco array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPasoUnoDatosCatalogos();
     fixture.detectChanges();
-    expect(invocarService.listoBanco.length).toBe(0);
+    expect(pantallasActionService.listoBanco.length).toBe(0);
   });
   it('should have defined a variable tiposSolicitud', () => {  
-    expect(invocarService.tiposSolicitud).toBeDefined();
+    expect(pantallasActionService.tiposSolicitud).toBeDefined();
   });
   it('should have defined tiposSolicitud array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPasoUnoDatosCatalogos();
     fixture.detectChanges();
-    expect(invocarService.tiposSolicitud.length).toBe(0);
+    expect(pantallasActionService.tiposSolicitud.length).toBe(0);
   });
   it('should have defined a variable noDePermisocoferprise', () => {  
-    expect(invocarService.noDePermisocoferprise).toBeDefined();
+    expect(pantallasActionService.noDePermisocoferprise).toBeDefined();
   });
   it('should have defined noDePermisocoferprise array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPasoUnoDatosCatalogos();
     fixture.detectChanges();
-    expect(invocarService.noDePermisocoferprise.length).toBe(0);
+    expect(pantallasActionService.noDePermisocoferprise.length).toBe(0);
   });
   it('should have defined a variable fraccionArancelaria', () => {  
-    expect(invocarService.fraccionArancelaria).toBeDefined();
+    expect(pantallasActionService.fraccionArancelaria).toBeDefined();
   });
   it('should have defined fraccionArancelaria array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPasoUnoDatosCatalogos();
     fixture.detectChanges();
-    expect(invocarService.fraccionArancelaria.length).toBe(0);
+    expect(pantallasActionService.fraccionArancelaria.length).toBe(0);
   });
   it('should have defined a variable tipoPersona', () => {  
-    expect(invocarService.numeroCas).toBeDefined();
+    expect(pantallasActionService.numeroCas).toBeDefined();
   });
   it('should have defined numeroCas array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPasoUnoDatosCatalogos();
     fixture.detectChanges();
-    expect(invocarService.numeroCas.length).toBe(0);
+    expect(pantallasActionService.numeroCas.length).toBe(0);
   });
   it('should have defined a variable clasificacion', () => {  
-    expect(invocarService.clasificacion).toBeDefined();
+    expect(pantallasActionService.clasificacion).toBeDefined();
   });
   it('should have defined clasificacion array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPasoUnoDatosCatalogos();
     fixture.detectChanges();
-    expect(invocarService.clasificacion.length).toBe(0);
+    expect(pantallasActionService.clasificacion.length).toBe(0);
   });
   it('should have defined a variable estadoFisico', () => {  
-    expect(invocarService.estadoFisico).toBeDefined();
+    expect(pantallasActionService.estadoFisico).toBeDefined();
   });
   it('should have defined estadoFisico array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPasoUnoDatosCatalogos();
     fixture.detectChanges();
-    expect(invocarService.estadoFisico.length).toBe(0);
+    expect(pantallasActionService.estadoFisico.length).toBe(0);
   });
   it('should have defined a variable datosObjecto', () => {  
-    expect(invocarService.datosObjecto).toBeDefined();
+    expect(pantallasActionService.datosObjecto).toBeDefined();
   });
   it('should have defined datosObjecto array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPasoUnoDatosCatalogos();
     fixture.detectChanges();
-    expect(invocarService.datosObjecto.length).toBe(0);
+    expect(pantallasActionService.datosObjecto.length).toBe(0);
   });
   it('should have defined a variable unidadDeMedida', () => {  
-    expect(invocarService.unidadDeMedida).toBeDefined();
+    expect(pantallasActionService.unidadDeMedida).toBeDefined();
   });
   it('should have defined unidadDeMedida array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPasoUnoDatosCatalogos();
     fixture.detectChanges();
-    expect(invocarService.unidadDeMedida.length).toBe(0);
+    expect(pantallasActionService.unidadDeMedida.length).toBe(0);
   });
   it('should have a form with default values', () => {
     expect(component.pagoDerechos.get('clave')?.value).toBe('084001963');
@@ -265,9 +265,9 @@ describe('PagoDeDerechosComponent', () => {
     component.clasificacionSeleccione();
     expect(CLASIFICACION_SPY).toHaveBeenCalled();
   });
-  it('should call initicializaPagoDerechosCatalogo', () => {
-    const INITICIALIZA_PAGO_DERECHOS_CATALOGO_SPY = jest.spyOn(invocarService, 'initicializaPagoDerechosCatalogo').mockImplementation();
-    invocarService.initicializaPagoDerechosCatalogo();
+  it('should call inicializaPasoUnoDatosCatalogos', () => {
+    const INITICIALIZA_PAGO_DERECHOS_CATALOGO_SPY = jest.spyOn(pantallasActionService, 'inicializaPasoUnoDatosCatalogos').mockImplementation();
+    pantallasActionService.inicializaPasoUnoDatosCatalogos();
     expect(INITICIALIZA_PAGO_DERECHOS_CATALOGO_SPY).toHaveBeenCalled();
   });
   it('should call createPagoDerechos', () => {

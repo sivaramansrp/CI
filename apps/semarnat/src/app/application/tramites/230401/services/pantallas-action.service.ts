@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class InvocarActionService {
+export class PantallasActionService {
   // Las siguientes variables se utilizan en el componente paso uno datos solicitud
   tiposSolicitud: Catalogo[] = [];
   noDePermisocoferprise: Catalogo[] = [];
@@ -78,7 +78,7 @@ export class InvocarActionService {
    * 
    * @returns {void}
    */
-  initicializaPagoDerechosCatalogo():void {
+  inicializaPagoDerechosCatalogo():void {
     this.obtenerRespuestaPorUrl(this, 'listoBanco', '/230401/pagoDerechosBanco.json');
   }
 

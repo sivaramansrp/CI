@@ -18,4 +18,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
-export class InvocarModuloRoutingModule { }
+export class PantallasModuloRoutingModule { }

@@ -1,13 +1,13 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { InvocarActionService } from './invocar-action.service';
+import { PantallasActionService } from './pantallas-action.service';
 import { TestBed } from '@angular/core/testing';
 
-describe('InvocarActionService', () => {
-  let service: InvocarActionService;
+describe('PantallasActionService', () => {
+  let service: PantallasActionService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({imports: [HttpClientTestingModule]});
-    service = TestBed.inject(InvocarActionService);
+    service = TestBed.inject(PantallasActionService);
   });
 
   it('should be created', () => {

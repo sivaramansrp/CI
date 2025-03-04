@@ -6,9 +6,10 @@ import {
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
 import {
+  CONTINUAR,
   CROSLISTA_DE_PAISES,
   LISTA_DE_ENTRADA_PERSONALIZADA,
-} from '../../enum/invocar-constante.enum';
+} from '../../enum/pantallas-constante.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -21,7 +22,7 @@ import {
   Tramite230401Store,
   initializeSolicitud230401State,
 } from '../../estados/tramite230401.store';
-import { InvocarActionService } from '../../services/invocar-action.service';
+import {PantallasActionService } from '../../services/pantallas-action.service';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -38,12 +39,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   seccionAduanera!: Catalogo[];
   tipoOperacion!: Catalogo[];
 
-  public crosListadepaises = CROSLISTA_DE_PAISES;
+  public crosListaDePaises = CROSLISTA_DE_PAISES;
   private destroyNotifier$: Subject<void> = new Subject();
   public solicitudState!: Solicitud230401State;
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Pais de procedencia',
-    derecha: 'Pais(es) seleccionados',
+    tituluDeLaIzquierda: 'País de procedencia',
+    derecha: 'País(es) seleccionados',
   };
   public paisDelProductoLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País donde se elabora el producto',
@@ -67,8 +68,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Lista de rangos de días seleccionarOrigenDelPais.
    */
-  seleccionarOrigenDelPais: string[] = this.crosListadepaises;
-  /**
+  seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
+  /**crosListaDePaises
    * Control de formulario para la paisDeProcedenciaFecha.
    */
   paisDeProcedenciaFecha: FormControl = new FormControl('');
@@ -121,7 +122,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Lista de rangos de días seleccionarOrigenDelPais.
    */
-  listapaisDelProducto: string[] = this.crosListadepaises;
+  listaPaisDelProducto: string[] = this.crosListaDePaises;
   /**
    * Control de formulario para la paisDelProductoFecha.
    */
@@ -146,7 +147,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       btnNombre: 'Agregar selección',
       class: 'btn-default',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.agregarDos('t'),
+      funcion: () => this.agregarDos(CONTINUAR),
     },
     {
       btnNombre: 'Restar selección',
@@ -158,7 +159,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       btnNombre: 'Restar todos',
       class: 'btn-default',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.quitarDos('t'),
+      funcion: () => this.quitarDos(CONTINUAR),
     },
   ];
 
@@ -175,7 +176,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Lista de rangos de días seleccionarOrigenDelPais.
    */
-  listadeEntradaPersonalizada = LISTA_DE_ENTRADA_PERSONALIZADA;
+  listaDeEntradaPersonalizada = LISTA_DE_ENTRADA_PERSONALIZADA;
   /**
    * Control de formulario para la aduanasDeEntradaFecha.
    */
@@ -200,7 +201,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       btnNombre: 'Agregar selección',
       class: 'btn-default',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.agregarTres('t'),
+      funcion: () => this.agregarTres(CONTINUAR),
     },
     {
       btnNombre: 'Restar selección',
@@ -216,13 +217,13 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     },
   ];
 
-  constructor(public invocarService:InvocarActionService,public validacionesService:ValidacionesFormularioService,public tramite230401Store:Tramite230401Store,public fb:FormBuilder){
+  constructor(public pantallasActionService:PantallasActionService,public validacionesService:ValidacionesFormularioService,public tramite230401Store:Tramite230401Store,public fb:FormBuilder){
     // do nothing
   }
 
   ngOnInit(): void {
     initializeSolicitud230401State();
-    this.invocarService.inicializaPasoUnoDatosCatalogos();
+    this.pantallasActionService.inicializaPasoUnoDatosCatalogos();
     this.creatFormSolicitud();
   }
 
@@ -289,8 +290,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @param {string} tipo - Tipo de acción a realizar.
    */
   agregarDos(tipo: string): void {
-    if (tipo === 't') {
-      this.paisDelProductoSeleccionadas = [...this.listapaisDelProducto];
+    if (tipo === CONTINUAR) {
+      this.paisDelProductoSeleccionadas = [...this.listaPaisDelProducto];
       this.paisDelProductoDatos = [];
     } else {
       const FECHAVALOR = this.paisDelProductoFecha.value.map(Number);
@@ -324,7 +325,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @param {string} tipo - Tipo de acción a realizar.
    */
   agregarTres(tipo: string): void {
-    if (tipo === 't') {
+    if (tipo === CONTINUAR) {
       this.aduanasDeEntradaSeleccionadas = [...this.seleccionarOrigenDelPais];
       this.aduanasDeEntradaDatos = [];
     } else {
@@ -341,7 +342,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @param {string} tipo - Tipo de acción a realizar.
    */
   quitarTres(tipo: string = ''): void {
-    if (tipo === 't') {
+    if (tipo === CONTINUAR) {
       this.aduanasDeEntradaDatos = [...this.aduanasDeEntradaSeleccionadas];
       this.aduanasDeEntradaSeleccionadas = [];
     } else {
@@ -359,7 +360,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    *
    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
-   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   * @param {string} metodoNombre - El nombre del método en el store que se va a pantallas con el valor del campo.
    * @returns {void}
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
@@ -468,7 +469,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.solicitudState?.tipoSolicitud,
         [Validators.required],
       ],
-      autorizacion: [this.solicitudState?.autorizacion],
+      autorizacion: [this.solicitudState?.autorizada],
       noDePermisocoferprise: [
         this.solicitudState?.noDePermisocoferprise,
         [Validators.required],
@@ -476,8 +477,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       nombreComercial: [
         { value: this.solicitudState?.nombreComercial, disabled: true },
       ],
-      cantidadAtorizada: [
-        { value: this.solicitudState?.cantidadAtorizada, disabled: true },
+      cantidadAutorizada: [
+        { value: this.solicitudState?.cantidadAutorizada, disabled: true },
       ],
       fraccionArancelaria: [
         this.solicitudState?.fraccionArancelaria,

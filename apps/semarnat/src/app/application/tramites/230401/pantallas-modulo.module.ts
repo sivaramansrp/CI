@@ -1,10 +1,10 @@
 import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudComponent } from './component/datos-solicitud/datos-solicitud.component';
-import { InvocarActionService } from './services/invocar-action.service';
-import { InvocarModuloRoutingModule } from './invocar-modulo-routing.module';
 import { NgModule } from '@angular/core';
 import { PagoDeDerechosComponent } from './component/pago-de-derechos/pago-de-derechos.component';
+import { PantallasActionService } from './services/pantallas-action.service';
+import { PantallasModuloRoutingModule } from './Pantallas-modulo-routing.module';
 import { PasoCapturarSolicitudComponent } from './pages/paso-capturar-solicitud/paso-capturar-solicitud.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoFirmarSolicitudComponent } from './pages/paso-firmar-solicitud/paso-firmar-solicitud.component';
@@ -31,7 +31,7 @@ import { ToastrService } from 'ngx-toastr';
     CommonModule,
     CrosslistComponent,
     FirmaElectronicaComponent,
-    InvocarModuloRoutingModule,
+    PantallasModuloRoutingModule,
     ReactiveFormsModule,
     SharedModule,
     SolicitanteComponent,
@@ -39,8 +39,8 @@ import { ToastrService } from 'ngx-toastr';
     WizardComponent,
   ],
   providers: [
-    InvocarActionService,
+    PantallasActionService,
     ToastrService,
   ]
 })
-export class InvocarModuloModule { }
+export class PantallasModuloModule { }

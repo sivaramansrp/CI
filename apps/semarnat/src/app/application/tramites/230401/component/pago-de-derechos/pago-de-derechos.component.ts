@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { InvocarActionService } from '../../services/invocar-action.service';
+import { PantallasActionService } from '../../services/pantallas-action.service';
+import { REGEX_FECHA_VALIDA } from '@libs/shared/data-access-user/src';
 /**
  * Validador de fecha que verifica si el valor del control sigue el formato dd/mm/yyyy.
  * 
@@ -9,7 +10,7 @@ import { InvocarActionService } from '../../services/invocar-action.service';
  */
 export function dateValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string] : any } | null => {
-    const IS_VALID = /^\d{2}\/\d{2}\/\d{4}$/.test(control.value);
+    const IS_VALID = REGEX_FECHA_VALIDA.test(control.value);
     return IS_VALID ? null : { 'invalidDate': { value: control.value } };
   };
 }
@@ -22,9 +23,9 @@ export function dateValidator(): ValidatorFn {
 export class PagoDeDerechosComponent implements OnInit {
   public pagoDerechos!: FormGroup;
   public clasificacion: string = '';
-  constructor(public invocarService: InvocarActionService, private fb: FormBuilder) {
+  constructor(public pantallasService: PantallasActionService, private fb: FormBuilder) {
     this.createPagoDerechos();
-    this.invocarService.initicializaPagoDerechosCatalogo();
+    this.pantallasService.inicializaPagoDerechosCatalogo();
   }
 
   /**

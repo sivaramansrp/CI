@@ -4,12 +4,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DatosSolicitudComponent } from './datos-solicitud.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { InvocarActionService } from '../../services/invocar-action.service';
-import { InvocarModuloModule } from '../../invocar-modulo.module';
+import { PantallasActionService } from '../../services/pantallas-action.service';
+import { PantallasModuloModule } from '../../pantallas-modulo.module';
 describe('DatosSolicitudComponent', () => {
   let component: DatosSolicitudComponent;
   let fixture: ComponentFixture<DatosSolicitudComponent>;
-  let invocarService: InvocarActionService;
+  let pantallasActionService: PantallasActionService;
   let form: FormGroup;
 
   beforeEach(async () => {
@@ -20,14 +20,14 @@ describe('DatosSolicitudComponent', () => {
         HttpClientTestingModule,
         ReactiveFormsModule,
         TituloComponent,
-        InvocarModuloModule,
+        PantallasModuloModule,
         CatalogoSelectComponent, BtnContinuarComponent, CrosslistComponent
       ],
     })
     .compileComponents();
     fixture = TestBed.createComponent(DatosSolicitudComponent);
     component = fixture.componentInstance;
-    invocarService = TestBed.inject(InvocarActionService);
+    pantallasActionService = TestBed.inject(PantallasActionService);
     fixture.detectChanges();
     form = new FormGroup({
       cantidad: new FormControl(''),
@@ -42,79 +42,79 @@ describe('DatosSolicitudComponent', () => {
     expect(component).toBeDefined();
   });
   it('should have a defined service', () => {
-    expect(invocarService).toBeDefined();
+    expect(pantallasActionService).toBeDefined();
   });
   it('should have defined a variable listoBanco', () => {  
-    expect(invocarService.listoBanco).toBeDefined();
+    expect(pantallasActionService.listoBanco).toBeDefined();
   });
   it('should have defined listoBanco array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPagoDerechosCatalogo();
     fixture.detectChanges();
-    expect(invocarService.listoBanco.length).toBe(0);
+    expect(pantallasActionService.listoBanco.length).toBe(0);
   });
   it('should have defined a variable tiposSolicitud', () => {  
-    expect(invocarService.tiposSolicitud).toBeDefined();
+    expect(pantallasActionService.tiposSolicitud).toBeDefined();
   });
   it('should have defined tiposSolicitud array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPagoDerechosCatalogo();
     fixture.detectChanges();
-    expect(invocarService.tiposSolicitud.length).toBe(0);
+    expect(pantallasActionService.tiposSolicitud.length).toBe(0);
   });
   it('should have defined a variable noDePermisocoferprise', () => {  
-    expect(invocarService.noDePermisocoferprise).toBeDefined();
+    expect(pantallasActionService.noDePermisocoferprise).toBeDefined();
   });
   it('should have defined noDePermisocoferprise array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPagoDerechosCatalogo();
     fixture.detectChanges();
-    expect(invocarService.noDePermisocoferprise.length).toBe(0);
+    expect(pantallasActionService.noDePermisocoferprise.length).toBe(0);
   });
   it('should have defined a variable fraccionArancelaria', () => {  
-    expect(invocarService.fraccionArancelaria).toBeDefined();
+    expect(pantallasActionService.fraccionArancelaria).toBeDefined();
   });
   it('should have defined fraccionArancelaria array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPagoDerechosCatalogo();
     fixture.detectChanges();
-    expect(invocarService.fraccionArancelaria.length).toBe(0);
+    expect(pantallasActionService.fraccionArancelaria.length).toBe(0);
   });
   it('should have defined a variable tipoPersona', () => {  
-    expect(invocarService.numeroCas).toBeDefined();
+    expect(pantallasActionService.numeroCas).toBeDefined();
   });
   it('should have defined numeroCas array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPagoDerechosCatalogo();
     fixture.detectChanges();
-    expect(invocarService.numeroCas.length).toBe(0);
+    expect(pantallasActionService.numeroCas.length).toBe(0);
   });
   it('should have defined a variable clasificacion', () => {  
-    expect(invocarService.clasificacion).toBeDefined();
+    expect(pantallasActionService.clasificacion).toBeDefined();
   });
   it('should have defined clasificacion array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPagoDerechosCatalogo();
     fixture.detectChanges();
-    expect(invocarService.clasificacion.length).toBe(0);
+    expect(pantallasActionService.clasificacion.length).toBe(0);
   });
   it('should have defined a variable estadoFisico', () => {  
-    expect(invocarService.estadoFisico).toBeDefined();
+    expect(pantallasActionService.estadoFisico).toBeDefined();
   });
   it('should have defined estadoFisico array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPagoDerechosCatalogo();
     fixture.detectChanges();
-    expect(invocarService.estadoFisico.length).toBe(0);
+    expect(pantallasActionService.estadoFisico.length).toBe(0);
   });
   it('should have defined a variable datosObjecto', () => {  
-    expect(invocarService.datosObjecto).toBeDefined();
+    expect(pantallasActionService.datosObjecto).toBeDefined();
   });
   it('should have defined datosObjecto array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPagoDerechosCatalogo();
     fixture.detectChanges();
-    expect(invocarService.datosObjecto.length).toBe(0);
+    expect(pantallasActionService.datosObjecto.length).toBe(0);
   });
   it('should have defined a variable unidadDeMedida', () => {  
-    expect(invocarService.unidadDeMedida).toBeDefined();
+    expect(pantallasActionService.unidadDeMedida).toBeDefined();
   });
   it('should have defined unidadDeMedida array empty', () => {  
-    invocarService.initicializaPagoDerechosCatalogo();
+    pantallasActionService.inicializaPagoDerechosCatalogo();
     fixture.detectChanges();
-    expect(invocarService.unidadDeMedida.length).toBe(0);
+    expect(pantallasActionService.unidadDeMedida.length).toBe(0);
   });
   it('should call ngOnInit', () => {
     const NG_ON_INIT_SPY = jest.spyOn(component, 'ngOnInit').mockImplementation();
@@ -221,7 +221,7 @@ describe('DatosSolicitudComponent', () => {
       component.FormSolicitud.controls['autorizacion']?.value &&
       component.FormSolicitud.controls['noDePermisocoferprise']?.value &&
       component.FormSolicitud.controls['nombreComercial']?.value &&
-      component.FormSolicitud.controls['cantidadAtorizada']?.value &&
+      component.FormSolicitud.controls['cantidadAutorizada']?.value &&
       component.FormSolicitud.controls['cantidad']?.value &&
       component.FormSolicitud.controls['fraccionArancelaria']?.value &&
       component.FormSolicitud.controls['descripcionDeLaFraccion']?.value &&

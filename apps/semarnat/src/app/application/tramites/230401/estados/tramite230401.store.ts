@@ -10,7 +10,7 @@ import { Injectable } from "@angular/core";
  * @property {boolean} autorizacion - Indica si la solicitud está autorizada.
  * @property {string} noDePermisocoferprise - Número de permiso de coferprise.
  * @property {string} nombreComercial - Nombre comercial del producto.
- * @property {string} cantidadAtorizada - Cantidad autorizada.
+ * @property {string} cantidadAutorizada - Cantidad autorizada.
  * @property {string} fraccionArancelaria - Fracción arancelaria.
  * @property {string} descripcionDeLaFraccion - Descripción de la fracción arancelaria.
  * @property {string} numeroCas - Número CAS.
@@ -33,10 +33,10 @@ import { Injectable } from "@angular/core";
  */
 export interface Solicitud230401State {
   tipoSolicitud: string;
-  autorizacion: boolean;
+  autorizada: boolean;
   noDePermisocoferprise: string;
   nombreComercial: string;
-  cantidadAtorizada: string;
+  cantidadAutorizada: string;
   fraccionArancelaria: string;
   descripcionDeLaFraccion: string;
   numeroCas: string;
@@ -66,10 +66,10 @@ export interface Solicitud230401State {
 export function initializeSolicitud230401State(): Solicitud230401State {
   return {
     tipoSolicitud: '',
-    autorizacion: false,
+    autorizada: false,
     noDePermisocoferprise: '',
     nombreComercial: '',
-    cantidadAtorizada: '',
+    cantidadAutorizada: '',
     fraccionArancelaria: '',
     descripcionDeLaFraccion: '',
     numeroCas: '',
@@ -87,7 +87,7 @@ export function initializeSolicitud230401State(): Solicitud230401State {
     especifique: '',
     especifiqueDos: '',
     cantidad: 1,
-    cantidadLetra: 'One',
+    cantidadLetra: 'Uno',
     unidadDeMedida: '',
   }
 }
@@ -156,12 +156,12 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
   /**
  * Guarda el tipo de solicitud en el estado.
  *
- * @param cantidadAtorizada - El tipo de solicitud que se va a guardar.
+ * @param cantidadAutorizada - El tipo de solicitud que se va a guardar.
  */
-  public setCantidadAtorizada(cantidadAtorizada: string): void {
+  public setCantidadAutorizada(cantidadAutorizada: string): void {
     this.update((state) => ({
       ...state,
-      cantidadAtorizada,
+      cantidadAutorizada,
     }));
   }
 
