@@ -7,8 +7,8 @@
  * @import { Router } from '@angular/router';
  */
 
-import { Component, Input } from '@angular/core';
-import { TEXTOS } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
+import { Component } from '@angular/core';
+import { TEXTOS } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'paso-tres',

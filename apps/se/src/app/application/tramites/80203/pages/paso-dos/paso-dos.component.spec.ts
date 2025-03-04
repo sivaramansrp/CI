@@ -1,4 +1,5 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from './paso-dos.component';
 import { TituloComponent } from '@ng-mf/data-access-user';

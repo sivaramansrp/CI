@@ -1,24 +1,42 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * @component Anexo1Component
  * @description Este componente es responsable de manejar el formulario de registro IMMEX.
  * Incluye la lógica para la obtención de datos y la gestión de formularios.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { PERMISO_IMMEX, FRACCION_ARANCELARIA, NICO } from 'libs/shared/data-access-user/src/tramites/constantes/immex-registro-de-solicitud-modality.enums';
-import { PermisoImmexDatosService } from 'libs/shared/data-access-user/src/core/services/80203/immex/permiso-immex-datos.service';
-import { Catalogo, RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { NicoService } from 'libs/shared/data-access-user/src/core/services/80203/nico/nico.service';
+
+import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Validators } from '@angular/forms';
+
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { FRACCION_EXPORTACION } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { IMMEX_SERVICIO } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { NICO_TABLA } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { fraccionInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { immexInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { nicoInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
+
+import { NicoService } from '../../servicios/nico/nico.service';
+import { PermisoImmexDatosService } from '../../servicios/immex/permiso-immex-datos.service';
+
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { immexRegistroform, IMMEX_SERVICIO, immexInfo, FRACCION_EXPORTACION, fraccionInfo, NICO_TABLA, nicoInfo } from 'libs/shared/data-access-user/src/core/models/80203/immex-registro-de-solicitud-modality.model';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
 @Component({
   selector: 'anexo-1',
@@ -36,9 +54,7 @@ import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabl
 })
 export class Anexo1Component implements OnInit, OnDestroy { 
   immexRegistroform!: FormGroup;
-  tableColumnsPermiso = PERMISO_IMMEX;
-  tableColumnsFraccion = FRACCION_ARANCELARIA;
-  tableColumnsNico = NICO;
+
 
   /**
    * Tipo de selección de la tabla.
@@ -119,6 +135,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
   /**
    * @property {any[]} permisoImmexDatos - Array de datos permiso immex.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   permisoImmexDatos: any[] = [];
   
   /**
@@ -154,6 +171,10 @@ export class Anexo1Component implements OnInit, OnDestroy {
     private readonly httpServicios: HttpClient,
     private readonly nicoService: NicoService
   ) { }
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 
   /**
    * @returns {void}
@@ -304,8 +325,5 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @method ngOnDestroy
    * @description Guarda el estado del formulario antes de destruir el componente.
    */
-  ngOnDestroy(): void {
-    // Guarde el estado del formulario si es necesario
 
-  }
 }

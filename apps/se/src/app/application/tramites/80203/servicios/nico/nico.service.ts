@@ -1,11 +1,15 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable no-empty-function */
 /**
  * @Injectable
  * @description Servicio para obtener los datos del menú desplegable de NICO.
  */
-import { Injectable } from '@angular/core';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
-import { Catalogo, RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

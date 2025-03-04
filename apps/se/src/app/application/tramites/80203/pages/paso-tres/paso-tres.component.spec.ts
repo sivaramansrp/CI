@@ -1,7 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
+
 import { PasoTresComponent } from './paso-tres.component';
+
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;

@@ -8,7 +8,7 @@
  */
 
 import { Component } from '@angular/core';
-import { TEXTOS } from 'libs/shared/data-access-user/src/tramites/constantes/immex-registro-de-solicitud-modality.enums';
+import { TEXTOS } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'paso-dos',

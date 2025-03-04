@@ -3,25 +3,32 @@
  * @description Módulo para el registro de solicitud IMMEX modalidad ampliación subsecuente sensibles.
  * Incluye la configuración de rutas y la declaración de componentes.
  */
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CatalogoSelectComponent, FirmaElectronicaComponent, SelectCatalogosComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from "@ng-mf/data-access-user";
-import { ImmexRegistroSolicitudModalityComponent } from './pages/immex-registro-solicitud-modality/immex-registro-solicitud-modality.component';
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
-
-import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
-import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AnexarDocumentosComponent } from 'libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component';
-
-import { ImmexRegistroDeSolicitudModalityRoutingModule } from './immex-registro-de-solicitud-modality-routing.module';
-import { Anexo1Component } from './components/anexo-1/anexo-1.component';
 
 import { ToastrService } from 'ngx-toastr';
+
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
+import { Anexo1Component } from './components/anexo-1/anexo-1.component';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { ImmexRegistroDeSolicitudModalityRoutingModule } from './immex-registro-de-solicitud-modality-routing.module';
+import { ImmexRegistroSolicitudModalityComponent } from './pages/immex-registro-solicitud-modality/immex-registro-solicitud-modality.component';
+import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
+import { SharedModule } from '@ng-mf/data-access-user';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@ng-mf/data-access-user';
+
 
 
 @NgModule({

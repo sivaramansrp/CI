@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/naming-convention */
 /**
  * @interface immexRegistroform
  * @description Interfaz para el formulario de registro IMMEX.

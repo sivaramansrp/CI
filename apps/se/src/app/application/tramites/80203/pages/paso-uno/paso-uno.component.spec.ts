@@ -1,9 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
+import { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+
+import { SolicitanteComponent, SolicitanteService } from '@ng-mf/data-access-user';
 
 import { PasoUnoComponent } from './paso-uno.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { SolicitanteService } from '@ng-mf/data-access-user';
+
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;

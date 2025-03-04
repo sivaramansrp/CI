@@ -1,53 +1,33 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
-import { Anexo1Component } from './anexo-1.component';
-import { FormBuilder } from '@angular/forms';
-import { PermisoImmexDatosService } from 'libs/shared/data-access-user/src/core/services/80203/immex/permiso-immex-datos.service';
 import { HttpClient } from '@angular/common/http';
-import { NicoService } from 'libs/shared/data-access-user/src/core/services/80203/nico/nico.service';
+import { CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import { Injectable } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of as observableOf } from 'rxjs';
+
+import { Anexo1Component } from './anexo-1.component';
+import { PermisoImmexDatosService } from '../../servicios/immex/permiso-immex-datos.service';
+import { NicoService } from '../../servicios/nico/nico.service';
+
 
 @Injectable()
 class MockHttpClient {
   post() {};
 }
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
 
 describe('Anexo1Component', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<Anexo1Component>;
+  let component: { ngOnDestroy: () => void; fb: { group?: any; }; fetchData: jest.Mock<any, any, any> | (() => void); obtenerListasDesplegables: jest.Mock<any, any, any> | (() => void); disableFormControls: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; permisoImmexDatosService: { getDatos?: any; }; permisoImmexDatos: { [x: string]: { tbodyData: { 2: {}; 3: {}; }; }; }; fraccionDatos: { [x: string]: { tbodyData: { 1: {}; 4: {}; }; }; }; immexRegistroform: { get?: any; patchValue?: any; }; obtenerIngresoSelectList: jest.Mock<any, any, any> | (() => void); nicoService: { obtenerMenuDesplegable?: any; }; showFraccionExportacion: () => void; showProductoImportacion: () => void; showCommodityImportacion: () => void; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ Anexo1Component, FormsModule, ReactiveFormsModule ],
       declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [

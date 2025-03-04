@@ -1,12 +1,15 @@
+/* eslint-disable class-methods-use-this */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * @component ImmexRegistroSolicitudModalityComponent
  * @description Este componente es responsable de manejar el flujo de pasos para el registro de solicitud IMMEX.
  * Incluye la lógica para la navegación entre pasos y la obtención de títulos.
  */
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/80203/immex-registro-de-solicitud-modality-routing.module';
-import { PASOS } from 'libs/shared/data-access-user/src/tramites/constantes/immex-registro-de-solicitud-modality.enums';
+import { DatosPasos } from '@ng-mf/data-access-user';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from '../../constantes/immex-registro-de-solicitud-modality.enums';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -24,6 +27,7 @@ interface AccionBoton {
 export class ImmexRegistroSolicitudModalityComponent {
   componenteWizard: any;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   title(title: any) {
     // throw new Error('Método no implementado.');
   }
@@ -77,6 +81,7 @@ export class ImmexRegistroSolicitudModalityComponent {
    * Obtener un título para todas las páginas.
    * @param valor - valor del índice de página. --80203
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   obtenerNombreDelTítulo(valor: number): any {
     // throw new Error('Método no implementado.');
   }
