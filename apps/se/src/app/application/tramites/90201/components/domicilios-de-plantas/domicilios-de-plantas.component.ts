@@ -48,13 +48,13 @@ export class DomiciliosDePlantasComponent {
    * @property {number} orden - El orden en que se mostrará la columna en la tabla.
    */
   public configuracionTabla: ConfiguracionColumna<any>[] = [
-    { encabezado: 'Calle', clave: (item: any) => item['Calle'], orden: 1 },
-    { encabezado: 'Número exterior', clave: (item: any) => item['Número exterior'], orden: 2 },
-    { encabezado: 'Número interior', clave: (item: any) => item['Número interior'], orden: 3 },
-    { encabezado: 'Código postal', clave: (item: any) => item['Código postal'], orden: 4 },
-    { encabezado: 'Colonia', clave: (item: any) => item['Colonia'], orden: 5 },
-    { encabezado: 'Municipio o alcaldía', clave: (item: any) => item['Municipio o alcaldía'], orden: 6 },
-    { encabezado: 'Estado', clave: (item: any) => item['Estado'], orden: 7 },
+    { encabezado: 'Calle', clave: (item: any) => item.calle, orden: 1 },
+    { encabezado: 'Número exterior', clave: (item: any) => item.numero, orden: 2 },
+    { encabezado: 'Número interior', clave: (item: any) => item.interior, orden: 3 },
+    { encabezado: 'Código postal', clave: (item: any) => item.postal, orden: 4 },
+    { encabezado: 'Colonia', clave: (item: any) => item.colonia, orden: 5 },
+    { encabezado: 'Municipio o alcaldía', clave: (item: any) => item.municipio, orden: 6 },
+    { encabezado: 'Estado', clave: (item: any) => item.estado, orden: 7 },
   ];
 
   /**

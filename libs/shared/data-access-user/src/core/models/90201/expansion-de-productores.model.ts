@@ -11,16 +11,16 @@ export interface ProductorIndirectoTabla {
 }
 
 export interface DomiciliosDePlantasTabla {
-  Calle: string;
-  'Número exterior': string;
-  'Número interior': string;
-  'Código postal': string;
-  Colonia: string;
-  'Municipio o alcaldía': string;
-  Estado: string;
+   calle: string;
+   numero: string;
+   interior: string;
+   postal: string;
+   colonia: string;
+  municipio: string;
+  estado: string;
 }
 
 export interface SectoresTabla {
-  'Lista de sectores': string;
-  'Clave del sector': string;
+  sectores: string;
+  claveDel: string;
 }

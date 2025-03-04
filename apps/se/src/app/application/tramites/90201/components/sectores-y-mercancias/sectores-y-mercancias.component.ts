@@ -81,12 +81,12 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   public configuracionTabla: ConfiguracionColumna<any>[] = [
     {
       encabezado: 'Lista de sectores',
-      clave: (item: any) => item['Lista de sectores'],
+      clave: (item: any) => item.sectores,
       orden: 1,
     },
     {
       encabezado: 'Clave del sector',
-      clave: (item: any) => item['Clave del sector'],
+      clave: (item: any) => item.claveDel,
       orden: 2,
     },
   ];

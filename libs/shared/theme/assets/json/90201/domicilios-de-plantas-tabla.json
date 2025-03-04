@@ -1,12 +1,12 @@
 [
     {
-        "Calle":"CARRETERA INTERNACIONAL NO. 15 SN MEX-NOG KM 203",
-        "Número exterior":"81210",
-        "Número interior":"MIGUEL HIDALGO",
-        "Código postal":"AHOME",
-        "Colonia":"one",
-        "Municipio o alcaldía":"martinez.eval",
-        "Estado":"tabla"
+        "calle":"CARRETERA INTERNACIONAL NO. 15 SN MEX-NOG KM 203",
+        "numero":"81210",
+        "interior":"MIGUEL HIDALGO",
+        "postal":"AHOME",
+        "colonia":"one",
+        "municipio":"martinez.eval",
+        "estado":"tabla"
     }
 ]
 
