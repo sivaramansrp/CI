@@ -238,17 +238,17 @@ export const CONFIGURACION_BITACORA_TABLA = [
     orden: 1,
   },
   {
-    encabezado: 'Fetcha modificación',
+    encabezado: 'Fecha modificación',
     clave: (ele: Bitacora) : string | undefined => ele.fetchModificion,
     orden: 2,
   },
   {
-    encabezado: 'Velores anteriores',
+    encabezado: 'Valores anteriores',
     clave: (ele: Bitacora) : string | undefined => ele.valoresAnteriores,
     orden: 3,
   },
   {
-    encabezado: 'Velores nuevos',
+    encabezado: 'Valores nuevos',
     clave: (ele: Bitacora): string | undefined => ele.valoresNuevos,
     orden: 4,
   },
@@ -296,6 +296,6 @@ export const CONFIGURACION_ANEXOS_IMPORTACION = [
 ];
 
 export const TITULOMENSAJE =
-  'Registro de solicitude modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén)';
+  'Registro de solicitud de modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén)';
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';

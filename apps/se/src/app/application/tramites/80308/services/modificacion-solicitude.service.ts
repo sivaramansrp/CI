@@ -38,7 +38,7 @@ export class ModificacionSolicitudeService {
       .pipe(map((res: any) => res.data));
   }
 
-  obteberBitacora(): Observable<Bitacora[]> {
+  obtenerBitacora(): Observable<Bitacora[]> {
     return this.http
       .get<Bitacora[]>('assets/json/80308/bitacora.json')
       .pipe(map((res: any) => res.data));
