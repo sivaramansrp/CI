@@ -119,7 +119,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
         [
           Validators.required,
           Validators.min(1),
-          Validators.pattern(REG_X.ONLY_NUMBERS), 
+          Validators.pattern(REG_X.SOLO_NUMEROS), 
         ],
       ],
       valorFacturaUSD: [
@@ -127,7 +127,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
         [
           Validators.required,
           Validators.min(0.01),
-          Validators.pattern(REG_X.DECIMAL_TWO_PLACES),
+          Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
         ],
       ],
     });
