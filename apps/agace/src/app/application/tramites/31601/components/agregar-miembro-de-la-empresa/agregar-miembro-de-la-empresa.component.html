@@ -1,0 +1,169 @@
+<div class="p-3 mt-4">
+  <h5>Agregar Miembro de la Empresa</h5>
+  <p>
+    <span class="text-danger text-justify">*</span> Opinión positiva vigente del
+    cumplimiento de obligaciones fiscales de la solicitante, los socios,
+    accionistas, representante legal, administrador único o miembros del consejo
+    de administración, según sea el caso.
+  </p>
+  <p class="text-danger fw-bold">Se debe agregar un socio o más accionistas</p>
+
+  <h5 class="text-start mt-4">Miembro de la empresa</h5>
+  <ng-table
+    [commonTableHeader]="miembroDeLaEmpresaHeaderData"
+    [commonTableBody]="miembroDeLaEmpresaBodyData"
+  ></ng-table>
+  <div class="d-flex justify-content-center">
+    <app-table-pagination
+      [totalItems]="totalItems"
+      [itemsPerPage]="itemsPerPage"
+      [currentPage]="currentPage"
+      (pageChange)="onPageChange($event)"
+      (itemsPerPageChange)="onItemsPerPageChange($event)"
+    >
+    </app-table-pagination>
+  </div>
+  <div class="d-flex justify-content-end">
+    <button
+      type="button"
+      class="btn btn-default me-md-3"
+      (click)="openAgregarModal()"
+    >
+      Modificar
+    </button>
+    <button type="button" class="btn btn-primary me-md-3">Eliminar</button>
+    <button type="button" class="btn btn-primary me-md-3">Agregar</button>
+  </div>
+</div>
+
+<div class="container p-3 mt-4 mb-4">
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="checkbox1" />
+    <label class="form-check-label text-justify" for="checkbox1">
+      <span class="text-danger">*</span> Una vez manifestado lo anterior, se
+      solicita al SAT, a través de AGACE, que realice las inspecciones a que
+      hace referencia la fracción IX de la regla 7.1.1, a las instalaciones
+      señaladas en las que se realizan las operaciones de comercio exterior con
+      el propósito de verificar la información plasmada en la presente solicitud
+      del Registro en el Esquema Integral de Certificación.
+    </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="checkbox2" />
+    <label class="form-check-label text-justify" for="checkbox2">
+      <span class="text-danger">*</span> Bajo protesta de decir verdad,
+      manifiesto que los datos asentados en el presente documento son ciertos y
+      que las facultades que me fueron otorgadas para representar al solicitante
+      no me han sido modificadas y/o revocadas.
+    </label>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" #Agregar>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Agregar miembro de la empresa</h5>
+      </div>
+      <div class="modal-body p-4">
+        <form [formGroup]="agregarMiembroDeLaEmpresaFrom" class="form-group">
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group">
+                <app-catalogo-select
+                  [label]="'En su carácter de'"
+                  [required]="true"
+                  [catalogo]="enSuCaracterDeOptions"
+                ></app-catalogo-select>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <label for="rfc" class="form-label">RFC *:</label>
+                <input
+                  type="text"
+                  id="rfc"
+                  formControlName="rfc"
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <div class="col-4 d-flex align-items-end">
+              <div class="form-group">
+                <button type="button" class="btn btn-primary">Buscar</button>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group">
+                <label for="obligadoaTributarenMéxico" class="form-label"
+                  >Obligado a tributar en México *:</label
+                >
+                <app-input-radio
+                  [radioOptions]="radioOptions"
+                  [isRequired]="true"
+                  [layout]="'horizontal'"
+                  [gap]="'50px'"
+                ></app-input-radio>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <label for="registroFederaldeContribuyentes" class="form-label"
+                  >Registro Federal de Contribuyentes *:</label
+                >
+                <input
+                  type="text"
+                  id="registroFederaldeContribuyentes"
+                  class="form-control"
+                  [value]="agregarMiembroDeLaEmpresaFrom.get('rfc')?.value"
+                  formControlName="registroFederaldeContribuyentes"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group">
+                <app-catalogo-select
+                  [label]="'Nacionalidad'"
+                  [placeholder]="'Seleccione un valor'"
+                  [required]="true"
+                  [catalogo]="nacionalidadOptions"
+                  formControlName="nacionalidad"
+                ></app-catalogo-select>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <label for="nombreCompleto" class="form-label"
+                  >Nombre completo *:</label
+                >
+                <input
+                  type="text"
+                  id="nombreCompleto"
+                  class="form-control"
+                  formControlName="nombreCompleto"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="button-group d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary me-md-3">
+              Aceptar
+            </button>
+            <button
+              type="button"
+              class="btn btn-default me-md-3"
+              (click)="closeAgregarModal()"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
