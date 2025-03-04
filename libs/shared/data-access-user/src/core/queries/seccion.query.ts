@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 @Injectable({providedIn: 'root'})
-export class SeccionQuery extends Query<SeccionState> {
+export class SeccionLibQuery extends Query<SeccionState> {
 
     /**
      * Selecciona el estatdo completo de la sección
