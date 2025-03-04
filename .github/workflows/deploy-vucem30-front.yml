@@ -30,22 +30,22 @@ jobs:
       - name: Define SonarScanner full name
         run: echo "SONAR=sonar-scanner-${{ env.VERSION }}" >> $GITHUB_ENV
         
+      - name: Listar archivos
+        run: ls -la
+  
       - name: Download SonarScanner
         run: |
-          cd frontend
           curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.VERSION }}.zip
           unzip sonar-scanner.zip
           
       - name: Verify SonarScanner Installation
         run: |
-          cd frontend
           ./${{ env.SONAR }}/bin/sonar-scanner --version
         
       - name: Run SonarQube Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          cd frontend
           ./${{ env.SONAR }}/bin/sonar-scanner \
             -Dsonar.projectKey=v30_front \
             -Dsonar.organization=v30 \
@@ -62,16 +62,14 @@ jobs:
             ${{ runner.os }}-node-
       - name: Install dependencies
         run: |
-          cd frontend
           npm install
           npm ci
       - name: Build Angular project
         run: |
-          cd frontend
           npx ng build --configuration=production
           
       - name: Build Docker images from docker-compose
-        run: docker-compose -f ./frontend/docker/modulefederation-microfrontends.yml build
+        run: docker-compose -f ./docker/modulefederation-microfrontends.yml build
         
       - name: Set up Docker Buildx
         id: buildx
