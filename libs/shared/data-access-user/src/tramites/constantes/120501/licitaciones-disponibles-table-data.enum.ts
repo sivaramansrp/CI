@@ -1,4 +1,4 @@
-interface Complimentaria {
+interface compliMentaria {
   numerodelicitacion: string;
   fechadelicitacion: string;
   descripcion: string;
@@ -10,32 +10,32 @@ interface Complimentaria {
 export const CONFIGURACION_ACCIONISTAS = [
     {
         encabezado: 'Número de licitación',
-        clave: (ele: Complimentaria) => ele.numerodelicitacion,
+        clave: (ele: compliMentaria) => ele.numerodelicitacion,
         orden: 1
       },
       {
         encabezado: 'Fecha de evento de licitación pública',
-        clave: (ele: Complimentaria) => ele.fechadelicitacion,
+        clave: (ele: compliMentaria) => ele.fechadelicitacion,
         orden: 2
       },
       {
         encabezado: 'Descripción del producto ',
-        clave: (ele: Complimentaria) => ele.descripcion,
+        clave: (ele: compliMentaria) => ele.descripcion,
         orden: 3
       },
       {
         encabezado: 'Monto adjudicado',
-        clave: (ele: Complimentaria) => ele.montoadjudicado,
+        clave: (ele: compliMentaria) => ele.montoadjudicado,
         orden: 4
       },
       {
         encabezado: 'Fecha inicio vigencia',
-        clave: (ele: Complimentaria) => ele.fechainiciovigencia,
+        clave: (ele: compliMentaria) => ele.fechainiciovigencia,
         orden: 5
       },
       {
         encabezado: 'Fecha fin vigencia',
-        clave: (ele: Complimentaria) => ele.fechafinvigencia,
+        clave: (ele: compliMentaria) => ele.fechafinvigencia,
         orden: 6
       }
 ]

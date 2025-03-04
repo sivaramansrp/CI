@@ -26,12 +26,13 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { LicitacionesDisponiblesService } from '@ng-mf/data-access-user';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 
 import { TablaSeleccion } from '@ng-mf/data-access-user'
 
 import { CONFIGURACION_ACCIONISTAS } from '@ng-mf/data-access-user';
 
+import detosdelatable from '../../../../../../../../../libs/shared/theme/assets/json/120501/datos-de-la-tabla.json'
 
 /**
  *  AccionBoton
@@ -101,16 +102,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   /**
    * Datos de ejemplo para la tabla.
    */
-  datos = [
-    {
-      numerodelicitacion:"002/2024 ",
-      fechadelicitacion:"2024-03-22 ",
-      descripcion:"",
-      montoadjudicado:"9985",
-      fechainiciovigencia:"2024-03-01",
-      fechafinvigencia:"2024-12-31"
-    }
-  ]
+  datos = detosdelatable;
   /**
    * Datos de los pasos del asistente.
    */
@@ -139,11 +131,11 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de entidades federativas.
    */
-  entidadfederativa!: Catalogo[];
+  entidadFederativa!: Catalogo[];
   /**
    * Catálogo de representaciones federales.
    */
-  representacionfederal!: Catalogo[];
+  representacionFederal!: Catalogo[];
   /**
    * Datos de la tabla.
    */
@@ -165,29 +157,29 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   constructor(private service:LicitacionesDisponiblesService,private fb: FormBuilder) {
     this.formForTotalCount = this.fb.group({})
     this.formulario = this.fb.group({
-      entidadfederativa: ["", Validators.required],
-      representacionfederal: ["", Validators.required],
+      entidadFederativa: ["", Validators.required],
+      representacionFederal: ["", Validators.required],
     });
     this.detalledelalicitacionForm = this.fb.group({
-      numeradelicitacion: ["", Validators.required],
-      fechadeleventodelicitacion: ["", Validators.required],
-      descripciondelproducto:["", Validators.required],
-      unidadtarifaria:["", Validators.required],
-      regimenaduanero: ["", Validators.required],
-      fraccionarancelaria: ["", Validators.required],
-      fechadeiniciodevigenciadelcupo: ["", Validators.required],
-      fechadefindevigenciadelcupo:["", Validators.required],
-      observaciones: ["", Validators.required],
-      bloquecomercial: ["", Validators.required],
+      numeraDelicitacion: ["", Validators.required],
+      fechaDelEventoDelicitacion: ["", Validators.required],
+      descripcionDelProducto:["", Validators.required],
+      unidadTarifaria:["", Validators.required],
+      regimenAduanero: ["", Validators.required],
+      fraccionArancelaria: ["", Validators.required],
+      fechaDeiniciodeVigenciadelCupo: ["", Validators.required],
+      fechaDefindeVigenciadelCupo:["", Validators.required],
+      obserVaciones: ["", Validators.required],
+      bloqueComercial: ["", Validators.required],
       paises: ["", Validators.required],
-      montoadjudicado: ["", Validators.required],
-      montodisponible: ["", Validators.required],
-      montomaximo: ["", Validators.required],
+      montoadJudicado: ["", Validators.required],
+      montoDisponible: ["", Validators.required],
+      montoMaximo: ["", Validators.required],
     })
     this.adquiriente = this.fb.group({
       rfc: ["", Validators.required],
-      montodisponible: [""],
-      montorecibir: ["", Validators.required],
+      adquirienteMontoDisponible: [""],
+      montoRecibir: ["", Validators.required],
     })
   }
   /**
@@ -196,9 +188,9 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.formularioTotalCount();
     this.actualizarRecuentoTotalDeFilas();
-    this.entidadFederativa();
-    this.representacionFederal();
-    this.getDetallesdelalicitacion();
+    this.getEntidadFederativa();
+    this.getRepresentacionFederal();
+    this.getDetallesDelalicitacion();
     this.getAdquiriente();
   }
   /**
@@ -220,10 +212,10 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   /**
    * Obtiene la lista de entidades federativas.
    */
-  entidadFederativa(): void {
-    this.service.getEntidadfederativa().subscribe((response) => {
+  getEntidadFederativa(): void {
+    this.service.getEntidadFederativa().subscribe((response) => {
       if(response){
-        this.entidadfederativa = response.data;
+        this.entidadFederativa = response.data;
       }
     }
     );
@@ -231,10 +223,10 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
 /**
    * Obtiene la lista de representaciones federales.
    */
-representacionFederal(): void {
-  this.service.getRepresentacionfederal().subscribe((response) => {
+getRepresentacionFederal(): void {
+  this.service.getRepresentacionFederal().subscribe((response) => {
     if(response){
-      this.representacionfederal = response.data;
+      this.representacionFederal = response.data;
     }
   }
   );
@@ -267,11 +259,7 @@ ngOnDestroy(): void {
  * @param e Objeto que contiene la acción y el valor del botón.
  */
 getValorIndice(e: AccionBoton):void{
-  console.log("e",e)
-  console.log("e valor",e.valor)
-
   if (e.valor > 0 && e.valor < 5) {
-    console.log("first if loop")
     this.indice = e.valor;
     if (this.wizardComponent) {
       if (e.accion === 'cont') {
@@ -279,9 +267,7 @@ getValorIndice(e: AccionBoton):void{
       } else {
         this.wizardComponent.atras();
       }
-    } else {
-      console.error('wizardComponent is not initialized');
-    }
+    } 
   }
 
 }
@@ -291,24 +277,24 @@ getValorIndice(e: AccionBoton):void{
  *
  * Utiliza el servicio `LicitacionesDisponiblesService` para obtener los datos.
  */
-getDetallesdelalicitacion():void{
-  this.service.getDetallesdelalicitacion().pipe(takeUntil(this.destroyed$)).subscribe(
+getDetallesDelalicitacion():void{
+  this.service.getDetallesDelalicitacion().subscribe(
     (data:any)=>{
       this.detalledelalicitacionForm.patchValue({
-        numeradelicitacion:data.numeradelicitacion,
-        fechadeleventodelicitacion:data.fechadeleventodelicitacion,
-        descripciondelproducto:data.descripciondelproducto,
-        unidadtarifaria:data.unidadtarifaria,
-        regimenaduanero:data.regimenaduanero,
-        fraccionarancelaria:data.fraccionarancelaria,
-        fechadeiniciodevigenciadelcupo:data.fechadeiniciodevigenciadelcupo,
-        fechadefindevigenciadelcupo:data.fechadefindevigenciadelcupo,
-        observaciones:data.observaciones,
-        bloquecomercial:data.bloquecomercial,
+        numeraDelicitacion:data.numeraDelicitacion,
+        fechaDelEventoDelicitacion:data.fechaDelEventoDelicitacion,
+        descripcionDelProducto:data.descripcionDelProducto,
+        unidadTarifaria:data.unidadTarifaria,
+        regimenAduanero:data.regimenAduanero,
+        fraccionArancelaria:data.fraccionArancelaria,
+        fechaDeiniciodeVigenciadelCupo:data.fechaDeiniciodeVigenciadelCupo,
+        fechaDefindeVigenciadelCupo:data.fechaDefindeVigenciadelCupo,
+        obserVaciones:data.obserVaciones,
+        bloqueComercial:data.bloqueComercial,
         paises:data.paises,
-        montoadjudicado:data.montoadjudicado,
-        montodisponible:data.montodisponible,
-        montomaximo:data.montomaximo
+        montoadJudicado:data.montoadJudicado,
+        montoDisponible:data.montoDisponible,
+        montoMaximo:data.montoMaximo
       })
     })
 }
@@ -319,12 +305,12 @@ getDetallesdelalicitacion():void{
  * Utiliza el servicio `LicitacionesDisponiblesService` para obtener los datos.
  */
 getAdquiriente():void{
-  this.service.getAdquiriente().pipe(takeUntil(this.destroyed$)).subscribe(
+  this.service.getAdquiriente().subscribe(
     (data:any)=>{
       this.adquiriente.patchValue({
         rfc:data.rfc,
-        montodisponible:data.montodisponible,
-        montorecibir:data.montorecibir
+        adquirienteMontoDisponible:data.adquirienteMontoDisponible,
+        montoRecibir:data.montoRecibir
       })
     })
 }

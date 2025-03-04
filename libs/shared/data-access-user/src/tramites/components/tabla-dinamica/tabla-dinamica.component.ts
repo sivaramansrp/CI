@@ -92,10 +92,6 @@ export class TablaDinamicaComponent<T> {
   obtenerConfiguracionOrdenada(): ConfiguracionColumna<T>[] {
     return this.configuracionTabla.sort((a, b) => a.orden - b.orden);
   }
-  ngOnInit(): void {
-    console.log("tipoSeleccionTabla",this.tipoSeleccionTabla)
-  }
-
   /**
    * Maneja la selección de una fila.
    * Actualiza el valor de `idFilaSeleccionada` con el ID de la fila seleccionada y emite el evento con la fila completa seleccionada.

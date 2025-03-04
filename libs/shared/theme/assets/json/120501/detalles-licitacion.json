@@ -1,17 +1,17 @@
 {
-    "numeradelicitacion":"002/2024",
-    "fechadeleventodelicitacion":"2024-03-22",
-    "descripciondelproducto":"PANTALONES CON PETO Y TIRANTI 100% ALGODON",
-    "unidadtarifaria":"Caja",
-    "regimenaduanero":"EXPORTACION",
-    "fraccionarancelaria":"61012003, 61013001, 61013099,",
-    "fechadeiniciodevigenciadelcupo":"2024-03-01",
-    "fechadefindevigenciadelcupo":"2024-12-31",
-    "observaciones":"",
-    "bloquecomercial":"Tratado entre México, Estados Unidos y Canadá",
+    "numeraDelicitacion":"002/2024",
+    "fechaDelEventoDelicitacion":"2024-03-22",
+    "descripcionDelProducto":"PANTALONES CON PETO Y TIRANTI 100% ALGODON",
+    "unidadTarifaria":"Caja",
+    "regimenAduanero":"EXPORTACION",
+    "fraccionArancelaria":"61012003, 61013001, 61013099,",
+    "fechaDeiniciodeVigenciadelCupo":"2024-03-01",
+    "fechaDefindeVigenciadelCupo":"2024-12-31",
+    "obserVaciones":"",
+    "bloqueComercial":"Tratado entre México, Estados Unidos y Canadá",
     "paises":"ESTADOS UNIDOS DE AMERICA,",
-    "montoadjudicado":"9985",
-    "montodisponible":"9985",
-    "montomaximo":"10000"
+    "montoadJudicado":"9985",
+    "montoDisponible":"9985",
+    "montoMaximo":"10000"
     
 }

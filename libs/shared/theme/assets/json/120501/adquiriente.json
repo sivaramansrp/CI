@@ -1,5 +1,5 @@
 {
     "rfc":"eeg860212925",
-    "montodisponible":"15",
-    "montorecibir":"1000"
+    "adquirienteMontoDisponible":"15",
+    "montoRecibir":"1000"
 }

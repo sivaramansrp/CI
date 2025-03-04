@@ -13,13 +13,13 @@ export class LicitacionesDisponiblesService {
   getData(): Observable<any> {
     return this.http.get('assets/json/120501/licitaciones-disponibles.json');
   }
-  getEntidadfederativa(): Observable<RespuestaCatalogos> {
+  getEntidadFederativa(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/120501/entidad-federativa.json');
   }
-  getRepresentacionfederal(): Observable<RespuestaCatalogos> {
+  getRepresentacionFederal(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/120501/representacion-federal.json');
   }
-  getDetallesdelalicitacion(): Observable<unknown> {
+  getDetallesDelalicitacion(): Observable<unknown> {
     return this.http.get('assets/json/120501/detalles-licitacion.json');
   }
   getAdquiriente(): Observable<unknown> {

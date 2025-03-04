@@ -8,10 +8,10 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'soltracupos',
+    redirectTo: 'cupos-solicitud-transferencia'
   },
   {
-    path: 'soltracupos',
+    path: 'cupos-solicitud-transferencia',
     component: SolicitarTransferenciaCuposMainComponent,
   },
 ];
