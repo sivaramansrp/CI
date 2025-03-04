@@ -61,6 +61,9 @@ import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { AgregarMiembroDeLaEmpresaComponent } from '../agregar-miembro-de-la-empresa/agregar-miembro-de-la-empresa.component';
+import { Tramite31601Store,Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
+import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query'
+import { Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
 
 /* @features
  * - Carga de datos desde archivos JSON.
@@ -320,18 +323,37 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
    * Datos del cuerpo de la tabla de instalaciones.
    */
   public InstalacionesBodyData: any[] = [];
+
+  public solicitudState!: Solicitud31601State
+  private destroyNotifier$: Subject<void> = new Subject();
   /*
    *constructor
    */
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private tramite31601Store: Tramite31601Store,
+    private tramite31601Query: Tramite31601Query
+  ) {}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Llama a los métodos para obtener datos de establecimientos, empleados, domicilios e instalaciones.
    */
   ngOnInit() {
+    this.tramite31601Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.preOperativeForm = this.fb.group({
-      autorizacionIVAIEPS: ['', Validators.required],
+      autorizacionIVAIEPS: [this.solicitudState?.autorizacionIVAIEPS, Validators.required],
+      regimen_0:[this.solicitudState?.regimen_0],
+      regimen_1:[this.solicitudState?.regimen_1],
+      regimen_2:[this.solicitudState?.regimen_2],
+      regimen_3:[this.solicitudState?.regimen_3],
       preOperativo: ['', Validators.required],
       indiqueSi: ['', Validators.required],
       senale: ['', Validators.required],
@@ -519,5 +541,10 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
     this.itemsPerPage = itemsPerPage;
     this.currentPage = 1;
     this.updatePagination();
+  }
+
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
+    const valor = form.get(campo)?.value;
+    (this.tramite31601Store[metodoNombre] as (value: any) => void)(valor);
   }
 }

@@ -14,6 +14,7 @@
           [description]="descriptionData.radio1.description"
           [showDescription]="true"
           formControlName="autorizacionIVAIEPS"
+          (change)="setValoresStore(preOperativeForm,'autorizacionIVAIEPS', 'setAutorizacionIVAIEPS')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -49,7 +50,10 @@
                 class="form-check-input"
                 type="checkbox"
                 id="regimen_0"
-                value="1"
+                value=""
+                name="regimen_0"
+                formControlName="regimen_0"
+                (change)="setValoresStore(preOperativeForm,'regimen_0', 'setRegimen_0')"
               />
               <label class="form-check-label" for="regimen_0">
                 Importación temporal para la elaboración, transformación o
@@ -70,7 +74,10 @@
                 class="form-check-input"
                 type="checkbox"
                 id="regimen_1"
-                value="1"
+                value=""
+                name="regimen_1"
+                formControlName="regimen_1"
+                (change)="setValoresStore(preOperativeForm,'regimen_1', 'setRegimen_1')"
               />
               <label class="form-check-label" for="regimen_1">
                 Depósito fiscal para someterse al proceso de ensamble y
@@ -92,7 +99,10 @@
                 class="form-check-input"
                 type="checkbox"
                 id="regimen_2"
-                value="1"
+                value=""
+                name="regimen_2"
+                formControlName="regimen_2"
+                (change)="setValoresStore(preOperativeForm,'regimen_2', 'setRegimen_2')"
               />
               <label class="form-check-label" for="regimen_2">
                 Elaboración, transformación o reparación en recinto fiscalizado
@@ -112,7 +122,10 @@
                 class="form-check-input"
                 type="checkbox"
                 id="regimen_3"
-                value="1"
+                value=""
+                name="regimen_3"
+                formControlName="regimen_3"
+                (change)="setValoresStore(preOperativeForm,'regimen_3', 'setRegimen_3')"
               />
               <label class="form-check-label" for="regimen_3">
                 Recinto Fiscalizado Estratégico
