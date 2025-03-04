@@ -42,17 +42,7 @@ jobs:
         run: |
           ./${{ env.SONAR }}/bin/sonar-scanner --version
         
-      - name: Run SonarQube Analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          ./${{ env.SONAR }}/bin/sonar-scanner \
-            -Dsonar.projectKey=v30_front \
-            -Dsonar.organization=v30 \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=https://sonar.ultrasist.net \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-            -Dsonar.verbose=true
+
       - name: Cache Node.js modules
         uses: actions/cache@v3
         with:
@@ -66,7 +56,7 @@ jobs:
           npm ci
           
       - name: Build Angular project with Nx
-        run: npx nx build app1
+        run: npx nx run dashboard:build
           
       - name: Build Docker images from docker-compose
         run: docker-compose -f ./docker/modulefederation-microfrontends.yml build
