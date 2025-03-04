@@ -11,10 +11,11 @@
  */
 
 import { Component, ViewChild } from '@angular/core';
-import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/120301/elegibilidad-de-textiles-routing.model';
+import { FormGroup, FormControl } from '@angular/forms';
+import { ListaPasosWizard } from '../../models/elegibilidad-de-textiles.model';
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { PASOS } from 'libs/shared/data-access-user/src/tramites/constantes/elegibilidad-de-textiles.enums';
+import { PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
 
 /**
  * Interfaz para definir la acción y el valor del botón. --120301
@@ -29,6 +30,9 @@ interface AccionBoton {
   templateUrl: './elegibilidad-textiles.component.html',
 })
 export class ElegibilidadTextilesComponent {
+
+  formGroup: FormGroup;
+
   title(title: any) {
     throw new Error('Método no implementado.');
   }
@@ -59,6 +63,18 @@ export class ElegibilidadTextilesComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  constructor() {
+
+    this.formGroup = new FormGroup({
+
+      campo1: new FormControl(''),
+
+      campo2: new FormControl('')
+
+    });
+
+  }
 
   /**
    * Maneja la acción del botón y determina la navegación (siguiente o anterior).
