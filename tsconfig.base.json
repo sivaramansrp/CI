@@ -24,6 +24,7 @@
         "apps/agriculture/src/app/remote-entry/entry.routes.ts"
       ],
       "but/Routes": ["apps/but/src/app/remote-entry/entry.routes.ts"],
+      "cofepris/Routes": ["apps/cofepris/src/app/remote-entry/entry.routes.ts"],
       "funcionario/Routes": [
         "apps/funcionario/src/app/remote-entry/entry.routes.ts"
       ],
