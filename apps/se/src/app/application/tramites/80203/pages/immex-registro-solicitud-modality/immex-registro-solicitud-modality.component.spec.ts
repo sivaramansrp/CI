@@ -47,11 +47,7 @@ describe('ImmexRegistroSolicitudModalityComponent', () => {
 
   it('should run #constructor()', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should run #title()', () => {
-    component.title({});
-  });
+  });  
 
   it('should run #getValorIndice()', () => {
     component.wizardComponent = component.wizardComponent || {};

@@ -25,11 +25,11 @@ interface AccionBoton {
   templateUrl: './immex-registro-solicitud-modality.component.html',
 })
 export class ImmexRegistroSolicitudModalityComponent {
-  componenteWizard: any;
+  asistenteSolicitud: any;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  title(title: any) {
-    // throw new Error('Método no implementado.');
+  establecerTitulo(title: any) {
+    throw new Error('Método no implementado.');
   }
 
   /**
@@ -83,6 +83,6 @@ export class ImmexRegistroSolicitudModalityComponent {
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   obtenerNombreDelTítulo(valor: number): any {
-    // throw new Error('Método no implementado.');
+    throw new Error('Método no implementado.');
   }
 }

@@ -39,6 +39,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'anexo-1',
   templateUrl: './anexo-1.component.html',
   styleUrls: ['./anexo-1.component.scss'],
@@ -69,10 +70,10 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @type {ConfiguracionColumna<immexInfo>[]}
    */
   permisoImmexTabla: ConfiguracionColumna<immexInfo>[] = IMMEX_SERVICIO;
-    /**
-   * Datos de los servicios.
-   * @type {immexInfo[]}
-   */
+/**
+ * Datos de los servicios IMMEX.
+ * @type {immexInfo[]} 
+ */
     ImmexDatos: immexInfo[] = [
       {
         IMMEX_Columna_1: '01',
@@ -83,6 +84,16 @@ export class Anexo1Component implements OnInit, OnDestroy {
         IMMEX_Columna_6: '10',
         IMMEX_Columna_7: '28/12/203',
         estatus: true
+      },
+      {
+        IMMEX_Columna_1: '02',
+        IMMEX_Columna_2: 'IM56789234',
+        IMMEX_Columna_3: '72015010',
+        IMMEX_Columna_4: 'Hierro y acero sin alear en lingotes',
+        IMMEX_Columna_5: 'Tonelada',
+        IMMEX_Columna_6: '25',
+        IMMEX_Columna_7: '15/05/2025',
+        estatus: false
       }
     ];
 
@@ -92,10 +103,11 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @type {ConfiguracionColumna<fraccionInfo>[]}
    */
   fraccionExportacionTabla: ConfiguracionColumna<fraccionInfo>[] = FRACCION_EXPORTACION;
-    /**
-   * Datos de los servicios.
-   * @type {fraccionInfo[]}
-   */
+/**
+ * Datos de las fracciones arancelarias.
+ * @type {fraccionInfo[]} 
+ * Datos de ejemplo:
+ */
     fraccionTablaDatos: fraccionInfo[] = [
       {
         FRACCION_Columna_1: '01',
@@ -105,7 +117,16 @@ export class Anexo1Component implements OnInit, OnDestroy {
         FRACCION_Columna_5: 'Fundición en bruto sin alear con un contenido de fosforo superior al 0.5% en peso',
         FRACCION_Columna_6: 'FRACC EXP 1 SENASICA',
         estatus: true
-      }
+      },
+      {
+        FRACCION_Columna_1: '02',
+        FRACCION_Columna_2: '72015010',
+        FRACCION_Columna_3: '72015010',
+        FRACCION_Columna_4: 'Tonelada',
+        FRACCION_Columna_5: 'Hierro y acero sin alear en lingotes',
+        FRACCION_Columna_6: 'FRACC EXP 2 SEMARNAT',
+        estatus: false
+      },
     ];
 
   // Mesa NICO
@@ -114,15 +135,22 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @type {ConfiguracionColumna<nicoInfo>[]}
    */
   nicoTabla: ConfiguracionColumna<nicoInfo>[] = NICO_TABLA;
-    /**
-   * Datos de los servicios.
-   * @type {nicoInfo[]}
-   */
+/**
+ * Datos de los servicios.
+ * @type {nicoInfo[]} 
+ * Datos de ejemplo:
+ */
+
     nicoTablaDatos: nicoInfo[] = [
       {
         NICO_Columna_1: '01',
-        NICO_Columna_2: 'Fundición en bruto sin alear con un contenido de fosforo superior al 0.5% en peso',
+        NICO_Columna_2: 'Fundición en bruto sin alear con un contenido de fósforo superior al 0.5% en peso',
         estatus: true
+      },
+      {
+        NICO_Columna_1: '02',
+        NICO_Columna_2: 'Acero inoxidable con alto contenido de cromo y níquel',
+        estatus: false
       }
     ];
 

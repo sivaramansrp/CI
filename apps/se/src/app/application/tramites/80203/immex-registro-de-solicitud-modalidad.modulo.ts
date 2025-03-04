@@ -13,7 +13,7 @@ import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { Anexo1Component } from './components/anexo-1/anexo-1.component';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { ImmexRegistroDeSolicitudModalityRoutingModule } from './immex-registro-de-solicitud-modality-routing.module';
+import { ImmexRegistroDeSolicitudModalityRoutingModule } from './immex-registro-de-solicitud-modalidad-enrutamiento.modulo';
 import { ImmexRegistroSolicitudModalityComponent } from './pages/immex-registro-solicitud-modality/immex-registro-solicitud-modality.component';
 import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';

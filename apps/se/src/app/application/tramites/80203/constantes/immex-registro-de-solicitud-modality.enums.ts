@@ -29,14 +29,14 @@ export const TEXTOS = {
     INSTRUCCIONES: `<h6>Instrucciones</h6>
     <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
     <p>- En caso de que no requieras algún documento, seleccionalo y elíminalo</p>
-    <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`
+    <p>- Si necesitas anexar más de un documento del mismo tipo seleccionalo de la lista y presiona "Agregar nuevo".</p>`
 };
 
 export const TEXTOS_REQUISITOS = {
     INSTRUCCIONES: `<h6>Instrucciones</h6>
     <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
-    <p>- En caso de que no requieras algún documento, selecciónalo y elimínalo</p>
-    <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`,
+    <p>- En caso de que no requieras algún documento, seleccionalo y elimínalo</p>
+    <p>- Si necesitas anexar más de un documento del mismo tipo seleccionalo de la lista y presiona "Agregar nuevo".</p>`,
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"</p>`,
 };
 export const MENSAJE_DE_ÉXITO_ETAPA_UNO = `La solicitud ha quedado registrada con el número temporal 202758511. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.`
