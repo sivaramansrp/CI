@@ -15,7 +15,7 @@ sharedMappings.register(path.join(__dirname, '../../tsconfig.base.json'), [
 
 module.exports = {
  output: {
-  uniqueName: 'agriculture',
+  uniqueName: 'agricultura',
   publicPath: 'auto',
   scriptType: 'text/javascript'
  },
@@ -29,10 +29,10 @@ module.exports = {
  },
  plugins: [
   new ModuleFederationPlugin({
-   name: 'agriculture',
+   name: 'agricultura',
    filename: 'remoteAppEntry.js',
    exposes: {
-    './Module': 'apps/agriculture/src/app/application/app.module.ts',
+    './Module': 'apps/agricultura/src/app/application/app.module.ts',
    },
    shared: share({
     '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
