@@ -19,6 +19,8 @@ import { DATOS_GENERALES_SOCIOS } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
+import DatosSociostable from '../../../../../../../../../libs/shared/theme/assets/json/120601/datosSocios-table.json';
+
 /**
  * Componente para gestionar los datos generales de socios.
  */
@@ -35,7 +37,7 @@ export class DatosGeneralesSociosComponent implements OnInit {
   FormSolicitud!: FormGroup;
 
   /** Formulario para almacenar el recuento total de filas */
-  formForTotalCount!: FormGroup;
+  formularioParaConteoTotal!: FormGroup;
 
   /** Pasos para la navegación en el asistente */
   pasos: ListaPasosWizard[] = PASOS;
@@ -57,12 +59,12 @@ export class DatosGeneralesSociosComponent implements OnInit {
   /**
    * Define el tipo de selección de la tabla como casilla de verificación (checkbox).
    */
-  tablecheckbox = TablaSeleccion.CHECKBOX;
+  tablaCasilla = TablaSeleccion.CHECKBOX;
 
   /**
    * Índice de la fila seleccionada en la tabla. Por defecto, se inicializa en 1.
    */
-  selectedRow: number = 1;
+  filaSeleccionada: number = 1;
 
   /** Configuración de la tabla para socios */
   configuracionTabla = DATOS_GENERALES_SOCIOS;
@@ -71,15 +73,7 @@ export class DatosGeneralesSociosComponent implements OnInit {
   configuracionTabla_Extranjeros = DATOS_GENERALES_EXTRANJEROS;
 
   /** Array de datos para socios */
-  datos_Socios = [
-    {
-      a: "DIP150930L51",
-      b: "DESARROLLOS INMOBILIARIOS PUENTE DE CANTERA SA DE CV",
-      c: "",
-      d: "",
-      e: "",
-    }
-  ];
+  datosSocios = DatosSociostable;
 
   /** Array de datos para socios extranjeros */
   datos_Extranjeros = [];
@@ -89,6 +83,8 @@ export class DatosGeneralesSociosComponent implements OnInit {
    * @param fb - Instancia de FormBuilder
    */
   constructor(private fb: FormBuilder) {
+    this.datosSocios = DatosSociostable;
+    console.log("datosSocios", this.datosSocios);
     // Constructor logic can be added here if needed
   }
 
@@ -98,16 +94,16 @@ export class DatosGeneralesSociosComponent implements OnInit {
   ngOnInit(): void {
     this.FormSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
-        exentoDePago: ['No', Validators.required],
-        exentoDePagos: ['No', Validators.required],
+        Nacionalidad: ['No', Validators.required],
+        persona: ['No', Validators.required],
       }),
     });
 
-    this.formForTotalCount = this.fb.group({
+    this.formularioParaConteoTotal = this.fb.group({
       recuentoTotalDeFilas: [{ value: '', disabled: true }],
     });
 
-    const TOTAL_ROW_COUNT = this.datos_Socios.length;
-    this.formForTotalCount.patchValue({ recuentoTotalDeFilas: TOTAL_ROW_COUNT });
+    const TOTAL_ROW_COUNT = this.datosSocios.length;
+    this.formularioParaConteoTotal.patchValue({ recuentoTotalDeFilas: TOTAL_ROW_COUNT });
   }
 }

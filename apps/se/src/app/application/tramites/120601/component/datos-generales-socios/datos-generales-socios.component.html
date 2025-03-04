@@ -5,13 +5,13 @@
       <ng-container formGroupName="datosImportadorExportador">
         <div class="row">
           <div class="col-md-6">
-            <label for="exentoDePago">Nacionalidad mexicana:</label>
+            <label for="nacionalidadMexicana">Nacionalidad mexicana:</label>
             <div class="row">
               <div class="col-md-6">
                 <input
                   type="radio"
                   id="no"
-                  formControlName="exentoDePago"
+                  formControlName="Nacionalidad"
                   value="No"
                   class="me-4"
                 />
@@ -21,7 +21,7 @@
                 <input
                   type="radio"
                   id="yes"
-                  formControlName="exentoDePago"
+                  formControlName="Nacionalidad"
                   value="Yes"
                   class="me-4"
                 />
@@ -31,13 +31,13 @@
           </div>
 
           <div class="col-md-6">
-            <label for="exentoDePagos">Tipo de persona:</label>
+            <label for="tipoDePersona">Tipo de persona:</label>
             <div class="row">
               <div class="col-md-6">
                 <input
                   type="radio"
                   id="no"
-                  formControlName="exentoDePagos"
+                  formControlName="persona"
                   value="No"
                   class="me-4"
                 />
@@ -47,7 +47,7 @@
                 <input
                   type="radio"
                   id="yes"
-                  formControlName="exentoDePagos"
+                  formControlName="persona"
                   value="Yes"
                   class="me-4"
                 />
@@ -91,8 +91,8 @@
         <h6>Datos de los socios y/o accionistas:</h6>
         <app-tabla-dinamica
           [configuracionTabla]="configuracionTabla"
-          [tipoSeleccionTabla]="tablecheckbox"
-          [datos]="datos_Socios"
+          [tipoSeleccionTabla]="tablaCasilla"
+          [datos]="datosSocios"
         ></app-tabla-dinamica>
   
         <div class="row">
@@ -112,11 +112,11 @@
         <h6>Datos de los socios y/o accionistas::</h6>
         <app-tabla-dinamica
           [configuracionTabla]="configuracionTabla_Extranjeros"
-          [tipoSeleccionTabla]="tablecheckbox"
+          [tipoSeleccionTabla]="tablaCasilla"
           [datos]="datos_Extranjeros"
         ></app-tabla-dinamica>
 
-        <form [formGroup]="formForTotalCount">
+        <form [formGroup]="formularioParaConteoTotal">
           <div class="text-center">
             <div>
               <input

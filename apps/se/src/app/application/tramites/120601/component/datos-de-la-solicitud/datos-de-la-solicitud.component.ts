@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 
 import { Catalogo, CatalogoSelectComponent, SelectCatalogosComponent, TituloComponent } from '@ng-mf/data-access-user';
+import tipeDeEmpresa from '../../../../../../../../../libs/shared/theme/assets/json/120601/tipoDeEmpresa.json';
 
 /**
  * Componente que representa los datos de la solicitud en un proceso de múltiples pasos.
@@ -64,16 +65,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * Obtiene la lista de tipos de empresa.
    */
   public getTipoDeEmpresa(): void {
-    this.tipoDeEmpresa = [
-      {
-        id: 1,
-        descripcion: 'SINALOA',
-      },
-      {
-        id: 2,
-        descripcion: 'Opción 1',
-      }
-    ];
+    this.tipoDeEmpresa = tipeDeEmpresa;
   }
 
   /**

@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Catalogo, CatalogoSelectComponent, DATOS_GENERALES_REPRESENTACION, SelectCatalogosComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import representacionFederal from '../../../../../../../../../libs/shared/theme/assets/json/120601/representacionFederal.json';
+import representacionFederaltable from '../../../../../../../../../libs/shared/theme/assets/json/120601/representacionFederal-table.json';
+import tipoDeEmpresa from '../../../../../../../../../libs/shared/theme/assets/json/120601/tipoDeEmpresa.json';
 
 /**
  * Componente que representa la representación federal en un proceso de múltiples pasos.
@@ -59,17 +62,7 @@ export class RepresentacionFederalComponent implements OnInit {
   /**
    * Arreglo de datos para los socios.
    */
-  datos_Socios = [
-    {
-      calle: "AV PARQUE INDUSTRIAL AZTECAS",
-      numeroExterior: "1550",
-      numeroInterior: "",
-      codigoPostal: "32679",
-      colonia: "PARQUE INDUSTRIAL AZTECA",
-      municipio: "JUAREZ",
-      estado: "CHIHUAHUA"
-    }
-  ];
+  datos_Socios = representacionFederaltable;
 
   /**
    * Representa la representación seleccionada del catálogo.
@@ -81,9 +74,9 @@ export class RepresentacionFederalComponent implements OnInit {
    * Constructor de la clase.
    * @param fb El servicio FormBuilder.
    */
-  // constructor(private fb: FormBuilder) {
-  //   Initialization logic can be added here if needed
-  // }
+  constructor(private fb: FormBuilder) {
+    // Initialization logic can be added here if needed
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -111,16 +104,7 @@ export class RepresentacionFederalComponent implements OnInit {
    * @returns {void}
    */
   public getEntidadFederativa(): void {
-    this.estado = [
-      {
-        id: 1,
-        descripcion: 'SINALOA',
-      },
-      {
-        id: 2,
-        descripcion: 'Opción 1',
-      }
-    ];
+    this.estado = tipoDeEmpresa;
   }
 
   /**
@@ -128,16 +112,7 @@ export class RepresentacionFederalComponent implements OnInit {
    * @returns {void}
    */
   public getRepresentacionFederal(): void {
-    this.representacion = [
-      {
-        id: 1,
-        descripcion: 'CULIACAN',
-      },
-      {
-        id: 2,
-        descripcion: 'Opción 1',
-      }
-    ];
+    this.representacion = representacionFederal;
   }
 
   /**

@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { tap } from 'rxjs';
+import { Subscription, tap } from 'rxjs';
 
 import { CATALOGOS_ID, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
@@ -32,7 +32,7 @@ import { UppercaseDirective } from '@ng-mf/data-access-user';
   templateUrl: './Domicilio.component.html',
   styleUrl: './Domicilio.component.scss',
 })
-export class DomicilioComponent implements OnInit {
+export class DomicilioComponent implements OnInit, OnDestroy {
   /**
    * Propiedad de entrada para establecer dinámicamente el tabindex.
    */
@@ -55,6 +55,9 @@ export class DomicilioComponent implements OnInit {
    * Contiene subgrupos para organizar la estructura del domicilio fiscal.
    */
   form!: FormGroup;
+
+    /** Manejo de la suscripción para evitar fugas de memoria. */
+    private subscription: Subscription = new Subscription();
 
   /**
    * Constructor del componente.
@@ -79,6 +82,13 @@ export class DomicilioComponent implements OnInit {
    */
   ngOnInit(): void {
     this.getDatosGenerales();
+  }
+
+   /**
+   * Se ejecuta al destruir el componente y se cancelan suscripciones activas.
+   */
+   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   /**
@@ -123,7 +133,6 @@ export class DomicilioComponent implements OnInit {
   inicializarFormGroup(config: FormularioDinamico[], grupoNombre: string): void {
     const GRUPO = this.form.get(grupoNombre) as FormGroup;
     config.forEach((campo) => {
-      //const VALIDATORS = DomicilioComponent.getValidators(campo.validators);
       const VALIDATORS = DomicilioComponent.getValidators(campo.validators);
       GRUPO.addControl(campo.campo, this.fb.control({ value: '', disabled: campo.disabled }, VALIDATORS));
     });
@@ -154,23 +163,23 @@ export class DomicilioComponent implements OnInit {
    * Obtiene los datos generales del solicitante y los asigna al formulario.
    */
   getDatosGenerales(): void {
-    this.solicitanteServicio.getDatosGenerales(CATALOGOS_ID.DATOS_PERSONA_FISICA)
-      .pipe(
-        tap((response) => {
-          if (response) {
-            const DATOS = JSON.parse(response.data);
-            const DATOS_DOMICILIO_FISCAL = DATOS.domicilioFiscal;
+    this.subscription.add(
+      this.solicitanteServicio.getDatosGenerales(CATALOGOS_ID.DATOS_PERSONA_FISICA)
+        .pipe(
+          tap((response) => {
+            if (response) {
+              const DATOS = JSON.parse(response.data);
+              const DATOS_DOMICILIO_FISCAL = DATOS.domicilioFiscal;
+              const CAMPOS_DATOS_DOMICILIO_FISCAL = this.formServices.obtenerNombresCamposForm(this.domicilioFiscalForm);
 
-
-            const CAMPOS_DATOS_DOMICILIO_FISCAL = this.formServices.obtenerNombresCamposForm(this.domicilioFiscalForm);
-
-            CAMPOS_DATOS_DOMICILIO_FISCAL.forEach((campo) => {
-              this.formServices.agregarValorCampoDesactivados(this.domicilioFiscalForm, campo, DATOS_DOMICILIO_FISCAL[campo]);
-            });
-          }
-        })
-      )
-      .subscribe();
+              CAMPOS_DATOS_DOMICILIO_FISCAL.forEach((campo) => {
+                this.formServices.agregarValorCampoDesactivados(this.domicilioFiscalForm, campo, DATOS_DOMICILIO_FISCAL[campo]);
+              });
+            }
+          })
+        )
+        .subscribe()
+    );
   }
 }
 

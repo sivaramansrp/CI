@@ -1,19 +1,19 @@
 interface Socios {
-  a: string;
-  b: string;
-  c: string;
-  d: string;
-  e: string;
+  rfc: string;
+  razonsocial: string;
+  nombre: string;
+  apellidoPaterno: string;
+  apellidoM: string;
 }
 
 interface Extranjeros {
-  a: string;
-  b: string;
-  c: string;
-  d: string;
-  e: string;
-  F: string;
-  G: string;
+  taxID: string;
+  razonSocial: string;
+  nombre: string;
+  apellidoPaterno: string;
+  pais: string;
+  cp: string;
+  estado: string;
 }
 
 interface Representacion {
@@ -29,27 +29,27 @@ interface Representacion {
 export const DATOS_GENERALES_SOCIOS = [
   {
     encabezado: 'RFC',
-    clave: (ele: Socios) => ele.a,
+    clave: (ele: Socios) => ele.rfc,
     orden: 1,
   },
   {
     encabezado: 'Razón social',
-    clave: (ele: Socios) => ele.b,
+    clave: (ele: Socios) => ele.razonsocial,
     orden: 2,
   },
   {
     encabezado: 'Nombre',
-    clave: (ele: Socios) => ele.c,
+    clave: (ele: Socios) => ele.nombre,
     orden: 3,
   },
   {
     encabezado: 'Apellido paterno',
-    clave: (ele: Socios) => ele.d,
+    clave: (ele: Socios) => ele.apellidoPaterno,
     orden: 4,
   },
   {
     encabezado: 'Apellido m',
-    clave: (ele: Socios) => ele.e,
+    clave: (ele: Socios) => ele.apellidoM,
     orden: 5,
   },
 ];
@@ -57,37 +57,37 @@ export const DATOS_GENERALES_SOCIOS = [
 export const DATOS_GENERALES_EXTRANJEROS = [
   {
     encabezado: 'TAX ID',
-    clave: (ele: Extranjeros) => ele.a,
+    clave: (ele: Extranjeros) => ele.taxID,
     orden: 1,
   },
   {
     encabezado: 'Razón social',
-    clave: (ele: Extranjeros) => ele.b,
+    clave: (ele: Extranjeros) => ele.razonSocial,
     orden: 2,
   },
   {
     encabezado: 'Nombre',
-    clave: (ele: Extranjeros) => ele.c,
+    clave: (ele: Extranjeros) => ele.nombre,
     orden: 3,
   },
   {
     encabezado: 'Apellido paterno',
-    clave: (ele: Extranjeros) => ele.d,
+    clave: (ele: Extranjeros) => ele.apellidoPaterno,
     orden: 4,
   },
   {
     encabezado: 'Pais',
-    clave: (ele: Extranjeros) => ele.e,
+    clave: (ele: Extranjeros) => ele.pais,
     orden: 5,
   },
   {
     encabezado: 'CP',
-    clave: (ele: Extranjeros) => ele.F,
+    clave: (ele: Extranjeros) => ele.cp,
     orden: 6,
   },
   {
     encabezado: 'Estado',
-    clave: (ele: Extranjeros) => ele.G,
+    clave: (ele: Extranjeros) => ele.estado,
     orden: 7,
   },
 ];
