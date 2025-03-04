@@ -13,18 +13,21 @@ import {
   ListaPasosWizard,
   TituloComponent
 } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 
+/* eslint-disable */
 import DatosSucursal from 'libs/shared/theme/assets/json/120602/branchSelData.json';
 import ExtranjerosDatos from 'libs/shared/theme/assets/json/120602/extranjeros.json';
 import TableDataDatos from 'libs/shared/theme/assets/json/120602/table-data.json';
 import radioButtonMexicana from 'libs/shared/theme/assets/json/120602/radio-button-mexicana.json';
 import radioButtonPersona from 'libs/shared/theme/assets/json/120602/radio-button-mexicana.json';
 
-import { DATOS_EMPRESA } from 'libs/shared/data-access-user/src/tramites/constantes/120602/datos-empresa.enum';
+
+
+import { DATOS_EMPRESA } from '@ng-mf/data-access-user';
 
 /**
  * Metadatos del componente 'DatosEmpresaComponent'.

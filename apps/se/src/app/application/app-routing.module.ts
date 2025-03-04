@@ -17,8 +17,8 @@ const routes: Routes = [
   {
     path: 'de-pruebas',
     loadChildren: () =>
-      import('./tramites/120602/de-pruebas.module').then(
-        (m) => m.DePruebasModule
+      import('./tramites/120602/empresa-frontera-solicitud.module').then(
+        (m) => m.EmpresaFronteraSolicitudModule
       ),
   },
   {
