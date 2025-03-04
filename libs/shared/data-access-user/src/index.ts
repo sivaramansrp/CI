@@ -83,4 +83,10 @@ export { TEXTOS as TEXTOS_220501 } from './tramites/constantes/220501/texto-enum
 export {CATALOGOS_ID as CATALOGOS_ID_220501} from './tramites/constantes/220501/constantes';
 export {FECHA_INSPECCION_INPUT as FECHA_INSPECCION_INPUT_220502} from './tramites/constantes/220502/texto-enum';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
+export * from './core/enums/tabla-seleccion.enum';
+export * from './tramites/constantes/110102/datos-tratados-acuerdos.enum'
+export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuerdos.service';
+export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.service';
+export * from './core/services/110102/representacion-federal/representacionFederal.service';
+export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';
