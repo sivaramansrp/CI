@@ -1,6 +1,8 @@
+import { AcusePageComponent, FirmaPageComponent } from '@ng-mf/data-access-user';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
+
 
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
@@ -27,6 +29,16 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
   },
+
+  {
+    path: 'firmar',
+    component: FirmaPageComponent
+
+  },
+  {
+    path: 'acuse',
+    component: AcusePageComponent
+  }
 ];
 
 @NgModule({

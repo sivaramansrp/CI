@@ -1,0 +1,50 @@
+import { catchError, map, Subject, takeUntil } from 'rxjs';
+import { Component, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { ServiciosExtraordinariosService } from '../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
+import { FirmaElectronicaComponent } from '../../components/firma-electronica/firma-electronica.component';
+
+@Component({
+  selector: 'lib-firma-page',
+  templateUrl: './firma-page.component.html',
+  styleUrl: './firma-page.component.scss',
+  standalone: true,
+  imports: [FirmaElectronicaComponent]
+})
+export class FirmaPageComponent implements OnDestroy {
+  ruta: string = 'aga';
+
+  private destroy$ = new Subject<void>();
+  constructor(
+    private router: Router,
+    private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
+  ) { }
+
+  /**
+  * Maneja el evento para obtener la firma y realiza acciones adicionales.
+  * @param ev - La cadena de texto que representa la firma obtenida.
+  */
+  obtieneFirma(ev: string): void {
+    const FIRMA: string = ev;
+    if (FIRMA) {
+      // Obtiene el número de trámite
+      this.serviciosExtraordinariosServices
+        .obtenerTramite(19)
+        .pipe(
+          takeUntil(this.destroy$),
+          map(() => {
+            this.router.navigate([`${this.ruta}/pago/acuse`]);
+          }),
+          catchError((_error) => {
+            return _error;
+          })
+        )
+        .subscribe();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+}
