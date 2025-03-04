@@ -64,9 +64,9 @@ jobs:
         run: |
           npm install
           npm ci
-      - name: Build Angular project
-        run: |
-          npx ng build --configuration=production
+          
+      - name: Build Angular project with Nx
+        run: npx nx build app1
           
       - name: Build Docker images from docker-compose
         run: docker-compose -f ./docker/modulefederation-microfrontends.yml build
