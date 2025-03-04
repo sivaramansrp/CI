@@ -51,7 +51,7 @@ jobs:
             ${{ runner.os }}-node-
           
       - name: Build Docker images from docker-compose
-        run: docker-compose -f ./docker/modulefederation-microfrontends.yml build
+        run: docker compose -f ./docker/modulefederation-microfrontends.yml build
         
       - name: Set up Docker Buildx
         id: buildx
