@@ -1,0 +1,35 @@
+{
+    "tableHeader": [
+        "Tipo de Persona ",
+        "Nombre",
+        "RFC ",
+        "En su carácter de ",
+        "Nacionalidad ",
+        "Obligado a tributar en México",
+        "Nombre de la empresa "
+    ],
+"tableBody": [
+    {
+        "tbodyData": [
+            "Fisica 1",
+            "ERNESTO HERNANDEZ URIBE",
+            "HEUE780514BVA",
+            "Accionista",
+            "MEXICO (ESTADOS UNIDOS MEXICANOS)",
+            "Si",
+            ""
+        ]
+    },
+    {
+    "tbodyData": [
+        "Fisica 1",
+        "ERNESTO HERNANDEZ URIBE",
+        "HEUE780514BVA",
+        "Administrador único ",
+        "MEXICO (ESTADOS UNIDOS MEXICANOS)",
+        "Si",
+        ""
+    ]
+}
+]
+}

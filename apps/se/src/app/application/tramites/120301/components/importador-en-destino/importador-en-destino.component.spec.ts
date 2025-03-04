@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ImportadorEnDestinoComponent } from './importador-en-destino.component';
-import { ElegibilidadTextilesService } from '../../../../../../../../../libs/shared/data-access-user/src/core/services/120301/elegibilidad-textiles/elegibilidad-textiles.service';
+import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles.service';
 import { of } from 'rxjs';
 
 describe('ImportadorEnDestinoComponent', () => {
