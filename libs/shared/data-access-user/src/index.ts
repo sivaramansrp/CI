@@ -81,4 +81,9 @@ export * from './tramites/directives/Uppercase/uppercase.directive';
 
 
 
+export * from './tramites/constantes/110102/datos-tratados-acuerdos.enum'
+export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuerdos.service';
+export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.service';
+export * from './core/services/110102/representacion-federal/representacionFederal.service';
+export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';

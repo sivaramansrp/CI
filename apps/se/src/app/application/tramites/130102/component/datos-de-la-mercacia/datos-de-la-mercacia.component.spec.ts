@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { DetosDelLaMarcaciaComponent } from './datos-de-la-mercacia.component';
@@ -64,7 +65,7 @@ describe('DetosDelMarcanciaComponent', () => {
     component.formDelLa.controls['unidadMedida'].setValue('kg');
     component.formDelLa.controls['cantidad'].setValue(10);
     component.formDelLa.controls['valorFacturaUSD'].setValue(100.5);
-    expect(component.formDelLa.valid).toBeTrue();
+    expect(component.formDelLa.valid).toBe(true);
   });
 
   it('should mark form as invalid when required fields are empty', () => {
@@ -73,7 +74,7 @@ describe('DetosDelMarcanciaComponent', () => {
     component.formDelLa.controls['unidadMedida'].setValue('');
     component.formDelLa.controls['cantidad'].setValue('');
     component.formDelLa.controls['valorFacturaUSD'].setValue('');
-    expect(component.formDelLa.valid).toBeFalse();
+    expect(component.formDelLa.valid).toBeFalsy();
   });
 
   it('should fetch fraccion and update selectedValue', () => {

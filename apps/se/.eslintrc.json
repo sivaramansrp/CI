@@ -23,7 +23,7 @@
           }
         ],
         "@angular-eslint/component-selector": [
-          "off",
+          "error",
           {
             "type": "element",
             "prefix": "app",
