@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
@@ -61,7 +62,11 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CatalogoSelectComponent,
     TableComponent,
     InputRadioComponent,
-    InputFechaComponent
+    InputFechaComponent,
+    ToastrModule.forRoot()
+  ],
+  providers: [
+    ToastrService
   ]
 })
 export class DonacionesExtranjerasModule { }
