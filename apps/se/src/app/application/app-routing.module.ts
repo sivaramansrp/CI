@@ -21,6 +21,14 @@ const routes: Routes = [
       import('./tramites/120404/entidad-legal.module').then(
         (m) => m.EntidadLegalModule)
       },
+
+  {
+    path:'exportador-autorizado',
+    loadChildren:()=>
+      import('./tramites/110102/exportador-autorizado.module').then(
+        (m)=>m.ExportadorautorizadoModule
+      )
+  },
   {
     path: 'pantallas',
     loadChildren: () =>
