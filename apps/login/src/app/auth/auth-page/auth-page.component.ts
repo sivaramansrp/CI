@@ -41,7 +41,7 @@ export class AuthPageComponent {
       }
       this.usuarioStore.establecerUsuario('LEQI', perfilUsuario, roles, '');
 
-      this.router.navigateByUrl('/aga/pago/seleccion-tramite');
+      window.location.href = '/seleccion-tramite';
     }
   }
 }

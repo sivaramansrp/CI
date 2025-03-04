@@ -1,0 +1,18 @@
+services:
+#----------------------------------------------------------------
+  modulefederation-aga-microfront:
+    image: modulefederation-aga-microfront:1.0.0
+    build: 
+      context: ./../
+      dockerfile: apps/aga/Dockerfile
+    container_name: modulefederation-aga-microfront
+    restart: on-failure
+    expose:
+      - '4203'
+    ports:
+      - "4203:80"
+    networks:
+      - modulefederation-network
+#----------------------------------------------------------------
+networks:
+  modulefederation-network:
