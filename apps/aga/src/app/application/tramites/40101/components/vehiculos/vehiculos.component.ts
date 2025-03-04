@@ -51,6 +51,7 @@ export class VehiculosComponent implements AfterViewInit {
   constructor(private fb: FormBuilder, private toastr: ToastrService) {}
 
   ngOnInit(): void {
+    //  localStorage.removeItem('vehiculoData');
     this.formVehiculo = this.fb.group({
       solicitudVehiculoVin2: [
         '',
@@ -143,49 +144,13 @@ export class VehiculosComponent implements AfterViewInit {
     console.log('✅ Loaded first table data:', this.nacional);
     console.log('✅ Loaded second table data:', this.secondTableData);
   }
-
-  //  initializeForm(): void {
-  //   this.formVehiculo = this.fb.group({
-  //     solicitudVehiculoVin2: ['', [Validators.required, Validators.minLength(5)]],
-  //     solicitudVehiculoTipoVehiculo: ['', Validators.required],
-  //     solicitudVehiculoIdDeVehiculo: [{ value: '', disabled: true }],
-  //     solicitudVehiculoNumeroPlacas: ['', Validators.required],
-  //     solicitudVehiculoPaisEmisor: ['', Validators.required],
-  //     solicitudDomicilioEstado: ['', Validators.required],
-  //     solicitudVehiculoMarca: ['', Validators.required],
-  //     solicitudVehiculoModelo: ['', Validators.required],
-  //     anioVehiculoVEH: ['', Validators.required],
-  //     solicitudVehiculoTransponder: ['', Validators.required],
-  //     solicitudVehiculoColor: ['', Validators.required],
-  //     solicitudVehiculoNumeroEconomico: ['', Validators.required],
-  //     solicitudVehiculoNumero2daPlaca: [''],
-  //     solicitudVehiculoEmisor2daPlaca: [''],
-  //     solicitudVehiculoPaisEmisor2daPlaca: [''],
-  //     solicitudVehiculoDesc: [''],
-
-  //     vin2: ['', [Validators.required, Validators.maxLength(17)]],
-  //     tipoVehiculoArrastreAGA: ['', Validators.required],
-  //     idDeVehiculo: [{ value: '', disabled: true }, Validators.required],
-  //     numeroPlacas: ['', [Validators.required, Validators.maxLength(8)]],
-  //     paisEmisor: ['', Validators.required],
-  //     estado2: ['', [Validators.required, Validators.maxLength(20)]],
-  //     colorAGA: ['', Validators.required],
-  //     numeroEconomico: ['', [Validators.required, Validators.maxLength(17)]],
-  //     numero2daPlaca: ['', [Validators.maxLength(8)]],
-  //     emisor2daPlaca: ['', [Validators.maxLength(20)]],
-  //     paisEmisor2daPlaca: [''],
-  //     desc: ['', [Validators.maxLength(200)]],
-  //   });
-
-  // console.log('Form Initialized:', this.formVehiculo);
-  // }
-
   onSubmit() {
     if (this.modalInstance) {
       this.modalInstance.hide();
     } else {
       console.error('Modal instance is not initialized!');
     }
+    localStorage.removeItem('vehiculoData');
     const newVehiculo = {
       id: this.nacional.length + 1,
       solicitudVehiculoVin2:
@@ -312,18 +277,16 @@ export class VehiculosComponent implements AfterViewInit {
     { clave: 'PL', descripcion: 'Plateado' },
   ];
   paisCatalogo = [
-  { clave: 'MX', descripcion: 'México' },
-  { clave: 'US', descripcion: 'Estados Unidos' },
-  { clave: 'CA', descripcion: 'Canadá' },
-  { clave: 'ES', descripcion: 'España' },
-  { clave: 'AR', descripcion: 'Argentina' },
-  { clave: 'BR', descripcion: 'Brasil' },
-  { clave: 'CO', descripcion: 'Colombia' },
-  { clave: 'FR', descripcion: 'Francia' },
-  { clave: 'DE', descripcion: 'Alemania' },
-
+    { clave: 'MX', descripcion: 'México' },
+    { clave: 'US', descripcion: 'Estados Unidos' },
+    { clave: 'CA', descripcion: 'Canadá' },
+    { clave: 'ES', descripcion: 'España' },
+    { clave: 'AR', descripcion: 'Argentina' },
+    { clave: 'BR', descripcion: 'Brasil' },
+    { clave: 'CO', descripcion: 'Colombia' },
+    { clave: 'FR', descripcion: 'Francia' },
+    { clave: 'DE', descripcion: 'Alemania' },
   ];
-
 
   get f() {
     return this.formVehiculo.controls;

@@ -1,19 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import mockData from '../../../../../assets/json/40101/director-general-mockdata.json';
+import mockData from 'libs/shared/theme/assets/json/40101/director-general-mockdata.json';
 
 @Component({
   selector: 'app-director-general',
   templateUrl: './director-general.component.html',
-  styleUrl: './director-general.component.scss',
+  styleUrls: ['./director-general.component.scss'],
 })
 export class DirectorGeneralComponent implements OnInit {
-  constructor(private fb: FormBuilder) {
+  directorGeneralForm!: FormGroup;
+
+  constructor(private fb: FormBuilder) {}
+
+  ngOnInit(): void {
     this.crearFormularioDirectorGeneral();
     this.setFormValues();
   }
-
-  directorGeneralForm: FormGroup;
 
   crearFormularioDirectorGeneral(): void {
     this.directorGeneralForm = this.fb.group({
@@ -23,20 +25,18 @@ export class DirectorGeneralComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.crearFormularioDirectorGeneral();
-
-    this.setFormValues();
-  }
-
   setFormValues(): void {
-    console.log(mockData);
-    this.directorGeneralForm.get('nombre')?.setValue(mockData.nombre);
-    this.directorGeneralForm
-      .get('primerApellido')
-      ?.setValue(mockData.primerApellido);
-    this.directorGeneralForm
-      .get('segundoApellido')
-      ?.setValue(mockData.segundoApellido);
+    console.log('Mock Data:', mockData); // Debugging step
+    if (mockData) {
+      setTimeout(() => { // Ensures Angular Change Detection runs
+        this.directorGeneralForm.patchValue({
+          nombre: mockData.nombre || '',
+          primerApellido: mockData.primerApellido || '',
+          segundoApellido: mockData.segundoApellido || '',
+        });
+        console.log('Updated Form Value:', this.directorGeneralForm.value);
+      });
+    }
   }
+  
 }

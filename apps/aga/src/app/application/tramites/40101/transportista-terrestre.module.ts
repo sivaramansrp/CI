@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { forwardRef, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TransportistaTerrestreRoutingModule } from './transportista-terrestre-routing.module';
 import { RouterModule } from '@angular/router';
@@ -13,22 +13,26 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
-import { AnexarDocumentosComponent } from '../../shared/components/anexar-documentos/anexar-documentos.component';
-import { SharedModule } from '../../shared/shared.module';
-import { InputCheckComponent } from '../../shared/components/input-check/input-check.component';
-import { InputHoraComponent } from '../../shared/components/input-hora/input-hora.component';
-import { InputFechaComponent } from '../../shared/components/input-fecha/input-fecha.component';
-import { CrosslistComponent } from '../../shared/components/crosslist/crosslist.component';
-import { AgregarTransporteComponent } from '../../shared/components/agregar-transporte/agregar-transporte.component';
-import { RepresentanteFiscalComponent } from '../../shared/components/representante-fiscal/representante-fiscal.component';
-import { SelectPaisesComponent } from '../../shared/components/select-paises/select-paises.component';
-import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
-import { CatalogoSelectComponent } from '../../shared/components/catalogo-select/catalogo-select.component';
-import { TituloComponent } from '../../shared/components/titulo/titulo.component';
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
+import { SharedModule } from '@ng-mf/data-access-user';
+import { InputCheckComponent } from '@ng-mf/data-access-user';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
+import { InputHoraComponent } from '@ng-mf/data-access-user';
+import { CrosslistComponent } from '@ng-mf/data-access-user';
+import {
+  AgregarTransporteComponent,
+  CatalogosService,
+} from '@ng-mf/data-access-user';
+import { RepresentanteFiscalComponent } from '@ng-mf/data-access-user';
+import { SelectPaisesComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { SolicitanteComponent } from './components/solicitante/solicitante.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { DirectorGeneralComponent } from './components/director-general/director-general.component';
-
+import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
+// import { SolicitanteComponent } from '@ng-mf/data-access-user';
 @NgModule({
   declarations: [
     SolicitantePageComponent,
@@ -41,29 +45,33 @@ import { DirectorGeneralComponent } from './components/director-general/director
   imports: [
     CommonModule,
     SharedModule,
-    TransportistaTerrestreRoutingModule,
+    TransportistaTerrestreRoutingModule ,
     RouterModule,
-    //   NavComponent,
-    forwardRef(() => WizardComponent),
-    TituloComponent,
+    WizardComponent,
+    forwardRef(() => SolicitanteComponent),
+    forwardRef(() => TituloComponent),
     forwardRef(() => BtnContinuarComponent),
     ReactiveFormsModule,
     forwardRef(() => AlertComponent),
     forwardRef(() => FirmaElectronicaComponent),
     forwardRef(() => SelectCatalogosComponent),
-    AnexarDocumentosComponent,
-    InputCheckComponent,
-    InputHoraComponent,
-    InputFechaComponent,
-    CrosslistComponent,
-    AgregarTransporteComponent,
-    RepresentanteFiscalComponent,
-    SelectPaisesComponent,
-    // ContendorComponent,
-    CatalogoSelectComponent,
-    SolicitanteComponent,
+    forwardRef(() => AnexarDocumentosComponent),
+    forwardRef(() => InputCheckComponent),
+    forwardRef(() => InputFechaComponent),
+    forwardRef(() => InputHoraComponent),
+    forwardRef(() => CrosslistComponent),
+    forwardRef(() => AgregarTransporteComponent),
+    forwardRef(() => RepresentanteFiscalComponent),
+    forwardRef(() => SelectPaisesComponent),
+    forwardRef(() => CatalogoSelectComponent),
     ChoferesComponent,
   ],
-  exports: [SolicitanteComponent],
+  exports: [
+    PasoUnoComponent,
+    PasoDosComponent,
+    PasoTresComponent,
+    BtnContinuarComponent,
+  ],
+  providers: [ToastrService, CatalogosService],
 })
 export class TransportistaTerrestreModule {}

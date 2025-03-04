@@ -763,6 +763,9 @@
               <table id="tablaDatosGenerales2" class="table w-95 mx-auto mt-3">
                 <thead>
                   <tr>
+                    <th>
+                      <input type="checkbox" (change)="toggleAll($event)" />
+                    </th>
                     <th>ID</th>
                     <th>VIN del vehículo</th>
                     <th>Tipo de unidad de arrastre</th>
@@ -774,6 +777,9 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let data of secondTableData; let i = index">
+                    <td>
+                      <input type="checkbox" />
+                    </td>
                     <td>{{ i + 1 }}</td>
                     <td>{{ data.vin2 }}</td>
                     <td>{{ data.tipoVehiculoArrastreAGA }}</td>
@@ -911,7 +917,8 @@
                                 <div class="form-group">
                                   <input
                                     type="text"
-                                    id="idDeVehiculoArrastre" placeholder="2"
+                                    id="idDeVehiculoArrastre"
+                                    placeholder="2"
                                     formControlName="idDeVehiculo"
                                     class="form-control"
                                     size="30"
@@ -1101,11 +1108,15 @@
                                     <option value="">
                                       Seleccione un valor
                                     </option>
-                                    
-                          Populate options dynamically in TypeScript using the 'pais' catalog.
-                          Example:
-                          <option *ngFor="let pais of paisCatalogo" [value]="pais.clave">{{ pais.descripcion }}</option>
-                       
+
+                                    Populate options dynamically in TypeScript
+                                    using the 'pais' catalog. Example:
+                                    <option
+                                      *ngFor="let pais of paisCatalogo"
+                                      [value]="pais.clave"
+                                    >
+                                      {{ pais.descripcion }}
+                                    </option>
                                   </select>
                                 </div>
                               </div>

@@ -14,15 +14,13 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '@ng-mf/data-access-user';
-
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import { Nacional } from '../../../../core/models/40101/transportista-terrestre.model';
-import { extranjero } from '../../../../core/models/40101/transportista-terrestre.model';
 import { HttpClient } from '@angular/common/http';
-import { LayoutChoferNacionalService } from '../../../../core/services/shared/layoutChoferNacional/layout-chofer-nacional.service';
-// import { StoreService } from '../../../../core/services/shared/store.service';
-import { StoreService } from 'ngx-toastr';
+import { Nacional } from 'libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
+import { extranjero } from 'libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
+import { LayoutChoferNacionalService } from 'libs/shared/data-access-user/src/core/services/40101/layout-chofer-nacional.service';
+import { StoreService } from 'libs/shared/data-access-user/src/core/services/40101/store/store.service';
 import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-choferes',

@@ -1,20 +1,18 @@
 <div class="container">
-  <ng-titulo titulo="Nombre del director general" />
+  <ng-titulo titulo="Nombre del director general"></ng-titulo>
   <form [formGroup]="directorGeneralForm">
     <div class="row">
       <div class="col-md-4 mb-3">
         <label class="form-label" for="nombre">Nombre(s)*:</label>
-        <input type="text" class="form-control" id="nombre" />
+        <input type="text" class="form-control" id="nombre" formControlName="nombre" placeholder="123456" />
       </div>
       <div class="col-md-4 mb-3">
         <label class="form-label" for="primerApellido">Primer apellido*:</label>
-        <input type="text" class="form-control" id="primerApellido" />
+        <input type="text" class="form-control" id="primerApellido" formControlName="primerApellido" />
       </div>
       <div class="col-md-4 mb-3">
-        <label class="form-label" for="segundoApellido"
-          >Segundo apellido*:</label
-        >
-        <input type="text" class="form-control" id="segundoApellido" />
+        <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
+        <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido" />
       </div>
     </div>
   </form>
