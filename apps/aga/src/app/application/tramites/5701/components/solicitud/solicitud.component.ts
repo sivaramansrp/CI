@@ -40,8 +40,8 @@ import { datosAgregarFormulario } from '@ng-mf/data-access-user';
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
-import { SeccionQuery } from '@ng-mf/data-access-user';
-import { Tramite5701Query } from '@ng-mf/data-access-user';
+import { SeccionQuery } from '../../../../estados/queries/seccion.query';
+import { Tramite5701Query } from '../../../../estados/queries/tramite5701.query';
 
 @Component({
   selector: 'app-solicitud',

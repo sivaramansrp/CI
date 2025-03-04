@@ -6,3 +6,4 @@ export const REMOTE_ROUTES: Route[] = [
     path: 'pago', loadChildren: () => import('./../application/app.module').then(module => module.AppAgaceModule)
   }
 ];
+ 
