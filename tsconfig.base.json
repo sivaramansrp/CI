@@ -23,15 +23,19 @@
       "agriculture/Routes": [
         "apps/agriculture/src/app/remote-entry/entry.routes.ts"
       ],
+      "amecafe/Routes": ["apps/amecafe/src/app/remote-entry/entry.routes.ts"],
+      "annoys/Routes": ["apps/annoys/src/app/remote-entry/entry.routes.ts"],
       "but/Routes": ["apps/but/src/app/remote-entry/entry.routes.ts"],
       "cofepris/Routes": ["apps/cofepris/src/app/remote-entry/entry.routes.ts"],
       "funcionario/Routes": [
         "apps/funcionario/src/app/remote-entry/entry.routes.ts"
       ],
       "herself/Routes": ["apps/herself/src/app/remote-entry/entry.routes.ts"],
+      "inbal/Routes": ["apps/inbal/src/app/remote-entry/entry.routes.ts"],
       "login/Routes": ["apps/login/src/app/remote-entry/entry.routes.ts"],
       "se/Routes": ["apps/se/src/app/remote-entry/entry.routes.ts"],
-      "semarnat/Routes": ["apps/semarnat/src/app/remote-entry/entry.routes.ts"]
+      "semarnat/Routes": ["apps/semarnat/src/app/remote-entry/entry.routes.ts"],
+      "sener/Routes": ["apps/sener/src/app/remote-entry/entry.routes.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
