@@ -4,7 +4,7 @@ import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ProsecComponent } from './prosec.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
-
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('ProsecComponent', () => {
   let component: ProsecComponent;
@@ -14,6 +14,7 @@ describe('ProsecComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ProsecComponent, PasoUnoComponent],
       imports: [WizardComponent, BtnContinuarComponent],
+      schemas: [NO_ERRORS_SCHEMA] // Add this to allow any custom elements
     })
     .compileComponents();
     
@@ -37,7 +38,7 @@ describe('ProsecComponent', () => {
   });
 
   it('should navigate to the next step when getValorIndice is called with "cont" action', () => {
-    spyOn(component.wizardComponent, 'siguiente');
+    jest.spyOn(component.wizardComponent, 'siguiente');
     const ACCION: ACCIONBOTON = { accion: 'cont', valor: 2 };
     component.getValorIndice(ACCION);
     expect(component.indice).toBe(2);
@@ -45,7 +46,7 @@ describe('ProsecComponent', () => {
   });
 
   it('should navigate to the previous step when getValorIndice is called with "ant" action', () => {
-    spyOn(component.wizardComponent, 'atras');
+    jest.spyOn(component.wizardComponent, 'atras');
     const ACCION: ACCIONBOTON = { accion: 'ant', valor: 1 };
     component.getValorIndice(ACCION);
     expect(component.indice).toBe(1);
@@ -53,7 +54,7 @@ describe('ProsecComponent', () => {
   });
 
   it('should not navigate if the valor is out of range', () => {
-    spyOn(component.wizardComponent, 'siguiente');
+    jest.spyOn(component.wizardComponent, 'siguiente');
     const ACCION: ACCIONBOTON = { accion: 'cont', valor: 5 };
     component.getValorIndice(ACCION);
     expect(component.indice).toBe(1);

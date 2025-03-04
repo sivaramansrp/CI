@@ -103,8 +103,11 @@ export class DomiciliosDePlantasComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.forma = new FormGroup({
-      modalidad: new FormControl(''),
+    this.forma = this.fb.group({
+      modalidad: [''],
+      Estado: [''],
+      RepresentacionFederal: [''],
+      ActividadProductiva: ['']
     });
     this.obtenserListaEstado();
   }

@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="row">
+    <div [formGroup]="sectoresYMercancias" class="row">
         <div class="form-group">
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="sector" [label]="'Sector'" [required]="true" formControlName="sector" name="sector"></app-catalogo-select>
@@ -30,7 +30,8 @@
                 value=""
                 class="form-control" 
                 id="Fraccion_arancelaria"  
-                placeholder="Fracción arancelaria">
+                placeholder="Fracción arancelaria",
+                formControlName="Fraccion_arancelaria">
             </div>
         </div>
         <div class="row mb-5">
