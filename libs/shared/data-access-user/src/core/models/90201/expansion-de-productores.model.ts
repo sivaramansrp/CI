@@ -1,26 +1,26 @@
 export interface AcuseTablaDatos {
-    No: string,
-    Documento: string,
-    Descargar: string,
+  no: string;
+  documento: string;
+  descargar: string;
 }
 
 export interface ProductorIndirectoTabla {
-    Registro: string,
-    Denominación: string,
-    Correo: string,
+  registro: string;
+  denominacion: string;
+  correo: string;
 }
 
 export interface DomiciliosDePlantasTabla {
-    "Calle": string,
-    "Número exterior": string,
-    "Número interior": string,
-    "Código postal": string,
-    "Colonia": string,
-    "Municipio o alcaldía": string,
-    "Estado": string,
+  Calle: string;
+  'Número exterior': string;
+  'Número interior': string;
+  'Código postal': string;
+  Colonia: string;
+  'Municipio o alcaldía': string;
+  Estado: string;
 }
 
 export interface SectoresTabla {
-    "Lista de sectores": string,
-    "Clave del sector": string,
+  'Lista de sectores': string;
+  'Clave del sector': string;
 }

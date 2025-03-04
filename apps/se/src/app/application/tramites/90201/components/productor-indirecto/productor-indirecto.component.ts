@@ -11,25 +11,22 @@ import { ProductorIndirectoTabla } from 'libs/shared/data-access-user/src/core/m
 import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { FormsModule } from '@angular/forms';
 
-
 /**
  * Componente ProductorIndirecto que se utiliza para mostrar y gestionar los ProductorIndirecto.
- * 
+ *
  * Este componente utiliza varios subcomponentes como TituloComponent, TablaDinamicaComponent, CommonModule,
  * FormsModule y AlertComponent para mostrar información y permitir al usuario seleccionar y agregar tratados.
- * 
+ *
  * @component
  */
 @Component({
   selector: 'app-productor-indirecto',
   standalone: true,
-  imports: [CommonModule,TituloComponent,TablaDinamicaComponent,FormsModule],
+  imports: [CommonModule, TituloComponent, TablaDinamicaComponent, FormsModule],
   templateUrl: './productor-indirecto.component.html',
   styleUrl: './productor-indirecto.component.scss',
 })
 export class ProductorIndirectoComponent {
-
-
   /**
    * Configuración para las columnas de la tabla en el componente Productor Indirecto.
    * Cada configuración de columna incluye el nombre del encabezado, una función clave para extraer el valor de un elemento y el orden de la columna.
@@ -40,9 +37,13 @@ export class ProductorIndirectoComponent {
    * @property {number} orden - El orden de la columna en la tabla.
    */
   public configuracionTabla: ConfiguracionColumna<any>[] = [
-    { encabezado: 'Registro', clave: (item: any) => item.Registro, orden: 1 },
-    { encabezado: 'Denominación', clave: (item: any) => item.Denominación, orden: 2 },
-    { encabezado: 'Correo', clave: (item: any) => item.Correo, orden: 3 }
+    { encabezado: 'registro', clave: (item: any) => item.registro, orden: 1 },
+    {
+      encabezado: 'denominacion',
+      clave: (item: any) => item.denominación,
+      orden: 2,
+    },
+    { encabezado: 'correo', clave: (item: any) => item.correo, orden: 3 },
   ];
 
   /**
@@ -60,5 +61,5 @@ export class ProductorIndirectoComponent {
    * Representa el RFC (Registro Federal de Contribuyentes) de un usuario.
    * Este es un identificador único utilizado para fines fiscales en México.
    */
-  public rfc:string = '';
+  public rfc: string = '';
 }
