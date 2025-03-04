@@ -29,11 +29,15 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
   },
-
+  {
+    path: 'atender-requerimientos',
+    loadChildren: () => import('./atencion-requerimientos/atencion-requerimientos.module').then(
+      (m) => m.AtencionRequerimientosModule
+    ),
+  },
   {
     path: 'firmar',
     component: FirmaPageComponent
-
   },
   {
     path: 'acuse',
