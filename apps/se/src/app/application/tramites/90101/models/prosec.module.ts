@@ -25,7 +25,7 @@ export interface ACCIONBOTON {
 /**
  * Interface representing a plant.
  */
-export interface plantas {
+export interface Plantas {
   /** Modality of the plant */
   modalidad: string;
   /** State where the plant is located */
@@ -36,7 +36,7 @@ export interface plantas {
   ActividadProductiva: string;
 }
 
-export interface filaPlantas {
+export interface FilaPlantas {
   calle: string;
   numeroExterior: string;
   numeroInterior: string;
@@ -45,13 +45,13 @@ export interface filaPlantas {
   municipioOAlcaldia: string;
 }
 
-export interface filaProductos {
+export interface FilaProductos {
   contribuyentes: string;
   razonSocial: string;
   Correo: string;
 }
 
-export interface filaSectors {
+export interface FilaSectors {
   sectorLista: string;
   sectorClave: string;
 }
@@ -59,7 +59,7 @@ export interface filaSectors {
 /**
  * Interface representing sectors and goods.
  */
-export interface sectoresYMercancias {
+export interface SectoresYMercancias {
   /** Sector of the goods */
   sector: string;
   /** Tariff fraction of the goods */
@@ -71,9 +71,9 @@ export interface sectoresYMercancias {
  */
 export interface ListaDeDatosFinal {
   /** List of plants */
-  plantas: plantas[];
+  plantas: Plantas[];
   /** List of sectors and goods */
-  sectoresYMercancias: sectoresYMercancias[];
+  sectoresYMercancias: SectoresYMercancias[];
 }
 
 /**

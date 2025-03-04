@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
-import { DomiciliosDePlantasComponent } from './domicilios-de-plantas.component';
-import { ProsecService } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user'; // Import the custom component
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { DomiciliosDePlantasComponent } from './domicilios-de-plantas.component';
+import { of } from 'rxjs';
+import { ProsecService } from '../../services/prosec.module';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('DomiciliosDePlantasComponent', () => {
   let component: DomiciliosDePlantasComponent;
@@ -47,33 +47,33 @@ describe('DomiciliosDePlantasComponent', () => {
   });
 
   it('should call obtenserListaEstado and set estadoSeleccionar', () => {
-    const mockData = [{ id: 1, nombre: 'Estado 1' }];
-    prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(mockData));
+    const MOCKDATA = [{ id: 1, nombre: 'Estado 1' }];
+    prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(MOCKDATA));
 
     component.obtenserListaEstado();
 
     expect(prosecServiceMock.obtenerMenuDesplegable).toHaveBeenCalledWith('estado.json');
-    expect(component.estadoSeleccionar).toEqual(mockData);
+    expect(component.estadoSeleccionar).toEqual(MOCKDATA);
   });
 
   it('should call obtenserListaFederal and set RepresentacionFederal', () => {
-    const mockData = [{ id: 1, nombre: 'Federal 1' }];
-    prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(mockData));
+    const MOCKDATA = [{ id: 1, nombre: 'Federal 1' }];
+    prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(MOCKDATA));
 
     component.obtenserListaFederal();
 
     expect(prosecServiceMock.obtenerMenuDesplegable).toHaveBeenCalledWith('federal.json');
-    expect(component.RepresentacionFederal).toEqual(mockData);
+    expect(component.RepresentacionFederal).toEqual(MOCKDATA);
   });
 
   it('should call obtenserListaActividad and set ActividadProductiva', () => {
-    const mockData = [{ id: 1, nombre: 'Actividad 1' }];
-    prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(mockData));
+    const MOCKDATA = [{ id: 1, nombre: 'Actividad 1' }];
+    prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(MOCKDATA));
 
     component.obtenserListaActividad();
 
     expect(prosecServiceMock.obtenerMenuDesplegable).toHaveBeenCalledWith('actividad_productiva.json');
-    expect(component.ActividadProductiva).toEqual(mockData);
+    expect(component.ActividadProductiva).toEqual(MOCKDATA);
   });
 
   it('should call obtenserLista and call obtenserListaFederal and obtenserListaActividad', () => {

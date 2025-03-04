@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
-import { Catalogo, RespuestaCatalogos } from '../../models/shared/catalogos.model';
+import { Injectable } from '@angular/core';
+
+
 
 /**
  * Service to handle Prosec related operations.
@@ -17,7 +19,9 @@ export class ProsecService {
    * Constructor to inject HttpClient.
    * @param http HttpClient instance
    */
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient) {
+    // Constructor logic can be added here if needed
+  }
  
   /**
    * Fetches a dropdown menu from a JSON file.
@@ -25,8 +29,8 @@ export class ProsecService {
    * @returns Observable of Catalogo array
    */
   obtenerMenuDesplegable(fileName: string): Observable<Catalogo[]> {
-    const baseUrl = this.url + fileName;
-    return this.http.get<RespuestaCatalogos>(baseUrl).pipe(
+    const BASEURL = this.url + fileName;
+    return this.http.get<RespuestaCatalogos>(BASEURL).pipe(
       map(response => response.data)
     );
   }
@@ -36,9 +40,9 @@ export class ProsecService {
    * @param fileName Name of the JSON file
    * @returns Observable of any array
    */
-  obtenerTablaDatos(fileName: string): Observable<any[]> {
-    const jsonUrl = this.url + fileName;
-    console.log(jsonUrl);
-    return this.http.get<any[]>(jsonUrl);
+  obtenerTablaDatos(fileName: string): Observable<Catalogo[]> {
+    const JSONURL = this.url + fileName;
+    console.log(JSONURL);
+    return this.http.get<Catalogo[]>(JSONURL);
   }
 }

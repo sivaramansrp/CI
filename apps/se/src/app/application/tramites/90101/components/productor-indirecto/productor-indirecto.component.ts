@@ -12,8 +12,8 @@
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { filaProductos } from '@ng-mf/data-access-user';
-import { ProsecService } from '@ng-mf/data-access-user';
+import { FilaProductos } from '../../models/prosec.module';
+import { ProsecService } from '../../services/prosec.module';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 @Component({
@@ -30,7 +30,7 @@ export class ProductorIndirectoComponent {
 
   TablaSeleccion = TablaSeleccion;
 
-  productorColumnsConfiguracion : ConfiguracionColumna<filaProductos>[] = [
+  productorColumnsConfiguracion : ConfiguracionColumna<FilaProductos>[] = [
     { encabezado: 'Registro federal de contribuyentes', 
       clave: (fila) => fila.contribuyentes, 
       orden: 1 },

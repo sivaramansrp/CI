@@ -1,6 +1,7 @@
+import { ListaDeDatosFinal, Plantas, SectoresYMercancias, createDatosState } from '../models/prosec.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { createDatosState, ListaDeDatosFinal, plantas, sectoresYMercancias } from 'libs/shared/data-access-user/src/core/models/90101/prosec.module';
+
 
 /**
  * Store to manage the state of Prosec authorization.
@@ -18,7 +19,7 @@ export class AutorizacionProsecStore extends Store<ListaDeDatosFinal> {
      * Updates the state with the information of sectors and goods.
      * @param sectoresYMercancias Data of sectors and goods.
      */
-    public actualizarSectoresYMercancias(sectoresYMercancias: sectoresYMercancias): void {
+    public actualizarSectoresYMercancias(sectoresYMercancias: SectoresYMercancias): void {
         this.update(state => ({
             ...state,
             sectoresYMercancias: [sectoresYMercancias], // Wraps the data in an array
@@ -27,9 +28,9 @@ export class AutorizacionProsecStore extends Store<ListaDeDatosFinal> {
 
     /**
      * Updates the state with the information of plants.
-     * @param plantas Data of plants.
+     * @param Plantas Data of plants.
      */
-    public actualizarPlantas(plantas: plantas): void {
+    public actualizarPlantas(plantas: Plantas): void {
         this.update(state => ({
             ...state,
             plantas: [plantas], // Wraps the data in an array

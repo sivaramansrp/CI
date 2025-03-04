@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
-import { SectoresYMercanciasComponent } from './sectores-y-mercancias.component';
-import { ProsecService } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user'; // Import the custom component
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { of } from 'rxjs';
+import { ProsecService } from '../../services/prosec.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SectoresYMercanciasComponent } from './sectores-y-mercancias.component';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 describe('SectoresYMercanciasComponent', () => {
   let component: SectoresYMercanciasComponent;
@@ -50,8 +50,8 @@ describe('SectoresYMercanciasComponent', () => {
   });
 
   it('should populate sector array on obtenserListaEstado', () => {
-    const mockData = [{ id: 1, nombre: 'Sector 1' }];
-    prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(mockData));
+    const MOCKDATA = [{ id: 1, nombre: 'Sector 1' }];
+    prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(MOCKDATA));
 
     component.obtenserListaEstado();
 

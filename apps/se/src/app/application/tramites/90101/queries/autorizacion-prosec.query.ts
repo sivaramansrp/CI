@@ -1,7 +1,8 @@
+import { AutorizacionProsecStore } from "../estados/autorizacion-prosec.store";
 import { Injectable } from "@angular/core";
-import { ListaDeDatosFinal } from "../models/90101/prosec.module";
+import { ListaDeDatosFinal } from "../models/prosec.module";
 import { Query } from "@datorama/akita";
-import { AutorizacionProsecStore } from "../../../../../../apps/se/src/app/application/store/90101/autorizacion-prosec.store";
+
 
 /**
  * Query to manage the state of Prosec authorization.

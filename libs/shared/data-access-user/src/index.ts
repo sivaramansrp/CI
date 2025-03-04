@@ -73,10 +73,7 @@ export * from './core/services/130118/pexim/pexim.service';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
-export * from './core/services/90101/prosec.module';
-export { PASOS as PASOS_90101, TEXTO, PARATEXTO } from './tramites/constantes/prosec.module';
 export * from './core/enums/tabla-seleccion.enum'
-export * from './core/models/90101/prosec.module'
 export * from './core/models/shared/configuracion-columna.model'
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';

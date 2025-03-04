@@ -40,7 +40,7 @@ export const SECTORCOLUMNS = [
     'Clave del sector',
 ]
 
-export const PARATEXTO =  'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
+export const PARATEXTO = 'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
 
 export const PRODUCTORCOLUMNS = [
     'Registro federal de contribuyentes',

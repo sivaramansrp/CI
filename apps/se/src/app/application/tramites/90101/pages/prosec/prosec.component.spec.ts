@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ACCIONBOTON } from '@ng-mf/data-access-user';
+import { ACCIONBOTON } from '../../models/prosec.module';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ProsecComponent } from './prosec.component';

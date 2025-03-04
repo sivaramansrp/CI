@@ -16,9 +16,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { filaSectors } from '@ng-mf/data-access-user';
-import { PARATEXTO } from '@ng-mf/data-access-user';
-import { ProsecService } from '@ng-mf/data-access-user';
+import { FilaSectors } from '../../models/prosec.module';
+import { PARATEXTO } from '../../constantes/prosec.module';
+import { ProsecService } from '../../services/prosec.module';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 
@@ -46,7 +46,7 @@ export class SectoresYMercanciasComponent implements OnInit {
 
   TablaSeleccion = TablaSeleccion;
 
-  sectorColumnsConfiguracion: ConfiguracionColumna<filaSectors>[] = [
+  sectorColumnsConfiguracion: ConfiguracionColumna<FilaSectors>[] = [
     { encabezado: 'Lista de sectores', clave: (fila) => fila.sectorLista, orden: 1 },
     { encabezado: 'Clave del sector', clave: (fila) => fila.sectorClave, orden: 2 },
   ];

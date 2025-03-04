@@ -7,13 +7,13 @@
  * @import { LISTAPASOWIZARD, ACCIONBOTON } from '../../../../core/models/90101/prosec/prosec.module';
  * @import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
  * @import { DatosPasos } from '../../../../core/models/shared/components.model';
- * @import { PASOS_90101 } from '../../../../shared/constantes/prosec/prosec.module';
+ * @import { PASOS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { ACCIONBOTON, LISTAPASOWIZARD } from '@ng-mf/data-access-user';
+import { ACCIONBOTON, LISTAPASOWIZARD } from '../../models/prosec.module';
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
-import { PASOS_90101 } from '@ng-mf/data-access-user';
+import { PASOS } from '../../constantes/prosec.module';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Component({
@@ -26,7 +26,7 @@ export class ProsecComponent {
   /**
    * @property {Array<LISTAPASOWIZARD>} pasos - Array de pasos del wizard.
    */
-  pasos: LISTAPASOWIZARD[] = PASOS_90101;
+  pasos: LISTAPASOWIZARD[] = PASOS;
 
   /**
    * @property {string | null} tituloMensaje - El título del mensaje.

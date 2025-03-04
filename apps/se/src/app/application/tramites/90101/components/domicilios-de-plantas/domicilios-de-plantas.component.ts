@@ -12,12 +12,12 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { filaPlantas } from '@ng-mf/data-access-user'
-import { ProsecService } from '@ng-mf/data-access-user';
-import { TEXTO } from '@ng-mf/data-access-user';
+import { FilaPlantas } from '../../models/prosec.module'
+import { ProsecService } from '../../services/prosec.module';
+import { TEXTO } from '../../constantes/prosec.module';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 @Component({
@@ -54,7 +54,7 @@ export class DomiciliosDePlantasComponent implements OnInit {
 
   TablaSeleccion = TablaSeleccion;
 
-  plantaColumnsConfiguracion: ConfiguracionColumna<filaPlantas>[] = [
+  plantaColumnsConfiguracion: ConfiguracionColumna<FilaPlantas>[] = [
     { encabezado: 'Calle', 
       clave: (fila) => fila.calle, 
       orden: 1 },
@@ -100,6 +100,7 @@ export class DomiciliosDePlantasComponent implements OnInit {
 
 
   constructor(private readonly fb: FormBuilder, private ProsecService: ProsecService) {
+    // Constructor logic can be added here if needed
   }
 
   ngOnInit(): void {
