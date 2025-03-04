@@ -7,7 +7,7 @@ export const PASOS = [
   },
   {
     indice: 2,
-    titulo: 'Requisitos necessrios',
+    titulo: 'Requisitos necesarios',
     activo: false,
     completado: false,
   },

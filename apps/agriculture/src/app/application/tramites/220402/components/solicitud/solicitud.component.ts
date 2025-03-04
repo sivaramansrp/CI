@@ -229,7 +229,7 @@ export class SolicitudComponent {
    * Método para mostrar los campos correspondientes a una mercancia.
    * @returns void
    */
-  mercancia_colapsable() {
+  mercanciaColapsable() {
     this.mercanciaCollapsable = !this.mercanciaCollapsable;
   }
 
@@ -238,7 +238,7 @@ export class SolicitudComponent {
    * @param {number} i - Índice de la mercancía a eliminar.
    * @returns {void}
    */
-  mercancia_borrar(i: number): void {
+  mercanciaBorrar(i: number): void {
     this.datosGeneralesArr.splice(i, 1);
   }
 
@@ -251,7 +251,7 @@ export class SolicitudComponent {
    */
   mercanciaAgregar() {
     this.datosGeneralesArr.push(this.datosMercancia.get('datosGenerales')?.value);
-    this.mercancia_colapsable();
+    this.mercanciaColapsable();
   }
 
   /**
