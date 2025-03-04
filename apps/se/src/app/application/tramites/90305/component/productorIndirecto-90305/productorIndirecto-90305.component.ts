@@ -8,6 +8,7 @@
 import { CommonModule } from '@angular/common';
 
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
@@ -28,11 +29,12 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-productor-indirecto-90305',
   standalone: true,
-  imports: [CommonModule, TituloComponent, TablaDinamicaComponent],
+  imports: [CommonModule, TituloComponent, TablaDinamicaComponent,ReactiveFormsModule],
   templateUrl: './productorIndirecto-90305.component.html',
   styleUrl: './productorIndirecto-90305.component.scss',
 })
 export class ProductorIndirecto90305Component implements OnInit{
+  productorIndForm!: FormGroup;
   /** Enum para la selección de la tabla */
   TablaSeleccion = TablaSeleccion;
   

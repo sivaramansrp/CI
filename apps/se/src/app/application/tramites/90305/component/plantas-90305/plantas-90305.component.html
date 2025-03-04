@@ -6,8 +6,11 @@
    
   </ul>
   <ng-titulo titulo="Plantas"></ng-titulo>
+<form [formGroup]="plantasForm">
   <app-tabla-dinamica
   [configuracionTabla]="configuracionTabla"
   [datos]="personaparas"
   [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
->
+></app-tabla-dinamica>
+</form>
+ 

@@ -10,7 +10,7 @@
 import { CommonModule } from '@angular/common';
 
 import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import {TablaDinamicaComponent, TablaSeleccion,TituloComponent} from '@ng-mf/data-access-user';
 
@@ -38,7 +38,9 @@ import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
   styleUrl: './lista-domicilios-90305.component.scss',
 })
 export class ListaDomicilios90305Component implements OnInit {
+  listaDomiciliosForm! : FormGroup;
   /**
+   * 
    * compo doc
    * @constructor
    * @param {ProsecModificacionServiceTsService} listaDomicilios - Servicio para obtener la lista de domicilios

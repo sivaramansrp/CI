@@ -8,6 +8,7 @@
 import { CommonModule } from '@angular/common';
 
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
@@ -27,11 +28,12 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-sector-90305',
   standalone: true,
-  imports: [CommonModule, TablaDinamicaComponent, TituloComponent],
+  imports: [CommonModule, TablaDinamicaComponent, TituloComponent ,ReactiveFormsModule],
   templateUrl: './sector-90305.component.html',
   styleUrl: './sector-90305.component.scss',
 })
 export class Sector90305Component implements OnInit {
+  sectorDataForm!: FormGroup;
   /** Enum para la selección de la tabla */
   TablaSeleccion = TablaSeleccion;
   

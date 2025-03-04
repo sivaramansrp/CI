@@ -8,7 +8,7 @@
 import { CommonModule } from '@angular/common';
 
 import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
@@ -38,6 +38,7 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
   styleUrl: './mercancias-90305.component.scss',
 })
 export class Mercancias90305Component implements OnInit {
+  mercanciasForm!:FormGroup;
   /**
    * compo doc
    * @constructor

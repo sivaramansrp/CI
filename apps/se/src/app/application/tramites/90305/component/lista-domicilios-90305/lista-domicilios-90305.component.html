@@ -1,5 +1,7 @@
 <ng-titulo titulo="Lista de domicilios"></ng-titulo>
-<app-tabla-dinamica
+<form [formGroup]=listaDomiciliosForm>
+
+  <app-tabla-dinamica
   [configuracionTabla]="configuracionTabla"
   [datos]="personaparas"
   [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
@@ -25,4 +27,8 @@
     Eliminar plantas
   </button>
 </div>
+</form>
+
+
+
 <hr *ngIf="showSecondButton" />

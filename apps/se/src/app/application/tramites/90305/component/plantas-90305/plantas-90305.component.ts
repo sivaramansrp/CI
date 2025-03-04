@@ -9,6 +9,7 @@
 import { CommonModule } from '@angular/common';
 
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
@@ -28,11 +29,12 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-plantas-90305',
   standalone: true,
-  imports: [CommonModule, TituloComponent, TablaDinamicaComponent],
+  imports: [CommonModule, TituloComponent, TablaDinamicaComponent,ReactiveFormsModule],
   templateUrl: './plantas-90305.component.html',
   styleUrl: './plantas-90305.component.scss',
 })
 export class Plantas90305Component implements OnInit {
+  plantasForm!: FormGroup;
   /** Enum para la selección de la tabla */
   TablaSeleccion = TablaSeleccion;
   /** Lista de plantas obtenidas del servicio */
@@ -50,7 +52,7 @@ export class Plantas90305Component implements OnInit {
     { encabezado: 'País', clave: (item: PLANTAS) => item.pais, orden: 8 },
     { encabezado: 'Teléfono', clave: (item: PLANTAS) => item.telefono, orden: 9 },
   ];
-  
+ 
   /*
  constructor
   */
