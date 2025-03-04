@@ -49,15 +49,6 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-            
-      - name: Install dependencies
-        run: |
-          npm install -g @nrwl/cli
-          npm install --force
-          npm ci
-          
-      - name: Build Angular project with Nx
-        run: npx nx run dashboard:build
           
       - name: Build Docker images from docker-compose
         run: docker-compose -f ./docker/modulefederation-microfrontends.yml build
