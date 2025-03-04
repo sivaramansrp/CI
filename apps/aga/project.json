@@ -40,7 +40,11 @@
         ],
         "customWebpackConfig": {
           "path": "apps/aga/webpack.config.ts"
-        }
+        },
+        "allowedCommonJsDependencies": [
+          "node-forge",
+          "moment"
+       ]
       },
       "configurations": {
         "production": {
@@ -75,8 +79,8 @@
     "serve": {
       "executor": "@nx/angular:dev-server",
       "options": {
-        "port": 4203,
-        "publicHost": "http://localhost:4203"
+        "port": 4202,
+        "publicHost": "http://localhost:4202"
       },
       "configurations": {
         "production": {
@@ -109,7 +113,7 @@
       "defaultConfiguration": "production",
       "options": {
         "buildTarget": "aga:build",
-        "port": 4203,
+        "port": 4202,
         "watch": false
       },
       "configurations": {
