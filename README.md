@@ -1,4 +1,4 @@
-# NgMf
+# NgMf     
 
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
@@ -69,6 +69,7 @@ It will show tasks that you can run with Nx.
 - npx nx serve login
 - npx nx serve funcionario
 - npx nx serve dashboard (host)
+- npx nx serve dashboard --port 5200
 - manifest.json for the port
 - Create new application - npx nx g @nx/angular:remote apps/aga
 - Angular 18.0.3
@@ -104,7 +105,17 @@ It will show tasks that you can run with Nx.
 - "include": ["apps/aga/src/**/*.ts"], - change aga into your procedure/dept
 
 ## Unittesing Module
-- npm run test:aga
+- npx nx run test:aga
 - If application / procedure specific
-- Goto aga/tsconfig.spec.js
-- "include": ["src/220401/**/*.ts"], - change aga into your procedure/dept
+- npx nx test se --testPathPattern=apps/se/src/app/application/tramites/120301
+
+# Lint
+- npx nx run lint:aga
+- If application / procedure specific
+- npx nx lint aga --lint-file-patterns="apps/aga/src/app/application/tramites/120301/**/*"
+
+# Remove cache
+- npx nx reset
+- npx nx clear-cache
+- Remove .nx if required
+- npx nx run serve dashboard --port=4500

@@ -20,6 +20,7 @@ export const CATALOGOS_ID = {
   DATOS_GNRLS_SOL: 5,
   CAT_TIPO_DOCUMENTO: 'tipos-documento',
   CAT_TIPO_OPERACION: 26,
+  CAT_MEDIO_DE_TRANSPORTE: 'medio-de-transporte',
   CAT_REGIMEN_MERCANCIA: 'regimen-mercancia',
   CAT_CLASIFI_REGIMEN: 'clasifi-regimen',
   CAT_FRACCION_ARANCELARIA: 'fraccion-arancelaria',
@@ -29,9 +30,12 @@ export const CATALOGOS_ID = {
   CAT_PAIS_DESTINO: 'pais-destino',
   CAT_MOLINO: 'molino',
   CAT_ESTADO: 'estado',
+  CAT_BIMESTRE_UNO: 'bimestre-catalogo-uno',
+  CAT_BIMESTRE_DOS: 'bimestre-catalogo-dos',
+  CAT_BIMESTRE_TRES: 'bimestre-catalogo-tres',
   CAT_REPRESENTACION_FEDERAL: 'representacion-federal',
   DATOS_PERSONA_FISICA: 21,
-}
+};
 
 export const TIPO_PERSONA = {
   FISICA_NACIONAL: 1,
