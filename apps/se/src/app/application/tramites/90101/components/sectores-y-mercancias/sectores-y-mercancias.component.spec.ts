@@ -4,7 +4,8 @@ import { of } from 'rxjs';
 import { SectoresYMercanciasComponent } from './sectores-y-mercancias.component';
 import { ProsecService } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user'; // Import the custom component
 
 describe('SectoresYMercanciasComponent', () => {
   let component: SectoresYMercanciasComponent;
@@ -17,10 +18,12 @@ describe('SectoresYMercanciasComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [SectoresYMercanciasComponent],
-      imports: [ReactiveFormsModule, TablaDinamicaComponent],
-      providers: [{ provide: ProsecService, useValue: prosecServiceMock }],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA] // Add this to allow any custom elements
+      declarations: [SectoresYMercanciasComponent], // Declare only the main component
+      imports: [ReactiveFormsModule, TablaDinamicaComponent, CatalogoSelectComponent], // Import the custom component
+      providers: [
+        { provide: ProsecService, useValue: prosecServiceMock }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA] // Add this to allow any custom elements
     }).compileComponents();
   });
 
@@ -47,13 +50,18 @@ describe('SectoresYMercanciasComponent', () => {
   });
 
   it('should populate sector array on obtenserListaEstado', () => {
+    const mockData = [{ id: 1, nombre: 'Sector 1' }];
+    prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(mockData));
+
     component.obtenserListaEstado();
+
+    expect(prosecServiceMock.obtenerMenuDesplegable).toHaveBeenCalledWith('sector.json');
     expect(component.sector.length).toBeGreaterThan(0);
     expect(component.sector[0].id).toBe(1);
   });
 
   it('should set TEXTO constant correctly', () => {
-    expect(component.TEXTO).toBe('PARATEXTO');
+    expect(component.TEXTO).toBe('Para continuar con el trámite, debes agregar por lo menos una mercancía.');
   });
 
   it('should have correct sector columns configuration', () => {

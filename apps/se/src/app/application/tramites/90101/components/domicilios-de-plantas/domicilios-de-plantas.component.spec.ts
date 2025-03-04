@@ -5,6 +5,7 @@ import { DomiciliosDePlantasComponent } from './domicilios-de-plantas.component'
 import { ProsecService } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user'; // Import the custom component
 
 describe('DomiciliosDePlantasComponent', () => {
   let component: DomiciliosDePlantasComponent;
@@ -17,8 +18,8 @@ describe('DomiciliosDePlantasComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [DomiciliosDePlantasComponent],
-      imports: [ReactiveFormsModule, TituloComponent],
+      declarations: [DomiciliosDePlantasComponent], // Declare only the main component
+      imports: [ReactiveFormsModule, TituloComponent, CatalogoSelectComponent], // Import the custom component
       providers: [
         { provide: ProsecService, useValue: prosecServiceMock }
       ],
@@ -76,8 +77,8 @@ describe('DomiciliosDePlantasComponent', () => {
   });
 
   it('should call obtenserLista and call obtenserListaFederal and obtenserListaActividad', () => {
-    spyOn(component, 'obtenserListaFederal');
-    spyOn(component, 'obtenserListaActividad');
+    jest.spyOn(component, 'obtenserListaFederal');
+    jest.spyOn(component, 'obtenserListaActividad');
 
     component.obtenserLista();
 
