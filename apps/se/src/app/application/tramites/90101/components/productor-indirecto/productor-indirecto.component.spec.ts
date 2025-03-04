@@ -3,6 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ProductorIndirectoComponent } from './productor-indirecto.component';
 import { ProsecService } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 
 describe('ProductorIndirectoComponent', () => {
@@ -12,7 +13,7 @@ describe('ProductorIndirectoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ProductorIndirectoComponent],
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, TablaDinamicaComponent],
       providers: [FormBuilder, ProsecService]
     })
     .compileComponents();

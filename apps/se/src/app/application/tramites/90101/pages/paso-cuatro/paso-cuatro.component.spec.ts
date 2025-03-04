@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { PasoCuatroComponent } from './paso-cuatro.component';
 
 describe('PasoCuatroComponent', () => {
@@ -8,7 +8,8 @@ describe('PasoCuatroComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoCuatroComponent]
+      declarations: [PasoCuatroComponent],
+      imports: [FirmaElectronicaComponent]
     })
     .compileComponents();
     

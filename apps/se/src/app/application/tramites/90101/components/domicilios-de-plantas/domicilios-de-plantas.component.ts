@@ -12,7 +12,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { filaPlantas } from '@ng-mf/data-access-user'
@@ -23,7 +23,7 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-domicilios-de-plantas',
   templateUrl: './domicilios-de-plantas.component.html',
-  styleUrl: './domicilios-de-plantas.component.scss',
+  styleUrls: ['./domicilios-de-plantas.component.scss'],
 })
 export class DomiciliosDePlantasComponent implements OnInit {
 
@@ -55,7 +55,9 @@ export class DomiciliosDePlantasComponent implements OnInit {
   TablaSeleccion = TablaSeleccion;
 
   plantaColumnsConfiguracion: ConfiguracionColumna<filaPlantas>[] = [
-    { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 1 },
+    { encabezado: 'Calle', 
+      clave: (fila) => fila.calle, 
+      orden: 1 },
     {
       encabezado: 'Número exterior',
       clave: (fila) => fila.numeroExterior,
@@ -98,27 +100,12 @@ export class DomiciliosDePlantasComponent implements OnInit {
 
 
   constructor(private readonly fb: FormBuilder, private ProsecService: ProsecService) {
-    this.forma = this.fb.group({
-      modalidad: [''],
-      Estado: [''],
-      RepresentacionFederal: [''],
-      ActividadProductiva: [''],
-    });
   }
 
-  /**
-   * @method ngOnInit
-   * @description Inicializa el componente y obtiene las listas de datos.
-   */
   ngOnInit(): void {
-    this.obtenserLista();
-  }
-
-  /**
-   * @method obtenserLista
-   * @description Obtiene las listas de datos de estados, representación federal y actividad productiva.
-   */
-  obtenserLista(): void {
+    this.forma = new FormGroup({
+      modalidad: new FormControl(''),
+    });
     this.obtenserListaEstado();
   }
 
@@ -129,7 +116,8 @@ export class DomiciliosDePlantasComponent implements OnInit {
   obtenserListaEstado(): void {
     this.ProsecService.obtenerMenuDesplegable('estado.json').subscribe(data => {
       this.estadoSeleccionar = data as Catalogo[];
-    });
+    }
+  );
   }
 
   /**
@@ -150,5 +138,14 @@ export class DomiciliosDePlantasComponent implements OnInit {
     this.ProsecService.obtenerMenuDesplegable('actividad_productiva.json').subscribe(data => {
       this.ActividadProductiva = data as Catalogo[];
     });
+  }
+
+   /**
+   * @method obtenserLista
+   * @description Obtiene las listas de datos de estados, representación federal y actividad productiva.
+   */
+   obtenserLista() {
+    this.obtenserListaFederal();
+    this.obtenserListaActividad();
   }
 }

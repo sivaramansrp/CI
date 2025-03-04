@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ACCIONBOTON } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ProsecComponent } from './prosec.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -10,7 +12,8 @@ describe('ProsecComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProsecComponent, WizardComponent]
+      declarations: [ProsecComponent, PasoUnoComponent],
+      imports: [WizardComponent, BtnContinuarComponent],
     })
     .compileComponents();
     

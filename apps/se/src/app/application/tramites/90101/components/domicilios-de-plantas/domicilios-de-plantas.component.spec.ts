@@ -1,9 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { DomiciliosDePlantasComponent } from './domicilios-de-plantas.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ProsecService } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 describe('DomiciliosDePlantasComponent', () => {
   let component: DomiciliosDePlantasComponent;
@@ -13,7 +17,7 @@ describe('DomiciliosDePlantasComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DomiciliosDePlantasComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule],
+      imports: [ReactiveFormsModule, HttpClientTestingModule, TituloComponent,AlertComponent, TablaDinamicaComponent, CatalogoSelectComponent],
       providers: [ProsecService]
     })
     .compileComponents();
@@ -33,7 +37,7 @@ describe('DomiciliosDePlantasComponent', () => {
     expect(component.forma.get('modalidad')).toBeDefined();
   });
 
-  it('should call obtenerListaEstado on init', () => {
+  it('should call obtenserListaEstado on init', () => {
     spyOn(component, 'obtenserListaEstado');
     component.ngOnInit();
     expect(component.obtenserListaEstado).toHaveBeenCalled();
@@ -98,5 +102,23 @@ describe('DomiciliosDePlantasComponent', () => {
   it('should have plantasDatos defined', () => {
     expect(component.plantasDatos).toBeDefined();
     expect(component.plantasDatos.length).toBeGreaterThan(0);
+  });
+
+  it('should set TEXTO correctly', () => {
+    const TEXTO = 'some text'; // Define TEXTO
+    expect(component.TEXTO).toBe(TEXTO);
+  });
+
+  it('should create form with modalidad control', () => {
+    component.ngOnInit();
+    expect(component.forma.contains('modalidad')).toBeTruthy();
+  });
+
+  it('should call obtenserListaActividad and obtenserListaFederal on obtenserLista', () => {
+    spyOn(component, 'obtenserListaActividad');
+    spyOn(component, 'obtenserListaFederal');
+    component.obtenserLista();
+    expect(component.obtenserListaActividad).toHaveBeenCalled();
+    expect(component.obtenserListaFederal).toHaveBeenCalled();
   });
 });
