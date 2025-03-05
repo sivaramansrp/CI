@@ -130,8 +130,8 @@ describe('PasoDosComponent', () => {
 
   it('should run #cambioArchivo()', async () => {
     await fixture.whenStable(); 
-    component.fileSizes = component.fileSizes || {};
-    component.fileSizes.index = 'index';
+    component.tamanosDeArchivos = component.tamanosDeArchivos || {};
+    component.tamanosDeArchivos.index = 'index';
     component.resolucions = component.resolucions || {};
     component.resolucions.index = 'index';
     component.nombresArchivosSubidos = component.nombresArchivosSubidos || {};

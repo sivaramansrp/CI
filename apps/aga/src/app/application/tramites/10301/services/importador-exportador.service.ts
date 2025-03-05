@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '../../models/shared/catalogos.model';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 /**
  * Servicio para obtener datos relacionados con importadores y exportadores.
@@ -58,6 +58,12 @@ export class ImportadorExportadorService {
   getTipoDocumento() {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/10301/tipodocumento.json'
+    );
+  }
+
+  getFechasSeleccionadas(){
+    return this.http.get<RespuestaCatalogos>(
+      'assets/json/10301/fechasSeleccionadas.json'
     );
   }
 }

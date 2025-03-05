@@ -5,13 +5,13 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 const ROUTES: Routes = [
   {
     path: 'solicitud',
-    component: SolicitudPageComponent,
+    component: SolicitudPageComponent
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'solicitud',
-  },
+    redirectTo: 'solicitud'
+  }
 ];
 
 @NgModule({

@@ -38,9 +38,9 @@
   ></ng-alert>
   <div class="col-md-6">
     <app-catalogo-select
-      [catalogo]="tipodocumento.catalogos"
-      [label]="tipodocumento.labelNombre"
-      [placeholder]="tipodocumento.primerOpcion"
+      [catalogo]="tipoDocumento.catalogos"
+      [label]="tipoDocumento.labelNombre"
+      [placeholder]="tipoDocumento.primerOpcion"
       [required]="true"
     ></app-catalogo-select>
     <div class="col-md-6 mt-5">
@@ -116,7 +116,7 @@
               style="width: 291px; font-size: large; height: 35px"
               class="form-select"
               [(ngModel)]="documentosSeleccion[i]"
-              (change)="enDocumentSelect(i)"
+              (change)="enDocumentoSelect(i)"
             >
               <option value="">-- Adjunta nuevo document</option>
               <option *ngFor="let doc of disponiblesDocumentos" [value]="doc">
@@ -174,8 +174,8 @@
       <tbody>
         <tr *ngFor="let doc of documentosSeleccion; let i = index">
           <td>{{ tiposDeDocumentos[i] }}</td>
-          <td>{{ fileSizes[i] !== null ? fileSizes[i] + " MB" : "" }}</td>
-          <td>{{ resolucions[i] }}</td>
+          <td>{{ tamanosDeArchivos[i] !== null ? tamanosDeArchivos[i] + " MB" : "" }}</td>
+          <td>{{ resoluciones[i] }}</td>
           <td>
             <div class="custome-file-container">
               <input

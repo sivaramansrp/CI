@@ -1,7 +1,8 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent,FirmaElectronicaComponent, InputRadioComponent, SolicitanteComponent, TableComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CatalogosService, CrosslistComponent,FirmaElectronicaComponent, InputRadioComponent, ServiciosExtraordinariosService, SolicitanteComponent, TableComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ImportadorExportadorService } from './services/importador-exportador.service';
 
 import { DatosDelTramiteComponent } from './components/datos-del-tramite/datos-del-tramite.component';
 import { ImportadorExportadorRoutingModule } from './importador-exportador-routing.module';
@@ -41,7 +42,10 @@ import { ToastrService } from 'ngx-toastr';
 ],
 exports:[],
 providers: [
-  ToastrService
+  ToastrService,
+  ImportadorExportadorService,
+  CatalogosService,
+  ServiciosExtraordinariosService
 ],
 schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

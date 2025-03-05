@@ -1,15 +1,18 @@
-import {AlertComponent,  
-  CATALOGOS_ID,  
-  Catalogo,  
-  CatalogoSelectComponent,  
-  CatalogosSelect,  
-  CatalogosService,  
-  TEXTOS,  
-  TituloComponent   } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  CATALOGOS_ID,
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  CatalogosService,
+  TEXTOS,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImportadorExportadorService } from '@ng-mf/data-access-user';
+import { ImportadorExportadorService } from '../../services/importador-exportador.service';
+import { Subscription } from 'rxjs';
 /**
  * Texto de adjuntar para terceros.
  */
@@ -27,94 +30,26 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
-  styles: [`.p {
-    font-size: medium;
-  }
-  
-  .th-center {
-    text-align: center;
-  }
-  
-  .btn-list {
-    max-width: 40rem;
-    max-height: 15rem;
-    text-align: justify !important;
-    font-size: 16px;
-    white-space: normal;
-  }
-  
-  .grey-column {
-    background-color: rgb(156, 155, 155);
-  }
-  
-  .visually-hidden-file {
-    opacity: 0;
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-  }
-  
-  .custome-file-label {
-    display: inline-block;
-    padding: 6px 12px;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.5;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    color: #212529;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
-  }
-  .custome-file-label:hover {
-    background-color: #a5a8ab;
-    border-color: #a5a8ab;
-  }
-  
-  /* Modal backdrop for the loading pop-up */
-  .modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1050;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  /* Modal content styling */
-  .custom-modal {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    width: 300px;
-    text-align: center;
-  }
-  .adjuntar-button:hover {
-    background-color: #611232;
-    color: white;
-  }
-  .adjuntar-button {
-    color: #611232;
-    border-color: #611232;
-  }
-  `],
+  styleUrls: ['./paso-dos.component.scss'],
   standalone: true,
-  imports: [TituloComponent, AlertComponent, CatalogoSelectComponent, FormsModule,ReactiveFormsModule, CommonModule]
+  imports: [
+    TituloComponent,
+    AlertComponent,
+    CatalogoSelectComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+  ],
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit, OnDestroy {
+   /**
+   * Suscripción para obtener los tipos de documentos.
+   */
+  getTiposDocumentosSubscription!: Subscription;
+  /**
+   * Suscripción para obtener el tipo de documento.
+   */
+  getTipoDocumentoSubscription!: Subscription;
   /**
    * Constantes de texto.
    */
@@ -131,14 +66,9 @@ export class PasoDosComponent implements OnInit {
   catalogoDocumentos: Catalogo[] = [];
 
   /**
-   * Documentos seleccionados.
-   */
-  documentosSeleccionados: Catalogo[] = [];
-
-  /**
    * Tipo de documento.
    */
-  tipodocumento!: CatalogosSelect;
+  tipoDocumento!: CatalogosSelect;
 
   /**
    * Texto de alerta para terceros.
@@ -184,7 +114,9 @@ export class PasoDosComponent implements OnInit {
   /**
    * Nombres de los archivos subidos.
    */
-  nombresArchivosSubidos: string[] = new Array(this.tiposDeDocumentos.length).fill('');
+  nombresArchivosSubidos: string[] = new Array(
+    this.tiposDeDocumentos.length
+  ).fill('');
 
   /**
    * Documentos disponibles.
@@ -194,7 +126,9 @@ export class PasoDosComponent implements OnInit {
   /**
    * Documentos seleccionados.
    */
-  documentosSeleccion: string[] = new Array(this.tiposDeDocumentos.length).fill('');
+  documentosSeleccion: string[] = new Array(this.tiposDeDocumentos.length).fill(
+    ''
+  );
 
   /**
    * Indica si se debe mostrar la tabla.
@@ -204,13 +138,14 @@ export class PasoDosComponent implements OnInit {
   /**
    * Tamaños de los archivos.
    */
-  fileSizes: (number | null)[] = new Array(this.tiposDeDocumentos.length).fill(null);
+  tamanosDeArchivos: (number | null)[] = new Array(
+    this.tiposDeDocumentos.length
+  ).fill(null);
 
   /**
    * Resoluciones de los archivos.
    */
-  resolucions: string[] = new Array(this.tiposDeDocumentos.length).fill('');
-  ngOnDestroy!: () => void;
+  resoluciones: string[] = new Array(this.tiposDeDocumentos.length).fill('');
 
   /**
    * Constructor que se utiliza para la inyección de dependencias.
@@ -230,29 +165,21 @@ export class PasoDosComponent implements OnInit {
   ngOnInit(): void {
     this.getTiposDocumentos();
     this.getTipoDocumento();
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que ampare el valor de la mercancía',
-      },
-      {
-        id: 2,
-        descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-      },
-    ];
   }
 
   /**
    * Obtiene los tipos de documentos.
    */
   getTiposDocumentos(): void {
-    this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).subscribe({
-      next: (resp): void => {
-        if (resp.length > 0) {
-          this.catalogoDocumentos = resp;
-        }
-      },
-    });
+    this.catalogosServices
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .subscribe({
+        next: (resp): void => {
+          if (resp.length > 0) {
+            this.catalogoDocumentos = resp;
+          }
+        },
+      });
   }
 
   /**
@@ -263,7 +190,7 @@ export class PasoDosComponent implements OnInit {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
-        this.tipodocumento = {
+        this.tipoDocumento = {
           labelNombre: 'Tipo de documento',
           required: false,
           primerOpcion: 'Selecciona un valor',
@@ -285,7 +212,7 @@ export class PasoDosComponent implements OnInit {
    * Método que se llama cuando se selecciona un documento en la lista.
    * @param index Índice del documento seleccionado.
    */
-  static enDocumentSelect(index: number): void {
+  enDocumentoSelect(index: number): void {
     // Este método se llama cuando se selecciona un documento en la lista.
     // Aquí se puede agregar la lógica para manejar la selección del documento.
   }
@@ -312,12 +239,12 @@ export class PasoDosComponent implements OnInit {
       if (SIZE_MB > 3) {
         alert('File size must be less than 3 MB');
         event.target.value = '';
-        this.fileSizes[index] = null;
-        this.resolucions[index] = '';
+        this.tamanosDeArchivos[index] = null;
+        this.resoluciones[index] = '';
         this.nombresArchivosSubidos[index] = '';
         return;
       } else {
-        this.fileSizes[index] = parseFloat(SIZE_MB.toFixed(2));
+        this.tamanosDeArchivos[index] = parseFloat(SIZE_MB.toFixed(2));
         this.nombresArchivosSubidos[index] = FILE.name;
       }
 
@@ -325,10 +252,10 @@ export class PasoDosComponent implements OnInit {
       READER.onload = (e: any) => {
         const IMG = new Image();
         IMG.onload = () => {
-          this.resolucions[index] = `${IMG.width}x${IMG.height}`;
+          this.resoluciones[index] = `${IMG.width}x${IMG.height}`;
         };
         IMG.onerror = () => {
-          this.resolucions[index] = 'N/A';
+          this.resoluciones[index] = 'N/A';
         };
         IMG.src = e.target.result;
       };
@@ -363,5 +290,16 @@ export class PasoDosComponent implements OnInit {
     this.mostrarTablaArchivosSubidos = false;
 
     this.procesoCompletado = true;
+  }
+ /**
+   * Método de limpieza que se ejecuta cuando el componente se destruye.
+   */
+  ngOnDestroy(): void {
+    if (this.getTiposDocumentosSubscription) {
+      this.getTiposDocumentosSubscription.unsubscribe();
+    }
+    if (this.getTipoDocumentoSubscription) {
+      this.getTipoDocumentoSubscription.unsubscribe();
+    }
   }
 }

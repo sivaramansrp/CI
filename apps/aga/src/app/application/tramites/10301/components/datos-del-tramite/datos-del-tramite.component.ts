@@ -1,8 +1,18 @@
-import { AlertComponent, CatalogoSelectComponent, CatalogosSelect, CrosslistComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  CrosslistComponent,
+  InputRadioComponent,
+  TableComponent,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImportadorExportadorService } from '@ng-mf/data-access-user';
+import { ImportadorExportadorService } from '../../services/importador-exportador.service';
+import { Subscription } from 'rxjs';
+import { SELECCION } from '../../constantes/importador-exportador.enum';
 
 /**
  * Texto de adjuntar para terceros.
@@ -15,81 +25,41 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
 @Component({
   selector: 'app-datos-del-tramite',
   templateUrl: './datos-del-tramite.component.html',
-  styles: [`.scrollable-table-container {
-    max-height: 400px;
-    overflow-y: auto;
-    overflow-x: auto;
-    border: 1px solid #ddd;
-    display: block;
-  }
-  
-  .alert-with-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .alert-with-checkbox input[type="checkbox"] {
-    margin-right: 10px;
-  }
-  
-  .table-active {
-    background-color: #e9ecef;
-    cursor: pointer;
-  }
-  
-  .table-hover tr:hover {
-    background-color: #f8f9fa;
-    cursor: pointer;
-  }
-  
-  .btn {
-    white-space: nowrap;
-  }
-  .table-container {
-    max-height: 400px;
-    overflow-y: auto;
-    overflow-x: scroll;
-    border: 1px solid #dee2e6;
-    border-radius: 0.25rem;
-  }
-  
-  table td {
-    word-wrap: break-word;
-  }
-  table {
-    margin-bottom: 0;
-    table-layout: fixed;
-  }
-  
-  .transfer-list {
-    height: 200px;
-    border: 2px solid #dee2e6;
-    border-radius: 0.25rem;
-    overflow-y: scroll;
-  }
-  
-  .transfer-list option {
-    padding: 8px 12px;
-    cursor: pointer;
-  }
-  
-  .transfer-list option:hover {
-    background-color: #f8f9fa;
-  }
-  
-  .transfer-list option:checked {
-    background-color: #e9ecef;
-  }
-  
-  .btn {
-    white-space: nowrap;
-  }
-  `],
+  styleUrls: ['./datos-del-tramite.component.scss'],
   standalone: true,
-  imports:[CommonModule,CatalogoSelectComponent,TituloComponent,TableComponent,AlertComponent,CrosslistComponent,InputRadioComponent, FormsModule,ReactiveFormsModule]
+  imports: [
+    CommonModule,
+    CatalogoSelectComponent,
+    TituloComponent,
+    TableComponent,
+    AlertComponent,
+    CrosslistComponent,
+    InputRadioComponent,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
 })
-export class DatosDelTramiteComponent implements OnInit {
+export class DatosDelTramiteComponent implements OnInit, OnDestroy {
+  /**
+   * Suscripción para obtener el catálogo de aduanas.
+   */
+  getAduanaIngresaraSubscription!: Subscription;
+
+  /**
+   * Suscripción para obtener el catálogo de años.
+   */
+  getAnoSubscription!: Subscription;
+
+  /**
+   * Suscripción para obtener el catálogo de condiciones.
+   */
+  getCondicionSubscription!: Subscription;
+
+  /**
+   * Suscripción para obtener el catálogo de países.
+   */
+  getPaisSubscription!: Subscription;
+
   /**
    * Texto de adjuntar para terceros.
    */
@@ -144,17 +114,10 @@ export class DatosDelTramiteComponent implements OnInit {
    * Lista de rangos de días seleccionados.
    */
   selectRangoDias: string[] = [];
-
   /**
    * Lista de fechas seleccionadas.
    */
-  fechasSeleccionadas: string[] = [
-    'Enseñanza',
-    'Investigación',
-    'Salud Publica',
-    'Servicio Social',
-    'Culturales',
-  ];
+  fechasSeleccionadas: string[] = [];
 
   /**
    * Lista de datos de fechas disponibles.
@@ -182,7 +145,7 @@ export class DatosDelTramiteComponent implements OnInit {
     {
       btnNombre: 'Agregar todo',
       class: 'btn-default',
-      funcion: () => this.agregar('t'),
+      funcion: () => this.agregar(SELECCION.SELECT_ALL),
     },
     {
       btnNombre: 'Remover',
@@ -192,7 +155,7 @@ export class DatosDelTramiteComponent implements OnInit {
     {
       btnNombre: 'Remover todo',
       class: 'btn-default',
-      funcion: () => this.quitar('t'),
+      funcion: () => this.quitar(SELECCION.SELECT_ALL),
     },
   ];
 
@@ -219,7 +182,7 @@ export class DatosDelTramiteComponent implements OnInit {
    * @param {string} tipo - Tipo de acción a realizar.
    */
   agregar(tipo: string) {
-    if (tipo === 't') {
+    if (tipo === SELECCION.SELECT_ALL) {
       this.fechasSeleccionadas = [...this.selectRangoDias];
       this.fechasDatos = [];
     } else {
@@ -234,7 +197,7 @@ export class DatosDelTramiteComponent implements OnInit {
    * @param {string} tipo - Tipo de acción a realizar.
    */
   quitar(tipo: string = '') {
-    if (tipo === 't') {
+    if (tipo === SELECCION.SELECT_ALL) {
       this.fechasDatos = [...this.fechasSeleccionadas];
       this.fechasSeleccionadas = [];
     } else {
@@ -263,7 +226,6 @@ export class DatosDelTramiteComponent implements OnInit {
   encabezadosTabla: string[] = [
     'Fines a los que se destinará la mercancía',
     'Tipo de mercancía',
-    'Both',
     'Año',
     'Modelo',
     'Marca',
@@ -283,72 +245,80 @@ export class DatosDelTramiteComponent implements OnInit {
    * Obtiene el catálogo de aduanas.
    */
   getAduanaIngresara(): void {
-    this.importarExportar.getAduanaIngresara().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
+    this.getAduanaIngresaraSubscription = this.importarExportar
+      .getAduanaIngresara()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
 
-        this.aduana = {
-          labelNombre: 'Aduana por la que ingresará la mercancía',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+          this.aduana = {
+            labelNombre: 'Aduana por la que ingresará la mercancía',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
    * Obtiene el catálogo de años.
    */
   getAno(): void {
-    this.importarExportar.getAno().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
+    this.getAnoSubscription = this.importarExportar
+      .getAno()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
 
-        this.ano = {
-          labelNombre: 'Año',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+          this.ano = {
+            labelNombre: 'Año',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
    * Obtiene el catálogo de condiciones.
    */
   getCondicion(): void {
-    this.importarExportar.getCondicion().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
+    this.getCondicionSubscription = this.importarExportar
+      .getCondicion()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
 
-        this.condicion = {
-          labelNombre: 'Condición de la mercancía',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+          this.condicion = {
+            labelNombre: 'Condición de la mercancía',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
    * Obtiene el catálogo de países.
    */
   getPais(): void {
-    this.importarExportar.getPais().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
+    this.getPaisSubscription = this.importarExportar
+      .getPais()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
 
-        this.pais = {
-          labelNombre: 'País',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+          this.pais = {
+            labelNombre: 'País',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
@@ -371,5 +341,22 @@ export class DatosDelTramiteComponent implements OnInit {
    */
   nextTabla() {
     this.showTabla = false;
+  }
+  /**
+   * Método de limpieza que se ejecuta cuando el componente se destruye.
+   */
+  ngOnDestroy(): void {
+    if (this.getAduanaIngresaraSubscription) {
+      this.getAduanaIngresaraSubscription.unsubscribe();
+    }
+    if (this.getAnoSubscription) {
+      this.getAnoSubscription.unsubscribe();
+    }
+    if (this.getPaisSubscription) {
+      this.getPaisSubscription.unsubscribe();
+    }
+    if (this.getCondicionSubscription) {
+      this.getCondicionSubscription.unsubscribe();
+    }
   }
 }

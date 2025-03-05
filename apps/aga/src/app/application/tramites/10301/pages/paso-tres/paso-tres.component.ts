@@ -1,8 +1,8 @@
 import { FirmaElectronicaComponent, ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { catchError, map } from 'rxjs';
+import { catchError, map, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TramiteStore } from '../../../../estados/tramite.store';
 
@@ -17,7 +17,11 @@ import { TramiteStore } from '../../../../estados/tramite.store';
   standalone: true,
   imports:[FirmaElectronicaComponent, CommonModule, FormsModule, ReactiveFormsModule]
 })
-export class PasoTresComponent {
+export class PasoTresComponent implements OnDestroy {
+ /**
+   * Suscripción para obtener el trámite.
+   */
+  obtienerTramiteSubscriber! : Subscription;
   /**
    * Tipo de persona.
    */
@@ -52,7 +56,7 @@ export class PasoTresComponent {
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
     if (FIRMA) {
-      this.serviciosExtraordinariosServices
+    this.obtienerTramiteSubscriber =  this.serviciosExtraordinariosServices
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {
@@ -66,4 +70,13 @@ export class PasoTresComponent {
         .subscribe();
     }
   }
+/**
+   * Método de limpieza que se ejecuta cuando el componente se destruye.
+   */
+  ngOnDestroy(): void {
+    if (this.obtienerTramiteSubscriber) {
+      this.obtienerTramiteSubscriber.unsubscribe();
+    }
+  }
+
 }
