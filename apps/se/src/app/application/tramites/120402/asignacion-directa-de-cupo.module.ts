@@ -22,6 +22,9 @@ import {
   SolicitanteComponent,
 } from '@ng-mf/data-access-user';
 import { DatosComponent } from './pages/datos/datos.component';
+import { PasoDosComponent } from './components/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
+import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -42,7 +45,9 @@ import { DatosComponent } from './pages/datos/datos.component';
     AlertComponent,
     SolicitanteComponent,
     BtnContinuarComponent,
+    PasoDosComponent,
+    PasoTresComponent,
   ],
-  providers: [provideHttpClient()],
+  providers: [provideHttpClient(), ToastrService],
 })
 export class AsignacionDirectaDeCupoModule {}
