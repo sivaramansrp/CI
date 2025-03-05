@@ -55,7 +55,7 @@ export class DatosDeLaMercanciaComponent implements OnInit{
 
 update()
 {
-  this.store.setCveRegistroProductor(this.datosDeLamercanciaFrom.get('solicitud.idSolicitud')?.value)
+  this.store.setCveRegistroProductor(this.datosDeLamercanciaFrom.get('cveRegistroProductor')?.value)
 }
 
   /**
