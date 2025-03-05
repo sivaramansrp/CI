@@ -1,0 +1,44 @@
+import { Component, ViewChild } from '@angular/core';
+import { DatosPasos, ListaPasosWizard, PERMISOS, WizardComponent } from '@ng-mf/data-access-user';
+
+interface AccionBoton {
+  /**
+   * The action to be performed.
+   */
+  accion: string;
+  /**
+   * The value associated with the action.
+   */
+  valor: number;
+}
+
+@Component({
+  selector: 'app-renuncia-de-derechos-de-permisos',
+  templateUrl: './renuncia-de-derechos-de-permisos.component.html',
+})
+export class RenunciaDeDerechosDePermisosComponent {
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  pantallasPasos: ListaPasosWizard[] = PERMISOS;
+
+  indice = 1;
+
+  datosPasos: DatosPasos = {
+    nroPasos: this.pantallasPasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
+  };
+
+  public getValorIndice(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
+  }
+
+}
