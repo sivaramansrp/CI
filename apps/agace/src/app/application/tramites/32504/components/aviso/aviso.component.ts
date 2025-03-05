@@ -1,17 +1,16 @@
-import { CARGO_TIPO, DATOS_EMPRESA } from '@ng-mf/data-access-user';
+import { CARGO_TIPO, DATOS_EMPRESA } from '../../enum/aviso.enum';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { InputConfig, MenuConfig, Props } from '@ng-mf/data-access-user';
 import { InputTypes, buttonActionTypes } from '@ng-mf/data-access-user';
 import { CargaMasivaComponent } from '../carga-masiva/carga-masiva.component';
 import { CatalogoSelectComponent } from "@ng-mf/data-access-user";
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
-import { InputConfig } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from "@ng-mf/data-access-user";
 import { InputRadioComponent } from "@ng-mf/data-access-user";
 import { ManualAvisoComponent } from '../manual-aviso/manual-aviso.component';
-import { MenuConfig } from '@ng-mf/data-access-user';
 import { TablaClomns } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
@@ -33,22 +32,22 @@ export class AvisoComponent implements OnInit {
       menu: [
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_EMPRESA[0],
+          props: DATOS_EMPRESA[0] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_EMPRESA[0],
+          props: DATOS_EMPRESA[1] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_EMPRESA[0],
+          props: DATOS_EMPRESA[2] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_EMPRESA[1],
+          props: DATOS_EMPRESA[3] as unknown as Props,
           class: 'col-md-4',
         }
       ],
@@ -59,7 +58,7 @@ export class AvisoComponent implements OnInit {
       menu: [
         {
           inputType: InputTypes.RADIO,
-          props: CARGO_TIPO[0],
+          props: CARGO_TIPO[0] as unknown as Props,
           class: 'col-md-8',
         },
       ],
@@ -124,8 +123,8 @@ export class AvisoComponent implements OnInit {
         "value": "carga_masiva"
       }
     ];  
-    this.configuracion[1].menu[0].props.options = TIPO_CARGA;
-    this.configuracion[1].menu[0].props.selectedValue = TIPO_CARGA[0].value;
+    this.configuracion[1].menu[0].props.radioOptions = TIPO_CARGA;
+    this.configuracion[1].menu[0].props.radioSelectedValue = TIPO_CARGA[0].value;
     this.valoresSeleccionadosRadio = { radio1: TIPO_CARGA[0].value };
     this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
@@ -169,7 +168,7 @@ export class AvisoComponent implements OnInit {
       .pipe(
         map((resp) => {
           if (resp.length > 0) {
-            this.configuracion[indiceGrupo].menu[indiceMenu].props.catalogs = resp;
+            this.configuracion[indiceGrupo].menu[indiceMenu].props.catalogos = resp;
           }
         })
       )
@@ -235,7 +234,7 @@ export class AvisoComponent implements OnInit {
    * @param evento - El nuevo valor de la entrada de radio.
    */
   cambioValorRadio(claveRadio: string, groupIndex: number, menuIndex: number, evento: string | number): void {
-    this.configuracion[groupIndex].menu[menuIndex].props.selectedValue = evento;
+    this.configuracion[groupIndex].menu[menuIndex].props.radioSelectedValue = evento;
     this.valoresSeleccionadosRadio[claveRadio] = evento.toString();
   }
 

@@ -72,7 +72,6 @@ export * from './tramites/constantes/regex.constants';
 export * from './core/services/130118/pexim/pexim.service';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
-export { CARGO_TIPO, DATOS_EMPRESA, DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMANUFACTURA, DATOS_QUIEN_RECIBE, TEXTO_REQUISITOS, TEXTO_ANEXAR_REQUISITOS, TEXTOS } from './core/enums/32504/aviso.enum';
 export { ActionType, TablaClomns } from './core/models/32504/aviso.model';
 export { AccionBoton } from './core/models/220202/fitosanitario.model';
 export { TablaDinamicaComponent } from './tramites/components/tabla-dinamica/tabla-dinamica.component';
@@ -85,3 +84,6 @@ export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.servi
 export * from './core/services/110102/representacion-federal/representacionFederal.service';
 export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';
+export { PASOS as PASOS_FOUR_STEPS } from './tramites/constantes/paso-four-steps.enum';
+export { InputTypes, buttonActionTypes } from './core/enums/forma-render.enum';
+export { ListaPasosWizard, InputConfig, MenuConfig, Props } from './core/models/forma-render.model';

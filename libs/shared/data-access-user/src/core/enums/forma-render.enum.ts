@@ -1,0 +1,15 @@
+export enum InputTypes { 
+    SELECT = 'select',
+    TEXT = 'text',
+    BREAK_CONTENT = 'break-content',
+    DATE = 'date',
+    RADIO = 'radio',
+    ALERT_CONTENT = 'alert-content',
+  }
+  
+  export enum buttonActionTypes {
+    AGREGAR = 'agregar',
+    MODIFICAR = 'modificar',
+    ELIMINAR = 'eliminar',
+    CANCELAR = 'cancelar',
+  }

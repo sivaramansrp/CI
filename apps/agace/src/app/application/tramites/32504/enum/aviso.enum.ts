@@ -38,8 +38,8 @@ export const CARGO_TIPO = [
         labelNombre: 'Tipo de carga',
         campo: 'carga_tipo',
         required: true,
-        options: [],
-        selectedValue: '',
+        radioOptions: [],
+        radioSelectedValue: '',
     },
 ];
 

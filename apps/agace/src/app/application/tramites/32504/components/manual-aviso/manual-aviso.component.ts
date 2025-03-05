@@ -1,7 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMANUFACTURA, DATOS_QUIEN_RECIBE, MenuConfig, TablaClomns } from '@ng-mf/data-access-user';
+import { DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMANUFACTURA, DATOS_QUIEN_RECIBE } from '../../enum/aviso.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { InputTypes, buttonActionTypes } from '@ng-mf/data-access-user';
+import { InputTypes, Props, buttonActionTypes } from '@ng-mf/data-access-user';
+import { MenuConfig, TablaClomns } from '@ng-mf/data-access-user';
 import { ActionType } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
@@ -33,17 +34,17 @@ export class ManualAvisoComponent implements OnInit {
       menu: [
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_QUIEN_RECIBE[0],
+          props: DATOS_QUIEN_RECIBE[0] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_QUIEN_RECIBE[1],
+          props: DATOS_QUIEN_RECIBE[1] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_QUIEN_RECIBE[2],
+          props: DATOS_QUIEN_RECIBE[2] as unknown as Props,
           class: 'col-md-4',
         },
       ],
@@ -54,42 +55,42 @@ export class ManualAvisoComponent implements OnInit {
       menu: [
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_DOMICILIO_LUGAR[0],
+          props: DATOS_DOMICILIO_LUGAR[0] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_DOMICILIO_LUGAR[1],
+          props: DATOS_DOMICILIO_LUGAR[1] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_DOMICILIO_LUGAR[2],
+          props: DATOS_DOMICILIO_LUGAR[2] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_DOMICILIO_LUGAR[3],
+          props: DATOS_DOMICILIO_LUGAR[3] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_DOMICILIO_LUGAR[4],
+          props: DATOS_DOMICILIO_LUGAR[4] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_DOMICILIO_LUGAR[5],
+          props: DATOS_DOMICILIO_LUGAR[5] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_DOMICILIO_LUGAR[6],
+          props: DATOS_DOMICILIO_LUGAR[6] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_DOMICILIO_LUGAR[7],
+          props: DATOS_DOMICILIO_LUGAR[7] as unknown as Props,
           class: 'col-md-4',
         },
       ],
@@ -102,32 +103,32 @@ export class ManualAvisoComponent implements OnInit {
       menu: [
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_MERCANCIA_SUBMANUFACTURA[0],
+          props: DATOS_MERCANCIA_SUBMANUFACTURA[0] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_MERCANCIA_SUBMANUFACTURA[1],
+          props: DATOS_MERCANCIA_SUBMANUFACTURA[1] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_MERCANCIA_SUBMANUFACTURA[2],
+          props: DATOS_MERCANCIA_SUBMANUFACTURA[2] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_MERCANCIA_SUBMANUFACTURA[3],
+          props: DATOS_MERCANCIA_SUBMANUFACTURA[3] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_MERCANCIA_SUBMANUFACTURA[4],
+          props: DATOS_MERCANCIA_SUBMANUFACTURA[4] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_MERCANCIA_SUBMANUFACTURA[5],
+          props: DATOS_MERCANCIA_SUBMANUFACTURA[5] as unknown as Props,
           class: 'col-md-4',
         },
       ],
@@ -228,7 +229,7 @@ export class ManualAvisoComponent implements OnInit {
       .pipe(
         map((resp) => {
           if (resp.length > 0) {
-            this.configuracion[indiceGrupo].menu[indiceMenu].props.catalogs = resp;
+            this.configuracion[indiceGrupo].menu[indiceMenu].props.catalogos = resp;
           }
         })
       )
@@ -295,7 +296,7 @@ export class ManualAvisoComponent implements OnInit {
    * @param evento - El nuevo valor de la entrada de radio.
    */
   cambioValorRadio(claveRadio: string, groupIndex: number, menuIndex: number, evento: string | number): void {
-    this.configuracion[groupIndex].menu[menuIndex].props.selectedValue = evento;
+    this.configuracion[groupIndex].menu[menuIndex].props.radioSelectedValue = evento;
     this.valoresSeleccionadosRadio[claveRadio] = evento.toString();
   }
 

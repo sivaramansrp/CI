@@ -1,6 +1,6 @@
 import { AlertComponent } from "@ng-mf/data-access-user";
 import { Component } from '@angular/core';
-import { TEXTOS } from '@ng-mf/data-access-user';
+import { TEXTOS } from '../../enum/aviso.enum';
 import { TituloComponent } from "@ng-mf/data-access-user";
 
 @Component({

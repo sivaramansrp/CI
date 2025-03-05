@@ -50,8 +50,8 @@
             }}</label
             >@if(item.props.required){<span>*</span>}:
             <app-input-radio
-              [radioOptions]="item.props.options"
-              [selectedValue]="item.props.selectedValue"
+              [radioOptions]="item.props.radioOptions"
+              [selectedValue]="item.props.radioSelectedValue"
               [isRequired]="item.props.required"
               (valueChange)="
                 cambioValorRadio(
