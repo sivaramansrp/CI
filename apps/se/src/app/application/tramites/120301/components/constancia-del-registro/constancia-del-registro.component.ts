@@ -9,7 +9,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ConstanciaDelRegistroService } from 'libs/shared/data-access-user/src/core/services/120301/constancia-del-registro/constancia-del-registro.service';
+import { ConstanciaDelRegistroService } from '../../services/constancia-del-registro/constancia-del-registro.service';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 @Component({
   selector: 'app-constancia-del-registro',
