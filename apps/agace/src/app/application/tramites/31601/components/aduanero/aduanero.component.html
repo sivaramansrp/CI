@@ -154,6 +154,8 @@
             [label]="'Sector Productivo'"
             [placeholder]="'Seleccione un valor'"
             [catalogo]="sectorProductivoAgace"
+            formControlName="sectorProductivo"
+            (change)="setValoresStore(preOperativeForm,'sectorProductivo', 'setSectorProductivo')"
           >
           </app-catalogo-select>
         </div>
@@ -162,6 +164,8 @@
             [label]="'Servicio'"
             [placeholder]="'Seleccione un valor'"
             [catalogo]="serviciosAgace"
+            formControlName="servicio"
+            (change)="setValoresStore(preOperativeForm,'servicio', 'setServicio')"
           >
           </app-catalogo-select>
         </div>
@@ -186,6 +190,7 @@
           [description]="descriptionData.radio2.description"
           [showDescription]="true"
           formControlName="preOperativo"
+          (change)="setValoresStore(preOperativeForm,'preOperativo', 'setPreOperativo')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -209,6 +214,7 @@
           [description]="descriptionData.radio3.description"
           [showDescription]="true"
           formControlName="indiqueSi"
+          (change)="setValoresStore(preOperativeForm,'indiqueSi', 'setIndiqueSi')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -231,6 +237,7 @@
           [description]="descriptionData.radio4.description"
           [showDescription]="true"
           formControlName="senale"
+          (change)="setValoresStore(preOperativeForm,'senale', 'setSenale')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -266,6 +273,8 @@
               id="empPropios"
               name="empPropios"
               maxlength="8"
+              formControlName="empPropios"
+              (change)="setValoresStore(preOperativeForm,'empPropios', 'setEmpPropios')"
             />
           </div>
         </div>
@@ -274,6 +283,8 @@
             [label]="'Bimestre'"
             [placeholder]="'Seleccione un valor'"
             [catalogo]="comboBimestresIDC"
+            formControlName="bimestre"
+            (change)="setValoresStore(preOperativeForm,'bimestre', 'setBimestre')"
           >
           </app-catalogo-select>
         </div>
@@ -290,6 +301,7 @@
           [description]="descriptionData.radio5.description"
           [showDescription]="true"
           formControlName="senaleSi"
+          (change)="setValoresStore(preOperativeForm,'senaleSi', 'setSenaleSi')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -350,6 +362,7 @@
           [description]="descriptionData.radio6.description"
           [showDescription]="true"
           formControlName="seMomento"
+          (change)="setValoresStore(preOperativeForm,'seMomento', 'setSeMomento')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -372,6 +385,7 @@
           [description]="descriptionData.radio7.description"
           [showDescription]="true"
           formControlName="cumplir"
+          (change)="setValoresStore(preOperativeForm,'cumplir', 'setCumplir')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -396,6 +410,7 @@
           [description]="descriptionData.radio8.description"
           [showDescription]="true"
           formControlName="indique"
+          (change)="setValoresStore(preOperativeForm,'indique', 'setIndique')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -421,6 +436,7 @@
           [description]="descriptionData.radio9.description"
           [showDescription]="true"
           formControlName="encuentra"
+          (change)="setValoresStore(preOperativeForm,'encuentra', 'setEncuentra')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -443,6 +459,7 @@
           [description]="descriptionData.radio10.description"
           [showDescription]="true"
           formControlName="delMismo"
+          (change)="setValoresStore(preOperativeForm,'delMismo', 'setDelMismo')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -465,6 +482,7 @@
           [description]="descriptionData.radio11.description"
           [showDescription]="true"
           formControlName="senaleMomento"
+          (change)="setValoresStore(preOperativeForm,'senaleMomento', 'setSenaleMomento')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -487,6 +505,7 @@
           [description]="descriptionData.radio12.description"
           [showDescription]="true"
           formControlName="enCaso"
+          (change)="setValoresStore(preOperativeForm,'enCaso', 'setEnCaso')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -504,6 +523,8 @@
         <app-catalogo-select
           [placeholder]="'Seleccione un valor'"
           [catalogo]="comboBimestresIDC"
+          formControlName="comboBimestresIDCSeleccione"
+          (change)="setValoresStore(preOperativeForm,'comboBimestresIDCSeleccione', 'setComboBimestresIDCSeleccione')"
         >
         </app-catalogo-select>
       </div>
@@ -563,6 +584,7 @@
           [description]="descriptionData.radio13.description"
           [showDescription]="true"
           formControlName="ingresar"
+          (change)="setValoresStore(preOperativeForm,'ingresar', 'setIngresar')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -585,6 +607,7 @@
           [description]="descriptionData.radio14.description"
           [showDescription]="true"
           formControlName="encuentraSus"
+          (change)="setValoresStore(preOperativeForm,'encuentraSus', 'setEncuentraSus')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -639,10 +662,10 @@
         </div>
       </div>
       <div class="form-group d-flex align-items-center gap-2">
-        <label for="registrosQue" class="form-label mb-0"
+        <label for="registrosQue2" class="form-label mb-0"
           >Registros que existen actualmente</label
         >
-        <input type="text" class="form-control w-50" id="registrosQue" />
+        <input type="text" class="form-control w-50" id="registrosQue2" formControlName="registrosQue2" (change)="setValoresStore(preOperativeForm,'registrosQue2', 'setRegistrosQue2')"/>
       </div>
     </div>
 
@@ -689,7 +712,7 @@
         <label for="registrosQueO" class="form-label mb-0"
           >Registros que existen actualmente.</label
         >
-        <input type="text" class="form-control w-50" id="registrosQue" />
+        <input type="text" class="form-control w-50" id="registrosQue" formControlName="registrosQue" (change)="setValoresStore(preOperativeForm,'registrosQue', 'setRegistrosQue')"/>
       </div>
       <label for="">
         Nota: Los proveedores nacionales que se declaren deberán contar con la
@@ -710,6 +733,7 @@
           [description]="descriptionData.radio15.description"
           [showDescription]="true"
           formControlName="momentoIngresar"
+          (change)="setValoresStore(preOperativeForm,'momentoIngresar', 'setMomentoIngresar')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -735,6 +759,7 @@
           [description]="descriptionData.radio16.description"
           [showDescription]="true"
           formControlName="indiqueCuenta"
+          (change)="setValoresStore(preOperativeForm,'indiqueCuenta', 'setIndiqueCuenta')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -754,7 +779,7 @@
             <label for="nombreDel" class="form-label"
               >Nombre del sistema o datos para su identificación</label
             >
-            <input type="text" class="form-control" id="nombreDel" />
+            <input type="text" class="form-control" id="nombreDel" formControlName="nombreDel" (change)="setValoresStore(preOperativeForm,'nombreDel', 'setNombreDel')"/>
             <div
               *ngIf="
                 preOperativeForm.controls['nombreDel'].invalid &&
@@ -785,7 +810,7 @@
             <label for="lugarDeRadicacion" class="form-label"
               >Lugar de radicación</label
             >
-            <input type="text" class="form-control" id="lugarDeRadicacion" />
+            <input type="text" class="form-control" id="lugarDeRadicacion" formControlName="lugarDeRadicacion" (change)="setValoresStore(preOperativeForm,'lugarDeRadicacion', 'setLugarDeRadicacion')"/>
             <div
               *ngIf="
                 preOperativeForm.controls['lugarDeRadicacion'].invalid &&
@@ -819,6 +844,8 @@
                 class="form-check-input"
                 type="checkbox"
                 id="indiqueCheck"
+                formControlName="indiqueCheck"
+                (change)="setValoresStore(preOperativeForm,'indiqueCheck', 'setIndiqueCheck')"
               /> </span
           ></label>
         </div>
@@ -896,6 +923,7 @@
           [description]="descriptionData.radio17.description"
           [showDescription]="true"
           formControlName="contabilidad"
+          (change)="setValoresStore(preOperativeForm,'contabilidad', 'setContabilidad')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -920,6 +948,7 @@
           [description]="descriptionData.radio18.description"
           [showDescription]="true"
           formControlName="rmfRadio"
+          (change)="setValoresStore(preOperativeForm,'rmfRadio', 'setRmfRadio')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -944,6 +973,7 @@
           [description]="descriptionData.radio19.description"
           [showDescription]="true"
           formControlName="vinculacionRegistroCancelado"
+          (change)="setValoresStore(preOperativeForm,'vinculacionRegistroCancelado', 'setVinculacionRegistroCancelado')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -968,6 +998,7 @@
           [description]="descriptionData.radio20.description"
           [showDescription]="true"
           formControlName="proveedoresListadoSAT"
+          (change)="setValoresStore(preOperativeForm,'proveedoresListadoSAT', 'setProveedoresListadoSAT')"
         ></app-input-radio>
         <div
           *ngIf="

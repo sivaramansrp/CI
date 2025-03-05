@@ -33,6 +33,9 @@ import {
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 import { PagoData } from 'libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
+import { Tramite31601Store,Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
+import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query'
+import { Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
 
 /**
  * @Component - CapturarIvaeiepsComponent
@@ -116,10 +119,14 @@ export class CapturarIvaeiepsComponent {
    * @param fb: una instancia de FormBuilder utilizada para crear controles de formulario.
    * @param validacionesService - Un servicio para validación de formularios.
    */
+  public solicitudState!: Solicitud31601State
+  private destroyNotifier$: Subject<void> = new Subject();
   // eslint-disable-next-line no-empty-function
   constructor(
     private fb: FormBuilder,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private tramite31601Store: Tramite31601Store,
+    private tramite31601Query: Tramite31601Query
   ) {}
 
   /**
@@ -162,14 +169,26 @@ export class CapturarIvaeiepsComponent {
    *  @returns {void}
    */
   inicializarForms(): void {
+    this.tramite31601Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.ivaForm = this.fb.group({
-      empleados: [false],
-      infraestructura: [false],
-      monto: [false],
-      antiguedad: [false],
-      tipoDe: [''],
-      valorPesos: [''],
-      descripcion: [''],
+      manifieste:[this.solicitudState?.manifieste],
+      indiqueIva:[this.solicitudState?.indiqueIva],
+      empleados: [this.solicitudState?.empleados],
+      infraestructura: [this.solicitudState?.infraestructura],
+      monto: [this.solicitudState?.monto],
+      antiguedad: [this.solicitudState?.antiguedad],
+      tipoDe: [this.solicitudState?.tipoDe],
+      valorPesos: [this.solicitudState?.valorPesos],
+      descripcion: [this.solicitudState?.descripcion],
+      haContado:[this.solicitudState?.haContado],
+      enCasoIva:[this.solicitudState?.enCasoIva],
       rfc: [
         '',
         [
@@ -186,14 +205,14 @@ export class CapturarIvaeiepsComponent {
         { value: '', disabled: true },
         Validators.maxLength(50),
       ],
-      numeroOperacion: [''],
+      numeroOperacion: [this.solicitudState?.numeroOperacion],
       cadenaDependencia: [
         { value: '', disabled: true },
         Validators.maxLength(50),
       ],
-      banco: ['', Validators.required],
+      banco: [this.solicitudState?.banco, Validators.required],
       llavePago: [
-        '',
+        this.solicitudState?.llavePago,
         [
           Validators.required,
           Validators.pattern(this.validacionesService.llavePagoPattern),
@@ -220,10 +239,7 @@ export class CapturarIvaeiepsComponent {
   poblarPagoForm(data: PagoData): void {
     this.formularioDePago.patchValue({
       claveReferencia: data.claveReferencia,
-      numeroOperacion: data.numeroOperacion,
       cadenaDependencia: data.cadenaDependencia,
-      banco: data.banco,
-      llavePago: data.llavePago,
       fechaPago: data.fechaPago,
       importePago: data.importePago,
     });
@@ -234,7 +250,7 @@ export class CapturarIvaeiepsComponent {
    *
    * Valor @param: el nuevo valor que se establecerá.
    */
-  cambioDeValor(value: any): void {
+  cambioDeValor(value: any,): void {
     this.valorSeleccionado = value;
   }
 
@@ -307,5 +323,9 @@ export class CapturarIvaeiepsComponent {
 
   cerrarModal(): void {
     this.mostrarModal = false;
+  }
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
+    const valor = form.get(campo)?.value;
+    (this.tramite31601Store[metodoNombre] as (value: any) => void)(valor);
   }
 }
