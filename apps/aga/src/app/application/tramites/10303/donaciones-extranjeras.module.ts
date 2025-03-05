@@ -9,6 +9,7 @@ import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogosService } from '@ng-mf/data-access-user';
 import { DatosDelFabricanteComponent } from './components/datos-del-fabricante/datos-del-fabricante.component';
 import { DatosDonanteExtranjeroComponent } from './components/datos-donante-extranjero/datos-donante-extranjero.component';
 import { DatosDonatarioComponent } from './components/datos-donatario/datos-donatario.component';
@@ -16,7 +17,9 @@ import { DatosPersonaOirRecibirComponent } from './components/datos-persona-oir-
 import { DatosRepLegalDonatarioComponent } from './components/datos-rep-legal-donatario/datos-rep-legal-donatario.component';
 import { DatosRepLegalRecibirDonacionComponent } from './components/datos-rep-legal-recibir-donacion/datos-rep-legal-recibir-donacion.component';
 import { DonacionesExtranjerasRoutingModule } from './donaciones-extranjeras-routing.module';
+import { DonacionesExtranjerasService } from './services/donaciones-extranjeras/donaciones-extranjeras.service';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
@@ -26,6 +29,7 @@ import { RegistroDeDonacionComponent } from './components/registro-de-donacion/r
 import { RegistroSolicitudPageComponent } from './pages/registro-solicitud-page/registro-solicitud-page.component';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -66,7 +70,11 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     ToastrModule.forRoot()
   ],
   providers: [
-    ToastrService
+    ToastrService,
+    DonacionesExtranjerasService,
+    CatalogosService,
+    InicioSesionService,
+    SubirDocumentoService 
   ]
 })
 export class DonacionesExtranjerasModule { }

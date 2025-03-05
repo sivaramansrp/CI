@@ -2,15 +2,14 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { map, merge } from 'rxjs';
 import { Modal } from 'bootstrap';
 
-import { FECHA_CADUCIDAD, PANELS, TEXTOS_10303 } from '@ng-mf/data-access-user';
-import { DonacionesExtranjerasService } from '@ng-mf/data-access-user';
+import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 import mercanciaTable from 'libs/shared/theme/assets/json/10303/mercancia-table.json';
 
-import { BasicRequerimientos, BasicRequerimientosRespuesta, Manifiestos, ManifiestosRespuesta } from '@ng-mf/data-access-user';
+import { BasicRequerimientos, BasicRequerimientosRespuesta, Manifiestos, ManifiestosRespuesta } from '../../models/donaciones-extranjeras.model';
 import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { InputFecha } from '@ng-mf/data-access-user';
-import { OpcionesDeBotonDeRadio } from '@ng-mf/data-access-user';
+import { FECHA_CADUCIDAD, OpcionesDeBotonDeRadio, PANELS, TEXTOS } from '../../constantes/donaciones-extranjeras.enum';
 
 /**
  * Componente para gestionar el registro de donación.
@@ -130,7 +129,7 @@ export class RegistroDeDonacionComponent implements OnInit {
   /**
    * Textos utilizados en el componente.
    */
-  TEXTOS = TEXTOS_10303;
+  TEXTOS = TEXTOS;
 
   /**
    * Opciones de botón de radio.
@@ -150,7 +149,7 @@ export class RegistroDeDonacionComponent implements OnInit {
   /**
    * Etiqueta del archivo seleccionado.
    */
-  etiquetaDeArchivo: string = TEXTOS_10303.ETIQUETA_DE_ARCHIVO;
+  etiquetaDeArchivo: string = TEXTOS.ETIQUETA_DE_ARCHIVO;
 
   /**
    * Indica si la sección es colapsable.
@@ -488,7 +487,7 @@ export class RegistroDeDonacionComponent implements OnInit {
       this.archivoMedicamentos = TARGET.files[0];
       this.etiquetaDeArchivo = this.archivoMedicamentos.name;
     } else {
-      this.etiquetaDeArchivo = TEXTOS_10303.ETIQUETA_DE_ARCHIVO;
+      this.etiquetaDeArchivo = TEXTOS.ETIQUETA_DE_ARCHIVO;
     }
   }
 
@@ -498,7 +497,7 @@ export class RegistroDeDonacionComponent implements OnInit {
    */
   eliminacionMedicamento(): void {
     this.archivoMedicamentos = null;
-    this.etiquetaDeArchivo = TEXTOS_10303.ETIQUETA_DE_ARCHIVO;
+    this.etiquetaDeArchivo = TEXTOS.ETIQUETA_DE_ARCHIVO;
   }
 
   /**

@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import { AlertComponent, CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { DatosDonanteExtranjeroComponent } from './datos-donante-extranjero.component';
-import { DonacionesExtranjerasService } from '@ng-mf/data-access-user';
+import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 
 describe('DatosDonanteExtranjeroComponent', () => {
   let component: DatosDonanteExtranjeroComponent;

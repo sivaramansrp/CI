@@ -5,7 +5,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { DatosRepLegalRecibirDonacionComponent } from './datos-rep-legal-recibir-donacion.component';
-import { DonacionesExtranjerasService } from '@ng-mf/data-access-user';
+import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 
 describe('DatosRepLegalRecibirDonacionComponent', () => {
   let component: DatosRepLegalRecibirDonacionComponent;

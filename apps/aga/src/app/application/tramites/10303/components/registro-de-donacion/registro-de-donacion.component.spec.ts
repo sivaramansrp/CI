@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 
 import { AlertComponent, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { DonacionesExtranjerasService } from 'libs/shared/data-access-user/src/core/services/10303/donaciones-extranjeras/donaciones-extranjeras.service';
+import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 import { RegistroDeDonacionComponent } from './registro-de-donacion.component';
 
 describe('RegistroDeDonacionComponent', () => {

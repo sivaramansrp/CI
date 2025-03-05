@@ -3,9 +3,9 @@ import { of } from 'rxjs';
 
 import { AlertComponent, CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { ContribuyenteRespuesta } from '@ng-mf/data-access-user';
+import { ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
 import { DatosRepLegalDonatarioComponent } from './datos-rep-legal-donatario.component';
-import { DonacionesExtranjerasService } from '@ng-mf/data-access-user';
+import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DatosRepLegalDonatarioComponent', () => {

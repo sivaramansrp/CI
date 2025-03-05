@@ -24,10 +24,9 @@ export * from './core/services/shared/solicitante/solicitante.service';
 
 export * from './tramites/constantes/servicios-extraordinarios.enum';
 
-export * from './core/services/220471/servicios-pantallas.service';
-export * from './core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
-export * from './core/services/10303/donaciones-extranjeras/donaciones-extranjeras.service';
-export * from './tramites/constantes/constantes';
+export * from  './core/services/220471/servicios-pantallas.service';
+export * from  './core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
+export * from  './tramites/constantes/constantes';
 
 export * from './tramites/components/crosslist/crosslist.component';
 export * from './tramites/components/firma-electronica/firma-electronica.component';
@@ -65,14 +64,12 @@ export * from './tramites/components/alert/alert.component';
 export * from './tramites/components/anexar-documentos/anexar-documentos.component';
 export * from './core/models/5701/servicios-extraordinarios.model';
 export * from './core/models/303/secciones.model';
-export * from './core/models/10303/donaciones-extranjeras.model';
 export * from './core/models/usuario/perfilUsuario.model';
 export * from './core/models/usuario/rol.model';
 export * from './core/services/shared/http/http.service';
 export * from './core/services/220471/servicios-pantallas.enum';
 export * from './tramites/constantes/regex.constants';
 export * from './core/services/130118/pexim/pexim.service';
-export * from './core/services/10303/donaciones-extranjeras/donaciones-extranjeras.service';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
@@ -83,4 +80,3 @@ export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.servi
 export * from './core/services/110102/representacion-federal/representacionFederal.service';
 export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';
-export {DATOS_DONATE_EXTRANJERO_LABELS, TEXTOS as TEXTOS_10303, PANELS, FECHA_CADUCIDAD, OpcionesDeBotonDeRadio } from './tramites/constantes/10303/donaciones-extranjeras.enum';

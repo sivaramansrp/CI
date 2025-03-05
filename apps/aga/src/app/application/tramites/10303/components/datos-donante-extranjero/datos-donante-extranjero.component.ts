@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { map, merge } from 'rxjs';
 
-import { DonacionesExtranjerasService } from '@ng-mf/data-access-user';
-
 import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
-import { DATOS_DONATE_EXTRANJERO_LABELS } from '@ng-mf/data-access-user';
+import { DATOS_DONATE_EXTRANJERO_LABELS } from '../../constantes/donaciones-extranjeras.enum';
+import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 
 /**
  * Componente para gestionar los datos del donante extranjero.

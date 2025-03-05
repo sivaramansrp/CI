@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { BasicRequerimientosRespuesta, ContribuyenteRespuesta, ManifiestosRespuesta } from '../../../models/10303/donaciones-extranjeras.model';
-import { RespuestaCatalogos } from '../../../models/shared/catalogos.model';
+import { BasicRequerimientosRespuesta, ContribuyenteRespuesta, ManifiestosRespuesta } from '../../models/donaciones-extranjeras.model';
+import { RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 /**
  * Servicio para gestionar las donaciones extranjeras y acceder a diversos recursos como manifiestos, requerimientos,

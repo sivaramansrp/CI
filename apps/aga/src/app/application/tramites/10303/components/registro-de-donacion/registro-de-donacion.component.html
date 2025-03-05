@@ -174,8 +174,8 @@
                                 <textarea class="form-control" name="descripcionMercanciaOtro"
                                     formControlName="descripcionMercanciaOtro" rows="3"
                                     id="descripcionMercanciaOtro"></textarea>
-                                @if (descripcionMercanciaOtro?.invalid && (descripcionMercanciaOtro?.dirty ||
-                                descripcionMercanciaOtro?.touched)) {
+                                @if (descripcionMercanciaOtro.invalid && (descripcionMercanciaOtro.dirty ||
+                                descripcionMercanciaOtro.touched)) {
                                 <div class="text-danger">
                                     Este campo solo permite caracteres alfanumericos.
                                 </div>

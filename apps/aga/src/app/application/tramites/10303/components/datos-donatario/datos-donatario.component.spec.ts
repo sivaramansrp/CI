@@ -2,11 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { ContribuyenteRespuesta } from '@ng-mf/data-access-user';
+import { ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
 
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { DatosDonatarioComponent } from './datos-donatario.component';
-import { DonacionesExtranjerasService } from '@ng-mf/data-access-user';
+import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DatosDonatarioComponent', () => {

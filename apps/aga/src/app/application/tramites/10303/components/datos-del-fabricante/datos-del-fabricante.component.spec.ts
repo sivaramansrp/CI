@@ -6,9 +6,9 @@ import { of } from 'rxjs';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { ContribuyenteRespuesta } from '@ng-mf/data-access-user';
+import { ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
 import { DatosDelFabricanteComponent } from './datos-del-fabricante.component';
-import { DonacionesExtranjerasService } from '@ng-mf/data-access-user';
+import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 
 const MOCK_PAISES: Catalogo[] = [
   { id: 1, descripcion: 'País 1' },
