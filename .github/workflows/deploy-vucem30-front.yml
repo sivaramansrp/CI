@@ -6,7 +6,7 @@ on:
   push:
     branches: [ "develop" ]
     paths:
-      - 'vucem-3.0-frontend/**'
+      - 'frontend/**'
 
 jobs:
   deploy:
@@ -30,30 +30,18 @@ jobs:
       - name: Define SonarScanner full name
         run: echo "SONAR=sonar-scanner-${{ env.VERSION }}" >> $GITHUB_ENV
         
+      - name: Listar archivos
+        run: ls -la
+  
       - name: Download SonarScanner
         run: |
-          cd vucem-3.0-frontend
           curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.VERSION }}.zip
           unzip sonar-scanner.zip
           
       - name: Verify SonarScanner Installation
         run: |
-          cd vucem-3.0-frontend
           ./${{ env.SONAR }}/bin/sonar-scanner --version
         
-      - name: Run SonarQube Analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          cd vucem-3.0-frontend
-          ./${{ env.SONAR }}/bin/sonar-scanner \
-            -Dsonar.projectKey=v30_front \
-            -Dsonar.organization=v30 \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=https://sonar.ultrasist.net \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-            -Dsonar.verbose=true
-
       - name: Cache Node.js modules
         uses: actions/cache@v3
         with:
@@ -61,17 +49,9 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        run: |
-          cd vucem-3.0-frontend
-          npm install
-          npm ci
-
-      - name: Build Angular project
-        run: |
-          cd vucem-3.0-frontend
-          npx ng build --configuration=production
+          
+      - name: Build Docker images from docker-compose
+        run: docker compose -f ./docker/modulefederation-microfrontends.yml build
         
       - name: Set up Docker Buildx
         id: buildx
@@ -87,7 +67,7 @@ jobs:
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
-          context: ./vucem-3.0-frontend/
+          context: ./frontend/
           tags: |
             ghcr.io/vucem30/dockerized-front-vucem30:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
