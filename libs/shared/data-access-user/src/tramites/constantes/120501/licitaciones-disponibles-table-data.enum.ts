@@ -7,7 +7,7 @@ interface compliMentaria {
   fechafinvigencia: string;
 }
 
-export const CONFIGURACION_ACCIONISTAS = [
+export const CONFIGURACION_ACCIONISTAS_TABLA = [
     {
         encabezado: 'Número de licitación',
         clave: (ele: compliMentaria) => ele.numerodelicitacion,

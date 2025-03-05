@@ -30,9 +30,7 @@ import { Subject } from 'rxjs';
 
 import { TablaSeleccion } from '@ng-mf/data-access-user'
 
-import { CONFIGURACION_ACCIONISTAS } from '@ng-mf/data-access-user';
-
-import detosdelatable from '../../../../../../../../../libs/shared/theme/assets/json/120501/datos-de-la-tabla.json'
+import { CONFIGURACION_ACCIONISTAS_TABLA } from '@ng-mf/data-access-user';
 
 /**
  *  AccionBoton
@@ -98,11 +96,11 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   /**
    * Configuración para la tabla de accionistas.
    */
-  configTableArray = CONFIGURACION_ACCIONISTAS;
+  configTableArray = CONFIGURACION_ACCIONISTAS_TABLA;
   /**
    * Datos de ejemplo para la tabla.
    */
-  datos = detosdelatable;
+  datos:any;
   /**
    * Datos de los pasos del asistente.
    */
@@ -192,6 +190,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     this.getRepresentacionFederal();
     this.getDetallesDelalicitacion();
     this.getAdquiriente();
+    this.getTabledatas();
   }
   /**
    * Inicializa el formulario para el recuento total de filas.
@@ -297,6 +296,14 @@ getDetallesDelalicitacion():void{
         montoMaximo:data.montoMaximo
       })
     })
+}
+getTabledatas():void{
+  this.service.getTableData().subscribe(
+    (data:any)=>{
+      this.datos = data;
+    }
+    
+  )
 }
 
 /**

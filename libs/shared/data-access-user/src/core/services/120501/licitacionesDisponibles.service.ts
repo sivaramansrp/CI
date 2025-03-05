@@ -25,4 +25,7 @@ export class LicitacionesDisponiblesService {
   getAdquiriente(): Observable<unknown> {
     return this.http.get('assets/json/120501/adquiriente.json');
   }
+  getTableData(): Observable<unknown> {
+    return this.http.get('assets/json/120501/datos-de-la-tabla.json');
+  }
 }
