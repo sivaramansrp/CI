@@ -84,4 +84,4 @@ export { TablePaginationComponent } from './tramites/components/table-pagination
 export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
 export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
-
+export * from './tramites/components/acuse/acuse.component';

@@ -1,7 +1,9 @@
-import { AcusePageComponent, FirmaPageComponent } from '@ng-mf/data-access-user';
+import { FirmaPageComponent } from '@ng-mf/data-access-user';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
+import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
+import { AcusePageComponent } from './acuse/acuse-page/acuse-page.component';
 
 
 const ROUTES: Routes = [
@@ -34,6 +36,10 @@ const ROUTES: Routes = [
     loadChildren: () => import('./atencion-requerimientos/atencion-requerimientos.module').then(
       (m) => m.AtencionRequerimientosModule
     ),
+  },
+  {
+    path: 'notificacion',
+    component: NotificacionPageComponent
   },
   {
     path: 'firmar',

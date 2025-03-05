@@ -33,7 +33,7 @@ export class FirmaPageComponent implements OnDestroy {
         .pipe(
           takeUntil(this.destroy$),
           map(() => {
-            this.router.navigate([`${this.ruta}/pago/acuse`]);
+            this.router.navigate([`${this.ruta}/acuse`]);
           }),
           catchError((_error) => {
             return _error;
