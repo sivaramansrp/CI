@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Catalogo, RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { AgricultureApiService } from 'libs/shared/data-access-user/src/core/services/220202/agriculture-api.service';
+import { AgriculturaApiService } from 'libs/shared/data-access-user/src/core/services/220202/agricultura-api.service';
 
 /**
  * @fileoverview Componente para la sección de datos para movilización nacional.
@@ -51,9 +51,9 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
 
   /**
    * @constructor
-   * @param {AgricultureApiService} agricultureApiService - Servicio HttpClient para realizar peticiones.
+   * @param {AgriculturaApiService} agriculturaApiService - Servicio HttpClient para realizar peticiones.
    */
-  constructor(private readonly agricultureApiService: AgricultureApiService) { }
+  constructor(private readonly agriculturaApiService: AgriculturaApiService) { }
 
   /**
    * @description Inicializa el componente.
@@ -85,7 +85,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
    * @method obtenerListaDeJustificaciones
    */
   obtenerListaDeJustificaciones() {
-    this.agricultureApiService.obtenerSelectorList('transporte.json').subscribe(data => {
+    this.agriculturaApiService.obtenerSelectorList('transporte.json').subscribe(data => {
       this.transporteList = data as Catalogo[];
     })
   }
@@ -96,7 +96,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
    * @method obtenerListaDePunto
    */
   obtenerListaDePunto() {
-    this.agricultureApiService.obtenerSelectorList('punto.json').subscribe(data => {
+    this.agriculturaApiService.obtenerSelectorList('punto.json').subscribe(data => {
       this.puntoList = data as Catalogo[];
     })
 

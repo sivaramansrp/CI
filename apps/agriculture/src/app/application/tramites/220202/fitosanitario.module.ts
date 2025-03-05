@@ -10,7 +10,7 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AgricultureComponent } from './pages/agriculture/agriculture.component';
+import { AgriculturaComponent } from './pages/agricultura/agricultura.component';
 
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
@@ -22,7 +22,7 @@ import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catal
     PasoTresComponent,
     PasoDosComponent,
     PasoCuatroComponent,
-    AgricultureComponent,
+    AgriculturaComponent,
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionNacionalComponent,
     PagoDeDerechosComponent

@@ -6,27 +6,27 @@ import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/compo
 import { AccionBoton, ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/220202/fitosanitario.model';
 
 /**
- * @fileoverview Componente para la gestión del formulario de agriculture.
- * Este componente maneja la lógica y la presentación del formulario de agriculture,
+ * @fileoverview Componente para la gestión del formulario de agricultura.
+ * Este componente maneja la lógica y la presentación del formulario de agricultura,
  * incluyendo la navegación entre pasos y la gestión de los datos.
- * @module agriculture
+ * @module agricultura
  */
 
 /**
- * Componente para el formulario de agriculture.
- * @class AgricultureComponent
+ * Componente para el formulario de agricultura.
+ * @class AgriculturaComponent
  */
 /**
  * Componente para mostrar el subtítulo del asistente.
- * @component AgricultureComponent
- * @selector app-agriculture
- * @templateUrl ./agriculture.component.html
+ * @component AgriculturaComponent
+ * @selector app-agricultura
+ * @templateUrl ./agricultura.component.html
  */
 @Component({
-  selector: 'app-agriculture',
-  templateUrl: './agriculture.component.html',
+  selector: 'app-agricultura',
+  templateUrl: './agricultura.component.html',
 })
-export class AgricultureComponent {
+export class AgriculturaComponent {
   /**
     * @description Array de objetos que definen los pasos del formulario.
     * Cada objeto contiene información sobre un paso específico,
@@ -54,7 +54,7 @@ export class AgricultureComponent {
 
   /**
    * @description Objeto que contiene los datos de los pasos del formulario.
-   * Este objeto se utiliza para comunicar información entre el componente Agriculture
+   * Este objeto se utiliza para comunicar información entre el componente Agricultura
    * y el componente Wizard, como el número de pasos, el índice actual y los textos
    * para los botones de navegación.
    * @type {DatosPasos}

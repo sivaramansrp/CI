@@ -1,21 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AgricultureComponent } from './agriculture.component';
+import { AgriculturaComponent } from './agricultura.component';
 import { AccionBoton } from 'libs/shared/data-access-user/src/core/models/220202/fitosanitario.model';
 
-describe('AgricultureComponent', () => {
-  let component: AgricultureComponent;
-  let fixture: ComponentFixture<AgricultureComponent>;
+describe('AgriculturaComponent', () => {
+  let component: AgriculturaComponent;
+  let fixture: ComponentFixture<AgriculturaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AgricultureComponent], // Declara el componente a testear
+      declarations: [AgriculturaComponent], // Declara el componente a testear
       imports: [], // Importa los módulos necesarios para el componente (si los hay)
       providers: [] // Provee los servicios necesarios para el componente (si los hay)
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(AgricultureComponent);
+    fixture = TestBed.createComponent(AgriculturaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
