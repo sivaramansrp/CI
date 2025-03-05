@@ -10,7 +10,7 @@ const ROUTES: Routes = [
   {
     path: 'pantallas',
     loadChildren: () =>
-      import('./tramites/230401/Pantallas-modulo.module').then((m) => m.PantallasModuloModule),
+      import('./tramites/230401/pantallas-modulo.module').then((m) => m.PantallasModuloModule),
   },
 ];
 

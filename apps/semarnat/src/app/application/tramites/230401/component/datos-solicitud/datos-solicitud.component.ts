@@ -93,7 +93,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       btnNombre: 'Agregar selección',
       class: 'btn-default',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.agregar('t'),
+      funcion: () => this.agregar(CONTINUAR),
     },
     {
       btnNombre: 'Restar selección',
@@ -105,7 +105,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       btnNombre: 'Restar todos',
       class: 'btn-default',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.quitar('t'),
+      funcion: () => this.quitar(CONTINUAR),
     },
   ];
 
@@ -213,7 +213,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       btnNombre: 'Restar todos',
       class: 'btn-default',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.quitarTres('t'),
+      funcion: () => this.quitarTres(CONTINUAR),
     },
   ];
 
@@ -256,7 +256,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @param {string} tipo - Tipo de acción a realizar.
    */
   agregar(tipo: string): void {
-    if (tipo === 't') {
+    if (tipo === CONTINUAR) {
       this.paisDeProcedenciaSeleccionadas = [...this.seleccionarOrigenDelPais];
       this.paisDeProcedenciaDatos = [];
     } else {
@@ -273,7 +273,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @param {string} tipo - Tipo de acción a realizar.
    */
   quitar(tipo: string = ''): void {
-    if (tipo === 't') {
+    if (tipo === CONTINUAR) {
       this.paisDeProcedenciaDatos = [...this.paisDeProcedenciaSeleccionadas];
       this.paisDeProcedenciaSeleccionadas = [];
     } else {
@@ -307,7 +307,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @param {string} tipo - Tipo de acción a realizar.
    */
   quitarDos(tipo: string = ''): void {
-    if (tipo === 't') {
+    if (tipo === CONTINUAR) {
       this.paisDelProductoDatos = [...this.paisDelProductoSeleccionadas];
       this.paisDelProductoSeleccionadas = [];
     } else {

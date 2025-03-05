@@ -4,7 +4,7 @@ import { DatosSolicitudComponent } from './component/datos-solicitud/datos-solic
 import { NgModule } from '@angular/core';
 import { PagoDeDerechosComponent } from './component/pago-de-derechos/pago-de-derechos.component';
 import { PantallasActionService } from './services/pantallas-action.service';
-import { PantallasModuloRoutingModule } from './Pantallas-modulo-routing.module';
+import { PantallasModuloRoutingModule } from './pantallas-modulo-routing.module';
 import { PasoCapturarSolicitudComponent } from './pages/paso-capturar-solicitud/paso-capturar-solicitud.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoFirmarSolicitudComponent } from './pages/paso-firmar-solicitud/paso-firmar-solicitud.component';
