@@ -1,0 +1,36 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { SeleccionModuloComponent } from '../seleccion-modulo/seleccion-modulo.component';
+import { EvaluarSolicitudComponent } from './evaluar-solicitud/evaluar-solicitud.component';
+import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirmar-notificacion.component';
+import { AtenderRequerimientoComponent } from './atender-requerimiento/atender-requerimiento.component';
+import { BandejaPendientesComponent } from './bandeja-pendientes/bandeja-pendientes.component';
+
+const routes: Routes = [
+  {
+    path: 'bandeja',
+    component: BandejaPendientesComponent,
+  },
+  {
+    path: 'atender-requerimiento',
+    component: AtenderRequerimientoComponent,
+  },
+  {
+    path: 'confirmar-notificacion',
+    component: ConfirmarNotificacionComponent,
+  },
+  {
+    path: 'evaluar-solicitud',
+    component: EvaluarSolicitudComponent,
+  },
+  {
+    path: 'seleccion-modulo',
+    component: SeleccionModuloComponent,
+  },
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class FuncionarioRoutingModule { }
