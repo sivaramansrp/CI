@@ -34,6 +34,7 @@ export const CATALOGOS_ID = {
   CAT_BIMESTRE_DOS: 'bimestre-catalogo-dos',
   CAT_BIMESTRE_TRES: 'bimestre-catalogo-tres',
   CAT_REPRESENTACION_FEDERAL: 'representacion-federal',
+  CAT_TIPO_TRANSPORTE: 29,
   DATOS_PERSONA_FISICA: 21,
 };
 

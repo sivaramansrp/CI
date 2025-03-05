@@ -65,6 +65,7 @@ export interface Solicitud5701State {
 
   personasResponsablesDespacho: ResponsablesDespacho[];
 
+  tipoTransporte: string;
   transporte: string[];
 
   montoPagar: string;
@@ -122,6 +123,7 @@ export function createInitialState(): Solicitud5701State {
     comprobanteValor: '',
     pedimentoValidado: false,
     personasResponsablesDespacho: [],
+    tipoTransporte: '',
     transporte: [],
     montoPagar: '',
     lineaCaptura: '',
@@ -458,6 +460,13 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     this.update((state) => ({
       ...state,
       personasResponsablesDespacho,
+    }));
+  }
+
+  public setTipoTransporte(tipoTransporte: string) {
+    this.update((state) => ({
+      ...state,
+      tipoTransporte,
     }));
   }
 

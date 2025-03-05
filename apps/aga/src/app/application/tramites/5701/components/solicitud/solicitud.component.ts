@@ -57,6 +57,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   aduanas!: Catalogo[];
   seccionAduanera!: Catalogo[];
   tipoOperacion!: Catalogo[];
+  tipoTransporte!: Catalogo[];
 
   tipoSolicitudSeleccionada!: number;
 
@@ -95,7 +96,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private formulariosService: FormulariosService,
     private catalogosServices: CatalogosService,
     private validacionesService: ValidacionesFormularioService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Peticiones a las apis
@@ -214,6 +215,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+ * Obtiene el grupo de formulario 'transporte' del formulario principal 'FormSolicitud'.
+ */
+  get transporte(): FormGroup {
+    return this.FormSolicitud.get('transporte') as FormGroup;
+  }
+
+  /**
    * Verifica si la solicitud seleccionada es de tipo individual.
    *
    * @returns {boolean} - Retorna `true` si la solicitud seleccionada es de tipo individual, de lo contrario retorna `false`.
@@ -299,13 +307,23 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
+    const tipoTransporte$ = this.catalogosServices
+      .getCatalogoById(CATALOGOS_ID.CAT_TIPO_TRANSPORTE)
+      .pipe(
+        map((resp) => {
+          this.tipoTransporte = JSON.parse(resp.data);
+        })
+      );
+
+
     merge(
       catTipoSolicitud$,
       catalogoPaises$,
       catalogoAduanas$,
       catalogoAduanas$,
       seccionesAduaneras$,
-      tipoOperacion$
+      tipoOperacion$,
+      tipoTransporte$,
     ).subscribe();
   }
 
@@ -416,7 +434,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
       personasResponsablesDespacho: this.fb.array([]),
 
-      transporte: this.fb.group({}),
+
+      transporte: this.fb.group({
+        tipoTransporte: [this.solicitudState?.tipoTransporte],
+
+      }),
 
       pagoCaptura: this.fb.group({
         montoAPagar: [
