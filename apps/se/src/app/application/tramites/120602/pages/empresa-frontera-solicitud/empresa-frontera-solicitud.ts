@@ -33,5 +33,5 @@ export class EmpresaFronteraSolicitudComponent {
    * @description Representa el índice del paso actual en el asistente.
    * Se inicializa en 2, lo que significa que el asistente comenzará en el tercer paso.
    */
-  indice: number = 2;
+  indice: number = 1;
 }

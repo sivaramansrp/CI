@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
+
 import { RouterModule, Routes } from '@angular/router';
+
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
@@ -15,7 +17,7 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'de-pruebas',
+    path: 'empresa-frontera',
     loadChildren: () =>
       import('./tramites/120602/empresa-frontera-solicitud.module').then(
         (m) => m.EmpresaFronteraSolicitudModule
