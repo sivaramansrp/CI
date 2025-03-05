@@ -127,7 +127,11 @@ export interface Personas {
 }
 
 export interface TipoDocumento {
+ 
+  selected: unknown;
   tipoDocumento: number;
+  
+  
 }
 
 export interface ListaPasosWizard {
