@@ -1,0 +1,35 @@
+<div class="container">
+    <div>
+      <ng-titulo
+        titulo="Detalles del transporte"
+      ></ng-titulo>
+      <form [formGroup]="detallesdeltransporte">
+        <div class="row">
+          <div class="col-md-4">
+            <label class="form-label" for="tratadoAcuerdo">Tratado / Acuerdo: </label>
+            <input type="text" class="form-control" id="tratadoAcuerdo" formControlName="tratadoAcuerdo" readonly>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="paísBloque">País / Bloque:</label>
+            <input type="text" class="form-control" id="paísBloque" formControlName="paísBloque" readonly>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="paísdeOrigen">País de origen</label>
+            <input type="text" class="form-control" id="paísdeOrigen" formControlName="paísdeOrigen" readonly>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="paísDestino">País destino: </label>
+            <input type="text" class="form-control" id="paísDestino" formControlName="paísDestino" readonly>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="fechadeExpedición">Fecha de expedición:</label>
+            <input type="text" class="form-control" id="fechadeExpedición" formControlName="fechadeExpedición" readonly>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="fechadeVencimiento">Fecha de vencimiento: </label>
+            <input type="text" class="form-control" id="fechadeVencimiento" formControlName="fechadeVencimiento" readonly>
+          </div>
+        </div>
+        </form>
+    </div>
+</div>
