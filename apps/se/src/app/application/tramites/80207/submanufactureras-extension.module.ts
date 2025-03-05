@@ -16,7 +16,6 @@ import { CommonModule } from '@angular/common';
 import { ContenedorDePasosComponent } from './pages/contenedor-de-pasos/contenedor-de-pasos.component';
 import { EmpresasSubmanufacturerasComponent } from './components/empresas-submanufactureras/empresas-submanufactureras.component';
 import { NgModule } from '@angular/core';
-import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -32,8 +31,7 @@ import { ToastrService } from 'ngx-toastr';
     ContenedorDePasosComponent,
     PasoUnoComponent,
     PasoDosComponent,
-    PasoTresComponent,
-    PasoCuatroComponent,
+    PasoTresComponent
   ],
   imports: [
     AlertComponent,
