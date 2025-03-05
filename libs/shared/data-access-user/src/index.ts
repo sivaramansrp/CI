@@ -78,4 +78,10 @@ export { AccionBoton } from './core/models/220202/fitosanitario.model';
 export { TablaDinamicaComponent } from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export { TablaSeleccion } from './core/enums/tabla-seleccion.enum';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
+export * from './core/enums/tabla-seleccion.enum';
+export * from './tramites/constantes/110102/datos-tratados-acuerdos.enum'
+export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuerdos.service';
+export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.service';
+export * from './core/services/110102/representacion-federal/representacionFederal.service';
+export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';
