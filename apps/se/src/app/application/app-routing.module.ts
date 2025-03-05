@@ -1,5 +1,6 @@
-import { NgModule } from '@angular/core';
+/* eslint-disable @typescript-eslint/naming-convention */
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
@@ -51,7 +52,7 @@ const routes: Routes = [
   {
     path: 'immex-registro-solicitud-modality',
     loadChildren: () =>
-      import('./tramites/80203/immex-registro-de-solicitud-modality.module').then(
+      import('./tramites/80203/immex-registro-de-solicitud-modalidad.modulo').then(
         (m) => m.ImmexRegistroDeSolicitudModalityModule
       )
     }
