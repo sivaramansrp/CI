@@ -27,9 +27,6 @@ export class BtnContinuarComponent {
   @Output() continuarEvento = new EventEmitter<AccionBoton>();
   @Output() btnGuardarClicked = new EventEmitter<void>();
 
-
-  // @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-
   wizardService = inject(WizardService);
   public seccion!: SeccionLibState;
   private destroyNotifier$: Subject<void> = new Subject();
