@@ -16,11 +16,6 @@ export class VehiculosComponent implements AfterViewInit {
   selectedTab: string = 'Parque vehicular';
   activeTab: string = 'parquevehicular';
   secondTableData: any[] = [];
-  selectTab(tabName: string) {
-    this.selectedTab =
-      tabName === 'parquevehicular' ? 'Parque vehicular' : 'Unidad de arrastre';
-    this.activeTab = tabName;
-  }
   labelSolicitudVehiculoTipoVehiculo = 'Tipo de vehiculo';
   solicitudTituloDatosVehiculo: string = 'Datos del Vehículo';
   labelSolicitudVehiculoVin: string = 'Número de identificacion vehicular';
@@ -47,9 +42,19 @@ export class VehiculosComponent implements AfterViewInit {
   botonLimpiar: string = 'Limpiar';
   botonCancelar: string = 'Cancelar';
   botonGuardar: string = 'Guardar';
-
+   /**
+   * Selecciona una pestaña.
+   * @param tabName El nombre de la pestaña a seleccionar.
+   */
+  selectTab(tabName: string) {
+    this.selectedTab =
+      tabName === 'parquevehicular' ? 'Parque vehicular' : 'Unidad de arrastre';
+    this.activeTab = tabName;
+  }
   constructor(private fb: FormBuilder, private toastr: ToastrService) {}
-
+ /**
+   * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
+   */
   ngOnInit(): void {
     //  localStorage.removeItem('vehiculoData');
     this.formVehiculo = this.fb.group({
@@ -140,10 +145,12 @@ export class VehiculosComponent implements AfterViewInit {
     if (storedSecondTableData) {
       this.secondTableData = JSON.parse(storedSecondTableData);
     }
-
     console.log('✅ Loaded first table data:', this.nacional);
     console.log('✅ Loaded second table data:', this.secondTableData);
   }
+/**
+   * Maneja el envío del formulario.
+   */
   onSubmit() {
     if (this.modalInstance) {
       this.modalInstance.hide();
@@ -218,6 +225,34 @@ export class VehiculosComponent implements AfterViewInit {
     }, 500);
   }
 
+  get f() {
+    return this.formVehiculo.controls;
+  }
+  eliminarRegistroSelec(tablaId: string): void {}
+   /**
+   * Método del ciclo de vida de Angular que se llama después de que la vista del componente ha sido completamente inicializada.
+   */
+  ngAfterViewInit(): void {
+    if (this.modalElement) {
+      this.modalInstance = new Modal(this.modalElement.nativeElement);
+    }
+  }
+  /**
+   * Abre el diálogo de captura para validación de persona física.
+   */
+  openDialogCapturaSPFisicaValidacion(): void {
+    if (this.modalInstance) {
+      this.modalInstance.show();
+    }
+  }
+ /**
+   * Abre el diálogo de captura para validación de persona moral.
+   */
+  openDialogCapturaSPMoralValidacion(): void {
+    if (this.modalInstance) {
+      this.modalInstance.show();
+    }
+  }
   paises = [
     { clave: 'MX', descripcion: 'México' },
     { clave: 'US', descripcion: 'Estados Unidos' },
@@ -287,28 +322,9 @@ export class VehiculosComponent implements AfterViewInit {
     { clave: 'FR', descripcion: 'Francia' },
     { clave: 'DE', descripcion: 'Alemania' },
   ];
-
-  get f() {
-    return this.formVehiculo.controls;
-  }
-  eliminarRegistroSelec(tablaId: string): void {}
-  ngAfterViewInit(): void {
-    if (this.modalElement) {
-      this.modalInstance = new Modal(this.modalElement.nativeElement);
-    }
-  }
-
-  openDialogCapturaSPFisicaValidacion(): void {
-    if (this.modalInstance) {
-      this.modalInstance.show();
-    }
-  }
-
-  openDialogCapturaSPMoralValidacion(): void {
-    if (this.modalInstance) {
-      this.modalInstance.show();
-    }
-  }
+  /**
+   * Cierra el modal.
+   */
   closeModal(): void {
     if (this.modalInstance) {
       this.modalInstance.hide();
@@ -316,10 +332,16 @@ export class VehiculosComponent implements AfterViewInit {
   }
 
   closeDialogoCaptura() {}
+  /**
+   * Limpia los datos del formulario de vehículos.
+   */
   limpiarDatosVEHARR() {
     this.formVehiculo.reset();
   }
   validarDescArrastre() {}
+  /**
+   * Limpia los datos del formulario de vehículos.
+   */
   toggleAll(event: any) {
     // this.selectedAll = event.target.checked;
     // this.nacional.forEach(nacion => nacion.selected = this.selectedAll);

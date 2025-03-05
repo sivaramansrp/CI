@@ -1,113 +1,129 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { of as observableOf } from 'rxjs';
 
-import { Component } from '@angular/core';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { SeccionQuery } from '../../../../core/queries/seccion.query';
+import { SeccionQuery } from '@ng-mf/data-access-user';
 import { SeccionStore } from '../../../../estados/seccion.store';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
-@Injectable()
-class MockSeccionQuery {}
-
+// Mock Store Service
 @Injectable()
 class MockSeccionStore {
-  establecerSeccion() {}
-  establecerFormaValida() {}
+  establecerSeccion = jest.fn();
+  establecerFormaValida = jest.fn();
 }
 
+// Custom Directive Mock
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
-  @Input() myCustom;
+  @Input() myCustom: any;
 }
 
-@Pipe({name: 'translate'})
+// Pipe Mocks
+@Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value: any): any {
+    return value;
+  }
 }
 
-@Pipe({name: 'phoneNumber'})
+@Pipe({ name: 'phoneNumber' })
 class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value: any): any {
+    return value;
+  }
 }
 
-@Pipe({name: 'safeHtml'})
+@Pipe({ name: 'safeHtml' })
 class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value: any): any {
+    return value;
+  }
 }
 
 describe('SolicitantePageComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<SolicitantePageComponent>;
+  let component: SolicitantePageComponent;
+  let seccionQueryMock: jest.Mocked<SeccionQuery>;
+  let seccionStoreMock: MockSeccionStore;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+  beforeEach(async () => {
+    // Correcting Mock for SeccionQuery
+    seccionQueryMock = {
+      selectSeccionState$: observableOf({
+        pasos: [],
+        currentStep: 1
+      }) // ✅ Now it's an Observable
+    } as unknown as jest.Mocked<SeccionQuery>;
+
+    // Creating Mock for SeccionStore
+    seccionStoreMock = new MockSeccionStore();
+
+    await TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule],
       declarations: [
         SolicitantePageComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        TranslatePipe,
+        PhoneNumberPipe,
+        SafeHtmlPipe,
         MyCustomDirective
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-        { provide: SeccionQuery, useClass: MockSeccionQuery },
-        { provide: SeccionStore, useClass: MockSeccionStore }
+        { provide: SeccionQuery, useValue: seccionQueryMock },
+        { provide: SeccionStore, useValue: seccionStoreMock }
       ]
-    }).overrideComponent(SolicitantePageComponent, {
-
     }).compileComponents();
+
     fixture = TestBed.createComponent(SolicitantePageComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
     fixture.destroy();
+    jest.clearAllMocks();
   });
 
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    spyOn(component, 'asignarSecciones');
-    component.seccionQuery = component.seccionQuery || {};
-    component.seccionQuery.selectSeccionState$ = observableOf({});
+  it('should initialize properly on ngOnInit()', () => {
+    jest.spyOn(component as any, 'asignarSecciones'); // FIXED TypeScript error
+
     component.ngOnInit();
-    expect(component.asignarSecciones).toHaveBeenCalled();
+
+    expect((component as any).asignarSecciones).toHaveBeenCalled();
   });
 
-  it('should run #seleccionaTab()', async () => {
-    component.seleccionaTab({});
+  it('should call seleccionaTab() with a given value', () => {
+    const tabMock = 1;
+    jest.spyOn(component, 'seleccionaTab');
+
+    component.seleccionaTab(tabMock);
+
+    expect(component.seleccionaTab).toHaveBeenCalledWith(tabMock);
   });
 
-  it('should run #getValorIndice()', async () => {
-    component.pasos = component.pasos || {};
-    component.wizardComponent = component.wizardComponent || {
-      siguiente: () => {},
-      atras: () => {}
-    };
-    spyOn(component.wizardComponent, 'siguiente');
-    spyOn(component.wizardComponent, 'atras');
-    component.getValorIndice({
-      valor: 'next', 
-      accion: 'siguiente' 
-    });
-    // expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    // expect(component.wizardComponent.atras).toHaveBeenCalled();
+  it('should call getValorIndice() and trigger wizard navigation', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    } as any; // FIXED TypeScript error
+
+    component.getValorIndice({ valor: 2, accion: 'cont' });
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+
+    component.getValorIndice({ valor: 1, accion: 'prev' });
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should run #asignarSecciones()', async () => {
-    component.seccionStore = component.seccionStore || {};
-    spyOn(component.seccionStore, 'establecerSeccion');
-    spyOn(component.seccionStore, 'establecerFormaValida');
-    component.asignarSecciones();
-    expect(component.seccionStore.establecerSeccion).toHaveBeenCalled();
-    expect(component.seccionStore.establecerFormaValida).toHaveBeenCalled();
-  });
+  it('should assign sections correctly using asignarSecciones()', () => {
+    (component as any).asignarSecciones(); // FIXED TypeScript error
 
+    expect(seccionStoreMock.establecerSeccion).toHaveBeenCalled();
+    expect(seccionStoreMock.establecerFormaValida).toHaveBeenCalled();
+  });
 });

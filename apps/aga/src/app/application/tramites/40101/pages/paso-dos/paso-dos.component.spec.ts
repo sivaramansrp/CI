@@ -1,84 +1,46 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { of, throwError } from 'rxjs';
 import { PasoDosComponent } from './paso-dos.component';
-import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
-
-@Injectable()
-class MockCatalogosService {
-  getCatalogo() {
-    return observableOf({});
-  }
-}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+import { CatalogosService } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('PasoDosComponent', () => {
-  let fixture;
-  let component;
+  let component: PasoDosComponent;
+  let fixture: ComponentFixture<PasoDosComponent>;
+  let catalogosServiceMock: any;
+
+  beforeEach(async () => {
+    catalogosServiceMock = {
+      getCatalogo: jest.fn(() => of([])) // ✅ FIX: Always returns an Observable
+    };
+
+    await TestBed.configureTestingModule({
+      declarations: [PasoDosComponent],
+      providers: [
+        { provide: CatalogosService, useValue: catalogosServiceMock }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA] // ✅ FIX: Avoids unknown element errors
+    }).compileComponents();
+  });
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-      declarations: [
-        PasoDosComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        { provide: CatalogosService, useClass: MockCatalogosService }
-      ]
-    }).overrideComponent(PasoDosComponent, {
-
-    }).compileComponents();
     fixture = TestBed.createComponent(PasoDosComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    spyOn(component, 'getTiposDocumentos');
-    component.ngOnInit();
-    expect(component.getTiposDocumentos).toHaveBeenCalled();
-  });
+  it('should handle error when getting tipos de documentos', () => {
+    catalogosServiceMock.getCatalogo.mockReturnValue(throwError(() => new Error('API Error'))); // ✅ Simulating API Error
 
-  it('should run #getTiposDocumentos()', async () => {
-    component.catalogosServices = component.catalogosServices || {};
-    spyOn(component.catalogosServices, 'getCatalogo').and.returnValue(observableOf({}));
     component.getTiposDocumentos();
-    expect(component.catalogosServices.getCatalogo).toHaveBeenCalled();
-  });
 
+    expect(catalogosServiceMock.getCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_TIPO_DOCUMENTO);
+    expect(component.catalogoDocumentos).toEqual([]); // ✅ Ensure empty array is set on error
+  });
 });

@@ -11,7 +11,6 @@ interface AccionBoton {
   accion: string;
   valor: number;
 }
-
 @Component({
   selector: 'app-solicitante-page',
   templateUrl: './solicitante-page.component.html',
@@ -29,7 +28,6 @@ export class SolicitantePageComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-
   constructor(
     private seccionQuery: SeccionQuery,
     private seccionStore: SeccionStore
@@ -59,7 +57,6 @@ export class SolicitantePageComponent {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-
   getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 6) {
       this.indice = e.valor;
@@ -70,7 +67,6 @@ export class SolicitantePageComponent {
       }
     }
   }
-
   /**
    * Método para asignar las secciones existentes al stored
    */

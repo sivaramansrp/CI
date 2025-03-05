@@ -1,131 +1,117 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
-// import { HttpClientTestingModule } from '@angular/common/http/testing';
-// import { ToastrModule, ToastrService } from 'ngx-toastr';
-// import { VehiculosComponent } from './vehiculos.component';
-// import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
+// @ts-nocheck
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+  Pipe,
+  PipeTransform,
+  Directive,
+  Input,
+} from '@angular/core';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  FormControl,
+  Validators,
+} from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { VehiculosComponent } from './vehiculos.component';
 
-// describe('VehiculosComponent', () => {
-//   let component: VehiculosComponent;
-//   let fixture: ComponentFixture<VehiculosComponent>;
-//   let toastrService: ToastrService;
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [
-//         HttpClientTestingModule,
-//         ToastrModule.forRoot(),
-//         ReactiveFormsModule,
-//         FormsModule
-//       ],
-//       declarations: [VehiculosComponent],
-//       providers: [FormBuilder, ToastrService]
-//     })
-//     .compileComponents();
-    
-//     fixture = TestBed.createComponent(VehiculosComponent);
-//     component = fixture.componentInstance;
-//     toastrService = TestBed.inject(ToastrService);
-//     fixture.detectChanges();
-//   });
+@Pipe({ name: 'translate' })
+class TranslatePipe implements PipeTransform {
+  transform(value: any) {
+    return value;
+  }
+}
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
+@Pipe({ name: 'phoneNumber' })
+class PhoneNumberPipe implements PipeTransform {
+  transform(value: any) {
+    return value;
+  }
+}
 
-//   it('should initialize the form on ngOnInit', () => {
-//     component.ngOnInit();
-//     expect(component.formVehiculo).toBeDefined();
-//   });
+@Pipe({ name: 'safeHtml' })
+class SafeHtmlPipe implements PipeTransform {
+  transform(value: any) {
+    return value;
+  }
+}
 
-//   it('should call onSubmit and show success toastr', () => {
-//     spyOn(toastrService, 'success');
-//     component.formVehiculo.setValue({
-//       solicitudVehiculoVin2: '123',
-//       solicitudVehiculoTipoVehiculo: 'Car',
-//       solicitudVehiculoNumeroEconomico: '456',
-//       solicitudVehiculoNumeroPlacas: '789',
-//       solicitudVehiculoPaisEmisor: 'USA',
-//       solicitudDomicilioEstado: 'California',
-//       solicitudVehiculoIdDeVehiculo: '1',
-//       solicitudVehiculoMarca: 'Toyota',
-//       solicitudVehiculoModelo: '2022',
-//       anioVehiculoVEH: '2022',
-//       solicitudVehiculoTransponder: '123456',
-//       solicitudVehiculoColor: 'Red',
-//       solicitudVehiculoNumero2daPlaca: 'ABC123', 
-//       solicitudVehiculoEmisor2daPlaca: 'USA' 
-//     });
-//     component.onSubmit();
-//     expect(toastrService.success).toHaveBeenCalledWith('Vehículo agregado correctamente');
-//   });
+describe('VehiculosComponent', () => {
+  let fixture: ComponentFixture<VehiculosComponent>;
+  let component: VehiculosComponent;
+  let toastrService: ToastrService;
 
-//   it('should call onSubmit and show error toastr if form is invalid', () => {
-//     spyOn(toastrService, 'error');
-//     component.formVehiculo.setValue({
-//       solicitudVehiculoVin2: '',
-//       solicitudVehiculoTipoVehiculo: '',
-//       solicitudVehiculoNumeroEconomico: '',
-//       solicitudVehiculoNumeroPlacas: '',
-//       solicitudVehiculoPaisEmisor: '',
-//       solicitudDomicilioEstado: '',
-//       solicitudVehiculoIdDeVehiculo: '',
-//       solicitudVehiculoMarca: '',
-//       solicitudVehiculoModelo: '',
-//       anioVehiculoVEH: '',
-//       solicitudVehiculoTransponder: '',
-//       solicitudVehiculoColor: '',
-//       solicitudVehiculoNumero2daPlaca: '', // Added missing field
-//       solicitudVehiculoEmisor2daPlaca: '' // Added missing field
-//     });
-//     component.onSubmit();
-//     expect(toastrService.error).toHaveBeenCalledWith('Por favor complete todos los campos requeridos');
-//   });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [
+        VehiculosComponent,
+        TranslatePipe,
+        PhoneNumberPipe,
+        SafeHtmlPipe,
+        MyCustomDirective,
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [
+        FormBuilder,
+        {
+          provide: ToastrService,
+          useValue: { error: jest.fn(), success: jest.fn() },
+        },
+      ],
+    }).compileComponents();
 
-//   it('should call eliminarRegistroSelec and remove the selected record', () => {
-//     component.nacional = [{ solicitudVehiculoVin2: '123' }];
-//     component.eliminarRegistroSelec('123');
-//     expect(component.nacional.length).toBe(0);
-//   });
+    fixture = TestBed.createComponent(VehiculosComponent);
+    component = fixture.componentInstance;
+    toastrService = TestBed.inject(ToastrService);
+  });
 
-//   it('should call closeModal and hide the modal', () => {
-//     component['modalInstance'] = { 
-//       hide: jasmine.createSpy('hide'),
-//       toggle: jasmine.createSpy('toggle'),
-//       show: jasmine.createSpy('show'),
-//       handleUpdate: jasmine.createSpy('handleUpdate'),
-//       dispose: jasmine.createSpy('dispose')
-//     };
-//     component.closeModal();
-//     expect((component as any).modalInstance.hide).toHaveBeenCalled();
-//   });
+  afterEach(() => {
+    if (component) {
+      component.ngOnDestroy = function () {};
+    }
+    if (fixture) {
+      fixture.destroy();
+    }
+  });
 
-//   it('should call openDialogCapturaSPFisicaValidacion and show the modal', () => {
-//     component['modalInstance'] = { 
-//       show: jasmine.createSpy('show'),
-//       hide: jasmine.createSpy('hide'),
-//       toggle: jasmine.createSpy('toggle'),
-//       handleUpdate: jasmine.createSpy('handleUpdate'),
-//       dispose: jasmine.createSpy('dispose')
-//     };
-//     component.openDialogCapturaSPFisicaValidacion();
-//     expect((component as any).modalInstance.show).toHaveBeenCalled();
-//   });
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
 
-//   it('should call openDialogCapturaSPMoralValidacion and show the modal', () => {
-//     (component as any).modalInstance = { 
-//       show: jasmine.createSpy('show'),
-//       hide: jasmine.createSpy('hide'),
-//       toggle: jasmine.createSpy('toggle'),
-//       handleUpdate: jasmine.createSpy('handleUpdate'),
-//       dispose: jasmine.createSpy('dispose')
-//     };
-//     component.openDialogCapturaSPMoralValidacion();
-//     expect((component as any).modalInstance.show).toHaveBeenCalled();
-//   });
+  it('should select a tab and update activeTab', () => {
+    component.selectTab('parquevehicular');
+    expect(component.selectedTab).toBe('Parque vehicular');
+    expect(component.activeTab).toBe('parquevehicular');
+  });
 
-//   it('should call limpiarDatosVEHARR and reset the form', () => {
-//     spyOn(component.formVehiculo, 'reset');
-//     component.limpiarDatosVEHARR();
-//     expect(component.formVehiculo.reset).toHaveBeenCalled();
-//   });
-// });
+  it('should initialize form on ngOnInit()', () => {
+    component.fb.group = jest.fn().mockReturnValue({
+      controls: {},
+    });
+    component.ngOnInit();
+    expect(component.fb.group).toHaveBeenCalled();
+  });
+
+  it('should open and close modals correctly', () => {
+    component.modalInstance = { show: jest.fn(), hide: jest.fn() };
+
+    component.openDialogCapturaSPFisicaValidacion();
+    expect(component.modalInstance.show).toHaveBeenCalled();
+
+    component.openDialogCapturaSPMoralValidacion();
+    expect(component.modalInstance.show).toHaveBeenCalled();
+
+    component.closeModal();
+    expect(component.modalInstance.hide).toHaveBeenCalled();
+  });
+});

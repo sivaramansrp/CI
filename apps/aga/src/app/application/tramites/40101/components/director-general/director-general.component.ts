@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import mockData from 'libs/shared/theme/assets/json/40101/director-general-mockdata.json';
-
 @Component({
   selector: 'app-director-general',
   templateUrl: './director-general.component.html',
@@ -9,13 +8,10 @@ import mockData from 'libs/shared/theme/assets/json/40101/director-general-mockd
 })
 export class DirectorGeneralComponent implements OnInit {
   directorGeneralForm!: FormGroup;
-
   constructor(private fb: FormBuilder) {}
-
-  ngOnInit(): void {
-    this.crearFormularioDirectorGeneral();
-    this.setFormValues();
-  }
+  /**
+   * Crea el formulario para el director general.
+   */
 
   crearFormularioDirectorGeneral(): void {
     this.directorGeneralForm = this.fb.group({
@@ -24,11 +20,20 @@ export class DirectorGeneralComponent implements OnInit {
       segundoApellido: ['', [Validators.required]],
     });
   }
-
+  /**
+   * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
+   */
+  ngOnInit(): void {
+    this.crearFormularioDirectorGeneral();
+    this.setFormValues();
+  }
+  /**
+   * Establece los valores del formulario utilizando datos simulados.
+   */
   setFormValues(): void {
-    console.log('Mock Data:', mockData); // Debugging step
+    console.log('Mock Data:', mockData);
     if (mockData) {
-      setTimeout(() => { // Ensures Angular Change Detection runs
+      setTimeout(() => {
         this.directorGeneralForm.patchValue({
           nombre: mockData.nombre || '',
           primerApellido: mockData.primerApellido || '',
@@ -38,5 +43,4 @@ export class DirectorGeneralComponent implements OnInit {
       });
     }
   }
-  
 }

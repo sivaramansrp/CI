@@ -4,7 +4,6 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
-
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
@@ -12,34 +11,33 @@ import { CatalogosService } from '@ng-mf/data-access-user';
 })
 export class PasoDosComponent {
   TEXTOS = TEXTOS;
-
   tiposDocumentos: Catalogo[] = [];
   infoAlert = 'alert-info';
   catalogoDocumentos: Catalogo[] = [];
   documentosSeleccionados: Catalogo[] = [];
-
-  constructor(
-    private catalogosServices: CatalogosService,
-  ) { }
-
+  constructor(private catalogosServices: CatalogosService) {}
+  /**
+   * 
+Gancho del ciclo de vida angular que se llama después de que se inicializan las propiedades enlazadas a datos.
+   */
   ngOnInit(): void {
     this.getTiposDocumentos();
     this.documentosSeleccionados = [
       {
         id: 1,
-        descripcion: 'Documentos que ampare el valor de la mercancía'
+        descripcion: 'Documentos que ampare el valor de la mercancía',
       },
       {
         id: 2,
-        descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)'
-      }
-    ]
-
+        descripcion:
+          'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
+      },
+    ];
   }
 
   /**
- * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
- */
+   * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
+   */
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
@@ -49,7 +47,7 @@ export class PasoDosComponent {
             this.catalogoDocumentos = resp;
           }
         },
-        error: (_error): void => { },
+        error: (_error): void => {},
       });
   }
 }

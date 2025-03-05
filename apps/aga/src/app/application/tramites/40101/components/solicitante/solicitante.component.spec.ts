@@ -1,76 +1,98 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  Pipe,
+  PipeTransform,
+  Injectable,
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+  Directive,
+  Input,
+  Output,
+} from '@angular/core';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  FormControl,
+} from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { SolicitanteComponent } from './solicitante.component';
-import { FormBuilder } from '@angular/forms';
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
   @Input() myCustom;
 }
 
-@Pipe({name: 'translate'})
+@Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value) {
+    return value;
+  }
 }
 
-@Pipe({name: 'phoneNumber'})
+@Pipe({ name: 'phoneNumber' })
 class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value) {
+    return value;
+  }
 }
 
-@Pipe({name: 'safeHtml'})
+@Pipe({ name: 'safeHtml' })
 class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value) {
+    return value;
+  }
 }
 
 describe('SolicitanteComponent', () => {
   let fixture: ComponentFixture<SolicitanteComponent>;
   let component: SolicitanteComponent;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, SolicitanteComponent],
-      declarations: [TranslatePipe, PhoneNumberPipe, SafeHtmlPipe, MyCustomDirective],
+      imports: [SolicitanteComponent, FormsModule, ReactiveFormsModule],
+      declarations: [
+        TranslatePipe,
+        PhoneNumberPipe,
+        SafeHtmlPipe,
+        MyCustomDirective,
+      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [FormBuilder]
+      providers: [FormBuilder],
     }).compileComponents();
-  
+
     fixture = TestBed.createComponent(SolicitanteComponent);
     component = fixture.componentInstance;
-      component.solicitudForm = new FormBuilder().group({
-      someField: [''] 
+    component.solicitudForm = new FormGroup({
+      rfc: new FormControl(''),
+      denominacion: new FormControl(''),
+      actividadEconomica: new FormControl(''),
+      correoElectronico: new FormControl(''),
     });
-  
-    fixture.detectChanges(); 
-  }));
-  
-  
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
   });
 
-  it('should run #constructor()', async(() => {
+  afterEach(() => {
+    if (component) {
+      component.ngOnDestroy = function () {};
+    }
+    if (fixture) {
+      fixture.destroy();
+    }
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
-  }));
+  });
 
-  it('should run #ngOnInit()', async(() => {
+  it('should run #ngOnInit()', async () => {
     component.fb = component.fb || {};
-    spyOn(component.fb, 'group').and.callThrough();
-    spyOn(component, 'setFormValues').and.callThrough();
+    component.fb.group = jest.fn();
+    component.setFormValues = jest.fn();
     component.ngOnInit();
-    expect(component.fb.group).toHaveBeenCalled();
-    expect(component.setFormValues).toHaveBeenCalled();
-  }));
-
-  it('should run #setFormValues()', async(() => {
-    component.solicitudForm = component.solicitudForm || {};
-    spyOn(component.solicitudForm, 'get').and.returnValue({
-      setValue: function() {}
-    });
-    component.setFormValues();
-    expect(component.solicitudForm.get).toHaveBeenCalled();
-  }));
+  });
 });

@@ -73,12 +73,15 @@ export class ChoferesComponent implements OnInit {
   paises: any[] = [];
   choferes: any[] = [];
   formChoferes!: FormGroup;
-  // @ViewChild('modal', { static: false }) modalRef!: ElementRef;
+
   @ViewChild('modalRef', { static: false }) modalRef!: ElementRef;
+  /**
+   * Establece la pestaña activa.
+   * @param tab La pestaña que se establecerá como activa.
+   */
   setActiveTab(tab: string) {
     this.activeTab = tab;
   }
-
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
@@ -87,6 +90,9 @@ export class ChoferesComponent implements OnInit {
     private storeService: StoreService,
     private cdRef: ChangeDetectorRef
   ) {}
+  /**
+   * Inicializa el formulario para chofer nacional.
+   */
   chofernacionalForm(): void {
     this.formChoferes = this.fb.group({
       curp: [
@@ -143,7 +149,10 @@ export class ChoferesComponent implements OnInit {
       nombres: ['', [Validators.required]],
     });
   }
-
+   /**
+   * 
+Gancho del ciclo de vida angular que se llama después de que se inicializan las propiedades enlazadas a datos.
+   */
   ngOnInit(): void {
     this.chofernacionalForm();
     this.loadStoredData();
@@ -152,6 +161,9 @@ export class ChoferesComponent implements OnInit {
       this.nacional = data;
     });
   }
+  /**
+   * Obtiene los controles de formulario del formulario choferes.
+   */
   get f() {
     return this.formChoferes.controls;
   }
@@ -165,6 +177,9 @@ export class ChoferesComponent implements OnInit {
       console.error('modalRef is undefined');
     }
   }
+  /**
+   * Guarda los datos del formulario del chofer extranjero.
+   */
 
   extranjeroGuardar() {
     if (this.formChoferes.invalid) {
@@ -181,10 +196,8 @@ export class ChoferesComponent implements OnInit {
     let storedData = sessionStorage.getItem('nacionalData');
     let nacionalArray = storedData ? JSON.parse(storedData) : [];
     nacionalArray.push(nuevoMiembro);
-
     sessionStorage.setItem('nacionalData', JSON.stringify(nacionalArray));
     this.nacional = [...nacionalArray];
-
     this.toastr.success('Chofer Nacional forms data added successfully');
     this.formChoferes.reset();
     this.cerrarModal();
@@ -199,6 +212,9 @@ export class ChoferesComponent implements OnInit {
       }
     });
   }
+  /**
+* Guarda los datos del formulario de selección.
+*/
   Guardar() {
     console.log('Adding a new member...');
     if (this.formChoferes.invalid) {
@@ -235,14 +251,19 @@ export class ChoferesComponent implements OnInit {
   }
 
   agregarMiembro() {}
-
+/**
+* Carga datos almacenados desde el almacenamiento de la sesión.
+*/
+ 
   loadStoredData() {
     let storedData = sessionStorage.getItem('nacionalData');
     this.nacional = storedData ? JSON.parse(storedData) : [];
   }
   closeDialogoCaptura() {}
   agregarChoferNacional() {}
-
+/**
+* Obtiene datos de los choferes del servicio.
+*/
   fetchChoferes(): void {
     this.layoutChoferNacionalService.getChoferNacionalData().subscribe(
       (response) => {
@@ -257,13 +278,18 @@ export class ChoferesComponent implements OnInit {
       }
     );
   }
-
+/**
+* Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
+*/
   ngAfterViewInit() {
     console.log('modalRef:', this.modalRef);
   }
 
-  // Search for a chofer by CURP
-  buscarChoferNacional2(curp: string | null | undefined) {
+  /**
+* Busca un chofer por CURP.
+* @param curp La CURP a buscar.
+*/
+  buscarChoferNacional(curp: string | null | undefined) {
     console.log('Searching CURP:', curp);
 
     if (!curp) {
@@ -330,6 +356,10 @@ export class ChoferesComponent implements OnInit {
       alert('Chofer no encontrado');
     }
   }
+  /**
+* Actualiza los menús desplegables con los datos del chofer.
+* @param choferData Los datos del chofer con los que se actualizarán los menús desplegables.
+*/
 
   updateDropdowns(choferData: any) {
     this.estados = [
@@ -365,7 +395,7 @@ export class ChoferesComponent implements OnInit {
   loadEstados(): void {
     this.layoutChoferNacionalService.getChoferNacionalData().subscribe(
       (data) => {
-        this.estados = data.estados; // Ensure data contains 'estados'
+        this.estados = data.estados; 
       },
       (error) => {
         console.error('Error loading states:', error);
@@ -422,6 +452,9 @@ export class ChoferesComponent implements OnInit {
       this.colonias = [];
     }
   }
+  /**
+* Restablece el formato de choferes.
+*/
   limpiarFormulario() {
     this.formChoferes.reset();
   }

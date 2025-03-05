@@ -16,20 +16,24 @@ import {
 })
 export class PasoUnoComponent implements AfterViewInit {
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-
   tipoPersona!: number;
   persona: FormularioDinamico[] = [];
   domicilioFiscal: FormularioDinamico[] = [];
   indice: number = 1;
-  validacion: boolean = false; // Or assign appropriate value
+  validacion: boolean = false; 
   // @Input() validacion!: boolean;
   @Input() datosNroPedimento!: any;
-
+  /**
+* Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
+*/
   ngAfterViewInit(): void {
     this.persona = PERSONA_MORAL_NACIONAL;
     this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
   }
-
+  /**
+   * Selecciona una pestaña.
+   * @param i El índice de la pestaña a seleccionar.
+   */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
