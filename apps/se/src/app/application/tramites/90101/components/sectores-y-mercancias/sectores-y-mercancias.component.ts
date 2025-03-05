@@ -18,7 +18,7 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FilaSectors } from '../../models/prosec.module';
 import { PARATEXTO } from '../../constantes/prosec.module';
-import { ProsecService } from '../../services/prosec.module';
+import { ProsecService } from '../../services/prosec.service';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 

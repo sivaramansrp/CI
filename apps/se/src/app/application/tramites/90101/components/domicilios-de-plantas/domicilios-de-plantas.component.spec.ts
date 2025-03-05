@@ -3,7 +3,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { DomiciliosDePlantasComponent } from './domicilios-de-plantas.component';
 import { of } from 'rxjs';
-import { ProsecService } from '../../services/prosec.module';
+import { ProsecService } from '../../services/prosec.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -50,7 +50,7 @@ describe('DomiciliosDePlantasComponent', () => {
     const MOCKDATA = [{ id: 1, nombre: 'Estado 1' }];
     prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(MOCKDATA));
 
-    component.obtenserListaEstado();
+    component.obtenerListaEstado();
 
     expect(prosecServiceMock.obtenerMenuDesplegable).toHaveBeenCalledWith('estado.json');
     expect(component.estadoSeleccionar).toEqual(MOCKDATA);
@@ -60,7 +60,7 @@ describe('DomiciliosDePlantasComponent', () => {
     const MOCKDATA = [{ id: 1, nombre: 'Federal 1' }];
     prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(MOCKDATA));
 
-    component.obtenserListaFederal();
+    component.obtenerListaFederal();
 
     expect(prosecServiceMock.obtenerMenuDesplegable).toHaveBeenCalledWith('federal.json');
     expect(component.RepresentacionFederal).toEqual(MOCKDATA);
@@ -70,19 +70,19 @@ describe('DomiciliosDePlantasComponent', () => {
     const MOCKDATA = [{ id: 1, nombre: 'Actividad 1' }];
     prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(MOCKDATA));
 
-    component.obtenserListaActividad();
+    component.obtenerListaActividad();
 
     expect(prosecServiceMock.obtenerMenuDesplegable).toHaveBeenCalledWith('actividad_productiva.json');
     expect(component.ActividadProductiva).toEqual(MOCKDATA);
   });
 
-  it('should call obtenserLista and call obtenserListaFederal and obtenserListaActividad', () => {
-    jest.spyOn(component, 'obtenserListaFederal');
-    jest.spyOn(component, 'obtenserListaActividad');
+  it('should call obtenerLista and call obtenserListaFederal and obtenserListaActividad', () => {
+    jest.spyOn(component, 'obtenerListaFederal');
+    jest.spyOn(component, 'obtenerListaActividad');
 
-    component.obtenserLista();
+    component.obtenerLista();
 
-    expect(component.obtenserListaFederal).toHaveBeenCalled();
-    expect(component.obtenserListaActividad).toHaveBeenCalled();
+    expect(component.obtenerListaFederal).toHaveBeenCalled();
+    expect(component.obtenerListaActividad).toHaveBeenCalled();
   });
 });

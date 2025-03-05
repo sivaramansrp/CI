@@ -16,7 +16,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FilaPlantas } from '../../models/prosec.module'
-import { ProsecService } from '../../services/prosec.module';
+import { ProsecService } from '../../services/prosec.service';
 import { TEXTO } from '../../constantes/prosec.module';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
@@ -110,14 +110,14 @@ export class DomiciliosDePlantasComponent implements OnInit {
       RepresentacionFederal: [''],
       ActividadProductiva: ['']
     });
-    this.obtenserListaEstado();
+    this.obtenerLista()
   }
 
   /**
    * @method obtenserListaEstado
    * @description Obtiene la lista de estados desde el servicio.
    */
-  obtenserListaEstado(): void {
+  obtenerListaEstado(): void {
     this.ProsecService.obtenerMenuDesplegable('estado.json').subscribe(data => {
       this.estadoSeleccionar = data as Catalogo[];
     }
@@ -128,7 +128,7 @@ export class DomiciliosDePlantasComponent implements OnInit {
    * @method obtenserListaFederal
    * @description Obtiene la lista de representación federal desde el servicio.
    */
-  obtenserListaFederal(): void {
+  obtenerListaFederal(): void {
     this.ProsecService.obtenerMenuDesplegable('federal.json').subscribe(data => {
       this.RepresentacionFederal = data as Catalogo[];
     });
@@ -138,7 +138,7 @@ export class DomiciliosDePlantasComponent implements OnInit {
    * @method obtenserListaActividad
    * @description Obtiene la lista de actividad productiva desde el servicio.
    */
-  obtenserListaActividad(): void {
+  obtenerListaActividad(): void {
     this.ProsecService.obtenerMenuDesplegable('actividad_productiva.json').subscribe(data => {
       this.ActividadProductiva = data as Catalogo[];
     });
@@ -148,8 +148,9 @@ export class DomiciliosDePlantasComponent implements OnInit {
    * @method obtenserLista
    * @description Obtiene las listas de datos de estados, representación federal y actividad productiva.
    */
-   obtenserLista() {
-    this.obtenserListaFederal();
-    this.obtenserListaActividad();
+   obtenerLista() {
+    this.obtenerListaEstado();
+    this.obtenerListaFederal();
+    this.obtenerListaActividad();
   }
 }
