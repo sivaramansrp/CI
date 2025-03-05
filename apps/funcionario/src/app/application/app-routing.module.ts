@@ -8,6 +8,13 @@ const ROUTES: Routes = [
     path: 'app-seleccion-modulo',
     component: SeleccionModuloComponent
   },
+  {
+    path: 'operacion-funcionario',
+    loadChildren: () =>
+      import('./components/funcionario.module').then(
+        (m) => m.FuncionarioModule
+      ),
+  },
 ];
 
 @NgModule({
