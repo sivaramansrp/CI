@@ -19,7 +19,7 @@ import { DATOS_GENERALES_SOCIOS } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
-import DatosSociostable from '../../../../../../../../../libs/shared/theme/assets/json/120601/datosSocios-table.json';
+import { datosSociosTable } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar los datos generales de socios.
@@ -73,7 +73,7 @@ export class DatosGeneralesSociosComponent implements OnInit {
   configuracionTabla_Extranjeros = DATOS_GENERALES_EXTRANJEROS;
 
   /** Array de datos para socios */
-  datosSocios = DatosSociostable;
+  datosSocios = datosSociosTable;
 
   /** Array de datos para socios extranjeros */
   datos_Extranjeros = [];
@@ -83,9 +83,7 @@ export class DatosGeneralesSociosComponent implements OnInit {
    * @param fb - Instancia de FormBuilder
    */
   constructor(private fb: FormBuilder) {
-    this.datosSocios = DatosSociostable;
-    console.log("datosSocios", this.datosSocios);
-    // Constructor logic can be added here if needed
+    // Si es necesario, se puede agregar aquí la lógica del constructor.
   }
 
   /**

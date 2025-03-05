@@ -78,12 +78,22 @@ export * from './core/enums/tabla-seleccion.enum';
 export * from './tramites/constantes/120601/datos-generales-socios-tabledata.enum';
 export * from './tramites/constantes/solicitante-constantes.enum';
 export * from './tramites/directives/Uppercase/uppercase.directive';
-
-
-
 export * from './tramites/constantes/110102/datos-tratados-acuerdos.enum'
 export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuerdos.service';
 export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.service';
 export * from './core/services/110102/representacion-federal/representacionFederal.service';
 export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';
+
+import datosSociosTable from '../../theme/assets/json/120601/datosSocios-table.json';
+export { datosSociosTable };
+
+import tipoDeEmpresa from '../../theme/assets/json/120601/tipoDeEmpresa.json';
+export { tipoDeEmpresa };
+
+import representacionFederalTable from '../../theme/assets/json/120601/representacionFederal-table.json';
+export { representacionFederalTable };
+
+import representacionFederal from '../../theme/assets/json/120601/representacionFederal.json';
+export { representacionFederal };
+

@@ -41,7 +41,7 @@ describe('DatosGeneralesSociosComponent', () => {
 
   it('should initialize form controls correctly', () => {
     expect(component.FormSolicitud.get('datosImportadorExportador')).toBeTruthy();
-    expect(component.formForTotalCount.get('recuentoTotalDeFilas')).toBeTruthy();
+    expect(component.FormSolicitud.get('recuentoTotalDeFilas')).toBeTruthy();
   });
 
   it('should initialize pasos correctly', () => {
@@ -50,10 +50,10 @@ describe('DatosGeneralesSociosComponent', () => {
   });
 
   it('should initialize default table selection as CHECKBOX', () => {
-    expect(component.tablecheckbox).toBe(TablaSeleccion.CHECKBOX);
+    expect(component.tablaCasilla).toBe(TablaSeleccion.CHECKBOX);
   });
 
   it('should initialize total row count correctly', () => {
-    expect(component.formForTotalCount.value.recuentoTotalDeFilas).toBe(component.datos_Socios.length);
+    expect(component.FormSolicitud.value.recuentoTotalDeFilas).toBe(component.datosSocios.length);
   });
 });

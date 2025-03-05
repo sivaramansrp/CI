@@ -11,8 +11,9 @@ import { NavComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 import { TituloComponent } from "@ng-mf/data-access-user";
-import { SolicitanteService } from '@ng-mf/data-access-user';
 import { provideHttpClient } from '@angular/common/http';
+
+import { SolicitanteService } from '@ng-mf/data-access-user';
 
 @NgModule({
   declarations: [

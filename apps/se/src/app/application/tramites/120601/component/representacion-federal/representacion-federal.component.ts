@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 
 import { Catalogo, CatalogoSelectComponent, DATOS_GENERALES_REPRESENTACION, SelectCatalogosComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import representacionFederal from '../../../../../../../../../libs/shared/theme/assets/json/120601/representacionFederal.json';
-import representacionFederaltable from '../../../../../../../../../libs/shared/theme/assets/json/120601/representacionFederal-table.json';
-import tipoDeEmpresa from '../../../../../../../../../libs/shared/theme/assets/json/120601/tipoDeEmpresa.json';
+
+import { representacionFederal } from '@ng-mf/data-access-user';
+import { representacionFederalTable } from '@ng-mf/data-access-user';
+import { tipoDeEmpresa } from '@ng-mf/data-access-user';
 
 /**
  * Componente que representa la representación federal en un proceso de múltiples pasos.
@@ -62,7 +63,7 @@ export class RepresentacionFederalComponent implements OnInit {
   /**
    * Arreglo de datos para los socios.
    */
-  datos_Socios = representacionFederaltable;
+  datos_Socios = representacionFederalTable;
 
   /**
    * Representa la representación seleccionada del catálogo.
