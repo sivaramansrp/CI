@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DATOS_GENERALES_SOLICITANTE, DOMICILIO_FISCAL_SOLICITANTE } from 'libs/shared/data-access-user/src/tramites/constantes/130120/permiso-importacion-modification.enum';
+import { DATOS_GENERALES_SOLICITANTE, DOMICILIO_FISCAL_SOLICITANTE } from '../../constants/permiso-importacion-modification.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormularioDinamico } from 'libs/shared/data-access-user/src/core/models/shared/forms-model';
