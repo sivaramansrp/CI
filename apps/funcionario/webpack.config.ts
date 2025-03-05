@@ -32,7 +32,7 @@ module.exports = {
    name: 'funcionario',
    filename: 'remoteAppEntry.js',
    exposes: {
-    './Module': 'apps/funcionario/src/app/remote-entry/entry.module.ts',
+    './Module': 'apps/funcionario/src/app/application/app.module.ts',
    },
    shared: share({
     '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
