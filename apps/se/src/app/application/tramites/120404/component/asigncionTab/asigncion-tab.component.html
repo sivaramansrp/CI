@@ -15,7 +15,7 @@
               <div class="row mb-3">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <app-catalogo-select [catalogo]="asigncionid" [required]="true" name="asignacionSolitud"  [label]="'Año del oficio de asignación'" formControlName="asignacionsolitud"  >
+                        <app-catalogo-select [catalogo]="solicitanteList" [required]="true" name="asignacionSolitud"  [label]="'Año del oficio de asignación'" formControlName="asignacionsolitud"  >
                       </app-catalogo-select>
                       <div *ngIf="isInvalid('asignacionsolitud')" class="text-danger">
                         Este campo es obligatorio

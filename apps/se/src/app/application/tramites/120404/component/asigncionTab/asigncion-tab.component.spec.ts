@@ -58,7 +58,7 @@ describe('AsignciontabComponent', () => {
 
     component.loadComboUnidadMedida();
     expect(service.getAsigncion).toHaveBeenCalled();
-    expect(component.asigncionid).toEqual(MOCKDATA);
+    expect(component.solicitanteList).toEqual(MOCKDATA);
   });
 
   it('should check if form control is invalid', () => {

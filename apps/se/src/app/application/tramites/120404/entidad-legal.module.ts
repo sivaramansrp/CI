@@ -12,7 +12,7 @@ import { SolicitantetabComponent } from './component/solicitanteTab/solicitantet
 import { EntidadLegalRoutingModule } from './entidad-legal-routing.module';
 
 import { AsignciondirectaPageComponent } from './pages/asignciondirecta-page/asignciondirecta-page.component';
-import { SolicitanteAsigncionComponent } from './pages/solicitante-asigncionTab/solicitante-asigncion.component';
+import { SolicitanteAsigncionComponent } from './pages/solicitante-asigncionTab/solicitante-entidad.component';
 @NgModule({
 
 declarations: [SolicitanteAsigncionComponent,AsignciondirectaPageComponent],

@@ -14,9 +14,9 @@ import { Component } from '@angular/core';
  * @styleUrl ./solicitante-asigncion.component.scss
  */
 @Component({
-  selector: 'app-solicitante-asigncion',
-  templateUrl: './solicitante-asigncion.component.html',
-  styleUrls: ['./solicitante-asigncion.component.scss'],
+  selector: 'app-solicitante-entidad',
+  templateUrl: './solicitante-entidad.component.html',
+  styleUrls: ['./solicitante-entidad.component.scss'],
 })
 export class SolicitanteAsigncionComponent {
   /**

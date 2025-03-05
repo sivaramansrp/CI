@@ -19,7 +19,7 @@ import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { SolicitanteasigncionserviceService } from 'libs/shared/data-access-user/src/core/services/120404/solicitanteasigncionService.service';
+import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-user/src/core/services/120404/solicitanteAsigncionservice.service';
 
 import { Catalogo } from '@ng-mf/data-access-user';
 
@@ -73,7 +73,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   /**
    * Lista de asignaciones.
    */
-  public asigncionid!: Catalogo[];
+  public solicitanteList!: Catalogo[];
 
   /**
    * Constructor del componente.
@@ -134,7 +134,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
     this.service.getAsigncion().pipe(
       takeUntil(this.destroyed$)
     ).subscribe((data): void => {
-      this.asigncionid = data as Catalogo[];
+      this.solicitanteList = data as Catalogo[];
     });
   }
 

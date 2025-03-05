@@ -10,7 +10,7 @@ import { AsignacionData } from 'libs/shared/data-access-user/src/core/models/120
 import { SolicitantetabComponent } from './solicitantetab.component';
 
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { SolicitanteasigncionserviceService } from 'libs/shared/data-access-user/src/core/services/120404/solicitanteasigncionService.service';
+import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-user/src/core/services/120404/solicitanteAsigncionservice.service';
 
 // eslint-disable-next-line @nx/enforce-module-boundaries
 
