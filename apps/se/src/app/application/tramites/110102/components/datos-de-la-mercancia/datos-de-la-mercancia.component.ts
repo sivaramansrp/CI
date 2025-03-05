@@ -3,10 +3,12 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { DatosDeLaMercanciaStore } from '../../estados/store/datos-de-la-mercancia.store';
+import { DatosDeLaMercanciaQuery } from '../../estados/queries/datos-de-la-mercancia.query';
 
 /**
  * Este componente maneja los datos de la mercancía.
@@ -18,7 +20,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   templateUrl: './datos-de-la-mercancia.component.html',
   styleUrl: './datos-de-la-mercancia.component.scss',
 })
-export class DatosDeLaMercanciaComponent {
+export class DatosDeLaMercanciaComponent implements OnInit{
 
   /**
    * Formulario para el registro de la mercancía del comercializador.
@@ -30,7 +32,7 @@ export class DatosDeLaMercanciaComponent {
    * Constructor del componente.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private store:DatosDeLaMercanciaStore,private query:DatosDeLaMercanciaQuery) {
     this.datosDeLamercanciaFrom = this.fb.group({
       cveRegistroProductor: ['', [Validators.required, Validators.maxLength(12)]],
       solicitud: this.fb.group({
@@ -39,6 +41,22 @@ export class DatosDeLaMercanciaComponent {
       })
     });
   }
+  ngOnInit(): void {
+    this.query.selectCveRegistroProductor$.subscribe(
+      (data)=>{
+      this.datosDeLamercanciaFrom.patchValue(
+      {
+          cveRegistroProductor:data
+      } 
+      )
+    }
+    )
+  }
+
+update()
+{
+  this.store.setCveRegistroProductor(this.datosDeLamercanciaFrom.get('solicitud.idSolicitud')?.value)
+}
 
   /**
    * Verifica si un control del formulario es inválido.
