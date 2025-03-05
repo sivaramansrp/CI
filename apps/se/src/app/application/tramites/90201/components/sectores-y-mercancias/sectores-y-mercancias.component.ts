@@ -1,12 +1,14 @@
+/* eslint-disable no-empty-function */
 /* eslint-disable sort-imports */
 /* eslint-disable @nx/enforce-module-boundaries */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { ExpansionDeProductoresService } from 'libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
-import { map, merge, Subscription } from 'rxjs';
+import { map, merge, Subject, Subscription, takeUntil } from 'rxjs';
 import { Sectoresy } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
@@ -20,6 +22,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import {
+  Solicitud90201State,
+  Tramite90201Store,
+} from '../../../../estados/tramites/tramite90201.store';
+import { Tramite90201Query } from '../../../../estados/queries/tramite90201.query';
 
 /**
  * Componente SectoresYMercancias que se utiliza para mostrar y gestionar los SectoresYMercancias.
@@ -108,6 +115,9 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    */
   private subscription: Subscription = new Subscription();
 
+  public solicitudState!: Solicitud90201State;
+  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Constructor del componente SectoresYMercanciasComponent.
    *
@@ -116,17 +126,28 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    */
   constructor(
     private _expansionDesvc: ExpansionDeProductoresService,
-    private fb: FormBuilder
-  ) {
-    this.establecerFormSectores();
-  }
+    private fb: FormBuilder,
+    private tramite90201Store: Tramite90201Store,
+    private tramite90201Query: Tramite90201Query
+  ) {}
 
   /**
    * Gancho de ciclo de vida que se llama después de que se inicializan las propiedades enlazadas a datos de una directiva.
    * Inicializa los catálogos llamando al método `inicializaCatalogos`.
    */
   ngOnInit(): void {
+    this.subscription.add(
+      this.tramite90201Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe()
+    );
     this.inicializaCatalogos();
+    this.establecerFormSectores();
   }
 
   /**
@@ -138,8 +159,8 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    */
   public establecerFormSectores(): void {
     this.sectoresForm = this.fb.group({
-      sector: [''],
-      fraccion: ['', Validators.maxLength(8)],
+      sector: [this.solicitudState?.sector],
+      fraccion: [this.solicitudState?.fraccion, Validators.maxLength(8)],
     });
   }
 
@@ -176,5 +197,21 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  /**
+   * Establece los valores del formulario en el store.
+   * Este método se utiliza para actualizar los valores del formulario en el store.
+   * @param form
+   * @param campo
+   * @param metodoNombre
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite90201Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite90201Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 }
