@@ -1,25 +1,36 @@
 /**
- * component ConsultadDomicilios90305Component
+ * @component ConsultadDomicilios90305Component
  * @description
  * Este componente permite la consulta de domicilios relacionados con Prosec.
  * Utiliza un formulario reactivo con un campo de selección de estado basado en un catálogo.
+ * Los datos del catálogo se obtienen del servicio `ProsecModificacionServiceTsService`.
+ * El estado seleccionado se gestiona utilizando Akita para asegurar la persistencia del estado.
  */
 
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import {ProsecModificacionServiceTsService, catalogoResponse} from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Observable } from 'rxjs';
+
+import {
+  CatalogoSelectComponent,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import {
+  ProsecModificacionServiceTsService,
+  catalogoResponse,
+} from '@ng-mf/data-access-user';
+import { Tramite90305Query } from '../../../../estados/queries/tramite90305.query';
+import { Tramite90305Store } from '../../../../estados/tramites/tramite90305.store';
+
 /**
+ * compo docs
  * @selector app-consultad-domicilios-90305
  * @standalone true
  */
@@ -36,41 +47,59 @@ import {
   styleUrl: './consultad-domicilios-90305.component.scss',
 })
 export class ConsultadDomicilios90305Component implements OnInit {
+  /** Observable para el estado seleccionado */
+  selectedEstado$: Observable<catalogoResponse | null> =
+    this.tramite90305Query.selectedEstado$;
   /** Catálogo de estados cargado desde un archivo JSON */
-  estadoJson:catalogoResponse[] = [];
-
+  estadoJson: catalogoResponse[] = [];
   /** Formulario reactivo para la consulta de domicilios */
   formConsulta!: FormGroup;
-
   /**
-   * constructor
+   * Constructor
    * @param {FormBuilder} fb - Constructor de formularios reactivos
+   * @param {ProsecModificacionServiceTsService} listaDomicilios - Servicio para obtener los datos del catálogo
+   * @param {Tramite90305Store} tramite90305Store - Store de Akita para gestionar el estado
+   * @param {Tramite90305Query} tramite90305Query - Query de Akita para seleccionar el estado
    */
-  constructor(private fb: FormBuilder,
-    private listaDomicilios: ProsecModificacionServiceTsService
+  constructor(
+    private fb: FormBuilder,
+    private listaDomicilios: ProsecModificacionServiceTsService,
+    private tramite90305Store: Tramite90305Store,
+    private tramite90305Query: Tramite90305Query
   ) {
-    //constructor
+    //constructor()
   }
-
   /**
    * Método del ciclo de vida de Angular - inicializa el componente y configura el formulario
    */
   ngOnInit(): void {
-    this.loadEstado();
     this.formConsulta = this.fb.group({
-      estadoControl: [
-        {
-          disabled: false,
-        },
-        Validators.required,
-      ],
+      estadoControl: [{ disabled: false }, Validators.required],
     });
-  }
 
-  loadEstado() {
-    this.listaDomicilios.getEstadoData().subscribe((resp:catalogoResponse[]) => {
-      this.estadoJson = resp;
+    this.selectedEstado$.subscribe((selectedEstado) => {
+      if (selectedEstado) {
+        this.formConsulta.get('estadoControl')?.setValue(selectedEstado);
+      }
     });
+
+    this.loadEstado();
   }
-  
+  /**
+   * Carga los datos del catálogo de estados desde el servicio
+   */
+  loadEstado(): void {
+    this.listaDomicilios
+      .getEstadoData()
+      .subscribe((resp: catalogoResponse[]) => {
+        this.estadoJson = resp;
+      });
+  }
+  /**
+   * Obtiene el estado seleccionado del formulario y lo guarda en el store
+   */
+  getMunicipios(): void {
+    const SELECTED_ESTADO = this.formConsulta.get('estadoControl')?.value;
+    this.tramite90305Store.setSelectedEstado(SELECTED_ESTADO);
+  }
 }

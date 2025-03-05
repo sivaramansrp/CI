@@ -9,6 +9,7 @@
             [label]="'Estado*'"
             [placeholder]="'Seleccione una aduana'"
             formControlName="estadoControl"
+            (change)="getMunicipios()"
           ></app-catalogo-select>
         </div>
       </div>

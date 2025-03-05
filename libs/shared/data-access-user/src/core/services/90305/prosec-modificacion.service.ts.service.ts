@@ -32,9 +32,7 @@ export class ProsecModificacionServiceTsService {
   getModoficacionInfo(){
     return this.http.get<MODIFICACAION_INFO>('assets/json/90305/modificacionInfo.json')
   }
-  // getEstadoData(){
-  //   return this.http.get<catalogoResponse>('assets/json/90305/estado.json')
-  // }
+  
   getEstadoData(): Observable<catalogoResponse[]> {
     return this.http.get<catalogoResponse[]>('assets/json/90305/estado.json');
   }
