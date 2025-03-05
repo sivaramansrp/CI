@@ -30,9 +30,9 @@ import { SelectCatalogosComponent } from 'libs/shared/data-access-user/src/trami
 import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
 import unidadRadioFields from 'libs/shared/theme/assets/json/220401/unidad.json';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { HistoricoFabricantesService } from 'libs/shared/data-access-user/src/core/services/120301/historico-fabricantes/historico-fabricantes.service';
-import { ServiciosElegibilidadDeTextilesService } from 'libs/shared/data-access-user/src/core/services/120301/servicios-elegibilidad-de-textiles.service';
-import { HISTORICO_TBCOL } from 'libs/shared/data-access-user/src/tramites/constantes/elegibilidad-de-textiles.enums';
+import { HistoricoFabricantesService } from '../../services/historico-fabricantes/historico-fabricantes.service';
+import { ServiciosElegibilidadDeTextilesService } from '../../services/servicios-elegibilidad-de-textiles.service';
+import { HISTORICO_TBCOL } from 'apps/se/src/app/application/tramites/120301/constantes/elegibilidad-de-textiles.enums';
 
 @Component({
   selector: 'historico-fabricantes',

@@ -13,16 +13,16 @@ import { TableComponent } from 'libs/shared/data-access-user/src/tramites/compon
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
-import { EXPEDICION_FACTURA_FECHA } from 'libs/shared/data-access-user/src/tramites/constantes/elegibilidad-de-textiles.enums';
-import { CapturarFacturasService } from 'libs/shared/data-access-user/src/core/services/120301/capturar-facturas/capturar-facturas.service';
+import { EXPEDICION_FACTURA_FECHA } from 'apps/se/src/app/application/tramites/120301/constantes/elegibilidad-de-textiles.enums';
+import { CapturarFacturasService } from '../../services/capturar-facturas/capturar-facturas.service';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Catalogo, RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogosSelect, InputFecha } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
 import { SelectCatalogosComponent } from 'libs/shared/data-access-user/src/tramites/components/select-catalogos/select-catalogos.component';
 import { InputFechaComponent } from 'libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import {CPATURAR_TBCOL} from 'libs/shared/data-access-user/src/tramites/constantes/elegibilidad-de-textiles.enums'
-import { ElegibilidadTextilesService } from 'libs/shared/data-access-user/src/core/services/120301/elegibilidad-textiles/elegibilidad-textiles.service';
+import {CPATURAR_TBCOL} from 'apps/se/src/app/application/tramites/120301/constantes/elegibilidad-de-textiles.enums'
+import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
 @Component({
   selector: 'app-capturar-facturas',
