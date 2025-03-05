@@ -16,6 +16,14 @@ const routes: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
+
+  {
+    path:'exportador-autorizado',
+    loadChildren:()=>
+      import('./tramites/110102/exportador-autorizado.module').then(
+        (m)=>m.ExportadorautorizadoModule
+      )
+  },
   {
     path: 'empresa-frontera',
     loadChildren: () =>
