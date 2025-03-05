@@ -197,7 +197,7 @@ export class SolicitudComponent {
         empaques: ['', [Validators.required]]
       }),
       unidadDeVerificacion: this.fb.group({
-        unidadDeVerify: ['', [Validators.required]],
+        unidadDeVerificar: ['', [Validators.required]],
         terceroEspecialista: ['', [Validators.required]]
       }),
       unidadExpedidoraFitosanitario: this.fb.group({

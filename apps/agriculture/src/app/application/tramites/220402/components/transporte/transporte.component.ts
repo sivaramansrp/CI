@@ -49,7 +49,7 @@ export class TransporteComponent implements OnDestroy {
   crearFormTransporte() {
     this.transporteForm = this.fb.group({
       mediodeTransporte: ['', [Validators.required]],
-      identificationDelTransporte: [''],
+      identificaciónDelTransporte: [''],
     });
   }
 
