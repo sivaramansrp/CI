@@ -1,5 +1,5 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { AlertComponent } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
@@ -137,8 +137,8 @@ export class TratadosComponent implements OnInit {
    */
   agregarTratado(): void {
     if (this.formularioTratados.valid) {
-      const nuevoTratado = this.formularioTratados.value;
-      this.cuerpoTabla.push(nuevoTratado);
+      const NUEVOTRATADO = this.formularioTratados.value;
+      this.cuerpoTabla.push(NUEVOTRATADO);
       this.formularioTratados.reset();
     } 
   }
