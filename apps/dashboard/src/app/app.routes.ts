@@ -33,13 +33,13 @@ export const appRoutes: Route[] = [
         }).then((m) => m.AppAgaModule)
   },
   {
-    path: 'agricultura',
+    path: 'agriculture',
     loadChildren: () =>
         loadRemoteModule({
             remoteEntry: 'http://localhost:4204/remoteAppEntry.js',
-            remoteName: 'agricultura',
+            remoteName: 'agriculture',
             exposedModule: './Module'
-        }).then((m) => m.AppAgriculturaModule)
+        }).then((m) => m.AppAgricultureModule)
   },
   {
     path: 'se',

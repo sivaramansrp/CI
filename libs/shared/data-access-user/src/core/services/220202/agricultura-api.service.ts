@@ -8,7 +8,7 @@ import { DatosDeTabla } from '../../models/220202/fitosanitario.model';
 @Injectable({
   providedIn: 'root'
 })
-export class AgriculturaApiService {
+export class AgricultureApiService {
   url: string = '../../../../../assets/json/220202/';
   constructor(private readonly http: HttpClient) { }
   /**

@@ -45,12 +45,12 @@ services:
       - modulefederation-network
 
 #----------------------------------------------------------------
-  modulefederation-agricultura-microfront:
-    image: modulefederation-agricultura-microfront:1.0.0
+  modulefederation-agriculture-microfront:
+    image: modulefederation-agriculture-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/agricultura/Dockerfile
-    container_name: modulefederation-agricultura-microfront
+      dockerfile: apps/agriculture/Dockerfile
+    container_name: modulefederation-agriculture-microfront
     restart: on-failure
     expose:
       - '4204'

@@ -1,4 +1,4 @@
-import { AgriculturaComponent } from './pages/agricultura/agricultura.component';
+import { AgricultureComponent } from './pages/agriculture/agriculture.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
@@ -7,13 +7,13 @@ import { Routes } from '@angular/router';
 
 export const ROUTES_FITOSANITARIO: Routes = [
   {
-    path: 'agricultura',
-    component: AgriculturaComponent,
+    path: 'agriculture',
+    component: AgricultureComponent,
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'agricultura',
+    redirectTo: 'agriculture',
   },
 
 ];

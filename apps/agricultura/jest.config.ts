@@ -1,9 +1,9 @@
 /* eslint-disable */
 export default {
-  displayName: 'agricultura',
+  displayName: 'agriculture',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/apps/agricultura',
+  coverageDirectory: '../../coverage/apps/agriculture',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

@@ -3,7 +3,7 @@ import { Catalogo } from "libs/shared/data-access-user/src/core/models/shared/ca
 import { InputFecha } from "libs/shared/data-access-user/src/core/models/shared/components.model"
 import { FECHA_DE_PAGO } from "libs/shared/data-access-user/src/tramites/constantes/220202/fitosanitario.enums"
 import { Component, OnInit } from "@angular/core"
-import { AgriculturaApiService } from "libs/shared/data-access-user/src/core/services/220202/agricultura-api.service"
+import { AgricultureApiService } from "libs/shared/data-access-user/src/core/services/220202/agriculture-api.service"
 
 
 
@@ -91,9 +91,9 @@ export class PagoDeDerechosComponent implements OnInit {
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
-   * @param {AgriculturaApiService} agriculturaApiService - Cliente HTTP para realizar solicitudes.
+   * @param {AgricultureApiService} agricultureApiService - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private readonly fb: FormBuilder, private readonly agriculturaApiService: AgriculturaApiService) { }
+  constructor(private readonly fb: FormBuilder, private readonly agricultureApiService: AgricultureApiService) { }
 
   /**
    * Inicializa el componente.
@@ -128,7 +128,7 @@ export class PagoDeDerechosComponent implements OnInit {
    * @method obtenerBancoSelectorList
    */
   obtenerBancoSelectorList() {
-    this.agriculturaApiService.obtenerSelectorList('banco.json').subscribe(data => {
+    this.agricultureApiService.obtenerSelectorList('banco.json').subscribe(data => {
       if (data) {
         this.bancoSelector = data;
       }
@@ -142,7 +142,7 @@ export class PagoDeDerechosComponent implements OnInit {
    * @method obtenerListaDeJustificaciones
    */
   obtenerListaDeJustificaciones() {
-    this.agriculturaApiService.obtenerSelectorList('Justificación.json').subscribe(data => {
+    this.agricultureApiService.obtenerSelectorList('Justificación.json').subscribe(data => {
       if (data) {
         this.justificacionSelector = data;
       }
