@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
-import { DetallesDelTransporteComponent } from './detalles-del-transporte/detalles-del-transporte.component';
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
 const ROUTES: Routes = [
 
   {
-    path:'demo',
-    component:DetallesDelTransporteComponent
+    path:'solicitud',
+    component:SolicitudPageComponent
   }
 ];
 

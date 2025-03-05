@@ -4,9 +4,9 @@ import { NgModule } from '@angular/core';
 
 const ROUTES: Routes = [
 
-  { path: '', pathMatch: 'full', redirectTo: 'cerdificado' },
+  { path: '', pathMatch: 'full', redirectTo: 'cerdificado-sgp' },
   {
-     path:'cerdificado',
+     path:'cerdificado-sgp',
     loadChildren: () =>import('./tramites/110209/certificado-sgp.module').then((m)=>m.CertificadoSGPModule)
   
 
