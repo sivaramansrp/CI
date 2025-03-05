@@ -12,7 +12,7 @@ import { FirmaElectronicaComponent } from '../../components/firma-electronica/fi
   imports: [FirmaElectronicaComponent]
 })
 export class FirmaPageComponent implements OnDestroy {
-  ruta: string = 'aga';
+  ruta!: string;
 
   private destroy$ = new Subject<void>();
   constructor(
@@ -25,6 +25,9 @@ export class FirmaPageComponent implements OnDestroy {
   * @param ev - La cadena de texto que representa la firma obtenida.
   */
   obtieneFirma(ev: string): void {
+    const rutaActual = this.router.url;
+    this.ruta = rutaActual.split('/')[1];
+
     const FIRMA: string = ev;
     if (FIRMA) {
       // Obtiene el número de trámite
@@ -33,6 +36,7 @@ export class FirmaPageComponent implements OnDestroy {
         .pipe(
           takeUntil(this.destroy$),
           map(() => {
+
             this.router.navigate([`${this.ruta}/acuse`]);
           }),
           catchError((_error) => {
