@@ -4,12 +4,12 @@ import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Importante } from '@ng-mf/data-access-user';
-import { ImportanteCatalogoSeleccion } from '@ng-mf/data-access-user';
+import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { RenovacionesMuestrasMercanciasService } from '@ng-mf/data-access-user';
+import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
+import { Subscription } from 'rxjs';
 import { Validators } from '@angular/forms';
-
-
 
 /**
  * Componente para el registro de renovaciones de muestras de mercancías.
@@ -25,7 +25,7 @@ import { Validators } from '@angular/forms';
   templateUrl: './registro-renovaciones-muestras-mercancias.component.html',
   styleUrl: './registro-renovaciones-muestras-mercancias.component.scss',
 })
-export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit {
+export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para el registro de muestras de mercancías.
    */
@@ -66,6 +66,17 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit {
    * @type {boolean}
    */
   panelDespachoOrMercancia: boolean = false;
+
+  /**
+ * Administra el ciclo de vida de la suscripción `darseDeBaja`.
+ * 
+ * - La variable `darseDeBaja` almacena la suscripción activa,
+ *   la cual puede ser `null` si no hay suscripción.
+ * - El método `ngOnDestroy` se asegura de que la suscripción
+ *   se cancele correctamente cuando el componente se destruya,
+ *   evitando fugas de memoria.
+ */
+  darseDeBaja: Subscription | null = null;
 
   /**
    * Constructor de RegistroRenovacionesMuestrasMercanciasComponent.
@@ -127,7 +138,7 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit {
    * @returns {void} No retorna ningún valor.
    */
   getOpcionImportador(): void {
-    this.renovacionesService.obtenerOpcionesDesplegables().subscribe({
+    this.darseDeBaja = this.renovacionesService.obtenerOpcionesDesplegables().subscribe({
       next: (res: ImportanteCatalogoSeleccion) => {
         this.opcionDeImportador = res.importadorExportadorPrevio;
         this.fraccionArancelariaAga = res.fraccionArancelariaAga;
@@ -194,6 +205,19 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit {
       this.formRegistroMuestras.get('descMotivoFaltaMuestra')?.disable();
     } else {
       this.formRegistroMuestras.get('descMotivoFaltaMuestra')?.disable();
+    }
+  }
+
+   /**
+     * Hook del ciclo de vida que se invoca cuando se destruye el componente.
+     * - Verifica si la suscripción `darseDeBaja` está activa.
+     * - Si existe, se da de baja (unsubscribe) del observable para liberar recursos.
+     * - Establece `darseDeBaja` a `null` como parte del proceso de limpieza.
+     */
+  ngOnDestroy(): void {
+    if (this.darseDeBaja) {
+      this.darseDeBaja.unsubscribe();
+      this.darseDeBaja = null;
     }
   }
 }

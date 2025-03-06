@@ -8,7 +8,7 @@ import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { FormsModule } from '@angular/forms';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
-import { PagoLCComponent } from './components/pago-lc/pago-lc.component';
+import { PagoLineaDeCapturaComponent } from './components/pago-linea-de-captura/pago-linea-de-captura.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -16,7 +16,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroRenovacionesMuestrasMercanciasComponent } from './components/registro-renovaciones-muestras-mercancias/registro-renovaciones-muestras-mercancias.component';
 import { RenovacionesComponent } from './pages/renovaciones/renovaciones.component';
 import { RenovacionesMuestrasMercanciasRoutingModule } from './renovaciones-muestras-mercancias-routing.module';
-import { RenovacionesMuestrasMercanciasService } from '@ng-mf/data-access-user';
+import { RenovacionesMuestrasMercanciasService } from './services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -29,7 +29,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PasoTresComponent,
     RenovacionesComponent,
     RegistroRenovacionesMuestrasMercanciasComponent,
-    PagoLCComponent,
+    PagoLineaDeCapturaComponent,
     DatosProrrogaMuestrasMercanciasComponent,
   ],
   imports: [
@@ -53,7 +53,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PasoDosComponent, 
     PasoTresComponent,
     RegistroRenovacionesMuestrasMercanciasComponent,
-    PagoLCComponent,
+    PagoLineaDeCapturaComponent,
     DatosProrrogaMuestrasMercanciasComponent,
   ],
   providers: [RenovacionesMuestrasMercanciasService],

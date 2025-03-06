@@ -22,7 +22,7 @@ fdescribe('PasoTresComponent', () => {
         {
           provide: Router,
           useValue: {
-            navigate: jasmine.createSpy('navigate'),
+            navigate: jest.fn(),
           },
         },
       ],

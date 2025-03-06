@@ -3,17 +3,17 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ImportanteCatalogoSeleccion } from '@ng-mf/data-access-user';
-import { PagoLCComponent } from './pago-lc.component';
+import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
+import { PagoLineaDeCapturaComponent } from './pago-linea-de-captura.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RenovacionesMuestrasMercanciasService } from '@ng-mf/data-access-user';
+import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
 import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
 import { throwError } from 'rxjs';
 
-describe('PagoLCComponent', () => {
-  let component: PagoLCComponent;
-  let fixture: ComponentFixture<PagoLCComponent>;
+describe('PagoLineaDeCapturaComponent', () => {
+  let component: PagoLineaDeCapturaComponent;
+  let fixture: ComponentFixture<PagoLineaDeCapturaComponent>;
   let renovacionesService: jest.Mocked<RenovacionesMuestrasMercanciasService>;
 
   beforeEach(async () => {
@@ -28,7 +28,7 @@ describe('PagoLCComponent', () => {
         FormsModule,
         HttpClientTestingModule
       ],
-      declarations: [PagoLCComponent],
+      declarations: [PagoLineaDeCapturaComponent],
       providers: [
         FormBuilder,
         {
@@ -38,7 +38,7 @@ describe('PagoLCComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PagoLCComponent);
+    fixture = TestBed.createComponent(PagoLineaDeCapturaComponent);
     component = fixture.componentInstance;
     renovacionesService = TestBed.inject(
       RenovacionesMuestrasMercanciasService

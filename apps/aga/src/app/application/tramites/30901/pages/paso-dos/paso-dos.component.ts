@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { ImportanteCatalogoSeleccion } from '@ng-mf/data-access-user';
+import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 import { OnInit } from '@angular/core';
-import { RenovacionesMuestrasMercanciasService } from '@ng-mf/data-access-user';
+import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { TableData } from '@ng-mf/data-access-user';
 

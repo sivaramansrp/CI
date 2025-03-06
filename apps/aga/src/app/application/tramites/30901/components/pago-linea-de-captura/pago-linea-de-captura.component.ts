@@ -1,26 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { ImportanteCatalogoSeleccion } from '@ng-mf/data-access-user';
+import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 import { OnInit } from '@angular/core';
-import { RenovacionesMuestrasMercanciasService} from '@ng-mf/data-access-user';
+import { REGEX_REEMPLAZAR } from 'libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
+import { Subscription } from 'rxjs';
 import { TableData } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
-
 /**
  * Componente para el manejo del pago de la línea de captura.
  *
  * @component
- * @selector 'app-pago-lc'
- * @templateUrl './pago-lc.component.html'
- * @styleUrl './pago-lc.component.scss'
+ * @selector 'app-pago-linea-de-captura'
+ * @templateUrl './pago-linea-de-captura.component.html'
+ * @styleUrl './pago-linea-de-captura.component.scss'
  */
 @Component({
-  selector: 'app-pago-lc',
-  templateUrl: './pago-lc.component.html',
-  styleUrl: './pago-lc.component.scss',
+  selector: 'app-pago-linea-de-captura',
+  templateUrl: './pago-linea-de-captura.component.html',
+  styleUrl: './pago-linea-de-captura.component.scss',
 })
-export class PagoLCComponent implements OnInit {
+export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
   /**
    * Formulario para el pago de la línea de captura.
    */
@@ -30,6 +31,17 @@ export class PagoLCComponent implements OnInit {
    * @type {TableData}
    */
   tableData!: TableData;
+
+/**
+ * Administra el ciclo de vida de la suscripción `darseDeBaja`.
+ * 
+ * - La variable `darseDeBaja` almacena la suscripción activa,
+ *   la cual puede ser `null` si no hay suscripción.
+ * - El método `ngOnDestroy` se asegura de que la suscripción
+ *   se cancele correctamente cuando el componente se destruya,
+ *   evitando fugas de memoria.
+ */
+  darseDeBaja: Subscription | null = null;
 
   /**
    * Constructor de la clase PagoLcComponent.
@@ -72,7 +84,7 @@ export class PagoLCComponent implements OnInit {
    * @returns {void}
    */
   obtenerDatosIniciales(): void {
-    this.renovacionesService.obtenerOpcionesDesplegables().subscribe({
+    this.darseDeBaja = this.renovacionesService.obtenerOpcionesDesplegables().subscribe({
       next: (res: ImportanteCatalogoSeleccion) => {
         this.tableData = res.tablaDeTarifasDePago;
       },
@@ -91,7 +103,7 @@ export class PagoLCComponent implements OnInit {
     this.formPagoLC.patchValue({
       lineaCaptura: this.formPagoLC
         .get('lineaCaptura')
-        ?.value.replace(/[^a-zA-Z0-9]/g, '')
+        ?.value.replace(REGEX_REEMPLAZAR, '')
         .toUpperCase(),
     });
   }
@@ -105,5 +117,18 @@ export class PagoLCComponent implements OnInit {
    */
   limpiarCampos(): void {
     this.formPagoLC.get('lineaCaptura')?.reset();
+  }
+  
+   /**
+     * Hook del ciclo de vida que se invoca cuando se destruye el componente.
+     * - Verifica si la suscripción `darseDeBaja` está activa.
+     * - Si existe, se da de baja (unsubscribe) del observable para liberar recursos.
+     * - Establece `darseDeBaja` a `null` como parte del proceso de limpieza.
+     */
+  ngOnDestroy(): void {
+    if (this.darseDeBaja) {
+      this.darseDeBaja.unsubscribe();
+      this.darseDeBaja = null;
+    }
   }
 }

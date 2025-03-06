@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { ComponentFixture } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { ImportanteCatalogoSeleccion } from '@ng-mf/data-access-user';
+import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 import { PasoDosComponent } from './paso-dos.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { RenovacionesMuestrasMercanciasService } from '@ng-mf/data-access-user';
+import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
 import { TestBed } from '@angular/core/testing';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';

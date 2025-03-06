@@ -1,9 +1,8 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
-// import { ImportanteCatalogoSeleccion } from '../../models/30901/registro-muestras-mercancias.model';
 import { RenovacionesMuestrasMercanciasService } from './renovaciones-muestras-mercancias.service';
 import { TestBed } from '@angular/core/testing';
-import { ImportanteCatalogoSeleccion } from '@ng-mf/data-access-user';
+import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 
 fdescribe('RenovacionesMuestrasMercanciasService', () => {
   let service: RenovacionesMuestrasMercanciasService;
@@ -132,7 +131,7 @@ fdescribe('RenovacionesMuestrasMercanciasService', () => {
     });
 
     const req = httpMock.expectOne(
-      'assets/json/30901/registro-muestras-mercancias.json'
+      '../../../../../assets/json/30901/registro-muestras-mercancias.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(dummyOptions);
