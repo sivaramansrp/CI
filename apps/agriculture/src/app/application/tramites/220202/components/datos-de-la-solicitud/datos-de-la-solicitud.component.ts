@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { AgriculturaApiService } from 'libs/shared/data-access-user/src/core/services/220202/agricultura-api.service';
+import { AgriculturaApiService } from 'apps/agriculture/src/app/application/tramites/220202/constantes/220202/agricultura-api.service';
 
 
 
