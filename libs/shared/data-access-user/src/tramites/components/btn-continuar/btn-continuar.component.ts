@@ -32,9 +32,10 @@ interface AccionBoton {
 })
 export class BtnContinuarComponent {
   @Input({ required: true }) datos!: DatosPasos;
-  @Output() continuarEvento = new EventEmitter<AccionBoton>();
+  @Input() btnGuardar: boolean = false;
 
-  // @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @Output() continuarEvento = new EventEmitter<AccionBoton>();
+  @Output() btnGuardarClicked = new EventEmitter<void>();
 
   wizardService = inject(WizardService);
   public seccion!: SeccionLibState;
@@ -89,5 +90,8 @@ export class BtnContinuarComponent {
 
       this.continuarEvento.emit(datosAnterior);
     }
+  }
+  guardar() {
+    this.btnGuardarClicked.emit();
   }
 }

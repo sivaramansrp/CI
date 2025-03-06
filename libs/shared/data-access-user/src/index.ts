@@ -95,3 +95,7 @@ export * from './core/services/110102/representacion-federal/representacionFeder
 export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';
 export * from './core/estados/seccion.store';
+export * from './tramites/pages/firma-page/firma-page.component';
+export * from './tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
+export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
+export * from './tramites/components/acuse/acuse.component';
