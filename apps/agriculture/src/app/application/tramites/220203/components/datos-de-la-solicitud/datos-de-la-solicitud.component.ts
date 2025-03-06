@@ -61,6 +61,7 @@ export class DatosDeLaSolicitudComponent {
     { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
     { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
   ];
+  cuerpoTablaFila: Fila[] = [];
   /**
    * @description Configuración de columnas para la tabla de solicitudes.
    */
@@ -134,7 +135,8 @@ export class DatosDeLaSolicitudComponent {
   /**
    * @description Datos de la tabla principal.
    */
-  cuerpoTabla: string[] = [];
+  cuerpoTabla: FilaSolicitud[] = [];
+  cuerpoTablaSolicitud: FilaSolicitud[] = [];
   /**
    * @description Indica si se debe mostrar la barra de desplazamiento.
    */
