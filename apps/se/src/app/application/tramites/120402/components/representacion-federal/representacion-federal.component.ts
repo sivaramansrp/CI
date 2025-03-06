@@ -35,9 +35,12 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   RepresentacionFederalService,
-  TituloComponent,
+  TituloComponent
 } from '@ng-mf/data-access-user';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
+import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
+import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
+
 
 /**
  * @class RepresentacionFederalComponent
@@ -92,6 +95,12 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   public representacion: Catalogo[] = [];
 
+  entidad$: Observable<Catalogo | null> =
+  this.tramite120402Query.entidad$;
+
+  representacion$: Observable<Catalogo | null> =
+  this.tramite120402Query.representacion$;
+
   /**
    * @constructor
    * @description
@@ -102,7 +111,9 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private service: RepresentacionFederalService
+    private service: RepresentacionFederalService,
+    private tramite120402Store: Tramite120402Store,
+    private tramite120402Query: Tramite120402Query
   ) {
     // Constructor
   }
@@ -120,6 +131,18 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     this.initializeForm();
     this.loadEntidad();
     this.loadRepresentacion();
+
+    this.entidad$.subscribe((entidad) => {
+      if (entidad) {
+        this.representacionForm.get('entidad')?.setValue(entidad);
+      }
+    });
+
+    this.representacion$.subscribe((representacion) => {
+      if (representacion) {
+        this.representacionForm.get('representacion')?.setValue(representacion);
+      }
+    });
   }
 
   /**
@@ -183,5 +206,15 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
       .subscribe((data: any) => {
         this.representacion = data;
       });
+  }
+
+  getEntidad(): void {
+    const SELECTED_ENTIDAD = this.representacionForm.get('entidad')?.value;
+    this.tramite120402Store.setEntidad(SELECTED_ENTIDAD);    
+  }
+
+  getRepresentacion(): void {
+    const SELECTED_REPRESENTACION = this.representacionForm.get('representacion')?.value;
+    this.tramite120402Store.setRepresentacion(SELECTED_REPRESENTACION);    
   }
 }

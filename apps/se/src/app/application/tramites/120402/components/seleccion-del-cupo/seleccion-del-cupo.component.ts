@@ -16,8 +16,12 @@ import {
 } from '@ng-mf/data-access-user';
 
 import { SeleccionDelCupoService } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
+
+import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
+
+import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
+import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
 
 /**
  * Componente para la selección del cupo en el sistema.
@@ -78,6 +82,8 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
+  regimen$: Observable<Catalogo | null> = this.tramite120402Query.regimen$;
+
   /**
    * Constructor del componente.
    * @param fb - Servicio de FormBuilder para manejar formularios reactivos.
@@ -85,7 +91,9 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private service: SeleccionDelCupoService
+    private service: SeleccionDelCupoService,
+    private tramite120402Store: Tramite120402Store,
+    private tramite120402Query: Tramite120402Query
   ) {
     // Constructor
   }
@@ -100,6 +108,12 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     this.loadRegimen();
     this.loadTratado();
     this.loadProducto();
+
+    this.regimen$.subscribe((regimen) => {
+      if (regimen) {
+        this.seleccionForm.get('regimen')?.setValue(regimen);
+      }
+    });
   }
 
   /**
@@ -170,7 +184,6 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    * Maneja el cambio en el campo de nombre del subproducto.
    * @param event - Evento de cambio.
    */
- 
 
   /**
    * Carga los datos de la selección del cupo desde el servicio.
@@ -183,5 +196,10 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.seleccionDelCupo = data;
       });
+  }
+
+  getRegimen(): void {
+    const SELECTED_REGIMEN = this.seleccionForm.get('regimen')?.value;
+    this.tramite120402Store.setRegimen(SELECTED_REGIMEN);    
   }
 }
