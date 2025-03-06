@@ -1,8 +1,15 @@
-import { HttpClient } from '@angular/common/http';
+import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { Catalogo, RespuestaCatalogos } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+
+import { HttpClient } from '@angular/common/http';
+
+import { Observable, map } from 'rxjs';
+
 import { DatosDeTabla } from '../../models/220202/fitosanitario.model';
+
+
+
 
 
 @Injectable({
@@ -10,14 +17,16 @@ import { DatosDeTabla } from '../../models/220202/fitosanitario.model';
 })
 export class AgriculturaApiService {
   url: string = '../../../../../assets/json/220202/';
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient) {
+    console.log('AgriculturaApiService');
+  }
   /**
    * Obtiene la lista de bancos.
    * @returns Observable de la lista de bancos.
    */
   obtenerSelectorList(fileName: string): Observable<Catalogo[]> {
-    const baseUrl = this.url + fileName;
-    return this.http.get<RespuestaCatalogos>(baseUrl).pipe(
+    const BASEURL = this.url + fileName;
+    return this.http.get<RespuestaCatalogos>(BASEURL).pipe(
       map(response => response.data)
     );
   }
@@ -25,10 +34,10 @@ export class AgriculturaApiService {
       * Obtiene los datos de la tabla desde el archivo JSON.
       * @returns Observable con los datos de la tabla.
       */
-  obtenerDatosDeTabla(fileName: string): Observable<any[]> {
-    const baseUrl = this.url + fileName;
-    return this.http.get<DatosDeTabla>(baseUrl).pipe(
-      map(response => response.data)
+  obtenerDatosDeTabla(fileName: string): Observable<DatosDeTabla> {
+    const BASEURL = this.url + fileName;
+    return this.http.get<DatosDeTabla>(BASEURL).pipe(
+      map(response => response)
     );
   }
 

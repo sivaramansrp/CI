@@ -1,8 +1,21 @@
-import { Store, StoreConfig } from '@datorama/akita';
+import {
+    DatosForma,
+
+    ListaDeDatosFinal,
+
+    Mercancia,
+
+    Movilizacion,
+
+    PagoForm,
+
+    createDatosState,
+} from '../models/220202/fitosanitario.model';
+
+
 import { Injectable } from '@angular/core';
-import { createDatosState, DatosForma, ListaDeDatosFinal, Mercancia, Movilizacion, PagoForm } from 'apps/agriculture/src/app/application/tramites/220202/models/220202/fitosanitario.model';
 
-
+import { Store, StoreConfig } from '@datorama/akita';
 
 @Injectable({
     providedIn: 'root',

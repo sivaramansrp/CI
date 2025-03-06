@@ -1,10 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { PASOS } from 'apps/agriculture/src/app/application/tramites/220202/constantes/220202/fitosanitario.enums';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 
-import { AccionBoton, ListaPasosWizard } from 'apps/agriculture/src/app/application/tramites/220202/models/220202/fitosanitario.model';
-
+import { AccionBoton, ListaPasosWizard } from '../../models/220202/fitosanitario.model';
+import { PASOS } from '../../constantes/220202/fitosanitario.enums';
 /**
  * @fileoverview Componente para la gestión del formulario de agricultura.
  * Este componente maneja la lógica y la presentación del formulario de agricultura,

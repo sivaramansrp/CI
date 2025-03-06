@@ -1,18 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-
-import { DatosDeFila } from 'apps/agriculture/src/app/application/tramites/220202/models/220202/fitosanitario.model';
-
-import { INSTRUCCION_DOBLE_CLIC } from 'apps/agriculture/src/app/application/tramites/220202/constantes/220202/fitosanitario.enums';
-
-import { HttpClient } from '@angular/common/http';
-
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { AgriculturaApiService } from 'apps/agriculture/src/app/application/tramites/220202/services/220202/agricultura-api.service';
+import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { DatosDeFila } from '../../models/220202/fitosanitario.model';
+import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
 
 
 
+interface MesaColumnasData {
+  tbodyData: string[];
+}
 /**
  * @Componente DatosDeLaSolicitudComponent
  * @description Componente para la sección de datos de la solicitud en el formulario de fitosanitarios.
@@ -33,11 +31,9 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * @description Datos para las columnas de la tabla.
    * Cada elemento del array representa una columna y contiene la información
    * para mostrar en la cabecera y las celdas de la tabla.
-   * @type {any[]}
+   * @type {MesaColumnasData[]}
    */
-  mesaColumnas: any[] = [{
-    tbodyData: ['Establecimiento 1', '123-456-7890', 'correo', 'Actividad 1', 'Otro detalle', 'Certificado 001', 'Domicilio 1'],
-  }];
+  mesaColumnas: DatosDeFila[] = [];
 
   /**
    * @description Rango de días seleccionados.
@@ -59,9 +55,9 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * @description Datos para el cuerpo de la tabla.
    * Este array contiene la información que se muestra en las celdas de la tabla,
    * excluyendo la cabecera.
-   * @type {any[]}
+   * @type {string[]}
    */
-  mesaCuerpo: any[] = [];
+  mesaCuerpo: string[] = [];
 
   /**
    * @description Datos de las filas de la tabla.
@@ -228,8 +224,8 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       uso: [''],
       producto: [''],
     });
-    const mercanciasArray = this.forma.get('mercancias') as FormArray;
-    mercanciasArray.push(this.fb.group({
+    const MERCANCIAS_ARRAY = this.forma.get('mercancias') as FormArray;
+    MERCANCIAS_ARRAY.push(this.fb.group({
       seleccionado: [''], // Checkbox
       noPartida: [''],
       tipoRequisito: [''],
@@ -265,7 +261,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
  */
   obtenerTablaCelulaValor() {
     this.agriculturaApiService.obtenerDatosDeTabla('solicitud.json').subscribe(data => {
-      this.tablaDeDatosDeCelda = data;
+      this.tablaDeDatosDeCelda = data as unknown as DatosDeFila[];
     })
 
   }
@@ -276,7 +272,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
 
   mesaColumnasData() {
     this.agriculturaApiService.obtenerDatosDeTabla('contenidodetabla.json').subscribe(data => {
-      this.mesaColumnas = data;
+      this.mesaColumnas = data as unknown as DatosDeFila[];
     })
   }
   mostrar_colapsable() {
