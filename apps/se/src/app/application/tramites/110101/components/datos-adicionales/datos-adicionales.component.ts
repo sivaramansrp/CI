@@ -5,8 +5,12 @@ import { CommonModule } from '@angular/common';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
+import { DatosAdicionalesStore } from '../../estados/tramites/datos-adicionales110101.store';
+import { DatosAdicionalesQuery } from '../../estados/queries/datos-adicionales110101.query'
 import { PROTESTA } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { distinctUntilChanged, Subject, take, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -33,6 +37,7 @@ export class DatosAdicionalesComponent implements OnInit {
    * @property {FormGroup} formulario - El formulario del componente.
    */
   public formulario!: FormGroup;
+  private destroy$ = new Subject<void>();
   /**
    * Representa la entidad seleccionada del catálogo.
    * Se espera que esta propiedad sea del tipo 'CatalogosSelect'.
@@ -68,8 +73,10 @@ export class DatosAdicionalesComponent implements OnInit {
    * @param validacionesService: Validaciones comunes del formulario.
    */
   constructor(private fb: FormBuilder,
+    private datosAdicionalesStore: DatosAdicionalesStore,
+    private datosAdicionalesQuery: DatosAdicionalesQuery
     // eslint-disable-next-line no-empty-function
-) {
+  ) {
   }
 
   /**
@@ -80,6 +87,11 @@ export class DatosAdicionalesComponent implements OnInit {
     this.crearFormulario();
     this.getEntidadFederativa();
     this.getRepresentacionFederal();
+    this.getFormDataFromStore();
+    // Subscribe to form changes and update store
+    this.formulario.valueChanges
+      .pipe(distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe(() => this.updateStore());
   }
   /**
    * Crea el formulario con los campos necesarios y sus validaciones.
@@ -152,5 +164,26 @@ export class DatosAdicionalesComponent implements OnInit {
   public validarRepresentacionFederalIDCSECEROR_(_e: Event): void {
     // this is a dynamic function once we get the api will implement it
 
+  }
+
+  private getFormDataFromStore(): void {
+    this.datosAdicionalesQuery.formValues$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((formValues) => {
+        if (formValues) {
+          this.formulario.patchValue(formValues, { emitEvent: false });
+        }
+      });
+  }
+
+  private updateStore(): void {
+    if (this.formulario.valid) {
+      const NEWVALUES = this.formulario.value;
+      this.datosAdicionalesQuery.formValues$.pipe(take(1)).subscribe((currentValues) => {
+        if (JSON.stringify(currentValues) !== JSON.stringify(NEWVALUES )) {
+          this.datosAdicionalesStore.update({ formValues: NEWVALUES});
+        }
+      });
+    }
   }
 }
