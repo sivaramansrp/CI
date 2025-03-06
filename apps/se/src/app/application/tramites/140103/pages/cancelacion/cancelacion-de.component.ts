@@ -31,7 +31,15 @@ export class CancelacionDeComponent {
     txtBtnSig: 'Continuar',
   };
  
-  getValorIndice(e: AccionBoton) {
+  /**
+   * Updates the `indice` property based on the value of the provided `AccionBoton` object.
+   * If the `valor` property of `AccionBoton` is between 1 and 4 (inclusive), it sets `indice` to `valor`.
+   * Depending on the `accion` property of `AccionBoton`, it either moves the wizard component forward or backward.
+   *
+   * @param {AccionBoton} e - The action button object containing `valor` and `accion` properties.
+   * @returns {void}
+   */
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

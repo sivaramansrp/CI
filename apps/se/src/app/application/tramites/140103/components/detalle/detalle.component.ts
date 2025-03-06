@@ -4,7 +4,7 @@ import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramit
 import { CommonModule } from '@angular/common';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-/**
+ /**
  * Componente que gestiona el detalle de un formulario relacionado con datos de importación o exportación.
  * Este componente permite visualizar y modificar información sobre los detalles del producto
  * utilizando un formulario reactivo, y está compuesto por varios subcomponentes reutilizables.
@@ -49,7 +49,9 @@ export class DetalleComponent implements OnInit {
    * 
    * @param fb - FormBuilder utilizado para crear y gestionar el formulario reactivo.
    */
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) {
+    // Initialization logic can be added here if needed
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -84,7 +86,7 @@ export class DetalleComponent implements OnInit {
    * Los valores cargados son valores estáticos que representan un ejemplo de importación/exportación.
    * Este método también deshabilita el formulario para que los usuarios no puedan modificar los valores.
    */
-  getFormData() {
+  getFormData(): void {
     this.DetalleForm.disable(); // Deshabilita el formulario para que no se pueda modificar
 
     // Carga los valores por defecto en cada uno de los controles del formulario

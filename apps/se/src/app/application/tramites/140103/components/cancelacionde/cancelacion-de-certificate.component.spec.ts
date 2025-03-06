@@ -1,15 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CancelacionDeCertificateComponent } from './cancelacion-de-certificate.component';
+import { CatalogoSelectComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common'; 
-import { TituloComponent } from '@ng-mf/data-access-user'; 
 import { OficioComponent } from '../oficio/oficio.component';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user'; 
 import cancelations from 'libs/shared/theme/assets/json/140103/cancelacion.json';
-import { CancelacionDeCertificateComponent } from './cancelacion-de-certificate.component';
 import cancelcatalog from 'libs/shared/theme/assets/json/140103/cancelcatalog.json';
-
+ interface Cupos {
+  cupo: number;
+  nombreProducto: string;
+  nombreSubproducto: string;
+  mecanismoAsignacion: string;
+  tipoCupo: string;
+}
 describe('CancelacionDeCertificateComponent', () => {
   let component: CancelacionDeCertificateComponent;
   let fixture: ComponentFixture<CancelacionDeCertificateComponent>;
@@ -76,15 +81,15 @@ describe('CancelacionDeCertificateComponent', () => {
   });
 
   it('should initialize the configuracionTabla with correct table configuration', () => {
-    const expectedConfiguracion: any[] = [
-      { encabezado: 'Cupo', clave: (item: any) => item.cupo, orden: 1 },
-      { encabezado: 'Nombre de Producto', clave: (item: any) => item.nombreProducto, orden: 2 },
-      { encabezado: 'Nombre del Subproducto', clave: (item: any) => item.nombreSubproducto, orden: 3 },
-      { encabezado: 'Mecanismo de Asignación', clave: (item: any) => item.mecanismoAsignacion, orden: 4 },
-      { encabezado: 'Tipo Cupo', clave: (item: any) => item.tipoCupo, orden: 5 }
+    const EXPECTEDCONFIGURATION: unknown = [
+      { encabezado: 'Cupo', clave: (item: Cupos) => item.cupo, orden: 1 },
+      { encabezado: 'Nombre de Producto', clave: (item: Cupos) => item.nombreProducto, orden: 2 },
+      { encabezado: 'Nombre del Subproducto', clave: (item: Cupos) => item.nombreSubproducto, orden: 3 },
+      { encabezado: 'Mecanismo de Asignación', clave: (item: Cupos) => item.mecanismoAsignacion, orden: 4 },
+      { encabezado: 'Tipo Cupo', clave: (item: Cupos) => item.tipoCupo, orden: 5 }
     ];
 
-    expect(component.configuracionTabla).toEqual(expectedConfiguracion);
+    expect(component.configuracionTabla).toEqual(EXPECTEDCONFIGURATION);
     expect(component.configuracionTabla.length).toBe(5); 
   });
 });

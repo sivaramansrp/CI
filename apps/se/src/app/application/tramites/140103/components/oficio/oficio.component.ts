@@ -1,4 +1,4 @@
-import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, TituloComponent } from '@ng-mf/data-access-user';
+//import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { certificadosCancelar} from 'libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
@@ -6,10 +6,17 @@ import { certificadosCancelar} from 'libs/shared/data-access-user/src/core/model
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { DetalleComponent } from '../detalle/detalle.component';
 import { HttpClient } from '@angular/common/http';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+//import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+//import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import oficiodata from 'libs/shared/theme/assets/json/140103/oficiotable.json';
-
+interface ConfiguracionItem {
+  folioOficioCertificado: string;
+  nombreRazonSocial: string;
+  estado: string;
+  fabricante: string;
+  importador: string;
+  unidadPrimaria: number;
+}
 /**
  * Componente para gestionar la visualización y actualización de los datos de los oficios de certificados.
  * Este componente muestra una tabla con la información de los oficios y permite la interacción con un formulario
@@ -87,13 +94,13 @@ export class OficioComponent implements OnInit {
    * Configuración de las columnas para la tabla de oficios.
    * Define qué columnas mostrar y cómo extraer los datos de cada oficio.
    */
-  configuracionTabla: ConfiguracionColumna<any>[] = [
-    { encabezado: 'Folio del oficio de certificado', clave: (item: any) => item.folioOficioCertificado, orden: 1 },
-    { encabezado: 'Nombre, Denominación o Razón Social', clave: (item: any) => item.nombreRazonSocial, orden: 2 },
-    { encabezado: 'Estado', clave: (item: any) => item.estado, orden: 3 },
-    { encabezado: 'Fabricante', clave: (item: any) => item.fabricante, orden: 4 },
-    { encabezado: 'Importador', clave: (item: any) => item.importador, orden: 5 },
-    { encabezado: 'Unidad Primaria', clave: (item: any) => item.unidadPrimaria, orden: 6 },
+  configuracionTabla: ConfiguracionColumna<ConfiguracionItem>[] = [
+    { encabezado: 'Folio del oficio de certificado', clave: (item:ConfiguracionItem) => item.folioOficioCertificado, orden: 1 },
+    { encabezado: 'Nombre, Denominación o Razón Social', clave: (item: ConfiguracionItem) => item.nombreRazonSocial, orden: 2 },
+    { encabezado: 'Estado', clave: (item: ConfiguracionItem) => item.estado, orden: 3 },
+    { encabezado: 'Fabricante', clave: (item: ConfiguracionItem) => item.fabricante, orden: 4 },
+    { encabezado: 'Importador', clave: (item: ConfiguracionItem) => item.importador, orden: 5 },
+    { encabezado: 'Unidad Primaria', clave: (item: ConfiguracionItem) => item.unidadPrimaria, orden: 6 },
   ];
 
   /**
@@ -119,7 +126,9 @@ export class OficioComponent implements OnInit {
    * @param http - HttpClient utilizado para hacer solicitudes HTTP.
    * @param fb - FormBuilder utilizado para crear y gestionar el formulario reactivo.
    */
-  constructor(public http: HttpClient, public fb: FormBuilder) {}
+  constructor(public http: HttpClient, public fb: FormBuilder) {
+    // Initialization logic can be added here if needed
+  }
 
   /**
    * Lista de pasos del asistente de navegación (wizard) que guiará al usuario a través de los pasos del proceso.
@@ -164,7 +173,7 @@ export class OficioComponent implements OnInit {
    * Método que actualiza los valores del formulario con datos predeterminados.
    * También deshabilita los campos para que no puedan ser modificados por el usuario.
    */
-  updateformfied() {
+  updateformfied(): void {
     this.OficioForm.get('oficioData.asignado')?.disable(); // Deshabilita el campo 'asignado'
     this.OficioForm.get('oficioData.monto')?.disable(); // Deshabilita el campo 'monto'
     this.OficioForm.get('oficioData.asignado')?.setValue('2500'); // Asigna un valor predeterminado al campo 'asignado'

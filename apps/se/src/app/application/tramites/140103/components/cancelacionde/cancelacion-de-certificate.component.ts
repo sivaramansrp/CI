@@ -10,6 +10,14 @@ import { OficioComponent } from '../oficio/oficio.component';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import cancelations from 'libs/shared/theme/assets/json/140103/cancelacion.json';
 import cancelcatalog from 'libs/shared/theme/assets/json/140103/cancelcatalog.json';
+interface Cupos {
+  cupo: number;
+  nombreProducto: string;
+  nombreSubproducto: string;
+  mecanismoAsignacion: string;
+  tipoCupo: string;
+}
+
 /**
  * Componente `CancelacionDeCertificateComponent`
  * 
@@ -160,12 +168,12 @@ export class CancelacionDeCertificateComponent {
    * 
    * @type {ConfiguracionColumna<any>[]}
    */
-  configuracionTabla: ConfiguracionColumna<any>[] = [
-    { encabezado: 'Cupo', clave: (item: any) => item.cupo, orden: 1 },
-    { encabezado: 'Nombre de Producto', clave: (item: any) => item.nombreProducto, orden: 2 },
-    { encabezado: 'Nombre del Subproducto', clave: (item: any) => item.nombreSubproducto, orden: 3 },
-    { encabezado: 'Mecanismo de Asignación', clave: (item: any) => item.mecanismoAsignacion, orden: 4 },
-    { encabezado: 'Tipo Cupo', clave: (item: any) => item.tipoCupo, orden: 5 }
+  configuracionTabla: ConfiguracionColumna<Cupos>[] = [
+    { encabezado: 'Cupo', clave: (item: Cupos) => item.cupo, orden: 1 },
+    { encabezado: 'Nombre de Producto', clave: (item: Cupos) => item.nombreProducto, orden: 2 },
+    { encabezado: 'Nombre del Subproducto', clave: (item: Cupos) => item.nombreSubproducto, orden: 3 },
+    { encabezado: 'Mecanismo de Asignación', clave: (item: Cupos) => item.mecanismoAsignacion, orden: 4 },
+    { encabezado: 'Tipo Cupo', clave: (item: Cupos) => item.tipoCupo, orden: 5 }
   ];
 
 }

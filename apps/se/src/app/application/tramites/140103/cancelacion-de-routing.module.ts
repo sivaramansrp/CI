@@ -6,7 +6,7 @@ import { NgModule } from '@angular/core';
 import { CancelacionDeComponent } from './pages/cancelacion/cancelacion-de.component';
 
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
       path: 'solicitante',
       component: CancelacionDeComponent,
@@ -14,7 +14,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
    exports: [RouterModule]
 })
 export class CancelacionDeRoutingModule { }

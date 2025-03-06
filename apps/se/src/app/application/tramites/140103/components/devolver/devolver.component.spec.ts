@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder,FormGroup,FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DevolverComponent } from './devolver.component';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
 
 describe('DevolverComponent', () => {
@@ -50,29 +50,29 @@ describe('DevolverComponent', () => {
   it('should disable form controls after calling updateformfied()', () => {
     component.updateformfied();
 
-    const folioControl = component.DevolverForm.get('DevolverData.folio');
-    const disponibleControl = component.DevolverForm.get('DevolverData.disponible');
-    const totalControl = component.DevolverForm.get('DevolverData.total');
-    const cuadradosControl = component.DevolverForm.get('DevolverData.cuadrados');
+    const FOLIOCONTROL = component.DevolverForm.get('DevolverData.folio');
+    const DISPONSIBLECONTROL = component.DevolverForm.get('DevolverData.disponible');
+    const TOTALCONTROL = component.DevolverForm.get('DevolverData.total');
+    const CUADRADOS_CONTROL = component.DevolverForm.get('DevolverData.cuadrados');
 
-    expect(folioControl?.disabled).toBe(true);
-    expect(disponibleControl?.disabled).toBe(true);
-    expect(totalControl?.disabled).toBe(true);
-    expect(cuadradosControl?.disabled).toBe(true);
+    expect(FOLIOCONTROL?.disabled).toBe(true);
+    expect(DISPONSIBLECONTROL?.disabled).toBe(true);
+    expect(TOTALCONTROL?.disabled).toBe(true);
+    expect(CUADRADOS_CONTROL?.disabled).toBe(true);
   });
 
   it('should set form values correctly in updateformfied()', () => {
     component.updateformfied();
 
-    const folioControl = component.DevolverForm.get('DevolverData.folio');
-    const disponibleControl = component.DevolverForm.get('DevolverData.disponible');
-    const totalControl = component.DevolverForm.get('DevolverData.total');
-    const cuadradosControl = component.DevolverForm.get('DevolverData.cuadrados');
+    const FOLIOCONTROL = component.DevolverForm.get('DevolverData.folio');
+    const DISPONSIBLECONTROL = component.DevolverForm.get('DevolverData.disponible');
+    const TOTALCONTROL = component.DevolverForm.get('DevolverData.total');
+    const CUADRADOS_CONTROL = component.DevolverForm.get('DevolverData.cuadrados');
 
-    expect(folioControl?.value).toBe('4MX216520');
-    expect(disponibleControl?.value).toBe('12');
-    expect(totalControl?.value).toBe('12');
-    expect(cuadradosControl?.value).toBe('133');
+    expect(FOLIOCONTROL?.value).toBe('4MX216520');
+    expect(DISPONSIBLECONTROL?.value).toBe('12');
+    expect(TOTALCONTROL?.value).toBe('12');
+    expect(CUADRADOS_CONTROL?.value).toBe('133');
   });
 
  

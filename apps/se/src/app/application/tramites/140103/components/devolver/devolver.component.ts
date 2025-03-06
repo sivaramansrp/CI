@@ -22,6 +22,12 @@ import facturasdata from 'libs/shared/theme/assets/json/140103/fracturastable.js
  * - `FormsModule`: Módulo necesario para trabajar con formularios basados en plantillas.
  * - `ReactiveFormsModule`: Módulo necesario para trabajar con formularios reactivos en Angular.
  */
+interface Factura {
+  numeroDeFactura: string;
+  importeInicial: string;
+  saldoaDevolver?: string; // This field is optional since it's missing in some cases (like `facturase`)
+}
+
 @Component({
   selector: 'app-devolver',
   standalone: true,
@@ -46,23 +52,24 @@ export class DevolverComponent implements OnInit {
    * Lista de facturas adicionales que se utilizan en el proceso de cancelación.
    */
   facturase: Facturase[] = facturasdata.facturase;
+  
   /**
    * Configuración de las columnas para mostrar las facturas en una tabla dinámica.
    * Contiene los encabezados y las claves para acceder a los datos de las facturas.
    */
-  facturasDatas: ConfiguracionColumna<any>[] = [
-    { encabezado: 'Numero de Factura', clave: (item: any) => item.numeroDeFactura, orden: 1 },
-    { encabezado: 'Importe Inicial', clave: (item: any) => item.importeInicial, orden: 2 },
-    { encabezado: 'Saldo a Devolver', clave: (item: any) => item.saldoaDevolver, orden: 3 }
+  facturasDatas: ConfiguracionColumna<Factura>[] = [
+    { encabezado: 'Numero de Factura', clave: (item: Factura) => item.numeroDeFactura, orden: 1 },
+    { encabezado: 'Importe Inicial', clave: (item: Factura) => item.importeInicial, orden: 2 },
+    { encabezado: 'Saldo a Devolver', clave: (item: Factura) => item.saldoaDevolver, orden: 3 }
   ];
 
   /**
    * Configuración de las columnas para mostrar las facturas principales en una tabla.
    * Esta configuración contiene solo los datos relevantes para mostrar en la tabla.
    */
-  facturasData: ConfiguracionColumna<any>[] = [
-    { encabezado: 'Numero de Factura', clave: (item: any) => item.numeroDeFactura, orden: 1 },
-    { encabezado: 'Importe Inicial', clave: (item: any) => item.importeInicial, orden: 2 }
+  facturasData: ConfiguracionColumna<Factura>[] = [
+    { encabezado: 'Numero de Factura', clave: (item: Factura) => item.numeroDeFactura, orden: 1 },
+    { encabezado: 'Importe Inicial', clave: (item: Factura) => item.importeInicial, orden: 2 }
   ];
 
   /**
@@ -81,7 +88,9 @@ export class DevolverComponent implements OnInit {
    * 
    * @param fb - FormBuilder utilizado para crear y gestionar el formulario reactivo.
    */
-  constructor(public fb: FormBuilder) {}
+  constructor(public fb: FormBuilder) {
+    // Initialization logic can be added here if needed
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente. Este método crea el formulario reactivo
@@ -107,7 +116,7 @@ export class DevolverComponent implements OnInit {
    * Método que actualiza los valores del formulario con datos predeterminados.
    * También deshabilita los campos para que los usuarios no puedan modificarlos.
    */
-  updateformfied() {
+  updateformfied(): void {
     this.DevolverForm.get('DevolverData.folio')?.setValue('4MX216520');
     this.DevolverForm.get('DevolverData.disponible')?.setValue('12');
     this.DevolverForm.get('DevolverData.total')?.setValue('12');
