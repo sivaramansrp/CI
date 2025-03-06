@@ -9,8 +9,6 @@ import { NgModule } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { SeleccionModuloComponent } from './seleccion-modulo/seleccion-modulo.component';
 import { BandejaTareasPendientesComponent } from './bandejaPendientes/bandeja-tareas-pendientes.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -28,8 +26,6 @@ import { MatRadioModule } from '@angular/material/radio';
     TituloComponent,
     ToastrModule.forRoot(),
     BandejaTareasPendientesComponent,
-    BrowserAnimationsModule, // Requerido por Angular Material
-    MatRadioModule
 ],
   providers: [
     provideToastr({
