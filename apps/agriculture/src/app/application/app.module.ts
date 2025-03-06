@@ -39,4 +39,4 @@ import { provideHttpClient } from '@angular/common/http';
   ],
   bootstrap: [AppComponent],
 })
-export class App220401Module { }
+export class AppAgriculturaModule { }

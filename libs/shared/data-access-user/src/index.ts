@@ -1,9 +1,6 @@
-import { TEXTOS } from './tramites/constantes/servicios-extraordinarios.enum';
 export * from './tramites/pages/acuse-page/acuse-page.component';
 
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
-
-export * from './core/queries/tramite5701.query';
 
 export * from './core/services/shared/formularios/formularios.service';
 
@@ -13,19 +10,21 @@ export * from './core/services/shared/validaciones-formulario/validaciones-formu
 
 export * from './core/services/shared/catalogos/catalogos.service';
 
-export * from './core/models/shared/forms-model'
+export * from './core/models/shared/forms-model';
 export * from './core/queries/seccion.query';
 export * from './tramites/constantes/seccionesTramites';
 export * from './core/models/shared/components.model';
-export * from './core/models/shared/catalogos.model'
+export * from './core/models/shared/catalogos.model';
 export * from './tramites/components/catalogo-select/catalogo-select.component';
 export * from './core/ambientes';
 export * from './core/enums/tipoPersona.enum';
 export * from './core/services/shared/solicitante/solicitante.service';
 export * from './tramites/constantes/servicios-extraordinarios.enum';
+
 export * from './core/services/220471/servicios-pantallas.service';
 export * from './core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 export * from './tramites/constantes/constantes';
+
 export * from './tramites/components/crosslist/crosslist.component';
 export * from './tramites/components/firma-electronica/firma-electronica.component';
 export * from './tramites/components/informacion-usuario/informacion-usuario.component';
@@ -57,9 +56,9 @@ export * from './tramites/components/input-hora/input-hora.component';
 export * from './tramites/components/input-fecha/input-fecha.component';
 export * from './tramites/components/table/table.component';
 export * from './tramites/components/agregar-archivo/agregar-archivo.component';
-export * from './tramites/components/agregar-transporte/agregar-transporte.component'
-export * from './tramites/components/alert/alert.component'
-export * from './tramites/components/anexar-documentos/anexar-documentos.component'
+export * from './tramites/components/agregar-transporte/agregar-transporte.component';
+export * from './tramites/components/alert/alert.component';
+export * from './tramites/components/anexar-documentos/anexar-documentos.component';
 export * from './core/models/5701/servicios-extraordinarios.model';
 export * from './core/models/303/secciones.model';
 export * from './core/models/usuario/perfilUsuario.model';
@@ -76,3 +75,21 @@ export * from './core/enums/tabla-seleccion.enum';
 export * from './core/services/220203/importacion-de-acuicultura.service';
 export * from './core/enums/220203/importacion-de-acuicultura.enum';
 export * from './core/models/220203/importacion-de-acuicultura.module';
+export * from './core/services/220501/revision.service';
+export * from './core/services/220501/sagarpa/sagarpa.service';
+export * from './core/enums/220502/solicitud-pantallas.enum';
+export * from './core/services/220502/solicitud-pantallas.service';
+export * from './core/models/220502/solicitud-pantallas.model';
+
+export { TEXTOS as TEXTOS_220501 } from './tramites/constantes/220501/texto-enum';
+
+export { CATALOGOS_ID as CATALOGOS_ID_220501 } from './tramites/constantes/220501/constantes';
+export { FECHA_INSPECCION_INPUT as FECHA_INSPECCION_INPUT_220502 } from './tramites/constantes/220502/texto-enum';
+export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
+export * from './core/enums/tabla-seleccion.enum';
+export * from './tramites/constantes/110102/datos-tratados-acuerdos.enum'
+export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuerdos.service';
+export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.service';
+export * from './core/services/110102/representacion-federal/representacionFederal.service';
+export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
+export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';

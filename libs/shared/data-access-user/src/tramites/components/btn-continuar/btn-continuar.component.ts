@@ -2,8 +2,8 @@ import { Component, EventEmitter, inject, Input, Output, signal, ViewChild } fro
 import { DatosPasos } from '../../../core/models/shared/components.model';
 import { WizardComponent } from '../wizard/wizard.component';
 import { WizardService } from '../../../core/services/shared/wizard/wizard.service';
-import { SeccionQuery } from '../../../core/queries/seccion.query';
-import { SeccionState, SeccionStore } from './../../../../../../../apps/aga/src/app/application/estados/seccion.store';
+import { SeccionLibQuery } from '../../../core/queries/seccion.query';
+import { SeccionLibState, SeccionLibStore } from '../../../core/estados/seccion.store';
 import { map, Subject, takeUntil } from 'rxjs';
 
 interface AccionBoton {
@@ -27,12 +27,12 @@ export class BtnContinuarComponent {
   // @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   wizardService = inject(WizardService);
-  public seccion!: SeccionState;
+  public seccion!: SeccionLibState;
   private destroyNotifier$: Subject<void> = new Subject();
   public habilitarBoton: boolean = false;
 
   constructor(
-    private seccionQuery: SeccionQuery,
+    private seccionQuery: SeccionLibQuery,
   ) {
 
   }
