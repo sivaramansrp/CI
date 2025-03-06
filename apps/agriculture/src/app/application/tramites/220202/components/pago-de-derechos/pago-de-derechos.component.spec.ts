@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
+import { Catalogo } from "libs/shared/data-access-user/src/core/models/shared/catalogos.model"
 import { ReactiveFormsModule } from '@angular/forms';
 
 describe('PagoDeDerechosComponent', () => {

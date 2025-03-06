@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { DatosDeFila } from 'libs/shared/data-access-user/src/core/models/220202/fitosanitario.model';
+import { DatosDeFila } from 'apps/agriculture/src/app/application/tramites/220202/models/220202/fitosanitario.model';
 
 import { INSTRUCCION_DOBLE_CLIC } from 'apps/agriculture/src/app/application/tramites/220202/constantes/220202/fitosanitario.enums';
 

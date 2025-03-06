@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Catalogo, RespuestaCatalogos } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { DatosDeTabla } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/220202/fitosanitario.model';
+import { DatosDeTabla } from '../../models/220202/fitosanitario.model';
 
 
 @Injectable({
