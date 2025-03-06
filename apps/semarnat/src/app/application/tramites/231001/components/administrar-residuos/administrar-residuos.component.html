@@ -1,0 +1,41 @@
+<div class="container">
+  <div>
+    <ng-titulo
+      titulo="Administrar residuos y/o materia prima a importar"
+    ></ng-titulo>
+
+    <div>
+      <h6>Datos de los residuos y/o materia prima a importar*:</h6>
+
+      <ng-table
+        [commonTableHeader]="tableHeaderData"
+        [commonTableBody]="tableBodyData"
+        [enableScrollbar]="true"
+      ></ng-table>
+
+      <form [formGroup]="formularioParaRecuentoTotal">
+        <div class="text-center">
+          <div>
+            <input
+              class="label-width"
+              id="recuentoTotalDeFilas"
+              formControlName="recuentoTotalDeFilas"
+              aria-labelledby="recuentoTotalDeFilas"
+              [disabled]="true"
+            />
+          </div>
+        </div>
+      </form>
+
+      <div class="row mb-5">
+        <div class="col-md-6 col-sm-6"></div>
+        <div class="col-md-6 col-sm-6 text-end">
+          <div class="btn-group">
+            <button class="btn btn-primary me-2" type="button">Borrar</button>
+            <button class="btn btn-danger" type="button">Agregar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
