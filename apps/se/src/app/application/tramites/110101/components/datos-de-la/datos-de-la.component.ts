@@ -2,15 +2,18 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 /* eslint-disable sort-imports */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { DatosDeLaStore } from '../../estados/tramites/datos-de-la110101.store';
+import { DatosDeLaQuery } from '../../estados/queries/datos-de-la.query110101';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { ELVALORALERTA } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { INTRODUZCA_NUMERO, REQUERIDO } from 'libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 import mercancia from 'libs/shared/theme/assets/json/110101/mercancia.json'
+import { distinctUntilChanged, Subject, take, takeUntil } from 'rxjs';
 
 /**
 * Este componente se utiliza para mostrar la forma del datosdelamercancia. - 110101
@@ -24,7 +27,7 @@ import mercancia from 'libs/shared/theme/assets/json/110101/mercancia.json'
   standalone: true,
   imports: [TituloComponent, CommonModule, AlertComponent, ReactiveFormsModule]
 })
-export class DatosDeLaComponent implements OnInit {
+export class DatosDeLaComponent implements OnInit,OnDestroy{
 
   /**
    * Una cadena que representa la clase CSS para una alerta de advertencia.
@@ -42,6 +45,7 @@ export class DatosDeLaComponent implements OnInit {
    * Este formulario se utiliza para capturar y validar los datos relacionados con Mercancia.
    */
   public formMercancia!: FormGroup;
+  private destroy$ = new Subject<void>();
   /** Adición de color de fondo dinámico al área de texto */
   public booleanVariable = '#cccccc';
   /**
@@ -68,7 +72,9 @@ export class DatosDeLaComponent implements OnInit {
  * @param validacionesService: Validaciones comunes del formulario.
  */
   constructor(private fb: FormBuilder,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private datosDeLaStore: DatosDeLaStore,
+    private datosDeLaQuery: DatosDeLaQuery
   ) {
     this.createFormMercancia();
   }
@@ -79,7 +85,12 @@ export class DatosDeLaComponent implements OnInit {
    */
 
   ngOnInit(): void {
-    this.getFormDatosDeMercancia();
+    // this.getFormDatosDeMercancia();
+    this.getFormDataFromStore();
+
+    this.formMercancia.valueChanges
+      .pipe(distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe(() => this.updateStore());
   }
 
   /**
@@ -122,5 +133,31 @@ export class DatosDeLaComponent implements OnInit {
  */
   isValid(field: string): boolean | null {
     return this.validacionesService.isValid(this.formMercancia, field);
+  }
+
+  private getFormDataFromStore(): void {
+    this.datosDeLaQuery.formValues$
+      .pipe(takeUntil(this.destroy$)) // Cleanup on destroy
+      .subscribe((formValues) => {
+        if (formValues) {
+          this.formMercancia.patchValue(formValues, { emitEvent: false }); // Prevents triggering valueChanges
+        }
+      });
+  }
+  
+  private updateStore(): void {
+    if (this.formMercancia.valid) {
+      const NEWVALUES = this.formMercancia.value;
+      this.datosDeLaQuery.formValues$.pipe(take(1)).subscribe((currentValues) => {
+        if (JSON.stringify(currentValues) !== JSON.stringify(NEWVALUES)) {
+          this.datosDeLaStore.update({ formValues: NEWVALUES });
+        }
+      });
+    }
+  }  
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
