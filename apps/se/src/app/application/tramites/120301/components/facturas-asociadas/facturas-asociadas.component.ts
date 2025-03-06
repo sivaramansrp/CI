@@ -16,8 +16,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
-import { FacturasAsociadasService } from 'libs/shared/data-access-user/src/core/services/120301/facturas-asociadas/facturas-asociadas.service';
-import {FACTUS_TBCOL, ASOCIADAS_TBCOl} from 'libs/shared/data-access-user/src/tramites/constantes/elegibilidad-de-textiles.enums'
+import { FacturasAsociadasService } from '../../services/facturas-asociadas/facturas-asociadas.service';
+import {FACTUS_TBCOL, ASOCIADAS_TBCOl} from 'apps/se/src/app/application/tramites/120301/constantes/elegibilidad-de-textiles.enums'
 
 @Component({
   selector: 'app-facturas-asociadas',

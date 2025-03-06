@@ -1,0 +1,18 @@
+services:
+#----------------------------------------------------------------
+  modulefederation-agace-microfront:
+    image: modulefederation-agace-microfront:1.0.0
+    build: 
+      context: ./../
+      dockerfile: apps/agace/Dockerfile
+    container_name: modulefederation-agace-microfront
+    restart: on-failure
+    expose:
+      - '4209'
+    ports:
+      - "4209:80"
+    networks:
+      - modulefederation-network
+#----------------------------------------------------------------
+networks:
+  modulefederation-network:

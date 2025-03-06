@@ -1,9 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
-// import { DatosPasos } from '../../../../core/models/shared/components.model';
-// import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
-// import { PASOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
-// import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
