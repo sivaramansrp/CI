@@ -3,14 +3,16 @@ import { AlertComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, distinctUntilChanged, takeUntil } from 'rxjs';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TratadosQuery } from '../../estados/queries/tratados110101.query';
+import { TratadosStore } from '../../estados/tramites/tratados110101.store';
 import tratadosDropdown from 'libs/shared/theme/assets/json/110101/tratdos-dropdown.json';
 import tratadosTable from 'libs/shared/theme/assets/json/110101/tratados-table.json';
-
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 /**
  * Componente Tratados que se utiliza para mostrar y gestionar los tratados.
@@ -34,16 +36,20 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
     ReactiveFormsModule
   ]
 })
-export class TratadosComponent implements OnInit {
+export class TratadosComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para gestionar los tratados.
    * 
    * @property {FormGroup} formularioTratados - El formulario reactivo que contiene los campos para los tratados.
    */
   formularioTratados!: FormGroup;
+  private destroy$ = new Subject<void>();
 
   // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder,
+    private tratadosStore: TratadosStore,
+    private tratadosQuery: TratadosQuery
+  ) { }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -54,6 +60,11 @@ export class TratadosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.inicializarFormularioTratados();
+    this.restoreFormValues();
+
+    this.formularioTratados.valueChanges
+      .pipe(distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe(() => this.updateStore());
   }
 
   /**
@@ -94,7 +105,7 @@ export class TratadosComponent implements OnInit {
     { catalogos: tratadosDropdown.origen }
   ];
 
- 
+
 
   /**
    * Método para seleccionar un tratado.
@@ -104,7 +115,7 @@ export class TratadosComponent implements OnInit {
    * 
    * @method seleccionar
    */
-    // eslint-disable-next-line class-methods-use-this
+  // eslint-disable-next-line class-methods-use-this
   seleccionar(): void {
     // Implementar el método o eliminarlo si no es necesario
   }
@@ -138,9 +149,41 @@ export class TratadosComponent implements OnInit {
   agregarTratado(): void {
     if (this.formularioTratados.valid) {
       const NUEVOTRATADO = this.formularioTratados.value;
-      this.cuerpoTabla.push(NUEVOTRATADO);
+      this.tratadosStore.addTratado(NUEVOTRATADO);
       this.formularioTratados.reset();
-    } 
+    }
+  }
+
+
+  private restoreFormValues(): void {
+    this.tratadosQuery.selectTratados$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((tratados) => {
+        this.cuerpoTabla = tratados;
+
+        if (tratados.length > 0) {
+          const ULTIMOTRATADO = tratados[tratados.length - 1];
+          this.formularioTratados.patchValue(ULTIMOTRATADO, { emitEvent: false });
+        } else {
+          this.formularioTratados.reset();
+        }
+      });
+  }
+
+  private updateStore(): void {
+    if (this.formularioTratados.valid) {
+      const NUEVOTRATADO = this.formularioTratados.value;
+      this.tratadosStore.updateTratado(NUEVOTRATADO); 
+    }
+  }
+
+  onDropdownChange(): void {
+    this.updateStore();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete(); 
   }
 
 }
