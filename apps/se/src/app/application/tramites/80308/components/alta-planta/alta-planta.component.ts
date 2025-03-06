@@ -199,7 +199,9 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
    * Método para aplicar la acción seleccionada, asignando los domicilios seleccionados.
    */
   aplicarAccion(): void {
-    this.store.aggregarDomicilios(this.domiciliosSeleccionados[0]);
+    if(this.domiciliosSeleccionados.length) {
+      this.store.aggregarDomicilios(this.domiciliosSeleccionados[0]);
+    }
   }
 
   /**
@@ -207,7 +209,9 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
    * @param {DomicilioInfo} plantas - El domicilio que se quiere eliminar.
    */
   eliminarPlantas(): void {
-    this.store.eliminarDomicilios(this.domiciliosSeleccionados[0]);
+    if(this.domiciliosSeleccionados.length) {
+      this.store.eliminarDomicilios(this.domiciliosSeleccionados[0]);
+    }
   }
 
   /**

@@ -8,7 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 
 @Component({
-  selector: 'paso-uno',
+  selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
