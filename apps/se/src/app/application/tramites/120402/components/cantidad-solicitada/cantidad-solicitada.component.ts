@@ -6,15 +6,20 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { FormBuilder } from '@angular/forms';
-import { FormGroup} from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 
+import { Observable } from 'rxjs';
+
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 
+import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
+
+import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
 
 /**
  * Componente que representa un formulario para solicitar una cantidad específica.
@@ -38,11 +43,18 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
+  cantidadSolicitada$: Observable<string | null> =
+    this.tramite120402Query.cantidadSolicitada$;
+
   /**
    * Constructor del componente.
    * @param fb FormBuilder para la creación y gestión del formulario reactivo.
    */
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private tramite120402Store: Tramite120402Store,
+    private tramite120402Query: Tramite120402Query
+  ) {
     // Constructor
   }
 
@@ -51,6 +63,12 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearFormulario();
+
+    this.cantidadSolicitada$.subscribe((cantidadSolicitada) => {
+      if (cantidadSolicitada) {
+        this.form.get('cantidadSolicitada')?.setValue(cantidadSolicitada);
+      }
+    });
   }
 
   /**
@@ -66,7 +84,7 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
    */
   crearFormulario(): void {
     this.form = this.fb.group({
-      cantidadSolicitada: ['100', [Validators.required]],
+      cantidadSolicitada: ['', [Validators.required]],
     });
   }
 
@@ -88,6 +106,11 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
   validarYEnviarFormulario(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-    } 
+    }
+  }
+
+  getCantidadSolicitada(): void {
+    const CANTIDAD_SOLICITADA = this.form.get('cantidadSolicitada')?.value;
+    this.tramite120402Store.setCantidadSolicitada(CANTIDAD_SOLICITADA);    
   }
 }

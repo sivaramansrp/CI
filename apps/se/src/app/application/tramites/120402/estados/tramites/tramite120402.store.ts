@@ -9,6 +9,9 @@ export interface Tramite120402State {
   representacion: Catalogo | null;
   regimen: Catalogo | null;
   tratado: Catalogo | null;
+  producto: Catalogo | null;
+  subproducto: Catalogo | null;
+  cantidadSolicitada: string;
 }
 
 
@@ -19,6 +22,9 @@ export function createInitialState(): Tramite120402State {
     representacion: null,
     regimen: null,
     tratado: null,
+    producto: null,
+    subproducto: null,
+    cantidadSolicitada: '',
   };
 }
 
@@ -52,10 +58,31 @@ export class Tramite120402Store extends Store<Tramite120402State> {
     }));
   }
 
-  public setTratado(regimen: Catalogo) {
+  public setTratado(tratado: Catalogo) {
     this.update((state) => ({
       ...state,
-      regimen,
+      tratado,
+    }));
+  }
+
+  public setProducto(producto: Catalogo) {
+    this.update((state) => ({
+      ...state,
+      producto,
+    }));
+  }
+
+  public setSubproducto(subproducto: Catalogo) {
+    this.update((state) => ({
+      ...state,
+      subproducto,
+    }));
+  }
+
+  public setCantidadSolicitada(cantidadSolicitada: string) {
+    this.update((state) => ({
+      ...state,
+      cantidadSolicitada,
     }));
   }
 }

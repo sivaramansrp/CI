@@ -18,6 +18,7 @@
           [label]="'Tratado o bloque comercial'"
           name="tratado"
           formControlName="tratado"
+          (change)="getTratado()"
         >
         </app-catalogo-select>
       </div>
@@ -27,6 +28,7 @@
           [label]="'Nombre de producto'"
           name="producto"
           formControlName="producto"
+          (change)="obtenerValorProducto()"
         >
         </app-catalogo-select>
       </div>
@@ -36,6 +38,7 @@
           [label]="'Nombre del subproducto'"
           name="subproducto"
           formControlName="subproducto"
+          (change)="getSubproducto()"
         >
         </app-catalogo-select>
       </div>

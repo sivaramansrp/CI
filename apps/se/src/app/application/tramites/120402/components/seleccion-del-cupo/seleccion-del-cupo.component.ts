@@ -83,6 +83,10 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
 
   regimen$: Observable<Catalogo | null> = this.tramite120402Query.regimen$;
+  tratado$: Observable<Catalogo | null> = this.tramite120402Query.tratado$;
+  producto$: Observable<Catalogo | null> = this.tramite120402Query.producto$;
+  subproducto$: Observable<Catalogo | null> = this.tramite120402Query.subproducto$;
+
 
   /**
    * Constructor del componente.
@@ -112,6 +116,24 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     this.regimen$.subscribe((regimen) => {
       if (regimen) {
         this.seleccionForm.get('regimen')?.setValue(regimen);
+      }
+    });
+
+    this.tratado$.subscribe((tratado) => {
+      if (tratado) {
+        this.seleccionForm.get('tratado')?.setValue(tratado);
+      }
+    });
+
+    this.producto$.subscribe((producto) => {
+      if (producto) {
+        this.seleccionForm.get('producto')?.setValue(producto);
+      }
+    });
+
+    this.subproducto$.subscribe((subproducto) => {
+      if (subproducto) {
+        this.seleccionForm.get('subproducto')?.setValue(subproducto);
       }
     });
   }
@@ -201,5 +223,20 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   getRegimen(): void {
     const SELECTED_REGIMEN = this.seleccionForm.get('regimen')?.value;
     this.tramite120402Store.setRegimen(SELECTED_REGIMEN);    
+  }
+
+  getTratado(): void {
+    const SELECTED_TRATADO = this.seleccionForm.get('tratado')?.value;
+    this.tramite120402Store.setTratado(SELECTED_TRATADO);    
+  }
+
+  obtenerValorProducto(): void {
+    const SELECTED_PRODUCTO = this.seleccionForm.get('producto')?.value;
+    this.tramite120402Store.setProducto(SELECTED_PRODUCTO);    
+  }
+
+  getSubproducto(): void {
+    const SELECTED_SUBPRODUCTO = this.seleccionForm.get('subproducto')?.value;
+    this.tramite120402Store.setSubproducto(SELECTED_SUBPRODUCTO);    
   }
 }

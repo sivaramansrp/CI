@@ -9,6 +9,10 @@ export class Tramite120402Query extends Query<Tramite120402State> {
   entidad$ = this.select((state) => state.entidad);
   representacion$ = this.select((state) => state.representacion);
   regimen$ = this.select((state) => state.regimen);
+  tratado$ = this.select((state) => state.tratado);
+  producto$ = this.select((state) => state.producto);
+  subproducto$ = this.select((state) => state.subproducto);
+  cantidadSolicitada$ = this.select((state) => state.cantidadSolicitada);
  
   constructor(private tramiteStore: Tramite120402Store) {
     super(tramiteStore);
