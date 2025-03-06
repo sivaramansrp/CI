@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-var-requires */
 // import { withModuleFederation } from '@nx/angular/module-federation';
 // import config from './module-federation.config';
 
 // module.exports = withModuleFederation(config);
 
 
-const { ModuleFederationPlugin: MODULE_FEDERATION_PLUGIN } = require('webpack').container;
+const { ModuleFederationPlugin } = require('webpack').container;
 const mf = require('@angular-architects/module-federation/webpack');
 const path = require('path');
 const share = mf.share;
@@ -31,13 +29,13 @@ module.exports = {
   }
  },
  plugins: [
-  new MODULE_FEDERATION_PLUGIN({
+  new ModuleFederationPlugin({
    name: 'semarnat',
    filename: 'remoteAppEntry.js',
    exposes: {
-    './Module': 'apps/semarnat/src/app/remote-entry/entry.module.ts',
+    './Module': 'apps/semarnat/src/app/application/app.module.ts',
    },
-   shared: share({
+   shared: share({ 
     '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
     '@angular/common': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
     '@angular/common/http': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
