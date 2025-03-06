@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Catalogo, RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { AgriculturaApiService } from 'apps/agriculture/src/app/application/tramites/220202/constantes/220202/agricultura-api.service';
+import { AgriculturaApiService } from 'apps/agriculture/src/app/application/tramites/220202/services/220202/agricultura-api.service';
 
 /**
  * @fileoverview Componente para la sección de datos para movilización nacional.

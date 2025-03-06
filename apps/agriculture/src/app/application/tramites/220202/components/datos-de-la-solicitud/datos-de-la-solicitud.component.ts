@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 
 import { DatosDeFila } from 'libs/shared/data-access-user/src/core/models/220202/fitosanitario.model';
 
-import { INSTRUCCION_DOBLE_CLIC } from 'libs/shared/data-access-user/src/tramites/constantes/220202/fitosanitario.enums';
+import { INSTRUCCION_DOBLE_CLIC } from 'apps/agriculture/src/app/application/tramites/220202/constantes/220202/fitosanitario.enums';
 
 import { HttpClient } from '@angular/common/http';
 
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { AgriculturaApiService } from 'apps/agriculture/src/app/application/tramites/220202/constantes/220202/agricultura-api.service';
+import { AgriculturaApiService } from 'apps/agriculture/src/app/application/tramites/220202/services/220202/agricultura-api.service';
 
 
 
