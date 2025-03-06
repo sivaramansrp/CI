@@ -7,7 +7,7 @@
  */
 
 import { Component } from '@angular/core';
-import { TEXTOS } from '@ng-mf/data-access-user';
+import { TEXTOS_REQUISITOS } from 'libs/shared/data-access-user/src/tramites/constantes/certificado-zoosanitario.enum';
 
 @Component({
   selector: 'app-paso-dos',
@@ -19,6 +19,6 @@ export class PasoDosComponent {
   /**
    * @property {any} TEXTOS - Constantes de textos utilizados en el componente.
    */
-  TEXTOS = TEXTOS;
+  TEXTOS = TEXTOS_REQUISITOS;
 
 }

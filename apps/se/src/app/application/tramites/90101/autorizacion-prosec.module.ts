@@ -24,6 +24,7 @@ import { ProsecComponent } from './pages/prosec/prosec.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SectoresYMercanciasComponent } from './components/sectores-y-mercancias/sectores-y-mercancias.component';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,11 @@ import { SectoresYMercanciasComponent } from './components/sectores-y-mercancias
     TableComponent,
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    ToastrModule.forRoot()
+  ],
+  providers: [
+    ToastrService
   ]
 })
 export class AutorizacionProsecModule { }
