@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
@@ -32,10 +32,10 @@ import {
 } from '@angular/forms';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
+import { Solicitud31601State,Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { PagoData } from 'libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
-import { Tramite31601Store,Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query'
-import { Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
 
 /**
  * @Component - CapturarIvaeiepsComponent
@@ -59,7 +59,7 @@ import { Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
   templateUrl: './capturar-ivaeieps.component.html',
   styleUrl: './capturar-ivaeieps.component.scss',
 })
-export class CapturarIvaeiepsComponent {
+export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
   /**
    * Grupo de formularios para formulario IVA
    */

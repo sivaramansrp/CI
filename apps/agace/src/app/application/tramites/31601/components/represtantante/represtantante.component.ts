@@ -108,8 +108,8 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
    * @param {keyof Tramite31601Store} metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
-    const valor = form.get(campo)?.value;
-    (this.tramite31601Store[metodoNombre] as (value: any) => void)(valor);
+    const VALOR = form.get(campo)?.value;
+    (this.tramite31601Store[metodoNombre] as (value: string) => void)(VALOR);
   }
 
   /**

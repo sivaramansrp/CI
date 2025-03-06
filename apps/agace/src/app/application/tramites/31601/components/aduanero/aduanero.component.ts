@@ -9,11 +9,11 @@
  * Maneja un formulario reactivo y la paginación de una tabla.
  */
 
-import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -23,36 +23,32 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { TableComponent } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
-import { REGEX_RFC } from 'libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-import { TablePaginationComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { AgregarMiembroDeLaEmpresaComponent } from '../agregar-miembro-de-la-empresa/agregar-miembro-de-la-empresa.component';
-import { Tramite31601Store, Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
-import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
-import { Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
 
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import { AgregarMiembroDeLaEmpresaComponent } from '../agregar-miembro-de-la-empresa/agregar-miembro-de-la-empresa.component';
+import Instalaciones from 'libs/shared/theme/assets/json/31601/Instalaciones.json';
+import { REGEX_RFC } from 'libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
+import applicantRegistrados from 'libs/shared/theme/assets/json/31601/applicantRegistrados.json';
+import comboBimestres from 'libs/shared/theme/assets/json/31601/comboBimestres.json';
+import comboIMMEXJson from 'libs/shared/theme/assets/json/31601/comboIMMEX.json';
+import controlInventarios from 'libs/shared/theme/assets/json/31601/controlInventarios.json';
+import destinatarioTable from 'libs/shared/theme/assets/json/220401/destinatario-table.json';
+import empleadosSubcontratacion from 'libs/shared/theme/assets/json/31601/empleadosSubcontratacion.json';
+import entidadFederativa from 'libs/shared/theme/assets/json/31601/entidadFederative.json';
+import establecimientoTable from 'libs/shared/theme/assets/json/220401/establecimiento-table.json';
 import preOperativo from 'libs/shared/theme/assets/json/31601/preOperativo.json';
+import prejson from 'libs/shared/theme/assets/json/31601/prejson.json';
 import productivo from 'libs/shared/theme/assets/json/31601/productivo.json';
 import serviciosAgace from 'libs/shared/theme/assets/json/31601/serviciosAgace.json';
-import comboIMMEXJson from 'libs/shared/theme/assets/json/31601/comboIMMEX.json';
-import comboBimestres from 'libs/shared/theme/assets/json/31601/comboBimestres.json';
-import establecimientoTable from 'libs/shared/theme/assets/json/220401/establecimiento-table.json';
-import empleadosSubcontratacion from 'libs/shared/theme/assets/json/31601/empleadosSubcontratacion.json';
-import applicantRegistrados from 'libs/shared/theme/assets/json/31601/applicantRegistrados.json';
-import destinatarioTable from 'libs/shared/theme/assets/json/220401/destinatario-table.json';
-import entidadFederativa from 'libs/shared/theme/assets/json/31601/entidadFederative.json';
-import prejson from 'libs/shared/theme/assets/json/31601/prejson.json';
-import controlInventarios from 'libs/shared/theme/assets/json/31601/controlInventarios.json';
-import Instalaciones from 'libs/shared/theme/assets/json/31601/Instalaciones.json';
 
 /**
  * @class AduaneroComponent
- * @implements {OnInit, AfterViewInit}
+ * @implements {OnInit, AfterViewInit,OnDestroy}
  * Componente para manejar el formulario reactivo y la paginación de una tabla.
  */
 @Component({
@@ -71,7 +67,7 @@ import Instalaciones from 'libs/shared/theme/assets/json/31601/Instalaciones.jso
     AgregarMiembroDeLaEmpresaComponent,
   ],
 })
-export class AduaneroComponent implements OnInit, AfterViewInit {
+export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Almacena los datos de descripción en un formato predefinido.
    */

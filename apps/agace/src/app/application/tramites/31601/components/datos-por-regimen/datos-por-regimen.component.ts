@@ -25,7 +25,7 @@ import { TableBodyData } from '@ng-mf/data-access-user';
 
 import { Tramite31601Store,Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query'
-import { Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
+import { Subject, map, merge, takeUntil } from 'rxjs';
 /**
  * Componente DatosPorRegimen que se utiliza para mostrar y gestionar los DatosPorRegimen.
  *
@@ -179,10 +179,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
     private tramiteAgaceStore: TramiteAgaceStore,
     private tramite31601Store: Tramite31601Store,
     private tramite31601Query: Tramite31601Query
-  ) {
-    
-  }
-
+  ){this.crearRegimenForm();}
   /**
    * Gancho de ciclo de vida que se llama después de inicializar las propiedades enlazadas a datos de una directiva.
    * Este método inicializa catálogos, establece valores de control de formularios, prepara los datos de la pestaña del régimen,
@@ -194,8 +191,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
     this.crearRegimenForm();
     this.inicializaCatalogos();
     this.regimenTabData();
-    this.getAgregarForm();
-    
+    this.getAgregarForm(); 
   }
 
   /**
@@ -528,7 +524,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
  */
 setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
   const valor = form.get(campo)?.value;
-  (this.tramite31601Store[metodoNombre] as (value: any) => void)(valor);
+  (this.tramite31601Store[metodoNombre] as (value: string) => void)(valor);
 }
 
 /**
