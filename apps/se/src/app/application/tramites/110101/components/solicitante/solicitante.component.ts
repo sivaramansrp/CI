@@ -1,7 +1,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subject, Subscription } from 'rxjs';
+import { distinctUntilChanged, take } from 'rxjs/operators';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { Tramite110101Query } from '../../estados/queries/tramite110101.query';
+import { Tramite110101Store } from '../../estados/tramites/tramite110101.store';
 import mockData from 'libs/shared/theme/assets/json/110101/solicitante-mockdata.json';
 
 /**
@@ -13,30 +17,37 @@ import mockData from 'libs/shared/theme/assets/json/110101/solicitante-mockdata.
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
   standalone: true,
-  imports:[TituloComponent,ReactiveFormsModule]
+  imports: [TituloComponent, ReactiveFormsModule]
 })
-export class SolicitanteComponent implements OnInit {
+export class SolicitanteComponent implements OnInit, OnDestroy {
   /**
    * Constructor para inyectar las dependencias necesarias.
    * @param fb - Servicio FormBuilder para crear formularios reactivos.
    */
   // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder) { } 
+  constructor(private fb: FormBuilder,
+    private tramite110101Store: Tramite110101Store,
+    private tramite110101Query: Tramite110101Query
+  ) { }
 
   /**
    * Grupo de formulario para el formulario de solicitud.
    */
   solicitudForm!: FormGroup;
+  formSubscription!: Subscription;
+  private destroy$ = new Subject<void>();
+  private restoreSubscription!: Subscription;
 
- /**
- * Datos simulados que representan a un solicitante con varios atributos.
- * 
- * @property {string} rfc - El RFC (Registro Federal de Contribuyentes) del solicitante.
- * @property {string} denominacion - El nombre o denominación del negocio del solicitante.
- * @property {string} actividadEconomica - La actividad económica o sector empresarial del solicitante.
- * @property {string} correoElectronico - La dirección de correo electrónico del solicitante.
- */
- 
+
+  /**
+  * Datos simulados que representan a un solicitante con varios atributos.
+  * 
+  * @property {string} rfc - El RFC (Registro Federal de Contribuyentes) del solicitante.
+  * @property {string} denominacion - El nombre o denominación del negocio del solicitante.
+  * @property {string} actividadEconomica - La actividad económica o sector empresarial del solicitante.
+  * @property {string} correoElectronico - La dirección de correo electrónico del solicitante.
+  */
+
   /**
    * Método que se ejecuta al inicializar el componente.
    * Inicializa el formulario `solicitudForm` con los campos necesarios.
@@ -48,6 +59,11 @@ export class SolicitanteComponent implements OnInit {
       denominacion: [''],
       actividadEconomica: [''],
       correoElectronico: ['']
+    });
+    this.restoreFormValues(); // Load state from store
+    // Sync form changes to store
+    this.formSubscription = this.solicitudForm.valueChanges.subscribe(() => {
+      this.updateStore();
     });
     this.setFormValues()
   }
@@ -67,10 +83,42 @@ export class SolicitanteComponent implements OnInit {
  */
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  setFormValues(){
+  setFormValues() {
     this.solicitudForm.get('rfc')?.setValue(mockData.rfc);
     this.solicitudForm.get('denominacion')?.setValue(mockData.denominacion);
     this.solicitudForm.get('actividadEconomica')?.setValue(mockData.actividadEconomica);
     this.solicitudForm.get('correoElectronico')?.setValue(mockData.correoElectronico);
+  }
+
+  private restoreFormValues(): void {
+    this.restoreSubscription = this.tramite110101Query.selectSolicitante$
+      .pipe(
+        distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
+        take(1)
+      )
+      .subscribe((solicitante) => {
+        if (solicitante) {
+          this.solicitudForm.patchValue(solicitante, { emitEvent: false });
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    if (this.formSubscription) {
+      this.formSubscription.unsubscribe();
+    }
+    if (this.restoreSubscription) {
+      this.restoreSubscription.unsubscribe();
+    }
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private updateStore(): void {
+    const FORMVALUES = this.solicitudForm.value;
+    this.tramite110101Store.setRfc(FORMVALUES.rfc);
+    this.tramite110101Store.setDenominacion(FORMVALUES.denominacion);
+    this.tramite110101Store.setActividadEconomica(FORMVALUES.actividadEconomica);
+    this.tramite110101Store.setCorreoElectronico(FORMVALUES.correoElectronico);
   }
 }
