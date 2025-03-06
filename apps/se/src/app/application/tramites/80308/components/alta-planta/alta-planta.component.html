@@ -5,11 +5,12 @@
       <form [formGroup]="formulario">
       
         <app-catalogo-select
-          [catalogo]="estados"
+          [catalogo]="(estados$ | async) || []"
           [label]="'Estado'"
           [required]="true"
           name="estado"
           formControlName="entidadFederativa"
+          (selectionChange)="tipoEstadoSeleccion($event)"
         ></app-catalogo-select>
       </form>
     </div>
@@ -23,7 +24,7 @@
   <ng-titulo titulo="Lista de Domicilios" />
   <div class="row">
     <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" (filaSeleccionada)="seleccionarDomicilios($event)"  [configuracionTabla]="configuracionTabla"
-    [datos]="datos"></app-tabla-dinamica>
+    [datos]="(datos$ | async) || []"></app-tabla-dinamica>
    
   </div>
 
@@ -37,12 +38,12 @@
 
   <div class="row">
     <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="configuracionTabla"
-    [datos]="domicilios" (filaSeleccionada)="eliminarPlantas($event)"></app-tabla-dinamica>
+    [datos]="(domicilios$ | async) || []" (filaSeleccionada)="seleccionarDomicilios($event)"></app-tabla-dinamica>
    
   </div>
   <div class="row">
     <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-      <button class="btn btn-primary" (click)="aplicarAccion()">Eliminar plantas</button>
+      <button class="btn btn-primary" (click)="eliminarPlantas()">Eliminar plantas</button>
     </div>
   </div>
 

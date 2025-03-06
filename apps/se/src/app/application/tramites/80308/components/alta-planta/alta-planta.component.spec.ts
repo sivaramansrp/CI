@@ -1,100 +1,141 @@
-import {
-  CUSTOM_ELEMENTS_SCHEMA,
-  Injectable,
-  NO_ERRORS_SCHEMA,
-} from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+import { ToastrModule, provideToastr } from 'ngx-toastr';
+
+import { Component } from '@angular/core';
 import { AltaPlantaComponent } from './alta-planta.component';
 import { FormBuilder } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
-import { of as observableOf } from 'rxjs';
-import { provideToastr } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
+import { Tramite80308Store } from '../../estados/tramite80308.store';
+import { Tramite80308Query } from '../../estados/tramite80308.query';
 
 @Injectable()
-class MockModificacionSolicitudeService {}
+class MockTramite80308Store {
+  setFormValida = function() {};
+}
+
+@Injectable()
+class MockTramite80308Query {
+  selectEstado$ = observableOf({
+    id: {}
+  });
+  selectBuscarDomicilios$ = {};
+  selectAltaPlanta$ = {};
+  selectDomicilios$ = {};
+}
 
 
 describe('AltaPlantaComponent', () => {
-  let fixture: ComponentFixture<AltaPlantaComponent>;
-  let component: AltaPlantaComponent;
-
+  let fixture;
+  let component;
 
   beforeEach(() => {
-   
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [ ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      imports: [ FormsModule, ReactiveFormsModule, ToastrModule, HttpClientTestingModule ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        {
-          provide: ModificacionSolicitudeService,
-          useClass: MockModificacionSolicitudeService,
-        },
+        ModificacionSolicitudeService,
+        ToastrService,
         provideToastr({
           positionClass: 'toast-top-right',
         }),
+        { provide: Tramite80308Store, useClass: MockTramite80308Store },
+        { provide: Tramite80308Query, useClass: MockTramite80308Query }
       ]
-    })
-      .overrideComponent(AltaPlantaComponent, {
-        set: {
-          providers: [
-            {
-              provide: ModificacionSolicitudeService,
-              useClass: MockModificacionSolicitudeService,
-            },
-          ],
-        },
-      })
-      .compileComponents();
+    }).overrideComponent(AltaPlantaComponent, {
+
+      set: { }    
+    }).compileComponents();
     fixture = TestBed.createComponent(AltaPlantaComponent);
     component = fixture.debugElement.componentInstance;
   });
 
 
-  it('debería ejecutar #constructor()', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería ejecutar #ngOnInit()', () => {
+  it('should run GetterDeclaration #formularioControl', async () => {
+    component.formulario = component.formulario || {};
+    component.formulario.get = jest.fn();
+    const formularioControl = component.formularioControl;
+    expect(component.formulario.get).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnInit()', async () => {
     component.cargarEstados = jest.fn();
     component.ngOnInit();
     expect(component.cargarEstados).toHaveBeenCalled();
   });
 
-  it('debe ejecutar #cargarEstados()', () => {
+  it('should run #cargarEstados()', async () => {
     component.modificionService = component.modificionService || {};
-    component.modificionService.obtenerListaEstado = jest
-      .fn()
-      .mockReturnValue(observableOf({}));
+    component.modificionService.obtenerListaEstado = jest.fn().mockReturnValue(observableOf({}));
+    component.store = component.store || {};
+    component.store.setaltaPlanta = jest.fn();
     component.cargarEstados();
     expect(component.modificionService.obtenerListaEstado).toHaveBeenCalled();
+    expect(component.store.setaltaPlanta).toHaveBeenCalled();
   });
 
-  it('debe ejecutar #buscarDomicilios()', () => {
-    component.formularioControl.setValue('value');
+  it('should run #buscarDomicilios()', async () => {
     component.modificionService = component.modificionService || {};
-    component.modificionService.obtenerDomicilios = jest
-      .fn()
-      .mockReturnValue(observableOf({}));
+    component.modificionService.obtenerDomicilios = jest.fn().mockReturnValue(observableOf({}));
+    component.store = component.store || {};
+    component.store.setbuscarDomicilios = jest.fn();
+    component.toastr = component.toastr || {};
+    component.toastr.error = jest.fn();
     component.buscarDomicilios();
     expect(component.modificionService.obtenerDomicilios).toHaveBeenCalled();
+    expect(component.store.setbuscarDomicilios).toHaveBeenCalled();
   });
 
-  it('debe ejecutar #seleccionarDomicilios()', () => {
+  it('should run #seleccionarDomicilios()', async () => {
+
     component.seleccionarDomicilios({});
- });
 
-  it('debe ejecutar #aplicarAccion()', () => {
-    component.aplicarAccion();
   });
 
-  it('debería ejecutar #eliminarPlantas()', () => {
+  it('should run #aplicarAccion()', async () => {
+    component.store = component.store || {};
+    component.store.aggregarDomicilios = jest.fn();
     component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
-    component.domiciliosSeleccionados = [{id: 1}];
-    component.eliminarPlantas({
-      id: 1,
-    });
+    component.domiciliosSeleccionados[0] = '0';
+    component.aplicarAccion();
+    expect(component.store.aggregarDomicilios).toHaveBeenCalled();
   });
+
+  it('should run #eliminarPlantas()', async () => {
+    component.store = component.store || {};
+    component.store.eliminarDomicilios = jest.fn();
+    component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
+    component.domiciliosSeleccionados[0] = '0';
+    component.eliminarPlantas();
+    expect(component.store.eliminarDomicilios).toHaveBeenCalled();
+  });
+
+  it('should run #tipoEstadoSeleccion()', async () => {
+    component.store = component.store || {};
+    component.store.setEstado = jest.fn();
+    component.tipoEstadoSeleccion({});
+    expect(component.store.setEstado).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+  });
+
 });

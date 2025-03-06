@@ -13,13 +13,16 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { CONFIGURACION_DOMICILIOS } from '../../constantes/modificacion.enum';
+import { CommonModule } from '@angular/common';
 import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
 import { DomicilioInfo } from '../../models/plantas-consulta.model';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
 import { ToastrService } from 'ngx-toastr';
+import { Tramite80308Query } from '../../estados/tramite80308.query';
+import { Tramite80308Store } from '../../estados/tramite80308.store';
 
 @Component({
   selector: 'app-alta-planta',
@@ -32,6 +35,7 @@ import { ToastrService } from 'ngx-toastr';
     TablaDinamicaComponent,
     ComplementariaImmexComponent,
     ReactiveFormsModule,
+    CommonModule
   ],
   providers: [ModificacionSolicitudeService, ToastrService],
 })
@@ -43,9 +47,9 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
 
   /**
    * Lista de catálogos que representan los estados.
-   * @type {Catalogo[]}
+   * @type {Observable<Catalogo[]>}
    */
-  estados: Catalogo[] = [];
+  estados$!: Observable<Catalogo[]>
 
   /**
    * Estado seleccionado.
@@ -55,9 +59,9 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
 
   /**
    * Lista de domicilios disponibles.
-   * @type {DomicilioInfo[]}
+   * @type {Observable<DomicilioInfo[]>}
    */
-  domicilios: DomicilioInfo[] = [];
+  domicilios$!: Observable<DomicilioInfo[]>;
 
   /**
    * Lista de domicilios seleccionados.
@@ -80,9 +84,9 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
 
   /**
    * Datos de ejemplo basados en la interfaz DomicilioInfo.
-   * @type {DomicilioInfo[]}
+   * @type {Observable<DomicilioInfo[]>}
    */
-  datos: DomicilioInfo[] = [];
+  datos$: Observable<DomicilioInfo[]>;
 
   /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
@@ -99,13 +103,29 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     public modificionService: ModificacionSolicitudeService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private store: Tramite80308Store,
+    private tramiteQuery: Tramite80308Query
   ) {
+
     // Inicialización del formulario para la entidad federativa.
     this.formulario = this.fb.group({
-      entidadFederativa: ['-1', Validators.required],
+      entidadFederativa: ['', [Validators.required, Validators.min(0)]],
     });
-
+   
+    this.tramiteQuery.selectEstado$.pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe(estado => {
+      if(estado) {
+        this.formulario.patchValue({
+          entidadFederativa: estado.id
+        });
+      }
+      this.store.setFormValida({entidadFederativa: this.formulario.valid})
+    });
+    this.datos$ = this.tramiteQuery.selectBuscarDomicilios$;
+    this.estados$ = this.tramiteQuery.selectAltaPlanta$;
+    this.domicilios$ = this.tramiteQuery.selectDomicilios$;
   }
 
   /**
@@ -134,7 +154,7 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
         (data: Catalogo[]) => {
-          this.estados = data;
+          this.store.setaltaPlanta(data);
         },
         (error) => {
           console.error('Error al cargar los estados:', error);
@@ -155,7 +175,7 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe(
           (data: DomicilioInfo[]) => {
-            this.datos = [...data];
+            this.store.setbuscarDomicilios(data);
           },
           () => {
             this.toastr.error('Error al buscar domicilios')
@@ -179,22 +199,26 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
    * Método para aplicar la acción seleccionada, asignando los domicilios seleccionados.
    */
   aplicarAccion(): void {
-    this.domicilios = this.domiciliosSeleccionados;
+    this.store.aggregarDomicilios(this.domiciliosSeleccionados[0]);
   }
 
   /**
    * Método para eliminar una planta de los domicilios seleccionados.
    * @param {DomicilioInfo} plantas - El domicilio que se quiere eliminar.
    */
-  eliminarPlantas(plantas: DomicilioInfo): void {
-    if (!this.domiciliosSeleccionados.length) {
-      return;
-    }
-    this.domiciliosSeleccionados = this.domiciliosSeleccionados.filter(
-      (ele) => {
-        return ele.id !== plantas.id;
-      }
-    );
+  eliminarPlantas(): void {
+    this.store.eliminarDomicilios(this.domiciliosSeleccionados[0]);
+  }
+
+  /**
+   * Establece el estado en el almacén (store) con el valor proporcionado.
+   * 
+   * @param {Catalogo} estado - El estado que se desea establecer en el almacén. Este parámetro debe ser de tipo `Catalogo`.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  tipoEstadoSeleccion(estado: Catalogo): void {
+    this.store.setEstado(estado);
   }
 
   /**
@@ -202,7 +226,6 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
    * Utiliza un Subject para notificar a todos los observables suscritos que deben completarse.
    * Esto ayuda a evitar posibles fugas de memoria al completar el Subject y finalizar las suscripciones.
    */
-
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

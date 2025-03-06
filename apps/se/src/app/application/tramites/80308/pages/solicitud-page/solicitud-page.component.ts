@@ -4,12 +4,14 @@ import {
   ListaPasosWizard,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { PASOS, TITULOMENSAJE } from '../../constantes/modificacion.enum';
+import { Subject, takeUntil } from 'rxjs';
 import { PasoCuatroComponent } from '../paso-cuatro/paso-cuatro.component';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
+import { Tramite80308Query } from '../../estados/tramite80308.query';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -35,14 +37,22 @@ interface AccionBoton {
     PasoUnoComponent,
     PasoDosComponent,
     PasoCuatroComponent,
-    BtnContinuarComponent,
-    PasoTresComponent],
+    BtnContinuarComponent
+   ],
   standalone: true
 })
 /**
  * Componente que representa la página de solicitud.
  */
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnDestroy {
+
+  /**
+   * Notificador para destruir los observables y evitar posibles fugas de memoria.
+   * @private
+   * @type {Subject<void>}
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+  
   /**
    * Lista de pasos del asistente.
    */
@@ -74,6 +84,14 @@ export class SolicitudPageComponent {
    */
   tituloMensaje: string = TITULOMENSAJE;
 
+  constructor(private tramiteQuery: Tramite80308Query, private seccion: SeccionLibStore, 
+  ){
+
+    this.tramiteQuery.FormaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe(res => {
+      this.seccion.establecerSeccion([true]);
+      this.seccion.establecerFormaValida([res]);
+    })
+  }
   /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.
@@ -120,5 +138,15 @@ export class SolicitudPageComponent {
       default:
         this.tituloMensaje = TITULOMENSAJE;
     }
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Utiliza un Subject para notificar a todos los observables suscritos que deben completarse.
+   * Esto ayuda a evitar posibles fugas de memoria al completar el Subject y finalizar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
