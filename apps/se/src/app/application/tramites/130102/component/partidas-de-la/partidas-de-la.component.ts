@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { CommonModule } from '@angular/common';
  
 import {
@@ -82,18 +83,21 @@ export class PartidasDeLaComponent implements OnInit {
    * Constructor del formulario reactivo.
    * @param {FormBuilder} fb - Constructor del formulario reactivo.
    */
+  // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder) {}
  
   /**
    * Método de inicialización del componente.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.crearFormulario();
     this.formularioTotalCount();
     this.getEstablecimiento();
     this.calculateTotals();
  
+    // eslint-disable-next-line dot-notation
     this.formForTotalCount.controls['cantidadTotal'].disable();
+    // eslint-disable-next-line dot-notation
     this.formForTotalCount.controls['valorTotalUSD'].disable();
   }
  
@@ -128,19 +132,21 @@ export class PartidasDeLaComponent implements OnInit {
    * Método para calcular los totales de cantidad y valor en USD.
    */
   calculateTotals(): void {
-    const cantidadTotal = this.tableBodyData.reduce(
+    const CANTIDAD_TOTAL = this.tableBodyData.reduce(
       (sum: number, item: { tbodyData: string[] }) =>
         sum + parseFloat(item.tbodyData[0]),
       0
     );
-    const valorTotalUSD = this.tableBodyData.reduce(
-      (sum: number, item: { tbodyData: string[] }) =>
-        sum + parseFloat(item.tbodyData[5]),
-      0
-    );
- 
-    this.formForTotalCount.controls['cantidadTotal'].setValue(cantidadTotal);
-    this.formForTotalCount.controls['valorTotalUSD'].setValue(valorTotalUSD);
+const VALOR_TOTAL_USD = this.tableBodyData.reduce(
+  (sum: number, item: { tbodyData: string[] }) =>
+    sum + parseFloat(item.tbodyData[5]),
+  0
+);
+
+// eslint-disable-next-line dot-notation
+this.formForTotalCount.controls['cantidadTotal'].setValue(CANTIDAD_TOTAL);
+// eslint-disable-next-line dot-notation
+this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTAL_USD);
   }
  
   /**
@@ -157,14 +163,15 @@ export class PartidasDeLaComponent implements OnInit {
    * Método para manejar la selección de fracción arancelaria TIGIE.
    * @param {Catalogo} aduana - Datos del catálogo seleccionado.
    */
-  fraccionArancelariaTIGIESelection() : void{
+   // eslint-disable-next-line class-methods-use-this
+   fraccionArancelariaTIGIESelection() : void{
     // Implementar el método o eliminarlo si no es necesario
   }
  
   /**
    * Método para obtener los datos de establecimiento.
    */
-  public getEstablecimiento() {
+  public getEstablecimiento(): void {
     this.tableHeaderData = this.getEstablecimientoTableData.tableHeader;
     this.tableBodyData = this.getEstablecimientoTableData.tableBody;
   }
@@ -189,9 +196,9 @@ export class PartidasDeLaComponent implements OnInit {
    * @returns {boolean} - Retorna true si el control es inválido, de lo contrario false.
    */
   esInvalido(nombreControl: string): boolean {
-    const control = this.form.get(nombreControl);
-    return control
-      ? control.invalid && (control.touched || control.dirty)
+    const CONTROL = this.form.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Component } from '@angular/core';
 
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';

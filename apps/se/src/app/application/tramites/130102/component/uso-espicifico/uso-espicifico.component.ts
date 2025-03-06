@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /**
  * @module UsoEspicificoComponent
  * @description Componente para el formulario de Uso Específico, permitiendo al usuario ingresar información sobre el uso específico de un producto, incluyendo la fracción arancelaria y una descripción.
@@ -70,6 +71,7 @@ export class UsoEspicificoComponent implements OnInit {
    * @constructor
    * @param {FormBuilder} formbuilt Servicio para construir el formulario.
    */
+  // eslint-disable-next-line no-empty-function
   constructor(private formbuilt: FormBuilder) { }
 
   /**
@@ -89,7 +91,7 @@ export class UsoEspicificoComponent implements OnInit {
    * @description Actualiza el formulario con el ID y la descripción de la fracción arancelaria seleccionada.
    * @memberof UsoEspicificoComponent
    */
-  obtenerRequisitosFraccionArancelariaEsquema() {
+  obtenerRequisitosFraccionArancelariaEsquema(): void {
     this.usoEspicificoForm.get('descripción')?.setValue('Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar) ');
   }
 }

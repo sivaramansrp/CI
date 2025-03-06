@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /**
  *compo doc
  * @fileoverview Componente DetosDelLaComponent: maneja la lógica del formulario
@@ -102,7 +103,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
    * @method ngOnInit
    * @description Inicializa el formulario con validaciones y carga datos de productos.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.formDelLa = this.fb.group({
       descripcion: [
         '',
@@ -142,7 +143,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
    *
    * Este método es para la etiqueta de radio de producto.
    */
-  onValueChange(value: string | number) {
+  onValueChange(value: string | number): void {
     this.selectedValue = value.toString();
   }
 
@@ -151,7 +152,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
    * @method fetchProductoOptions
    * @description Carga las opciones de productos desde el JSON.
    */
-  fetchProductoOptions() {
+  fetchProductoOptions(): void {
     this.producto = productoOptions.options;
     this.defaultSelect = productoOptions.defaultSelect;
   }

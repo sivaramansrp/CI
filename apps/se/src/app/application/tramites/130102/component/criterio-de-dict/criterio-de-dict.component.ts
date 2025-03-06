@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /**
  * CriterioDeDictComponent es un componente que maneja la selección de solicitudes de mercancía.
  * @packageDocumentation
@@ -14,6 +15,7 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import SolicitudMercanciaValues from 'libs/shared/theme/assets/json/130102/solicitud_mercancia.json';
+
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 /**

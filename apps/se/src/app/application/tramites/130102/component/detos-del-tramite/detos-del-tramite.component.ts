@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /**
  * compo doc
  * @fileoverview Componente encargado de gestionar la selección de solicitudes y tipos de documentos en un trámite.
@@ -119,7 +120,7 @@ export class DetosDelTramiteComponent implements OnInit {
    *
    * Este método es para el control de radio de solicitud.
    */
-  onValueChange(value: string | number) {
+  onValueChange(value: string | number): void {
     this.selectedValue = value;
   }
 
@@ -133,7 +134,7 @@ export class DetosDelTramiteComponent implements OnInit {
   /**
    * Obtiene la lista de opciones de solicitud desde un archivo JSON.
    */
-  fetchSolicitudeOptions() {
+  fetchSolicitudeOptions(): void {
     this.http
       .get<ProductoResponse>('/assets/json/130102/solicitude-options.json')
       .subscribe((data) => {

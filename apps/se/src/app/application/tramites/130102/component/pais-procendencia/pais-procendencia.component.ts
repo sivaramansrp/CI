@@ -1,3 +1,5 @@
+/* eslint-disable @nx/enforce-module-boundaries */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /**
  * compo doc
  * @fileoverview Componente encargado de gestionar la selección de países de procedencia en un trámite.
@@ -105,6 +107,7 @@ export class PaisProcendenciaComponent implements OnInit {
    * @param {HttpClient} http - Servicio HTTP para obtener datos del servidor.
    * @param {FormBuilder} fb - Utilidad para la construcción de formularios reactivos.
    */
+  // eslint-disable-next-line no-empty-function
   constructor(private http: HttpClient, private fb: FormBuilder) {}
 
   /**
@@ -128,9 +131,9 @@ export class PaisProcendenciaComponent implements OnInit {
       this.fechasSeleccionadas = [...this.selectRangoDias];
       this.fechasDatos = [];
     } else {
-      const fechaValor = this.fecha.value.map(Number);
-      this.fechasSeleccionadas.push(this.fechasDatos[fechaValor]);
-      this.fechasDatos.splice(fechaValor, 1);
+      const FECHA_VALOR = this.fecha.value.map(Number);
+      this.fechasSeleccionadas.push(this.fechasDatos[FECHA_VALOR]);
+      this.fechasDatos.splice(FECHA_VALOR, 1);
     }
   }
 
@@ -143,9 +146,9 @@ export class PaisProcendenciaComponent implements OnInit {
       this.fechasDatos = [...this.fechasSeleccionadas];
       this.fechasSeleccionadas = [];
     } else {
-      const fechaValor = this.fechaSeleccionada.value.map(Number);
-      this.fechasDatos.push(this.fechasSeleccionadas[fechaValor]);
-      this.fechasSeleccionadas.splice(fechaValor, 1);
+      const FECHA_VALOR = this.fechaSeleccionada.value.map(Number);
+      this.fechasDatos.push(this.fechasSeleccionadas[FECHA_VALOR]);
+      this.fechasSeleccionadas.splice(FECHA_VALOR, 1);
     }
   }
 
