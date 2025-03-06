@@ -26,14 +26,20 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { LicitacionesDisponiblesService } from '@ng-mf/data-access-user';
 
-import { map, merge, Subject, takeUntil } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
+import { Subject } from 'rxjs';
+
 
 import { TablaSeleccion } from '@ng-mf/data-access-user'
 
 import { CONFIGURACION_ACCIONISTAS_TABLA } from '@ng-mf/data-access-user';
-import { Solicitud120501State, Tramite120501Store } from '../../../../estados/tramites/tramite120501.store';
+import { Solicitud120501State } from '../../estados/tramites/tramite120501.store';
+import { Tramite120501Store } from '../../estados/tramites/tramite120501.store';
 
-import { Tramite120501Query } from '../../../../estados/queries/tramite120501.query';
+import { Tramite120501Query } from '../../estados/queries/tramite120501.query';
+
 
 /**
  *  AccionBoton
@@ -132,11 +138,11 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de entidades federativas.
    */
-  entidadFederativa!: Catalogo[];
+  entidadFederativaOptions: Catalogo[] = [];
   /**
    * Catálogo de representaciones federales.
    */
-  representacionFederal!: Catalogo[];
+  representacionFederalOptions: Catalogo[] = [];
   /**
    * Datos de la tabla.
    */
@@ -150,8 +156,8 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   public entidadFederativaState!: Solicitud120501State;
+
   private destroyNotifier$: Subject<void> = new Subject();
-  
   /**
    * Constructor del componente.
    *
@@ -186,6 +192,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
       adquirienteMontoDisponible: [""],
       montoRecibir: ["", Validators.required],
     })
+
   }
   /**
    * Método de inicialización del componente.
@@ -194,21 +201,48 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     this.formularioTotalCount();
     this.actualizarRecuentoTotalDeFilas();
     this.getEntidadFederativa();
-    this.getRepresentacionFederal();
     this.getDetallesDelalicitacion();
     this.getAdquiriente();
     this.getTabledatas();
-    this.entidadFederativaSelection();
-    this.tramite120501Query.selectSolicitud$.subscribe(
-      (data)=>{
-          this.adquiriente.patchValue(
-          {
-            montoRecibir:data
-          }
+
+    this.tramite120501Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.adquiriente.patchValue(
+              {
+                montoRecibir:seccionState.montoRecibir
+              } 
+              )
+          })
         )
-      }
-    )
-    
+        .subscribe();
+
+        this.tramite120501Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.formulario.patchValue(
+              {
+                entidadFederativa:seccionState.entidadFederativa,
+                representacionFederal: seccionState.representacionFederal
+              } 
+              )
+          })
+        )
+        .subscribe();
+
+        const ENTITAD_FEDERATIVA = this.formulario.get('entidadFederativa')?.value;
+
+        const REPRESENTACION_FEDERAL = this.formulario.get('representacionFederal')?.value;
+
+        if (ENTITAD_FEDERATIVA !== "-1") {
+          this.getRepresentacionFederal(ENTITAD_FEDERATIVA);
+          this.formulario.get('representacionFederal')?.setValue(REPRESENTACION_FEDERAL);
+        } else {
+          this.representacionFederalOptions = [];
+        }
+        
   }
   /**
    * Inicializa el formulario para el recuento total de filas.
@@ -230,42 +264,25 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * Obtiene la lista de entidades federativas.
    */
   getEntidadFederativa(): void {
-   this.service.getEntidadFederativa().subscribe((response) =>{
-        if(response){
-             this.entidadFederativa = response.data;
-            }
-          }
-      )
-      // this.tramite120501Query.selectSolicitud$.subscribe((response)=>{
-      //   if(response){
-      //     this.entidadFederativa = response;
-      //    }
-      //  }
-
-      //  this.tramite120501Query.selectSolicitud$
-      // .pipe(
-      //   takeUntil(this.destroyNotifier$),
-      //   map((seccionState) => {
-      //     this.entidadFederativaState = seccionState;
-      //     console.log("this.entidadFederativaState",this.entidadFederativaState)
-      //   })
-      // )
-      // .subscribe();
-      
-
-      
-      
+      this.service.getEntidadFederativa().pipe(
+        takeUntil(this.destroyed$)
+      ).subscribe(
+        (data) => {
+          this.entidadFederativaOptions = data;
+        }
+      );
      
   }
 /**
    * Obtiene la lista de representaciones federales.
    */
-getRepresentacionFederal(): void {
-  this.service.getRepresentacionFederal().subscribe((response) => {
-    if(response){
-      this.representacionFederal = response.data;
+getRepresentacionFederal(representacionFederal :string): void {
+  this.service.getRepresentacionFederal(representacionFederal).pipe(
+    takeUntil(this.destroyed$)
+  ).subscribe(
+    (data) => {
+      this.representacionFederalOptions = data;
     }
-  }
   );
 }
 
@@ -363,10 +380,13 @@ setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite12050
   (this.tramite120501Store[metodoNombre] as (value: any) => void)(VALOR);
 }
 
-entidadFederativaSelection(): void {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const entidadFederativa = this.formulario.get('entidadFederativa')?.value;
-  this.tramite120501Store.setEntidadFederativa(entidadFederativa);
+onentidadFederativaChange(valor:any): void{
+  if (valor !== '-1') {
+    this.getRepresentacionFederal(valor.id);
+  } else {
+    this.representacionFederalOptions = [];
+  }
+  this.setValoresStore(this.formulario, 'entidadFederativa', 'setEntidadFederativa');
 }
 
 }
