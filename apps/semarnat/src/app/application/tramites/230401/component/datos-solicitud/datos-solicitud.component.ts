@@ -20,9 +20,13 @@ import {
 import {
   Solicitud230401State,
   Tramite230401Store,
-  initializeSolicitud230401State,
 } from '../../estados/tramite230401.store';
+import {
+  map,
+  takeUntil,
+} from 'rxjs';
 import {PantallasActionService } from '../../services/pantallas-action.service';
+import { Solicitud230401Query } from '../../estados/queries/solicitud230401.query';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -217,12 +221,21 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     },
   ];
 
-  constructor(public pantallasActionService:PantallasActionService,public validacionesService:ValidacionesFormularioService,public tramite230401Store:Tramite230401Store,public fb:FormBuilder){
+  constructor(public pantallasActionService:PantallasActionService,
+    public validacionesService:ValidacionesFormularioService,
+    public tramite230401Store:Tramite230401Store,public fb:FormBuilder,
+  public solicitud230401Query: Solicitud230401Query) {
     // do nothing
   }
 
   ngOnInit(): void {
-    initializeSolicitud230401State();
+    this.solicitud230401Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      ).subscribe();
     this.pantallasActionService.inicializaPasoUnoDatosCatalogos();
     this.creatFormSolicitud();
   }

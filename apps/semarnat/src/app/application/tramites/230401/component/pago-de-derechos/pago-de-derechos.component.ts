@@ -1,8 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import {
+  map,
+  takeUntil,
+} from 'rxjs';
+import { PagoDerechosState } from '../../models/tramies230401.models';
 import { PantallasActionService } from '../../services/pantallas-action.service';
 import { REGEX_FECHA_VALIDA } from '@libs/shared/data-access-user/src';
+import { Solicitud230401Query } from '../../estados/queries/solicitud230401.query';
+import { Subject } from 'rxjs';
+import { Tramite230401Store } from '../../estados/tramite230401.store';
 /**
  * Validador de fecha que verifica si el valor del control sigue el formato dd/mm/yyyy.
  * 
@@ -23,8 +31,12 @@ export function dateValidator(): ValidatorFn {
 export class PagoDeDerechosComponent implements OnInit {
   public pagoDerechos!: FormGroup;
   public clasificacion: string = '';
-  constructor(public pantallasService: PantallasActionService, private fb: FormBuilder) {
-    this.createPagoDerechos();
+  private destroyNotifier$: Subject<void> = new Subject();
+  public pagoDerechosState!: PagoDerechosState;
+
+  constructor(public pantallasService: PantallasActionService, private fb: FormBuilder,
+    public tramite230401Store:Tramite230401Store, public solicitud230401Query: Solicitud230401Query
+  ) {
     this.pantallasService.inicializaPagoDerechosCatalogo();
   }
 
@@ -34,6 +46,13 @@ export class PagoDeDerechosComponent implements OnInit {
    * Los campos 'banco' y 'fecha' son obligatorios.
    */
   ngOnInit(): void {
+     this.solicitud230401Query.seletPagoDerechosState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.pagoDerechosState = seccionState;
+          })
+        ).subscribe();
     this.createPagoDerechos();
   }
   /**
@@ -50,20 +69,28 @@ export class PagoDeDerechosComponent implements OnInit {
     */
   createPagoDerechos(): void {
     this.pagoDerechos = this.fb.group({
-      clave: [{ value: '084001963', disabled: true }],
-      dependencia: [{ value: '0100160910791', disabled: true }],
-      banco: ['', [Validators.required]],
-      llavePago: [{ value: '12345LLPCI', disabled: true }],
-      fecha: ['', [Validators.required, dateValidator()]],
-      importePago: [{ value: '1842', disabled: true }],
+      clave: [{ value: this.pagoDerechosState.clave, disabled: true }],
+      dependencia: [{ value: this.pagoDerechosState.dependencia, disabled: true }],
+      banco: [this.pagoDerechosState.banco, [Validators.required]],
+      llavePago: [{ value: this.pagoDerechosState.llavePago, disabled: true }],
+      fecha: [this.pagoDerechosState.fecha, [Validators.required, dateValidator()]],
+      importePago: [{ value: this.pagoDerechosState.importePago, disabled: true }],
     });
+    const FETCHA_CONTROL = this.pagoDerechos.get('fecha');
+    if (FETCHA_CONTROL) {
+      FETCHA_CONTROL.valueChanges.subscribe((value) => {
+        this.tramite230401Store.setPagoDerechosStateProperty('fecha', value);
+      });
+    }
   }
 
+  
   /**
    * Método para manejar la selección de clasificación.
    */
   clasificacionSeleccione(): void {
     this.clasificacion = this.pagoDerechos.get('banco')?.value;
+    this.tramite230401Store.setPagoDerechosStateProperty('banco', this.clasificacion);
   }
 
 }

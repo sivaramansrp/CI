@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from "@datorama/akita";
 import { Injectable } from "@angular/core";
+import { PagoDerechosState } from "../models/tramies230401.models";
 
 /**
  * Representa el estado de una solicitud específica.
@@ -56,6 +57,7 @@ export interface Solicitud230401State {
   cantidad: number;
   cantidadLetra: string;
   unidadDeMedida: string;
+  pagoDerechosState: PagoDerechosState
 }
 
 /**
@@ -89,6 +91,14 @@ export function initializeSolicitud230401State(): Solicitud230401State {
     cantidad: 1,
     cantidadLetra: 'Uno',
     unidadDeMedida: '',
+    pagoDerechosState: {
+      clave: '084001963',
+      dependencia: '0100160910791',
+      banco: '',
+      llavePago: '12345LLPCI',
+      fecha: '',
+      importePago: '1842'
+    }
   }
 }
 
@@ -392,4 +402,33 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
     }));
   }
 
+  /**
+   * Establece el estado de pago de derechos.
+   *
+   * @param {PagoDerechosState} pagoDerechosState - El nuevo estado de pago de derechos.
+   * @returns {void}
+   */
+  public setPagoDerechosState(pagoDerechosState: PagoDerechosState): void {
+    this.update((state) => ({
+      ...state,
+      pagoDerechosState,
+    }));
+  }
+
+  /**
+   * Establece una propiedad del estado de pago de derechos.
+   *
+   * @param property - El nombre de la propiedad del estado de pago de derechos que se va a actualizar.
+   * @param value - El nuevo valor para la propiedad especificada.
+   * @returns void
+   */
+  public setPagoDerechosStateProperty(property: string, value: string): void {
+    this.update((state) => ({
+      ...state,
+      pagoDerechosState: {
+        ...state.pagoDerechosState,
+        [property]: value,
+      },
+    }));
+  }
 }
