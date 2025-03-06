@@ -1,75 +1,82 @@
 <div class="container">
-  <div class="row d-flex align-items-end">
+  <!--<div class="row d-flex align-items-end">
     <div class="col-md-4">
       <form [formGroup]="documentoForma">
-        <app-catalogo-select [catalogo]="catalogoDocumentos" [label]="'Tipo de documento'" [required]="true" formControlName="documento" (change)="seleccionarDocumento()"></app-catalogo-select>
+        <app-catalogo-select [catalogo]="catalogoDocumentos" [label]="'Tipo de documento'" [required]="true"
+                             formControlName="documento" (change)="seleccionarDocumento()"></app-catalogo-select>
       </form>
     </div>
 
     <div class="col-md-4">
       <div class="btn-upload">
         <input type="file" class="form-control" id="file-input" (change)="cargarDoc($event)"
-          [disabled]="btnDesactivado">
+               [disabled]="btnDesactivado">
         <label for="file-input" class="btn" [ngClass]="!btnDesactivado ? 'btn-primary' : 'btn-disabled'">
           <i class="bi bi-cloud-arrow-up"></i>
           Subir documento
         </label>
       </div>
     </div>
-  </div>
+  </div>-->
 
-  <div class="row mt-3">
+  <!--<div class="row mt-3">
     <div class="col-md-4">
       @if (documentoSeleccionado) {
       <div class="especificaciones">
         <span>Tipo documento: {{PDF}}</span>
-        <span>Tamaño(KB): {{tamMaximo}} {{MB}} </span>
+        <span>Tamaño(MB): {{tamMaximo}} {{MB}} </span>
         <span>Resolución(dpi): {{documentoSeleccionado.dpi}}
           {{DPI}}</span>
       </div>
 
       }
     </div>
-  </div>
+  </div>-->
 
   <div class="row mt-5">
-    <div class="col-md-12">
-      @if (docCargados) {
-      <table class="table table-responsive">
-        <thead>
-          <tr>
-            <th colspan="2">Tipo Documento</th>
-            <th>Documento</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (item of documentosCargados; track item.tipoDocumento.id; let i = $index) {
-          <tr>
-            <td> {{i+1}} </td>
-            <td>{{ item.tipoDocumento.descripcion}}</td>
-            <td>{{ item.nombreArchivo}}</td>
-            <td>
-              <button type="button" class="btn btn-link" (click)="verPdf(url)">
+    <span class="h3">Documentos obligatorios</span>
+    <div class="col-md-12 border rounded bg-file-container px-4">
+      @for (item of catalogoDocumentos; track item.id; let i = $index) {
+        <div class="row py-3">
+          <div class="col-md-6 d-flex flex-column">
+            <span>Documento {{ item.descripcion }}</span>
+            <small>Tamaño(MB): {{ convertKbToMb(item.tam) }} {{ MB }}, Resolución(dpi) minima para
+              imagenes: {{ item.dpi }} {{ DPI }}</small>
+          </div>
+          <div class="col-md-5">
+            <div class="d-flex">
+              <label for="formFile" class="form-label"></label>
+              <input class="form-control custom-file-label" type="file" id="formFile" #fileInput
+                     (change)="cargarDoc($event, fileInput,item.id)">
+            </div>
+          </div>
+          <div class="col-md-1 d-flex">
+
+            <button type="button" class="btn file-btn-add" (click)="agregarParte(fileInput, item)">
+              <i class="bi bi-plus-circle-fill"></i>
+            </button>
+            @if (existePreview(item.id)) {
+              <button type="button" class="btn btn-link" (click)="verPdf(item.id)">
                 <i class="bi bi-eye bi-c"></i>
               </button>
-
-              <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
-                (click)="abrirModal(i)">
-                <i class="bi bi-trash3 bi-c"></i>
-              </button>
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
+            }
+            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
+                    (click)="limpiarFile(fileInput)">
+              <i class="bi bi-trash3 bi-c"></i>
+            </button>
+          </div>
+        </div>
       }
+      <div class="d-flex justify-content-end w-100 mb-4">
+        <button class="btn-primary rounded">Cargar archivos</button>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- Modal -->
-<div class="modal" [ngClass]="modal" id="modalConfirmacion" #modalConfirmacion tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true" data-bs-backdrop="static">
+<div class="modal" [ngClass]="modal" id="modalConfirmacion" #modalConfirmacion tabindex="-1"
+     aria-labelledby="modalConfirmacionLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">

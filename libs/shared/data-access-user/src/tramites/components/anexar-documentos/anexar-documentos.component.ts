@@ -1,8 +1,8 @@
-import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
 import {
   CatalogosSelect,
-  DocumentosCargados,
+  DocumentosCargados
 } from '../../../core/models/shared/components.model';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
@@ -11,7 +11,7 @@ import {
   CATALOGOS_ID,
   MB,
   PDF,
-  DPI,
+  DPI
 } from '../../constantes/constantes';
 import { Login } from '../../../core/models/shared/inicio-sesion.model';
 import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
@@ -28,9 +28,9 @@ declare const bootstrap: any; // Importación para manejar Bootstrap en TS
   standalone: true,
   imports: [CatalogoSelectComponent, CommonModule, ReactiveFormsModule, ToastrModule],
   templateUrl: './anexar-documentos.component.html',
-  styleUrl: './anexar-documentos.component.scss',
+  styleUrl: './anexar-documentos.component.scss'
 })
-export class AnexarDocumentosComponent {
+export class AnexarDocumentosComponent implements OnInit {
   @Input() catalogoDocumentos: Catalogo[] = [];
   documentoForma!: FormGroup;
 
@@ -49,27 +49,33 @@ export class AnexarDocumentosComponent {
 
   datosLogin: Login = {
     user: 'user1@example.com',
-    password: 'clave1',
+    password: 'clave1'
   };
 
   token!: string;
   base64File: string = '';
 
   readonly url: string = URL_PRUEBA;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  fileNames: string = '';
 
 
   @ViewChild('modalConfirmacion') modalConfirmacion!: ElementRef;
+  rutaArchivoPreview: string = '';
+  listadoArchivos: any[] = [];
 
   constructor(
     private toastr: ToastrService,
     private inicioSesionService: InicioSesionService,
     private subirDocumentoService: SubirDocumentoService,
-    private fb: FormBuilder,
-  ) { }
+    private fb: FormBuilder
+  ) {
+  }
 
   ngOnInit() {
     this.obtenerToken(this.datosLogin);
     this.crearFormaDocumento();
+    console.log(this.catalogoDocumentos);
   }
 
   /**
@@ -99,13 +105,13 @@ export class AnexarDocumentosComponent {
       },
       error: (error): void => {
         console.log(error);
-      },
+      }
     });
   }
 
   crearFormaDocumento(): void {
     this.documentoForma = this.fb.group({
-      documento: ['', [Validators.required]],
+      documento: ['', [Validators.required]]
     });
   }
 
@@ -143,53 +149,62 @@ export class AnexarDocumentosComponent {
    * Maneja la carga de un documento.
    * @param {Event} event - El evento de carga del archivo.
    */
-  cargarDoc(event: Event): void {
+  cargarDoc(event: Event, fileInput: HTMLInputElement, id: any): void {
     const archivo = event.target as HTMLInputElement;
     const informacionArchivo = (archivo.files as FileList)[0];
+    console.log(informacionArchivo);
 
     if (informacionArchivo) {
-      const extArchivo = informacionArchivo.name
-        .split('.')
-        .pop()
-        ?.toLowerCase();
+      const extArchivo = informacionArchivo.name.split('.').pop()?.toLowerCase();
 
       if (extArchivo !== this.PDF.toLowerCase()) {
         this.toastr.error('Solo se aceptan archivos pdf');
+        fileInput.value = '';
         return;
       }
 
-      const tamanioRequerido = this.documentoSeleccionado.tam
-        ? this.convertirKilobytesABytes(
-          parseInt(this.documentoSeleccionado.tam, 10)
-        )
-        : 0;
-      const tamanioArchivo = informacionArchivo.size;
-
+      // const tamanioRequerido = this.documentoSeleccionado.tam ? this.convertirKilobytesABytes(parseInt(this.documentoSeleccionado.tam, 10)) : 0;
+      const tamanioRequerido: number = 10 * 1048576;
+      const tamanioArchivo: number = informacionArchivo.size;
+      console.log(tamanioArchivo);
       if (tamanioArchivo > tamanioRequerido) {
-        this.toastr.error(
-          'El tamaño del documento que intenta cargar excede el tamaño permitido'
-        );
+        this.toastr.error('El tamaño del documento que intenta cargar excede el tamaño permitido');
+        fileInput.value = '';
         return;
       }
-
-      this.subirDocumentoService.subirDocumento(
-        this.token,
-        informacionArchivo
-      ).subscribe({
-        next: (): void => {
-          this.toastr.success('Documento subido');
-        },
-        error: (_error): void => {
-          this.toastr.error('Error al subir el documento');
-        },
+      this.listadoArchivos.push({
+        name: informacionArchivo.name,
+        id,
+        archivo: informacionArchivo,
+        ruta: URL.createObjectURL(informacionArchivo)
       });
+      console.log(this.listadoArchivos);
 
-      this.documentosCargados.push({
+      /*this.documentosCargados.push({
         tipoDocumento: this.documentoSeleccionado,
-        nombreArchivo: informacionArchivo.name,
-      });
+        nombreArchivo: informacionArchivo.name
+      });*/
     }
   }
+
+  existePreview(id: any): boolean {
+    // console.log(id);
+    const encontrado = this.listadoArchivos.find(f => f.id === id);
+    return encontrado !== undefined;
+  }
+
+  uploadFiles(informacionArchivo: any): void {
+    this.subirDocumentoService.subirDocumento(this.token, informacionArchivo).subscribe({
+      next: (): void => {
+        this.toastr.success('Documento subido');
+      },
+      error: (error): void => {
+        console.error(error);
+        this.toastr.error('Error al subir el documento');
+      }
+    });
+  }
+
 
   /**
    * Convierte kilobytes a megabytes.
@@ -215,14 +230,17 @@ export class AnexarDocumentosComponent {
    * @param {string} url - La URL del archivo PDF que se va a abrir.
    * @returns {void}
    */
-  verPdf(url: string): void {
-    window.open(url, '_blank');
+  verPdf(id: any): void {
+
+    console.log(this.rutaArchivoPreview);
+    const ruta = this.listadoArchivos.find(f => f.id === id)?.ruta;
+    window.open(ruta, '_blank');
   }
 
   /**
- * Abre el modal para eliminar un documento.
- * @param {number} i - El índice del documento.
- */
+   * Abre el modal para eliminar un documento.
+   * @param {number} i - El índice del documento.
+   */
   abrirModal(i: number) {
     this.modal = 'show';
     this.indiceDocumento = i;
@@ -251,10 +269,36 @@ export class AnexarDocumentosComponent {
    * Cierra el modal.
    */
   cerrarModal(): void {
+    this.modal = '';
+    return;
     const modalElement = this.modalConfirmacion.nativeElement;
     const modalInstance = bootstrap.Modal.getInstance(modalElement);
     if (modalInstance) {
       modalInstance.hide();
     }
+  }
+
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.fileNames = Array.from(input.files).map(file => file.name).join(', ');
+    }
+  }
+
+  limpiarFile(fileInput: HTMLInputElement): void {
+    fileInput.value = '';
+  }
+
+  agregarParte(fileInput: HTMLInputElement, i: any) {
+    console.log(i);
+    console.log(fileInput);
+
+  }
+
+  convertKbToMb(size: string | undefined): string {
+    if (size === undefined) {
+      return '0';
+    }
+    return String((parseInt(size) / 1000).toFixed(2));
   }
 }
