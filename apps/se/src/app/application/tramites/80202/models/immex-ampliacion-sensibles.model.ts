@@ -30,3 +30,21 @@ export interface Anexo {
   id: number;
   description: string;
 }
+
+export interface TablaFraccionArancelaria {
+  no: string;
+  fraccionArancelaria: string;
+  descripcion: string;
+  CantidadAnual: string;
+  CapacidadInstaladaPorPeriodo: string;
+  umt: string;
+  encabezado: string;
+}
+export interface TablaFraccionDeImportacion {
+  no: string;
+  fracciondeImportacion: string;
+  fracciondeExportacion: string;
+  umt: string;
+  descripcionComercial: string;
+  descripcion: string;
+}

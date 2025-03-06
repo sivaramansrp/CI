@@ -3,7 +3,6 @@ import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '../../models/immex-ampliacion-sensibles.model';
 import { MENSAJE_DE_EXITO_ETAPA_UNO } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/immex-ampliacion-sensibles.enums';
-import { Subject } from 'rxjs';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -58,11 +57,6 @@ export class SolicitudPageComponent {
    */
   indice: number = 1;
 
-  /**
-   * Notificador de destrucción del componente.
-   * @property {Subject<void>} destroyNotifier$ - Notificador de destrucción del componente.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Componente Wizard.
    * @property {WizardComponent} wizardComponent - Referencia al componente Wizard para controlar la navegación.

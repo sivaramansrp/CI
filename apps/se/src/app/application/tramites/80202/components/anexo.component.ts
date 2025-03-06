@@ -1,5 +1,15 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Component } from '@angular/core';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+
+import {
+  ImmexAmpliacionSensiblesState,
+  ImmexAmpliacionSensiblesStore,
+} from '../estados/immex-ampliacion-sensibles.store';
+import { ImmexAmpliacionSensiblesQuery } from '../estados/immex-ampliacion-sensibles.query';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * @title Anexo
@@ -12,7 +22,8 @@ import { Component } from '@angular/core';
   templateUrl: './anexo.component.html',
   styleUrl: './anexo.component.scss',
 })
-export class AnexoComponent {
+export class AnexoComponent implements OnInit, OnDestroy {
+  tabSelection: TablaSeleccion = TablaSeleccion.RADIO;
   /**
    * Grupo de formularios principal.
    * @property {FormGroup} forma
@@ -25,14 +36,42 @@ export class AnexoComponent {
    */
   fraccionArancelaria!: FormGroup;
 
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  public solicitudState!: ImmexAmpliacionSensiblesState;
+
   /**
    * Constructor del componente.
    * @param {FormBuilder} fb
    * @method constructor
    * @returns {void}
    */
-  constructor(private readonly fb: FormBuilder) {
+  constructor(
+    private readonly fb: FormBuilder,
+    private immexAmpliacionSensiblesStore: ImmexAmpliacionSensiblesStore,
+    private immexAmplicationSensiblesQuery: ImmexAmpliacionSensiblesQuery
+  ) {}
+  ngOnInit(): void {
+    this.immexAmplicationSensiblesQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.solicitudState = state as ImmexAmpliacionSensiblesState;
+        })
+      )
+      .subscribe();
     this.initActionFormBuild();
+  }
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof ImmexAmpliacionSensiblesStore
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    console.log(VALOR);
+    (this.immexAmpliacionSensiblesStore[metodoNombre] as (value: any) => void)(
+      VALOR
+    );
   }
 
   /**
@@ -42,11 +81,17 @@ export class AnexoComponent {
    */
   initActionFormBuild(): void {
     this.fraccionForm = this.fb.group({
-      fraccionArancelaria: ['', Validators.required],
+      fraccionArancelariaSensibles: [
+        this.solicitudState.fraccionArancelariaSensibles,
+        Validators.required,
+      ],
     });
     this.fraccionArancelaria = this.fb.group({
-      fraccionArancelaria: ['', Validators.required],
-      descripciondelproducto: [''],
+      fraccionArancelaria: [
+        this.solicitudState.fraccionArancelaria,
+        Validators.required,
+      ],
+      descripciondelproducto: [this.solicitudState.descripciondelproducto],
     });
   }
 
@@ -163,4 +208,9 @@ export class AnexoComponent {
       descripcion: 'Con un contenido de carbono superior al 4% en peso.',
     },
   ];
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

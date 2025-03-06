@@ -16,9 +16,16 @@
             <input
               class="form-control"
               id="coordenadas"
-              formControlName="fraccionArancelaria"
+              formControlName="fraccionArancelariaSensibles"
               placeholder=""
               type="text"
+              (change)="
+                setValoresStore(
+                  fraccionForm,
+                  'fraccionArancelariaSensibles',
+                  'setFraccionArancelariaSensibles'
+                )
+              "
             />
           </div>
         </div>
@@ -52,7 +59,7 @@
     </div>
     <div class="row mb-5">
       <app-tabla-dinamica
-        tablaSeleccion="RADIO"
+        [tipoSeleccionTabla]="tabSelection"
         [configuracionTabla]="configuracionColumnasSensibles"
         [datos]="datos"
       ></app-tabla-dinamica>
@@ -92,6 +99,13 @@
                 formControlName="fraccionArancelaria"
                 placeholder=""
                 type="text"
+                (change)="
+                  setValoresStore(
+                    fraccionArancelaria,
+                    'fraccionArancelaria',
+                    'setFraccionArancelaria'
+                  )
+                "
               />
             </div>
           </div>
@@ -106,6 +120,13 @@
                 id="descripciondelproducto"
                 formControlName="descripciondelproducto"
                 placeholder=""
+                (change)="
+                  setValoresStore(
+                    fraccionArancelaria,
+                    'descripciondelproducto',
+                    'setDescripcionDelProducto'
+                  )
+                "
               ></textarea>
             </div>
           </div>
@@ -140,7 +161,7 @@
     </div>
     <div class="row mb-5">
       <app-tabla-dinamica
-        tablaSeleccion="RADIO"
+        [tipoSeleccionTabla]="tabSelection"
         [configuracionTabla]="configuracionColumnas"
         [datos]="datos2"
       ></app-tabla-dinamica>
