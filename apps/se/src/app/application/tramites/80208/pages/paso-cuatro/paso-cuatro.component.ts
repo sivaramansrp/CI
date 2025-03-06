@@ -1,4 +1,3 @@
-
 import { Component } from '@angular/core';
 /**
  * Este componente se utiliza para mostrar el subtítulo del asistente

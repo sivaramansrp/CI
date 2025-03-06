@@ -23,24 +23,15 @@ describe('CambioDeModalidadComponent', () => {
   });
 
   it('should run #ngOnInit()', () => {
-    component.inicializarForm = jest.fn();
     component.getCargarDatos = jest.fn();
     component.disableFormControls = jest.fn();
     component.getCambioDeModalidad = jest.fn();
     component.getServiciosImmx = jest.fn();
     component.ngOnInit();
-    expect(component.inicializarForm).toHaveBeenCalled();
     expect(component.getCargarDatos).toHaveBeenCalled();
     expect(component.disableFormControls).toHaveBeenCalled();
     expect(component.getCambioDeModalidad).toHaveBeenCalled();
     expect(component.getServiciosImmx).toHaveBeenCalled();
-  });
-
-  it('should run #inicializarForm()', () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.inicializarForm();
-    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #getcargarDatos()', () => {

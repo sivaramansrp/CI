@@ -77,11 +77,4 @@ export class SolicitudModalidadPageComponent {
     }
   }
 
-  // /**
-  //  * Obtener un título para todas las paginas.
-  //  * @param valor - valor del índice de pagina. --80208
-  //  */
-  //  obtenerNombreDelTítulo(valor: number): string {
-  //   throw new Error('Método no implementado.');
-  // }
 }

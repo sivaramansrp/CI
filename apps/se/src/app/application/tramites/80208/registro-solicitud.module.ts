@@ -19,7 +19,6 @@ import { CambioDeModalidadComponent } from './component/cambio-de-modalidad/camb
 
 import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 import { RegistroSolicitudRoutingModule } from './registro-solicitud-routing.module';
@@ -29,7 +28,6 @@ import { SolicitudModalidadPageComponent } from './pages/solicitud-modalidad-pag
   declarations: [
     SolicitudModalidadPageComponent,
     PasoUnoComponent,
-    PasoTresComponent,
     PasoCuatroComponent,
     PasoDosComponent,
 

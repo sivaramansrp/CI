@@ -13,7 +13,7 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { ConfiguracionColumna } from '../../modelos/cambio-de-modalidad.model';
+import { CambioDeModalidadForm, ConfiguracionColumna } from '../../modelos/cambio-de-modalidad.model';
 
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
@@ -23,12 +23,14 @@ import { Subject } from 'rxjs';
 
 import { CONFIGURACION_SERVICIO } from '../../modelos/cambio-de-modalidad.model';
 
-import { takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 
 import { CambioModalidad } from '../../modelos/cambio-de-modalidad.model';
 import { ServicioInfo } from '../../modelos/cambio-de-modalidad.model';
 
+import { CambioModalidadQuery } from '../../estados/tramite80208.query';
 import { CambioModalidadService } from '../../service/cambio-modalidad.service';
+import { CambioModalidadStore } from '../../estados/tramite80208.store';
 
 
 /**
@@ -107,6 +109,24 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   serviciosImmxForm!: FormGroup;
 
   /**
+   * @propiedad cambioModalidadState
+   * @tipo string
+   */
+  cambioModalidadState!: string;
+
+  /**
+   * @propiedad cambioDeModalidadState
+   * @tipo CambioDeModalidadForm
+   */
+  cambioDeModalidadState!: CambioDeModalidadForm;
+
+  /**
+   * @propiedad serviciosImmxState
+   * @tipo string
+   */
+  serviciosImmxState!: string;
+
+  /**
    * Lista de servicios IMMX disponibles.
    * @type {Catalogo[]}
    */
@@ -124,6 +144,11 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
   espectaculoServiciosImmx: boolean = false;
 
+  /**
+   * @propiedad destroyNotifier$
+   * @tipo Subject<void>
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Constructor del componente.
@@ -134,8 +159,10 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
 
   constructor(
     public fb: FormBuilder,
-    public modalidadService: CambioModalidadService
-  ) { 
+    public modalidadService: CambioModalidadService,
+    public cambioModalidadQuery: CambioModalidadQuery,
+    public cambioModalidadStore: CambioModalidadStore
+  ) {
     // No se necesita lógica de inicialización adicional.
   }
 
@@ -145,11 +172,21 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.cambioModalidadQuery.selectCambioModalidad$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.cambioModalidadState = seccionState.cambioModalidad;
+          this.cambioDeModalidadState = seccionState.cambioDeModalidad;
+          this.serviciosImmxState = seccionState.serviciosImmx;
+        })
+      ).subscribe();
     this.inicializarForm();
     this.getCargarDatos();
     this.disableFormControls();
     this.getCambioDeModalidad();
     this.getServiciosImmx();
+
   }
 
   /**
@@ -159,15 +196,15 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
   inicializarForm(): void {
     this.cambioDeModalidadForm = this.fb.group({
-      seleccionaLaModalidad: ['', Validators.required],
-      folio: ['', [Validators.required, Validators.min(1)]],
-      ano: ['', [Validators.required, Validators.min(2000), Validators.max(2100)]],
-      seleccionaModalidad: ['', Validators.required],
-      cambioDeModalidad: ['', Validators.required]
+      seleccionaLaModalidad: [this.cambioDeModalidadState.seleccionaLaModalidad, Validators.required],
+      folio: [this.cambioDeModalidadState.folio, [Validators.required, Validators.min(1)]],
+      ano: [this.cambioDeModalidadState.ano, [Validators.required, Validators.min(2000), Validators.max(2100)]],
+      seleccionaModalidad: [this.cambioDeModalidadState.seleccionaModalidad, Validators.required],
+      cambioDeModalidad: [this.cambioModalidadState, Validators.required]
     });
 
     this.serviciosImmxForm = this.fb.group({
-      serviciosImmx: ['', Validators.required]
+      serviciosImmx: [this.cambioModalidadState, Validators.required]
     });
   }
 
@@ -192,6 +229,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   getServiciosImmx(): void {
     this.modalidadService.getServiciosImmx().subscribe((data) => {
       this.serviciosImmx = data.data;
+      this.cambioModalidadStore.setCambioModalidad(JSON.stringify(this.serviciosImmx));
     });
   }
 
@@ -207,7 +245,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
       if (SELECCIONADAID) {
         this.toggleServiciosImmx(SELECCIONADAID);
       }
-    }); 
+    });
   }
 
   /**
@@ -229,24 +267,25 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * @param {number} SELECCIONADAID - ID de la modalidad seleccionada.
    * @returns {void}
    */
-  toggleServiciosImmx(SELECCIONADAID: number): void {
+  toggleServiciosImmx(SELECCIONADAID: any): void {
     if (!SELECCIONADAID || !this.cambioDeModalidad.length) {
       this.espectaculoServiciosImmx = false;
       return;
     }
-    const OPCIONSELECCIONADA = this.cambioDeModalidad.find(item => item.id === SELECCIONADAID);
+    const OPCIONSELECCIONADA = this.cambioDeModalidad.find(item => item.id.toString() === SELECCIONADAID);
     this.espectaculoServiciosImmx = OPCIONSELECCIONADA?.descripcion?.toUpperCase() === 'SERVICIOS';
+    this.cambioModalidadStore.setCambioModalidad(SELECCIONADAID)
   }
 
   /**
    * Maneja el evento de selección del dropdown.
-   * 
+   *  
    * @param {any} event - Evento de selección del dropdown.
    * @returns {void}
    */
   onDropdownSelect(event: any): void {
     if (event?.id) {
-      this.toggleServiciosImmx(event.id);
+      this.toggleServiciosImmx(event.id.toString());
     }
   }
 
