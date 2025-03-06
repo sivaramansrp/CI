@@ -15,9 +15,9 @@ export class PasoTresComponent {
     // Constructor
   }
 
-  obtieneFirma(ev: string) {
-    const firma: string = ev;
-    if (firma) {
+  obtieneFirma(ev: string): void {
+    const FIRMA = ev;
+    if (FIRMA) {
       this.router.navigate(['servicios-extraordinarios/acuse']);
     }
   }

@@ -86,7 +86,9 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private service: SeleccionDelCupoService
-  ) {}
+  ) {
+    // Constructor
+  }
 
   /**
    * Método de ciclo de vida de Angular: Se ejecuta cuando el componente es inicializado.

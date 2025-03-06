@@ -11,7 +11,8 @@ import { Component } from '@angular/core';
   selector: 'app-datos',
   templateUrl: './datos.component.html',
 })
-export class DatosComponent {  /**
+export class DatosComponent {  
+  /**
   * Índice actual de la pestaña seleccionada.
   */
  indice: number = 1;

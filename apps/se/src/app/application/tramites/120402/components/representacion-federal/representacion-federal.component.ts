@@ -20,7 +20,8 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
 import {
@@ -102,7 +103,9 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private service: RepresentacionFederalService
-  ) {}
+  ) {
+    // Constructor
+  }
 
   /**
    * @method ngOnInit
