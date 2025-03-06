@@ -5,6 +5,7 @@ import { EvaluarSolicitudComponent } from './evaluar-solicitud/evaluar-solicitud
 import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirmar-notificacion.component';
 import { AtenderRequerimientoComponent } from './atender-requerimiento/atender-requerimiento.component';
 import { BandejaPendientesComponent } from './bandeja-pendientes/bandeja-pendientes.component';
+import { AutorizarDictamenComponent } from './autorizar-dictamen/autorizar-dictamen.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,10 @@ const routes: Routes = [
   {
     path: 'seleccion-modulo',
     component: SeleccionModuloComponent,
+  },
+  {
+    path: 'autorizar-dictamen',
+    component: AutorizarDictamenComponent,
   },
 ];
 
