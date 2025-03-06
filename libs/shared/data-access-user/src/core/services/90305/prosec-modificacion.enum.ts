@@ -1,4 +1,4 @@
-export const PROSEC_MODIFICATION = [
+export const PROSEC_MODIFICACION = [
     {
         indice: 1,
         titulo: 'Capturar solicitud',

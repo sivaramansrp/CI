@@ -17,8 +17,8 @@ describe('Sector90305Component', () => {
   let mockService: ProsecModificacionServiceTsService;
 
   const MOCK_SECTOR: SECTOR_MODEL[] = [
-    { listaDeSectores: 'Sector A', claveDelSector: '123', eStatus: 'Activo' },
-    { listaDeSectores: 'Sector B', claveDelSector: '456', eStatus: 'Inactivo' }
+    { listaDeSectores: 'Sector A', claveDelSector: '123', estatus: 'Activo' },
+    { listaDeSectores: 'Sector B', claveDelSector: '456', estatus: 'Inactivo' }
   ];
 
   beforeEach(async () => {
@@ -50,7 +50,7 @@ describe('Sector90305Component', () => {
     const EXPECTED_CONFIG: ConfiguracionColumna<SECTOR_MODEL>[] = [
       { encabezado: 'Lista de sectores', clave: (item: SECTOR_MODEL) => item.listaDeSectores, orden: 1 },
       { encabezado: 'Clave del sector', clave: (item: SECTOR_MODEL) => item.claveDelSector, orden: 2 },
-      { encabezado: 'Estatus', clave: (item: SECTOR_MODEL) => item.eStatus, orden: 3 }
+      { encabezado: 'Estatus', clave: (item: SECTOR_MODEL) => item.estatus, orden: 3 }
     ];
     expect(component.configuracionTabla).toEqual(EXPECTED_CONFIG);
   });

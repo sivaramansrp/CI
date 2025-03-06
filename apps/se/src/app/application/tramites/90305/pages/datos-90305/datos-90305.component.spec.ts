@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Datoa90305Component } from './datoa-90305.component';
+import { Datos90305Component } from './datos-90305.component';
 
-describe('Datoa90305Component', () => {
-  let component: Datoa90305Component;
-  let fixture: ComponentFixture<Datoa90305Component>;
+describe('Datos90305Component', () => {
+  let component: Datos90305Component;
+  let fixture: ComponentFixture<Datos90305Component>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [Datoa90305Component],
+      declarations: [Datos90305Component],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Datoa90305Component);
+    fixture = TestBed.createComponent(Datos90305Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

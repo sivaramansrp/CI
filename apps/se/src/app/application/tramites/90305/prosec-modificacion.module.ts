@@ -3,15 +3,11 @@ import { NgModule } from '@angular/core';
 
 import { ProsecModificacionRoutingModule } from './prosec-modificacion-routing.module';
 
-
-
-import { Datoa90305Component } from './pages/datos-90305/datoa-90305.component';
-
 import { FormsModule } from '@angular/forms';
 
 import { ProsecModificacionComponent } from './pages/prosec-modificacion/prosec-modificacion.component';
 
-import { Modification90305Component } from './component/modification-90305/modification-90305.component';
+import { Modificacion90305Component } from './component/modificacion-90305/modificacion-90305.component';
 
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -21,9 +17,11 @@ import { Bitacora90305Component } from './component/bitacora-90305/bitacora-9030
 
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 
+import { Datos90305Component } from './pages/datos-90305/datos-90305.component';
+
 
 @NgModule({
-  declarations: [ProsecModificacionComponent, Datoa90305Component],
-  imports: [ CommonModule,FormsModule, ProsecModificacionRoutingModule ,Modification90305Component,WizardComponent,ConsultadDomicilios90305Component,Bitacora90305Component,SolicitanteComponent],
+  declarations: [ProsecModificacionComponent, Datos90305Component],
+  imports: [ CommonModule,FormsModule, ProsecModificacionRoutingModule ,Modificacion90305Component,WizardComponent,ConsultadDomicilios90305Component,Bitacora90305Component,SolicitanteComponent],
 })
 export class ProsecModificacionModule {}

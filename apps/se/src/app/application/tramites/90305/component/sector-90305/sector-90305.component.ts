@@ -58,7 +58,7 @@ export class Sector90305Component implements OnInit {
   configuracionTabla: ConfiguracionColumna<SECTOR_MODEL>[] = [
     { encabezado: 'Lista de sectores', clave: (item: SECTOR_MODEL) => item.listaDeSectores, orden: 1 },
     { encabezado: 'Clave del sector', clave: (item: SECTOR_MODEL) => item.claveDelSector, orden: 2 },
-    { encabezado: 'Estatus', clave: (item: SECTOR_MODEL) => item.eStatus, orden: 3 }
+    { encabezado: 'Estatus', clave: (item: SECTOR_MODEL) => item.estatus, orden: 3 }
   ];
   
   /**

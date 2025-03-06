@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BITACORA_MODEL, ESTADO_DATA, MERCANCIAS_MODEL, MODIFICACAION_INFO, PLANTAS, PRODUCTOR_INDIRECTO, PROSEC_MODIFICATION_MODEL, SECTOR_MODEL } from '../../models/90305/prosec-modificacion.model';
+import { BITACORA_MODEL, MERCANCIAS_MODEL, MODIFICACION_INFO, PLANTAS, PRODUCTOR_INDIRECTO, PROSEC_MODIFICACION_MODEL, SECTOR_MODEL } from '../../models/90305/prosec-modificacion.model';
 import { catalogoResponse } from '../../models/shared/catalogos.model';
 import { Observable } from 'rxjs';
 
@@ -12,7 +12,7 @@ export class ProsecModificacionServiceTsService {
 
   constructor(private http: HttpClient) { }
   getListaDomicilios() {
-    return this.http.get<PROSEC_MODIFICATION_MODEL[]>('assets/json/90305/lista-de-domicilios.json');
+    return this.http.get<PROSEC_MODIFICACION_MODEL[]>('assets/json/90305/lista-de-domicilios.json');
   }
   getPlantaComplementaria() {
     return this.http.get<PLANTAS[]>('assets/json/90305/plantas.json');
@@ -30,9 +30,8 @@ export class ProsecModificacionServiceTsService {
     return this.http.get<BITACORA_MODEL[]>('assets/json/90305/bitacora.json')
   }
   getModoficacionInfo(){
-    return this.http.get<MODIFICACAION_INFO>('assets/json/90305/modificacionInfo.json')
+    return this.http.get<MODIFICACION_INFO>('assets/json/90305/modificacionInfo.json')
   }
-  
   getEstadoData(): Observable<catalogoResponse[]> {
     return this.http.get<catalogoResponse[]>('assets/json/90305/estado.json');
   }

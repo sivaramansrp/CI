@@ -8,14 +8,14 @@ import { ConsultadDomicilios90305Component } from '../consultad-domicilios-90305
 import { ListaDomicilios90305Component } from '../lista-domicilios-90305/lista-domicilios-90305.component';
 import { Mercancias90305Component } from '../mercancias-90305/mercancias-90305.component';
 import { ModificacionInfo90305Component } from '../modificacion-info-90305/modificacion-info-90305.component';
-import { Modification90305Component } from './modification-90305.component';
+import { Modificacion90305Component } from './modificacion-90305.component';
 import { Plantas90305Component } from '../plantas-90305/plantas-90305.component';
 import { ProductorIndirecto90305Component } from '../productorIndirecto-90305/productorIndirecto-90305.component';
 import { Sector90305Component } from '../sector-90305/sector-90305.component';
 
 describe('Modification90305Component', () => {
-  let component: Modification90305Component;
-  let fixture: ComponentFixture<Modification90305Component>;
+  let component: Modificacion90305Component;
+  let fixture: ComponentFixture<Modificacion90305Component>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -30,12 +30,12 @@ describe('Modification90305Component', () => {
         ModificacionInfo90305Component,
         BtnContinuarComponent,
       ],
-      declarations: [Modification90305Component],
+      declarations: [Modificacion90305Component],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(Modification90305Component);
+    fixture = TestBed.createComponent(Modificacion90305Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

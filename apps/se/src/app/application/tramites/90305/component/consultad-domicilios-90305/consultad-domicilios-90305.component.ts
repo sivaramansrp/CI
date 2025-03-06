@@ -9,7 +9,7 @@
 
 import { CommonModule } from '@angular/common';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -29,6 +29,8 @@ import {
 import { Tramite90305Query } from '../../../../estados/queries/tramite90305.query';
 import { Tramite90305Store } from '../../../../estados/tramites/tramite90305.store';
 
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 /**
  * compo docs
  * @selector app-consultad-domicilios-90305
@@ -46,7 +48,9 @@ import { Tramite90305Store } from '../../../../estados/tramites/tramite90305.sto
   templateUrl: './consultad-domicilios-90305.component.html',
   styleUrl: './consultad-domicilios-90305.component.scss',
 })
-export class ConsultadDomicilios90305Component implements OnInit {
+export class ConsultadDomicilios90305Component implements OnInit, OnDestroy{
+    /** Subject para destruir el componente */
+    private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
   selectedEstado$: Observable<catalogoResponse | null> =
     this.tramite90305Query.selectedEstado$;
@@ -91,6 +95,7 @@ export class ConsultadDomicilios90305Component implements OnInit {
   loadEstado(): void {
     this.listaDomicilios
       .getEstadoData()
+      .pipe(takeUntil(this.destroy$))
       .subscribe((resp: catalogoResponse[]) => {
         this.estadoJson = resp;
       });
@@ -101,5 +106,12 @@ export class ConsultadDomicilios90305Component implements OnInit {
   getMunicipios(): void {
     const SELECTED_ESTADO = this.formConsulta.get('estadoControl')?.value;
     this.tramite90305Store.setSelectedEstado(SELECTED_ESTADO);
+  }
+  /*
+    * Método del ciclo de vida de Angular - destruye el componente
+  */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -8,7 +8,7 @@
  */
 import { CommonModule } from '@angular/common';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 
@@ -24,6 +24,8 @@ import { TEXTO_ALERT } from '@ng-mf/data-access-user';
 
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 /**
  * compo doc
  * @component Bitacora90305Component
@@ -38,7 +40,9 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
   templateUrl: './bitacora-90305.component.html',
   styleUrl: './bitacora-90305.component.scss',
 })
-export class Bitacora90305Component implements OnInit {
+export class Bitacora90305Component implements OnInit, OnDestroy {
+  /** Subject para destruir el componente */
+  private destroy$ = new Subject<void>();
   /** Enum para la selección de tabla */
   TablaSeleccion = TablaSeleccion;
 
@@ -81,8 +85,17 @@ export class Bitacora90305Component implements OnInit {
    * Obtiene los datos de la bitácora del servicio y actualiza `bitacoraData`
    */
   loadBitacora(): void {
-    this.listaDomicilios.getBitacora().subscribe((resp) => {
-      this.bitacoraData = resp;
-    });
+    this.listaDomicilios.getBitacora()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp) => {
+        this.bitacoraData = resp;
+      });
+  }
+  /*
+    * Método del ciclo de vida de Angular - destruye el componente
+  */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -7,7 +7,7 @@
 
 import { CommonModule } from '@angular/common';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -20,6 +20,9 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
 import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * selector app-mercancias-90305
@@ -37,7 +40,9 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
   templateUrl: './mercancias-90305.component.html',
   styleUrl: './mercancias-90305.component.scss',
 })
-export class Mercancias90305Component implements OnInit {
+export class Mercancias90305Component implements OnInit ,OnDestroy {
+   /** Subject para destruir el componente */
+    private destroy$ = new Subject<void>();
   mercanciasForm!:FormGroup;
   /**
    * compo doc
@@ -87,8 +92,17 @@ export class Mercancias90305Component implements OnInit {
    * Obtiene la lista de mercancías del servicio y las almacena en `mercanciasProd`
    */
   loadMercancias(): void {
-    this.mercancias.getMercancias().subscribe((resp) => {
+    this.mercancias.getMercancias()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((resp) => {
       this.mercanciasProd = resp;
     });
+  }
+  /*
+   * Método del ciclo de vida de Angular - destruye el componente
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -1,6 +1,6 @@
 
 
-export interface PROSEC_MODIFICATION_MODEL {
+export interface PROSEC_MODIFICACION_MODEL {
   calle: string; 
   numeroExterior: string; 
   numeroInterior : string; 
@@ -28,7 +28,7 @@ export interface PROSEC_MODIFICATION_MODEL {
   export interface  SECTOR_MODEL{
     listaDeSectores:string;
     claveDelSector:string;
-    eStatus:string;
+    estatus:string;
   }
   export interface MERCANCIAS_MODEL{
     fraccionArancelaria : string;
@@ -47,7 +47,7 @@ export interface PROSEC_MODIFICATION_MODEL {
     valoresAnteriores:string;
     valoresNuevos:string;
   }
-  export interface MODIFICACAION_INFO{
+  export interface MODIFICACION_INFO{
     registroFederalContribuyentes:string;
     representacionFederal:string;
     tipoModificacion:string;

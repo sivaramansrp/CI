@@ -22,7 +22,7 @@ import { Sector90305Component } from '../sector-90305/sector-90305.component';
  * @standalone true
  */
 @Component({
-  selector: 'app-modification-90305',
+  selector: 'app-modificacion-90305',
   standalone: true,
   imports: [
     CommonModule,
@@ -35,10 +35,10 @@ import { Sector90305Component } from '../sector-90305/sector-90305.component';
     ModificacionInfo90305Component,
     BtnContinuarComponent,
   ],
-  templateUrl: './modification-90305.component.html',
-  styleUrl: './modification-90305.component.scss',
+  templateUrl: './modificacion-90305.component.html',
+  styleUrl: './modificacion-90305.component.scss',
 })
-export class Modification90305Component {
+export class Modificacion90305Component {
   /** Lista de pasos del asistente de modificación */
   pasos: ListaPasosWizard[] = PASOS;
   /** Índice actual del asistente */

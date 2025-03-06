@@ -1,6 +1,6 @@
 /**
  * compo doc
- * @component Datoa90305Component
+ * @component Datos90305Component
  * @description
  * Componente que gestiona la información del solicitante en el trámite 90305.
  * Permite seleccionar el tipo de persona y cambiar entre diferentes pestañas de datos.
@@ -11,13 +11,13 @@ import { SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 
 /**
  * compo doc
- * @selector app-datoa-90305
+ * @selector app-datos-90305
  */
 @Component({
-  selector: 'app-datoa-90305',
-  templateUrl: './datoa-90305.component.html',
+  selector: 'app-datos-90305',
+  templateUrl: './datos-90305.component.html',
 })
-export class Datoa90305Component implements AfterViewInit {
+export class Datos90305Component implements AfterViewInit {
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    */

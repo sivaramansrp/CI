@@ -10,7 +10,7 @@ import { Component } from '@angular/core';
 
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 
-import { PROSEC_MODIFICATION } from '@ng-mf/data-access-user';
+import { PROSEC_MODIFICACION } from '@ng-mf/data-access-user';
 
 /**
  * compo doc
@@ -23,11 +23,11 @@ import { PROSEC_MODIFICATION } from '@ng-mf/data-access-user';
 export class ProsecModificacionComponent {
   /**
    * Lista de pasos del asistente (wizard) para la modificación PROSEC.
-   * Se obtiene a partir de la enumeración `PROSEC_MODIFICATION`.
+   * Se obtiene a partir de la enumeración `PROSEC_MODIFICACION`.
    * 
    * @type {ListaPasosWizard[]}
    */
-  pantallasPasos: ListaPasosWizard[] = PROSEC_MODIFICATION;
+  pantallasPasos: ListaPasosWizard[] = PROSEC_MODIFICACION;
 
   /**
    * Índice del paso actual dentro del asistente.

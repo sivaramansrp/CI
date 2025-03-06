@@ -83,7 +83,7 @@ export {ConfiguracionColumna} from './core/models/shared/configuracion-columna.m
 export {TablaSeleccion} from './core/enums/tabla-seleccion.enum';
 export {TablaDinamicaComponent} from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export {TituloComponent} from './tramites/components/titulo/titulo.component';
-export {PROSEC_MODIFICATION_MODEL} from './core/models/90305/prosec-modificacion.model';
-export {PROSEC_MODIFICATION} from './core/services/90305/prosec-modificacion.enum';
+export {PROSEC_MODIFICACION_MODEL} from './core/models/90305/prosec-modificacion.model';
+export {PROSEC_MODIFICACION} from './core/services/90305/prosec-modificacion.enum';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';
