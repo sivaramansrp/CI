@@ -49,6 +49,11 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: |
+          npm install --force
+          npm ci
           
       - name: Build Docker images from docker-compose
         run: docker compose -f ./docker/modulefederation-microfrontends.yml build
