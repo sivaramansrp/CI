@@ -27,6 +27,9 @@
                 )
               "
             />
+            @if (isValid(fraccionForm,'fraccionArancelariaSensibles')) {
+            <div class="mensaje-error">Fecha no válida, elija otro día</div>
+            }
           </div>
         </div>
       </form>
@@ -107,6 +110,9 @@
                   )
                 "
               />
+              @if (isValid(fraccionArancelaria,'fraccionArancelaria')) {
+              <div class="mensaje-error">Fecha no válida, elija otro día</div>
+              }
             </div>
           </div>
           <div>
@@ -128,6 +134,9 @@
                   )
                 "
               ></textarea>
+              @if (isValid(fraccionArancelaria,'descripciondelproducto')) {
+              <div class="mensaje-error">Fecha no válida, elija otro día</div>
+              }
             </div>
           </div>
         </div>

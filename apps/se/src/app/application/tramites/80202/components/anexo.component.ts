@@ -1,15 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { Subject } from 'rxjs';
+import { delay } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+import { tap } from 'rxjs';
+
+import { SeccionLibQuery } from '@ng-mf/data-access-user';
+import { SeccionLibState } from '@ng-mf/data-access-user';
+import { SeccionLibStore } from '@ng-mf/data-access-user';
+
 import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 import {
   ImmexAmpliacionSensiblesState,
   ImmexAmpliacionSensiblesStore,
 } from '../estados/immex-ampliacion-sensibles.store';
 import { ImmexAmpliacionSensiblesQuery } from '../estados/immex-ampliacion-sensibles.query';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * @title Anexo
@@ -40,6 +49,8 @@ export class AnexoComponent implements OnInit, OnDestroy {
 
   public solicitudState!: ImmexAmpliacionSensiblesState;
 
+  private seccionState!: SeccionLibState;
+
   /**
    * Constructor del componente.
    * @param {FormBuilder} fb
@@ -49,9 +60,20 @@ export class AnexoComponent implements OnInit, OnDestroy {
   constructor(
     private readonly fb: FormBuilder,
     private immexAmpliacionSensiblesStore: ImmexAmpliacionSensiblesStore,
-    private immexAmplicationSensiblesQuery: ImmexAmpliacionSensiblesQuery
+    private immexAmplicationSensiblesQuery: ImmexAmpliacionSensiblesQuery,
+    private validacionesService: ValidacionesFormularioService,
+    private seccionStore: SeccionLibStore,
+    private seccionQuery: SeccionLibQuery
   ) {}
   ngOnInit(): void {
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
     this.immexAmplicationSensiblesQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -61,6 +83,23 @@ export class AnexoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.initActionFormBuild();
+
+    this.seccionStore.establecerFormaValida([false]);
+
+    this.fraccionForm.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((_value) => {
+          if (this.fraccionForm.valid) {
+            this.seccionStore.establecerSeccion([true]);
+            this.seccionStore.establecerFormaValida([true]);
+          } else {
+            this.seccionStore.establecerFormaValida([false]);
+          }
+        })
+      )
+      .subscribe();
   }
   setValoresStore(
     form: FormGroup,
@@ -68,10 +107,13 @@ export class AnexoComponent implements OnInit, OnDestroy {
     metodoNombre: keyof ImmexAmpliacionSensiblesStore
   ): void {
     const VALOR = form.get(campo)?.value;
-    console.log(VALOR);
     (this.immexAmpliacionSensiblesStore[metodoNombre] as (value: any) => void)(
       VALOR
     );
+  }
+
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field)!;
   }
 
   /**
