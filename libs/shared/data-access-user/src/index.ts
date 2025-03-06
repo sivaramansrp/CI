@@ -74,7 +74,7 @@ export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 export * from './core/services/220501/revision.service';
 export * from './core/services/220501/sagarpa/sagarpa.service';
-// export * from './core/enums/220502/solicitud-pantallas.enum';
+export * from './core/enums/220502/solicitud-pantallas.enum';
 export * from './core/services/220502/solicitud-pantallas.service';
 export * from './core/models/220502/solicitud-pantallas.model';
 
