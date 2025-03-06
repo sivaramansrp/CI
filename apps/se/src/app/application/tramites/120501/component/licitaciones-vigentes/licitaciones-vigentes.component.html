@@ -16,7 +16,7 @@
             <div class="row">
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="entidadFederativa" formControlName="entidadFederativa" [label]="'Entidad federativa'"
-                  [required]="true" name="federalent"></app-catalogo-select>
+                  [required]="true" name="federalent" (change)="setValoresStore(formulario,'entidadFederativa', 'setEntidadFederativa')"></app-catalogo-select>
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="representacionFederal" formControlName="representacionFederal" [label]="'Representación federal'"
@@ -116,7 +116,8 @@
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="montoRecibir">Monto a recibir*:</label>
-                <input type="text" class="form-control bg-white" id="montoRecibir" formControlName="montoRecibir" [ngClass]="isInvalid('montoRecibir') ? 'required' : ''">
+                <input type="text" class="form-control bg-white" id="montoRecibir" formControlName="montoRecibir" [ngClass]="isInvalid('montoRecibir') ? 'required' : ''"
+                (change)="setValoresStore(adquiriente,'montoRecibir', 'setmontoRecibir')">
                 <div *ngIf="isInvalid('montoRecibir')" class="text-danger">
                   Este campo es obligatorio
               </div>

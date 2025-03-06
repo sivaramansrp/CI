@@ -26,11 +26,14 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { LicitacionesDisponiblesService } from '@ng-mf/data-access-user';
 
-import { Subject } from 'rxjs';
+import { map, merge, Subject, takeUntil } from 'rxjs';
 
 import { TablaSeleccion } from '@ng-mf/data-access-user'
 
 import { CONFIGURACION_ACCIONISTAS_TABLA } from '@ng-mf/data-access-user';
+import { Solicitud120501State, Tramite120501Store } from '../../../../estados/tramites/tramite120501.store';
+
+import { Tramite120501Query } from '../../../../estados/queries/tramite120501.query';
 
 /**
  *  AccionBoton
@@ -146,13 +149,17 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * Referencia al componente del asistente (wizard).
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  public entidadFederativaState!: Solicitud120501State;
+  private destroyNotifier$: Subject<void> = new Subject();
+  
   /**
    * Constructor del componente.
    *
    * @param service Servicio para obtener datos de licitaciones disponibles.
    * @param fb Constructor de formularios.
    */
-  constructor(private service:LicitacionesDisponiblesService,private fb: FormBuilder) {
+  constructor(private service:LicitacionesDisponiblesService,private fb: FormBuilder,private tramite120501Store: Tramite120501Store, 
+    private tramite120501Query: Tramite120501Query) {
     this.formForTotalCount = this.fb.group({})
     this.formulario = this.fb.group({
       entidadFederativa: ["", Validators.required],
@@ -191,6 +198,17 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     this.getDetallesDelalicitacion();
     this.getAdquiriente();
     this.getTabledatas();
+    this.entidadFederativaSelection();
+    this.tramite120501Query.selectSolicitud$.subscribe(
+      (data)=>{
+          this.adquiriente.patchValue(
+          {
+            montoRecibir:data
+          }
+        )
+      }
+    )
+    
   }
   /**
    * Inicializa el formulario para el recuento total de filas.
@@ -212,12 +230,32 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * Obtiene la lista de entidades federativas.
    */
   getEntidadFederativa(): void {
-    this.service.getEntidadFederativa().subscribe((response) => {
-      if(response){
-        this.entidadFederativa = response.data;
-      }
-    }
-    );
+   this.service.getEntidadFederativa().subscribe((response) =>{
+        if(response){
+             this.entidadFederativa = response.data;
+            }
+          }
+      )
+      // this.tramite120501Query.selectSolicitud$.subscribe((response)=>{
+      //   if(response){
+      //     this.entidadFederativa = response;
+      //    }
+      //  }
+
+      //  this.tramite120501Query.selectSolicitud$
+      // .pipe(
+      //   takeUntil(this.destroyNotifier$),
+      //   map((seccionState) => {
+      //     this.entidadFederativaState = seccionState;
+      //     console.log("this.entidadFederativaState",this.entidadFederativaState)
+      //   })
+      // )
+      // .subscribe();
+      
+
+      
+      
+     
   }
 /**
    * Obtiene la lista de representaciones federales.
@@ -317,8 +355,18 @@ getAdquiriente():void{
       this.adquiriente.patchValue({
         rfc:data.rfc,
         adquirienteMontoDisponible:data.adquirienteMontoDisponible,
-        montoRecibir:data.montoRecibir
       })
     })
 }
+setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite120501Store): void {
+  const VALOR = form.get(campo)?.value;
+  (this.tramite120501Store[metodoNombre] as (value: any) => void)(VALOR);
+}
+
+entidadFederativaSelection(): void {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const entidadFederativa = this.formulario.get('entidadFederativa')?.value;
+  this.tramite120501Store.setEntidadFederativa(entidadFederativa);
+}
+
 }

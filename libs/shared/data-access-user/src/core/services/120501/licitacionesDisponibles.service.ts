@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { RespuestaCatalogos } from '../../models/shared/catalogos.model';
+import { catalogoResponse, RespuestaCatalogos } from '../../models/shared/catalogos.model';
 
 @Injectable({
   providedIn: 'root'
