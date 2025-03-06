@@ -1,9 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { DatosProrrogaMuestrasMercanciasQuery } from '../../estados/renovaciones/datos-prorroga-muestras-mercancias.query';
+import { DatosProrrogaMuestrasMercanciasStore } from '../../estados/renovaciones/datos-prorroga-muestras-mercancias.store';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { ListaDeFechas } from '../../models/registro-muestras-mercancias.model';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { OnInit } from '@angular/core';
-
+import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 /**
  * Componente para gestionar los datos de prórroga de muestras de mercancías.
  * 
@@ -19,7 +24,7 @@ import { OnInit } from '@angular/core';
   templateUrl: './datos-prorroga-muestras-mercancias.component.html',
   styleUrl: './datos-prorroga-muestras-mercancias.component.scss',
 })
-export class DatosProrrogaMuestrasMercanciasComponent implements OnInit {
+export class DatosProrrogaMuestrasMercanciasComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para los datos de prórroga de muestras de mercancías.
    * 
@@ -78,13 +83,23 @@ export class DatosProrrogaMuestrasMercanciasComponent implements OnInit {
     habilitado: false,
   };
 
+   /**
+     * Subject para desuscribirse de los observables.
+     * @type {Subject<void>}
+     */ 
+    private destroyed$ = new Subject<void>();
+
   /**
    * Constructor de la clase DatosProrrogaMuestrasMercanciasComponent.
    * 
    * @param {FormBuilder} fb - Instancia de FormBuilder para crear y gestionar formularios reactivos.
    */
-  constructor(public fb: FormBuilder) {
-       // Si es necesario, se puede agregar aquí la lógica de inicialización
+  constructor(
+    public fb: FormBuilder,
+    public query: DatosProrrogaMuestrasMercanciasQuery,
+    public store: DatosProrrogaMuestrasMercanciasStore
+  ) {
+    // Si es necesario, se puede agregar aquí la lógica de inicialización
   }
 
   /**
@@ -96,9 +111,24 @@ export class DatosProrrogaMuestrasMercanciasComponent implements OnInit {
    */
   ngOnInit(): void {
     this.formDatosProrroga = this.fb.group({
-      fechaInicioVigencia: [{ value: '01/01/2024', disabled: true }],
-      fechaFinVigencia: [{ value: '31/12/2024', disabled: true }],
+      fechaInicioVigencia: [{ value: '', disabled: true }],
+      fechaFinVigencia: [{ value: '', disabled: true }],
     });
+
+    /**
+     * Observable que obtiene las fechas de inicio y fin de vigencia.
+     */
+    this.query.obtenerFechas$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState: ListaDeFechas) => {
+          this.formDatosProrroga.patchValue({
+            fechaInicioVigencia: seccionState.fechaInicioVigencia,
+            fechaFinVigencia: seccionState.fechaFinVigencia,
+          });
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -126,5 +156,15 @@ export class DatosProrrogaMuestrasMercanciasComponent implements OnInit {
     this.formDatosProrroga.patchValue({
       fechaFinVigencia: date,
     });
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Desuscribe el componente de todos los observables.
+   * @returns {void}
+   * */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

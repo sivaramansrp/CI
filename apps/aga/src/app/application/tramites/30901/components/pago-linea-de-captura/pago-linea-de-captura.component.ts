@@ -3,11 +3,16 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 import { OnInit } from '@angular/core';
+import { PagoLineaDeCaptureQuery } from '../../estados/pago-linea-de-captura/pago-linea-de-captura.query';
+import { PagoLineaDeCaptureStore } from '../../estados/pago-linea-de-captura/pago-linea-de-captura.store';
 import { REGEX_REEMPLAZAR } from 'libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
+import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
+import { map } from 'rxjs';
 import { TableData } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
 /**
  * Componente para el manejo del pago de la línea de captura.
  *
@@ -44,6 +49,12 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
   darseDeBaja: Subscription | null = null;
 
   /**
+   * Subject para desuscribirse de los observables.
+   * @type {Subject<void>}
+   */ 
+  private destroyed$ = new Subject<void>();
+
+  /**
    * Constructor de la clase PagoLcComponent.
    *
    * @param fb - Instancia de FormBuilder para la creación y manejo de formularios reactivos.
@@ -51,7 +62,9 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
    */
   constructor(
     public fb: FormBuilder,
-    private renovacionesService: RenovacionesMuestrasMercanciasService
+    private renovacionesService: RenovacionesMuestrasMercanciasService,
+    public pagoLineaDeCaptureStore: PagoLineaDeCaptureStore,
+    public pagoLineaDeCaptureQuery: PagoLineaDeCaptureQuery
   ) {
     // Si es necesario, se puede agregar aquí la lógica de inicialización
   }
@@ -73,6 +86,18 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
         [Validators.maxLength(20)],
       ],
     });
+
+    /**
+     * Observable que obtiene los pagos de tarifas de la tienda.
+     */
+    this.pagoLineaDeCaptureQuery.obtenerPagoDeTarifas$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState: TableData) => {
+          this.tableData = seccionState;
+        })
+      )
+      .subscribe();
     this.obtenerDatosIniciales();
   }
 
@@ -84,11 +109,15 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerDatosIniciales(): void {
-    this.darseDeBaja = this.renovacionesService.obtenerOpcionesDesplegables().subscribe({
-      next: (res: ImportanteCatalogoSeleccion) => {
-        this.tableData = res.tablaDeTarifasDePago;
-      },
-    });
+    this.darseDeBaja = this.renovacionesService
+      .obtenerOpcionesDesplegables()
+      .subscribe({
+        next: (res: ImportanteCatalogoSeleccion) => {
+          this.pagoLineaDeCaptureStore.update({
+            tableBody: res.tablaDeTarifasDePago.tableBody,
+          });
+        },
+      });
   }
 
   /**
@@ -118,17 +147,34 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
   limpiarCampos(): void {
     this.formPagoLC.get('lineaCaptura')?.reset();
   }
-  
-   /**
-     * Hook del ciclo de vida que se invoca cuando se destruye el componente.
-     * - Verifica si la suscripción `darseDeBaja` está activa.
-     * - Si existe, se da de baja (unsubscribe) del observable para liberar recursos.
-     * - Establece `darseDeBaja` a `null` como parte del proceso de limpieza.
-     */
+
+  /**
+   * Agrega tarifas de pago obteniendo los valores del formulario y actualizando la tabla.
+   */
+  anadirTarifasDePago(): void {
+    const LINEA_CAPTURA = this.formPagoLC.get('lineaCaptura')?.value;
+    const VALOR_PAGO = this.formPagoLC.get('valorPago')?.value;
+    if (!LINEA_CAPTURA || !VALOR_PAGO) {
+      return;
+    }
+    this.pagoLineaDeCaptureStore.agregarPagoDeTarifas(
+      LINEA_CAPTURA,
+      VALOR_PAGO
+    );
+  }
+
+  /**
+   * Hook del ciclo de vida que se invoca cuando se destruye el componente.
+   * - Verifica si la suscripción `darseDeBaja` está activa.
+   * - Si existe, se da de baja (unsubscribe) del observable para liberar recursos.
+   * - Establece `darseDeBaja` a `null` como parte del proceso de limpieza.
+   */
   ngOnDestroy(): void {
     if (this.darseDeBaja) {
       this.darseDeBaja.unsubscribe();
       this.darseDeBaja = null;
     }
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

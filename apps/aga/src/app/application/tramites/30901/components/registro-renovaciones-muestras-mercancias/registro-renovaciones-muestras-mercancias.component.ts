@@ -7,9 +7,14 @@ import { Importante } from '@ng-mf/data-access-user';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { RegistroMuestras } from '../../models/registro-muestras-mercancias.model';
+import { RegistroRenovacionesMuestrasMercanciasQuery } from '../../estados/registro-renovaciones-muestras-mercancias/registro-renovaciones-muestras-mercancias.query';
 import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
+import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente para el registro de renovaciones de muestras de mercancías.
@@ -79,6 +84,12 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit, 
   darseDeBaja: Subscription | null = null;
 
   /**
+   * Subject para desuscribirse de los observables.
+   * @type {Subject<void>}
+   */
+  private destroyed$ = new Subject<void>();
+
+  /**
    * Constructor de RegistroRenovacionesMuestrasMercanciasComponent.
    * 
    * @param fb - Instancia de FormBuilder para la creación y gestión de formularios reactivos.
@@ -86,7 +97,8 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit, 
    */
   constructor(
     public fb: FormBuilder,
-    public renovacionesService: RenovacionesMuestrasMercanciasService
+    public renovacionesService: RenovacionesMuestrasMercanciasService,
+    public query: RegistroRenovacionesMuestrasMercanciasQuery
   ) {
      // Si es necesario, se puede agregar aquí la lógica de inicialización
   }
@@ -126,6 +138,30 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit, 
       ideGenerica: [{ value: 'gaseoso', disabled: true }],
       descClobGenerica: [{ value: '', disabled: true }],
     });
+
+    // Se suscribe al observable para obtener el registro de muestras de la tienda.
+    this.query.obtenerRegistro$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((response: RegistroMuestras) => {
+          this.formRegistroMuestras.patchValue({
+            opcionDeImportador: response.opcionDeImportador,
+            tomaMuestraDespacho: response.tomaMuestraDespacho,
+            descMotivoFaltaMuestra: response.descMotivoFaltaMuestra,
+            comboFraccionConcatenada: response.comboFraccionConcatenada,
+            fraccionConcatenada: response.fraccionConcatenada,
+            fracciondescripcion: response.fracciondescripcion,
+            comboNicos: response.comboNicos,
+            nicoDescripcion: response.nicoDescripcion,
+            nombreQuimico: response.nombreQuimico,
+            nombreComercial: response.nombreComercial,
+            numeroCAS: response.numeroCAS,
+            ideGenerica: response.ideGenerica,
+            descClobGenerica: response.descClobGenerica,
+          });
+        })
+      )
+      .subscribe();
     this.getOpcionImportador();
   }
 
@@ -207,7 +243,6 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit, 
       this.formRegistroMuestras.get('descMotivoFaltaMuestra')?.disable();
     }
   }
-
    /**
      * Hook del ciclo de vida que se invoca cuando se destruye el componente.
      * - Verifica si la suscripción `darseDeBaja` está activa.
