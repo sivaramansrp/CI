@@ -6,7 +6,7 @@ import { Query } from '@datorama/akita';
 export class Tramite110102Query extends Query <Tramite110102State> {
 
 
-  solicitudEntidadFederativaEntidadClave$= this.select((state) => {
+  selectTramite110102$= this.select((state) => {
     return state;
   });
 

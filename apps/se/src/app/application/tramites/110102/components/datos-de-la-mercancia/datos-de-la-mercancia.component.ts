@@ -1,18 +1,14 @@
 /**
  * Este componente maneja los datos de la mercancía.
  */
-
-import { CommonModule } from '@angular/common';
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
 import { Tramite110102Store } from '../../estados/store/tramite110102.store';
-
-
 
 /**
  * Este componente maneja los datos de la mercancía.
@@ -32,13 +28,20 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
    */
   datosDeLamercanciaFrom: FormGroup;
 
+  /**
+   * Subject que emite un evento cuando el componente es destruido,
+   * permitiendo la desuscripción de observables.
+   * @type {Subject<void>}
+   */
   private destroyed$ = new Subject<void>();
 
   /**
    * Constructor del componente.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
+   * @param {Tramite110102Store} tramite110102Store - Servicio para manejar el estado del trámite.
+   * @param {Tramite110102Query} tramite110102Query - Servicio para consultar el estado del trámite.
    */
-  constructor(private fb: FormBuilder,private tramite110102Store:Tramite110102Store,private tramite110102Query:Tramite110102Query) {
+  constructor(private fb: FormBuilder, private tramite110102Store: Tramite110102Store, private tramite110102Query: Tramite110102Query) {
     this.datosDeLamercanciaFrom = this.fb.group({
       cveRegistroProductor: ['', [Validators.required, Validators.maxLength(12)]],
       solicitud: this.fb.group({
@@ -47,27 +50,41 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
       })
     });
   }
+
+  /**
+   * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
+   * Obtiene los valores del store y los asigna al formulario.
+   */
   ngOnInit(): void {
-    this.tramite110102Query.solicitudEntidadFederativaEntidadClave$
-    .pipe(
-      takeUntil(this.destroyed$),
-      map((seccionState) => {
-        this.datosDeLamercanciaFrom.patchValue(
-          {
-              cveRegistroProductor:seccionState.cveRegistroProductor
-          } 
-          )
-      })
-    )
-    .subscribe();
+    this.getValoresStore();
   }
 
-
-setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110102Store): void {
+  /**
+   * Establece los valores en el store.
+   * @param {FormGroup} form - El formulario del cual se obtienen los valores.
+   * @param {string} campo - El nombre del campo del formulario.
+   * @param {keyof Tramite110102Store} metodoNombre - El nombre del método del store.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110102Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite110102Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+  /**
+   * Obtiene los valores del store y los asigna al formulario.
+   */
+  getValoresStore(): void {
+    this.tramite110102Query.selectTramite110102$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.datosDeLamercanciaFrom.patchValue({
+            cveRegistroProductor: seccionState.cveRegistroProductor
+          });
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Verifica si un control del formulario es inválido.
@@ -92,6 +109,11 @@ setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite11010
       this.datosDeLamercanciaFrom.get('cveRegistroProductor')?.disable();
     }
   }
+
+  /**
+   * Hook del ciclo de vida que se llama cuando la directiva se destruye.
+   * Completa el subject destroyed$ para desuscribirse de todos los observables.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
