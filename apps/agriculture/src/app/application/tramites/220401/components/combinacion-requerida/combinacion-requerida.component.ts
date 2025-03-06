@@ -1,5 +1,5 @@
 /* eslint-disable sort-imports */
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
@@ -16,7 +16,7 @@ import { TercerosRelacionadosComponent } from '../terceros-relacionados/terceros
   imports: [SelectCatalogosComponent,TituloComponent,ReactiveFormsModule,CommonModule,TercerosRelacionadosComponent],
   styleUrl: './combinacion-requerida.component.scss'
 })
-export class CombinacionRequeridaComponent {
+export class CombinacionRequeridaComponent implements OnInit {
 
   public especie!: CatalogosSelect;
   public funcionZootecnica!: CatalogosSelect;
@@ -50,6 +50,7 @@ export class CombinacionRequeridaComponent {
       this.getPaisOrigen();
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public isValid(field: string) {
       return this.validacionesService.isValid(this.formCombinacion,field);
     }
@@ -59,8 +60,9 @@ export class CombinacionRequeridaComponent {
      * 
      */
 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public crearFormCombinacion() {
-      this.formCombinacion =  this.fb.group({
+      this.formCombinacion = this.fb.group({
         especie:[''],
         funcionZootecnica:[''],
         mercancia:[''],
@@ -81,6 +83,7 @@ export class CombinacionRequeridaComponent {
    * @description getPaisOrigen se utiliza para obtener los datos del menú desplegable de la opción de selección
    */
   
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public getPaisOrigen() {
       this.paisOrigen = {
         labelNombre: 'País de Origen',
@@ -103,6 +106,7 @@ export class CombinacionRequeridaComponent {
   * @description getRegimenMercancia se utiliza para obtener los datos del menú desplegable de la opción de selección
   */
   
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public getRegimenMercancia() {
       this.regimenMercancia = {
         labelNombre: 'Régimen al que se Destinará la Mercancía',
@@ -125,6 +129,7 @@ export class CombinacionRequeridaComponent {
    * @description getOisaSalida se utiliza para obtener los datos del menú desplegable de la opción de selección
    */
   
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public getOisaSalida() {
       this.oisaSalida = {
         labelNombre: 'OISA de Salida',
@@ -147,6 +152,7 @@ export class CombinacionRequeridaComponent {
    * @description getAduanaSalida se utiliza para obtener los datos del menú desplegable de la opción de selección
    */
   
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public getAduanaSalida() {
       this.aduanaSalida = {
         labelNombre: 'Aduana de Salida/Lugar de Embarque',
@@ -169,6 +175,7 @@ export class CombinacionRequeridaComponent {
   /**
    * @description getTipoActividad se utiliza para obtener los datos del menú desplegable de la opción de selección
    */
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public getTipoActividad() {
       this.tipoActividad = {
         labelNombre: 'Tipo de Actividad del Establecimiento',
@@ -191,6 +198,7 @@ export class CombinacionRequeridaComponent {
    * @description getNombreEstablecimiento se utiliza para obtener los datos del menú desplegable de la opción de selección
    */
   
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public getNombreEstablecimiento() {
       this.nombreEstablecimiento = {
         labelNombre: 'Nombre, Denominación o Razón Social',
@@ -213,6 +221,7 @@ export class CombinacionRequeridaComponent {
    * @description getPaisDestino se utiliza para obtener los datos del menú desplegable de la opción de selección
    */
   
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public getPaisDestino() {
       this.paisDestino = {
         labelNombre: 'País de destino',
@@ -235,6 +244,7 @@ export class CombinacionRequeridaComponent {
    * @description getMercancia se utiliza para obtener los datos del menú desplegable de la opción de selección
    */
   
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public getMercancia() { 
       this.mercancia = { 
         labelNombre: 'Mercancía',
@@ -257,6 +267,7 @@ export class CombinacionRequeridaComponent {
    * @description getEspecie se utiliza para obtener los datos del menú desplegable de la opción de selección
    */
   
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public getEspecie() {
       this.especie = {
         labelNombre: 'Especie',
@@ -279,6 +290,7 @@ export class CombinacionRequeridaComponent {
      * @description getFuncionZootecnica se utiliza para obtener los datos del menú desplegable de la opción de selección
      */
   
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public getFuncionZootecnica() {
       this.funcionZootecnica = {
         labelNombre: 'Función Zootécnica',
@@ -297,7 +309,8 @@ export class CombinacionRequeridaComponent {
       };
     }
   
-    public docSeleccionado(e: Catalogo) {
+     // eslint-disable-next-line class-methods-use-this
+     docSeleccionado(e: Catalogo): void {
       console.log(e);
     }
 

@@ -4,12 +4,16 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import radioOptionsData from 'libs/shared/theme/assets/json/220401/tipo-de-certifico.json';
 
 import { AgregarArchivoComponent } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
+
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import unidadRadioFields from 'libs/shared/theme/assets/json/220401/unidad.json';
 @Component({
   selector: 'app-datos-del-certificado',
@@ -37,13 +41,14 @@ export class DatosDelCertificadoComponent implements OnInit {
 
   radioBoton = unidadRadioFields; // import data from Json
 
+  // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder) {}
   ngOnInit(): void {
     this.formGroup = this.fb.group({
       seleccion: [this.selectedValue],
     });
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
   onValueChange(newValue: any) {
     this.selectedValue = newValue;
   }
@@ -53,25 +58,25 @@ export class DatosDelCertificadoComponent implements OnInit {
     {
       labelNombre: 'Delegaciones estatales SAGARPA',
       required: true,
-      catalogos: this.getCatalogos(),
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
       primerOpcion: '',
     },
     {
       labelNombre: 'OSIA',
       required: true,
-      catalogos: this.getCatalogos(),
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
       primerOpcion: '',
     },
     {
       labelNombre: 'Oficina Central',
       required: true,
-      catalogos: this.getCatalogos(),
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
       primerOpcion: '',
     },
     {
       labelNombre: 'Distrito Desarrollo Rural (DDR)',
       required: false,
-      catalogos: this.getCatalogos(),
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
       primerOpcion: '',
     },
   ];
@@ -81,7 +86,7 @@ export class DatosDelCertificadoComponent implements OnInit {
    *
    * @returns An array of catalog objects, each containing an `id` and a `descripcion`.
    */
-  private getCatalogos() {
+  private static getCatalogos(): { id: number; descripcion: string }[] {
     return [
       { id: 1, descripcion: 'Option 1' },
       { id: 2, descripcion: 'Option 2' },
@@ -112,12 +117,11 @@ export class DatosDelCertificadoComponent implements OnInit {
       ],
     },
   ];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  seleccionar(e:any){
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-empty-function, @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function, class-methods-use-this, @typescript-eslint/explicit-function-return-type
+  seleccionar(e:any){}
   
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  // eslint-disable-next-line @typescript-eslint/no-empty-function, class-methods-use-this, no-empty-function, @typescript-eslint/explicit-function-return-type
   cargarArchivo() {}
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  // eslint-disable-next-line @typescript-eslint/no-empty-function, class-methods-use-this, @typescript-eslint/explicit-function-return-type, no-empty-function
   agregar() {}
 }

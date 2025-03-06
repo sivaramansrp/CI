@@ -1,10 +1,15 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { Component, OnDestroy } from '@angular/core';
 
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+
 import { HttpCoreService } from '@ng-mf/data-access-user';
+
 import { ReplaySubject, takeUntil } from 'rxjs';
+
 import { CatalogosSelect } from '@ng-mf/data-access-user';
+
 import { Catalogo } from '@ng-mf/data-access-user';
 
 /**
@@ -53,6 +58,7 @@ export class TransporteComponent implements OnDestroy {
   /**
    * Este método se utiliza para crear la forma del transporte. - 220401
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   crearFormTransporte() {
     this.transporteForm = this.fb.group({
       mediodeTransporte: ['', [Validators.required]],
@@ -69,6 +75,7 @@ export class TransporteComponent implements OnDestroy {
    * @param field: campo del formulario
    * @returns Validaciones del formulario
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   isValid(form: FormGroup, field: string) {
     return this.validacionesService.isValid(form, field);
   }
@@ -76,19 +83,23 @@ export class TransporteComponent implements OnDestroy {
   /**
    * Este método se utiliza para marcar los controles del formulario como tocados. - 220401
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   validarTransporteFormulario() {
     if (this.transporteForm.invalid) {
       this.transporteForm.markAllAsTouched();
+      // eslint-disable-next-line no-useless-return
       return;
     }
   }
 /**
  * Este método se utiliza para obtener los datos de los medios de transporte.
  */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   fetchtiposDocumentos() {
     this.httpCoreService.get('assets/json/220401/mediodetransporte.json').pipe(
       takeUntil(this.destroyed$)
     ).subscribe((data): void => {
+      // eslint-disable-next-line dot-notation
       this.tiposDocumentos['catalogos'] = data as Catalogo[];
     });
   }

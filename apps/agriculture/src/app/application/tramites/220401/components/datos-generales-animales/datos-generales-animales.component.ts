@@ -1,12 +1,17 @@
+/* eslint-disable class-methods-use-this */
 import { Component, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
 import { Catalogo } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import aduanasJson from './../../../../../../../../../libs/shared/theme/assets/json/220401/umc.json';
+
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import sexoJson from './../../../../../../../../../libs/shared/theme/assets/json/220401/sexo.json';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 
 import {
@@ -54,6 +59,7 @@ export class DatosGeneralesAnimalesComponent implements OnInit {
    * Maneja la selección de una aduana en el primer select.
    * @param e - La aduana seleccionada.
    */
+  // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder) {}
   /**
    * Validador personalizado para validar una descripción especial.
@@ -64,9 +70,11 @@ export class DatosGeneralesAnimalesComponent implements OnInit {
    * @returns Un objeto de error de validación `{ descripcionEspeciales: 'Ingresa datos válidos.' }` si el valor no cumple con las reglas,
    *          o `null` si el valor es válido.
    */
+  // eslint-disable-next-line class-methods-use-this
   descripcionEspecialesValidator(
     control: AbstractControl
   ): ValidationErrors | null {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const value = control.value;
 
     if (
@@ -83,7 +91,9 @@ export class DatosGeneralesAnimalesComponent implements OnInit {
    * @param control - El control de formulario a validar.
    * @returns Un objeto de error de validación o nulo.
    */
+  // eslint-disable-next-line class-methods-use-this
   descripcionValidator(control: AbstractControl): ValidationErrors | null {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const value = control.value;
     // Implement your custom validation logic here
     if (value && value.length > 0) {
@@ -98,8 +108,10 @@ export class DatosGeneralesAnimalesComponent implements OnInit {
    * @param max - El valor máximo.
    * @returns Una función de validación.
    */
+  // eslint-disable-next-line class-methods-use-this
   valueRangeValidator(min: number, max: number) {
     return (control: AbstractControl): ValidationErrors | null => {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const value = parseFloat(control.value);
       if (isNaN(value) || value < min || value > max) {
         return { valueRange: true };
@@ -202,6 +214,7 @@ export class DatosGeneralesAnimalesComponent implements OnInit {
    * @param value - El valor de la fracción arancelaria.
    * @param length - La longitud del valor de la fracción arancelaria.
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   obtenerDescripcionFraccion(value: string, length: number): void {
     // Implementar la lógica para obtener la descripción de la fracción
     this.frmMercanciaAnimal
@@ -235,6 +248,7 @@ export class DatosGeneralesAnimalesComponent implements OnInit {
   /**
    * Muestra un mensaje.
    */
+  // eslint-disable-next-line class-methods-use-this
   mostrarMensaje(): void {
     // Implementar la lógica para mostrar un mensaje
   }

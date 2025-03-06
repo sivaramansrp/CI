@@ -1,3 +1,6 @@
+/* eslint-disable no-empty-function */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable class-methods-use-this */
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -32,6 +35,7 @@ export class PagoDeDerechoComponent implements OnInit {
   public Justificacion!: Catalogo[]; // Opciones disponibles para justificar el pago
   public Banco!: Catalogo[]; // Opciones disponibles para seleccionar el banco
 
+  // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder) { }
 
   /**
@@ -45,8 +49,8 @@ export class PagoDeDerechoComponent implements OnInit {
    * @memberof PagoDeDerechoComponent
    */
   ngOnInit(): void {
-    this.getJustificacion();  // Obtiene las opciones para justificar el pago
-    this.getBanco();           // Obtiene las opciones para seleccionar el banco
+    this.getJustificacion(); // Obtiene las opciones para justificar el pago
+    this.getBanco(); // Obtiene las opciones para seleccionar el banco
     this.FormSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
         exentoDePago: ['No', Validators.required],
@@ -136,6 +140,7 @@ export class PagoDeDerechoComponent implements OnInit {
    * 
    * @memberof PagoDeDerechoComponent
    */
+  // eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
   JustificacionSeleccion(): void { }
 
   /**
@@ -143,6 +148,7 @@ export class PagoDeDerechoComponent implements OnInit {
    * 
    * @memberof PagoDeDerechoComponent
    */
+  // eslint-disable-next-line no-empty-function
   BancoSeleccion(): void { }
 
   /**
@@ -152,5 +158,6 @@ export class PagoDeDerechoComponent implements OnInit {
    * 
    * @memberof PagoDeDerechoComponent
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   validarFormulario() { }
 }
