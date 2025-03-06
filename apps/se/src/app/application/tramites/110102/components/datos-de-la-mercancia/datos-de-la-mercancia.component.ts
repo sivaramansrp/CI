@@ -3,12 +3,16 @@
  */
 
 import { CommonModule } from '@angular/common';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { DatosDeLaMercanciaStore } from '../../estados/store/datos-de-la-mercancia.store';
-import { DatosDeLaMercanciaQuery } from '../../estados/queries/datos-de-la-mercancia.query';
+import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
+import { Tramite110102Store } from '../../estados/store/tramite110102.store';
+
+
 
 /**
  * Este componente maneja los datos de la mercancía.
@@ -20,7 +24,7 @@ import { DatosDeLaMercanciaQuery } from '../../estados/queries/datos-de-la-merca
   templateUrl: './datos-de-la-mercancia.component.html',
   styleUrl: './datos-de-la-mercancia.component.scss',
 })
-export class DatosDeLaMercanciaComponent implements OnInit{
+export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
 
   /**
    * Formulario para el registro de la mercancía del comercializador.
@@ -28,11 +32,13 @@ export class DatosDeLaMercanciaComponent implements OnInit{
    */
   datosDeLamercanciaFrom: FormGroup;
 
+  private destroyed$ = new Subject<void>();
+
   /**
    * Constructor del componente.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
    */
-  constructor(private fb: FormBuilder,private store:DatosDeLaMercanciaStore,private query:DatosDeLaMercanciaQuery) {
+  constructor(private fb: FormBuilder,private tramite110102Store:Tramite110102Store,private tramite110102Query:Tramite110102Query) {
     this.datosDeLamercanciaFrom = this.fb.group({
       cveRegistroProductor: ['', [Validators.required, Validators.maxLength(12)]],
       solicitud: this.fb.group({
@@ -42,21 +48,26 @@ export class DatosDeLaMercanciaComponent implements OnInit{
     });
   }
   ngOnInit(): void {
-    this.query.selectCveRegistroProductor$.subscribe(
-      (data)=>{
-      this.datosDeLamercanciaFrom.patchValue(
-      {
-          cveRegistroProductor:data
-      } 
-      )
-    }
+    this.tramite110102Query.solicitudEntidadFederativaEntidadClave$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.datosDeLamercanciaFrom.patchValue(
+          {
+              cveRegistroProductor:seccionState.cveRegistroProductor
+          } 
+          )
+      })
     )
+    .subscribe();
   }
 
-update()
-{
-  this.store.setCveRegistroProductor(this.datosDeLamercanciaFrom.get('cveRegistroProductor')?.value)
-}
+
+setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110102Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite110102Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
 
   /**
    * Verifica si un control del formulario es inválido.
@@ -80,5 +91,9 @@ update()
     } else {
       this.datosDeLamercanciaFrom.get('cveRegistroProductor')?.disable();
     }
+  }
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

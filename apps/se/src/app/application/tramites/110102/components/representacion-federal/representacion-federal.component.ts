@@ -7,12 +7,15 @@ import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+
+import { map, takeUntil } from 'rxjs/operators';
 
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 
 import { Catalogo, CatalogoSelectComponent, DatosPasos, TituloComponent } from '@ng-mf/data-access-user';
 import { RepresentacionfederalService } from '@ng-mf/data-access-user';
+import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
+import { Tramite110102Store } from '../../estados/store/tramite110102.store';
 
 /**
  * Este componente maneja la representación federal.
@@ -66,7 +69,7 @@ btnData: DatosPasos = {
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
    * @param {RepresentacionfederalService} service - Servicio para obtener datos de la representación federal.
    */
-  constructor(private fb: FormBuilder, private service: RepresentacionfederalService) {
+  constructor(private fb: FormBuilder, private service: RepresentacionfederalService,private tramite110102Store:Tramite110102Store,private tramite110102Query:Tramite110102Query) {
     this.formularioRepresentacionFederalForm = this.fb.group({
       solicitudEntidadFederativaEntidadClave: ['', Validators.required],
       unidadAdministrativaClave: ['', Validators.required]
@@ -80,15 +83,28 @@ btnData: DatosPasos = {
    */
   ngOnInit(): void {
     this.cargarEntidadesFrontera();
-    const ENTIDAD = "-1";
-    const REPRESENTACIONFEDERAL = "-1";
+    this.tramite110102Query.solicitudEntidadFederativaEntidadClave$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.formularioRepresentacionFederalForm.patchValue(
+              {
+                solicitudEntidadFederativaEntidadClave:seccionState.solicitudEntidadFederativaEntidadClave,
+                unidadAdministrativaClave:seccionState.unidadAdministrativaClave
+              } 
+              )
+          })
+        )
+        .subscribe();
 
-    if (ENTIDAD !== "-1") {
-      this.recuperarRepresentacionFederalSE(ENTIDAD);
-      this.formularioRepresentacionFederalForm.get('unidadAdministrativaClave')?.setValue(REPRESENTACIONFEDERAL);
-    } else {
-      this.representacionFederalOptions = [];
-    }
+        const ENTIDAD = this.formularioRepresentacionFederalForm.get('solicitudEntidadFederativaEntidadClave')?.value;
+        const REPRESENTACIONFEDERAL = this.formularioRepresentacionFederalForm.get('unidadAdministrativaClave')?.value;
+        if (ENTIDAD !== "-1") {
+          this.recuperarRepresentacionFederalSE(ENTIDAD);
+          this.formularioRepresentacionFederalForm.get('unidadAdministrativaClave')?.setValue(REPRESENTACIONFEDERAL);
+        } else {
+          this.representacionFederalOptions = [];
+        }
   }
 
   /**
@@ -115,6 +131,8 @@ btnData: DatosPasos = {
     } else {
       this.representacionFederalOptions = [];
     }
+    this.setValoresStore(this.formularioRepresentacionFederalForm, 'solicitudEntidadFederativaEntidadClave', 'setSolicitudEntidadFederativaEntidadClave');
+
   }
 
   /**
@@ -130,6 +148,13 @@ btnData: DatosPasos = {
       }
     );
   }
+
+
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110102Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite110102Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
  /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.
    * Completa el subject destroyed$ para desuscribirse de todos los observables.

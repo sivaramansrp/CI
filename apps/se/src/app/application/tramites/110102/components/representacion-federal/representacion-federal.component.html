@@ -9,7 +9,9 @@
         </div>
         <div class="col-md-4">
             <app-catalogo-select [catalogo]="representacionFederalOptions" [label]="'Representación federal'"
-                [required]="true" formControlName="unidadAdministrativaClave"></app-catalogo-select>
+                [required]="true" formControlName="unidadAdministrativaClave" 
+                (change)="setValoresStore(formularioRepresentacionFederalForm,'unidadAdministrativaClave','setUnidadAdministrativaClave')">
+            </app-catalogo-select>
         </div>
 
     </div>
