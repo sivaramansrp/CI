@@ -38,7 +38,7 @@
     <div class="col-md-12 border rounded bg-file-container px-4">
       @for (item of catalogoDocumentos; track item.id; let i = $index) {
         <div class="row py-3">
-          <div class="col-md-6 d-flex flex-column">
+          <div class="col-md-5 d-flex flex-column">
             <span>Documento {{ item.descripcion }}</span>
             <small>Tamaño(MB): {{ convertKbToMb(item.tam) }} {{ MB }}, Resolución(dpi) minima para
               imagenes: {{ item.dpi }} {{ DPI }}</small>
@@ -50,7 +50,7 @@
                      (change)="cargarDoc($event, fileInput,item.id)">
             </div>
           </div>
-          <div class="col-md-1 d-flex">
+          <div class="col-md-2 d-flex justify-content-end">
 
             <button type="button" class="btn file-btn-add" (click)="agregarParte(fileInput, item)">
               <i class="bi bi-plus-circle-fill"></i>
