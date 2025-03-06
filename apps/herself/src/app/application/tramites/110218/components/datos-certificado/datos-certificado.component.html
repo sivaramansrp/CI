@@ -1,0 +1,20 @@
+<div class="container">
+    <div>
+        <ng-titulo titulo="Datos del certificado"></ng-titulo>
+        <form [formGroup]="datosdelcertificado">
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="form-label" for="lugar">Lugar *: </label>
+                    <input type="text" class="form-control" id="lugar" formControlName="lugar" readonly>
+                </div>
+                <div class="col-md-12">
+                    <label class="form-label" for="observaciones">Observaciones:</label>
+                    <textarea type="text" class="form-control custom-textarea" id="observaciones"
+                        formControlName="observaciones" readonly></textarea>
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+</div>

@@ -12,6 +12,10 @@ import { ValidarCertificadoTecnicoJaponComponent } from './pages/validar-certifi
 
 import { AppSolicitanteTabsComponent } from './pages/app-solicitante-tabs/app-solicitante-tabs.component';
 import { TratadosComponent } from './components/tratados/tratados.component';
+import { DestinatarioComponent } from './components/destinatario/destinatario.component';
+import { TransporteComponent } from './components/transporte/transporte.component';
+import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
+import { DatosCertificadoComponent } from './components/datos-certificado/datos-certificado.component';
 
 
 @NgModule({
@@ -26,7 +30,11 @@ import { TratadosComponent } from './components/tratados/tratados.component';
     SolicitanteComponent,
     CertificadoTecnicoJaponRoutingModule,
     TratadosComponent,
-    TituloComponent
+    TituloComponent,
+    TransporteComponent,
+    DestinatarioComponent,
+    RepresentanteLegalComponent,
+    DatosCertificadoComponent
     
   ]
 })

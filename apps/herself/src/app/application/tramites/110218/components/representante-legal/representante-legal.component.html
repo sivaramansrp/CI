@@ -1,0 +1,36 @@
+<div class="container">
+    <div>
+      <ng-titulo
+        titulo="Datos del representante legal del exportador"
+      ></ng-titulo>
+      <form [formGroup]="datosdelexportador">
+        <div class="row">
+          <div class="col-md-12">
+            <label class="form-label" for="nombredelRepresentante">Nombre del representante legal del exportador *: </label>
+            <input type="text" class="form-control" id="nombredelRepresentante" formControlName="nombredelRepresentante" readonly>
+          </div>
+          <div class="col-md-8">
+            <label class="form-label" for="empresa">Empresa *:</label>
+            <input type="text" class="form-control" id="empresa" formControlName="empresa" readonly>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="cargo">Cargo *:</label>
+            <input type="text" class="form-control" id="cargo" formControlName="cargo" readonly>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="teléfono">Teléfono *:</label>
+            <input type="text" class="form-control" id="teléfono" formControlName="teléfono" readonly>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="fax">Fax *:</label>
+            <input type="text" class="form-control" id="fax" formControlName="fax" readonly>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="correoElectrónico">Correo electrónico *:</label>
+            <input type="text" class="form-control" id="correoElectrónico" formControlName="correoElectrónico" readonly>
+          </div>
+          
+        </div>
+        </form>
+    </div>
+</div>
