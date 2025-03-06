@@ -14,6 +14,14 @@ const routes: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
+
+  {
+    path:'exportador-autorizado',
+    loadChildren:()=>
+      import('./tramites/110102/exportador-autorizado.module').then(
+        (m)=>m.ExportadorautorizadoModule
+      )
+  },
   {
     path: 'pantallas',
     loadChildren: () =>
@@ -39,6 +47,10 @@ const routes: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
+  },
+  {
+    path : 'modificacion',
+    loadChildren: () => import('./tramites/80308/modificacion-solicitud.module').then((m) => m.ModificacionSolicitudModule)
   }
 ];
 

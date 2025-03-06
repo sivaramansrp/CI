@@ -2,8 +2,8 @@ import { Component, EventEmitter, inject, Input, Output, signal, ViewChild } fro
 import { DatosPasos } from '../../../core/models/shared/components.model';
 import { WizardComponent } from '../wizard/wizard.component';
 import { WizardService } from '../../../core/services/shared/wizard/wizard.service';
-import { SeccionQuery } from '../../../core/queries/seccion.query';
-import { SeccionState, SeccionStore } from './../../../../../../../apps/aga/src/app/application/estados/seccion.store';
+import { SeccionLibQuery } from '../../../core/queries/seccion.query';
+import { SeccionLibState, SeccionLibStore } from '../../../core/estados/seccion.store';
 import { map, Subject, takeUntil } from 'rxjs';
 
 interface AccionBoton {
@@ -21,19 +21,20 @@ interface AccionBoton {
 })
 
 export class BtnContinuarComponent {
-  @Input({required:true}) datos!: DatosPasos;
-  @Output() continuarEvento = new EventEmitter<AccionBoton>();
+  @Input({ required: true }) datos!: DatosPasos;
+  @Input() btnGuardar: boolean = false;
 
-// @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @Output() continuarEvento = new EventEmitter<AccionBoton>();
+  @Output() btnGuardarClicked = new EventEmitter<void>();
 
   wizardService = inject(WizardService);
-  public seccion!: SeccionState;
+  public seccion!: SeccionLibState;
   private destroyNotifier$: Subject<void> = new Subject();
   public habilitarBoton: boolean = false;
 
   constructor(
-    private seccionQuery: SeccionQuery,
-  ){
+    private seccionQuery: SeccionLibQuery,
+  ) {
 
   }
 
@@ -49,16 +50,16 @@ export class BtnContinuarComponent {
   }
 
   get btnAntVisible() {
-    return (this.datos.indice === 1  ? 'hidden' : 'visible')
+    return (this.datos.indice === 1 ? 'hidden' : 'visible')
   }
 
   get btnContVisible() {
-    return (this.datos.indice === this.datos.nroPasos  ? false : true)
+    return (this.datos.indice === this.datos.nroPasos ? false : true)
   }
 
 
-  continuar() : void {
-    const condicion = this.datos.indice > 0  && this.datos.indice < this.datos.nroPasos;
+  continuar(): void {
+    const condicion = this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
     if (condicion) {
       this.wizardService.cambio_indice(this.datos.indice);
       const datosContinuar: AccionBoton = {
@@ -69,7 +70,7 @@ export class BtnContinuarComponent {
     }
   }
 
-  anterior() : void {
+  anterior(): void {
     const condicion = this.datos.indice > 1 && this.datos.indice < this.datos.nroPasos + 1;
     if (condicion) {
       const datosAnterior: AccionBoton = {
@@ -79,5 +80,8 @@ export class BtnContinuarComponent {
 
       this.continuarEvento.emit(datosAnterior)
     }
+  }
+  guardar() {
+    this.btnGuardarClicked.emit();
   }
 }
