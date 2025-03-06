@@ -7,7 +7,7 @@ import { Routes } from '@angular/router';
 
 export const ROUTES_FITOSANITARIO: Routes = [
   {
-    path: 'agricultura',
+    path: 'agriculture',
     component: AgriculturaComponent,
   },
   {
