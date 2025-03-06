@@ -349,7 +349,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     this.crearFormulario();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.configuracion[3].menu[0].props.radioOptions = tipoDePersonaProductorOptions;
     this.configuracion[3].menu[0].props.radioSelectedValue = tipoDePersonaProductorOptions[0].value;
     this.configuracion[4].menu[0].props.radioOptions = tipoDePersonaExportadorOptions;

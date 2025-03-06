@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { DATOS_GENERALES_SOLICITANTE, DOMICILIO_FISCAL_SOLICITANTE } from '../../constants/permiso-importacion-modification.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormularioDinamico } from 'libs/shared/data-access-user/src/core/models/shared/forms-model';
-import { TituloComponent } from "libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
+import { FormularioDinamico } from '@ng-mf/data-access-user';
+import { TituloComponent } from "@ng-mf/data-access-user";
 
 @Component({
   selector: 'app-solicitante',
@@ -25,7 +25,7 @@ export class SolicitanteComponent implements OnInit {
 
   }
   
-  ngOnInit() {
+  ngOnInit(): void {
     this.inicializarFormGroup(this.persona, 'datosGenerales');
     this.inicializarFormGroup(this.fiscal, 'domicilioFiscal');
   }
@@ -41,31 +41,31 @@ export class SolicitanteComponent implements OnInit {
     config: FormularioDinamico[],
     grupoNombre: string
   ): void {
-    const grupo = this.form.get(grupoNombre) as FormGroup;
+    const GRUPO = this.form.get(grupoNombre) as FormGroup;
     config.forEach((campo) => {
-      const validators = this.getValidators(campo.validators);
-      grupo.addControl(
+      const VALIDATORS = SolicitanteComponent.getValidators(campo.validators);
+      GRUPO.addControl(
         campo.campo,
-        this.fb.control({ value: '', disabled: campo.disabled }, validators)
+        this.fb.control({ value: '', disabled: campo.disabled }, VALIDATORS)
       );
     });
 
   }
 
-  getValidators(validators: string[]): ValidatorFn[] {
-    const formValidators: ValidatorFn[] = [];
+  static getValidators(validators: string[]): ValidatorFn[] {
+    const FORM_VALIDATORS: ValidatorFn[] = [];
     validators.forEach((validator) => {
       if (validator === 'required') {
-        formValidators.push(Validators.required);
+        FORM_VALIDATORS.push(Validators.required);
       } else if (validator.includes('maxLength')) {
-        const max = validator.split(':')[1];
-        formValidators.push(Validators.maxLength(Number(max)));
+        const MAX = validator.split(':')[1];
+        FORM_VALIDATORS.push(Validators.maxLength(Number(MAX)));
       } else if (validator.includes('pattern')) {
-        const pattern = validator.split(':')[1];
-        formValidators.push(Validators.pattern(pattern));
+        const PATTERN = validator.split(':')[1];
+        FORM_VALIDATORS.push(Validators.pattern(PATTERN));
       }
     });
-    return formValidators;
+    return FORM_VALIDATORS;
   }
 
 }
