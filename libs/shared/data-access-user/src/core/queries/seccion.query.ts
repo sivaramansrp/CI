@@ -1,9 +1,9 @@
-import { SeccionState, SeccionStore } from 'apps/aga/src/app/application/estados/seccion.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
+import { SeccionLibState, SeccionLibStore } from '../estados/seccion.store';
 
 @Injectable({providedIn: 'root'})
-export class SeccionLibQuery extends Query<SeccionState> {
+export class SeccionLibQuery extends Query<SeccionLibState> {
 
     /**
      * Selecciona el estatdo completo de la sección
@@ -13,7 +13,7 @@ export class SeccionLibQuery extends Query<SeccionState> {
     })
 
     constructor(
-        protected override store: SeccionStore
+        protected override store: SeccionLibStore
     ) {
         super(store);
     }
