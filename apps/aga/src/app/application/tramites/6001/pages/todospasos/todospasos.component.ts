@@ -1,7 +1,9 @@
 /* eslint-disable sort-imports */
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component } from '@angular/core';
-import { ListaPasosWizard, PANTA_PASOS } from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
+import { DatosPasos, ListaPasosWizard, Todospasos, WizardComponent } from '@ng-mf/data-access-user';
+import { PANTA_PASOS } from '../../services/registro-cuentas-bancarias.enum';
+import { AccionBoton } from 'libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
 
 @Component({
   selector: 'app-todospasos',
@@ -16,6 +18,45 @@ export class TodospasosComponent {
  /**
   * Esta variable se utiliza para almacenar el índice del paso.
   */
- indice: number = 2;
+ indice: number = 1;
+
+ public TEXTOS = Todospasos;
+
+
+   /**
+   * Esta variable se utiliza para almacenar el componente wizard.
+   * @param wizardComponent - El componente wizard.
+   */
+   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+   /**
+    * Esta variable se utiliza para almacenar los datos de los pasos.
+    * @param datosPasos - Los datos de los pasos.
+    * @param nroPasos - El número de pasos.
+    * @param indice - El índice.
+    * @param txtBtnAnt - El texto del botón anterior.
+    * @param txtBtnSig - El texto del botón siguiente.
+    */
+
+   public datosPasos: DatosPasos = {
+     nroPasos: this.pantallasPasos.length,
+     indice: this.indice,
+     txtBtnAnt: 'Anterior',
+     txtBtnSig: 'Continuar',
+   };
+
+   /**
+   * Este método se utiliza para inicializar el componente.
+   */
+   public getValorIndice(e: AccionBoton) {
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
+  }
 
 }

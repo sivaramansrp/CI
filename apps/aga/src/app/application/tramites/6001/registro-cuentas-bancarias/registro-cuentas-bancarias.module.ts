@@ -8,6 +8,11 @@ import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/compo
 import { TodospasosComponent } from '../pages/todospasos/todospasos.component';
 import { PasoDosComponent } from '../pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../pages/paso-uno/paso-uno.component';
+import { DatosGeneralesComponent } from '../components/datos-generales/datos-generales.component';
+import { AlertComponent, BtnContinuarComponent, FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { provideHttpClient } from '@angular/common/http';
+import { RegistroCuentasBancariasService } from '../services/registro-cuentas-bancarias.service';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 
 @NgModule({
@@ -15,7 +20,17 @@ import { PasoUnoComponent } from '../pages/paso-uno/paso-uno.component';
   imports: [
     CommonModule,
     RegistroCuentasBancariasRoutingModule,
-    WizardComponent
+    WizardComponent,
+    DatosGeneralesComponent,
+    AlertComponent,
+    FirmaElectronicaComponent,
+    BtnContinuarComponent,
+    ToastrModule.forRoot(),
+  ],
+  providers: [
+    RegistroCuentasBancariasService,
+    provideHttpClient(),
+    ToastrService
   ]
 })
 export class RegistroCuentasBancariasModule { }
