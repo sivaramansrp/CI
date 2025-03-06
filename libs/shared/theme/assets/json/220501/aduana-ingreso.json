@@ -1,0 +1,23 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 0,
+      "descripcion": "ACAPULCO, GRO"
+    },
+    {
+      "id": 1,
+      "descripcion": "ZIHUATANEJO"
+    },
+    {
+      "id": 2,
+      "descripcion": "TAXCO"
+    },
+    {
+      "id": 3,
+      "descripcion": "CHILPANCINGO"
+    }
+    
+  ],
+  "message": "Aduana ingreso"
+}
