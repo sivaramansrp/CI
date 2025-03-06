@@ -21,10 +21,11 @@ interface AccionBoton {
 })
 
 export class BtnContinuarComponent {
-  @Input({required:true}) datos!: DatosPasos;
-  @Output() continuarEvento = new EventEmitter<AccionBoton>();
+  @Input({ required: true }) datos!: DatosPasos;
+  @Input() btnGuardar: boolean = false;
 
-// @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @Output() continuarEvento = new EventEmitter<AccionBoton>();
+  @Output() btnGuardarClicked = new EventEmitter<void>();
 
   wizardService = inject(WizardService);
   public seccion!: SeccionLibState;
@@ -33,7 +34,7 @@ export class BtnContinuarComponent {
 
   constructor(
     private seccionQuery: SeccionLibQuery,
-  ){
+  ) {
 
   }
 
@@ -49,16 +50,16 @@ export class BtnContinuarComponent {
   }
 
   get btnAntVisible() {
-    return (this.datos.indice === 1  ? 'hidden' : 'visible')
+    return (this.datos.indice === 1 ? 'hidden' : 'visible')
   }
 
   get btnContVisible() {
-    return (this.datos.indice === this.datos.nroPasos  ? false : true)
+    return (this.datos.indice === this.datos.nroPasos ? false : true)
   }
 
 
-  continuar() : void {
-    const condicion = this.datos.indice > 0  && this.datos.indice < this.datos.nroPasos;
+  continuar(): void {
+    const condicion = this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
     if (condicion) {
       this.wizardService.cambio_indice(this.datos.indice);
       const datosContinuar: AccionBoton = {
@@ -69,7 +70,7 @@ export class BtnContinuarComponent {
     }
   }
 
-  anterior() : void {
+  anterior(): void {
     const condicion = this.datos.indice > 1 && this.datos.indice < this.datos.nroPasos + 1;
     if (condicion) {
       const datosAnterior: AccionBoton = {
@@ -79,5 +80,8 @@ export class BtnContinuarComponent {
 
       this.continuarEvento.emit(datosAnterior)
     }
+  }
+  guardar() {
+    this.btnGuardarClicked.emit();
   }
 }
