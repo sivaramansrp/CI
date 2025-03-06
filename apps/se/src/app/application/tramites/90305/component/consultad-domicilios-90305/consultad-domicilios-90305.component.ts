@@ -23,14 +23,16 @@ import {
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import {
-  ProsecModificacionServiceTsService,
   catalogoResponse,
 } from '@ng-mf/data-access-user';
-import { Tramite90305Query } from '../../../../estados/queries/tramite90305.query';
-import { Tramite90305Store } from '../../../../estados/tramites/tramite90305.store';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { Tramite90305Query } from '../../estados/tramite90305.query';
+import { Tramite90305Store } from '../../estados/tramite90305.store';
+
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
 /**
  * compo docs
  * @selector app-consultad-domicilios-90305

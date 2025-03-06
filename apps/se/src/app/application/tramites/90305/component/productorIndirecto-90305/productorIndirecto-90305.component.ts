@@ -13,12 +13,15 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { PRODUCTOR_INDIRECTO } from '@ng-mf/data-access-user';
+
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
 
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+
+import { ProductorIndirecto } from '../../models/prosec-modificacion.model';
+
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
 
 /**
  * compo doc
@@ -39,7 +42,7 @@ export class ProductorIndirecto90305Component implements OnInit{
   TablaSeleccion = TablaSeleccion;
   
   /** Lista de productores indirectos obtenidos del servicio */
-  productoIndData: PRODUCTOR_INDIRECTO[] = [];
+  productoIndData: ProductorIndirecto [] = [];
 
   constructor(private listaDomicilios: ProsecModificacionServiceTsService) {
     //constructor
@@ -64,10 +67,10 @@ export class ProductorIndirecto90305Component implements OnInit{
   /**
    * Configuración de la tabla de productores indirectos
    */
-  configuracionTabla: ConfiguracionColumna<PRODUCTOR_INDIRECTO>[] = [
-    { encabezado: 'Registro federal de contribuyentes', clave: (item: PRODUCTOR_INDIRECTO) => item.registroFederal, orden: 1 },
-    { encabezado: 'Denominación o razón social', clave: (item: PRODUCTOR_INDIRECTO) => item.denominacion, orden: 2 },
-    { encabezado: 'Correo', clave: (item: PRODUCTOR_INDIRECTO) => item.correo, orden: 3 },
-    { encabezado: 'Estatus', clave: (item: PRODUCTOR_INDIRECTO) => item.eStatus, orden: 4 }
+  configuracionTabla: ConfiguracionColumna<ProductorIndirecto >[] = [
+    { encabezado: 'Registro federal de contribuyentes', clave: (item: ProductorIndirecto ) => item.registroFederal, orden: 1 },
+    { encabezado: 'Denominación o razón social', clave: (item: ProductorIndirecto ) => item.denominacion, orden: 2 },
+    { encabezado: 'Correo', clave: (item: ProductorIndirecto ) => item.correo, orden: 3 },
+    { encabezado: 'Estatus', clave: (item: ProductorIndirecto ) => item.eStatus, orden: 4 }
   ];
 }

@@ -5,9 +5,10 @@ import { CommonModule } from '@angular/common';
 
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
-import {CatalogoSelectComponent, ProsecModificacionServiceTsService ,TituloComponent , catalogoResponse } from '@ng-mf/data-access-user';
+import {CatalogoSelectComponent ,TituloComponent , catalogoResponse } from '@ng-mf/data-access-user';
 
 import { of } from 'rxjs';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
 
 describe('ConsultadDomicilios90305Component', () => {
   let component: ConsultadDomicilios90305Component;

@@ -14,18 +14,21 @@ import { AlertComponent } from '@ng-mf/data-access-user';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { BITACORA_MODEL } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
-import { TEXTO_ALERT } from '@ng-mf/data-access-user';
 
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { BitacoraModel } from '../../models/prosec-modificacion.model';
+
+import { TEXTO_ALERT } from '../../constantes/prosec-modificacion.enum';
+
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
 /**
  * compo doc
  * @component Bitacora90305Component
@@ -47,7 +50,7 @@ export class Bitacora90305Component implements OnInit, OnDestroy {
   TablaSeleccion = TablaSeleccion;
 
   /** Almacena los datos obtenidos de la bitácora */
-  bitacoraData: BITACORA_MODEL[] = [];
+  bitacoraData: BitacoraModel [] = [];
 
   /** Enum para los mensajes de alerta */
   TEXTO_ALERT = TEXTO_ALERT;
@@ -74,11 +77,11 @@ export class Bitacora90305Component implements OnInit, OnDestroy {
    * Configuración de columnas de la tabla
    * @type {ConfiguracionColumna<any>[]}
    */
-  configuracionTabla: ConfiguracionColumna<BITACORA_MODEL>[] = [
-    { encabezado: 'Tipo de modificación', clave: (item: BITACORA_MODEL) => item.tipoModificacion, orden: 1 },
-    { encabezado: 'Fecha de modificación', clave: (item: BITACORA_MODEL) => item.fechaModificacion, orden: 2 },
-    { encabezado: 'Valores anteriores', clave: (item: BITACORA_MODEL) => item.valoresAnteriores, orden: 3 },
-    { encabezado: 'Valores nuevos', clave: (item: BITACORA_MODEL) => item.valoresNuevos, orden: 4 }
+  configuracionTabla: ConfiguracionColumna<BitacoraModel >[] = [
+    { encabezado: 'Tipo de modificación', clave: (item: BitacoraModel ) => item.tipoModificacion, orden: 1 },
+    { encabezado: 'Fecha de modificación', clave: (item: BitacoraModel ) => item.fechaModificacion, orden: 2 },
+    { encabezado: 'Valores anteriores', clave: (item: BitacoraModel ) => item.valoresAnteriores, orden: 3 },
+    { encabezado: 'Valores nuevos', clave: (item: BitacoraModel ) => item.valoresNuevos, orden: 4 }
   ];
 
   /**
@@ -87,7 +90,8 @@ export class Bitacora90305Component implements OnInit, OnDestroy {
   loadBitacora(): void {
     this.listaDomicilios.getBitacora()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((resp) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .subscribe((resp:any) => {
         this.bitacoraData = resp;
       });
   }

@@ -14,15 +14,17 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { MERCANCIAS_MODEL } from '@ng-mf/data-access-user';
 
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
-import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+
+import { MercanciasModel } from '../../models/prosec-modificacion.model';
 
 /**
  * selector app-mercancias-90305
@@ -57,26 +59,26 @@ export class Mercancias90305Component implements OnInit ,OnDestroy {
   TablaSeleccion = TablaSeleccion;
   
   /** Lista de mercancías obtenidas del servicio */
-  mercanciasProd: MERCANCIAS_MODEL[] = [];
+  mercanciasProd: MercanciasModel [] = [];
 
   /**
    * Configuración de las columnas de la tabla dinámica
-   * @type {ConfiguracionColumna<MERCANCIAS_MODEL>[]}
+   * @type {ConfiguracionColumna<MercanciasModel >[]}
    */
-  configuracionTabla: ConfiguracionColumna<MERCANCIAS_MODEL>[] = [
+  configuracionTabla: ConfiguracionColumna<MercanciasModel >[] = [
     {
       encabezado: 'Fracción arancelaria',
-      clave: (item: MERCANCIAS_MODEL) => item.fraccionArancelaria,
+      clave: (item: MercanciasModel ) => item.fraccionArancelaria,
       orden: 1,
     },
     {
       encabezado: 'Clave del sector',
-      clave: (item: MERCANCIAS_MODEL) => item.claveDelSector,
+      clave: (item: MercanciasModel ) => item.claveDelSector,
       orden: 2,
     },
     {
       encabezado: 'Estatus',
-      clave: (item: MERCANCIAS_MODEL) => item.eStatus,
+      clave: (item: MercanciasModel ) => item.eStatus,
       orden: 3,
     },
   ];

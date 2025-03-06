@@ -9,8 +9,8 @@
 import { Component } from '@angular/core';
 
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PROSEC_MODIFICACION } from '../../constantes/prosec-modificacion.enum';
 
-import { PROSEC_MODIFICACION } from '@ng-mf/data-access-user';
 
 /**
  * compo doc

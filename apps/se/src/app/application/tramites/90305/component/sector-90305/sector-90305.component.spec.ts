@@ -1,22 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Sector90305Component } from './sector-90305.component';
 
-import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { SECTOR_MODEL } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+import { SectorModel  } from '../../models/prosec-modificacion.model';
 
 describe('Sector90305Component', () => {
   let component: Sector90305Component;
   let fixture: ComponentFixture<Sector90305Component>;
   let mockService: ProsecModificacionServiceTsService;
 
-  const MOCK_SECTOR: SECTOR_MODEL[] = [
+  const MOCK_SECTOR: SectorModel [] = [
     { listaDeSectores: 'Sector A', claveDelSector: '123', estatus: 'Activo' },
     { listaDeSectores: 'Sector B', claveDelSector: '456', estatus: 'Inactivo' }
   ];
@@ -47,10 +47,10 @@ describe('Sector90305Component', () => {
   });
 
   it('should have the correct table configuration', () => {
-    const EXPECTED_CONFIG: ConfiguracionColumna<SECTOR_MODEL>[] = [
-      { encabezado: 'Lista de sectores', clave: (item: SECTOR_MODEL) => item.listaDeSectores, orden: 1 },
-      { encabezado: 'Clave del sector', clave: (item: SECTOR_MODEL) => item.claveDelSector, orden: 2 },
-      { encabezado: 'Estatus', clave: (item: SECTOR_MODEL) => item.estatus, orden: 3 }
+    const EXPECTED_CONFIG: ConfiguracionColumna<SectorModel >[] = [
+      { encabezado: 'Lista de sectores', clave: (item: SectorModel ) => item.listaDeSectores, orden: 1 },
+      { encabezado: 'Clave del sector', clave: (item: SectorModel ) => item.claveDelSector, orden: 2 },
+      { encabezado: 'Estatus', clave: (item: SectorModel ) => item.estatus, orden: 3 }
     ];
     expect(component.configuracionTabla).toEqual(EXPECTED_CONFIG);
   });

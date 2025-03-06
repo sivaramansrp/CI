@@ -1,9 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Bitacora90305Component } from './bitacora-90305.component';
 
-import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
-
-import { BITACORA_MODEL } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
@@ -13,6 +10,8 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+import { BitacoraModel  } from '../../models/prosec-modificacion.model';
 
 describe('Bitacora90305Component', () => {
   let component: Bitacora90305Component;
@@ -59,7 +58,7 @@ describe('Bitacora90305Component', () => {
   });
 
   it('should populate `bitacoraData` when `loadBitacora` is called', () => {
-    const MOCK_DATA: BITACORA_MODEL[] = [
+    const MOCK_DATA: BitacoraModel [] = [
       {
         tipoModificacion: 'Test Type',
         fechaModificacion: '2024-02-27',

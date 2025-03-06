@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Mercancias90305Component } from './mercancias-90305.component';
-import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
@@ -9,6 +8,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
 
 describe('Mercancias90305Component', () => {
   let component: Mercancias90305Component;

@@ -18,14 +18,16 @@ import {
   TituloComponent,
 } from '@ng-mf/data-access-user';
 
-import { PROSEC_MODIFICACION_MODEL } from '@ng-mf/data-access-user';
 
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
-import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+
+import { ProsecModificacionModel } from '../../models/prosec-modificacion.model';
 
 /**
  * compo doc
@@ -67,55 +69,55 @@ export class ListaDomicilios90305Component implements OnInit, OnDestroy {
   }
 
   /** Configuración de columnas para la tabla dinámica */
-  configuracionTabla: ConfiguracionColumna<PROSEC_MODIFICACION_MODEL>[] = [
+  configuracionTabla: ConfiguracionColumna<ProsecModificacionModel >[] = [
     {
       encabezado: 'Calle',
-      clave: (item: PROSEC_MODIFICACION_MODEL) => item.calle,
+      clave: (item: ProsecModificacionModel ) => item.calle,
       orden: 1,
     },
     {
       encabezado: 'Número exterior',
-      clave: (item: PROSEC_MODIFICACION_MODEL) => item.numeroExterior,
+      clave: (item: ProsecModificacionModel ) => item.numeroExterior,
       orden: 2,
     },
     {
       encabezado: 'Número interior',
-      clave: (item: PROSEC_MODIFICACION_MODEL) => item.numeroInterior,
+      clave: (item: ProsecModificacionModel ) => item.numeroInterior,
       orden: 3,
     },
     {
       encabezado: 'Código postal',
-      clave: (item: PROSEC_MODIFICACION_MODEL) => item.codigoPostal,
+      clave: (item: ProsecModificacionModel ) => item.codigoPostal,
       orden: 4,
     },
     {
       encabezado: 'Colonia',
-      clave: (item: PROSEC_MODIFICACION_MODEL) => item.colonia,
+      clave: (item: ProsecModificacionModel ) => item.colonia,
       orden: 5,
     },
     {
       encabezado: 'Localidad',
-      clave: (item: PROSEC_MODIFICACION_MODEL) => item.localidad,
+      clave: (item: ProsecModificacionModel ) => item.localidad,
       orden: 6,
     },
     {
       encabezado: 'Municipio o alcaldía',
-      clave: (item: PROSEC_MODIFICACION_MODEL) => item.municipioOAlcaldia,
+      clave: (item: ProsecModificacionModel ) => item.municipioOAlcaldia,
       orden: 7,
     },
     {
       encabezado: 'Entidad Federativa',
-      clave: (item: PROSEC_MODIFICACION_MODEL) => item.entidadFederativa,
+      clave: (item: ProsecModificacionModel ) => item.entidadFederativa,
       orden: 8,
     },
     {
       encabezado: 'País',
-      clave: (item: PROSEC_MODIFICACION_MODEL) => item.pais,
+      clave: (item: ProsecModificacionModel ) => item.pais,
       orden: 9,
     },
     {
       encabezado: 'Teléfono',
-      clave: (item: PROSEC_MODIFICACION_MODEL) => item.telefono,
+      clave: (item: ProsecModificacionModel ) => item.telefono,
       orden: 10,
     },
   ];
@@ -124,7 +126,7 @@ export class ListaDomicilios90305Component implements OnInit, OnDestroy {
   TablaSeleccion = TablaSeleccion;
 
   /** Datos de domicilios obtenidos del servicio */
-  personaparas: PROSEC_MODIFICACION_MODEL[] = [];
+  personaparas: ProsecModificacionModel [] = [];
 
   /** Método del ciclo de vida de Angular - inicializa el componente y carga la lista de domicilios */
   ngOnInit() {

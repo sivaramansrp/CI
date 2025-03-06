@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Plantas90305Component } from './plantas-90305.component';
-import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
-import { PLANTAS } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+import { PLANTAS } from '../../models/prosec-modificacion.model';
 
 describe('Plantas90305Component', () => {
   let component: Plantas90305Component;

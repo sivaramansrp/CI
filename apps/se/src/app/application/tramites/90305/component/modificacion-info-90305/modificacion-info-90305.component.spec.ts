@@ -3,8 +3,8 @@ import { ModificacionInfo90305Component } from './modificacion-info-90305.compon
 
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
-import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
 
 describe('ModificacionInfo90305Component', () => {
   let component: ModificacionInfo90305Component;

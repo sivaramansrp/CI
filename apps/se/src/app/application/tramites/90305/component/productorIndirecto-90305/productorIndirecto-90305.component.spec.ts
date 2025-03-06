@@ -1,22 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProductorIndirecto90305Component } from './productorIndirecto-90305.component';
-import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
-import { PRODUCTOR_INDIRECTO } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+import { ProductorIndirecto } from '../../models/prosec-modificacion.model';
 
 describe('ProductorIndirecto90305Component', () => {
   let component: ProductorIndirecto90305Component;
   let fixture: ComponentFixture<ProductorIndirecto90305Component>;
   let mockService: ProsecModificacionServiceTsService;
 
-  const MOCK_PRODUCTOR_DATA: PRODUCTOR_INDIRECTO[] = [
+  const MOCK_PRODUCTOR_DATA: ProductorIndirecto [] = [
     { registroFederal: 'ABC123', denominacion: 'Empresa A', correo: 'empresaA@example.com', eStatus: 'Activo' },
     { registroFederal: 'XYZ456', denominacion: 'Empresa B', correo: 'empresaB@example.com', eStatus: 'Inactivo' }
   ];
@@ -47,11 +47,11 @@ describe('ProductorIndirecto90305Component', () => {
   });
 
   it('should have the correct table configuration', () => {
-    const EXPECTED_CONFIG: ConfiguracionColumna<PRODUCTOR_INDIRECTO>[] = [
-      { encabezado: 'Registro federal de contribuyentes', clave: (item: PRODUCTOR_INDIRECTO) => item.registroFederal, orden: 1 },
-      { encabezado: 'Denominación o razón social', clave: (item: PRODUCTOR_INDIRECTO) => item.denominacion, orden: 2 },
-      { encabezado: 'Correo', clave: (item: PRODUCTOR_INDIRECTO) => item.correo, orden: 3 },
-      { encabezado: 'Estatus', clave: (item: PRODUCTOR_INDIRECTO) => item.eStatus, orden: 4 }
+    const EXPECTED_CONFIG: ConfiguracionColumna<ProductorIndirecto >[] = [
+      { encabezado: 'Registro federal de contribuyentes', clave: (item: ProductorIndirecto ) => item.registroFederal, orden: 1 },
+      { encabezado: 'Denominación o razón social', clave: (item: ProductorIndirecto ) => item.denominacion, orden: 2 },
+      { encabezado: 'Correo', clave: (item: ProductorIndirecto ) => item.correo, orden: 3 },
+      { encabezado: 'Estatus', clave: (item: ProductorIndirecto ) => item.eStatus, orden: 4 }
     ];
   
     expect(component.configuracionTabla.length).toBe(EXPECTED_CONFIG.length);

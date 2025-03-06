@@ -14,12 +14,14 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { PLANTAS } from '@ng-mf/data-access-user';
+
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
 
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+
+import { PLANTAS } from '../../models/prosec-modificacion.model';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
 
 /**
  * compo doc

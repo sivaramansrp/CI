@@ -13,12 +13,14 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { SECTOR_MODEL } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
 
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+
+import { SectorModel } from '../../models/prosec-modificacion.model';
+
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
 
 /**
  * compo doc
@@ -38,7 +40,7 @@ export class Sector90305Component implements OnInit {
   TablaSeleccion = TablaSeleccion;
   
   /** Lista de sectores obtenidos del servicio */
-  sectorData: SECTOR_MODEL[] = [];
+  sectorData: SectorModel [] = [];
   /*
   *constructor
   */
@@ -55,10 +57,10 @@ export class Sector90305Component implements OnInit {
   }
   
   /** Configuración de la tabla de sectores */
-  configuracionTabla: ConfiguracionColumna<SECTOR_MODEL>[] = [
-    { encabezado: 'Lista de sectores', clave: (item: SECTOR_MODEL) => item.listaDeSectores, orden: 1 },
-    { encabezado: 'Clave del sector', clave: (item: SECTOR_MODEL) => item.claveDelSector, orden: 2 },
-    { encabezado: 'Estatus', clave: (item: SECTOR_MODEL) => item.estatus, orden: 3 }
+  configuracionTabla: ConfiguracionColumna<SectorModel >[] = [
+    { encabezado: 'Lista de sectores', clave: (item: SectorModel ) => item.listaDeSectores, orden: 1 },
+    { encabezado: 'Clave del sector', clave: (item: SectorModel ) => item.claveDelSector, orden: 2 },
+    { encabezado: 'Estatus', clave: (item: SectorModel ) => item.estatus, orden: 3 }
   ];
   
   /**

@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ListaDomicilios90305Component } from './lista-domicilios-90305.component';
-import { ProsecModificacionServiceTsService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
@@ -8,6 +7,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
 
 describe('ListaDomicilios90305Component', () => {
   let component: ListaDomicilios90305Component;
