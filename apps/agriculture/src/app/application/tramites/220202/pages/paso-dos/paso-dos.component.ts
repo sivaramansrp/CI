@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TEXTOS_REQUISITOS } from 'libs/shared/data-access-user/src/tramites/constantes/certificado-zoosanitario.enum';
+import { TEXTOS_REQUISITOS } from 'apps/agriculture/src/app/application/tramites/220201/constantes/certificado-zoosanitario.enum';
 
 /**
  * Componente para mostrar el subtítulo del asistente.

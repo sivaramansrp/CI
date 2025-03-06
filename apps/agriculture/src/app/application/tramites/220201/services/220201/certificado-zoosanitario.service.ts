@@ -6,9 +6,9 @@ import {
   DatosParaMovilizacionNacional,
   TercerosRelacionados,
   PagoDeDerechos,
-} from 'libs/shared/data-access-user/src/core/models/220201/capturar-solicitud.model';
+} from '../../models/220201/capturar-solicitud.model';
 import { Observable } from 'rxjs';
-import { ZoosanitarioStore } from '../../../../../../../apps/agriculture/src/app/application/estados/220201/zoosanitario.store'
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store'
 /**
  * Servicio para la gestión de solicitudes de certificado zoosanitario.
  * Este servicio proporciona métodos para configurar y enviar la información de la solicitud.

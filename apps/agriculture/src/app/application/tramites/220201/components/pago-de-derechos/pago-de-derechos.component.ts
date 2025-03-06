@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FECHA_DE_PAGO } from 'libs/shared/data-access-user/src/tramites/constantes/certificado-zoosanitario.enum';
+import { FECHA_DE_PAGO } from 'apps/agriculture/src/app/application/tramites/220201/constantes/certificado-zoosanitario.enum';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CatalogosSelect, InputFecha } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
 import { HttpClient } from '@angular/common/http';

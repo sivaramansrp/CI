@@ -13,5 +13,13 @@
     "jest.config.ts",
     "src/**/*.test.ts"
   ],
-  "include": ["src/**/*.ts", "../../../apps/se/src/app/application/tramites/120301/queries/elegibilidad-de-textiles.query.ts", "../../../apps/se/src/app/application/tramites/120301/models/elegibilidad-de-textiles-routing.model.ts", "../../../apps/se/src/app/application/tramites/120301/models/elegibilidad-de-textiles.model.ts", "../../../apps/se/src/app/application/tramites/120301/services/elegibilidad-textiles.service.spec.ts", "../../../apps/se/src/app/application/tramites/120301/services/elegibilidad-textiles.service.ts"]
+  "include": [
+    "src/**/*.ts",
+    "../../../apps/se/src/app/application/tramites/120301/queries/elegibilidad-de-textiles.query.ts",
+    "../../../apps/se/src/app/application/tramites/120301/models/elegibilidad-de-textiles-routing.model.ts",
+    "../../../apps/se/src/app/application/tramites/120301/models/elegibilidad-de-textiles.model.ts",
+    "../../../apps/se/src/app/application/tramites/120301/services/elegibilidad-textiles.service.spec.ts",
+    "../../../apps/se/src/app/application/tramites/120301/services/elegibilidad-textiles.service.ts",
+    "../../../apps/agriculture/src/app/application/tramites/220201/constantes/certificado-zoosanitario.enum.ts"
+  ]
 }

@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { AccionBoton, ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/220201/certificado-zoosanitario.model';
-import { PASOS, SUCECESS_MESSAGE_STAGEONE } from 'libs/shared/data-access-user/src/tramites/constantes/certificado-zoosanitario.enum';
+import { AccionBoton, ListaPasosWizard } from 'apps/agriculture/src/app/application/tramites/220201/models/220201/certificado-zoosanitario.model';
+import { PASOS, SUCECESS_MESSAGE_STAGEONE } from 'apps/agriculture/src/app/application/tramites/220201/constantes/certificado-zoosanitario.enum';
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 /**

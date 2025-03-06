@@ -2,9 +2,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Component, OnInit } from '@angular/core';
 
-import { TEXTOS } from 'libs/shared/data-access-user/src/tramites/constantes/certificado-zoosanitario.enum';
+import { TEXTOS } from 'apps/agriculture/src/app/application/tramites/220201/constantes/certificado-zoosanitario.enum';
 
-import { CatalogosSelect } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
 import { Catalogo, RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 import { HttpClient } from '@angular/common/http';
