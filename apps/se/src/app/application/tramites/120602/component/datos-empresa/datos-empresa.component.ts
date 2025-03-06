@@ -24,6 +24,8 @@ import ExtranjerosDatos from 'libs/shared/theme/assets/json/120602/extranjeros.j
 import TableDataDatos from 'libs/shared/theme/assets/json/120602/table-data.json';
 import radioButtonMexicana from 'libs/shared/theme/assets/json/120602/radio-button-mexicana.json';
 import radioButtonPersona from 'libs/shared/theme/assets/json/120602/radio-button-mexicana.json';
+import dropDown from 'libs/shared/theme/assets/json/120602/drop-down.json'
+
 
 
 
@@ -71,9 +73,10 @@ export class DatosEmpresaComponent implements OnInit {
   public valorSeleccionadoPersona: string = '';
 
   /**
- * The 'tipoSeleccionTabla' is a public property of the 'TablaSeleccion' type.
- * It is initialized with the value 'TablaSeleccion.CHECKBOX'.
- */
+   * La propiedad pública 'tipoSeleccionTabla' es de tipo 'TablaSeleccion'.
+   * Se inicializa con el valor 'TablaSeleccion.CHECKBOX'.
+   */
+
   public tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
@@ -187,10 +190,7 @@ export class DatosEmpresaComponent implements OnInit {
     * Obtiene las opciones del catálogo federal y estatal.
     */
   obtenerFederalEstatal(): void {
-    this.federalEstatal = [
-      { id: 1, descripcion: 'CHIHUAHUA' },
-      { id: 2, descripcion: 'CIUDAD JUAREZ' }
-    ];
+    this.federalEstatal = dropDown.listaDesplegable
   }
 
   /**
