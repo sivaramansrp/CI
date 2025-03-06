@@ -114,13 +114,23 @@ export class CapturarIvaeiepsComponent {
   tipoDeInversion: Catalogo[] = dropDown.tipoDe;
 
   /**
+   * Estado de la solicitud.
+   */
+  public solicitudState!: Solicitud31601State;
+
+  /**
+   * Notificador para destruir las suscripciones.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
    * Construye una instancia de CapturarIvaeiepsComponent.
    *
    * @param fb: una instancia de FormBuilder utilizada para crear controles de formulario.
    * @param validacionesService - Un servicio para validación de formularios.
+   * @param {Tramite31601Store} tramite31601Store - Store para gestionar el estado del trámite.
+   * @param {Tramite31601Query} tramite31601Query - Query para obtener el estado del trámite.
    */
-  public solicitudState!: Solicitud31601State
-  private destroyNotifier$: Subject<void> = new Subject();
   // eslint-disable-next-line no-empty-function
   constructor(
     private fb: FormBuilder,
@@ -324,8 +334,24 @@ export class CapturarIvaeiepsComponent {
   cerrarModal(): void {
     this.mostrarModal = false;
   }
+  /**
+   * Establece el valor de un campo en el store de Tramite31601.
+   *
+   * @param {FormGroup} form - El grupo de formularios que contiene el campo.
+   * @param {string} campo - El nombre del campo cuyo valor se va a establecer.
+   * @param {keyof Tramite31601Store} metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
     const valor = form.get(campo)?.value;
     (this.tramite31601Store[metodoNombre] as (value: any) => void)(valor);
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

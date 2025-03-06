@@ -4,14 +4,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @nx/enforce-module-boundaries */
 /**
- * compo doc
  * @module AduaneroComponent
- *  Componente para agregar un miembro de la empresa.
+ * Componente para agregar un miembro de la empresa.
  * Maneja un formulario reactivo y la paginación de una tabla.
  */
 
 import { CommonModule } from '@angular/common';
-
 import {
   AfterViewInit,
   Component,
@@ -19,9 +17,6 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-
-import preOperativo from 'libs/shared/theme/assets/json/31601/preOperativo.json';
-
 import {
   FormBuilder,
   FormGroup,
@@ -29,48 +24,36 @@ import {
   Validators,
 } from '@angular/forms';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
-import productivo from 'libs/shared/theme/assets/json/31601/productivo.json';
-import serviciosAgace from 'libs/shared/theme/assets/json/31601/serviciosAgace.json';
-
-import comboIMMEXJson from 'libs/shared/theme/assets/json/31601/comboIMMEX.json';
-
-import comboBimestres from 'libs/shared/theme/assets/json/31601/comboBimestres.json';
-
 import { Catalogo } from '@ng-mf/data-access-user';
-
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import establecimientoTable from 'libs/shared/theme/assets/json/220401/establecimiento-table.json';
-
-import empleadosSubcontratacion from 'libs/shared/theme/assets/json/31601/empleadosSubcontratacion.json';
-
-import applicantRegistrados from 'libs/shared/theme/assets/json/31601/applicantRegistrados.json';
-
-import destinatarioTable from 'libs/shared/theme/assets/json/220401/destinatario-table.json';
-import entidadFederativa from 'libs/shared/theme/assets/json/31601/entidadFederative.json';
-import prejson from 'libs/shared/theme/assets/json/31601/prejson.json';
-
-import controlInventarios from 'libs/shared/theme/assets/json/31601/controlInventarios.json';
-
-import Instalaciones from 'libs/shared/theme/assets/json/31601/Instalaciones.json';
-
 import { TableComponent } from '@ng-mf/data-access-user';
-
 import { Modal } from 'bootstrap';
 import { REGEX_RFC } from 'libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-
 import { AgregarMiembroDeLaEmpresaComponent } from '../agregar-miembro-de-la-empresa/agregar-miembro-de-la-empresa.component';
-import { Tramite31601Store,Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
-import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query'
+import { Tramite31601Store, Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
+import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
 import { Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
 
-/* @features
- * - Carga de datos desde archivos JSON.
- * - Paginación y filtrado de tablas.
- * - Manejo de formularios reactivos.
- * - Implementación de modales con Bootstrap.
- * - Organización y reutilización de componentes.
+import preOperativo from 'libs/shared/theme/assets/json/31601/preOperativo.json';
+import productivo from 'libs/shared/theme/assets/json/31601/productivo.json';
+import serviciosAgace from 'libs/shared/theme/assets/json/31601/serviciosAgace.json';
+import comboIMMEXJson from 'libs/shared/theme/assets/json/31601/comboIMMEX.json';
+import comboBimestres from 'libs/shared/theme/assets/json/31601/comboBimestres.json';
+import establecimientoTable from 'libs/shared/theme/assets/json/220401/establecimiento-table.json';
+import empleadosSubcontratacion from 'libs/shared/theme/assets/json/31601/empleadosSubcontratacion.json';
+import applicantRegistrados from 'libs/shared/theme/assets/json/31601/applicantRegistrados.json';
+import destinatarioTable from 'libs/shared/theme/assets/json/220401/destinatario-table.json';
+import entidadFederativa from 'libs/shared/theme/assets/json/31601/entidadFederative.json';
+import prejson from 'libs/shared/theme/assets/json/31601/prejson.json';
+import controlInventarios from 'libs/shared/theme/assets/json/31601/controlInventarios.json';
+import Instalaciones from 'libs/shared/theme/assets/json/31601/Instalaciones.json';
+
+/**
+ * @class AduaneroComponent
+ * @implements {OnInit, AfterViewInit}
+ * Componente para manejar el formulario reactivo y la paginación de una tabla.
  */
 @Component({
   selector: 'app-aduanero',
@@ -100,234 +83,181 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
   description: string = '';
 
   /**
-   * compo doc
-   * @property {ElementRef} modifyModal
    * Referencia al modal de modificación en la plantilla HTML.
    */
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
 
   /**
-   *  compo doc
-   * @property {ElementRef} instalacionesModal
    * Referencia al modal de instalaciones en la plantilla HTML.
    */
   @ViewChild('instalacionesModal', { static: false })
   instalacionesModal!: ElementRef;
 
   /**
-   *  compo doc
-   * @property {Modal} modalInstance
    * Instancia del modal de modificación.
    */
   modalInstance!: Modal;
 
   /**
-   *  compo doc
-   * @property {Modal} modalInstanceInstalaciones
    * Instancia del modal de instalaciones.
    */
   modalInstanceInstalaciones!: Modal;
 
   /**
-   *  compo doc
-   * @property {FormGroup} preOperativeForm
    * Formulario reactivo para datos preoperativos.
    */
   preOperativeForm!: FormGroup;
 
   /**
-   *  compo doc
-   * @property {Catalogo[]} radioOptions
    * Opciones para los radio buttons, cargadas desde un archivo JSON.
    */
   radioOptions = preOperativo;
 
   /**
-   *  compo doc
-   * @property {unknown} establecimientoBodyData
    * Contiene los datos del cuerpo de la tabla de establecimientos.
    */
   public establecimientoBodyData: any = [];
 
   /**
-   *  compo doc
-   * @property {Catalogo[]} sectorProductivoAgace
    * Lista de sectores productivos obtenidos desde un archivo JSON.
    */
   sectorProductivoAgace: Catalogo[] = productivo;
 
   /**
-   *  compo doc
-   * @property {Catalogo[]} serviciosAgace
    * Lista de servicios Agace obtenidos desde un archivo JSON.
    */
   serviciosAgace: Catalogo[] = serviciosAgace;
 
   /**
-   *  compo doc
-   * @property {Catalogo[]} comboBimestresIDC
    * Lista de bimestres para selección.
    */
   comboBimestresIDC: Catalogo[] = comboBimestres;
 
   /**
-   *  compo doc
-   * @property {Catalogo[]} entidadFederativa
    * Lista de entidades federativas cargadas desde un archivo JSON.
    */
   entidadFederativa: Catalogo[] = entidadFederativa;
 
   /**
-   *  compo doc
-   * @property {boolean} selectAll
    * Indica si todos los elementos de una tabla están seleccionados.
    */
   selectAll: boolean = false;
 
   /**
-   *  compo doc
-   * @property {any} controlInventarios
    * Datos de control de inventarios obtenidos desde un JSON.
    */
   controlInventarios: any = controlInventarios;
 
   /**
-   *  compo doc
-   * @property {Catalogo[]} comboIMMEX
    * Lista de opciones IMMEX cargadas desde un archivo JSON.
    */
   comboIMMEX: Catalogo[] = comboIMMEXJson;
 
   /**
-   *  compo doc
-   * @property {string[]} establecimientoHeaderData
    * Encabezados de la tabla de establecimientos.
    */
   public establecimientoHeaderData: string[] = [];
 
   /**
-   *  compo doc
-   * @property {any[]} fullEstablecimientoBodyData
    * Datos completos de los establecimientos.
    */
   public fullEstablecimientoBodyData: any[] = [];
 
   /**
-   *  compo doc
-   * @property {any} getEstablecimientoTableData
    * Datos de la tabla de establecimientos obtenidos desde un JSON.
    */
   public getEstablecimientoTableData = establecimientoTable;
 
   /**
-   *  compo doc
-   * @property {any} getDestinatarioTableData
    * Datos de la tabla de destinatarios obtenidos desde un JSON.
    */
   public getDestinatarioTableData = destinatarioTable;
 
   /**
-   *  compo doc
-   * @property {any} empleadosSubcontratacion
    * Datos de empleados bajo subcontratación.
    */
   public empleadosSubcontratacion = empleadosSubcontratacion;
 
   /**
-   *  compo doc
-   * @property {any} applicantRegistrados
    * Lista de aplicantes registrados.
    */
   public applicantRegistrados = applicantRegistrados;
 
   /**
-   *  compo doc
-   * @property {any} Instalaciones
    * Información sobre instalaciones obtenidas desde un JSON.
    */
   public Instalaciones = Instalaciones;
 
   /**
-   *  compo doc
-   * @property {any[]} paginatedEstablecimientoBodyData
    * Datos paginados de los establecimientos.
    */
   public paginatedEstablecimientoBodyData: any[] = [];
 
   /**
-   *  compo doc
-   * @property {string} contextPath
    * Ruta base para peticiones al servidor.
    */
   contextPath: string = '';
 
   /**
-   *  compo doc
-   * @property {number} totalItems
    * Número total de elementos en la tabla.
    */
   totalItems: number = 0;
 
   /**
-   *  compo doc
-   * @property {number} currentPage
    * Página actual de la paginación.
    */
   currentPage: number = 1;
 
   /**
-   *  compo doc
-   * @property {number} itemsPerPage
    * Cantidad de elementos por página en la paginación.
    */
   itemsPerPage: number = 5;
 
   /**
-   *  compo doc
-   * @property {string[]} empleadosHeaderData
    * Encabezados de la tabla de empleados.
    */
   public empleadosHeaderData: string[] = [];
 
   /**
-   *  compo doc
-   * @property {any[]} empleadosBodyData
    * Datos del cuerpo de la tabla de empleados.
    */
   public empleadosBodyData: any[] = [];
 
   /**
-   *  compo doc
-   * @property {string[]} domiciliosHeaderData
    * Encabezados de la tabla de domicilios.
    */
   public domiciliosHeaderData: string[] = [];
 
   /**
-   *  compo doc
-   * @property {any[]} domiciliosBodyData
    * Datos del cuerpo de la tabla de domicilios.
    */
   public domiciliosBodyData: any[] = [];
 
   /**
-   *  compo doc
-   * @property {string[]} InstalacionesHeaderData
    * Encabezados de la tabla de instalaciones.
    */
   public InstalacionesHeaderData: string[] = [];
 
   /**
-   *  compo doc
-   * @property {any[]} InstalacionesBodyData
    * Datos del cuerpo de la tabla de instalaciones.
    */
   public InstalacionesBodyData: any[] = [];
 
-  public solicitudState!: Solicitud31601State
+  /**
+   * Estado de la solicitud.
+   */
+  public solicitudState!: Solicitud31601State;
+
+  /**
+   * Notificador para destruir observables.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
-  /*
-   *constructor
+
+  /**
+   * Constructor del componente.
+   * @param fb - FormBuilder para crear formularios reactivos.
+   * @param tramite31601Store - Store para manejar el estado del trámite.
+   * @param tramite31601Query - Query para obtener datos del trámite.
    */
   constructor(
     private fb: FormBuilder,
@@ -551,8 +481,23 @@ export class AduaneroComponent implements OnInit, AfterViewInit {
     this.updatePagination();
   }
 
+  /**
+   * Establece el valor de un campo en el store de Tramite31601.
+   * @param form - El grupo de formularios que contiene el campo.
+   * @param campo - El nombre del campo cuyo valor se va a establecer.
+   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
     const valor = form.get(campo)?.value;
     (this.tramite31601Store[metodoNombre] as (value: any) => void)(valor);
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
