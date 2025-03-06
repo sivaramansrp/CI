@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { PermisoImportacionStore } from '../permiso-importacion.store';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PermisoImportacionStoreService {
 
