@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputConfig, InputRadioComponent, InputTypes } from '@ng-mf/data-access-user';
+import { InputConfig, InputRadioComponent, InputTypes, Props } from '@ng-mf/data-access-user';
 import { AvisoComponent } from './aviso.component';
 import { CargaMasivaComponent } from '../carga-masiva/carga-masiva.component';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
@@ -160,7 +160,7 @@ describe('AvisoComponent', () => {
         menu: [
           {
             inputType: InputTypes.TEXT,
-            props: { campo: 'testField', labelNombre: 'Test Field' },
+            props: { campo: 'testField', labelNombre: 'Test Field' } as unknown as Props,
             class: 'col-md-4',
           }
         ]
@@ -182,7 +182,7 @@ describe('AvisoComponent', () => {
     (catalogosService.getCatalogo as jest.Mock).mockReturnValue(of(MOCK_RESPONSE));
     component.obtenerValoresCatalogo(0, 0, 'someKey');
     expect(catalogosService.getCatalogo).toHaveBeenCalledWith('someKey');
-    expect(component.configuracion[0].menu[0].props.catalogs).toEqual(MOCK_RESPONSE);
+    expect(component.configuracion[0].menu[0].props.catalogos).toEqual(MOCK_RESPONSE);
   });
 
   it('should handle button action AGREGAR', () => {

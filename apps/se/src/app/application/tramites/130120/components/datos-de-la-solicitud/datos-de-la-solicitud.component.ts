@@ -11,10 +11,6 @@ import { InputRadioComponent } from "@ng-mf/data-access-user";
 import { InputTypes } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { map } from 'rxjs';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import tipoDePersonaExportadorOptions from 'libs/shared/theme/assets/json/130120/tipo-de-persona-exportador.json';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import tipoDePersonaProductorOptions from 'libs/shared/theme/assets/json/130120/tipo-de-persona-productor.json';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -350,13 +346,37 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.configuracion[3].menu[0].props.radioOptions = tipoDePersonaProductorOptions;
-    this.configuracion[3].menu[0].props.radioSelectedValue = tipoDePersonaProductorOptions[0].value;
-    this.configuracion[4].menu[0].props.radioOptions = tipoDePersonaExportadorOptions;
-    this.configuracion[4].menu[0].props.radioSelectedValue = tipoDePersonaExportadorOptions[0].value;
+    const PERSONA_PRODUCTOR = [
+      {
+        "label": "Física",
+        "value": "Física"
+      },
+      {
+        "label": "Moral",
+        "value": "Moral"
+      }
+    ];
+    const PERSONA_EXPORTADOR = [
+      {
+        "label": "Física",
+        "value": "Física"
+      },
+      {
+        "label": "Moral",
+        "value": "Moral"
+      },
+      {
+        "label": "Ninguno",
+        "value": "Ninguno"
+      }
+    ];
+    this.configuracion[3].menu[0].props.radioOptions = PERSONA_PRODUCTOR;
+    this.configuracion[3].menu[0].props.radioSelectedValue = PERSONA_PRODUCTOR[0].value;
+    this.configuracion[4].menu[0].props.radioOptions = PERSONA_EXPORTADOR;
+    this.configuracion[4].menu[0].props.radioSelectedValue = PERSONA_EXPORTADOR[0].value;
     this.valoresSeleccionadosRadio = {
-      radio3: tipoDePersonaProductorOptions[0].value,
-      radio4: tipoDePersonaExportadorOptions[0].value
+      radio3: PERSONA_PRODUCTOR[0].value,
+      radio4: PERSONA_EXPORTADOR[0].value
     };
     this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
