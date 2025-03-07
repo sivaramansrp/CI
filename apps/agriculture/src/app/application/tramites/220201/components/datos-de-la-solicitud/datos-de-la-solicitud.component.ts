@@ -2,11 +2,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Component, OnInit } from '@angular/core';
 
-import { TEXTOS } from 'apps/agriculture/src/app/application/tramites/220201/constantes/certificado-zoosanitario.enum';
+import { TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import { Catalogo, RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 import { HttpClient } from '@angular/common/http';
+import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos de la solicitud.
@@ -97,7 +98,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   regimen: Catalogo[] = [];
   selectedValue: string = 'no';
 
-  opcionDeBotonDeRadio: any = [
+  opcionDeBotonDeRadio: RadioOpcion[] = [
     {
       "label": "Animales Vivos",
       "value": "yes"
@@ -134,7 +135,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   };
 
   encabezadoDeTabla: string[] = this.tableData.header;
-  mesaCuerpo: any = this.tableData.body;
+  mesaCuerpo: string[] = this.tableData.body[0].tbodyData;
 
 
 
@@ -213,8 +214,8 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    */
   obtenerIngresoSelectList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/aduana_de_ingreso.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.aduanaDeIngreso = datos;
+      const DATOS = data?.data;
+      this.aduanaDeIngreso = DATOS;
     });
   }
 
@@ -224,8 +225,8 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    */
   obtenerSanidadAgropecuariaList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/oficina_de_inspeccion.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.sanidadAgropecuaria = datos;
+      const DATOS = data?.data;
+      this.sanidadAgropecuaria = DATOS;
     });
   }
 
@@ -235,8 +236,8 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    */
   obtenerPuntoInspeccionList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.puntoInspeccion = datos;
+      const DATOS = data?.data;
+      this.puntoInspeccion = DATOS;
     });
   }
 
@@ -246,8 +247,8 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    */
   obtenerEstablecimientoList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/establecimiento.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.establecimientoTIF = datos;
+      const DATOS = data?.data;
+      this.establecimientoTIF = DATOS;
     });
   }
 
@@ -258,8 +259,8 @@ export class DatosDeLaSolicitudComponent implements OnInit {
 
   obtenerVeterinarioList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.veterinario = datos;
+      const DATOS = data?.data;
+      this.veterinario = DATOS;
     });
   }
 
@@ -269,8 +270,8 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    */
   obtenerRegimenList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/regimen.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.regimen = datos;
+      const DATOS = data?.data;
+      this.regimen = DATOS;
     });
   }
 }

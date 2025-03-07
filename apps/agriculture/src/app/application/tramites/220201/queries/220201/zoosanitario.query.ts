@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-
 import { Query } from "@datorama/akita";
+
 import { CapturarSolicitud } from "../../models/220201/capturar-solicitud.model";
-import { ZoosanitarioStore } from "../../estados/220201/zoosanitario.store"
+import { ZoosanitarioStore } from "../../estados/220201/zoosanitario.store";
 /**
  * @summary Servicio de consulta para el estado de fitosanitarios.
  * 

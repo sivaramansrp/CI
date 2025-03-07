@@ -52,3 +52,7 @@ export interface AccionBoton {
     accion: string;
     valor: number;
 }
+export interface RadioOpcion {
+    label: string;
+    value: string;
+}

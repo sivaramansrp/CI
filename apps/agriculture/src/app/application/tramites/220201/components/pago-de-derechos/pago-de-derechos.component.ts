@@ -1,9 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { FECHA_DE_PAGO } from 'apps/agriculture/src/app/application/tramites/220201/constantes/certificado-zoosanitario.enum';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { CatalogosSelect, InputFecha } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
 import { HttpClient } from '@angular/common/http';
-import { Catalogo, RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+
+import { Component } from '@angular/core';
+
+import { FormBuilder, FormGroup } from '@angular/forms';
+
+import { Catalogo, InputFecha, RespuestaCatalogos } from '@ng-mf/data-access-user';
+
+import { FECHA_DE_PAGO } from '../../constantes/certificado-zoosanitario.enum';
+
+import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
 /**
  * @fileoverview Componente para la gestión del formulario de pago de derechos.
@@ -22,7 +27,7 @@ import { Catalogo, RespuestaCatalogos } from 'libs/shared/data-access-user/src/c
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss']
 })
-export class PagoDeDerechosComponent implements OnInit {
+export class PagoDeDerechosComponent {
 
   /**
    * Configuración para el input de fecha de pago.
@@ -59,9 +64,9 @@ export class PagoDeDerechosComponent implements OnInit {
 
   /**
   * Opciones para el radio button de exención de pago.
-  * @property {any[]} radioOptions
+  * @property {RadioOpcion[]} radioOptions
   */
-  radioOptions: any[] = [
+  radioOptions: RadioOpcion[] = [
     {
       "label": "No",
       "value": "no"
@@ -83,15 +88,11 @@ export class PagoDeDerechosComponent implements OnInit {
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
    * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient) { }
-
-  /**
-   * Inicializa el componente.
-   * @method ngOnInit
-   */
-  ngOnInit(): void {
+  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient) {
     this.obtenerDetallesDeListaDeOpciones();
   }
+
+
 
   /**
    * Obtiene los detalles de las listas de opciones (banco y justificación).
@@ -108,8 +109,8 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   obtenerBancoSelectorList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.bancoSelector = datos as Catalogo[];
+      const DATOS = data?.data;
+      this.bancoSelector = DATOS as Catalogo[];
     });
   }
 
@@ -119,8 +120,8 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   obtenerListaDeJustificaciones() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/Justificación.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.justificacionSelector = datos as Catalogo[];
+      const DATOS = data?.data;
+      this.justificacionSelector = DATOS as Catalogo[];
     });
   }
 }

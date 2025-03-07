@@ -1,13 +1,18 @@
-import { Injectable } from '@angular/core';
+
+
 import {
   CapturarSolicitud,
-  Solicitante,
   DatosDeLaSolicitud,
   DatosParaMovilizacionNacional,
-  TercerosRelacionados,
   PagoDeDerechos,
+  Solicitante,
+  TercerosRelacionados,
 } from '../../models/220201/capturar-solicitud.model';
+
+import { Injectable } from '@angular/core';
+
 import { Observable } from 'rxjs';
+
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store'
 /**
  * Servicio para la gestión de solicitudes de certificado zoosanitario.
@@ -18,7 +23,9 @@ import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store'
   providedIn: 'root',
 })
 export class CertificadoZoosanitarioServiceService {
-  constructor(private zoosanitarioStore: ZoosanitarioStore) { }
+  constructor(private readonly zoosanitarioStore: ZoosanitarioStore) {
+    console.log('CertificadoZoosanitarioServiceService');
+  }
   updateSolicitante(solicitante: Solicitante): void {
     this.zoosanitarioStore.actualizarSolicitante(solicitante);
   }
@@ -43,8 +50,6 @@ export class CertificadoZoosanitarioServiceService {
     this.zoosanitarioStore.limpiarFormulario();
   }
 
-  // --- Getting Data ---
-
   getSolicitante(): Observable<Solicitante> {
     return this.zoosanitarioStore._select(state => state.solicitante); // Use _select for observable
   }
@@ -59,10 +64,6 @@ export class CertificadoZoosanitarioServiceService {
 
   getTercerosRelacionados(): Observable<TercerosRelacionados> {
     return this.zoosanitarioStore._select(state => state.tercerosRelacionados);
-  }
-
-  getTerceros(): Observable<any> { // Or Observable<Tercero[]> if you have a Tercero interface
-    return this.zoosanitarioStore._select(state => state.tercerosRelacionados.terceros);
   }
 
   getPagoDeDerechos(): Observable<PagoDeDerechos> {

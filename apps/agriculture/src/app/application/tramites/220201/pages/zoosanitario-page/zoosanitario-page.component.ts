@@ -1,7 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
+
 import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
+
 import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
-import { WizardComponent, DatosPasos } from '@ng-mf/data-access-user';
+
+import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente principal para el formulario de certificado zoosanitario.
@@ -20,7 +23,7 @@ export class ZoosanitarioPageComponent {
    * Array de pasos del asistente.
    * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
    */
-  pasos: ListaPasosWizard[] = PASOS;
+  pasos: ListaPasosWizard[] = [];
 
   /**
    * Título del mensaje principal.
@@ -57,6 +60,10 @@ export class ZoosanitarioPageComponent {
    */
   mensajeDeTextoDeExito: string = MENSAJE_DE_EXITO_ETAPA_UNO;
 
+  constructor() {
+    this.pasos = PASOS;
+  }
+
   /**
    * Maneja la acción del botón y navega entre los pasos.
    * @method getValorIndice
@@ -65,7 +72,7 @@ export class ZoosanitarioPageComponent {
   getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
-      this.tituloMensaje = this.obtenerNombreDelTítulo(e.valor);
+      this.tituloMensaje = ZoosanitarioPageComponent.obtenerNombreDelTítulo(e.valor);
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
@@ -80,7 +87,7 @@ export class ZoosanitarioPageComponent {
    * @param {number} valor - El índice de la página.
    * @returns {string} - El título correspondiente.
    */
-  obtenerNombreDelTítulo(valor: number) {
+  static obtenerNombreDelTítulo(valor: number) {
     switch (valor) {
       case 1:
         return 'Zoosanitario para importación';

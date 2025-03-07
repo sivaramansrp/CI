@@ -1,8 +1,9 @@
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CatalogosSelect } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Catalogo, RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+
+import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos para la movilización nacional.
@@ -93,8 +94,8 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
    */
   obtenerTransporteListList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/transporte.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.medioTransporteList = datos;
+      const DATOS = data?.data;
+      this.medioTransporteList = DATOS;
     });
   }
 
@@ -104,8 +105,8 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
    */
   obtenernombreDeLaEmpresaTransportistaList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.nombreDeLaEmpresaTransportista = datos;
+      const DATOS = data?.data;
+      this.nombreDeLaEmpresaTransportista = DATOS;
     });
   }
 
@@ -115,8 +116,8 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
    */
   obtenerPuntoDeVerificaciónList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.puntoDeVerificacionFederal = datos;
+      const DATOS = data?.data;
+      this.puntoDeVerificacionFederal = DATOS;
     });
   }
 
@@ -126,8 +127,8 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
  */
   obtenerIdentificacionTransporteList() {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').subscribe((data): void => {
-      const datos = data?.data;
-      this.identificacionTransporteList = datos;
+      const DATOS = data?.data;
+      this.identificacionTransporteList = DATOS;
     });
   }
 }
