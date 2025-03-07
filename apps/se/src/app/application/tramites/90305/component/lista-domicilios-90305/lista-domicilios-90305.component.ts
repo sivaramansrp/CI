@@ -64,7 +64,7 @@ export class ListaDomicilios90305Component implements OnInit, OnDestroy {
   showSecondButton = false;
 
   /** Alterna la visibilidad de los botones */
-  toggleButtons() {
+  toggleButtons():void {
     this.showSecondButton = !this.showSecondButton;
   }
 
@@ -129,7 +129,7 @@ export class ListaDomicilios90305Component implements OnInit, OnDestroy {
   personaparas: ProsecModificacionModel [] = [];
 
   /** Método del ciclo de vida de Angular - inicializa el componente y carga la lista de domicilios */
-  ngOnInit() {
+  ngOnInit() :void{
     this.loadDomicilios();
   }
 

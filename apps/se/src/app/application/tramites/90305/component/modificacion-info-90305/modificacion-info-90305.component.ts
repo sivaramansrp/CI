@@ -64,7 +64,7 @@ export class ModificacionInfo90305Component implements OnInit, OnDestroy {
   /**
    * Carga la información de modificación desde el servicio y actualiza el formulario
    */
-  loadInfo() {
+  loadInfo() :void{
     this.modificaaionInfo
       .getModoficacionInfo()
       .subscribe((data) => {

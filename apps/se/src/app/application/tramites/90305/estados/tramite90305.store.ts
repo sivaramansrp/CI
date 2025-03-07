@@ -21,7 +21,7 @@ export class Tramite90305Store extends Store<Tramite90305State> {
     super(createInitialState());
   }
 
-  public setSelectedEstado(selectedEstado: catalogoResponse) {
+  public setSelectedEstado(selectedEstado: catalogoResponse) : void {
     this.update((state) => ({
       ...state,
       selectedEstado,

@@ -17,25 +17,25 @@ export class ProsecModificacionServiceTsService {
   constructor(private http: HttpClient) {
     //constructor
    }
-  getListaDomicilios() {
+  getListaDomicilios() : Observable<ProsecModificacionModel[]> {
     return this.http.get<ProsecModificacionModel[]>('assets/json/90305/lista-de-domicilios.json');
   }
-  getPlantaComplementaria() {
+  getPlantaComplementaria() : Observable<PLANTAS[]> {
     return this.http.get<PLANTAS[]>('assets/json/90305/plantas.json');
   }
-  getMercancias(){
+  getMercancias(): Observable<MercanciasModel []> {
     return this.http.get<MercanciasModel []>('assets/json/90305/mercancias.json');
   } 
-  getSector(){
+  getSector(): Observable<SectorModel []> {
     return this.http.get<SectorModel []>('assets/json/90305/sector.json')
   }
-  getProductoIndirecto(){
+  getProductoIndirecto(): Observable<ProductorIndirecto []> {
     return this.http.get<ProductorIndirecto []>('assets/json/90305/prodIndirecto.json')
   }
-  getBitacora(){
+  getBitacora(): Observable<BitacoraModel []> {
     return this.http.get<BitacoraModel []>('assets/json/90305/bitacora.json')
   }
-  getModoficacionInfo(){
+  getModoficacionInfo(): Observable<ModificacionInfo > {
     return this.http.get<ModificacionInfo >('assets/json/90305/modificacionInfo.json')
   }
   getEstadoData(): Observable<catalogoResponse[]> {

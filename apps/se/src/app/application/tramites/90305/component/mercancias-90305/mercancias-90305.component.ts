@@ -86,7 +86,7 @@ export class Mercancias90305Component implements OnInit ,OnDestroy {
   /**
    * Método del ciclo de vida de Angular - inicializa el componente y carga las mercancías
    */
-  ngOnInit() {
+  ngOnInit():void {
     this.loadMercancias();
   }
 
