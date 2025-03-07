@@ -56,6 +56,25 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'certificado-registro',
+    loadChildren: () =>
+      import('./tramites/80205/certificado-registro.module').then(
+        (m) => m.CertificadoRegistroModule)
+  },
+  {
+    path: 'certificado-registro',
+    loadChildren: () =>
+      import('./tramites/80205/certificado-registro.module').then(
+        (m) => m.CertificadoRegistroModule)
+  },
+  {
+    path: 'subfabricante-immex',
+    loadChildren: () =>
+      import('./tramites/80207/subfabricante-extension.module').then(
+        (m) => m.SubfabricanteExtentionModule
+      ),
+    },
+{
     path: 'immex-ampliacion-sensibles',
     loadChildren: () =>
       import('./tramites/80202/immex-ampliacion-sensibles.module').then(
@@ -63,12 +82,20 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'immex-registro-solicitud-modality',
+    loadChildren: () =>
+      import('./tramites/80203/immex-registro-de-solicitud-modalidad.modulo').then(
+        (m) => m.ImmexRegistroDeSolicitudModalityModule
+      )
+    },
+  {
     path: 'modificacion',
     loadChildren: () =>
       import('./tramites/80308/modificacion-solicitud.module').then(
         (m) => m.ModificacionSolicitudModule
       ),
   },
+
 ];
 
 @NgModule({

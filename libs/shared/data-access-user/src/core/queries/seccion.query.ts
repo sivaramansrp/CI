@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 import { SeccionLibState, SeccionLibStore } from '../estados/seccion.store';
 
+
 @Injectable({ providedIn: 'root' })
 export class SeccionLibQuery extends Query<SeccionLibState> {
   /**
