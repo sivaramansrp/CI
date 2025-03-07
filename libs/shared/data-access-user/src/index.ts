@@ -75,8 +75,10 @@ export * from './core/services/shared/wizard/wizard.service';
 export * from './core/services/220471/servicios-pantallas.enum';
 export * from './tramites/constantes/regex.constants';
 export * from './core/services/130118/pexim/pexim.service';
+export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
+export * from './core/models/shared/configuracion-columna.model'
 export * from './core/services/220501/revision.service';
 export * from './core/services/220501/sagarpa/sagarpa.service';
 export * from './core/enums/220502/solicitud-pantallas.enum';

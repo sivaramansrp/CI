@@ -90,7 +90,13 @@ const routes: Routes = [
         (m) => m.ModificacionSolicitudModule
       ),
   },
-
+  {
+    path: 'autorizacion-prosec',
+    loadChildren: () =>
+      import('./tramites/90101/autorizacion-prosec.module').then(
+        (m) => m.AutorizacionProsecModule
+      ),
+  }
   {
     path: 'solicitud-modalidad',
     loadChildren: () =>
