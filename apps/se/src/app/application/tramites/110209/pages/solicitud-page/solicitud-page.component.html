@@ -4,18 +4,19 @@
       <div class="col-md-12">
         <h2>Validar por motivos técnicos el certificado SGP </h2>
       </div>
-      <app-wizard [listaPasos]="pasos"></app-wizard>
+      <app-wizard [listaPasos]="pasos" (indice)="seleccionaTab($event)"></app-wizard>
     </div>
 
     <div class="row">
       @switch (indice) {
       @case (1) {
-         <app-capturar-solicitud></app-capturar-solicitud>
+        <app-capturar-solicitud></app-capturar-solicitud>
       }
       @case (2) {
-
+       <app-firmar-solicitud></app-firmar-solicitud>
       }
       }
+      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
   </div>
 </div>
