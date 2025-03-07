@@ -37,7 +37,18 @@ export class DatosAdicionalesComponent implements OnInit {
    * @property {FormGroup} formulario - El formulario del componente.
    */
   public formulario!: FormGroup;
+
+  /**
+ * **Subject para manejar la destrucción de suscripciones**
+ *
+ * - Se utiliza para cancelar las suscripciones activas cuando el componente o servicio es destruido.
+ * - Evita fugas de memoria al asegurarse de que las suscripciones se cancelen correctamente.
+ * - Se emite un valor en `ngOnDestroy` y luego se completa.
+ *
+ * @private
+ */
   private destroy$ = new Subject<void>();
+
   /**
    * Representa la entidad seleccionada del catálogo.
    * Se espera que esta propiedad sea del tipo 'CatalogosSelect'.
@@ -87,11 +98,10 @@ export class DatosAdicionalesComponent implements OnInit {
     this.crearFormulario();
     this.getEntidadFederativa();
     this.getRepresentacionFederal();
-    this.getFormDataFromStore();
-    // Subscribe to form changes and update store
+    this.obtenerDatosFormularioDesdeStore();
     this.formulario.valueChanges
       .pipe(distinctUntilChanged(), takeUntil(this.destroy$))
-      .subscribe(() => this.updateStore());
+      .subscribe(() => this.actualizarStore());
   }
   /**
    * Crea el formulario con los campos necesarios y sus validaciones.
@@ -166,7 +176,16 @@ export class DatosAdicionalesComponent implements OnInit {
 
   }
 
-  private getFormDataFromStore(): void {
+  /**
+   * **Obtiene los valores del formulario desde el estado de la tienda**
+   *
+   * - Se suscribe a `formValues$` del `datosAdicionalesQuery` para recibir los valores actuales del formulario.
+   * - Cuando hay valores disponibles, actualiza el formulario sin disparar eventos (`emitEvent: false`).
+   * - La suscripción se gestiona con `takeUntil(this.destroy$)` para evitar fugas de memoria.
+   *
+   * @private
+   */
+  private obtenerDatosFormularioDesdeStore(): void {
     this.datosAdicionalesQuery.formValues$
       .pipe(takeUntil(this.destroy$))
       .subscribe((formValues) => {
@@ -176,7 +195,17 @@ export class DatosAdicionalesComponent implements OnInit {
       });
   }
 
-  private updateStore(): void {
+  /**
+   * **Actualiza el estado de la tienda con los valores actuales del formulario**
+   *
+   * - Obtiene los valores actuales del formulario.
+   * - Se suscribe a `formValues$` del `datosAdicionalesQuery` y toma el último valor disponible.
+   * - Compara los valores actuales del formulario con los almacenados en el estado.
+   * - Solo actualiza el estado si hay cambios para evitar actualizaciones innecesarias.
+   *
+   * @private
+   */
+  private actualizarStore(): void {
     const NEWVALUES = this.formulario.value;
     this.datosAdicionalesQuery.formValues$.pipe(take(1)).subscribe((currentValues) => {
       if (JSON.stringify(currentValues) !== JSON.stringify(NEWVALUES)) {
@@ -184,4 +213,5 @@ export class DatosAdicionalesComponent implements OnInit {
       }
     });
   }
+
 }
