@@ -47,11 +47,6 @@ export class AsignacionDirectaDeCupoComponent {
   indice: number = 1;
  
   /**
-   * Textos utilizados en el componente.
-   */
-  TEXTOS = ALERT;
- 
-  /**
    * Clase CSS para aplicar estilos específicos a los elementos de la interfaz.
    */
   class: string = 'alert-danger';
