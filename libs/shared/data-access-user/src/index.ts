@@ -1,3 +1,5 @@
+import { TEXTOS } from './tramites/constantes/servicios-extraordinarios.enum';
+import { UppercaseDirective } from './tramites/directives/Uppercase/uppercase.directive';
 export * from './tramites/pages/acuse-page/acuse-page.component';
 
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
@@ -82,14 +84,16 @@ export { TEXTOS as TEXTOS_220501 } from './tramites/constantes/220501/texto-enum
 
 export { CATALOGOS_ID as CATALOGOS_ID_220501 } from './tramites/constantes/220501/constantes';
 export { FECHA_INSPECCION_INPUT as FECHA_INSPECCION_INPUT_220502 } from './tramites/constantes/220502/texto-enum';
+export { PASOS as TODAPASOS } from './tramites/constantes/certificado-zoosanitario.enum';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './core/enums/tabla-seleccion.enum';
 export * from './tramites/directives/Uppercase/uppercase.directive'
+export * from './tramites/directives/Uppercase/uppercase.directive';
 export {
   TEXTOS_REQUISITOS as TEXTOS_REQUISITOS_80202,
   MENSAJE_DE_EXITO_ETAPA_UNO,
 } from './tramites/constantes/certificado-zoosanitario.enum';
-export * from './core/enums/tabla-seleccion.enum';
+
 export * from './tramites/constantes/110102/datos-tratados-acuerdos.enum';
 export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuerdos.service';
 export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.service';
