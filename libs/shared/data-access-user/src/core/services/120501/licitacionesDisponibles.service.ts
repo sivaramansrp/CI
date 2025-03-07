@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { catalogoResponse, RespuestaCatalogos } from '../../models/shared/catalogos.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,13 +15,13 @@ export class LicitacionesDisponiblesService {
   getEntidadFederativa(): Observable<any> {
     return this.http.get('assets/json/120501/entidad-federativa.json');
   }
-  getRepresentacionFederal(representacionFederal:string): Observable<any> {
+  getRepresentacionFederal(): Observable<any> {
     return this.http.get<any>('assets/json/120501/representacion-federal.json');
   }
   getDetallesDelalicitacion(): Observable<unknown> {
     return this.http.get('assets/json/120501/detalles-licitacion.json');
   }
-  getAdquiriente(): Observable<unknown> {
+  getAdquiriente(): Observable<any> {
     return this.http.get('assets/json/120501/adquiriente.json');
   }
   getTableData(): Observable<unknown> {

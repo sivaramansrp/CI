@@ -26,7 +26,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { LicitacionesDisponiblesService } from '@ng-mf/data-access-user';
 
-import { map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 import { Subject } from 'rxjs';
@@ -35,7 +35,6 @@ import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@ng-mf/data-access-user'
 
 import { CONFIGURACION_ACCIONISTAS_TABLA } from '@ng-mf/data-access-user';
-import { Solicitud120501State } from '../../estados/tramites/tramite120501.store';
 import { Tramite120501Store } from '../../estados/tramites/tramite120501.store';
 
 import { Tramite120501Query } from '../../estados/queries/tramite120501.query';
@@ -147,6 +146,10 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * Datos de la tabla.
    */
   public tableData!: TableData;
+
+  entidadFederativa: Catalogo[]=[];
+  representacionFederal: Catalogo[]=[];
+  
   /**
    * Subject para la destrucción del componente.
    */
@@ -155,7 +158,10 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * Referencia al componente del asistente (wizard).
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-  public entidadFederativaState!: Solicitud120501State;
+
+  entidadFederativa$: Observable<Catalogo | null> = this.tramite120501Query.entidadFederativa$;
+  representacionFederal$: Observable<Catalogo | null> = this.tramite120501Query.representacionFederal$;
+  montoRecibir$: Observable<string | null> = this.tramite120501Query.montoRecibir$;
 
   private destroyNotifier$: Subject<void> = new Subject();
   /**
@@ -164,7 +170,8 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * @param service Servicio para obtener datos de licitaciones disponibles.
    * @param fb Constructor de formularios.
    */
-  constructor(private service:LicitacionesDisponiblesService,private fb: FormBuilder,private tramite120501Store: Tramite120501Store, 
+  constructor(private service:LicitacionesDisponiblesService,private fb: FormBuilder,
+    private tramite120501Store: Tramite120501Store, 
     private tramite120501Query: Tramite120501Query) {
     this.formForTotalCount = this.fb.group({})
     this.formulario = this.fb.group({
@@ -201,48 +208,28 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     this.formularioTotalCount();
     this.actualizarRecuentoTotalDeFilas();
     this.getEntidadFederativa();
+    this.getRepresentacionFederal();
     this.getDetallesDelalicitacion();
     this.getAdquiriente();
     this.getTabledatas();
 
-    this.tramite120501Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyed$),
-          map((seccionState) => {
-            this.adquiriente.patchValue(
-              {
-                montoRecibir:seccionState.montoRecibir
-              } 
-              )
-          })
-        )
-        .subscribe();
+    this.montoRecibir$.subscribe((montoRecibir) => {
+      if(montoRecibir){
+        this.adquiriente.get('montoRecibir')?.setValue(montoRecibir);
+      }
+    });
 
-        this.tramite120501Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyed$),
-          map((seccionState) => {
-            this.formulario.patchValue(
-              {
-                entidadFederativa:seccionState.entidadFederativa,
-                representacionFederal: seccionState.representacionFederal
-              } 
-              )
-          })
-        )
-        .subscribe();
+    this.entidadFederativa$.subscribe((entidadFederativa) => {
+      if (entidadFederativa) {
+        this.formulario.get('entidadFederativa')?.setValue(entidadFederativa);
+      }
+    });
 
-        const ENTITAD_FEDERATIVA = this.formulario.get('entidadFederativa')?.value;
-
-        const REPRESENTACION_FEDERAL = this.formulario.get('representacionFederal')?.value;
-
-        if (ENTITAD_FEDERATIVA !== "-1") {
-          this.getRepresentacionFederal(ENTITAD_FEDERATIVA);
-          this.formulario.get('representacionFederal')?.setValue(REPRESENTACION_FEDERAL);
-        } else {
-          this.representacionFederalOptions = [];
-        }
-        
+    this.representacionFederal$.subscribe((representacionFederal) => {
+      if (representacionFederal) {
+        this.formulario.get('representacionFederal')?.setValue(representacionFederal);
+      }
+    });
   }
   /**
    * Inicializa el formulario para el recuento total de filas.
@@ -276,8 +263,8 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
 /**
    * Obtiene la lista de representaciones federales.
    */
-getRepresentacionFederal(representacionFederal :string): void {
-  this.service.getRepresentacionFederal(representacionFederal).pipe(
+getRepresentacionFederal(): void {
+  this.service.getRepresentacionFederal().pipe(
     takeUntil(this.destroyed$)
   ).subscribe(
     (data) => {
@@ -374,19 +361,27 @@ getAdquiriente():void{
         adquirienteMontoDisponible:data.adquirienteMontoDisponible,
       })
     })
+  
 }
 setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite120501Store): void {
   const VALOR = form.get(campo)?.value;
   (this.tramite120501Store[metodoNombre] as (value: any) => void)(VALOR);
 }
 
-onentidadFederativaChange(valor:any): void{
-  if (valor !== '-1') {
-    this.getRepresentacionFederal(valor.id);
-  } else {
-    this.representacionFederalOptions = [];
-  }
-  this.setValoresStore(this.formulario, 'entidadFederativa', 'setEntidadFederativa');
+onChangeEntiadFederative():void{
+  const ENTITAD_FEDERATIVA = this.formulario.get('entidadFederativa')?.value;
+  this.tramite120501Store.setEntidadFederativa(ENTITAD_FEDERATIVA);  
 }
+
+onChangeRepresentacionFederal():void{
+  const REPRESENTACION_FEDERAL = this.formulario.get('representacionFederal')?.value;
+  this.tramite120501Store.setRepresentacionFederal(REPRESENTACION_FEDERAL);
+}
+
+montoRecibirValue():void{
+  const MONTO_RECIBIR = this.adquiriente.get('montoRecibir')?.value;
+  this.tramite120501Store.setmontoRecibir(MONTO_RECIBIR);
+}
+
 
 }
