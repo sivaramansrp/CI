@@ -49,6 +49,18 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'certificado-registro',
+    loadChildren: () =>
+      import('./tramites/80205/certificado-registro.module').then(
+        (m) => m.CertificadoRegistroModule)
+  },
+  {
+    path: 'certificado-registro',
+    loadChildren: () =>
+      import('./tramites/80205/certificado-registro.module').then(
+        (m) => m.CertificadoRegistroModule)
+  },
+  {
     path: 'subfabricante-immex',
     loadChildren: () =>
       import('./tramites/80207/subfabricante-extension.module').then(
