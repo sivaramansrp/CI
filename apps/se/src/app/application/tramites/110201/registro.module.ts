@@ -32,7 +32,8 @@ import { DestinatarioComponent } from './components/destinatario/destinatario.co
     PasoUnoComponent,
     CertificadoDeOrigenComponent,
     DatosCertificadoComponent,
-    DestinatarioComponent
+    DestinatarioComponent,
+    TituloComponent
 
   ]
 })
