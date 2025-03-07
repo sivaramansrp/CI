@@ -148,8 +148,6 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
   agregarTratado(): void {
     if (this.formularioTratados.valid) {
-      const NUEVOTRATADO = this.formularioTratados.value;
-      this.tratadosStore.addTratado(NUEVOTRATADO);
       this.formularioTratados.reset();
     }
   }
@@ -171,10 +169,8 @@ export class TratadosComponent implements OnInit, OnDestroy {
   }
 
   private updateStore(): void {
-    if (this.formularioTratados.valid) {
       const NUEVOTRATADO = this.formularioTratados.value;
       this.tratadosStore.updateTratado(NUEVOTRATADO); 
-    }
   }
 
   onDropdownChange(): void {
