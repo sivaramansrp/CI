@@ -11,6 +11,7 @@ export interface ProsecState {
     Sector: Catalogo[];
     Fraccion_arancelaria: string;
     contribuyentes: string;
+    formaValida: Catalogo[];
 }
 
 export function createInitialState(): ProsecState {
@@ -22,6 +23,7 @@ export function createInitialState(): ProsecState {
         Sector: [],
         Fraccion_arancelaria: '',
         contribuyentes: '',
+        formaValida: []
     }
 }
 /**
@@ -91,5 +93,12 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
             ...state,
             contribuyentes,
         }));
+    }
+
+    public setFormaValida(formaValida: Catalogo[]){
+        this.update((state) => ({
+            ...state,
+            formaValida,
+        }))
     }
 }

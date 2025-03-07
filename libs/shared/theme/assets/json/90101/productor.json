@@ -1,7 +1,9 @@
 {
-    "productor": [
+    "productorDato": [
         {
-            "tbodyData": ["TS0931210493","TRW SISTEMAS DE DIRECCIONESS DE AL DE CV","carlos.flores@trw"]
+          "contribuyentes": "TS0931210493",
+          "razonSocial": "TRW SISTEMAS DE DIRECCIONESS DE AL DE CV",
+          "Correo": "carlos.flores@trw"
         }
-    ]
+      ]
 }

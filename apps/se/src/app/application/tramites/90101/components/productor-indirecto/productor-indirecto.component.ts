@@ -15,6 +15,7 @@ import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FilaProductos } from '../../models/prosec.module';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ProsecService } from '../../services/prosec.service';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
@@ -34,6 +35,8 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy  {
   productorIndirecto!: FormGroup;
 
   TablaSeleccion = TablaSeleccion;
+  
+  productorDato: any[] = [];
 
   productorColumnsConfiguracion : ConfiguracionColumna<FilaProductos>[] = [
     { encabezado: 'Registro federal de contribuyentes', 
@@ -50,15 +53,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy  {
       orden: 3,
     },
   ];
-
-  productorDato = [
-    {
-      contribuyentes: 'TS0931210493',
-      razonSocial: 'TRW SISTEMAS DE DIRECCIONESS DE AL DE CV',
-      Correo: 'carlos.flores@trw'
-    }
-  ]
-
+  
   private destroyNotifier$: Subject<void> = new Subject();
 
   private productorState!: ProsecState
@@ -84,13 +79,13 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy  {
       )
       .subscribe();
     this.initActionFormBuild();
+    this.recuperarDatos();
   }
 
   initActionFormBuild(): void {
     this.productorIndirecto = this.fb.group({
       contribuyentes: [
-        this.productorState.contribuyentes,
-        Validators.required
+        this.productorState.contribuyentes
       ]
     })
   }
@@ -105,6 +100,19 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy  {
     (this.AutorizacionProsecStore[metodoNombre] as (value: any) => void)(
       VALOR
     );
+  }
+
+  recuperarDatos(): void {
+    this.ProsecService.obtenerTablaDatos('productor.json').subscribe({
+      next: (response: any) => {
+        if (response && Array.isArray(response.productorDato)) {
+          this.productorDato = response.productorDato
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al obtener los datos:', error);
+      }
+    });
   }
 
   ngOnDestroy(): void {

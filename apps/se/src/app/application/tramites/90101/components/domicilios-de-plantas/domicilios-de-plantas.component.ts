@@ -18,11 +18,17 @@ import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FilaPlantas } from '../../models/prosec.module'
+import { HttpErrorResponse } from '@angular/common/http';
 import { ProsecService } from '../../services/prosec.service';
+import { SeccionLibQuery } from '@ng-mf/data-access-user';
+import { SeccionLibState } from '@ng-mf/data-access-user';
+import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { TEXTO } from '../../constantes/prosec.module';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { delay } from 'rxjs';
 import { map } from 'rxjs';
 import { Subject } from 'rxjs';
+import { tap } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 @Component({
@@ -57,11 +63,15 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    */
   ActividadProductiva: Catalogo[] = [];
 
+  plantasDatos: FilaPlantas[] = [];
+
   TablaSeleccion = TablaSeleccion;
 
   private destroyNotifier$: Subject<void> = new Subject();
 
   private domiciliosState!: ProsecState;
+
+  private seccionState!: SeccionLibState
 
   plantaColumnsConfiguracion: ConfiguracionColumna<FilaPlantas>[] = [
     { encabezado: 'Calle', 
@@ -94,30 +104,26 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     },
   ];
 
-  plantasDatos = [
-    {
-      calle: 'CALLE 5',
-      numeroExterior: 'S/N',
-      numeroInterior: '',
-      codigoPostal: 81124,
-      colonia: 'OTRA NO ESPECIFICADA EN EL CATÁLOGO',
-      municipioOAlcaldia: 'GUASAVE'
-    }
-
-  ];
-
-
-
   constructor(
     private readonly fb: FormBuilder, 
     private ProsecService: ProsecService, 
     private AutorizacionProsecStore: AutorizacionProsecStore,
     private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
+    private seccionStore: SeccionLibStore,
+    private seccionQuery: SeccionLibQuery
   ) {
     // Constructor logic can be added here if needed
   }
 
   ngOnInit(): void {
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
     this.AUtorizacionProsecQuery.selectProsec$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -128,6 +134,28 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
       .subscribe();
     this.initActionFormBuild();
     this.obtenerLista();
+
+    this.seccionStore.establecerFormaValida([false]);
+
+    this.forma.statusChanges
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            delay(10),
+            tap((_value) => {
+              if (this.forma.valid) {
+                this.AutorizacionProsecStore.setFormaValida([{ id: 1, descripcion: "Valida" }])
+              }
+            })
+          )
+          .subscribe();
+
+    if(this.domiciliosState.formaValida[0].descripcion = 'AllValida'){
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([true])
+    }
+    else{
+      this.seccionStore.establecerFormaValida([false]);
+    }
   }
 
   setValoresStore(
@@ -146,7 +174,18 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     this.forma = this.fb.group({
       modalidad: [
         this.domiciliosState.modalidad,
-        Validators.required,
+      ],
+      Estado: [
+        this.domiciliosState.Estado,
+        Validators.required
+      ],
+      RepresentacionFederal: [
+        this.domiciliosState.RepresentacionFederal,
+        Validators.required
+      ],
+      ActividadProductiva: [
+        this.domiciliosState.ActividadProductiva,
+        Validators.required
       ]
     })
   }
@@ -156,8 +195,14 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @description Obtiene la lista de estados desde el servicio.
    */
   obtenerListaEstado(): void {
-    this.ProsecService.obtenerMenuDesplegable('estado.json').subscribe(data => {
-      this.estadoSeleccionar = data as Catalogo[];
+    this.ProsecService.obtenerMenuDesplegable('estado.json').subscribe({
+      next: (data) => {
+        this.estadoSeleccionar = data as Catalogo[];
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al obtener los datos:', error);
+        this.estadoSeleccionar = [];
+      }
     }
   );
   }
@@ -167,8 +212,14 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @description Obtiene la lista de representación federal desde el servicio.
    */
   obtenerListaFederal(): void {
-    this.ProsecService.obtenerMenuDesplegable('federal.json').subscribe(data => {
-      this.RepresentacionFederal = data as Catalogo[];
+    this.ProsecService.obtenerMenuDesplegable('federal.json').subscribe({
+      next: (data) => {
+        this.RepresentacionFederal = data as Catalogo[];
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al obtener los datos:', error);
+        this.RepresentacionFederal = [];
+      }
     });
   }
 
@@ -177,8 +228,14 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @description Obtiene la lista de actividad productiva desde el servicio.
    */
   obtenerListaActividad(): void {
-    this.ProsecService.obtenerMenuDesplegable('actividad_productiva.json').subscribe(data => {
-      this.ActividadProductiva = data as Catalogo[];
+    this.ProsecService.obtenerMenuDesplegable('actividad_productiva.json').subscribe({
+      next: (data) => {
+        this.ActividadProductiva = data as Catalogo[];
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al obtener los datos:', error);
+        this.ActividadProductiva = [];
+      }
     });
   }
 
@@ -190,6 +247,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     this.obtenerListaEstado();
     this.obtenerListaFederal();
     this.obtenerListaActividad();
+    this.recuperarDatos();
   }
 
   estadoSeleccion(Estado: Catalogo): void {
@@ -202,6 +260,19 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
 
   productivaSeleccion(ActividadProductiva: Catalogo): void {
     this.AutorizacionProsecStore.setActividadProductiva([ActividadProductiva]);
+  }
+
+  recuperarDatos(): void {
+    this.ProsecService.obtenerTablaDatos('plantasDatos.json').subscribe({
+      next: (response: any) => {
+        if (response && Array.isArray(response.plantasDatos)) {
+          this.plantasDatos = response.plantasDatos
+        } 
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al obtener los datos:', error);
+      }
+    });
   }
 
   ngOnDestroy(): void {

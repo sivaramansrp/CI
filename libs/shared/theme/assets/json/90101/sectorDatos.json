@@ -1,7 +1,8 @@
 {
-   "sectors":[
+   "sectors": [
     {
-        "tbodyData": ["De la Industria Automotriz y de Autopartes a)","XIXa"]
+      "sectorLista": "Sector",
+      "sectorClave": "XIXa - De la Industria Automotriz y"
     }
-   ]
+  ]
 }

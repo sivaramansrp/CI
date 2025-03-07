@@ -19,11 +19,17 @@ import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FilaSectors } from '../../models/prosec.module';
+import { HttpErrorResponse } from '@angular/common/http';
 import { PARATEXTO } from '../../constantes/prosec.module';
 import { ProsecService } from '../../services/prosec.service';
+import { SeccionLibQuery } from '@ng-mf/data-access-user';
+import { SeccionLibState } from '@ng-mf/data-access-user';
+import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
+import { delay } from 'rxjs';
 import { map } from 'rxjs';
+import { Subject } from 'rxjs';
+import { tap } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 
@@ -51,26 +57,26 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
 
   TablaSeleccion = TablaSeleccion;
 
+  sectors: any[] = [];
+
   sectorColumnsConfiguracion: ConfiguracionColumna<FilaSectors>[] = [
     { encabezado: 'Lista de sectores', clave: (fila) => fila.sectorLista, orden: 1 },
     { encabezado: 'Clave del sector', clave: (fila) => fila.sectorClave, orden: 2 },
   ];
 
-  sectors = [
-    {
-      sectorLista: 'Sector',
-      sectorClave: 'XIXa - De la Industria Automotriz y'
-    }
-  ]
-
   private destroyNotifier$: Subject<void> = new Subject();
 
   private sectoresState!: ProsecState
 
+  private seccionState!: SeccionLibState
+
+
   constructor(private readonly fb: FormBuilder, 
     private ProsecService: ProsecService, 
     private AutorizacionProsecStore: AutorizacionProsecStore,
-    private AUtorizacionProsecQuery: AUtorizacionProsecQuery
+    private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
+    private seccionStore: SeccionLibStore,
+    private seccionQuery: SeccionLibQuery
   ) {}
 
   /**
@@ -82,6 +88,14 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   // }
 
   ngOnInit(): void {
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
       this.AUtorizacionProsecQuery.selectProsec$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -92,16 +106,43 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         .subscribe();
       this.initActionFormBuild();
       this.obtenserListaEstado();
+      this.recuperarDatos();
+
+      this.seccionStore.establecerFormaValida([false]);
+
+      this.sectoresYMercancias.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((_value) => {
+          if (this.sectoresYMercancias.valid) {
+            this.AutorizacionProsecStore.setFormaValida([{ id: 2, descripcion: "AllValida" }])
+            console.log("ccc",this.sectoresState)
+          }
+        })
+      )
+      .subscribe();
+
+      if(this.sectoresState.formaValida[0].descripcion = 'AllValida'){
+        this.seccionStore.establecerSeccion([true]);
+        this.seccionStore.establecerFormaValida([true])
+      }
+      else{
+        this.seccionStore.establecerFormaValida([false]);
+      }
+
     }
   
     initActionFormBuild(): void {
       this.sectoresYMercancias = this.fb.group({
-        sector: [''],
+        sector: [
+          this.sectoresState.Sector,
+          Validators.required
+        ],
         Fraccion_arancelaria: [
-              this.sectoresState.Fraccion_arancelaria,
-              Validators.required
-            ]
-          })
+          this.sectoresState.Fraccion_arancelaria
+        ]
+      })
     }
 
     setValoresStore(
@@ -117,20 +158,31 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     }
 
   /**
-   * @method obtenserLista
-   * @description Obtiene las listas de datos de sectores.
-   */
-  // obtenserLista(): void {
-  //   this.obtenserListaEstado();
-  // }
-
-  /**
    * @method obtenserListaEstado
    * @description Obtiene la lista de sectores desde el servicio.
    */
   obtenserListaEstado(): void {
-    this.ProsecService.obtenerMenuDesplegable('sector.json').subscribe(data => {
-      this.sector = data as Catalogo[];
+    this.ProsecService.obtenerMenuDesplegable('sector.json').subscribe({
+      next: (data) => {
+        this.sector = data as Catalogo[];
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al obtener los datos:', error);
+        this.sector = [];
+      }
+    });
+  }
+
+  recuperarDatos(): void {
+    this.ProsecService.obtenerTablaDatos('sectorDatos.json').subscribe({
+      next: (response: any) => {
+        if (response && Array.isArray(response.sectors)) {
+          this.sectors = response.sectors
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al obtener los datos:', error);
+      }
     });
   }
 
