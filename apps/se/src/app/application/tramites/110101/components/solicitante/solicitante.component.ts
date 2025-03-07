@@ -28,16 +28,29 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private tramite110101Store: Tramite110101Store,
     private tramite110101Query: Tramite110101Query
-  // eslint-disable-next-line no-empty-function
+    // eslint-disable-next-line no-empty-function
   ) { }
 
   /**
    * Grupo de formulario para el formulario de solicitud.
    */
   solicitudForm!: FormGroup;
+
+  /**
+ * Suscripción para rastrear los cambios en el formulario y manejar la limpieza de memoria.
+ */
   formSubscription!: Subscription;
+
+  /**
+ * Sujeto para manejar la destrucción de suscripciones y evitar fugas de memoria.
+ */
   private destroy$ = new Subject<void>();
+
+  /**
+  * Suscripción utilizada para restaurar los valores del formulario desde el estado de la tienda.
+  */
   private restoreSubscription!: Subscription;
+
 
 
   /**
@@ -61,8 +74,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
       actividadEconomica: [''],
       correoElectronico: ['']
     });
-    this.restoreFormValues(); // Load state from store
-    // Sync form changes to store
+    this.restoreFormValues(); 
     this.formSubscription = this.solicitudForm.valueChanges.subscribe(() => {
       this.updateStore();
     });
@@ -91,6 +103,11 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
     this.solicitudForm.get('correoElectronico')?.setValue(mockData.correoElectronico);
   }
 
+  /**
+   * Restaura los valores del formulario desde el estado de la tienda.
+   * Se suscribe al estado del solicitante y actualiza los valores del formulario si existen datos previos.
+   * La suscripción se completa después de recibir el primer valor.
+   */
   private restoreFormValues(): void {
     this.restoreSubscription = this.tramite110101Query.selectSolicitante$
       .pipe(
@@ -104,6 +121,11 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
       });
   }
 
+
+  /**
+   * Método que se ejecuta cuando el componente se destruye.
+   * Se encarga de limpiar las suscripciones para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     if (this.formSubscription) {
       this.formSubscription.unsubscribe();
@@ -115,6 +137,11 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+
+  /**
+   * Método para actualizar el estado del store con los valores actuales del formulario.
+   * Se extraen los valores del formulario y se actualizan en el store correspondiente.
+   */
   private updateStore(): void {
     const FORMVALUES = this.solicitudForm.value;
     this.tramite110101Store.setRfc(FORMVALUES.rfc);
@@ -122,4 +149,5 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
     this.tramite110101Store.setActividadEconomica(FORMVALUES.actividadEconomica);
     this.tramite110101Store.setCorreoElectronico(FORMVALUES.correoElectronico);
   }
+
 }

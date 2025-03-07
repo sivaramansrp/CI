@@ -35,34 +35,57 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
     super(createSolicitanteInitialState());
   }
 
-  // Métodos para actualizar el estado de los campos del formulario
-  public setRfc(rfc: string):void{
+  /**
+   * Establece el valor del RFC en el estado de la tienda.
+   * 
+   * @param rfc - El RFC a actualizar en el estado.
+   */
+  public setRfc(rfc: string): void {
     this.update((state) => ({
       ...state,
       rfc,
     }));
   }
 
-  public setDenominacion(denominacion: string):void {
+
+  /**
+   * Establece el valor de la denominación en el estado de la tienda.
+   * 
+   * @param denominacion - El valor de la denominación a actualizar en el estado.
+   */
+  public setDenominacion(denominacion: string): void {
     this.update((state) => ({
       ...state,
       denominacion,
     }));
   }
 
-  public setActividadEconomica(actividadEconomica: string):void {
+
+  /**
+   * Establece el valor de la actividad económica en el estado de la tienda.
+   * 
+   * @param actividadEconomica - El valor de la actividad económica a actualizar en el estado.
+   */
+  public setActividadEconomica(actividadEconomica: string): void {
     this.update((state) => ({
       ...state,
       actividadEconomica,
     }));
   }
 
-  public setCorreoElectronico(correoElectronico: string):void {
+
+  /**
+   * Establece el valor del correo electrónico en el estado de la tienda.
+   * 
+   * @param correoElectronico - El correo electrónico a actualizar en el estado.
+   */
+  public setCorreoElectronico(correoElectronico: string): void {
     this.update((state) => ({
       ...state,
       correoElectronico,
     }));
   }
+
 
   /**
    * Limpiar los datos del solicitante
