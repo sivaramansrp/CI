@@ -269,8 +269,5 @@ export class DatosEmpresaComponent implements OnInit {
     const valor = form.get(campo)?.value;
     (this.tramite120602Store[metodoNombre] as (value: any) => void)(valor);
   }
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
+
 }
