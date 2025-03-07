@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'paso-tres',
+  selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
   
 })

@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AlertComponent } from '@ng-mf/data-access-user';
+
 import { PasoDosComponent } from './paso-dos.component';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { AlertComponent, AnexarDocumentosComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { ToastrService } from 'ngx-toastr/toastr/toastr.service';
+import { ToastrModule } from 'ngx-toastr';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -11,10 +13,11 @@ describe('PasoDosComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PasoDosComponent],
-      imports: [TituloComponent, AlertComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA], // Add this line to ignore unrecognized elements
-    }).compileComponents();
-
+      imports: [TituloComponent, AlertComponent,
+        AnexarDocumentosComponent,ToastrModule.forRoot(),HttpClientModule],
+    })
+    .compileComponents();
+    
     fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

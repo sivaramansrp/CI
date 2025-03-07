@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AccionBoton } from '../../models/datos-info.model';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RegistroPageComponent } from './registro-page.component';
 import { PASOS} from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -11,6 +12,7 @@ describe('RegistroPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [WizardComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
       declarations: [RegistroPageComponent]
     }).compileComponents();
   });
