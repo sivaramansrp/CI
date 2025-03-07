@@ -5,7 +5,7 @@ import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-merc
 import { OnInit } from '@angular/core';
 import { PagoLineaDeCaptureQuery } from '../../estados/pago-linea-de-captura/pago-linea-de-captura.query';
 import { PagoLineaDeCaptureStore } from '../../estados/pago-linea-de-captura/pago-linea-de-captura.store';
-import { REGEX_REEMPLAZAR } from 'libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { REGEX_REEMPLAZAR } from '@ng-mf/data-access-user';
 import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
