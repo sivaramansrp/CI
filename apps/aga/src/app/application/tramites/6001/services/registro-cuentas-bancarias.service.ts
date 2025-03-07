@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JSONResponse } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { enviroment } from '@libs/shared/data-access-user/src/enviroments/enviroment';
-import { catchError, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
 import { DatosGenerales, RegistroDeSolicitudesTabla } from '../models/registro-cuentas-bancarias.model';
 
 @Injectable({
@@ -13,6 +13,8 @@ import { DatosGenerales, RegistroDeSolicitudesTabla } from '../models/registro-c
 export class RegistroCuentasBancariasService {
 
   urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
+  private componentSource = new BehaviorSubject<string>('DatosGenerales'); // Componente predeterminado
+  componenteActual = this.componentSource.asObservable();
 
 
   constructor(private http: HttpClient) {
@@ -38,5 +40,10 @@ export class RegistroCuentasBancariasService {
         return throwError(() => error);
       })
     );
+  }
+
+
+  public cambiarComponente(component: string) {
+    this.componentSource.next(component);
   }
 }

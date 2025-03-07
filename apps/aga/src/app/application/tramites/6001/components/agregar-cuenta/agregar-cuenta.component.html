@@ -1,1 +1,94 @@
-<p>agregar-cuenta works!</p>
+<div class="container">
+    <ng-titulo titulo="Agregar cuenta" />
+    <h4 class="mb-5">Ingresar los datos de la cuenta bancaria</h4>
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <form>
+                <div class="mb-3 row">
+                    <label for="titular" class="col-sm-3 col-form-label">Titular de la cuenta*:</label>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="titular" >
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="row mb-3">
+                    <!-- formControlName="persona"  -->
+                    <div class="col-md-12">
+                        <app-catalogo-select 
+                            [catalogo]="tipoDePersona" 
+                            [label]="'Tipo de persona'"
+                            [required]="true" name="persona"  
+                            (change)="tipoDePersonaSeleccion()" >
+                        </app-catalogo-select>
+                    </div>
+                </div>
+        
+                <div class="mb-3 row">
+                    <label for="rfc" class="col-sm-3 col-form-label">RFC*:<i class="bi bi-question-circle-fill"></i></label>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <input type="text" id="rfc" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label for="cuenta" class="col-sm-3 col-form-label">Número de cuenta*:</label>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <input type="text" id="cuenta" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+
+        <label for="pais">País donde radica*:</label>
+        <select id="pais" class="select-field">
+            <option>MÉXICO (ESTADOS UNIDOS MEXICANOS)</option>
+        </select>
+
+        <label for="institucion">Institución*:</label>
+        <select id="institucion" class="select-field">
+            <option>Selecciona una institución de crédito</option>
+            <option>BANBAJIO</option>
+            <option>BANJERCITO</option>
+            <option>BANREGIO</option>
+            <option>BANSI</option>
+            <option>BANK OF TOKIO-MITSUBISHI UFI (MÉXICO), S.A.</option>
+        </select>
+
+        <label for="estado">Estado*:</label>
+        <select id="estado" class="select-field error">
+            <option>Selecciona una entidad</option>
+        </select>
+
+
+        <div class="mb-3 row">
+            <label for="sucursal" class="col-sm-3 col-form-label">Sucursal*:</label>
+            <div class="col-sm-9">
+                <div class="form-group">
+                    <input type="text" id="sucursal" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="plaza" class="col-sm-3 col-form-label">Número de plaza*:</label>
+            <div class="col-sm-9">
+                <div class="form-group">
+                    <input type="text" id="plaza" class="form-control">
+                </div>
+            </div>
+        </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="btn-container">
+            <button type="submit" class="btn btn-guardar">Guardar</button>
+            <button type="button" class="btn btn-cancelar">Cancelar</button>
+        </div> -->

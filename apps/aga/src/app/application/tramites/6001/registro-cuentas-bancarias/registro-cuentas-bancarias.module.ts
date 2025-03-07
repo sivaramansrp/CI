@@ -13,6 +13,7 @@ import { AlertComponent, BtnContinuarComponent, FirmaElectronicaComponent } from
 import { provideHttpClient } from '@angular/common/http';
 import { RegistroCuentasBancariasService } from '../services/registro-cuentas-bancarias.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { AgregarCuentaComponent } from '../components/agregar-cuenta/agregar-cuenta.component';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     AlertComponent,
     FirmaElectronicaComponent,
     BtnContinuarComponent,
+    AgregarCuentaComponent,
     ToastrModule.forRoot(),
   ],
   providers: [

@@ -86,6 +86,7 @@ export class DatosGeneralesComponent implements OnInit {
   }
 
   public altaDeCuenta(): void {
+    this._registroCuentasBancariasSvc.cambiarComponente('AgregarCuenta');
   }
 
 }
