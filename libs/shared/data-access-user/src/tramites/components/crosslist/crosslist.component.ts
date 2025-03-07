@@ -1,7 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-
+/**
+ * Interfaz que representa las etiquetas de la lista cruzada.
+ * 
+ * @property {string} tituluDeLaIzquierda - El título de la izquierda.
+ * @property {string} derecha - El valor de la derecha.
+ */
+export interface CrossListLable {
+  tituluDeLaIzquierda: string;
+  derecha: string;
+}
 @Component({
   selector: 'crosslist',
   standalone: true,
@@ -13,40 +22,19 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 export class CrosslistComponent implements OnInit, OnChanges {
   @Input({ required: true }) fechas!: string[];
   @Input() botonField: any;
+  @Input() botones: any;
+  @Input() label: CrossListLable | undefined;
   fechasDatos: string[] = [];
   fechasSeleccionadas: string[] = [];
   fecha: FormControl = new FormControl('');
   fechaSeleccionada: FormControl = new FormControl('');
   @Input() showSearchInput1: boolean = false;
   @Input() showSearchInput2: boolean = false;
-  botones = [
-    {
-      btnNombre: 'Agregar',
-      class: 'btn-primary',
-      funcion: () => this.agregar(''),
-    },
-    {
-      btnNombre: 'Agregar todas',
-      class: 'btn-default',
-
-      funcion: () => this.agregar('t'),
-    },
-    {
-      btnNombre: 'Quitar',
-      class: 'btn-danger',
-
-      funcion: () => this.quitar(''),
-    },
-    {
-      btnNombre: 'Quitar todas',
-      class: 'btn-default',
-
-      funcion: () => this.quitar('t'),
-    },
-  ];
-
   ngOnInit() {
     this.fechasDatos = [...this.fechas];
+    if(!this.botones){
+      this.setButtonDefault();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -55,6 +43,43 @@ export class CrosslistComponent implements OnInit, OnChanges {
       this.fechasDatos = [...this.fechas]
     }
   }
+  /**
+   * Establece los botones predeterminados para la interfaz de usuario.
+   * 
+   * Este método configura un conjunto de botones con sus nombres, clases CSS y funciones asociadas.
+   * Los botones incluyen opciones para agregar, agregar todas, quitar y quitar todas.
+   * 
+   * @returns {void}
+   */
+  setButtonDefault():void {
+    this.botones = [
+      {
+        btnNombre: 'Agregar',
+        class: 'btn-primary',
+        funcion: () => this.agregar(''),
+      },
+      {
+        btnNombre: 'Agregar todas',
+        class: 'btn-default',
+  
+        funcion: () => this.agregar('t'),
+      },
+      {
+        btnNombre: 'Quitar',
+        class: 'btn-danger',
+  
+        funcion: () => this.quitar(''),
+      },
+      {
+        btnNombre: 'Quitar todas',
+        class: 'btn-default',
+  
+        funcion: () => this.quitar('t'),
+      },
+    ];
+  
+  }
+
 
   agregar(type: string) {
     if (type === 't') {

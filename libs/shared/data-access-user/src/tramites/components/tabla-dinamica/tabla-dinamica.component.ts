@@ -10,7 +10,7 @@ import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
   styleUrl: './tabla-dinamica.component.scss',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  host: {}
+  host: { hostID: crypto.randomUUID().toString() },
 })
 export class TablaDinamicaComponent<T> {
   /**
@@ -20,7 +20,6 @@ export class TablaDinamicaComponent<T> {
    * @type { TablaSeleccion}
    */
   @Input() tipoSeleccionTabla!: TablaSeleccion;
-
 
   /**
    * Expone el `enum` `TablaSeleccion` al componente de plantilla HTML.
