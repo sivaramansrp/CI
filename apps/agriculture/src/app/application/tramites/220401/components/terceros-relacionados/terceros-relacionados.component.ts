@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { MENSAJEDEALERTA, TituloComponent } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
-import establecimientoTable from './../../../../../../../../../libs/shared/theme/assets/json/220401/establecimiento-table.json'
-import destinatarioTable from './../../../../../../../../../libs/shared/theme/assets/json/220401/destinatario-table.json'
-import importardorTable from './../../../../../../../../../libs/shared/theme/assets/json/220401/importador-table.json'
+import establecimientoTable from '../../../../../../../../../libs/shared/theme/assets/json/220401/establecimiento-table.json'
+import destinatarioTable from '../../../../../../../../../libs/shared/theme/assets/json/220401/destinatario-table.json'
+import importardorTable from '../../../../../../../../../libs/shared/theme/assets/json/220401/importador-table.json'
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { AgregarDestinatoriaComponent } from '../agregar-destinatoria/agregar-destinatoria.component';
 
