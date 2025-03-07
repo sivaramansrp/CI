@@ -42,3 +42,10 @@ export interface DatosMercanciaSubmanufactura {
     valor_usd: string,
     descripcion_mercancia: string,
 }
+export interface ColumnasTabla {
+    rfc: string,
+    nombreComercial: string,
+    entidadFederativa: string,
+    alcaldioOMuncipio: string,
+    colonia: string,
+}

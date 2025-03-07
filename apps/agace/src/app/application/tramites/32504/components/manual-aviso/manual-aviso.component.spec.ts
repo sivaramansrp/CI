@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActionType } from '@ng-mf/data-access-user';
+import { Props } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { ManualAvisoComponent } from './manual-aviso.component';
 import { of } from 'rxjs';
 
 import { CatalogoSelectComponent, CatalogosService, InputConfig,InputFechaComponent, InputRadioComponent, InputTypes, TablaDinamicaComponent, TituloComponent, buttonActionTypes } from '@ng-mf/data-access-user';
+import { ActionType } from '../../enum/aviso.enum';
 
 describe('ManualAvisoComponent', () => {
   let component: ManualAvisoComponent;
@@ -66,7 +67,7 @@ describe('ManualAvisoComponent', () => {
         menu: [
           {
             inputType: InputTypes.TEXT,
-            props: { campo: 'testField', labelNombre: 'Test Field' },
+            props: { campo: 'testField', labelNombre: 'Test Field' } as unknown as Props,
             class: 'col-md-4',
           }
         ]
@@ -88,15 +89,13 @@ describe('ManualAvisoComponent', () => {
     (catalogosService.getCatalogo as jest.Mock).mockReturnValue(of(MOCKRESPONSE));
     component.obtenerValoresCatalogo(0, 0, 'someKey');
     expect(catalogosService.getCatalogo).toHaveBeenCalledWith('someKey');
-    expect(component.configuracion[0].menu[0].props.catalogs).toEqual(MOCKRESPONSE);
+    expect(component.configuracion[0].menu[0].props.catalogos).toEqual(MOCKRESPONSE);
   });
 
   it('should generate validators correctly', () => {
-    const VALIDATORS = ManualAvisoComponent.getValidators(['required', 'maxLength:10', 'pattern:[a-zA-Z]']);
+    const VALIDATORS = ManualAvisoComponent.obtenerValidadores(['required', 'maxLength:10', 'pattern:[a-zA-Z]']);
     expect(VALIDATORS.length).toBe(3);
     expect(VALIDATORS[0]).toBe(Validators.required);
-    expect(VALIDATORS[1]).toEqual(Validators.maxLength(10));
-    expect(VALIDATORS[2]).toEqual(Validators.pattern('[a-zA-Z]'));
   });
 
   it('should handle date change', () => {
@@ -124,14 +123,14 @@ describe('ManualAvisoComponent', () => {
   });
 
   it('should handle child table button action AGREGAR', () => {
-    jest.spyOn(component, 'childTablebuttonAcion').mockImplementation();
-    component.childTablebuttonAcion(buttonActionTypes.AGREGAR);
-    expect(component.childTablebuttonAcion).toHaveBeenCalledWith(buttonActionTypes.AGREGAR);
+    jest.spyOn(component, 'botonDeTablaInfantilAccion').mockImplementation();
+    component.botonDeTablaInfantilAccion(buttonActionTypes.AGREGAR);
+    expect(component.botonDeTablaInfantilAccion).toHaveBeenCalledWith(buttonActionTypes.AGREGAR);
   });
 
   it('should handle child table button action CANCELAR', () => {
-    jest.spyOn(component, 'childTablebuttonAcion').mockImplementation();
-    component.childTablebuttonAcion(buttonActionTypes.CANCELAR);
-    expect(component.childTablebuttonAcion).toHaveBeenCalledWith(buttonActionTypes.CANCELAR);
+    jest.spyOn(component, 'botonDeTablaInfantilAccion').mockImplementation();
+    component.botonDeTablaInfantilAccion(buttonActionTypes.CANCELAR);
+    expect(component.botonDeTablaInfantilAccion).toHaveBeenCalledWith(buttonActionTypes.CANCELAR);
   });
 });

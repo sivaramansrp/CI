@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IntroAvisoComponent } from './intro-aviso.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('IntroAvisoComponent', () => {
   let component: IntroAvisoComponent;
@@ -8,7 +9,7 @@ describe('IntroAvisoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [IntroAvisoComponent]
+      imports: [IntroAvisoComponent, HttpClientModule]
     })
     .compileComponents();
     

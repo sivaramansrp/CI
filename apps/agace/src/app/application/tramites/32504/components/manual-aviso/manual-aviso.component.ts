@@ -1,16 +1,17 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMANUFACTURA, DATOS_QUIEN_RECIBE } from '../../constants/aviso.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { InputTypes, Props, buttonActionTypes } from '@ng-mf/data-access-user';
-import { MenuConfig, TablaClomns } from '@ng-mf/data-access-user';
-import { ActionType } from '@ng-mf/data-access-user';
+import { FormaValidators, InputTypes, Props, buttonActionTypes } from '@ng-mf/data-access-user';
+import { ActionType } from '../../enum/aviso.enum';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
+import { ColumnasTabla } from '../../models/aviso.model';
 import { CommonModule } from '@angular/common';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { InputConfig } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { MenuConfig } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -143,31 +144,31 @@ export class ManualAvisoComponent implements OnInit {
   tableData: {
     headers: {
       encabezado: string,
-      clave: (ele: TablaClomns) => string,
+      clave: (ele: ColumnasTabla) => string,
       orden: number
     }[],
     data: [],
   } = {
       headers: [
-        { encabezado: 'RFC', clave: (ele: TablaClomns) => ele.rfc, orden: 1 },
+        { encabezado: 'RFC', clave: (ele: ColumnasTabla) => ele.rfc, orden: 1 },
         {
           encabezado: 'Nombre comercial',
-          clave: (ele: TablaClomns) => ele.nombreComercial,
+          clave: (ele: ColumnasTabla) => ele.nombreComercial,
           orden: 2,
         },
         {
           encabezado: 'Entidad federativa',
-          clave: (ele: TablaClomns) => ele.entidadFederativa,
+          clave: (ele: ColumnasTabla) => ele.entidadFederativa,
           orden: 3,
         },
         {
-          encabezado: 'Alcaldío o Municipio',
-          clave: (ele: TablaClomns) => ele.alcaldioOMuncipio,
+          encabezado: 'Alcaldía o Municipio',
+          clave: (ele: ColumnasTabla) => ele.alcaldioOMuncipio,
           orden: 4,
         },
         {
           encabezado: 'Colonia',
-          clave: (ele: TablaClomns) => ele.colonia,
+          clave: (ele: ColumnasTabla) => ele.colonia,
           orden: 5,
         },
       ],
@@ -178,6 +179,7 @@ export class ManualAvisoComponent implements OnInit {
   actionTypes = ActionType;
   TablaSeleccion = TablaSeleccion;
   event = {};
+  inputTypes = InputTypes;
   
   constructor(
     private fb: FormBuilder,
@@ -191,6 +193,10 @@ export class ManualAvisoComponent implements OnInit {
     this.renderGroup(this.configuracion);
   }
 
+  /**
+   * Pase la config para inicializar el formulario
+   * @param config - La config para los controles del formulario.
+   */
   renderGroup(config: InputConfig[]): void { 
     config.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
@@ -210,7 +216,7 @@ export class ManualAvisoComponent implements OnInit {
   ): void {
     const GRUPO = this.formulario.get(nombreGrupo) as FormGroup;
     configuracion.forEach((campo: MenuConfig, menuIndex: number) => {
-      const VALIDATORS = campo.props.validators ? ManualAvisoComponent.getValidators(campo.props.validators) : [Validators.required];
+      const VALIDATORS = campo.props.validators ? ManualAvisoComponent.obtenerValidadores(campo.props.validators) : [Validators.required];
       const CONTROL_NAME = campo.props.campo ? campo.props.campo : campo.props.labelNombre;
       GRUPO.addControl(
         CONTROL_NAME,
@@ -250,9 +256,6 @@ export class ManualAvisoComponent implements OnInit {
       datosDomicilioLugar: this.fb.group({}),
       datosMercanciaSubmanufactura: this.fb.group({}),
       manualDatos: this.fb.group({}),
-      // datosExporta: this.fb.group({}),
-      // datosProductor: this.fb.group({}),
-      // datosExportador: this.fb.group({}),
     });
   }
 
@@ -261,15 +264,15 @@ export class ManualAvisoComponent implements OnInit {
    * @param validadores - Una matriz de patrones regex que se utilizarán para la validación.
    * @returns Una matriz de validadores de formularios.
    */
-  static getValidators(validadores: string[]): ValidatorFn[] {
+  static obtenerValidadores(validadores: string[]): ValidatorFn[] {
     const FORM_VALIDATORS: ValidatorFn[] = [];
     validadores.forEach((validadore) => {
-      if (validadore === 'required') {
+      if (validadore === FormaValidators.REQUIRED) {
         FORM_VALIDATORS.push(Validators.required);
-      } else if (validadore.includes('maxLength')) {
+      } else if (validadore.includes(FormaValidators.MAX_LENGTH)) {
         const MAX = validadore.split(':')[1];
         FORM_VALIDATORS.push(Validators.maxLength(Number(MAX)));
-      } else if (validadore.includes('pattern')) {
+      } else if (validadore.includes(FormaValidators.PATTERN)) {
         const PATTERN = validadore.split(':')[1];
         FORM_VALIDATORS.push(Validators.pattern(PATTERN));
       }
@@ -343,7 +346,7 @@ export class ManualAvisoComponent implements OnInit {
     }
   }
 
-  childTablebuttonAcion(action: buttonActionTypes): void {
+  botonDeTablaInfantilAccion(action: buttonActionTypes): void {
     switch (action) {
       case buttonActionTypes.AGREGAR:
       case buttonActionTypes.CANCELAR:

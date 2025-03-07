@@ -1,17 +1,17 @@
 import { CARGO_TIPO, DATOS_EMPRESA } from '../../constants/aviso.enum';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { InputConfig, MenuConfig, Props } from '@ng-mf/data-access-user';
+import { FormaValidators, InputConfig, MenuConfig, Props } from '@ng-mf/data-access-user';
 import { InputTypes, buttonActionTypes } from '@ng-mf/data-access-user';
 import { CargaMasivaComponent } from '../carga-masiva/carga-masiva.component';
 import { CatalogoSelectComponent } from "@ng-mf/data-access-user";
 import { CatalogosService } from '@ng-mf/data-access-user';
+import { ColumnasTabla } from '../../models/aviso.model';
 import { CommonModule } from '@angular/common';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from "@ng-mf/data-access-user";
 import { InputRadioComponent } from "@ng-mf/data-access-user";
 import { ManualAvisoComponent } from '../manual-aviso/manual-aviso.component';
-import { TablaClomns } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
@@ -65,40 +65,37 @@ export class AvisoComponent implements OnInit {
       ],
     },
   ];
-  valoresSeleccionadosRadio: { [key: string]: string } = {
-    radio1: ''
-  };
   fiscal: FormularioDinamico[] = [];
   formulario!: FormGroup;
   tableData: {
     headers: {
       encabezado: string,
-      clave: (ele: TablaClomns) => string,
+      clave: (ele: ColumnasTabla) => string,
       orden: number
     }[],
     data: [],
   } = {
       headers:
       [
-        { encabezado: 'RFC', clave: (ele: TablaClomns) => ele.rfc, orden: 1 },
+        { encabezado: 'RFC', clave: (ele: ColumnasTabla) => ele.rfc, orden: 1 },
         {
           encabezado: 'Nombre comercial',
-          clave: (ele: TablaClomns) => ele.nombreComercial,
+          clave: (ele: ColumnasTabla) => ele.nombreComercial,
           orden: 2,
         },
         {
           encabezado: 'Entidad federativa',
-          clave: (ele: TablaClomns) => ele.entidadFederativa,
+          clave: (ele: ColumnasTabla) => ele.entidadFederativa,
           orden: 3,
         },
         {
-          encabezado: 'Alcaldío o Municipio',
-          clave: (ele: TablaClomns) => ele.alcaldioOMuncipio,
+          encabezado: 'Alcaldía o Municipio',
+          clave: (ele: ColumnasTabla) => ele.alcaldioOMuncipio,
           orden: 4,
         },
         {
           encabezado: 'Colonia',
-          clave: (ele: TablaClomns) => ele.colonia,
+          clave: (ele: ColumnasTabla) => ele.colonia,
           orden: 5,
         },
       ],
@@ -108,6 +105,11 @@ export class AvisoComponent implements OnInit {
   buttonActionTypes = buttonActionTypes;
   TablaSeleccion = TablaSeleccion;
   evento = {};
+  inputTypes = InputTypes;
+  cargaTipo = {
+    MANUAL: 'manual',
+    CARGA_MASIVA: 'carga_masiva',
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -130,7 +132,6 @@ export class AvisoComponent implements OnInit {
     ];  
     this.configuracion[1].menu[0].props.radioOptions = TIPO_CARGA;
     this.configuracion[1].menu[0].props.radioSelectedValue = TIPO_CARGA[0].value;
-    this.valoresSeleccionadosRadio = { radio1: TIPO_CARGA[0].value };
     this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
     });
@@ -149,14 +150,15 @@ export class AvisoComponent implements OnInit {
   ): void {
     const GRUPO = this.formulario.get(nombreGrupo) as FormGroup;
     configuracion.forEach((campo: MenuConfig, menuIndex: number) => {
-      const VALIDATORS = campo.props.validators ? AvisoComponent.getValidators(campo.props.validators) : [Validators.required];
+      const VALIDATORS = campo.props.validators ? AvisoComponent.obtenerValidadores(campo.props.validators) : [Validators.required];
       const CONTROL_NAME = campo.props.campo ? campo.props.campo : campo.props.labelNombre;
       GRUPO.addControl(
         CONTROL_NAME,
         this.fb.control({ value: '', disabled: campo.props.disabled }, VALIDATORS)
       );
       if (campo.inputType === InputTypes.SELECT) {
-        this.obtenerValoresCatalogo(indiceGrupo, menuIndex, CONTROL_NAME);
+        // Use this below line once API is works fine to get the catalog values
+        // this.obtenerValoresCatalogo(indiceGrupo, menuIndex, CONTROL_NAME);
       }
     });
   }
@@ -188,9 +190,6 @@ export class AvisoComponent implements OnInit {
       datosEmpresa: this.fb.group({}),
       cargaTipo: this.fb.group({}),
       manualDatos: this.fb.group({}),
-      // datosExporta: this.fb.group({}),
-      // datosProductor: this.fb.group({}),
-      // datosExportador: this.fb.group({}),
     });
   }
 
@@ -199,15 +198,15 @@ export class AvisoComponent implements OnInit {
    * @param validadores - Una matriz de patrones regex que se utilizarán para la validación.
    * @returns Una matriz de validadores de formularios.
    */
-  static getValidators(validadores: string[]): ValidatorFn[] {
+  static obtenerValidadores(validadores: string[]): ValidatorFn[] {
     const FORM_VALIDATORS: ValidatorFn[] = [];
     validadores.forEach((validadore) => {
-      if (validadore === 'required') {
+      if (validadore === FormaValidators.REQUIRED) {
         FORM_VALIDATORS.push(Validators.required);
-      } else if (validadore.includes('maxLength')) {
+      } else if (validadore.includes(FormaValidators.MAX_LENGTH)) {
         const MAX = validadore.split(':')[1];
         FORM_VALIDATORS.push(Validators.maxLength(Number(MAX)));
-      } else if (validadore.includes('pattern')) {
+      } else if (validadore.includes(FormaValidators.PATTERN)) {
         const PATTERN = validadore.split(':')[1];
         FORM_VALIDATORS.push(Validators.pattern(PATTERN));
       }
@@ -240,7 +239,6 @@ export class AvisoComponent implements OnInit {
    */
   cambioValorRadio(claveRadio: string, groupIndex: number, menuIndex: number, evento: string | number): void {
     this.configuracion[groupIndex].menu[menuIndex].props.radioSelectedValue = evento;
-    this.valoresSeleccionadosRadio[claveRadio] = evento.toString();
   }
 
   buttonAcion(action: buttonActionTypes): void {

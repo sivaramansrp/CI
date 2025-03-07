@@ -76,7 +76,6 @@ export * from './core/services/130118/pexim/pexim.service';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
-export * from './core/models/32504/aviso.model';
 export * from './core/models/220202/fitosanitario.model';
 export * from './core/services/220501/revision.service';
 export * from './core/services/220501/sagarpa/sagarpa.service';
@@ -111,7 +110,4 @@ export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
 export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
 export * from './tramites/components/acuse/acuse.component';
-
-export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
-export * from './core/models/shared/configuracion-columna.model';
-export * from './core/enums/tabla-seleccion.enum';
+export * from './core/enums/forma-validators.enum';

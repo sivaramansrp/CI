@@ -200,7 +200,7 @@ export const TEXTOS = {
     <p>- El archivo no debe exceder los 1000 registros. Para descargar plantilla del archivo de excel de click</p>`,
     FILE_UPLOAD: `Seleccionar archivo`,
     FILE_UPLOAD_TEXT: `Sin archivos seleccionados`,
-    FILE_UPLOAD_TEXT_SUCCESS: `El formato del archivo es correcto. Se enviara un correo de notificación con el resultado.`,
+    FILE_UPLOAD_TEXT_SUCCESS: `El formato del archivo es correcto. Se enviará un correo de notificación con el resultado.`,
 };
 
 export const TEXTO_REQUISITOS = {
@@ -209,7 +209,7 @@ export const TEXTO_REQUISITOS = {
     REQUISITOS_OPCIONALES_INSTRUCCIONES: `<h6>Instrucciones</h6>
   <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
   <p>- En caso de que no requieras algún documento, seleccionalo y elíminalo</p>
-  <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar neuvo".</p>`,
+  <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`,
 }
 
 export const TEXTO_ANEXAR_REQUISITOS = {

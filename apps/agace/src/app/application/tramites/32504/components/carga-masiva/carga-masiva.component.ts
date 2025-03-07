@@ -23,7 +23,7 @@ export class CargaMasivaComponent {
    * Implementar lógica de carga de archivo..
    * @param {any} event
    */
-  updateFile(event: Event): void {
+  actualizarArchivo(event: Event): void {
     // Implementar lógica de carga de archivo.
     this.event = event;
   }

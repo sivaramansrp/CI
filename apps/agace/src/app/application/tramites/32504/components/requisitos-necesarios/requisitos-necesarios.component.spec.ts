@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { RequisitosNecesariosComponent } from './requisitos-necesarios.component';
-import { TEXTO_REQUISITOS } from '@ng-mf/data-access-user';
+import { TEXTO_REQUISITOS } from '../../constants/aviso.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('RequisitosNecesariosComponent', () => {
   let component: RequisitosNecesariosComponent;
@@ -13,7 +15,12 @@ describe('RequisitosNecesariosComponent', () => {
       imports: [
         TituloComponent,
         AlertComponent,
-        RequisitosNecesariosComponent // Import the standalone component here
+        RequisitosNecesariosComponent,
+        HttpClientModule,
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        ToastrService
       ]
     }).compileComponents();
 
