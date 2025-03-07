@@ -71,7 +71,11 @@ export class PantallasComponent {
     txtBtnSig: 'Continuar',
   };
 
-  catalogoDocumentos: Catalogo[] = [];
+  /**
+   * Un array de objetos Catalogo que representa el catálogo de documentos.
+   * Este array está inicialmente vacío y puede ser poblado con instancias de Catalogo.
+   */
+  public catalogoDocumentos: Catalogo[] = [];
 
 
 
@@ -87,7 +91,7 @@ export class PantallasComponent {
    *
    * @param {AccionBoton} e - El objeto del botón de acción que contiene las propiedades `valor` y `accion`.
    */
-  getValorIndice(e: AccionBoton) {
+ public getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -99,7 +103,16 @@ export class PantallasComponent {
   }
 
 
-  getTiposDocumentos(): void {
+  /**
+   * Obtiene el catálogo de tipos de documentos del servicio de catálogos.
+   * 
+   * Este método recupera el catálogo de tipos de documentos identificado por 
+   * `CATALOGOS_ID.CAT_TIPO_DOCUMENTO` del `catalogosServices`. 
+   * Si la respuesta contiene algún elemento, los asigna a `catalogoDocumentos`.
+   * 
+   * @returns {void}
+   */
+  public getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
       .subscribe({
