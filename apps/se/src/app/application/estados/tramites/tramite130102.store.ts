@@ -107,26 +107,211 @@ export class Tramite130102Store extends Store<Solicitud130102State> {
 
   /**
    * Actualiza el valor de la fracción arancelaria.
-   * @param fraccion - Nueva fracción arancelaria.
+   * @param {string} fraccion - Nueva fracción arancelaria.
    */
   public setFraccion(fraccion: string) {
-    this.update((state) => ({ ...state, fraccion }));
+    this.update((state) => ({
+      ...state,
+      fraccion,
+    }));
   }
 
   /**
-   * Actualiza la descripción de la fracción.
-   * @param descripcion - Nueva descripción.
+   * Actualiza la descripción del trámite.
+   * @param {string} descripcion - Nueva descripción del trámite.
    */
   public setDescripcion(descripcion: string) {
-    this.update((state) => ({ ...state, descripcion }));
+    this.update((state) => ({
+      ...state,
+      descripcion,
+    }));
   }
 
   /**
-   * Actualiza el código de fracción arancelaria.
-   * @param fraccionArancelaria - Nuevo código de fracción arancelaria.
+   * Actualiza la fracción arancelaria.
+   * @param {string} fraccionArancelaria - Nuevo valor de fracción arancelaria.
    */
   public setFraccionArancelaria(fraccionArancelaria: string) {
-    this.update((state) => ({ ...state, fraccionArancelaria }));
+    this.update((state) => ({
+      ...state,
+      fraccionArancelaria,
+    }));
+  }
+
+  /**
+   * Actualiza la unidad de medida.
+   * @param {string} unidadMedida - Nueva unidad de medida.
+   */
+  public setUnidadMedida(unidadMedida: string) {
+    this.update((state) => ({
+      ...state,
+      unidadMedida,
+    }));
+  }
+
+  /**
+   * Actualiza la cantidad de productos.
+   * @param {number} cantidad - Nueva cantidad.
+   */
+  public setcantidad(cantidad: number) {
+    this.update((state) => ({
+      ...state,
+      cantidad,
+    }));
+  }
+
+  /**
+   * Actualiza el valor de la factura en dólares USD.
+   * @param {string} valorFacturaUSD - Nuevo valor de factura.
+   */
+  public setValorFacturaUSD(valorFacturaUSD: string) {
+    this.update((state) => ({
+      ...state,
+      valorFacturaUSD,
+    }));
+  }
+
+  /**
+   * Actualiza la cantidad de partidas.
+   * @param {number} cantidadPartidas - Nueva cantidad de partidas.
+   */
+  public setCantidad_partidas(cantidadPartidas: number) {
+    this.update((state) => ({
+      ...state,
+      cantidadPartidas,
+    }));
+  }
+
+  /**
+   * Actualiza la fracción arancelaria TIGIE.
+   * @param {string} fraccionArancelariaTIGIE - Nuevo valor.
+   */
+  public setFraccionArancelariaTIGIE(fraccionArancelariaTIGIE: string) {
+    this.update((state) => ({
+      ...state,
+      fraccionArancelariaTIGIE,
+    }));
+  }
+
+  /**
+   * Actualiza el código extendido de la fracción TIGIE.
+   * @param {string} fraccionArancelariaTIGIE_TIGIE - Nuevo código.
+   */
+  public setFraccionArancelariaTIGIE_TIGIE(fraccionArancelariaTIGIE_TIGIE: string) {
+    this.update((state) => ({
+      ...state,
+      fraccionArancelariaTIGIE_TIGIE,
+    }));
+  }
+
+  /**
+   * Actualiza la descripción de las partidas.
+   * @param {string} descripcionPartidas - Nueva descripción.
+   */
+  public setdescripcion_partidas(descripcionPartidas: string) {
+    this.update((state) => ({
+      ...state,
+      descripcionPartidas,
+    }));
+  }
+
+  /**
+   * Actualiza el valor en dólares de la partida.
+   * @param {number} valorPartidaUSD - Nuevo valor.
+   */
+  public setvalorPartidaUSD(valorPartidaUSD: number) {
+    this.update((state) => ({
+      ...state,
+      valorPartidaUSD,
+    }));
+  }
+
+  /**
+   * Actualiza la fracción arancelaria.
+   * @param {string} fracciónarancelaria - Nueva fracción.
+   */
+  public setfraccionarancelaria(fracciónarancelaria: string) {
+    this.update((state) => ({
+      ...state,
+      fracciónarancelaria,
+    }));
+  }
+
+  /**
+   * Actualiza la solicitud de mercancía.
+   * @param {string} solicitudMercancia - Nueva solicitud.
+   */
+  public setsolicitudMercancia(solicitudMercancia: string) {
+    this.update((state) => ({
+      ...state,
+      solicitudMercancia,
+    }));
+  }
+
+  /**
+   * Actualiza la entidad.
+   * @param {string} entidad - Nueva entidad.
+   */
+  public setEntidad(entidad: string) {
+    this.update((state) => ({
+      ...state,
+      entidad,
+    }));
+  }
+
+  /**
+   * Actualiza la representación.
+   * @param {string} representacion - Nueva representación.
+   */
+  public setRepresentacion(representacion: string) {
+    this.update((state) => ({
+      ...state,
+      representacion,
+    }));
+  }
+
+  /**
+   * Actualiza el bloque del trámite.
+   * @param {string} bloque - Nuevo bloque.
+   */
+  public setBloque(bloque: string) {
+    this.update((state) => ({
+      ...state,
+      bloque,
+    }));
+  }
+
+  /**
+   * Actualiza la justificación del trámite.
+   * @param {string} descripcionJustificacion - Nueva justificación.
+   */
+  public setDescripcionJustificacion(descripcionJustificacion: string) {
+    this.update((state) => ({
+      ...state,
+      descripcionJustificacion,
+    }));
+  }
+
+  /**
+   * Actualiza las observaciones.
+   * @param {string} observaciones - Nuevas observaciones.
+   */
+  public setObservaciones(observaciones: string) {
+    this.update((state) => ({
+      ...state,
+      observaciones,
+    }));
+  }
+
+  /**
+   * Actualiza los productos involucrados.
+   * @param {string} productos - Nueva lista de productos.
+   */
+  public setProducto(productos: string) {
+    this.update((state) => ({
+      ...state,
+      productos,
+    }));
   }
 
   /**
