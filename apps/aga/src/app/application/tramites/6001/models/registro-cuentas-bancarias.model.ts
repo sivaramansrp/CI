@@ -1,4 +1,4 @@
-export interface REGISTRO_DE_SOLICITUDES_TABLA {
+export interface RegistroDeSolicitudesTabla {
     movimiento: number;
     cuenta: string;
     rfc: string;
@@ -12,7 +12,7 @@ export interface REGISTRO_DE_SOLICITUDES_TABLA {
     domicilio: string;
 }
 
-export interface DATOS_GENERALES {
+export interface DatosGenerales {
     data: DATOS[];
 }
 

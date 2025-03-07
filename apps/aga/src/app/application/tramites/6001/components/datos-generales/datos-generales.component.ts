@@ -4,11 +4,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RegistroCuentasBancariasService } from '../../services/registro-cuentas-bancarias.service';
-import { REGISTRO_DE_SOLICITUDES_TABLA } from '@libs/shared/data-access-user/src/core/models/6001/registro-cuentas-bancarias.model';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-
+import { RegistroDeSolicitudesTabla } from '../../models/registro-cuentas-bancarias.model';
 @Component({
   selector: 'app-datos-generales',
   standalone: true,
@@ -19,21 +18,21 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 export class DatosGeneralesComponent implements OnInit {
 
   public formDatosGenerales!: FormGroup;
-  public registroDeSolicitudesTablaDatos: REGISTRO_DE_SOLICITUDES_TABLA[] = [];
+  public registroDeSolicitudesTablaDatos: RegistroDeSolicitudesTabla[] = [];
 
   /** Configuración de la tabla de sectores */
-  public configuracionTabla: ConfiguracionColumna<REGISTRO_DE_SOLICITUDES_TABLA>[] = [
-    { encabezado: 'Tipo movimiento', clave: (item: REGISTRO_DE_SOLICITUDES_TABLA) => item.movimiento, orden: 1 },
-    { encabezado: 'Titular cuenta', clave: (item: REGISTRO_DE_SOLICITUDES_TABLA) => item.cuenta, orden: 2 },
-    { encabezado: 'RFC', clave: (item: REGISTRO_DE_SOLICITUDES_TABLA) => item.rfc, orden: 3 },
-    { encabezado: 'Tipo persona', clave: (item: REGISTRO_DE_SOLICITUDES_TABLA) => item.persona, orden: 4 },
-    { encabezado: 'Número de cuenta', clave: (item: REGISTRO_DE_SOLICITUDES_TABLA) => item.numerodecuenta, orden: 5 },
-    { encabezado: 'Sucursal', clave: (item: REGISTRO_DE_SOLICITUDES_TABLA) => item.sucursal, orden: 6 },
-    { encabezado: 'Institución de crédito', clave: (item: REGISTRO_DE_SOLICITUDES_TABLA) => item.instituciondecredito, orden: 7 },
-    { encabezado: 'Número de plaza', clave: (item: REGISTRO_DE_SOLICITUDES_TABLA) => item.numero, orden: 8 },
-    { encabezado: 'Pais donde radica cuenta', clave: (item: REGISTRO_DE_SOLICITUDES_TABLA) => item.radicaCuenta, orden: 9 },
-    { encabezado: 'Estado', clave: (item: REGISTRO_DE_SOLICITUDES_TABLA) => item.estado, orden: 10 },
-    { encabezado: 'Domicilio extranjero', clave: (item: REGISTRO_DE_SOLICITUDES_TABLA) => item.domicilio, orden: 11 }
+  public configuracionTabla: ConfiguracionColumna<RegistroDeSolicitudesTabla>[] = [
+    { encabezado: 'Tipo movimiento', clave: (item: RegistroDeSolicitudesTabla) => item.movimiento, orden: 1 },
+    { encabezado: 'Titular cuenta', clave: (item: RegistroDeSolicitudesTabla) => item.cuenta, orden: 2 },
+    { encabezado: 'RFC', clave: (item: RegistroDeSolicitudesTabla) => item.rfc, orden: 3 },
+    { encabezado: 'Tipo persona', clave: (item: RegistroDeSolicitudesTabla) => item.persona, orden: 4 },
+    { encabezado: 'Número de cuenta', clave: (item: RegistroDeSolicitudesTabla) => item.numerodecuenta, orden: 5 },
+    { encabezado: 'Sucursal', clave: (item: RegistroDeSolicitudesTabla) => item.sucursal, orden: 6 },
+    { encabezado: 'Institución de crédito', clave: (item: RegistroDeSolicitudesTabla) => item.instituciondecredito, orden: 7 },
+    { encabezado: 'Número de plaza', clave: (item: RegistroDeSolicitudesTabla) => item.numero, orden: 8 },
+    { encabezado: 'Pais donde radica cuenta', clave: (item: RegistroDeSolicitudesTabla) => item.radicaCuenta, orden: 9 },
+    { encabezado: 'Estado', clave: (item: RegistroDeSolicitudesTabla) => item.estado, orden: 10 },
+    { encabezado: 'Domicilio extranjero', clave: (item: RegistroDeSolicitudesTabla) => item.domicilio, orden: 11 }
   ];
 
 
@@ -84,6 +83,9 @@ export class DatosGeneralesComponent implements OnInit {
         this.formDatosGenerales.get('tipoDePersona')?.setValue(API_RESPONSE_DATOS.tipoDePersona);
       }
     });
+  }
+
+  public altaDeCuenta(): void {
   }
 
 }

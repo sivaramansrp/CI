@@ -2,10 +2,10 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DATOS_GENERALES, REGISTRO_DE_SOLICITUDES_TABLA } from '@libs/shared/data-access-user/src/core/models/6001/registro-cuentas-bancarias.model';
 import { JSONResponse } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { enviroment } from '@libs/shared/data-access-user/src/enviroments/enviroment';
 import { catchError, Observable, throwError } from 'rxjs';
+import { DatosGenerales, RegistroDeSolicitudesTabla } from '../models/registro-cuentas-bancarias.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,12 +19,12 @@ export class RegistroCuentasBancariasService {
     //
    }
 
-   public getSolicitudesTabla():Observable<REGISTRO_DE_SOLICITUDES_TABLA[]> {
-      return this.http.get<REGISTRO_DE_SOLICITUDES_TABLA[]>('assets/json/6001/registro-de-solicitudes-tabla.json');
+   public getSolicitudesTabla():Observable<RegistroDeSolicitudesTabla[]> {
+      return this.http.get<RegistroDeSolicitudesTabla[]>('assets/json/6001/registro-de-solicitudes-tabla.json');
    }
 
-   public obtenerDatosDeFormularioDeAPI():Observable<DATOS_GENERALES> {
-      return this.http.get<DATOS_GENERALES>('assets/json/6001/respuesta-de-la-api.json');
+   public obtenerDatosDeFormularioDeAPI():Observable<DatosGenerales> {
+      return this.http.get<DatosGenerales>('assets/json/6001/respuesta-de-la-api.json');
    }
 
      /**
