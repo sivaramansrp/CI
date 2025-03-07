@@ -30,15 +30,6 @@ export class AgriculturaApiService {
       map(response => response.data)
     );
   }
-  /**
-      * Obtiene los datos de la tabla desde el archivo JSON.
-      * @returns Observable con los datos de la tabla.
-      */
-  obtenerDatosDeTabla(fileName: string): Observable<DatosDeTabla> {
-    const BASEURL = this.url + fileName;
-    return this.http.get<DatosDeTabla>(BASEURL).pipe(
-      map(response => response)
-    );
-  }
+
 
 }

@@ -33,7 +33,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * para mostrar en la cabecera y las celdas de la tabla.
    * @type {MesaColumnasData[]}
    */
-  mesaColumnas: DatosDeFila[] = [];
+  mesaColumnas: string[] = [];
 
   /**
    * @description Rango de días seleccionados.
@@ -180,7 +180,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     private readonly agriculturaApiService: AgriculturaApiService
 
   ) {
-    this.mesaColumnasData();
+    this.createFromFields();
   }
   /**
  * @description Inicializa el componente.
@@ -191,7 +191,6 @@ export class DatosDeLaSolicitudComponent implements OnInit {
  */
   ngOnInit(): void {
     this.obtenerTodosLosDatosDeLaLista();
-    this.obtenerTablaCelulaValor();
   }
   /**
    * @description Crea los campos del formulario y los agrupa en un `FormGroup`.
@@ -255,26 +254,8 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     this.getUmCLista();
     this.getusoLista();
   }
-  /**
- * @description Obtiene la lista de table desde un archivo JSON.
- * @method obtenerTablaCelulaValor
- */
-  obtenerTablaCelulaValor() {
-    this.agriculturaApiService.obtenerDatosDeTabla('solicitud.json').subscribe(data => {
-      this.tablaDeDatosDeCelda = data as unknown as DatosDeFila[];
-    })
 
-  }
-  /**
-* @description Obtiene la lista de table desde un archivo JSON.
-* @method mesaColumnasData
-*/
 
-  mesaColumnasData() {
-    this.agriculturaApiService.obtenerDatosDeTabla('contenidodetabla.json').subscribe(data => {
-      this.mesaColumnas = data as unknown as DatosDeFila[];
-    })
-  }
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
   }

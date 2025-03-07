@@ -8,7 +8,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   imports: [CommonModule],
   templateUrl: './alert.component.html',
   styleUrl: './alert.component.scss',
-  host: { 'hostID': crypto.randomUUID().toString() }
+  host: {}
 })
 export class AlertComponent implements OnInit {
   @Input() CONTENIDO!: string;
@@ -16,7 +16,7 @@ export class AlertComponent implements OnInit {
 
   textoHTML: SafeHtml = '';
 
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(private sanitizer: DomSanitizer) { }
 
   /**
    * Método del ciclo de vida de Angular que se llama una vez que el componente ha sido inicializado.
