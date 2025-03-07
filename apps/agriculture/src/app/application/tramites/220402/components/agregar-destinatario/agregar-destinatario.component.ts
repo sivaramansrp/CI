@@ -31,7 +31,7 @@ export class AgregarDestinatarioComponent implements OnDestroy, OnInit {
   };
 
   constructor(private mediodetransporteService: MediodetransporteService) {
-    this.fetchtiposDocumentos();
+    this.fetchTiposDocumentos()
   }
   ngOnInit(): void {
     this.inicializaCatalogos();
@@ -40,7 +40,7 @@ export class AgregarDestinatarioComponent implements OnDestroy, OnInit {
   /**
    * Este método se utiliza para obtener los datos de los medios de transporte.
    */
-  fetchtiposDocumentos(): void {
+  fetchTiposDocumentos(): void {
     this.mediodetransporteService
       .getMedioDeTransporte()
       .pipe(takeUntil(this.destroyed$))

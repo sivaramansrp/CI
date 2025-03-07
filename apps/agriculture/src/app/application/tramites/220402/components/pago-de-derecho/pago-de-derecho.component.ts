@@ -30,13 +30,13 @@ export class PagoDeDerechoComponent implements OnInit {
 
   FormSolicitud!: FormGroup;
 
-  answer: string = '';
+  respuesta: string = '';
 
-  public mercancia!: CatalogosSelect;
+  public mercanciaCatalogo!: CatalogosSelect;
 
-  bancode!: Catalogo;
+  bancoSeleccionado!: Catalogo;
 
-  banco!: CatalogosSelect;
+  bancoCatalogo!: CatalogosSelect;
 
   constructor(
     private fb: FormBuilder,
@@ -46,7 +46,7 @@ export class PagoDeDerechoComponent implements OnInit {
   }
 
   actualizarBanco(e: Catalogo): void {
-    this.bancode = e;
+    this.bancoSeleccionado = e;
   }
 
   fetchBancoData(): void {
@@ -54,7 +54,7 @@ export class PagoDeDerechoComponent implements OnInit {
       if (resp.code === 200) {
         const response = resp.data;
 
-        this.banco = {
+        this.bancoCatalogo = {
           labelNombre: 'Banco*',
           required: false,
           primerOpcion: 'Selecciona un valor',
@@ -161,7 +161,7 @@ export class PagoDeDerechoComponent implements OnInit {
    */
 
   public getMercancia() {
-    this.mercancia = {
+    this.mercanciaCatalogo = {
       labelNombre: 'Mercancía',
       required: true,
       primerOpcion: 'Selecciona un valor',
@@ -184,11 +184,9 @@ export class PagoDeDerechoComponent implements OnInit {
    * Si el formulario es válido, registra los valores del formulario en la consola.
    */
   validarFormulario() {
-    if (this.FormSolicitud.valid) {
-      console.log(this.FormSolicitud.value);
-    }
+    
   }
   public static docSeleccionado(e: unknown): void {
-    console.log(e);
+  
   }
 }

@@ -11,7 +11,7 @@ import {
   FECHA_FINAL,
   FECHA_INICIO,
 } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
-import { MediodetransporteService } from 'libs/shared/data-access-user/src/core/services/220402/mediodetransporte.service';
+import { MediodetransporteService } from 'libs/shared/data-access-user/src/core/services/220402/medio-de-transporte.service';
 
 import { map, merge, takeUntil, ReplaySubject, Subject } from 'rxjs';
 import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/solicitud220402.store';
@@ -230,8 +230,8 @@ export class SolicitudComponent {
         empaques: [this.solicitudState?.empaques, [Validators.required]]
       }),
       unidadDeVerificacion: this.fb.group({
-        unidadDeVerify: [this.solicitudState?.unidadDeVerify, [Validators.required]],
-        terceroEspecialista: [this.solicitudState?.terceroEspecialista, [Validators.required]]
+        unidadDeVerificar: ['', [Validators.required]],
+        terceroEspecialista: ['', [Validators.required]]
       }),
       unidadExpedidoraFitosanitario: this.fb.group({
         entidadFederative: [this.solicitudState?.entidadFederative, [Validators.required]],
@@ -262,7 +262,7 @@ export class SolicitudComponent {
    * Método para mostrar los campos correspondientes a una mercancia.
    * @returns void
    */
-  mercancia_colapsable() {
+  mercanciaColapsable() {
     this.mercanciaCollapsable = !this.mercanciaCollapsable;
   }
 
@@ -271,7 +271,7 @@ export class SolicitudComponent {
    * @param {number} i - Índice de la mercancía a eliminar.
    * @returns {void}
    */
-  mercancia_borrar(i: number): void {
+  mercanciaBorrar(i: number): void {
     this.datosGeneralesArr.splice(i, 1);
   }
 
@@ -284,7 +284,7 @@ export class SolicitudComponent {
    */
   mercanciaAgregar() {
     this.datosGeneralesArr.push(this.datosMercancia.get('datosGenerales')?.value);
-    this.mercancia_colapsable();
+    this.mercanciaColapsable();
   }
 
   /**

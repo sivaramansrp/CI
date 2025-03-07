@@ -116,7 +116,7 @@
                   Datos Generales de la Mercancía:
                 </h4>
                 @if(!mercanciaCollapsable){
-                <button type="button" (click)="mercancia_colapsable()" class="collpase-button collapsed"></button>
+                <button type="button" (click)="mercanciaColapsable()" class="collpase-button collapsed"></button>
                 }
               </div>
               <div class="panel-collapse collapse in" id="mercancia-colapsable">
@@ -144,7 +144,7 @@
                         <td class="text-center">{{item.UMT}}</td>
                         <td class="text-center">{{item.cantidadUMC}}</td>
                         <td class="text-center">{{item.cantidadUMT}}</td>
-                        <td class="text-center"><button type="button" (click)="mercancia_borrar(i)"><i
+                        <td class="text-center"><button type="button" (click)="mercanciaBorrar(i)"><i
                               class="bi-trash"></i></button></td>
                       </tr>
 
@@ -299,7 +299,7 @@
                                 <div class="btn-group">
                                   <button class="btn btn-primary me-2" (click)="mercanciaAgregar();"
                                     type="button">Agregar</button>
-                                  <button (click)="mercancia_colapsable()" class="btn btn-danger"
+                                  <button (click)="mercanciaColapsable()" class="btn btn-danger"
                                     type="button">Cancelar</button>
                                 </div>
                               </div>
@@ -349,8 +349,8 @@
       <div class="row mt-3">
 
         <div class="col-md-5">
-          <app-catalogo-select [catalogo]="options" formControlName="unidadDeVerify"
-            [label]="'Nombre de la unidad de verificación'" [required]="true"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="options" formControlName="unidadDeVerificar" [label]="'Nombre de la unidad de verificación'"
+            [required]="true"></app-catalogo-select>
         </div>
 
         <div class="col-md-5">
