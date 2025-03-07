@@ -1,7 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 
 import { EMPRESA_FRONTERA } from '@ng-mf/data-access-user';
+
+import { DatosPasos } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@ng-mf/data-access-user';
+
+import { PASOS } from '@ng-mf/data-access-user';
+
+interface AccionBoton {
+  accion: string;
+  valor: number;
+}
 
 /**
  * @class EmpresaFronteraSolicitudComponent
@@ -13,6 +23,10 @@ import { EMPRESA_FRONTERA } from '@ng-mf/data-access-user';
   templateUrl: './empresa-frontera-solicitud.html',
 })
 export class EmpresaFronteraSolicitudComponent {
+
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  pasos: ListaPasosWizard[] = PASOS;
   /**
    * @constructor
    * @description Inicializa una instancia del componente EmpresaFronteraSolicitudComponent.
@@ -34,4 +48,24 @@ export class EmpresaFronteraSolicitudComponent {
    * Se inicializa en 2, lo que significa que el asistente comenzará en el tercer paso.
    */
   indice: number = 1;
+
+  
+  datosPasos: DatosPasos = {
+    nroPasos: this.pasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
+  };
+
+  getValorIndice(e: AccionBoton) {
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
+  }
+  
 }

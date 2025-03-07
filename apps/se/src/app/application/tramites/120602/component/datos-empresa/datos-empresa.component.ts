@@ -27,9 +27,14 @@ import radioButtonPersona from 'libs/shared/theme/assets/json/120602/radio-butto
 import dropDown from 'libs/shared/theme/assets/json/120602/drop-down.json'
 
 
-
-
 import { DATOS_EMPRESA } from '@ng-mf/data-access-user';
+import { Tramite120602Query } from '../../../../estados/queries/tramite120602.query';
+
+import { Solicitud120602State, Tramite120602Store } from '../../../../estados/tramites/tramite120602.store';
+
+
+import { takeUntil, map } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 /**
  * Metadatos del componente 'DatosEmpresaComponent'.
@@ -119,12 +124,19 @@ export class DatosEmpresaComponent implements OnInit {
    */
   pasos: ListaPasosWizard[] = [];
 
+  public solicitudState!: Solicitud120602State;
+
+  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
   * Constructor de la clase.
   * @param fb - Instancia de FormBuilder para construir formularios reactivos.
   */
   // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder,
+    private tramite120602Store: Tramite120602Store,
+    private tramite120602Query: Tramite120602Query
+  ) { }
 
   /**
    * Método de inicialización del componente.
@@ -139,37 +151,49 @@ export class DatosEmpresaComponent implements OnInit {
   * Inicializa el formulario reactivo de la empresa.
   */
   private inicializarFormulario(): void {
+    this.tramite120602Query.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe((data) => {
+      console.log('State from the query during form initialization:', data);
+    });
     this.formularioEmpresa = this.fb.group({
-      estado: [null],
-      representacionFederal: [null, Validators.required],
-      tipoEmpresa: [null],
-      especifique: [{ value: '', disabled: true }, Validators.maxLength(20)],
-      actividadEconomicaPreponderante: [''],
-      descripcion: [{ value: '', disabled: true }],
+      estado: [this.solicitudState.estado],
+      representacionFederal: [this.solicitudState.representacionFederal, Validators.required],
+      tipoEmpresa: [this.solicitudState.tipoEmpresa],
+      especifique: [{ value: this.solicitudState?.especifique || '', disabled: true }, Validators.maxLength(20)],
+      actividadEconomicaPreponderante: [this.solicitudState.actividadEconomicaPreponderante],
+      descripcion: [{ value: this.solicitudState.descripcion || '', disabled: true }],
 
       // Dirección
-      pais: [{ value: '', disabled: true }],
-      codigoPostal: [{ value: '', disabled: true }],
-      estadoDomicilio: [{ value: '', disabled: true }],
-      municipioAlcaldia: [{ value: '', disabled: true }],
-      localidad: [{ value: '', disabled: true }],
-      colonia: [{ value: '', disabled: true }],
-      calle: [{ value: '', disabled: true }],
-      numeroExterior: [{ value: '', disabled: true }],
-      numeroInterior: [{ value: '', disabled: true }],
+      pais: [{ value: this.solicitudState.pais ||'', disabled: true }],
+      codigoPostal: [{ value:this.solicitudState.codigoPostal || '', disabled: true }],
+      estadoDomicilio: [{ value: this.solicitudState.estadoDomicilio ||'', disabled: true }],
+      municipioAlcaldia: [{ value: this.solicitudState.municipioAlcaldia ||'', disabled: true }],
+      localidad: [{ value: this.solicitudState.localidad ||'', disabled: true }],
+      colonia: [{ value: this.solicitudState.colonia ||'', disabled: true }],
+      calle: [{ value: this.solicitudState.calle ||'', disabled: true }],
+      numeroExterior: [{ value: this.solicitudState.numeroExterior ||'', disabled: true }],
+      numeroInterior: [{ value: this.solicitudState.numeroInterior ||'', disabled: true }],
 
       // Contacto
-      lada: [{ value: '', disabled: true }],
-      telefono: [{ value: '', disabled: true }],
+      lada: [{ value: this.solicitudState.lada ||'', disabled: true }],
+      telefono: [{ value: this.solicitudState.telefono ||'', disabled: true }],
+      nacionalidad: [this.solicitudState.nacionalidad],
+      tipoDePersona: [this.solicitudState.tipoDePersona],
 
 
       // Detalles de la empresa
-      taxId: ['', Validators.required],
-      denominacion: [''],
-      datosPais: [null, Validators.required],
-      datosCodigoPostal: [''],
-      datosEstado: [''],
-      correoElectronico: [''],
+      taxId: [this.solicitudState.taxId, Validators.required],
+      denominacion: [this.solicitudState.denominacion],
+      datosPais: [this.solicitudState.datosPais, Validators.required],
+      datosCodigoPostal: [this.solicitudState.datosCodigoPostal],
+      datosEstado: [this.solicitudState.datosEstado],
+      correoElectronico: [this.solicitudState.correoElectronico],
     });
   }
 
@@ -240,4 +264,13 @@ export class DatosEmpresaComponent implements OnInit {
     txtBtnAnt: 'Anterior', // Texto para el botón de retroceso
     txtBtnSig: 'Continuar', // Texto para el botón de siguiente
   };
+
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite120602Store): void {
+    const valor = form.get(campo)?.value;
+    (this.tramite120602Store[metodoNombre] as (value: any) => void)(valor);
+  }
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

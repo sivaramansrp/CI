@@ -2,12 +2,14 @@
     <ng-titulo titulo="Representación federal"></ng-titulo>
     <div class="row">
         <div class="col-md-3">
-            <app-catalogo-select [catalogo]="federalEstatal" [label]="'Estado'" [required]="false" name="Estado"
-                formControlName="estado"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="federalEstatal" [label]="'Estado'"   [required]="false" name="Estado"
+                formControlName="estado" (change)="setValoresStore(formularioEmpresa,'estado', 'setEstado')">
+            </app-catalogo-select>
         </div>
         <div class="col-md-3">
             <app-catalogo-select [catalogo]="federalEstatal" [label]="'Representación federal'" [required]="true"
-                name="Representación federal" formControlName="representacionFederal"></app-catalogo-select>
+                name="Representación federal" formControlName="representacionFederal" (change)="setValoresStore(formularioEmpresa,'representacionFederal', 'setRepresentacionFederal')">
+            </app-catalogo-select>
         </div>
     </div>
 
@@ -19,8 +21,9 @@
 
     <div class="row">
         <div class="col-md-4">
-            <app-catalogo-select [catalogo]="federalEstatal" [label]="'Tipo de empresa*:'" [required]="false"
-                name="Tipo de empresa" formControlName="tipoEmpresa"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="federalEstatal" [label]="'Tipo de empresa:'" [required]="true"
+                name="Tipo de empresa" formControlName="tipoEmpresa"
+                (change)="setValoresStore(formularioEmpresa,'tipoEmpresa', 'setTipoEmpresa')"></app-catalogo-select>
 
         </div>
         <div class="col-md-8">
@@ -32,7 +35,8 @@
             <label for="actividad-economica-preponderante" class="form-label">Clasificación del Catálogo de Actividades
                 Económicas del SAT conforme a la Actividad Económica Preponderante":</label>
             <input type="text" id="actividad-economica-preponderante" class="form-control"
-                name="actividadEconomicaPreponderante" formControlName="actividadEconomicaPreponderante">
+                name="actividadEconomicaPreponderante" formControlName="actividadEconomicaPreponderante"
+                (change)="setValoresStore(formularioEmpresa,'actividadEconomicaPreponderante', 'setActividadEconomicaPreponderante')">
         </div>
         <div class="col-md-12">
             <label for="descripcion" class="form-label">Descripción:</label>
@@ -101,24 +105,26 @@
         <div class="col-md-6">
             <label class="form-label">Nacionalidad mexicana:</label>
             <app-input-radio [radioOptions]="opcionSeleccionMexicana" [selectedValue]="valorSeleccionadoNacionalidad"
-                [isRequired]="false" [layout]="'horizontal'"></app-input-radio>
+                [isRequired]="false" [layout]="'horizontal'" formControlName="nacionalidad"></app-input-radio>
         </div>
         <div class="col-md-6">
             <label class="form-label">Tipo de persona:</label>
             <app-input-radio [radioOptions]="opcionSeleccionPersona" [selectedValue]="valorSeleccionadoPersona"
-                [isRequired]="false" [layout]="'horizontal'"></app-input-radio>
+                [isRequired]="false" [layout]="'horizontal'" formConrolName="tipoDePersona"></app-input-radio>
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
             <label for="taxId" class="form-label">TAX ID*:</label>
-            <input type="text" id="taxId" class="form-control" formControlName="taxId">
+            <input type="text" id="taxId" class="form-control" formControlName="taxId"
+                (change)="setValoresStore(formularioEmpresa,'taxId', 'setTaxId')">
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
             <label for="Denominación" class="form-label">Denominación o razón social:</label>
-            <input type="text" id="denominación" class="form-control" formControlName="denominacion">
+            <input type="text" id="denominación" class="form-control" formControlName="denominacion"
+            (change)="setValoresStore(formularioEmpresa,'denominacion', 'setDenominacion')">
         </div>
         <div class="col-md-6">
             <app-catalogo-select [catalogo]="federalEstatal" [label]="'País'" [required]="true" name="País"
@@ -127,15 +133,18 @@
         </div>
         <div class="col-md-6">
             <label for="Código postal" class="form-label">Código postal:</label>
-            <input type="text" id="Código postal" class="form-control" formControlName="datosCodigoPostal">
+            <input type="text" id="Código postal" class="form-control" formControlName="datosCodigoPostal"
+             (change)="setValoresStore(formularioEmpresa,'datosCodigoPostal', 'setDatosCodigoPostal')">
         </div>
         <div class="col-md-6">
             <label for="Estado" class="form-label">Estado:</label>tableData
-            <input type="text" id="Estado" class="form-control" formControlName="datosEstado">
+            <input type="text" id="Estado" class="form-control" formControlName="datosEstado"
+            (change)="setValoresStore(formularioEmpresa,'datosEstado', 'setDatosEstado')">
         </div>
         <div class="col-md-6">
             <label for="Correo electrónico" class="form-label">Correo electrónico:</label>
-            <input type="text" id="Correo electrónico" class="form-control" formControlName="correoElectronico">
+            <input type="text" id="Correo electrónico" class="form-control" formControlName="correoElectronico"
+            (change)="setValoresStore(formularioEmpresa,'correoElectronico', 'setCorreoElectronico')">
         </div>
         <div class="col-md-12 d-flex justify-content-end mt-2 mb-4">
             <button type="button" class="btn btn-primary">Agregar</button>
