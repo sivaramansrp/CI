@@ -38,7 +38,7 @@ export class BtnContinuarComponent {
   private destroyNotifier$: Subject<void> = new Subject();
   public habilitarBoton: boolean = false;
 
-  constructor(private seccionQuery: SeccionLibQuery) {}
+  constructor(private seccionQuery: SeccionLibQuery) { }
 
   ngOnInit() {
     this.seccionQuery.selectSeccionState$
