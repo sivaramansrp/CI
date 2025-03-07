@@ -97,6 +97,16 @@ const routes: Routes = [
         (m) => m.AutorizacionProsecModule
       ),
   }
+  {
+    path: 'solicitud-modalidad',
+    loadChildren: () =>
+      import('./tramites/80208/registro-solicitud.module').then(
+        (m) => m.RegistroSolicitudModule
+      ),
+  }
+
+
+
 ];
 
 @NgModule({
