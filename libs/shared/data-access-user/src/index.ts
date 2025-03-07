@@ -90,6 +90,7 @@ export { FECHA_INSPECCION_INPUT as FECHA_INSPECCION_INPUT_220502 } from './trami
 export { PASOS as TODAPASOS } from './tramites/constantes/certificado-zoosanitario.enum';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './core/enums/tabla-seleccion.enum';
+export * from './tramites/directives/Uppercase/uppercase.directive'
 export * from './tramites/directives/Uppercase/uppercase.directive';
 export {
   TEXTOS_REQUISITOS as TEXTOS_REQUISITOS_80202,
