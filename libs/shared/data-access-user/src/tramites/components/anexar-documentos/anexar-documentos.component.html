@@ -61,7 +61,7 @@
               </button>
             }
             <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
-                    (click)="limpiarFile(fileInput)">
+                    (click)="limpiarFile(fileInput,item)">
               <i class="bi bi-trash3 bi-c"></i>
             </button>
           </div>
@@ -69,6 +69,20 @@
       }
       <div class="d-flex justify-content-end w-100 mb-4">
         <button class="btn-primary rounded">Cargar archivos</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <span class="h3">Documentos opcionales</span>
+    <div class="col-md-12 border rounded bg-file-container px-4" style="min-height: 15rem">
+      <div class="form-group py-3">
+<!--        <select class="form-control" multiple [formControl]="documentosOpcionales">-->
+        <select class="selectpicker" multiple aria-label="Default select example" data-live-search="true" [formControl]="documentosOpcionales">
+          <option *ngFor="let option of archivosOpcionales" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
       </div>
     </div>
   </div>

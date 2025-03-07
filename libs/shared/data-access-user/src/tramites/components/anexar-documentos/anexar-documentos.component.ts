@@ -18,7 +18,7 @@ import { InicioSesionService } from '../../../core/services/shared/inicio-sesion
 import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
 import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { URL_PRUEBA } from '../../constantes/servicios-extraordinarios.enum';
 
 declare const bootstrap: any; // Importación para manejar Bootstrap en TS
@@ -63,6 +63,19 @@ export class AnexarDocumentosComponent implements OnInit {
   @ViewChild('modalConfirmacion') modalConfirmacion!: ElementRef;
   rutaArchivoPreview: string = '';
   listadoArchivos: any[] = [];
+  documentosOpcionales: FormControl = new FormControl<any>('');
+  archivosOpcionales: any[] = [
+    { "value": 1, "label": "Lorem ipsum" },
+    { "value": 2, "label": "Lorem ipsum" },
+    { "value": 3, "label": "Lorem ipsum" },
+    { "value": 4, "label": "Lorem ipsum" },
+    { "value": 5, "label": "Lorem ipsum" },
+    { "value": 6, "label": "Lorem ipsum" },
+    { "value": 7, "label": "Lorem ipsum" },
+    { "value": 8, "label": "Lorem ipsum" },
+    { "value": 9, "label": "Lorem ipsum" },
+    { "value": 10, "label": "Lorem ipsum" }
+  ];
 
   constructor(
     private toastr: ToastrService,
@@ -285,8 +298,10 @@ export class AnexarDocumentosComponent implements OnInit {
     }
   }
 
-  limpiarFile(fileInput: HTMLInputElement): void {
+  limpiarFile(fileInput: HTMLInputElement, item: any): void {
     fileInput.value = '';
+    const index = this.listadoArchivos.findIndex(f => f.id === item.id);
+    this.listadoArchivos.splice(index, 1);
   }
 
   agregarParte(fileInput: HTMLInputElement, i: any) {
