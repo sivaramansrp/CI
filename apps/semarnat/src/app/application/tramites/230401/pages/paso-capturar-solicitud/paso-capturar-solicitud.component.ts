@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, PASOS4, WizardComponent } from '@ng-mf/data-access-user';
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { AccionBoton } from 'libs/shared/data-access-user/src/core/models/220201/certificado-zoosanitario.model';
+import { AccionBoton } from '../../enum/pantallas-constante.enum';
 
 @Component({
   selector: 'app-paso-capturar-solicitud',
