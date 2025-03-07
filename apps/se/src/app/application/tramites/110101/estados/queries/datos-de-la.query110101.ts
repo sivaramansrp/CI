@@ -7,9 +7,18 @@ import { Query } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
 export class DatosDeLaQuery extends Query<DatosDeLaState> {
+  /**
+   * **Constructor del servicio de consultas (Query) para DatosDeLa**
+   *
+   * - Inyecta la tienda `DatosDeLaStore` y la pasa al constructor de la clase base.
+   * - Permite acceder y suscribirse a los cambios en el estado de los datos de la mercancía.
+   *
+   * @param store - Instancia de `DatosDeLaStore` que gestiona el estado de los datos de la mercancía.
+   */
   constructor(protected override store: DatosDeLaStore) {
     super(store);
   }
+
 
   /**
    * **Obtiene un observable de los valores del formulario**
