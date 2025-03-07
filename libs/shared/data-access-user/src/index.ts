@@ -95,6 +95,7 @@ export * from './core/services/110102/representacion-federal/representacionFeder
 export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';
 export { PASOS as PASOS_FOUR_STEPS } from './tramites/constantes/paso-four-steps.enum';
+export { PASOS as PASOS_THREE_STEPS } from './tramites/constantes/paso-three-steps.enum';
 export * from './core/enums/forma-render.enum';
 export { ListaPasosWizard, InputConfig, MenuConfig, Props } from './core/models/forma-render.model';
 export * from './core/estados/seccion.store';
