@@ -5,11 +5,8 @@ globalThis.ngJest = {
     errorOnUnknownElements: true,
     errorOnUnknownProperties: true,
   },
-  crypto: {}
+  crypto: {},
 };
-
-
 
 global.crypto.randomUUID = uuidv4;
 import 'jest-preset-angular/setup-jest';
- 
