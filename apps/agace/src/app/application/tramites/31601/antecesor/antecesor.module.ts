@@ -24,6 +24,7 @@ import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { RequisitosComponent } from '../components/requisitos/requisitos.component';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { provideHttpClient } from '@angular/common/http';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [DatosComponent, PantallasComponent, FirmarSolicitudComponent],
@@ -48,10 +49,13 @@ import { provideHttpClient } from '@angular/common/http';
     FirmaElectronicaComponent,
     BtnContinuarComponent,
     RequisitosComponent,
+    ToastrModule.forRoot(),
   ],
   providers: [
     ServiciosPantallaService,
     provideHttpClient(),
+    ToastrService
+    
   ]
 })
 
