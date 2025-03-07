@@ -45,7 +45,7 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
   templateUrl: './anexar-page.component.html',
   styleUrl: './anexar-page.component.scss',
   standalone: true,
-  imports: [CommonModule,TituloComponent,FormsModule,ReactiveFormsModule,AlertComponent,TablaDinamicaComponent,CatalogoSelectComponent],
+  imports: [CommonModule,TituloComponent,FormsModule,ReactiveFormsModule,AlertComponent],
 })
 export class AnexarPageComponent implements OnInit {
   /**
@@ -171,18 +171,6 @@ export class AnexarPageComponent implements OnInit {
   ngOnInit(): void {
     this.getTiposDocumentos();
     this.getTipoDocumento();
-    // this.documentosSeleccionados = [
-    //   {
-    //           id: 1,
-    //           descripcion: 'Documentos que ampare el valor de la mercancía',
-    //         },
-    //         {
-    //           id: 2,
-    //           descripcion:
-    //             'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-    //         },
-    //       ];
-      
   }
 
   /**
