@@ -249,3 +249,30 @@ export const Aviso = {
 
 
 export const URL_PRUEBA = 'assets/pdf/Test03.pdf';
+
+export const PASOS_REQUERIMIENTOS = [
+  {
+    indice: 1,
+    titulo: 'Requerimiento de información',
+    activo: true,
+    completado: true,
+  },
+  {
+    indice: 2,
+    titulo: 'Requerimiento de datos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 3,
+    titulo: 'Anexar documentos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 4,
+    titulo: 'Firmar promoción',
+    activo: false,
+    completado: false,
+  },
+];
