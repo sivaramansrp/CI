@@ -1,11 +1,13 @@
-import { Observable, map } from 'rxjs';
 import {
-  SubmanufacturerDatos,
+  InfoRegistro,
   SubmanufacturerDireccionModelo,
 } from '../modelos/submanufacturer-modelos';
+
+import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
+
 
 @Injectable()
 /**
@@ -22,13 +24,15 @@ export class SubManufacturerService {
   /**
    * Obtiene los datos de registro y subcontratista.
    * @method getDatos
-   * @returns {Observable<any>} Observable con los datos de registro y subcontratista.
+   * @returns {Observable<InfoRegistro>} Observable con los datos de registro y subcontratista.
    */
-  getDatos(): Observable<SubmanufacturerDatos> {
-    return this.http
-      .get<SubmanufacturerDatos>('assets/json/80207/submanufacturer-datos.json')
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .pipe(map((response: any) => response.data));
+  getDatos(): Observable<InfoRegistro> {
+    return (
+      this.http
+        .get<InfoRegistro>('assets/json/80207/submanufacturer-datos.json')
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .pipe(map((response: any) => response.data.infoRegistro))
+    );
   }
 
   /**
@@ -48,11 +52,13 @@ export class SubManufacturerService {
    * @returns {Observable<TableData>} Observable con la lista de subfabricantes disponibles.
    */
   getSubfabricantesDisponibles(): Observable<SubmanufacturerDireccionModelo[]> {
-    return this.http
-      .get<SubmanufacturerDireccionModelo[]>(
-        'assets/json/80207/submanufactureras-disponibles-datos.json'
-      )
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .pipe(map((response: any) => response.data));
+    return (
+      this.http
+        .get<SubmanufacturerDireccionModelo[]>(
+          'assets/json/80207/submanufactureras-disponibles-datos.json'
+        )
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .pipe(map((response: any) => response.data))
+    );
   }
 }

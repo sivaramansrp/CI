@@ -1,4 +1,4 @@
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -22,10 +22,10 @@ import {
 
 import { CommonModule } from '@angular/common';
 
-
 import { SUBMANUFACTURADORES_TABLA_CONFIGURACION } from '../../constantes/submanufabricnats-tabla-configuracion.enum';
 import { SubManufacturerService } from '../../servicios/servicios-submanufacturer-servico';
-
+import { Tramites80207Queries } from '../../estados/tramite80207.query';
+import { Tramites80207Store } from '../../estados/tamite80207.store';
 
 /**
  * @fileoverview Componente para la gestión de empresas submanufactureras.
@@ -54,6 +54,7 @@ import { SubManufacturerService } from '../../servicios/servicios-submanufacture
   ],
 })
 export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
+  formularioEstado!: FormGroup;
   /**
    * Formulario para la información de registro.
    * @property {FormGroup} formularioInfoRegistro
@@ -76,7 +77,7 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * Datos del subcontratista obtenidos del servicio.
    * @property {DatosSubcontratista} datosSubcontratista
    */
-  datosSubcontratista!: DatosSubcontratista;
+  datosSubcontratista: DatosSubcontratista = { rfc: '', estado: '' };
 
   /**
    * Lista de estados obtenida del servicio.
@@ -96,7 +97,7 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @property {ConfiguracionColumna<SubmanufacturerDireccionModelo>[]} configuracionTabla
    */
   configuracionTabla: ConfiguracionColumna<SubmanufacturerDireccionModelo>[] =
-  SUBMANUFACTURADORES_TABLA_CONFIGURACION
+    SUBMANUFACTURADORES_TABLA_CONFIGURACION;
 
   /**
    * Datos del subfabricante seleccionado.
@@ -123,12 +124,6 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
   listaDeSubfabricantesPorEliminar: SubmanufacturerDireccionModelo[] = [];
 
   /**
-   * Arreglo de suscripciones para gestionar la limpieza de recursos.
-   * @property {Subscription[]} arregloDeSuscripciones
-   */
-  arregloDeSuscripciones: Subscription[] = [];
-
-  /**
    * Controla la visualización de la tabla de subfabricantes disponibles.
    * @property {BehaviorSubject<boolean>} mostrarTablaSubfabricantesDisponibles$
    */
@@ -142,16 +137,30 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
   mostrarTablaSubfabricantesSeleccionadas: boolean = false;
 
   /**
-   * Constructor del componente.
-   * @constructor
-   * @param {FormBuilder} fb - Servicio para la creación de formularios.
-   * @param {SubManufacturerService} subManufacturerDatoService - Servicio para obtener datos de submanufactureras.
-   */
+ * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+ * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+ * 
+ * @property {Subject<void>} destroyNotifier$
+ */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+ /**
+ * Constructor del componente que inyecta los servicios necesarios para la creación del formulario
+ * y la inicialización de datos. 
+ * 
+ * @param {FormBuilder} fb - Servicio que ayuda a construir formularios reactivos en Angular.
+ * @param {SubManufacturerService} subManufacturerDatoService - Servicio para manejar la lógica relacionada con los subfabricantes.
+ * @param {Tramites80207Queries} query - Servicio que contiene las consultas para obtener los datos relacionados con los trámites.
+ * @param {Tramites80207Store} store - Servicio que maneja el estado de los trámites y datos asociados.
+ */
   constructor(
     private fb: FormBuilder,
-    private subManufacturerDatoService: SubManufacturerService
+    private subManufacturerDatoService: SubManufacturerService,
+    private query: Tramites80207Queries,
+    private store: Tramites80207Store
   ) {
     this.inicializarFormularioInfoRegistro();
+    this.inicializarFormularioDatosSubcontratista();
   }
 
   /**
@@ -159,29 +168,102 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
-    this.inicializarFormularioInfoRegistro();
-    this.inicializarFormularioDatosSubcontratista();
-    this.getDatos();
+    this.obtenerDatosDeRegistro();
+    this.obtenerDatosDelAlmacen();
     this.obtenerListaEstado();
   }
 
   /**
-   * Obtiene los datos de registro y subcontratista desde el servicio y actualiza los formularios correspondientes.
-   * @method getDatos
-   */
-  getDatos(): void {
-    const SUSCRIPCIÓN = this.subManufacturerDatoService
-      .getDatos()
-      .subscribe((response) => {
-        if (response) {
-          this.infoRegistro = response.infoRegistro;
-          this.datosSubcontratista = response.datosSubcontratista;
-          this.inicializarFormularioInfoRegistro();
-          this.inicializarFormularioDatosSubcontratista();
-        }
+ * Obtiene los datos del almacén y los asigna al formulario de información de registro.
+ * Se suscribe al observable `infoRegisterEstado$` para obtener los datos, y cuando se reciben,
+ * se actualiza la propiedad `infoRegistro` y se establece el valor del formulario `formularioInfoRegistro`.
+ * 
+ * @method obtenerDatosDelAlmacen
+ */
+  obtenerDatosDelAlmacen(): void {
+    this.query.infoRegisterEstado$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((infoRegister) => {
+        this.infoRegistro = infoRegister;
+        this.formularioInfoRegistro.setValue(infoRegister);
       });
 
-    this.arregloDeSuscripciones.push(SUSCRIPCIÓN);
+    this.query.datosSubcontratistaEstado$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datosSubcontratista) => {
+        this.datosSubcontratista = datosSubcontratista;
+        this.formularioDatosSubcontratista.setValue(datosSubcontratista);
+      });
+
+    this.query.plantasSubfabricantesAgregar$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((plantasSubfabricantesAgregar) => {
+        if (plantasSubfabricantesAgregar.length > 0) {
+          this.obtenerSubfabricantesDisponibles();
+          this.datosSubfabricanteParaSerAgregados =
+            plantasSubfabricantesAgregar;
+          this.mostrarTablaSubfabricantesDisponibles$.next(true);
+          this.mostrarTablaSubfabricantesSeleccionadas = true;
+        }
+      });
+  }
+
+  /**
+ * Actualiza el estado seleccionado en los datos del subcontratista y lo guarda en el store.
+ * 
+ * Este método recibe un objeto `estadoSeleccionado` de tipo `Catalogo`, y actualiza la propiedad `estado`
+ * de `datosSubcontratista` con el ID del estado seleccionado. Luego, se utiliza el método `setDatosContr` 
+ * del store para almacenar los datos actualizados del subcontratista.
+ * 
+ * @method enEstadoSeleccionado
+ * @param {Catalogo} estadoSeleccionado - Objeto que contiene el estado seleccionado, con su propiedad `id`.
+ */
+  enEstadoSeleccionado(estadoSeleccionado: Catalogo): void {
+    this.datosSubcontratista = {
+      ...this.datosSubcontratista,
+      estado: estadoSeleccionado.id.toString(),
+    };
+    this.store.setDatosContr(this.datosSubcontratista);
+  }
+
+  /**
+ * Obtiene el valor del RFC del formulario de datos del subcontratista y lo guarda en el store.
+ * 
+ * Este método recupera el valor del campo `rfc` desde el formulario `formularioDatosSubcontratista`, 
+ * luego actualiza la propiedad `rfc` en los datos del subcontratista (`datosSubcontratista`) con el valor obtenido.
+ * Finalmente, almacena los datos actualizados del subcontratista en el store utilizando el método `setDatosContr`.
+ * 
+ * @method obtenerRFC
+ */
+  obtenerRFC(): void {
+    const VALOR_ACTUAL_RFC =
+      this.formularioDatosSubcontratista.get('rfc')?.value;
+    this.datosSubcontratista = {
+      ...this.datosSubcontratista,
+      rfc: VALOR_ACTUAL_RFC,
+    };
+    this.store.setDatosContr(this.datosSubcontratista);
+  }
+
+  /**
+ * Obtiene los datos de registro del servicio `subManufacturerDatoService` y los guarda en el store.
+ * 
+ * Este método se suscribe al observable proporcionado por el servicio `subManufacturerDatoService.getDatos()`. 
+ * Cuando se recibe una respuesta, se verifica que no sea nula o indefinida, y luego se almacena la información 
+ * de registro en el store utilizando el método `setInfoRegistro`. La suscripción se gestiona para que se complete 
+ * cuando el componente sea destruido, gracias al uso de `takeUntil` con `destroyNotifier$`.
+ * 
+ * @method obtenerDatosDeRegistro
+ */
+  obtenerDatosDeRegistro(): void {
+    this.subManufacturerDatoService
+      .getDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response) => {
+        if (response) {
+          this.store.setInfoRegistro(response);
+        }
+      });
   }
 
   /**
@@ -189,19 +271,11 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @method inicializarFormularioInfoRegistro
    */
   inicializarFormularioInfoRegistro(): void {
-    if (this.infoRegistro) {
-      this.formularioInfoRegistro = this.fb.group({
-        modalidad: [{ value: this.infoRegistro.modalidad, disabled: true }],
-        folio: [{ value: this.infoRegistro.folio, disabled: true }],
-        año: [{ value: this.infoRegistro.ano, disabled: true }],
-      });
-    } else {
-      this.formularioInfoRegistro = this.fb.group({
-        modalidad: [{ value: '', disabled: true }],
-        folio: [{ value: '', disabled: true }],
-        año: [{ value: '', disabled: true }],
-      });
-    }
+    this.formularioInfoRegistro = this.fb.group({
+      modalidad: [{ value: '', disabled: true }],
+      folio: [{ value: '', disabled: true }],
+      ano: [{ value: '', disabled: true }],
+    });
   }
 
   /**
@@ -209,17 +283,10 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @method inicializarFormularioDatosSubcontratista
    */
   inicializarFormularioDatosSubcontratista(): void {
-    if (this.datosSubcontratista) {
-      this.formularioDatosSubcontratista = this.fb.group({
-        rfc: [this.datosSubcontratista.rfc, Validators.required],
-        estado: [this.datosSubcontratista.estado, Validators.required],
-      });
-    } else {
-      this.formularioDatosSubcontratista = this.fb.group({
-        rfc: ['', Validators.required],
-        estado: ['', Validators.required],
-      });
-    }
+    this.formularioDatosSubcontratista = this.fb.group({
+      rfc: ['', Validators.required],
+      estado: ['', Validators.required],
+    });
   }
 
   /**
@@ -227,14 +294,14 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @method obtenerListaEstado
    */
   obtenerListaEstado(): void {
-    const SUSCRIPCIÓN = this.subManufacturerDatoService
+    this.subManufacturerDatoService
       .obtenerListaEstado()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((response) => {
         if (response) {
           this.estadoCatalogo = response.data;
         }
       });
-    this.arregloDeSuscripciones.push(SUSCRIPCIÓN);
   }
 
   /**
@@ -242,15 +309,15 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @method obtenerSubfabricantesDisponibles
    */
   obtenerSubfabricantesDisponibles(): void {
-    const SUSCRIPCIÓN = this.subManufacturerDatoService
+    this.subManufacturerDatoService
       .getSubfabricantesDisponibles()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((response: SubmanufacturerDireccionModelo[]) => {
         if (response) {
           this.datosTablaSubfabricantesDisponibles = response;
           this.mostrarTablaSubfabricantesDisponibles$.next(true);
         }
       });
-    this.arregloDeSuscripciones.push(SUSCRIPCIÓN);
   }
 
   /**
@@ -272,7 +339,12 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @method realizarBusqueda
    */
   realizarBusqueda(): void {
-    this.obtenerSubfabricantesDisponibles();
+    if (
+      this.formularioDatosSubcontratista.get('rfc')?.value !== '' &&
+      this.formularioDatosSubcontratista.get('estado')?.value !== ''
+    ) {
+      this.obtenerSubfabricantesDisponibles();
+    }
   }
 
   /**
@@ -282,6 +354,9 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
   agregarPlantas(): void {
     this.datosSubfabricanteParaSerAgregados =
       this.datosDelSubfabricanteSeleccionado;
+    this.store.setPlantasSubfabricantesAgregar(
+      this.datosSubfabricanteParaSerAgregados
+    );
     if (
       this.datosSubfabricanteParaSerAgregados &&
       this.datosSubfabricanteParaSerAgregados.length > 0
@@ -296,8 +371,24 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @method datosDelSubfabricantePorEliminar
    * @param {SubmanufacturerDireccionModelo[]} event - Evento con los datos del subfabricante por eliminar.
    */
-  datosDelSubfabricantePorEliminar(event: SubmanufacturerDireccionModelo[]): void {
+  datosDelSubfabricantePorEliminar(
+    event: SubmanufacturerDireccionModelo[]
+  ): void {
     this.listaDeSubfabricantesPorEliminar = event;
+  }
+
+  /**
+ * Elimina las plantas de subfabricantes de la lista de subfabricantes a eliminar.
+ * 
+ * Este método actualiza el store con la lista de subfabricantes a eliminar mediante el método 
+ * `setPlantasSubfabricantesEliminar`, pasando como parámetro la propiedad `listaDeSubfabricantesPorEliminar`.
+ * 
+ * @method eliminarPlantas
+ */
+  eliminarPlantas(): void {
+    this.store.setPlantasSubfabricantesEliminar(
+      this.listaDeSubfabricantesPorEliminar
+    );
   }
 
   /**
@@ -305,11 +396,10 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
    * @method ngOnDestroy
    */
-  ngOnDestroy():void {
-    this.arregloDeSuscripciones.forEach((suscripcion) =>
-      suscripcion.unsubscribe()
-    );
+  ngOnDestroy(): void {
     this.mostrarTablaSubfabricantesDisponibles$.next(false);
     this.mostrarTablaSubfabricantesSeleccionadas = false;
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

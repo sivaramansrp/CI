@@ -1,3 +1,5 @@
+import { Catalogo } from "@libs/shared/data-access-user/src";
+
 export interface InfoRegistro {
     modalidad: string;
     folio: string;
@@ -18,4 +20,6 @@ export interface InfoRegistro {
   export interface SubmanufacturerDatos{
     infoRegistro: InfoRegistro;
     datosSubcontratista: DatosSubcontratista;
+    plantasSubfabricantesAgregar:SubmanufacturerDireccionModelo[],
+    plantasSubfabricantesEliminar:SubmanufacturerDireccionModelo[]
   }
