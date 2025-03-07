@@ -1,8 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { AccionBoton, ListaPasosWizard } from 'apps/agriculture/src/app/application/tramites/220201/models/220201/certificado-zoosanitario.model';
-import { PASOS, SUCECESS_MESSAGE_STAGEONE } from 'apps/agriculture/src/app/application/tramites/220201/constantes/certificado-zoosanitario.enum';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
+import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
+import { WizardComponent, DatosPasos } from '@ng-mf/data-access-user';
 
 /**
  * Componente principal para el formulario de certificado zoosanitario.
@@ -17,7 +16,6 @@ import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/compo
   templateUrl: './zoosanitario-page.component.html',
 })
 export class ZoosanitarioPageComponent {
-
   /**
    * Array de pasos del asistente.
    * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
@@ -57,7 +55,7 @@ export class ZoosanitarioPageComponent {
    * Mensaje de éxito para el primer paso.
    * @property {string} mensajeDeTextoDeExito - Mensaje que se muestra si el primer paso se completa con éxito.
    */
-  mensajeDeTextoDeExito: string = SUCECESS_MESSAGE_STAGEONE;
+  mensajeDeTextoDeExito: string = MENSAJE_DE_EXITO_ETAPA_UNO;
 
   /**
    * Maneja la acción del botón y navega entre los pasos.
