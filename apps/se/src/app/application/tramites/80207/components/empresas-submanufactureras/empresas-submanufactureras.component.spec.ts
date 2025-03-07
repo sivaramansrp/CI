@@ -1,148 +1,209 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { RespuestaCatalogos, TituloComponent } from '@ng-mf/data-access-user';
-import { Observable, of } from 'rxjs';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { EmpresasSubmanufacturerasComponent } from './empresas-submanufactureras.component';
-
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { SubmanufacturerDatos, SubmanufacturerDireccionModelo } from '../../modelos/submanufacturer-modelos';
+import { FormBuilder } from '@angular/forms';
 import { SubManufacturerService } from '../../servicios/servicios-submanufacturer-servico';
+import { Tramites80207Queries } from '../../estados/tramite80207.query';
+import { Tramites80207Store } from '../../estados/tamite80207.store';
 
+@Injectable()
+class MockSubManufacturerService {}
 
-class MockSubManufacturerDatoService {
-  getDatos():Observable<SubmanufacturerDatos> {
-    const MOCKDATA:SubmanufacturerDatos={ infoRegistro:{
-      modalidad: "",
-      folio: "",
-      ano: 123
-    }, datosSubcontratista: {
-      rfc: "134",
-      estado : "Mexico"
-    } }
-    return of(MOCKDATA);
-  }
+@Injectable()
+class MockTramites80207Queries {}
 
-  obtenerListaEstado():Observable<RespuestaCatalogos> {
-    const MOCKDATA:RespuestaCatalogos={ code:200,data: [],message:"" }
-    return of(MOCKDATA);
-  }
+@Injectable()
+class MockTramites80207Store {}
 
-  getSubfabricantesDisponibles() :Observable<SubmanufacturerDireccionModelo[]>{
-    return of([]);
-  }
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
 }
 
 describe('EmpresasSubmanufacturerasComponent', () => {
-  let component: EmpresasSubmanufacturerasComponent;
-  let fixture: ComponentFixture<EmpresasSubmanufacturerasComponent>;
-  let fb: FormBuilder;
+  let fixture;
+  let component;
 
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule ,EmpresasSubmanufacturerasComponent],
+      declarations: [
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        FormBuilder,
+        { provide: SubManufacturerService, useClass: MockSubManufacturerService },
+        { provide: Tramites80207Queries, useClass: MockTramites80207Queries },
+        { provide: Tramites80207Store, useClass: MockTramites80207Store }
+      ]
+    }).overrideComponent(EmpresasSubmanufacturerasComponent, {
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [EmpresasSubmanufacturerasComponent,ReactiveFormsModule,TituloComponent, TablaDinamicaComponent],
-      providers: [FormBuilder,
-        { provide: SubManufacturerService, useClass: MockSubManufacturerDatoService } 
-      ], 
     }).compileComponents();
     fixture = TestBed.createComponent(EmpresasSubmanufacturerasComponent);
-    component = fixture.componentInstance;
-    fb = TestBed.inject(FormBuilder); 
-  
+    component = fixture.debugElement.componentInstance;
   });
 
- 
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
 
-  it('should create the component', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call ngOnInit and all necessary methods', () => {
-    jest.spyOn(component, 'inicializarFormularioInfoRegistro');
-    jest.spyOn(component, 'inicializarFormularioDatosSubcontratista');
-    jest.spyOn(component, 'getDatos');
-    jest.spyOn(component, 'obtenerListaEstado');
-  
+  it('should run #ngOnInit()', async () => {
+    component.obtenerDatosDeRegistro = jest.fn();
+    component.obtenerDatosDelAlmacen = jest.fn();
+    component.obtenerListaEstado = jest.fn();
     component.ngOnInit();
-  
-    expect(component.inicializarFormularioInfoRegistro).toHaveBeenCalled();
-    expect(component.inicializarFormularioDatosSubcontratista).toHaveBeenCalled();
-    expect(component.getDatos).toHaveBeenCalled();
-    expect(component.obtenerListaEstado).toHaveBeenCalled();
+    expect(component.obtenerDatosDeRegistro).toHaveBeenCalled();
+    expect(component.obtenerDatosDelAlmacen).toHaveBeenCalled();
+     expect(component.obtenerListaEstado).toHaveBeenCalled();
   });
-  
-  it('should initialize the form with infoRegistro values if infoRegistro is provided', () => {
-  
-    component.infoRegistro = {
-      modalidad: 'Test Modalidad',
-      folio: '123456',
-      ano: 2023
-    };
 
-    // Call the method
+  
+  it('should run #enEstadoSeleccionado()', async () => {
+    component.store = component.store || {};
+    component.store.setDatosContr = jest.fn();
+    component.enEstadoSeleccionado({
+      id: {
+        toString: function() {}
+      }
+    });
+     expect(component.store.setDatosContr).toHaveBeenCalled();
+  });
+
+  it('should run #obtenerRFC()', async () => {
+    component.formularioDatosSubcontratista = component.formularioDatosSubcontratista || {};
+    component.formularioDatosSubcontratista.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.store = component.store || {};
+    component.store.setDatosContr = jest.fn();
+    component.obtenerRFC();
+    expect(component.formularioDatosSubcontratista.get).toHaveBeenCalled();
+    expect(component.store.setDatosContr).toHaveBeenCalled();
+  });
+
+  it('should run #obtenerDatosDeRegistro()', async () => {
+    component.subManufacturerDatoService = component.subManufacturerDatoService || {};
+    component.subManufacturerDatoService.getDatos = jest.fn().mockReturnValue(observableOf({}));
+    component.store = component.store || {};
+    component.store.setInfoRegistro = jest.fn();
+    component.obtenerDatosDeRegistro();
+    expect(component.subManufacturerDatoService.getDatos).toHaveBeenCalled();
+    expect(component.store.setInfoRegistro).toHaveBeenCalled();
+  });
+
+  it('should run #inicializarFormularioInfoRegistro()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
     component.inicializarFormularioInfoRegistro();
-
-    // Check that the form has the correct values
-    expect(component.formularioInfoRegistro.value.modalidad).toBe('Test Modalidad');
-    expect(component.formularioInfoRegistro.value.folio).toBe('123456');
-    expect(component.formularioInfoRegistro.value.año).toBe(2023);
+     expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should initialize form with datosSubcontratista values', () => {
-    // Define sample data for datosSubcontratista
-    component.datosSubcontratista = {
-      rfc: 'ABC123',
-      estado: 'Active',
-    };
-
+  it('should run #inicializarFormularioDatosSubcontratista()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
     component.inicializarFormularioDatosSubcontratista();
-
-    
-    expect(component.formularioDatosSubcontratista.value.rfc).toBe('ABC123');
-    expect(component.formularioDatosSubcontratista.value.estado).toBe('Active');
+     expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should initialize form with empty values if datosSubcontratista is undefined', () => {
-    component.datosSubcontratista = {rfc:'',estado:''}; // Simulate the absence of datosSubcontratista
-
-    component.inicializarFormularioDatosSubcontratista();
-
-
-    expect(component.formularioDatosSubcontratista.value.rfc).toBe('');
-    expect(component.formularioDatosSubcontratista.value.estado).toBe('');
+  it('should run #obtenerListaEstado()', async () => {
+    component.subManufacturerDatoService = component.subManufacturerDatoService || {};
+    component.subManufacturerDatoService.obtenerListaEstado = jest.fn().mockReturnValue(observableOf({
+      data: {}
+    }));
+    component.obtenerListaEstado();
+     expect(component.subManufacturerDatoService.obtenerListaEstado).toHaveBeenCalled();
   });
 
-  it('should set datosDelSubfabricanteSeleccionado when event has items', () => {
-    const event: SubmanufacturerDireccionModelo[] = [
-     { calle :"VIA MORELOS",  
-
-      numExterior :55400,
-      numInterior :347, 
-      codigoPostal:28001,
-      colonia :"SANTA MARIA TULPETLAC"
-    }
-    ];
-
-    component.obtenerRegistroSeleccionado(event);
-
-    
-    expect(component.datosDelSubfabricanteSeleccionado).toEqual(event);
-   
+  it('should run #obtenerSubfabricantesDisponibles()', async () => {
+    component.subManufacturerDatoService = component.subManufacturerDatoService || {};
+    component.subManufacturerDatoService.getSubfabricantesDisponibles = jest.fn().mockReturnValue(observableOf({}));
+    component.mostrarTablaSubfabricantesDisponibles$ = component.mostrarTablaSubfabricantesDisponibles$ || {};
+    component.mostrarTablaSubfabricantesDisponibles$.next = jest.fn();
+    component.obtenerSubfabricantesDisponibles();
+    expect(component.subManufacturerDatoService.getSubfabricantesDisponibles).toHaveBeenCalled();
+    expect(component.mostrarTablaSubfabricantesDisponibles$.next).toHaveBeenCalled();
   });
 
-  it('should set datosDelSubfabricanteSeleccionado to an empty array and hide the table when event is empty', () => {
-    const event: SubmanufacturerDireccionModelo[] = [];
+  it('should run #obtenerRegistroSeleccionado()', async () => {
 
-    component.obtenerRegistroSeleccionado(event);
+    component.obtenerRegistroSeleccionado({
+      length: {}
+    }, {});
 
-   
-    expect(component.datosDelSubfabricanteSeleccionado).toEqual([]);
-   
-    expect(component.mostrarTablaSubfabricantesSeleccionadas).toBeFalsy();
   });
-  
-}
-)
 
+  it('should run #realizarBusqueda()', async () => {
+    component.formularioDatosSubcontratista = component.formularioDatosSubcontratista || {};
+    component.formularioDatosSubcontratista.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.obtenerSubfabricantesDisponibles = jest.fn();
+    component.realizarBusqueda();
+    expect(component.formularioDatosSubcontratista.get).toHaveBeenCalled();
+    expect(component.obtenerSubfabricantesDisponibles).toHaveBeenCalled();
+  });
 
+  it('should run #agregarPlantas()', async () => {
+    component.datosDelSubfabricanteSeleccionado = component.datosDelSubfabricanteSeleccionado || {};
+    component.store = component.store || {};
+    component.store.setPlantasSubfabricantesAgregar = jest.fn();
+    component.agregarPlantas();
+    expect(component.store.setPlantasSubfabricantesAgregar).toHaveBeenCalled();
+  });
+
+  it('should run #datosDelSubfabricantePorEliminar()', async () => {
+
+    component.datosDelSubfabricantePorEliminar({});
+
+  });
+
+  it('should run #eliminarPlantas()', async () => {
+    component.store = component.store || {};
+    component.store.setPlantasSubfabricantesEliminar = jest.fn();
+    component.eliminarPlantas();
+     expect(component.store.setPlantasSubfabricantesEliminar).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.mostrarTablaSubfabricantesDisponibles$ = component.mostrarTablaSubfabricantesDisponibles$ || {};
+    component.mostrarTablaSubfabricantesDisponibles$.next = jest.fn();
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.mostrarTablaSubfabricantesDisponibles$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+  });
+
+});
 

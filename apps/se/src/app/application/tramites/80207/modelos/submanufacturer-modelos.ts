@@ -1,5 +1,3 @@
-import { Catalogo } from "@libs/shared/data-access-user/src";
-
 export interface InfoRegistro {
     modalidad: string;
     folio: string;

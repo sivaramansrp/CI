@@ -30,11 +30,5 @@ export const PASOS = [
         titulo: 'Firmar solicitud',
         activo: false,
         completado: false,
-      },
-    // {
-    //   indice: 4,
-    //   titulo: 'Firmar solicitud',
-    //   activo: false,
-    //   completado: false,
-    // },
+    }
   ];

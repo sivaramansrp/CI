@@ -14,6 +14,8 @@ const mockSubManufacturerDatos: SubmanufacturerDatos = {
       rfc: 'RFC12345',
       estado: 'Activo',
     },
+    plantasSubfabricantesAgregar:[],
+    plantasSubfabricantesEliminar:[]
   };
 
 describe('ServiciosExtraordinariosService', () => {
