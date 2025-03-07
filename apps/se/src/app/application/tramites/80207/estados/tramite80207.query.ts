@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Tramite80207State } from '../modelos/subfabricante-modelos';
+import { Tramite80207State } from '../modelos/subfabricante.model';
 import { Tramites80207Store } from './tramite80207.store';
 
 /**

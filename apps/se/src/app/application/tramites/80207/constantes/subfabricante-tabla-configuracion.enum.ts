@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
-import { SubfabricanteDireccionModelo } from "../modelos/subfabricante-modelos";
+import { SubfabricanteDireccionModelo } from "../modelos/subfabricante.model";
 
 
 export const SUBFABRICANTE_TABLA_CONFIGURACION = 

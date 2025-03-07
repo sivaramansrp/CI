@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
 import { SUBFABRICANTE_TABLA_CONFIGURACION } from '../../constantes/subfabricante-tabla-configuracion.enum';
 import {
   SubfabricanteDireccionModelo,
-} from '../../modelos/subfabricante-modelos';
+} from '../../modelos/subfabricante.model';
 import { SubfabricanteService } from '../../servicios/servicios-subfabricante.service';
 import { Tramites80207Queries } from '../../estados/tramite80207.query';
 import { Tramites80207Store } from '../../estados/tramite80207.store';

@@ -3,7 +3,7 @@ import {
   InfoRegistro,
   SubfabricanteDireccionModelo,
   Tramite80207State,
-} from '../modelos/subfabricante-modelos';
+} from '../modelos/subfabricante.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { Tramite80207State } from '../modelos/subfabricante-modelos';
+import { Tramite80207State } from '../modelos/subfabricante.model';
 import { SubfabricanteService } from './servicios-subfabricante.service';
 
 

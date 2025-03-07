@@ -1,7 +1,7 @@
 import {
   InfoRegistro,
   SubfabricanteDireccionModelo,
-} from '../modelos/subfabricante-modelos';
+} from '../modelos/subfabricante.model';
 
 import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
