@@ -7,7 +7,6 @@ import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catal
 import { ImportacionDeAcuiculturaRoutingModule } from './importacion-de-acuicultura-routing.module';
 
 // Pages
-import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -26,7 +25,6 @@ import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-d
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    PasoCuatroComponent,
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionComponent,
     SanidadCertificadoComponent
