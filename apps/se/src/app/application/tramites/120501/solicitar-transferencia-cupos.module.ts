@@ -5,7 +5,11 @@ import { NO_ERRORS_SCHEMA} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SolicitarTransferenciaCuposRoutingModule } from './solicitar-transferencia-cupos-routing.module';
 
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+
+
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -27,6 +31,8 @@ import { AlertComponent } from '@ng-mf/data-access-user';
   declarations: [
     PasoSolicitanteComponent,
     SolicitarTransferenciaCuposMainComponent,
+    
+    
   ],
   imports: [
     CommonModule,
@@ -38,7 +44,9 @@ import { AlertComponent } from '@ng-mf/data-access-user';
     BtnContinuarComponent,
     CatalogoSelectComponent,
     AlertComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    FirmaElectronicaComponent,
+    AnexarDocumentosComponent
 
   ],
   exports: [TablaDinamicaComponent],

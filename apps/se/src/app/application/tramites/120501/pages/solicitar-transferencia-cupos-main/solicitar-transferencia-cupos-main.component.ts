@@ -7,7 +7,7 @@ import { Component, ViewChild } from '@angular/core';
 
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { SOLICITAR_PASOS } from '@ng-mf/data-access-user';
+import { PASOS } from '@ng-mf/data-access-user';
 
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -35,8 +35,8 @@ export class SolicitarTransferenciaCuposMainComponent {
    * {ListaPasosWizard[]} pasosSolicitar
    *  Arreglo que contiene los pasos del wizard.
    */
-  pasosSolicitar: ListaPasosWizard[] = SOLICITAR_PASOS;
-
+  pasosSolicitar: ListaPasosWizard[] = PASOS;
+  LOGIN:string = "";
   /**
    * {number} indice
    *  Índice actual del wizard.
