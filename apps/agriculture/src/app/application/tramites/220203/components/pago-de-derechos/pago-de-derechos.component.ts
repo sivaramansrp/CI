@@ -69,7 +69,7 @@ export class PagoDeDerechosComponent implements OnInit {
    * @description Crea el formulario de pago según el valor de `exentoPagoValor`.
    */
   private crearFormularioPago(): void {
-    const ESEXENTO = this.exentoPagoValor === 'Si';  // This is a simple flag, it doesn't need to be upper case
+    const ESEXENTO = this.exentoPagoValor === 'Si';
     this.formularioPago = this.fb.group({
       exentoPago: ['', Validators.required],
       justificacion: ['', Validators.required],

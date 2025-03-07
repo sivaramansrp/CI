@@ -1,5 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { TEXTOS, CatalogosService, Catalogo, CATALOGOS_ID } from '@ng-mf/data-access-user';
+
+import {
+  CATALOGOS_ID,
+  Catalogo,
+  CatalogosService,
+  TEXTOS,
+
+} from '@ng-mf/data-access-user';
+
+
 
 /**
  * Componente para manejar el paso dos en el proceso de importación de acuicultura.
