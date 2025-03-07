@@ -9,7 +9,8 @@ import { DatosPasos } from '@ng-mf/data-access-user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
-import { SeccionQuery } from '@ng-mf/data-access-user';
+
+import { SeccionQuery } from '../../../../estados/queries/seccion.query';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
