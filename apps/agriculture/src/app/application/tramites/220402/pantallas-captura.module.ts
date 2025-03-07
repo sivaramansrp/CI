@@ -11,6 +11,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { FirmaElectronicaComponent } from 'libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 import { SelectCatalogosComponent } from 'libs/shared/data-access-user/src/tramites/components/select-catalogos/select-catalogos.component';
@@ -28,12 +31,16 @@ import { TransporteComponent } from './components/transporte/transporte.componen
 import { PagoDeDerechoComponent } from './components/pago-de-derecho/pago-de-derecho.component';
 
 import { AgregarDestinatarioComponent } from './components/agregar-destinatario/agregar-destinatario.component';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
     SolicitudPageComponent,
     SolicitudComponent,
     PasoUnoComponent,
+    PasoDosComponent,
+    PasoTresComponent,
+    PasoCuatroComponent,
     TransporteComponent,
     PagoDeDerechoComponent,
     AgregarDestinatarioComponent,
@@ -61,7 +68,9 @@ import { AgregarDestinatarioComponent } from './components/agregar-destinatario/
     RepresentanteFiscalComponent,
     SelectPaisesComponent,
     CatalogoSelectComponent,
+    ToastrModule.forRoot()
   ],
+  providers:[ToastrService],
   exports: [],
 })
 export class PantallasCapturaModule {}

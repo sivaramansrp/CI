@@ -5,6 +5,7 @@ import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/ca
 
 import { CatalogosSelect } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Derecho220402State, Derecho220402Store } from '../../estados/tramites/derecho220402.store';
 
 @Component({
   selector: 'app-pago-de-derecho',
@@ -12,6 +13,21 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrl: './pago-de-derecho.component.scss',
 })
 export class PagoDeDerechoComponent implements OnInit {
+
+  /**
+       * Estado de la transporte.
+       */
+  public transporteState: Derecho220402State = {
+    exentoDePago: '',
+    nombreImportExport: '',
+    justificacion: '',
+    claveDeReferencia: '',
+    cadenaDependencia: '',
+    llaveDePago: '',
+    fechaPago: '',
+    importePago: ''
+  };
+
   FormSolicitud!: FormGroup;
 
   answer: string = '';
@@ -59,14 +75,14 @@ export class PagoDeDerechoComponent implements OnInit {
     this.getMercancia();
     this.FormSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
-        exentoDePago: ['No', Validators.required],
-        nombreImportExport: ['', Validators.required],
-        justificacion: ['', Validators.required],
-        claveDeReferencia: ['', Validators.required],
-        cadenaDependencia: ['', Validators.required],
-        llaveDePago: ['', Validators.required],
-        fechaPago: [' ', Validators.required],
-        importePago: ['', Validators.required],
+        exentoDePago: [this.transporteState?.exentoDePago, Validators.required],
+        nombreImportExport: [this.transporteState?.nombreImportExport, Validators.required],
+        justificacion: [this.transporteState?.justificacion, Validators.required],
+        claveDeReferencia: [this.transporteState?.claveDeReferencia, Validators.required],
+        cadenaDependencia: [this.transporteState?.cadenaDependencia, Validators.required],
+        llaveDePago: [this.transporteState?.llaveDePago, Validators.required],
+        fechaPago: [this.transporteState?.fechaPago, Validators.required],
+        importePago: [this.transporteState?.importePago, Validators.required],
       }),
     });
     // Activa la lógica cuando el formulario se ha inicializado

@@ -7,6 +7,7 @@ import { ValidacionesFormularioService } from 'libs/shared/data-access-user/src/
 
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { MediodetransporteService } from 'libs/shared/data-access-user/src/core/services/220402/mediodetransporte.service';
+import { Transporte220402State, Transporte220402Store } from '../../estados/tramites/transporte220402.store';
 
 @Component({
   selector: 'app-transporte',
@@ -15,6 +16,14 @@ import { MediodetransporteService } from 'libs/shared/data-access-user/src/core/
 })
 export class TransporteComponent implements OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+  /**
+     * Estado de la transporte.
+     */
+  public transporteState: Transporte220402State = {
+    mediodeTransporte: '',
+    identificationDelTransporte: ''
+  };
 
   transporteForm!: FormGroup;
   public tiposDocumentos: CatalogosSelect = {
@@ -46,8 +55,8 @@ export class TransporteComponent implements OnDestroy {
    */
   crearFormTransporte() {
     this.transporteForm = this.fb.group({
-      mediodeTransporte: ['', [Validators.required]],
-      identificationDelTransporte: [''],
+      mediodeTransporte: [this.transporteState?.mediodeTransporte, [Validators.required]],
+      identificationDelTransporte: [this.transporteState?.mediodeTransporte]
     });
   }
 

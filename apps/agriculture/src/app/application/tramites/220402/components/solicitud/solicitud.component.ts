@@ -13,7 +13,11 @@ import {
 } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
 import { MediodetransporteService } from 'libs/shared/data-access-user/src/core/services/220402/mediodetransporte.service';
 
-import { map, merge, takeUntil, ReplaySubject } from 'rxjs';
+import { map, merge, takeUntil, ReplaySubject, Subject } from 'rxjs';
+import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/solicitud220402.store';
+import { Solicitud220402Query } from '../../estados/queries/solicitud220402.query';
+
+
 
 /**
  * Componente para la vista de la solicitud de la sección de "220402".
@@ -32,9 +36,16 @@ import { map, merge, takeUntil, ReplaySubject } from 'rxjs';
 export class SolicitudComponent {
 
   /**
+   * Estado de la solicitud.
+   */
+  public solicitudState!: Solicitud220402State;
+
+  /**
      * Fecha inicio de entrada.
      */
   fechaInicioInput: InputFecha = FECHA_INICIO;
+
+  diaMinimo!: string;
 
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -73,19 +84,21 @@ export class SolicitudComponent {
  */
   federativaOrigen: string = '';
 
+  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
    * @param validacionesService Servicio para validaciones de formularios.
+   * @param tramite220402Store Almacén de estado para el trámite 220402.
    */
   constructor(
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-    private mediodetransporteService: MediodetransporteService
-  ) {
-    // Inicializar el formulario principal
-    this.crearFormSolicitud();
-  }
+    private mediodetransporteService: MediodetransporteService,
+    private solicitud220402Store: Solicitud220402Store,
+    private solicitud220402Query: Solicitud220402Query
+  ) {}
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -97,6 +110,18 @@ export class SolicitudComponent {
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
+    this.solicitud220402Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
+      // Inicializar el formulario principal
+    this.crearFormSolicitud();
+    
   }
 
   /**
@@ -160,6 +185,8 @@ export class SolicitudComponent {
             });
     }
 
+    
+
   /**
    * Crea el formulario de solicitud.
    * @return {void} No retorna ningún valor.
@@ -167,42 +194,48 @@ export class SolicitudComponent {
   crearFormSolicitud(): void {
     this.FormSolicitud = this.fb.group({
       datosDelTramiteRealizar: this.fb.group({
-        tipoDeCertificado: ['', Validators.required],
-        seccionAduanera: ['', Validators.required],
-        puntoDestino: ['', Validators.required],
-        paisDeDestino: ['', Validators.required],
-        paisDeProcedencia: ['', Validators.required]
+        tipoDeCertificado: [this.solicitudState?.tipoDeCertificado, Validators.required],
+        seccionAduanera: [this.solicitudState?.seccionAduanera, Validators.required],
+        puntoDestino: [this.solicitudState?.puntoDestino, Validators.required],
+        paisDeDestino: [this.solicitudState?.paisDeDestino, Validators.required],
+        paisDeProcedencia: [this.solicitudState?.paisDeProcedencia, Validators.required]
       }),
       datosMercancia: this.fb.group({
-        rangoDeFechas: [''],
-        fechaInicio: [{ value: '', disabled: true }, [Validators.required]],
-        fechaFinal: [[{ value: '', disabled: true }, [Validators.required]]],
+        rangoDeFechas: [this.solicitudState?.rangoDeFechas],
+        fechaInicio: [
+          this.solicitudState?.fechaInicio,
+          [Validators.required, this.validacionesService.validaFechaNoHoy],
+        ],
+        fechaFinal: [
+          this.solicitudState?.fechaFinal,
+          [Validators.required, this.validacionesService.validaFechaNoHoy],
+        ],
         datosGenerales: this.fb.group({
-          fraccionArancelaria: ['', [Validators.required]],
-          descdelaFraccion: ['', Validators.required],
-          cantidadUMT: ['', Validators.required],
-          UMT: ['', Validators.required],
-          cantidadUMC: ['', Validators.required],
-          UMC: ['', Validators.required],
-          paisdeOrigen: ['', Validators.required],
-          entidadFederativadeOrigen: ['', Validators.required],
-          municipiodeOrigen: [[''], Validators.required],
-          datosOrigen: this.fb.array([]),
-          marcasDistintivas: ['', Validators.required],
-          USO: ['', Validators.required]
+          fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required]],
+          descdelaFraccion: [this.solicitudState?.descdelaFraccion, Validators.required],
+          cantidadUMT: [this.solicitudState?.cantidadUMT, Validators.required],
+          UMT: [this.solicitudState?.UMT, Validators.required],
+          cantidadUMC: [this.solicitudState?.cantidadUMC, Validators.required],
+          UMC: [this.solicitudState?.UMC, Validators.required],
+          paisdeOrigen: [this.solicitudState?.paisdeOrigen, Validators.required],
+          entidadFederativadeOrigen: [this.solicitudState?.entidadFederativadeOrigen, Validators.required],
+          municipiodeOrigen: [[this.solicitudState?.municipiodeOrigen], Validators.required],
+          datosOrigen: this.fb.array(this.solicitudState?.datosOrigen),
+          marcasDistintivas: [this.solicitudState?.marcasDistintivas, Validators.required],
+          USO: [this.solicitudState?.USO, Validators.required]
         })
       }),
       numeroDescDeLosEmpaques: this.fb.group({
-        numero: ['', [Validators.required]],
-        empaques: ['', [Validators.required]]
+        numero: [this.solicitudState?.numero, [Validators.required]],
+        empaques: [this.solicitudState?.empaques, [Validators.required]]
       }),
       unidadDeVerificacion: this.fb.group({
-        unidadDeVerify: ['', [Validators.required]],
-        terceroEspecialista: ['', [Validators.required]]
+        unidadDeVerify: [this.solicitudState?.unidadDeVerify, [Validators.required]],
+        terceroEspecialista: [this.solicitudState?.terceroEspecialista, [Validators.required]]
       }),
       unidadExpedidoraFitosanitario: this.fb.group({
-        entidadFederative: ['', [Validators.required]],
-        terceroEspecialista: ['', [Validators.required]]
+        entidadFederative: [this.solicitudState?.entidadFederative, [Validators.required]],
+        terceroEspecialista: [this.solicitudState?.terceroEspecialista, [Validators.required]]
       })
     });
   }
@@ -280,6 +313,35 @@ export class SolicitudComponent {
   municipioEliminar() {
     const municipioOrigin = this.datosGenerales.get('municipiodeOrigen')?.value;
     this.origenArr = this.origenArr.filter((item: any) => item.indexOf(municipioOrigin) == -1);
+  }
+
+  /**
+   * Establece los valores en el store de tramite5701.
+   *
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   * @returns {void}
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud220402Store): void {
+    const valor = form.get(campo)?.value;
+    (this.solicitud220402Store[metodoNombre] as (value: any) => void)(valor);
+  }
+
+  changeFechaFinal(): void {
+    this.datosMercancia.updateValueAndValidity();
+    this.setValoresStore(this.datosMercancia, 'fechaFinal', 'setFechaFinal');
+  }
+
+  /**
+   * Verifica si hay un error de intervalo de fecha en los datos del servicio.
+   * @returns {boolean} - `true` si hay un error de intervalo de fecha y el campo ha sido tocado, de lo contrario `false`.
+   */
+  intervaloFechaError(): boolean {
+    return (
+      this.datosMercancia.hasError('invalidIntervalo') &&
+      this.datosMercancia.touched
+    );
   }
 
   /**

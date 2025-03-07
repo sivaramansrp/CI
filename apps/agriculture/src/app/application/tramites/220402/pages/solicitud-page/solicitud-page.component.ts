@@ -2,9 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { PASOS } from 'libs/shared/data-access-user/src/tramites/constantes/pantallas-captura.enum';
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/220402/pantallas-captura.model';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
 import { map, Subject, takeUntil } from 'rxjs';
-import { SeccionQuery } from 'libs/shared/data-access-user/src//core/queries/seccion.query';
+import { SeccionQuery } from 'libs/shared/data-access-user/src/core/queries/seccion.query';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SECCIONES_TRAMITE_220402 } from 'libs/shared/data-access-user/src/tramites/constantes/seccionesTramites';
 
