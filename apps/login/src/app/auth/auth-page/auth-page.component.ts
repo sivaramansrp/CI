@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PerfilUsuario } from '@ng-mf/data-access-user';
+import { AMBIENTES, PerfilUsuario } from '@ng-mf/data-access-user';
 import { Rol } from  '@ng-mf/data-access-user';
 import { Router } from '@angular/router'; 
 import { TipoPersona } from '@ng-mf/data-access-user';
@@ -11,12 +11,22 @@ import { UsuarioStore } from './../../estados/usuario.store';
 })
 export class AuthPageComponent {
   indice: number = 1;
-
+  public ruta: string = '';
+  
   constructor(
     private router: Router,
     private usuarioStore: UsuarioStore,
   ) {
 
+  }
+
+
+  ngOnInit(): void {
+    if (window.location.host.indexOf('localhost') !== -1) {
+      this.ruta = AMBIENTES.LOCALHOST;
+    } else {
+      this.ruta = AMBIENTES.DESARROLLO
+    }
   }
 
   seleccionaTab(i: number): void {

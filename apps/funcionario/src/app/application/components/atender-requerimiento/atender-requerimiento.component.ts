@@ -6,6 +6,6 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './atender-requerimiento.component.html',
-  styleUrl: './atender-requerimiento.component.scss',
+  styleUrl: './atender-requerimiento.component.css',
 })
 export class AtenderRequerimientoComponent {}
