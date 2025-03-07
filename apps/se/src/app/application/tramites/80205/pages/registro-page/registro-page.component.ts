@@ -1,9 +1,14 @@
+import { Component,OnDestroy, ViewChild } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { AmpliacionServiciosQuery } from '../../estados/tramite80205.query';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { TODAPASOS } from '@ng-mf/data-access-user';
+import { PASOS } from '@ng-mf/data-access-user';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
+
 import { WizardComponent } from '@ng-mf/data-access-user';
 
-import { Component, ViewChild } from '@angular/core';
+
 
 
 interface AccionBoton {
@@ -23,13 +28,14 @@ interface AccionBoton {
   selector: 'app-registro-page',
   templateUrl: './registro-page.component.html',
 })
-export class RegistroPageComponent {
+export class RegistroPageComponent implements OnDestroy {
 
   /**
    * Array de pasos del asistente.
    * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
    */
-  pasos: ListaPasosWizard[] = TODAPASOS;
+  pasos: ListaPasosWizard[] = PASOS;
+  destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Título del mensaje principal.
@@ -56,7 +62,7 @@ export class RegistroPageComponent {
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
-    txtBtnAnt: 'Guardar',
+    txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
 
@@ -71,10 +77,18 @@ export class RegistroPageComponent {
    * @method getValorIndice
    * @param {AccionBoton} e - Objeto con la acción (cont/atras) y el valor (índice) del botón.
    */
+  constructor(private tramiteQuery: AmpliacionServiciosQuery, private seccion: SeccionLibStore, 
+  ){
+
+    this.tramiteQuery.FormaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe(res => {
+      this.seccion.establecerSeccion([true]);
+      this.seccion.establecerFormaValida([res]);
+    })
+  }
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
-      this.tituloMensaje =RegistroPageComponent.obtenerNombreDelTítulo(e.valor);
+      //this.tituloMensaje =RegistroPageComponent.obtenerNombreDelTítulo(e.valor);
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
@@ -89,21 +103,7 @@ export class RegistroPageComponent {
    * @param {number} valor - El índice de la página.
    * @returns {string} - El título correspondiente.
    */
-   static obtenerNombreDelTítulo(valor: number): string {
-    // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-    switch (valor) {
-      case 1:
-        return 'Zoosanitario para importación';
-      case 2:
-        return 'Cargar archivos';
-      case 3:
-        return 'Cargar archivos';
-      case 4:
-        return 'Firmar';
-      default:
-        return 'Zoosanitario para importación';
-    }
-  }
+   
 
   /**
    * Cambia el título del mensaje según la pestaña seleccionada.
@@ -123,5 +123,9 @@ export class RegistroPageComponent {
         this.tituloMensaje = 'Registro de solicitud IMMEX modalidad ampliación servicios';
         break;
     }
+  }
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -16,11 +16,11 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
-import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RegistroPageComponent } from './pages/registro-page/registro-page.component';
+import { ToastrService } from 'ngx-toastr';
 
 /**
  * @fileoverview Módulo para el registro de certificados zoosanitarios.
@@ -36,7 +36,6 @@ import { RegistroPageComponent } from './pages/registro-page/registro-page.compo
 
 @NgModule({
   declarations: [
-    PasoCuatroComponent,
     PasoDosComponent,
     PasoTresComponent,
     PasoUnoComponent,
@@ -59,6 +58,7 @@ import { RegistroPageComponent } from './pages/registro-page/registro-page.compo
     SolicitanteComponent,
     TituloComponent,
     WizardComponent,
-  ]
+  ],
+  providers: [ToastrService]
 })
 export class CertificadoRegistroModule { }

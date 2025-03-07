@@ -15,13 +15,13 @@ export interface ServicioInmex {
     export interface InfoServicios {
         seleccionaLaModalidad: string;
         folio: string;
-        año: string;
+        ano: string;
       }
     
       export interface Servicios{
         seleccionaLaModalidad: string;
         folio: string;
-        año:string;
+        ano:string;
       }
      export interface ResponseData {
         idsubmanufacturer: string;

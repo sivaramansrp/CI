@@ -4,9 +4,7 @@
       <div class="col-md-12">
         <h1>{{ tituloMensaje || null }}</h1>
       </div>
-      <ng-container *ngIf="indice === 2">
-        <ng-alert [CONTENIDO]="mensajeDeTextoDeExito"></ng-alert>
-      </ng-container>
+     
 
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
@@ -17,9 +15,7 @@
       } @case (2) {
       <app-paso-dos></app-paso-dos>
       } @case (3) {
-      <app-paso-tres></app-paso-tres>
-      } @case (4) {
-      <app-paso-cuatro></app-paso-cuatro>
+      <paso-tres></paso-tres>
       } }
 
       <btn-continuar

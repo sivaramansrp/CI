@@ -39,11 +39,11 @@
                 <input
                     type="text"
                     id="Ano"
-                    name="año"
+                    name="ano"
                     size="30"
                     maxlength="13"
                     class="form-control"
-                    formControlName="año"
+                    formControlName="ano"
                 />
             </div>
         </div>
@@ -62,12 +62,16 @@
   <div class="col-md-8">
    
     <div class="form-group"  >
+        <form [formGroup]="formulario">
        <app-catalogo-select
           [catalogo]="aduanaDeIngreso"
           [label]="'Servicios IMMEX'"
+          [required]="true"
           name="aduanaIngreso"
+          formControlName="entidadFederativa"
           (selectionChange)="procesarDatosDelHijo($event)"
         ></app-catalogo-select> 
+        </form>
       </div>
     
   </div>
@@ -118,19 +122,19 @@
     <div class="col-md-4">
         <div class="form-group">
             <label for="rfdecontri">Registro federal de contribuyentes:</label>
-            <input type="text" id="rfcEmpresa" [(ngModel)]="rfcEmpresa" name="rfdecontri" class="form-control" />
+            <input type="text" id="rfcEmpresa" [(ngModel)]="rfcEmpresa" name="rfdecontri" class="form-control"  (ngModelChange)="enCambioDeCampo('rfcEmpresa', $event)"/>
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label for="numeroProgramaImmex">Número del Programa IMMEX:</label>
-            <input type="text" id="numeroPrograma" [(ngModel)]="numeroPrograma" name="numeroProgramaImmex" class="form-control" />
+            <input type="text" id="numeroPrograma" [(ngModel)]="numeroPrograma" name="numeroProgramaImmex" class="form-control" (ngModelChange)="enCambioDeCampo('numeroPrograma', $event)" />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label for="tiempoPrograma">Año del Programa IMMEX:</label>
-            <input type="text" id="tiempoPrograma" [(ngModel)]="tiempoPrograma" name="tiempoPrograma" class="form-control" />
+            <input type="text" id="tiempoPrograma" [(ngModel)]="tiempoPrograma" name="tiempoPrograma" class="form-control" (ngModelChange)="enCambioDeCampo('tiempoPrograma', $event)"  />
         </div>
     </div>
   </div>

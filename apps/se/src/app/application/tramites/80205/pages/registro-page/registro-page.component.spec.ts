@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AccionBoton } from '../../models/datos-info.model';
 import { RegistroPageComponent } from './registro-page.component';
-import { TODAPASOS} from '@ng-mf/data-access-user';
+import { PASOS} from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 describe('RegistroPageComponent', () => {
@@ -26,7 +26,7 @@ describe('RegistroPageComponent', () => {
   });
 
   it('should have default pasos defined', () => {
-    expect(component.pasos).toEqual(TODAPASOS);
+    expect(component.pasos).toEqual(PASOS);
   });
 
   it('should have default tituloMensaje', () => {
@@ -39,9 +39,9 @@ describe('RegistroPageComponent', () => {
 
   it('should have default datosPasos', () => {
     expect(component.datosPasos).toEqual({
-      nroPasos: TODAPASOS.length,
+      nroPasos: PASOS.length,
       indice: 1,
-      txtBtnAnt: 'Guardar',
+      txtBtnAnt: 'Anterior',
       txtBtnSig: 'Continuar',
     });
   });
@@ -53,7 +53,7 @@ describe('RegistroPageComponent', () => {
     component.getValorIndice(ACCIONBOTON);
 
     expect(component.indice).toBe(ACCIONBOTON.valor);
-    expect(component.tituloMensaje).toBe('Cargar archivos');
+    expect(component.tituloMensaje).toBe('Registro de solicitud IMMEX modalidad ampliación servicios ');
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
@@ -64,7 +64,7 @@ describe('RegistroPageComponent', () => {
     component.getValorIndice(ACCIONBOTON);
 
     expect(component.indice).toBe(ACCIONBOTON.valor);
-    expect(component.tituloMensaje).toBe('Cargar archivos');
+    expect(component.tituloMensaje).toBe('Registro de solicitud IMMEX modalidad ampliación servicios ');
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 

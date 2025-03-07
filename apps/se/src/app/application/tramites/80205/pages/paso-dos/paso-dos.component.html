@@ -1,22 +1,7 @@
 <div class="container">
-  <div class="row">
-    <div class="row">
-      <div class="com-md-12">
-        <ng-titulo titulo="Requistios obligatorios" />
-      </div>
-    </div>
-    <div class="row">
-      <div>Placeholder</div>
-    </div>
+  <ng-titulo titulo="Requisitos opcionales" />
 
-    <div class="row">
-      <div class="com-md-12">
-        <ng-titulo titulo="Requistios opcionales" />
-      </div>
-      <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
-    </div>
-    <div class="row">
-      <div>Placeholder</div>
-    </div>
-  </div>
+  <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
+
+  <anexar-documentos ></anexar-documentos>
 </div>
