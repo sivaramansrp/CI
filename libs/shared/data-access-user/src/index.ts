@@ -73,7 +73,21 @@ export * from './tramites/constantes/registro-como-empresa.enum'
 export * from './core/services/130118/pexim/pexim.service';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
+export * from './core/services/220501/revision.service';
+export * from './core/services/220501/sagarpa/sagarpa.service';
+export * from './core/enums/220502/solicitud-pantallas.enum';
+export * from './core/services/220502/solicitud-pantallas.service';
+export * from './core/models/220502/solicitud-pantallas.model';
+
+export { TEXTOS as TEXTOS_220501 } from './tramites/constantes/220501/texto-enum';
+
+export { CATALOGOS_ID as CATALOGOS_ID_220501 } from './tramites/constantes/220501/constantes';
+export { FECHA_INSPECCION_INPUT as FECHA_INSPECCION_INPUT_220502 } from './tramites/constantes/220502/texto-enum';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
+export {
+  TEXTOS_REQUISITOS as TEXTOS_REQUISITOS_80202,
+  MENSAJE_DE_EXITO_ETAPA_UNO,
+} from './tramites/constantes/certificado-zoosanitario.enum';
 export * from './core/enums/tabla-seleccion.enum';
 export * from './tramites/constantes/120601/datos-generales-socios-tabledata.enum';
 export * from './tramites/constantes/solicitante-constantes.enum';
@@ -97,3 +111,8 @@ export { representacionFederalTable };
 import representacionFederal from '../../theme/assets/json/120601/representacionFederal.json';
 export { representacionFederal };
 
+export * from './core/estados/seccion.store';
+export * from './tramites/pages/firma-page/firma-page.component';
+export * from './tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
+export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
+export * from './tramites/components/acuse/acuse.component';

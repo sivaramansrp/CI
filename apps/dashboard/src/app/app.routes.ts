@@ -39,7 +39,7 @@ export const appRoutes: Route[] = [
             remoteEntry: 'http://localhost:4204/remoteAppEntry.js',
             remoteName: 'agriculture',
             exposedModule: './Module'
-        }).then((m) => m.AppAgriculturaModule)
+        }).then((m) => m.AppAgricultureModule)
   },
   {
     path: 'se',
@@ -57,7 +57,7 @@ export const appRoutes: Route[] = [
             remoteEntry: 'http://localhost:4206/remoteAppEntry.js',
             remoteName: 'semarnat',
             exposedModule: './Module'
-        }).then((m) => m.RemoteEntryModule)
+        }).then((m) => m.AppSemarnatModule)
   },
   {
     path: 'funcionario',
