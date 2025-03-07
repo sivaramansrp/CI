@@ -1,8 +1,20 @@
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud301State,
+  Tramite301Store,
+} from '../../../../estados/tramites/tramite301.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
-import { Solicitud301State, Tramite301Store } from '../../../../estados/tramites/tramite301.store';
 import { Tramite301Query } from '../../../../estados/queries/tramite301.query';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

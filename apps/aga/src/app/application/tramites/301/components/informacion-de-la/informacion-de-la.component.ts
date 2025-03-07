@@ -3,19 +3,30 @@
  * @module InformacionDeLaComponent
  * @description Este módulo define el componente `InformacionDeLaComponent` que maneja la información de la mercancía.
  */
-import { CommonModule } from '@angular/common';
+import {
+  BtnContinuarComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BtnContinuarComponent, Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud301State,
+  Tramite301Store,
+} from '../../../../estados/tramites/tramite301.store';
 import { Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-
+import { CommonModule } from '@angular/common';
+import { Tramite301Query } from '../../../../estados/queries/tramite301.query';
 import estadofisico from 'libs/shared/theme/assets/json/130102/entidad_federativa.json';
 import franccionArancelaria from 'libs/shared/theme/assets/json/301/fraccion-arancelaria-options.json';
 import nico from 'libs/shared/theme/assets/json/301/nico-options.json';
-
-import { Solicitud301State, Tramite301Store } from '../../../../estados/tramites/tramite301.store';
-import { Tramite301Query } from '../../../../estados/queries/tramite301.query';
 
 interface DatosPasos {
   indice: number;

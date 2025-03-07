@@ -1,10 +1,28 @@
 /* eslint-disable no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  AlertComponent,
+  BtnContinuarComponent,
+  CatalogoSelectComponent,
+  TituloComponent,
+  Aviso,
+  Importante,
+  Catalogo,
+  DatosPasos,
+  ListaPasosWizard,
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { map, Subject, Subscription, takeUntil } from 'rxjs';
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, TituloComponent, Aviso, Importante, Catalogo, DatosPasos, ListaPasosWizard } from '@ng-mf/data-access-user';
-import { Solicitud301State, Tramite301Store } from '../../../../estados/tramites/tramite301.store';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud301State,
+  Tramite301Store,
+} from '../../../../estados/tramites/tramite301.store';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { Tramite301Query } from '../../../../estados/queries/tramite301.query';
 
 /**
