@@ -13,4 +13,4 @@ export const ROUTES_REGISTRAR_IMMEX: Routes = [
   imports: [RouterModule.forChild(ROUTES_REGISTRAR_IMMEX)],
   exports: [RouterModule],
 })
-export class SubmanufacturerasExtentionRoutingModule {}
+export class SubfabricanteExtentionRoutingModule {}

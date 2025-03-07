@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { Tramite80207State } from '../modelos/submanufacturer-modelos';
-import { SubManufacturerService } from './servicios-submanufacturer-servico';
+import { Tramite80207State } from '../modelos/subfabricante-modelos';
+import { SubfabricanteService } from './servicios-subfabricante.service';
 
 
 const mockSubManufacturerDatos: Tramite80207State = {
@@ -22,14 +22,14 @@ const mockSubManufacturerDatos: Tramite80207State = {
   };
 
 describe('ServiciosExtraordinariosService', () => {
-  let service: SubManufacturerService;
+  let service: SubfabricanteService;
  let httpMock:HttpTestingController;
   beforeEach(() => {
     TestBed.configureTestingModule({
         imports: [HttpClientTestingModule], // Import HttpClientTestingModule if the service makes HTTP requests
-      providers: [SubManufacturerService], // Provide the service
+      providers: [SubfabricanteService], // Provide the service
     });
-    service = TestBed.inject(SubManufacturerService);
+    service = TestBed.inject(SubfabricanteService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 

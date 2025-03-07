@@ -14,15 +14,15 @@ import {
 } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { ContenedorDePasosComponent } from './pages/contenedor-de-pasos/contenedor-de-pasos.component';
-import { EmpresasSubmanufacturerasComponent } from './components/empresas-submanufactureras/empresas-submanufactureras.component';
+import { EmpresasSubFabricanteComponent } from './components/empresas-submanufactureras/empresas-subfabricante.component';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { SubManufacturerService } from './servicios/servicios-submanufacturer-servico';
-import { SubmanufacturerasExtentionRoutingModule } from './submanufactureras-extension-routing.module';
+import { SubfabricanteExtentionRoutingModule } from './subfabricante-extension-routing.module';
+import { SubfabricanteService } from './servicios/servicios-subfabricante.service';
 
 import { ToastrService } from 'ngx-toastr';
 
@@ -43,7 +43,7 @@ import { ToastrService } from 'ngx-toastr';
     ReactiveFormsModule,
     RouterModule,
     SelectCatalogosComponent,
-    SubmanufacturerasExtentionRoutingModule,
+    SubfabricanteExtentionRoutingModule,
     SharedModule,
     TituloComponent,
     WizardComponent,
@@ -51,8 +51,8 @@ import { ToastrService } from 'ngx-toastr';
     TableComponent,
     FirmaElectronicaComponent,
     TablaDinamicaComponent,
-    EmpresasSubmanufacturerasComponent,
+    EmpresasSubFabricanteComponent,
   ],
-  providers: [SubManufacturerService, ToastrService],
+  providers: [SubfabricanteService, ToastrService],
 })
-export class SubmanufacturerasExtentionModule {}
+export class SubfabricanteExtentionModule {}

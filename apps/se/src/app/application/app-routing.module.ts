@@ -49,10 +49,10 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'submanufactureras-immex',
+    path: 'subfabricante-immex',
     loadChildren: () =>
-      import('./tramites/80207/submanufactureras-extension.module').then(
-        (m) => m.SubmanufacturerasExtentionModule
+      import('./tramites/80207/subfabricante-extension.module').then(
+        (m) => m.SubfabricanteExtentionModule
       ),
     },
 {

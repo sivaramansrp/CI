@@ -1,9 +1,9 @@
 import {
   DatosSubcontratista,
   InfoRegistro,
-  SubmanufacturerDireccionModelo,
+  SubfabricanteDireccionModelo,
   Tramite80207State,
-} from '../modelos/submanufacturer-modelos';
+} from '../modelos/subfabricante-modelos';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -77,36 +77,18 @@ export class Tramites80207Store extends Store<Tramite80207State> {
   /**
    * Actualiza el estado del store con la lista de plantas subfabricantes a agregar.
    *
-   * Este método recibe un arreglo de objetos de tipo `SubmanufacturerDireccionModelo` y
+   * Este método recibe un arreglo de objetos de tipo `SubfabricanteDireccionModelo` y
    * actualiza la propiedad `plantasSubfabricantesAgregar` en el estado actual utilizando el método `update`.
    *
    * @method setPlantasSubfabricantesAgregar
-   * @param {SubmanufacturerDireccionModelo[]} plantasSubfabricantesAgregar - Lista de plantas subfabricantes a agregar al estado.
+   * @param {SubfabricanteDireccionModelo[]} plantasSubfabricantesAgregar - Lista de plantas subfabricantes a agregar al estado.
    */
   setPlantasSubfabricantesAgregar(
-    plantasSubfabricantesAgregar: SubmanufacturerDireccionModelo[]
+    plantasSubfabricantesAgregar: SubfabricanteDireccionModelo[]
   ): void {
     this.update((state) => ({
       ...state,
       plantasSubfabricantesAgregar: plantasSubfabricantesAgregar,
-    }));
-  }
-
-  /**
-   * Actualiza el estado del store con la lista de plantas subfabricantes a eliminar.
-   *
-   * Este método recibe un arreglo de objetos de tipo `SubmanufacturerDireccionModelo` y
-   * actualiza la propiedad `plantasSubfabricantesEliminar` en el estado actual utilizando el método `update`.
-   *
-   * @method setPlantasSubfabricantesEliminar
-   * @param {SubmanufacturerDireccionModelo[]} plantasSubfabricantesEliminar - Lista de plantas subfabricantes a eliminar del estado.
-   */
-  setPlantasSubfabricantesEliminar(
-    plantasSubfabricantesEliminar: SubmanufacturerDireccionModelo[]
-  ): void {
-    this.update((state) => ({
-      ...state,
-      plantasSubfabricantesEliminar: plantasSubfabricantesEliminar,
     }));
   }
 
@@ -127,14 +109,14 @@ export class Tramites80207Store extends Store<Tramite80207State> {
     })
   }
 
-  setPlantasBuscadas(plantasBuscadas:SubmanufacturerDireccionModelo[]):void{
+  setPlantasBuscadas(plantasBuscadas:SubfabricanteDireccionModelo[]):void{
     this.update((state) => ({
       ...state,
       plantasBuscadas: plantasBuscadas,
     }));
   }
 
-    eliminarPlantas(eliminarPlantas:SubmanufacturerDireccionModelo[]): void {
+    eliminarPlantas(eliminarPlantas:SubfabricanteDireccionModelo[]): void {
       this.update(state => {
         const PLANTAS = [...state.plantasSubfabricantesAgregar].filter(ele => 
           !eliminarPlantas.some((plantas)=>plantas.calle===ele.calle)

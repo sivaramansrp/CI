@@ -9,11 +9,6 @@ import {
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  DatosSubcontratista,
-  InfoRegistro,
-  SubmanufacturerDireccionModelo,
-} from '../../modelos/submanufacturer-modelos';
-import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
@@ -22,10 +17,13 @@ import {
 
 import { CommonModule } from '@angular/common';
 
-import { SUBMANUFACTURADORES_TABLA_CONFIGURACION } from '../../constantes/submanufabricnats-tabla-configuracion.enum';
-import { SubManufacturerService } from '../../servicios/servicios-submanufacturer-servico';
+import { SUBFABRICANTE_TABLA_CONFIGURACION } from '../../constantes/subfabricante-tabla-configuracion.enum';
+import {
+  SubfabricanteDireccionModelo,
+} from '../../modelos/subfabricante-modelos';
+import { SubfabricanteService } from '../../servicios/servicios-subfabricante.service';
 import { Tramites80207Queries } from '../../estados/tramite80207.query';
-import { Tramites80207Store } from '../../estados/tamite80207.store';
+import { Tramites80207Store } from '../../estados/tramite80207.store';
 
 /**
  * @fileoverview Componente para la gestión de empresas submanufactureras.
@@ -41,9 +39,9 @@ import { Tramites80207Store } from '../../estados/tamite80207.store';
  */
 
 @Component({
-  selector: 'app-empresas-submanufactureras',
-  templateUrl: './empresas-submanufactureras.component.html',
-  styleUrls: ['./empresas-submanufactureras.component.scss'],
+  selector: 'app-empresas-subfabricante',
+  templateUrl: './empresas-subfabricante.component.html',
+  styleUrls: ['./empresas-subfabricante.component.scss'],
   standalone: true,
   imports: [
     TablaDinamicaComponent,
@@ -53,8 +51,7 @@ import { Tramites80207Store } from '../../estados/tamite80207.store';
     TituloComponent,
   ],
 })
-export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
-  formularioEstado!: FormGroup;
+export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
   /**
    * Formulario para la información de registro.
    * @property {FormGroup} formularioInfoRegistro
@@ -67,17 +64,6 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    */
   formularioDatosSubcontratista!: FormGroup;
 
-  /**
-   * Información de registro obtenida del servicio.
-   * @property {InfoRegistro} infoRegistro
-   */
-  infoRegistro!: InfoRegistro;
-
-  /**
-   * Datos del subcontratista obtenidos del servicio.
-   * @property {DatosSubcontratista} datosSubcontratista
-   */
-  datosSubcontratista: DatosSubcontratista = { rfc: '', estado: '' };
 
   /**
    * Lista de estados obtenida del servicio.
@@ -94,34 +80,34 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
 
   /**
    * Configuración de las columnas de la tabla de subfabricantes.
-   * @property {ConfiguracionColumna<SubmanufacturerDireccionModelo>[]} configuracionTabla
+   * @property {ConfiguracionColumna<SubfabricanteDireccionModelo>[]} configuracionTabla
    */
-  configuracionTabla: ConfiguracionColumna<SubmanufacturerDireccionModelo>[] =
-    SUBMANUFACTURADORES_TABLA_CONFIGURACION;
+  configuracionTabla: ConfiguracionColumna<SubfabricanteDireccionModelo>[] =
+  SUBFABRICANTE_TABLA_CONFIGURACION;
 
   /**
    * Datos del subfabricante seleccionado.
-   * @property {SubmanufacturerDireccionModelo[]} datosDelSubfabricanteSeleccionado
+   * @property {SubfabricanteDireccionModelo[]} datosDelSubfabricanteSeleccionado
    */
-  datosDelSubfabricanteSeleccionado: SubmanufacturerDireccionModelo[] = [];
+  datosDelSubfabricanteSeleccionado: SubfabricanteDireccionModelo[] = [];
 
   /**
    * Agregar los datos del subfabricante seleccionado.
-   * @property {SubmanufacturerDireccionModelo[]} datosSubfabricanteParaSerAgregados
+   * @property {SubfabricanteDireccionModelo[]} datosSubfabricanteParaSerAgregados
    */
-  datosSubfabricanteParaSerAgregados: SubmanufacturerDireccionModelo[] = [];
+  datosSubfabricanteParaSerAgregados: SubfabricanteDireccionModelo[] = [];
 
   /**
    * Datos de la tabla de subfabricantes disponibles.
-   * @property {SubmanufacturerDireccionModelo[]} datosTablaSubfabricantesDisponibles
+   * @property {SubfabricanteDireccionModelo[]} datosTablaSubfabricantesDisponibles
    */
-  datosTablaSubfabricantesDisponibles: SubmanufacturerDireccionModelo[] = [];
+  datosTablaSubfabricantesDisponibles: SubfabricanteDireccionModelo[] = [];
 
   /**
    * Lista de subfabricantes por eliminar.
-   * @property {SubmanufacturerDireccionModelo[]} listaDeSubfabricantesPorEliminar
+   * @property {SubfabricanteDireccionModelo[]} listaDeSubfabricantesPorEliminar
    */
-  listaDeSubfabricantesPorEliminar: SubmanufacturerDireccionModelo[] = [];
+  listaDeSubfabricantesPorEliminar: SubfabricanteDireccionModelo[] = [];
 
   /**
    * Controla la visualización de la tabla de subfabricantes disponibles.
@@ -149,13 +135,13 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * y la inicialización de datos.
    *
    * @param {FormBuilder} fb - Servicio que ayuda a construir formularios reactivos en Angular.
-   * @param {SubManufacturerService} subManufacturerDatoService - Servicio para manejar la lógica relacionada con los subfabricantes.
+   * @param {SubfabricanteService} subfabricanteDatosService - Servicio para manejar la lógica relacionada con los subfabricantes.
    * @param {Tramites80207Queries} query - Servicio que contiene las consultas para obtener los datos relacionados con los trámites.
    * @param {Tramites80207Store} store - Servicio que maneja el estado de los trámites y datos asociados.
    */
   constructor(
     private fb: FormBuilder,
-    private subManufacturerDatoService: SubManufacturerService,
+    private subfabricanteDatosService: SubfabricanteService,
     public query: Tramites80207Queries,
     private store: Tramites80207Store
   ) {
@@ -184,14 +170,12 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
     this.query.infoRegisterEstado$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((infoRegister) => {
-        this.infoRegistro = infoRegister;
         this.formularioInfoRegistro.setValue(infoRegister);
       });
 
     this.query.datosSubcontratistaEstado$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datosSubcontratista) => {
-        this.datosSubcontratista = datosSubcontratista;
         this.formularioDatosSubcontratista.setValue(datosSubcontratista);
         this.store.setFormValida({
           esDatosSubcontratistaValido: this.formularioDatosSubcontratista.valid,
@@ -206,6 +190,7 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
           this.mostrarTablaSubfabricantesDisponibles$.next(true);
         }
       })
+
 
 
     this.query.plantasSubfabricantesAgregar$
@@ -235,11 +220,10 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @param {Catalogo} estadoSeleccionado - Objeto que contiene el estado seleccionado, con su propiedad `id`.
    */
   enEstadoSeleccionado(estadoSeleccionado: Catalogo): void {
-    this.datosSubcontratista = {
-      ...this.datosSubcontratista,
+    this.formularioDatosSubcontratista.patchValue({
       estado: estadoSeleccionado.id.toString(),
-    };
-    this.store.setDatosContr(this.datosSubcontratista);
+    })
+    this.store.setDatosContr(this.formularioDatosSubcontratista.value);
   }
 
   /**
@@ -252,19 +236,13 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @method obtenerRFC
    */
   obtenerRFC(): void {
-    const VALOR_ACTUAL_RFC =
-      this.formularioDatosSubcontratista.get('rfc')?.value;
-    this.datosSubcontratista = {
-      ...this.datosSubcontratista,
-      rfc: VALOR_ACTUAL_RFC,
-    };
-    this.store.setDatosContr(this.datosSubcontratista);
+    this.store.setDatosContr(this.formularioDatosSubcontratista.value);
   }
 
   /**
-   * Obtiene los datos de registro del servicio `subManufacturerDatoService` y los guarda en el store.
+   * Obtiene los datos de registro del servicio `subfabricanteDatosService` y los guarda en el store.
    *
-   * Este método se suscribe al observable proporcionado por el servicio `subManufacturerDatoService.getDatos()`.
+   * Este método se suscribe al observable proporcionado por el servicio `subfabricanteDatosService.getDatos()`.
    * Cuando se recibe una respuesta, se verifica que no sea nula o indefinida, y luego se almacena la información
    * de registro en el store utilizando el método `setInfoRegistro`. La suscripción se gestiona para que se complete
    * cuando el componente sea destruido, gracias al uso de `takeUntil` con `destroyNotifier$`.
@@ -272,7 +250,7 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @method obtenerDatosDeRegistro
    */
   obtenerDatosDeRegistro(): void {
-    this.subManufacturerDatoService
+    this.subfabricanteDatosService
       .getDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((response) => {
@@ -310,7 +288,7 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @method obtenerListaEstado
    */
   obtenerListaEstado(): void {
-    this.subManufacturerDatoService
+    this.subfabricanteDatosService
       .obtenerListaEstado()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((response) => {
@@ -325,10 +303,10 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @method obtenerSubfabricantesDisponibles
    */
   obtenerSubfabricantesDisponibles(): void {
-    this.subManufacturerDatoService
+    this.subfabricanteDatosService
       .getSubfabricantesDisponibles()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((response: SubmanufacturerDireccionModelo[]) => {
+      .subscribe((response: SubfabricanteDireccionModelo[]) => {
         if (response.length>0) {
           this.store.setPlantasBuscadas(response)
         }
@@ -338,9 +316,9 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
   /**
    * Obtiene el registro seleccionado de la tabla de subfabricantes disponibles.
    * @method obtenerRegistroSeleccionado
-   * @param {SubmanufacturerDireccionModelo[]} event - Evento con los datos del registro seleccionado.
+   * @param {SubfabricanteDireccionModelo[]} event - Evento con los datos del registro seleccionado.
    */
-  obtenerRegistroSeleccionado(event: SubmanufacturerDireccionModelo[]): void {
+  obtenerRegistroSeleccionado(event: SubfabricanteDireccionModelo[]): void {
     if (event.length > 0) {
       this.datosDelSubfabricanteSeleccionado = event;
     } else {
@@ -367,27 +345,18 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @method agregarPlantas
    */
   agregarPlantas(): void {
-    this.datosSubfabricanteParaSerAgregados =
-      this.datosDelSubfabricanteSeleccionado;
     this.store.setPlantasSubfabricantesAgregar(
-      this.datosSubfabricanteParaSerAgregados
+      this.datosDelSubfabricanteSeleccionado
     );
-    if (
-      this.datosSubfabricanteParaSerAgregados &&
-      this.datosSubfabricanteParaSerAgregados.length > 0
-    ) {
-      this.mostrarTablaSubfabricantesSeleccionadas = true;
-      //Implementar la llamada a la API posterior para los datos del subfabricante seleccionado
-    }
   }
 
   /**
    * Obtiene los datos del subfabricante por eliminar.
    * @method datosDelSubfabricantePorEliminar
-   * @param {SubmanufacturerDireccionModelo[]} event - Evento con los datos del subfabricante por eliminar.
+   * @param {SubfabricanteDireccionModelo[]} event - Evento con los datos del subfabricante por eliminar.
    */
   datosDelSubfabricantePorEliminar(
-    event: SubmanufacturerDireccionModelo[]
+    event: SubfabricanteDireccionModelo[]
   ): void {
     this.listaDeSubfabricantesPorEliminar = event;
   }
@@ -401,9 +370,6 @@ export class EmpresasSubmanufacturerasComponent implements OnInit, OnDestroy {
    * @method eliminarPlantas
    */
   eliminarPlantas(): void {
-    this.store.setPlantasSubfabricantesEliminar(
-      this.listaDeSubfabricantesPorEliminar
-    );
     this.store.eliminarPlantas(this.listaDeSubfabricantesPorEliminar);
   }
 

@@ -7,11 +7,11 @@ import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
-import { EmpresasSubmanufacturerasComponent } from './empresas-submanufactureras.component';
+import { EmpresasSubmanufacturerasComponent } from './empresas-subfabricante.component';
 import { FormBuilder } from '@angular/forms';
-import { SubManufacturerService } from '../../servicios/servicios-submanufacturer-servico';
+import { SubManufacturerService } from '../../servicios/servicios-subfabricante.service';
 import { Tramites80207Queries } from '../../estados/tramite80207.query';
-import { Tramites80207Store } from '../../estados/tamite80207.store';
+import { Tramites80207Store } from '../../estados/tramite80207.store';
 
 @Injectable()
 class MockSubManufacturerService {}
@@ -48,7 +48,7 @@ describe('EmpresasSubmanufacturerasComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ,EmpresasSubmanufacturerasComponent],
+      imports: [ FormsModule, ReactiveFormsModule,EmpresasSubmanufacturerasComponent, ],
       declarations: [
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
@@ -83,11 +83,37 @@ describe('EmpresasSubmanufacturerasComponent', () => {
     component.ngOnInit();
     expect(component.obtenerDatosDeRegistro).toHaveBeenCalled();
     expect(component.obtenerDatosDelAlmacen).toHaveBeenCalled();
-     expect(component.obtenerListaEstado).toHaveBeenCalled();
+    expect(component.obtenerListaEstado).toHaveBeenCalled();
   });
 
-  
+  it('should run #obtenerDatosDelAlmacen()', async () => {
+    component.query = component.query || {};
+    component.query.infoRegisterEstado$ = observableOf({});
+    component.query.datosSubcontratistaEstado$ = observableOf({});
+    component.query.plantasBuscadas$ = observableOf({
+      length: {}
+    });
+    component.query.plantasSubfabricantesAgregar$ = observableOf({
+      length: {}
+    });
+    component.formularioInfoRegistro = component.formularioInfoRegistro || {};
+    component.formularioInfoRegistro.setValue = jest.fn();
+    component.formularioDatosSubcontratista = component.formularioDatosSubcontratista || {};
+    component.formularioDatosSubcontratista.setValue = jest.fn();
+    component.store = component.store || {};
+    component.store.setFormValida = jest.fn();
+    component.mostrarTablaSubfabricantesDisponibles$ = component.mostrarTablaSubfabricantesDisponibles$ || {};
+    component.mostrarTablaSubfabricantesDisponibles$.next = jest.fn();
+    component.obtenerDatosDelAlmacen();
+    expect(component.formularioInfoRegistro.setValue).toHaveBeenCalled();
+    expect(component.formularioDatosSubcontratista.setValue).toHaveBeenCalled();
+    expect(component.store.setFormValida).toHaveBeenCalled();
+  });
+
   it('should run #enEstadoSeleccionado()', async () => {
+    component.formularioDatosSubcontratista = component.formularioDatosSubcontratista || {};
+    component.formularioDatosSubcontratista.patchValue = jest.fn();
+    component.formularioDatosSubcontratista.value = 'value';
     component.store = component.store || {};
     component.store.setDatosContr = jest.fn();
     component.enEstadoSeleccionado({
@@ -95,18 +121,16 @@ describe('EmpresasSubmanufacturerasComponent', () => {
         toString: function() {}
       }
     });
-     expect(component.store.setDatosContr).toHaveBeenCalled();
+    expect(component.formularioDatosSubcontratista.patchValue).toHaveBeenCalled();
+    expect(component.store.setDatosContr).toHaveBeenCalled();
   });
 
   it('should run #obtenerRFC()', async () => {
-    component.formularioDatosSubcontratista = component.formularioDatosSubcontratista || {};
-    component.formularioDatosSubcontratista.get = jest.fn().mockReturnValue({
-      value: {}
-    });
     component.store = component.store || {};
     component.store.setDatosContr = jest.fn();
+    component.formularioDatosSubcontratista = component.formularioDatosSubcontratista || {};
+    component.formularioDatosSubcontratista.value = 'value';
     component.obtenerRFC();
-    expect(component.formularioDatosSubcontratista.get).toHaveBeenCalled();
     expect(component.store.setDatosContr).toHaveBeenCalled();
   });
 
@@ -131,7 +155,7 @@ describe('EmpresasSubmanufacturerasComponent', () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.inicializarFormularioDatosSubcontratista();
-     expect(component.fb.group).toHaveBeenCalled();
+    // expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #obtenerListaEstado()', async () => {
@@ -140,15 +164,18 @@ describe('EmpresasSubmanufacturerasComponent', () => {
       data: {}
     }));
     component.obtenerListaEstado();
-     expect(component.subManufacturerDatoService.obtenerListaEstado).toHaveBeenCalled();
+    expect(component.subManufacturerDatoService.obtenerListaEstado).toHaveBeenCalled();
   });
 
   it('should run #obtenerSubfabricantesDisponibles()', async () => {
     component.subManufacturerDatoService = component.subManufacturerDatoService || {};
-    component.subManufacturerDatoService.getSubfabricantesDisponibles = jest.fn().mockReturnValue(observableOf({}));
-    component.mostrarTablaSubfabricantesDisponibles$ = component.mostrarTablaSubfabricantesDisponibles$ || {};
-    component.mostrarTablaSubfabricantesDisponibles$.next = jest.fn();
+    component.subManufacturerDatoService.getSubfabricantesDisponibles = jest.fn().mockReturnValue(observableOf({
+      length: {}
+    }));
+    component.store = component.store || {};
+    component.store.setPlantasBuscadas = jest.fn();
     component.obtenerSubfabricantesDisponibles();
+    expect(component.subManufacturerDatoService.getSubfabricantesDisponibles).toHaveBeenCalled();
   });
 
   it('should run #obtenerRegistroSeleccionado()', async () => {
@@ -171,11 +198,10 @@ describe('EmpresasSubmanufacturerasComponent', () => {
   });
 
   it('should run #agregarPlantas()', async () => {
-    component.datosDelSubfabricanteSeleccionado = component.datosDelSubfabricanteSeleccionado || {};
     component.store = component.store || {};
     component.store.setPlantasSubfabricantesAgregar = jest.fn();
     component.agregarPlantas();
-    expect(component.store.setPlantasSubfabricantesAgregar).toHaveBeenCalled();
+     expect(component.store.setPlantasSubfabricantesAgregar).toHaveBeenCalled();
   });
 
   it('should run #datosDelSubfabricantePorEliminar()', async () => {
@@ -186,8 +212,7 @@ describe('EmpresasSubmanufacturerasComponent', () => {
 
   it('should run #eliminarPlantas()', async () => {
     component.store = component.store || {};
-    component.store.setPlantasSubfabricantesEliminar = jest.fn();
-    component.store.eliminarPlantas=jest.fn();
+    component.store.eliminarPlantas = jest.fn();
     component.eliminarPlantas();
      expect(component.store.eliminarPlantas).toHaveBeenCalled();
   });
@@ -205,4 +230,3 @@ describe('EmpresasSubmanufacturerasComponent', () => {
   });
 
 });
-

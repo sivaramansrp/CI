@@ -8,7 +8,7 @@ export interface InfoRegistro {
     rfc: string;
     estado : string;
   }
-  export interface SubmanufacturerDireccionModelo {
+  export interface SubfabricanteDireccionModelo {
     calle :string,
     numExterior :number,
     numInterior :number,
@@ -18,8 +18,8 @@ export interface InfoRegistro {
   export interface Tramite80207State{
     infoRegistro: InfoRegistro;
     datosSubcontratista: DatosSubcontratista;
-    plantasBuscadas:SubmanufacturerDireccionModelo[],
-    plantasSubfabricantesAgregar:SubmanufacturerDireccionModelo[],
+    plantasBuscadas:SubfabricanteDireccionModelo[],
+    plantasSubfabricantesAgregar:SubfabricanteDireccionModelo[],
     
     formaValida: {
       esDatosSubcontratistaValido:boolean

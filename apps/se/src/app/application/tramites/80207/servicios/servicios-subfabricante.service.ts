@@ -1,7 +1,7 @@
 import {
   InfoRegistro,
-  SubmanufacturerDireccionModelo,
-} from '../modelos/submanufacturer-modelos';
+  SubfabricanteDireccionModelo,
+} from '../modelos/subfabricante-modelos';
 
 import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -14,9 +14,9 @@ import { RespuestaCatalogos } from '@ng-mf/data-access-user';
  * @fileoverview Servicio para la gestión de datos de submanufactureras.
  * Este servicio maneja la obtención de datos relacionados con las submanufactureras,
  * incluyendo la lista de estados, subfabricantes disponibles y seleccionados.
- * @module serviciosSubmanufacturerService --80207
+ * @module serviciosSubfabricanteService --80207
  */
-export class SubManufacturerService {
+export class SubfabricanteService {
   constructor(private readonly http: HttpClient) {
     //El constructor está intencionadamente vacío ya que solo inyecta el servicio HttpClient.
   }
@@ -51,10 +51,10 @@ export class SubManufacturerService {
    * @method getSubfabricantesDisponibles
    * @returns {Observable<TableData>} Observable con la lista de subfabricantes disponibles.
    */
-  getSubfabricantesDisponibles(): Observable<SubmanufacturerDireccionModelo[]> {
+  getSubfabricantesDisponibles(): Observable<SubfabricanteDireccionModelo[]> {
     return (
       this.http
-        .get<SubmanufacturerDireccionModelo[]>(
+        .get<SubfabricanteDireccionModelo[]>(
           'assets/json/80207/submanufactureras-disponibles-datos.json'
         )
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
