@@ -1,3 +1,4 @@
+/* eslint-disable sort-imports */
 /**
  * Este componente se utiliza para mostrar los pasos del asistente - 90201
  * Lista de pasos
@@ -6,6 +7,9 @@
 
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, ViewChild } from '@angular/core';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { CatalogosService } from '@libs/shared/data-access-user/src/core/services/shared/catalogos/catalogos.service';
+import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
 // eslint-disable-next-line sort-imports
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
@@ -67,6 +71,14 @@ export class PantallasComponent {
     txtBtnSig: 'Continuar',
   };
 
+  catalogoDocumentos: Catalogo[] = [];
+
+
+
+  constructor(private catalogosServices: CatalogosService) {
+    //
+  }
+
 
   /**
    * Actualiza la propiedad `indice` en función del valor del objeto `AccionBoton` proporcionado.
@@ -84,5 +96,19 @@ export class PantallasComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+
+  getTiposDocumentos(): void {
+    this.catalogosServices
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .subscribe({
+        next: (resp): void => {
+          if (resp.length > 0) {
+            this.catalogoDocumentos = resp;
+          }
+        },
+        error: (_error): void => { },
+      });
   }
 }

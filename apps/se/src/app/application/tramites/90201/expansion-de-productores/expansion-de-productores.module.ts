@@ -16,6 +16,7 @@ import { FirmarSolicitudComponent } from '../pages/firmar-solicitud/firmar-solic
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { CatalogosService } from 'libs/shared/data-access-user/src/core/services/shared/catalogos/catalogos.service';
 import { FirmarSolicitudPasoDosComponent } from '../components/firmar-solicitud-paso-dos/firmar-solicitud-paso-dos.component';
+import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component';
 
 
 
@@ -35,6 +36,7 @@ import { FirmarSolicitudPasoDosComponent } from '../components/firmar-solicitud-
     DomiciliosDePlantasComponent,
     BtnContinuarComponent,
     FirmarSolicitudPasoDosComponent,
+    AnexarDocumentosComponent,
     ToastrModule.forRoot()
   ],
   exports: [],
