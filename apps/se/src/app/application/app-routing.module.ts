@@ -49,6 +49,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'subfabricante-immex',
+    loadChildren: () =>
+      import('./tramites/80207/subfabricante-extension.module').then(
+        (m) => m.SubfabricanteExtentionModule
+      ),
+    },
+{
     path: 'immex-ampliacion-sensibles',
     loadChildren: () =>
       import('./tramites/80202/immex-ampliacion-sensibles.module').then(
@@ -62,6 +69,7 @@ const routes: Routes = [
         (m) => m.ModificacionSolicitudModule
       ),
   },
+
 ];
 
 @NgModule({
