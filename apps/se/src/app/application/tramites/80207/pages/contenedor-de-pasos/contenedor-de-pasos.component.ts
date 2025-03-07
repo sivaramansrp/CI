@@ -1,11 +1,15 @@
 
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import {
   DatosPasos,
   ListaPasosWizard,
+  SeccionLibStore,
   WizardComponent,
 } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constantes/pasos.enum';
+import { Subject } from 'rxjs';
+import { Tramites80207Queries } from '../../estados/tramite80207.query';
+import { takeUntil } from 'rxjs/operators';
 
 
 
@@ -46,7 +50,7 @@ interface AccionBoton {
  * Lista de pasos del wizard.
  * @property {ListaPasosWizard[]} pasos
  */
-export class ContenedorDePasosComponent {
+export class ContenedorDePasosComponent implements OnDestroy {
   /**
    * Lista de pasos del wizard.
    * @property {ListaPasosWizard[]} pasos
@@ -82,6 +86,20 @@ export class ContenedorDePasosComponent {
    * @param {AccionBoton} e - Acción del botón que contiene el valor del índice.
    */
 
+    /**
+     * Notificador para destruir los observables y evitar posibles fugas de memoria.
+     * @private
+     * @type {Subject<void>}
+     */
+    destroyNotifier$: Subject<void> = new Subject();
+
+  constructor(private tramiteQuery: Tramites80207Queries, private seccion: SeccionLibStore){
+    this.tramiteQuery.formaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe(res => {
+      this.seccion.establecerSeccion([true]);
+      this.seccion.establecerFormaValida([res]);
+    })
+  }
+
   getValorIndice(e: AccionBoton):void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
@@ -92,4 +110,13 @@ export class ContenedorDePasosComponent {
       }
     }
   }
+    /**
+   * Método que se ejecuta al destruir el componente.
+   * Utiliza un Subject para notificar a todos los observables suscritos que deben completarse.
+   * Esto ayuda a evitar posibles fugas de memoria al completar el Subject y finalizar las suscripciones.
+   */
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
+    }
 }

@@ -1,13 +1,13 @@
 import {
   DatosSubcontratista,
   InfoRegistro,
-  SubmanufacturerDatos,
   SubmanufacturerDireccionModelo,
+  Tramite80207State,
 } from '../modelos/submanufacturer-modelos';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
-export function createInitialState(): SubmanufacturerDatos {
+export function createInitialState(): Tramite80207State {
   const INFO_REGISTRO: InfoRegistro = {
     modalidad: '',
     folio: '',
@@ -20,8 +20,13 @@ export function createInitialState(): SubmanufacturerDatos {
   return {
     infoRegistro: INFO_REGISTRO,
     datosSubcontratista: DATOS_SUBCONTRATISTA,
+    formaValida: {
+      esDatosSubcontratistaValido: false
+    },
+    plantasBuscadas:[],
     plantasSubfabricantesAgregar: [],
-    plantasSubfabricantesEliminar: [],
+    
+
   };
 }
 
@@ -36,7 +41,7 @@ export function createInitialState(): SubmanufacturerDatos {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite-80207', resettable: true })
-export class Tramites80207Store extends Store<SubmanufacturerDatos> {
+export class Tramites80207Store extends Store<Tramite80207State> {
   /**
    * Actualiza el estado del store con la información del registro proporcionada.
    *
@@ -104,6 +109,42 @@ export class Tramites80207Store extends Store<SubmanufacturerDatos> {
       plantasSubfabricantesEliminar: plantasSubfabricantesEliminar,
     }));
   }
+
+   /**
+   * Establece el estado de validación del formulario en el almacén.
+   * 
+   * @param {Object} formaValida - Un objeto donde las claves son los nombres de los campos del formulario y los valores son booleanos que indican si el campo es válido o no.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+   setFormValida(formaValida: { [key: string]: boolean }) :void {
+    this.update(state => {
+      const IS_VALID = {...state.formaValida, ...formaValida}
+      return {
+        ...state,
+        formaValida: IS_VALID
+      }
+    })
+  }
+
+  setPlantasBuscadas(plantasBuscadas:SubmanufacturerDireccionModelo[]):void{
+    this.update((state) => ({
+      ...state,
+      plantasBuscadas: plantasBuscadas,
+    }));
+  }
+
+    eliminarPlantas(eliminarPlantas:SubmanufacturerDireccionModelo[]): void {
+      this.update(state => {
+        const PLANTAS = [...state.plantasSubfabricantesAgregar].filter(ele => 
+          !eliminarPlantas.some((plantas)=>plantas.calle===ele.calle)
+        );
+        return {
+          ...state,
+          plantasSubfabricantesAgregar: PLANTAS
+        }
+      })
+    }
 
   /**
    * Constructor que inicializa el estado del store con el valor inicial.

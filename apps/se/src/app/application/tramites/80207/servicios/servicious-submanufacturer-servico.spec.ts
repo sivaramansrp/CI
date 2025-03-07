@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { SubmanufacturerDatos } from '../modelos/submanufacturer-modelos';
+import { Tramite80207State } from '../modelos/submanufacturer-modelos';
 import { SubManufacturerService } from './servicios-submanufacturer-servico';
 
 
-const mockSubManufacturerDatos: SubmanufacturerDatos = {
+const mockSubManufacturerDatos: Tramite80207State = {
     infoRegistro: {
       modalidad: 'Modalidad Test',
       folio: 'Folio 12345',
@@ -15,7 +15,10 @@ const mockSubManufacturerDatos: SubmanufacturerDatos = {
       estado: 'Activo',
     },
     plantasSubfabricantesAgregar:[],
-    plantasSubfabricantesEliminar:[]
+    plantasBuscadas:[],
+    formaValida: {
+      esDatosSubcontratistaValido:false
+    },
   };
 
 describe('ServiciosExtraordinariosService', () => {

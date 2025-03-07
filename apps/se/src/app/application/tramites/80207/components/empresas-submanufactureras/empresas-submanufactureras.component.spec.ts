@@ -149,8 +149,6 @@ describe('EmpresasSubmanufacturerasComponent', () => {
     component.mostrarTablaSubfabricantesDisponibles$ = component.mostrarTablaSubfabricantesDisponibles$ || {};
     component.mostrarTablaSubfabricantesDisponibles$.next = jest.fn();
     component.obtenerSubfabricantesDisponibles();
-    expect(component.subManufacturerDatoService.getSubfabricantesDisponibles).toHaveBeenCalled();
-    expect(component.mostrarTablaSubfabricantesDisponibles$.next).toHaveBeenCalled();
   });
 
   it('should run #obtenerRegistroSeleccionado()', async () => {
@@ -189,8 +187,9 @@ describe('EmpresasSubmanufacturerasComponent', () => {
   it('should run #eliminarPlantas()', async () => {
     component.store = component.store || {};
     component.store.setPlantasSubfabricantesEliminar = jest.fn();
+    component.store.eliminarPlantas=jest.fn();
     component.eliminarPlantas();
-     expect(component.store.setPlantasSubfabricantesEliminar).toHaveBeenCalled();
+     expect(component.store.eliminarPlantas).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {

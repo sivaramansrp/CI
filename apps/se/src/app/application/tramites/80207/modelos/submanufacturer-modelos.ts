@@ -15,9 +15,13 @@ export interface InfoRegistro {
     codigoPostal:number
     colonia :string
   }
-  export interface SubmanufacturerDatos{
+  export interface Tramite80207State{
     infoRegistro: InfoRegistro;
     datosSubcontratista: DatosSubcontratista;
+    plantasBuscadas:SubmanufacturerDireccionModelo[],
     plantasSubfabricantesAgregar:SubmanufacturerDireccionModelo[],
-    plantasSubfabricantesEliminar:SubmanufacturerDireccionModelo[]
+    
+    formaValida: {
+      esDatosSubcontratistaValido:boolean
+    },
   }
