@@ -105,3 +105,16 @@ export const NICO = [
     'Nico',
     'Descripción',
 ];
+
+export const SECCIONES_TRAMITE_80203 = {
+    PASO_1: {
+        VALIDACION_SECCION_1: false,
+        VALIDACION_SECCION_2: true,
+    },
+    PASO_2: {
+        VALIDACION_SECCION: true,
+    },
+    PASO_3: {
+        requiereValidacion: true,
+    },
+};

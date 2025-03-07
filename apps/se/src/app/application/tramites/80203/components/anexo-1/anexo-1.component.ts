@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -16,27 +17,34 @@ import { OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
 
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, SeccionLibQuery, SeccionLibState } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { fraccionInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
 
 import { FRACCION_EXPORTACION } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { IMMEX_SERVICIO } from '../../modelos/immex-registro-de-solicitud-modality.model';
-import { NICO_TABLA } from '../../modelos/immex-registro-de-solicitud-modality.model';
-import { fraccionInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { ImmexRegistroQuery } from '../../estados/queries/tramite80203.query';
+import { ImmexRegistroStore } from '../../estados/tramites/tramite80203.store';
 import { immexInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { nicoInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
 
+import { NICO_TABLA } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { NicoService } from '../../servicios/nico/nico.service';
 import { PermisoImmexDatosService } from '../../servicios/immex/permiso-immex-datos.service';
 
+import { SECCIONES_TRAMITE_80203 } from '../../constantes/immex-registro-de-solicitud-modality.enums';
+
+import { delay, map, takeUntil, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { Validators } from '@angular/forms';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -55,7 +63,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class Anexo1Component implements OnInit, OnDestroy { 
   immexRegistroform!: FormGroup;
-
+  immexRegitroAnexoState!: immexRegistroform;
 
   /**
    * Tipo de selección de la tabla.
@@ -153,6 +161,11 @@ export class Anexo1Component implements OnInit, OnDestroy {
         estatus: false
       }
     ];
+    /**
+   * @propiedad immexRegistro
+   * @tipo string
+   */
+    immexRegistro!: string;
 
   /**
    * Subject para manejar la desuscripción de observables.
@@ -185,7 +198,8 @@ export class Anexo1Component implements OnInit, OnDestroy {
   showFraccionExport: boolean = false;
   showProductoImport: boolean = false;
   showCommodityImport: boolean = false;
-
+  private seccion!: SeccionLibState;
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * @constructor
    * @param {FormBuilder} fb - Constructor de formularios.
@@ -197,11 +211,18 @@ export class Anexo1Component implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private readonly permisoImmexDatosService: PermisoImmexDatosService,
     private readonly httpServicios: HttpClient,
-    private readonly nicoService: NicoService
+    private readonly nicoService: NicoService,
+    private immexRegistroQuery: ImmexRegistroQuery,
+    private immexRegistroStore: ImmexRegistroStore,
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore,
+
   ) { }
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**
@@ -211,34 +232,96 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
 
   ngOnInit(): void {
+
+    this.immexRegistroQuery.selectImmexRegistro$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.immexRegitroAnexoState = seccionState.immexRegistro;
+      })
+    ).subscribe();
+
     this.immexRegistroform = this.fb.group({
       exportacionForm: this.fb.group({
-        permisoImmexDatos: [[]],
-        fraccionDatos: [[]],
-        nicoDatos: ['', Validators.required],
-        fraccionArancelariaExportacion: ['', Validators.required],
-        productoArancelariaExportacion: ['', Validators.required],
-        fraccionArancelariaDesc: ['', Validators.required],
-        productoDescExportacion: ['', Validators.required],
-        FraccionDescExportacion: ['', Validators.required],
-        exportacionDescExportacion: ['', Validators.required],
+        permisoImmexDatos: [this.immexRegitroAnexoState.permisoImmexDatos || [], []],
+        fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
+        nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
+        fraccionArancelariaExportacion: [this.immexRegitroAnexoState?.fraccionArancelariaExportacion || '', []],
+        productoArancelariaExportacion: [this.immexRegitroAnexoState?.productoArancelariaExportacion || '', []],
+        fraccionArancelariaDesc: [this.immexRegitroAnexoState?.fraccionArancelariaDesc || '', []],
+        productoDescExportacion: [this.immexRegitroAnexoState?.productoDescExportacion || '', []],
+        FraccionDescExportacion: [this.immexRegitroAnexoState?.FraccionDescExportacion || '', []],
+        exportacionDescExportacion: [this.immexRegitroAnexoState?.exportacionDescExportacion || '', []],
+        Nico: [this.immexRegitroAnexoState?.Nico || '', []],
       }),
       importacionForm: this.fb.group({
-        permisoImmexDatos: [[]],
-        fraccionDatos: [[]],
-        nicoDatos: ['', Validators.required],
-        commodityImportacion: ['', Validators.required],
-        commodityDescImportacion: ['', Validators.required],
-        commodityNicoDescImportacion: ['', Validators.required],
-        candiadAnual: ['', Validators.required],
-        capacidadPeriodo: ['', Validators.required],
-        candidadPorPeriodo: ['', Validators.required],
+        fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
+        nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
+        commodityImportacion: [this.immexRegitroAnexoState?.commodityImportacion || '', []],
+        commodityDescImportacion: [this.immexRegitroAnexoState?.commodityDescImportacion || '', []],
+        commodityNicoDescImportacion: [this.immexRegitroAnexoState?.commodityNicoDescImportacion || '', []],
+        candiadAnual: [this.immexRegitroAnexoState?.candiadAnual || '', []],
+        capacidadPeriodo: [this.immexRegitroAnexoState?.capacidadPeriodo || '', []],
+        candidadPorPeriodo: [this.immexRegitroAnexoState?.candidadPorPeriodo || '', []],
+        Nico: [this.immexRegitroAnexoState?.Nico || '', []],
       })
     });
+  
+    // Asegúrese de que immexRegitroAnexoState esté asignado antes de acceder a sus propiedades
+    this.immexRegistroQuery.selectImmexRegistro$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState: any) => {
+          if (seccionState) {
+            this.immexRegitroAnexoState = seccionState.immexRegistro;
+            this.immexRegistroform.patchValue(this.immexRegitroAnexoState);
+          }
+        })
+      ).subscribe();
+      this.immexRegistroform.statusChanges
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      delay(10),
+      tap((_value) => {
+        let ACTIVE_STATE = {...this.immexRegistroform.value.exportacionForm};
+        ACTIVE_STATE = {...ACTIVE_STATE, ...this.immexRegistroform.value.exportacionForm};
+        ACTIVE_STATE = {...ACTIVE_STATE, ...this.immexRegistroform.value.importacionForm};
+        this.immexRegistroStore.setImmexRegistro(ACTIVE_STATE);
+      })
+    )
+    .subscribe();
     this.fetchData();
     this.obtenerListasDesplegables();
     this.disableFormControls();
+
+    // Para el botón de validación Continuar
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
+
+    this.immexRegistroform.statusChanges
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      delay(10),
+      tap(() => {
+        const SECCION: number = 1;
+        const seccionState = this.seccionQuery.getValue();
+        const FORMAS_VALIDADAS = [...seccionState.formaValida];
+        const controlPath = 'immexRegistroform.exportacionForm';
+        const CONTROL = this.immexRegistroform.get(controlPath)?.status;
+  
+        FORMAS_VALIDADAS[SECCION] = this.immexRegistroform.valid || CONTROL === 'VALID';
+  
+        this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+      })
+    )
+    .subscribe();
   }
+  
 
   /**
    * @method fetchData
@@ -293,6 +376,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
         this.fraccionDatos = [];
         this.nicoDatos = [];
       },
+      
     });
     this.permisoImmexDatosService.getDatos()
     .pipe(takeUntil(this.unsubscribe$))

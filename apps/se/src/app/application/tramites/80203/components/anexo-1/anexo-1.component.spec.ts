@@ -59,10 +59,10 @@ describe('Anexo1Component', () => {
     component.obtenerListasDesplegables = jest.fn();
     component.disableFormControls = jest.fn();
     component.ngOnInit();
-    // expect(component.fb.group).toHaveBeenCalled();
-    // expect(component.fetchData).toHaveBeenCalled();
-    // expect(component.obtenerListasDesplegables).toHaveBeenCalled();
-    // expect(component.disableFormControls).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fetchData).toHaveBeenCalled();
+    expect(component.obtenerListasDesplegables).toHaveBeenCalled();
+    expect(component.disableFormControls).toHaveBeenCalled();
   });
 
   it('should run #fetchData()', async () => {
@@ -88,22 +88,22 @@ describe('Anexo1Component', () => {
     });
     component.immexRegistroform.patchValue = jest.fn();
     component.fetchData();
-    // expect(component.permisoImmexDatosService.getDatos).toHaveBeenCalled();
-    // expect(component.immexRegistroform.get).toHaveBeenCalled();
-    // expect(component.immexRegistroform.patchValue).toHaveBeenCalled();
+    expect(component.permisoImmexDatosService.getDatos).toHaveBeenCalled();
+    expect(component.immexRegistroform.get).toHaveBeenCalled();
+    expect(component.immexRegistroform.patchValue).toHaveBeenCalled();
   });
 
   it('should run #obtenerListasDesplegables()', async () => {
     component.obtenerIngresoSelectList = jest.fn();
     component.obtenerListasDesplegables();
-    // expect(component.obtenerIngresoSelectList).toHaveBeenCalled();
+    expect(component.obtenerIngresoSelectList).toHaveBeenCalled();
   });
 
   it('should run #obtenerIngresoSelectList()', async () => {
     component.nicoService = component.nicoService || {};
     component.nicoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerIngresoSelectList();
-    // expect(component.nicoService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(component.nicoService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #showFraccionExportacion()', async () => {
@@ -130,7 +130,7 @@ describe('Anexo1Component', () => {
       disable: function() {}
     });
     component.disableFormControls();
-    // expect(component.immexRegistroform.get).toHaveBeenCalled();
+    expect(component.immexRegistroform.get).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -139,7 +139,7 @@ describe('Anexo1Component', () => {
       value: {}
     });
     component.ngOnDestroy();
-    // expect(component.immexRegistroform.get).toHaveBeenCalled();
+    expect(component.immexRegistroform.get).toHaveBeenCalled();
   });
 
 });

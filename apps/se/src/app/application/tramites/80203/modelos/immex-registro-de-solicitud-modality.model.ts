@@ -5,6 +5,14 @@
  * @description Interfaz para el formulario de registro IMMEX.
  */
 export interface immexRegistroform {
+  candidadPorPeriodo: string;
+  capacidadPeriodo: string;
+  candiadAnual: string;
+  commodityNicoDescImportacion: string;
+  nicoDatos: string;
+  exportacionDescExportacion: string;
+  FraccionDescExportacion: string;
+  fraccionArancelariaDesc: string;
   permisoImmexDatos: number;
   fraccionArancelariaExportacion: string;
   productoDescExportacion: string;
