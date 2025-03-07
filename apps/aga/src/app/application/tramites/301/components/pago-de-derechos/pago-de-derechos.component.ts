@@ -7,13 +7,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { map, Subject, Subscription, takeUntil } from 'rxjs';
+import { SelectCatalogosComponent, TituloComponent } from '@ng-mf/data-access-user';
 import {
   Solicitud301State,
   Tramite301Store,
 } from '../../../../estados/tramites/tramite301.store';
-import { Subject, Subscription, takeUntil, map } from 'rxjs';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite301Query } from '../../../../estados/queries/tramite301.query';
 
 /**

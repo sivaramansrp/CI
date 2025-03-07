@@ -1,33 +1,11 @@
 /* eslint-disable no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  Solicitud301State,
-  Tramite301Store,
-} from '../../../../estados/tramites/tramite301.store';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
-
-// Importación de constantes desde un archivo de enumeración
-import { Aviso, Importante } from '@ng-mf/data-access-user';
-
-// Modelos necesarios para este componente
-import { Catalogo } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-
-// Componentes de la UI
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { DatosPasos } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { map, Subject, Subscription, takeUntil } from 'rxjs';
+import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, TituloComponent, Aviso, Importante, Catalogo, DatosPasos, ListaPasosWizard } from '@ng-mf/data-access-user';
+import { Solicitud301State, Tramite301Store } from '../../../../estados/tramites/tramite301.store';
 import { Tramite301Query } from '../../../../estados/queries/tramite301.query';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
 
 /**
  * Componente para el registro de productos relacionados con importaciones y exportaciones.
@@ -204,7 +182,6 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
    */
   registroSeleccion(): void {
     // Este método puede ser extendido para manejar la lógica de selección de documentos
-    return;
   }
 
   /**

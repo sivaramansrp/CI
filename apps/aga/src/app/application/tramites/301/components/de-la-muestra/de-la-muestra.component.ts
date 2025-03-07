@@ -1,22 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-
-import { TituloComponent } from '@ng-mf/data-access-user';
-import {
-  Solicitud301State,
-  Tramite301Store,
-} from '../../../../estados/tramites/tramite301.store';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Solicitud301State, Tramite301Store } from '../../../../estados/tramites/tramite301.store';
 import { Tramite301Query } from '../../../../estados/queries/tramite301.query';
-import { Subscription, Subject, takeUntil, map } from 'rxjs';
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 /**
  * Componente `DeLaMuestraComponent`
@@ -79,7 +68,9 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite301Store: Tramite301Store,
     private tramite301Query: Tramite301Query
-  ) {}
+  ) {
+    // add initialization code here
+  }
 
   /**
    * Método placeholder para la validación del formulario.
@@ -88,9 +79,10 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
    *
    * @returns {void} No retorna nada, ya que es un método sin lógica por el momento.
    */
-  validarFormulario(): void {
-    // Este método puede incluir lógica de validación en el futuro.
-  }
+  // validarFormulario(): void {
+  //   // const MERCANCIA = this.mercancia;
+  //     // Este método puede incluir lógica de validación en el futuro.
+  // }
 
   /**
    * Método del ciclo de vida `ngOnInit()` de Angular.

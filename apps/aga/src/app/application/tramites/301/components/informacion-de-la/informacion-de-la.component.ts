@@ -1,30 +1,26 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @nx/enforce-module-boundaries */
 /**
  * @module InformacionDeLaComponent
  * @description Este módulo define el componente `InformacionDeLaComponent` que maneja la información de la mercancía.
  */
-
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { BtnContinuarComponent, Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Subject, Subscription } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 
 import estadofisico from 'libs/shared/theme/assets/json/130102/entidad_federativa.json';
 import franccionArancelaria from 'libs/shared/theme/assets/json/301/fraccion-arancelaria-options.json';
 import nico from 'libs/shared/theme/assets/json/301/nico-options.json';
 
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import {
-  Solicitud301State,
-  Tramite301Store,
-} from '../../../../estados/tramites/tramite301.store';
+import { Solicitud301State, Tramite301Store } from '../../../../estados/tramites/tramite301.store';
 import { Tramite301Query } from '../../../../estados/queries/tramite301.query';
-import { Subscription, Subject, takeUntil, map } from 'rxjs';
+
+interface DatosPasos {
+  indice: number;
+  txtBtnSig: string;
+}
 
 @Component({
   selector: 'app-informacion-de-la',
@@ -66,9 +62,9 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
   indice: number = 1;
 
   /**
-   * @property {any} datosPasos - Datos de los pasos del formulario.
+   * @property {DatosPasos} datosPasos - Datos de los pasos del formulario.
    */
-  datosPasos: any = {
+  datosPasos: DatosPasos = {
     indice: this.indice,
     txtBtnSig: 'Continuar',
   };
@@ -96,7 +92,9 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
     private formbuilt: FormBuilder,
     private tramite301Store: Tramite301Store,
     private tramite301Query: Tramite301Query
-  ) {}
+  ) {
+    // The constructor is used for dependency injection
+  }
 
   /**
    * @method ngOnInit
@@ -147,7 +145,7 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
    * @param {any} valor - Valor seleccionado.
    * @memberof InformacionDeLaComponent
    */
-  valorSeleccionadoFraccion() {
+  valorSeleccionadoFraccion(): void {
     if (this.informacionDeLaform.get('fraccionArancelaria')?.value) {
       this.informacionDeLaform.get('descripcionFraccion')?.enable();
     } else {
@@ -161,7 +159,7 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
    * @param {any} valor - Valor seleccionado.
    * @memberof InformacionDeLaComponent
    */
-  valorSeleccionadoNico() {
+  valorSeleccionadoNico(): void {
     if (this.informacionDeLaform.get('nico')?.value) {
       this.informacionDeLaform.get('descripcionNico')?.enable();
     } else {
@@ -180,7 +178,7 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite301Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite301Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
