@@ -147,8 +147,19 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    */
   public tableData!: TableData;
 
-  entidadFederativa: Catalogo[]=[];
-  representacionFederal: Catalogo[]=[];
+    /**
+     * Lista de entidades federativas.
+     *  LicitacionesVigentesComponent
+     * 
+     */
+    entidadFederativa: Catalogo[] = [];
+
+    /**
+     * Lista de representaciones federales.
+     * LicitacionesVigentesComponent
+     * 
+     */
+    representacionFederal: Catalogo[] = [];
   
   /**
    * Subject para la destrucción del componente.
@@ -159,11 +170,27 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  /**
+     * Observable para la entidad federativa.
+     * LicitacionesVigentesComponent
+     * 
+     */
   entidadFederativa$: Observable<Catalogo | null> = this.tramite120501Query.entidadFederativa$;
+
+  /**
+   * Observable para la representación federal.
+   * LicitacionesVigentesComponent
+   * 
+   */
   representacionFederal$: Observable<Catalogo | null> = this.tramite120501Query.representacionFederal$;
+
+  /**
+   * Observable para el monto a recibir.
+   * LicitacionesVigentesComponent
+   * 
+   */
   montoRecibir$: Observable<string | null> = this.tramite120501Query.montoRecibir$;
 
-  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Constructor del componente.
    *
@@ -339,15 +366,19 @@ getDetallesDelalicitacion():void{
       })
     })
 }
-getTabledatas():void{
-  this.service.getTableData().subscribe(
-    (data:any)=>{
-      this.datos = data;
-    }
-    
-  )
-}
-
+   /**
+     * Obtiene los datos de la tabla desde el servicio.
+     *
+     * LicitacionesVigentesComponent
+     * 
+     */ 
+  getTabledatas(): void {
+    this.service.getTableData().subscribe(
+        (data: any) => {
+            this.datos = data;
+        }
+    );
+  }
 /**
  * Obtiene y establece los datos del adquiriente en el formulario 'adquiriente'.
  *
@@ -363,25 +394,51 @@ getAdquiriente():void{
     })
   
 }
+/**
+     * Establece los valores en el store del trámite 120501.
+     *
+     * LicitacionesVigentesComponent
+     * El formulario que contiene los valores.
+     * El nombre del campo en el formulario.
+     * El nombre del método en el store a invocar.
+     * 
+     */
 setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite120501Store): void {
   const VALOR = form.get(campo)?.value;
   (this.tramite120501Store[metodoNombre] as (value: any) => void)(VALOR);
 }
 
-onChangeEntiadFederative():void{
+/**
+* Actualiza el valor de la entidad federativa en el store.
+*
+* LicitacionesVigentesComponent
+* 
+*/
+onChangeEntiadFederative(): void {
   const ENTITAD_FEDERATIVA = this.formulario.get('entidadFederativa')?.value;
-  this.tramite120501Store.setEntidadFederativa(ENTITAD_FEDERATIVA);  
+  this.tramite120501Store.setEntidadFederativa(ENTITAD_FEDERATIVA);
 }
 
-onChangeRepresentacionFederal():void{
+/**
+* Actualiza el valor de la representación federal en el store.
+*
+* LicitacionesVigentesComponent
+*
+*/
+onChangeRepresentacionFederal(): void {
   const REPRESENTACION_FEDERAL = this.formulario.get('representacionFederal')?.value;
   this.tramite120501Store.setRepresentacionFederal(REPRESENTACION_FEDERAL);
 }
 
-montoRecibirValue():void{
+/**
+* Actualiza el valor del monto a recibir en el store.
+*
+* LicitacionesVigentesComponent
+* 
+*/
+montoRecibirValue(): void {
   const MONTO_RECIBIR = this.adquiriente.get('montoRecibir')?.value;
   this.tramite120501Store.setmontoRecibir(MONTO_RECIBIR);
 }
-
 
 }
