@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SeleccionModuloComponent } from './seleccion-modulo/seleccion-modulo.component';
+import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
+import { AcusePageComponent, FirmaPageComponent } from '@libs/shared/data-access-user/src';
 
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'app-seleccion-modulo' },
@@ -15,6 +17,19 @@ const ROUTES: Routes = [
         (m) => m.FuncionarioModule
       ),
   },
+  {
+    path: 'notificaciones',
+    component: NotificacionPageComponent
+  },
+  {
+    path: 'firmar',
+    component: FirmaPageComponent
+  },
+  {
+    path: 'acuse',
+    component: AcusePageComponent
+  }
+
 ];
 
 @NgModule({
