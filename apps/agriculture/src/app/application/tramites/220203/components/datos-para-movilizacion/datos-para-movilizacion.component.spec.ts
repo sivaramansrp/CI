@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosParaMovilizacionComponent } from './datos-para-movilizacion.component';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'; // Import for HTTP testing
-import { CatalogoSelectComponent, ImportacionDeAcuiculturaService, TituloComponent } from '@ng-mf/data-access-user'; // Import your service
+import { CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user'; // Import your service
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
+import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
 describe('DatosParaMovilizacionComponent', () => {
   let component: DatosParaMovilizacionComponent;

@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { AlertComponent, CatalogoSelectComponent, ImportacionDeAcuiculturaService, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, CatalogoSelectComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
+import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;
   let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;

@@ -2,10 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
-import { CatalogoSelectComponent, ImportacionDeAcuiculturaService, InputFechaComponent, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, InputFechaComponent, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;

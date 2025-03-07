@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SanidadCertificadoComponent } from './sanidad-certificado.component';
-import { BtnContinuarComponent, ImportacionDeAcuiculturaService, WizardComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
 import { PasoCuatroComponent } from '../paso-cuatro/paso-cuatro.component';
@@ -10,6 +10,7 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { NO_ERRORS_SCHEMA } from '@angular/core'; // Import NO_ERRORS_SCHEMA
+import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
 describe('SanidadCertificadoComponent', () => {
   let component: SanidadCertificadoComponent;

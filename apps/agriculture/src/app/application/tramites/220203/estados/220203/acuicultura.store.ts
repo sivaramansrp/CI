@@ -1,7 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { Acuicultura, createDatosState, FormularioMovilizacion, FormularioPago } from 'libs/shared/data-access-user/src/core/models/220203/importacion-de-acuicultura.module';
-import { DatosMercancia } from 'libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
+import { Acuicultura, createDatosState, FormularioMovilizacion, FormularioPago } from '../../models/220203/importacion-de-acuicultura.module';
+import { DatosMercancia } from '@ng-mf/data-access-user';
 
 
 

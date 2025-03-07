@@ -1,6 +1,8 @@
-import { Catalogo, ConfiguracionColumna, ImportacionDeAcuiculturaService, MENSAJE_DOBLE_CLIC, TablaSeleccion } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
+import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 interface DatoTabla {
   solicitud: string;
   fechaCreacion: string;

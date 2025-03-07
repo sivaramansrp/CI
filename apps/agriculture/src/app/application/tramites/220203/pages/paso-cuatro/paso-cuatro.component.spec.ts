@@ -3,9 +3,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoCuatroComponent } from './paso-cuatro.component';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
-import { FirmaElectronicaComponent, ImportacionDeAcuiculturaService, TituloComponent } from '@ng-mf/data-access-user';
+import { FirmaElectronicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
 describe('PasoCuatroComponent', () => {
   let component: PasoCuatroComponent;

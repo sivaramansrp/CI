@@ -1,5 +1,7 @@
-import { AccionBoton, DatosPasos, ListaPasosWizard, PASOSACUICULTURA, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
+import { PASOSACUICULTURA } from '../../constantes/220203/importacion-de-acuicultura.enum';
+import { AccionBoton } from '../../models/220203/importacion-de-acuicultura.module';
 @Component({
   selector: 'app-sanidad-certificado',
   templateUrl: './sanidad-certificado.component.html',

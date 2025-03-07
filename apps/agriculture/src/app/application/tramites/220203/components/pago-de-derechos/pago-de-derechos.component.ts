@@ -1,13 +1,12 @@
 import {
   Catalogo,
-  FECHA_SALIDA_ACUICULTURA,
-  ImportacionDeAcuiculturaService,
   InputFecha,
-  OpcionDeRadio,
-  TIPO_RADIO
 } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO } from '../../constantes/220203/importacion-de-acuicultura.enum';
+import { OpcionDeRadio } from '../../models/220203/importacion-de-acuicultura.module';
+import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 /**
  * @description Componente para el pago de derechos en la importación de acuicultura.
  */
