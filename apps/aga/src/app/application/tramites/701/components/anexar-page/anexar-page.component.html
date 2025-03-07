@@ -15,16 +15,16 @@
         <td>
           <ng-container *ngIf="!procesoCompletado; else fileNameDisplay">
             <select
-              style="width: 291px; font-size: large; height: 35px"
               class="form-select"
               [(ngModel)]="documentosSeleccion[i]"
               (change)="enDocumentSelect(i)"
             >
-              <option value="">-- Adjunta nuevo document</option>
+              <option value="">-- Adjunta nuevo documento</option>
               <option *ngFor="let doc of disponiblesDocumentos" [value]="doc">
                 {{ doc }}
               </option>
             </select>
+           
           </ng-container>
           <ng-template #fileNameDisplay>
             {{ nombresArchivosSubidos[i] }}
@@ -43,10 +43,10 @@
     </tbody>
   </table>
 
+
   <div class="col-md-12 mt-5 d-flex justify-content-end">
     <button
       type="button"
-      style="margin-right: 15px"
       class="btn btn-default ms-3"
     >
       Guardar
@@ -65,6 +65,7 @@
     <ng-titulo titulo="Adjuntar documentos" />
     <ng-alert [CONTENIDO]="TEXTO_DE_ADJUNTAR"></ng-alert>
     <table class="table" *ngIf="mostrarTabla">
+      
       <thead class="table-light">
         <tr>
           <th>Tipo de documento</th>
@@ -76,8 +77,8 @@
       <tbody>
         <tr *ngFor="let doc of documentosSeleccion; let i = index">
           <td>{{ tiposDeDocumentos[i] }}</td>
-          <td>{{ fileSizes[i] !== null ? fileSizes[i] + " MB" : "" }}</td>
-          <td>{{ resolucions[i] }}</td>
+          <td>{{ Tamanosdearchivo[i] !== null ? Tamanosdearchivo[i] + " MB" : "" }}</td>
+          <td>{{ resoluciones[i] }}</td>
           <td>
             <div class="custome-file-container">
               <input
@@ -97,15 +98,16 @@
           <td>{{ nombresArchivosSubidos[i] }}</td>
         </tr>
       </tbody>
-    </table>
+      </table>
+   
     <div class="alert alert-warning" role="alert">
-      La carga del documento puede tardar varois segundos, este tiempo dependerá
+      La carga del documento puede tardar varios segundos, este tiempo dependerá
       del tamaño de tu archivo y de tu velocidad de conexión
     </div>
     <div class="col-md-12 mt-5 d-flex justify-content-end">
       <button
         type="button"
-        style="margin-right: 15px"
+       
         class="btn btn-default ms-3"
       >
         Cerrar
@@ -118,7 +120,8 @@
   </div>
 
   <div *ngIf="mostrarTablaArchivosSubidos" class="mt-4">
-    <table class="table">
+  
+      <table class="table">
       <thead class="table-light">
         <tr>
           <th>Documento</th>
@@ -134,6 +137,7 @@
         </tr>
       </tbody>
     </table>
+  
     <div class="col-md-12 mt-5 d-flex justify-content-end">
       <button class="btn btn-primary" (click)="cerrarProceso()">Cerrar</button>
     </div>
@@ -151,7 +155,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="documentPreviewModalLabel">
-          Document Preview
+          Vista previa del documento
         </h5>
         <button
           type="button"

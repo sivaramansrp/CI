@@ -19,7 +19,7 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 import { SharedModule } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
-
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 
 @NgModule({
@@ -46,6 +46,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     TituloComponent,
     WizardComponent,
     SharedModule,
+    TablaDinamicaComponent
   ],
   providers: [ToastrService],
 })
