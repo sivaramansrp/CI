@@ -5,20 +5,22 @@
             <div class="row">
                 <div class="col-md-12">
                     <label class="form-label" for="lugar">Lugar *: </label>
-                    <input type="text" class="form-control" id="lugar" formControlName="lugar" readonly>
+                    <input type="text" class="form-control bg-white" id="lugar" formControlName="lugar" readonly>
                 </div>
                 <div class="col-md-12">
                     <label class="form-label" for="observaciones">Observaciones:</label>
-                    <textarea type="text" class="form-control custom-textarea" id="observaciones"
+                    <textarea type="text" class="form-control custom-textarea bg-white" id="observaciones"
                         formControlName="observaciones" readonly></textarea>
                 </div>
 
             </div>
         </form>
-       
+
 
     </div>
     <h6>Mercancías seleccionadas</h6>
-    <app-tabla-dinamica [configuracionTabla]="configTableArray"
-    [datos] = "datos"></app-tabla-dinamica>
+    <app-tabla-dinamica [configuracionTabla]="configTableArray" [datos]="datos" [tipoSeleccionTabla]="tableradio"
+        (filaSeleccionada)="handleFilaSeleccionada($event)"
+        (listaDeFilaSeleccionada)="handleListaDeFilaSeleccionada($event)">
+    </app-tabla-dinamica>
 </div>

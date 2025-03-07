@@ -4,6 +4,7 @@ import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-acces
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 import { CERTIFICADO_TABLA } from '@libs/shared/data-access-user/src/tramites/constantes/110218/certificado-tecnico-japon.enum';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
 @Component({
   selector: 'app-datos-certificado',
@@ -15,6 +16,7 @@ import { CERTIFICADO_TABLA } from '@libs/shared/data-access-user/src/tramites/co
 export class DatosCertificadoComponent implements OnInit {
   datosdelcertificado : FormGroup ;
   configTableArray = CERTIFICADO_TABLA;
+  tableradio = TablaSeleccion.RADIO
   datos:any;
   constructor(private fb: FormBuilder, private service:CertificadoTecnicoJaponService ) { 
     this.datosdelcertificado = this.fb.group({
@@ -35,6 +37,15 @@ export class DatosCertificadoComponent implements OnInit {
       }
       
     )
+  }
+  
+  handleFilaSeleccionada(fila: any): void {
+    console.log('Fila seleccionada:', fila);
+  }
+
+  
+  handleListaDeFilaSeleccionada(filasSeleccionadas: any[]): void {
+    console.log('Filas seleccionadas:', filasSeleccionadas);
   }
  
 }
