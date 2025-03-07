@@ -1,0 +1,19 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 0,
+      "descripcion": "Moritimo"
+    },
+    {
+      "id": 1,
+      "descripcion": "Naval"
+    },
+    {
+      "id": 2,
+      "descripcion": "Tierra"
+    }
+    
+  ],
+  "message": "Oficiana de inspeccion"
+}

@@ -26,7 +26,7 @@ import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'ampliacion-servicios',
+  selector: 'app-ampliacion-servicios',
   standalone: true,
   imports: [
     ReactiveFormsModule,

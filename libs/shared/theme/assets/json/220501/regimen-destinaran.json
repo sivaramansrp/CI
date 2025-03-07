@@ -1,0 +1,23 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 0,
+      "descripcion": "Definitivos"
+    },
+    {
+      "id": 1,
+      "descripcion": "ultimo"
+    },
+    {
+      "id": 2,
+      "descripcion": "final"
+    },
+    {
+      "id": 3,
+      "descripcion": "esencial"
+    }
+    
+  ],
+  "message": "Aduana ingreso"
+}
