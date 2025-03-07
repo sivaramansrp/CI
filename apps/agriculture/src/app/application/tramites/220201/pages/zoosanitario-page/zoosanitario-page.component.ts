@@ -1,7 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { AccionBoton, ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/220201/certificado-zoosanitario.model';
-import { PASOS, SUCECESS_MESSAGE_STAGEONE } from 'libs/shared/data-access-user/src/tramites/constantes/certificado-zoosanitario.enum';
+import {
+  AccionBoton,
+  ListaPasosWizard,
+} from 'libs/shared/data-access-user/src/core/models/220201/certificado-zoosanitario.model';
+import {
+  PASOS,
+  MENSAJE_DE_EXITO_ETAPA_UNO,
+} from 'libs/shared/data-access-user/src/tramites/constantes/certificado-zoosanitario.enum';
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 /**
@@ -17,7 +23,6 @@ import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/compo
   templateUrl: './zoosanitario-page.component.html',
 })
 export class ZoosanitarioPageComponent {
-
   /**
    * Array de pasos del asistente.
    * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
@@ -57,7 +62,7 @@ export class ZoosanitarioPageComponent {
    * Mensaje de éxito para el primer paso.
    * @property {string} mensajeDeTextoDeExito - Mensaje que se muestra si el primer paso se completa con éxito.
    */
-  mensajeDeTextoDeExito: string = SUCECESS_MESSAGE_STAGEONE;
+  mensajeDeTextoDeExito: string = MENSAJE_DE_EXITO_ETAPA_UNO;
 
   /**
    * Maneja la acción del botón y navega entre los pasos.
