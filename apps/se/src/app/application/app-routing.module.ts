@@ -7,7 +7,7 @@ const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent
+    component: SeleccionTramiteComponent,
   },
   {
     path: 'octava-temporal',
@@ -18,11 +18,11 @@ const routes: Routes = [
   },
 
   {
-    path:'exportador-autorizado',
-    loadChildren:()=>
+    path: 'exportador-autorizado',
+    loadChildren: () =>
       import('./tramites/110102/exportador-autorizado.module').then(
-        (m)=>m.ExportadorautorizadoModule
-      )
+        (m) => m.ExportadorautorizadoModule
+      ),
   },
   {
     path: 'prosec-modificacion',
@@ -56,7 +56,21 @@ const routes: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
-  }
+  },
+  {
+    path: 'immex-ampliacion-sensibles',
+    loadChildren: () =>
+      import('./tramites/80202/immex-ampliacion-sensibles.module').then(
+        (m) => m.ImmexAmpliacionSensiblesModule
+      ),
+  },
+  {
+    path: 'modificacion',
+    loadChildren: () =>
+      import('./tramites/80308/modificacion-solicitud.module').then(
+        (m) => m.ModificacionSolicitudModule
+      ),
+  },
 ];
 
 @NgModule({
