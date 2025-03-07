@@ -65,17 +65,19 @@ export class AnexarDocumentosComponent implements OnInit {
   listadoArchivos: any[] = [];
   documentosOpcionales: FormControl = new FormControl<any>('');
   archivosOpcionales: any[] = [
-    { "value": 1, "label": "Lorem ipsum" },
-    { "value": 2, "label": "Lorem ipsum" },
-    { "value": 3, "label": "Lorem ipsum" },
-    { "value": 4, "label": "Lorem ipsum" },
-    { "value": 5, "label": "Lorem ipsum" },
-    { "value": 6, "label": "Lorem ipsum" },
-    { "value": 7, "label": "Lorem ipsum" },
-    { "value": 8, "label": "Lorem ipsum" },
-    { "value": 9, "label": "Lorem ipsum" },
-    { "value": 10, "label": "Lorem ipsum" }
+    { descripcion: 'Documento_opcional_01', dpi: '300', id: '21', tam: '10000' },
+    { descripcion: 'Documento_opcional_02', dpi: '301', id: '22', tam: '11000' },
+    { descripcion: 'Documento_opcional_03', dpi: '302', id: '23', tam: '12000' },
+    { descripcion: 'Documento_opcional_04', dpi: '303', id: '24', tam: '13000' },
+    { descripcion: 'Documento_opcional_05', dpi: '304', id: '25', tam: '14000' },
+    { descripcion: 'Documento_opcional_06', dpi: '305', id: '26', tam: '15000' },
+    { descripcion: 'Documento_opcional_07', dpi: '306', id: '27', tam: '16000' },
+    { descripcion: 'Documento_opcional_08', dpi: '307', id: '28', tam: '17000' },
+    { descripcion: 'Documento_opcional_09', dpi: '308', id: '29', tam: '18000' },
+    { descripcion: 'Documento_opcional_10', dpi: '309', id: '30', tam: '19000' }
   ];
+  listDocOpcionales: any[] = [];
+  listDocOpcionalesDuplicado: any[] = [];
 
   constructor(
     private toastr: ToastrService,
@@ -315,5 +317,18 @@ export class AnexarDocumentosComponent implements OnInit {
       return '0';
     }
     return String((parseInt(size) / 1000).toFixed(2));
+  }
+
+  agregarOpcionales(): void {
+    const index: number = this.listDocOpcionales.findIndex(f => f.id === this.documentosOpcionales.value);
+    if (index === -1) {
+      const opcional = this.archivosOpcionales.find(f => f.id === this.documentosOpcionales.value);
+      this.listDocOpcionales.push(opcional);
+      this.listDocOpcionalesDuplicado = this.listDocOpcionales.map(op => op.id);
+    }
+  }
+
+  cargarArchivos(): void {
+    console.log(this.listadoArchivos);
   }
 }
