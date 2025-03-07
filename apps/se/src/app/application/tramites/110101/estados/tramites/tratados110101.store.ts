@@ -1,6 +1,12 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
+/** 
+ * **Interfaz que representa un Tratado Comercial**  
+ * 
+ * Define la estructura de datos para almacenar información sobre los tratados  
+ * comerciales entre países o bloques económicos.  
+ */
 interface Tratado {
   /** 
    * **Nombre del país o bloque al que pertenece el tratado**  

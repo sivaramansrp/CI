@@ -38,12 +38,18 @@ export interface FormMercancia {
   valorTransaccion: string;
 }
 
+/** 
+ * **Estado de los datos de la mercancía**  
+ * 
+ * Representa la estructura de almacenamiento para los valores  
+ * del formulario de mercancía dentro del estado de la aplicación.  
+ */
 export interface DatosDeLaState {
   /**
-   * **Estado del formulario de mercancía**  
+   * **Valores actuales del formulario de mercancía**  
    * 
-   * Almacena los valores actuales del formulario de mercancía.  
-   * Si no hay datos registrados, su valor será `null`.
+   * Contiene los datos ingresados en el formulario de mercancía.  
+   * Si aún no se han registrado datos, su valor será `null`.  
    */
   formValues: FormMercancia | null;
 }
