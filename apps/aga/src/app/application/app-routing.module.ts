@@ -1,6 +1,10 @@
+import { FirmaPageComponent } from '@ng-mf/data-access-user';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
+import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
+import { AcusePageComponent } from './acuse/acuse-page/acuse-page.component';
+
 
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
@@ -28,9 +32,22 @@ const ROUTES: Routes = [
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
   },
   {
-    path: 'registro-cuentas-bancarias',
-    loadChildren: () =>
-      import('./tramites/6001/registro-cuentas-bancarias/registro-cuentas-bancarias.module').then((m) => m.RegistroCuentasBancariasModule),
+    path: 'atender-requerimientos',
+    loadChildren: () => import('./atencion-requerimientos/atencion-requerimientos.module').then(
+      (m) => m.AtencionRequerimientosModule
+    ),
+  },
+  {
+    path: 'notificacion',
+    component: NotificacionPageComponent
+  },
+  {
+    path: 'firmar',
+    component: FirmaPageComponent
+  },
+  {
+    path: 'acuse',
+    component: AcusePageComponent
   }
 ];
 
