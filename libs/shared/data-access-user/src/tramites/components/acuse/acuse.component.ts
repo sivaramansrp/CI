@@ -13,6 +13,7 @@ import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
   styleUrl: './acuse.component.scss',
 })
 export class AcuseComponent implements OnChanges {
+  @Input() titulo!: string;
   @Input() txtAlerta!: string;
   @Input() subtitulo!: string;
   @Input() folio!: string;
