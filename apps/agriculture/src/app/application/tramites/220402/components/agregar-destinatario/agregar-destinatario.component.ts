@@ -3,7 +3,7 @@ import { CatalogosSelect } from 'libs/shared/data-access-user/src/core/models/sh
 
 import { TipoPersona } from 'libs/shared/data-access-user/src/core/enums/tipoPersona.enum';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { MediodetransporteService } from 'libs/shared/data-access-user/src/core/services/220402/mediodetransporte.service';
+import { MediodetransporteService } from 'libs/shared/data-access-user/src/core/services/220402/medio-de-transporte.service';
 import { ReplaySubject, takeUntil } from 'rxjs';
 
 @Component({

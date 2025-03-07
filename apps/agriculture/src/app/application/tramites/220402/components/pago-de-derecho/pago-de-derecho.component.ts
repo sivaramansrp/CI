@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CapturaSolicitudeService } from 'libs/shared/data-access-user/src/core/services/220402/captura-solicitude.service';
+import { CapturaSolicitudeService } from 'libs/shared/data-access-user/src/core/services/220402/captura-solicitud.service';
 
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
