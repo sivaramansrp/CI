@@ -31,9 +31,18 @@ export function createSolicitanteInitialState(): Solicitante110101State {
 })
 @StoreConfig({ name: 'solicitante', resettable: true })
 export class Tramite110101Store extends Store<Solicitante110101State> {
-  constructor() {
+   /**
+   * **Constructor de la tienda**
+   *
+   * - Inicializa el estado de la tienda con los valores predeterminados definidos en `createSolicitanteInitialState()`.
+   * - Garantiza que la tienda comience con una estructura de datos válida para el solicitante.
+   *
+   * @constructor
+   */
+   constructor() {
     super(createSolicitanteInitialState());
   }
+
 
   /**
    * Establece el valor del RFC en el estado de la tienda.

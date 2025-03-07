@@ -76,7 +76,16 @@ export function createInitialState(): DatosDeLaState {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'datosDeLa' })
 export class DatosDeLaStore extends Store<DatosDeLaState> {
-  constructor() {
+   /**
+   * **Constructor de la tienda**
+   *
+   * - Inicializa el estado de la tienda con los valores predeterminados definidos en `createInitialState()`.
+   * - Garantiza que la tienda comience con una estructura de datos válida.
+   *
+   * @constructor
+   */
+   constructor() {
     super(createInitialState());
   }
+
 }

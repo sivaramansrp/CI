@@ -34,9 +34,18 @@ export interface TratadosState {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'tratados' })
 export class TratadosStore extends Store<TratadosState> {
+  /**
+   * **Constructor de la tienda**
+   *
+   * - Inicializa el estado de la tienda con una lista vacía de tratados.
+   * - Garantiza que la tienda comience con una estructura de datos válida.
+   *
+   * @constructor
+   */
   constructor() {
     super({ tratados: [] });
   }
+
 
   /**
    * **Agrega un nuevo tratado al estado**
