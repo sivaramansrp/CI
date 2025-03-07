@@ -16,12 +16,15 @@ import { SolicitantetabComponent } from '../solicitanteTab/solicitantetab.compon
 
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-user/src/core/services/120404/solicitanteAsigncionservice.service';
 
 import { Catalogo } from '@ng-mf/data-access-user';
+import { Tramite120404Query } from '../../estados/queries/tramite120404.query';
+import { Tramite120404Store } from '../../estados/store/tramite120404.store';
+
 
 /**
  * Componente para la gestión del formulario de asignación.
@@ -81,7 +84,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
    * @param service Servicio para obtener los datos de asignación.
    */
   // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder, private service: SolicitanteasigncionserviceService) {}
+  constructor(private fb: FormBuilder, private service: SolicitanteasigncionserviceService, private tramite120404Store:Tramite120404Store,private tramite120404Query:Tramite120404Query) {}
 
   /**
    * Método de inicialización del componente.
@@ -89,6 +92,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
     this.loadComboUnidadMedida();
+    this.enPatchFormData();
   }
 
   /**
@@ -99,6 +103,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
       datosRegimen: this.fb.group({
         asignacionsolitud: ['', Validators.required],
         numTramite: ['', Validators.required],
+        asignacionRadio: [false, Validators.requiredTrue]
       })
     });
   }
@@ -136,6 +141,34 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
     ).subscribe((data): void => {
       this.solicitanteList = data as Catalogo[];
     });
+  }
+
+  /**
+  * Obtiene el valor de un control en el formulario y lo pasa a un método del store para actualizar el estado.
+  */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite120404Store): void {
+    const VALOR = form.get('datosRegimen')?.get(campo)?.value;
+    (this.tramite120404Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+  * Actualiza el formulario con datos del store
+  */
+  enPatchFormData(): void {
+    this.tramite120404Query.selectTramite120404$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.asignacionForm.get('datosRegimen')?.patchValue(
+              {
+                  numTramite:seccionState.numTramite,
+                  asignacionsolitud: seccionState.asignacionsolitud,
+                  asignacionRadio: seccionState.asignacionRadio
+              } 
+              )
+          })
+        )
+        .subscribe();
   }
 
   /**
