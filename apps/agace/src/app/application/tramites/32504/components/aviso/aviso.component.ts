@@ -1,4 +1,4 @@
-import { CARGO_TIPO, DATOS_EMPRESA } from '../../enum/aviso.enum';
+import { CARGO_TIPO, DATOS_EMPRESA } from '../../constants/aviso.enum';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { InputConfig, MenuConfig, Props } from '@ng-mf/data-access-user';
@@ -15,6 +15,7 @@ import { TablaClomns } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
+import { Tramite32504Store } from '../../estados/tramite32504.store';
 import { map } from 'rxjs';
 
 @Component({
@@ -108,7 +109,11 @@ export class AvisoComponent implements OnInit {
   TablaSeleccion = TablaSeleccion;
   evento = {};
 
-  constructor(private fb: FormBuilder, private catalogosServicios: CatalogosService) {
+  constructor(
+    private fb: FormBuilder,
+    private catalogosServicios: CatalogosService,
+    private store: Tramite32504Store
+  ) {
     this.crearFormulario();
   }
 
@@ -254,5 +259,9 @@ export class AvisoComponent implements OnInit {
         break;
     }
   }
-  
+
+  onSubmit(): void {
+    this.store.setDatosEmpresa(this.formulario.value.datosEmpresa);
+    this.store.setCargaTipo(this.formulario.value.cargaTipo);
+  }
 }

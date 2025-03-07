@@ -1,6 +1,6 @@
 import { AlertComponent, AnexarDocumentosComponent } from "@ng-mf/data-access-user";
 import { Component } from '@angular/core';
-import { TEXTO_REQUISITOS } from '../../enum/aviso.enum';
+import { TEXTO_REQUISITOS } from '../../constants/aviso.enum';
 import { TituloComponent } from "@ng-mf/data-access-user";
 
 @Component({

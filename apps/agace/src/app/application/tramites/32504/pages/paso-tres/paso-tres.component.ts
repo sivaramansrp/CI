@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FirmaElectronicaComponent } from "@ng-mf/data-access-user";
-import { TEXTO_ANEXAR_REQUISITOS } from '../../enum/aviso.enum';
+import { TEXTO_ANEXAR_REQUISITOS } from '../../constants/aviso.enum';
 
 @Component({
   selector: 'app-paso-tres',

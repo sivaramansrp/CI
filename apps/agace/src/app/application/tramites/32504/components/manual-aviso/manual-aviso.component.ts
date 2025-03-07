@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMANUFACTURA, DATOS_QUIEN_RECIBE } from '../../enum/aviso.enum';
+import { DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMANUFACTURA, DATOS_QUIEN_RECIBE } from '../../constants/aviso.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { InputTypes, Props, buttonActionTypes } from '@ng-mf/data-access-user';
 import { MenuConfig, TablaClomns } from '@ng-mf/data-access-user';
@@ -14,6 +14,7 @@ import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { Tramite32504Store } from '../../estados/tramite32504.store';
 import { map } from 'rxjs';
 
 @Component({
@@ -178,7 +179,11 @@ export class ManualAvisoComponent implements OnInit {
   TablaSeleccion = TablaSeleccion;
   event = {};
   
-  constructor(private fb: FormBuilder, private catalogosServicios: CatalogosService) {
+  constructor(
+    private fb: FormBuilder,
+    private catalogosServicios: CatalogosService,
+    private store: Tramite32504Store
+  ) {
     this.crearFormulario();
   }
   
@@ -347,5 +352,11 @@ export class ManualAvisoComponent implements OnInit {
       default:
         break;
     }
+  }
+
+  onSubmit(): void {
+    this.store.setDatosQuienRecibe(this.formulario.get('datosQuienRecibe')?.value);
+    this.store.setDatosDomicilioLugar(this.formulario.get('datosDomicilioLugar')?.value);
+    this.store.setDatosMercanciaSubmanufactura(this.formulario.get('datosMercanciaSubmanufactura')?.value);
   }
 }

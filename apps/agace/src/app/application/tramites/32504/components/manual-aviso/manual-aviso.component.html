@@ -1,5 +1,5 @@
 <div class="container">
-    <form [formGroup]="formulario" >
+    <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
       @for(fieldGroup of configuracion; let groupIndex = $index; track groupIndex)
       {
       <div class="form" [formGroupName]="fieldGroup.formGroupName" [ngClass]="{'d-none' : isAgregarClicked}">
