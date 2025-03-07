@@ -28,6 +28,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private tramite110101Store: Tramite110101Store,
     private tramite110101Query: Tramite110101Query
+  // eslint-disable-next-line no-empty-function
   ) { }
 
   /**

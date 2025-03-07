@@ -49,6 +49,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private tratadosStore: TratadosStore,
     private tratadosQuery: TratadosQuery
+  // eslint-disable-next-line no-empty-function
   ) { }
 
   /**

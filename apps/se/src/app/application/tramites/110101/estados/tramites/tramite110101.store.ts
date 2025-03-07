@@ -36,28 +36,28 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
   }
 
   // Métodos para actualizar el estado de los campos del formulario
-  public setRfc(rfc: string) {
+  public setRfc(rfc: string):void{
     this.update((state) => ({
       ...state,
       rfc,
     }));
   }
 
-  public setDenominacion(denominacion: string) {
+  public setDenominacion(denominacion: string):void {
     this.update((state) => ({
       ...state,
       denominacion,
     }));
   }
 
-  public setActividadEconomica(actividadEconomica: string) {
+  public setActividadEconomica(actividadEconomica: string):void {
     this.update((state) => ({
       ...state,
       actividadEconomica,
     }));
   }
 
-  public setCorreoElectronico(correoElectronico: string) {
+  public setCorreoElectronico(correoElectronico: string):void {
     this.update((state) => ({
       ...state,
       correoElectronico,
@@ -67,7 +67,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
   /**
    * Limpiar los datos del solicitante
    */
-  public limpiarSolicitante() {
+  public limpiarSolicitante():void{
     this.reset();
   }
 }
