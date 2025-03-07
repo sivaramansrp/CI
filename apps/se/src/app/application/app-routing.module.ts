@@ -39,6 +39,11 @@ const routes: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
+  },
+  {  
+    path:'certificado-tecnico-japon',
+    loadChildren: () =>import('./tramites/110218/certificado-tecnico-japon.module').then((m)=>m.CertificadoTecnicoJaponModule)
+
   }
 ];
 

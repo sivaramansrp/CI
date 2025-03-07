@@ -9,11 +9,7 @@ const ROUTES: Routes = [
      path:'cerdificado',
     loadChildren: () =>import('./tramites/110209/certificado-sgp.module').then((m)=>m.CertificadoSGPModule)
   },
-  {  
-    path:'certificado-tecnico-japon',
-    loadChildren: () =>import('./tramites/110218/certificado-tecnico-japon.module').then((m)=>m.CertificadoTecnicoJaponModule)
-
-  }
+ 
 
   
 ];
