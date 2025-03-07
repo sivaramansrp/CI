@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { SECCIONES_TRAMITE_230401 } from '../../enum/pantallas-constante.enum';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 
@@ -6,15 +6,13 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/
   selector: 'app-paso-uno-cs',
   templateUrl: './paso-uno-cs.component.html',
 })
-export class PasoUnoCsComponent implements OnInit{
+export class PasoUnoCsComponent {
   indice: number = 1;
 
   constructor(private seccionStore: SeccionLibStore){
-    // do nothing
-  }
-  ngOnInit(): void {
     this.asignarSecciones();
   }
+
 
   /**
    * Selecciona una pestaña específica.
