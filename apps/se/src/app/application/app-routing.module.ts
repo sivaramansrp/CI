@@ -35,6 +35,11 @@ const routes: Routes = [
       import('./tramites/130118/pexim.module').then((m) => m.PeximModule),
   },
   {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/110204/pexim.module').then((m) => m.PeximModule),
+  },
+  {
     path: 'elegibilidad-de-textiles',
     loadChildren: () =>
       import('./tramites/120301/elegibilidad-de-textiles.module').then(
