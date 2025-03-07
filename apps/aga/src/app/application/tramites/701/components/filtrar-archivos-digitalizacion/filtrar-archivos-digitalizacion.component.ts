@@ -14,8 +14,9 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { Observable } from 'rxjs';
+import { RegistroDigitalizarDocumentosService } from '@ng-mf/data-access-user';
+import { TipoDocumento } from '@libs/shared/data-access-user/src/core/models/701/tipo-documento.model';
 
-import { TipoDocumento } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/701/tipo-documento.model';
 
 /**
  * Componente para filtrar archivos de digitalización.
@@ -78,7 +79,8 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
     private fb: FormBuilder,
     private catalogosServices: CatalogosService,
     private toastr: ToastrService,
-    private http: HttpClient
+    private http: HttpClient,
+    private registrodigitalizar: RegistroDigitalizarDocumentosService,
   ) {
     this.tipoDocumentosForm = this.fb.group({
       solicitud: this.fb.group({
@@ -121,9 +123,9 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
    * @returns {Observable<TipoDocumento[]>} Un observable con la lista de documentos.
    */
   getDocumentos(): Observable<TipoDocumento[]> {
-    return this.http.get<TipoDocumento[]>(
-      '../../../../../assets/json/701/documento-select.json'
-    );
+    console.log("hi");
+     return this.registrodigitalizar.getDocumentoSelect();
+  
   }
 
   /**
@@ -176,12 +178,14 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
    */
   addDoctoEspecifico(): void {
     if (this.documentoSeleccionado) {
+      
       this.http
-        .get<TipoDocumento[]>(
-          '../../../../../assets/json/701/documento-select.json'
-        )
+    .get<TipoDocumento[]>(
+     './shared/theme/assets/json/701/documento-select.json'
+    )
         .subscribe({
           next: (data) => {
+
             const selectedDocument = data.find(
               (doc) =>
                 doc.tipoDocumento?.descripcion ===
@@ -195,8 +199,8 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
               this.toastr.error('Documento no encontrado en el archivo JSON');
             }
           },
-          error: (error) => {
-            console.log(error);
+          error: () => {
+           
             this.toastr.error('Error al agregar el documento');
           },
         });

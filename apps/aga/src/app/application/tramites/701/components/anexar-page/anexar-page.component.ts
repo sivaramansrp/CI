@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable class-methods-use-this */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable no-empty-function */
@@ -18,7 +22,9 @@ import { CatalogosService } from  '@ng-mf/data-access-user';
 import { RegistroDigitalizarDocumentosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { Subscription } from 'rxjs';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 /**
  * Constante de texto de alerta para terceros.
  */
@@ -39,7 +45,7 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
   templateUrl: './anexar-page.component.html',
   styleUrl: './anexar-page.component.scss',
   standalone: true,
-  imports: [CommonModule,TituloComponent,FormsModule,ReactiveFormsModule,AlertComponent],
+  imports: [CommonModule,TituloComponent,FormsModule,ReactiveFormsModule,AlertComponent,TablaDinamicaComponent,CatalogoSelectComponent],
 })
 export class AnexarPageComponent implements OnInit {
   /**
@@ -65,7 +71,7 @@ export class AnexarPageComponent implements OnInit {
   /**
    * Tipo de documento seleccionado.
    */
-  tipodocumento!: CatalogosSelect;
+  TipoDocumento!: CatalogosSelect;
 
   /**
    * Texto de alerta para la interfaz de usuario.
@@ -111,22 +117,24 @@ export class AnexarPageComponent implements OnInit {
    * Indicador para mostrar el modal.
    */
   mostrarModal: boolean = false;
+  
 
   /**
    * URL de vista previa del documento.
    */
-  documentPreviewUrl: SafeResourceUrl | null = null;
-
+  URLdevistapreviadeldocumento: SafeResourceUrl | null = null;
+  
   /**
    * Documentos disponibles para selección.
    */
-  disponiblesDocumentos: string[] = ['Document A'];
-
+  disponiblesDocumentos: any[] = ['Document A'];
+  
   /**
    * Documentos seleccionados por el usuario.
    */
   documentosSeleccion: string[] = new Array(this.tiposDeDocumentos.length).fill('');
-
+  
+  
   /**
    * Indicador para mostrar la tabla.
    */
@@ -135,13 +143,16 @@ export class AnexarPageComponent implements OnInit {
   /**
    * Tamaños de los archivos subidos.
    */
-  fileSizes: (number | null)[] = new Array(this.tiposDeDocumentos.length).fill(null);
+  Tamanosdearchivo: (number | null)[] = new Array(this.tiposDeDocumentos.length).fill(null);
 
   /**
    * Resoluciones de los archivos subidos.
    */
-  resolucions: string[] = new Array(this.tiposDeDocumentos.length).fill('');
+  resoluciones: string[] = new Array(this.tiposDeDocumentos.length).fill('');
+  getTiposDocumentosSubscription: any;
+  getTipoDocumentoSubscription: any;
 
+  
   /**
    * Constructor del componente.
    * @param catalogosServices Servicio para obtener catálogos.
@@ -160,17 +171,18 @@ export class AnexarPageComponent implements OnInit {
   ngOnInit(): void {
     this.getTiposDocumentos();
     this.getTipoDocumento();
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que ampare el valor de la mercancía',
-      },
-      {
-        id: 2,
-        descripcion:
-          'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-      },
-    ];
+    // this.documentosSeleccionados = [
+    //   {
+    //           id: 1,
+    //           descripcion: 'Documentos que ampare el valor de la mercancía',
+    //         },
+    //         {
+    //           id: 2,
+    //           descripcion:
+    //             'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
+    //         },
+    //       ];
+      
   }
 
   /**
@@ -197,14 +209,16 @@ export class AnexarPageComponent implements OnInit {
       if (resp.code === 200) {
         const response = resp.data;
 
-        this.tipodocumento = {
+        this.TipoDocumento = {
           labelNombre: 'Tipo de documento',
           required: false,
           primerOpcion: 'Selecciona un valor',
           catalogos: response,
-        };
+        }
       }
+      
     });
+    
   }
 
   /**
@@ -220,9 +234,7 @@ export class AnexarPageComponent implements OnInit {
    * @param index Índice del documento seleccionado.
    */
   enDocumentSelect(index: number): void {
-    console.log(
-      `Document selected for row ${index}: ${this.disponiblesDocumentos[index]}`
-    );
+    
   }
 
   /**
@@ -232,7 +244,7 @@ export class AnexarPageComponent implements OnInit {
   verDocument(index: number): void {
     if (this.nombresArchivosSubidos[index]) {
       const documentUrl = this.nombresArchivosSubidos[index];
-      this.documentPreviewUrl =
+      this.URLdevistapreviadeldocumento =
         this.sanitizer.bypassSecurityTrustResourceUrl(documentUrl);
       const modalElement = document.getElementById('documentPreviewModal');
       if (modalElement) {
@@ -263,22 +275,22 @@ export class AnexarPageComponent implements OnInit {
       if (sizeMB > 3) {
         console.error('File size must be less than 3 MB');
         input.value = '';
-        this.fileSizes[index] = null;
-        this.resolucions[index] = '';
+        this.Tamanosdearchivo[index] = null;
+        this.resoluciones[index] = '';
         this.nombresArchivosSubidos[index] = '';
         return;
       }
-      this.fileSizes[index] = parseFloat(sizeMB.toFixed(2));
+      this.Tamanosdearchivo[index] = parseFloat(sizeMB.toFixed(2));
       this.nombresArchivosSubidos[index] = file.name;
 
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>): void => {
         const img = new Image();
         img.onload = (): void => {
-          this.resolucions[index] = `${img.width}x${img.height}`;
+          this.resoluciones[index] = `${img.width}x${img.height}`;
         };
         img.onerror = (): void => {
-          this.resolucions[index] = 'N/A';
+          this.resoluciones[index] = 'N/A';
         };
         img.src = e.target?.result as string;
       };
@@ -312,5 +324,14 @@ export class AnexarPageComponent implements OnInit {
     this.mostrarTabla = false;
     this.mostrarTablaArchivosSubidos = false;
     this.procesoCompletado = true;
+  }
+
+  ngOnDestroy(): void {
+    if (this.getTiposDocumentosSubscription) {
+      this.getTiposDocumentosSubscription.unsubscribe();
+    }
+    if (this.getTipoDocumentoSubscription) {
+      this.getTipoDocumentoSubscription.unsubscribe();
+    }
   }
 }

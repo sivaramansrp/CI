@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import{RespuestaCatalogos} from '../../models/shared/catalogos.model';
+import { TipoDocumento } from '../../models/701/tipo-documento.model';
 @Injectable({
   providedIn: 'root',
 })
@@ -15,5 +16,12 @@ export class RegistroDigitalizarDocumentosService {
     return this.http.get<RespuestaCatalogos>(
       './shared/theme/assets/json/701/tipodocumento.json'
     );
+  }
+  
+  getDocumentoSelect(){
+    console.log("helo");
+    return  this.http.get<TipoDocumento[]>(
+      './shared/theme/assets/json/701/documento-select.json'
+    )
   }
 }
