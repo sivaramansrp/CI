@@ -11,8 +11,16 @@ export class DatosDeLaQuery extends Query<DatosDeLaState> {
     super(store);
   }
 
-  /** Returns an observable of form values */
+  /**
+   * **Obtiene un observable de los valores del formulario**
+   * 
+   * Este getter devuelve un `Observable` que emite los valores actuales del formulario almacenados en el estado.
+   * Permite suscribirse a los cambios en los valores del formulario en tiempo real.
+   * 
+   * @returns {Observable<FormMercancia | null>} Observable con los valores del formulario o `null` si no hay datos.
+   */
   get formValues$(): Observable<FormMercancia | null> {
     return this.select(state => state.formValues);
   }
+
 }

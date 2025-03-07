@@ -45,7 +45,17 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * Este formulario se utiliza para capturar y validar los datos relacionados con Mercancia.
    */
   public formMercancia!: FormGroup;
+
+  /**
+   * **Subject para manejar la destrucción del componente**
+   * 
+   * Este `Subject` se utiliza para cancelar suscripciones y evitar 
+   * fugas de memoria cuando el componente es destruido.
+   * Se usa comúnmente en el operador `takeUntil` dentro de los observables.
+   */
   private destroy$ = new Subject<void>();
+
+
   /** Adición de color de fondo dinámico al área de texto */
   public booleanVariable = '#cccccc';
   /**
@@ -86,11 +96,10 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // this.getFormDatosDeMercancia();
-    this.getFormDataFromStore();
-
+    this.obtenerDatosFormularioDesdeStore();
     this.formMercancia.valueChanges
       .pipe(distinctUntilChanged(), takeUntil(this.destroy$))
-      .subscribe(() => this.updateStore());
+      .subscribe(() => this.actualizarStore());
   }
 
   /**
@@ -135,7 +144,14 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     return this.validacionesService.isValid(this.formMercancia, field);
   }
 
-  private getFormDataFromStore(): void {
+  /**
+   * **Obtiene los valores del formulario desde el store y los aplica al formulario**
+   * 
+   * - Se suscribe a `formValues$` de `datosDeLaQuery` para recibir los valores almacenados en el estado.
+   * - Si existen valores, los asigna al formulario `formMercancia` sin disparar eventos (`emitEvent: false`).
+   * - La suscripción se gestiona con `takeUntil(this.destroy$)` para evitar fugas de memoria.
+   */
+  private obtenerDatosFormularioDesdeStore(): void {
     this.datosDeLaQuery.formValues$
       .pipe(takeUntil(this.destroy$)) // Cleanup on destroy
       .subscribe((formValues) => {
@@ -145,7 +161,17 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
       });
   }
 
-  private updateStore(): void {
+
+  /**
+   * **Actualiza el estado del store con los valores actuales del formulario**
+   * 
+   * - Obtiene los valores actuales del formulario `formMercancia`.
+   * - Se suscribe a `formValues$` de `datosDeLaQuery` y toma el último valor almacenado en el estado.
+   * - Compara los valores actuales del formulario con los valores en el estado para evitar actualizaciones innecesarias.
+   * - Si los valores son diferentes, actualiza el store con los nuevos valores.
+   * - La suscripción utiliza `take(1)` para obtener solo un valor y evitar suscripciones innecesarias.
+   */
+  private actualizarStore(): void {
     const NEWVALUES = this.formMercancia.value;
     this.datosDeLaQuery.formValues$.pipe(take(1)).subscribe((currentValues) => {
       if (JSON.stringify(currentValues) !== JSON.stringify(NEWVALUES)) {
@@ -154,8 +180,17 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     });
   }
 
+
+  /**
+   * **Limpia los recursos y finaliza las suscripciones al destruir el componente**
+   * 
+   * - `this.destroy$.next();` emite un valor para notificar a los observables dependientes que deben completarse.
+   * - `this.destroy$.complete();` finaliza el `Subject` para liberar memoria y evitar fugas de memoria.
+   * - Este método se ejecuta automáticamente cuando el componente se destruye, asegurando una gestión eficiente de las suscripciones.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
 }
