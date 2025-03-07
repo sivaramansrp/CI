@@ -2,26 +2,49 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 /**
- * Estado del formulario de solicitante.
+ * **Estado del formulario de solicitante**
+ *
+ * Representa la estructura del estado para los datos del solicitante en el trámite 110101.
  */
 export interface Solicitante110101State {
+  /** RFC del solicitante. */
   rfc: string;
+  
+  /** Denominación o razón social del solicitante. */
   denominacion: string;
+  
+  /** Actividad económica principal del solicitante. */
   actividadEconomica: string;
+  
+  /** Correo electrónico de contacto del solicitante. */
   correoElectronico: string;
 }
 
+
 /**
- * Función para crear el estado inicial de solicitante.
+ * **Función para crear el estado inicial del solicitante**
+ *
+ * Esta función devuelve un estado inicial vacío para los datos del solicitante en el trámite 110101.
+ * Se utiliza para inicializar el store con valores predeterminados.
+ *
+ * @returns {Solicitante110101State} Estado inicial del solicitante con valores vacíos.
  */
 export function createSolicitanteInitialState(): Solicitante110101State {
   return {
+    /** RFC del solicitante, inicialmente vacío. */
     rfc: '',
+
+    /** Denominación o razón social del solicitante, inicialmente vacío. */
     denominacion: '',
+
+    /** Actividad económica principal del solicitante, inicialmente vacío. */
     actividadEconomica: '',
+
+    /** Correo electrónico de contacto del solicitante, inicialmente vacío. */
     correoElectronico: ''
   };
 }
+
 
 /**
  * Store para gestionar el estado de los datos del solicitante.

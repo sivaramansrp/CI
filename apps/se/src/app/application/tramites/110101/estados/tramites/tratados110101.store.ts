@@ -29,10 +29,18 @@ export interface TratadosState {
 }
 
 /**
- * **Akita store para gestionar tratados**
+ * **Akita Store para gestionar tratados**
+ *
+ * Este store se encarga de administrar el estado de los tratados dentro de la aplicación.
+ * Utiliza Akita para la gestión de estado reactivo, permitiendo la actualización y consulta 
+ * de los datos de tratados en tiempo real.
+ *
+ * @@Injectable({ providedIn: 'root' }) - Hace que el store esté disponible en toda la aplicación.
+ * @StoreConfig({ name: 'tratados' }) - Configura el store con el nombre 'tratados'.
  */
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'tratados' })
+
 export class TratadosStore extends Store<TratadosState> {
   /**
    * **Constructor de la tienda**
