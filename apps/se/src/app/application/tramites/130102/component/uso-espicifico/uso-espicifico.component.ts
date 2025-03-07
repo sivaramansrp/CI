@@ -18,6 +18,11 @@ import { CommonModule } from '@angular/common';
 
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 
+import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+
+import { Subject, map, takeUntil } from 'rxjs'; 
+
 @Component({
   selector: 'app-uso-espicifico',
   standalone: true,
@@ -67,12 +72,20 @@ export class UsoEspicificoComponent implements OnInit {
    */
   catalogos: Catalogo[] = fraccionOptionJson;
 
+  public solicitudState!: Solicitud130102State;
+  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * @constructor
    * @param {FormBuilder} formbuilt Servicio para construir el formulario.
    */
   // eslint-disable-next-line no-empty-function
-  constructor(private formbuilt: FormBuilder) { }
+  constructor(private formbuilt: FormBuilder,
+    private tramite130102Store: Tramite130102Store,
+    private tramite130102Query: Tramite130102Query
+  ) { 
+    // constructor
+  }
 
   /**
    * @method ngOnInit
@@ -80,11 +93,34 @@ export class UsoEspicificoComponent implements OnInit {
    * @memberof UsoEspicificoComponent
    */
   ngOnInit(): void {
+
+    this.tramite130102Query.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {  
+        console.log('Solicitud130102State', seccionState);
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
+
     this.usoEspicificoForm = this.formbuilt.group({
-      fracciónarancelaria: ['', Validators.required],
+      fracciónarancelaria: [ this.solicitudState?.fracciónarancelaria, Validators.required],
       descripción: [{ value: '', disabled: true }]
     });
   }
+
+    /**
+   * Asigna un valor del formulario al store.
+   *
+   * @param {FormGroup} form - Formulario reactivo.
+   * @param {string} campo - Campo del formulario a obtener.
+   * @param {keyof Tramite130102Store} metodoNombre - Método del store donde se guardará el valor.
+   */
+   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
+      const valor = form.get(campo)?.value;
+      (this.tramite130102Store[metodoNombre] as (value: any) => void)(valor);
+    }
 
   /**
    * @method obtenerRequisitosFraccionArancelariaEsquema

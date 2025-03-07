@@ -7,7 +7,7 @@
             <div class="col-8">
                 <app-catalogo-select 
                [label]="'Fracción arancelaria PROSEC (Especificar la fracción arancelaria del producto en el que se utilizará la mercancía a importar)'" 
-                (change)="obtenerRequisitosFraccionArancelariaEsquema()" 
+                (change)="obtenerRequisitosFraccionArancelariaEsquema();setValoresStore(usoEspicificoForm,'fracciónarancelaria', 'setfraccionarancelaria')" 
                 formControlName="fracciónarancelaria"
                 [catalogo]="catalogos"
                [required]="true"></app-catalogo-select>

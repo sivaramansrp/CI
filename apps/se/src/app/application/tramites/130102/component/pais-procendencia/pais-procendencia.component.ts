@@ -24,6 +24,11 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
 
 import paisProcJson from 'libs/shared/theme/assets/json/130102/pais-procenia.json';
 
+
+import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+
+import { Subject, map, takeUntil } from 'rxjs';
 /**
  * Componente para la gestión de la selección de países de procedencia.
  */
@@ -76,6 +81,9 @@ export class PaisProcendenciaComponent implements OnInit {
    */
   paisProc: Catalogo[] = paisProcJson;
 
+  public solicitudState!: Solicitud130102State;
+  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
    */
@@ -108,18 +116,44 @@ export class PaisProcendenciaComponent implements OnInit {
    * @param {FormBuilder} fb - Utilidad para la construcción de formularios reactivos.
    */
   // eslint-disable-next-line no-empty-function
-  constructor(private http: HttpClient, private fb: FormBuilder) {}
+  constructor(private http: HttpClient, private fb: FormBuilder,
+    private tramite130102Store: Tramite130102Store,
+    private tramite130102Query: Tramite130102Query
+  ) {
+    //constructor
+  }
 
   /**
    * Inicializa el componente y configura el formulario.
    */
   ngOnInit() {
+     this.tramite130102Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {  
+            console.log('Solicitud130102State', seccionState);
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe();
+
     this.paisForm = this.fb.group({
-      bloque: [''],
-      descripcionJustificacion: ['', [Validators.required]],
-      observaciones: [''],
+      bloque: [this.solicitudState?.bloque],
+      descripcionJustificacion: [this.solicitudState?.descripcionJustificacion, [Validators.required]],
+      observaciones: [this.solicitudState?.observaciones],
     });
     this.fetchPaisProc();
+  }
+  /**
+   * Asigna un valor del formulario al store.
+   *
+   * @param {FormGroup} form - Formulario reactivo.
+   * @param {string} campo - Campo del formulario a obtener.
+   * @param {keyof Tramite130102Store} metodoNombre - Método del store donde se guardará el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
+    const valor = form.get(campo)?.value;
+    (this.tramite130102Store[metodoNombre] as (value: any) => void)(valor);
   }
 
   /**

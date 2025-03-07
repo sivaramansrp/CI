@@ -13,6 +13,12 @@ import EntidadFederativaOptions from 'libs/shared/theme/assets/json/130102/entid
 import RepresentacionFederalOptions from 'libs/shared/theme/assets/json/130102/representacion_federal.json';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
+
+import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+
+import { Subject, map, takeUntil } from 'rxjs'; 
+
 /**
  * RepresentacionComponent es un componente que maneja la selección de entidades federativas y representaciones federales.
  */
@@ -58,14 +64,20 @@ export class RepresentacionComponent implements OnInit {
    */
   seleccionadaRepresentacionFederal: Catalogo = { id: 0, descripcion: '' };
 
+  public solicitudState!: Solicitud130102State;
+  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Inicializa el componente RepresentacionComponent.
    * @constructor
    * @param {FormBuilder} fb - El constructor de formularios.
    * @returns void
    */
-  constructor(private fb: FormBuilder) {
-    //
+  constructor(private fb: FormBuilder,
+    private tramite130102Store: Tramite130102Store,
+    private tramite130102Query: Tramite130102Query
+  ) {
+    //constructor
   }
 
   /**
@@ -91,10 +103,31 @@ export class RepresentacionComponent implements OnInit {
    * @returns void
    */
   ngOnInit(): void {
+    this.tramite130102Query.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {  
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
+
     this.frmRepresentacion = this.fb.group({
-      entidad: ['', Validators.required],
-      representacion: ['', Validators.required],
+      entidad: [ this.solicitudState?.entidad , Validators.required],
+      representacion: [ this.solicitudState?.representacion , Validators.required],
     });
+  }
+
+    /**
+   * Asigna un valor del formulario al store.
+   *
+   * @param {FormGroup} form - Formulario reactivo.
+   * @param {string} campo - Campo del formulario a obtener.
+   * @param {keyof Tramite130102Store} metodoNombre - Método del store donde se guardará el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
+    const valor = form.get(campo)?.value;
+    (this.tramite130102Store[metodoNombre] as (value: any) => void)(valor);
   }
 
   /**

@@ -4,7 +4,7 @@
  * @fileoverview Componente encargado de gestionar la selección de solicitudes y tipos de documentos en un trámite.
  * @module DetosDelTramiteComponent
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
@@ -28,6 +28,11 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
 
 import solicitudeSelectVal from 'libs/shared/theme/assets/json/130102/solicitude-select.json';
 
+import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+
+import { Subject, map, takeUntil } from 'rxjs';
+
 /**
  * Componente para la gestión de solicitudes y tipos de documentos en un trámite.
  */
@@ -43,7 +48,7 @@ import solicitudeSelectVal from 'libs/shared/theme/assets/json/130102/solicitude
   ],
   templateUrl: './detos-del-tramite.component.html',
 })
-export class DetosDelTramiteComponent implements OnInit {
+export class DetosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Lista de campos de entrada utilizados en el formulario.
    */
@@ -90,25 +95,52 @@ export class DetosDelTramiteComponent implements OnInit {
    */
   defaultSelect: string = 'Inicial';
 
+  public solicitudState!: Solicitud130102State;
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Constructor del componente.
    * @param {HttpClient} http - Servicio para realizar peticiones HTTP.
    * @param {FormBuilder} fb - Utilidad para la construcción de formularios reactivos.
    */
-  constructor(private http: HttpClient, private fb: FormBuilder) {
+  constructor(private http: HttpClient, private fb: FormBuilder, 
+    private tramite130102Store: Tramite130102Store,
+    private tramite130102Query: Tramite130102Query
+  ) {
     //constructor
   }
 
   /**
    * Inicializa el componente, configura el formulario y obtiene datos iniciales.
    */
-  ngOnInit(): void {
+  ngOnInit(): void { 
+    this.tramite130102Query.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {  
+        console.log('Solicitud130102State', seccionState);
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
+
     this.formDelTramite = this.fb.group({
       solicitud: [''],
       tipoDocumento: [''],
-      fraccion: ['', [Validators.required]],
+      fraccion: [this.solicitudState?.fraccion, [Validators.required]],
     });
     this.fetchSolicitudeOptions();
+
+  }
+  /**
+   * Asigna un valor del formulario al store.
+   *
+   * @param {FormGroup} form - Formulario reactivo.
+   * @param {string} campo - Campo del formulario a obtener.
+   * @param {keyof Tramite130102Store} metodoNombre - Método del store donde se guardará el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
+    const valor = form.get(campo)?.value;
+    (this.tramite130102Store[metodoNombre] as (value: any) => void)(valor);
   }
 
   /**
@@ -122,6 +154,7 @@ export class DetosDelTramiteComponent implements OnInit {
    */
   onValueChange(value: string | number): void {
     this.selectedValue = value;
+
   }
 
   /**
@@ -141,5 +174,19 @@ export class DetosDelTramiteComponent implements OnInit {
         this.solicitude = data.options;
         this.defaultSelect = data.defaultSelect;
       });
+  }
+
+  
+  /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

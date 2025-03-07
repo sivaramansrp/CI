@@ -11,7 +11,7 @@ import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/compon
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { UppercaseDirective } from 'libs/shared/data-access-user/src/tramites/directives/Uppercase/uppercase.directive';
  
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { TEXTOS } from 'libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
 import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
@@ -20,7 +20,12 @@ import establecimientoTable from 'libs/shared/theme/assets/json/130102/partidas-
 import fraccionArancelariaTIGIE from 'libs/shared/theme/assets/json/130102/partidas-de-la-catalogos-select.json';
  
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
- 
+
+import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+
+import { Subject, map, takeUntil } from 'rxjs'; 
+
 @Component({
   selector: 'app-partidas-de-la',
   standalone: true,
@@ -36,7 +41,7 @@ import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramit
   templateUrl: './partidas-de-la.component.html',
   styleUrl: './partidas-de-la.component.scss',
 })
-export class PartidasDeLaComponent implements OnInit {
+export class PartidasDeLaComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo utilizado para gestionar los datos de las partidas de la mercancía.
    * @type {FormGroup}
@@ -79,12 +84,18 @@ export class PartidasDeLaComponent implements OnInit {
    */
   public getEstablecimientoTableData = establecimientoTable;
  
+    public solicitudState!: Solicitud130102State;
+    private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Constructor del formulario reactivo.
    * @param {FormBuilder} fb - Constructor del formulario reactivo.
    */
   // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,
+      private tramite130102Store: Tramite130102Store,
+      private tramite130102Query: Tramite130102Query
+  ) {}
  
   /**
    * Método de inicialización del componente.
@@ -101,23 +112,45 @@ export class PartidasDeLaComponent implements OnInit {
     this.formForTotalCount.controls['valorTotalUSD'].disable();
   }
  
+    /**
+   * Asigna un valor del formulario al store.
+   *
+   * @param {FormGroup} form - Formulario reactivo.
+   * @param {string} campo - Campo del formulario a obtener.
+   * @param {keyof Tramite130102Store} metodoNombre - Método del store donde se guardará el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
+    const valor = form.get(campo)?.value;
+    (this.tramite130102Store[metodoNombre] as (value: any) => void)(valor);
+  }
   /**
    * Método para crear el formulario reactivo.
    */
   crearFormulario(): void {
+    this.tramite130102Query.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {  
+        console.log('Solicitud130102State', seccionState);
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
+
     this.form = this.fb.group({
       cantidad: [
-        '',
+        this.solicitudState?.cantidadPartidas,
         [
           Validators.required,
           Validators.pattern('^[0-9]+$'),
           Validators.maxLength(18),
         ],
       ],
-      fraccionArancelariaTIGIE: ['', [Validators.required]],
-      descripcion: ['', [Validators.required, Validators.maxLength(255)]],
+      fraccionArancelariaTIGIE: [ this.solicitudState?.fraccionArancelariaTIGIE, [Validators.required]],
+      fraccionArancelariaTIGIE_TIGIE: [ this.solicitudState?.fraccionArancelariaTIGIE_TIGIE, [Validators.required]],
+      descripcion: [ this.solicitudState?.descripcionPartidas, [Validators.required, Validators.maxLength(255)]],
       valorPartidaUSD: [
-        '',
+        this.solicitudState?.valorPartidaUSD,
         [
           Validators.required,
           Validators.min(0),
@@ -200,5 +233,10 @@ this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTAL_USD);
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -4,7 +4,7 @@
  * @fileoverview Componente DetosDelLaComponent: maneja la lógica del formulario
  * para la gestión de productos, fracciones arancelarias y unidades de medida.
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
@@ -24,6 +24,11 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { REG_X } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+
+import { Subject, map, takeUntil } from 'rxjs';
 
 
 /**
@@ -45,7 +50,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   templateUrl: './datos-de-la-mercacia.component.html',
   styleUrl: './datos-de-la-mercacia.component.scss',
 })
-export class DetosDelLaMarcaciaComponent implements OnInit {
+export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
   /**
    * compo doc
    * @property {any} prodData - Datos de productos importados desde un archivo JSON.
@@ -74,7 +79,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
    * compo doc
    * @property {string} defaultSelect - Valor predeterminado para el selector de productos.
    */
-  defaultSelect: string = 'Nuevo';
+  //defaultSelect: string = 'Nuevo';
 
   /**
    * compo doc
@@ -88,13 +93,19 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
    */
   fraccionF: Catalogo[] = fractionValues;
 
+  public solicitudState!: Solicitud130102State;
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * compo doc
    * @constructor
    * @param {HttpClient} http - Cliente HTTP para solicitudes.
    * @param {FormBuilder} fb - Constructor de formularios reactivos.
    */
-  constructor(private http: HttpClient, private fb: FormBuilder) {
+  constructor(private http: HttpClient,
+     private fb: FormBuilder,
+    private tramite130102Store: Tramite130102Store,
+    private tramite130102Query: Tramite130102Query
+  ) {
     //constructor
   }
 
@@ -104,19 +115,30 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
    * @description Inicializa el formulario con validaciones y carga datos de productos.
    */
   ngOnInit(): void {
+    this.tramite130102Query.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {  
+        console.log('Solicitud130102State', seccionState);
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
+
     this.formDelLa = this.fb.group({
+      productos: [this.solicitudState?.productos],
       descripcion: [
-        '',
+        this.solicitudState?.descripcion,
         [
           Validators.required,
           Validators.minLength(10),
           Validators.maxLength(500),
         ],
       ],
-      fraccion: ['', [Validators.required]],
-      unidadMedida: ['', [Validators.required]],
+      fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required]],
+      unidadMedida: [this.solicitudState?.unidadMedida, [Validators.required]],
       cantidad: [
-        '',
+        this.solicitudState?.cantidad,
         [
           Validators.required,
           Validators.min(1),
@@ -124,7 +146,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
         ],
       ],
       valorFacturaUSD: [
-        '',
+        this.solicitudState?.valorFacturaUSD,
         [
           Validators.required,
           Validators.min(0.01),
@@ -132,7 +154,19 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
         ],
       ],
     });
-    this.fetchProductoOptions();
+   this.fetchProductoOptions();
+  }
+
+    /**
+   * Asigna un valor del formulario al store.
+   *
+   * @param {FormGroup} form - Formulario reactivo.
+   * @param {string} campo - Campo del formulario a obtener.
+   * @param {keyof Tramite130102Store} metodoNombre - Método del store donde se guardará el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
+    const valor = form.get(campo)?.value;
+    (this.tramite130102Store[metodoNombre] as (value: any) => void)(valor);
   }
 
   /**
@@ -154,7 +188,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
    */
   fetchProductoOptions(): void {
     this.producto = productoOptions.options;
-    this.defaultSelect = productoOptions.defaultSelect;
+    //this.defaultSelect = productoOptions.defaultSelect;
   }
 
   /**
@@ -174,4 +208,10 @@ export class DetosDelLaMarcaciaComponent implements OnInit {
   fetchUnidad(): void {
     this.selectedValue = 'Nuevo';
   }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }
