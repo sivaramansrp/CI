@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PasoCuatroComponent } from './paso-cuatro.component';
-import { FirmaPageComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, FirmaElectronicaComponent, FirmaPageComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { ToastrModule } from 'ngx-toastr';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoCuatroComponent', () => {
   let component: PasoCuatroComponent;
@@ -10,7 +12,7 @@ describe('PasoCuatroComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PasoCuatroComponent],
-      imports: [FirmaPageComponent],
+      imports: [TituloComponent, HttpClientTestingModule, AlertComponent, TablaDinamicaComponent, AnexarDocumentosComponent, ToastrModule.forRoot(), FirmaElectronicaComponent]
     })
       .compileComponents();
 
