@@ -3,17 +3,20 @@ import { Injectable } from '@angular/core';
 
 interface Tratado {
   /** 
-   * Nombre del país o bloque al que pertenece el tratado.
+   * **Nombre del país o bloque al que pertenece el tratado**  
+   * Indica la nación o región que forma parte del acuerdo comercial.  
    */
   pais: string;
 
   /** 
-   * Nombre del tratado o acuerdo comercial.
+   * **Nombre del tratado o acuerdo comercial**  
+   * Especifica el nombre del tratado firmado entre los países involucrados.  
    */
   tratado: string;
 
   /** 
-   * Criterio de origen aplicado en el tratado.
+   * **Criterio de origen aplicado en el tratado**  
+   * Define la regla utilizada para determinar el origen de la mercancía.  
    */
   origen: string;
 }

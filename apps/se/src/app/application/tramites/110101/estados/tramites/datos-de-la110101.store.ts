@@ -40,13 +40,14 @@ export interface FormMercancia {
 
 export interface DatosDeLaState {
   /**
-   * **Valores del Formulario de Mercancía**  
+   * **Estado del formulario de mercancía**  
    * 
-   * Representa los valores actuales del formulario de mercancía.  
-   * Si no hay datos almacenados, su valor será `null`.
+   * Almacena los valores actuales del formulario de mercancía.  
+   * Si no hay datos registrados, su valor será `null`.
    */
   formValues: FormMercancia | null;
 }
+
 
 
 /**
