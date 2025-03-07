@@ -7,6 +7,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { representacionFederal } from '@ng-mf/data-access-user';
 import { representacionFederalTable } from '@ng-mf/data-access-user';
 import { tipoDeEmpresa } from '@ng-mf/data-access-user';
+import { RepresentacionFederaStore } from '../../estados/tramites/store/representacion-federal.store';
+import { RepresentacionFederaQuery } from '../../estados/tramites/queries/representacion-federal.query';
 
 /**
  * Componente que representa la representación federal en un proceso de múltiples pasos.
@@ -26,6 +28,7 @@ import { tipoDeEmpresa } from '@ng-mf/data-access-user';
   templateUrl: './representacion-federal.component.html',
   styleUrl: './representacion-federal.component.css',
 })
+
 export class RepresentacionFederalComponent implements OnInit {
 
   /**
@@ -71,22 +74,44 @@ export class RepresentacionFederalComponent implements OnInit {
    */
   public representacion!: Catalogo[];
 
-  /**
-   * Constructor de la clase.
-   * @param fb El servicio FormBuilder.
-   */
-  constructor(private fb: FormBuilder) {
-    // Initialization logic can be added here if needed
-  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
    * @returns {void}
    */
+
+  /**
+   * Constructor del componente.
+   * 
+   * @param fb - Instancia de FormBuilder para la creación de formularios reactivos.
+   */
+
+
+  constructor(
+    private fb: FormBuilder,
+    private query: RepresentacionFederaQuery,
+    private store: RepresentacionFederaStore
+  ) {
+    //constructor
+  }
+
   ngOnInit(): void {
     this.crearFormulario();
     this.getEntidadFederativa();
     this.getRepresentacionFederal();
+
+    this.query.selectEstado$.subscribe((data)=>{
+      this.formulario.patchValue({
+        estado: data
+      })
+    });
+
+    this.query.selectRepresentacion$.subscribe((data)=>{
+      this.formulario.patchValue({
+        representacion: data
+      })
+    })
+ 
   }
 
   /**
@@ -124,6 +149,7 @@ export class RepresentacionFederalComponent implements OnInit {
    // eslint-disable-next-line class-methods-use-this
   public docSeleccionado(_e: Event): void {
     // Esta es una función dinámica; una vez que obtengamos la API, la implementaremos.
+    this.store.setEstado(this.formulario.get('estado')?.value);
   }
 
   /**
@@ -134,5 +160,6 @@ export class RepresentacionFederalComponent implements OnInit {
    // eslint-disable-next-line class-methods-use-this
   public validarRepresentacionFederalIDCSECEROR_(_e: Event): void {
     // Esta es una función dinámica; una vez que obtengamos la API, la implementaremos.
+    this.store.setRepresentacion(this.formulario.get('representacion')?.value);
   }
 }

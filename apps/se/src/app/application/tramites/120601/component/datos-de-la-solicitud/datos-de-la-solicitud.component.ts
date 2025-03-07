@@ -3,8 +3,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 
 import { Catalogo, CatalogoSelectComponent, SelectCatalogosComponent, TituloComponent } from '@ng-mf/data-access-user';
-
+import { DatosDeLaSolicitudStore } from '../../estados/tramites/store/datos-de-la-solicitud.store';
+import { DatosDeLaSolicitudQuery } from '../../estados/tramites/queries/datos-de-la-solicitud.query';
 import { tipoDeEmpresa} from '@ng-mf/data-access-user';
+
 /**
  * Componente que representa los datos de la solicitud en un proceso de múltiples pasos.
  */
@@ -37,7 +39,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * Constructor de DatosDeLaSolicitudComponent.
    * @param fb El servicio FormBuilder.
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private store: DatosDeLaSolicitudStore, private query: DatosDeLaSolicitudQuery) {
     // Initialization logic can be added here if needed
   }
 
@@ -47,6 +49,12 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   ngOnInit(): void {
     this.crearFormulario();
     this.getTipoDeEmpresa();
+
+    this.query.selectTipoDeEmpresa$.subscribe((data)=>{
+      this.solicitudForm.patchValue({
+        tipoDeEmpresa: data
+      })
+    });
   }
 
   /**
@@ -75,5 +83,6 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   // eslint-disable-next-line class-methods-use-this
   public docSeleccionado(_e: Event): void {
     // Esta es una función dinámica; una vez que tengamos la API, la implementaremos.
+    this.store.setTipoDeEmpresa(this.solicitudForm.get('tipoDeEmpresa')?.value);
   }
 }

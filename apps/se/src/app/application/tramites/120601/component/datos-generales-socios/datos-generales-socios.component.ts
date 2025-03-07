@@ -18,6 +18,8 @@ import { DATOS_GENERALES_EXTRANJEROS } from '@ng-mf/data-access-user';
 import { DATOS_GENERALES_SOCIOS } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { DatosGeneralesSociosStore } from '../../estados/tramites/store/datos-generales-socios.store';
+import { DatosGeneralesSociosQuery } from '../../estados/tramites/queries/datos-generales-socios.query';
 
 import { datosSociosTable } from '@ng-mf/data-access-user';
 
@@ -82,7 +84,7 @@ export class DatosGeneralesSociosComponent implements OnInit {
    * Constructor - inicializa el form builder.
    * @param fb - Instancia de FormBuilder
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private store: DatosGeneralesSociosStore, private query: DatosGeneralesSociosQuery) {
     // Si es necesario, se puede agregar aquí la lógica del constructor.
   }
 
@@ -92,8 +94,9 @@ export class DatosGeneralesSociosComponent implements OnInit {
   ngOnInit(): void {
     this.FormSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
-        Nacionalidad: ['No', Validators.required],
+        nacionalidad: ['No', Validators.required],
         persona: ['No', Validators.required],
+        cadenaDependencia: ['', Validators.required]
       }),
     });
 
@@ -103,5 +106,42 @@ export class DatosGeneralesSociosComponent implements OnInit {
 
     const TOTAL_ROW_COUNT = this.datosSocios.length;
     this.formularioParaConteoTotal.patchValue({ recuentoTotalDeFilas: TOTAL_ROW_COUNT });
+
+    this.query.selectNacionalidad$.subscribe((data)=>{
+      this.FormSolicitud.patchValue({
+        datosImportadorExportador: {
+          nacionalidad: data
+        }
+      })
+    });
+
+    this.query.selectPersona$.subscribe((data)=>{
+      this.FormSolicitud.patchValue({
+        datosImportadorExportador: {
+          persona: data
+        }
+      })
+    });
+
+    this.query.selectCadenaDependencia$.subscribe((data)=>{
+      this.FormSolicitud.patchValue({
+        datosImportadorExportador: {
+          cadenaDependencia: data
+        }
+      })
+    });
+
+  }
+
+  enCambioNacionalidad() {
+    this.store.setNacionalidad(this.FormSolicitud.get(['datosImportadorExportador', 'nacionalidad'])?.value);
+  }
+
+  enCambioPersona() {
+    this.store.setPersona(this.FormSolicitud.get(['datosImportadorExportador','persona'])?.value);
+  }
+
+  enCambioCadenaDependencia() {
+    this.store.setCadenaDependencia(this.FormSolicitud.get(['datosImportadorExportador','cadenaDependencia'])?.value);
   }
 }
