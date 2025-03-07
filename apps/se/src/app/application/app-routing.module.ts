@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+
 import { RouterModule, Routes } from '@angular/router';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const routes: Routes = [
@@ -38,6 +39,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
+      ),
+  },
+  {
+    path: 'certificado-sgp',
+    loadChildren: () =>
+      import('./tramites/110209/certificado-sgp.module').then(
+        (m) => m.CertificadoSGPModule
       ),
   }
 ];
