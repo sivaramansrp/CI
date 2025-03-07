@@ -5,13 +5,21 @@ const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent
+    component: SeleccionTramiteComponent,
   },
   {
     path: 'octava-temporal',
     loadChildren: () =>
       import('./tramites/130102/octava-temporal.module').then(
         (m) => m.OctavaTemporalModule
+      ),
+  },
+
+  {
+    path: 'exportador-autorizado',
+    loadChildren: () =>
+      import('./tramites/110102/exportador-autorizado.module').then(
+        (m) => m.ExportadorautorizadoModule
       ),
   },
   {
@@ -41,12 +49,19 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'expansion-de-productores',
+    path: 'immex-ampliacion-sensibles',
     loadChildren: () =>
-      import('./tramites/90201/expansion-de-productores/expansion-de-productores.module').then(
-        (m) => m.ExpansionDeProductoresModule
+      import('./tramites/80202/immex-ampliacion-sensibles.module').then(
+        (m) => m.ImmexAmpliacionSensiblesModule
       ),
-  }
+  },
+  {
+    path: 'modificacion',
+    loadChildren: () =>
+      import('./tramites/80308/modificacion-solicitud.module').then(
+        (m) => m.ModificacionSolicitudModule
+      ),
+  },
 ];
 
 @NgModule({
