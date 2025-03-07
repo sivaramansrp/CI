@@ -3,7 +3,6 @@ import { SanidadCertificadoComponent } from './sanidad-certificado.component';
 import { BtnContinuarComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
-import { PasoCuatroComponent } from '../paso-cuatro/paso-cuatro.component';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -23,7 +22,6 @@ describe('SanidadCertificadoComponent', () => {
       declarations: [
         SanidadCertificadoComponent,
         PasoUnoComponent,
-        PasoCuatroComponent,
         PasoDosComponent,
         PasoTresComponent, // Declare all components used in the test
 
