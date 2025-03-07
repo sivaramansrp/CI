@@ -28,7 +28,7 @@ interface AccionBoton {
   imports: [],
   templateUrl: './btn-continuar.component.html',
   styleUrl: './btn-continuar.component.scss',
-  host: { hostID: crypto.randomUUID().toString() },
+  host: {},
 })
 export class BtnContinuarComponent {
   @Input({ required: true }) datos!: DatosPasos;
