@@ -43,13 +43,21 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * @property {FormGroup} formularioTratados - El formulario reactivo que contiene los campos para los tratados.
    */
   formularioTratados!: FormGroup;
+
+  /**
+  * **Subject utilizado para manejar la destrucción de suscripciones**
+  * 
+  * Este `Subject` se emite en `ngOnDestroy` para notificar y completar todas las
+  * suscripciones activas, evitando posibles fugas de memoria en el componente.
+  */
   private destroy$ = new Subject<void>();
+
 
   // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder,
     private tratadosStore: TratadosStore,
     private tratadosQuery: TratadosQuery
-  // eslint-disable-next-line no-empty-function
+    // eslint-disable-next-line no-empty-function
   ) { }
 
   /**
@@ -61,11 +69,10 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarFormularioTratados();
-    this.restoreFormValues();
-
+    this.restaurarValoresFormulario();
     this.formularioTratados.valueChanges
       .pipe(distinctUntilChanged(), takeUntil(this.destroy$))
-      .subscribe(() => this.updateStore());
+      .subscribe(() => this.actualizarEstado());
   }
 
   /**
@@ -154,7 +161,15 @@ export class TratadosComponent implements OnInit, OnDestroy {
   }
 
 
-  private restoreFormValues(): void {
+  /**
+   * **Restaura los valores del formulario a partir del estado de la tienda**
+   * 
+   * Suscribe a `selectTratados$` para actualizar la tabla y el formulario con el último tratado almacenado.
+   * - Si hay tratados en el estado, se asigna el último al formulario.
+   * - Si no hay tratados, se restablece el formulario.
+   * - La suscripción se gestiona con `takeUntil(this.destroy$)` para evitar fugas de memoria.
+   */
+  private restaurarValoresFormulario(): void {
     this.tratadosQuery.selectTratados$
       .pipe(takeUntil(this.destroy$))
       .subscribe((tratados) => {
@@ -169,18 +184,32 @@ export class TratadosComponent implements OnInit, OnDestroy {
       });
   }
 
-  private updateStore(): void {
-      const NUEVOTRATADO = this.formularioTratados.value;
-      this.tratadosStore.updateTratado(NUEVOTRATADO); 
+
+  /**
+   * **Actualiza el estado de la tienda con los valores del formulario**
+   * 
+   * Obtiene los valores actuales del formulario y actualiza el último tratado en la tienda de estado.
+   * Esto permite reflejar los cambios en tiempo real sin necesidad de validar el formulario completo.
+   */
+  private actualizarEstado(): void {
+    const NUEVOTRATADO = this.formularioTratados.value;
+    this.tratadosStore.updateTratado(NUEVOTRATADO);
   }
 
-  onDropdownChange(): void {
-    this.updateStore();
-  }
 
+  /**
+   * **Ciclo de vida: OnDestroy**
+   * 
+   * Este método se ejecuta cuando el componente se destruye. 
+   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
+   * 
+   * - Envía un valor a `destroy$` para notificar a los observables que deben completarse.
+   * - Completa `destroy$` para liberar los recursos asociados.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
-    this.destroy$.complete(); 
+    this.destroy$.complete();
   }
+
 
 }
