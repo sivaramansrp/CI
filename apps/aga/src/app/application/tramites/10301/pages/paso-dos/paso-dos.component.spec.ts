@@ -1,164 +1,175 @@
-//@ts-nocheck
-import {
-  CUSTOM_ELEMENTS_SCHEMA,
-  Directive,
-  Injectable,
-  Input,
-  NO_ERRORS_SCHEMA,
-  Output,
-  Pipe,
-  PipeTransform
-} from '@angular/core';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { ImportadorExportadorService } from '@ng-mf/data-access-user';
-import { of as observableOf } from 'rxjs';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+import { of } from 'rxjs';
+import { Component } from '@angular/core';
 import { PasoDosComponent } from './paso-dos.component';
-import { TestBed } from '@angular/core/testing';
+import { CatalogosService } from '@ng-mf/data-access-user';
+import { ImportadorExportadorService } from '../../services/importador-exportador.service';
+import { ImportadorExportadorStore } from '../../state/store';
+import { ImportadorExportadorQuery } from '../../state/query';
+import { DatosDelTramiteComponent } from '../../components/datos-del-tramite/datos-del-tramite.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+@Injectable()
+class MockImportadorExportadorService {}
+
+@Injectable()
+class MockImportadorExportadorStore {}
+
+@Injectable()
+class MockImportadorExportadorQuery {}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
   @Input() myCustom;
 }
 
-@Pipe({ name: 'translate' })
+@Pipe({name: 'translate'})
 class TranslatePipe implements PipeTransform {
-  static transform(value) {
-    return value;
-  }
+  transform(value) { return value; }
 }
 
-@Pipe({ name: 'phoneNumber' })
+@Pipe({name: 'phoneNumber'})
 class PhoneNumberPipe implements PipeTransform {
-  static transform(value) {
-    return value;
-  }
+  transform(value) { return value; }
 }
 
-@Pipe({ name: 'safeHtml' })
+@Pipe({name: 'safeHtml'})
 class SafeHtmlPipe implements PipeTransform {
-  static transform(value) {
-    return value;
-  }
+  transform(value) { return value; }
 }
 
 describe('PasoDosComponent', () => {
   let fixture;
-  let component: PasoDosComponent;
+  let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
+      imports: [ FormsModule, ReactiveFormsModule, PasoDosComponent, HttpClientTestingModule ],
       declarations: [
-        PasoDosComponent,
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective,
+        
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [CatalogosService, ImportadorExportadorService],
-    })
-      .overrideComponent(PasoDosComponent, {})
-      .compileComponents();
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        CatalogosService,
+        { provide: ImportadorExportadorService, useClass: MockImportadorExportadorService },
+        { provide: ImportadorExportadorStore, useClass: MockImportadorExportadorStore },
+        { provide: ImportadorExportadorQuery, useClass: MockImportadorExportadorQuery }
+      ]
+    }).compileComponents();
     fixture = TestBed.createComponent(PasoDosComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
+  class MockImportadorExportadorService{
+    getTipoDocumento() {
+      return of({ code: 200, data: [{ id: 1, descripcion: 'Tipo Documento' }] });
+    }
+  }
+
+
   afterEach(() => {
-    component.ngOnDestroy = function () {
-      // Esta función se deja vacía intencionalmente para la limpieza después de cada prueba.
-    };
+    if(component){
+    component.ngOnDestroy = () => {};
+    }
     fixture.destroy();
   });
 
   it('should run #constructor()', async () => {
-    await fixture.whenStable(); 
     expect(component).toBeTruthy();
   });
 
   it('should run #ngOnInit()', async () => {
-    await fixture.whenStable(); 
     component.getTiposDocumentos = jest.fn();
     component.getTipoDocumento = jest.fn();
     component.ngOnInit();
-   
+
   });
 
   it('should run #getTiposDocumentos()', async () => {
-    await fixture.whenStable(); 
     component.catalogosServices = component.catalogosServices || {};
-    component.catalogosServices.getCatalogo = jest
-      .fn()
-      .mockReturnValue(observableOf({}));
+    component.catalogosServices.getCatalogo = jest.fn().mockReturnValue(observableOf({}));
     component.getTiposDocumentos();
-    
+    // expect(component.catalogosServices.getCatalogo).toHaveBeenCalled();
   });
 
   it('should run #getTipoDocumento()', async () => {
-    await fixture.whenStable(); 
     component.importarExportar = component.importarExportar || {};
-    component.importarExportar.getTipoDocumento = jest.fn().mockReturnValue(
-      observableOf({
-        code: {},
-        data: {},
-      })
-    );
+    component.importarExportar.getTipoDocumento = jest.fn().mockReturnValue(observableOf({
+      code: {},
+      data: {}
+    }));
     component.getTipoDocumento();
-    
+    // expect(component.importarExportar.getTipoDocumento).toHaveBeenCalled();
   });
 
   it('should run #todosDocumentos()', async () => {
-    await fixture.whenStable(); 
     component.documentosSeleccion = component.documentosSeleccion || {};
-    component.documentosSeleccion.every = jest.fn().mockReturnValue([null]);
+    component.documentosSeleccion.every = jest.fn().mockReturnValue([
+      null
+    ]);
     component.todosDocumentos();
-    
+    // expect(component.documentosSeleccion.every).toHaveBeenCalled();
   });
 
-  it('should run #enDocumentSelect()', async () => {
-    await fixture.whenStable(); 
-    component.enDocumentSelect({});
+  it('should run #enDocumentoSelect()', async () => {
+
+    component.enDocumentoSelect({});
+
   });
 
   it('should run #verDocument()', async () => {
-    await fixture.whenStable(); 
     component.documentosSeleccion = component.documentosSeleccion || {};
     component.documentosSeleccion.index = 'index';
     component.verDocument({});
+
   });
 
   it('should run #cambioArchivo()', async () => {
-    await fixture.whenStable(); 
     component.tamanosDeArchivos = component.tamanosDeArchivos || {};
     component.tamanosDeArchivos.index = 'index';
-    component.resolucions = component.resolucions || {};
-    component.resolucions.index = 'index';
+    component.resoluciones = component.resoluciones || {};
+    component.resoluciones.index = 'index';
     component.nombresArchivosSubidos = component.nombresArchivosSubidos || {};
     component.nombresArchivosSubidos.index = 'index';
-    component.cambioArchivo(
-      {
-        target: {
-          files: {
-            0: {
-              size: {},
-              name: {},
-            },
-          },
-          value: {},
-        },
-      },
-      {}
-    );
+    const fakeFile = new File(["dummy content"], "test-image.png", { type: "image/png" });
+const event = {
+  target: { files: [fakeFile] }
+} as unknown as Event;
+component.cambioArchivo(event);
+    
+    
+
   });
 
   it('should run #adjuntarArchivos()', async () => {
-    await fixture.whenStable(); 
+
     component.adjuntarArchivos();
+
   });
 
   it('should run #cerrarProceso()', async () => {
-    await fixture.whenStable(); 
+
     component.cerrarProceso();
+
   });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.getTiposDocumentosSubscription = component.getTiposDocumentosSubscription || {};
+    component.getTiposDocumentosSubscription.unsubscribe = jest.fn();
+    component.getTipoDocumentoSubscription = component.getTipoDocumentoSubscription || {};
+    component.getTipoDocumentoSubscription.unsubscribe = jest.fn();
+    component.ngOnDestroy();
+    // expect(component.getTiposDocumentosSubscription.unsubscribe).toHaveBeenCalled();
+    // expect(component.getTipoDocumentoSubscription.unsubscribe).toHaveBeenCalled();
+  });
+
 });

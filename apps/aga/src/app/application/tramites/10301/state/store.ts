@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
+import { ImportadorExportadorState, createInitialState } from './ImportadorExportador.model';
 
 export interface TramiteState {
   aduana: string | null;
@@ -19,7 +20,7 @@ export interface TramiteState {
   valorSeleccionado: string | null;
 }
 
-export function createInitialState(): TramiteState {
+export function createInitialTramiteState(): TramiteState {
   return {
     aduana: null,
     ano: null,
@@ -40,8 +41,8 @@ export function createInitialState(): TramiteState {
 }
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'tramite' })
-export class TramiteStore extends Store<TramiteState> {
+@StoreConfig({ name: 'importadorExportador' })
+export class ImportadorExportadorStore extends Store<ImportadorExportadorState> {
   constructor() {
     super(createInitialState());
   }

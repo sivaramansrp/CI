@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { TramiteState, TramiteStore } from './store';
+import { ImportadorExportadorStore } from './store';
+import { ImportadorExportadorState } from './ImportadorExportador.model';
 
 @Injectable({ providedIn: 'root' })
-export class TramiteQuery extends Query<TramiteState> {
-  constructor(protected override store: TramiteStore) {
+export class ImportadorExportadorQuery extends Query<ImportadorExportadorState> {
+  constructor(protected override store: ImportadorExportadorStore) {
     super(store);
   }
 
