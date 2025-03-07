@@ -1,7 +1,7 @@
 export const DATOS_EMPRESA = [
     {
         labelNombre: 'Número de programa IMMEX:',
-        campo: 'numero_programa',
+        campo: 'numeroPrograma',
         class: 'col-md-12',
         tipo_input: 'text',
         disabled: true,
@@ -10,7 +10,7 @@ export const DATOS_EMPRESA = [
     },
     {
         labelNombre: 'Año de programa IMMEX:',
-        campo: 'ano_programa',
+        campo: 'anoPrograma',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -19,14 +19,14 @@ export const DATOS_EMPRESA = [
     },
     {
         labelNombre: 'Mes al que corresponde el aviso:',
-        campo: 'mes_corresponde_aviso',
+        campo: 'mesCorrespondeAviso',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
     },
     {
         labelNombre: 'Año al que corresponde el aviso:',
-        campo: 'ano_corresponde_aviso',
+        campo: 'anoCorrespondeAviso',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
@@ -36,7 +36,7 @@ export const DATOS_EMPRESA = [
 export const CARGO_TIPO = [
     {
         labelNombre: 'Tipo de carga',
-        campo: 'carga_tipo',
+        campo: 'cargaTipo',
         required: true,
         radioOptions: [],
         radioSelectedValue: '',
@@ -64,7 +64,7 @@ export const DATOS_QUIEN_RECIBE = [
     },
     {
         labelNombre: 'Año de programa IMMEX:',
-        campo: 'ano_programa_qr',
+        campo: 'anoProgramaQr',
         class: 'col-md-12',
         tipo_input: 'text',
         disabled: true,
@@ -76,7 +76,7 @@ export const DATOS_QUIEN_RECIBE = [
 export const DATOS_DOMICILIO_LUGAR = [
     {
         labelNombre: 'Nombre comercial:',
-        campo: 'nombre_comercial',
+        campo: 'nombreComercial',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -85,7 +85,7 @@ export const DATOS_DOMICILIO_LUGAR = [
     },
     {
         labelNombre: 'Entidad federativa:',
-        campo: 'entidad_federativa',
+        campo: 'entidadFederativa',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
@@ -115,7 +115,7 @@ export const DATOS_DOMICILIO_LUGAR = [
     },
     {
         labelNombre: 'Número exterior:',
-        campo: 'numero_exterior',
+        campo: 'numeroExterior',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -124,7 +124,7 @@ export const DATOS_DOMICILIO_LUGAR = [
     },
     {
         labelNombre: 'Número interior:',
-        campo: 'numero_interior',
+        campo: 'numeroInterior',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -133,7 +133,7 @@ export const DATOS_DOMICILIO_LUGAR = [
     },
     {
         labelNombre: 'Código postal:',
-        campo: 'codigo_postal',
+        campo: 'codigoPostal',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -145,7 +145,7 @@ export const DATOS_DOMICILIO_LUGAR = [
 export const DATOS_MERCANCIA_SUBMANUFACTURA = [
     {
         labelNombre: 'Fracción arancelaria:',
-        campo: 'frac_arancelaria',
+        campo: 'fracArancelaria',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
@@ -161,7 +161,7 @@ export const DATOS_MERCANCIA_SUBMANUFACTURA = [
     },
     {
         labelNombre: 'Unidad de medida:',
-        campo: 'unidad_medida',
+        campo: 'unidadMedida',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
@@ -177,7 +177,7 @@ export const DATOS_MERCANCIA_SUBMANUFACTURA = [
     },
     {
         labelNombre: 'Valor USD:',
-        campo: 'valor_usd',
+        campo: 'valorUsd',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
@@ -186,7 +186,7 @@ export const DATOS_MERCANCIA_SUBMANUFACTURA = [
     },
     {
         labelNombre: 'Descripcíon de la mercancía:',
-        campo: 'descripcion_mercancia',
+        campo: 'descripcionMercancia',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,

@@ -7,40 +7,40 @@ export interface FormularioGrupo {
 }
 
 export interface DatosEmpresa {
-    numero_programa: string,
-    ano_programa: string,
-    mes_corresponde_aviso: string,
-    ano_corresponde_aviso: string,
+    numeroPrograma: string,
+    anoPrograma: string,
+    mesCorrespondeAviso: string,
+    anoCorrespondeAviso: string,
 }
 
 export interface CargaTipo {
-    carga_tipo: string,
+    cargaTipo: string,
 }
 
 export interface DatosQuienRecibe {
     rfc: string,
-    number_programa_qr: string,
-    ano_programa_qr: string,
+    numberProgramaQr: string,
+    anoProgramaQr: string,
 }
 
 export interface DatosDomicilioLugar {
-    nombre_comercial: string,
-    entidad_federativa: string,
-    alcaldia_municipio: string,
+    nombreComercial: string,
+    entidadFederativa: string,
+    alcaldiaMunicipio: string,
     colonias: string,
     calle: string,
-    numero_exterior: string,
-    numero_interior: string,
-    codigo_postal: string,
+    numeroExterior: string,
+    numeroInterior: string,
+    codigoPostal: string,
 }
 
 export interface DatosMercanciaSubmanufactura {
-    frac_arancelaria: string,
+    fracArancelaria: string,
     nico: string,
-    unidad_medida: string,
+    unidadMedida: string,
     cantidad: string,
-    valor_usd: string,
-    descripcion_mercancia: string,
+    valorUsd: string,
+    descripcionMercancia: string,
 }
 export interface ColumnasTabla {
     rfc: string,

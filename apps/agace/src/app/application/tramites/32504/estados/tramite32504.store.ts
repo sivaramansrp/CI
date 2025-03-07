@@ -4,36 +4,36 @@ import { Injectable } from '@angular/core';
 
 export const INITIAL_STATE: FormularioGrupo = {
     datosEmpresa: {
-        numero_programa: '',
-        ano_programa: '',
-        mes_corresponde_aviso: '',
-        ano_corresponde_aviso: '',
+        numeroPrograma: '',
+        anoPrograma: '',
+        mesCorrespondeAviso: '',
+        anoCorrespondeAviso: '',
     },
     cargaTipo: {
-        carga_tipo: '',
+        cargaTipo: '',
     },
     datosQuienRecibe: {
         rfc: '',
-        number_programa_qr: '',
-        ano_programa_qr: '',
+        numberProgramaQr: '',
+        anoProgramaQr: '',
     },
     datosDomicilioLugar: {
-        nombre_comercial: '',
-        entidad_federativa: '',
-        alcaldia_municipio: '',
+        nombreComercial: '',
+        entidadFederativa: '',
+        alcaldiaMunicipio: '',
         colonias: '',
         calle: '',
-        numero_exterior: '',
-        numero_interior: '',
-        codigo_postal: '',
+        numeroExterior: '',
+        numeroInterior: '',
+        codigoPostal: '',
     },
     datosMercanciaSubmanufactura: {
-        frac_arancelaria: '',
+        fracArancelaria: '',
         nico: '',
-        unidad_medida: '',
+        unidadMedida: '',
         cantidad: '',
-        valor_usd: '',
-        descripcion_mercancia: '',
+        valorUsd: '',
+        descripcionMercancia: '',
     },
 };
 

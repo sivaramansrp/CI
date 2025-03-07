@@ -123,8 +123,8 @@ describe('AvisoComponent', () => {
 
   it('should handle catalog selection', () => {
     jest.spyOn(component, 'seleccionCatalogo').mockImplementation();
-    component.seleccionCatalogo('ano_corresponde_aviso', 'someValue' as unknown as Event);
-    expect(component.seleccionCatalogo).toHaveBeenCalledWith('ano_corresponde_aviso', 'someValue');
+    component.seleccionCatalogo('anoCorrespondeAviso', 'someValue' as unknown as Event);
+    expect(component.seleccionCatalogo).toHaveBeenCalledWith('anoCorrespondeAviso', 'someValue');
   });
 
   it('should handle radio value change', () => {
