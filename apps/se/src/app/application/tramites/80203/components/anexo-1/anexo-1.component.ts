@@ -312,9 +312,12 @@ export class Anexo1Component implements OnInit, OnDestroy {
         const seccionState = this.seccionQuery.getValue();
         const FORMAS_VALIDADAS = [...seccionState.formaValida];
         const controlPath = 'immexRegistroform.exportacionForm';
+        const controlPath2 = 'immexRegistroform.importacionForm';
         const CONTROL = this.immexRegistroform.get(controlPath)?.status;
+        const CONTROL2 = this.immexRegistroform.get(controlPath2)?.status;
   
         FORMAS_VALIDADAS[SECCION] = this.immexRegistroform.valid || CONTROL === 'VALID';
+        FORMAS_VALIDADAS[SECCION] = this.immexRegistroform.valid || CONTROL2 === 'VALID';
   
         this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
       })

@@ -123,15 +123,15 @@
         <div class="col-12">
           <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
             <label for="candiad-anual">Cantidad anual*:</label>
-            <input type="text" class="form-control" id="candiad-anual" formControlName="candiadAnual" placeholder="" />
+            <input type="text" class="form-control" id="candiad-anual" formControlName="candiadAnual" placeholder="" [required]="true"/>
           </div>
           <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
             <label for="capacidad-periodo">Capacidad instalada por periodo*:</label>
-            <input type="text" class="form-control" id="capacidad-periodo" formControlName="capacidadPeriodo" placeholder="" />
+            <input type="text" class="form-control" id="capacidad-periodo" formControlName="capacidadPeriodo" placeholder="" [required]="true"/>
           </div>
           <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
             <label for="candidad-por-periodo">Cantidad por periodo*:</label>
-            <input type="text" class="form-control" id="candidad-por-periodo" formControlName="candidadPorPeriodo" placeholder="" />
+            <input type="text" class="form-control" id="candidad-por-periodo" formControlName="candidadPorPeriodo" placeholder="" [required]="true"/>
           </div>
         </div>
         <div class="col-12 mt-5">
