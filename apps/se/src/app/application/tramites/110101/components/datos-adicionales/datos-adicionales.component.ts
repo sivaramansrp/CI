@@ -177,13 +177,11 @@ export class DatosAdicionalesComponent implements OnInit {
   }
 
   private updateStore(): void {
-    if (this.formulario.valid) {
-      const NEWVALUES = this.formulario.value;
-      this.datosAdicionalesQuery.formValues$.pipe(take(1)).subscribe((currentValues) => {
-        if (JSON.stringify(currentValues) !== JSON.stringify(NEWVALUES )) {
-          this.datosAdicionalesStore.update({ formValues: NEWVALUES});
-        }
-      });
-    }
+    const NEWVALUES = this.formulario.value;
+    this.datosAdicionalesQuery.formValues$.pipe(take(1)).subscribe((currentValues) => {
+      if (JSON.stringify(currentValues) !== JSON.stringify(NEWVALUES)) {
+        this.datosAdicionalesStore.update({ formValues: NEWVALUES });
+      }
+    });
   }
 }
