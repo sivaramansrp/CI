@@ -40,14 +40,14 @@ export interface FormMercancia {
 
 export interface DatosDeLaState {
   /**
-  * **Valores del Formulario de Mercancía**  
-  * 
-  * Contiene los valores actuales del formulario de mercancía.  
-  * Si no hay datos cargados, su valor será `null`.
-  */
+   * **Valores del Formulario de Mercancía**  
+   * 
+   * Representa los valores actuales del formulario de mercancía.  
+   * Si no hay datos almacenados, su valor será `null`.
+   */
   formValues: FormMercancia | null;
-
 }
+
 
 /**
  * **Crea el estado inicial de DatosDeLaState**
@@ -76,15 +76,15 @@ export function createInitialState(): DatosDeLaState {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'datosDeLa' })
 export class DatosDeLaStore extends Store<DatosDeLaState> {
-   /**
-   * **Constructor de la tienda**
-   *
-   * - Inicializa el estado de la tienda con los valores predeterminados definidos en `createInitialState()`.
-   * - Garantiza que la tienda comience con una estructura de datos válida.
-   *
-   * @constructor
-   */
-   constructor() {
+  /**
+  * **Constructor de la tienda**
+  *
+  * - Inicializa el estado de la tienda con los valores predeterminados definidos en `createInitialState()`.
+  * - Garantiza que la tienda comience con una estructura de datos válida.
+  *
+  * @constructor
+  */
+  constructor() {
     super(createInitialState());
   }
 

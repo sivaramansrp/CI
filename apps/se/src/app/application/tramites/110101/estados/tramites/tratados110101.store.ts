@@ -19,14 +19,19 @@ interface Tratado {
 }
 
 
+/**
+ * **Estado de los tratados en la aplicación**
+ * 
+ * Representa la estructura del estado para los tratados, incluyendo una lista de tratados registrados.
+ */
 export interface TratadosState {
   /** 
- * Lista de tratados registrados en la aplicación.  
- * Cada tratado contiene información sobre el país, el acuerdo y el criterio de origen.
- */
+   * **Lista de tratados registrados**  
+   * Contiene información sobre el país, el acuerdo y el criterio de origen de cada tratado.
+   */
   tratados: Tratado[];
-
 }
+
 
 /**
  * **Akita Store para gestionar tratados**
