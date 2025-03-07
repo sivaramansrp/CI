@@ -1,4 +1,4 @@
-import { CATALOGOS_ID_220501 } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID } from '../../constantes/constantes';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { EventEmitter } from '@angular/core';
@@ -7,11 +7,11 @@ import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
-import { SagarpaService } from '@ng-mf/data-access-user';
-import { TEXTOS_220501 } from '@ng-mf/data-access-user';
+import { SagarpaService } from '../../services/sagarpa/sagarpa.service';
+import { TEXTOS } from '../../constantes/texto-enum';
 import { Tramite220501Store } from '../../../../estados/tramite220501.store';
 import { Validators } from '@angular/forms';
-import { map, never } from 'rxjs';
+import { map } from 'rxjs';
 import mercanciaTable from '../../../../../../../../../libs/shared/theme/assets/json/220501/mercancia-table.json';
 import { merge } from 'rxjs';
 
@@ -53,7 +53,7 @@ export class MedioTransporteComponent implements OnInit {
   /**
    * Constantes de texto.
    */
-  TEXTOS = TEXTOS_220501;
+  TEXTOS = TEXTOS;
 
   /**
    * Indica si se debe mostrar el componente de agregar mercancía.
@@ -128,7 +128,7 @@ export class MedioTransporteComponent implements OnInit {
    */
   private inicializaCatalogos(): void {
     const MEDIODETRANSPORTE$ = this.sagarpaService
-      .getMediodetransporte(CATALOGOS_ID_220501.CAT_MEDIO_DE_TRANSPORTE)
+      .getMediodetransporte(CATALOGOS_ID.CAT_MEDIO_DE_TRANSPORTE)
       .pipe(
         map((resp) => {
           this.medioDeTransporte = resp.data;

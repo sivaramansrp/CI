@@ -11,7 +11,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { SolicitudPantallasService } from '@ng-mf/data-access-user';
+import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { inject } from '@angular/core';

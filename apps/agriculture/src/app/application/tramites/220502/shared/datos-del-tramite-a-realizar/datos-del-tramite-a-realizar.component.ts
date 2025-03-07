@@ -4,8 +4,8 @@ import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
-import { DatosDelTramiteRealizar } from '@ng-mf/data-access-user';
-import { FECHA_INSPECCION_INPUT_220502 } from '@ng-mf/data-access-user';
+import { DatosDelTramiteRealizar } from '../../models/solicitud-pantallas.model';
+import { FECHA_INSPECCION_INPUT } from '../../constantes/texto-enum';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
@@ -14,7 +14,7 @@ import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SolicitudPantallasService } from '@ng-mf/data-access-user';
+import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
 import { Validators } from '@angular/forms';
 import { inject } from '@angular/core';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -82,7 +82,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
   /**
    * Campo de entrada de fecha inicializado con la constante FECHA_INSPECCION.
    */
-  fechaInicioInput: InputFecha = FECHA_INSPECCION_INPUT_220502;
+  fechaInicioInput: InputFecha = FECHA_INSPECCION_INPUT;
 
   /** Constructor para inyectar el servicio de solicitud de pantallas. */
   constructor(private solicitudService: SolicitudPantallasService) {
