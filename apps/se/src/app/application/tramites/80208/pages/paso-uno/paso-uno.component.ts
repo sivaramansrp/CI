@@ -1,5 +1,7 @@
 
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { SECCIONES_TRAMITE_80208 } from '../../constantes/solicitud-modalidad.enums';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente para el asistente de solicitud.
@@ -14,7 +16,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss'
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit {
 
   /**
    * Índice de la pestaña seleccionada.
@@ -22,6 +24,15 @@ export class PasoUnoComponent {
    * @default 1
    */
   indice: number = 1;
+
+  // eslint-disable-next-line no-empty-function
+  constructor(private seccionStore: SeccionLibStore) {
+
+  }
+
+  ngOnInit(): void {
+    this.asignarSecciones();
+  }
 
   /**
    * Lista de secciones del formulario.
@@ -48,5 +59,20 @@ export class PasoUnoComponent {
   seleccionaTab(i: number): void {
     this.indice = i;
     this.tabChanged.emit(i);
+  }
+
+  private asignarSecciones(): void {
+    const SECCIONES: boolean[] = [];
+    const FORMA_VALIDA: boolean[] = [];
+    const PREDETERMINADO = SECCIONES_TRAMITE_80208
+    for (const LLAVE_SECCION in PREDETERMINADO.PASO_1) {
+      if (Object.prototype.hasOwnProperty.call(PREDETERMINADO.PASO_1, LLAVE_SECCION)) {
+        // @ts-expect-error - fix this
+        SECCIONES.push(PREDETERMINADO.PASO_1[LLAVE_SECCION]);
+        FORMA_VALIDA.push(false);
+      }
+    }
+    this.seccionStore.establecerSeccion(SECCIONES);
+    this.seccionStore.establecerFormaValida(FORMA_VALIDA);
   }
 }

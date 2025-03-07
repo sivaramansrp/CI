@@ -11,6 +11,7 @@
  */
 
 import { Component, ViewChild } from '@angular/core';
+import { CambioModalidadQuery } from '../../estados/tramite80208.query';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constantes/solicitud-modalidad.enums';
@@ -32,7 +33,7 @@ interface AccionBoton {
   styleUrl: './solicitud-modalidad-page.component.scss'
 })
 export class SolicitudModalidadPageComponent {
-  
+
   /**
    * @property {Array<ListaPasosWizard>} pasos - Array de pasos del wizard.
    */
@@ -57,6 +58,18 @@ export class SolicitudModalidadPageComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  /**
+ * Notificador para destruir los observables y evitar posibles fugas de memoria.
+ * @private
+ * @type {Subject<void>}
+ */
+
+  constructor(
+    public cambioModalidadQuery: CambioModalidadQuery,
+    // eslint-disable-next-line no-empty-function
+  ) {
+  }
 
   /**
    * Maneja la acción del botón y determina la navegación (siguiente o anterior).

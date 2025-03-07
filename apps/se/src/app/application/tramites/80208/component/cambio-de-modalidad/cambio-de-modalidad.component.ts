@@ -9,7 +9,7 @@ import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
@@ -23,7 +23,7 @@ import { Subject } from 'rxjs';
 
 import { CONFIGURACION_SERVICIO } from '../../modelos/cambio-de-modalidad.model';
 
-import { map, takeUntil } from 'rxjs/operators';
+import { delay, map, takeUntil, tap } from 'rxjs/operators';
 
 import { CambioModalidad } from '../../modelos/cambio-de-modalidad.model';
 import { ServicioInfo } from '../../modelos/cambio-de-modalidad.model';
@@ -150,6 +150,8 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  private seccion!: SeccionLibState;
+
   /**
    * Constructor del componente.
    * 
@@ -161,7 +163,9 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public modalidadService: CambioModalidadService,
     public cambioModalidadQuery: CambioModalidadQuery,
-    public cambioModalidadStore: CambioModalidadStore
+    public cambioModalidadStore: CambioModalidadStore,
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore
   ) {
     // No se necesita lógica de inicialización adicional.
   }
@@ -172,6 +176,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+
     this.cambioModalidadQuery.selectCambioModalidad$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -186,7 +191,32 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
     this.disableFormControls();
     this.getCambioDeModalidad();
     this.getServiciosImmx();
-
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
+    this.cambioDeModalidadForm.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((_value) => {
+          const SECCION: number = 1;
+          const FORMAS_VALIDADAS = this.seccion.formaValida;
+          const CONTROL = this.cambioDeModalidadForm.get('cambioDeModalidad')?.status;
+          if (this.cambioDeModalidadForm.valid || CONTROL === 'VALID' ) {
+            FORMAS_VALIDADAS[SECCION] = true;
+            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+          } else {
+            FORMAS_VALIDADAS[SECCION] = false;
+            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -258,7 +288,6 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
     this.cambioDeModalidadForm.get('folio')?.disable();
     this.cambioDeModalidadForm.get('ano')?.disable();
     this.cambioDeModalidadForm.get('seleccionaModalidad')?.disable();
-    this.cambioDeModalidadForm.get('cambioDeModalidad')?.disable();
   }
 
   /**

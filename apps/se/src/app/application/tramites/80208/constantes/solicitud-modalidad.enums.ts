@@ -27,3 +27,16 @@ export const TEXTOS_REQUISITOS = {
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"</p>`,
 };
 export const SUCECESS_MESSAGE_STAGEONE = `La solicitud ha quedado registrada con el número temporal 202758511. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.`
+
+export const SECCIONES_TRAMITE_80208 = {
+    PASO_1: {
+        VALIDACION_SECCION_1: false,
+        VALIDACION_SECCION_2: true,
+    },
+    PASO_2: {
+        VALIDACION_SECCION: true,
+    },
+    PASO_3: {
+        requiereValidacion: true,
+    },
+};
