@@ -9,7 +9,7 @@ import { enviroment } from '../../../../enviroments/enviroment';
 export class InicioSesionService {
   urlServer = enviroment.URL_SERVER;
 
-  constructor(private http: HttpClient) {}
+  constructor(public http: HttpClient) {}
 
   obtenerToken(body: Login) {
     return this.http.post<TokenResponse>(`${this.urlServer}/login`, body);
