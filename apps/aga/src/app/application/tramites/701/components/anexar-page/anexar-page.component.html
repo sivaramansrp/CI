@@ -1,7 +1,7 @@
 <div class="container">
   <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR"></ng-alert>
 
-  <table>
+  <table class="table">
     <thead class="table-light">
       <tr>
         <th style="width: 690px">Tipo de documentos</th>
@@ -64,7 +64,7 @@
   <div *ngIf="mostrarTabla" class="mt-4">
     <ng-titulo titulo="Adjuntar documentos" />
     <ng-alert [CONTENIDO]="TEXTO_DE_ADJUNTAR"></ng-alert>
-    <table *ngIf="mostrarTabla">
+    <table class="table" *ngIf="mostrarTabla">
       
       <thead class="table-light">
         <tr>
@@ -121,7 +121,7 @@
 
   <div *ngIf="mostrarTablaArchivosSubidos" class="mt-4">
   
-      <table>
+      <table class="table">
       <thead class="table-light">
         <tr>
           <th>Documento</th>
