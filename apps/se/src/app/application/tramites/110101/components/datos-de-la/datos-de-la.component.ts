@@ -27,7 +27,7 @@ import { distinctUntilChanged, Subject, take, takeUntil } from 'rxjs';
   standalone: true,
   imports: [TituloComponent, CommonModule, AlertComponent, ReactiveFormsModule]
 })
-export class DatosDeLaComponent implements OnInit,OnDestroy{
+export class DatosDeLaComponent implements OnInit, OnDestroy {
 
   /**
    * Una cadena que representa la clase CSS para una alerta de advertencia.
@@ -144,17 +144,15 @@ export class DatosDeLaComponent implements OnInit,OnDestroy{
         }
       });
   }
-  
+
   private updateStore(): void {
-    if (this.formMercancia.valid) {
-      const NEWVALUES = this.formMercancia.value;
-      this.datosDeLaQuery.formValues$.pipe(take(1)).subscribe((currentValues) => {
-        if (JSON.stringify(currentValues) !== JSON.stringify(NEWVALUES)) {
-          this.datosDeLaStore.update({ formValues: NEWVALUES });
-        }
-      });
-    }
-  }  
+    const NEWVALUES = this.formMercancia.value;
+    this.datosDeLaQuery.formValues$.pipe(take(1)).subscribe((currentValues) => {
+      if (JSON.stringify(currentValues) !== JSON.stringify(NEWVALUES)) {
+        this.datosDeLaStore.update({ formValues: NEWVALUES });
+      }
+    });
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
