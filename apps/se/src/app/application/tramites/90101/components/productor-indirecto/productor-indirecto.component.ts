@@ -9,19 +9,24 @@
  * @import { ProsecService } from 'libs/shared/data-access-user/src/core/services/90101/prosec.module';
  */
 
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Component } from '@angular/core';
+import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FilaProductos } from '../../models/prosec.module';
 import { ProsecService } from '../../services/prosec.service';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-productor-indirecto',
   templateUrl: './productor-indirecto.component.html',
   styleUrl: './productor-indirecto.component.scss'
 })
-export class ProductorIndirectoComponent {
+export class ProductorIndirectoComponent implements OnInit, OnDestroy  {
 
   /**
    * @property {FormGroup} productorIndirecto - El grupo de formularios para capturar los datos del productor indirecto.
@@ -54,11 +59,57 @@ export class ProductorIndirectoComponent {
     }
   ]
 
-  constructor(private readonly fb: FormBuilder, private ProsecService: ProsecService) {
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  private productorState!: ProsecState
+
+  constructor(
+    private readonly fb: FormBuilder, 
+    private ProsecService: ProsecService,
+    private AutorizacionProsecStore: AutorizacionProsecStore,
+    private AUtorizacionProsecQuery: AUtorizacionProsecQuery
+  ) {
     this.productorIndirecto = this.fb.group({
       contribuyentes: [''],
     });
   }
 
+  ngOnInit(): void {
+    this.AUtorizacionProsecQuery.selectProsec$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.productorState = state as ProsecState;
+        })
+      )
+      .subscribe();
+    this.initActionFormBuild();
+  }
+
+  initActionFormBuild(): void {
+    this.productorIndirecto = this.fb.group({
+      contribuyentes: [
+        this.productorState.contribuyentes,
+        Validators.required
+      ]
+    })
+  }
+
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof AutorizacionProsecStore
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    console.log(VALOR);
+    (this.AutorizacionProsecStore[metodoNombre] as (value: any) => void)(
+      VALOR
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 
 }

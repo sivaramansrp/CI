@@ -11,21 +11,26 @@
  * @import { PLANTACOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FilaPlantas } from '../../models/prosec.module'
 import { ProsecService } from '../../services/prosec.service';
 import { TEXTO } from '../../constantes/prosec.module';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { map } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-domicilios-de-plantas',
   templateUrl: './domicilios-de-plantas.component.html',
   styleUrls: ['./domicilios-de-plantas.component.scss'],
 })
-export class DomiciliosDePlantasComponent implements OnInit {
+export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
 
   /**
    * @property {FormGroup} forma - El grupo de formularios para capturar los datos de las plantas.
@@ -53,6 +58,10 @@ export class DomiciliosDePlantasComponent implements OnInit {
   ActividadProductiva: Catalogo[] = [];
 
   TablaSeleccion = TablaSeleccion;
+
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  private domiciliosState!: ProsecState;
 
   plantaColumnsConfiguracion: ConfiguracionColumna<FilaPlantas>[] = [
     { encabezado: 'Calle', 
@@ -99,18 +108,47 @@ export class DomiciliosDePlantasComponent implements OnInit {
 
 
 
-  constructor(private readonly fb: FormBuilder, private ProsecService: ProsecService) {
+  constructor(
+    private readonly fb: FormBuilder, 
+    private ProsecService: ProsecService, 
+    private AutorizacionProsecStore: AutorizacionProsecStore,
+    private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
+  ) {
     // Constructor logic can be added here if needed
   }
 
   ngOnInit(): void {
+    this.AUtorizacionProsecQuery.selectProsec$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.domiciliosState = state as ProsecState;
+        })
+      )
+      .subscribe();
+    this.initActionFormBuild();
+    this.obtenerLista();
+  }
+
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof AutorizacionProsecStore
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    console.log(VALOR);
+    (this.AutorizacionProsecStore[metodoNombre] as (value: any) => void)(
+      VALOR
+    );
+  }
+
+  initActionFormBuild(): void {
     this.forma = this.fb.group({
-      modalidad: [''],
-      Estado: [''],
-      RepresentacionFederal: [''],
-      ActividadProductiva: ['']
-    });
-    this.obtenerLista()
+      modalidad: [
+        this.domiciliosState.modalidad,
+        Validators.required,
+      ]
+    })
   }
 
   /**
@@ -153,4 +191,22 @@ export class DomiciliosDePlantasComponent implements OnInit {
     this.obtenerListaFederal();
     this.obtenerListaActividad();
   }
+
+  estadoSeleccion(Estado: Catalogo): void {
+    this.AutorizacionProsecStore.setEstado([Estado]);
+  }
+
+  fedralSeleccion(RepresentacionFederal: Catalogo): void {
+    this.AutorizacionProsecStore.setRepresentacionFederal([RepresentacionFederal]);
+  }
+
+  productivaSeleccion(ActividadProductiva: Catalogo): void {
+    this.AutorizacionProsecStore.setActividadProductiva([ActividadProductiva]);
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+  
 }

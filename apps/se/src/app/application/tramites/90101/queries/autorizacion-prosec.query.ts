@@ -1,6 +1,6 @@
 import { AutorizacionProsecStore } from "../estados/autorizacion-prosec.store";
 import { Injectable } from "@angular/core";
-import { ListaDeDatosFinal } from "../models/prosec.module";
+import { ProsecState } from "../estados/autorizacion-prosec.store";
 import { Query } from "@datorama/akita";
 
 
@@ -8,7 +8,12 @@ import { Query } from "@datorama/akita";
  * Query to manage the state of Prosec authorization.
  */
 @Injectable({ providedIn: 'root' })
-export class FitosanitarioQuery extends Query<ListaDeDatosFinal> {
+export class AUtorizacionProsecQuery extends Query<ProsecState> {
+
+    selectProsec$ = this.select((state) => {
+        return state;
+      });
+    
 
     /**
      * Constructor to inject AutorizacionProsecStore.

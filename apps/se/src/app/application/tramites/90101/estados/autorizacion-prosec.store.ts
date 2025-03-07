@@ -1,8 +1,29 @@
 import { ListaDeDatosFinal, Plantas, SectoresYMercancias, createDatosState } from '../models/prosec.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 
+export interface ProsecState {
+    modalidad: string;
+    Estado: Catalogo[];
+    RepresentacionFederal: Catalogo[];
+    ActividadProductiva: Catalogo[];
+    Sector: Catalogo[];
+    Fraccion_arancelaria: string;
+    contribuyentes: string;
+}
 
+export function createInitialState(): ProsecState {
+    return {
+        modalidad: '',
+        Estado: [],
+        RepresentacionFederal: [],
+        ActividadProductiva: [],
+        Sector: [],
+        Fraccion_arancelaria: '',
+        contribuyentes: '',
+    }
+}
 /**
  * Store to manage the state of Prosec authorization.
  */
@@ -10,19 +31,19 @@ import { Injectable } from '@angular/core';
     providedIn: 'root',
 })
 @StoreConfig({ name: 'seccion', resettable: true })
-export class AutorizacionProsecStore extends Store<ListaDeDatosFinal> {
+export class AutorizacionProsecStore extends Store<ProsecState> {
     constructor() {
-        super(createDatosState());
+        super(createInitialState());
     }
 
     /**
      * Updates the state with the information of sectors and goods.
      * @param sectoresYMercancias Data of sectors and goods.
      */
-    public actualizarSectoresYMercancias(sectoresYMercancias: SectoresYMercancias): void {
-        this.update(state => ({
+    public setModalidad(modalidad: string) {
+        this.update((state) => ({
             ...state,
-            sectoresYMercancias: [sectoresYMercancias], // Wraps the data in an array
+            modalidad, // Wraps the data in an array
         }));
     }
 
@@ -30,10 +51,45 @@ export class AutorizacionProsecStore extends Store<ListaDeDatosFinal> {
      * Updates the state with the information of plants.
      * @param Plantas Data of plants.
      */
-    public actualizarPlantas(plantas: Plantas): void {
-        this.update(state => ({
+    public setEstado(Estado: Catalogo[]) {
+        this.update((state) => ({
             ...state,
-            plantas: [plantas], // Wraps the data in an array
+            Estado, // Wraps the data in an array
+        }));
+    }
+
+    public setRepresentacionFederal(RepresentacionFederal: Catalogo[]) {
+        this.update((state) => ({
+            ...state,
+            RepresentacionFederal,
+        }));
+    }
+
+    public setActividadProductiva(ActividadProductiva: Catalogo[]) {
+        this.update((state) => ({
+            ...state,
+            ActividadProductiva,
+        }));
+    }
+
+    public setSector(Sector: Catalogo[]) {
+        this.update((state) => ({
+            ...state,
+            Sector,
+        }));
+    }
+
+    public setFraccionArancelaria(Fraccion_arancelaria: string) {
+        this.update((state) => ({
+            ...state,
+            Fraccion_arancelaria,
+        }));
+    }
+
+    public setcontribuyentes(contribuyentes: string) {
+        this.update((state) => ({
+            ...state,
+            contribuyentes,
         }));
     }
 }

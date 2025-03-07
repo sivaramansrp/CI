@@ -12,14 +12,19 @@
  * @import { SECTORCOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FilaSectors } from '../../models/prosec.module';
 import { PARATEXTO } from '../../constantes/prosec.module';
 import { ProsecService } from '../../services/prosec.service';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 
 @Component({
@@ -27,7 +32,7 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
   templateUrl: './sectores-y-mercancias.component.html',
   styleUrl: './sectores-y-mercancias.component.scss',
 })
-export class SectoresYMercanciasComponent implements OnInit {
+export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
 
   /**
    * @property {FormGroup} sectoresYMercancias - El grupo de formularios para capturar los datos de los sectores y mercancías.
@@ -58,28 +63,66 @@ export class SectoresYMercanciasComponent implements OnInit {
     }
   ]
 
-  constructor(private readonly fb: FormBuilder, private ProsecService: ProsecService) {
-    this.sectoresYMercancias = this.fb.group({
-      sector: [''],
-      Fraccion_arancelaria: [''],
-    });
-  }
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  private sectoresState!: ProsecState
+
+  constructor(private readonly fb: FormBuilder, 
+    private ProsecService: ProsecService, 
+    private AutorizacionProsecStore: AutorizacionProsecStore,
+    private AUtorizacionProsecQuery: AUtorizacionProsecQuery
+  ) {}
 
   /**
    * @method ngOnInit
    * @description Inicializa el componente y obtiene las listas de datos.
    */
+  // ngOnInit(): void {
+  //   this.obtenserLista();
+  // }
+
   ngOnInit(): void {
-    this.obtenserLista();
-  }
+      this.AUtorizacionProsecQuery.selectProsec$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((state) => {
+            this.sectoresState = state as ProsecState;
+          })
+        )
+        .subscribe();
+      this.initActionFormBuild();
+      this.obtenserListaEstado();
+    }
+  
+    initActionFormBuild(): void {
+      this.sectoresYMercancias = this.fb.group({
+        sector: [''],
+        Fraccion_arancelaria: [
+              this.sectoresState.Fraccion_arancelaria,
+              Validators.required
+            ]
+          })
+    }
+
+    setValoresStore(
+      form: FormGroup,
+      campo: string,
+      metodoNombre: keyof AutorizacionProsecStore
+    ): void {
+      const VALOR = form.get(campo)?.value;
+      console.log(VALOR);
+      (this.AutorizacionProsecStore[metodoNombre] as (value: any) => void)(
+        VALOR
+      );
+    }
 
   /**
    * @method obtenserLista
    * @description Obtiene las listas de datos de sectores.
    */
-  obtenserLista(): void {
-    this.obtenserListaEstado();
-  }
+  // obtenserLista(): void {
+  //   this.obtenserListaEstado();
+  // }
 
   /**
    * @method obtenserListaEstado
@@ -89,5 +132,14 @@ export class SectoresYMercanciasComponent implements OnInit {
     this.ProsecService.obtenerMenuDesplegable('sector.json').subscribe(data => {
       this.sector = data as Catalogo[];
     });
+  }
+
+  sectorSeleccion(Sector: Catalogo): void {
+    this.AutorizacionProsecStore.setActividadProductiva([Sector]);
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

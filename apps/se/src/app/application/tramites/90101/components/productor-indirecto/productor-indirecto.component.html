@@ -1,14 +1,24 @@
 <div class="container">
-    <div class="row">
+    <form [formGroup]="productorIndirecto">
         <div class="col-md-4">
+            <div class="form-group">
             <label class="form-label" for="contribuyentes">Registro federal de contribuyentes:</label>
             <input type="text" 
             value=""
             class="form-control" 
             id="contribuyentes"  
-            placeholder="Registro federal de contribuyentes">
+            placeholder="Registro federal de contribuyentes"
+            formControlName="contribuyentes"
+            (change)="
+                setValoresStore(
+                    productorIndirecto,
+                  'contribuyentes',
+                  'setcontribuyentes'
+                )"
+                >
+            </div>
         </div>
-    </div>
+    </form>
     <div class="row mb-5">
         <div class=" text-end mt-5">
             <button class="btn btn-default me-2">Eliminar Productor</button>
