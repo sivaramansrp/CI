@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
+
 import { RouterModule, Routes } from '@angular/router';
+
 import { SanidadCertificadoComponent } from './pages/sanidad-certificado/sanidad-certificado.component';
 const ROUTES: Routes = [ // Renamed to UPPER_CASE
   {
