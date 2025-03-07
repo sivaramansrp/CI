@@ -12,4 +12,15 @@ export class LayoutChoferNacionalService {
   getChoferNacionalData(): Observable<any> {
     return this.http.get<any>(this.urlServer);
   }
+
+  getEstados(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlServer}/estados`);
+  }
+  getMunicipios(claveEstado: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlServer}/municipios?estado=${claveEstado}`);
+  }
+
+  getColonias(claveMunicipio: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlServer}/colonias?municipio=${claveMunicipio}`);
+  }
 }

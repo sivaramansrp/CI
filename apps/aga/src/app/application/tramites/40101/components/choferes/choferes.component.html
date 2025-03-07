@@ -64,7 +64,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let nacion of nacional">
+                <tr *ngFor="let nacion of choferesList$ | async">
                   <td>
                     <input type="checkbox" />
                   </td>
@@ -136,7 +136,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let exterior of nacional">
+                <tr *ngFor="let exterior of choferesextranjerosList$ | async">
                   <td>{{ exterior.nombres }}</td>
                   <td>{{ exterior.nombre }}</td>
                   <td>{{ exterior.calle }}</td>
@@ -211,6 +211,7 @@
                     type="text"
                     class="form-control"
                     formControlName="curp"
+                    (input)="onCurpInput()"
                   />
                 </div>
                 <div
@@ -515,6 +516,7 @@
                       id="entidadFederativaCHN"
                       class="form-control"
                       formControlName="entidadFederativaCHN"
+                      (change)="onEstadoChange($event)"
                     >
                       <option value="">Selecciona un valor</option>
                       <option
@@ -537,6 +539,7 @@
                       id="delegacionCHN"
                       class="form-control"
                       formControlName="delegacionCHN"
+                      (change)="onMunicipioChange($event)"
                     >
                       <option value="">Selecciona un valor</option>
                       <option
