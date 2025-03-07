@@ -18,6 +18,8 @@ export class DatosCertificadoComponent implements OnInit {
   configTableArray = CERTIFICADO_TABLA;
   tableradio = TablaSeleccion.RADIO
   datos:any;
+  selectedRow: any;  
+  selectedRows: any[] = [];  
   constructor(private fb: FormBuilder, private service:CertificadoTecnicoJaponService ) { 
     this.datosdelcertificado = this.fb.group({
       lugar: [""],
@@ -40,12 +42,11 @@ export class DatosCertificadoComponent implements OnInit {
   }
   
   handleFilaSeleccionada(fila: any): void {
-    console.log('Fila seleccionada:', fila);
+    this.selectedRow = fila;
   }
-
   
   handleListaDeFilaSeleccionada(filasSeleccionadas: any[]): void {
-    console.log('Filas seleccionadas:', filasSeleccionadas);
+    this.selectedRows = filasSeleccionadas;
   }
  
 }
