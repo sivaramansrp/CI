@@ -1,6 +1,6 @@
 <div class="container table-container">
   <ng-titulo titulo="Importante" />
-  <form [formGroup]="FormSolicitud">
+  <form [formGroup]="registroParaLaForm">
     <ng-alert [CONTENIDO]="TEXTOS.Importante"></ng-alert>
 
     <div class="row" style="padding-bottom: 20px; text-align: right">
@@ -10,14 +10,14 @@
     </div>
 
     <app-catalogo-select
-      [catalogo]="registro"
-      formControlname="registro"
+      [catalogo]="registroOptions"
+      formControlName="registro"
       [label]="
         '¿Se han realizado previamente importaciones o exportaciones del producto a registrar?'
       "
       [required]="true"
       name="registro"
-      (change)="setValoresStore(FormSolicitud, 'registro', 'setRegistro')"
+      (change)="setValoresStore(registroParaLaForm, 'registro', 'setRegistro')"
     ></app-catalogo-select>
   </form>
 </div>

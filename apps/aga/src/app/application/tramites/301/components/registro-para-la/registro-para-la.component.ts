@@ -5,7 +5,7 @@ import {
   Solicitud301State,
   Tramite301Store,
 } from '../../../../estados/tramites/tramite301.store';
-import { map, Subject, Subscription, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 
 // Importación de constantes desde un archivo de enumeración
 import { Aviso, Importante } from '@ng-mf/data-access-user';
@@ -52,7 +52,14 @@ import {
   standalone: true,
 })
 export class RegistroParaLaComponent implements OnInit, OnDestroy {
-  FormSolicitud!: FormGroup;
+  /**
+   * Formulario principal del componente.
+   * Este formulario contiene el campo de registro de importaciones/exportaciones.
+   *
+   * @type {FormGroup}
+   * @memberof RegistroParaLaComponent
+   */
+  registroParaLaForm!: FormGroup;
 
   /**
    * Constantes importadas desde el archivo de enumeración que contienen textos importantes y de advertencia.
@@ -86,7 +93,7 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
    * @type {CatalogosSelect}
    * @memberof RegistroParaLaComponent
    */
-  public registro!: Catalogo[];
+  public registroOptions!: Catalogo[];
 
   /**
    * Lista de pasos en el flujo del formulario.
@@ -112,6 +119,12 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
     txtBtnSig: 'Continuar', // Texto para el botón de siguiente
   };
 
+  /**
+   * Suscripción a los cambios en el formulario reactivo.
+   *
+   * @type {Subscription}
+   * @memberof RegistroParaLaComponent
+   */
   private subscription: Subscription = new Subscription();
 
   /**
@@ -157,7 +170,7 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
     );
     this.getRegistro(); // Llama al método para obtener los datos de registro
 
-    this.FormSolicitud = this.fb.group({
+    this.registroParaLaForm = this.fb.group({
       registro: [this.solicitudState?.registro, Validators.required],
     });
   }
@@ -169,7 +182,7 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
    * @memberof RegistroParaLaComponent
    */
   public getRegistro(): void {
-    this.registro = [
+    this.registroOptions = [
       { id: 1, descripcion: 'Si' },
       { id: 2, descripcion: 'No' },
     ];

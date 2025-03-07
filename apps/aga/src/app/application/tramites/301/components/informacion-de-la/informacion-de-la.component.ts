@@ -169,6 +169,11 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Maneja el evento de continuar al siguiente paso.
+   * @method continuar
+   * @memberof InformacionDeLaComponent
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
@@ -178,6 +183,11 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
     (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
+  /**
+   * Maneja el evento de continuar al siguiente paso.
+   * @method continuar
+   * @memberof InformacionDeLaComponent
+   */
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
