@@ -1,3 +1,5 @@
+import { TEXTOS } from './tramites/constantes/servicios-extraordinarios.enum';
+import { UppercaseDirective } from './tramites/directives/Uppercase/uppercase.directive';
 export * from './tramites/pages/acuse-page/acuse-page.component';
 
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
@@ -11,6 +13,7 @@ export * from './core/services/shared/validaciones-formulario/validaciones-formu
 export * from './core/services/shared/catalogos/catalogos.service';
 
 export * from './core/models/shared/forms-model';
+export * from './core/models/shared/configuracion-columna.model';
 export * from './core/queries/seccion.query';
 export * from './tramites/constantes/seccionesTramites';
 export * from './core/models/shared/components.model';
@@ -19,11 +22,11 @@ export * from './tramites/components/catalogo-select/catalogo-select.component';
 
 export * from './core/ambientes';
 export * from './core/enums/tipoPersona.enum';
+export * from './core/enums/tabla-seleccion.enum';
 
 export * from './core/services/shared/solicitante/solicitante.service';
 
 export * from './tramites/constantes/servicios-extraordinarios.enum';
-
 export * from './core/services/220471/servicios-pantallas.service';
 export * from './core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 export * from './tramites/constantes/constantes';
@@ -37,6 +40,7 @@ export * from './tramites/components/representante-fiscal/representante-fiscal.c
 export * from './tramites/components/select-paises/select-paises.component';
 export * from './tramites/components/solicitante/solicitante.component';
 export * from './tramites/components/table/table.component';
+export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './tramites/components/terceros/terceros.component';
 export * from './tramites/components/titulo/titulo.component';
 export * from './tramites/components/crosslist/crosslist.component';
@@ -67,11 +71,14 @@ export * from './core/models/303/secciones.model';
 export * from './core/models/usuario/perfilUsuario.model';
 export * from './core/models/usuario/rol.model';
 export * from './core/services/shared/http/http.service';
+export * from './core/services/shared/wizard/wizard.service';
 export * from './core/services/220471/servicios-pantallas.enum';
 export * from './tramites/constantes/regex.constants';
 export * from './core/services/130118/pexim/pexim.service';
+export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
+export * from './core/models/shared/configuracion-columna.model'
 export * from './core/services/220501/revision.service';
 export * from './core/services/220501/sagarpa/sagarpa.service';
 export * from './core/enums/220502/solicitud-pantallas.enum';
@@ -95,3 +102,9 @@ export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
 export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
 export * from './tramites/components/acuse/acuse.component';
+
+export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
+export * from './core/models/shared/configuracion-columna.model';
+export * from './core/enums/tabla-seleccion.enum';
+export * from './tramites/directives/Uppercase/uppercase.directive'
+export * from './tramites/directives/Uppercase/uppercase.directive';
