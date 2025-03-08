@@ -30,7 +30,7 @@ export interface FormaTextProp {
   disabled: boolean,
   validators?: string[],
   placeholder?: string,
-  availableRadioOptions?: string[]
+  availableRadioOptions?: (string | number)[]
 }
 
 export interface CatalogoSelectProp {

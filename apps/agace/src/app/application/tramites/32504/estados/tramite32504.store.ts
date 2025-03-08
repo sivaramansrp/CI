@@ -120,4 +120,11 @@ export class Tramite32504Store extends Store<FormularioGrupo> {
       datosMercanciaSubmanufactura,
     }));
   }
+
+  /**
+   * @description Resets the store to its initial state.
+   */
+  public limpiarFormulario(): void {
+    this.reset();
+  }
 }

@@ -333,20 +333,17 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       ],
     },
   ];
-  valoresSeleccionadosRadio: { [key: string]: string } = {
-    radio3: '',
-    radio4: ''
-  };
   fiscal: FormularioDinamico[] = [];
   formulario!: FormGroup;
   evento = {};
+  inputTypes = InputTypes;
 
   constructor(private fb: FormBuilder, private catalogosServicios: CatalogosService) {
     this.crearFormulario();
   }
 
   ngOnInit(): void {
-    const PERSONA_PRODUCTOR = [
+    const PERSONA_EXPORTADOR = [
       {
         "label": "Física",
         "value": "Física"
@@ -356,7 +353,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
         "value": "Moral"
       }
     ];
-    const PERSONA_EXPORTADOR = [
+    const PERSONA_PRODUCTOR = [
       {
         "label": "Física",
         "value": "Física"
@@ -374,10 +371,6 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     this.configuracion[3].menu[0].props.radioSelectedValue = PERSONA_PRODUCTOR[0].value;
     this.configuracion[4].menu[0].props.radioOptions = PERSONA_EXPORTADOR;
     this.configuracion[4].menu[0].props.radioSelectedValue = PERSONA_EXPORTADOR[0].value;
-    this.valoresSeleccionadosRadio = {
-      radio3: PERSONA_PRODUCTOR[0].value,
-      radio4: PERSONA_EXPORTADOR[0].value
-    };
     this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
     });
@@ -484,8 +477,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * @param claveRadio - La clave de la entrada de radio.
    * @param evento - El nuevo valor de la entrada de radio.
    */
-  cambioValorRadio(claveRadio: string, evento: string | number): void {
-    this.configuracion[3].menu[0].props.radioSelectedValue = evento;
-    this.valoresSeleccionadosRadio[claveRadio] = evento.toString();
+  cambioValorRadio(claveRadio: string, groupIndex: number, menuIndex: number, evento: string | number): void {
+    this.configuracion[groupIndex].menu[menuIndex].props.radioSelectedValue = evento;
   }
 }
