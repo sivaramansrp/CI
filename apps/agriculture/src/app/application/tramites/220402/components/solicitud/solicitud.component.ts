@@ -285,6 +285,7 @@ export class SolicitudComponent {
   mercanciaAgregar() {
     this.datosGeneralesArr.push(this.datosMercancia.get('datosGenerales')?.value);
     this.mercanciaColapsable();
+    this.setValoresStore(this.datosMercancia, 'datosMercancia', 'setDatosMercancia');
   }
 
   /**

@@ -127,6 +127,91 @@ export class Solicitud220402Store extends Store<Solicitud220402State> {
       fechaFinal
     }));
   }
+
+  public setFraccionArancelaria(fraccionArancelaria: string) {
+    this.update((state) => ({
+      ...state,
+      fraccionArancelaria
+    }));
+  }
+
   
+  public setDescdelaFraccion(descdelaFraccion: string) {
+    this.update((state) => ({
+      ...state,
+      descdelaFraccion
+    }));
+  }
+  
+  public setCantidadUMT(cantidadUMT: string) {
+    this.update((state) => ({
+      ...state,
+      cantidadUMT
+    }));
+  }
+
+  public setUMT(UMT: string) {
+    this.update((state) => ({
+      ...state,
+      UMT
+    }));
+  }
+
+  
+  public setCantidadUMC(cantidadUMC: string) {
+    this.update((state) => ({
+      ...state,
+      cantidadUMC
+    }));
+  }
+  
+  public setUMC(UMC: string) {
+    this.update((state) => ({
+      ...state,
+      UMC
+    }));
+  }
+
+  public setPaisdeOrigen(paisdeOrigen: string) {
+    this.update((state) => ({
+      ...state,
+      paisdeOrigen
+    }));
+  }
+
+  public setEntidadFederativadeOrigen(entidadFederativadeOrigen: string) {
+    this.update((state) => ({
+      ...state,
+      entidadFederativadeOrigen
+    }));
+  }
+  
+  public setMunicipiodeOrigen(municipiodeOrigen: string) {
+    this.update((state) => ({
+      ...state,
+      municipiodeOrigen
+    }));
+  }
+
+  public setMarcasDistintivas(marcasDistintivas: string) {
+    this.update((state) => ({
+      ...state,
+      marcasDistintivas
+    }));
+  }
+
+  public setUSO(USO: string) {
+    this.update((state) => ({
+      ...state,
+      USO
+    }));
+  }
+
+  public setDatosMercancia(datosMercancia: string) {
+    this.update((state) => ({
+      ...state,
+      datosMercancia
+    }));
+  }
 
 }

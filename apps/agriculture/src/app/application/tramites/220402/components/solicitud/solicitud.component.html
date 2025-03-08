@@ -51,14 +51,16 @@
       <div class=" row mt-3">
         <div class="col-md-8">
           <app-catalogo-select [catalogo]="options" formControlName="paisDeDestino" [label]="'País de destino'"
-            [required]="true" (change)="setValoresStore(datosDelTramiteRealizar,'paisDeDestino', 'setPaisDeDestino');"></app-catalogo-select>
+            [required]="true"
+            (change)="setValoresStore(datosDelTramiteRealizar,'paisDeDestino', 'setPaisDeDestino');"></app-catalogo-select>
         </div>
       </div>
 
       <div class="row mt-3">
         <div class="col-md-8">
           <app-catalogo-select [catalogo]="options" formControlName="paisDeProcedencia" [label]="'País de procedencia'"
-            [required]="true" (change)="setValoresStore(datosDelTramiteRealizar,'paisDeProcedencia', 'setPaisDeProcedencia');"></app-catalogo-select>
+            [required]="true"
+            (change)="setValoresStore(datosDelTramiteRealizar,'paisDeProcedencia', 'setPaisDeProcedencia');"></app-catalogo-select>
         </div>
       </div>
 
@@ -70,40 +72,41 @@
         <div class="col-md-4">
           <label class="form-check-label" for="rangoDeFechas">Rango de fechas:</label>
           <input class="form-check-input me-3" type="checkbox" value="" id="rangoDeFechas"
-            formControlName="rangoDeFechas" (change)="setValoresStore(datosMercancia,'rangoDeFechas', 'setRangoDeFechas')">
+            formControlName="rangoDeFechas"
+            (change)="setValoresStore(datosMercancia,'rangoDeFechas', 'setRangoDeFechas')">
         </div>
       </div>
       <div class="row mt-3">
-          <!-- <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaInicio($event)"></input-fecha> -->
-          <div class="col-md-4">
-            <label for="fechaInicio" class="form-label">Fecha inicio*:</label>
-            <input class="form-control" type="date" name="fechaInicio" id="fechaInicio" formControlName="fechaInicio"
-              [ngClass]="isValid(datosMercancia,'fechaInicio') ? 'required' : ''"
-              (change)="setValoresStore(datosMercancia,'fechaInicio', 'setFechaInicio')">
+        <!-- <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaInicio($event)"></input-fecha> -->
+        <div class="col-md-4">
+          <label for="fechaInicio" class="form-label">Fecha inicio*:</label>
+          <input class="form-control" type="date" name="fechaInicio" id="fechaInicio" formControlName="fechaInicio"
+            [ngClass]="isValid(datosMercancia,'fechaInicio') ? 'required' : ''"
+            (change)="setValoresStore(datosMercancia,'fechaInicio', 'setFechaInicio')">
 
-            @if (isValid(datosMercancia,'fechaInicio')) {
-            <div class="mensaje-error">
-              Fecha no válida, elija otro día
-            </div>
-            }
+          @if (isValid(datosMercancia,'fechaInicio')) {
+          <div class="mensaje-error">
+            Fecha no válida, elija otro día
+          </div>
+          }
         </div>
         <div class="col-md-4">
           <label for="fechaFinal" class="form-label">Fecha final*:</label>
-            <input class="form-control" type="date" name="fechaFinal" id="fechaFinal" formControlName="fechaFinal"
-              [ngClass]="isValid(datosMercancia,'fechaFinal') ? 'required' : ''" [min]="diaMinimo"
-              (change)="changeFechaFinal()">
+          <input class="form-control" type="date" name="fechaFinal" id="fechaFinal" formControlName="fechaFinal"
+            [ngClass]="isValid(datosMercancia,'fechaFinal') ? 'required' : ''" [min]="diaMinimo"
+            (change)="changeFechaFinal()">
 
-            @if (isValid(datosMercancia,'fechaFinal')) {
-            <div class="mensaje-error">
-              Fecha no válida, elija otro día
-            </div>
-            }
+          @if (isValid(datosMercancia,'fechaFinal')) {
+          <div class="mensaje-error">
+            Fecha no válida, elija otro día
+          </div>
+          }
 
-            @if (intervaloFechaError()) {
-            <div class="mensaje-error">
-              Intervalo de fecha no válido
-            </div>
-            }
+          @if (intervaloFechaError()) {
+          <div class="mensaje-error">
+            Intervalo de fecha no válido
+          </div>
+          }
         </div>
       </div>
 
@@ -170,8 +173,8 @@
                                 <div class="form-group">
                                   <label class="form-label" for="fraccionArancelaria">Fracción arancelaria:</label>
                                   <input class="form-control" id="fraccionArancelaria"
-                                    placeholder="Fracción arancelaria" type="text"
-                                    formControlName="fraccionArancelaria" />
+                                    placeholder="Fracción arancelaria" type="text" formControlName="fraccionArancelaria"
+                                    (change)="setValoresStore(datosGenerales,'fraccionArancelaria', 'setFraccionArancelaria')" />
                                 </div>
                               </div>
                               <div class="col-md-8">
@@ -179,7 +182,8 @@
                                   <label class="form-label" for="descdelaFraccion">Descripción de la fracción:</label>
                                   <input class="form-control" id="descdelaFraccion"
                                     placeholder="Descripción de la fracción" type="text"
-                                    formControlName="descdelaFraccion" />
+                                    formControlName="descdelaFraccion"
+                                    (change)="setValoresStore(datosGenerales,'descdelaFraccion', 'setDescdelaFraccion')" />
                                 </div>
                               </div>
                             </div>
@@ -188,14 +192,15 @@
                                 <div class="form-group">
                                   <label class="form-label" for="cantidadUMT">Cantidad UMT:</label>
                                   <input class="form-control" id="cantidadUMT" placeholder="Cantidad UMT" type="text"
-                                    formControlName="cantidadUMT" />
+                                    formControlName="cantidadUMT"
+                                    (change)="setValoresStore(datosGenerales,'cantidadUMT', 'setCantidadUMT')" />
                                 </div>
                               </div>
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label class="form-label" for="UMT">UMT:</label>
                                   <input class="form-control" id="UMT" placeholder="UMT" type="text"
-                                    formControlName="UMT" />
+                                    formControlName="UMT" (change)="setValoresStore(datosGenerales,'UMT', 'setUMT')" />
                                 </div>
                               </div>
                             </div>
@@ -205,32 +210,33 @@
                                   <label class="form-label" for="cantidadUMC">Cantidad UMC*:</label>
                                   <input class="form-control" id="cantidadUMC" placeholder="Cantidad UMC" type="text"
                                     formControlName="cantidadUMC"
-                                    [ngClass]="isValid(datosGenerales,'cantidadUMC') ? 'required' : ''" />
+                                    [ngClass]="isValid(datosGenerales,'cantidadUMC') ? 'required' : ''"
+                                    (change)="setValoresStore(datosGenerales,'cantidadUMC', 'setCantidadUMC')" />
                                 </div>
                               </div>
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <app-catalogo-select [catalogo]="options" formControlName="UMC" [label]="'UMC'"
-                                    [required]="true"></app-catalogo-select>
+                                    [required]="true" (change)="setValoresStore(datosGenerales,'UMC', 'setUMC')"></app-catalogo-select>
                                 </div>
                               </div>
                             </div>
                             <div class="col-md-12">
                               <div class="col-md-8">
                                 <app-catalogo-select [catalogo]="options" formControlName="paisdeOrigen"
-                                  [label]="'País de origen'" [required]="true"></app-catalogo-select>
+                                  [label]="'País de origen'" [required]="true" (change)="setValoresStore(datosGenerales,'paisdeOrigen', 'setPaisdeOrigen')"></app-catalogo-select>
                               </div>
                             </div>
                             <div class="col-md-12">
                               <div class="col-md-4">
                                 <app-catalogo-select [catalogo]="options" formControlName="entidadFederativadeOrigen"
                                   [label]="'Entidad federativa de
-                                  origen'" [required]="true"></app-catalogo-select>
+                                  origen'" [required]="true" (change)="setValoresStore(datosGenerales,'entidadFederativadeOrigen', 'setEntidadFederativadeOrigen')"></app-catalogo-select>
                               </div>
                               <div class="col-md-4">
                                 <label for="municipiodeOrigen" class="form-label">Municipio de origen*:</label>
                                 <select multiple class="form-select" id="municipiodeOrigen"
-                                  formControlName="municipiodeOrigen">
+                                  formControlName="municipiodeOrigen" (change)="setValoresStore(datosGenerales,'municipiodeOrigen', 'setMunicipiodeOrigen')">
                                   <option value="Municipio 1">Municipio 1</option>
                                   <option value="Municipio 2">Municipio 2</option>
                                   <option value="Municipio 3">Municipio 3</option>
@@ -279,7 +285,7 @@
                                 <div class="form-group">
                                   <label class="form-label" for="marcasDistintivas">Marcas distintivas:</label>
                                   <input class="form-control" id="marcasDistintivas" placeholder="Marcas distintivas"
-                                    type="text" formControlName="marcasDistintivas" />
+                                    type="text" formControlName="marcasDistintivas" (change)="setValoresStore(datosGenerales,'marcasDistintivas', 'setMarcasDistintivas')" />
                                 </div>
                               </div>
                             </div>
@@ -288,7 +294,7 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <app-catalogo-select [catalogo]="options" formControlName="USO" [label]="'USO'"
-                                    [required]="true"></app-catalogo-select>
+                                    [required]="true" (change)="setValoresStore(datosGenerales,'USO', 'setUSO')"></app-catalogo-select>
                                 </div>
                               </div>
                             </div>
@@ -349,8 +355,8 @@
       <div class="row mt-3">
 
         <div class="col-md-5">
-          <app-catalogo-select [catalogo]="options" formControlName="unidadDeVerificar" [label]="'Nombre de la unidad de verificación'"
-            [required]="true"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="options" formControlName="unidadDeVerificar"
+            [label]="'Nombre de la unidad de verificación'" [required]="true"></app-catalogo-select>
         </div>
 
         <div class="col-md-5">

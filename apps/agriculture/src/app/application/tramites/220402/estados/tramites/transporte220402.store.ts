@@ -27,17 +27,17 @@ export class Transporte220402Store extends Store<Transporte220402State> {
     super(createInitialTransporteState());
   }
 
-  public setFraccionArancelaria(fraccionArancelaria: string) {
+  public setMediodeTransporte(mediodeTransporte: string) {
     this.update((state) => ({
       ...state,
-      fraccionArancelaria,
+      mediodeTransporte
     }));
   }
 
-  public setFraccionRegla(reglaFraccion: string) {
+  public setIdentificationDelTransporte(identificationDelTransporte: string) {
     this.update((state) => ({
       ...state,
-      reglaFraccion
+      identificationDelTransporte
     }));
   }
 

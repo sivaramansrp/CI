@@ -5,37 +5,20 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <select-catalogos
-            [catalogosDatos]="tiposDocumentos"
-          ></select-catalogos>
+          <app-catalogo-select [catalogo]="tiposDocumentos.catalogos" formControlName="mediodeTransporte"
+            [label]="'Medio de transporte'" [required]="true"
+            (change)="setValoresStore(transporteForm,'mediodeTransporte', 'setMediodeTransporte')"></app-catalogo-select>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="identificaciónDelTransporte"
-            >Identificación del transporte:</label
-          >
-          <input
-            class="form-control"
-            id="identificaciónDelTransporte"
-            formControlName="identificaciónDelTransporte"
-            placeholder=""
-            type="text"
-          />
+          <label class="form-label" for="identificationDelTransporte">Identificación del transporte:</label>
+          <input class="form-control" id="identificationDelTransporte" formControlName="identificationDelTransporte"
+            placeholder="" type="text" (change)="setValoresStore(transporteForm,'identificationDelTransporte', 'setIdentificationDelTransporte')" />
         </div>
       </div>
     </div>
 
-    <div class="row mt-5 mb-2">
-      <div class="col-md-8">
-        <p>* Campos obligatorios</p>
-      </div>
-      <div class="col-md-4">
-        <div class="btn-group">
-          <button class="btn btn-primary me-2" type="button">Guardar</button>
-          <button class="btn btn-danger" type="button">Continuar</button>
-        </div>
-      </div>
-    </div>
+
   </form>
 </div>
