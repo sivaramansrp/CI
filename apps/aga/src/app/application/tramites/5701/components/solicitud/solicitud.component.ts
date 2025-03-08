@@ -40,8 +40,8 @@ import { datosAgregarFormulario } from '@ng-mf/data-access-user';
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
-import { SeccionQuery } from '@ng-mf/data-access-user';
-import { Tramite5701Query } from '@ng-mf/data-access-user';
+import { SeccionQuery } from '../../../../estados/queries/seccion.query';
+import { Tramite5701Query } from '../../../../estados/queries/tramite5701.query';
 
 @Component({
   selector: 'app-solicitud',
@@ -531,6 +531,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   tipoSolicitudSeleccion(): void {
+    if (this.solicitudState?.tipoSolicitud) {
+      
+      console.log('Al elegir un nuevo tipo de solicitud se borraran todos los datos que ya ha lllenado');
+      
+    }
+
     this.tipoSolicitudSeleccionada = parseInt(
       this.FormSolicitud.get('tipoSolicitud')?.value,
       10
