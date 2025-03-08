@@ -3,7 +3,8 @@
 
 // module.exports = withModuleFederation(config);
 
-
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/naming-convention */
 const { ModuleFederationPlugin } = require('webpack').container;
 const mf = require('@angular-architects/module-federation/webpack');
 const path = require('path');

@@ -3,13 +3,11 @@ import { DatosGrupos } from '../../models/permiso-importacion-modification.model
 import { PermisoImportacionStore } from '../../../../../../../../apps/se/src/app/application/store/130120/permiso-importacion.store';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PermisoImportacionStoreService {
-
-  constructor(private permisoImportacionStore: PermisoImportacionStore) { }
-
-  updateDatos(params: DatosGrupos): void {
-    this.permisoImportacionStore.actualizarDatosGrupos(params);
-  }
+  // constructor(private permisoImportacionStore: PermisoImportacionStore) { }
+  // updateDatos(params: DatosGrupos): void {
+  //   this.permisoImportacionStore.actualizarDatosGrupos(params);
+  // }
 }
