@@ -15,8 +15,7 @@ import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { Observable } from 'rxjs';
 import { RegistroDigitalizarDocumentosService } from '@ng-mf/data-access-user';
-import { TipoDocumento } from '@libs/shared/data-access-user/src/core/models/701/tipo-documento.model';
-
+import { TipoDocumento } from '../../models/701/tipo-documento.model';
 
 /**
  * Componente para filtrar archivos de digitalización.

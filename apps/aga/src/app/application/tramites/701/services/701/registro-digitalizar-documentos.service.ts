@@ -1,7 +1,11 @@
+/* eslint-disable no-empty-function */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @nx/enforce-module-boundaries */
+/* eslint-disable sort-imports */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import{RespuestaCatalogos} from '../../models/shared/catalogos.model';
 import { TipoDocumento } from '../../models/701/tipo-documento.model';
+import{RespuestaCatalogos} from '../../../../../../../../../libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 @Injectable({
   providedIn: 'root',
 })
@@ -20,7 +24,7 @@ export class RegistroDigitalizarDocumentosService {
   
   getDocumentoSelect(){
     console.log("helo");
-    return  this.http.get<TipoDocumento[]>(
+    return this.http.get<TipoDocumento[]>(
       './shared/theme/assets/json/701/documento-select.json'
     )
   }

@@ -1,5 +1,5 @@
-import { Catalogo } from '../shared/catalogos.model';
-
+/* eslint-disable @nx/enforce-module-boundaries */
+import { Catalogo } from '@libs/shared/data-access-user/src';
 /**
  * Interfaz que representa un tipo de documento.
  */

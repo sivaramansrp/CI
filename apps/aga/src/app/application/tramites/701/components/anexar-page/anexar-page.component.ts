@@ -11,14 +11,18 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as bootstrap from 'bootstrap';
-import { AlertComponent, CATALOGOS_ID, TituloComponent } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  CATALOGOS_ID,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 
 // eslint-disable-next-line no-multi-spaces
-import { TEXTOS } from  '@ng-mf/data-access-user';
+import { TEXTOS } from '@ng-mf/data-access-user';
 // eslint-disable-next-line no-multi-spaces
-import { Catalogo } from  '@ng-mf/data-access-user';
-import { CatalogosSelect } from  '@ng-mf/data-access-user';
-import { CatalogosService } from  '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { CatalogosService } from '@ng-mf/data-access-user';
 import { RegistroDigitalizarDocumentosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -45,7 +49,15 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
   templateUrl: './anexar-page.component.html',
   styleUrl: './anexar-page.component.scss',
   standalone: true,
-  imports: [CommonModule,TituloComponent,FormsModule,ReactiveFormsModule,AlertComponent,TablaDinamicaComponent,CatalogoSelectComponent],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    AlertComponent,
+    TablaDinamicaComponent,
+    CatalogoSelectComponent,
+  ],
 })
 export class AnexarPageComponent implements OnInit {
   /**
@@ -111,30 +123,32 @@ export class AnexarPageComponent implements OnInit {
   /**
    * Nombres de los archivos subidos.
    */
-  nombresArchivosSubidos: string[] = new Array(this.tiposDeDocumentos.length).fill('');
+  nombresArchivosSubidos: string[] = new Array(
+    this.tiposDeDocumentos.length
+  ).fill('');
 
   /**
    * Indicador para mostrar el modal.
    */
   mostrarModal: boolean = false;
-  
 
   /**
    * URL de vista previa del documento.
    */
   URLdevistapreviadeldocumento: SafeResourceUrl | null = null;
-  
+
   /**
    * Documentos disponibles para selección.
    */
   disponiblesDocumentos: any[] = ['Document A'];
-  
+
   /**
    * Documentos seleccionados por el usuario.
    */
-  documentosSeleccion: string[] = new Array(this.tiposDeDocumentos.length).fill('');
-  
-  
+  documentosSeleccion: string[] = new Array(this.tiposDeDocumentos.length).fill(
+    ''
+  );
+
   /**
    * Indicador para mostrar la tabla.
    */
@@ -143,7 +157,9 @@ export class AnexarPageComponent implements OnInit {
   /**
    * Tamaños de los archivos subidos.
    */
-  Tamanosdearchivo: (number | null)[] = new Array(this.tiposDeDocumentos.length).fill(null);
+  Tamanosdearchivo: (number | null)[] = new Array(
+    this.tiposDeDocumentos.length
+  ).fill(null);
 
   /**
    * Resoluciones de los archivos subidos.
@@ -152,7 +168,6 @@ export class AnexarPageComponent implements OnInit {
   getTiposDocumentosSubscription: any;
   getTipoDocumentoSubscription: any;
 
-  
   /**
    * Constructor del componente.
    * @param catalogosServices Servicio para obtener catálogos.
@@ -171,18 +186,6 @@ export class AnexarPageComponent implements OnInit {
   ngOnInit(): void {
     this.getTiposDocumentos();
     this.getTipoDocumento();
-    // this.documentosSeleccionados = [
-    //   {
-    //           id: 1,
-    //           descripcion: 'Documentos que ampare el valor de la mercancía',
-    //         },
-    //         {
-    //           id: 2,
-    //           descripcion:
-    //             'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-    //         },
-    //       ];
-      
   }
 
   /**
@@ -214,11 +217,9 @@ export class AnexarPageComponent implements OnInit {
           required: false,
           primerOpcion: 'Selecciona un valor',
           catalogos: response,
-        }
+        };
       }
-      
     });
-    
   }
 
   /**
@@ -233,9 +234,7 @@ export class AnexarPageComponent implements OnInit {
    * Maneja la selección de un documento.
    * @param index Índice del documento seleccionado.
    */
-  enDocumentSelect(index: number): void {
-    
-  }
+  enDocumentSelect(index: number): void {}
 
   /**
    * Muestra la vista previa del documento.
@@ -325,6 +324,8 @@ export class AnexarPageComponent implements OnInit {
     this.mostrarTablaArchivosSubidos = false;
     this.procesoCompletado = true;
   }
+
+  
 
   ngOnDestroy(): void {
     if (this.getTiposDocumentosSubscription) {
