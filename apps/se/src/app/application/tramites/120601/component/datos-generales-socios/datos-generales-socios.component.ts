@@ -13,14 +13,13 @@ import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 
 import { DatosPasos, datosSociosTable } from '@ng-mf/data-access-user';
-
+import { Subject, takeUntil } from 'rxjs';
 import { DATOS_GENERALES_EXTRANJEROS } from '@ng-mf/data-access-user';
 import { DATOS_GENERALES_SOCIOS } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { Tramite120601Query } from '../../estados/tramite-120601.query';
 import { Tramite120601Store } from '../../estados/tramite-120601.store';
-import { Subject, takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar los datos generales de socios.

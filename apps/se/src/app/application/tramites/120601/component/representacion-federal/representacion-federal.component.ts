@@ -7,9 +7,10 @@ import { Tramite120601Store } from '../../estados/tramite-120601.store';
 import { Catalogo, CatalogoSelectComponent, DATOS_GENERALES_REPRESENTACION, SelectCatalogosComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
+import { Subject, takeUntil } from 'rxjs';
 import { representacionFederal, representacionFederalTable } from '@ng-mf/data-access-user';
 import { tipoDeEmpresa } from '@ng-mf/data-access-user';
-import { Subject, takeUntil } from 'rxjs';
+
 
 /**
  * Componente que representa la representación federal en un proceso de múltiples pasos.

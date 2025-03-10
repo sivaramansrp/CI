@@ -5,8 +5,9 @@ import { Tramite120601Query } from '../../estados/tramite-120601.query';
 import { Tramite120601Store } from '../../estados/tramite-120601.store';
 
 import { Catalogo, CatalogoSelectComponent, SelectCatalogosComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { tipoDeEmpresa} from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
+import { tipoDeEmpresa} from '@ng-mf/data-access-user';
+
 
 
 /**
