@@ -1,22 +1,13 @@
-import { Component } from '@angular/core';
-import {
-  Catalogo
-} from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import {
-  InputFecha,
-} from 'libs/shared/data-access-user/src/core/models/shared/components.model';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FECHA_FINAL, FECHA_INICIO } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ValidacionesFormularioService } from 'libs/shared/data-access-user/src/core/services/shared/validaciones-formulario/validaciones-formulario.service';
-import {
-  FECHA_FINAL,
-  FECHA_INICIO,
-} from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
-import { MediodetransporteService } from 'libs/shared/data-access-user/src/core/services/220402/medio-de-transporte.service';
-
-import { map, merge, takeUntil, ReplaySubject, Subject } from 'rxjs';
-import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/solicitud220402.store';
-import { Solicitud220402Query } from '../../estados/queries/solicitud220402.query';
-
+import { InputFecha } from '@ng-mf/data-access-user';
+import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
+import { MediodetransporteService } from '../../services/medio-de-transporte.service';
+import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
+import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 
 /**
@@ -33,7 +24,7 @@ import { Solicitud220402Query } from '../../estados/queries/solicitud220402.quer
  * Componente que representa la página de solicitud.
  */
 
-export class SolicitudComponent {
+export class SolicitudComponent implements OnInit, OnDestroy{
 
   /**
    * Estado de la solicitud.
@@ -62,7 +53,7 @@ export class SolicitudComponent {
   /**
    * Indica si la persona mercancia es visible.
    */
-  mercanciaCollapsable: boolean = false;
+  mercanciaCollapsable: boolean = true;
 
   /**
    * Lista de catálogos de Seleccione una opción.
@@ -98,7 +89,7 @@ export class SolicitudComponent {
     private mediodetransporteService: MediodetransporteService,
     private solicitud220402Store: Solicitud220402Store,
     private solicitud220402Query: Solicitud220402Query
-  ) {}
+  ) { }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -119,9 +110,9 @@ export class SolicitudComponent {
       )
       .subscribe();
 
-      // Inicializar el formulario principal
+    // Inicializar el formulario principal
     this.crearFormSolicitud();
-    
+
   }
 
   /**
@@ -151,6 +142,7 @@ export class SolicitudComponent {
     return this.datosMercancia.get('datosGenerales') as FormGroup;
   }
 
+
   /**
 * Obtiene el grupo de formulario 'numeroDescDeLosEmpaques' del formulario principal 'FormSolicitud'.
 *
@@ -160,6 +152,23 @@ export class SolicitudComponent {
     return this.FormSolicitud.get('numeroDescDeLosEmpaques') as FormGroup;
   }
 
+  /**
+* Obtiene el grupo de formulario 'unidadDeVerificacion' del formulario principal 'FormSolicitud'.
+*
+* @returns {FormGroup} El grupo de formulario 'unidadDeVerificacion'.
+*/
+  get unidadDeVerificacion(): FormGroup {
+    return this.FormSolicitud.get('unidadDeVerificacion') as FormGroup;
+  }
+
+  /**
+  * Obtiene el grupo de formulario 'unidadExpedidoraFitosanitario' del formulario principal 'FormSolicitud'.
+  *
+  * @returns {FormGroup} El grupo de formulario 'unidadExpedidoraFitosanitario'.
+  */
+  get unidadExpedidoraFitosanitario(): FormGroup {
+    return this.FormSolicitud.get('unidadExpedidoraFitosanitario') as FormGroup;
+  }
   /**
    * Verifica si un campo específico en un formulario es válido.
    *
@@ -176,22 +185,23 @@ export class SolicitudComponent {
      * Inicializa los catálogos necesarios para el formulario.
      */
   private inicializaCatalogos(): void {
-  
-      this.mediodetransporteService
-            .getMedioDeTransporte()
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe((data): void => {
-              this.options = data as Catalogo[];
-            });
-    }
 
-    
+    this.mediodetransporteService
+      .getMedioDeTransporte()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data: any): void => {
+        this.options = data as Catalogo[];
+      });
+  }
+
+
 
   /**
    * Crea el formulario de solicitud.
    * @return {void} No retorna ningún valor.
    */
   crearFormSolicitud(): void {
+    console.log(this.solicitudState);
     this.FormSolicitud = this.fb.group({
       datosDelTramiteRealizar: this.fb.group({
         tipoDeCertificado: [this.solicitudState?.tipoDeCertificado, Validators.required],
@@ -219,8 +229,7 @@ export class SolicitudComponent {
           UMC: [this.solicitudState?.UMC, Validators.required],
           paisdeOrigen: [this.solicitudState?.paisdeOrigen, Validators.required],
           entidadFederativadeOrigen: [this.solicitudState?.entidadFederativadeOrigen, Validators.required],
-          municipiodeOrigen: [[this.solicitudState?.municipiodeOrigen], Validators.required],
-          datosOrigen: this.fb.array(this.solicitudState?.datosOrigen),
+          municipiodeOrigen: [this.solicitudState?.municipiodeOrigen, Validators.required],
           marcasDistintivas: [this.solicitudState?.marcasDistintivas, Validators.required],
           USO: [this.solicitudState?.USO, Validators.required]
         })
@@ -230,21 +239,24 @@ export class SolicitudComponent {
         empaques: [this.solicitudState?.empaques, [Validators.required]]
       }),
       unidadDeVerificacion: this.fb.group({
-        unidadDeVerificar: ['', [Validators.required]],
-        terceroEspecialista: ['', [Validators.required]]
+        unidadDeVerificar: [this.solicitudState?.unidadDeVerificar, [Validators.required]],
+        terceroEspecialista: [this.solicitudState?.terceroEspecialista, [Validators.required]]
       }),
       unidadExpedidoraFitosanitario: this.fb.group({
         entidadFederative: [this.solicitudState?.entidadFederative, [Validators.required]],
-        terceroEspecialista: [this.solicitudState?.terceroEspecialista, [Validators.required]]
+        fitosanitario: [this.solicitudState?.fitosanitario, [Validators.required]]
       })
     });
+    this.federativaOrigen = this.datosGenerales.get('entidadFederativadeOrigen')?.value || 'NA';
+    this.origenArr = this.datosGenerales.get('municipiodeOrigen')?.value || [];
+
   }
 
   /**
    * Método para cambiar la fecha incio.
    * @param nuevo_valor Nuevo valor de la fecha incio.
    */
-  cambioFechaInicio(nuevo_valor: string) {
+  cambioFechaInicio(nuevo_valor: string): void {
     this.datosMercancia.get('fechaInicio')?.setValue(nuevo_valor);
     this.datosMercancia.get('fechaInicio')?.markAsUntouched();
   }
@@ -253,7 +265,7 @@ export class SolicitudComponent {
    * Método para cambiar la fecha final.
    * @param nuevo_valor Nuevo valor de la fecha final.
    */
-  cambioFechaFinal(nuevo_valor: string) {
+  cambioFechaFinal(nuevo_valor: string): void {
     this.datosMercancia.get('fechaFinal')?.setValue(nuevo_valor);
     this.datosMercancia.get('fechaFinal')?.markAsUntouched();
   }
@@ -262,7 +274,7 @@ export class SolicitudComponent {
    * Método para mostrar los campos correspondientes a una mercancia.
    * @returns void
    */
-  mercanciaColapsable() {
+  mercanciaColapsable(): void {
     this.mercanciaCollapsable = !this.mercanciaCollapsable;
   }
 
@@ -282,10 +294,9 @@ export class SolicitudComponent {
    * @method mercanciaAgregar
    * @memberof SolicitudComponent
    */
-  mercanciaAgregar() {
+  mercanciaAgregar(): void {
     this.datosGeneralesArr.push(this.datosMercancia.get('datosGenerales')?.value);
     this.mercanciaColapsable();
-    this.setValoresStore(this.datosMercancia, 'datosMercancia', 'setDatosMercancia');
   }
 
   /**
@@ -298,7 +309,7 @@ export class SolicitudComponent {
    * - `origenArr` se establece con el valor del control `municipiodeOrigen` 
    *   o un arreglo vacío si el control no tiene valor.
    */
-  municipioAgregar() {
+  municipioAgregar(): void {
     this.federativaOrigen = this.datosGenerales.get('entidadFederativadeOrigen')?.value || 'NA';
     this.origenArr = this.datosGenerales.get('municipiodeOrigen')?.value || [];
   }
@@ -311,9 +322,10 @@ export class SolicitudComponent {
    * 
    * @returns {void}
    */
-  municipioEliminar() {
-    const municipioOrigin = this.datosGenerales.get('municipiodeOrigen')?.value;
-    this.origenArr = this.origenArr.filter((item: any) => item.indexOf(municipioOrigin) == -1);
+  municipioEliminar(): void {
+    const MUNICIPIO_ORIGIN = this.datosGenerales.get('municipiodeOrigen')?.value;
+    this.origenArr = this.origenArr.filter((item: any) => item.indexOf(MUNICIPIO_ORIGIN) === -1);
+    this.datosGenerales.get('municipiodeOrigen')?.setValue(this.origenArr);
   }
 
   /**
@@ -325,8 +337,8 @@ export class SolicitudComponent {
    * @returns {void}
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud220402Store): void {
-    const valor = form.get(campo)?.value;
-    (this.solicitud220402Store[metodoNombre] as (value: any) => void)(valor);
+    const VALOR = form.get(campo)?.value;
+    (this.solicitud220402Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
   changeFechaFinal(): void {

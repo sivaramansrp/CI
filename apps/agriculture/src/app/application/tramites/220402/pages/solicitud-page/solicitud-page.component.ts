@@ -1,12 +1,12 @@
-import { Component, ViewChild } from '@angular/core';
-import { PASOS } from 'libs/shared/data-access-user/src/tramites/constantes/pantallas-captura.enum';
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/220402/pantallas-captura.model';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { DatosPasos } from '@ng-mf/data-access-user';
+import { ListaPasosWizard } from '../../models/pantallas-captura.model';
 import { map, Subject, takeUntil } from 'rxjs';
-import { SeccionQuery } from 'libs/shared/data-access-user/src/core/queries/seccion.query';
+import { PASOS } from '@ng-mf/data-access-user';
+import { SeccionQuery } from'../../../../estados/queries/seccion.query';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
-import { SECCIONES_TRAMITE_220402 } from 'libs/shared/data-access-user/src/tramites/constantes/seccionesTramites';
+import { SECCIONES_TRAMITE_220402 } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  *
@@ -35,7 +35,7 @@ interface AccionBoton {
 /**
  * Componente que representa la página de solicitud.
  */
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnInit{
 
   /**
    * @property {ListaPasosWizard[]} pasos - Lista de pasos del wizard.
@@ -92,7 +92,7 @@ export class SolicitudPageComponent {
    * @description Método que se ejecuta al inicializar el componente.
    * Suscribe al estado de la sección y asigna las secciones.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -122,7 +122,7 @@ export class SolicitudPageComponent {
    *
    * @returns {void}
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -136,13 +136,15 @@ export class SolicitudPageComponent {
   /**
    * Método para asignar las secciones existentes al stored
    */
-  private asignarSecciones() {
-    let secciones: boolean[] = Object.values(SECCIONES_TRAMITE_220402.PASO_1);
-    let formaValida: boolean[] = [];
-    for (let llaveSeccion in SECCIONES_TRAMITE_220402.PASO_1) {
-      formaValida.push(false);
+  private asignarSecciones(): void {
+    const SECCIONES: boolean[] = Object.values(SECCIONES_TRAMITE_220402.PASO_1);
+    const FORM_VALIDA: boolean[] = [];
+    for (const lLAVESECCIONE in SECCIONES_TRAMITE_220402.PASO_1) {
+      if(lLAVESECCIONE) {
+        FORM_VALIDA.push(false);
+      }
     }
-    this.seccionStore.establecerSeccion(secciones);
-    this.seccionStore.establecerFormaValida(formaValida);
+    this.seccionStore.establecerSeccion(SECCIONES);
+    this.seccionStore.establecerFormaValida(FORM_VALIDA);
   }
 }

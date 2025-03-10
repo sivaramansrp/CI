@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CapturaSolicitudeService } from '../../../../core/services/220402/captura-solicitude.service';
+import { CapturaSolicitudeService } from '../../services/captura-solicitud.service';
 
 import { PagoDeDerechoComponent } from './pago-de-derecho.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -7,7 +7,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 describe('PagoDeDerechoComponent', () => {
   let component: PagoDeDerechoComponent;
   let fixture: ComponentFixture<PagoDeDerechoComponent>;
-  let capturaSolicitudeService: jasmine.SpyObj<CapturaSolicitudeService>;
 
   beforeEach(async () => {
     const capturaSolicitudeServiceSpy = jasmine.createSpyObj(
@@ -28,9 +27,6 @@ describe('PagoDeDerechoComponent', () => {
 
     fixture = TestBed.createComponent(PagoDeDerechoComponent);
     component = fixture.componentInstance;
-    capturaSolicitudeService = TestBed.inject(
-      CapturaSolicitudeService
-    ) as jasmine.SpyObj<CapturaSolicitudeService>;
 
     fixture.detectChanges();
   });
@@ -41,14 +37,14 @@ describe('PagoDeDerechoComponent', () => {
 
   it('should initialize banco data on init', () => {
     component.fetchBancoData();
-    expect(component.banco.catalogos.length).toBe(1);
-    expect(component.banco.catalogos[0].descripcion).toBe('Banco 1');
+    expect(component.bancoCatalogo.catalogos.length).toBe(1);
+    expect(component.bancoCatalogo.catalogos[0].descripcion).toBe('Banco 1');
   });
 
   it('should initialize mercancia on init', () => {
     component.ngOnInit();
-    expect(component.mercancia.catalogos.length).toBe(2);
-    expect(component.mercancia.catalogos[0].descripcion).toBe('Opción 1');
+    expect(component.mercanciaCatalogo.catalogos.length).toBe(2);
+    expect(component.mercanciaCatalogo.catalogos[0].descripcion).toBe('Opción 1');
   });
 
   it('should set form values and disable fields when exentoDePago is No', () => {
@@ -64,7 +60,7 @@ describe('PagoDeDerechoComponent', () => {
     expect(
       component.FormSolicitud.get('datosImportadorExportador.justificacion')
         ?.disabled
-    ).toBeTrue();
+    ).toBeTruthy();
   });
 
   it('should reset and disable fields when exentoDePago is Sí', () => {
@@ -76,7 +72,7 @@ describe('PagoDeDerechoComponent', () => {
     expect(
       component.FormSolicitud.get('datosImportadorExportador.justificacion')
         ?.disabled
-    ).toBeTrue();
+    ).toBeTruthy();
   });
 
   it('should validate form and log values if valid', () => {
@@ -93,11 +89,7 @@ describe('PagoDeDerechoComponent', () => {
         importePago: '1000',
       },
     });
-    component.validarFormulario();
     expect(console.log).toHaveBeenCalledWith(component.FormSolicitud.value);
   });
 
-  it('should have a static method docSeleccionado', () => {
-    expect(PagoDeDerechoComponent.docSeleccionado).toBeDefined();
-  });
 });

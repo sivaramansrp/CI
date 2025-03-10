@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitudComponent } from './solicitud.component';
-import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
@@ -37,14 +37,14 @@ describe('SolicitudComponent', () => {
 
   it('should toggle mercanciaCollapsable when mercancia_colapsable is called', () => {
     const initialState = component.mercanciaCollapsable;
-    component.mercancia_colapsable();
+    component.mercanciaColapsable();
     expect(component.mercanciaCollapsable).toBe(!initialState);
   });
 
   it('should remove an item from datosGeneralesArr when mercancia_borrar is called', () => {
     component.datosGeneralesArr.push({});
     const initialLength = component.datosGeneralesArr.length;
-    component.mercancia_borrar(0);
+    component.mercanciaBorrar(0);
     expect(component.datosGeneralesArr.length).toBe(initialLength - 1);
   });
 

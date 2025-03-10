@@ -114,3 +114,4 @@ export * from './tramites/components/acuse/acuse.component';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './core/models/shared/configuracion-columna.model';
 export * from './core/enums/tabla-seleccion.enum';
+export { TEXTOS_REQUISITOS } from './tramites/constantes/certificado-zoosanitario.enum';

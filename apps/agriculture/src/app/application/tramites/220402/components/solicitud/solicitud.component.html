@@ -217,26 +217,30 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <app-catalogo-select [catalogo]="options" formControlName="UMC" [label]="'UMC'"
-                                    [required]="true" (change)="setValoresStore(datosGenerales,'UMC', 'setUMC')"></app-catalogo-select>
+                                    [required]="true"
+                                    (change)="setValoresStore(datosGenerales,'UMC', 'setUMC')"></app-catalogo-select>
                                 </div>
                               </div>
                             </div>
                             <div class="col-md-12">
                               <div class="col-md-8">
                                 <app-catalogo-select [catalogo]="options" formControlName="paisdeOrigen"
-                                  [label]="'País de origen'" [required]="true" (change)="setValoresStore(datosGenerales,'paisdeOrigen', 'setPaisdeOrigen')"></app-catalogo-select>
+                                  [label]="'País de origen'" [required]="true"
+                                  (change)="setValoresStore(datosGenerales,'paisdeOrigen', 'setPaisdeOrigen')"></app-catalogo-select>
                               </div>
                             </div>
                             <div class="col-md-12">
                               <div class="col-md-4">
                                 <app-catalogo-select [catalogo]="options" formControlName="entidadFederativadeOrigen"
                                   [label]="'Entidad federativa de
-                                  origen'" [required]="true" (change)="setValoresStore(datosGenerales,'entidadFederativadeOrigen', 'setEntidadFederativadeOrigen')"></app-catalogo-select>
+                                  origen'" [required]="true"
+                                  (change)="setValoresStore(datosGenerales,'entidadFederativadeOrigen', 'setEntidadFederativadeOrigen')"></app-catalogo-select>
                               </div>
                               <div class="col-md-4">
                                 <label for="municipiodeOrigen" class="form-label">Municipio de origen*:</label>
                                 <select multiple class="form-select" id="municipiodeOrigen"
-                                  formControlName="municipiodeOrigen" (change)="setValoresStore(datosGenerales,'municipiodeOrigen', 'setMunicipiodeOrigen')">
+                                  formControlName="municipiodeOrigen"
+                                  (change)="setValoresStore(datosGenerales,'municipiodeOrigen', 'setMunicipiodeOrigen')">
                                   <option value="Municipio 1">Municipio 1</option>
                                   <option value="Municipio 2">Municipio 2</option>
                                   <option value="Municipio 3">Municipio 3</option>
@@ -285,7 +289,8 @@
                                 <div class="form-group">
                                   <label class="form-label" for="marcasDistintivas">Marcas distintivas:</label>
                                   <input class="form-control" id="marcasDistintivas" placeholder="Marcas distintivas"
-                                    type="text" formControlName="marcasDistintivas" (change)="setValoresStore(datosGenerales,'marcasDistintivas', 'setMarcasDistintivas')" />
+                                    type="text" formControlName="marcasDistintivas"
+                                    (change)="setValoresStore(datosGenerales,'marcasDistintivas', 'setMarcasDistintivas')" />
                                 </div>
                               </div>
                             </div>
@@ -294,7 +299,8 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <app-catalogo-select [catalogo]="options" formControlName="USO" [label]="'USO'"
-                                    [required]="true" (change)="setValoresStore(datosGenerales,'USO', 'setUSO')"></app-catalogo-select>
+                                    [required]="true"
+                                    (change)="setValoresStore(datosGenerales,'USO', 'setUSO')"></app-catalogo-select>
                                 </div>
                               </div>
                             </div>
@@ -339,12 +345,14 @@
           <div class="form-group">
             <label class="form-label" for="numero">Número*:</label>
             <input class="form-control" id="numero" placeholder="numero" type="number" formControlName="numero"
-              [ngClass]="isValid(numeroDescDeLosEmpaques,'numero') ? 'required' : ''" />
+              [ngClass]="isValid(numeroDescDeLosEmpaques,'numero') ? 'required' : ''"
+              (change)="setValoresStore(numeroDescDeLosEmpaques,'numero', 'setNumero')" />
           </div>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="options" formControlName="empaques" [label]="'Descripción de los empaques'"
-            [required]="true"></app-catalogo-select>
+            [required]="true"
+            (change)="setValoresStore(numeroDescDeLosEmpaques,'empaques', 'setEmpaques')"></app-catalogo-select>
         </div>
       </div>
 
@@ -356,12 +364,14 @@
 
         <div class="col-md-5">
           <app-catalogo-select [catalogo]="options" formControlName="unidadDeVerificar"
-            [label]="'Nombre de la unidad de verificación'" [required]="true"></app-catalogo-select>
+            [label]="'Nombre de la unidad de verificación'" [required]="true"
+            (change)="setValoresStore(unidadDeVerificacion,'unidadDeVerificar', 'setUnidadDeVerificar')"></app-catalogo-select>
         </div>
 
         <div class="col-md-5">
           <app-catalogo-select [catalogo]="options" formControlName="terceroEspecialista"
-            [label]="'Nombre del tercero especialista fitosanitario'" [required]="true"></app-catalogo-select>
+            [label]="'Nombre del tercero especialista fitosanitario'" [required]="true"
+            (change)="setValoresStore(unidadDeVerificacion,'terceroEspecialista', 'setTerceroEspecialista')"></app-catalogo-select>
         </div>
       </div>
 
@@ -374,12 +384,14 @@
 
         <div class="col-md-5">
           <app-catalogo-select [catalogo]="options" formControlName="entidadFederative"
-            [label]="'Entidad Federativa de Unidad Expedidora'" [required]="true"></app-catalogo-select>
+            [label]="'Entidad Federativa de Unidad Expedidora'" [required]="true"
+            (change)="setValoresStore(unidadExpedidoraFitosanitario,'entidadFederative', 'setEntidadFederative')"></app-catalogo-select>
         </div>
 
         <div class="col-md-5">
-          <app-catalogo-select [catalogo]="options" formControlName="terceroEspecialista"
-            [label]="'Módulo de certificado fitosanitario'" [required]="true"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="options" formControlName="fitosanitario"
+            [label]="'Módulo de certificado fitosanitario'" [required]="true"
+            (change)="setValoresStore(unidadExpedidoraFitosanitario,'fitosanitario', 'setFitosanitario')"></app-catalogo-select>
         </div>
 
       </div>

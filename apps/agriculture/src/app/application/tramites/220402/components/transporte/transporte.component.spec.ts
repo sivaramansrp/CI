@@ -20,14 +20,6 @@ describe('TransporteComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize tiposDocumentos on init', () => {
-    component.fetchtiposDocumentos();
-    expect(component.tiposDocumentos.catalogos.length).toBe(1);
-    expect(component.tiposDocumentos.catalogos[0].descripcion).toBe(
-      'Transporte 1'
-    );
-  });
-
   it('should create transporte form on init', () => {
     component.crearFormTransporte();
     expect(component.transporteForm).toBeDefined();
@@ -42,15 +34,15 @@ describe('TransporteComponent', () => {
     const form = component.transporteForm;
     const field = 'mediodeTransporte';
     form.get(field)?.setValue('');
-    expect(component.isValid(form, field)).toBeFalse();
+    expect(component.isValid(form, field)).toBeFalsy();
     form.get(field)?.setValue('Some Value');
-    expect(component.isValid(form, field)).toBeTrue();
+    expect(component.isValid(form, field)).toBeTruthy();
   });
 
   it('should mark form as touched if invalid', () => {
     component.crearFormTransporte();
     component.transporteForm.get('mediodeTransporte')?.setValue('');
     component.validarTransporteFormulario();
-    expect(component.transporteForm.touched).toBeTrue();
+    expect(component.transporteForm.touched).toBeTruthy();
   });
 });

@@ -1,27 +1,26 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReplaySubject, takeUntil, Subject, map } from 'rxjs';
-import { CatalogosSelect } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { HttpCoreService } from 'libs/shared/data-access-user/src/core/services/shared/http/http.service';
-import { ValidacionesFormularioService } from 'libs/shared/data-access-user/src/core/services/shared/validaciones-formulario/validaciones-formulario.service';
+import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { HttpCoreService } from '@ng-mf/data-access-user';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { Transporte220402State, Transporte220402Store } from '../../estados/tramites/transporte220402.store';
-import { MediodetransporteService } from 'libs/shared/data-access-user/src/core/services/220402/medio-de-transporte.service';
-import { Transporte220402Query } from '../../estados/queries/transporte220402.query';
-
+import { Catalogo } from '@ng-mf/data-access-user';
+import { MediodetransporteService } from '../../services/medio-de-transporte.service';
+import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
+import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
 @Component({
   selector: 'app-transporte',
   templateUrl: './transporte.component.html',
   styleUrl: './transporte.component.scss',
 })
-export class TransporteComponent implements OnDestroy {
+export class TransporteComponent implements OnDestroy, OnInit {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
      * Estado de la transporte.
      */
-  public transporteState!: Transporte220402State;
+  public transporteState!: Solicitud220402State;
 
   private destroyNotifier$: Subject<void> = new Subject();
 
@@ -45,8 +44,8 @@ export class TransporteComponent implements OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private httpCoreService: HttpCoreService,
     private mediodetransporteService: MediodetransporteService,
-    private transporte220402Store: Transporte220402Store,
-    private transporte220402Query: Transporte220402Query
+    private solicitud220402Store: Solicitud220402Store,
+    private solicitud220402Query: Solicitud220402Query
   ) {
     this.fetchTiposDocumentos();
   }
@@ -60,7 +59,7 @@ export class TransporteComponent implements OnDestroy {
      * @returns {void}
      */
     ngOnInit(): void {
-      this.transporte220402Query.selectTransporte$
+      this.solicitud220402Query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
@@ -77,10 +76,10 @@ export class TransporteComponent implements OnDestroy {
   /**
    * Este método se utiliza para crear la forma del transporte. - 220401
    */
-  crearFormTransporte() {
+  crearFormTransporte(): void {
     this.transporteForm = this.fb.group({
       mediodeTransporte: [this.transporteState?.mediodeTransporte, [Validators.required]],
-      identificationDelTransporte: [this.transporteState?.identificationDelTransporte]
+      identificacionDelTransporte: [this.transporteState?.identificacionDelTransporte]
     });
   }
 
@@ -90,17 +89,16 @@ export class TransporteComponent implements OnDestroy {
    * @param field: campo del formulario
    * @returns Validaciones del formulario
    */
-  isValid(form: FormGroup, field: string) {
-    return this.validacionesService.isValid(form, field);
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
   }
 
   /**
    * Este método se utiliza para marcar los controles del formulario como tocados. - 220401
    */
-  validarTransporteFormulario() {
+  validarTransporteFormulario(): void {
     if (this.transporteForm.invalid) {
       this.transporteForm.markAllAsTouched();
-      return;
     }
   }
   /**
@@ -123,9 +121,9 @@ export class TransporteComponent implements OnDestroy {
      * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
      * @returns {void}
      */
-    setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Transporte220402Store): void {
-      const valor = form.get(campo)?.value;
-      (this.transporte220402Store[metodoNombre] as (value: any) => void)(valor);
+    setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud220402Store): void {
+      const VALOR = form.get(campo)?.value;
+      (this.solicitud220402Store[metodoNombre] as (value: any) => void)(VALOR);
     }
 
   /**

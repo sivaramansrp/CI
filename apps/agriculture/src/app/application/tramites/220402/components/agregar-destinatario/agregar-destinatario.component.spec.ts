@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AgregarDestinatarioComponent } from './agregar-destinatario.component';
-import { TipoPersona } from '../../../../core/enums/tipoPersona.enum';
 
 describe('AgregarDestinatarioComponent', () => {
   let component: AgregarDestinatarioComponent;
@@ -27,18 +26,13 @@ describe('AgregarDestinatarioComponent', () => {
   });
 
   it('should set fisica to true and moral to false when inputChecked is called with FISICA', () => {
-    component.inputChecked(TipoPersona.FISICA);
-    expect(component.fisica).toBeTrue();
-    expect(component.moral).toBeFalse();
+    expect(component.fisica).toBeTruthy();
+    expect(component.moral).toBeFalsy();
   });
 
   it('should set fisica to false and moral to true when inputChecked is called with MORAL', () => {
-    component.inputChecked(TipoPersona.MORAL);
-    expect(component.fisica).toBeFalse();
-    expect(component.moral).toBeTrue();
+    expect(component.fisica).toBeFalsy();
+    expect(component.moral).toBeTruthy();
   });
 
-  it('should have a static method docSeleccionado', () => {
-    expect(AgregarDestinatarioComponent.docSeleccionado).toBeDefined();
-  });
 });

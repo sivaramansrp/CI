@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { CapturaSolicitudeService } from 'libs/shared/data-access-user/src/core/services/220402/captura-solicitud.service';
-
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-
-import { CatalogosSelect } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
+import { CapturaSolicitudeService } from '../../services/captura-solicitud.service';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Derecho220402State, Derecho220402Store } from '../../estados/tramites/derecho220402.store';
+import { MediodetransporteService } from '../../services//medio-de-transporte.service';
+import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
+import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
+import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-pago-de-derecho',
@@ -13,20 +15,13 @@ import { Derecho220402State, Derecho220402Store } from '../../estados/tramites/d
   styleUrl: './pago-de-derecho.component.scss',
 })
 export class PagoDeDerechoComponent implements OnInit {
-
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
-       * Estado de la transporte.
-       */
-  public transporteState: Derecho220402State = {
-    exentoDePago: '',
-    nombreImportExport: '',
-    justificacion: '',
-    claveDeReferencia: '',
-    cadenaDependencia: '',
-    llaveDePago: '',
-    fechaPago: '',
-    importePago: ''
-  };
+     * Estado de la transporte.
+     */
+  public derechoState!: Solicitud220402State;
+
+  private destroyNotifier$: Subject<void> = new Subject();
 
   FormSolicitud!: FormGroup;
 
@@ -36,11 +31,20 @@ export class PagoDeDerechoComponent implements OnInit {
 
   bancoSeleccionado!: Catalogo;
 
-  bancoCatalogo!: CatalogosSelect;
+  public bancoCatalogo: CatalogosSelect = {
+    labelNombre: 'Banco',
+    required: true,
+    primerOpcion: 'Selecciona un valor',
+    catalogos: [],
+  };
 
   constructor(
     private fb: FormBuilder,
-    private captuaservice: CapturaSolicitudeService
+    private captuaservice: CapturaSolicitudeService,
+    private solicitud220402Store: Solicitud220402Store,
+    private solicitud220402Query: Solicitud220402Query,
+    private validacionesService: ValidacionesFormularioService,
+    private mediodetransporteService: MediodetransporteService
   ) {
     this.fetchBancoData();
   }
@@ -50,18 +54,12 @@ export class PagoDeDerechoComponent implements OnInit {
   }
 
   fetchBancoData(): void {
-    this.captuaservice.getBanco().subscribe((resp) => {
-      if (resp.code === 200) {
-        const response = resp.data;
-
-        this.bancoCatalogo = {
-          labelNombre: 'Banco*',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: response,
-        };
-      }
-    });
+    this.mediodetransporteService
+      .getMedioDeTransporte()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data): void => {
+        this.bancoCatalogo.catalogos = data as Catalogo[];
+      });
   }
   /**
    * Hook del ciclo de vida de Angular que se llama después de que la vista del componente se ha inicializado completamente.
@@ -73,16 +71,27 @@ export class PagoDeDerechoComponent implements OnInit {
 
   ngOnInit(): void {
     this.getMercancia();
+
+    this.solicitud220402Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.derechoState = seccionState;
+        })
+      )
+      .subscribe();
+
     this.FormSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
-        exentoDePago: [this.transporteState?.exentoDePago, Validators.required],
-        nombreImportExport: [this.transporteState?.nombreImportExport, Validators.required],
-        justificacion: [this.transporteState?.justificacion, Validators.required],
-        claveDeReferencia: [this.transporteState?.claveDeReferencia, Validators.required],
-        cadenaDependencia: [this.transporteState?.cadenaDependencia, Validators.required],
-        llaveDePago: [this.transporteState?.llaveDePago, Validators.required],
-        fechaPago: [this.transporteState?.fechaPago, Validators.required],
-        importePago: [this.transporteState?.importePago, Validators.required],
+        exentoDePago: [this.derechoState?.exentoDePago, Validators.required],
+        nombreImportExport: [this.derechoState?.nombreImportExport, Validators.required],
+        justificacion: [this.derechoState?.justificacion, Validators.required],
+        claveDeReferencia: [this.derechoState?.claveDeReferencia, Validators.required],
+        cadenaDependencia: [this.derechoState?.cadenaDependencia, Validators.required],
+        banco: [this.derechoState?.banco, Validators.required],
+        llaveDePago: [this.derechoState?.llaveDePago, Validators.required],
+        fechaPago: [this.derechoState?.fechaPago, Validators.required],
+        importePago: [this.derechoState?.importePago, Validators.required],
       }),
     });
     // Activa la lógica cuando el formulario se ha inicializado
@@ -160,7 +169,7 @@ export class PagoDeDerechoComponent implements OnInit {
    *   - `descripcion`: Una cadena de texto que describe la opción. Actualmente, ambas opciones tienen la misma descripción 'Opción 1'.
    */
 
-  public getMercancia() {
+  public getMercancia(): void {
     this.mercanciaCatalogo = {
       labelNombre: 'Mercancía',
       required: true,
@@ -177,16 +186,37 @@ export class PagoDeDerechoComponent implements OnInit {
       ],
     };
   }
+
   /**
-   * Valida el formulario y registra los valores del formulario si el formulario es válido.
-   *
-   * Este método verifica si el grupo de formularios FormSolicitud es válido.
-   * Si el formulario es válido, registra los valores del formulario en la consola.
+   * Este método se utiliza para validar la forma del transporte. - 220401
+   * @param form: Forma del transporte
+   * @param field: campo del formulario
+   * @returns Validaciones del formulario
    */
-  validarFormulario() {
-    
+  isValid(form: FormGroup, field: string) {
+    return this.validacionesService.isValid(form, field);
   }
-  public static docSeleccionado(e: unknown): void {
-  
+
+  /**
+       * Establece los valores en el store de tramite5701.
+       *
+       * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+       * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+       * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+       * @returns {void}
+       */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud220402Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.solicitud220402Store[metodoNombre] as (value: any) => void)(VALOR);
   }
+
+  /**
+* Obtiene el grupo de formulario 'datosImportadorExportador' del formulario principal 'FormSolicitud'.
+*
+* @returns {FormGroup} El grupo de formulario 'datosImportadorExportador'.
+*/
+  get datosImportadorExportador(): FormGroup {
+    return this.FormSolicitud.get('datosImportadorExportador') as FormGroup;
+  }
+
 }

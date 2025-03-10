@@ -1,37 +1,36 @@
-import { NgModule } from '@angular/core';
+import { AgregarDestinatarioComponent } from './components/agregar-destinatario/agregar-destinatario.component';
+import { AgregarTransporteComponent } from '@ng-mf/data-access-user';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { CrosslistComponent } from '@ng-mf/data-access-user';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { InputCheckComponent } from '@ng-mf/data-access-user';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
+import { InputHoraComponent } from '@ng-mf/data-access-user';
+import { NavComponent } from '@ng-mf/data-access-user';
+import { NgModule } from '@angular/core';
+import { PagoDeDerechoComponent } from './components/pago-de-derecho/pago-de-derecho.component';
 import { PantallasCapturaRoutingModule } from './pantallas-captura-routing.module';
-import { RouterModule } from '@angular/router';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { NavComponent } from 'libs/shared/data-access-user/src/tramites/components/nav/nav.component';
-import { SolicitanteComponent } from 'libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { SolicitudComponent } from './components/solicitud/solicitud.component';
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
-import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { FirmaElectronicaComponent } from 'libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
-import { SelectCatalogosComponent } from 'libs/shared/data-access-user/src/tramites/components/select-catalogos/select-catalogos.component';
-import { AnexarDocumentosComponent } from 'libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component';
-import { SharedModule } from 'libs/shared/data-access-user/src/tramites/shared.module';
-import { InputCheckComponent } from 'libs/shared/data-access-user/src/tramites/components/input-check/input-check.component';
-import { InputHoraComponent } from 'libs/shared/data-access-user/src/tramites/components/input-hora/input-hora.component';
-import { InputFechaComponent } from 'libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
-import { CrosslistComponent } from 'libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
-import { AgregarTransporteComponent } from 'libs/shared/data-access-user/src/tramites/components/agregar-transporte/agregar-transporte.component';
-import { RepresentanteFiscalComponent } from 'libs/shared/data-access-user/src/tramites/components/representante-fiscal/representante-fiscal.component';
-import { SelectPaisesComponent } from 'libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { TransporteComponent } from './components/transporte/transporte.component';
-import { PagoDeDerechoComponent } from './components/pago-de-derecho/pago-de-derecho.component';
-
-import { AgregarDestinatarioComponent } from './components/agregar-destinatario/agregar-destinatario.component';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RepresentanteFiscalComponent } from '@ng-mf/data-access-user';
+import { RouterModule } from '@angular/router';
+import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
+import { SelectPaisesComponent } from '@ng-mf/data-access-user';
+import { SharedModule } from '@ng-mf/data-access-user';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { SolicitudComponent } from './components/solicitud/solicitud.component';
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { TransporteComponent } from './components/transporte/transporte.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
+
 
 @NgModule({
   declarations: [
@@ -40,7 +39,6 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    PasoCuatroComponent,
     TransporteComponent,
     PagoDeDerechoComponent,
     AgregarDestinatarioComponent,
