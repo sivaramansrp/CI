@@ -1,6 +1,5 @@
 <div class="container">
   <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR"></ng-alert>
-
   <table class="table">
     <thead class="table-light">
       <tr>
@@ -14,17 +13,17 @@
         <td>{{ docType }}</td>
         <td>
           <ng-container *ngIf="!procesoCompletado; else fileNameDisplay">
-            <select
-              class="form-select"
-              [(ngModel)]="documentosSeleccion[i]"
-              (change)="enDocumentSelect(i)"
-            >
-              <option value="">-- Adjunta nuevo documento</option>
-              <option *ngFor="let doc of disponiblesDocumentos" [value]="doc">
-                {{ doc }}
-              </option>
-            </select>
-           
+          <app-catalogo-select
+          id="disponiblesDocumentos"
+          [catalogo]="disponiblesDocumentos.catalogos"
+          [label]="disponiblesDocumentos.labelNombre"
+          [placeholder]="disponiblesDocumentos.primerOpcion"
+          [required]="disponiblesDocumentos.required"
+          [isDisabled]="false"
+          [(ngModel)]="documentosSeleccion[i]" 
+          (change)="enDocumentSelect(i)"
+        ></app-catalogo-select>
+   
           </ng-container>
           <ng-template #fileNameDisplay>
             {{ nombresArchivosSubidos[i] }}

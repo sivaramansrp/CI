@@ -19,12 +19,13 @@ import { TEXTOS } from  '@ng-mf/data-access-user';
 import { Catalogo } from  '@ng-mf/data-access-user';
 import { CatalogosSelect } from  '@ng-mf/data-access-user';
 import { CatalogosService } from  '@ng-mf/data-access-user';
-import { RegistroDigitalizarDocumentosService } from '@ng-mf/data-access-user';
+import { RegistroDigitalizarDocumentosService } from '../../services/registro-digitalizar-documentos.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+
 /**
  * Constante de texto de alerta para terceros.
  */
@@ -119,16 +120,20 @@ export class AnexarPageComponent implements OnInit {
   mostrarModal: boolean = false;
   
 
+
   /**
    * URL de vista previa del documento.
    */
   URLdevistapreviadeldocumento: SafeResourceUrl | null = null;
-  
+  disponiblesDocumentos!: CatalogosSelect;
   /**
    * Documentos disponibles para selección.
    */
-  disponiblesDocumentos: any[] = ['Document A'];
-  
+  // disponiblesDocumentos: Catalogo[] = ['Document A','Document B','Document C'];
+
+  // catalogo: Catalogo[] = this.disponiblesDocumentos;
+   
+
   /**
    * Documentos seleccionados por el usuario.
    */
@@ -171,17 +176,7 @@ export class AnexarPageComponent implements OnInit {
   ngOnInit(): void {
     this.getTiposDocumentos();
     this.getTipoDocumento();
-    // this.documentosSeleccionados = [
-    //   {
-    //           id: 1,
-    //           descripcion: 'Documentos que ampare el valor de la mercancía',
-    //         },
-    //         {
-    //           id: 2,
-    //           descripcion:
-    //             'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-    //         },
-    //       ];
+    this.getDocumentos();
       
   }
 
@@ -215,12 +210,24 @@ export class AnexarPageComponent implements OnInit {
           primerOpcion: 'Selecciona un valor',
           catalogos: response,
         }
-      }
-      
+      } 
     });
-    
   }
 
+  getDocumentos(): void {
+    this.registrodigitalizar.getDocumentos().subscribe((resp) => {
+      if (resp.code === 200) {
+        const response = resp.data;
+ 
+        this.disponiblesDocumentos = {
+          labelNombre: '',
+          required: false,
+          primerOpcion: '--Adjunta nuveo documento',
+          catalogos: response,
+        };
+      }
+    });
+  }
   /**
    * Verifica si todos los documentos han sido seleccionados.
    * @returns Verdadero si todos los documentos han sido seleccionados, falso en caso contrario.
@@ -231,9 +238,9 @@ export class AnexarPageComponent implements OnInit {
 
   /**
    * Maneja la selección de un documento.
-   * @param index Índice del documento seleccionado.
+   * @param _index Índice del documento seleccionado.
    */
-  enDocumentSelect(index: number): void {
+  enDocumentSelect(_index: number): void {
     
   }
 

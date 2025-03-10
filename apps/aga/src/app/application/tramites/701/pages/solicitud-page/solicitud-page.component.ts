@@ -33,6 +33,7 @@ interface AccionBoton {
   templateUrl: './solicitud-page.component.html',
   styles: ``,
    standalone: true,
+   
     imports: [BtnContinuarComponent,CommonModule,FormsModule,PasoTresComponent,PasoDosComponent,PasoUnoComponent,ReactiveFormsModule,WizardComponent],
 })
 export class SolicitudPageComponent implements OnInit {
