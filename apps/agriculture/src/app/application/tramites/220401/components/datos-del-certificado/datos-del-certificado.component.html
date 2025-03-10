@@ -21,8 +21,8 @@
   <form [formGroup]="formGroup1">
     <ng-titulo titulo="Unidad expedidora"></ng-titulo>
  
-    <app-input-radio class="fw-semibold" [radioOptions]="radioBoton" [selectedValue]="defaultSelect" [isRequired]="true"
-        (valueChange)="onValueChange($event)" [layout]="'horizontal'"></app-input-radio>
+    <app-input-radio class="fw-semibold" [radioOptions]="radioBoton" [selectedValue]="defaultSelect" [isRequired]="true" formControlName="osia"  (valueChange)="onValueChange($event)"
+    [layout]="'horizontal'"  (change)="setValoresStore(datosdelForm,'osia', 'setosia')" ></app-input-radio>
   
         <div *ngIf="defaultSelect === 'oficina central'">
               <div class="row">
@@ -63,5 +63,5 @@
             <button class="btn btn-default me-2">Guardar</button>
             <button class="btn btn-primary">Continuar</button>
         </div>
-        </form>
+     
 </div>
