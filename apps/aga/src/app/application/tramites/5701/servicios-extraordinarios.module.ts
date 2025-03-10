@@ -77,7 +77,9 @@ import { EvaluarDictamenComponent } from './pages/evaluar-dictamen/evaluar-dicta
     forwardRef(() => WizardComponent),
     ToastrModule.forRoot()
   ],
-  exports: [],
+  exports: [
+    PasoUnoComponent
+  ],
   providers: [
     ToastrService,
     CatalogosService
