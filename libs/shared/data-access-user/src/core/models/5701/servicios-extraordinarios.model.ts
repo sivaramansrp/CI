@@ -48,9 +48,9 @@ export interface DatosImportadorExportador {
   nombre: string;
   desNumeroRegistro: string;
   programa: string;
-  immex: string;
+  desImmex: string;
   immexValue: string;
-  industriaAutomotriz: string;
+  desIndustrialAutomotriz: string;
   tipoEmpresaCertificada: string;
   idSocioComercial: string;
   opEconomicoAut: boolean;

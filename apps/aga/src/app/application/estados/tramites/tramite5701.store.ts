@@ -19,9 +19,9 @@ export interface Solicitud5701State {
   nombre: string;
   desNumeroRegistro: string;
   programa: string;
-  immex: string;
-  immexValue: string;
-  industriaAutomotriz: string;
+  desImmex: string;
+  desImmexValue: string;
+  desIndustrialAutomotriz: string;
   tipoEmpresaCertificada: string;
   idSocioComercial: string;
   socioComercial: boolean;
@@ -83,9 +83,9 @@ export function createInitialState(): Solicitud5701State {
     nombre: '',
     desNumeroRegistro: '',
     programa: '',
-    immex: '',
-    immexValue: '',
-    industriaAutomotriz: '',
+    desImmex: '',
+    desImmexValue: '',
+    desIndustrialAutomotriz: '',
     tipoEmpresaCertificada: '',
     idSocioComercial: '',
     socioComercial: false,
@@ -181,24 +181,24 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setImmex(immex: string): void {
+  public setdesImmex(desImmex: string): void {
     this.update((state) => ({
       ...state,
-      immex,
+      desImmex,
     }));
   }
 
-  public setImmexValue(immexValue: string): void {
+  public setdesImmexValue(desImmexValue: string): void {
     this.update((state) => ({
       ...state,
-      immexValue,
+      desImmexValue,
     }));
   }
 
-  public setIndustriaAutomotriz(industriaAutomotriz: string): void {
+  public setDesIndustriaAutomotriz(desIndustrialAutomotriz: string): void {
     this.update((state) => ({
       ...state,
-      industriaAutomotriz,
+      desIndustrialAutomotriz,
     }));
   }
 

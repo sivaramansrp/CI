@@ -35,8 +35,8 @@
       "certificaiones": {
         "desNumeroRegistro": "",
         "programa": "",
-        "immex": "",
-        "industriaAutomotriz": "",
+        "desImmex": "",
+        "desIndustrialAutomotriz": "",
         "tipoEmpresaCertificada": "",
         "idSocioComercial": "",
         "socioComercial": false,

@@ -107,18 +107,20 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="immex">IMMEX (Número/aaaa):</label>
+            <label class="form-label" for="desImmex"
+              >Immex (Número/aaaa):</label
+            >
             <input
               class="form-control"
-              id="immex"
+              id="desImmex"
               placeholder=""
               type="text"
-              formControlName="immex"
+              formControlName="desImmex"
               (change)="
                 setValoresStore(
                   datosImportadorExportador,
-                  'immex',
-                  'setImmexValue'
+                  'desImmex',
+                  'setdesImmexValue'
                 )
               "
             />
@@ -127,20 +129,20 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="industriaAutomotriz"
+            <label class="form-label" for="desIndustrialAutomotriz"
               >Industria Automotriz:</label
             >
             <input
               class="form-control"
-              id="industriaAutomotriz"
+              id="desIndustrialAutomotriz"
               placeholder=""
               type="text"
-              formControlName="industriaAutomotriz"
+              formControlName="desIndustrialAutomotriz"
               (change)="
                 setValoresStore(
                   datosImportadorExportador,
-                  'industriaAutomotriz',
-                  'setIndustriaAutomotriz'
+                  'desIndustrialAutomotriz',
+                  'setDesIndustriaAutomotriz'
                 )
               "
             />
@@ -150,7 +152,7 @@
 
       <div class="row mt-2">
         <div class="col-md-12">
-          <label for="certificacion_a">Tipo de empresa certificada</label>
+          <label for="tipoEmpresa">Tipo de empresa certificada</label>
         </div>
 
         <div class="col-md-6">
@@ -161,7 +163,7 @@
                 type="radio"
                 name="tipoEmpresaCertificada"
                 value="a"
-                id="certificacion_a"
+                id="certificacionALab"
                 formControlName="tipoEmpresaCertificada"
                 (change)="
                   setValoresStore(
@@ -171,7 +173,7 @@
                   )
                 "
               />
-              <label class="form-check-label" for="certificacion_a"
+              <label class="form-check-label" for="certificacionALab"
                 >I.V.A e I.E.P.S Certificación A:</label
               >
             </div>
@@ -183,7 +185,7 @@
                 type="radio"
                 name="tipoEmpresaCertificada"
                 value="aa"
-                id="certificacion_aa"
+                id="certificacionAALab"
                 formControlName="tipoEmpresaCertificada"
                 (change)="
                   setValoresStore(
@@ -193,7 +195,7 @@
                   )
                 "
               />
-              <label class="form-check-label" for="certificacion_aa"
+              <label class="form-check-label" for="certificacionAALab"
                 >I.V.A e I.E.P.S Certificación AA:</label
               >
             </div>
@@ -204,8 +206,8 @@
                 class="form-check-input"
                 type="radio"
                 name="tipoEmpresaCertificada"
-                value="oea"
-                id="certificacion_oea"
+                value="aaa"
+                id="certificacionAAALab"
                 formControlName="tipoEmpresaCertificada"
                 (change)="
                   setValoresStore(
@@ -215,7 +217,7 @@
                   )
                 "
               />
-              <label class="form-check-label" for="certificacion_oea"
+              <label class="form-check-label" for="certificacionAAALab"
                 >I.V.A e I.E.P.S Certificación AAA:</label
               >
             </div>
@@ -289,14 +291,19 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="idSocioComercial"
-              >ID Socio comercial:</label
-            >
+              >ID Socio comercial @if(isRequired()) {*}:
+            </label>
             <input
               class="form-control"
               id="idSocioComercial"
               placeholder=""
               type="text"
               formControlName="idSocioComercial"
+              [ngClass]="
+                isValid(datosImportadorExportador, 'idSocioComercial')
+                  ? 'required'
+                  : ''
+              "
             />
           </div>
         </div>
@@ -594,7 +601,6 @@
           ></app-catalogo-select>
         </div>
       </div>
-
     </div>
 
     }

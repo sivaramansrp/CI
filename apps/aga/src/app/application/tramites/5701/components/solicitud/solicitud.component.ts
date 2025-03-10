@@ -1,4 +1,4 @@
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import {
   DESPACHO_DD,
@@ -31,7 +31,7 @@ import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../estados/tramites/tramite5701.store';
-import { Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
+import { Subject, delay, map, max, merge, takeUntil, tap } from 'rxjs';
 import { CatalogosService } from '@ng-mf/data-access-user';
 
 import { FechasService } from '@ng-mf/data-access-user';
@@ -244,6 +244,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     return this.validacionesService.isValid(form, field)!;
   }
 
+  isRequired(): boolean {
+    const CONTROL = this.datosImportadorExportador.get('idSocioComercial') as FormControl;
+
+    if (CONTROL) {
+      const REQUERIDO = CONTROL.hasValidator(Validators.required);
+      return REQUERIDO;
+    }
+
+    return false;
+
+  }
+
   /**
    * Verifica si hay un error de intervalo de fecha en los datos del servicio.
    * @returns {boolean} - `true` si hay un error de intervalo de fecha y el campo ha sido tocado, de lo contrario `false`.
@@ -362,9 +374,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.solicitudState?.desNumeroRegistro,
           [Validators.maxLength(25)],
         ],
-        programa: [this.solicitudState?.programa],
-        immex: [this.solicitudState?.immex],
-        industriaAutomotriz: [this.solicitudState?.industriaAutomotriz],
+        programa: [this.solicitudState?.programa, [Validators.maxLength(300)]],
+        desdesImmex: [this.solicitudState?.desImmex],
+        desIndustrialAutomotriz: [this.solicitudState?.desIndustrialAutomotriz],
         tipoEmpresaCertificada: [this.solicitudState?.tipoEmpresaCertificada],
         socioComercial: [this.solicitudState?.socioComercial],
         opEconomicoAut: [this.solicitudState?.opEconomicoAut],
@@ -531,7 +543,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   // *Eventos de los componentes hijos
   busqueda_rfc(): void {
-    if(this.datosImportadorExportador.get('RFCImpExp')?.valid) {
+    if (this.datosImportadorExportador.get('RFCImpExp')?.valid) {
       const RFC_IMP_EXP =
         this.datosImportadorExportador.get('RFCImpExp')?.value;
       // Aqui se hará la busqueda del rfc, para obtener el nombre
@@ -539,12 +551,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.datosImportadorExportador,
         'nombre'
       );
-  
+
       const NOMBRE =
         this.datosImportadorExportador.get('nombre')?.value;
       this.tramite5701Store.setRFCImpExp(RFC_IMP_EXP);
       this.tramite5701Store.setNombre(NOMBRE);
-    } 
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -630,11 +642,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   socioComercialChange(): void {
-    const socioComercial =
+    const SOCIO_COMERCIAL =
       this.datosImportadorExportador.get('socioComercial')?.value;
-    if (socioComercial) {
+    if (SOCIO_COMERCIAL) {
       this.datosImportadorExportador.get('idSocioComercial')?.enable();
+      this.datosImportadorExportador.get('idSocioComercial')?.setValidators([Validators.required, Validators.maxLength(30)],);
+      this.datosImportadorExportador.get('idSocioComercial')?.updateValueAndValidity();
     } else {
+      this.datosImportadorExportador.get('idSocioComercial')?.clearValidators();
+      this.datosImportadorExportador.get('idSocioComercial')?.updateValueAndValidity();
+      this.datosImportadorExportador.get('idSocioComercial')?.reset();
       this.datosImportadorExportador.get('idSocioComercial')?.disable();
     }
 
