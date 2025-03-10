@@ -3,43 +3,83 @@
     <form [formGroup]="formCombinacion">
         <div class="row mb-3">
             <div class="col-md-4">
-                <select-catalogos [catalogosDatos]="especie"
-                                  (valorSeleccion)="docSeleccionado($event)">
-                </select-catalogos>
+              
+                <app-catalogo-select
+                [catalogo]="especie"
+                [tooltipQuestionCircle]="false"
+                [label]="'Especie*'"
+                [placeholder]="'Seleccione un valor'"
+                formControlName="especie"
+                (change)="docSeleccionado()"
+              ></app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <select-catalogos [catalogosDatos]="funcionZootecnica"
-                                  (valorSeleccion)="docSeleccionado($event)">
-                </select-catalogos>
+              
+                <app-catalogo-select
+                [catalogo]="funcionZootecnica"
+                [tooltipQuestionCircle]="false"
+                [label]="'Función Zootécnica*'"
+                [placeholder]="'Seleccione un valor'"
+                formControlName="funcionZootecnica"
+                (change)="docSeleccionado()"
+              ></app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <select-catalogos [catalogosDatos]="mercancia"
-                                  (valorSeleccion)="docSeleccionado($event)">
-                </select-catalogos>
+               
+                <app-catalogo-select
+                [catalogo]="mercancia"
+                [tooltipQuestionCircle]="false"
+                [label]="'Mercancia'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                formControlName="mercancia"
+                (change)="docSeleccionado()"
+              ></app-catalogo-select>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-4">
-                <select-catalogos [catalogosDatos]="paisDestino"
-                                  (valorSeleccion)="docSeleccionado($event)">
-                </select-catalogos>
+             
+                <app-catalogo-select
+                [catalogo]="paisDestino"
+                [tooltipQuestionCircle]="false"
+                [label]="'País de destino'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                formControlName="paisDestino"
+                (change)="docSeleccionado()"
+              ></app-catalogo-select>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-8">
-                <select-catalogos [catalogosDatos]="nombreEstablecimiento"
-                                  (valorSeleccion)="docSeleccionado($event)">
-                </select-catalogos>
+              
+                <app-catalogo-select
+                [catalogo]="nombreEstablecimiento"
+                [tooltipQuestionCircle]="false"
+                [label]="'Nombre, Denominación o Razón Social'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                formControlName="nombreEstablecimiento"
+                (change)="docSeleccionado()"
+              ></app-catalogo-select>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-8">
-                <select-catalogos [catalogosDatos]="tipoActividad"
-                                  (valorSeleccion)="docSeleccionado($event)">
-                </select-catalogos>
+              
+                <app-catalogo-select
+                [catalogo]="tipoActividad"
+                [tooltipQuestionCircle]="false"
+                [label]="'Tipo de Actividad del Establecimiento'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                formControlName="tipoActividad"
+                (change)="docSeleccionado()"
+              ></app-catalogo-select>
             </div>
             <div class="col-md-4">
                 <label for="otro" class="form-label">Otro</label>
@@ -74,33 +114,61 @@
 
         <div class="row mb-3">
             <div class="col-md-8">
-                <select-catalogos [catalogosDatos]="aduanaSalida"
-                                  (valorSeleccion)="docSeleccionado($event)">
-                </select-catalogos>
+            
+                <app-catalogo-select
+                [catalogo]="aduanaSalida"
+                [tooltipQuestionCircle]="false"
+                [label]="'Aduana de Salida/Lugar de Embarque'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                formControlName="aduanaSalida"
+                (change)="docSeleccionado()"
+              ></app-catalogo-select>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-8">
-                <select-catalogos [catalogosDatos]="oisaSalida"
-                                  (valorSeleccion)="docSeleccionado($event)">
-                </select-catalogos>
+              
+                <app-catalogo-select
+                [catalogo]="oisaSalida"
+                [tooltipQuestionCircle]="false"
+                [label]="'OISA de Salida'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                formControlName="oisaSalida"
+                (change)="docSeleccionado()"
+              ></app-catalogo-select>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-8">
-                <select-catalogos [catalogosDatos]="regimenMercancia"
-                                  (valorSeleccion)="docSeleccionado($event)">
-                </select-catalogos>
+           
+                <app-catalogo-select
+                [catalogo]="regimenMercancia"
+                [tooltipQuestionCircle]="false"
+                [label]="'Régimen al que se Destinará la Mercancía'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                formControlName="regimenMercancia"
+                (change)="docSeleccionado()"
+              ></app-catalogo-select>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-8">
-                <select-catalogos [catalogosDatos]="paisOrigen"
-                                  (valorSeleccion)="docSeleccionado($event)">
-                </select-catalogos>
+              
+                <app-catalogo-select
+                [catalogo]="paisOrigen"
+                [tooltipQuestionCircle]="false"
+                [label]="'País de Origen'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                formControlName="paisOrigen"
+                (change)="docSeleccionado()"
+              ></app-catalogo-select>
             </div>
             <div class="col-md-4">
                 <label for="fechaArribo" class="form-label">Fecha Arribo País Importador</label>
