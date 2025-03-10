@@ -3,6 +3,9 @@ import { ElegibilidadDeTextilesState } from '../models/elegibilidad-de-textiles.
 import { Query } from '@datorama/akita';
 import { ElegibilidadDeTextilesStore } from '../estados/elegibilidad-de-textiles.store';
 
+/**
+ * Query to manage the state of Prosec authorization.
+ */
 @Injectable({ providedIn: 'root' })
 export class ElegibilidadDeTextilesQuery extends Query<ElegibilidadDeTextilesState> {
   /**
@@ -11,7 +14,7 @@ export class ElegibilidadDeTextilesQuery extends Query<ElegibilidadDeTextilesSta
    * @param store Instancia del `FitosanitarioStore` utilizada para
    * inicializar la consulta.
    */
-  //   constructor(protected override store: ElegibilidadDeTextilesStore) {
-  //     super(store);
-  //   }
+    constructor(protected override store: ElegibilidadDeTextilesStore) {
+      super(store);
+    }
 }

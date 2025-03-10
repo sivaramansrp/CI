@@ -75,8 +75,10 @@ export * from './core/services/shared/wizard/wizard.service';
 export * from './core/services/220471/servicios-pantallas.enum';
 export * from './tramites/constantes/regex.constants';
 export * from './core/services/130118/pexim/pexim.service';
+export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
+export * from './core/models/shared/configuracion-columna.model'
 export * from './core/services/220501/revision.service';
 export * from './core/services/220501/sagarpa/sagarpa.service';
 export * from './core/enums/220502/solicitud-pantallas.enum';
@@ -90,6 +92,7 @@ export { FECHA_INSPECCION_INPUT as FECHA_INSPECCION_INPUT_220502 } from './trami
 export { PASOS as TODAPASOS } from './tramites/constantes/certificado-zoosanitario.enum';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './core/enums/tabla-seleccion.enum';
+export * from './tramites/directives/Uppercase/uppercase.directive'
 export * from './tramites/directives/Uppercase/uppercase.directive';
 export {
   TEXTOS_REQUISITOS as TEXTOS_REQUISITOS_80202,
