@@ -11,7 +11,10 @@ import { Catalogo, CatalogoSelectComponent } from "@ng-mf/data-access-user";
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { TransporteService } from '../../services/transporte.service';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
+import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
+
 
 /**
  * Este componente maneja el formulario de transporte.
@@ -51,7 +54,7 @@ export class TransporteComponent implements OnInit, OnDestroy {
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
    * @param {TransporteService} service - Servicio para obtener datos de transporte.
    */
-  constructor(private fb: FormBuilder, private service: TransporteService) {
+  constructor(private fb: FormBuilder, private service: TransporteService,private tramite110209Store: Tramite110209Store, private tramite110209Query: Tramite110209Query) {
     this.transporteForm = this.fb.group({
       medioDeTransporte: [''],
       rutaCompleta: [''],
@@ -66,6 +69,7 @@ export class TransporteComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getMedioDeTransporte();
+    this.getValoresStore();
   }
 
   /**
@@ -81,6 +85,27 @@ export class TransporteComponent implements OnInit, OnDestroy {
     );
   }
 
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110209Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite110209Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+
+  getValoresStore(): void {
+    this.tramite110209Query.selectTramite110102$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.transporteForm.patchValue({
+            medioDeTransporte: seccionState.medioDeTransporte,
+            rutaCompleta: seccionState.rutaCompleta,
+            puertoDeEmbarque: seccionState.puertoDeEmbarque,
+            puertoDeDesembarque: seccionState.puertoDeDesembarque
+          });
+        })
+      )
+      .subscribe();
+  }
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.
    * Completa el subject destroyed$ para desuscribirse de todos los observables.

@@ -7,13 +7,15 @@
                     <app-catalogo-select  formControlName="medioDeTransporte" 
                     [catalogo]="medioDeTransporteOptions" 
                     [label]="'Medio de transporte'"
-                    [required]="false"></app-catalogo-select>
+                    [required]="false"
+                    (change)="setValoresStore(transporteForm,'medioDeTransporte','setMedioDeTransporte')"></app-catalogo-select>
                 </div>
             </div>
             <div class="col-md-8">
                 <div class="form-group">
                     <label for="rutaCompleta" class="form-label">Ruta Completa :</label>
-                    <input type="text" id="rutaCompleta" formControlName="rutaCompleta" class="form-control">
+                    <input type="text" id="rutaCompleta" formControlName="rutaCompleta" class="form-control" 
+                    (change)="setValoresStore(transporteForm,'rutaCompleta','setRutaCompleta')">
                 </div>
             </div>
         </div>
@@ -21,14 +23,16 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="puertoDeEmbarque" class="form-label">Puerto de Embarque :</label>
-                    <input type="text" id="puertoDeEmbarque" formControlName="puertoDeEmbarque" class="form-control">
+                    <input type="text" id="puertoDeEmbarque" formControlName="puertoDeEmbarque" class="form-control"
+                    (change)="setValoresStore(transporteForm,'puertoDeEmbarque','setPuertoDeEmbarque')">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="puertoDeDesembarque" class="form-label">Puerto de Desembarque :</label>
                     <input type="text" id="puertoDeDesembarque" formControlName="puertoDeDesembarque"
-                        class="form-control">
+                        class="form-control"
+                        (change)="setValoresStore(transporteForm,'puertoDeDesembarque','setPuertoDeDesembarque')">
                 </div>
             </div>
         </div>

@@ -27,14 +27,6 @@ export class SolicitudPageComponent {
   indice: number = 1;
 
 
-  /**
-   * Selecciona una pestaña del asistente.
-   * @param i Índice de la pestaña a seleccionar.
-   */
-  seleccionaTab(i: number): void {
-    this.indice = i;
-  }
-
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
