@@ -156,6 +156,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
   constructor(private readonly fb: FormBuilder, private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService) {
     this.createFromGroup();
     this.obtenerCatalogosTransporte();
+    this.obtenerCatalogosArancelaria();
+    this.obtenerCatalogosUMC();
+    this.obtenerCatalogosUMT();
+    this.obtenerCatalogosUSO();
   }
   /**
    * @description Crea el grupo de formularios para los datos de la mercancía.
@@ -201,12 +205,39 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
   obtenerCatalogosTransporte() {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('transporte.json').subscribe((data => {
       this.aduanaDeIngresoList = data.data as Catalogo[];
+      this.tipoRequisitoList = data.data as Catalogo[];
+    }));
+  }
+  obtenerCatalogosArancelaria() {
+    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').subscribe((data => {
+      this.oficinaInspeccionList = data.data as Catalogo[];
+      this.oficinaInspeccionList = data.data as Catalogo[];
+    }));
+  }
+  obtenerCatalogosUMC() {
+    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('aduana_de_ingreso.json').subscribe((data => {
+      this.umcList = data.data as Catalogo[];
+      this.arancelariaList = data.data as Catalogo[];
+    }));
+  }
+  obtenerCatalogosUMT() {
+    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('empresa.json').subscribe((data => {
+      this.regimenList = data.data as Catalogo[];
+      this.nicoList = data.data as Catalogo[];
+      this.puntoInspeccionList = data.data as Catalogo[];
+    }));
+  }
+  obtenerCatalogosUSO() {
+    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('oficina_de_inspeccion.json').subscribe((data => {
+      this.usoList = data.data as Catalogo[];
+      this.paisDeOrigenList = data.data as Catalogo[];
+      this.paisDeProcedenciaList = data.data as Catalogo[];
     }));
   }
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
   }
   ngOnDestroy(): void {
-    console.log(this.datosMercanciaFormGroup.value);
+    this.importacionDeAcuiculturaServices.actualizarDatosMercancia(this.datosMercanciaFormGroup.value);
   }
 }

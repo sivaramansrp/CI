@@ -63,6 +63,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.crearFormularioPago();
     this.obtenerListaJustificacion();
     this.obtenerListaBanco();
+    this.importacionAcuiculturaServicio.obtenerDatos().subscribe((data) => {
+      console.log(data);
+    });
   }
 
   /**
@@ -123,6 +126,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    console.log(this.formularioPago.value);
+    this.importacionAcuiculturaServicio.actualizarFormularioPago(this.formularioPago.value);
   }
 }

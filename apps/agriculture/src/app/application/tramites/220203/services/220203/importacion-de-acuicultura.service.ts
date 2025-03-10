@@ -6,13 +6,14 @@ import { Observable } from 'rxjs';
 
 import {
   Acuicultura,
+  DatosMercancia220203,
   FormularioMovilizacion,
   FormularioPago
 } from '../../models/220203/importacion-de-acuicultura.module';
 
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
 
-import { DatosMercancia, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 
 /**
@@ -71,7 +72,7 @@ export class ImportacionDeAcuiculturaService {
    * Actualizar los datos de mercancía en el store.
    * @param datosMercancia Datos de mercancía.
    */
-  public actualizarDatosMercancia(datosMercancia: DatosMercancia): void {
+  public actualizarDatosMercancia(datosMercancia: DatosMercancia220203): void {
     this.acuiculturaStore.actualizarDatosMercancia(datosMercancia); // Actualiza solo los datosMercancia
   }
 
