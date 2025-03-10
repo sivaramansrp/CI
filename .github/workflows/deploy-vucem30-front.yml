@@ -49,6 +49,11 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: |
+          npm install --force
+          npm ci
           
       - name: Build Docker images from docker-compose
         run: docker compose -f ./docker/modulefederation-microfrontends.yml build
@@ -67,7 +72,7 @@ jobs:
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
-          context: ./frontend/
+          context: .
           tags: |
             ghcr.io/vucem30/dockerized-front-vucem30:latest
           push: ${{ github.ref == 'refs/heads/develop' }}

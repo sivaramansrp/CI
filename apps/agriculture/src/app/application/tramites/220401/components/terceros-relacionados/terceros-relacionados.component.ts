@@ -6,13 +6,13 @@ import { MENSAJEDEALERTA, TituloComponent } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
 
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import establecimientoTable from './../../../../../../../../../libs/shared/theme/assets/json/220401/establecimiento-table.json'
+import establecimientoTable from '../../../../../../../../../libs/shared/theme/assets/json/220401/establecimiento-table.json'
 
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import destinatarioTable from './../../../../../../../../../libs/shared/theme/assets/json/220401/destinatario-table.json'
+import destinatarioTable from '../../../../../../../../../libs/shared/theme/assets/json/220401/destinatario-table.json'
 
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import importardorTable from './../../../../../../../../../libs/shared/theme/assets/json/220401/importador-table.json'
+import importardorTable from '../../../../../../../../../libs/shared/theme/assets/json/220401/importador-table.json'
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 
