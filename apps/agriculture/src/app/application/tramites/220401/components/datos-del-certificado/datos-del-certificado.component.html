@@ -1,5 +1,5 @@
 <div class="container">
-  <form>
+  <form [formGroup]="formGroup">
     <ng-titulo titulo="Datos del tramite a realizar" />
     <div class="row">
       <div class="col-md-12">
@@ -17,18 +17,29 @@
     </div>
   </form>
 
-  <ng-titulo titulo="Unidad expedidora"></ng-titulo>
+  <form [formGroup]="formGroup1">
+    <ng-titulo titulo="Unidad expedidora"></ng-titulo>
  
-  <app-input-radio class="fw-semibold" [radioOptions]="radioBoton" [selectedValue]="defaultSelect" [isRequired]="true"
-      (valueChange)="onValueChange($event)" [layout]="'horizontal'"></app-input-radio>
+    <app-input-radio class="fw-semibold" [radioOptions]="radioBoton" [selectedValue]="defaultSelect" [isRequired]="true"
+        (valueChange)="onValueChange($event)" [layout]="'horizontal'"></app-input-radio>
+  
+        <div *ngIf="defaultSelect === 'oficina central'">
+              <div class="row">
+                
+                  <div class="col-md-4" *ngFor="let config of catalogConfigs"> 
+                    <app-catalogo-select
+                    [required]="config.required"
+                    [catalogo]="config.catalogo"
+                    [label]="config.label"
+                    formControlName="{{config.controlName}}"
+                    (change)="getDelegaciones()"
+                  ></app-catalogo-select>
+                  </div>
+              </div>
+          </div>
+  </form>
 
-      <div *ngIf="defaultSelect === 'oficina central'">
-            <div class="row">
-                <div class="col-md-4" *ngFor="let config of dropdownConfigs">
-                    <select-catalogos [catalogosDatos]="config" (valorSeleccion)="seleccionar($event)"></select-catalogos>
-                </div>
-            </div>
-        </div>
+
 
         <ng-titulo titulo="Datos Generales de la mercancia Animal"></ng-titulo>
         <h6>Mercancias</h6>
