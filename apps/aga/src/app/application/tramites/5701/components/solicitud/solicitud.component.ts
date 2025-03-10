@@ -500,7 +500,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         differenceInHours > 24
       ) {
         this.datosServicio.setErrors({ invalidIntervalo: true });
-        // return { invalidIntervalo: true };
       }
 
       const differenceInDays = differenceInTime / (1000 * 3600 * 24);
@@ -513,12 +512,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.datosServicio
           .get('fechaFinal')!
           .setErrors({ invalidIntervalo: true });
-        // return { invalidIntervalo: true };
       }
 
       if (differenceInTime < 0) {
         this.datosServicio.setErrors({ endDateBeforeStartDate: true });
       }
+
+      // Validación adicional
+      if (fechaFinal.getTime() <= fechaInicio.getTime()) {
+        this.datosServicio.get('fechaFinal')?.setErrors({ invalidIntervalo: true });
+        this.datosServicio.get('horaFinal')?.setErrors({ invalidIntervalo: true });
+      } 
     }
   }
 
@@ -702,6 +706,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
+    console.log(this.datosImportadorExportador);
+    
   }
 
   /**
