@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Tramite120601Query } from '../../estados/tramite-120601.query';
@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 import { representacionFederal, representacionFederalTable } from '@ng-mf/data-access-user';
 import { tipoDeEmpresa } from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
 
 /**
  * Componente que representa la representación federal en un proceso de múltiples pasos.
@@ -29,7 +30,7 @@ import { tipoDeEmpresa } from '@ng-mf/data-access-user';
   styleUrl: './representacion-federal.component.css',
 })
 
-export class RepresentacionFederalComponent implements OnInit {
+export class RepresentacionFederalComponent implements OnInit, OnDestroy {
 
   /**
    * Datos del encabezado de la tabla.
@@ -74,6 +75,8 @@ export class RepresentacionFederalComponent implements OnInit {
    */
   public representacion!: Catalogo[];
 
+  private destroyed$ = new Subject<void>();
+
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -100,13 +103,17 @@ export class RepresentacionFederalComponent implements OnInit {
     this.getEntidadFederativa();
     this.getRepresentacionFederal();
 
-    this.query.selectEstado$.subscribe((data)=>{
+    this.query.selectEstado$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe((data)=>{
       this.formulario.patchValue({
         estado: data
       })
     });
 
-    this.query.selectRepresentacion$.subscribe((data)=>{
+    this.query.selectRepresentacion$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe((data)=>{
       this.formulario.patchValue({
         representacion: data
       })
@@ -161,5 +168,10 @@ export class RepresentacionFederalComponent implements OnInit {
   public validarRepresentacionFederalIDCSECEROR_(_e: Event): void {
     // Esta es una función dinámica; una vez que obtengamos la API, la implementaremos.
     this.store.setRepresentacion(this.formulario.get('representacion')?.value);
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

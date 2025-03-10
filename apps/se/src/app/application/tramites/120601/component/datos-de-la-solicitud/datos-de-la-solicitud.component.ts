@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Tramite120601Query } from '../../estados/tramite-120601.query';
@@ -6,6 +6,7 @@ import { Tramite120601Store } from '../../estados/tramite-120601.store';
 
 import { Catalogo, CatalogoSelectComponent, SelectCatalogosComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { tipoDeEmpresa} from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
 
 
 /**
@@ -24,7 +25,7 @@ import { tipoDeEmpresa} from '@ng-mf/data-access-user';
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.css'],
 })
-export class DatosDeLaSolicitudComponent implements OnInit {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * El formulario para los datos de la solicitud.
@@ -35,6 +36,8 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * La lista de tipos de empresa.
    */
   public tipoDeEmpresa!: Catalogo[];
+
+  private destroyed$ = new Subject<void>();
 
   /**
    * Constructor de DatosDeLaSolicitudComponent.
@@ -51,7 +54,9 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     this.crearFormulario();
     this.getTipoDeEmpresa();
 
-    this.query.selectTipoDeEmpresa$.subscribe((data)=>{
+    this.query.selectTipoDeEmpresa$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe((data)=>{
       this.solicitudForm.patchValue({
         tipoDeEmpresa: data
       })
@@ -85,5 +90,10 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   public docSeleccionado(_e: Event): void {
     // Esta es una función dinámica; una vez que tengamos la API, la implementaremos.
     this.store.setTipoDeEmpresa(this.solicitudForm.get('tipoDeEmpresa')?.value);
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

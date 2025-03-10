@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -20,6 +20,7 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { Tramite120601Query } from '../../estados/tramite-120601.query';
 import { Tramite120601Store } from '../../estados/tramite-120601.store';
+import { Subject, takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar los datos generales de socios.
@@ -31,7 +32,7 @@ import { Tramite120601Store } from '../../estados/tramite-120601.store';
   templateUrl: './datos-generales-socios.component.html',
   styleUrl: './datos-generales-socios.component.scss',
 })
-export class DatosGeneralesSociosComponent implements OnInit {
+export class DatosGeneralesSociosComponent implements OnInit, OnDestroy {
 
   /** Formulario para la solicitud del usuario */
   FormSolicitud!: FormGroup;
@@ -78,6 +79,8 @@ export class DatosGeneralesSociosComponent implements OnInit {
   /** Array de datos para socios extranjeros */
   datos_Extranjeros = [];
 
+  private destroyed$ = new Subject<void>();
+
   /**
    * Constructor - inicializa el form builder.
    * @param fb - Instancia de FormBuilder
@@ -105,7 +108,9 @@ export class DatosGeneralesSociosComponent implements OnInit {
     const TOTAL_ROW_COUNT = this.datosSocios.length;
     this.formularioParaConteoTotal.patchValue({ recuentoTotalDeFilas: TOTAL_ROW_COUNT });
 
-    this.query.selectNacionalidad$.subscribe((data)=>{
+    this.query.selectNacionalidad$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe((data)=>{
       this.FormSolicitud.patchValue({
         datosImportadorExportador: {
           nacionalidad: data
@@ -113,7 +118,9 @@ export class DatosGeneralesSociosComponent implements OnInit {
       })
     });
 
-    this.query.selectPersona$.subscribe((data)=>{
+    this.query.selectPersona$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe((data)=>{
       this.FormSolicitud.patchValue({
         datosImportadorExportador: {
           persona: data
@@ -121,7 +128,9 @@ export class DatosGeneralesSociosComponent implements OnInit {
       })
     });
 
-    this.query.selectCadenaDependencia$.subscribe((data)=>{
+    this.query.selectCadenaDependencia$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe((data)=>{
       this.FormSolicitud.patchValue({
         datosImportadorExportador: {
           cadenaDependencia: data
@@ -141,5 +150,10 @@ export class DatosGeneralesSociosComponent implements OnInit {
 
   enCambioCadenaDependencia() {
     this.store.setCadenaDependencia(this.FormSolicitud.get(['datosImportadorExportador','cadenaDependencia'])?.value);
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }
