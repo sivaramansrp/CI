@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -8,14 +9,12 @@ import {
   Validators,
 } from '@angular/forms';
 import {
-  SelectCatalogosComponent,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
-import {
   Solicitud301State,
   Tramite301Store,
 } from '../../../../estados/tramites/tramite301.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { SelectCatalogosComponent } from 'libs/shared/data-access-user/src/tramites/components/select-catalogos/select-catalogos.component';
+import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../estados/queries/tramite301.query';
 
 /**

@@ -1,17 +1,17 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Component } from '@angular/core';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PANTAPASOS } from '@ng-mf/data-access-user';
+import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
+import { PANTAPASOS } from 'libs/shared/data-access-user/src/core/services/220471/servicios-pantallas.enum';
 
 /**
  * Este componente se utiliza para mostrar los pasos del asistente - 220401
  * Lista de pasos
  * Índice del paso
- */ 
+ */
 @Component({
   selector: 'app-pantallas',
-  templateUrl: './pantallas.component.html'
+  templateUrl: './pantallas.component.html',
 })
-
 export class PantallasComponent {
   /**
    * Esta variable se utiliza para almacenar la lista de pasos.

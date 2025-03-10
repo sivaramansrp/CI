@@ -1,16 +1,10 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  AlertComponent,
-  BtnContinuarComponent,
-  CatalogoSelectComponent,
-  TituloComponent,
   Aviso,
   Importante,
-  Catalogo,
-  DatosPasos,
-  ListaPasosWizard,
-} from '@ng-mf/data-access-user';
+} from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -23,6 +17,13 @@ import {
   Tramite301Store,
 } from '../../../../estados/tramites/tramite301.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
+import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
+import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
+import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
+import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../estados/queries/tramite301.query';
 
 /**
@@ -188,18 +189,6 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
 
     // Actualiza el número de pasos en el objeto `datosPasos` después de cargar la lista de pasos
     this.datosPasos.nroPasos = this.pasos.length;
-  }
-
-  /**
-   * Método que maneja la selección de un documento.
-   * Este método es un "placeholder" por ahora y puede ser extendido para manejar la lógica de selección de documentos.
-   *
-   * @param {unknown} e - Evento o información del documento seleccionado.
-   * @returns {void}
-   * @memberof RegistroParaLaComponent
-   */
-  registroSeleccion(): void {
-    // Este método puede ser extendido para manejar la lógica de selección de documentos
   }
 
   /**
