@@ -19,7 +19,14 @@
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/semarnat/public"
+            "input": "apps/se/src/assets/",
+            "output":"./assets/"
+          },
+          { "glob": "favicon.ico", "input": "./", "output": "./" },
+          {
+            "glob": "**/*",
+            "input": "libs/shared/theme/assets/",
+            "output": "./assets/"
           }
         ],
         "styles": ["apps/semarnat/src/styles.scss"],
