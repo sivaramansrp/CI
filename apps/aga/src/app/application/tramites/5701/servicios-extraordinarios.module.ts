@@ -1,5 +1,5 @@
 import { AgregaPersonasComponent } from './components/agrega-personas/agrega-personas.component';
-import { AgregarTransporteComponent, CatalogosService } from '@ng-mf/data-access-user';
+import { AgregarTransporteComponent, CatalogosService, UppercaseDirective } from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
@@ -75,6 +75,7 @@ import { EvaluarDictamenComponent } from './pages/evaluar-dictamen/evaluar-dicta
     forwardRef(() => SolicitanteComponent),
     forwardRef(() => TituloComponent),
     forwardRef(() => WizardComponent),
+    forwardRef(() => UppercaseDirective),
     ToastrModule.forRoot()
   ],
   exports: [

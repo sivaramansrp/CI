@@ -44,10 +44,10 @@ export interface PersonaTerceros {
   correo: string;
 }
 export interface DatosImportadorExportador {
-  rfcImportExport: string;
-  nombreImportExport: string;
-  nroRegistro: string;
-  programaFomento: string;
+  RFCImpExp: string;
+  nombre: string;
+  desNumeroRegistro: string;
+  programa: string;
   immex: string;
   immexValue: string;
   industriaAutomotriz: string;

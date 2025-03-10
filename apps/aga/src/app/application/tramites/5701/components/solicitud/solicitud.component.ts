@@ -348,21 +348,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         [Validators.required],
       ],
       datosImportadorExportador: this.fb.group({
-        rfcImportExport: [
-          this.solicitudState?.rfcImportExport,
+        RFCImpExp: [
+          this.solicitudState?.RFCImpExp,
           [
             Validators.required,
             Validators.pattern(this.validacionesService.rfcPattern),
           ],
         ],
-        nombreImportExport: [
-          { value: this.solicitudState?.nombreImportExport, disabled: true },
+        nombre: [
+          { value: this.solicitudState?.nombre, disabled: true },
         ],
-        nroRegistro: [
-          this.solicitudState?.nroRegistro,
+        desNumeroRegistro: [
+          this.solicitudState?.desNumeroRegistro,
           [Validators.maxLength(25)],
         ],
-        programaFomento: [this.solicitudState?.programaFomento],
+        programa: [this.solicitudState?.programa],
         immex: [this.solicitudState?.immex],
         industriaAutomotriz: [this.solicitudState?.industriaAutomotriz],
         tipoEmpresaCertificada: [this.solicitudState?.tipoEmpresaCertificada],
@@ -531,32 +531,34 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   // *Eventos de los componentes hijos
   busqueda_rfc(): void {
-    const rfcImportExport =
-      this.datosImportadorExportador.get('rfcImportExport')?.value;
-    // Aqui se hará la busqueda del rfc, para obtener el nombre
-    this.llenarCamposDesactivados(
-      this.datosImportadorExportador,
-      'nombreImportExport'
-    );
-
-    const nombreImportExport =
-      this.datosImportadorExportador.get('nombreImportExport')?.value;
-    this.tramite5701Store.setRfcImportExport(rfcImportExport);
-    this.tramite5701Store.setNombreImportExport(nombreImportExport);
+    if(this.datosImportadorExportador.get('RFCImpExp')?.valid) {
+      const RFC_IMP_EXP =
+        this.datosImportadorExportador.get('RFCImpExp')?.value;
+      // Aqui se hará la busqueda del rfc, para obtener el nombre
+      this.llenarCamposDesactivados(
+        this.datosImportadorExportador,
+        'nombre'
+      );
+  
+      const NOMBRE =
+        this.datosImportadorExportador.get('nombre')?.value;
+      this.tramite5701Store.setRFCImpExp(RFC_IMP_EXP);
+      this.tramite5701Store.setNombre(NOMBRE);
+    } 
   }
 
   // eslint-disable-next-line class-methods-use-this
   llenarCamposDesactivados(form: FormGroup, field: string): void {
     form.get(field)?.enable();
-    form.get(field)?.setValue('DAYNIZ YAEL VELASCO CORONEL');
+    form.get(field)?.setValue('JUAN PEREZ CRUZ');
     form.get(field)?.disable();
   }
 
   tipoSolicitudSeleccion(): void {
     if (this.solicitudState?.tipoSolicitud) {
-      
+
       console.log('Al elegir un nuevo tipo de solicitud se borraran todos los datos que ya ha lllenado');
-      
+
     }
 
     this.tipoSolicitudSeleccionada = parseInt(
