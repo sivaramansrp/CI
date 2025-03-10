@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SeleccionModuloComponent } from './seleccion-modulo/seleccion-modulo.component';
 import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
-import { AcusePageComponent, FirmaPageComponent } from '@libs/shared/data-access-user/src';
+import { AcusePageComponent } from '@libs/shared/data-access-user/src';
+import { FirmaPageComponent } from './notificaciones/firma-page/firma-page.component';
 
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'app-seleccion-modulo' },
