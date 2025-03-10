@@ -23,7 +23,7 @@ export class ZoosanitarioPageComponent {
    * Array de pasos del asistente.
    * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
    */
-  pasos: ListaPasosWizard[] = [];
+  pasos: ListaPasosWizard[] = PASOS;
 
   /**
    * Título del mensaje principal.
@@ -72,7 +72,6 @@ export class ZoosanitarioPageComponent {
   getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
-      this.tituloMensaje = ZoosanitarioPageComponent.obtenerNombreDelTítulo(e.valor);
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
@@ -81,26 +80,7 @@ export class ZoosanitarioPageComponent {
     }
   }
 
-  /**
-   * Obtiene el título para cada página según el índice.
-   * @method obtenerNombreDelTítulo
-   * @param {number} valor - El índice de la página.
-   * @returns {string} - El título correspondiente.
-   */
-  static obtenerNombreDelTítulo(valor: number) {
-    switch (valor) {
-      case 1:
-        return 'Zoosanitario para importación';
-      case 2:
-        return 'Cargar archivos';
-      case 3:
-        return 'Zoosanitario para importación';
-      case 4:
-        return 'Firmar';
-      default:
-        return 'Zoosanitario para importación';
-    }
-  }
+
 
   /**
    * Cambia el título del mensaje según la pestaña seleccionada.

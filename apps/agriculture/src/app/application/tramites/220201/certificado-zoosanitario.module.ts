@@ -41,8 +41,6 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionNacionalComponent,
     PagoDeDerechosComponent,
-
-
   ],
   imports: [
     SharedModule,
