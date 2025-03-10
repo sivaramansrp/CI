@@ -95,7 +95,7 @@ export * from './core/services/110102/representacion-federal/representacionFeder
 export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export * from './tramites/constantes/120501/licitaciones-disponibles-table-data.enum'
 export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';
-export * from './core/enums/solicitar-tranfera.enum'; 
+export * from './core/enums/solicitar-transferencia.enum'; 
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './core/enums/tabla-seleccion.enum'
 export * from './core/services/120501/licitacionesDisponibles.service'

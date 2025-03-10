@@ -86,7 +86,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   /**
    * Opciones para la tabla.
    */
-  tableoptions = {
+  tableOptions = {
     checkbox : false
   };
   /**
@@ -96,7 +96,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   /**
    * Estado de la selección de radio en la tabla.
    */
-  tableradio = TablaSeleccion.UNDEFINED;
+  tableRadio = TablaSeleccion.UNDEFINED;
   /**
    * Fila seleccionada en la tabla.
    */
@@ -129,7 +129,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   /**
    * Formulario para el detalle de la licitación.
    */
-  detalledelalicitacionForm!: FormGroup;
+  detalledelaLicitacionForm!: FormGroup;
   /**
    * Formulario para el adquiriente.
    */
@@ -205,7 +205,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
       entidadFederativa: ["", Validators.required],
       representacionFederal: ["", Validators.required],
     });
-    this.detalledelalicitacionForm = this.fb.group({
+    this.detalledelaLicitacionForm = this.fb.group({
       numeraDelicitacion: ["", Validators.required],
       fechaDelEventoDelicitacion: ["", Validators.required],
       descripcionDelProducto:["", Validators.required],
@@ -348,7 +348,7 @@ getValorIndice(e: AccionBoton):void{
 getDetallesDelalicitacion():void{
   this.service.getDetallesDelalicitacion().subscribe(
     (data:any)=>{
-      this.detalledelalicitacionForm.patchValue({
+      this.detalledelaLicitacionForm.patchValue({
         numeraDelicitacion:data.numeraDelicitacion,
         fechaDelEventoDelicitacion:data.fechaDelEventoDelicitacion,
         descripcionDelProducto:data.descripcionDelProducto,
