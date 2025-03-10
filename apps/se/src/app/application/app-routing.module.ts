@@ -102,7 +102,7 @@ const routes: Routes = [
       import('./tramites/90101/autorizacion-prosec.module').then(
         (m) => m.AutorizacionProsecModule
       ),
-  }
+  },
   {
     path: 'solicitud-modalidad',
     loadChildren: () =>
