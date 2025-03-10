@@ -5,9 +5,10 @@
  *  ./datos-dela.component.html
  *  ./datos-dela.component.scss
  */
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AlertComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
@@ -27,6 +28,15 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   selector: 'app-datos-dela',
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
+  standalone: true,
+  imports: [
+    CommonModule,
+    AlertComponent,
+    CatalogoSelectComponent,
+    TituloComponent,
+    ReactiveFormsModule,
+    BtnContinuarComponent
+  ]
 })
 export class DatosDelaSolicitudeComponent implements OnInit {
   

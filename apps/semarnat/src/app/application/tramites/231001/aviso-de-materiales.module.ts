@@ -22,10 +22,9 @@ import { SolicitanteDatosTabsComponent } from './pages/solicitante-datos-tabs/so
 
 @NgModule({
   declarations: [
-    DatosDelaSolicitudeComponent,
     DatosComponent,
     PantallasComponent,
-    SolicitanteDatosTabsComponent
+    SolicitanteDatosTabsComponent,
   ],
   imports: [
     CommonModule,
@@ -35,12 +34,11 @@ import { SolicitanteDatosTabsComponent } from './pages/solicitante-datos-tabs/so
     TituloComponent,
     AdministrarResiduosComponent,
     DatosDeLosResiduosComponent,
+    DatosDelaSolicitudeComponent,
     CatalogoSelectComponent,
     BtnContinuarComponent,
     AlertComponent,
-    SolicitanteComponent
+    SolicitanteComponent,
   ],
-  
-  exports: [PantallasComponent]
 })
-export class AvisodematerialesModule { }
+export class AvisodematerialesModule {}
