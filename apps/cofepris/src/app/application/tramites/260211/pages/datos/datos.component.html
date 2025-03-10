@@ -1,0 +1,39 @@
+
+<div class="container">
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li [ngClass]="indice === 1 ? 'active' : ''">
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
+            </li>
+            <li [ngClass]="indice === 2 ? 'active' : ''">
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(2)">Datos de la solicitud</a>
+            </li>
+            <li [ngClass]="indice === 3 ? 'active' : ''">
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Terceros Relacionados</a>
+            </li>
+            <li [ngClass]="indice === 4 ? 'active' : ''">
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Pago de derechos</a>
+            </li>
+            
+        </ul>
+        <ng-container>
+            @switch (indice) {
+                @case(1) {
+                    <p>componente de solicitud aquí</p>
+                }              
+                @case (2) {
+                    <p>Datos de la solicitud</p>
+                }
+                @case(3) {
+                    <p>Terceros Relacionados</p>
+                }
+               
+                @case(4) {
+                    <p>Pago de derechos</p>
+                }
+                
+
+            }
+        </ng-container>
+    </div>
+</div>
