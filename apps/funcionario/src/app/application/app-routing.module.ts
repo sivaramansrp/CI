@@ -20,15 +20,10 @@ const ROUTES: Routes = [
   },
   {
     path: 'notificaciones',
-    component: NotificacionPageComponent
-  },
-  {
-    path: 'firmar',
-    component: FirmaPageComponent
-  },
-  {
-    path: 'acuse',
-    component: AcusePageComponent
+    loadChildren: () =>
+      import('./notificaciones/notificaciones.module').then(
+        (m) => m.NotificacionesModule
+      ),
   }
 
 ];

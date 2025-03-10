@@ -26,8 +26,10 @@ export class FirmaPageComponent implements OnDestroy {
   * @param ev - La cadena de texto que representa la firma obtenida.
   */
   obtieneFirma(ev: string): void {
-    const rutaActual = this.router.url;
-    this.ruta = rutaActual.split('/')[1];
+    const RUTA_ACTUAL = this.router.url;
+    const SEGEMENTOS_RUTA = RUTA_ACTUAL.split('/');
+    
+    this.ruta = SEGEMENTOS_RUTA.slice(0, SEGEMENTOS_RUTA.length - 1).join('/');    
 
     const FIRMA: string = ev;
     if (FIRMA) {

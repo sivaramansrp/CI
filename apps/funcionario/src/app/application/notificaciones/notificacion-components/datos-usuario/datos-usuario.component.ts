@@ -50,6 +50,6 @@ export class DatosUsuarioComponent implements OnInit {
      * @returns {void} No retorna ningún valor.
      */
     continuar() : void {
-        this.router.navigate(['funcionario/firmar']);
+        this.router.navigate(['funcionario/notificaciones/firmar']);
     }
 }
