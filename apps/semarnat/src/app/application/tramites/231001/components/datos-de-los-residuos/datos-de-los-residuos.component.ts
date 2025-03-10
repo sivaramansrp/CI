@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, map } from 'rxjs';
 
 import { BtnContinuarComponent } from "@ng-mf/data-access-user";
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -15,7 +15,11 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { MateriaprimaformserviceService } from 'libs/shared/data-access-user/src/core/services/231001/materia-prima-formservice.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
-
+import { Tramite231001Query } from '../../../../tramites/231001/estados/queries/tramite231001.query';
+import {
+  Solicitud231001State,
+  Tramite231001Store,
+} from '../../../../tramites/231001/estados/tramites/tramite231001.store'
 
 /**
  * Componente que maneja los datos relacionados con los residuos, incluidos los formularios y catálogos.
@@ -93,14 +97,17 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    * Instancia de FormBuilder para crear formularios.
    *  Servicio para realizar solicitudes HTTP.
    */
-  constructor(private fb: FormBuilder,private service:MateriaprimaformserviceService ) {
+  constructor(private fb: FormBuilder, private service: MateriaprimaformserviceService,
+    private tramite231001Query: Tramite231001Query,
+    private tramite231001Store: Tramite231001Store,
+  ) {
     this.materiaPrimaForm = this.fb.group({
       descUnidadMedida: [''],
       descFraccion: [''],
       generica1: [''],
       clavePartida: [''],
       claveSubPartida: [''],
-      
+
       nombreDeLaMateriaPrima: ['', [Validators.required, Validators.maxLength(120)]], // Descripción de la mercancía (requerido, máximo 120 caracteres)
       cantidad: ['', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,6})?$'), Validators.maxLength(18)]], // Valor numérico (requerido, número entero o decimal con hasta 6 decimales, máximo 18 caracteres)
       cantidadEnLetra: [{ value: '', disabled: true }, Validators.maxLength(256)], // Cantidad en letra (deshabilitado, máximo 256 caracteres)
@@ -119,8 +126,58 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    * Método que se ejecuta cuando el componente es inicializado. Carga los catálogos de unidad de medida y capítulo de fracción.
    */
   ngOnInit(): void {
+
     this.loadComboUnidadMedida();
     this.loadComboCapituloFraccion();
+
+    this.tramite231001Query.unidadMedidaComercial$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((unidadMedidaComercial) => {
+        this.materiaPrimaForm.patchValue({
+          descUnidadMedida: unidadMedidaComercial.descUnidadMedida
+        });
+      });
+
+    this.tramite231001Query.capituloFraccion$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((capituloFraccion) => {
+        this.materiaPrimaForm.get('capituloFraccion')?.setValue(capituloFraccion);
+      });
+
+    this.tramite231001Query.partidaFraccion$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((partidaFraccion) => {
+        this.materiaPrimaForm.get('partidaFraccion')?.setValue(partidaFraccion);
+      });
+
+    this.tramite231001Query.subPartidaFraccion$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((subPartidaFraccion) => {
+        this.materiaPrimaForm.get('subPartidaFraccion')?.setValue(subPartidaFraccion);
+      });
+
+    this.tramite231001Query.fraccion$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((fraccion) => {
+        this.materiaPrimaForm.patchValue({
+          descFraccion: fraccion.descFraccion
+        });
+      });
+
+    this.tramite231001Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((state) => {
+          this.materiaPrimaForm.patchValue({
+            nombreDeLaMateriaPrima: state.nombreDeLaMateriaPrima,
+            cantidad: state.cantidad
+
+          });
+        })
+      )
+      .subscribe();
+
+
   }
 
   /**
@@ -207,6 +264,8 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
     this.comboSubPartidaFraccion = [];
     this.comboFraccionArancelariaParametros = [];
     this.loadComboPartidaFraccion();
+    const capituloFraccion = this.materiaPrimaForm.get('capituloFraccion')?.value;
+    this.tramite231001Store.setCapituloFraccion(capituloFraccion);
   }
 
   /**
@@ -224,6 +283,7 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
     this.comboSubPartidaFraccion = [];
     this.comboFraccionArancelariaParametros = [];
     this.loadComboSubPartidaFraccion();
+    this.tramite231001Store.setpartidaFraccion(PARTIDA_CLAVE);
   }
 
   /**
@@ -239,8 +299,12 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
     });
     this.comboFraccionArancelariaParametros = [];
     this.loadComboFraccionArancelariaParametros();
+    this.tramite231001Store.setSubPartidaFraccion(SUB_PARTIDA_CLAVE);
   }
-
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite231001Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite231001Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
   /**
    * @method cambiaFraccion
    * Maneja el cambio de fracción y valida su vigencia.
@@ -253,7 +317,10 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
         generica1: FRACCION_SELECCIONADA.id
       });
       this.validaVigenciaFraccion(FRACCION_SELECCIONADA.id);
+      this.tramite231001Store.setFraccion(FRACCION_SELECCIONADA.descripcion);
     }
+
+
   }
 
   /**
@@ -261,12 +328,18 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    * Maneja el cambio de unidad de medida y actualiza la descripción.
    */
   cambiaUnidadMedida(): void {
-    const UNIDAD_SELECCIONADA = this.comboUnidadMedida.find(unidad => unidad.id === this.materiaPrimaForm.get('unidadMedidaComercial.clave')?.value);
+    const claveSeleccionada = this.materiaPrimaForm.get('unidadMedidaComercial.clave')?.value;
+    const claveAsNumber = Number(claveSeleccionada);
+    const UNIDAD_SELECCIONADA = this.comboUnidadMedida.find(unidad => unidad.id === claveAsNumber);
+
     if (UNIDAD_SELECCIONADA) {
-      this.materiaPrimaForm.patchValue({ descUnidadMedida: UNIDAD_SELECCIONADA.descripcion });
+      this.materiaPrimaForm.patchValue({
+        descUnidadMedida: UNIDAD_SELECCIONADA.descripcion
+      });
+
+      this.tramite231001Store.setDescUnidadMedida(UNIDAD_SELECCIONADA.descripcion);
     }
   }
-
   /**
    * @method validaVigenciaFraccion
    * Valida la vigencia de la fracción.
