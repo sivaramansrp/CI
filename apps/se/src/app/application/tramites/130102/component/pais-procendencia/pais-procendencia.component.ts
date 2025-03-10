@@ -152,8 +152,8 @@ export class PaisProcendenciaComponent implements OnInit {
    * @param {keyof Tramite130102Store} metodoNombre - Método del store donde se guardará el valor.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
-    const valor = form.get(campo)?.value;
-    (this.tramite130102Store[metodoNombre] as (value: any) => void)(valor);
+    const VALOR = form.get(campo)?.value;
+    (this.tramite130102Store[metodoNombre] as (value: string | number | boolean) => void)(VALOR);
   }
 
   /**

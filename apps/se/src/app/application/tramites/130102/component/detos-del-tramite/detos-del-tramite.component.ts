@@ -4,7 +4,7 @@
  * @fileoverview Componente encargado de gestionar la selección de solicitudes y tipos de documentos en un trámite.
  * @module DetosDelTramiteComponent
  */
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
@@ -139,8 +139,8 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
    * @param {keyof Tramite130102Store} metodoNombre - Método del store donde se guardará el valor.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
-    const valor = form.get(campo)?.value;
-    (this.tramite130102Store[metodoNombre] as (value: any) => void)(valor);
+    const VALOR = form.get(campo)?.value;
+    (this.tramite130102Store[metodoNombre] as (value: string | number) => void)(VALOR);
   }
 
   /**

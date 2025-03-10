@@ -11,7 +11,7 @@ import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/compon
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { UppercaseDirective } from 'libs/shared/data-access-user/src/tramites/directives/Uppercase/uppercase.directive';
  
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { TEXTOS } from 'libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
 import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
@@ -95,7 +95,9 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
       private tramite130102Store: Tramite130102Store,
       private tramite130102Query: Tramite130102Query
-  ) {}
+  ) {
+    //constructor
+  }
  
   /**
    * Método de inicialización del componente.
@@ -120,8 +122,8 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
    * @param {keyof Tramite130102Store} metodoNombre - Método del store donde se guardará el valor.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
-    const valor = form.get(campo)?.value;
-    (this.tramite130102Store[metodoNombre] as (value: any) => void)(valor);
+    const VALOR = form.get(campo)?.value;
+    (this.tramite130102Store[metodoNombre] as (value: string | number) => void)(VALOR);
   }
   /**
    * Método para crear el formulario reactivo.
