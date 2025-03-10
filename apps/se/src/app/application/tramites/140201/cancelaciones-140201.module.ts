@@ -1,0 +1,31 @@
+import { NgModule } from '@angular/core';
+
+import { CommonModule } from '@angular/common';
+
+import { Cancelaciones140201RoutingModule } from './cancelaciones-140201-routing.module';
+
+import {
+  BtnContinuarComponent,
+  SolicitanteComponent,
+  WizardComponent,
+} from '@libs/shared/data-access-user/src';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Cancelaciones140201Component } from './pages/cancelaciones-140201/cancelaciones-140201.component';
+import { Datos140201Component } from './pages/datos-140201/datos-140201.component';
+
+@NgModule({
+  declarations: [
+    Cancelaciones140201Component,
+    Datos140201Component
+  ],
+  imports: [
+    CommonModule,
+    Cancelaciones140201RoutingModule,
+    WizardComponent,
+    BtnContinuarComponent,
+    SolicitanteComponent,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
+})
+export class Cancelaciones140201Module {}
