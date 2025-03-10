@@ -1,11 +1,11 @@
 // @import "bootstrap/scss/bootstrap";
 
-@import "_colores.scss";
-@import "_gobmx.scss";
-@import "_gobmxstyles.scss";
-@import "_fonts.scss";
-@import "_titulos.scss";
-@import "_gobmx.scss";
+@import '_colores.scss';
+@import '_gobmx.scss';
+@import '_gobmxstyles.scss';
+@import '_fonts.scss';
+@import '_titulos.scss';
+@import '_gobmx.scss';
 
 .bi-c {
   color: $color-primario;
@@ -15,7 +15,6 @@
   }
 }
 
-
 .required {
   border: #fe4a47 1px solid;
 }
@@ -23,11 +22,12 @@
 .titulo {
   font-weight: 400;
   font-size: 32px;
-  font-family: 'patria', sans-serif;
+  font-family: Patria;
+  margin-top: 3rem;
+  margin-bottom: 3rem !important;
 
+  &-gold {
+    color: $color-oro;
+  }
 }
-
-
-
-
 

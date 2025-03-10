@@ -17,6 +17,7 @@ export class AcuseComponent implements OnChanges {
   @Input() txtAlerta!: string;
   @Input() subtitulo!: string;
   @Input() folio!: string;
+  @Input() url!: string;
 
   readonly encabezadoTablaAcuse: { valor: string, key: keyof BodyTablaAcuse }[] = [
     {
