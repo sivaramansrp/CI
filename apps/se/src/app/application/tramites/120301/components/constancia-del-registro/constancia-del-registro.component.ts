@@ -85,7 +85,9 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery
-  ) { }
+  ) { 
+    // Constructor logic can be added here if needed
+  }
 
   ngOnInit(): void {
     this.seccionQuery.selectSeccionState$

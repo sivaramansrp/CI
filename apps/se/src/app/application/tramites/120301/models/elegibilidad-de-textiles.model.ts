@@ -18,6 +18,13 @@
  * @property {string} correo - Correo electrónico del solicitante.
  */
 
+export interface Solicitante {
+  rfc: string;
+  nombreRazonSocial: string;
+  aPaterno: string;
+  correo: string;
+}
+
   export interface ListaPasosWizard {
     indice: number;
     titulo: string;

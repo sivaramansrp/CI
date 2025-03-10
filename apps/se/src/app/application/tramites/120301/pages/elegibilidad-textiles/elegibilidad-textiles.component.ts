@@ -11,11 +11,11 @@
  */
 
 import { Component, ViewChild } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
+import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '../../models/elegibilidad-de-textiles.model';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
 import { PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  * Interfaz para definir la acción y el valor del botón. --120301

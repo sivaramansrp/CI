@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
-import { ElegibilidadDeTextilesState } from '../models/elegibilidad-de-textiles.model';
-import { Query } from '@datorama/akita';
 import { ElegibilidadDeTextilesStore, TextilesState } from '../estados/elegibilidad-de-textiles.store';
+import { Injectable } from '@angular/core';
+import { Query } from '@datorama/akita';
 
 /**
  * Query to manage the state of Prosec authorization.

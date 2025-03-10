@@ -12,7 +12,7 @@ import { FormularioDinamico } from 'libs/shared/data-access-user/src/core/models
 import { FormulariosService } from 'libs/shared/data-access-user/src/core/services/shared/formularios/formularios.service';
 import { ServiciosElegibilidadDeTextilesService } from '../../services/servicios-elegibilidad-de-textiles.service';
 import { SolicitanteService } from 'libs/shared/data-access-user/src/core/services/shared/solicitante/solicitante.service';
-import { solicitante } from 'apps/se/src/app/application/tramites/120301/models/elegibilidad-de-textiles.model';
+import { Solicitante } from 'apps/se/src/app/application/tramites/120301/models/elegibilidad-de-textiles.model';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { tap } from 'rxjs';
 
@@ -198,7 +198,7 @@ export class SolicitanteComponent implements OnInit {
    * @method ngOnDestroy
    */
   ngOnDestroy(): void {
-    const sol: solicitante = this.form.value.datosGenerales as solicitante;
+    const sol: Solicitante = this.form.value.datosGenerales as Solicitante;
     this.form.reset();
   }
 }
