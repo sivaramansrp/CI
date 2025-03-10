@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -18,7 +18,7 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
 })
-export class PagoDeDerechosComponent implements OnInit {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
  * @description Formulario para el pago de derechos.
  */
@@ -121,5 +121,8 @@ export class PagoDeDerechosComponent implements OnInit {
     this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json').subscribe((data) => {
       this.justificacionCatalogo = data.data as Catalogo[];
     });
+  }
+  ngOnDestroy(): void {
+    console.log(this.formularioPago.value);
   }
 }

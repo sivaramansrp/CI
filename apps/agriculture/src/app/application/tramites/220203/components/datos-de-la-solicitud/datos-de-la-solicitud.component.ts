@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -39,7 +39,7 @@ interface FilaSolicitud {
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss'
 })
-export class DatosDeLaSolicitudComponent {
+export class DatosDeLaSolicitudComponent implements OnDestroy {
   /**
    * @description Mensaje que se muestra en una alerta al hacer doble clic.
    */
@@ -206,5 +206,7 @@ export class DatosDeLaSolicitudComponent {
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
   }
-
+  ngOnDestroy(): void {
+    console.log(this.datosMercanciaFormGroup.value);
+  }
 }

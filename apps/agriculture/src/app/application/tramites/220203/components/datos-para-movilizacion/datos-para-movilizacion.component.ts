@@ -1,6 +1,6 @@
 import { Catalogo } from '@ng-mf/data-access-user';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -14,7 +14,7 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
   templateUrl: './datos-para-movilizacion.component.html',
   styleUrls: ['./datos-para-movilizacion.component.scss']
 })
-export class DatosParaMovilizacionComponent implements OnInit {
+export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
   /**
    * @description Lista de opciones de transporte.
    */
@@ -71,5 +71,8 @@ export class DatosParaMovilizacionComponent implements OnInit {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').subscribe((data => {
       this.puntos = data.data as Catalogo[];
     }));
+  }
+  ngOnDestroy(): void {
+    console.log(this.formularioMovilizacion.value);
   }
 }
