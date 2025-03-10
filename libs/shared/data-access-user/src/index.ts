@@ -15,6 +15,8 @@ export * from './core/services/shared/catalogos/catalogos.service';
 export * from './core/models/shared/forms-model';
 export * from './core/models/shared/configuracion-columna.model';
 export * from './core/queries/seccion.query';
+export * from './core/estados/seccion.store';
+
 export * from './tramites/constantes/seccionesTramites';
 export * from './core/models/shared/components.model';
 export * from './core/models/shared/catalogos.model';
