@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { CertificadoTecnicoJaponRoutingModule } from './certificado-tecnico-japon-routing.module';
 
-import { BtnContinuarComponent, SolicitanteComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { BtnContinuarComponent, CatalogoSelectComponent, SolicitanteComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
@@ -12,10 +12,14 @@ import { ValidarCertificadoTecnicoJaponComponent } from './pages/validar-certifi
 
 import { AppSolicitanteTabsComponent } from './pages/app-solicitante-tabs/app-solicitante-tabs.component';
 import { TratadosComponent } from './components/tratados/tratados.component';
+
 import { DestinatarioComponent } from './components/destinatario/destinatario.component';
 import { TransporteComponent } from './components/transporte/transporte.component';
+
 import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
+
 import { DatosCertificadoComponent } from './components/datos-certificado/datos-certificado.component';
+import { MercanciasSeleccionadasFormComponent } from './components/mercancias-seleccionadas-form/mercancias-seleccionadas-form.component';
 
 
 @NgModule({
@@ -34,7 +38,9 @@ import { DatosCertificadoComponent } from './components/datos-certificado/datos-
     TransporteComponent,
     DestinatarioComponent,
     RepresentanteLegalComponent,
-    DatosCertificadoComponent
+    DatosCertificadoComponent,
+    MercanciasSeleccionadasFormComponent,
+    CatalogoSelectComponent
     
   ]
 })

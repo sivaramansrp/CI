@@ -1,0 +1,68 @@
+<div class="container">
+    <form [formGroup]="modifydatosdelcertificado">
+        <div class="row">
+            <div class="col-md-12">
+                <label class="form-label" for="nombreComercial">Nombre comercial:  </label>
+                <input type="text" class="form-control" id="nombreComercial" formControlName="nombreComercial" readonly>
+            </div>
+            <div class="col-md-12">
+                <label class="form-label" for="nombreenIngles">Nombre en inglés: </label>
+                <input type="text" class="form-control" id="nombreenIngles"
+                    formControlName="nombreenIngles" readonly>
+            </div>
+            <div class="col-md-12">
+                <label class="form-label" for="complementoDelaDescripcion">Complemento de la descripción:  </label>
+                <input type="text" class="form-control bg-white" id="complementoDelaDescripcion"
+                    formControlName="complementoDelaDescripcion">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="marca">Marca: </label>
+                <input type="text" class="form-control bg-white" id="marca"
+                    formControlName="marca">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="valorMercancia">Valor mercancía: </label>
+                <input type="text" class="form-control bg-white" id="valorMercancia"
+                    formControlName="valorMercancia">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="cantidad">Cantidad: </label>
+                <input type="text" class="form-control" id="cantidad"
+                    formControlName="cantidad" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="unidaddeMedidadeComercializacionOptions" formControlName="unidaddeMedidadeComercializacion"
+            name="unidaddeMedidadeComercializacion" [label]="'Unidad de medida de comercialización'" class="Unidadformlabel"></app-catalogo-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label class="form-label" for="numerodeFactura">Número de factura: </label>
+                <input type="text" class="form-control bg-white" id="numerodeFactura"
+                    formControlName="numerodeFactura" >
+            </div>
+            <div class="col-md-4">
+                    <app-catalogo-select [catalogo]="tipodeFacturaOptions" formControlName="tipodeFactura" [label]="'Tipo de factura'"
+                   name="tipodeFactura"></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="fechadelaFactura">Fecha de la factura: </label>
+                <input type="text" class="form-control" id="fechadelaFactura"
+                    formControlName="fechadelaFactura" readonly>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3 mb-3">
+                    Cancelar 
+                  </button><span class="mr-3"></span>
+                  <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3 mb-3">
+                    Modificar 
+                  </button>
+            </div>
+        </div>
+    </form>
+</div>
