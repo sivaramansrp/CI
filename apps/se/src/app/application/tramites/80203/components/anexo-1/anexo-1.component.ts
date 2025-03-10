@@ -58,10 +58,10 @@ import { Validators } from '@angular/forms';
     ReactiveFormsModule,
     TablaDinamicaComponent,
     CatalogoSelectComponent,
-    
+
   ]
 })
-export class Anexo1Component implements OnInit, OnDestroy { 
+export class Anexo1Component implements OnInit, OnDestroy {
   immexRegistroform!: FormGroup;
   immexRegitroAnexoState!: immexRegistroform;
 
@@ -72,100 +72,54 @@ export class Anexo1Component implements OnInit, OnDestroy {
   tablaSeleccionRadio: TablaSeleccion = TablaSeleccion.RADIO;
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
-// Mesa IMMEX
+  // Mesa IMMEX
   /**
    * Configuración de las columnas de la tabla.
    * @type {ConfiguracionColumna<immexInfo>[]}
    */
   permisoImmexTabla: ConfiguracionColumna<immexInfo>[] = IMMEX_SERVICIO;
-/**
- * Datos de los servicios IMMEX.
- * @type {immexInfo[]} 
- */
-    ImmexDatos: immexInfo[] = [
-      {
-        IMMEX_Columna_1: '01',
-        IMMEX_Columna_2: 'IM23377137',
-        IMMEX_Columna_3: '72012001',
-        IMMEX_Columna_4: 'Fundición en bruto sin alear con un contenido de fosforo superior al 0.5% en peso"',
-        IMMEX_Columna_5: 'Kilogramo',
-        IMMEX_Columna_6: '10',
-        IMMEX_Columna_7: '28/12/203',
-        estatus: true
-      },
-      {
-        IMMEX_Columna_1: '02',
-        IMMEX_Columna_2: 'IM56789234',
-        IMMEX_Columna_3: '72015010',
-        IMMEX_Columna_4: 'Hierro y acero sin alear en lingotes',
-        IMMEX_Columna_5: 'Tonelada',
-        IMMEX_Columna_6: '25',
-        IMMEX_Columna_7: '15/05/2025',
-        estatus: false
-      }
-    ];
+  /**
+   * Datos de los servicios IMMEX.
+   * @type {immexInfo[]} 
+   */
+  ImmexTableDatos: immexInfo[] = [];
 
   // Mesa FRACCION EXPORTACION
   /**
    * Configuración de las columnas de la tabla.
    * @type {ConfiguracionColumna<fraccionInfo>[]}
    */
-  fraccionExportacionTabla: ConfiguracionColumna<fraccionInfo>[] = FRACCION_EXPORTACION;
-/**
- * Datos de las fracciones arancelarias.
- * @type {fraccionInfo[]} 
- * Datos de ejemplo:
- */
-    fraccionTablaDatos: fraccionInfo[] = [
-      {
-        FRACCION_Columna_1: '01',
-        FRACCION_Columna_2: '72012001',
-        FRACCION_Columna_3: '72012001',
-        FRACCION_Columna_4: 'Kilogramo',
-        FRACCION_Columna_5: 'Fundición en bruto sin alear con un contenido de fosforo superior al 0.5% en peso',
-        FRACCION_Columna_6: 'FRACC EXP 1 SENASICA',
-        estatus: true
-      },
-      {
-        FRACCION_Columna_1: '02',
-        FRACCION_Columna_2: '72015010',
-        FRACCION_Columna_3: '72015010',
-        FRACCION_Columna_4: 'Tonelada',
-        FRACCION_Columna_5: 'Hierro y acero sin alear en lingotes',
-        FRACCION_Columna_6: 'FRACC EXP 2 SEMARNAT',
-        estatus: false
-      },
-    ];
 
+  fraccionExportacionTabla: ConfiguracionColumna<fraccionInfo>[] = FRACCION_EXPORTACION;
+  /**
+   * Datos de las fracciones arancelarias.
+   * @type {fraccionInfo[]} 
+   * Datos de ejemplo:
+   */
+  // FraccionTablaDatos: fraccionInfo[] = [];
+  FraccionTablaDatos: fraccionInfo[] = [];
   // Mesa NICO
   /**
    * Configuración de las columnas de la tabla.
    * @type {ConfiguracionColumna<nicoInfo>[]}
    */
   nicoTabla: ConfiguracionColumna<nicoInfo>[] = NICO_TABLA;
-/**
- * Datos de los servicios.
- * @type {nicoInfo[]} 
- * Datos de ejemplo:
- */
 
-    nicoTablaDatos: nicoInfo[] = [
-      {
-        NICO_Columna_1: '01',
-        NICO_Columna_2: 'Fundición en bruto sin alear con un contenido de fósforo superior al 0.5% en peso',
-        estatus: true
-      },
-      {
-        NICO_Columna_1: '02',
-        NICO_Columna_2: 'Acero inoxidable con alto contenido de cromo y níquel',
-        estatus: false
-      }
-    ];
-    /**
-   * @propiedad immexRegistro
-   * @tipo string
+
+  /**
+   * Datos de los servicios.
+   * @type {nicoInfo[]} 
+   * Datos de ejemplo:
    */
-    immexRegistro!: string;
+
+  NicoTablaDatos: nicoInfo[] = [];
+
+
+  /**
+ * @propiedad immexRegistro
+ * @tipo string
+ */
+  immexRegistro!: string;
 
   /**
    * Subject para manejar la desuscripción de observables.
@@ -178,26 +132,32 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   permisoImmexDatos: any[] = [];
-  
+
   /**
-   * @property {any[]} fraccionDatos - Array de datos permiso immex.
+   * @property {any[]} fraccionDatos - Array de datos fraccion.
    */
   fraccionDatos: any[] = [];
-  
+
   /**
-   * @property {any[]} nicoDatos - Array de datos permiso immex.
+   * @property {any[]} nicoDatos - Array de datos nico
    */
   nicoDatos: any[] = [];
-  
+
   /**
    * Configuración para el select de unidad de medida.
    * @property {CatalogosSelect} nico
    */
   nico: Catalogo[] = [];
-  
+
   showFraccionExport: boolean = false;
+  showTableExport: boolean = false;
+  showTableImport: boolean = false;
+  showTableFractionExp: boolean = false;
+  showTableNicoExp: boolean = false
+  showTableNicoImp: boolean = false
   showProductoImport: boolean = false;
   showCommodityImport: boolean = false;
+
   private seccion!: SeccionLibState;
   private destroyNotifier$: Subject<void> = new Subject();
   /**
@@ -209,7 +169,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private readonly permisoImmexDatosService: PermisoImmexDatosService,
+    private permisoImmexDatosService: PermisoImmexDatosService,
     private readonly httpServicios: HttpClient,
     private readonly nicoService: NicoService,
     private immexRegistroQuery: ImmexRegistroQuery,
@@ -232,7 +192,6 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
 
   ngOnInit(): void {
-
     this.immexRegistroQuery.selectImmexRegistro$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
@@ -265,7 +224,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
         Nico: [this.immexRegitroAnexoState?.Nico || '', []],
       })
     });
-  
+
     // Asegúrese de que immexRegitroAnexoState esté asignado antes de acceder a sus propiedades
     this.immexRegistroQuery.selectImmexRegistro$
       .pipe(
@@ -277,18 +236,18 @@ export class Anexo1Component implements OnInit, OnDestroy {
           }
         })
       ).subscribe();
-      this.immexRegistroform.statusChanges
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      delay(10),
-      tap((_value) => {
-        let ACTIVE_STATE = {...this.immexRegistroform.value.exportacionForm};
-        ACTIVE_STATE = {...ACTIVE_STATE, ...this.immexRegistroform.value.exportacionForm};
-        ACTIVE_STATE = {...ACTIVE_STATE, ...this.immexRegistroform.value.importacionForm};
-        this.immexRegistroStore.setImmexRegistro(ACTIVE_STATE);
-      })
-    )
-    .subscribe();
+    this.immexRegistroform.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((_value) => {
+          let ACTIVE_STATE = { ...this.immexRegistroform.value.exportacionForm };
+          ACTIVE_STATE = { ...ACTIVE_STATE, ...this.immexRegistroform.value.exportacionForm };
+          ACTIVE_STATE = { ...ACTIVE_STATE, ...this.immexRegistroform.value.importacionForm };
+          this.immexRegistroStore.setImmexRegistro(ACTIVE_STATE);
+        })
+      )
+      .subscribe();
     this.fetchData();
     this.obtenerListasDesplegables();
     this.disableFormControls();
@@ -304,88 +263,92 @@ export class Anexo1Component implements OnInit, OnDestroy {
       .subscribe();
 
     this.immexRegistroform.statusChanges
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      delay(10),
-      tap(() => {
-        const SECCION: number = 1;
-        const seccionState = this.seccionQuery.getValue();
-        const FORMAS_VALIDADAS = [...seccionState.formaValida];
-        const controlPath = 'immexRegistroform.exportacionForm';
-        const controlPath2 = 'immexRegistroform.importacionForm';
-        const CONTROL = this.immexRegistroform.get(controlPath)?.status;
-        const CONTROL2 = this.immexRegistroform.get(controlPath2)?.status;
-  
-        FORMAS_VALIDADAS[SECCION] = this.immexRegistroform.valid || CONTROL === 'VALID';
-        FORMAS_VALIDADAS[SECCION] = this.immexRegistroform.valid || CONTROL2 === 'VALID';
-  
-        this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-      })
-    )
-    .subscribe();
-  }
-  
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap(() => {
+          const SECCION: number = 1;
+          const seccionState = this.seccionQuery.getValue();
+          const FORMAS_VALIDADAS = [...seccionState.formaValida];
+          const controlPath = 'immexRegistroform.exportacionForm';
+          const controlPath2 = 'immexRegistroform.importacionForm';
+          const CONTROL = this.immexRegistroform.get(controlPath)?.status;
+          const CONTROL2 = this.immexRegistroform.get(controlPath2)?.status;
 
+          FORMAS_VALIDADAS[SECCION] = this.immexRegistroform.valid || CONTROL === 'VALID';
+          FORMAS_VALIDADAS[SECCION] = this.immexRegistroform.valid || CONTROL2 === 'VALID';
+
+          this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+        })
+      )
+      .subscribe();
+  }
   /**
    * @method fetchData
    * @description Obtiene los datos de los fabricantes desde el servicio.
    */
   fetchData(): void {
-    this.permisoImmexDatosService.getDatos().subscribe({
-      next: (response: any) => {
-        if (response && Array.isArray(response.permisoImmexDatos) && Array.isArray(response.fraccionDatos) && Array.isArray(response.nicoDatos)) {
-          this.permisoImmexDatos = response.permisoImmexDatos.map((item: any) => {
-            return { tbodyData: item.tbodyData };
-          });
+    this.permisoImmexDatosService.getDatos()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (response: any) => {
+          if (response && Array.isArray(response.permisoImmexDatos) &&
+            Array.isArray(response.fraccionDatos) &&
+            Array.isArray(response.nicoDatos)) {
+            // Para introducir datos en la tabla
+            this.ImmexTableDatos = response.permisoImmexDatos;
+            this.NicoTablaDatos = response.nicoDatos;
+            this.FraccionTablaDatos = response.fraccionDatos;
 
-          this.fraccionDatos = response.fraccionDatos.map((item: any) => {
-            return { tbodyData: item.tbodyData };
-          });
+            // Para asignar valores al campo de entrada
+            this.permisoImmexDatos = response.permisoImmexDatos;
+            this.fraccionDatos = response.fraccionDatos;
+            this.nicoDatos = response.nicoDatos;
 
-          this.nicoDatos = response.nicoDatos.map((item: any) => {
-            return { tbodyData: item.tbodyData };
-          });
+            // Patch Exportacion Forma
+            if (this.permisoImmexDatos.length > 0) {
+              this.immexRegistroform.get('exportacionForm')?.patchValue({
+                fraccionArancelariaExportacion: this.permisoImmexDatos[0].IMMEX_Columna_3
+              });
+            }
 
-          if (this.permisoImmexDatos.length > 0) {
-            this.immexRegistroform.get('exportacionForm')?.patchValue({
-              fraccionArancelariaExportacion: this.permisoImmexDatos[0].tbodyData[2]
-            });
+            if (this.fraccionDatos.length > 0) {
+              this.immexRegistroform.get('exportacionForm')?.patchValue({
+                productoArancelariaExportacion: this.fraccionDatos[0].FRACCION_Columna_2,
+                productoDescExportacion: this.fraccionDatos[0].FRACCION_Columna_5,
+                FraccionDescExportacion: this.fraccionDatos[0].FRACCION_Columna_5,
+                exportacionDescExportacion: this.fraccionDatos[0].FRACCION_Columna_6,
+              });
+            }
+
+            // Patch Importacion Forma
+            if (this.permisoImmexDatos.length > 0) {
+              this.immexRegistroform.get('importacionForm')?.patchValue({
+                commodityImportacion: this.permisoImmexDatos[0].IMMEX_Columna_3,
+                commodityDescImportacion: this.permisoImmexDatos[0].IMMEX_Columna_4,
+                commodityNicoDescImportacion: this.permisoImmexDatos[0].IMMEX_Columna_4,
+              });
+            }
+
+          } else {
+            console.error('La respuesta de la API no tiene el formato esperado:', response);
+            this.permisoImmexDatos = [];
+            this.fraccionDatos = [];
+            this.nicoDatos = [];
           }
-          if (this.fraccionDatos.length > 0) {
-            this.immexRegistroform.get('exportacionForm')?.patchValue({
-              productoArancelariaExportacion: this.fraccionDatos[0].tbodyData[1],
-              productoDescExportacion: this.fraccionDatos[0].tbodyData[4],
-              FraccionDescExportacion: this.fraccionDatos[0].tbodyData[4],
-              exportacionDescExportacion: this.fraccionDatos[0].tbodyData[4], 
-            });
-          }
-          if (this.permisoImmexDatos.length > 0) {
-            this.immexRegistroform.get('importacionForm')?.patchValue({
-              commodityImportacion: this.permisoImmexDatos[0].tbodyData[2],
-              commodityDescImportacion: this.permisoImmexDatos[0].tbodyData[3],
-              commodityNicoDescImportacion: this.permisoImmexDatos[0].tbodyData[3],
-            });
-          }
-        } else {
-          console.error('La respuesta de la API no tiene el formato esperado:', response);
+        },
+        error: (error: any) => {
+          console.error('Error al obtener los datos:', error);
           this.permisoImmexDatos = [];
           this.fraccionDatos = [];
           this.nicoDatos = [];
         }
-      },
-      error: (error: any) => {
-        console.error('Error al obtener los datos:', error);
-        this.permisoImmexDatos = [];
-        this.fraccionDatos = [];
-        this.nicoDatos = [];
-      },
-      
-    });
-    this.permisoImmexDatosService.getDatos()
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe((data) => {
-      this.immexRegistroform.patchValue(data);
-    });
+      });
+      this.permisoImmexDatosService.getDatos()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.immexRegistroform.patchValue(data);
+      });
   }
 
   /**
@@ -411,7 +374,43 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @method showFraccionExportacion
    */
   showFraccionExportacion(): void {
-    this.showFraccionExport = true; 
+    this.showFraccionExport = true;
+  }
+
+  /**
+ * Muestra la sección de fracción de exportación.
+ * @method showTableExportacion
+ */
+  showTableExportacion(): void {
+    this.showTableExport = true;
+  }
+  /**
+ * Muestra la sección de fracción de exportación.
+ * @method showTableExportacion
+ */
+  showTableImportacion(): void {
+    this.showTableImport = true;
+  }
+  /**
+ * Muestra la sección de fracción de exportación.
+ * @method showTableExportacion
+ */
+  showTableFractionExport(): void {
+    this.showTableFractionExp = true;
+  }
+  /**
+ * Muestra la sección de fracción de exportación.
+ * @method showTableExportacion
+ */
+  showTableNicoExport(): void {
+    this.showTableNicoExp = true;
+  }
+  /**
+ * Muestra la sección de fracción de exportación.
+ * @method showTableExportacion
+ */
+  showTableNicoImport(): void {
+    this.showTableNicoImp = true;
   }
 
   /**
@@ -419,7 +418,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @method showProductoImportacion
    */
   showProductoImportacion(): void {
-    this.showProductoImport = true; 
+    this.showProductoImport = true;
   }
 
   /**
@@ -427,7 +426,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @method showCommodityImportacion
    */
   showCommodityImportacion(): void {
-    this.showCommodityImport = true; 
+    this.showCommodityImport = true;
   }
   disableFormControls(): void {
     this.immexRegistroform.get('exportacionForm.productoArancelariaExportacion')?.disable();
@@ -441,4 +440,8 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @description Guarda el estado del formulario antes de destruir el componente.
    */
 
+}
+
+function subscribe(arg0: { next: (response: any) => void; error: (error: any) => void; }) {
+  throw new Error('Function not implemented.');
 }
