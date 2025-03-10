@@ -3,7 +3,8 @@
  * 
  */
 
-import { CatalogosSelect, TableData } from '@ng-mf/data-access-user';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { TableData } from '@ng-mf/data-access-user';
 
 /**
  * Representa una selección importante del catálogo para el registro de muestras de mercancías.
@@ -48,7 +49,18 @@ export interface ImportanteCatalogoSeleccion {
     /**
      *  Tabla de tarifas de pago.
      */
-    tablaDeTarifasDePago: TableData
+    tablaDeTarifasDePago: TableData,
+
+  /** 
+   * Almacena las fechas de validez de la autorización. 
+   */
+  validezDeLaAutorizacion: ListaDeFechas;
+
+  /** 
+   * Almacena los datos del registro de muestras. 
+   */
+  registroMuestrasDatos: RegistroMuestras;
+
 }
 /**
  * Representa un registro de muestras de mercancías.
@@ -133,3 +145,51 @@ export interface ListaDeFechas {
    */
   fechaFinVigencia: string;
 }
+
+/** 
+ * Interfaz que representa el estado de almacenamiento de muestras de mercancías. 
+ * Contiene información sobre autorizaciones, registros, pagos y catálogos relacionados 
+ * con importaciones y exportaciones. 
+ */
+export interface MuestrasMercanciasStore {
+  /** 
+   * Almacena las fechas de validez de la autorización. 
+   */
+  validezDeLaAutorizacion: ListaDeFechas; 
+
+  /** 
+   * Almacena los registros de muestras y sus renovaciones. 
+   */
+  renovacionesDeRegistro: RegistroMuestras;
+
+  /** 
+   * Almacena los detalles del pago, incluyendo encabezados y datos de la tabla. 
+   */
+  pagoDeDerechos: TableData;
+
+  /** 
+   * Almacena el catálogo de importadores/exportadores previos. 
+   */
+  importadorExportadorPrevio: CatalogosSelect;
+
+  /** 
+   * Almacena el catálogo de fracciones arancelarias de la AGA (Aduana General de la Nación). 
+   */
+  fraccionArancelariaAga: CatalogosSelect;
+
+  /** 
+   * Almacena el catálogo de NICO (Número de Identificación Comercial). 
+   */
+  nico: CatalogosSelect;
+
+  /** 
+   * Almacena el catálogo de IDE genérico (Identificación de Especificaciones). 
+   */
+  ideGenerica: CatalogosSelect;
+
+  /** 
+   * Almacena el catálogo relacionado con la toma de muestras durante el despacho. 
+   */
+  tomaMuestraDespacho: CatalogosSelect;
+}
+

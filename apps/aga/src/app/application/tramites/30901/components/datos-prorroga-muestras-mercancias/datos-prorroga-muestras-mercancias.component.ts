@@ -1,12 +1,15 @@
 import { Component, OnDestroy } from '@angular/core';
-import { DatosProrrogaMuestrasMercanciasQuery } from '../../estados/renovaciones/datos-prorroga-muestras-mercancias.query';
-import { DatosProrrogaMuestrasMercanciasStore } from '../../estados/renovaciones/datos-prorroga-muestras-mercancias.store';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { ListaDeFechas } from '../../models/registro-muestras-mercancias.model';
+import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 import { InputFecha } from '@ng-mf/data-access-user';
+import { ListaDeFechas } from '../../models/registro-muestras-mercancias.model';
 import { OnInit } from '@angular/core';
+import { RenovacionesMuestrasMercanciasQuery } from '../../estados/renovaciones-muestras-mercancias.query';
+import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
+import { RenovacionesMuestrasMercanciasStore } from '../../estados/renovaciones-muestras-mercancias.store';
 import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 /**
@@ -89,6 +92,17 @@ export class DatosProrrogaMuestrasMercanciasComponent implements OnInit, OnDestr
      */ 
     private destroyed$ = new Subject<void>();
 
+    /**
+     * Administra el ciclo de vida de la suscripción `darseDeBaja`.
+     * 
+     * - La variable `darseDeBaja` almacena la suscripción activa,
+     *   la cual puede ser `null` si no hay suscripción.
+     * - El método `ngOnDestroy` se asegura de que la suscripción
+     *   se cancele correctamente cuando el componente se destruya,
+     *   evitando fugas de memoria.
+     */
+      darseDeBaja: Subscription | null = null;
+
   /**
    * Constructor de la clase DatosProrrogaMuestrasMercanciasComponent.
    * 
@@ -96,8 +110,9 @@ export class DatosProrrogaMuestrasMercanciasComponent implements OnInit, OnDestr
    */
   constructor(
     public fb: FormBuilder,
-    public query: DatosProrrogaMuestrasMercanciasQuery,
-    public store: DatosProrrogaMuestrasMercanciasStore
+    public renovacionesMuestrasMercanciasService: RenovacionesMuestrasMercanciasService,
+    public renovacionesMuestrasMercanciasStore: RenovacionesMuestrasMercanciasStore,
+    public renovacionesMuestrasMercanciasQuery: RenovacionesMuestrasMercanciasQuery
   ) {
     // Si es necesario, se puede agregar aquí la lógica de inicialización
   }
@@ -118,17 +133,33 @@ export class DatosProrrogaMuestrasMercanciasComponent implements OnInit, OnDestr
     /**
      * Observable que obtiene las fechas de inicio y fin de vigencia.
      */
-    this.query.obtenerFechas$
+    this.renovacionesMuestrasMercanciasQuery.selectValidezDeLaAutorizacion$
       .pipe(
         takeUntil(this.destroyed$),
-        map((seccionState: ListaDeFechas) => {
+        map((datos: ListaDeFechas) => {
           this.formDatosProrroga.patchValue({
-            fechaInicioVigencia: seccionState.fechaInicioVigencia,
-            fechaFinVigencia: seccionState.fechaFinVigencia,
+            fechaInicioVigencia: datos.fechaInicioVigencia,
+            fechaFinVigencia: datos.fechaFinVigencia,
           });
         })
       )
       .subscribe();
+
+      this.getvalidezDeLaAutorizacionDatos();
+  }
+
+
+  /**
+   * Obtiene los datos de validez de la autorización desde el servicio y actualiza el estado.
+   * Realiza una suscripción al servicio para obtener las opciones desplegables y 
+   * actualiza la validez de la autorización en el store.
+   */
+  getvalidezDeLaAutorizacionDatos(): void{
+    this.darseDeBaja = this.renovacionesMuestrasMercanciasService.obtenerOpcionesDesplegables().subscribe({
+      next:(res : ImportanteCatalogoSeleccion)=>{
+        this.renovacionesMuestrasMercanciasStore.actualizarFechas(res.validezDeLaAutorizacion);
+      }
+    })
   }
 
   /**
@@ -164,6 +195,10 @@ export class DatosProrrogaMuestrasMercanciasComponent implements OnInit, OnDestr
    * @returns {void}
    * */
   ngOnDestroy(): void {
+    if (this.darseDeBaja) {
+      this.darseDeBaja.unsubscribe();
+      this.darseDeBaja = null;
+    }
     this.destroyed$.next();
     this.destroyed$.complete();
   }

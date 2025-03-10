@@ -5,17 +5,17 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Importante } from '@ng-mf/data-access-user';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
+import { MuestrasMercanciasStore } from '../../models/registro-muestras-mercancias.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { RegistroMuestras } from '../../models/registro-muestras-mercancias.model';
-import { RegistroRenovacionesMuestrasMercanciasQuery } from '../../estados/registro-renovaciones-muestras-mercancias/registro-renovaciones-muestras-mercancias.query';
+import { RenovacionesMuestrasMercanciasQuery } from '../../estados/renovaciones-muestras-mercancias.query';
 import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
+import { RenovacionesMuestrasMercanciasStore } from '../../estados/renovaciones-muestras-mercancias.store';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-
 /**
  * Componente para el registro de renovaciones de muestras de mercancías.
  * 
@@ -98,7 +98,8 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit, 
   constructor(
     public fb: FormBuilder,
     public renovacionesService: RenovacionesMuestrasMercanciasService,
-    public query: RegistroRenovacionesMuestrasMercanciasQuery
+    public renovacionesMuestrasMercanciasStore: RenovacionesMuestrasMercanciasStore,
+    public renovacionesMuestrasMercanciasQuery: RenovacionesMuestrasMercanciasQuery
   ) {
      // Si es necesario, se puede agregar aquí la lógica de inicialización
   }
@@ -117,47 +118,52 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit, 
     this.formRegistroMuestras = this.fb.group({
       opcionDeImportador: [''],
       tomaMuestraDespacho: [''],
-      descMotivoFaltaMuestra: [{ value: 'no', disabled: true }],
+      descMotivoFaltaMuestra: [{ value: '', disabled: true }],
       comboFraccionConcatenada: [''],
       fraccionConcatenada: [''],
-      fracciondescripcion: [{ value: 'Vacas lecheras.', disabled: true }],
+      fracciondescripcion: [{ value: '', disabled: true }],
       comboNicos: [''],
-      nicoDescripcion: [{ value: 'Vacas lecheras.', disabled: true }],
+      nicoDescripcion: [{ value: '', disabled: true }],
       nombreQuimico: [
-        { value: 'Nombre Quimico', disabled: true },
+        { value: '', disabled: true },
         [Validators.maxLength(256)],
       ],
       nombreComercial: [
-        { value: 'Nombre Comercial', disabled: true },
+        { value: '', disabled: true },
         [Validators.maxLength(256)],
       ],
       numeroCAS: [
-        { value: '34524', disabled: true },
+        { value: '', disabled: true },
         [Validators.maxLength(120)],
       ],
-      ideGenerica: [{ value: 'gaseoso', disabled: true }],
+      ideGenerica: [{ value: '', disabled: true }],
       descClobGenerica: [{ value: '', disabled: true }],
     });
 
     // Se suscribe al observable para obtener el registro de muestras de la tienda.
-    this.query.obtenerRegistro$
+    this.renovacionesMuestrasMercanciasQuery.selectRenovacionesDeRegistro$
       .pipe(
         takeUntil(this.destroyed$),
-        map((response: RegistroMuestras) => {
+        map((response: MuestrasMercanciasStore) => {
+          this.opcionDeImportador = response.importadorExportadorPrevio;
+          this.fraccionArancelariaAga = response.fraccionArancelariaAga;
+          this.nico = response.nico;
+          this.ideGenerica = response.ideGenerica;
+          this.tomaMuestraDespacho = response.tomaMuestraDespacho;
           this.formRegistroMuestras.patchValue({
-            opcionDeImportador: response.opcionDeImportador,
-            tomaMuestraDespacho: response.tomaMuestraDespacho,
-            descMotivoFaltaMuestra: response.descMotivoFaltaMuestra,
-            comboFraccionConcatenada: response.comboFraccionConcatenada,
-            fraccionConcatenada: response.fraccionConcatenada,
-            fracciondescripcion: response.fracciondescripcion,
-            comboNicos: response.comboNicos,
-            nicoDescripcion: response.nicoDescripcion,
-            nombreQuimico: response.nombreQuimico,
-            nombreComercial: response.nombreComercial,
-            numeroCAS: response.numeroCAS,
-            ideGenerica: response.ideGenerica,
-            descClobGenerica: response.descClobGenerica,
+            opcionDeImportador: response.renovacionesDeRegistro.opcionDeImportador,
+            tomaMuestraDespacho: response.renovacionesDeRegistro.tomaMuestraDespacho,
+            descMotivoFaltaMuestra: response.renovacionesDeRegistro.descMotivoFaltaMuestra,
+            comboFraccionConcatenada: response.renovacionesDeRegistro.comboFraccionConcatenada,
+            fraccionConcatenada: response.renovacionesDeRegistro.fraccionConcatenada,
+            fracciondescripcion: response.renovacionesDeRegistro.fracciondescripcion,
+            comboNicos: response.renovacionesDeRegistro.comboNicos,
+            nicoDescripcion: response.renovacionesDeRegistro.nicoDescripcion,
+            nombreQuimico: response.renovacionesDeRegistro.nombreQuimico,
+            nombreComercial: response.renovacionesDeRegistro.nombreComercial,
+            numeroCAS: response.renovacionesDeRegistro.numeroCAS,
+            ideGenerica: response.renovacionesDeRegistro.ideGenerica,
+            descClobGenerica: response.renovacionesDeRegistro.descClobGenerica,
           });
         })
       )
@@ -176,11 +182,12 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit, 
   getOpcionImportador(): void {
     this.darseDeBaja = this.renovacionesService.obtenerOpcionesDesplegables().subscribe({
       next: (res: ImportanteCatalogoSeleccion) => {
-        this.opcionDeImportador = res.importadorExportadorPrevio;
-        this.fraccionArancelariaAga = res.fraccionArancelariaAga;
-        this.nico = res.nico;
-        this.ideGenerica = res.ideGenerica;
-        this.tomaMuestraDespacho = res.tomaMuestraDespacho;
+        this.renovacionesMuestrasMercanciasStore.actualizarImportadorExportador(res.importadorExportadorPrevio)
+        this.renovacionesMuestrasMercanciasStore.actualizacionFraccionTarifaAga(res.fraccionArancelariaAga)
+        this.renovacionesMuestrasMercanciasStore.actualizarDatosUnicos(res.nico)
+        this.renovacionesMuestrasMercanciasStore.actualizacionDeIdeGenerica(res.ideGenerica)
+        this.renovacionesMuestrasMercanciasStore.actualizarTakeSampleOffice(res.tomaMuestraDespacho)
+        this.renovacionesMuestrasMercanciasStore.actualizarRegistro(res.registroMuestrasDatos)
       },
     });
   }

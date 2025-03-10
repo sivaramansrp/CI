@@ -3,15 +3,15 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 import { OnInit } from '@angular/core';
-import { PagoLineaDeCaptureQuery } from '../../estados/pago-linea-de-captura/pago-linea-de-captura.query';
-import { PagoLineaDeCaptureStore } from '../../estados/pago-linea-de-captura/pago-linea-de-captura.store';
 import { REGEX_REEMPLAZAR } from '@ng-mf/data-access-user';
+import { RenovacionesMuestrasMercanciasQuery } from '../../estados/renovaciones-muestras-mercancias.query';
 import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
+import { RenovacionesMuestrasMercanciasStore } from '../../estados/renovaciones-muestras-mercancias.store';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
-import { map } from 'rxjs';
 import { TableData } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 /**
  * Componente para el manejo del pago de la línea de captura.
@@ -63,8 +63,8 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
   constructor(
     public fb: FormBuilder,
     private renovacionesService: RenovacionesMuestrasMercanciasService,
-    public pagoLineaDeCaptureStore: PagoLineaDeCaptureStore,
-    public pagoLineaDeCaptureQuery: PagoLineaDeCaptureQuery
+    public renovacionesMuestrasMercanciasStore: RenovacionesMuestrasMercanciasStore,
+    public renovacionesMuestrasMercanciasQuery: RenovacionesMuestrasMercanciasQuery
   ) {
     // Si es necesario, se puede agregar aquí la lógica de inicialización
   }
@@ -90,7 +90,7 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
     /**
      * Observable que obtiene los pagos de tarifas de la tienda.
      */
-    this.pagoLineaDeCaptureQuery.obtenerPagoDeTarifas$
+    this.renovacionesMuestrasMercanciasQuery.selectPagoDeDerechos$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState: TableData) => {
@@ -113,9 +113,7 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
       .obtenerOpcionesDesplegables()
       .subscribe({
         next: (res: ImportanteCatalogoSeleccion) => {
-          this.pagoLineaDeCaptureStore.update({
-            tableBody: res.tablaDeTarifasDePago.tableBody,
-          });
+          this.renovacionesMuestrasMercanciasStore.actualizarPagoDeTarifas(res.tablaDeTarifasDePago)
         },
       });
   }
@@ -157,7 +155,7 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
     if (!LINEA_CAPTURA || !VALOR_PAGO) {
       return;
     }
-    this.pagoLineaDeCaptureStore.agregarPagoDeTarifas(
+    this.renovacionesMuestrasMercanciasStore.agregarPagoDeTarifas(
       LINEA_CAPTURA,
       VALOR_PAGO
     );

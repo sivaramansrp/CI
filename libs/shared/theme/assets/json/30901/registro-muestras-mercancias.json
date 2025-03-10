@@ -97,5 +97,25 @@
             "tbodyData": ["032000Q0GHM1284", "50000"]
           }
         ]
+      },
+      "validezDeLaAutorizacion":{
+        "fechaInicioVigencia": "01/01/2025",
+        "fechaFinVigencia":"30/01/2025"
+      },
+      "registroMuestrasDatos": {
+        "opcionDeImportador": "",
+        "tomaMuestraDespacho": "",
+        "descMotivoFaltaMuestra": "no",
+        "comboFraccionConcatenada": "",
+        "fraccionConcatenada": "",
+        "fracciondescripcion": "Vacas lecheras.",
+        "comboNicos": "",
+        "nicoDescripcion": "Vacas lecheras.",
+        "nombreQuimico": "Nombre Quimico",
+        "nombreComercial": "Nombre Comercial",
+        "numeroCAS": "34524",
+        "ideGenerica": "gaseoso",
+        "descClobGenerica": ""
       }
+      
 }
