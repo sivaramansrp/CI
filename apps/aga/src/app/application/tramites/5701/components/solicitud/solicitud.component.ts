@@ -553,6 +553,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   tipoSolicitudSeleccion(): void {
+    if (this.solicitudState?.tipoSolicitud) {
+      
+      console.log('Al elegir un nuevo tipo de solicitud se borraran todos los datos que ya ha lllenado');
+      
+    }
+
     this.tipoSolicitudSeleccionada = parseInt(
       this.FormSolicitud.get('tipoSolicitud')?.value,
       10

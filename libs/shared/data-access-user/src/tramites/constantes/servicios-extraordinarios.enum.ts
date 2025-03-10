@@ -247,5 +247,45 @@ export const Aviso = {
   <p>El Servicio de Administración Tributaria (SAT), es el sujeto obligado y responsable del tratamiento de los datos personales que se recaban a través de la Ventanilla Digital Mexicana de Comercio Exterior (VUCEM), los datos personales podrán ser utilizados y transferidos a la autoridades competentes, con la finalidad de llevar a cabo cualquier trámite relacionado con importaciones, exportaciones y tránsito de mercancías de comercio exterior, incluyendo las regulaciones y restricciones no arancelarias que, conforme a la legislación aplicable, sea exigido por las autoridades competentes en materia de comercio </p>`
 };
 
+export const Sectoresy = {
+  alerta: `<p>Para continuar con el trámite, debes agregar por lo menos una mercancía.</p>`,
+}
+
+export const firmar = {
+  alerta: `<p>La solicitud ha sido guardada exitosamente. Tiene 15 días naturales para firmarla, después de ese tiempo desaparecerá
+del listado de solicitudes pendientes por firmar. Número de solicitud [202758747]</p>`,
+}
+
+export const solicitud = {
+  alerta: `<p>Tu solicitud ha sido registrada con el siguiente número de folio <0200900200120242540000002>.</p>`,
+}
+
 
 export const URL_PRUEBA = 'assets/pdf/Test03.pdf';
+
+export const PASOS_REQUERIMIENTOS = [
+  {
+    indice: 1,
+    titulo: 'Requerimiento de información',
+    activo: true,
+    completado: true,
+  },
+  {
+    indice: 2,
+    titulo: 'Requerimiento de datos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 3,
+    titulo: 'Anexar documentos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 4,
+    titulo: 'Firmar promoción',
+    activo: false,
+    completado: false,
+  },
+];
