@@ -15,10 +15,4 @@ import { TEXTOS } from '@ng-mf/data-access-user';
 })
 export class PasoTresComponent {
 
-  /**
-   * Objeto con las instrucciones.
-   * @property {string} TEXTOS - Instrucciones para el usuario. --220201
-   */
-  TEXTOS: string = TEXTOS?.INSTRUCCIONES;
-
 }

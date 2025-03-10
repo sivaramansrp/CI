@@ -24,7 +24,6 @@ import { CertificadoZoosanitario } from './certificado-zoosanitario-routing.modu
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionNacionalComponent } from './components/datos-para-movilizacion-nacional/datos-para-movilizacion-nacional.component';
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
-import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -34,7 +33,6 @@ import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitari
 @NgModule({
   declarations: [
     PasoDosComponent,
-    PasoCuatroComponent,
     PasoTresComponent,
     PasoUnoComponent,
     ZoosanitarioPageComponent,

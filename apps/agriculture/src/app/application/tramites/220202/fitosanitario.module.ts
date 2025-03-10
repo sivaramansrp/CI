@@ -14,8 +14,6 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 
-import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
-
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 
 import { DatosParaMovilizacionNacionalComponent } from './components/datos-para-movilizacion-nacional/datos-para-movilizacion-nacional.component';
@@ -48,7 +46,6 @@ import {
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    PasoCuatroComponent,
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionNacionalComponent,
     PagoDeDerechosComponent
