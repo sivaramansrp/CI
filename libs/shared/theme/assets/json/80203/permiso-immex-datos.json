@@ -1,0 +1,17 @@
+{
+  "permisoImmexDatos": [
+    {
+      "tbodyData": ["1", "IM23377137", "72012001", "Fundición en bruto sin alear con un contenido de fosforo superior al 0.5% en peso", "Kilogramo", "10", "28/12/203"]
+    }
+  ],
+  "fraccionDatos": [
+    {
+      "tbodyData": ["00", "72012001", "72012001", "Kilogramo", "Fundición en bruto sin alear con un contenido de fosforo superior al 0.5% en peso", "FRACC EXP 1 SENASICA"]
+    }
+  ],
+  "nicoDatos": [
+    {
+      "tbodyData": ["01", "Fundición en bruto sin alear con un contenido de fosforo superior al 0.5% en peso"]
+    }
+  ]
+}
