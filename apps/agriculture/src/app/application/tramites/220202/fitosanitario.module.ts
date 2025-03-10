@@ -39,6 +39,7 @@ import {
   TituloComponent,
   WizardComponent
 } from '@ng-mf/data-access-user';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,10 @@ import {
     CatalogoSelectComponent,
     TableComponent,
     InputRadioComponent,
+    ToastrModule.forRoot(),
+  ],
+  providers: [
+    ToastrService
   ]
 })
 export class FitosanitarioModule { }
