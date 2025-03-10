@@ -37,6 +37,8 @@ const ROUTES: Routes = [
       import('./tramites/10301/importador-exportador.module').then(
         (m) => m.ImportadorExportadorModule
       ),
+    },
+    {
     path: 'atender-requerimientos',
     loadChildren: () => import('./atencion-requerimientos/atencion-requerimientos.module').then(
       (m) => m.AtencionRequerimientosModule

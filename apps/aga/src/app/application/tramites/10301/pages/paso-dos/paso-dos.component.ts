@@ -13,8 +13,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImportadorExportadorService } from '../../services/importador-exportador.service';
 import { Subscription } from 'rxjs';
-import { ImportadorExportadorStore } from '../../state/store';
-import { ImportadorExportadorQuery } from '../../state/query';
+
 
 /**
  * Texto de adjuntar para terceros.
@@ -158,9 +157,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   constructor(
     public catalogosServices: CatalogosService,
     public importarExportar: ImportadorExportadorService,
-    private store: ImportadorExportadorStore,
-    private query: ImportadorExportadorQuery
-  ) {
+   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
