@@ -16,6 +16,7 @@
         [isRequired]="true"
         (valueChange)="onValueChange($event)"
         [layout]="'vertical'"
+        formControlName="exportadorFabricanteMismo"
       ></app-input-radio>
       <h6>Fabricantes nacionales</h6>
   
@@ -39,7 +40,7 @@
         <label for="message" class="form-label"
           >Número de registro fiscal*:</label
         >
-        <input type="text" class="form-control" id="message" placeholder="" />
+        <input type="text" class="form-control" id="message" placeholder="" formControlName="numeroRegistroFiscal" />
       </div>
     </form>
   </div>

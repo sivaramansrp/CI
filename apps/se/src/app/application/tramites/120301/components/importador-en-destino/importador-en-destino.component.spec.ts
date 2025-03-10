@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ImportadorEnDestinoComponent } from './importador-en-destino.component';
-import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles.service';
+import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 
 describe('ImportadorEnDestinoComponent', () => {
@@ -46,13 +46,13 @@ describe('ImportadorEnDestinoComponent', () => {
   });
 
   it('should call obtenerIngresoSelectList and set tipo', () => {
-    const mockData = [{ id: 1, descripcion: 'Tipo 1' }];
-    spyOn(elegibilidadTextilesService, 'obtenerMenuDesplegable').and.returnValue(of(mockData));
+    const MOCKDATA = [{ id: 1, descripcion: 'Tipo 1' }];
+    spyOn(elegibilidadTextilesService, 'obtenerMenuDesplegable').and.returnValue(of(MOCKDATA));
 
     component.obtenerIngresoSelectList();
 
     expect(elegibilidadTextilesService.obtenerMenuDesplegable).toHaveBeenCalledWith('tipo.json');
-    expect(component.tipo).toEqual(mockData);
+    expect(component.tipo).toEqual(MOCKDATA);
   });
 
   it('should validate importadorForm fields', () => {

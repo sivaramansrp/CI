@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
 import { HistoricoFabricantesComponent } from './historico-fabricantes.component';
-import { HistoricoFabricantesService } from 'libs/shared/data-access-user/src/core/services/120301/historico-fabricantes/historico-fabricantes.service';
+import { HistoricoFabricantesService } from '../../services/historico-fabricantes/historico-fabricantes.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { InputRadioComponent } from 'libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { InputRadioComponent } from 'libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
+
+import { of } from 'rxjs';
 
 describe('HistoricoFabricantesComponent', () => {
   let component: HistoricoFabricantesComponent;

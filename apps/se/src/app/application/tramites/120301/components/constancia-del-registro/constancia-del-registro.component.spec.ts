@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ConstanciaDelRegistroComponent } from './constancia-del-registro.component';
+import { ConstanciaDelRegistroService } from '../../services/constancia-del-registro/constancia-del-registro.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
-import { ConstanciaDelRegistroComponent } from './constancia-del-registro.component';
-import { ConstanciaDelRegistroService } from 'libs/shared/data-access-user/src/core/services/120301/constancia-del-registro/constancia-del-registro.service';
 import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { of } from 'rxjs';
 
 describe('ConstanciaDelRegistroComponent', () => {
   let component: ConstanciaDelRegistroComponent;

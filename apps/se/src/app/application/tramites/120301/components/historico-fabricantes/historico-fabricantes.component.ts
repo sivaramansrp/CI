@@ -20,22 +20,20 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputRadioComponent } from 'libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
-import radioOptionsData from 'libs/shared/theme/assets/json/120301/tipos-de-fabricante-exportador.json';
-import { AgregarArchivoComponent } from 'libs/shared/data-access-user/src/tramites/components/agregar-archivo/agregar-archivo.component';
-import { CatalogosSelect } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { SelectCatalogosComponent } from 'libs/shared/data-access-user/src/tramites/components/select-catalogos/select-catalogos.component';
-import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
-import unidadRadioFields from 'libs/shared/theme/assets/json/220401/unidad.json';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { HISTORICO_TBCOL } from 'apps/se/src/app/application/tramites/120301/constantes/elegibilidad-de-textiles.enums';
 import { HistoricoFabricantesService } from '../../services/historico-fabricantes/historico-fabricantes.service';
 import { ServiciosElegibilidadDeTextilesService } from '../../services/servicios-elegibilidad-de-textiles.service';
-import { HISTORICO_TBCOL } from 'apps/se/src/app/application/tramites/120301/constantes/elegibilidad-de-textiles.enums';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import radioOptionsData from '@libs/shared/theme/assets/json/120301/tipos-de-fabricante-exportador.json';
+import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json';
 
 @Component({
-  selector: 'historico-fabricantes',
+  selector: 'app-historico-fabricantes',
   templateUrl: './historico-fabricantes.component.html',
   styleUrls: ['./historico-fabricantes.component.scss'],
   standalone: true,
@@ -92,7 +90,9 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private historicoFabricantesService: HistoricoFabricantesService,
     private readonly serviciosElegibilidadDeTextilesService: ServiciosElegibilidadDeTextilesService
-  ) { }
+  ) { 
+    // Constructor logic can be added here if needed
+  }
 
   /**
    * @method ngOnInit

@@ -7,10 +7,18 @@
  * @import { FormBuilder, FormGroup, Validators } from '@angular/forms';
  */
 import { Component, OnInit } from '@angular/core';
-import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ConstanciaDelRegistroService } from '../../services/constancia-del-registro/constancia-del-registro.service';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
+import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { SeccionLibQuery } from '@ng-mf/data-access-user';
+import { SeccionLibState } from '@ng-mf/data-access-user';
+import { SeccionLibStore } from '@ng-mf/data-access-user';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import radioOptionsData from '@libs/shared/theme/assets/json/120301/mostrar.json';
 @Component({
   selector: 'app-constancia-del-registro',
   templateUrl: './constancia-del-registro.component.html',
@@ -19,7 +27,8 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
   imports: [
     TableComponent,
     TituloComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InputRadioComponent
   ]
 })
 export class ConstanciaDelRegistroComponent implements OnInit {
@@ -43,6 +52,16 @@ export class ConstanciaDelRegistroComponent implements OnInit {
    */
   ConstanciaDelRegistro!: FormGroup;
 
+  radioOptions = radioOptionsData;
+
+  selectedValue: string | number = '';
+
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  private constanciaState!: TextilesState;
+
+  private seccionState!: SeccionLibState
+
   /**
    * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
    */
@@ -61,11 +80,36 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   federal: any[] = [];
   constructor(
     private fb: FormBuilder,
-    private constanciaDelRegistroService: ConstanciaDelRegistroService
+    private constanciaDelRegistroService: ConstanciaDelRegistroService,
+    private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
+    private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
+    private seccionStore: SeccionLibStore,
+    private seccionQuery: SeccionLibQuery
   ) { }
 
   ngOnInit(): void {
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
+    this.ElegibilidadDeTextilesQuery.selectTextile$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.constanciaState = state as TextilesState;
+        })
+      )
+      .subscribe();
     this.fetchData();
+    this.initActionFormBuild();
+    
+  }
+
+  initActionFormBuild(): void {
     this.fitosanitarioForm = this.fb.group({
       flexRadioRegistro: ['Datos'],
       estado: [''],
@@ -78,7 +122,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
       typoCategoria: [''],
       typoRegimen: [''],
       descripcionCategoriaTextil: [''],
-      pais: [''],
+      PaisDestino: [''],
       unidadMedidaCategoriaTextil: [''],
       factorConversionCategoriaTextil: [''],
       fechaInicioVigencia: [''],
@@ -111,4 +155,21 @@ export class ConstanciaDelRegistroComponent implements OnInit {
       }
     });
   }
+
+  onValueChange(newValue: any) {
+    this.selectedValue = newValue;
+  }
+
+  setValoresStore(
+      form: FormGroup,
+      campo: string,
+      metodoNombre: keyof ElegibilidadDeTextilesStore
+    ): void {
+      const VALOR = form.get(campo)?.value;
+      console.log(VALOR);
+      (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: any) => void)(
+        VALOR
+      );
+    }
+
 }

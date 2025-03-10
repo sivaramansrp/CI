@@ -8,21 +8,23 @@
  * @import { TableComponent } from '../../../../shared/components/table/table.component';
  */
 
+import { CPATURAR_TBCOL, EXPEDICION_FACTURA_FECHA } from '../../constantes/elegibilidad-de-textiles.enums';
 import { Component, OnInit } from '@angular/core';
-import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-
-import { EXPEDICION_FACTURA_FECHA } from 'apps/se/src/app/application/tramites/120301/constantes/elegibilidad-de-textiles.enums';
+import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil} from 'rxjs';
 import { CapturarFacturasService } from '../../services/capturar-facturas/capturar-facturas.service';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { Catalogo, RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { CatalogosSelect, InputFecha } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { SelectCatalogosComponent } from 'libs/shared/data-access-user/src/tramites/components/select-catalogos/select-catalogos.component';
-import { InputFechaComponent } from 'libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import {CPATURAR_TBCOL} from 'apps/se/src/app/application/tramites/120301/constantes/elegibilidad-de-textiles.enums'
+import { Catalogo} from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { HttpClient } from '@angular/common/http';
+import { InputFecha } from '@ng-mf/data-access-user';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
+import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-capturar-facturas',
@@ -71,31 +73,63 @@ export class CapturarFacturasComponent implements OnInit {
   * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.--120301
   */
   facturas: any[] = [];
+
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  private capturarState!: TextilesState
+
+  private seccionState!: SeccionLibState
+
   constructor(
     private capturarFacturasService: CapturarFacturasService,
     private ElegibilidadTextilesService: ElegibilidadTextilesService,
     private readonly httpServicios: HttpClient,
-    private readonly fb: FormBuilder
-  ) { }
+    private readonly fb: FormBuilder,
+    private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
+    private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
+    private seccionStore: SeccionLibStore,
+    private seccionQuery: SeccionLibQuery
+  ) {
+    // Constructor logic can be added here if needed
+   }
 
   ngOnInit(): void {
+    this.seccionQuery.selectSeccionState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.seccionState = seccionState;
+          })
+        )
+        .subscribe();
+    this.ElegibilidadDeTextilesQuery.selectTextile$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.capturarState = state as TextilesState;
+        })
+      )
+      .subscribe();
+
+        this.fetchData();
+        this.obtenerListasDesplegables();
+        this.initActionFormBuild();
+  }
+
+  initActionFormBuild(): void {
     this.facturaForm = this.fb.group({
       numeroFactura: ['', Validators.required],
       cantidadTotal: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
       unidadDeMedida: ['', Validators.required],
       fechaInicioInput: ['', Validators.required],
       valorDolares: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-      emisorConsignatario: this.fb.group({
-        taxId: ['', Validators.required],
-        razonSocial: ['', Validators.required],
-        calle: ['', Validators.required],
-        ciudad: ['', Validators.required],
-        cp: ['', [Validators.required, Validators.pattern(/^\d{5}$/)]], // Assuming CP is a 5-digit postal code
-        pais: ['', Validators.required],
-      })
+      taxId: ['', Validators.required],
+      razonSocial: ['', Validators.required],
+      calle: ['', Validators.required],
+      ciudad: ['', Validators.required],
+      cp: ['', [Validators.required, Validators.pattern(/^\d{5}$/)]], // Assuming CP is a 5-digit postal code
+      pais: ['', Validators.required],
     });
-    this.fetchData();
-    this.obtenerListasDesplegables();
   }
   fetchData(): void {
     this.capturarFacturasService.getDatos().subscribe({
@@ -125,10 +159,6 @@ export class CapturarFacturasComponent implements OnInit {
  */
   unidadDeMedida: Catalogo[] = [];
   /**
-* Configuración para el input de fecha-expedición-factura.
-* @property {InputFecha} fechaInicioInput
-*/
-
   /**
    * Configuración para el input de fecha de pago.
    * @property {InputFecha} fechaInicioInput
@@ -141,6 +171,18 @@ export class CapturarFacturasComponent implements OnInit {
   obtenerListasDesplegables() {
     this.obtenerIngresoSelectList();
   }
+
+  setValoresStore(
+      form: FormGroup,
+      campo: string,
+      metodoNombre: keyof ElegibilidadDeTextilesStore
+    ): void {
+      const VALOR = form.get(campo)?.value;
+      console.log(VALOR);
+      (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: any) => void)(
+        VALOR
+      );
+    }
 
   /**
    * Obtiene la lista para el select de unidad de medida.

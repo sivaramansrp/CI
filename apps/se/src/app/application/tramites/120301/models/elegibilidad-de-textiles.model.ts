@@ -17,12 +17,6 @@
  * @property {string} aPaterno - Apellido paterno del solicitante.--120301
  * @property {string} correo - Correo electrónico del solicitante.
  */
-export interface solicitante {
-    rfc: string;
-    nombreRazonSocial: string;
-    aPaterno: string;
-    correo: string;
-  }
 
   export interface ListaPasosWizard {
     indice: number;
@@ -45,7 +39,7 @@ export interface solicitante {
    * @property {string} certificacion - Certificación.
    * @property {string} regimen - Régimen.
    */
-  export interface datosDeLaSolicitud {
+  export interface DatosDeLaSolicitud {
     aduanaIngreso: string;
     oficinaInspeccion: string;
     puntoInspeccion: string;
@@ -67,7 +61,7 @@ export interface solicitante {
    * @property {string} transporte - Tipo de transporte.--120301
    * @property {string} punto - Punto de encuentro.
    */
-  export interface datosParaMovilizacionNacional {
+  export interface DatosParaMovilizacionNacional {
     coordenadas: string;
     nombre: string;
     medio: string;
@@ -88,7 +82,7 @@ export interface solicitante {
    * @property {string} llavePago - Llave de pago.
    * @property {string} importePago - Importe de pago.
    */
-  export interface pagoDeDerechos {
+  export interface PagoDeDerechos {
     exentoPagoNo: string;
     exentoPagoSi: string;
     justificacion: string;
@@ -114,7 +108,7 @@ export interface solicitante {
     fabricantesNacionales: any[]; // Adjust type if there's a specific structure
     fabricantesDatos: any[]; // Adjust type if there's a specific structure
   }
-  export interface formularioAsociacionFactura {
+  export interface FormularioAsociacionFactura {
     cantidad: string;
   }
   export interface FitosanitarioForm {
@@ -157,7 +151,7 @@ export interface solicitante {
     importadorForm: ImportadorForm;
     facturaForm: FacturaForm;
     fitosanitarioForm: FitosanitarioForm;
-    formularioAsociacionFactura: formularioAsociacionFactura;
+    formularioAsociacionFactura: FormularioAsociacionFactura;
     historicoFabricantesForm: HistoricoFabricantesForm;
   }
 

@@ -11,13 +11,14 @@
  * @import { FacturasAsociadasService } from '../../../../core/services/120301/facturas-asociadas/facturas-asociadas.service';
  */
 
+import { ASOCIADAS_TBCOl, FACTUS_TBCOL } from 'apps/se/src/app/application/tramites/120301/constantes/elegibilidad-de-textiles.enums'
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
+import { CommonModule } from '@angular/common';
 import { FacturasAsociadasService } from '../../services/facturas-asociadas/facturas-asociadas.service';
-import {FACTUS_TBCOL, ASOCIADAS_TBCOl} from 'apps/se/src/app/application/tramites/120301/constantes/elegibilidad-de-textiles.enums'
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { TableComponent } from '@ng-mf/data-access-user';
+
 
 @Component({
   selector: 'app-facturas-asociadas',

@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="row">
+    <form [formGroup]="importadorForm">
       <div class="col-md-12">
         <ng-titulo titulo="Importador en destino" />
       </div>
@@ -11,6 +11,7 @@
             formControlName="tipo"
             [required]="true"
             name="tipo"
+            formControlName="tipo"
           ></app-catalogo-select>
         </div>
         <div class="col-md-6">
@@ -27,6 +28,7 @@
               type="text"
               appUppercase
               name="Cantidad-total"
+              formControlName="cantidadTotal"
             />
           </div>
         </div>
@@ -42,6 +44,7 @@
               type="text"
               appUppercase
               name="Razón-social"
+              formControlName="razonSocial"
             />
           </div>
         </div>
@@ -58,6 +61,7 @@
               type="text"
               appUppercase
               name="Domicilio"
+              formControlName="domicilio"
             />
           </div>
         </div>
@@ -75,6 +79,7 @@
               type="text"
               appUppercase
               name="ciudad"
+              formControlName="ciudad"
             />
           </div>
         </div>
@@ -85,11 +90,12 @@
               class="form-control"
               value=""
               class="form-control"
-              id="cp"
+              id="cpImportador"
               placeholder=""
               type="text"
               appUppercase
-              name="cp"
+              name="cpImportador"
+              formControlName="cpImportador"
             />
           </div>
         </div>
@@ -100,14 +106,15 @@
               class="form-control"
               value=""
               class="form-control"
-              id="País"
+              id="PaisImportador"
               placeholder=""
               type="text"
               appUppercase
-              name="País"
+              name="PaisImportador"
+              formControlName="PaisImportador"
             />
           </div>
         </div>
       </div>
-    </div>
+    </form>
   </div>

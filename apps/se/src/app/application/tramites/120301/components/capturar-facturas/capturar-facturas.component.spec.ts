@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
 import { CapturarFacturasComponent } from './capturar-facturas.component';
-import { CapturarFacturasService } from 'libs/shared/data-access-user/src/core/services/120301/capturar-facturas/capturar-facturas.service';
+import { CapturarFacturasService } from '../../services/capturar-facturas/capturar-facturas.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { InputFechaComponent } from 'libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SelectCatalogosComponent } from 'libs/shared/data-access-user/src/tramites/components/select-catalogos/select-catalogos.component';
 import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { SelectCatalogosComponent } from 'libs/shared/data-access-user/src/tramites/components/select-catalogos/select-catalogos.component';
-import { InputFechaComponent } from 'libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
+import { of } from 'rxjs';
 
 describe('CapturarFacturasComponent', () => {
   let component: CapturarFacturasComponent;
@@ -71,7 +71,7 @@ describe('CapturarFacturasComponent', () => {
 
     component.obtenerIngresoSelectList();
 
-    expect(component.unidadDeMedida.catalogos).toEqual(mockUnidadDeMedida.data);
+    expect(component.unidadDeMedida).toEqual(mockUnidadDeMedida.data);
   });
 
   it('should handle error while fetching unidad de medida data', () => {
@@ -79,6 +79,6 @@ describe('CapturarFacturasComponent', () => {
 
     component.obtenerIngresoSelectList();
 
-    expect(component.unidadDeMedida.catalogos).toEqual([]);
+    expect(component.unidadDeMedida).toEqual([]);
   });
 });

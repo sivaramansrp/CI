@@ -1,15 +1,11 @@
 import { Injectable } from '@angular/core';
 import {
-  solicitante,
-  datosDeLaSolicitud,
-  datosParaMovilizacionNacional,
-  pagoDeDerechos,
   ElegibilidadDeTextiles,
   ImportadorForm,
   FacturaForm,
   FitosanitarioForm,
-  formularioAsociacionFactura,
   HistoricoFabricantesForm,
+  FormularioAsociacionFactura,
 } from '../models/elegibilidad-de-textiles.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs'; // Importa Observable
@@ -30,7 +26,7 @@ export class ElegibilidadDeTextilesStore extends Store<ElegibilidadDeTextilesSta
         importadorForm: {} as ImportadorForm,
         facturaForm: {} as FacturaForm,
         fitosanitarioForm: {} as FitosanitarioForm,
-        formularioAsociacionFactura: {} as formularioAsociacionFactura,
+        formularioAsociacionFactura: {} as FormularioAsociacionFactura,
         historicoFabricantesForm: {} as HistoricoFabricantesForm
       }
     });

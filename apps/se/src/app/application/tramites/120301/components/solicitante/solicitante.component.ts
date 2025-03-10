@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ID_DE_USUARIO, ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from 'apps/se/src/app/application/tramites/120301/constantes/elegibilidad-de-textiles.enums';
 import {
   FormBuilder,
   FormGroup,
@@ -6,15 +7,13 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { FormularioDinamico } from 'libs/shared/data-access-user/src/core/models/shared/forms-model';
 import { FormulariosService } from 'libs/shared/data-access-user/src/core/services/shared/formularios/formularios.service';
-
 import { ServiciosElegibilidadDeTextilesService } from '../../services/servicios-elegibilidad-de-textiles.service';
 import { SolicitanteService } from 'libs/shared/data-access-user/src/core/services/shared/solicitante/solicitante.service';
 import { solicitante } from 'apps/se/src/app/application/tramites/120301/models/elegibilidad-de-textiles.model';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { ID_DE_USUARIO, ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL } from 'apps/se/src/app/application/tramites/120301/constantes/elegibilidad-de-textiles.enums';
-import { CommonModule } from '@angular/common';
 import { tap } from 'rxjs';
 
 

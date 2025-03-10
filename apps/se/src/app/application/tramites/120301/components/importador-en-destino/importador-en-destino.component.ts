@@ -7,18 +7,19 @@
  * @import { FormGroup } from '@angular/forms';
  */
 
-import { Component } from '@angular/core';
+
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { Catalogo, RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { Component, OnInit } from '@angular/core';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'importador-en-destino',
+  selector: 'app-importador-en-destino',
   templateUrl: './importador-en-destino.component.html',
   styleUrl: './importador-en-destino.component.scss'
 })
-export class ImportadorEnDestinoComponent {
+export class ImportadorEnDestinoComponent implements OnInit{
   /**
    * @property {FormGroup} forma - El grupo de formularios para capturar los datos del importador.
    */
@@ -49,12 +50,12 @@ export class ImportadorEnDestinoComponent {
   crearFormulario(): void {
     this.importadorForm = this.fb.group({
       tipo: ['', Validators.required],
-      cantidadTotal: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      razonSocial: ['', Validators.required],
+      cantidadTotalImportador: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      razonSocialImportador: ['', Validators.required],
       domicilio: ['', Validators.required],
-      ciudad: ['', Validators.required],
-      cp: ['', [Validators.required, Validators.pattern('^[0-9]{5}$')]], // Assuming CP is a 5-digit code
-      pais: ['', Validators.required]
+      ciudadImportador: ['', Validators.required],
+      cpImportador: ['', [Validators.required, Validators.pattern('^[0-9]{5}$')]], // Assuming CP is a 5-digit code
+      PaisImportador: ['', Validators.required]
     });
   }
 

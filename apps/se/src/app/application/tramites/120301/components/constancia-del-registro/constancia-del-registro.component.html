@@ -1,19 +1,47 @@
 <div class="container">
     <form [formGroup]="fitosanitarioForm">
       <div class="row">
+        <div class="col-md-12">
+          <label for="Mostrar"
+            >Mostrar:</label
+          >
+        </div>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [selectedValue]="selectedValue"
+          (valueChange)="onValueChange($event)"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="flexRadioRegistro"
+          (change)="
+            setValoresStore(
+            fitosanitarioForm,
+            'flexRadioRegistro',
+            'setFlexRadioRegistro'
+            )"
+        ></app-input-radio>
+      </div>
+      <div class="row">
         <div class="row pb-5">
           <ng-titulo titulo="Representación-federal"></ng-titulo>
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="Estado">Estado:</label>
+              <label class="form-label" for="estado">Estado:</label>
               <input
                 value=""
                 class="form-control"
-                id="Estado"
+                id="estado"
                 placeholder=""
                 type="text"
                 appUppercase
-                name="Estado"
+                name="estado"
+                formControlName="estado"
+                (change)="
+                  setValoresStore(
+                  fitosanitarioForm,
+                  'estado',
+                  'setEstado'
+                  )"
               />
             </div>
           </div>
@@ -25,11 +53,18 @@
               <input
                 value=""
                 class="form-control"
-                id="Representacion-federal"
+                id="representacionFederal"
                 placeholder=""
                 type="text"
                 appUppercase
-                name="Representacion-federal"
+                name="representacionFederal"
+                formControlName="representacionFederal"
+                (change)="
+                  setValoresStore(
+                  fitosanitarioForm,
+                  'representacionFederal',
+                  'setRepresentacionFederal'
+                  )"
               />
             </div>
           </div>
@@ -44,11 +79,12 @@
               <input
                 value=""
                 class="form-control"
-                id="Fracción-arancelaria"
+                id="fraccionArancelaria"
                 placeholder=""
                 type="text"
                 appUppercase
-                name="Fracción-arancelaria"
+                name="fraccionArancelaria"
+                formControlName="fraccionArancelaria"
               />
             </div>
           </div>
@@ -65,6 +101,7 @@
                 type="text"
                 appUppercase
                 name="producto"
+                formControlName="descripcionProducto"
               />
             </div>
           </div>
@@ -79,6 +116,7 @@
                 type="text"
                 appUppercase
                 name="Tratado"
+                formControlName="tratado"
               />
             </div>
           </div>
@@ -95,6 +133,7 @@
                 type="text"
                 appUppercase
                 name="subproducto"
+                formControlName="subproducto"
               />
             </div>
           </div>
@@ -111,6 +150,7 @@
                 type="text"
                 appUppercase
                 name="Mecanismo"
+                formControlName="mecanismo"
               />
             </div>
           </div>
@@ -125,6 +165,7 @@
                 type="text"
                 appUppercase
                 name="Categoria_textil"
+                formControlName="typoCategoria"
               />
             </div>
           </div>
@@ -139,6 +180,7 @@
                 type="text"
                 appUppercase
                 name="regimen"
+                formControlName="typoRegimen"
               />
             </div>
           </div>
@@ -155,20 +197,22 @@
                 type="text"
                 appUppercase
                 name="categoria-textil"
+                formControlName="descripcionCategoriaTextil"
               />
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="Pais">País destino/origen:</label>
+              <label class="form-label" for="PaisDestino">País destino/origen:</label>
               <input
                 value=""
                 class="form-control"
-                id="Pais"
+                id="PaisDestino"
                 placeholder=""
                 type="text"
                 appUppercase
-                name="Pais"
+                name="PaisDestino"
+                formControlName="PaisDestino"
               />
             </div>
           </div>
@@ -185,6 +229,7 @@
                 type="text"
                 appUppercase
                 name="medida"
+                formControlName="unidadMedidaCategoriaTextil"
               />
             </div>
           </div>
@@ -201,6 +246,7 @@
                 type="text"
                 appUppercase
                 name="categoria"
+                formControlName="factorConversionCategoriaTextil"
               />
             </div>
           </div>
@@ -217,6 +263,7 @@
                 type="text"
                 appUppercase
                 name="fecha-de-inicio"
+                formControlName="fechaInicioVigencia"
               />
             </div>
           </div>
@@ -233,6 +280,7 @@
                 type="text"
                 appUppercase
                 name="fecha-de-fin"
+                formControlName="fechaFinVigencia"
               />
             </div>
           </div>
