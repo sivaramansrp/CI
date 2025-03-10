@@ -12,6 +12,7 @@
                 class="form-control"
                 id="nombreDeLaMateriaPrima"
                 [placeholder]="'Nombre de la materia prima'"
+                (change)="setValoresStore(materiaPrimaForm,'nombreDeLaMateriaPrima', 'setNombreDeLaMateriaPrima')"
               />
               <div *ngIf="materiaPrimaForm.get('nombreDeLaMateriaPrima')?.invalid && (materiaPrimaForm.get('nombreDeLaMateriaPrima')?.dirty || materiaPrimaForm.get('nombreDeLaMateriaPrima')?.touched)">
                   <div *ngIf="materiaPrimaForm.get('nombreDeLaMateriaPrima')?.errors?.['required']">
@@ -31,6 +32,7 @@
                 id="cantidad"
                 [placeholder]="'1'"
                 (blur)="obtenerLetraCantidad(materiaPrimaForm.get('cantidad')?.value)"
+                (change)="setValoresStore(materiaPrimaForm,'cantidad', 'setcantidad')"
               />
               <div *ngIf="materiaPrimaForm.get('cantidad')?.invalid && (materiaPrimaForm.get('cantidad')?.dirty || materiaPrimaForm.get('cantidad')?.touched)">
                   <div *ngIf="materiaPrimaForm.get('cantidad')?.errors?.['required']">

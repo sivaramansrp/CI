@@ -9,12 +9,17 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
-
+import { Observable, Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { Tramite231001Query } from '../../../../tramites/231001/estados/queries/tramite231001.query';
+import {
+  Solicitud231001State,
+  Tramite231001Store,
+} from '../../../../tramites/231001/estados/tramites/tramite231001.store'
 
 /**
  * Decorador que define un componente de Angular.
@@ -29,7 +34,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDelaSolicitudeComponent implements OnInit {
-  
+  private destroyed$: Subject<void> = new Subject();
+  public solicitudState!: Solicitud231001State;
   /**
    *  datosForm
    * @type {FormGroup}
@@ -84,7 +90,10 @@ export class DatosDelaSolicitudeComponent implements OnInit {
    * @param {FormBuilder} fb - Servicio FormBuilder para la creación de formularios.
    * @param {CatalogosService} catalogosServices - Servicio para obtener los catálogos.
    */
-  constructor(public fb: FormBuilder, private catalogosServices: CatalogosService) {
+  constructor(public fb: FormBuilder, private catalogosServices: CatalogosService,
+    private tramite231001Query: Tramite231001Query,
+    private tramite231001Store: Tramite231001Store,
+  ) {
     this.solicitudForm = this.fb.group({
       datosdelForm: this.fb.group({
         numeroRegistroAmbiental: ['', Validators.required],
@@ -140,13 +149,49 @@ export class DatosDelaSolicitudeComponent implements OnInit {
       aduanas: [null, Validators.required],
     });
     this.aduanasdata();
+
+    this.tramite231001Query.numeroProgramaImmex$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((numeroProgramaImmex) => {
+        if (numeroProgramaImmex) {
+          this.solicitudForm.get('numeroProgramaImmex')?.setValue(numeroProgramaImmex);
+        }
+      });
+
+    this.tramite231001Query.aduanas$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((aduanas) => {
+        this.datosForm.get('aduanas')?.setValue(aduanas);
+      });
+
+    this.tramite231001Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((state) => {
+          this.solicitudForm.patchValue({
+            datosdelForm: {
+              numeroRegistroAmbiental: state.numeroRegistroAmbiental,
+              descripcionGenerica1: state.descripcionGenerica1,
+              numeroProgramaImmex: state.numeroProgramaImmex,
+            },
+          });
+        })
+      )
+      .subscribe();
+
   }
 
   /**
    * Maneja la selección de una aduana.
    */
   onAduanaSelect(): void {
-    this.selectedAduana = this.datosForm.get('aduanas')?.value;
+    // this.selectedAduana = this.datosForm.get('aduanas')?.value;
+    this.selectedAduana = parseInt(this.datosForm.get('aduanas')?.value,
+      10
+    );
+
+    const aduanas = this.datosForm.get('aduanas')?.value
+    this.tramite231001Store.setAduanas(aduanas);
   }
 
   /**
@@ -163,5 +208,15 @@ export class DatosDelaSolicitudeComponent implements OnInit {
         console.error('API Error:', err);
       },
     });
+  }
+  getnumeroProgramaImmex(): void {
+    const selectedNumeroProgramaImmex = this.solicitudForm.get('datosdelForm.numeroProgramaImmex')?.value;
+    this.tramite231001Store.setnumeroProgramaImmex(selectedNumeroProgramaImmex);
+  }
+
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite231001Store): void {
+    const VALOR = form.get(campo)?.value;
+
+    (this.tramite231001Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 }
