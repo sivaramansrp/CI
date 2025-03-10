@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Tramite120601Query } from '../../estados/tramite-120601.query';
+import { Tramite120601Store } from '../../estados/tramite-120601.store';
 
 import { Catalogo, CatalogoSelectComponent, SelectCatalogosComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { tipoDeEmpresa} from '@ng-mf/data-access-user';
-import { Tramite120601Store } from '../../estados/tramite-120601.store';
-import { Tramite120601Query } from '../../estados/tramite-120601.query';
+
 
 /**
  * Componente que representa los datos de la solicitud en un proceso de múltiples pasos.
