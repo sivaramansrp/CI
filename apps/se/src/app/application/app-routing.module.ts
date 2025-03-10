@@ -96,12 +96,19 @@ const routes: Routes = [
       import('./tramites/90101/autorizacion-prosec.module').then(
         (m) => m.AutorizacionProsecModule
       ),
-  }
+  },
   {
     path: 'solicitud-modalidad',
     loadChildren: () =>
       import('./tramites/80208/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
+      ),
+  },
+  {
+    path: 'nuevo-programa-industrial',
+    loadChildren: () =>
+      import('./tramites/80101/nuevo-programa-industrial.module').then(
+        (m) => m.NuevoProgramaIndustrialModule
       ),
   }
 
