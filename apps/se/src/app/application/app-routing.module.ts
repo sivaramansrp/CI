@@ -103,6 +103,13 @@ const routes: Routes = [
       import('./tramites/80208/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
       ),
+  },
+  {
+    path: 'cancelaciones-ministerioEconomia',
+    loadChildren: () =>
+      import('./tramites/140201/cancelaciones-140201.module').then(
+        (m) => m.Cancelaciones140201Module
+      ),
   }
 
 
