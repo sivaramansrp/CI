@@ -1,1 +1,238 @@
-<p>permiso-renuncia-de-derechos works!</p>
+<div class="container">
+  <form [formGroup]="permisoForm">
+    <ng-titulo titulo="Permiso renuncia de derechos" />
+    <div class="row mt-2">
+      <div class="col-md-5">
+        <div class="form-group">
+          <label class="form-label">Folio trámite:</label>
+          <input
+            class="form-control disabledColor1"
+            placeholder=""
+            type="text"
+            name="folioTrámite"
+            formControlName="folioTrámite"
+          />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label class="form-label">Tipo de solicitud:</label>
+          <input
+            class="form-control disabledColor1"
+            placeholder=""
+            type="text"
+            readonly
+            name="tipoDeSolicitud"
+            formControlName="tipoDeSolicitud"
+          />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label">Régimen:</label>
+          <input
+            class="form-control disabledColor1"
+            placeholder=""
+            type="text"
+            readonly
+            name="régimen"
+            formControlName="régimen"
+          />
+        </div>
+      </div>
+    </div>
+    <!-- row-->
+
+    <div class="row mt-2">
+      <div class="col-md-5">
+        <div class="form-group">
+          <label class="form-label">Clasificación del régimen:</label>
+          <input
+            class="form-control disabledColor1"
+            placeholder=""
+            type="text"
+            readonly
+            name="clasificaciónDelRégimen"
+            formControlName="clasificaciónDelRégimen"
+          />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label class="form-label">Periodo de vigencia:</label>
+          <input
+            class="form-control disabledColor1"
+            placeholder=""
+            type="text"
+            readonly
+            name="periodoDeVigencia"
+            formControlName="periodoDeVigencia"
+          />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label">Unidad de medida:</label>
+          <input
+            class="form-control disabledColor1"
+            placeholder=""
+            type="text"
+            readonly
+            name="unidadDeMedida"
+            formControlName="unidadDeMedida"
+          />
+        </div>
+      </div>
+    </div>
+    <!-- row-->
+
+    <div class="row mt-2">
+      <div class="col-md-5">
+        <div class="form-group">
+          <label class="form-label">Fracción arancelaria:</label>
+          <input
+            class="form-control disabledColor1"
+            placeholder=""
+            type="text"
+            readonly
+            name="fracciónArancelaria"
+            formControlName="fracciónArancelaria"
+          />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label class="form-label">Cantidad autorizada</label>
+          <input
+            class="form-control disabledColor1"
+            placeholder=""
+            type="text"
+            readonly
+            name="cantidadAutorizada"
+            formControlName="cantidadAutorizada"
+          />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label">Valor autorizado:</label>
+          <input
+            class="form-control disabledColor1"
+            placeholder=""
+            type="text"
+            readonly
+            name="valorAutorizado"
+            formControlName="valorAutorizado"
+          />
+        </div>
+      </div>
+    </div>
+    <!-- row-->
+
+    <div class="row mt-2">
+      <div class="col-md-2">
+        <div class="form-group">
+          <label class="form-label">NICO:</label>
+          <input
+            class="form-control disabledColor1"
+            placeholder=""
+            type="text"
+            readonly
+            name="nico"
+            formControlName="nico"
+          />
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="form-group">
+          <label class="form-label">Descripción NICO:</label>
+          <textarea
+            class="form-control disabledColor1 textarea-auto-height"
+            rows="2"
+            formControlName="descripciónNico"
+          ></textarea>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="form-group">
+          <label class="form-label">Acotación:</label>
+          <textarea
+            class="form-control disabledColor1 textarea-auto-height"
+            rows="2"
+            name="acotación"
+            readonly
+            formControlName="acotación"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+    <!-- row-->
+
+    <div class="row mt-2">
+      <div class="col-md-5">
+        <div class="form-group">
+          <label class="form-label">Permiso válido desde:</label>
+          <input
+            class="form-control disabledColor1"
+            placeholder=""
+            type="text"
+            readonly
+            name="permisoVálidoDesde"
+            formControlName="permisoVálidoDesde"
+          />
+        </div>
+      </div>
+      <div class="col-md-7">
+        <div class="form-group">
+          <label class="form-label">Permiso válido hasta:</label>
+          <input
+            class="form-control disabledColor1"
+            placeholder=""
+            type="text"
+            readonly
+            name="permisoVálidoHasta"
+            formControlName="permisoVálidoHasta"
+          />
+        </div>
+      </div>
+    </div>
+    <!-- row-->
+
+    <hr class="red" />
+
+    <div class="row mt-2">
+      <div class="col-md-10 col-sm-12">
+        <div class="form-group">
+          <label class="form-label">Motivo renuncia de derechos*:</label>
+          <textarea
+            class="form-control textarea-auto-height"
+            rows="4"
+            name="motivoRenunciaDeDerechos"
+            formControlName="motivoRenunciaDeDerechos"
+          ></textarea>
+
+          <div *ngIf="esInvalido('motivoRenunciaDeDerechos')" class="text-danger">
+            <small *ngIf="permisoForm.controls['motivoRenunciaDeDerechos'].hasError('required')">Motivo de renuncia de derechos es obligatoria.</small>
+            <small *ngIf="permisoForm.controls['motivoRenunciaDeDerechos'].hasError('maxlength')">Máximo 255 caracteres.</small>
+        </div>
+        </div>
+      </div>
+    </div>
+    <!-- row-->
+
+    <div class="row mt-2">
+      <div class="col-md-12">
+        <ng-titulo titulo="Manifiesto bajo protesta" />
+        <div class="form-check bg-light p-0">
+
+            <div class="alert alert-info content-with-checkbox">
+              <input class="form-check-input" formControlName="controlar" [ngClass]="{'is-invalid': esInvalido('controlar')}" type="checkbox" id="manifiesto">
+              {{MANIFIESTO_BAJO_PROTESTA}}
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- row-->
+  </form>
+</div>
