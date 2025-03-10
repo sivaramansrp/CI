@@ -11,35 +11,94 @@ import { catalogoResponse } from '@libs/shared/data-access-user/src';
  * @interface solicitud220401State
  * @description Interfaz que define la estructura del estado para la solicitud 220401.
  */
+
+/**
+ * Interfaz que define el estado de la solicitud 220401.
+ */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface solicitud220401State {
+  /** Certificación asociada a la solicitud. */
   certificada: string;
+
+  /** Identificación del medio de transporte. */
   identificationDelTransporte: string;
+
+  /** Estado seleccionado, obtenido de un catálogo de respuestas. */
   selectedEstado: catalogoResponse | null;
+
+  /** Número de contenedor para el transporte de la mercancía. */
   numerodeContenedor: string;
+
+  /** Fecha de embarque de la mercancía. */
   fetchdeEmbarque: string;
+
+  /** Número de flejes de seguridad. */
   numerodeFlejes: string;
+
+  /** Datos del certificado asociado a la solicitud. */
   datoscertificado: string;
+
+  /** Fracción arancelaria correspondiente a la mercancía. */
   fraccionArancelaria: string;
+
+  /** Fecha de caducidad de la mercancía o certificado. */
   fechaCaducidad: string;
+
+  /** Nombre o identificación del animal o producto. */
   nombreIdentificacion: string;
+
+  /** Raza del animal, en caso de aplicar. */
   raza: string;
+
+  /** Edad del animal, si corresponde. */
   edadAnimal: string;
+
+  /** Color del animal o producto, si aplica. */
   color: string;
+
+  /** Número de autorización CITES, si es necesario. */
   numeroAutorizacionCITES: string;
+
+  /** Aduana de ingreso o salida de la mercancía. */
   aduana: string;
+
+  /** Código OSIA asociado a la solicitud. */
   osia: string;
+
+  /** Sexo del animal, si aplica. */
   sexo: string;
+
+  /** Otro dato relevante, si no existe un campo específico. */
   otro: string;
+
+  /** Punto de ingreso al país o región. */
   puntoIngreso: string;
+
+  /** Nombre del establecimiento donde se realiza la verificación. */
   nombreEstablecimientoCheck: string;
+
+  /** Número de autorización del establecimiento. */
   numeroAutorizacionCheck: string;
+
+  /** Tipo de actividad realizada en el establecimiento. */
   tipoActividadCheck: string;
+
+  /** Otro dato relevante para la verificación. */
   otroCheck: string;
+
+  /** Fecha estimada de arribo de la mercancía o animales. */
   fechaArribo: string;
+
+  /** Justificación de la solicitud, si es necesaria. */
   Justificacion: string;
+
+  /** Indica si la solicitud está exenta de pago. */
   exentoDePago: string;
+
+  /** Llave o referencia del pago realizado. */
   llaveDePago: string;
+
+  /** Fecha en la que se realizó el pago. */
   fechaPago: string;
 }
 
@@ -50,35 +109,92 @@ export interface solicitud220401State {
  */
 export function createInitialState(): solicitud220401State {
   return {
+  
+   /** Certificación asociada a la solicitud. */
     certificada: '',
+
+    /** Identificación del medio de transporte. */
     identificationDelTransporte: '',
+  
+    /** Estado seleccionado, obtenido de un catálogo de respuestas. */
     selectedEstado: null,
+  
+    /** Número de contenedor para el transporte de la mercancía. */
     numerodeContenedor: '',
+  
+    /** Fecha de embarque de la mercancía. */
     fetchdeEmbarque: '',
+  
+    /** Número de flejes de seguridad. */
     numerodeFlejes: '',
+  
+    /** Datos del certificado asociado a la solicitud. */
     datoscertificado: '',
+  
+    /** Fracción arancelaria correspondiente a la mercancía. */
     fraccionArancelaria: '',
+  
+    /** Fecha de caducidad de la mercancía o certificado. */
     fechaCaducidad: '',
+  
+    /** Nombre o identificación del animal o producto. */
     nombreIdentificacion: '',
+  
+    /** Raza del animal, en caso de aplicar. */
     raza: '',
+  
+    /** Edad del animal, si corresponde. */
     edadAnimal: '',
+  
+    /** Color del animal o producto, si aplica. */
     color: '',
+  
+    /** Número de autorización CITES, si es necesario. */
     numeroAutorizacionCITES: '',
+  
+    /** Aduana de ingreso o salida de la mercancía. */
     aduana: '',
+  
+    /** Código OSIA asociado a la solicitud. */
     osia: '',
+  
+    /** Sexo del animal, si aplica. */
     sexo: '',
+  
+    /** Otro dato relevante, si no existe un campo específico. */
     otro: '',
+  
+    /** Punto de ingreso al país o región. */
     puntoIngreso: '',
+  
+    /** Nombre del establecimiento donde se realiza la verificación. */
     nombreEstablecimientoCheck: '',
+  
+    /** Número de autorización del establecimiento. */
     numeroAutorizacionCheck: '',
+  
+    /** Tipo de actividad realizada en el establecimiento. */
     tipoActividadCheck: '',
+  
+    /** Otro dato relevante para la verificación. */
     otroCheck: '',
+  
+    /** Fecha estimada de arribo de la mercancía o animales. */
     fechaArribo: '',
+  
+    /** Justificación de la solicitud, si es necesaria. */
     Justificacion: '',
+  
+    /** Indica si la solicitud está exenta de pago. */
     exentoDePago: '',
+  
+    /** Llave o referencia del pago realizado. */
     llaveDePago: '',
+  
+    /** Fecha en la que se realizó el pago. */
     fechaPago: ''
   };
+  
 }
 
 /**

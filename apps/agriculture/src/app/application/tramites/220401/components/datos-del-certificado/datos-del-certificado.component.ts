@@ -1,5 +1,11 @@
+/**
+ * Importaciones necesarias para el componente DatosDelCertificado.
+ */
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+/**
+ * Importaciones necesarias para el componente DatosDelCertificado.
+ */
 import {
   FormBuilder,
   FormControl,
@@ -7,6 +13,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+/** Importación de componentes reutilizables y modelos. */
 import {
   Catalogo,
   catalogoResponse,
@@ -14,15 +21,17 @@ import {
   InputRadioComponent,
 } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+/** Datos de opciones para el componente de radio desde un archivo JSON. */
 
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import radioOptionsData from 'libs/shared/theme/assets/json/220401/tipo-de-certifico.json';
 import { AgregarArchivoComponent } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
+/** Importación del store y estado para la gestión de la solicitud. */
 
 import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
-
+/** Campos de radio desde un archivo JSON. */
 
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import unidadRadioFields from 'libs/shared/theme/assets/json/220401/unidad.json';
@@ -31,6 +40,9 @@ import { map, Subject, takeUntil } from 'rxjs';
 
 import { Pantallas220401Service } from '../pantallas220401.service';
 import { Observable } from 'rxjs';
+/**
+ * Componente que gestiona los datos del certificado en la solicitud 220401.
+ */
 
 @Component({
   selector: 'app-datos-del-certificado',
@@ -49,20 +61,24 @@ import { Observable } from 'rxjs';
 })
 export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
  
- 
+  /** Formulario principal para la solicitud. */
   solicitudForm!:FormGroup;
-
+ /** Opciones de radio importadas desde JSON. */
   radioOptions = radioOptionsData; // Use imported JSON data
   selectedValue: string = 'Nuevo';
-
+ /** Valor seleccionado en el componente de radio. */
   defaultSelect: string | number = 'oficina central';
+  /** Notificador para destruir las suscripciones al salir del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
-  
+  /** Formulario de datos del certificado. */
   datosdelForm!: FormGroup;
   radioBoton = unidadRadioFields; // import data from Json
   // public datosState!: solicitud220401State;
   public solicitudState!: solicitud220401State;
   estadoJson: catalogoResponse[] = [];
+  /**
+   * Constructor del componente, inyecta los servicios necesarios.
+   */
 
   // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder,
@@ -71,6 +87,9 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
     private _pantallas220401Service: Pantallas220401Service   
    
 ) {}
+/**
+   * Inicialización del componente.
+   */
   ngOnInit(): void {
     this.datosdelForm = this.fb.group({
       tipoCertificado: ['', Validators.required],
@@ -95,7 +114,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
         }
       });
     });
-    
+        /** Suscripción para obtener el estado de la solicitud. */
     this.agregarQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -104,14 +123,20 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      this.formGroup1= this.fb.group({
+        osia:[this.solicitudState?.osia]
+      })
 
       this.datosdelForm= this.fb.group({
         datoscertificado:[this.solicitudState?.datoscertificado],
         certificada: [this.solicitudState?.certificada],
-        osia:[this.solicitudState?.osia]
+        // osia:[this.solicitudState?.osia]
       })
 
       }
+      /**
+   * Maneja los cambios en el valor seleccionado.
+   */
   
       onValueChange(value: string | number) {
         this.selectedValue = value.toString();
@@ -183,6 +208,9 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
       );
     });
   }
+  /**
+   * Limpia las suscripciones al destruir el componente.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
@@ -235,6 +263,5 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
       { id: 3, descripcion: 'Option 3' },
     ];
  
-
 }
 }
