@@ -75,9 +75,13 @@ export * from './core/services/shared/wizard/wizard.service';
 export * from './core/services/220471/servicios-pantallas.enum';
 export * from './tramites/constantes/regex.constants';
 export * from './core/services/130118/pexim/pexim.service';
-export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
+
+export {ConfiguracionColumna} from './core/models/shared/configuracion-columna.model';
+export {TablaSeleccion} from './core/enums/tabla-seleccion.enum';
+export {TablaDinamicaComponent} from './tramites/components/tabla-dinamica/tabla-dinamica.component';
+export {TituloComponent} from './tramites/components/titulo/titulo.component';
 export * from './core/models/shared/configuracion-columna.model'
 export * from './core/services/220501/revision.service';
 export * from './core/services/220501/sagarpa/sagarpa.service';
@@ -90,7 +94,6 @@ export { TEXTOS as TEXTOS_220501 } from './tramites/constantes/220501/texto-enum
 export { CATALOGOS_ID as CATALOGOS_ID_220501 } from './tramites/constantes/220501/constantes';
 export { FECHA_INSPECCION_INPUT as FECHA_INSPECCION_INPUT_220502 } from './tramites/constantes/220502/texto-enum';
 export { PASOS as TODAPASOS } from './tramites/constantes/certificado-zoosanitario.enum';
-export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './core/enums/tabla-seleccion.enum';
 export * from './tramites/directives/Uppercase/uppercase.directive'
 export * from './tramites/directives/Uppercase/uppercase.directive';
@@ -111,6 +114,5 @@ export * from './tramites/components/encabezado-requerimiento/encabezado-requeri
 export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
 export * from './tramites/components/acuse/acuse.component';
 
-export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './core/models/shared/configuracion-columna.model';
 export * from './core/enums/tabla-seleccion.enum';
