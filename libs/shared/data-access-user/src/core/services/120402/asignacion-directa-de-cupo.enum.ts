@@ -16,12 +16,6 @@ export const ASIGNACION = [
         titulo: 'Anexar requistios',
         activo: false,
         completado: false,
-      },
-      {
-        indice: 4,
-        titulo: 'Firmar soclicitud',
-        activo: false,
-        completado: false,
       }
 ]
 
