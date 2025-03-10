@@ -9,11 +9,6 @@ import { HttpClient } from '@angular/common/http';
 
 import { Catalogo } from '../../../../core/models/shared/catalogos.model';
 
-import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
-import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
-
-import { Subject, map, takeUntil } from 'rxjs';
-
 describe('PaisProcendenciaComponent', () => {
   let component: PaisProcendenciaComponent;
   let fixture: ComponentFixture<PaisProcendenciaComponent>;

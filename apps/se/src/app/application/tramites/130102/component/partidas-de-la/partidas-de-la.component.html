@@ -27,8 +27,8 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <app-catalogo-select [catalogo]="fraccionArancelariaTIGIE"  formControlName="fraccionArancelariaTIGIE"
-                    [required]="true" (change)="fraccionArancelariaTIGIESelection(); setValoresStore(form,'fraccionArancelariaTIGIE', 'setFraccionArancelariaTIGIE')"></app-catalogo-select>
+                    <app-catalogo-select [catalogo]="fraccionArancelariaTIGIE"  formControlName="fraccionArancelariaTIGIE_TIGIE"
+                    [required]="true" (change)="fraccionArancelariaTIGIESelection(); setValoresStore(form,'fraccionArancelariaTIGIE_TIGIE', 'setFraccionArancelariaTIGIE_TIGIE')"></app-catalogo-select>
                         <div *ngIf="esInvalido('fraccionArancelariaTIGIE')" class="text-danger">
                             <small>Debe seleccionar una fracción.</small>
                         </div>
