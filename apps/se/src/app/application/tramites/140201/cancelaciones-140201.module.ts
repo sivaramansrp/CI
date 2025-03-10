@@ -12,11 +12,12 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Cancelaciones140201Component } from './pages/cancelaciones-140201/cancelaciones-140201.component';
 import { Datos140201Component } from './pages/datos-140201/datos-140201.component';
+import { DatosDelLas140201Component } from './components/datos-del-las-140201/datos-del-las-140201.component';
 
 @NgModule({
   declarations: [
     Cancelaciones140201Component,
-    Datos140201Component
+    Datos140201Component,
   ],
   imports: [
     CommonModule,
@@ -26,6 +27,7 @@ import { Datos140201Component } from './pages/datos-140201/datos-140201.componen
     SolicitanteComponent,
     FormsModule,
     ReactiveFormsModule,
+    DatosDelLas140201Component
   ],
 })
 export class Cancelaciones140201Module {}
