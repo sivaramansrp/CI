@@ -5,6 +5,7 @@ import { CapturarSolicitudComponent } from './pages/capturar-solicitud/capturar-
 import { CommonModule } from '@angular/common';
 
 import { CertificadoSGPRoutingModule } from './certificado-sgp-routing.module';
+import { DatosDelCertificadoComponent } from "./components/datos-del-certificado/datos-del-certificado.component";
 import { DetallesDelTransporteComponent } from './components/detalles-del-transporte/detalles-del-transporte.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { FirmarSolicitudComponent } from './pages/firmar-solicitud/firmar-solicitud.component';
@@ -12,6 +13,7 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { TransporteComponent } from './components/transporte/transporte.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
+
 
 
 @NgModule({
@@ -29,6 +31,7 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     TransporteComponent,
     FirmaElectronicaComponent,
     BtnContinuarComponent,
-  ],
+    DatosDelCertificadoComponent
+],
 })
 export class CertificadoSGPModule {}

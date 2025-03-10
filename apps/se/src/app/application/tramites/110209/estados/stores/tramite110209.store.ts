@@ -6,7 +6,9 @@ export interface Tramite110209State{
     medioDeTransporte: string;
     rutaCompleta: string,
     puertoDeEmbarque: string,
-    puertoDeDesembarque: string
+    puertoDeDesembarque: string,
+    observaciones: string
+
 }
 
 export function createInitialState(): Tramite110209State {
@@ -14,14 +16,15 @@ export function createInitialState(): Tramite110209State {
         medioDeTransporte: '',
         rutaCompleta: '',
         puertoDeEmbarque: '',
-        puertoDeDesembarque: ''
+        puertoDeDesembarque: '',
+        observaciones: ''
     }
 }
 
 @Injectable({
     providedIn: 'root',
   })
-  @StoreConfig({ name: 'tramite110102', resettable: true })
+  @StoreConfig({ name: 'tramite110209', resettable: true })
   export class Tramite110209Store extends Store<Tramite110209State> {
     constructor() {
       super(createInitialState());
@@ -53,6 +56,13 @@ public setMedioDeTransporte(medioDeTransporte: string):void {
         this.update((state) => ({
         ...state,
         puertoDeDesembarque,
+        }));
+    }
+
+    public setObservaciones(observaciones: string):void {
+        this.update((state) => ({
+        ...state,
+        observaciones,
         }));
     }
 

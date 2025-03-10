@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 import { TransporteComponent } from './transporte.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { TransporteService } from '../../services/transporte.service';
+import { TransporteService } from '../../services/transporte/transporte.service';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 

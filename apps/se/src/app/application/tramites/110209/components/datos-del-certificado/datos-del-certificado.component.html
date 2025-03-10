@@ -1,0 +1,34 @@
+<div class="container">
+    <ng-titulo [titulo]="'Datos del certificado'"></ng-titulo>
+    <form [formGroup]="datosDelCertificadoForm">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="observaciones" class="form-label">Observaciones :</label>
+                    <textarea class="form-control" id="observaciones" formControlName="observaciones"
+                        placeholder="pruebas"
+                        (change)="setValoresStore(datosDelCertificadoForm,'observaciones','setObservaciones')"></textarea>
+                    <div
+                        *ngIf="datosDelCertificadoForm.controls['observaciones'].errors && datosDelCertificadoForm.controls['observaciones'].touched">
+                        <span *ngIf="datosDelCertificadoForm.controls['observaciones'].hasError('pattern')" class="text-danger">
+                           <small>Por favor, corrija la observaciones.</small> 
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <label for="mercancíasSeleccionadas" class="form-label">Mercancías seleccionadas</label>
+            <div>
+                <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosTabla"
+                    [tipoSeleccionTabla]="seleccionTabla"></app-tabla-dinamica>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-primary">Modificar</button>
+        </div>
+
+    </div>
+</div>
