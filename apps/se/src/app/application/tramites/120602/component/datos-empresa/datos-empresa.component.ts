@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -55,7 +55,7 @@ import { Subject } from 'rxjs';
   templateUrl: './datos-empresa.component.html',
   styleUrl: './datos-empresa.component.scss',
 })
-export class DatosEmpresaComponent implements OnInit {
+export class DatosEmpresaComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para los datos de la empresa.
    */
@@ -159,7 +159,6 @@ export class DatosEmpresaComponent implements OnInit {
       })
     )
     .subscribe((data) => {
-      console.log('State from the query during form initialization:', data);
     });
     this.formularioEmpresa = this.fb.group({
       estado: [this.solicitudState.estado],
@@ -270,4 +269,16 @@ export class DatosEmpresaComponent implements OnInit {
     (this.tramite120602Store[metodoNombre] as (value: any) => void)(valor);
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
