@@ -101,7 +101,7 @@ const routes: Routes = [
       import('./tramites/90101/autorizacion-prosec.module').then(
         (m) => m.AutorizacionProsecModule
       ),
-  }
+  },
   {
     path: 'solicitud-modalidad',
     loadChildren: () =>
@@ -115,7 +115,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(ROUTES)],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
