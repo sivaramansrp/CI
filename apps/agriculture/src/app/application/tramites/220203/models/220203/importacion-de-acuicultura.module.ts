@@ -110,10 +110,16 @@ export interface FormularioPago {
     fechaPago: string;
     importePago: string;
 }
+export interface submitDatos {
+    pagoDeformaValida: boolean,
+    dataParaMovilizacion: boolean,
+    dataDeLaSolicitud: boolean,
+}
 export interface Acuicultura {
     formularioPago: FormularioPago;
     formularioMovilizacion: FormularioMovilizacion;
     datosMercancia: DatosMercancia220203;
+    formaValida: submitDatos;
 }
 
 export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura {
@@ -134,7 +140,7 @@ export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura
             puntoVerificacion: '',
             nombreEmpresaTransportista: ''
         },
-        datosMercancia: params.datosMercancia || {
+        datosMercancia: params?.datosMercancia || {
             realizarGroup: {
                 aduanaIngreso: '',
                 oficinaInspeccion: '',
@@ -165,7 +171,14 @@ export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura
             },
             detalles: {
                 nombreCientifico: ''
-            }
+            },
+
+
+        },
+        formaValida: params?.formaValida || {
+            pagoDeformaValida: false,
+            dataParaMovilizacion: false,
+            dataDeLaSolicitud: false
         }
     };
 }

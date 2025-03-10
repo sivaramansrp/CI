@@ -73,6 +73,12 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
     }));
   }
   ngOnDestroy(): void {
+    let datos = {
+      dataParaMovilizacion: false,
+    }
+    if (this.formularioMovilizacion.valid) {
+      datos.dataParaMovilizacion = true
+    }
     this.importacionDeAcuiculturaServices.actualizarFormularioMovilizacion(this.formularioMovilizacion.value);
   }
 }

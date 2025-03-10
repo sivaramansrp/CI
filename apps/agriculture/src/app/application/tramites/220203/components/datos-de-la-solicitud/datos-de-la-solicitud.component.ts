@@ -238,6 +238,12 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
     this.colapsable = !this.colapsable;
   }
   ngOnDestroy(): void {
+    let datos = {
+      dataDeLaSolicitud: false,
+    }
+    if (this.datosMercanciaFormGroup.valid) {
+      datos.dataDeLaSolicitud = true
+    }
     this.importacionDeAcuiculturaServices.actualizarDatosMercancia(this.datosMercanciaFormGroup.value);
   }
 }

@@ -56,4 +56,18 @@ export class AcuiculturaStore extends Store<Acuicultura> {
     public limpiarFormulario(): void {
         this.reset();
     }
+
+    /**
+     * Restablece el estado a su estado inicial.
+     */
+    public actualizarformaValida(updatedFormaValida: { [key: string]: boolean }): void {
+        this.update(state => ({
+            ...state,
+            formaValida: {
+                ...state.formaValida,
+                ...updatedFormaValida,
+            }
+        }));
+    }
+
 }

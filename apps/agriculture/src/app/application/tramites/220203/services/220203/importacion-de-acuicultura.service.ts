@@ -75,6 +75,19 @@ export class ImportacionDeAcuiculturaService {
   public actualizarDatosMercancia(datosMercancia: DatosMercancia220203): void {
     this.acuiculturaStore.actualizarDatosMercancia(datosMercancia); // Actualiza solo los datosMercancia
   }
+  /**
+   * Actualizar los datos de mercancía en el store.
+   * @param datosMercancia Datos de mercancía.
+   */
+  /**
+   * Updates the 'formaValida' field in the store.
+   * @param updatedFormaValida The updated boolean values for 'formaValida'.
+   */
+  public actualizarFormaValida(updatedFormaValida: { [key: string]: boolean }): void {
+    this.acuiculturaStore.actualizarformaValida(updatedFormaValida);
+  }
+
+
 
   /**
    * Restablecer el formulario a su estado inicial.
