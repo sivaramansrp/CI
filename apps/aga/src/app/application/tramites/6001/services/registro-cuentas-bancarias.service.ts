@@ -22,11 +22,19 @@ export class RegistroCuentasBancariasService {
    }
 
    public getSolicitudesTabla():Observable<RegistroDeSolicitudesTabla[]> {
-      return this.http.get<RegistroDeSolicitudesTabla[]>('assets/json/6001/registro-de-solicitudes-tabla.json');
+      return this.http.get<RegistroDeSolicitudesTabla[]>('assets/json/6001/registro-de-solicitudes-tabla.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
    }
 
    public obtenerDatosDeFormularioDeAPI():Observable<DatosGenerales> {
-      return this.http.get<DatosGenerales>('assets/json/6001/respuesta-de-la-api.json');
+      return this.http.get<DatosGenerales>('assets/json/6001/respuesta-de-la-api.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
    }
 
      /**
@@ -45,5 +53,39 @@ export class RegistroCuentasBancariasService {
 
   public cambiarComponente(component: string) {
     this.componentSource.next(component);
+  }
+
+  public getTipoDePersonaDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/6001/tipo-de-persona.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+  public getPaisDondeRadicaDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/6001/pais-donde-radica.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+
+  public getInstitucionDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/6001/institucion.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+
+  public getEstadoDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/6001/estado.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
   }
 }
