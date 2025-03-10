@@ -7,7 +7,14 @@ const ROUTES: Routes = [
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
-  }
+  },
+  {
+    path: 'permiso-maquila',
+    loadChildren: () =>
+      import('./tramites/260212/permiso-maquila.module').then(
+        (m) => m.PermisoMaquilaModule
+      ),
+  },
 ];
 
 @NgModule({

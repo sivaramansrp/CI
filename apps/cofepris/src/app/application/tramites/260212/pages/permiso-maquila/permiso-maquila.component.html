@@ -1,0 +1,20 @@
+<div class="page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <ng-titulo titulo="Permiso sanitario de importación de dispositivos médicos para maquila" />
+            </div>
+            <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
+        </div>
+        <div class="row">
+            @switch (indice) {
+                @case (1) {
+                   <app-datos-260212></app-datos-260212> 
+                }
+                @case (2) {
+                    
+                }
+            }
+        </div>
+    </div>
+</div>
