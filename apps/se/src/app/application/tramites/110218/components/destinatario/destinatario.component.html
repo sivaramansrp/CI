@@ -5,26 +5,23 @@
             <div class="row">
                 <div class="col-md-4">
                     <label class="form-label" for="nombre">Nombre(s): </label>
-                    <input type="text" class="form-control bg-white" id="nombre" formControlName="nombre" readonly>
+                    <input type="text" class="form-control bg-white" id="nombre" formControlName="nombre" (change)="onDatosdeldestinatarioChange('nombre')">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="primerApellido">Primer apellido:</label>
-                    <input type="text" class="form-control bg-white" id="primerApellido" formControlName="primerApellido"
-                        readonly>
+                    <input type="text" class="form-control bg-white" id="primerApellido" formControlName="primerApellido" (change)="onDatosdeldestinatarioChange('primerApellido')" >
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="segundoApellido">Segundo apellido:</label>
-                    <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido"
-                        readonly>
+                    <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido" readonly>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="númeroderegistroFiscal">Número de registro fiscal *: </label>
-                    <input type="text" class="form-control bg-white" id="númeroderegistroFiscal"
-                        formControlName="númeroderegistroFiscal" readonly>
+                    <input type="text" class="form-control bg-white" id="númeroderegistroFiscal" formControlName="númeroderegistroFiscal" (change)="onDatosdeldestinatarioChange('númeroderegistroFiscal')">
                 </div>
                 <div class="col-md-8">
                     <label class="form-label" for="razónSocial">Razón social:</label>
-                    <input type="text" class="form-control bg-white" id="razónSocial" formControlName="razónSocial" readonly>
+                    <input type="text" class="form-control bg-white" id="razónSocial" formControlName="razónSocial" (change)="onDatosdeldestinatarioChange('razónSocial')">
                 </div>
 
             </div>
@@ -38,30 +35,30 @@
             <div class="row">
                 <div class="col-md-8">
                     <label class="form-label" for="calle">Calle *: </label>
-                    <input type="text" class="form-control bg-white" id="calle" formControlName="calle">
+                    <input type="text" class="form-control bg-white" id="calle" formControlName="calle" (change)="onDomiciliodeldestinatarioChange('calle')">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="númeroLetra">Número y/o letra *:</label>
                     <input type="text" class="form-control bg-white" id="númeroLetra" formControlName="númeroLetra"
-                        readonly>
+                        (change)="onDomiciliodeldestinatarioChange('númeroLetra')">
                 </div>
                 <div class="col-md-8">
                     <label class="form-label" for="ciudad">Ciudad (población, estado o provincia) *:</label>
                     <input type="text" class="form-control bg-white" id="ciudad" formControlName="ciudad"
-                        readonly>
+                        (change)="onDomiciliodeldestinatarioChange('ciudad')">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="correoElectrónico">Correo electrónico *:</label>
                     <input type="text" class="form-control bg-white" id="correoElectrónico"
-                        formControlName="correoElectrónico" readonly>
+                        formControlName="correoElectrónico" (change)="onDomiciliodeldestinatarioChange('correoElectrónico')">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="fax">Fax:</label>
-                    <input type="text" class="form-control bg-white" id="fax" formControlName="fax" readonly>
+                    <input type="text" class="form-control bg-white" id="fax" formControlName="fax" (change)="onDomiciliodeldestinatarioChange('fax')">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="teléfono">Teléfono:</label>
-                    <input type="text" class="form-control bg-white" id="teléfono" formControlName="teléfono" readonly>
+                    <input type="text" class="form-control bg-white" id="teléfono" formControlName="teléfono" (change)="onDomiciliodeldestinatarioChange('teléfono')">
                 </div>
 
             </div>

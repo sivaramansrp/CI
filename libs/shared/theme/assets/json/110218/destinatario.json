@@ -1,9 +1,6 @@
-[
-    {
-        "nombre": "Pedro",
-        "primerApellido": "juarez",
-        "segundoApellido": "SEGUNDO APELLIDO I",
-        "númeroderegistroFiscal": "DEAE800904|L9",
-        "razónSocial": ""
-    }
-]
+{
+    "segundoApellido": [
+        "Hernández"
+    ]
+  
+}

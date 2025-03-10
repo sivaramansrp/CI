@@ -38,7 +38,7 @@ export class TransporteComponent implements OnInit, OnDestroy{
    private destroyed$ = new Subject<void>();
    
     constructor(private fb: FormBuilder,private tramite110218Store: Tramite110218Store, 
-      private tramite110218Query: Tramite110218Query) { 
+      private tramite110218Query: Tramite110218Query, ) { 
       this.detallestransporte = this.fb.group({
         puertodeEmbarque: [""],
         puertodeDesembarque: [""],
