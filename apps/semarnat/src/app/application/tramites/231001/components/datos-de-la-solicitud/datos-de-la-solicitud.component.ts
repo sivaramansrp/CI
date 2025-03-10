@@ -225,8 +225,8 @@ export class DatosDelaSolicitudeComponent implements OnInit {
   }
 
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite231001Store): void {
-    const VALOR = form.get(campo)?.value;
-
+    const VALOR = this.solicitudForm.get(['datosdelForm', campo])?.value;
+    
     (this.tramite231001Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 }
