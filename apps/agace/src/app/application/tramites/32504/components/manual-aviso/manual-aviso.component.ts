@@ -1,7 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { BotonAccionesTipos, FormaValidators, InputTypes, Props } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMANUFACTURA, DATOS_QUIEN_RECIBE } from '../../constants/aviso.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { FormaValidators, InputTypes, Props, buttonActionTypes } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ActionType } from '../../enum/aviso.enum';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
@@ -16,7 +17,6 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite32504Store } from '../../estados/tramite32504.store';
-import { map } from 'rxjs';
 
 @Component({
   selector: 'app-manual-aviso',
@@ -25,9 +25,11 @@ import { map } from 'rxjs';
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent],
   standalone: true,
 })
-export class ManualAvisoComponent implements OnInit {
+export class ManualAvisoComponent implements OnInit, OnDestroy {
 
   @Output() emitButtonAction = new EventEmitter<boolean>();
+
+  private destroyNotifier$: Subject<void> = new Subject();
 
   configuracion: InputConfig[] = [
     {
@@ -52,7 +54,7 @@ export class ManualAvisoComponent implements OnInit {
       ],
     },
     {
-      title: 'Datos del domicilio del lugar en donde se Ilevarán a cabo las operaciones de submanufactura',
+      title: 'Datos del domicilio del lugar en donde se llevarán a cabo las operaciones de submanufactura',
       formGroupName: 'datosDomicilioLugar',
       menu: [
         {
@@ -174,8 +176,8 @@ export class ManualAvisoComponent implements OnInit {
       ],
       data: []
     };
-  isAgregarClicked = false;
-  buttonActionTypes = buttonActionTypes;
+  esAgregarClicked = false;
+  botonAccionesTipos = BotonAccionesTipos;
   actionTypes = ActionType;
   TablaSeleccion = TablaSeleccion;
   event = {};
@@ -238,6 +240,7 @@ export class ManualAvisoComponent implements OnInit {
     this.catalogosServicios
       .getCatalogo(clave)
       .pipe(
+        takeUntil(this.destroyNotifier$),
         map((resp) => {
           if (resp.length > 0) {
             this.configuracion[indiceGrupo].menu[indiceMenu].props.catalogos = resp;
@@ -308,15 +311,20 @@ export class ManualAvisoComponent implements OnInit {
     this.valoresSeleccionadosRadio[claveRadio] = evento.toString();
   }
 
-  buttonAcion(actionType: ActionType, action: buttonActionTypes): void {
-    switch (actionType) {
+  /**
+   * La función maneja las acciones de los botones según el formulario actual. Esta función maneja las acciones de los botones para dos formularios
+   * @param accionTipo - Tipo de acción que define el tipo de formulario.
+   * @param accione - Parámetro que tiene la acción de ser del tipo BotonAccionesTipos.
+   */
+  accionesBotones(accionTipo: ActionType, accione: BotonAccionesTipos): void {
+    switch (accionTipo) {
       case 'FORM_ACTION':
-        switch (action) {
-          case buttonActionTypes.AGREGAR:
-          case buttonActionTypes.CANCELAR:
+        switch (accione) {
+          case BotonAccionesTipos.AGREGAR:
+          case BotonAccionesTipos.CANCELAR:
             this.emitButtonAction.emit(false);
             break;
-          case buttonActionTypes.MODIFICAR:
+          case BotonAccionesTipos.MODIFICAR:
             
             break;
         
@@ -325,15 +333,15 @@ export class ManualAvisoComponent implements OnInit {
         }
         break;
       case 'TABLE_ACTION':
-        switch (action) {
-          case buttonActionTypes.AGREGAR:
-            this.isAgregarClicked = true;
+        switch (accione) {
+          case BotonAccionesTipos.AGREGAR:
+            this.esAgregarClicked = true;
             this.renderGroup(this.configuracion_table);
             break;
-          case buttonActionTypes.ELIMINAR:
+          case BotonAccionesTipos.ELIMINAR:
             this.emitButtonAction.emit(false);
             break;
-          case buttonActionTypes.MODIFICAR:
+          case BotonAccionesTipos.MODIFICAR:
             
             break;
         
@@ -346,11 +354,11 @@ export class ManualAvisoComponent implements OnInit {
     }
   }
 
-  botonDeTablaInfantilAccion(action: buttonActionTypes): void {
+  botonDeTablaInfantilAccion(action: BotonAccionesTipos): void {
     switch (action) {
-      case buttonActionTypes.AGREGAR:
-      case buttonActionTypes.CANCELAR:
-        this.isAgregarClicked = false;
+      case BotonAccionesTipos.AGREGAR:
+      case BotonAccionesTipos.CANCELAR:
+        this.esAgregarClicked = false;
         break;
       default:
         break;
@@ -361,5 +369,10 @@ export class ManualAvisoComponent implements OnInit {
     this.store.setDatosQuienRecibe(this.formulario.get('datosQuienRecibe')?.value);
     this.store.setDatosDomicilioLugar(this.formulario.get('datosDomicilioLugar')?.value);
     this.store.setDatosMercanciaSubmanufactura(this.formulario.get('datosMercanciaSubmanufactura')?.value);
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

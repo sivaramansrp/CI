@@ -10,7 +10,7 @@ import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { ManualAvisoComponent } from '../manual-aviso/manual-aviso.component';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { buttonActionTypes } from '@ng-mf/data-access-user';
+import { BotonAccionesTipos } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 
 
@@ -168,19 +168,19 @@ describe('AvisoComponent', () => {
   });
 
   it('should handle button action AGREGAR', () => {
-    component.buttonAcion(buttonActionTypes.AGREGAR);
-    expect(component.isManualAsivoAgregarClicked).toBe(true);
+    component.accionesBotones(BotonAccionesTipos.AGREGAR);
+    expect(component.esManualAsivoAgregarClicked).toBe(true);
   });
 
   it('should handle button action ELIMINAR', () => {
-    jest.spyOn(component, 'buttonAcion').mockImplementation();
-    component.buttonAcion(buttonActionTypes.ELIMINAR);
-    expect(component.buttonAcion).toHaveBeenCalledWith(buttonActionTypes.ELIMINAR);
+    jest.spyOn(component, 'accionesBotones').mockImplementation();
+    component.accionesBotones(BotonAccionesTipos.ELIMINAR);
+    expect(component.accionesBotones).toHaveBeenCalledWith(BotonAccionesTipos.ELIMINAR);
   });
 
   it('should handle button action MODIFICAR', () => {
-    jest.spyOn(component, 'buttonAcion').mockImplementation();
-    component.buttonAcion(buttonActionTypes.MODIFICAR);
-    expect(component.buttonAcion).toHaveBeenCalledWith(buttonActionTypes.MODIFICAR);
+    jest.spyOn(component, 'accionesBotones').mockImplementation();
+    component.accionesBotones(BotonAccionesTipos.MODIFICAR);
+    expect(component.accionesBotones).toHaveBeenCalledWith(BotonAccionesTipos.MODIFICAR);
   });
 });

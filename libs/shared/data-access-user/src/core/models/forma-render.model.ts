@@ -9,7 +9,6 @@ export interface InputConfig {
 export interface MenuConfig {
   inputType: string,
   props: Props,
-  // props: CatalogoSelectProp | RadioProps | FormaTextProp | FetchaProps,
   class: string,
   visibility?: string,
   radioConfig?: string[],
@@ -44,14 +43,19 @@ export interface CatalogoSelectProp {
 export interface RadioProps {
   labelNombre: string;
   campo: string;
-  radioOptions: { label: string; value: string | number }[];
+  radioOptions: LabelValueDatos[];
   radioSelectedValue: string | number;
+  jsonDataFileName: string;
 }
 
 export interface FetchaProps {
   labelNombre: string;
   campo: string;
   habilitado: boolean
+}
+export interface LabelValueDatos {
+  label: string,
+  value: string | number
 }
 
 export interface Props extends FormaTextProp, CatalogoSelectProp, RadioProps, FetchaProps {

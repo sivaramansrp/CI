@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { BtnContinuarComponent } from "@ng-mf/data-access-user";
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS_FOUR_STEPS } from '@ng-mf/data-access-user';
+import { PASOS_CUATRO_STEPS } from '@ng-mf/data-access-user';
 import { PasoCuatroComponent } from "../paso-cuatro/paso-cuatro.component";
 import { PasoDosComponent } from "../paso-dos/paso-dos.component";
 import { PasoTresComponent } from "../paso-tres/paso-tres.component";
@@ -23,7 +23,7 @@ interface AccionBoton {
 export class IntroPermisoComponent {
 
   indice = 1;
-  pasos: ListaPasosWizard[] = PASOS_FOUR_STEPS;
+  pasos: ListaPasosWizard[] = PASOS_CUATRO_STEPS;
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,

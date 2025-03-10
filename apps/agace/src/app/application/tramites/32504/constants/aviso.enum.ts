@@ -40,6 +40,7 @@ export const CARGO_TIPO = [
         required: true,
         radioOptions: [],
         radioSelectedValue: '',
+        jsonDataFileName: 'tipo-cargo.json',
     },
 ];
 

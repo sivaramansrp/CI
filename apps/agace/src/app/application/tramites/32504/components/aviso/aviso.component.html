@@ -5,7 +5,7 @@
     <div
       class="form"
       [formGroupName]="fieldGroup.formGroupName"
-      [ngClass]="{ 'd-none': isManualAsivoAgregarClicked }"
+      [ngClass]="{ 'd-none': esManualAsivoAgregarClicked }"
     >
       <ng-titulo [titulo]="fieldGroup.title" />
 
@@ -74,7 +74,7 @@
     <div
       class="form"
       formGroupName="manualDatos"
-      [ngClass]="{ 'd-none': isManualAsivoAgregarClicked }"
+      [ngClass]="{ 'd-none': esManualAsivoAgregarClicked }"
     >
       <ng-titulo titulo="Datos del aviso" />
       <div class="row">
@@ -88,7 +88,7 @@
             type="button"
             class="btn btn-primary ms-3"
             [disabled]="true"
-            (click)="buttonAcion(buttonActionTypes.ELIMINAR)"
+            (click)="accionesBotones(botonAccionesTipos.ELIMINAR)"
           >
             Eliminar
           </button>
@@ -96,7 +96,7 @@
             type="button"
             class="btn btn-primary ms-3"
             [disabled]="false"
-            (click)="buttonAcion(buttonActionTypes.MODIFICAR)"
+            (click)="accionesBotones(botonAccionesTipos.MODIFICAR)"
           >
             Modificar
           </button>
@@ -104,16 +104,16 @@
             type="button"
             class="btn btn-primary ms-3"
             [disabled]="false"
-            (click)="buttonAcion(buttonActionTypes.AGREGAR)"
+            (click)="accionesBotones(botonAccionesTipos.AGREGAR)"
           >
             Agregar
           </button>
         </div>
       </div>
     </div>
-    } @if (isManualAsivoAgregarClicked) {
+    } @if (esManualAsivoAgregarClicked) {
     <app-manual-aviso
-      (emitButtonAction)="isManualAsivoAgregarClicked = $event"
+      (emitButtonAction)="esManualAsivoAgregarClicked = $event"
     ></app-manual-aviso>
     } @if (configuracion[1] && configuracion[1].menu[0] && configuracion[1].menu[0].props && configuracion[1].menu[0].props.radioSelectedValue && configuracion[1].menu[0].props.radioSelectedValue === cargaTipo.CARGA_MASIVA) {
     <app-carga-masiva></app-carga-masiva>

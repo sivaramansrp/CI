@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ManualAvisoComponent } from './manual-aviso.component';
 import { of } from 'rxjs';
 
-import { CatalogoSelectComponent, CatalogosService, InputConfig,InputFechaComponent, InputRadioComponent, InputTypes, TablaDinamicaComponent, TituloComponent, buttonActionTypes } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, CatalogosService, InputConfig,InputFechaComponent, InputRadioComponent, InputTypes, TablaDinamicaComponent, TituloComponent, botonAccionesTipos } from '@ng-mf/data-access-user';
 import { ActionType } from '../../enum/aviso.enum';
 
 describe('ManualAvisoComponent', () => {
@@ -105,32 +105,32 @@ describe('ManualAvisoComponent', () => {
   });
 
   it('should handle button action AGREGAR', () => {
-    jest.spyOn(component, 'buttonAcion').mockImplementation();
-    component.buttonAcion(ActionType.FORM_ACTION, buttonActionTypes.AGREGAR);
-    expect(component.buttonAcion).toHaveBeenCalledWith(ActionType.FORM_ACTION, buttonActionTypes.AGREGAR);
+    jest.spyOn(component, 'accionesBotones').mockImplementation();
+    component.accionesBotones(ActionType.FORM_ACTION, botonAccionesTipos.AGREGAR);
+    expect(component.accionesBotones).toHaveBeenCalledWith(ActionType.FORM_ACTION, botonAccionesTipos.AGREGAR);
   });
 
   it('should handle button action ELIMINAR', () => {
-    jest.spyOn(component, 'buttonAcion').mockImplementation();
-    component.buttonAcion(ActionType.FORM_ACTION, buttonActionTypes.ELIMINAR);
-    expect(component.buttonAcion).toHaveBeenCalledWith(ActionType.FORM_ACTION, buttonActionTypes.ELIMINAR);
+    jest.spyOn(component, 'accionesBotones').mockImplementation();
+    component.accionesBotones(ActionType.FORM_ACTION, botonAccionesTipos.ELIMINAR);
+    expect(component.accionesBotones).toHaveBeenCalledWith(ActionType.FORM_ACTION, botonAccionesTipos.ELIMINAR);
   });
 
   it('should handle button action MODIFICAR', () => {
-    jest.spyOn(component, 'buttonAcion').mockImplementation();
-    component.buttonAcion(ActionType.FORM_ACTION, buttonActionTypes.MODIFICAR);
-    expect(component.buttonAcion).toHaveBeenCalledWith(ActionType.FORM_ACTION, buttonActionTypes.MODIFICAR);
+    jest.spyOn(component, 'accionesBotones').mockImplementation();
+    component.accionesBotones(ActionType.FORM_ACTION, botonAccionesTipos.MODIFICAR);
+    expect(component.accionesBotones).toHaveBeenCalledWith(ActionType.FORM_ACTION, botonAccionesTipos.MODIFICAR);
   });
 
   it('should handle child table button action AGREGAR', () => {
     jest.spyOn(component, 'botonDeTablaInfantilAccion').mockImplementation();
-    component.botonDeTablaInfantilAccion(buttonActionTypes.AGREGAR);
-    expect(component.botonDeTablaInfantilAccion).toHaveBeenCalledWith(buttonActionTypes.AGREGAR);
+    component.botonDeTablaInfantilAccion(botonAccionesTipos.AGREGAR);
+    expect(component.botonDeTablaInfantilAccion).toHaveBeenCalledWith(botonAccionesTipos.AGREGAR);
   });
 
   it('should handle child table button action CANCELAR', () => {
     jest.spyOn(component, 'botonDeTablaInfantilAccion').mockImplementation();
-    component.botonDeTablaInfantilAccion(buttonActionTypes.CANCELAR);
-    expect(component.botonDeTablaInfantilAccion).toHaveBeenCalledWith(buttonActionTypes.CANCELAR);
+    component.botonDeTablaInfantilAccion(botonAccionesTipos.CANCELAR);
+    expect(component.botonDeTablaInfantilAccion).toHaveBeenCalledWith(botonAccionesTipos.CANCELAR);
   });
 });

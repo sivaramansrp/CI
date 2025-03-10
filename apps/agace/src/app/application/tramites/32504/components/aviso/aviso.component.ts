@@ -1,8 +1,9 @@
+import { BotonAccionesTipos, InputTypes } from '@ng-mf/data-access-user';
 import { CARGO_TIPO, DATOS_EMPRESA } from '../../constants/aviso.enum';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { FormaValidators, InputConfig, MenuConfig, Props } from '@ng-mf/data-access-user';
-import { InputTypes, buttonActionTypes } from '@ng-mf/data-access-user';
+import { AvisoDatosService } from '../../services/aviso-datos.service';
 import { CargaMasivaComponent } from '../carga-masiva/carga-masiva.component';
 import { CatalogoSelectComponent } from "@ng-mf/data-access-user";
 import { CatalogosService } from '@ng-mf/data-access-user';
@@ -11,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from "@ng-mf/data-access-user";
 import { InputRadioComponent } from "@ng-mf/data-access-user";
+import { LabelValueDatos } from '@ng-mf/data-access-user';
 import { ManualAvisoComponent } from '../manual-aviso/manual-aviso.component';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
@@ -101,8 +103,8 @@ export class AvisoComponent implements OnInit {
       ],
       data: []
     };
-  isManualAsivoAgregarClicked = false;
-  buttonActionTypes = buttonActionTypes;
+  esManualAsivoAgregarClicked = false;
+  botonAccionesTipos = BotonAccionesTipos;
   TablaSeleccion = TablaSeleccion;
   evento = {};
   inputTypes = InputTypes;
@@ -114,7 +116,8 @@ export class AvisoComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private catalogosServicios: CatalogosService,
-    private store: Tramite32504Store
+    private store: Tramite32504Store,
+    private avisoDatosService: AvisoDatosService,
   ) {
     this.crearFormulario();
   }
@@ -157,10 +160,28 @@ export class AvisoComponent implements OnInit {
         this.fb.control({ value: '', disabled: campo.props.disabled }, VALIDATORS)
       );
       if (campo.inputType === InputTypes.SELECT) {
-        // Use this below line once API is works fine to get the catalog values
+        // Utilice la siguiente línea una vez que la API funcione bien para obtener los valores del catálogo
         // this.obtenerValoresCatalogo(indiceGrupo, menuIndex, CONTROL_NAME);
       }
+      if (campo.inputType === InputTypes.RADIO) {
+        this.getRadioData(campo.props.jsonDataFileName, (data) => {
+          this.configuracion[1].menu[0].props.radioOptions = data;
+          this.configuracion[1].menu[0].props.radioSelectedValue = data[0].value;
+        });
+      }
     });
+  }
+
+  /**
+  * Obtenga las opciones de entrada de radio del servicio
+  * @param fileName - Este es el nombre del archivo json que necesitamos para las opciones
+  * @param callback - Función de devolución de llamada donde se establece la opción en el menú
+  */
+  getRadioData(fileName: string, callback: (data: LabelValueDatos[]) => void): void {
+    this.avisoDatosService.getDatos(fileName)
+      .subscribe((data) => {
+        callback(data);
+      });
   }
 
   /**
@@ -241,15 +262,19 @@ export class AvisoComponent implements OnInit {
     this.configuracion[groupIndex].menu[menuIndex].props.radioSelectedValue = evento;
   }
 
-  buttonAcion(action: buttonActionTypes): void {
-    switch (action) {
-      case buttonActionTypes.AGREGAR:
-        this.isManualAsivoAgregarClicked = true;
+  /**
+   * La función maneja las acciones del botón.
+   * @param accione - Parámetro que tiene la acción de ser del tipo BotonAccionesTipos.
+   */
+  accionesBotones(accione: BotonAccionesTipos): void {
+    switch (accione) {
+      case BotonAccionesTipos.AGREGAR:
+        this.esManualAsivoAgregarClicked = true;
         break;
-      case buttonActionTypes.ELIMINAR:
+      case BotonAccionesTipos.ELIMINAR:
         
         break;
-      case buttonActionTypes.MODIFICAR:
+      case BotonAccionesTipos.MODIFICAR:
         
         break;
     

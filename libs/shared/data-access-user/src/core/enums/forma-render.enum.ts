@@ -7,7 +7,7 @@ export enum InputTypes {
     ALERT_CONTENT = 'alert-content',
   }
   
-  export enum buttonActionTypes {
+  export enum BotonAccionesTipos {
     AGREGAR = 'agregar',
     MODIFICAR = 'modificar',
     ELIMINAR = 'eliminar',

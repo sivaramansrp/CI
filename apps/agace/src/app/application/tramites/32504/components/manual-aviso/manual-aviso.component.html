@@ -2,7 +2,7 @@
     <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
       @for(fieldGroup of configuracion; let groupIndex = $index; track groupIndex)
       {
-      <div class="form" [formGroupName]="fieldGroup.formGroupName" [ngClass]="{'d-none' : isAgregarClicked}">
+      <div class="form" [formGroupName]="fieldGroup.formGroupName" [ngClass]="{'d-none' : esAgregarClicked}">
         <ng-titulo [titulo]="fieldGroup.title" />
   
         <div class="row align-items-center">
@@ -65,7 +65,7 @@
         </div>
       </div>
       }
-      <div class="form" formGroupName="manualDatos" [ngClass]="{'d-none' : isAgregarClicked}">
+      <div class="form" formGroupName="manualDatos" [ngClass]="{'d-none' : esAgregarClicked}">
         <ng-titulo titulo="Datos del aviso" />
         <div class="row">
           <app-tabla-dinamica 
@@ -78,7 +78,7 @@
               type="button"
               class="btn btn-primary ms-3"
               [disabled]="true"
-              (click)="buttonAcion(actionTypes.TABLE_ACTION, buttonActionTypes.ELIMINAR)"
+              (click)="accionesBotones(actionTypes.TABLE_ACTION, botonAccionesTipos.ELIMINAR)"
             >
               Eliminar
             </button>
@@ -86,7 +86,7 @@
               type="button"
               class="btn btn-primary ms-3"
               [disabled]="false"
-              (click)="buttonAcion(actionTypes.TABLE_ACTION, buttonActionTypes.MODIFICAR)"
+              (click)="accionesBotones(actionTypes.TABLE_ACTION, botonAccionesTipos.MODIFICAR)"
             >
               Modificar
             </button>
@@ -94,14 +94,14 @@
               type="button"
               class="btn btn-primary ms-3"
               [disabled]="false"
-              (click)="buttonAcion(actionTypes.TABLE_ACTION, buttonActionTypes.AGREGAR)"
+              (click)="accionesBotones(actionTypes.TABLE_ACTION, botonAccionesTipos.AGREGAR)"
             >
               Agregar
             </button>
           </div>
         </div>
       </div>
-      @if (isAgregarClicked) {
+      @if (esAgregarClicked) {
         @for(fieldGroup of configuracion_table; let groupIndex = $index; track groupIndex)
         {
         <div class="form" [formGroupName]="fieldGroup.formGroupName">
@@ -148,7 +148,7 @@
               type="button"
               class="btn btn-primary ms-3"
               [disabled]="false"
-              (click)="botonDeTablaInfantilAccion(buttonActionTypes.CANCELAR)"
+              (click)="botonDeTablaInfantilAccion(botonAccionesTipos.CANCELAR)"
             >
               Cancelar
             </button>
@@ -156,7 +156,7 @@
               type="button"
               class="btn btn-primary ms-3"
               [disabled]="false"
-              (click)="botonDeTablaInfantilAccion(buttonActionTypes.AGREGAR)"
+              (click)="botonDeTablaInfantilAccion(botonAccionesTipos.AGREGAR)"
             >
               Agregar
             </button>
@@ -164,13 +164,13 @@
         </div>
         }
       }
-      @if (!isAgregarClicked) {
+      @if (!esAgregarClicked) {
       <div class="mt-5 d-flex justify-content-end">
         <button
           type="button"
           class="btn btn-primary ms-3"
           [disabled]="false"
-          (click)="buttonAcion(actionTypes.FORM_ACTION, buttonActionTypes.CANCELAR)"
+          (click)="accionesBotones(actionTypes.FORM_ACTION, botonAccionesTipos.CANCELAR)"
         >
           Cancelar
         </button>
@@ -178,7 +178,7 @@
           type="button"
           class="btn btn-primary ms-3"
           [disabled]="false"
-          (click)="buttonAcion(actionTypes.FORM_ACTION, buttonActionTypes.AGREGAR)"
+          (click)="accionesBotones(actionTypes.FORM_ACTION, botonAccionesTipos.AGREGAR)"
         >
           Agregar
         </button>

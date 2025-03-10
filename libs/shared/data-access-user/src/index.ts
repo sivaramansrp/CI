@@ -101,10 +101,10 @@ export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.servi
 export * from './core/services/110102/representacion-federal/representacionFederal.service';
 export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';
-export { PASOS as PASOS_FOUR_STEPS } from './tramites/constantes/paso-four-steps.enum';
-export { PASOS as PASOS_THREE_STEPS } from './tramites/constantes/paso-three-steps.enum';
+export { PASOS as PASOS_CUATRO_STEPS } from './tramites/constantes/paso-cuatro-steps.enum';
+export { PASOS as PASOS_TRES_STEPS } from './tramites/constantes/paso-tres-steps.enum';
 export * from './core/enums/forma-render.enum';
-export { ListaPasosWizard, InputConfig, MenuConfig, Props } from './core/models/forma-render.model';
+export { ListaPasosWizard, InputConfig, MenuConfig, Props, LabelValueDatos } from './core/models/forma-render.model';
 export * from './core/estados/seccion.store';
 export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
