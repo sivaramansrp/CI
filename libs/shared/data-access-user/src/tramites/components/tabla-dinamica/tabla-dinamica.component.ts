@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FormsModule } from '@angular/forms';
-import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-tabla-dinamica',
@@ -19,6 +19,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @type { TablaSeleccion}
    */
+
   @Input() tipoSeleccionTabla!: TablaSeleccion;
 /*
    * Este valor es necesario para que la plantilla pueda acceder a los diferentes tipos de selección como "CHECKBOX", "RADIO", etc., que definen el comportamiento de la tabla.
