@@ -103,7 +103,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /** Gancho de ciclo de vida para cargar datos iniciales cuando se inicializa el componente */
   ngOnInit(): void {
-    this.inspeccionFisicaQuery.obtenerDatosIniciales$.pipe(
+    this.inspeccionFisicaQuery.selectCargarDatosIniciales$.pipe(
       takeUntil(this.destroyed$),
         map((data: CargarDatosIniciales) => {
           this.hHistorialinspeccion = data.hHistorialinspeccion;

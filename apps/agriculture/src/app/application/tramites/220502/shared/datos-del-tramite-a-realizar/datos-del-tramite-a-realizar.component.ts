@@ -5,14 +5,14 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 import { DatosDelTramiteRealizar } from '../../models/solicitud-pantallas.model';
-import { DatosDelTramiteRealizarQuery } from '../../estados/datos-del-tramite-realizar/datos-del-tramite-realizar.query';
-import { DatosDelTramiteRealizarStore } from '../../estados/datos-del-tramite-realizar/datos-del-tramite-realizar.store';
 import { FECHA_INSPECCION_INPUT } from '../../constantes/texto-enum';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
+import { InspeccionFisicaQuery } from '../../estados/inspeccion-fisica.query';
+import { InspeccionFisicaStore } from '../../estados/inspeccion-fisica.store';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -97,8 +97,8 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
   /** Constructor para inyectar el servicio de solicitud de pantallas. */
   constructor(
     private solicitudService: SolicitudPantallasService,
-    private datosDelTramiteRealizarStore: DatosDelTramiteRealizarStore,
-    private datosDelTramiteRealizarQuery: DatosDelTramiteRealizarQuery
+    private inspeccionFisicaStore: InspeccionFisicaStore,
+    private inspeccionFisicaQuery: InspeccionFisicaQuery,
   ) {
     // Se puede agregar aquí el código de inicialización si es necesario en el futuro.
   }
@@ -121,7 +121,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
       );
     }
 
-    this.datosDelTramiteRealizarQuery.obtenerProcedimientoCarryData$
+    this.inspeccionFisicaQuery.selectDatosDelTramiteRealizar$
       .pipe(
         takeUntil(this.destroyed$),
         map((datos: DatosDelTramiteRealizar) => {
@@ -239,7 +239,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
   cargarDatosIniciales(): void {
     this.solicitudService.getDataDatosDelTramite().subscribe({
       next: (data: DatosDelTramiteRealizar) => {
-        this.datosDelTramiteRealizarStore.actualizarDatosIniciales(data);
+        this.inspeccionFisicaStore.actualizarDatosDelTramite(data);
       },
     });
   }

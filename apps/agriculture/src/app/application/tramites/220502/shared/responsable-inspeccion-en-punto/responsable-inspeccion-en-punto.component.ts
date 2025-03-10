@@ -7,14 +7,15 @@ import { ControlContainer } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
+import { InspeccionFisicaQuery } from '../../estados/inspeccion-fisica.query';
+import { InspeccionFisicaStore } from '../../estados/inspeccion-fisica.store';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ResponsableInspeccionEnPuntoQuery } from '../../estados/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.query';
-import { ResponsableInspeccionEnPuntoStore } from '../../estados/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.store';
 import { RouterModule } from '@angular/router';
 import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
 import { Subject } from 'rxjs';
+import { TipoContenedor } from '../../models/solicitud-pantallas.model';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { inject } from '@angular/core';
@@ -59,7 +60,7 @@ export class ResponsableInspeccionEnPuntoComponent
     return this.contenedorPrincipal.control as FormGroup;
   }
   /** Almacena datos del catálogo para el tipo de contenedor. */
-  tipoContenedor!: CatalogosSelect;
+  tipoContenedor: CatalogosSelect = {} as CatalogosSelect;
 
   /**
    * Subject para desuscribirse de los observables.
@@ -68,8 +69,8 @@ export class ResponsableInspeccionEnPuntoComponent
   private destroyed$ = new Subject<void>();
 
   constructor(
-    public responsableInspeccionEnPuntoStore: ResponsableInspeccionEnPuntoStore,
-    public responsableInspeccionEnPuntoQuery: ResponsableInspeccionEnPuntoQuery,
+    private inspeccionFisicaStore: InspeccionFisicaStore,
+    private inspeccionFisicaQuery: InspeccionFisicaQuery,
     private solicitudService: SolicitudPantallasService /**Servicio para obtener datos de solicitud */
   ) {
     /** Inyectar el ControlContainer principal para administrar los controles de formulario */
@@ -96,11 +97,11 @@ export class ResponsableInspeccionEnPuntoComponent
       );
     }
 
-    this.responsableInspeccionEnPuntoQuery.obtenerDatosIniciales$
+    this.inspeccionFisicaQuery.selectCatalogos$
       .pipe(
         takeUntil(this.destroyed$),
-        map((tipoContenedor: CatalogosSelect) => {
-          this.tipoContenedor = tipoContenedor;
+        map((res: CatalogosSelect) => {
+          this.tipoContenedor = res;
         })
       )
       .subscribe();
@@ -126,8 +127,8 @@ export class ResponsableInspeccionEnPuntoComponent
    */
   cargarDatosIniciales(): void {
     this.solicitudService.getDataResponsableInspeccion().subscribe({
-      next: (data: { tipoContenedor: CatalogosSelect }) => {
-        this.responsableInspeccionEnPuntoStore.actualizarDatosIniciales(data);
+      next: (data: TipoContenedor) => {
+        this.inspeccionFisicaStore.actualizarCatalogosSelect(data.tipoContenedor);
       },
     })
   }

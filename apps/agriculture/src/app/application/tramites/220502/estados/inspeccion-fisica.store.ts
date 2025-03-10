@@ -1,29 +1,22 @@
 import { CargarDatosIniciales } from '../models/solicitud-pantallas.model';
-import { CarrosDeFerrocarril } from '../models/solicitud-pantallas.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { DatosDeMercancias } from '../models/solicitud-pantallas.model';
-import { HistorialInspeccionFisica } from '../models/solicitud-pantallas.model';
+import { DatosDelTramiteRealizar } from '../models/solicitud-pantallas.model';
 import { Injectable } from '@angular/core';
-import { Solicitud } from '../models/solicitud-pantallas.model';
+import { InspeccionFisica } from '../models/solicitud-pantallas.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 /**
- * Crea el estado inicial de la tienda con los valores por defecto.
- *
- * @returns Un objeto con la estructura de `CargarDatosIniciales`.
+ * Función para crear el estado inicial de la inspección física.
+ * Retorna un objeto con los valores predeterminados.
+ * 
+ * @returns Estado inicial de la inspección física.
  */
-export function crearEstadoInicial(): CargarDatosIniciales {
+export function crearEstadoInicial(): InspeccionFisica {
   return {
-    hHistorialinspeccion: [] as string[],
-    dHistorialInspecciones: [] as HistorialInspeccionFisica[],
-    dCarrosDeFerrocarril: [] as CarrosDeFerrocarril[],
-    hCarroFerrocarril: [] as string[],
-    hSolicitud: [] as string[],
-    dSolicitud: [] as Solicitud[],
-    hMerchandise: [] as string[],
-    dMercancia: [] as DatosDeMercancias[],
-    medioDeTransporte: {} as CatalogosSelect,
+    cargarDatosIniciales: {} as CargarDatosIniciales,
+    catalogosSelect: {} as CatalogosSelect,
+    datosDelTramiteRealizar: {} as DatosDelTramiteRealizar,
   };
 }
 
@@ -31,29 +24,54 @@ export function crearEstadoInicial(): CargarDatosIniciales {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'inspeccion-fisica', resettable: true })
-export class InspeccionFisicaStore extends Store<CargarDatosIniciales> {
+export class InspeccionFisicaStore extends Store<InspeccionFisica> {
   /**
-   * Constructor de la tienda `InspeccionFisicaStore`.
-   * Inicializa la tienda con el estado predeterminado.
+   * Constructor de la tienda (store) de inspección física.
+   * Inicializa el estado con los valores predeterminados.
    */
   constructor() {
     super(crearEstadoInicial());
   }
 
   /**
-   * Actualiza los datos iniciales de la tienda con la información proporcionada.
-   *
-   * @param datos - Objeto que contiene los nuevos datos a actualizar en el estado.
+   * Método para actualizar los datos iniciales de la inspección física.
+   * 
+   * @param datos - Datos iniciales a actualizar.
    */
   public actualizarDatosIniciales(datos: CargarDatosIniciales): void {
     this.update((state) => ({
       ...state,
-      ...datos,
+      cargarDatosIniciales: datos,
     }));
   }
 
   /**
-   * Limpia los datos de la sección restableciendo el estado a su valor inicial.
+   * Método para actualizar los datos del trámite que se va a realizar.
+   * 
+   * @param datos - Información del trámite a actualizar.
+   */
+  actualizarDatosDelTramite(datos: DatosDelTramiteRealizar): void {
+    this.update((state) => ({
+      ...state,
+      datosDelTramiteRealizar: datos,
+    }));
+  }
+
+  /**
+   * Método para actualizar los catálogos disponibles en la inspección.
+   * 
+   * @param datos - Catálogos de selección a actualizar.
+   */
+  actualizarCatalogosSelect(datos: CatalogosSelect): void {
+    this.update((state) => ({
+      ...state,
+      catalogosSelect: datos,
+    }));
+  }
+
+  /**
+   * Método para limpiar y restablecer la sección de inspección física.
+   * Restaura el estado a su valor inicial.
    */
   public limpiarSeccion(): void {
     this.reset();
