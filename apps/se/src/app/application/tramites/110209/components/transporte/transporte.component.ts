@@ -9,16 +9,17 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { Catalogo, CatalogoSelectComponent } from "@ng-mf/data-access-user";
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { TransporteService } from '../../services/transporte.service';
+
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
-
+import { TransporteService } from '../../services/transporte.service';
 
 /**
  * Este componente maneja el formulario de transporte.
  */
+
 
 @Component({
   selector: 'app-transporte',
@@ -53,8 +54,10 @@ export class TransporteComponent implements OnInit, OnDestroy {
    * Servicio para la creación de formularios reactivos y para obtener datos de transporte.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
    * @param {TransporteService} service - Servicio para obtener datos de transporte.
+   * @param {Tramite110209Store} tramite110209Store - Servicio para manejar el estado del trámite.
+   * @param {Tramite110209Query} tramite110209Query - Servicio para consultar el estado del trámite.
    */
-  constructor(private fb: FormBuilder, private service: TransporteService,private tramite110209Store: Tramite110209Store, private tramite110209Query: Tramite110209Query) {
+  constructor(private fb: FormBuilder, private service: TransporteService, private tramite110209Store: Tramite110209Store, private tramite110209Query: Tramite110209Query) {
     this.transporteForm = this.fb.group({
       medioDeTransporte: [''],
       rutaCompleta: [''],
@@ -65,7 +68,7 @@ export class TransporteComponent implements OnInit, OnDestroy {
 
   /**
    * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
-   * Obtiene las opciones de medio de transporte.
+   * Obtiene las opciones de medio de transporte y los valores del store.
    */
   ngOnInit(): void {
     this.getMedioDeTransporte();
@@ -85,12 +88,20 @@ export class TransporteComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Establece los valores en el store.
+   * @param {FormGroup} form - El formulario del cual se obtienen los valores.
+   * @param {string} campo - El nombre del campo del formulario.
+   * @param {keyof Tramite110209Store} metodoNombre - El nombre del método del store.
+   */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110209Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite110209Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-
+  /**
+   * Obtiene los valores del store y los asigna al formulario.
+   */
   getValoresStore(): void {
     this.tramite110209Query.selectTramite110102$
       .pipe(
@@ -106,6 +117,7 @@ export class TransporteComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.
    * Completa el subject destroyed$ para desuscribirse de todos los observables.
