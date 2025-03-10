@@ -30,6 +30,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/120602/empresa-frontera-solicitud.module').then(
         (m) => m.EmpresaFronteraSolicitudModule
+      )
   },
   {
     path: 'prosec-modificacion',
