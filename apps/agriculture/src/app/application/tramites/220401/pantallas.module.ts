@@ -27,8 +27,8 @@ import { provideHttpClient } from '@angular/common/http';
   declarations: [
     PantallasComponent,
     DatosComponent,
-    TransporteComponent
-   ],
+    TransporteComponent,
+    ],
   imports: [
     CommonModule,
     PagoDeDerechoComponent,
@@ -38,15 +38,17 @@ import { provideHttpClient } from '@angular/common/http';
     TituloComponent,
     BtnContinuarComponent,
     SolicitudPantallasComponent,
-    DatosDelCertificadoComponent,
+    // DatosDelCertificadoComponent,
     FormsModule,
     ReactiveFormsModule,
     CombinacionRequeridaComponent,
     TercerosRelacionadosComponent,
     AgregarDestinatoriaComponent,
     DatosGeneralesAnimalesComponent,
-    SelectCatalogosComponent 
+    SelectCatalogosComponent ,
+    DatosDelCertificadoComponent
   ],
+  
   providers: [
       provideHttpClient(),
       ServiciosPantallasService

@@ -1,5 +1,5 @@
 /* eslint-disable sort-imports */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
@@ -8,6 +8,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosComponent } from '../terceros-relacionados/terceros-relacionados.component';
+import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
+import { AgregarQuery } from '../../../../estados/queries/agregar.query';
+import { map, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-combinacion-requerida',
@@ -16,7 +19,7 @@ import { TercerosRelacionadosComponent } from '../terceros-relacionados/terceros
   imports: [SelectCatalogosComponent,TituloComponent,ReactiveFormsModule,CommonModule,TercerosRelacionadosComponent],
   styleUrl: './combinacion-requerida.component.scss'
 })
-export class CombinacionRequeridaComponent implements OnInit {
+export class CombinacionRequeridaComponent implements OnInit, OnDestroy {
 
   public especie!: CatalogosSelect;
   public funcionZootecnica!: CatalogosSelect;
@@ -30,14 +33,28 @@ export class CombinacionRequeridaComponent implements OnInit {
   public paisOrigen!: CatalogosSelect;
 
   public formCombinacion!: FormGroup;
+  private destroyNotifier$: Subject<void> = new Subject();
+    public solicitudState!: solicitud220401State;
   
     constructor(private fb: FormBuilder,
-                private validacionesService: ValidacionesFormularioService
+                private validacionesService: ValidacionesFormularioService,
+                private agregar220401Store: Agregar220401Store,
+                private agregarQuery: AgregarQuery,
     ) {
-      this.crearFormCombinacion();
+      
     }
   
     ngOnInit(): void {
+this.agregarQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+      this.crearFormCombinacion();
+
       this.getEspecie();
       this.getFuncionZootecnica();
       this.getMercancia();
@@ -69,14 +86,25 @@ export class CombinacionRequeridaComponent implements OnInit {
         paisDestino:[''],
         nombreEstablecimiento:[''],
         tipoActividad:[''],
-        otro: [''],
+        otro : [this.solicitudState?.otro],
         aduanaSalida:[''],
         oisaSalida:[''],
         regimenMercancia:[''],
         paisOrigen:[''],
-        fechaArribo:[''],
-        puntoIngreso:['',[Validators.maxLength(200)]],
+        puntoIngreso:[this.solicitudState?.puntoIngreso,[Validators.maxLength(200)]],
+        nombreEstablecimientoCheck:[this.solicitudState?.nombreEstablecimientoCheck],
+        numeroAutorizacionCheck:[this.solicitudState?.numeroAutorizacionCheck],
+        tipoActividadCheck:[this.solicitudState?.tipoActividadCheck],
+        otroCheck:[this.solicitudState?.otroCheck],
+        fechaArribo:[this.solicitudState?.fechaArribo]
+        
       });
+    }
+
+    setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
+      const VALOR = form.get(campo)?.value;
+      console.log("value",VALOR);
+      (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
     }
   
   /**
@@ -312,6 +340,10 @@ export class CombinacionRequeridaComponent implements OnInit {
      // eslint-disable-next-line class-methods-use-this
      docSeleccionado(e: Catalogo): void {
       console.log(e);
+    }
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
     }
 
 }

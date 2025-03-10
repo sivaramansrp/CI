@@ -12,7 +12,8 @@
                 <label for="no">No</label>
               </div>
               <div class="radio-option">
-                <input type="radio" id="yes" formControlName="exentoDePago" value="Yes">
+                <input type="radio" id="yes" formControlName="exentoDePago" value="Yes"
+                >
                 <label for="yes">Si</label>
               </div>
              
@@ -27,7 +28,7 @@
                
 
                 <app-catalogo-select [catalogo]="Justificacion" formControlName="Justificacion" [label]="'Justificación*:'"
-                [required]="true" name="Justificacion"  (change)="JustificacionSeleccion()" ></app-catalogo-select>
+                [required]="true" name="Justificacion"    (change)="setValoresStore(FormSolicitud,'Justificacion', 'setJustificacion')"></app-catalogo-select>
               </div>
             </div>
           </div>
@@ -54,9 +55,7 @@
                 <app-catalogo-select [catalogo]="Banco" formControlName="Banco" [label]="'Banco*:'"
                 [required]="true" name="Banco"  (change)="BancoSeleccion()" ></app-catalogo-select>
                
-             
-             
-              </div>
+             </div>
             </div>
            
           </div>
@@ -94,10 +93,6 @@
           </div>
   
         </ng-container>
-  
-       
-  
-       
       </form>
     </div>
   </div>

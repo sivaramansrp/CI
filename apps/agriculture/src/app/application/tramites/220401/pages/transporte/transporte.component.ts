@@ -1,16 +1,19 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 import { HttpCoreService } from '@ng-mf/data-access-user';
 
-import { ReplaySubject, takeUntil } from 'rxjs';
+import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
 
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 
 import { Catalogo } from '@ng-mf/data-access-user';
+
+import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
+import { AgregarQuery } from '../../../../estados/queries/agregar.query';
 
 /**
  * Este componente se utiliza para mostrar la forma del transporte. - 220401
@@ -23,7 +26,7 @@ import { Catalogo } from '@ng-mf/data-access-user';
   templateUrl: './transporte.component.html'
 })
 
-export class TransporteComponent implements OnDestroy {
+export class TransporteComponent implements OnDestroy, OnInit {
   /**
    * Esta variable se utiliza para destruir la suscripción.
    */
@@ -32,6 +35,8 @@ export class TransporteComponent implements OnDestroy {
    * Esta variable se utiliza para crear la forma del transporte.
    */
   transporteForm!: FormGroup;
+  private destroyNotifier$: Subject<void> = new Subject();
+  public solicitudState!: solicitud220401State;
 
   public tiposDocumentos: CatalogosSelect = {
     labelNombre: 'Medio de transporte',
@@ -49,12 +54,28 @@ export class TransporteComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-    private httpCoreService: HttpCoreService
+    private httpCoreService: HttpCoreService,
+    private agregar220401Store: Agregar220401Store,
+    private agregarQuery: AgregarQuery,
   ) {
     this.fetchtiposDocumentos();
-    this.crearFormTransporte();
+    
   }
 
+  ngOnInit(): void {
+    // Peticiones a las apis
+   
+
+    this.agregarQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+      this.crearFormTransporte();
+    }
   /**
    * Este método se utiliza para crear la forma del transporte. - 220401
    */
@@ -62,11 +83,17 @@ export class TransporteComponent implements OnDestroy {
   crearFormTransporte() {
     this.transporteForm = this.fb.group({
       mediodeTransporte: ['', [Validators.required]],
-      identificationDelTransporte: [''],
-      numerodeContenedor: [''],
-      fetchdeEmbarque: [''],
-      numerodeFlejes: ['']
-    });
+      identificationDelTransporte: [this.solicitudState?.identificationDelTransporte],
+      numerodeContenedor:[this.solicitudState?.numerodeContenedor],
+      fetchdeEmbarque:[this.solicitudState?.fetchdeEmbarque],
+      numerodeFlejes:[this.solicitudState?.numerodeFlejes]
+     });
+  }
+
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
+    const VALOR = form.get(campo)?.value;
+    console.log("value",VALOR);
+    (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
   }
 
   /**
@@ -107,8 +134,10 @@ export class TransporteComponent implements OnDestroy {
    * Este método se utiliza para destruir la suscripción.
    * @returns destroyed$
    */
+  
   ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
+  
 }

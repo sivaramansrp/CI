@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
@@ -27,6 +27,10 @@ import {
   REGEX_LEADING_SPACES,
 } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+
+import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
+import { AgregarQuery } from '../../../../estados/queries/agregar.query';
+import { map, Subject, takeUntil } from 'rxjs';
 /**
  * DatosGeneralsAnimalsComponent es un componente que maneja la selección de aduanas y otros datos generales de animales.
  */
@@ -42,11 +46,14 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
   templateUrl: './datos-generales-animales.component.html',
   styleUrl: './datos-generales-animales.component.scss',
 })
-export class DatosGeneralesAnimalesComponent implements OnInit {
+export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
   /** Configuración del primer select de aduanas */
   frmMercanciaAnimal!: FormGroup;
+   private destroyNotifier$: Subject<void> = new Subject();
+    public solicitudState!: solicitud220401State;
   /** Configuración del primer select de aduanas */
   aduanas: Catalogo[] = aduanasJson;
+  // fraccionF: Catalogo[] = fractionValues;
   /** Configuración del segundo select de aduanas */
   sexo: Catalogo[] = sexoJson;
 
@@ -60,7 +67,10 @@ export class DatosGeneralesAnimalesComponent implements OnInit {
    * @param e - La aduana seleccionada.
    */
   // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, 
+    private agregar220401Store: Agregar220401Store,
+    private agregarQuery: AgregarQuery,
+  ) {}
   /**
    * Validador personalizado para validar una descripción especial.
    * Este validador verifica si el valor ingresado cumple con las reglas de caracteres permitidos y no tiene espacios al principio.
@@ -123,9 +133,19 @@ export class DatosGeneralesAnimalesComponent implements OnInit {
    * Inicializa el componente y configura el grupo de formularios con reglas de validación.
    */
   ngOnInit(): void {
+
+     this.agregarQuery.selectSolicitud$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.solicitudState = seccionState;
+            })
+          )
+          .subscribe();
+
     this.frmMercanciaAnimal = this.fb.group({
       fraccionArancelaria: [
-        '',
+        this.solicitudState?.fraccionArancelaria || '',
         [
           Validators.required,
           Validators.minLength(8),
@@ -157,7 +177,7 @@ export class DatosGeneralesAnimalesComponent implements OnInit {
         ],
       ],
       fechaCaducidad: [
-        '',
+        this.solicitudState?.fechaCaducidad || '',
         [
           Validators.required,
           Validators.maxLength(15),
@@ -165,34 +185,37 @@ export class DatosGeneralesAnimalesComponent implements OnInit {
           this.valueRangeValidator(0.01, 999999999999.99), // Validador personalizado para rango de valores
         ],
       ],
-      aduana: ['', Validators.required], // Agregue FormControl para el campo seleccionado
+      aduana: [this.solicitudState?.aduana || '',[ Validators.required]], // Agregue FormControl para el campo seleccionado
       cites: ['', Validators.maxLength(15)],
       nombreIdentificacion: [
-        '',
+        this.solicitudState?.nombreIdentificacion || '',
         [
           Validators.required,
           Validators.maxLength(200),
           this.descripcionEspecialesValidator, // Validador personalizado
         ],
       ],
-      numeroAutorizacionCITES: ['', Validators.maxLength(15)],
+      numeroAutorizacionCITES: [ this.solicitudState?.raza || '',[Validators.maxLength(15)]],
       raza: [
-        '',
+        this.solicitudState?.raza || '',
         [
           Validators.maxLength(50),
           this.descripcionEspecialesValidator, // Validador personalizado
         ],
       ],
       edadAnimal: [
-        '',
+        this.solicitudState?.edadAnimal || '',
         [
           Validators.required,
           Validators.maxLength(50),
           this.descripcionEspecialesValidator, // Validador personalizado
         ],
       ],
+      sexo:[
+        this.solicitudState?.sexo || '',
+      ],
       color: [
-        '',
+        this.solicitudState?.color || '',
         [
           Validators.maxLength(30),
           this.descripcionEspecialesValidator, // Validador personalizado
@@ -200,7 +223,9 @@ export class DatosGeneralesAnimalesComponent implements OnInit {
       ],
     });
   }
- 
+  // fetchFraccion(): void {
+  //   this.selectedValue = 'Nuevo';
+  // }
  
   /**
    * Maneja la selección de una aduana en el segundo select.
@@ -263,5 +288,17 @@ export class DatosGeneralesAnimalesComponent implements OnInit {
    */
   mostrarErrores(): void {
     // Implementar la lógica para mostrar los errores
+  }
+
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
+    const VALOR = form.get(campo)?.value;
+    console.log("value",VALOR);
+    // const VALOR = form.get('datosdelForm')?.get(campo)?.value;
+    (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
