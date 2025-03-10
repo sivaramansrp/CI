@@ -1,9 +1,9 @@
 /* eslint-disable sort-imports */
 import { NgModule } from '@angular/core';
+
 import { RouterModule, Routes } from '@angular/router';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const routes: Routes = [
+const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
@@ -22,6 +22,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tramites/110102/exportador-autorizado.module').then(
         (m) => m.ExportadorautorizadoModule
+      ),
+  },
+  {
+    path: 'prosec-modificacion',
+    loadChildren: () =>
+      import('./tramites/90305/prosec-modificacion.module').then(
+        (m) => m.ProsecModificacionModule
       ),
   },
   {
@@ -110,7 +117,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
