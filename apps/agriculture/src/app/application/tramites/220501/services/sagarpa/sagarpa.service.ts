@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '../../../models/shared/catalogos.model';
+import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 /**
  * Servicio para gestionar las operaciones relacionadas con SAGARPA.

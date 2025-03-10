@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnInit } from '@angular/core';
-import { RevisionService } from '@ng-mf/data-access-user';
+import { RevisionService } from '../../services/revision.service';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 /**

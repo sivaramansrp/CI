@@ -7,14 +7,20 @@ import { ControlContainer } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
+import { InspeccionFisicaQuery } from '../../estados/inspeccion-fisica.query';
+import { InspeccionFisicaStore } from '../../estados/inspeccion-fisica.store';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { SolicitudPantallasService } from '@ng-mf/data-access-user';
+import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
+import { Subject } from 'rxjs';
+import { TipoContenedor } from '../../models/solicitud-pantallas.model';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { inject } from '@angular/core';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 /**
  * Componente que representa al responsable de la inspección en un punto.
  * Este componente agrega y administra dinámicamente controles de formulario para los detalles de responsabilidad de inspección.
@@ -54,9 +60,17 @@ export class ResponsableInspeccionEnPuntoComponent
     return this.contenedorPrincipal.control as FormGroup;
   }
   /** Almacena datos del catálogo para el tipo de contenedor. */
-  tipoContenedor!: CatalogosSelect;
+  tipoContenedor: CatalogosSelect = {} as CatalogosSelect;
+
+  /**
+   * Subject para desuscribirse de los observables.
+   * @type {Subject<void>}
+   */
+  private destroyed$ = new Subject<void>();
 
   constructor(
+    private inspeccionFisicaStore: InspeccionFisicaStore,
+    private inspeccionFisicaQuery: InspeccionFisicaQuery,
     private solicitudService: SolicitudPantallasService /**Servicio para obtener datos de solicitud */
   ) {
     /** Inyectar el ControlContainer principal para administrar los controles de formulario */
@@ -82,6 +96,15 @@ export class ResponsableInspeccionEnPuntoComponent
         })
       );
     }
+
+    this.inspeccionFisicaQuery.selectCatalogos$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((res: CatalogosSelect) => {
+          this.tipoContenedor = res;
+        })
+      )
+      .subscribe();
     this.cargarDatosIniciales(); // Cargar datos del catálogo inicial
   }
   /**
@@ -104,8 +127,8 @@ export class ResponsableInspeccionEnPuntoComponent
    */
   cargarDatosIniciales(): void {
     this.solicitudService.getDataResponsableInspeccion().subscribe({
-      next: (data: { tipoContenedor: CatalogosSelect }) => {
-        this.tipoContenedor = data.tipoContenedor;
+      next: (data: TipoContenedor) => {
+        this.inspeccionFisicaStore.actualizarCatalogosSelect(data.tipoContenedor);
       },
     })
   }
@@ -120,5 +143,7 @@ export class ResponsableInspeccionEnPuntoComponent
     ) {
       this.grupoFormularioPadre.removeControl(this.claveDeControl);
     }
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

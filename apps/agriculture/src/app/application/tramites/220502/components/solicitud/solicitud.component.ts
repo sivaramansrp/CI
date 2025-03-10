@@ -1,23 +1,28 @@
-import { CargarDatosIniciales } from '@ng-mf/data-access-user';
-import { CarrosDeFerrocarril } from '@ng-mf/data-access-user';
+import { CargarDatosIniciales } from '../../models/solicitud-pantallas.model';
+import { CarrosDeFerrocarril } from '../../models/solicitud-pantallas.model';
 import { CarrosDeFerrocarrilComponent } from '../../shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { DatosDeMercancias } from '@ng-mf/data-access-user';
+import { Component, OnDestroy } from '@angular/core';
+import { DatosDeMercancias } from '../../models/solicitud-pantallas.model';
 import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { HistorialInspeccionFisica } from '@ng-mf/data-access-user';
+import { HistorialInspeccionFisica } from '../../models/solicitud-pantallas.model';
 import { HistorialInspeccionFisicaComponent } from '../../shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
+import { InspeccionFisicaQuery } from '../../estados/inspeccion-fisica.query';
+import { InspeccionFisicaStore } from '../../estados/inspeccion-fisica.store';
 import { MedioTransporteComponent } from '../../shared/medio-transporte/medio-transporte.component';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsableInspeccionEnPuntoComponent } from '../../shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
-import { Solicitud } from '@ng-mf/data-access-user';
+import { Solicitud } from '../../models/solicitud-pantallas.model';
 import { SolicitudDatosComponent } from '../../shared/solicitud-datos/solicitud-datos.component';
-import { SolicitudPantallasService } from '@ng-mf/data-access-user';
+import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar la solicitud de trámite.
@@ -41,7 +46,7 @@ import { SolicitudPantallasService } from '@ng-mf/data-access-user';
   styleUrl: './solicitud.component.scss',
 })
 /** Componente para gestionar la solicitud de trámite */
-export class SolicitudComponent implements OnInit {
+export class SolicitudComponent implements OnInit, OnDestroy {
   /** Grupo de formularios para manejar formularios reactivos.*/
   form: FormGroup;
 
@@ -78,9 +83,17 @@ export class SolicitudComponent implements OnInit {
   /** Datos de historial de inspección física para mostrar en la tabla. */
   dHistorialInspecciones: HistorialInspeccionFisica[] = [];
 
+  /**
+     * Subject para desuscribirse de los observables.
+     * @type {Subject<void>}
+     */ 
+  private destroyed$ = new Subject<void>();
+
   /** Constructor para inyectar dependencias */
   constructor(
     private fb: FormBuilder,
+    private inspeccionFisicaStore: InspeccionFisicaStore,
+    private inspeccionFisicaQuery: InspeccionFisicaQuery,
     private solicitudService: SolicitudPantallasService /**Servicio para obtener datos de solicitud */
   ) {
     this.form = this.fb.group(
@@ -90,6 +103,20 @@ export class SolicitudComponent implements OnInit {
 
   /** Gancho de ciclo de vida para cargar datos iniciales cuando se inicializa el componente */
   ngOnInit(): void {
+    this.inspeccionFisicaQuery.selectCargarDatosIniciales$.pipe(
+      takeUntil(this.destroyed$),
+        map((data: CargarDatosIniciales) => {
+          this.hHistorialinspeccion = data.hHistorialinspeccion;
+          this.dHistorialInspecciones = data.dHistorialInspecciones;
+          this.dCarrosDeFerrocarril = data.dCarrosDeFerrocarril;
+          this.hCarroFerrocarril = data.hCarroFerrocarril;
+          this.hSolicitud = data.hSolicitud;
+          this.dSolicitud = data.dSolicitud;
+          this.hMercanciaTabla = data.hMerchandise;
+          this.dMercanciaBody = data.dMercancia;
+          this.mediodetransporte = data.medioDeTransporte;
+        })
+    ).subscribe();
     this.cargarDatosIniciales();
   }
 
@@ -99,16 +126,18 @@ export class SolicitudComponent implements OnInit {
   cargarDatosIniciales(): void {
     this.solicitudService.getData().subscribe({
       next: (data: CargarDatosIniciales) => {
-        this.hHistorialinspeccion = data.hHistorialinspeccion;
-        this.dHistorialInspecciones = data.dHistorialInspecciones;
-        this.dCarrosDeFerrocarril = data.dCarrosDeFerrocarril;
-        this.hCarroFerrocarril = data.hCarroFerrocarril;
-        this.hSolicitud = data.hSolicitud;
-        this.dSolicitud = data.dSolicitud;
-        this.hMercanciaTabla = data.hMerchandise;
-        this.dMercanciaBody = data.dMercancia;
-        this.mediodetransporte = data.medioDeTransporte;
+        this.inspeccionFisicaStore.actualizarDatosIniciales(data);
       }
     });
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Desuscribe el componente de todos los observables.
+   * @returns {void}
+   * */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

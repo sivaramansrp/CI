@@ -4,21 +4,25 @@ import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
-import { DatosDelTramiteRealizar } from '@ng-mf/data-access-user';
-import { FECHA_INSPECCION_INPUT_220502 } from '@ng-mf/data-access-user';
+import { DatosDelTramiteRealizar } from '../../models/solicitud-pantallas.model';
+import { FECHA_INSPECCION_INPUT } from '../../constantes/texto-enum';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
+import { InspeccionFisicaQuery } from '../../estados/inspeccion-fisica.query';
+import { InspeccionFisicaStore } from '../../estados/inspeccion-fisica.store';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SolicitudPantallasService } from '@ng-mf/data-access-user';
+import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
+import { Subject } from 'rxjs';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { inject } from '@angular/core';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 /**
  * Componente para gestionar los datos del trámite a realizar.
  */
@@ -82,10 +86,20 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
   /**
    * Campo de entrada de fecha inicializado con la constante FECHA_INSPECCION.
    */
-  fechaInicioInput: InputFecha = FECHA_INSPECCION_INPUT_220502;
+  fechaInicioInput: InputFecha = FECHA_INSPECCION_INPUT;
+
+  /**
+   * Subject para desuscribirse de los observables.
+   * @type {Subject<void>}
+   */
+  private destroyed$ = new Subject<void>();
 
   /** Constructor para inyectar el servicio de solicitud de pantallas. */
-  constructor(private solicitudService: SolicitudPantallasService) {
+  constructor(
+    private solicitudService: SolicitudPantallasService,
+    private inspeccionFisicaStore: InspeccionFisicaStore,
+    private inspeccionFisicaQuery: InspeccionFisicaQuery,
+  ) {
     // Se puede agregar aquí el código de inicialización si es necesario en el futuro.
   }
 
@@ -106,6 +120,15 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
         })
       );
     }
+
+    this.inspeccionFisicaQuery.selectDatosDelTramiteRealizar$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((datos: DatosDelTramiteRealizar) => {
+          this.actualizarDatosIniciales(datos);
+        })
+      )
+      .subscribe();
     /** Cargar datos iniciales */
     this.cargarDatosIniciales();
   }
@@ -166,10 +189,12 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Carga datos del catálogo inicial para las selecciones de formulario.
-   */
-  cargarDatosIniciales(): void {
+/**
+ * Actualiza los datos iniciales de los campos del formulario según la información proporcionada.
+ *
+ * @param data - El objeto de datos que contiene valores para diferentes campos de catálogo.
+ */
+  actualizarDatosIniciales(data: DatosDelTramiteRealizar): void {
     const CATALOGOTEMPLATE = (
       label: string,
       required: boolean,
@@ -180,38 +205,44 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
       primerOpcion: 'Selecciona un valor',
       catalogos: catalogos,
     });
-  
+
+    this.certificadosAutorizados = CATALOGOTEMPLATE(
+      'Certificados autorizados pendientes',
+      true,
+      data.pendientesCertificados
+    );
+    this.horaDeInspeccion = CATALOGOTEMPLATE(
+      'Hora de inspección',
+      true,
+      data.horaInspeccion
+    );
+    this.aduanaDeIngreso = CATALOGOTEMPLATE(
+      'Aduana de ingreso',
+      false,
+      data.aduanaIngreso
+    );
+    this.sanidadAgropecuaria = CATALOGOTEMPLATE(
+      'Oficina de inspección de Sanidad Agropecuaria',
+      false,
+      data.sanidadAgropecuaria
+    );
+    this.puntoDeInspeccion = CATALOGOTEMPLATE(
+      'Punto de inspección',
+      false,
+      data.puntoInspeccion
+    );
+  }
+
+  /**
+   * Carga datos del catálogo inicial para las selecciones de formulario.
+   */
+  cargarDatosIniciales(): void {
     this.solicitudService.getDataDatosDelTramite().subscribe({
       next: (data: DatosDelTramiteRealizar) => {
-        this.certificadosAutorizados = CATALOGOTEMPLATE(
-          'Certificados autorizados pendientes',
-          true,
-          data.pendientesCertificados
-        );
-        this.horaDeInspeccion = CATALOGOTEMPLATE(
-          'Hora de inspección',
-          true,
-          data.horaInspeccion
-        );
-        this.aduanaDeIngreso = CATALOGOTEMPLATE(
-          'Aduana de ingreso',
-          false,
-          data.aduanaIngreso
-        );
-        this.sanidadAgropecuaria = CATALOGOTEMPLATE(
-          'Oficina de inspección de Sanidad Agropecuaria',
-          false,
-          data.sanidadAgropecuaria
-        );
-        this.puntoDeInspeccion = CATALOGOTEMPLATE(
-          'Punto de inspección',
-          false,
-          data.puntoInspeccion
-        );
-      }
+        this.inspeccionFisicaStore.actualizarDatosDelTramite(data);
+      },
     });
   }
-  
 
   /**
    * Getter para acceder al grupo de formularios 'datosServicio'.
@@ -230,6 +261,9 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
 
   /**
    * Gancho de ciclo de vida para limpiar los controles de formulario cuando se destruye el componente.
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Desuscribe el componente de todos los observables.
+   * @returns {void}
    */
   ngOnDestroy(): void {
     if (
@@ -238,5 +272,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
     ) {
       this.grupoFormularioPadre.removeControl(this.claveDeControl);
     }
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }
