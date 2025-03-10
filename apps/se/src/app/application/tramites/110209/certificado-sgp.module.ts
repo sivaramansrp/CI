@@ -9,10 +9,14 @@ import { DatosDelCertificadoComponent } from "./components/datos-del-certificado
 import { DetallesDelTransporteComponent } from './components/detalles-del-transporte/detalles-del-transporte.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { FirmarSolicitudComponent } from './pages/firmar-solicitud/firmar-solicitud.component';
+import { RegistroDeMercanciaComponent } from './components/registro-de-mercancia/registro-de-mercancia.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { ToastrService } from 'ngx-toastr';
 import { TransporteComponent } from './components/transporte/transporte.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
+
+
 
 
 
@@ -31,7 +35,9 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     TransporteComponent,
     FirmaElectronicaComponent,
     BtnContinuarComponent,
-    DatosDelCertificadoComponent
+    DatosDelCertificadoComponent,
+    RegistroDeMercanciaComponent
 ],
+providers: [ToastrService],
 })
 export class CertificadoSGPModule {}

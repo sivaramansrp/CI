@@ -5,6 +5,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -15,6 +16,11 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tab
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
+
+
+/**
+ * Este componente maneja el formulario de datos del certificado.
+ */
 
 @Component({
   selector: 'app-datos-del-certificado',
@@ -56,6 +62,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    */
   configuracionTabla = CONFIGURACION_MERCANCIAS;
 
+
   /**
    * Constructor del componente.
    * Servicio para la creación de formularios reactivos y para obtener datos de mercancías.
@@ -64,7 +71,9 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    * @param {Tramite110209Store} tramite110209Store - Servicio para manejar el estado del trámite.
    * @param {Tramite110209Query} tramite110209Query - Servicio para consultar el estado del trámite.
    */
-  constructor(private fb: FormBuilder, private service: MercanciasService, private tramite110209Store: Tramite110209Store, private tramite110209Query: Tramite110209Query) {
+  constructor(private fb: FormBuilder, private service: MercanciasService, 
+    private tramite110209Store: Tramite110209Store, 
+    private tramite110209Query: Tramite110209Query ,private router: Router) {
     this.datosDelCertificadoForm = this.fb.group({
       observaciones: ['',Validators.pattern(/^(?!\s)(.*\S)?$/)]
     });
@@ -120,6 +129,12 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
+  onNavigate(): void {  
+   this.router.navigate(['/se/certificado-sgp/registro-de-mercancia']);
+
+  }
+
 
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.
