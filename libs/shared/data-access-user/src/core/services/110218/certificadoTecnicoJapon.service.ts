@@ -9,12 +9,20 @@ import { Observable } from 'rxjs';
 export class CertificadoTecnicoJaponService {
 
   constructor(private http: HttpClient) { }
-  
+
   getDatosCertificado(): Observable<any> {
     return this.http.get('assets/json/110218/certificado-tecnico-japon.json');
   }
 
   gettratados(): Observable<any> {
     return this.http.get('assets/json/110218/tratados.json');
+  }
+
+  getrepresentante(): Observable<any> {
+    return this.http.get('assets/json/110218/representante-legal.json');
+  }
+  
+  getdestinatario(): Observable<any> {
+    return this.http.get('assets/json/110218/destinatario.json');
   }
 }
