@@ -99,6 +99,10 @@
                       (click)="limpiarFile(fileInput,item)">
                 <i class="bi bi-trash3 bi-c"></i>
               </button>
+              <button type="button" class="btn file-btn-add" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
+                      (click)="eliminarOpcionar(item)">
+                <i class="bi bi-x-circle-fill"></i>
+              </button>
             </div>
           </div>
         }

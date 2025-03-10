@@ -331,4 +331,12 @@ export class AnexarDocumentosComponent implements OnInit {
   cargarArchivos(): void {
     console.log(this.listadoArchivos);
   }
+
+  eliminarOpcionar(item: any): void {
+    const index: number = this.listDocOpcionales.findIndex(f => f.id === item.id);
+    if (index !== -1) {
+      this.listDocOpcionales.splice(index, 1);
+      this.listDocOpcionalesDuplicado = this.listDocOpcionales.map(op => op.id);
+    }
+  }
 }
