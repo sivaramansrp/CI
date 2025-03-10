@@ -68,8 +68,8 @@ const routes: Routes = [
       import('./tramites/80207/subfabricante-extension.module').then(
         (m) => m.SubfabricanteExtentionModule
       ),
-    },
-{
+  },
+  {
     path: 'immex-ampliacion-sensibles',
     loadChildren: () =>
       import('./tramites/80202/immex-ampliacion-sensibles.module').then(
@@ -82,7 +82,7 @@ const routes: Routes = [
       import('./tramites/80203/immex-registro-de-solicitud-modalidad.modulo').then(
         (m) => m.ImmexRegistroDeSolicitudModalityModule
       )
-    },
+  },
   {
     path: 'modificacion',
     loadChildren: () =>
@@ -96,7 +96,7 @@ const routes: Routes = [
       import('./tramites/90101/autorizacion-prosec.module').then(
         (m) => m.AutorizacionProsecModule
       ),
-  }
+  },
   {
     path: 'solicitud-modalidad',
     loadChildren: () =>
@@ -104,13 +104,10 @@ const routes: Routes = [
         (m) => m.RegistroSolicitudModule
       ),
   }
-
-
-
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
