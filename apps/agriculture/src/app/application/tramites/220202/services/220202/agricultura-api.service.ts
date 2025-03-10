@@ -6,8 +6,6 @@ import { HttpClient } from '@angular/common/http';
 
 import { Observable, map } from 'rxjs';
 
-import { DatosDeTabla } from '../../models/220202/fitosanitario.model';
-
 
 
 

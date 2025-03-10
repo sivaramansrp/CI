@@ -8,9 +8,6 @@ import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.en
 
 
 
-interface MesaColumnasData {
-  tbodyData: string[];
-}
 /**
  * @Componente DatosDeLaSolicitudComponent
  * @description Componente para la sección de datos de la solicitud en el formulario de fitosanitarios.
