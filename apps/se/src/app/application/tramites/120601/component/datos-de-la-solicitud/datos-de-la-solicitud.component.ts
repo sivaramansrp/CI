@@ -3,9 +3,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 
 import { Catalogo, CatalogoSelectComponent, SelectCatalogosComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { DatosDeLaSolicitudStore } from '../../estados/tramites/store/datos-de-la-solicitud.store';
-import { DatosDeLaSolicitudQuery } from '../../estados/tramites/queries/datos-de-la-solicitud.query';
 import { tipoDeEmpresa} from '@ng-mf/data-access-user';
+import { Tramite120601Store } from '../../estados/tramite-120601.store';
+import { Tramite120601Query } from '../../estados/tramite-120601.query';
 
 /**
  * Componente que representa los datos de la solicitud en un proceso de múltiples pasos.
@@ -39,7 +39,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * Constructor de DatosDeLaSolicitudComponent.
    * @param fb El servicio FormBuilder.
    */
-  constructor(private fb: FormBuilder, private store: DatosDeLaSolicitudStore, private query: DatosDeLaSolicitudQuery) {
+  constructor(private fb: FormBuilder, private store: Tramite120601Store, private query: Tramite120601Query) {
     // Initialization logic can be added here if needed
   }
 

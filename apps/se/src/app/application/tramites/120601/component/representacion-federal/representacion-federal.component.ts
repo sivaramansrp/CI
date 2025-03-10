@@ -7,8 +7,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { representacionFederal } from '@ng-mf/data-access-user';
 import { representacionFederalTable } from '@ng-mf/data-access-user';
 import { tipoDeEmpresa } from '@ng-mf/data-access-user';
-import { RepresentacionFederaStore } from '../../estados/tramites/store/representacion-federal.store';
-import { RepresentacionFederaQuery } from '../../estados/tramites/queries/representacion-federal.query';
+import { Tramite120601Query } from '../../estados/tramite-120601.query';
+import { Tramite120601Store } from '../../estados/tramite-120601.store';
 
 /**
  * Componente que representa la representación federal en un proceso de múltiples pasos.
@@ -89,8 +89,8 @@ export class RepresentacionFederalComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private query: RepresentacionFederaQuery,
-    private store: RepresentacionFederaStore
+    private query: Tramite120601Query,
+    private store: Tramite120601Store
   ) {
     //constructor
   }

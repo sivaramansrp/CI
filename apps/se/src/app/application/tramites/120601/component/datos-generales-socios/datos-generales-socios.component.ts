@@ -18,8 +18,8 @@ import { DATOS_GENERALES_EXTRANJEROS } from '@ng-mf/data-access-user';
 import { DATOS_GENERALES_SOCIOS } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { DatosGeneralesSociosStore } from '../../estados/tramites/store/datos-generales-socios.store';
-import { DatosGeneralesSociosQuery } from '../../estados/tramites/queries/datos-generales-socios.query';
+import { Tramite120601Store } from '../../estados/tramite-120601.store';
+import { Tramite120601Query } from '../../estados/tramite-120601.query';
 
 import { datosSociosTable } from '@ng-mf/data-access-user';
 
@@ -84,7 +84,7 @@ export class DatosGeneralesSociosComponent implements OnInit {
    * Constructor - inicializa el form builder.
    * @param fb - Instancia de FormBuilder
    */
-  constructor(private fb: FormBuilder, private store: DatosGeneralesSociosStore, private query: DatosGeneralesSociosQuery) {
+  constructor(private fb: FormBuilder, private store: Tramite120601Store, private query: Tramite120601Query) {
     // Si es necesario, se puede agregar aquí la lógica del constructor.
   }
 
