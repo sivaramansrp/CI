@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 
 import { FormBuilder, FormGroup } from '@angular/forms';
 
@@ -9,6 +9,8 @@ import { Catalogo, InputFecha, RespuestaCatalogos } from '@ng-mf/data-access-use
 import { FECHA_DE_PAGO } from '../../constantes/certificado-zoosanitario.enum';
 
 import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
+
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 
 /**
  * @fileoverview Componente para la gestión del formulario de pago de derechos.
@@ -27,7 +29,7 @@ import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model'
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss']
 })
-export class PagoDeDerechosComponent {
+export class PagoDeDerechosComponent implements OnDestroy {
 
   /**
    * Configuración para el input de fecha de pago.
@@ -88,7 +90,7 @@ export class PagoDeDerechosComponent {
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
    * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient) {
+  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient, private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService) {
     this.obtenerDetallesDeListaDeOpciones();
   }
 
@@ -123,5 +125,15 @@ export class PagoDeDerechosComponent {
       const DATOS = data?.data;
       this.justificacionSelector = DATOS as Catalogo[];
     });
+  }
+  ngOnDestroy(): void {
+    const FORMA_VALIDA_ACTUALIZADA = {
+      pagoDeformaValida: false,
+    };
+    if (this.pagoForm.valid) {
+      FORMA_VALIDA_ACTUALIZADA.pagoDeformaValida = true;
+    }
+    this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
+    this.certificadoZoosanitarioServices.updatePagoDeDerechos(this.pagoForm.value);
   }
 }

@@ -71,6 +71,19 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
     }
 
     /**
+   * Updates the 'formaValida' field.
+   * @param updatedFormaValida The updated boolean values for 'formaValida'.
+   */
+    public actualizarformaValida(updatedFormaValida: { [key: string]: boolean }): void {
+        this.update(state => ({
+            ...state,
+            formaValida: {
+                ...state?.submitValidator,
+                ...updatedFormaValida, // Only the updated fields are merged here
+            }
+        }));
+    }
+    /**
      * @description Resets the store to its initial state.
      */
     public limpiarFormulario(): void {

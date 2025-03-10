@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 
 import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos para la movilización nacional.
@@ -22,7 +23,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './datos-para-movilizacion-nacional.component.html',
   styleUrl: './datos-para-movilizacion-nacional.component.scss'
 })
-export class DatosParaMovilizacionNacionalComponent implements OnInit {
+export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy {
 
   /**
    * Grupo de formularios para la movilización nacional.
@@ -59,7 +60,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
    * @param {FormBuilder} fb - Inyección de dependencia del servicio FormBuilder.
    * @param {HttpClient} httpServicios - Inyección de dependencia del servicio HttpClient.
    */
-  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient) {
+  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient, private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService) {
     this.movilizacionForm = this.fb.group({
       coordenadas: ['', Validators.required],
       nombre: ['', Validators.required],
@@ -130,5 +131,15 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
       const DATOS = data?.data;
       this.identificacionTransporteList = DATOS;
     });
+  }
+  ngOnDestroy(): void {
+    const FORMA_VALIDA_ACTUALIZADA = {
+      dataParaMovilizacion: false, // Example boolean to update
+    };
+    if (this.movilizacionForm.valid) {
+      FORMA_VALIDA_ACTUALIZADA.dataParaMovilizacion = true;
+    }
+    this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
+    this.certificadoZoosanitarioServices.updatePagoDeDerechos(this.movilizacionForm.value);
   }
 }

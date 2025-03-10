@@ -30,6 +30,10 @@ export class CertificadoZoosanitarioServiceService {
     this.zoosanitarioStore.actualizarSolicitante(solicitante);
   }
 
+  actualizarFormaValida(updatedFormaValida: { [key: string]: boolean }): void {
+    this.zoosanitarioStore.actualizarformaValida(updatedFormaValida);
+  }
+
   updateDatosDeLaSolicitud(datosDeLaSolicitud: DatosDeLaSolicitud): void {
     this.zoosanitarioStore.actualizarDatosDeLaSolicitud(datosDeLaSolicitud);
   }
@@ -45,6 +49,8 @@ export class CertificadoZoosanitarioServiceService {
   updatePagoDeDerechos(pagoDeDerechos: PagoDeDerechos): void {
     this.zoosanitarioStore.actualizarPagoDeDerechos(pagoDeDerechos);
   }
+
+
 
   limpiarFormulario(): void {
     this.zoosanitarioStore.limpiarFormulario();

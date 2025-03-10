@@ -1,13 +1,16 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
 import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 import { HttpClient } from '@angular/common/http';
+
 import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
+
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos de la solicitud.
@@ -26,7 +29,7 @@ import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model'
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss']
 })
-export class DatosDeLaSolicitudComponent implements OnInit {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Constantes de texto.
    * @property {string} TEXTOS
@@ -145,7 +148,9 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
    * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.--220201
    */
-  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient) {
+  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient,
+    private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService
+  ) {
     this.crearFormulario();
     this.initActionFormBuild();
   }
@@ -273,5 +278,15 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       const DATOS = data?.data;
       this.regimen = DATOS;
     });
+  }
+  ngOnDestroy(): void {
+    const FORMA_VALIDA_ACTUALIZADA = {
+      dataDeLaSolicitud: false, // Example boolean to update
+    };
+    if (this.datosDelaSolicitud.valid) {
+      FORMA_VALIDA_ACTUALIZADA.dataDeLaSolicitud = true;
+    }
+    this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
+    this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(this.datosDelaSolicitud.value);
   }
 }
