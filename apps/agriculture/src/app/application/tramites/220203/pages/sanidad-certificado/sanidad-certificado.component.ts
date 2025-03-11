@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
 
 import { PASOSACUICULTURA } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
@@ -18,6 +18,10 @@ export class SanidadCertificadoComponent {
     txtBtnAnt: 'Guardar',
     txtBtnSig: 'Continuar',
   };
+  constructor(private readonly seccionStore: SeccionLibStore) {
+    this.seccionStore.establecerFormaValida([false]);
+    this.seccionStore.establecerSeccion([true]);
+  }
   /**
    * Componente Wizard.
    * @property {WizardComponent} wizardComponent - Referencia al componente Wizard para controlar la navegación.

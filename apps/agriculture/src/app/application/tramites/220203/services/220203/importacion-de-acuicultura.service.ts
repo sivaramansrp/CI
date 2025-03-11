@@ -93,7 +93,7 @@ export class ImportacionDeAcuiculturaService {
         this.seccionStore.establecerSeccion([true]);
         this.seccionStore.establecerFormaValida([true]);
       } else {
-        this.seccionStore.establecerSeccion([false]);
+        this.seccionStore.establecerSeccion([true]);
         this.seccionStore.establecerFormaValida([false]);
       }
     });
