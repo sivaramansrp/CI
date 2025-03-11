@@ -1,9 +1,9 @@
 /* eslint-disable sort-imports */
 import { NgModule } from '@angular/core';
+
 import { RouterModule, Routes } from '@angular/router';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const routes: Routes = [
+const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
@@ -25,6 +25,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'prosec-modificacion',
+    loadChildren: () =>
+      import('./tramites/90305/prosec-modificacion.module').then(
+        (m) => m.ProsecModificacionModule
+      ),
+  },
+  {
     path: 'pantallas',
     loadChildren: () =>
       import('./tramites/110101/pantallas/pantallas.module').then(
@@ -35,6 +42,12 @@ const routes: Routes = [
     path: 'pexim',
     loadChildren: () =>
       import('./tramites/130118/pexim.module').then((m) => m.PeximModule),
+  },
+  {
+    path: 'expansion-de-productores',
+    loadChildren: () =>
+      import('./tramites/90201/expansion-de-productores/expansion-de-productores.module').then(
+        (m) => m.ExpansionDeProductoresModule),
   },
   {
     path: 'elegibilidad-de-textiles',
@@ -117,7 +130,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
