@@ -193,9 +193,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       const FORMA_VALIDA_ACTUALIZADA = {
         datosFormaValidacion: false,
       };
-      if (this.forma?.valid) {
-        FORMA_VALIDA_ACTUALIZADA.datosFormaValidacion = true;
-      }
+      FORMA_VALIDA_ACTUALIZADA.datosFormaValidacion = this.forma?.valid ? true : FORMA_VALIDA_ACTUALIZADA.datosFormaValidacion;
       this.agriculturaApiService.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
     })
     this.obtenerTodosLosDatosDeLaLista();
