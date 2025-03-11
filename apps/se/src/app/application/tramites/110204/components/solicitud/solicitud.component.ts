@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, merge } from 'rxjs';
 
 import { Catalogo, CATALOGOS_ID, FECHA_SALIDA, InputFecha, PeximService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
+import { Solicitud110204State, Tramite110204Store, } from '../../estados/tramite110204.store';
 
 
 /**
@@ -69,7 +69,7 @@ export class SolicitudComponent implements OnInit {
   /**
    * Estado de la solicitud.
    */
-  public solicitudState: Solicitud130118State | undefined;
+  public solicitudState: Solicitud110204State | undefined;
 
   /**
    * Indica si la persona física es visible.
@@ -96,13 +96,13 @@ export class SolicitudComponent implements OnInit {
    * @param peximService Servicio para obtener datos de PEXIM.
    * @param fb FormBuilder para crear formularios.
    * @param validacionesService Servicio para validaciones de formularios.
-   * @param tramite130118Store Almacén de estado para el trámite 130118.
+   * @param tramite110204Store Almacén de estado para el trámite 130118.
    */
   constructor(
     private peximService: PeximService,
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-    private tramite130118Store: Tramite130118Store
+    private tramite110204Store: Tramite110204Store
   ) {
     // Inicializar el formulario principal
     this.crearFormSolicitud();
@@ -423,7 +423,7 @@ export class SolicitudComponent implements OnInit {
    */
   regimenMercanciaSeleccion(): void {
     const regimenMercancia = this.FormSolicitud.get('regimenMercancia')?.value;
-    this.tramite130118Store.setRegimenMercancia(regimenMercancia);
+    this.tramite110204Store.setRegimenMercancia(regimenMercancia);
   }
 
   /**
@@ -431,7 +431,7 @@ export class SolicitudComponent implements OnInit {
    */
   clasifiRegimenSeleccion(): void {
     const clasifiRegimen = this.FormSolicitud.get('clasifiRegimen')?.value;
-    this.tramite130118Store.setClasifiRegimen(clasifiRegimen);
+    this.tramite110204Store.setClasifiRegimen(clasifiRegimen);
   }
 
   /**
@@ -439,7 +439,7 @@ export class SolicitudComponent implements OnInit {
    */
   fraccionArancelariaSeleccion(): void {
     const fraccionArancelaria = this.FormSolicitud.get('fraccionArancelaria')?.value;
-    this.tramite130118Store.setFraccionArancelaria(fraccionArancelaria);
+    this.tramite110204Store.setFraccionArancelaria(fraccionArancelaria);
   }
 
   /**
@@ -447,7 +447,7 @@ export class SolicitudComponent implements OnInit {
    */
   nicoSeleccion(): void {
     const nico = this.FormSolicitud.get('nico')?.value;
-    this.tramite130118Store.setNico(nico);
+    this.tramite110204Store.setNico(nico);
   }
 
   /**
@@ -455,7 +455,7 @@ export class SolicitudComponent implements OnInit {
    */
   unidadMedidaTarifariaSeleccion(): void {
     const unidadMedidaTarifaria = this.FormSolicitud.get('unidadMedidaTarifaria')?.value;
-    this.tramite130118Store.setUnidadMedidaTarifaria(unidadMedidaTarifaria);
+    this.tramite110204Store.setUnidadMedidaTarifaria(unidadMedidaTarifaria);
   }
 
   /**
@@ -463,7 +463,7 @@ export class SolicitudComponent implements OnInit {
    */
   paisOrigenSeleccion(): void {
     const paisOrigen = this.FormSolicitud.get('paisOrigen')?.value;
-    this.tramite130118Store.setPaisOrigen(paisOrigen);
+    this.tramite110204Store.setPaisOrigen(paisOrigen);
   }
 
   /**
@@ -471,7 +471,7 @@ export class SolicitudComponent implements OnInit {
    */
   paisDestinoSeleccion(): void {
     const paisDestino = this.FormSolicitud.get('paisDestino')?.value;
-    this.tramite130118Store.setPaisDestino(paisDestino);
+    this.tramite110204Store.setPaisDestino(paisDestino);
   }
 
   /**
@@ -479,7 +479,7 @@ export class SolicitudComponent implements OnInit {
    */
   molinoSeleccion(): void {
     const molino = this.FormSolicitud.get('molino')?.value;
-    this.tramite130118Store.setMolino(molino);
+    this.tramite110204Store.setMolino(molino);
   }
 
   /**
@@ -487,7 +487,7 @@ export class SolicitudComponent implements OnInit {
    */
   estadoSeleccion(): void {
     const estado = this.FormSolicitud.get('estado')?.value;
-    this.tramite130118Store.setEstado(estado);
+    this.tramite110204Store.setEstado(estado);
   }
 
   /**
@@ -495,7 +495,7 @@ export class SolicitudComponent implements OnInit {
    */
   representacionFederalSeleccion(): void {
     const representacionFederal = this.FormSolicitud.get('representacionFederal')?.value;
-    this.tramite130118Store.setRepresentacionFederal(representacionFederal);
+    this.tramite110204Store.setRepresentacionFederal(representacionFederal);
   }
 
   /**

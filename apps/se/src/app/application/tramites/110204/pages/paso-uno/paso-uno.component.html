@@ -16,14 +16,15 @@
       <ng-container>
         @switch (indice) {
         @case (1) {
-        <solicitante #Solicitante></solicitante>
+                <solicitante  #solicitante></solicitante>
+        <!-- <solicitante #Solicitante></solicitante> -->
         }
         @case (2) {
-        <solicitud></solicitud>
-        }
+        <app-certificado-origen></app-certificado-origen>
+        } 
         @case (3) {
-          <solicitud></solicitud>
-          }
+          <app-datos-certificado></app-datos-certificado>
+          } 
         }
       </ng-container>
     </div>

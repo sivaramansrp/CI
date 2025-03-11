@@ -1,0 +1,127 @@
+<form [formGroup]="solicitudForm">
+    <input type="hidden" formControlName="solicitud.blnJustificacionCertificado" id="idJustificacionCertificado" />
+  
+    <table id="tablaDatosGenerales" class="table">
+      <tr>
+        <td class="titulo" colspan="3">
+          <label for="certificado.titulo.datosCertificado">Datos Certificado</label>
+        </td>
+      </tr>
+  
+      <tr  id="idEtiquetaObservacionesCupo">
+        <td class="campos">
+          <label for="certificado.observacionesCupo">Observaciones Cupo</label>
+        </td>
+      </tr>
+  
+      <tr id="idCampoObservacionesCupo">
+        <td colspan="2">
+          <textarea formControlName="solicitud.certificadoOrigen.observacionesCupo" id="idObservacionesCupo" cols="80" rows="5" readonly class="form-control"></textarea>
+        </td>
+      </tr>
+  
+      <tr>
+        <td class="campos">
+          <label for="certificado.observaciones">Observaciones</label>
+        </td>
+      </tr>
+  
+      <tr>
+        <td colspan="2">
+          <textarea formControlName="solicitud.certificadoOrigen.observaciones" id="solicitud.certificadoOrigen.observaciones" cols="80" rows="5" class="form-control"></textarea>
+        </td>
+      </tr>
+  
+      <tr >
+        <td class="campos">
+          <span class="require">*</span>
+          <label for="certificado.precisa">Precisa</label>
+        </td>
+      </tr>
+  
+      <tr >
+        <td colspan="2">
+          <textarea formControlName="solicitud.certificadoOrigen.precisa" id="solicitud.certificadoOrigen.precisa" cols="80" rows="5" class="form-control"></textarea>
+        </td>
+      </tr>
+  
+      <tr >
+        <td class="campos">
+          <label for="certificado.presenta">Presenta</label>
+        </td>
+      </tr>
+  
+      <tr >
+        <td colspan="2">
+          <textarea formControlName="solicitud.certificadoOrigen.presenta" id="solicitud.certificadoOrigen.presenta" cols="80" rows="5" class="form-control"></textarea>
+        </td>
+      </tr>
+  
+      <tr>
+        <td class="campos">
+          <span class="require">*</span>
+          <label for="solicitud.certificadoOrigen.lenguaje.clave">Lenguaje</label>
+        </td>
+      </tr>
+  
+      <tr >
+        <td>
+          <select formControlName="solicitud.certificadoOrigen.lenguaje.clave" class="form-control">
+            <option value="-1">Seleccione un valor</option>
+            <option *ngFor="let item of lenguajeESP" [value]="item.clave">{{ item.descripcion }}</option>
+          </select>
+        </td>
+      </tr>
+  
+      <tr >
+        <td>
+          <select formControlName="solicitud.certificadoOrigen.lenguaje.clave" class="form-control">
+            <option value="-1">Seleccione un valor</option>
+            <option *ngFor="let item of lenguajeEUR" [value]="item.clave">{{ item.descripcion }}</option>
+          </select>
+        </td>
+      </tr>
+    </table>
+  
+    <div>
+      <table id="tablaDatosGenerales" class="table">
+        <tr>
+          <td class="titulo" colspan="3">
+            <label for="certificado.titulo.justificacionObtencionCertificado">Justificación Obtención Certificado</label>
+          </td>
+        </tr>
+  
+        <tr>
+          <td class="campos">
+            <label for="certificado.preguntaObtencionCertificado">Pregunta Obtención Certificado</label>
+          </td>
+        </tr>
+  
+        <tr>
+          <td class="campos" colspan="2">
+            <div class="form-check">
+              <input type="checkbox" formControlName="solicitud.certificadoOrigen.requiereJustificacion" id="idCapturarJustificacion" (change)="habilitarCampoJustificacion()" class="form-check-input" />
+              <label for="opinion.si" class="form-check-label">Sí</label>
+            </div>
+          </td>
+        </tr>
+  
+        <tr id="etiquetaJustificacion">
+          <td class="campos">
+            <span class="require">*</span>
+            <label for="certificado.justificacion">Justificación</label>
+          </td>
+        </tr>
+  
+        <tr  id="campoJustificacion">
+          <td colspan="2">
+            <textarea formControlName="solicitud.certificadoOrigen.justificacionRequerimiento" id="solicitud.certificadoOrigen.justificacionRequerimiento" cols="80" rows="5" class="form-control"></textarea>
+          </td>
+        </tr>
+      </table>
+    </div>
+  
+    <div >
+      <input type="hidden" formControlName="solicitud.unidadAdministrativaRepresentacionFederal.clave" id="claveUnidadRFHidden" />
+    </div>
+  </form>

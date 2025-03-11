@@ -1,0 +1,23 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "calle": "Main St",
+      "numeroExterior": "123",
+      "numeroInterior": "A",
+      "codigoPostal": "12345",
+      "localidad": "Localidad 1",
+      "colonia": "Colonia 1",
+      "delegacionMunicipio": "Delegación 1",
+      "entidadFederativa": "Estado 1",
+      "pais": "País 1",
+      "telefono": "1234567890",
+      "idPlanta": "1",
+      "idSolicitud": "1",
+      "razonSocial": "Razón Social 1",
+      "desEstatus": "Activada",
+      "estatus": true,
+      "rfc": "18362138"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+<div>
+
+</div>
+
+<div>
+    <form [formGroup]="form">
+        <ng-titulo titulo="Tratado y país o bloque" />
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]="(estados$ | async) || []" [label]="'Tratado / Acuerdo*:'"
+                    [required]="true" name="estado" formControlName="entidadFederativa"
+                    (selectionChange)="tipoEstadoSeleccion($event)"></app-catalogo-select>
+            </div>
+
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]="(pais$ | async) || []" [label]="'País / Bloque*:'" [required]="true"
+                    name="estado" formControlName="bloque"
+                    (selectionChange)="tipoSeleccion($event)"></app-catalogo-select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="fracciónArancelaria" class="form-label">Fracción arancelaria:</label>
+                <input type="text" class="form-control"  id="fracciónArancelaria">
+            </div>
+
+            <div class="col-md-4">
+                <label for="registroProducto" class="form-label"># Registro producto:</label>
+                <input type="text" class="form-control"  id="registroProducto">
+            </div>
+            <div class="col-md-4">
+                <label for="nombreComercial" class="form-label">Nombre comercial:</label>
+                <input type="text" class="form-control"  id="nombreComercial">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12  text-center">
+                <label for="fracciónArancelaria" class="form-label">Periodo</label>
+            </div>
+        </div>
+
+        <div class="col-md-4 form-field">
+            <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
+        </div>
+        <div class="col-md-4 form-field">
+            <input-fecha [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+        </div>
+
+        
+        <div class="row w-100">
+            <div class="col-12 d-flex justify-content-end mt-3 mb-4">
+              <button class="btn btn-primary"  (click)="buscarDomicilios()">Mercancia Disponibles</button>
+            </div>
+          </div>
+
+          <app-tabla-dinamica  [configuracionTabla]="configuracionTabla"
+          [datos]="datos" [tipoSeleccionTabla]="seleccionTabla"></app-tabla-dinamica>
+    </form>
+
+</div>
+
+
