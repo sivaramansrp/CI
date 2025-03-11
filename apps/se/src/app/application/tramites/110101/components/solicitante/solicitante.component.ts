@@ -4,8 +4,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, take } from 'rxjs/operators';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { Tramite110101Query } from '../../estados/queries/tramite110101.query';
-import { Tramite110101Store } from '../../estados/tramites/tramite110101.store';
+import { Tramite110101Query } from '../../estados/queries/solicitante110101.query';
+import { Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
 import mockData from 'libs/shared/theme/assets/json/110101/solicitante-mockdata.json';
 
 /**

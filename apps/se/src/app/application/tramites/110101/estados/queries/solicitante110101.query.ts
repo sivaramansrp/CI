@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Solicitante110101State } from '../tramites/tramite110101.store';
-import { Tramite110101Store } from '../tramites/tramite110101.store';
+import { Solicitante110101State } from '../tramites/solicitante110101.store';
+import { Tramite110101Store } from '../tramites/solicitante110101.store';
 
 /**
  * Query para acceder al estado del solicitante.
