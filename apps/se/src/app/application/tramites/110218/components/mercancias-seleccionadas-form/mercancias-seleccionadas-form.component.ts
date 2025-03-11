@@ -1,10 +1,14 @@
-import { Component } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
+
+import { Subject } from 'rxjs';
 
 /**
  * Componente para el formulario de mercancías seleccionadas.
@@ -20,7 +24,7 @@ import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user
   templateUrl: './mercancias-seleccionadas-form.component.html',
   styleUrl: './mercancias-seleccionadas-form.component.scss',
 })
-export class MercanciasSeleccionadasFormComponent {
+export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy{
   /**
    * Opciones para la unidad de medida de comercialización.
    * MercanciasSeleccionadasFormComponent
@@ -39,12 +43,14 @@ export class MercanciasSeleccionadasFormComponent {
    */
   modifydatosdelcertificado: FormGroup;
 
+  private destroyed$ = new Subject<void>();
+
   /**
    * Constructor del componente.
    *
    * Constructor de formularios.
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private service: CertificadoTecnicoJaponService) {
     this.modifydatosdelcertificado = this.fb.group({
       nombreComercial: [''],
       nombreenIngles: [''],
@@ -57,5 +63,32 @@ export class MercanciasSeleccionadasFormComponent {
       tipodeFactura: [''],
       fechadelaFactura: [''],
     });
+  }
+
+  ngOnInit(): void {
+    this.unidadMedidaData();
+    this.tipoDeFactura();
+  }
+
+  unidadMedidaData():void{
+    this.service.getUnidadMedida().subscribe(
+      (data:any) => {
+        this.unidaddeMedidadeComercializacionOptions = data;
+      }
+    );
+  }
+
+  tipoDeFactura():void{
+    this.service.getTipodeFctura().subscribe(
+      (data:any) => {
+        this.tipodeFacturaOptions = data;
+        console.log("tipodeFacturaOptions",this.tipodeFacturaOptions)
+      }
+    );
+  }
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

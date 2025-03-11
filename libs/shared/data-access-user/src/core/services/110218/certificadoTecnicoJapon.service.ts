@@ -25,4 +25,10 @@ export class CertificadoTecnicoJaponService {
   getdestinatario(): Observable<any> {
     return this.http.get('assets/json/110218/destinatario.json');
   }
+  getUnidadMedida():Observable<any>{
+    return this.http.get('assets/json/110218/unidad-medida.json');
+  }
+  getTipodeFctura():Observable<any>{
+    return this.http.get('assets/json/110218/tipo-de-factura.json');
+  }
 }
