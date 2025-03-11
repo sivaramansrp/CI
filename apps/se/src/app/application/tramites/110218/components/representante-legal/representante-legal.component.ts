@@ -1,17 +1,26 @@
-import { Component } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Component, OnDestroy, OnInit } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { FormBuilder} from '@angular/forms';
-import { FormGroup} from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
+import { Observable, Subject, takeUntil } from 'rxjs';
+
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
+
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
+
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 
-
+/**
+ * Componente para manejar los datos del representante legal del exportador.
+ *
+ * Este componente permite a los usuarios introducir y visualizar los datos del representante legal,
+ * incluyendo información personal y de contacto.
+ *
+ */
 @Component({
   selector: 'app-representante-legal',
   standalone: true,
@@ -19,42 +28,94 @@ import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/sr
   templateUrl: './representante-legal.component.html',
   styleUrl: './representante-legal.component.scss',
 })
-export class RepresentanteLegalComponent {
+export class RepresentanteLegalComponent implements OnDestroy, OnInit {
+  /**
+   * Formulario para los datos del exportador.
+   * RepresentanteLegalComponent
+   * 
+   */
   datosdelexportador: FormGroup;
+  /**
+   * Observable para el nombre del representante legal.
+   * RepresentanteLegalComponent
+   */
   nombredelRepresentante$: Observable<string | null> = this.tramite110218Query.nombredelRepresentante$;
+  /**
+   * Observable para el cargo del representante legal.
+   * RepresentanteLegalComponent
+   */
   cargo$: Observable<string | null> = this.tramite110218Query.cargo$;
+  /**
+   * Observable para los teléfonos del representante legal.
+   * RepresentanteLegalComponent
+   */
   teléfonos$: Observable<string | null> = this.tramite110218Query.teléfonos$;
+  /**
+   * Observable para los fax del representante legal.
+   * RepresentanteLegalComponent
+   */
   faxs$: Observable<string | null> = this.tramite110218Query.faxs$;
+  /**
+   * Observable para los correos electrónicos del representante legal.
+   * RepresentanteLegalComponent
+   */
   correoElectrónicos$: Observable<string | null> = this.tramite110218Query.correoElectrónicos$;
 
+  /**
+   * Subject para la destrucción del componente.
+   * RepresentanteLegalComponent
+   */
   private destroyed$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder, private tramite110218Store: Tramite110218Store,
-    private tramite110218Query: Tramite110218Query, private service: CertificadoTecnicoJaponService) {
+  /**
+   * Constructor del componente.
+   *
+   * Constructor de formularios.
+   * Store para el trámite 110218.
+   * Query para el trámite 110218.
+   * Servicio para obtener datos del representante legal.
+   */
+  constructor(
+    private fb: FormBuilder,
+    private tramite110218Store: Tramite110218Store,
+    private tramite110218Query: Tramite110218Query,
+    private service: CertificadoTecnicoJaponService
+  ) {
     this.datosdelexportador = this.fb.group({
-      nombredelRepresentante: [""],
-      empresa: [""],
-      cargo: [""],
-      teléfonos: [""],
-      faxs: [""],
-      correoElectrónicos: [""],
-    })
+      nombredelRepresentante: [''],
+      empresa: [''],
+      cargo: [''],
+      teléfonos: [''],
+      faxs: [''],
+      correoElectrónicos: [''],
+    });
   }
 
+  /**
+   * Método de inicialización del componente.
+   * RepresentanteLegalComponent
+   */
   ngOnInit(): void {
     this.subscribeToStoreChanges();
     this.getTabledatas();
   }
+
+  /**
+   * Obtiene los datos del representante legal desde el servicio.
+   * RepresentanteLegalComponent
+   */
   getTabledatas(): void {
-    this.service.getrepresentante().subscribe(
-      (data: any) => {
-        this.datosdelexportador.patchValue({
-          empresa: data.empresa,
-         
-        });
-      }
-    );
+    this.service.getrepresentante().subscribe((data: any) => {
+      this.datosdelexportador.patchValue({
+        empresa: data.empresa,
+      });
+    });
   }
+
+  /**
+   * Suscribe a los cambios en el store y actualiza el formulario.
+   * RepresentanteLegalComponent
+   */
   subscribeToStoreChanges(): void {
     const OBSERVABLES = {
       nombredelRepresentante: this.nombredelRepresentante$,
@@ -73,11 +134,20 @@ export class RepresentanteLegalComponent {
     });
   }
 
+  /**
+   * Método de destrucción del componente.
+   * RepresentanteLegalComponent
+   */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
 
+  /**
+   * Maneja los cambios en los controles del formulario y actualiza el store.
+   * RepresentanteLegalComponent
+   * Nombre del control del formulario.
+   */
   onDatosdelexportadorChange(controlName: string): void {
     const VALUE = this.datosdelexportador.get(controlName)?.value;
 
@@ -98,8 +168,18 @@ export class RepresentanteLegalComponent {
         this.tramite110218Store.setcorreoElectrónicos(VALUE);
         break;
       default:
-        console.warn(`Unhandled control name: ${controlName}`);
+        console.warn(`Nombre de control no manejado: ${controlName}`);
         break;
     }
   }
 }
+
+
+
+
+
+
+
+
+
+

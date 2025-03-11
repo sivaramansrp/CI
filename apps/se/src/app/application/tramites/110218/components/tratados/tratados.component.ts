@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Componente Tratados
  * Este componente maneja los detalles del transporte relacionados con tratados y acuerdos.
@@ -7,7 +8,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 
 /**
