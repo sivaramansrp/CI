@@ -26,6 +26,7 @@ import { provideHttpClient } from '@angular/common/http';
 
  import { PasoDosComponent } from './components/paso-dos/paso-dos.component';
  import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
+import { ToastrService } from 'ngx-toastr';
 
 
 @NgModule({
@@ -59,7 +60,8 @@ import { provideHttpClient } from '@angular/common/http';
   
   providers: [
       provideHttpClient(),
-      ServiciosPantallasService
+      ServiciosPantallasService,
+      ToastrService,
     ],
 })
 /**
