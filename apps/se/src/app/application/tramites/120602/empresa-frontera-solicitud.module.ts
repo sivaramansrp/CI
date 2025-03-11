@@ -6,15 +6,17 @@ import { EmpresaFronteraSolicitudRoutingModule } from './empresa-frontera-solici
 
 import { EmpresaFronteraSolicitudComponent } from './pages/empresa-frontera-solicitud/empresa-frontera-solicitud';
 
-import {AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import {AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { DatosEmpresaComponent } from './component/datos-empresa/datos-empresa.component';
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { PasoDosComponent } from './component/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './component/paso-tres/paso-tres.component';
+import { SolicitanteComponent } from './component/solicitante/solicitante.component';
+
 
 @NgModule({
-  declarations: [DatosComponent,EmpresaFronteraSolicitudComponent,
-    PasoDosComponent,
-    PasoTresComponent,],
+  declarations: [DatosComponent,
+    EmpresaFronteraSolicitudComponent,
+],
   imports: [CommonModule, 
     EmpresaFronteraSolicitudRoutingModule,
     WizardComponent,
@@ -22,9 +24,11 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
     DatosEmpresaComponent,
     AnexarDocumentosComponent,
     FirmaElectronicaComponent, 
-   AlertComponent,
-   BtnContinuarComponent,
-   SolicitanteComponent
+    AlertComponent,
+    BtnContinuarComponent,
+    SolicitanteComponent,
+    PasoDosComponent,
+    PasoTresComponent 
   ],
 })
 export class EmpresaFronteraSolicitudModule {}

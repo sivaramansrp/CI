@@ -1,12 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { TEXTOS } from '@ng-mf/data-access-user';
-import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
+
 import { CatalogosService } from '@ng-mf/data-access-user';
 
+import { CommonModule } from '@angular/common';
+
+import { AlertComponent, AnexarDocumentosComponent, TEXTOS, TituloComponent } from '@libs/shared/data-access-user/src';
+
+
 @Component({
-  selector: 'paso-dos',
+  selector: 'app-paso-dos',
+   standalone: true,
+    imports: [ CommonModule, 
+        TituloComponent,
+        AnexarDocumentosComponent, 
+        AlertComponent,],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
@@ -20,6 +29,7 @@ export class PasoDosComponent implements OnInit {
 
   constructor(
     private catalogosServices: CatalogosService,
+  // eslint-disable-next-line no-empty-function
   ) { }
 
   ngOnInit(): void {

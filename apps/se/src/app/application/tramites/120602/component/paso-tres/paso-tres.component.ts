@@ -1,11 +1,18 @@
 import { catchError, map } from 'rxjs';
 import { TramiteStore } from '../../../../estados/tramite.store';
+
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 
+import { CommonModule } from '@angular/common';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+
 @Component({
-  selector: 'paso-tres',
+  selector: 'app-paso-tres',
+  standalone: true,
+  imports: [ CommonModule, 
+      FirmaElectronicaComponent, ],
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss'
 })
@@ -15,6 +22,7 @@ export class PasoTresComponent {
     private router: Router,
     private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
     private tramiteStore: TramiteStore
+  // eslint-disable-next-line no-empty-function
   ) { }
 
   /**
