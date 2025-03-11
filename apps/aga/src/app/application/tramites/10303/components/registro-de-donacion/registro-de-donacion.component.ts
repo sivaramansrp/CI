@@ -196,6 +196,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
     this.inicializaCatalogos();
 
     this.obtenerBasicoRequerimientos();
+    this.obtenerManifiestos();
 
     this.tramite10303Query.selectSeccionState$
       .pipe(
@@ -209,7 +210,6 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
     // Inicializar el formulario principal
     this.crearDatosDelFabricanteForm();
 
-    this.obtenerManifiestos();
     this.obtenerMercancia();
 
     this.aduanaSeleccion();
@@ -247,17 +247,27 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Obtiene el FormArray correspondiente a 'seleccionadaManifiesto' dentro del formulario de registro de donación.
+   * 
+   * @returns {FormArray} El FormArray de 'seleccionadaManifiesto'.
+   */
+  get seleccionadaManifiesto(): FormArray {
+    return this.registroDonacionForm.get('manifiesto.seleccionadaManifiesto') as FormArray;
+  }
+
+  /**
    * Inicializa el formulario reactivo
    * @returns {void}
    */
   crearDatosDelFabricanteForm(): void {
     this.registroDonacionForm = this.fb.group({
       manifiesto: this.fb.group({
+        seleccionadaManifiesto:
+          this.fb.array(this.registroDeDonacionState?.seleccionadaManifiesto),
         aduana: [
           this.registroDeDonacionState?.aduana,
           [Validators.required]
         ],
-        basicoRequerimiento: this.fb.array([]),
         seleccionadaBasicoRequerimiento:
           this.fb.array(this.registroDeDonacionState?.seleccionadaBasicoRequerimiento)
       })
@@ -570,7 +580,6 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
         this.manifiestos = result?.data;
       }
     });
-    this.manifiestosSeleccionados = this.manifiestos.map(() => false);
   }
 
   /**
@@ -591,7 +600,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
    * @param event - El evento que se dispara al cambiar el estado del checkbox.
    * @param index - El índice del control en el formulario que se va a actualizar.
    */
-  onCheckboxChange(event: Event, index: number): void {
+  onBasicoRequirimentoCheckboxCambiar(event: Event, index: number): void {
     const VALOR_ENTRADA = event.target as HTMLInputElement;
     this.seleccionadaBasicoRequerimiento.controls[index].setValue(VALOR_ENTRADA.checked);
     this.setValoresStore(this.registroDonacionForm, 'manifiesto.seleccionadaBasicoRequerimiento', 'setSeleccionadaBasicoRequerimiento');
@@ -613,12 +622,15 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
   /**
    * Cambia el estado de la casilla de verificación según el índice.
    * 
+   * @param event - El evento que se dispara al cambiar el estado del checkbox.
    * @param {number} index - Índice de la casilla de verificación.
    * 
    * @returns {void}
    */
-  onCheckboxCambiar(index: number): void {
-    this.manifiestoSeleccionado[index] = !this.manifiestoSeleccionado[index];
+  onManifiestoCheckboxCambiar(event: Event, index: number): void {
+    const VALOR_ENTRADA = event.target as HTMLInputElement;
+    this.seleccionadaManifiesto.controls[index].setValue(VALOR_ENTRADA.checked);
+    this.setValoresStore(this.registroDonacionForm, 'manifiesto.seleccionadaManifiesto', 'setSeleccionadaManifiesto');
   }
 
   /**

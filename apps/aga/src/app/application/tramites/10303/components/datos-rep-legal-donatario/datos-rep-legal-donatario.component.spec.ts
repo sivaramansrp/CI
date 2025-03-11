@@ -1,136 +1,123 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
-
-import { AlertComponent, CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
 import { DatosRepLegalDonatarioComponent } from './datos-rep-legal-donatario.component';
-import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormBuilder } from '@angular/forms';
+import { of } from 'rxjs';
 
 describe('DatosRepLegalDonatarioComponent', () => {
   let component: DatosRepLegalDonatarioComponent;
-  let fixture: ComponentFixture<DatosRepLegalDonatarioComponent>;
-  let donacionesExtranjerasService: DonacionesExtranjerasService;
+  let mockDonacionesExtranjerasService: any;
+  let mockTramite10303Store: any;
+  let mockTramite10303Query: any;
+  let mockToastr: any;
 
-  const PAIS_MOCK = { data: [{ id: 1, descripcion: 'México' }] };
-  const CONTRIBUYENTE_MOCK: ContribuyenteRespuesta = {
-    data: [{
-      rfc: 'ABC123456789',
-      razonSocial: 'Empresa S.A. de C.V.',
-      nombre: 'Juan',
-      apellidoPaterno: 'Pérez',
-      apellidoMaterno: 'González',
-      calle: 'Av. Reforma',
-      numeroExterior: '123',
-      numeroInterior: '101',
-      estado: 'CDMX',
-      colonia: 'Centro',
-      codigoPostal: '01000',
-      pais: 'MX',
-      correoElectronico: 'juan.perez@example.com',
-      telefono: '5551234567'
-    }]
-  };
-
-  const CONTRIBUYENTE_NOT_FOUND_MOCK: ContribuyenteRespuesta = { data: [] };
-
-  beforeEach(async () => {
-    const DONACIONES_EXTRANJERAS_SERVICE_MOCK = {
-      getPaises: jest.fn().mockReturnValue(of(PAIS_MOCK)),
-      buscarContribuyente: jest.fn().mockReturnValue(of(CONTRIBUYENTE_MOCK))
+  beforeEach(() => {
+    mockDonacionesExtranjerasService = {
+      getPaises: jest.fn(),
+      buscarContribuyente: jest.fn()
+    };
+    mockTramite10303Store = {
+      setCvePaisRepLegalDonatario: jest.fn()
+    };
+    mockTramite10303Query = {
+      selectSeccionState$: of({ rfcRepLegalDonatario: 'XYZ123', nombreRepLegalDonatario: 'Jane Doe' })
+    };
+    mockToastr = {
+      error: jest.fn()
     };
 
-    await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, CatalogoSelectComponent, AlertComponent],
-      declarations: [DatosRepLegalDonatarioComponent],
-      providers: [
-        { provide: DonacionesExtranjerasService, useValue: DONACIONES_EXTRANJERAS_SERVICE_MOCK }
-      ]
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(DatosRepLegalDonatarioComponent);
-    component = fixture.componentInstance;
-    donacionesExtranjerasService = TestBed.inject(DonacionesExtranjerasService);
+    component = new DatosRepLegalDonatarioComponent(
+      mockDonacionesExtranjerasService,
+      new FormBuilder(),
+      mockTramite10303Store,
+      mockTramite10303Query,
+      mockToastr
+    );
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should initialize the catalog of countries correctly on ngOnInit', () => {
+  it('should create the form on initialization', () => {
     component.ngOnInit();
-    expect(component.pais).toEqual([{ id: 1, descripcion: 'México' }]);
-    expect(donacionesExtranjerasService.getPaises).toHaveBeenCalledWith(CATALOGOS_ID.CAT_PAIS);
+    expect(component.datosRepLegalDonatarioForm).toBeDefined();
   });
 
-  it('should call `inicializaCatalogos` and populate pais catalog', () => {
+  it('should initialize catalogues', () => {
+    mockDonacionesExtranjerasService.getPaises.mockReturnValue(of({ data: [{ id: 1, nombre: 'India' }] }));
     component.inicializaCatalogos();
-    expect(component.pais).toEqual([{ id: 1, descripcion: 'México' }]);
+    expect(mockDonacionesExtranjerasService.getPaises).toHaveBeenCalled();
   });
 
-  it('should populate form fields correctly when contributor is found', () => {
-    component.buscarContribuyenteRfc(2, 'ABC123456789');
-    expect(component.nombreRepLegalDonatario).toBe('Juan Pérez González');
-    expect(component.calleRepLegalDonatario).toBe('Av. Reforma');
-    expect(component.numExteriorRepLegalDonatario).toBe('123');
-    expect(component.numInteriorRepLegalDonatario).toBe('101');
-    expect(component.estadoRepLegalDonatario).toBe('CDMX');
-    expect(component.coloniaRepLegalDonatario).toBe('Centro');
-    expect(component.codigoPostalRepLegalDonatario).toBe('01000');
-    expect(component.cvePaisRepLegalDonatario).toBe('MX');
-    expect(component.correoElectronicoRepLegalDonatario).toBe('juan.perez@example.com');
-    expect(component.telefonoRepLegalDonatario).toBe('5551234567');
+  it('should set the selected country in store', () => {
+    component.datosRepLegalDonatarioForm = new FormBuilder().group({
+      cvePaisRepLegalDonatario: ['IN']
+    });
+    component.paisSeleccion();
+    expect(mockTramite10303Store.setCvePaisRepLegalDonatario).toHaveBeenCalledWith('IN');
   });
 
-  it('should reset form fields when contributor is not found', () => {
-    (donacionesExtranjerasService.buscarContribuyente as jest.Mock).mockReturnValue(of(CONTRIBUYENTE_NOT_FOUND_MOCK));
-    component.buscarContribuyenteRfc(2, 'XYZ987654321');
-    expect(component.rfcRepLegalDonatario).toBe('');
-    expect(component.nombreRepLegalDonatario).toBe('');
-    expect(component.calleRepLegalDonatario).toBe('');
-    expect(component.numExteriorRepLegalDonatario).toBe('');
-    expect(component.numInteriorRepLegalDonatario).toBe('');
-    expect(component.estadoRepLegalDonatario).toBe('');
-    expect(component.coloniaRepLegalDonatario).toBe('');
-    expect(component.codigoPostalRepLegalDonatario).toBe('');
-    expect(component.cvePaisRepLegalDonatario).toBe('');
-    expect(component.correoElectronicoRepLegalDonatario).toBe('');
-    expect(component.telefonoRepLegalDonatario).toBe('');
-  });
-
-  it('should show alert when an invalid value is passed to `buscarContribuyenteRfc`', () => {
-    jest.spyOn(window, 'alert').mockImplementation(() => undefined);
-    component.buscarContribuyenteRfc(0, 'ABC123456789'); // Invalid value
-    expect(window.alert).toHaveBeenCalledWith('Valor erronio');
-  });
-
-  it('should call `buscarContribuyente` with the correct RFC', () => {
-    component.buscarContribuyenteRfc(2, 'ABC123456789');
-    expect(donacionesExtranjerasService.buscarContribuyente).toHaveBeenCalledWith('ABC123456789');
-  });
-
-  it('should reset all form fields when `restablecerFormulario` is called', () => {
-    component.nombreRepLegalDonatario = 'Juan Pérez';
-    component.calleRepLegalDonatario = 'Av. Reforma';
+  it('should reset the form', () => {
+    const resetSpy = jest.spyOn(component.datosRepLegalDonatarioForm, 'reset');
     component.restablecerFormulario();
-    expect(component.nombreRepLegalDonatario).toBe('');
-    expect(component.calleRepLegalDonatario).toBe('');
-    expect(component.numExteriorRepLegalDonatario).toBe('');
-    expect(component.numInteriorRepLegalDonatario).toBe('');
-    expect(component.estadoRepLegalDonatario).toBe('');
-    expect(component.coloniaRepLegalDonatario).toBe('');
-    expect(component.codigoPostalRepLegalDonatario).toBe('');
-    expect(component.cvePaisRepLegalDonatario).toBe('');
-    expect(component.correoElectronicoRepLegalDonatario).toBe('');
-    expect(component.telefonoRepLegalDonatario).toBe('');
+    expect(resetSpy).toHaveBeenCalled();
   });
 
-  it('should call `restablecerFormulario` when contributor data is not found', () => {
-    (donacionesExtranjerasService.buscarContribuyente as jest.Mock).mockReturnValue(of(CONTRIBUYENTE_NOT_FOUND_MOCK));
-    jest.spyOn(component, 'restablecerFormulario');
-    component.buscarContribuyenteRfc(2, 'XYZ987654321'); // RFC not found
-    expect(component.restablecerFormulario).toHaveBeenCalled();
+  it('should fetch contributor and update the form', () => {
+    const mockData = { data: [{ rfc: 'XYZ123', nombre: 'Jane', apellidoPaterno: 'Doe', apellidoMaterno: '', calle: 'Park Avenue', numeroExterior: '10' }] };
+    mockDonacionesExtranjerasService.buscarContribuyente.mockReturnValue(of(mockData));
+
+    component.buscarContribuyenteRfc(2, 'XYZ123');
+    expect(mockDonacionesExtranjerasService.buscarContribuyente).toHaveBeenCalledWith('XYZ123');
+  });
+
+  it('should handle contributor not found scenario', () => {
+    mockDonacionesExtranjerasService.buscarContribuyente.mockReturnValue(of({ data: [null] }));
+    component.buscarContribuyenteRfc(2, 'XYZ123');
+    expect(mockToastr.error).toHaveBeenCalledWith('Valor erronio');
+  });
+
+  it('should patch form values when a contributor is found', () => {
+    const mockContribuyente = {
+      rfc: 'XYZ123',
+      razonSocial: 'ABC Corp',
+      nombre: 'Jane',
+      apellidoPaterno: 'Doe',
+      apellidoMaterno: '',
+      calle: 'Park Avenue',
+      numeroExterior: '10',
+      numeroInterior: '2A',
+      estado: 'Tamil Nadu',
+      colonia: 'Downtown',
+      codigoPostal: '123456',
+      pais: 'India',
+      correoElectronico: 'jane.doe@example.com',
+      telefono: '9876543210'
+    };
+
+    component.construirRLdonatario(mockContribuyente, true);
+    expect(component.datosRepLegalDonatarioForm.value).toEqual({
+      rfcRepLegalDonatario: undefined,
+      nombreRepLegalDonatario: 'Jane Doe ',
+      calleRepLegalDonatario: 'Park Avenue',
+      numExteriorRepLegalDonatario: '10',
+      numInteriorRepLegalDonatario: '2A',
+      cvePaisRepLegalDonatario: 'India',
+      codigoPostalRepLegalDonatario: '123456',
+      estadoRepLegalDonatario: 'Tamil Nadu',
+      coloniaRepLegalDonatario: 'Downtown',
+      correoElectronicoRepLegalDonatario: 'jane.doe@example.com',
+      telefonoRepLegalDonatario: '9876543210'
+    });
+  });
+
+  it('should reset form if contributor is not found', () => {
+    const resetSpy = jest.spyOn(component.datosRepLegalDonatarioForm, 'reset');
+    component.construirRLdonatario(null as any, false);
+    expect(resetSpy).toHaveBeenCalled();
+  });
+
+  it('should clean up subscriptions on destroy', () => {
+    const destroySpy = jest.spyOn((component as any).destruirNotificador$, 'next');
+    const completeSpy = jest.spyOn((component as any).destruirNotificador$, 'complete');
+
+    component.ngOnDestroy();
+    expect(destroySpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

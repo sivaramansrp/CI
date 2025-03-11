@@ -8,8 +8,8 @@
             <div class="col-md-12">
                 <div class="alert alert-info">
                     <input class="form-check-input" type="checkbox" [id]="'manifiesto-' + i"
-                        [value]="manifiesto.declaracion.clave" [checked]="manifiesto.manifiestoDeclaracion"
-                        class="required" (change)="onCheckboxCambiar(i)">
+                        [value]="manifiesto.declaracion.clave" [checked]="seleccionadaManifiesto.value[i]"
+                        class="required" (change)="onManifiestoCheckboxCambiar($event, i)" />
                     <div class="manifiestoDescripcion">
                         <label>*{{manifiesto.declaracion.descripcion}}</label>
                     </div>
@@ -38,7 +38,8 @@
             @for (basicoRequerimiento of basicoRequerimientos; let i = $index; track i) {
             <div class="col-md-12">
                 <input type="checkbox" class="form-check-input me-2"
-                    [checked]="seleccionadaBasicoRequerimiento.value[i]" (change)="onCheckboxChange($event, i)" />
+                    [checked]="seleccionadaBasicoRequerimiento.value[i]"
+                    (change)="onBasicoRequirimentoCheckboxCambiar($event, i)" />
                 <span for="basicoRequerimiento" class="ms-2">{{ basicoRequerimiento.descripcion }}</span>
             </div>
             }

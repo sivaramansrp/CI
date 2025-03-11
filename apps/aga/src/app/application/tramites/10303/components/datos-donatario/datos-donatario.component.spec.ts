@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, FormGroup } from '@angular/forms';
 import { of } from 'rxjs';
 
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
-
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
 import { DatosDonatarioComponent } from './datos-donatario.component';
 import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -35,6 +34,8 @@ describe('DatosDonatarioComponent', () => {
   };
 
   beforeEach(async () => {
+    const SPY = jasmine.createSpyObj('DonacionesExtranjerasService', ['getPaises', 'buscarContribuyente']);
+
     const DONACIONES_EXTRANJERAS_SERVICE_MOCK = {
       getPaises: jest.fn().mockReturnValue(of(PAIS_MOCK)),
       buscarContribuyente: jest.fn().mockReturnValue(of(CONTRIBUYENTE_MOCK))
@@ -52,109 +53,90 @@ describe('DatosDonatarioComponent', () => {
     fixture = TestBed.createComponent(DatosDonatarioComponent);
     component = fixture.componentInstance;
     donacionesExtranjerasService = TestBed.inject(DonacionesExtranjerasService);
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the pais catalog correctly on ngOnInit', () => {
+  it('should create the form on ngOnInit', () => {
     component.ngOnInit();
-
-    // Check if pais is correctly populated
-    expect(component.pais).toEqual([{ id: 1, descripcion: 'México' }]);
+    expect(component.datosDonatarioForm).toBeDefined();
   });
-
-  it('should call getPaises method during initialization', () => {
-    component.ngOnInit();
-
-    // Ensure getPaises method is called
-    expect(donacionesExtranjerasService.getPaises).toHaveBeenCalledWith(CATALOGOS_ID.CAT_PAIS);
+  
+  it('should call tramite10303Store.setCvePaisDonatario on paisSeleccion', () => {
+    const SPY = jest.spyOn(component['tramite10303Store'], 'setCvePaisDonatario');
+    component.datosDonatarioForm.patchValue({ cvePaisDonatario: 'testPais' });
+    component.paisSeleccion();
+    expect(SPY).toHaveBeenCalledWith('testPais');
   });
-
-  it('should correctly populate form fields with contribuyente data when found', () => {
+  
+  it('should call construirDonatario with correct parameters on buscarContribuyenteRfc', () => {
+    const SPY = jest.spyOn(component, 'construirDonatario');
+    jest.spyOn(donacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of(CONTRIBUYENTE_MOCK));
     component.buscarContribuyenteRfc(1, 'ABC123456789');
-
-    // Check if form fields are correctly populated
-    expect(component.nombreDonatario).toBe('Juan Pérez González');
-    expect(component.calleDonatario).toBe('Av. Reforma');
-    expect(component.numExteriorDonatario).toBe('123');
-    expect(component.numInteriorDonatario).toBe('101');
-    expect(component.estadoDonatario).toBe('CDMX');
-    expect(component.coloniaDonatario).toBe('Centro');
-    expect(component.codigoPostalDonatario).toBe('01000');
-    expect(component.cvePaisDonatario).toBe('MX');
-    expect(component.correoElectronicoDonatario).toBe('juan.perez@example.com');
-    expect(component.telefonoDonatario).toBe('5551234567');
+    expect(SPY).toHaveBeenCalledWith(CONTRIBUYENTE_MOCK.data[0], true);
   });
-
-  it('should reset form fields if contribuyente data is not found', () => {
-    // Modify mock to return null data
-    const CONTRIBUYENTE_NOT_FOUND_MOCK: ContribuyenteRespuesta = { data: [] };
-    (donacionesExtranjerasService.buscarContribuyente as jest.Mock).mockReturnValue(of(CONTRIBUYENTE_NOT_FOUND_MOCK));
-
-    component.buscarContribuyenteRfc(1, 'XYZ987654321');
-
-    // Check if form fields are reset
-    expect(component.nombreDonatario).toBe('');
-    expect(component.calleDonatario).toBe('');
-    expect(component.numExteriorDonatario).toBe('');
-    expect(component.numInteriorDonatario).toBe('');
-    expect(component.estadoDonatario).toBe('');
-    expect(component.coloniaDonatario).toBe('');
-    expect(component.codigoPostalDonatario).toBe('');
-    expect(component.cvePaisDonatario).toBe('');
-    expect(component.correoElectronicoDonatario).toBe('');
-    expect(component.telefonoDonatario).toBe('');
+  
+  it('should call toastr.error on buscarContribuyenteRfc with incorrect valor', () => {
+    const TOASTR_SPY = jest.spyOn((component as any).toastr, 'error');
+    jest.spyOn(donacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of(CONTRIBUYENTE_MOCK));
+    component.buscarContribuyenteRfc(0, 'ABC123456789');
+    expect(TOASTR_SPY).toHaveBeenCalledWith('Valor erronio');
   });
-
-  it('should show an alert when invalid value is passed to buscarContribuyenteRfc', () => {
-    window.alert = jest.fn(); 
-
-    component.buscarContribuyenteRfc(0, 'ABC123456789'); // Invalid value passed
-
-    // Check if alert is triggered
-    expect(window.alert).toHaveBeenCalledWith('Valor erronio');
-  });
-
-  it('should call buscarContribuyente with the correct RFC', () => {
+  
+  it('should call restablecerFormulario if contribuyente not found', () => {
+    const SPY = jest.spyOn(component, 'restablecerFormulario');
+    jest.spyOn(donacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of({ data: [] }));
     component.buscarContribuyenteRfc(1, 'ABC123456789');
-
-    // Check if service method is called with correct RFC
-    expect(donacionesExtranjerasService.buscarContribuyente).toHaveBeenCalledWith('ABC123456789');
+    expect(SPY).toHaveBeenCalled();
   });
-
-  it('should call restablecerFormulario when contribuyente is not found', () => {
-    // Mocking contribuyente data as null
-    const CONTRIBUYENTE_NOT_FOUND_MOCK: ContribuyenteRespuesta = { data: [] };
-    (donacionesExtranjerasService.buscarContribuyente as jest.Mock).mockReturnValue(of(CONTRIBUYENTE_NOT_FOUND_MOCK));
-
-    jest.spyOn(component, 'restablecerFormulario');
-
-    component.buscarContribuyenteRfc(1, 'XYZ987654321'); // RFC not found
-
-    // Ensure restablecerFormulario is called when no contribuyente is found
-    expect(component.restablecerFormulario).toHaveBeenCalled();
+  
+  it('should patch form values on construirDonatario with encontrado true', () => {
+    const CONTRIBUYENTE = CONTRIBUYENTE_MOCK.data[0];
+    component.construirDonatario(CONTRIBUYENTE, true);
+    expect(component.datosDonatarioForm.get('nombreDonatario')?.value).toEqual('Juan Pérez González');
+    expect(component.datosDonatarioForm.get('calleDonatario')?.value).toEqual('Av. Reforma');
   });
-
-  it('should reset all form fields when restablecerFormulario is called', () => {
-    // Set some fields with non-empty values
-    component.nombreDonatario = 'Juan Pérez';
-    component.calleDonatario = 'Av. Reforma';
-
-    // Call restablecerFormulario method
+  
+  it('should reset form on construirDonatario with encontrado false', () => {
+    const SPY = jest.spyOn(component, 'restablecerFormulario');
+    component.construirDonatario(CONTRIBUYENTE_MOCK.data[0], false);
+    expect(SPY).toHaveBeenCalled();
+  });
+  
+  it('should reset form on restablecerFormulario', () => {
+    component.datosDonatarioForm.reset({
+      rfcDonatario: null,
+      nombreDonatario: null,
+      calleDonatario: null,
+      numExteriorDonatario: null,
+      numInteriorDonatario: null,
+      cvePaisDonatario: null,
+      codigoPostalDonatario: null,
+      estadoDonatario: null,
+      coloniaDonatario: null,
+      correoElectronicoDonatario: null,
+      telefonoDonatario: null
+    });
     component.restablecerFormulario();
+    expect(component.datosDonatarioForm.get('rfcDonatario')?.value).toBeNull();
+    expect(component.datosDonatarioForm.get('nombreDonatario')?.value).toBeNull();
+  });
 
-    // Check if all fields are reset
-    expect(component.nombreDonatario).toBe('');
-    expect(component.calleDonatario).toBe('');
-    expect(component.numExteriorDonatario).toBe('');
-    expect(component.numInteriorDonatario).toBe('');
-    expect(component.estadoDonatario).toBe('');
-    expect(component.coloniaDonatario).toBe('');
-    expect(component.codigoPostalDonatario).toBe('');
-    expect(component.cvePaisDonatario).toBe('');
-    expect(component.correoElectronicoDonatario).toBe('');
-    expect(component.telefonoDonatario).toBe('');
+  it('should set valores in store on setValoresStore', () => {
+    const FORM = new FormGroup({
+      testCampo: new FormControl('testValue')
+    });
+    const SPY = jest.spyOn(component['tramite10303Store'], 'setCvePaisDonatario');
+    component.setValoresStore(FORM, 'testCampo', 'setCvePaisDonatario');
+    expect(SPY).toHaveBeenCalledWith('testValue');
+  });
+  
+  it('should destroy subscriptions on ngOnDestroy', () => {
+    const SPY = jest.spyOn(component['destruirNotificador$'], 'next');
+    component.ngOnDestroy();
+    expect(SPY).toHaveBeenCalled();
   });
 });

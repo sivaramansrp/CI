@@ -78,19 +78,31 @@ describe('DatosDelFabricanteComponent', () => {
   it('should search contribuyente by RFC', () => {
     jest.spyOn(service, 'buscarContribuyente').mockReturnValue(of(MOCK_CONTRIBUYENTE_RESPUESTA));
     component.buscarContribuyenteRfc(6, 'XAXX010101000');
-    expect(component.nombreFabricante).toEqual('Nombre Ejemplo Apellido Paterno Apellido Materno');
+    expect(component.datosDelFabricanteForm.get('nombreFabricante')?.value).toEqual('Nombre Ejemplo Apellido Paterno Apellido Materno');
   });
 
   it('should process the fabricante data', () => {
     const CONTRIBUYENTE = MOCK_CONTRIBUYENTE_RESPUESTA.data[0];
     component.fabricante(CONTRIBUYENTE, true);
-    expect(component.nombreFabricante).toEqual('Nombre Ejemplo Apellido Paterno Apellido Materno');
-    expect(component.calleFabricante).toEqual('Calle Ejemplo');
+    expect(component.datosDelFabricanteForm.get('nombreFabricante')?.value).toEqual('Nombre Ejemplo Apellido Paterno Apellido Materno');
+    expect(component.datosDelFabricanteForm.get('calleFabricante')?.value).toEqual('Calle Ejemplo');
   });
 
   it('should reset the form', () => {
     component.restablecerFormulario();
-    expect(component.rfcFabricante).toEqual('');
-    expect(component.nombreFabricante).toEqual('');
+    expect(component.datosDelFabricanteForm.get('rfcFabricante')?.value).toBeNull();
+    expect(component.datosDelFabricanteForm.get('nombreFabricante')?.value).toBeNull();
+  });
+
+  it('should set valores in store', () => {
+    const SPY = jest.spyOn(component['tramite10303Store'], 'setCvePaisFabricante');
+    component.setValoresStore(component.datosDelFabricanteForm, 'cvePaisFabricante', 'setCvePaisFabricante');
+    expect(SPY).toHaveBeenCalled();
+  });
+
+  it('should destroy subscriptions on ngOnDestroy', () => {
+    const SPY = jest.spyOn(component['destruirNotificador$'], 'next');
+    component.ngOnDestroy();
+    expect(SPY).toHaveBeenCalled();
   });
 });

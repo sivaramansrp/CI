@@ -42,12 +42,6 @@ describe('RegistroDeDonacionComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should toggle checkbox state', () => {
-    component.manifiestoSeleccionado = [false, false];
-    component.onCheckboxCambiar(1);
-    expect(component.manifiestoSeleccionado[1]).toBeTruthy();
-  });
-
   it('should show or hide collapsible panel', () => {
     component.panels = [{ label: 'Panel 1', isCollapsed: true }, { label: 'Panel 2', isCollapsed: true }];
     component.mostrar_colapsable(1);

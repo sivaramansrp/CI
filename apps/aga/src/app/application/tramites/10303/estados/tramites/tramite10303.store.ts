@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
  * @returns Solicitud10303
  */
 export interface RegistroDeDonacion10303State {
+    seleccionadaManifiesto: boolean[];
     aduana: string;
     seleccionadaBasicoRequerimiento: boolean[];
 
@@ -104,6 +105,7 @@ export interface RegistroDeDonacion10303State {
 
 export function createInitialState(): RegistroDeDonacion10303State {
     return {
+        seleccionadaManifiesto: [false, false, false, false, false],
         aduana: '',
         seleccionadaBasicoRequerimiento: [false, false, false, false, false, false],
 
@@ -208,6 +210,13 @@ export function createInitialState(): RegistroDeDonacion10303State {
 export class Tramite10303Store extends Store<RegistroDeDonacion10303State> {
     constructor() {
         super(createInitialState());
+    }
+
+    public setSeleccionadaManifiesto(seleccionadaManifiesto: []): void {
+        this.update((state) => ({
+            ...state,
+            seleccionadaManifiesto
+        }));
     }
 
     public setAduana(aduana: string): void {

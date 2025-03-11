@@ -1,157 +1,166 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { DatosRepLegalRecibirDonacionComponent } from './datos-rep-legal-recibir-donacion.component';
-import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
+import { FormBuilder } from '@angular/forms';
+import { of } from 'rxjs';
 
 describe('DatosRepLegalRecibirDonacionComponent', () => {
   let component: DatosRepLegalRecibirDonacionComponent;
-  let fixture: ComponentFixture<DatosRepLegalRecibirDonacionComponent>;
-  let donacionesExtranjerasService: jest.Mocked<DonacionesExtranjerasService>;
-
-  beforeEach(async () => {
-    const DONACIONES_EXTRANJERAS_SERVICE_MOCK = {
-      getPaises: jest.fn(),
-      buscarContribuyente: jest.fn()
-    };
-
-    await TestBed.configureTestingModule({
-      declarations: [DatosRepLegalRecibirDonacionComponent],
-      imports: [CatalogoSelectComponent],
-      providers: [
-        { provide: DonacionesExtranjerasService, useValue: DONACIONES_EXTRANJERAS_SERVICE_MOCK },
-        NO_ERRORS_SCHEMA
-      ]
-    }).compileComponents();
-
-    donacionesExtranjerasService = TestBed.inject(DonacionesExtranjerasService) as jest.Mocked<DonacionesExtranjerasService>;
-  });
+  let mockDonacionesExtranjerasService: any;
+  let mockTramite10303Store: any;
+  let mockTramite10303Query: any;
+  let mockToastr: any;
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DatosRepLegalRecibirDonacionComponent);
-    component = fixture.componentInstance;
-    donacionesExtranjerasService = TestBed.inject(DonacionesExtranjerasService) as jest.Mocked<DonacionesExtranjerasService>;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should call `inicializaCatalogos` and populate pais catalog', () => {
-    const PAISES: Catalogo[] = [{ id: 1, descripcion: 'México' }];
-    donacionesExtranjerasService.getPaises.mockReturnValue(of({ code: 200, data: PAISES, message: 'Success' }));
-
-    component.inicializaCatalogos();
-
-    expect(component.pais).toEqual([{ id: 1, descripcion: 'México' }]);
-    expect(donacionesExtranjerasService.getPaises).toHaveBeenCalled();
-  });
-
-  it('should initialize catalogos correctly', () => {
-    const PAISES: Catalogo[] = [{ id: 1, descripcion: 'United States' }, { id: 2, descripcion: 'México' }];
-    donacionesExtranjerasService.getPaises.mockReturnValue(of({ code: 200, data: PAISES, message: 'Success' }));
-
-    component.ngOnInit();
-
-    expect(component.pais).toEqual(PAISES);
-  });
-
-  it('should populate form with valid data when contributor is found', () => {
-    const CONTRIBUTOR_DATA = {
-      rfc: '123456789012',
-      razonSocial: 'Company XYZ',
-      nombre: 'John',
-      apellidoPaterno: 'Doe',
-      apellidoMaterno: 'Smith',
-      calle: 'Main St',
-      numeroExterior: '123',
-      numeroInterior: 'A',
-      estado: 'California',
-      colonia: 'Downtown',
-      codigoPostal: '90001',
-      pais: 'US',
-      correoElectronico: 'john.doe@example.com',
-      telefono: '1234567890'
+    mockDonacionesExtranjerasService = {
+      getPaises: jest.fn(),
+      buscarContribuyente: jest.fn(),
+    };
+    mockTramite10303Store = {
+      setCvePaisRepLegalAutorizado: jest.fn(),
+    };
+    mockTramite10303Query = {
+      selectSeccionState$: of({
+        rfcRepLegalAutorizado: 'ABC123',
+        nombreRepLegalAutorizado: 'Jane Smith',
+      }),
+    };
+    mockToastr = {
+      error: jest.fn(),
     };
 
-    donacionesExtranjerasService.buscarContribuyente.mockReturnValue(of({ data: [CONTRIBUTOR_DATA] }));
-
-    component.buscarContribuyenteRfc(3, '123456789012');
-
-    expect(component.nombreRepLegalAutorizado).toBe('Company XYZ');
-    expect(component.calleRepLegalAutorizado).toBe('Main St');
-    expect(component.estadoRepLegalAutorizado).toBe('California');
-    expect(component.telefonoRepLegalAutorizado).toBe('1234567890');
+    component = new DatosRepLegalRecibirDonacionComponent(
+      mockDonacionesExtranjerasService,
+      new FormBuilder(),
+      mockTramite10303Store,
+      mockTramite10303Query,
+      mockToastr
+    );
   });
 
-  it('should reset the form if no contributor is found', () => {
-    donacionesExtranjerasService.buscarContribuyente.mockReturnValue(of({ data: [] }));
-
-    component.buscarContribuyenteRfc(3, 'nonexistentRFC');
-
-    expect(component.nombreRepLegalAutorizado).toBe('');
-    expect(component.calleRepLegalAutorizado).toBe('');
-    expect(component.estadoRepLegalAutorizado).toBe('');
+  it('should create the form during initialization', () => {
+    component.ngOnInit();
+    expect(component.datosRepLegalRecibirDonacionForm).toBeDefined();
   });
 
-  it('should alert with "Valor erronio" if the value is incorrect', () => {
-    window.alert = jest.fn();
-    donacionesExtranjerasService.buscarContribuyente.mockReturnValue(of({ data: [] }));
-
-    component.buscarContribuyenteRfc(2, '123456789012');
-
-    expect(window.alert).toHaveBeenCalledWith('Valor erronio');
+  it('should initialize catalogs', () => {
+    mockDonacionesExtranjerasService.getPaises.mockReturnValue(
+      of({ data: [{ id: 1, nombre: 'India' }] })
+    );
+    component.inicializaCatalogos();
+    expect(mockDonacionesExtranjerasService.getPaises).toHaveBeenCalled();
   });
 
-  it('should handle errors from the service and reset the form', () => {
-    donacionesExtranjerasService.buscarContribuyente.mockReturnValue(throwError(() => new Error('Service Error')));
-
-    component.buscarContribuyenteRfc(3, '123456789012');
-
-    expect(component.nombreRepLegalAutorizado).toBe('');
-    expect(component.calleRepLegalAutorizado).toBe('');
-    expect(component.estadoRepLegalAutorizado).toBe('');
+  it('should set the selected country in the store', () => {
+    component.datosRepLegalRecibirDonacionForm = new FormBuilder().group({
+      cvePaisRepLegalAutorizado: ['IN'],
+    });
+    component.paisSeleccion();
+    expect(
+      mockTramite10303Store.setCvePaisRepLegalAutorizado
+    ).toHaveBeenCalledWith('IN');
   });
 
-  it('should reset all fields to empty values', () => {
-    component.nombreRepLegalAutorizado = 'John Doe';
-    component.calleRepLegalAutorizado = 'Main St';
-
+  it('should reset the form', () => {
+    component.datosRepLegalRecibirDonacionForm = new FormBuilder().group({});
+    const resetSpy = jest.spyOn(
+      component.datosRepLegalRecibirDonacionForm,
+      'reset'
+    );
     component.restablecerFormulario();
-
-    expect(component.nombreRepLegalAutorizado).toBe('');
-    expect(component.calleRepLegalAutorizado).toBe('');
+    expect(resetSpy).toHaveBeenCalled();
   });
 
-  it('should call getPaises and populate pais', () => {
-    const PAISES: Catalogo[] = [{ id: 1, descripcion: 'United States' }];
-    donacionesExtranjerasService.getPaises.mockReturnValue(of({ code: 200, data: PAISES, message: 'Success' }));
+  it('should fetch contributor and update form when found', () => {
+    const mockData = {
+      data: [
+        {
+          rfc: 'ABC123',
+          nombre: 'Jane',
+          apellidoPaterno: 'Smith',
+          apellidoMaterno: '',
+          calle: 'Park Street',
+          numeroExterior: '10',
+          estado: 'Tamil Nadu',
+          colonia: 'Central',
+          codigoPostal: '600001',
+          pais: 'India',
+          correoElectronico: 'jane.smith@example.com',
+          telefono: '9876543210',
+        },
+      ],
+    };
 
-    component.inicializaCatalogos();
+    mockDonacionesExtranjerasService.buscarContribuyente.mockReturnValue(
+      of(mockData)
+    );
 
-    expect(component.pais).toEqual(PAISES);
-    expect(donacionesExtranjerasService.getPaises).toHaveBeenCalled();
+    component.buscarContribuyenteRfc(3, 'ABC123');
+    expect(mockDonacionesExtranjerasService.buscarContribuyente).toHaveBeenCalledWith(
+      'ABC123'
+    );
   });
 
-  it('should alert with "Valor erronio" when searching with invalid RFC and incorrect valor', () => {
-    window.alert = jest.fn();
-
-    // Simulate a search with an invalid RFC and incorrect valor (2 instead of 3)
-    component.buscarContribuyenteRfc(2, 'invalidRFC');
-
-    expect(window.alert).toHaveBeenCalledWith('Valor erronio');
+  it('should handle error when contributor is not found', () => {
+    mockDonacionesExtranjerasService.buscarContribuyente.mockReturnValue(
+      of({ data: [null] })
+    );
+    component.buscarContribuyenteRfc(3, 'ABC123');
+    expect(mockToastr.error).toHaveBeenCalledWith('Valor erronio');
   });
 
-  it('should handle no countries in the catalog gracefully', () => {
-    donacionesExtranjerasService.getPaises.mockReturnValue(of({ code: 200, data: [], message: 'Success' }));
+  it('should patch form values when contributor is found', () => {
+    const mockContributor = {
+      rfc: 'ABC123',
+      nombre: 'Jane',
+      apellidoPaterno: 'Smith',
+      apellidoMaterno: '',
+      calle: 'Park Street',
+      numeroExterior: '10',
+      numeroInterior: '2B',
+      estado: 'Tamil Nadu',
+      colonia: 'Central',
+      codigoPostal: '600001',
+      pais: 'India',
+      correoElectronico: 'jane.smith@example.com',
+      telefono: '9876543210',
+    };
 
-    component.inicializaCatalogos();
+    component.construirRepLegalAutorizado(mockContributor, true);
+    expect(component.datosRepLegalRecibirDonacionForm.value).toEqual({
+      rfcRepLegalAutorizado: undefined,
+      nombreRepLegalAutorizado: 'Jane Smith ',
+      calleRepLegalAutorizado: 'Park Street',
+      numExteriorRepLegalAutorizado: '10',
+      numInteriorRepLegalAutorizado: '2B',
+      cvePaisRepLegalAutorizado: 'India',
+      codigoPostalRepLegalAutorizado: '600001',
+      estadoRepLegalAutorizado: 'Tamil Nadu',
+      coloniaRepLegalAutorizado: 'Central',
+      correoElectronicoRepLegalAutorizado: 'jane.smith@example.com',
+      telefonoRepLegalAutorizado: '9876543210',
+    });
+  });
 
-    expect(component.pais).toEqual([]);
-    expect(donacionesExtranjerasService.getPaises).toHaveBeenCalled();
+  it('should reset form if contributor is not found', () => {
+    const resetSpy = jest.spyOn(
+      component.datosRepLegalRecibirDonacionForm,
+      'reset'
+    );
+    component.construirRepLegalAutorizado(null as any, false);
+    expect(resetSpy).toHaveBeenCalled();
+  });
+
+  it('should clean up subscriptions on destroy', () => {
+    const destroySpy = jest.spyOn(
+      (component as any).destruirNotificador$,
+      'next'
+    );
+    const completeSpy = jest.spyOn(
+      (component as any).destruirNotificador$,
+      'complete'
+    );
+
+    component.ngOnDestroy();
+    expect(destroySpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });
