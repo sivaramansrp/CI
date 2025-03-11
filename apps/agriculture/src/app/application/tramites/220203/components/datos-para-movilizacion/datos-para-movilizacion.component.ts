@@ -83,7 +83,7 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
     });
   }
   verificarEstadoDelBoton() {
-    let DATOS = {
+    const DATOS = {
       dataParaMovilizacion: false,
     }
     if (this.formularioMovilizacion.valid) {

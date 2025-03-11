@@ -38,6 +38,7 @@ import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/
 import { DatosParaMovilizacionComponent } from './components/datos-para-movilizacion/datos-para-movilizacion.component';
 
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
+
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 

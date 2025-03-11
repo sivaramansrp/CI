@@ -110,7 +110,7 @@ export interface FormularioPago {
     fechaPago: string;
     importePago: string;
 }
-export interface enviarDatos {
+export interface EnviarDatos {
     pagoDeformaValida: boolean,
     dataParaMovilizacion: boolean,
     dataDeLaSolicitud: boolean,
@@ -119,7 +119,7 @@ export interface Acuicultura {
     formularioPago: FormularioPago;
     formularioMovilizacion: FormularioMovilizacion;
     datosMercancia: DatosMercancia220203;
-    formaValida: enviarDatos;
+    formaValida: EnviarDatos;
 }
 
 export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura {

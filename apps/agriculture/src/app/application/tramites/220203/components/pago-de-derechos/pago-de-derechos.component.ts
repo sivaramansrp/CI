@@ -123,7 +123,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   verificarEstadoDelBoton() {
-    let DATOS = {
+    const DATOS = {
       pagoDeformaValida: false,
     }
     if (this.formularioPago.valid) {

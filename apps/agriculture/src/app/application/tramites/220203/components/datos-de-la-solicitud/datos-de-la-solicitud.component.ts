@@ -256,7 +256,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     this.colapsable = !this.colapsable;
   }
   verificarEstadoDelBoton() {
-    let DATOS = {
+    const DATOS = {
       dataDeLaSolicitud: false,
     }
     if (this.datosMercanciaFormGroup.valid) {
@@ -265,13 +265,13 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     this.importacionDeAcuiculturaServices.actualizarFormaValida(DATOS);
   }
   ngOnDestroy(): void {
-    let datos = {
+    const DATOS = {
       dataDeLaSolicitud: false,
     }
     if (this.datosMercanciaFormGroup.valid) {
-      datos.dataDeLaSolicitud = true
+      DATOS.dataDeLaSolicitud = true
     }
-    this.importacionDeAcuiculturaServices.actualizarFormaValida(datos);
+    this.importacionDeAcuiculturaServices.actualizarFormaValida(DATOS);
     this.importacionDeAcuiculturaServices.actualizarDatosMercancia(this.datosMercanciaFormGroup.value);
   }
 }

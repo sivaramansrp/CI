@@ -2,13 +2,20 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 
-import { map, Observable } from 'rxjs';
+import {
+  Observable,
+  map
+} from 'rxjs';
 
 import {
   Acuicultura,
+
   DatosMercancia220203,
-  enviarDatos,
+
+  EnviarDatos,
+
   FormularioMovilizacion,
+
   FormularioPago,
 } from '../../models/220203/importacion-de-acuicultura.module';
 
@@ -106,7 +113,7 @@ export class ImportacionDeAcuiculturaService {
    */
   public obtenerTodosLosStatus(): Observable<boolean> {
     return this.acuiculturaStore._select(state => state.formaValida).pipe(
-      map((formaValida: enviarDatos) => {
+      map((formaValida: EnviarDatos) => {
         return Object.values(formaValida).every(value => value === true);
       })
     );
