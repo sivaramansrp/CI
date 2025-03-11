@@ -21,11 +21,7 @@ export class TablaDinamicaComponent<T> {
    */
 
   @Input() tipoSeleccionTabla!: TablaSeleccion;
-
-  /**
-   * Expone el `enum` `TablaSeleccion` al componente de plantilla HTML.
-   * Permite que los valores del `enum` sean accesibles dentro de la plantilla para usarlos en las directivas de Angular como `*ngIf` o `*ngFor`.
-   *
+/*
    * Este valor es necesario para que la plantilla pueda acceder a los diferentes tipos de selección como "CHECKBOX", "RADIO", etc., que definen el comportamiento de la tabla.
    *
    * @type {typeof TablaSeleccion}
