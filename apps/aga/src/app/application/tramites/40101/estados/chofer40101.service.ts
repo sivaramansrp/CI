@@ -3,16 +3,18 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Chofer40101Store } from './chofer40101.store';
 import { Injectable } from '@angular/core';
 import { DatosDelVehículo, DatosDelVehículoPaisEmisor } from 'libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
+import { HttpClient } from '@angular/common/http';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class Chofer40101Service {
+  private urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
   private choferesListSubject = new BehaviorSubject<any[]>([]);
   choferesList$ = this.choferesListSubject.asObservable();
 
-  constructor(private chofer40101Store: Chofer40101Store) {
+  constructor(private chofer40101Store: Chofer40101Store, private http: HttpClient) {
     const storedData = localStorage.getItem('choferesList');
     if (storedData) {
       this.choferesListSubject.next(JSON.parse(storedData));
@@ -59,7 +61,20 @@ export class Chofer40101Service {
     ]);
   }
   
-  
+  getChoferNacionalData(): Observable<any> {
+    return this.http.get<any>(this.urlServer);
+  }
+
+  getEstados(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlServer}/estados`);
+  }
+  getMunicipios(claveEstado: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlServer}/municipios?estado=${claveEstado}`);
+  }
+
+  getColonias(claveMunicipio: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlServer}/colonias?municipio=${claveMunicipio}`);
+  }
 }
 
 

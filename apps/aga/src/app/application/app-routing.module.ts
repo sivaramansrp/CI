@@ -48,6 +48,13 @@ const ROUTES: Routes = [
     ),
   },
   {
+    path: 'transportista-terrestre',
+    loadChildren: () =>
+      import('./tramites/40101/transportista-terrestre.module').then(
+        (m) => m.TransportistaTerrestreModule
+      ),
+  },
+  {
     path: 'notificacion',
     component: NotificacionPageComponent
   },

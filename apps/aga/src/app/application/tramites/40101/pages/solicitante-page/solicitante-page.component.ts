@@ -19,7 +19,7 @@ interface AccionBoton {
 export class SolicitantePageComponent {
   pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
   indice: number = 1;
-  // public seccion!: SeccionState;
+  //  public seccion!: SeccionState;
   private destroyNotifier$: Subject<void> = new Subject();
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   datosPasos: DatosPasos = {

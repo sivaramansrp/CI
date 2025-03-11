@@ -20,7 +20,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Nacional } from 'libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
 import { extranjero, Catalogo } from 'libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
-import { LayoutChoferNacionalService } from 'libs/shared/data-access-user/src/core/services/40101/layout-chofer-nacional.service';
+// import { LayoutChoferNacionalService } from 'libs/shared/data-access-user/src/core/services/40101/layout-chofer-nacional.service';
 import { StoreService } from 'libs/shared/data-access-user/src/core/services/40101/store/store.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { Chofer40101Store, Choferesnacionales40101State } from '../../estados/chofer40101.store';
@@ -98,7 +98,7 @@ export class ChoferesComponent implements OnInit {
     private fb: FormBuilder,
     private toastr: ToastrService,
     private http: HttpClient,
-    private layoutChoferNacionalService: LayoutChoferNacionalService,
+    // private layoutChoferNacionalService: LayoutChoferNacionalService,
     private storeService: StoreService,
     private chofer40101Store: Chofer40101Store,
     private chofer40101Service: Chofer40101Service,
@@ -299,7 +299,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    * Obtiene datos de los choferes del servicio.
    */
   fetchChoferes(): void {
-    this.layoutChoferNacionalService.getChoferNacionalData().subscribe(
+    this.chofer40101Service.getChoferNacionalData().subscribe(
       (response) => {
         this.choferes = response;
         // this.estados = response;
@@ -422,7 +422,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   loadMunicipios(claveEstado: string): void {
     if (!claveEstado) return;
 
-    this.layoutChoferNacionalService.getMunicipios(claveEstado).subscribe(
+    this.chofer40101Service.getMunicipios(claveEstado).subscribe(
       (data) => {
         console.log('Municipios:', data); // Debugging
         this.municipios = data;
@@ -436,7 +436,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   loadColonias(claveMunicipio: string): void {
     if (!claveMunicipio) return;
 
-    this.layoutChoferNacionalService.getColonias(claveMunicipio).subscribe(
+    this.chofer40101Service.getColonias(claveMunicipio).subscribe(
       (data) => {
         console.log('Colonias:', data); // Debugging
         this.colonias = data;

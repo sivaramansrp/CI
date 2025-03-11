@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { TransportistaTerrestreRoutingModule } from './transportista-terrestre-routing.module';
 import { RouterModule } from '@angular/router';
 import { WizardComponent } from '@ng-mf/data-access-user';
-//import { NavComponent } from '../../shared/components/nav/nav.component';
 import { ChoferesComponent } from './components/choferes/choferes.component';
 import { VehiculosComponent } from './components/vehiculos/vehiculos.component';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
@@ -32,7 +31,8 @@ import { SolicitanteComponent } from './components/solicitante/solicitante.compo
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { DirectorGeneralComponent } from './components/director-general/director-general.component';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
-// import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { Chofer40101Service } from './estados/chofer40101.service';
+import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
 @NgModule({
   declarations: [
     SolicitantePageComponent,
@@ -72,6 +72,6 @@ import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-p
     PasoTresComponent,
     BtnContinuarComponent,
   ],
-  providers: [ToastrService, CatalogosService],
+  providers: [ToastrService, CatalogosService, Chofer40101Service, InicioSesionService],
 })
 export class TransportistaTerrestreModule {}
