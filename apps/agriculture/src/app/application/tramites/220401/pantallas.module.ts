@@ -24,6 +24,10 @@ import { DatosDelCertificadoComponent } from './components/datos-del-certificado
 import { DatosGeneralesAnimalesComponent } from './components/datos-generales-animales/datos-generales-animales.component';
 import { provideHttpClient } from '@angular/common/http';
 
+ import { PasoDosComponent } from './components/paso-dos/paso-dos.component';
+ import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
+
+
 @NgModule({
   declarations: [ 
     PantallasComponent,
@@ -48,7 +52,9 @@ import { provideHttpClient } from '@angular/common/http';
     DatosGeneralesAnimalesComponent,
     SelectCatalogosComponent ,
     DatosDelCertificadoComponent,
-   SolicitanteComponent
+   SolicitanteComponent,
+   PasoDosComponent,
+   PasoTresComponent
   ],
   
   providers: [
