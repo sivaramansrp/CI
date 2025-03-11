@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PANTAPASOS } from '@ng-mf/data-access-user';
+import { PERMISO_MAQUILA } from '../../constantes/permiso-maquila.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 
 @Component({
@@ -12,7 +12,7 @@ export class PermisoMaquilaComponent {
   /**
      * Esta variable se utiliza para almacenar la lista de pasos.
      */
-  pantallasPasos: ListaPasosWizard[] = PANTAPASOS;
+  pantallasPasos: ListaPasosWizard[] = PERMISO_MAQUILA;
 
   /**
    * Esta variable se utiliza para almacenar el índice del paso.
