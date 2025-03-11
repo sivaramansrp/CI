@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
+// import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -19,7 +19,7 @@ interface AccionBoton {
 export class SolicitantePageComponent {
   pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
   indice: number = 1;
-  public seccion!: SeccionState;
+  // public seccion!: SeccionState;
   private destroyNotifier$: Subject<void> = new Subject();
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   datosPasos: DatosPasos = {
@@ -30,7 +30,7 @@ export class SolicitantePageComponent {
   };
   constructor(
     // private seccionQuery: SeccionQuery,
-    private seccionStore: SeccionStore
+    // private seccionStore: SeccionStore
   ) {}
 
   ngOnInit() {
@@ -78,7 +78,7 @@ export class SolicitantePageComponent {
       secciones.push(SECCIONES_TRAMITE_5701.PASO_1[llaveSeccion]);
       formaValida.push(false);
     }
-    this.seccionStore.establecerSeccion(secciones);
-    this.seccionStore.establecerFormaValida(formaValida);
+    // this.seccionStore.establecerSeccion(secciones);
+    // this.seccionStore.establecerFormaValida(formaValida);
   }
 }
