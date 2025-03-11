@@ -1,6 +1,5 @@
-import { DatosPasos, ListaPasosWizard, PASOS_REQUERIMIENTOS, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, PASOS_REQUERIMIENTOS, SeccionLibState, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SeccionState, SeccionStore } from '../../estados/seccion.store';
 import { Subject, map, takeUntil } from 'rxjs';
 
 interface AccionBoton {
@@ -16,7 +15,7 @@ export class AtenderRequerimientosPageComponent {
   pasos: ListaPasosWizard[] = PASOS_REQUERIMIENTOS;
 
   indice: number = 1;
-  public seccion!: SeccionState;
+  public seccion!: SeccionLibState;
   private destroyNotifier$: Subject<void> = new Subject();
 
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
