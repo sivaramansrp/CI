@@ -8,7 +8,7 @@ import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-
   standalone: true,
   imports: [CommonModule, CapturarRequerimientoComponent, SolicitarDocumentosEvaluacionComponent],
   templateUrl: './requerimiento-informacion.component.html',
-  styleUrl: './requerimiento-informacion.component.css',
+  styleUrl: './requerimiento-informacion.component.scss',
 })
 export class RequerimientoInformacionComponent {
 /**

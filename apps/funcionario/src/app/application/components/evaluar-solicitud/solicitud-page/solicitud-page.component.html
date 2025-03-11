@@ -9,14 +9,6 @@
         [numFolioTramite]="'02309482934723832'"
         [tipoTramite]="'Registro de solicitud de servicios extraordinarios'"
       ></lib-encabezado-requerimiento>
-      <!-- <div class="row rounded p-3 bg-light">
-        <div class="col-md-12 rounded p-3 bg-white ">
-            <label class="control-label" for="empleadosImss">Folio del trámite:</label> <span>5345345343453453454</span>
-         </div>
-        <div class="col-md-12 rounded p-3 bg-white">
-            <label class="control-label" for="empleadosImss">Tipo de solicitud:</label> <span>Registro de solicitud de servicios extraordinarios</span>
-        </div>
-    </div> -->
     <br>
     <div class="row margin-top">
       <ul class="nav nav-tabs justify-content-center">
@@ -42,10 +34,8 @@
 
     </div>
     <div class="d-flex justify-content-lg-end">
-      <div class="btn-group">
-        <button class="btn btn-default" type="button" >Guardar</button>
-        <button type="button" class="btn btn-primary ms-2">Cancelar</button> 
-      </div>
+        <button type="button" class="btn btn-default ms-2">Cancelar</button> 
+        <button class="btn  btn-primary ms-2" type="button" (click)="guardarFirmar()">Guardar y firmar</button>
   </div>
     </div>
 </div>

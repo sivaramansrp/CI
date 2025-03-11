@@ -6,6 +6,9 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './capturar-requerimiento.component.html',
-  styleUrl: './capturar-requerimiento.component.css',
+  styleUrl: './capturar-requerimiento.component.scss',
 })
-export class CapturarRequerimientoComponent {}
+export class CapturarRequerimientoComponent {
+
+  
+}

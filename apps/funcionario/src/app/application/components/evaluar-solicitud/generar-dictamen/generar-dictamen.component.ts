@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './generar-dictamen.component.html',
-  styleUrl: './generar-dictamen.component.css',
+  styleUrl: './generar-dictamen.component.scss',
 })
 export class GenerarDictamenComponent {
   formDictamen: FormGroup = this.fb.group({

@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna, TablaDinamicaComponent, TipoDocumento } from '@ng-mf/data-access-user';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-solicitar-documentos',
   standalone: true,
-  imports: [CommonModule, TablaDinamicaComponent],
+  imports: [CommonModule, TablaDinamicaComponent, FormsModule],
   templateUrl: './solicitar-documentos-evaluacion.component.html',
-  styleUrl: './solicitar-documentos-evaluacion.component.css',
+  styleUrl: './solicitar-documentos-evaluacion.component.scss',
 })
 export class SolicitarDocumentosEvaluacionComponent {
 
@@ -30,6 +31,7 @@ export class SolicitarDocumentosEvaluacionComponent {
   eliminarDocumento(index: number) {
     this.documentosSeleccionados.splice(index, 1);
   }
+
 
   tipoDocumentos: TipoDocumento[] = [];
   configuracionTabla: ConfiguracionColumna<any>[] = [

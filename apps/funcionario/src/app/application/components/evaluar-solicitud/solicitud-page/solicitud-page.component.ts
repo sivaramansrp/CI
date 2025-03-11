@@ -5,16 +5,22 @@ import { CapturarRequerimientoComponent } from '../capturar-requerimiento/captur
 import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 import { RequerimientoInformacionComponent } from '../requerimiento-informacion/requerimiento-informacion.component';
 import { EncabezadoRequerimientoComponent } from '@libs/shared/data-access-user/src';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-solicitud-page',
   standalone: true,
   imports: [CommonModule, EncabezadoRequerimientoComponent, GenerarDictamenComponent, CapturarRequerimientoComponent, SolicitarDocumentosEvaluacionComponent, RequerimientoInformacionComponent], // <-- Importa los componentes aquí
   templateUrl: './solicitud-page.component.html',
-  styleUrl: './solicitud-page.component.css',
+  styleUrl: './solicitud-page.component.scss',
 })
 export class SolicitudPageComponent {
 
+  constructor(
+    private router: Router
+  ){
+    
+  }
   /**
    * Índice de la pestaña seleccionada
    */
@@ -35,7 +41,7 @@ export class SolicitudPageComponent {
   /*
    * Método que se ejecuta para guardar y firmar
   */
-  // guardarFirmar(): void { 
-  //   this.firmar = true;
-  // }
+  guardarFirmar(): void { 
+    this.router.navigate(['funcionario/firma-electronica']);
+  }
 }
