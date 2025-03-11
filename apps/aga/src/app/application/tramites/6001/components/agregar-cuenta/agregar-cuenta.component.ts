@@ -7,7 +7,8 @@ import { TituloComponent } from "../../../../../../../../../libs/shared/data-acc
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { RegistroCuentasBancariasService } from '../../services/registro-cuentas-bancarias.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 @Component({
   selector: 'app-agregar-cuenta',
@@ -43,15 +44,15 @@ export class AgregarCuentaComponent implements OnInit {
 
   public crearAgregarCuentaForm():void {
     this.agregarCuentaForm = this.fb.group({
-      titularDeLaCuenta: [''],
+      titularDeLaCuenta: ['',[Validators.required,Validators.maxLength(90)]],
       persona: [''],
-      rfc: [''],
-      numeroDeCuenta: [''],
+      rfc: ['',[Validators.required,Validators.pattern(REGEX_RFC)]],
+      numeroDeCuenta: ['',[Validators.required,Validators.maxLength(30)]],
       pais: [''],
       institucion: [''],
       estado: [''],
-      sucursal: [''],
-      numeroDePlaza: ['']
+      sucursal: ['',[Validators.required,Validators.maxLength(10),Validators.pattern(/[^0-9A-Za-z&_-]/)]],
+      numeroDePlaza: ['',[Validators.required,Validators.maxLength(10),Validators.pattern(/[^0-9A-Za-z]/)]]
     })
   }
 

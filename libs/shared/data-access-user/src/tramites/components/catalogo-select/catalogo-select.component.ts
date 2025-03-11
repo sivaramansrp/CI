@@ -43,6 +43,7 @@ export class CatalogoSelectComponent
   @Input() tooltipQuestionCircle:boolean = false;
   @Output() selectionChange = new EventEmitter<Catalogo>();
   formSelect: FormGroup;
+  @Input() isInline: boolean = false;
 
   constructor(private fb: FormBuilder) {
     this.formSelect = this.fb.group({

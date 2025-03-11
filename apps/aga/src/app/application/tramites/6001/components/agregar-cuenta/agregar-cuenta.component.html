@@ -11,6 +11,16 @@
                         <div class="form-group">
                             <input type="text" formControlName="titularDeLaCuenta" class="form-control" id="titular" >
                         </div>
+                        @if(agregarCuentaForm.controls['titularDeLaCuenta'].invalid && agregarCuentaForm.controls['titularDeLaCuenta'].touched) {
+                            <div class="d-grid">
+                                @if(agregarCuentaForm.controls['titularDeLaCuenta'].errors?.['required']) {
+                                    <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
+                                @if(agregarCuentaForm.controls['titularDeLaCuenta'].errors?.['maxlength']) {
+                                    <span class="mensaje-error">No puede exceder los 30 caracteres.</span>
+                                }
+                            </div>
+                        }
                     </div>
                 </div>
         
@@ -20,6 +30,7 @@
                             [catalogo]="tipoDePersona" 
                             [label]="'Tipo de persona'"
                             [required]="true"
+                            [isInline]="true"
                             formControlName="persona"
                              name="persona"  
                             (change)="tipoDePersonaSeleccion()" >
@@ -33,6 +44,16 @@
                         <div class="form-group">
                             <input type="text" id="rfc" formControlName="rfc" class="form-control">
                         </div>
+                        @if(agregarCuentaForm.controls['rfc'].invalid && agregarCuentaForm.controls['rfc'].touched) {
+                            <div class="d-grid">
+                                @if(agregarCuentaForm.controls['rfc'].errors?.['required']) {
+                                    <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
+                                @if(agregarCuentaForm.controls['rfc'].errors?.['pattern']) {
+                                    <span class="mensaje-error">Formato de RFC inválido. Debe seguir el formato correcto.</span>
+                                }
+                            </div>
+                        }
                     </div>
                 </div>
 
@@ -42,6 +63,16 @@
                         <div class="form-group">
                             <input type="text" formControlName="numeroDeCuenta" id="cuenta" class="form-control">
                         </div>
+                        @if(agregarCuentaForm.controls['numeroDeCuenta'].invalid && agregarCuentaForm.controls['numeroDeCuenta'].touched) {
+                            <div class="d-grid">
+                                @if(agregarCuentaForm.controls['numeroDeCuenta'].errors?.['required']) {
+                                    <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
+                                @if(agregarCuentaForm.controls['numeroDeCuenta'].errors?.['maxlength']) {
+                                    <span class="mensaje-error">No puede exceder los 30 caracteres.</span>
+                                }
+                            </div>
+                        }
                     </div>
                 </div>
 
@@ -50,7 +81,8 @@
                         <app-catalogo-select 
                             [catalogo]="paisDondeRadica" 
                             [label]="'País donde radica'"
-                            [required]="true" 
+                            [required]="true"
+                            [isInline]="true" 
                             name="pais"
                             formControlName="pais"
                             (change)="paisDondeRadicaSeleccion()" >
@@ -64,6 +96,7 @@
                             [catalogo]="institucion" 
                             [label]="'Institución'"
                             [required]="true" 
+                            [isInline]="true"
                             formControlName="institucion"
                             name="institucions"  
                             (change)="institucionSeleccion()" >
@@ -78,6 +111,7 @@
                             [catalogo]="estado" 
                             [label]="'Estado'"
                             [required]="true" 
+                            [isInline]="true"
                             formControlName="estado"
                             name="estado"  
                             (change)="estadoSeleccion()" >
@@ -92,6 +126,19 @@
                         <div class="form-group">
                             <input type="text" formControlName="sucursal" id="sucursal" class="form-control">
                         </div>
+                        @if(agregarCuentaForm.controls['sucursal'].invalid && agregarCuentaForm.controls['sucursal'].touched) {
+                            <div class="d-grid">
+                                @if(agregarCuentaForm.controls['sucursal'].errors?.['required']) {
+                                    <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
+                                @if(agregarCuentaForm.controls['sucursal'].errors?.['pattern']) {
+                                    <span class="mensaje-error">Formato de sucursal no válido. Debe seguir el formato correcto.</span>
+                                }
+                                @if(agregarCuentaForm.controls['sucursal'].errors?.['maxlength']) {
+                                    <span class="mensaje-error">No puede exceder los 10 caracteres.</span>
+                                }
+                            </div>
+                        }
                     </div>
                 </div>
 
@@ -99,8 +146,21 @@
                     <label for="plaza" class="col-sm-3 col-form-label">Número de plaza*:</label>
                     <div class="col-sm-9">
                         <div class="form-group">
-                            <input type="text" formControlName="numeroDePlaza" id="plaza" class="form-control">
+                            <input type="text" formControlName="numeroDePlaza" id="plaza" class="form-control text-uppercase">
                         </div>
+                        @if(agregarCuentaForm.controls['numeroDePlaza'].invalid && agregarCuentaForm.controls['numeroDePlaza'].touched) {
+                            <div class="d-grid">
+                                @if(agregarCuentaForm.controls['numeroDePlaza'].errors?.['required']) {
+                                    <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
+                                @if(agregarCuentaForm.controls['numeroDePlaza'].errors?.['pattern']) {
+                                    <span class="mensaje-error">Formato de número de plaza no válido. Debe seguir el formato correcto.</span>
+                                }
+                                @if(agregarCuentaForm.controls['numeroDePlaza'].errors?.['maxlength']) {
+                                    <span class="mensaje-error">No puede exceder los 10 caracteres.</span>
+                                }
+                            </div>
+                        }
                     </div>
                 </div>
             </form>
