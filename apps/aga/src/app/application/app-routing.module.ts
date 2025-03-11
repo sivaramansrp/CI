@@ -1,6 +1,10 @@
+import { FirmaPageComponent } from '@ng-mf/data-access-user';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
+import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
+import { AcusePageComponent } from './acuse/acuse-page/acuse-page.component';
+
 
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
@@ -28,16 +32,35 @@ const ROUTES: Routes = [
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
   },
   {
-    path: 'registro-digitalizar-documentos',
+
+    path: 'atender-requerimientos',
+    loadChildren: () => import('./atencion-requerimientos/atencion-requerimientos.module').then(
+      (m) => m.AtencionRequerimientosModule
+    ),
+  },
+  {
+    path: 'notificacion',
+    component: NotificacionPageComponent
+  },
+  {
+    path: 'firmar',
+    component: FirmaPageComponent
+  },
+  {
+    path: 'acuse',
+    component: AcusePageComponent
+  },
+  {path: 'registro-digitalizar-documentos',
     loadChildren: () =>
       import('./tramites/701/registro-digitalizar-documentos.module').then(
         (m) => m.RegistroDigitalizarDocumentosModule
       ),
   },
+
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 
 import { Catalogo } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import aduanasJson from './../../../../../../../../../libs/shared/theme/assets/json/220401/umc.json';
-import sexoJson from './../../../../../../../../../libs/shared/theme/assets/json/220401/sexo.json';
+import aduanasJson from '../../../../../../../../../libs/shared/theme/assets/json/220401/umc.json';
+import sexoJson from '../../../../../../../../../libs/shared/theme/assets/json/220401/sexo.json';
 
 import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 
