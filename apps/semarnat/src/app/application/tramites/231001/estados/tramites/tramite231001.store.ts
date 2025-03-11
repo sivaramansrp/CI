@@ -20,16 +20,11 @@ export interface Solicitud231001State {
   cantidad: number;
   numeroProgramaImmex: Catalogo | null;
   aduanas: string;
-  unidadMedidaComercial: {
-    clave: string;
-    descUnidadMedida: string;
-  };
-  capituloFraccion: string;
-  partidaFraccion: string;
-  subPartidaFraccion: string;
-  fraccion: {
-    descFraccion: string;
-  }
+  unidadMedidaComercial: Catalogo | null;
+  capituloFraccion: Catalogo | null;
+  partidaFraccion: Catalogo | null;
+  subPartidaFraccion: Catalogo | null;
+  fraccion: Catalogo | null;
 }
 
 export function createInitialState(): Solicitud231001State {
@@ -40,16 +35,11 @@ export function createInitialState(): Solicitud231001State {
     cantidad: 0,
     numeroProgramaImmex: null,
     aduanas: '',
-    unidadMedidaComercial: {
-      clave: '',
-      descUnidadMedida: '',
-    },
-    capituloFraccion: '',
-    partidaFraccion: '',
-    subPartidaFraccion: '',
-    fraccion: {
-      descFraccion: '',
-    }
+    unidadMedidaComercial: null,
+    capituloFraccion: null,
+    partidaFraccion: null,
+    subPartidaFraccion: null,
+    fraccion: null
   }
 }
 
@@ -100,40 +90,34 @@ export class Tramite231001Store extends Store<Solicitud231001State> {
       aduanas,
     }));
   }
-  public setDescUnidadMedida(descUnidadMedida: string): void {
+  public setDescUnidadMedida(unidadMedidaComercial: Catalogo): void {
     this.update((state) => ({
       ...state,
-      unidadMedidaComercial: {
-        ...state.unidadMedidaComercial,
-        descUnidadMedida,
-      },
+      unidadMedidaComercial
     }));
   }
-  public setCapituloFraccion(capituloFraccion: string): void {
+  public setCapituloFraccion(capituloFraccion: Catalogo): void {
     this.update((state) => ({
       ...state,
       capituloFraccion,
     }));
   }
-  public setpartidaFraccion(partidaFraccion: string): void {
+  public setpartidaFraccion(partidaFraccion: Catalogo): void {
     this.update((state) => ({
       ...state,
       partidaFraccion,
     }));
   }
-  public setSubPartidaFraccion(subPartidaFraccion: string): void {
+  public setSubPartidaFraccion(subPartidaFraccion: Catalogo): void {
     this.update((state) => ({
       ...state,
       subPartidaFraccion,
     }));
   }
-  public setFraccion(descFraccion: string): void {
+  public setFraccion(fraccion: Catalogo): void {
     this.update((state) => ({
       ...state,
-      fraccion: {
-        ...state.fraccion,
-        descFraccion,
-      },
+      fraccion
     }));
   }
 }

@@ -71,7 +71,7 @@ export class AdministrarResiduosComponent implements OnInit {
    * Actualiza el recuento total de filas en el formulario
    */
   public actualizarRecuentoTotalDeFilas(): void {
-    const totalRowCount = this.tableBodyData.length;
-    this.formularioParaRecuentoTotal.patchValue({ recuentoTotalDeFilas: totalRowCount });
+    const TOTAL_ROW_COUNT = this.tableBodyData.length;
+    this.formularioParaRecuentoTotal.patchValue({ recuentoTotalDeFilas: TOTAL_ROW_COUNT });
   }
 }
