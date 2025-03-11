@@ -23,7 +23,7 @@ import { TEXTOS } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
-import { RegistroDigitalizarDocumentosService } from '@ng-mf/data-access-user';
+import { RegistroDigitalizarDocumentosService } from '../../services/701/registro-digitalizar-documentos.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';

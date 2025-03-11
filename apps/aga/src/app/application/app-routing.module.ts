@@ -49,6 +49,7 @@ const ROUTES: Routes = [
   {
     path: 'acuse',
     component: AcusePageComponent
+
   },
   {path: 'registro-digitalizar-documentos',
     loadChildren: () =>
