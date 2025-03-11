@@ -3,7 +3,7 @@ import { AnexarDocumentosComponent } from "libs/shared/data-access-user/src/tram
 import { Component } from '@angular/core';
 
 import { TituloComponent } from "libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
-import { TEXTOS_REQUISITOS } from "libs/shared/data-access-user/src/tramites/constantes/certificado-zoosanitario.enum";
+import { TEXTOS_REQUISITOS } from "../../constants/permiso-importacion-modification.enum";
 
 @Component({
   selector: 'app-paso-dos',
