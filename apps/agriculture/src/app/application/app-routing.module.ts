@@ -43,6 +43,13 @@ const routes: Routes = [
       import('./tramites/220502/inspeccion-fisica.module').then(
         (m) => m.InspeccionFisicaModule
       ),
+  },
+  {
+    path: 'acuicola-fisica',
+    loadChildren: () =>
+      import('./tramites/220703/acuicola-fisica.module').then(
+        (m) => m.AcuicolaFisicaModule
+      ),
   }
 ];
 
