@@ -9,6 +9,7 @@ import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO } from '../../constantes/220203/im
 import { OpcionDeRadio } from '../../models/220203/importacion-de-acuicultura.module';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
+import { channel } from 'diagnostics_channel';
 
 /**
  * @description Componente para el pago de derechos en la importación de acuicultura.
@@ -53,14 +54,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private readonly importacionAcuiculturaServicio: ImportacionDeAcuiculturaService
   ) {
-    console.log('PAGO DE DERECHOS COMPONENT');
+    this.crearFormularioPago();
   }
 
   /**
    * @description Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.crearFormularioPago();
+    this.formularioPago.valueChanges.subscribe((changes) => {
+      this.verificarEstadoDelBoton();
+    })
+
     this.obtenerListaJustificacion();
     this.obtenerListaBanco();
   }
@@ -73,12 +77,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.formularioPago = this.fb.group({
       exentoPago: ['', Validators.required],
       justificacion: ['', Validators.required],
-      claveReferencia: [{ value: '', disabled: true }],
-      cadenaDependencia: [{ value: '', disabled: true }],
+      claveReferencia: [{ value: '', disabled: true }, Validators.required],
+      cadenaDependencia: [{ value: '', disabled: true }, Validators.required],
       banco: ['', Validators.required],
-      llavePago: [{ value: '', disabled: ESEXENTO }],
-      fechaPago: [{ value: '', disabled: true }],
-      importePago: [{ value: '', disabled: true }],
+      llavePago: [{ value: '', disabled: ESEXENTO }, Validators.required],
+      fechaPago: [{ value: '', disabled: true }, Validators.required],
+      importePago: [{ value: '', disabled: true }, Validators.required],
     });
   }
 
@@ -114,6 +118,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     });
   }
 
+  verificarEstadoDelBoton() {
+    let DATOS = {
+      pagoDeformaValida: false,
+    }
+    if (this.formularioPago.valid) {
+      DATOS.pagoDeformaValida = true
+    }
+    this.importacionAcuiculturaServicio.actualizarFormaValida(DATOS);
+  }
+
   /**
    * @description Obtiene la lista de justificaciones desde el servicio.
    */
@@ -123,13 +137,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    let datos = {
-      pagoDeformaValida: false,
-    }
-    if (this.formularioPago.valid) {
-      datos.pagoDeformaValida = true
-    }
-    this.importacionAcuiculturaServicio.actualizarFormaValida(datos);
     this.importacionAcuiculturaServicio.actualizarFormularioPago(this.formularioPago.value);
   }
 }

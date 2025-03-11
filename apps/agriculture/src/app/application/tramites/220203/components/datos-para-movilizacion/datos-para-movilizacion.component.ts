@@ -42,7 +42,7 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
     this.formularioMovilizacion = this.fb.group({
       medioDeTransporte: ['', Validators.required],
       identificacionTransporte: ['IDTERR'],
-      puntoVerificacion: ['', Validators.required],
+      puntoVerificacion: [''],
       nombreEmpresaTransportista: ['', Validators.required]
     });
   }
@@ -51,6 +51,9 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
    * @description Método del ciclo de vida que se ejecuta cuando el componente se inicializa.
    */
   ngOnInit(): void {
+    this.formularioMovilizacion.valueChanges.subscribe((changes) => {
+      this.verificarEstadoDelBoton();
+    })
     this.obtenerCatalogosTransporte();
     this.obtenerCatalogosPuntos();
   }
@@ -72,13 +75,17 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
       this.puntos = data.data as Catalogo[];
     }));
   }
-  ngOnDestroy(): void {
-    let datos = {
+  verificarEstadoDelBoton() {
+    let DATOS = {
       dataParaMovilizacion: false,
     }
     if (this.formularioMovilizacion.valid) {
-      datos.dataParaMovilizacion = true
+      DATOS.dataParaMovilizacion = true
     }
+    this.importacionDeAcuiculturaServices.actualizarFormaValida(DATOS);
+  }
+
+  ngOnDestroy(): void {
     this.importacionDeAcuiculturaServices.actualizarFormularioMovilizacion(this.formularioMovilizacion.value);
   }
 }

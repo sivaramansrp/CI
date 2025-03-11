@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -39,7 +39,7 @@ interface FilaSolicitud {
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss'
 })
-export class DatosDeLaSolicitudComponent implements OnDestroy {
+export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   /**
    * @description Mensaje que se muestra en una alerta al hacer doble clic.
    */
@@ -170,7 +170,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
         aduanaIngreso: ['', Validators.required],
         oficinaInspeccion: ['', Validators.required],
         puntoInspeccion: ['', Validators.required],
-        numeroGuia: ['', Validators.required],
+        numeroGuia: [''],
         regimen: ['', Validators.required]
       }),
       mercanciaGroup: this.fb.group({
@@ -182,7 +182,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
         descripcionFraccionArancelaria: [{ value: '', disabled: true }, Validators.required],
         nico: ['', Validators.required],
         descripcionNico: [{ value: '', disabled: true }, Validators.required],
-        descripcion: [''],
+        descripcion: ['', Validators.required],
         cantidadUMT: ['', Validators.required],
         umt: [{ value: '', disabled: true }, Validators.required],
         cantidadUMC: ['', Validators.required],
@@ -195,8 +195,13 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
         paisDeProcedencia: ['', Validators.required]
       }),
       detalles: this.fb.group({
-        nombreCientifico: ['', Validators.required]
+        nombreCientifico: ['']
       })
+    })
+  }
+  ngOnInit(): void {
+    this.datosMercanciaFormGroup.valueChanges.subscribe((changes) => {
+      this.verificarEstadoDelBoton();
     })
   }
   /**
@@ -237,6 +242,15 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
   }
+  verificarEstadoDelBoton() {
+    let DATOS = {
+      dataDeLaSolicitud: false,
+    }
+    if (this.datosMercanciaFormGroup.valid) {
+      DATOS.dataDeLaSolicitud = true
+    }
+    this.importacionDeAcuiculturaServices.actualizarFormaValida(DATOS);
+  }
   ngOnDestroy(): void {
     let datos = {
       dataDeLaSolicitud: false,
@@ -244,6 +258,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy {
     if (this.datosMercanciaFormGroup.valid) {
       datos.dataDeLaSolicitud = true
     }
+    this.importacionDeAcuiculturaServices.actualizarFormaValida(datos);
     this.importacionDeAcuiculturaServices.actualizarDatosMercancia(this.datosMercanciaFormGroup.value);
   }
 }

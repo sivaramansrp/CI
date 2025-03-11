@@ -2,18 +2,19 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import {
   Acuicultura,
   DatosMercancia220203,
+  enviarDatos,
   FormularioMovilizacion,
-  FormularioPago
+  FormularioPago,
 } from '../../models/220203/importacion-de-acuicultura.module';
 
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
 
-import { RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { RespuestaCatalogos, SeccionLibStore } from '@ng-mf/data-access-user';
 
 
 /**
@@ -32,7 +33,7 @@ export class ImportacionDeAcuiculturaService {
    * @description Constructor del servicio.
    * @param http Cliente HTTP para realizar las peticiones.
    */
-  constructor(private readonly http: HttpClient, private readonly acuiculturaStore: AcuiculturaStore) {
+  constructor(private readonly http: HttpClient, private readonly acuiculturaStore: AcuiculturaStore, private readonly seccionStore: SeccionLibStore) {
     console.log('ImportacionDeAcuiculturaService');
   }
 
@@ -80,12 +81,37 @@ export class ImportacionDeAcuiculturaService {
    * @param datosMercancia Datos de mercancía.
    */
   /**
-   * Updates the 'formaValida' field in the store.
-   * @param updatedFormaValida The updated boolean values for 'formaValida'.
+   * Actualiza el campo 'formaValida' en el store de acuicultura.
+   * @param updatedFormaValida Los valores booleanos actualizados para 'formaValida'.
+   * @description Esta función actualiza el estado de 'formaValida' en el store de acuicultura y, 
+   * dependiendo del valor de todos los estados, actualiza las secciones y forma válida en el store.
    */
   public actualizarFormaValida(updatedFormaValida: { [key: string]: boolean }): void {
     this.acuiculturaStore.actualizarformaValida(updatedFormaValida);
+    this.obtenerTodosLosStatus().subscribe((result: boolean) => {
+      if (result) {
+        this.seccionStore.establecerSeccion([true]);
+        this.seccionStore.establecerFormaValida([true]);
+      } else {
+        this.seccionStore.establecerSeccion([false]);
+        this.seccionStore.establecerFormaValida([false]);
+      }
+    });
   }
+  /**
+   * Obtiene el estado actualizado de la forma válida.
+   * @returns Observable<boolean> Devuelve un observable con el valor booleano que indica si todos los valores de 'formaValida' son verdaderos.
+   * @description Esta función obtiene los valores actuales de 'formaValida' del store de acuicultura 
+   * y verifica si todos los valores son verdaderos.
+   */
+  public obtenerTodosLosStatus(): Observable<boolean> {
+    return this.acuiculturaStore._select(state => state.formaValida).pipe(
+      map((formaValida: enviarDatos) => {
+        return Object.values(formaValida).every(value => value === true);
+      })
+    );
+  }
+
 
 
 
