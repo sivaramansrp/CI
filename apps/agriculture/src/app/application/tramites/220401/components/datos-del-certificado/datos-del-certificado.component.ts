@@ -130,7 +130,6 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
       this.datosdelForm= this.fb.group({
         datoscertificado:[this.solicitudState?.datoscertificado],
         certificada: [this.solicitudState?.certificada],
-        // osia:[this.solicitudState?.osia]
       })
 
       }
@@ -143,7 +142,6 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
       }
   
     loaddataDelegacionesData(): void {
-      console.log('getDelegaciones');
       this._pantallas220401Service.getDelegacionesData().subscribe((data) => {
         this.delegacionesJson = data;
         this.updateCatalogConfigs();
@@ -251,8 +249,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
     ];
     setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
       const VALOR = form.get(campo)?.value;
-     console.log("abc", VALOR);
-      (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
+    (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
     }
     
  

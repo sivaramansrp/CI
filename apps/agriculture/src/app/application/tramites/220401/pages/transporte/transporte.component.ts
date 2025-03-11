@@ -63,10 +63,8 @@ export class TransporteComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    // Peticiones a las apis
-   
-
-    this.agregarQuery.selectSolicitud$
+    
+  this.agregarQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -92,7 +90,6 @@ export class TransporteComponent implements OnDestroy, OnInit {
 
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
     const VALOR = form.get(campo)?.value;
-    console.log("value",VALOR);
     (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
   }
 

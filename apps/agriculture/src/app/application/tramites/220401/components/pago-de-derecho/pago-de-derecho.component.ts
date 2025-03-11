@@ -125,8 +125,7 @@ this.agregarQuery.selectSolicitud$
   }
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
     const VALOR = form.get(campo)?.value;
-    console.log("value",VALOR);
-    (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
+   (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
   }
   /**
    * Obtiene las opciones de justificación para el pago de derechos.

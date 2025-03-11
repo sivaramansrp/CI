@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
-import { Dropdown220401State, Dropdown220401Store } from './store220401';
+import { Pantallas220401State, Pantallas220401Store } from './store220401';
 
 @Injectable({ providedIn: 'root' })
-export class Dropdown220401Query extends Query<Dropdown220401State> {
-  constructor(protected override store: Dropdown220401Store) {
+export class Dropdown220401Query extends Query<Pantallas220401State> {
+  constructor(protected override store: Pantallas220401Store) {
     super(store);
   }
 

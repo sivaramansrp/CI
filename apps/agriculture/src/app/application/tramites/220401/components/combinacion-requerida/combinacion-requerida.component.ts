@@ -126,7 +126,6 @@ this.agregarQuery.selectSolicitud$
 
     setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
       const VALOR = form.get(campo)?.value;
-      console.log("value",VALOR);
       (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
     }
   
@@ -193,19 +192,12 @@ this.agregarQuery.selectSolicitud$
     });
   }
 
- 
-
-
   /**
    * @method crearFormCombinacion
    * @description Método para crear el formulario formCombinacion.
    */
   
-   
-
- 
-  
-    ngOnDestroy(): void {
+   ngOnDestroy(): void {
       this.destroyNotifier$.next();
       this.destroyNotifier$.complete();
     }
@@ -215,7 +207,5 @@ this.agregarQuery.selectSolicitud$
    * @method docSeleccionado
    * @description Método placeholder para la funcionalidad de documento seleccionado.
    */
-  docSeleccionado(): void {
-    // Método pendiente de implementación
-  }
+ 
 }

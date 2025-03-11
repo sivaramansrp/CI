@@ -223,10 +223,6 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
       ],
     });
   }
-  // fetchFraccion(): void {
-  //   this.selectedValue = 'Nuevo';
-  // }
- 
   /**
    * Maneja la selección de una aduana en el segundo select.
    * @param e - La aduana seleccionada.
@@ -292,8 +288,6 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
 
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
     const VALOR = form.get(campo)?.value;
-    console.log("value",VALOR);
-    // const VALOR = form.get('datosdelForm')?.get(campo)?.value;
     (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
   }
 
