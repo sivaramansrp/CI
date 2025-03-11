@@ -11,7 +11,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 
-import { CERTIFICADO_TABLA } from '@libs/shared/data-access-user/src/tramites/constantes/110218/certificado-tecnico-japon.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
@@ -20,6 +19,9 @@ import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
 import { Router } from '@angular/router';
+
+import { CERTIFICADO_TABLA, CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
+
 
 /**
  * Componente para mostrar y manejar los datos del certificado técnico de Japón.
@@ -132,6 +134,11 @@ export class DatosCertificadoComponent implements OnInit {
   ngOnInit(): void {
     this.getTabledatas();
     this.subscribeToStoreChanges();
+    
+    this.tramite110218Query.tableDataDatos$.subscribe((data)=>
+      
+      console.log("table datas.",data)
+    )
   }
   /**
    * Obtiene los datos de la tabla desde el servicio.
@@ -140,7 +147,6 @@ export class DatosCertificadoComponent implements OnInit {
   getTabledatas(): void {
     this.service.getDatosCertificado().subscribe((data: any) => {
       this.datos = data;
-      console.log(this.datos);
     });
   }
   /**
@@ -148,8 +154,9 @@ export class DatosCertificadoComponent implements OnInit {
    * DatosCertificadoComponent
    * Fila seleccionada.
    */
-  handleFilaSeleccionada(fila: any): void {
+  handleFilaSeleccionada(fila: CompliMentaria): void {
     this.selectedRow = fila;
+    console.log("selected row data",this.selectedRow)
   }
   /**
    * Maneja la selección de múltiples filas en la tabla.
@@ -164,7 +171,11 @@ export class DatosCertificadoComponent implements OnInit {
    * DatosCertificadoComponent
    */
   onModifyForm(): void {
+    this.tramite110218Store.storeTableValues(this.selectedRow)
     this.router.navigate(['se/certificado-tecnico-japon/mercancias-seleccionadas-form']);
+    // this.router.navigate(['pago/certificado-tecnico-japon/mercancias-seleccionadas-form']);
+
+    
   }
   /**
    * Suscribe a los cambios en el store y actualiza el formulario.

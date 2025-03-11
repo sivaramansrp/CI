@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 /**
  * Componente para el formulario de mercancías seleccionadas.
@@ -53,7 +53,7 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy{
   constructor(private fb: FormBuilder, private service: CertificadoTecnicoJaponService) {
     this.modifydatosdelcertificado = this.fb.group({
       nombreComercial: [''],
-      nombreenIngles: [''],
+      nombreIngles: [''],
       complementoDelaDescripcion: [''],
       marca: [''],
       valorMercancia: [''],
@@ -68,6 +68,7 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy{
   ngOnInit(): void {
     this.unidadMedidaData();
     this.tipoDeFactura();
+    this.tableDataValues()
   }
 
   unidadMedidaData():void{
@@ -82,9 +83,23 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy{
     this.service.getTipodeFctura().subscribe(
       (data:any) => {
         this.tipodeFacturaOptions = data;
-        console.log("tipodeFacturaOptions",this.tipodeFacturaOptions)
       }
     );
+  }
+
+  tableDataValues():void{
+    this.service.getDatosCertificado().pipe(takeUntil(this.destroyed$)).subscribe(
+      (data:any[])=>{
+        this.modifydatosdelcertificado.patchValue({
+          nombreComercial:data[0].nombreComercial,
+          nombreIngles: data[0].nombreIngles,
+          cantidad:'100',
+          fechadelaFactura: '2024-11-13'        
+        }
+       
+        )
+      }
+    )
   }
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnDestroy(): void {

@@ -2,7 +2,7 @@ import { Store, StoreConfig } from '@datorama/akita';
   
 import { Injectable } from '@angular/core';
 
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 
@@ -30,7 +30,8 @@ export interface Solicitud110218State {
   faxs:string,
   correoElectrónicos:string
   lugar:string,
-  observaciones:string
+  observaciones:string,
+  tableDataDatos:CompliMentaria[]
 }
 
 
@@ -58,6 +59,7 @@ export function createInitialState(): Solicitud110218State {
     correoElectrónicos:'',
     lugar:'',
     observaciones:'',
+    tableDataDatos: []
   }
 }
 
@@ -202,5 +204,17 @@ export class Tramite110218Store extends Store<Solicitud110218State> {
         observaciones,
       }));
     }
+    public storeTableValues(fila : CompliMentaria):void{
+      this.update((state) => {
+        
+        const TABLE_DATA = [...state.tableDataDatos, fila]
+        return{
+            ...state,
+            tableDataDatos: TABLE_DATA
+        }
+        
+      });
+    }
+    
 }
 

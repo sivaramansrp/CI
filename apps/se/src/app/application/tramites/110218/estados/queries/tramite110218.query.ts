@@ -30,7 +30,7 @@ export class Tramite110218Query extends Query<Solicitud110218State> {
   correoElectrónicos$ = this.select((state) => state.correoElectrónicos);
   lugar$ = this.select((state) => state.lugar);
   observaciones$ = this.select((state) => state.observaciones);
-
+  tableDataDatos$ = this.select((state) => state.tableDataDatos)
 
   constructor(protected override store: Tramite110218Store) {
     super(store);
