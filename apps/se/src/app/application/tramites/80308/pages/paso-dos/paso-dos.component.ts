@@ -11,7 +11,7 @@ import { TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
   styleUrl: './paso-dos.component.scss',
   standalone: true,
   imports: [AlertComponent, TituloComponent, AnexarDocumentosComponent],
-  host: { 'hostID': crypto.randomUUID().toString()}
+  host: {}
 })
 export class PasoDosComponent {
   /**

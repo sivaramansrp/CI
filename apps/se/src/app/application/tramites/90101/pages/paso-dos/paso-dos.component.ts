@@ -7,7 +7,8 @@
  */
 
 import { Component } from '@angular/core';
-import { TEXTOS_REQUISITOS } from 'libs/shared/data-access-user/src/tramites/constantes/certificado-zoosanitario.enum';
+import { TEXTOS_REQUISITOS } from '../../constantes/prosec.module';
+
 
 @Component({
   selector: 'app-paso-dos',

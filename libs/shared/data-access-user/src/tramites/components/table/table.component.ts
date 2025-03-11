@@ -2,9 +2,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { TableData } from '../../../core/models/shared/components.model';
- 
+
 import { CommonModule } from '@angular/common';
- 
+
 @Component({
   selector: 'ng-table',
   templateUrl: './table.component.html',
@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
   imports: [
     CommonModule
   ],
- host: { 'hostID': crypto.randomUUID().toString() }
+  host: {}
 })
 export class TableComponent implements OnInit, OnChanges {
   @Input() enableScrollbar: boolean = false;
@@ -26,12 +26,12 @@ export class TableComponent implements OnInit, OnChanges {
    * @description
    * commonTableBody se utiliza para obtener datos del cuerpo de la tabla de la componente
    */
-  @Input() commonTableBody: any =[];
- 
-   /**
-   * @description
-   * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero
-   */
+  @Input() commonTableBody: any = [];
+
+  /**
+  * @description
+  * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero
+  */
 
 
   /**
@@ -42,12 +42,12 @@ export class TableComponent implements OnInit, OnChanges {
     tableHeader: [],
     tableBody: []
   };
- 
+
   /**
    * @description
    * ngOnInit se utiliza para inicializar la tabla de la componente
    */
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.tableData = {
       tableHeader: this.commonTableHeader,
       tableBody: this.commonTableBody

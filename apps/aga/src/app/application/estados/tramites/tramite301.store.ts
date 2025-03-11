@@ -9,16 +9,16 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
  */
 export interface Solicitud301State {
   /**
-   * Linea
+   * linea
    * @type {string}
    */
-  Linea: string;
+  linea: string;
 
   /**
-   * Linea checkbox
+   * linea checkbox
    * @type {string}
    */
-  Lineacheckbox: string;
+  lineaCheckbox: string;
 
   /**
    * Nombre quimico
@@ -96,16 +96,16 @@ export interface Solicitud301State {
 export function createInitialState(): Solicitud301State {
   return {
     /**
-     * Linea
+     * linea
      * @type {string}
      */
-    Linea: '',
+    linea: '',
 
     /**
-     * Linea checkbox
+     * linea checkbox
      * @type {string}
      * */
-    Lineacheckbox: '',
+    lineaCheckbox: '',
 
     /**
      * Nombre quimico
@@ -196,23 +196,23 @@ export class Tramite301Store extends Store<Solicitud301State> {
 
   /**
    * Guarda la línea en el estado.
-   * @param Linea
+   * @param linea
    */
-  public setLinea(Linea: string) {
+  public setLinea(linea: string) {
     this.update((state) => ({
       ...state,
-      Linea,
+      linea,
     }));
   }
 
   /**
    * Guarda el tipo de solicitud en el estado.
-   * @param Lineacheckbox
+   * @param lineaCheckbox
    */
-  public setLineaCheckbox(Lineacheckbox: string) {
+  public setLineaCheckbox(lineaCheckbox: string) {
     this.update((state) => ({
       ...state,
-      Lineacheckbox,
+      lineaCheckbox,
     }));
   }
 
