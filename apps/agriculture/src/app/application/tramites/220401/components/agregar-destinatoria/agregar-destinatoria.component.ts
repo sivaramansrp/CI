@@ -1,5 +1,5 @@
 /* eslint-disable sort-imports */
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -12,7 +12,7 @@ import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
   standalone: true,
   imports: [TituloComponent,SelectCatalogosComponent],
 })
-export class AgregarDestinatoriaComponent {
+export class AgregarDestinatoriaComponent implements OnInit {
 
   public pais!: CatalogosSelect;
   // eslint-disable-next-line @typescript-eslint/no-inferrable-types
@@ -20,10 +20,8 @@ export class AgregarDestinatoriaComponent {
   // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   public moral: boolean = false;
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  conatructor() {
-
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function, no-empty-function
+  constructor() {}
 
   ngOnInit(): void {
     this.getPais();
@@ -33,6 +31,7 @@ export class AgregarDestinatoriaComponent {
    * @description getPais se utiliza para obtener los datos de los paises
    */
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   public getPais() {
     this.pais = {
       labelNombre: 'País',
@@ -51,16 +50,15 @@ export class AgregarDestinatoriaComponent {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public docSeleccionado(e: Catalogo) {
-      
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function, no-empty-function, @typescript-eslint/no-unused-vars, class-methods-use-this
+   docSeleccionado(e: Catalogo): void {}
 
   /**
    * 
    * @param  checkBoxName, que acepta datos de tipo cadena
    * @description inputChecked se utiliza para verificar si el checkbox está seleccionado
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   public inputChecked(checkBoxName:string) {
     if(checkBoxName === 'fisica') {
       this.fisica = true;

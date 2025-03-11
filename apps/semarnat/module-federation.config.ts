@@ -1,5 +1,6 @@
 import { ModuleFederationConfig } from '@nx/webpack';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const config: ModuleFederationConfig = {
   name: 'semarnat',
   exposes: {

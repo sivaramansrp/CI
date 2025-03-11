@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+/* eslint-disable no-empty-function */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable class-methods-use-this */
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
@@ -7,6 +10,9 @@ import { FormBuilder } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
+import { AgregarQuery } from '../../../../estados/queries/agregar.query';
+import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * Componente que gestiona el formulario de pago de derechos de importación o exportación.
@@ -24,15 +30,20 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, FormsModule, CatalogoSelectComponent],
   standalone: true,
 })
-export class PagoDeDerechoComponent implements OnInit {
+export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   FormSolicitud!: FormGroup; // Objeto de formulario reactivo para manejar los datos del formulario
-  
+   private destroyNotifier$: Subject<void> = new Subject();
+    public solicitudState!: solicitud220401State;
   answer: string = ''; // Respuesta seleccionada por el usuario
   
   public Justificacion!: Catalogo[]; // Opciones disponibles para justificar el pago
   public Banco!: Catalogo[]; // Opciones disponibles para seleccionar el banco
 
-  constructor(private fb: FormBuilder) { }
+  // eslint-disable-next-line no-empty-function
+  constructor(private fb: FormBuilder,
+    private agregar220401Store: Agregar220401Store,
+    private agregarQuery: AgregarQuery,
+  ) { }
 
   /**
    * Hook de ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -45,21 +56,31 @@ export class PagoDeDerechoComponent implements OnInit {
    * @memberof PagoDeDerechoComponent
    */
   ngOnInit(): void {
-    this.getJustificacion();  // Obtiene las opciones para justificar el pago
-    this.getBanco();           // Obtiene las opciones para seleccionar el banco
+this.agregarQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
+    this.getJustificacion(); // Obtiene las opciones para justificar el pago
+    this.getBanco(); // Obtiene las opciones para seleccionar el banco
     this.FormSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
         exentoDePago: ['No', Validators.required],
-        Justificacion: ['', Validators.required],
+       Justificacion: [this.solicitudState?.llaveDePago || '', [Validators.required]],
         nombreImportExport: ['', Validators.required],
         rfcImportExport: ['', Validators.required],
         cadenaDependencia: ['', Validators.required],
         Banco: ['', Validators.required],
-        llaveDePago: ['', Validators.required],
-        fechaPago: [' ', Validators.required],
-        importePago: ['', Validators.required],
+        llaveDePago:['', Validators.required],
+        fechaPago:['', Validators.required],
+       importePago: ['', Validators.required],
       }),
     });
+    
 
     // Se activa la lógica para actualizar campos según el valor inicial de 'exentoDePago'
     this.updateFormFieldsBasedOnExentoDePago('No');
@@ -102,7 +123,10 @@ export class PagoDeDerechoComponent implements OnInit {
       this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.disable();
     }
   }
-
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
+    const VALOR = form.get(campo)?.value;
+   (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
+  }
   /**
    * Obtiene las opciones de justificación para el pago de derechos.
    * 
@@ -136,6 +160,7 @@ export class PagoDeDerechoComponent implements OnInit {
    * 
    * @memberof PagoDeDerechoComponent
    */
+  // eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
   JustificacionSeleccion(): void { }
 
   /**
@@ -143,6 +168,7 @@ export class PagoDeDerechoComponent implements OnInit {
    * 
    * @memberof PagoDeDerechoComponent
    */
+  // eslint-disable-next-line no-empty-function
   BancoSeleccion(): void { }
 
   /**
@@ -152,5 +178,11 @@ export class PagoDeDerechoComponent implements OnInit {
    * 
    * @memberof PagoDeDerechoComponent
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   validarFormulario() { }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

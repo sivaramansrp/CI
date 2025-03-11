@@ -1,24 +1,21 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
-
-const routes: Routes = [
+const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
   },
   {
-    path: 'aviso-de-materiales',
+    path: 'pantallas',
     loadChildren: () =>
-      import('./tramites/231001/aviso-de-materiales.module').then(
-        (m) => m.AvisodematerialesModule
-      ),
+      import('./tramites/230401/pantallas-modulo.module').then((m) => m.PantallasModuloModule),
   },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
