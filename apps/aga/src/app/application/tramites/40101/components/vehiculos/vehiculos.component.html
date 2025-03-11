@@ -32,7 +32,6 @@
       <h3 *ngIf="activeTab === 'parquevehicular'">{{ selectedTab }}</h3>
       <h3 *ngIf="activeTab === 'unidaddearrastre'">{{ selectedTab }}</h3>
       <hr class="red" />
-
       <div class="tab-content">
         <div class="tab-pane fade show active" id="subtabs-3" role="tabpanel">
           <div class="row table-responsive">
@@ -64,27 +63,32 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let nacion of nacional; let i = index">
+                  <tr
+                    *ngFor="
+                      let vehiculo of vehiculosList$ | async;
+                      let i = index
+                    "
+                  >
                     <td>
                       <input type="checkbox" />
                     </td>
                     <td>{{ i + 1 }}</td>
-                    <td>{{ nacion.solicitudVehiculoVin2 }}</td>
-                    <td>{{ nacion.solicitudVehiculoTipoVehiculo }}</td>
-                    <td>{{ nacion.solicitudVehiculoIdDeVehiculo }}</td>
-                    <td>{{ nacion.solicitudVehiculoNumeroPlacas }}</td>
-                    <td>{{ nacion.solicitudVehiculoPaisEmisor }}</td>
-                    <td>{{ nacion.solicitudDomicilioEstado }}</td>
-                    <td>{{ nacion.solicitudVehiculoMarca }}</td>
-                    <td>{{ nacion.solicitudVehiculoModelo }}</td>
-                    <td>{{ nacion.anioVehiculoVEH }}</td>
-                    <td>{{ nacion.solicitudVehiculoTransponder }}</td>
-                    <td>{{ nacion.solicitudVehiculoColor }}</td>
-                    <td>{{ nacion.solicitudVehiculoNumeroEconomico }}</td>
-                    <td>{{ nacion.solicitudVehiculoNumero2daPlaca }}</td>
-                    <td>{{ nacion.solicitudVehiculoEmisor2daPlaca }}</td>
-                    <td>{{ nacion.solicitudVehiculoPaisEmisor2daPlaca }}</td>
-                    <td>{{ nacion.solicitudVehiculoDesc }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoVin2 }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoTipoVehiculo }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoIdDeVehiculo }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoNumeroPlacas }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoPaisEmisor }}</td>
+                    <td>{{ vehiculo.solicitudDomicilioEstado }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoMarca }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoModelo }}</td>
+                    <td>{{ vehiculo.anioVehiculoVEH }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoTransponder }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoColor }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoNumeroEconomico }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoNumero2daPlaca }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoEmisor2daPlaca }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoPaisEmisor2daPlaca }}</td>
+                    <td>{{ vehiculo.solicitudVehiculoDesc }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -92,13 +96,6 @@
           </div>
 
           <!-- Contenido de la tablaDatosGenerales -->
-
-          <table id="socioPersonaFisicaCAAT" class="table">
-            <!-- Contenido de socioPersonaFisicaCAAT -->
-          </table>
-          <div id="pagingSocioPersonaFisica">
-            <!-- Paginación para Persona Física -->
-          </div>
           <table id="tablaDatosGenerales" class="table w-95 mx-auto">
             <tr>
               <td colspan="4">
@@ -198,22 +195,13 @@
                                     labelSolicitudVehiculoTipoVehiculo
                                   }}</label>
                                   <span class="require">*</span>
-                                </div>
-                                <div>
-                                  <select
-                                    id="solicitudVehiculoTipoVehiculo"
+                                  <app-catalogo-select
+                                    [catalogo]="vehiculoArrastr"
                                     formControlName="solicitudVehiculoTipoVehiculo"
-                                    class="form-control"
-                                  >
-                                    <option value="">
-                                      {{ nonSelectionTextTipoVehiculo }}
-                                    </option>
-                                    <option
-                                      *ngFor="let tipo of tipoVehiculoAGA"
-                                    >
-                                      {{ tipo.descripcion }}
-                                    </option>
-                                  </select>
+                                    [required]="true"
+                                    name="solicitudVehiculoTipoVehiculo"
+                                    (change)="conVehiculoArrastre()"
+                                  ></app-catalogo-select>
                                 </div>
                               </div>
 
@@ -287,21 +275,15 @@
                                     labelSolicitudVehiculoPaisEmisor
                                   }}</label>
                                   <span class="require">*</span>
+                                  <app-catalogo-select
+                                  [catalogo]="vehiculosA"
+                                  formControlName="solicitudVehiculoPaisEmisor"
+                                  [required]="true"
+                                  name="solicitudVehiculoPaisEmisor"
+                                  (change)="paisEmisorVehiculoArrastrer()"
+                                ></app-catalogo-select>
                                 </div>
-                                <div>
-                                  <select
-                                    id="solicitudVehiculoPaisEmisor"
-                                    formControlName="solicitudVehiculoPaisEmisor"
-                                    class="form-control"
-                                  >
-                                    <option value="">
-                                      {{ nonSelectionTextPaisEmisor }}
-                                    </option>
-                                    <option *ngFor="let pais of paises">
-                                      {{ pais.descripcion }}
-                                    </option>
-                                  </select>
-                                </div>
+            
                               </div>
 
                               <!-- Estado Input -->
@@ -724,28 +706,12 @@
                                     name="guardar"
                                     class="btn btn-primary"
                                   >
-                                    Guardar
+                                    Guardar12
                                   </button>
                                 </div>
                               </div>
                             </div>
                           </form>
-                        </div>
-                        <div class="modal-footer">
-                          <!-- <button
-                            type="button"
-                            class="btn btn-secondary"
-                            data-bs-dismiss="modal"
-                          >
-                            Close
-                          </button>
-                          <button type="submit"
-                          id="guardarVehiculo"
-                          name="guardar"
-                          class="btn btn-primary"
-                        >
-                          Guardar
-                        </button> -->
                         </div>
                       </div>
                     </div>
@@ -776,7 +742,12 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let data of secondTableData; let i = index">
+                  <tr
+                    *ngFor="
+                      let data of unidadesdearrastreList$ | async;
+                      let i = index
+                    "
+                  >
                     <td>
                       <input type="checkbox" />
                     </td>
@@ -794,13 +765,6 @@
           </div>
 
           <!-- Contenido de la tablaDatosGenerales -->
-
-          <table id="socioPersonaMoralCAAT" class="table mx-auto">
-            <!-- Contenido de socioPersonaMoralCAAT -->
-          </table>
-          <div id="pagingSocioPersonaMoral">
-            <!-- Paginación para Persona Moral -->
-          </div>
           <table id="tablaDatosGenerales" class="table w-95 mx-auto">
             <tr></tr>
             <tr>
@@ -842,7 +806,7 @@
                         <div class="modal-body">
                           <form
                             [formGroup]="formVehiculo"
-                            (ngSubmit)="onSubmit()"
+                            (ngSubmit)="UnidadesDearrastre()"
                           >
                             <div class="row">
                               <div class="col-md-12">
@@ -1185,15 +1149,6 @@
                               </div>
                             </div>
                           </form>
-                        </div>
-                        <div class="modal-footer">
-                          <!-- <button
-                            type="button"
-                            class="btn btn-secondary"
-                            (click)="closeModal()"
-                          >
-                            Cerrar
-                          </button> -->
                         </div>
                       </div>
                     </div>

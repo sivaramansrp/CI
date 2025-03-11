@@ -1,7 +1,12 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Chofer40101Query } from '../../estados/chofer40101.query';
+import { Chofer40101Service } from '../../estados/chofer40101.service';
+import { Chofer40101Store } from '../../estados/chofer40101.store';
 import { Modal } from 'bootstrap';
+import { Observable } from 'rxjs/internal/Observable';
 import { ToastrService } from 'ngx-toastr';
+import { DatosDelVehículo, DatosDelVehículoPaisEmisor } from 'libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
 @Component({
   selector: 'app-vehiculos',
   templateUrl: './vehiculos.component.html',
@@ -12,10 +17,16 @@ export class VehiculosComponent implements AfterViewInit {
   @ViewChild('dataTable', { static: false }) dataTable!: ElementRef;
   private modalInstance!: Modal;
   formVehiculo!: FormGroup;
-  nacional: any[] = [];
+  vehiculos: any[] = [];
+  vehiculosList$: Observable<any[]> = new Observable();
+  unidadesdearrastre: any[] = [];
+  unidadesdearrastreList$: Observable<any[]> = new Observable();
   selectedTab: string = 'Parque vehicular';
   activeTab: string = 'parquevehicular';
-  secondTableData: any[] = [];
+  vehiculoArrastr: any[] = [];
+  vehiculosA: any[] = [];
+
+  // secondTableData: any[] = [];
   labelSolicitudVehiculoTipoVehiculo = 'Tipo de vehiculo';
   solicitudTituloDatosVehiculo: string = 'Datos del Vehículo';
   labelSolicitudVehiculoVin: string = 'Número de identificacion vehicular';
@@ -42,7 +53,7 @@ export class VehiculosComponent implements AfterViewInit {
   botonLimpiar: string = 'Limpiar';
   botonCancelar: string = 'Cancelar';
   botonGuardar: string = 'Guardar';
-   /**
+  /**
    * Selecciona una pestaña.
    * @param tabName El nombre de la pestaña a seleccionar.
    */
@@ -51,8 +62,14 @@ export class VehiculosComponent implements AfterViewInit {
       tabName === 'parquevehicular' ? 'Parque vehicular' : 'Unidad de arrastre';
     this.activeTab = tabName;
   }
-  constructor(private fb: FormBuilder, private toastr: ToastrService) {}
- /**
+  constructor(
+    private fb: FormBuilder,
+    private toastr: ToastrService,
+    private chofer40101Store: Chofer40101Store,
+    private chofer40101Service: Chofer40101Service,
+    private chofer40101Query: Chofer40101Query
+  ) {}
+  /**
    * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
    */
   ngOnInit(): void {
@@ -137,18 +154,24 @@ export class VehiculosComponent implements AfterViewInit {
       paisEmisor2daPlaca: '',
       desc: '',
     });
-    const storedVehiculoData = localStorage.getItem('vehiculoData');
-    if (storedVehiculoData) {
-      this.nacional = JSON.parse(storedVehiculoData);
-    }
-    const storedSecondTableData = localStorage.getItem('secondTableData');
-    if (storedSecondTableData) {
-      this.secondTableData = JSON.parse(storedSecondTableData);
-    }
-    console.log('✅ Loaded first table data:', this.nacional);
-    console.log('✅ Loaded second table data:', this.secondTableData);
+
+    this.vehiculosList$ = this.chofer40101Query.getvehiculos$;
+    this.chofer40101Query.getvehiculos$.subscribe((vehiculos: any) => {
+      this.vehiculos = vehiculos;
+    });
+    console.log('✅ Loaded vehicle data:', this.vehiculos);
+    this.unidadesdearrastreList$ = this.chofer40101Query.getUnidadesdeArrastre$;
+    this.UnidadesDearrastre();
+    this.chofer40101Query.getUnidadesdeArrastre$.subscribe(
+      (unidadesdearrastre: any) => {
+        this.unidadesdearrastre = unidadesdearrastre;
+        console.log('✅ loaded Unidades  data:', this.unidadesdearrastre);
+      }
+    );
+    this.conVehiculoArrastre();
+    this.paisEmisorVehiculoArrastrer();
   }
-/**
+  /**
    * Maneja el envío del formulario.
    */
   onSubmit() {
@@ -157,9 +180,10 @@ export class VehiculosComponent implements AfterViewInit {
     } else {
       console.error('Modal instance is not initialized!');
     }
-    localStorage.removeItem('vehiculoData');
+
+    // Create a new vehiculo object
     const newVehiculo = {
-      id: this.nacional.length + 1,
+      id: (this.vehiculos?.length || 0) + 1, // Generate ID dynamically
       solicitudVehiculoVin2:
         this.formVehiculo.value.solicitudVehiculoVin2?.trim(),
       solicitudVehiculoTipoVehiculo:
@@ -191,45 +215,90 @@ export class VehiculosComponent implements AfterViewInit {
         this.formVehiculo.value.solicitudVehiculoDesc?.trim(),
     };
 
-    // if (Object.values(newVehiculo).some((value) => !value)) {
-    //   this.toastr.warning('⚠️ Fields cannot be empty');
-    //   return;
-    // }
-
-    const vinExists = this.nacional.some(
+    // Check if VIN already exists in Akita state
+    const vinExists = this.vehiculos?.some(
       (item) => item.solicitudVehiculoVin2 === newVehiculo.solicitudVehiculoVin2
     );
+
     if (vinExists) {
       this.toastr.error('⚠️ This VIN already exists!');
       return;
     }
 
-    this.nacional.push(newVehiculo);
-    localStorage.setItem('vehiculoData', JSON.stringify(this.nacional));
+    // Ensure `this.vehiculos` is an array before adding new data
+    if (!Array.isArray(this.vehiculos)) {
+      this.vehiculos = [];
+    }
 
-    this.nacional = [...this.nacional];
+    // Update the Akita state (no localStorage)
+    this.chofer40101Store.setVehiculos([...this.vehiculos, newVehiculo]);
 
     this.formVehiculo.reset();
-    this.toastr.success('Vehiculo data added successfully');
+    this.toastr.success('🚗 Vehiculo added successfully!');
 
+    // Close the modal
     this.closeModal();
-    setTimeout(() => {
-      if (this.dataTable) {
-        this.dataTable.nativeElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        });
-      } else {
-        console.error('dataTable not found in DOM');
-      }
-    }, 500);
+  }
+
+  UnidadesDearrastre() {
+    if (this.formVehiculo.valid) {
+      const newUnidad = this.formVehiculo.value;
+      const currentData = this.chofer40101Query.getunidadesdearrastre();
+      this.chofer40101Store.setUnidadesdeArrastre([...currentData, newUnidad]);
+      this.unidadesdearrastreList$ =
+        this.chofer40101Query.getUnidadesdeArrastre$;
+    }
+    this.formVehiculo = this.fb.group({
+      solicitudVehiculoVin2:
+        this.formVehiculo.value.solicitudVehiculoVin2?.trim(),
+      solicitudVehiculoTipoVehiculo:
+        this.formVehiculo.value.solicitudVehiculoTipoVehiculo?.trim(),
+      solicitudVehiculoNumeroEconomico:
+        this.formVehiculo.value.solicitudVehiculoNumeroEconomico?.trim(),
+      solicitudVehiculoNumeroPlacas:
+        this.formVehiculo.value.solicitudVehiculoNumeroPlacas?.trim(),
+      solicitudVehiculoPaisEmisor:
+        this.formVehiculo.value.solicitudVehiculoPaisEmisor?.trim(),
+      solicitudDomicilioEstado:
+        this.formVehiculo.value.solicitudDomicilioEstado?.trim(),
+      solicitudVehiculoMarca:
+        this.formVehiculo.value.solicitudVehiculoMarca?.trim(),
+      solicitudVehiculoModelo:
+        this.formVehiculo.value.solicitudVehiculoModelo?.trim(),
+      anioVehiculoVEH: this.formVehiculo.value.anioVehiculoVEH?.trim(),
+      solicitudVehiculoTransponder:
+        this.formVehiculo.value.solicitudVehiculoTransponder?.trim(),
+      solicitudVehiculoColor:
+        this.formVehiculo.value.solicitudVehiculoColor?.trim(),
+      solicitudVehiculoNumero2daPlaca:
+        this.formVehiculo.value.solicitudVehiculoNumero2daPlaca?.trim(),
+      solicitudVehiculoEmisor2daPlaca:
+        this.formVehiculo.value.solicitudVehiculoEmisor2daPlaca?.trim(),
+      solicitudVehiculoPaisEmisor2daPlaca:
+        this.formVehiculo.value.solicitudVehiculoPaisEmisor2daPlaca?.trim(),
+      solicitudVehiculoDesc:
+        this.formVehiculo.value.solicitudVehiculoDesc?.trim(),
+      vin2: ['', [Validators.required, Validators.maxLength(17)]],
+      tipoVehiculoArrastreAGA: ['', Validators.required],
+      idDeVehiculo: [{ value: '2', disabled: true }, Validators.required],
+      numeroPlacas: ['', [Validators.required, Validators.maxLength(8)]],
+      paisEmisor: ['', Validators.required],
+      estado2: ['', [Validators.required, Validators.maxLength(20)]],
+      colorAGA: ['', Validators.required],
+      numeroEconomico: ['', [Validators.required, Validators.maxLength(17)]],
+      numero2daPlaca: ['', Validators.maxLength(8)],
+      emisor2daPlaca: ['', Validators.maxLength(20)],
+      paisEmisor2daPlaca: [''],
+      desc: ['', [Validators.maxLength(200)]],
+    });
+    // this.toastr.success('🚗 UnidadesdeArrastre added successfully!');
   }
 
   get f() {
     return this.formVehiculo.controls;
   }
   eliminarRegistroSelec(tablaId: string): void {}
-   /**
+  /**
    * Método del ciclo de vida de Angular que se llama después de que la vista del componente ha sido completamente inicializada.
    */
   ngAfterViewInit(): void {
@@ -245,7 +314,7 @@ export class VehiculosComponent implements AfterViewInit {
       this.modalInstance.show();
     }
   }
- /**
+  /**
    * Abre el diálogo de captura para validación de persona moral.
    */
   openDialogCapturaSPMoralValidacion(): void {
@@ -253,20 +322,47 @@ export class VehiculosComponent implements AfterViewInit {
       this.modalInstance.show();
     }
   }
+  conVehiculoArrastre() {
+    const solicitudVehiculoTipoVehiculo = this.formVehiculo.get(
+      'solicitudVehiculoTipoVehiculo'
+    )?.value;
+    console.log('Selected Value:', solicitudVehiculoTipoVehiculo);
+    this.chofer40101Store.setsolicitudVehiculoTipoVehiculo(
+      solicitudVehiculoTipoVehiculo
+    );
+    this.chofer40101Service.getClasifiRegimen().subscribe({
+      next: (data: DatosDelVehículo[]) => {
+        this.vehiculoArrastr = data;
+      },
+      error: (error) => console.error('Error fetching data:', error),
+    });
+  }
+  paisEmisorVehiculoArrastrer() {
+    const solicitudVehiculoPaisEmisor = this.formVehiculo.get('solicitudVehiculoPaisEmisor')?.value;
+    console.log('Selected Value:', solicitudVehiculoPaisEmisor);
+
+    // Update store
+    this.chofer40101Store.setsolicitudVehiculoPaisEmisor(solicitudVehiculoPaisEmisor);
+
+    // Fetch and update dropdown options
+    this.chofer40101Service.getPaisEmisor().subscribe({
+      next: (value: DatosDelVehículoPaisEmisor[]) => {
+        console.log('Pais Emisor Data:', value); // Debugging
+        this.vehiculosA = value;
+      },
+      error: (error) => console.error('Error fetching data:', error),
+    });
+  }
+
   paises = [
-    { clave: 'MX', descripcion: 'México' },
-    { clave: 'US', descripcion: 'Estados Unidos' },
+    { clave: 'MX', descripcion: 'México3434' },
+    { clave: 'US', descripcion: 'Estados Unidos33' },
     { clave: 'CA', descripcion: 'Canadá' },
     { clave: 'ES', descripcion: 'España' },
     { clave: 'AR', descripcion: 'Argentina' },
     { clave: 'BR', descripcion: 'Brasil' },
   ];
-  tipoVehiculoAGA = [
-    { clave: 'AUTOMOVIL', descripcion: 'Automóvil' },
-    { clave: 'CAMIONETA', descripcion: 'Camioneta' },
-    { clave: 'MOTOCICLETA', descripcion: 'Motocicleta' },
-    { clave: 'CAMION', descripcion: 'Camión' },
-  ];
+
   anios = [
     { descripcion: '2025' },
     { descripcion: '2024' },

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import mockData from 'libs/shared/theme/assets/json/40101/director-general-mockdata.json';
+import { Chofer40101Query } from '../../estados/chofer40101.query';
+import { Chofer40101Store } from '../../estados/chofer40101.store';
 @Component({
   selector: 'app-director-general',
   templateUrl: './director-general.component.html',
@@ -8,11 +10,24 @@ import mockData from 'libs/shared/theme/assets/json/40101/director-general-mockd
 })
 export class DirectorGeneralComponent implements OnInit {
   directorGeneralForm!: FormGroup;
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private chofer40101Query:Chofer40101Query, private chofer40101Store:Chofer40101Store) {}
   /**
    * Crea el formulario para el director general.
    */
 
+
+  /**
+   * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
+   */
+  ngOnInit(): void {
+    this.crearFormularioDirectorGeneral();
+    this.setFormValues();
+    
+    // Listen to form changes and update the store
+    this.directorGeneralForm.valueChanges.subscribe((formData) => {
+      this.updateStore(formData);
+    });
+  }
   crearFormularioDirectorGeneral(): void {
     this.directorGeneralForm = this.fb.group({
       nombre: ['', [Validators.required]],
@@ -21,17 +36,9 @@ export class DirectorGeneralComponent implements OnInit {
     });
   }
   /**
-   * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
-   */
-  ngOnInit(): void {
-    this.crearFormularioDirectorGeneral();
-    this.setFormValues();
-  }
-  /**
    * Establece los valores del formulario utilizando datos simulados.
    */
   setFormValues(): void {
-    console.log('Mock Data:', mockData);
     if (mockData) {
       setTimeout(() => {
         this.directorGeneralForm.patchValue({
@@ -39,8 +46,21 @@ export class DirectorGeneralComponent implements OnInit {
           primerApellido: mockData.primerApellido || '',
           segundoApellido: mockData.segundoApellido || '',
         });
-        console.log('Updated Form Value:', this.directorGeneralForm.value);
       });
     }
+  }
+  updateStore(updatedData: any): void {
+    // Get existing data
+    const existingData = this.chofer40101Query.getChoferes();
+
+    // Merge updated form values into store
+    // const updatedChoferes = existingData.map((item) => ({
+    //   ...item,
+    //   nombre: updatedData.nombre,
+    //   primerApellido: updatedData.primerApellido,
+    //   segundoApellido: updatedData.segundoApellido,
+    // }));
+
+    // this.chofer40101Store.set(updatedChoferes);
   }
 }

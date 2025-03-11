@@ -512,6 +512,11 @@
                     <span class="require">*</span>
                   </div>
                   <div>
+
+                    <app-catalogo-select  formControlName="estado"
+                    [required]="true" name="estado" (change)="estadoSeleccion()"></app-catalogo-select>
+
+                <!-- <input type="hidden" name="entidadSolicitud" />
                     <select
                       id="entidadFederativaCHN"
                       class="form-control"
@@ -525,7 +530,7 @@
                       >
                         {{ estado.descripcion }}
                       </option>
-                    </select>
+                    </select> -->
                   </div>
                 </div>
 

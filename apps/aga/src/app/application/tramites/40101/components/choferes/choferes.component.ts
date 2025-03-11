@@ -13,7 +13,7 @@ import {
   FormGroup,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '@ng-mf/data-access-user';
+import { Catalogo, SharedModule } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -22,9 +22,10 @@ import { extranjero } from 'libs/shared/data-access-user/src/core/models/40101/t
 import { LayoutChoferNacionalService } from 'libs/shared/data-access-user/src/core/services/40101/layout-chofer-nacional.service';
 import { StoreService } from 'libs/shared/data-access-user/src/core/services/40101/store/store.service';
 import { ChangeDetectorRef } from '@angular/core';
-import { Chofer40101Store } from '../../../../estados/tramites/chofer40101.store';
-import { Chofer40101Service } from 'libs/shared/data-access-user/src/core/services/40101/store/chofer40101.service';
-import { Chofer40101Query } from 'libs/shared/data-access-user/src/core/queries/chofer40101.query';
+import { Chofer40101Store, Choferesnacionales40101State } from '../../estados/chofer40101.store';
+import { Chofer40101Query } from '../../estados/chofer40101.query';
+import { Chofer40101Service } from '../../estados/chofer40101.service';
+import { CatalogosService } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-choferes',
@@ -34,6 +35,7 @@ import { Chofer40101Query } from 'libs/shared/data-access-user/src/core/queries/
   imports: [ReactiveFormsModule, CommonModule, SharedModule],
 })
 export class ChoferesComponent implements OnInit {
+[x: string]: any;
   solicitudTituloChoferExtranjero: string = 'Datos del chofer extranjero';
   labelSolicitudPersonaNombre: string = 'Nombre';
   labelSolicitudPersonaPrimerApellido: string = 'Primer Apellido ';
@@ -69,7 +71,8 @@ export class ChoferesComponent implements OnInit {
   extranjero: Array<extranjero> = [];
   activeTab: string = 'nacional';
   Choferesextranjeros: string = 'Choferes extranjeros';
-  estados: any[] = [];
+  // estados: any[] = [];
+  estado!: Catalogo[];
   municipios: any[] = [];
   paisOrigenCHN: any[] = [];
   entidadFederativaCHN: any[] = [];
@@ -97,7 +100,8 @@ export class ChoferesComponent implements OnInit {
     private chofer40101Store: Chofer40101Store,
     private chofer40101Service: Chofer40101Service,
     private chofer40101Query: Chofer40101Query,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private catalogosService: CatalogosService
   ) {}
   /**
    * Inicializa el formulario para chofer nacional.
@@ -165,10 +169,14 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   ngOnInit(): void {
     // Assign the observable directly to avoid multiple subscriptions
     this.choferesList$ = this.chofer40101Query.getChoferes$;
-
-    // Debugging: Log initial store value
+    this.choferesextranjerosList$ = this.chofer40101Query.getchoferesextranjero$;
+  
     this.choferesList$.subscribe((choferes) => {
-      console.log('Choferes in Akita Store:', choferes);
+      console.log('Updated Choferes:', choferes);
+    });
+  
+    this.choferesextranjerosList$.subscribe((choferesextranjeros) => {
+      console.log('Updated Extranjero Choferes:', choferesextranjeros);
     });
 
     // Check if store has data synchronously
@@ -177,13 +185,13 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.chofernacionalForm();
     this.loadStoredData();
     this.fetchChoferes();
-    
+
     this.storeService.nacionalData$.subscribe((data) => {
       this.nacional = data;
     });
 
     this.loadEstados();
-  
+    this.estadoSeleccion();
   }
   /**
    * Obtiene los controles de formulario del formulario choferes.
@@ -207,37 +215,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
 
   extranjeroGuardar() {
     if (this.formChoferes.invalid) {
-      this.toastr.error('Please fill out all required fields.');
-      return;
-    }
-  
-    const nuevoMiembro = this.formChoferes.getRawValue();
-    console.log('Form Values:', nuevoMiembro);
-  
-    if (!nuevoMiembro || Object.keys(nuevoMiembro).length === 0) {
-      this.toastr.error('Invalid form data. Please try again.');
-      return;
-    }
-  
-    // Use the service to add the new record to extranjero list
-    this.chofer40101Service.addChofer(nuevoMiembro, true);  // Pass 'true' to indicate extranjero
-  
-    // Reset the form
-    this.formChoferes.reset();
-    this.toastr.success('Chofer extranjero added successfully');
-  
-    // Close the modal
-    this.cerrarModal();
-  }
-  
-  
-  /**
-   * Guarda los datos del formulario de selección.
-   */
-  Guardar() {
-    console.log('Adding a new member...');
-  
-    if (this.formChoferes.invalid) {
       // this.toastr.error('Please fill out all required fields.');
       // return;
     }
@@ -250,13 +227,48 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       return;
     }
   
+    // Use the service to add the new record to extranjero list
+    this.chofer40101Service.addChofer(nuevoMiembro, true); // 'true' for extranjeros
+  
+    // Reset the form
+    this.formChoferes.reset();
+    this.toastr.success('Chofer extranjero added successfully');
+  
+    // Close the modal
+    this.cerrarModal();
+  
+    // Fetch updated list to ensure the table updates
+    this.choferesextranjerosList$ = this.chofer40101Query.getchoferesextranjero$;
+  }
+  
+  
+
+  /**
+   * Guarda los datos del formulario de selección.
+   */
+  Guardar() {
+    console.log('Adding a new member...');
+
+    if (this.formChoferes.invalid) {
+      // this.toastr.error('Please fill out all required fields.');
+      // return;
+    }
+
+    const nuevoMiembro = this.formChoferes.getRawValue();
+    console.log('Form Values:', nuevoMiembro);
+
+    if (!nuevoMiembro || Object.keys(nuevoMiembro).length === 0) {
+      this.toastr.error('Invalid form data. Please try again.');
+      return;
+    }
+
     // Call the service method to add the new member
     this.chofer40101Service.addChofer(nuevoMiembro);
-  
+
     this.toastr.success('Chofer Nacional forms data added successfully');
     this.formChoferes.reset();
     this.cerrarModal();
-  
+
     setTimeout(() => {
       if (this.modalRef) {
         this.modalRef.nativeElement.classList.remove('show');
@@ -268,7 +280,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       }
     });
   }
-  
 
   agregarMiembro() {}
   /**
@@ -288,7 +299,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.layoutChoferNacionalService.getChoferNacionalData().subscribe(
       (response) => {
         this.choferes = response;
-        this.estados = response;
+        // this.estados = response;
         this.municipios = response;
         this.colonias = response;
         this.paises = response;
@@ -316,76 +327,61 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       this.buscarChoferNacional(curpValue);
     }
   }
-  buscarChoferNacional(curp: string | null | undefined) {
-    console.log('Searching CURP:', curp);
-
+  buscarChoferNacional(curp: string) {
     if (!curp) {
-      alert('Por favor ingrese una CURP válida');
+      console.warn('CURP is empty!');
       return;
     }
-
-    if (!Array.isArray(this.choferes) || this.choferes.length === 0) {
-      alert('No hay choferes disponibles para buscar');
-      return;
-    }
-
-    const choferEncontrado = this.choferes.find((chofer) => {
-      try {
-        if (!chofer.data || typeof chofer.data !== 'string') {
-          console.warn('Invalid chofer data format:', chofer);
-          return false;
-        }
-
-        const cleanedData = chofer.data.trim();
-        const choferData = JSON.parse(cleanedData);
-
-        if (!choferData?.datosGenerales?.curp) {
-          console.warn('Missing CURP in choferData:', choferData);
-          return false;
-        }
-
-        return (
-          choferData.datosGenerales.curp.toLowerCase() === curp.toLowerCase()
-        );
-      } catch (error) {
-        console.error(
-          'Error parsing chofer data:',
-          error,
-          'Invalid Data:',
-          chofer.data
-        );
-        return false;
-      }
+  
+    const choferData = {
+      nombre: 'Juan',
+      apellidoPaterno: 'Pérez',
+      apellidoMaternoCHN: 'González',
+      rfc: 'JUAN890123ABC',
+      gafete: '123456',
+      vigenciagafete: '2025-12-31',
+      calle: 'Av. Reforma',
+      numeroExterior: '123',
+      numeroInterior: 'A1',
+      paisCHN: 'MEX',
+      entidadFederativaCHN: 'CDMX',
+      delegacionCHN: 'Benito Juárez',
+      coloniaCHN: 'Nápoles',
+    };
+  
+    // Populate the form
+    this.formChoferes.patchValue(choferData);
+  
+    // Ensure `estados` are loaded before setting `entidadFederativaCHN`
+    this.loadEstados().then(() => {
+      this.formChoferes.patchValue({ entidadFederativaCHN: choferData.entidadFederativaCHN });
+  
+      // Load municipios based on selected estado
+      this.onEstadoChange({ target: { value: choferData.entidadFederativaCHN } } as unknown as Event).then(() => {
+  
+        // Ensure `municipios` is loaded before setting `delegacionCHN`
+        setTimeout(() => {
+          this.formChoferes.patchValue({ delegacionCHN: choferData.delegacionCHN });
+  
+          // Load colonias based on selected municipio
+          this.onMunicipioChange({ target: { value: choferData.delegacionCHN } } as unknown as Event).then(() => {
+            setTimeout(() => {
+              this.formChoferes.patchValue({ coloniaCHN: choferData.coloniaCHN });
+            }, 300);
+          });
+        }, 500);
+      });
     });
-
-    if (choferEncontrado) {
-      try {
-        const choferData = JSON.parse(choferEncontrado.data.trim());
-        console.log('Chofer encontrado:', choferData);
-
-        // Set form values
-        this.formChoferes.patchValue({
-          nombre: choferData.datosGenerales.nombreRazonSocial || '',
-          apellidoPaterno: choferData.datosGenerales.primerApellido || '',
-          apellidoMaternoCHN: choferData.datosGenerales.segundoApellido || '',
-          vigenciagafete: choferData.datosGenerales.actEconomica || '',
-          gafete: choferData.datosGenerales.correo || '',
-          entidadFederativaCHN: choferData.datosGenerales.estados || '',
-          delegacionCHN: choferData.datosGenerales.municipio || '',
-          coloniaCHN: choferData.datosGenerales.colonia || '',
-          paisCHN: choferData.datosGenerales.paises || '',
-        });
-
-        // ✅ Dynamically update dropdowns
-        this.updateDropdowns(choferData);
-      } catch (error) {
-        console.error('Error parsing found chofer data:', error);
-      }
-    } else {
-      alert('Chofer no encontrado');
-    }
   }
-
+  
+  
+  
+  
+  
+  
+  // Load estados list (replace with API call)
+ 
+  
   updateDropdowns(choferData: any) {
     const estadoClave = choferData.datosGenerales.estados;
     const municipioClave = choferData.datosGenerales.municipio;
@@ -403,23 +399,21 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
 
   onChanges(): void {
     this.formChoferes
-      .get('solicitud.entidadFederativaCHN')
+      .get('formChoferes.entidadFederativaCHN')
       ?.valueChanges.subscribe((valor) => {});
 
     this.formChoferes
-      .get('solicitud.delegacionCHN')
+      .get('formChoferes.delegacionCHN')
       ?.valueChanges.subscribe((valor) => {});
   }
-  loadEstados(): void {
-    this.layoutChoferNacionalService.getEstados().subscribe(
-      (data) => {
-        console.log('Estados:', data); // Debugging
-        this.estados = data;
-      },
-      (error) => {
-        console.error('Error loading states:', error);
-      }
-    );
+  loadEstados(): Promise<void> {
+    return new Promise((resolve) => {
+      // this.estados = [
+      //   { clave: 'CDMX', descripcion: 'Ciudad de México' },
+      //   { clave: 'JAL', descripcion: 'Jalisco' },
+      // ];
+      resolve(); // Resolve the Promise after setting the data
+    });
   }
 
   loadMunicipios(claveEstado: string): void {
@@ -456,17 +450,29 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     }
   }
 
-  onEstadoChange(event: Event): void {
-    const claveEstado = (event.target as HTMLSelectElement).value;
-    this.formChoferes.patchValue({ entidadFederativaCHN: claveEstado }); // ✅ Update FormControl
-    this.loadMunicipios(claveEstado);
+  onEstadoChange(event: Event): Promise<void> {
+    return new Promise((resolve) => {
+      const selectedEstado = (event.target as HTMLSelectElement).value;
+      
+      // Load municipios based on the selected estado
+      // this.municipios = this.getMunicipiosByEstado(selectedEstado);
+  
+      resolve();
+    });
   }
-
-  onMunicipioChange(event: Event): void {
-    const claveMunicipio = (event.target as HTMLSelectElement).value;
-    this.formChoferes.patchValue({ delegacionCHN: claveMunicipio }); // ✅ Update FormControl
-    this.loadColonias(claveMunicipio);
+  
+  onMunicipioChange(event: Event): Promise<void> {
+    return new Promise((resolve) => {
+      const selectedMunicipio = (event.target as HTMLSelectElement).value;
+      
+      // Load colonias based on the selected municipio
+      // this.colonias = this.getColoniasByMunicipio(selectedMunicipio);
+  
+      resolve();
+    });
   }
+  
+  
   /**
    * Restablece el formato de choferes.
    */
@@ -477,6 +483,10 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
 
   toggleAll(event: any) {
     this.selectedAll = event.target.checked;
-    // this.nacional.forEach(nacion => nacion.selected = this.selectedAll);
   }
+  estadoSeleccion(): void {
+    const estado = this.formChoferes.get('estado')?.value;
+    this.chofer40101Store.setEstado(estado);
+  }
+
 }

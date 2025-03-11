@@ -37,4 +37,13 @@ export interface Nacional {
     numerodelsegurosocial: string;
     entidadFederativaCHN: string;
   }
+  export interface DatosDelVehículo {
+    clave: string;
+    descripcion: string;
+  }
+  export interface DatosDelVehículoPaisEmisor {
+    clave1: string;
+    descripcion2: string;
+  }
+  
   

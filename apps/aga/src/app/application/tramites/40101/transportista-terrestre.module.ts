@@ -41,6 +41,7 @@ import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-p
     VehiculosComponent,
     PasoTresComponent,
     DirectorGeneralComponent,
+    SolicitanteComponent
   ],
   imports: [
     CommonModule,
@@ -48,7 +49,6 @@ import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-p
     TransportistaTerrestreRoutingModule ,
     RouterModule,
     WizardComponent,
-    forwardRef(() => SolicitanteComponent),
     forwardRef(() => TituloComponent),
     forwardRef(() => BtnContinuarComponent),
     ReactiveFormsModule,

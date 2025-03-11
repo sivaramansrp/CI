@@ -5,7 +5,6 @@ import { CatalogosService } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
   let fixture: ComponentFixture<PasoDosComponent>;
@@ -13,15 +12,15 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     catalogosServiceMock = {
-      getCatalogo: jest.fn(() => of([])) // ✅ FIX: Always returns an Observable
+      getCatalogo: jest.fn(() => of([])),
     };
 
     await TestBed.configureTestingModule({
       declarations: [PasoDosComponent],
       providers: [
-        { provide: CatalogosService, useValue: catalogosServiceMock }
+        { provide: CatalogosService, useValue: catalogosServiceMock },
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA] // ✅ FIX: Avoids unknown element errors
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
 
@@ -36,11 +35,13 @@ describe('PasoDosComponent', () => {
   });
 
   it('should handle error when getting tipos de documentos', () => {
-    catalogosServiceMock.getCatalogo.mockReturnValue(throwError(() => new Error('API Error'))); // ✅ Simulating API Error
-
+    catalogosServiceMock.getCatalogo.mockReturnValue(
+      throwError(() => new Error('API Error'))
+    );
     component.getTiposDocumentos();
-
-    expect(catalogosServiceMock.getCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_TIPO_DOCUMENTO);
-    expect(component.catalogoDocumentos).toEqual([]); // ✅ Ensure empty array is set on error
+    expect(catalogosServiceMock.getCatalogo).toHaveBeenCalledWith(
+      CATALOGOS_ID.CAT_TIPO_DOCUMENTO
+    );
+    expect(component.catalogoDocumentos).toEqual([]);
   });
 });

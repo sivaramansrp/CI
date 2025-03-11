@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import mockData from 'libs/shared/theme/assets/json/40101/solicitante-mockdata.json';
 
 /**
@@ -11,8 +10,6 @@ import mockData from 'libs/shared/theme/assets/json/40101/solicitante-mockdata.j
   selector: 'app-solicitante',
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
-  standalone: true,
-  imports:[TituloComponent,ReactiveFormsModule],
 
 })
 export class SolicitanteComponent implements OnInit {
