@@ -7,18 +7,12 @@ export const EMPRESA_FRONTERA  = [
   },
   {
     indice: 2,
-    titulo: 'Requisitos neccesarios',
-    activo: false,
-    completado: false,
-  },
-  {
-    indice: 3,
     titulo: 'Anexar requisitos',
     activo: false,
     completado: false,
   },
   {
-    indice: 4,
+    indice: 3,
     titulo: 'Firmar solicitud',
     activo: false,
     completado: false,

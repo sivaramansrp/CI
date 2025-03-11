@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { SolicitanteComponent,TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 
 /**
  * @class DatosComponent
@@ -8,7 +9,22 @@ import { Component } from '@angular/core';
   selector: 'app-datos',
   templateUrl: './datos.component.html',
 })
-export class DatosComponent {
+export class DatosComponent implements AfterViewInit{
+
+  /**
+   * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
+  */
+  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+
+
+    /**
+     * Se ejecuta después de que la vista ha sido inicializada.
+     * Llama al método `obtenerTipoPersona` del componente SolicitanteComponent
+     * para establecer el tipo de persona como MORAL_NACIONAL.
+     */
+    ngAfterViewInit() :void{
+      this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+    }
 
   /**
    * @constructor
