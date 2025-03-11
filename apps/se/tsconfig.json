@@ -12,6 +12,7 @@
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "module": "esnext",
+
   },
   "files": [],
   "include": [],

@@ -3,6 +3,7 @@ import {
   Catalogo,
   CatalogoPaises,
   CrossListLable,
+  SeccionLibQuery,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
 import {
@@ -22,10 +23,14 @@ import {
   Tramite230401Store,
 } from '../../estados/tramite230401.store';
 import {
+  delay,
   map,
   takeUntil,
+  tap,
 } from 'rxjs';
 import {PantallasActionService } from '../../services/pantallas-action.service';
+import { SeccionLibState } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { Solicitud230401Query } from '../../estados/queries/solicitud230401.query';
 import { Subject } from 'rxjs';
 
@@ -220,11 +225,13 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       funcion: () => this.quitarTres(CONTINUAR),
     },
   ];
+  private seccion!: SeccionLibState;
 
   constructor(public pantallasActionService:PantallasActionService,
     public validacionesService:ValidacionesFormularioService,
     public tramite230401Store:Tramite230401Store,public fb:FormBuilder,
-  public solicitud230401Query: Solicitud230401Query) {
+  public solicitud230401Query: Solicitud230401Query,
+    private seccionQuery: SeccionLibQuery,private seccionStore: SeccionLibStore) {
     // do nothing
   }
 
@@ -238,6 +245,55 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       ).subscribe();
     this.pantallasActionService.inicializaPasoUnoDatosCatalogos();
     this.creatFormSolicitud();
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
+
+    this.FormSolicitud.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((_value) => {
+          const SECCION: number = 1;
+          const FORMAS_VALIDADAS = this.seccion.formaValida;
+          const ES_VALIDO_EL_FORM = this.esFormValido();
+          if (this.FormSolicitud.valid || (ES_VALIDO_EL_FORM)) {
+            FORMAS_VALIDADAS[SECCION] = true;
+            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+          } else {
+            FORMAS_VALIDADAS[SECCION] = false;
+            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+          }
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Verifica si el formulario es válido.
+   * 
+   * Recorre todos los controles del formulario y verifica si alguno de ellos
+   * está habilitado e inválido. Si encuentra un control que cumple con estas
+   * condiciones, retorna `false`. Si todos los controles habilitados son válidos,
+   * retorna `true`.
+   * 
+   * @returns {boolean} `true` si todos los controles habilitados son válidos, 
+   *                    `false` si al menos uno de los controles habilitados es inválido.
+   */
+  esFormValido(): boolean {
+    // eslint-disable-next-line guard-for-in
+    for (const NOMBRE_DEL_CONTROL in this.FormSolicitud.controls) {
+      const CONTROL = this.FormSolicitud.get(NOMBRE_DEL_CONTROL);
+      if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**

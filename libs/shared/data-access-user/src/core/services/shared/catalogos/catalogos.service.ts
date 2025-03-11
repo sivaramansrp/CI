@@ -2,11 +2,11 @@ import {
   CatalogoPaises,
   RespuestaCatalogos,
   catalogoResponse,
-} from '../../../models/shared/catalogos.model';
+} from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { enviroment } from '../../../../enviroments/enviroment';
-import { JSONResponse } from '../../../models/shared/catalogos.model';
+import { JSONResponse } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 @Injectable({
   providedIn: 'root',
