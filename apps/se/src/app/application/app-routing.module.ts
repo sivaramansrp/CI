@@ -41,7 +41,7 @@ const routes: Routes = [
       ),
   }, 
   {
-    path: 'CancelacionDe',
+    path: 'cancelacion-de',
     loadChildren: () =>
       import('./tramites/140103/cancelacion-de.module').then(
         (m) => m.CancelacionDeModule

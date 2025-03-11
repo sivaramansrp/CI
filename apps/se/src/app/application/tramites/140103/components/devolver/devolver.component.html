@@ -4,20 +4,20 @@
 
 
 <div>
-    <form [formGroup]="DevolverForm" >
-        <div formGroupName="DevolverData">
+    <div class="container" [formGroup]="DevolverForm" >
+      
     
     <div class="row"  style="padding-bottom: 20px;" >
                 <div class="col-md-5">
                     <div class="form-group">
                       <label class="form-label" for="folio">Folio del oficio de certificado</label>
-                      <input class="form-control" id="folio" formControlName="folio"  type="text">
+                      <input class="form-control" id="folio" formControlName="folio"  type="text" >
                     </div>
                   </div>
                   <div class="col-md-5">
                     <div class="form-group">
                       <label class="form-label" for="disponible"> Monto disponible (en unidades primarias):</label>
-                      <input class="form-control" id="disponible" formControlName="disponible"  type="text">
+                      <input class="form-control" id="disponible" formControlName="disponible"  type="text" >
                     </div>
                   </div>
     </div> 
@@ -46,7 +46,7 @@
         <div class="col-md-5">
             <div class="form-group">
               <label class="form-label" for="cantidad"> Cantidad a devolver (en unidades primarias):</label>
-              <input class="form-control" id="cantidad" formControlName="cantidad"  type="text">
+              <input class="form-control" id="cantidad" formControlName="cantidad"  type="text" (change)="setValoresStore(DevolverForm,'cantidad', 'setCantidad')">
             </div>
           </div>   
     </div>   
@@ -92,7 +92,7 @@
           <div class="col-md-5">
             <div class="form-group">
               <label class="form-label" for="cuadrados"> Total a devolver en metros cuadrados:</label>
-              <input class="form-control" id="cuadrados" formControlName="cuadrados"  type="text">
+              <input class="form-control" id="cuadrados" formControlName="cuadrados"  type="text" >
             </div>
           </div>
 </div>  
@@ -103,8 +103,8 @@
     
     </div>
    
-</div>
-</form>
+
+    </div>
 </div>
 
 

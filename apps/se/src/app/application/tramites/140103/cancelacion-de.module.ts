@@ -1,5 +1,5 @@
-//import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { CancelacionDeCertificateComponent } from './components/cancelacionde/cancelacion-de-certificate.component';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CancelacionDeCertificateComponent } from './components/cancelacionde/cancelacion-de-certificado.component';
 import { CancelacionDeComponent } from './pages/cancelacion/cancelacion-de.component';
 import { CancelacionDeRoutingModule } from './cancelacion-de-routing.module';
 import { CommonModule } from '@angular/common';
@@ -19,10 +19,10 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 @NgModule({
   declarations: [
     CancelacionDeComponent,
-    DatosComponent,FirmarSolicitudComponent,Solicitante140103Component
+    DatosComponent,FirmarSolicitudComponent
   ],
   imports: [
-    CommonModule,
+    CommonModule,Solicitante140103Component,
     CancelacionDeRoutingModule,
     BtnContinuarComponent,
     CancelacionDeCertificateComponent,

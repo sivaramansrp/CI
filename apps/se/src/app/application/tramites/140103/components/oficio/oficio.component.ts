@@ -1,4 +1,4 @@
-//import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, TituloComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { certificadosCancelar} from 'libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
@@ -6,8 +6,8 @@ import { certificadosCancelar} from 'libs/shared/data-access-user/src/core/model
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { DetalleComponent } from '../detalle/detalle.component';
 import { HttpClient } from '@angular/common/http';
-//import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-//import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import oficiodata from 'libs/shared/theme/assets/json/140103/oficiotable.json';
 interface ConfiguracionItem {
   folioOficioCertificado: string;

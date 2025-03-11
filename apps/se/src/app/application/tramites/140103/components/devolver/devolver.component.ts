@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { Facturas } from 'libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
@@ -7,6 +7,9 @@ import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramite
 import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import facturasdata from 'libs/shared/theme/assets/json/140103/fracturastable.json'
+import { Solicitud140103State, Tramite140103Store } from '../../../../estados/tramites/tramite140103.store';
+import { map, Subject, takeUntil } from 'rxjs';
+import { Tramite140103Query } from '../../../../estados/queries/tramite140103.query';
 /**
  * Componente para gestionar el proceso de devolución de facturas.
  * Este componente utiliza un formulario reactivo para capturar y mostrar información relacionada con
@@ -40,7 +43,7 @@ interface Factura {
   templateUrl: './devolver.component.html',
   styleUrls: ['./devolver.component.scss']
 })
-export class DevolverComponent implements OnInit {
+export class DevolverComponent implements OnInit, OnDestroy {
 
   /**
    * Lista de facturas cargadas desde un archivo JSON, que contiene información relevante
@@ -82,50 +85,78 @@ export class DevolverComponent implements OnInit {
    * Contiene un grupo de controles para el folio, disponible, cantidad, total y cuadrados.
    */
   DevolverForm!: FormGroup;
+    public solicitudState!: Solicitud140103State;
+    private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Constructor del componente. Inicializa el formulario reactivo utilizando el FormBuilder.
    * 
    * @param fb - FormBuilder utilizado para crear y gestionar el formulario reactivo.
    */
-  constructor(public fb: FormBuilder) {
-    // Initialization logic can be added here if needed
-  }
+  constructor(private fb: FormBuilder,
+      private tramite140103Store: Tramite140103Store,
+      private tramite140103Query: Tramite140103Query
+    ) { }
 
+    ngOnInit(): void {
+      this.inicializarFormulario();
+      
+      // Load your catalog data here if necessary (e.g., from an API or JSON file)
+    }
   /**
    * Método que se ejecuta al inicializar el componente. Este método crea el formulario reactivo
    * y configura los controles necesarios con las validaciones requeridas.
    */
-  ngOnInit(): void {
+  inicializarFormulario(): void {
+     this.tramite140103Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState as Solicitud140103State;
+          })
+        )
+        .subscribe((data) => {
+        });
     // Inicializa el formulario con los controles necesarios y las validaciones
-    this.DevolverForm = this.fb.group({
-      DevolverData: this.fb.group({
+    this.DevolverForm = this.fb.group({     
         folio: [''],
         disponible: [''],
-        cantidad: ['', Validators.required], // Campo obligatorio para la cantidad a devolver
+        cantidad: [this.solicitudState.cantidad, Validators.required], // Campo obligatorio para la cantidad a devolver
         total: [''],
         cuadrados: [''],
-      })
+     
     });
 
     // Llama al método para actualizar el campo 'monto' con los valores predeterminados
     this.updateformfied();
   }
-
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite140103Store): void {
+    const valor = form.get(campo)?.value;
+    (this.tramite140103Store[metodoNombre] as (value: any) => void)(valor);
+  }
   /**
    * Método que actualiza los valores del formulario con datos predeterminados.
    * También deshabilita los campos para que los usuarios no puedan modificarlos.
    */
   updateformfied(): void {
-    this.DevolverForm.get('DevolverData.folio')?.setValue('4MX216520');
-    this.DevolverForm.get('DevolverData.disponible')?.setValue('12');
-    this.DevolverForm.get('DevolverData.total')?.setValue('12');
-    this.DevolverForm.get('DevolverData.cuadrados')?.setValue('133');
+    this.DevolverForm.get('folio')?.setValue('4MX216520');
+    this.DevolverForm.get('disponible')?.setValue('12');
+    this.DevolverForm.get('total')?.setValue('12');
+    this.DevolverForm.get('cuadrados')?.setValue('133');
 
     // Deshabilita los campos para que no se puedan editar
-    this.DevolverForm.get('DevolverData.folio')?.disable();
-    this.DevolverForm.get('DevolverData.disponible')?.disable();
-    this.DevolverForm.get('DevolverData.total')?.disable();
-    this.DevolverForm.get('DevolverData.cuadrados')?.disable();
+    this.DevolverForm.get('folio')?.disable();
+    this.DevolverForm.get('disponible')?.disable();
+    this.DevolverForm.get('total')?.disable();
+    this.DevolverForm.get('cuadrados')?.disable();
   }
+  
+ 
+
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }

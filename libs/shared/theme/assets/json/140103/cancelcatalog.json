@@ -1,6 +1,6 @@
 {
 
-    "regime":[
+    "regimen":[
         { "id": 1, "descripcion": "Exportacion" }
        
       ],
@@ -12,12 +12,12 @@
       { "id": 1, "descripcion": "T-MEC" }
      
     ],
-    "nombrede": [
+    "producto": [
         { "id": 1, "descripcion": "option1" },
         { "id": 2, "descripcion": "option2" },
         { "id": 3, "descripcion": "option3" }
     ],
-    "nombredel": [
+    "subproducto": [
         { "id": 1, "descripcion": "option1" },
         { "id": 2, "descripcion": "option2" },
         { "id": 3, "descripcion": "option3" }
