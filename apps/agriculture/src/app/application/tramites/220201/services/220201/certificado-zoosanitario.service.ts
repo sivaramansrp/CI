@@ -7,6 +7,7 @@ import {
   PagoDeDerechos,
   Solicitante,
   TercerosRelacionados,
+  ValidarEnvio,
 } from '../../models/220201/capturar-solicitud.model';
 
 import { Injectable } from '@angular/core';
@@ -76,6 +77,9 @@ export class CertificadoZoosanitarioServiceService {
 
   getPagoDeDerechos(): Observable<PagoDeDerechos> {
     return this.zoosanitarioStore._select(state => state.pagoDeDerechos);
+  }
+  getValidarEnvio(): Observable<ValidarEnvio> {
+    return this.zoosanitarioStore._select(state => state.validarEnvio);
   }
 
   getFormData(): Observable<CapturarSolicitud> {
