@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
+
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
@@ -23,6 +24,13 @@ const ROUTES: Routes = [
       import('./tramites/110102/exportador-autorizado.module').then(
         (m) => m.ExportadorautorizadoModule
       ),
+  },
+  {
+    path: 'empresa-frontera',
+    loadChildren: () =>
+      import('./tramites/120602/empresa-frontera-solicitud.module').then(
+        (m) => m.EmpresaFronteraSolicitudModule
+      )
   },
   {
     path: 'prosec-modificacion',
@@ -81,8 +89,8 @@ const ROUTES: Routes = [
       import('./tramites/80207/subfabricante-extension.module').then(
         (m) => m.SubfabricanteExtentionModule
       ),
-    },
-{
+  },
+  {
     path: 'immex-ampliacion-sensibles',
     loadChildren: () =>
       import('./tramites/80202/immex-ampliacion-sensibles.module').then(
@@ -95,7 +103,7 @@ const ROUTES: Routes = [
       import('./tramites/80203/immex-registro-de-solicitud-modalidad.modulo').then(
         (m) => m.ImmexRegistroDeSolicitudModalityModule
       )
-    },
+  },
   {
     path: 'modificacion',
     loadChildren: () =>
@@ -126,4 +134,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
