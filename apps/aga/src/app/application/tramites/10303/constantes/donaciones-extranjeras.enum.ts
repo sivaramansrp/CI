@@ -1,7 +1,7 @@
 /**
  * Etiquetas para los campos del formulario de datos del donante extranjero.
  */
-export const DATOS_DONATE_EXTRANJERO_LABELS = {
+export const DATOS_DONAR_EXTRANJERO_LABELS = {
     "nombreLabel": 'Nombre',
     "calleLabel": 'Calle',
     "numExteriorLabel": 'Número exterior',
@@ -52,7 +52,7 @@ export const FECHA_CADUCIDAD = {
  * - `label`: El texto mostrado a la usuaria.
  * - `value`: El valor correspondiente de la opción.
  */
-export const OpcionesDeBotonDeRadio = [
+export const OPCIONES_DE_BOTON_DE_RADIO = [
     {
         label: 'Sí',
         value: '1',

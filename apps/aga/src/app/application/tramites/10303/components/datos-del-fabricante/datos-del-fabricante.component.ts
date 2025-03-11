@@ -1,9 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, map, merge } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subject, map, merge, takeUntil } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
-import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
 import { Contribuyente, ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { RegistroDeDonacion10303State, Tramite10303Store } from '../../estados/tramites/tramite10303.store';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
+import { Tramite10303Query } from '../../estados/queries/tramite10303.query';
 
 /**
  * Componente para gestionar los datos del fabricante.
@@ -13,66 +18,27 @@ import { DonacionesExtranjerasService } from '../../services/donaciones-extranje
   templateUrl: './datos-del-fabricante.component.html',
   styleUrl: './datos-del-fabricante.component.scss'
 })
-export class DatosDelFabricanteComponent implements OnInit {
+export class DatosDelFabricanteComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario de datos del fabricante.
+   */
+  datosDelFabricanteForm!: FormGroup;
+
+  /**
+   * Subject para destruir las suscripciones.
+   */
+  private destruirNotificador$: Subject<void> = new Subject();
+
   /** 
-     * Lista de países obtenida desde el servicio.
-     * @type {Catalogo[]}
-     */
+    * Lista de países obtenida desde el servicio.
+    * @type {Catalogo[]}
+    */
   pais!: Catalogo[];
 
-  /** 
-   * RFC del fabricante.
-   * @type {string}
-   */
-  rfcFabricante: string = '';
-
-  /** 
-   * Nombre completo del fabricante.
-   * @type {string}
-   */
-  nombreFabricante: string = '';
-
-  /** 
-   * Calle del fabricante.
-   * @type {string}
-   */
-  calleFabricante: string = '';
-
-  /** 
-   * Número exterior de la dirección del fabricante.
-   * @type {string}
-   */
-  numExteriorFabricante: string = '';
-
-  /** 
-   * Número interior de la dirección del fabricante.
-   * @type {string}
-   */
-  numInteriorFabricante: string = '';
-
-  /** 
-   * Estado del fabricante.
-   * @type {string}
-   */
-  estadoFabricante: string = '';
-
-  /** 
-   * Colonia del fabricante.
-   * @type {string}
-   */
-  coloniaFabricante: string = '';
-
-  /** 
-   * Código postal del fabricante.
-   * @type {string}
-   */
-  codigoPostalFabricante: string = '';
-
-  /** 
-   * Clave del país del fabricante.
-   * @type {string}
-   */
-  cvePaisFabricante: string = '';
+  /**
+    * Estado de la registro de donacion.
+    */
+  public registroDeDonacionState: RegistroDeDonacion10303State | undefined;
 
   /**
    * Constructor del componente.
@@ -81,6 +47,10 @@ export class DatosDelFabricanteComponent implements OnInit {
    */
   constructor(
     private donacionesExtranjerasService: DonacionesExtranjerasService,
+    private toastrService: ToastrService,
+    private fb: FormBuilder,
+    private tramite10303Store: Tramite10303Store,
+    private tramite10303Query: Tramite10303Query
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -91,6 +61,38 @@ export class DatosDelFabricanteComponent implements OnInit {
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
+
+    this.tramite10303Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.registroDeDonacionState = seccionState;
+        })
+      )
+      .subscribe();
+
+    // Inicializar el formulario principal
+    this.crearDatosDelFabricanteForm();
+
+    this.paisSeleccion();
+  }
+
+  /**
+    * Inicializa el formulario reactivo
+    * @returns {void}
+    */
+  crearDatosDelFabricanteForm(): void {
+    this.datosDelFabricanteForm = this.fb.group({
+      rfcFabricante: [this.registroDeDonacionState?.rfcFabricante],
+      nombreFabricante: [{ value: this.registroDeDonacionState?.nombreFabricante, disabled: true }],
+      calleFabricante: [{ value: this.registroDeDonacionState?.calleFabricante, disabled: true }],
+      numExteriorFabricante: [{ value: this.registroDeDonacionState?.numExteriorFabricante, disabled: true }],
+      numInteriorFabricante: [{ value: this.registroDeDonacionState?.numInteriorFabricante, disabled: true }],
+      cvePaisFabricante: [{ value: this.registroDeDonacionState?.cvePaisFabricante, disabled: true }],
+      codigoPostalFabricante: [{ value: this.registroDeDonacionState?.codigoPostalFabricante, disabled: true }],
+      estadoFabricante: [{ value: this.registroDeDonacionState?.estadoFabricante, disabled: true }],
+      coloniaFabricante: [{ value: this.registroDeDonacionState?.coloniaFabricante, disabled: true }]
+    });
   }
 
   /**
@@ -102,12 +104,21 @@ export class DatosDelFabricanteComponent implements OnInit {
       .pipe(
         map((resp) => {
           this.pais = resp.data;
-        })
+        }),
+        takeUntil(this.destruirNotificador$)
       );
 
     merge(
       PAIS$
     ).subscribe();
+  }
+
+  /**
+   * Establece el país seleccionado en el store de tramite10303.
+   */
+  paisSeleccion(): void {
+    const PAIS = this.datosDelFabricanteForm.get('cvePaisFabricante')?.value;
+    this.tramite10303Store.setCvePaisFabricante(PAIS);
   }
 
   /**
@@ -118,7 +129,9 @@ export class DatosDelFabricanteComponent implements OnInit {
    */
   buscarContribuyenteRfc(valor: number, id: string): void {
     //Implementar la lógica para buscar el colaborador por RFC
-    this.donacionesExtranjerasService.buscarContribuyente(id).subscribe({
+    this.donacionesExtranjerasService.buscarContribuyente(id).pipe(
+      takeUntil(this.destruirNotificador$)
+    ).subscribe({
       next: (result: ContribuyenteRespuesta) => {
         const DATA = result?.data[0];
         if (DATA !== null) {
@@ -126,13 +139,13 @@ export class DatosDelFabricanteComponent implements OnInit {
             this.fabricante(DATA, true);
           }
           else {
-            console.error("Valor erronio");
+            this.toastrService.error('Valor erronio');
           }
         } else {
           if (valor === 6) {
             this.fabricante(DATA, false);
           } else {
-            console.error("Valor erronio");
+            this.toastrService.error('Valor erronio');
           }
         }
       }
@@ -147,19 +160,18 @@ export class DatosDelFabricanteComponent implements OnInit {
    */
   fabricante(data: Contribuyente, encontrado: boolean): void {
     if (encontrado) {
-      if (data.rfc.length === 12) {
-        this.nombreFabricante = data.razonSocial ?? '';
-      } else {
-        this.nombreFabricante = `${data.nombre} ${data.apellidoPaterno} ${data.apellidoMaterno}`;
-      }
+      const VALORES_DE_FORMATO = {
+        nombreFabricante: data.rfc.length === 12 ? data.razonSocial ?? '' : `${data.nombre} ${data.apellidoPaterno} ${data.apellidoMaterno}`,
+        calleFabricante: data.calle,
+        numExteriorFabricante: data.numeroExterior,
+        numInteriorFabricante: data.numeroInterior ?? '',
+        estadoFabricante: data.estado,
+        coloniaFabricante: data.colonia,
+        codigoPostalFabricante: data.codigoPostal,
+        cvePaisFabricante: data.pais
+      };
 
-      this.calleFabricante = data.calle;
-      this.numExteriorFabricante = data.numeroExterior;
-      this.numInteriorFabricante = data.numeroInterior ?? '';
-      this.estadoFabricante = data.estado;
-      this.coloniaFabricante = data.colonia;
-      this.codigoPostalFabricante = data.codigoPostal;
-      this.cvePaisFabricante = data.pais;
+      this.datosDelFabricanteForm.patchValue(VALORES_DE_FORMATO);
     } else {
       this.restablecerFormulario();
     }
@@ -169,14 +181,28 @@ export class DatosDelFabricanteComponent implements OnInit {
    * Resetea todos los campos del formulario a sus valores iniciales.
    */
   restablecerFormulario(): void {
-    this.rfcFabricante = '';
-    this.nombreFabricante = '';
-    this.calleFabricante = '';
-    this.numExteriorFabricante = '';
-    this.numInteriorFabricante = '';
-    this.estadoFabricante = '';
-    this.coloniaFabricante = '';
-    this.codigoPostalFabricante = '';
-    this.cvePaisFabricante = '';
+    this.datosDelFabricanteForm.reset();
+  }
+
+  /**
+    * Establece los valores en el store de tramite5701.
+    *
+    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+    * @returns {void}
+    */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite10303Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite10303Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
+
+  /**
+   * Se ejecuta al destruir el componente.
+   * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destruirNotificador$.next();
+    this.destruirNotificador$.complete();
   }
 }

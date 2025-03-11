@@ -1,10 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { map, merge } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subject, map, merge, takeUntil } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 
 import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
 import { Contribuyente, ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
+import { RegistroDeDonacion10303State, Tramite10303Store } from '../../estados/tramites/tramite10303.store';
+import { Tramite10303Query } from '../../estados/queries/tramite10303.query';
 
 /**
  * Componente para gestionar los datos de la persona autorizada para recibir donaciones.
@@ -14,66 +18,26 @@ import { Contribuyente, ContribuyenteRespuesta } from '../../models/donaciones-e
   templateUrl: './datos-persona-oir-recibir.component.html',
   styleUrl: './datos-persona-oir-recibir.component.scss'
 })
-export class DatosPersonaOirRecibirComponent implements OnInit {
+export class DatosPersonaOirRecibirComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario de datos de la persona autorizada para recibir donaciones.
+   */
+  datosPersonaOirRecibirForm!: FormGroup;
+
+  /**
+   * Subject para destruir las suscripciones.
+   */
+  private destruirNotificador$: Subject<void> = new Subject();
+
   /** 
    * Lista de países obtenida desde el servicio. 
    */
   pais!: Catalogo[];
 
   /**
-   * RFC de la persona autorizada para recibir donaciones.
-   */
-  rfcPersonaAutorizada: string = '';
-
-  /**
-   * Nombre completo de la persona autorizada.
-   */
-  nombrePersonaAutorizada: string = '';
-
-  /**
-   * Calle de la persona autorizada.
-   */
-  callePersonaAutorizada: string = '';
-
-  /**
-   * Número exterior de la persona autorizada.
-   */
-  numExteriorPersonaAutorizada: string = '';
-
-  /**
-   * Número interior de la persona autorizada.
-   */
-  numInteriorPersonaAutorizada: string = '';
-
-  /**
-   * Estado de la persona autorizada.
-   */
-  estadoPersonaAutorizada: string = '';
-
-  /**
-   * Colonia de la persona autorizada.
-   */
-  coloniaPersonaAutorizada: string = '';
-
-  /**
-   * Código postal de la persona autorizada.
-   */
-  codigoPostalPersonaAutorizada: string = '';
-
-  /**
-   * Clave del país de la persona autorizada.
-   */
-  cvePaisPersonaAutorizada: string = '';
-
-  /**
-   * Correo electrónico de la persona autorizada.
-   */
-  correoElectronicoPersonaAutorizada: string = '';
-
-  /**
-   * Teléfono de la persona autorizada.
-   */
-  telefonoPersonaAutorizada: string = '';
+    * Estado de la registro de donacion.
+    */
+  public registroDeDonacionState: RegistroDeDonacion10303State | undefined;
 
   /**
    * Constructor del componente.
@@ -81,7 +45,11 @@ export class DatosPersonaOirRecibirComponent implements OnInit {
    * @param donacionesExtranjerasService Servicio para gestionar las donaciones extranjeras.
    */
   constructor(
-    private donacionesExtranjerasService: DonacionesExtranjerasService
+    private donacionesExtranjerasService: DonacionesExtranjerasService,
+    private fb: FormBuilder,
+    private tramite10303Store: Tramite10303Store,
+    private tramite10303Query: Tramite10303Query,
+    private toastr: ToastrService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -92,6 +60,40 @@ export class DatosPersonaOirRecibirComponent implements OnInit {
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
+
+    this.tramite10303Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.registroDeDonacionState = seccionState;
+        })
+      )
+      .subscribe();
+
+    // Inicializar el formulario principal
+    this.crearDatosPersonaOirRecibirForm();
+
+    this.paisSeleccion();
+  }
+
+  /**
+    * Inicializa el formulario reactivo
+    * @returns {void}
+    */
+  crearDatosPersonaOirRecibirForm(): void {
+    this.datosPersonaOirRecibirForm = this.fb.group({
+      rfcPersonaAutorizada: [this.registroDeDonacionState?.rfcPersonaAutorizada],
+      nombrePersonaAutorizada: [{ value: this.registroDeDonacionState?.nombrePersonaAutorizada, disabled: true }],
+      callePersonaAutorizada: [{ value: this.registroDeDonacionState?.callePersonaAutorizada, disabled: true }],
+      numExteriorPersonaAutorizada: [{ value: this.registroDeDonacionState?.numExteriorPersonaAutorizada, disabled: true }],
+      numInteriorPersonaAutorizada: [{ value: this.registroDeDonacionState?.numInteriorPersonaAutorizada, disabled: true }],
+      cvePaisPersonaAutorizada: [{ value: this.registroDeDonacionState?.cvePaisPersonaAutorizada, disabled: true }],
+      codigoPostalPersonaAutorizada: [{ value: this.registroDeDonacionState?.codigoPostalPersonaAutorizada, disabled: true }],
+      estadoPersonaAutorizada: [{ value: this.registroDeDonacionState?.estadoPersonaAutorizada, disabled: true }],
+      coloniaPersonaAutorizada: [{ value: this.registroDeDonacionState?.coloniaPersonaAutorizada, disabled: true }],
+      correoElectronicoPersonaAutorizada: [{ value: this.registroDeDonacionState?.correoElectronicoPersonaAutorizada, disabled: true }],
+      telefonoPersonaAutorizada: [{ value: this.registroDeDonacionState?.telefonoPersonaAutorizada, disabled: true }]
+    });
   }
 
   /**
@@ -104,12 +106,21 @@ export class DatosPersonaOirRecibirComponent implements OnInit {
       .pipe(
         map((resp) => {
           this.pais = resp.data;
-        })
+        }),
+        takeUntil(this.destruirNotificador$)
       );
 
     merge(
       PAIS$
     ).subscribe();
+  }
+
+  /**
+   * Establece el país seleccionado en el store de tramite10303.
+   */
+  paisSeleccion(): void {
+    const PAIS = this.datosPersonaOirRecibirForm.get('cvePaisPersonaAutorizada')?.value;
+    this.tramite10303Store.setCvePaisPersonaAutorizada(PAIS);
   }
 
   /**
@@ -119,7 +130,9 @@ export class DatosPersonaOirRecibirComponent implements OnInit {
    */
   buscarContribuyenteRfc(valor: number, id: string): void {
     // Implement the logic to search for the contributor by RFC
-    this.donacionesExtranjerasService.buscarContribuyente(id).subscribe({
+    this.donacionesExtranjerasService.buscarContribuyente(id).pipe(
+      takeUntil(this.destruirNotificador$)
+    ).subscribe({
       next: (result: ContribuyenteRespuesta) => {
         const DATA = result?.data[0];
         if (DATA !== null) {
@@ -127,13 +140,13 @@ export class DatosPersonaOirRecibirComponent implements OnInit {
             this.construirPOyR(DATA, true);
           }
           else {
-            console.error("Valor erronio");
+            this.toastr.error("Valor erronio");
           }
         } else {
           if (valor === 4) {
             this.construirPOyR(DATA, false);
           } else {
-            console.error("Valor erronio");
+            this.toastr.error("Valor erronio");
           }
         }
       }
@@ -147,40 +160,51 @@ export class DatosPersonaOirRecibirComponent implements OnInit {
    */
   construirPOyR(data: Contribuyente, encontrado: boolean): void {
     if (encontrado) {
-      if (data.rfc.length === 12) {
-        this.nombrePersonaAutorizada = data.razonSocial ?? '';
-      } else {
-        this.nombrePersonaAutorizada = `${data.nombre} ${data.apellidoPaterno} ${data.apellidoMaterno}`;
-      }
+      const VALORES_DE_FORMATO = {
+        nombrePersonaAutorizada: data.rfc.length === 12 ? data.razonSocial ?? '' : `${data.nombre} ${data.apellidoPaterno} ${data.apellidoMaterno}`,
+        callePersonaAutorizada : data.calle,
+        numExteriorPersonaAutorizada: data.numeroExterior,
+        numInteriorPersonaAutorizada: data.numeroInterior ?? '',
+        estadoPersonaAutorizada: data.estado,
+        coloniaPersonaAutorizada: data.colonia,
+        codigoPostalPersonaAutorizada: data.codigoPostal,
+        cvePaisPersonaAutorizada: data.pais,
+        correoElectronicoPersonaAutorizada: data.correoElectronico,
+        telefonoPersonaAutorizada: data.telefono
+      };
 
-      this.callePersonaAutorizada = data.calle;
-      this.numExteriorPersonaAutorizada = data.numeroExterior;
-      this.numInteriorPersonaAutorizada = data.numeroInterior ?? '';
-      this.estadoPersonaAutorizada = data.estado;
-      this.coloniaPersonaAutorizada = data.colonia;
-      this.codigoPostalPersonaAutorizada = data.codigoPostal;
-      this.cvePaisPersonaAutorizada = data.pais;
-      this.correoElectronicoPersonaAutorizada = data.correoElectronico;
-      this.telefonoPersonaAutorizada = data.telefono;
+      this.datosPersonaOirRecibirForm.patchValue(VALORES_DE_FORMATO);
     } else {
       this.restablecerFormulario();
     }
   }
 
   /**
+    * Establece los valores en el store de tramite5701.
+    *
+    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+    * @returns {void}
+    */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite10303Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite10303Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
+
+  /**
    * Resetea todos los campos del formulario a sus valores iniciales.
    */
   restablecerFormulario(): void {
-    this.rfcPersonaAutorizada = '';
-    this.nombrePersonaAutorizada = '';
-    this.callePersonaAutorizada = '';
-    this.numExteriorPersonaAutorizada = '';
-    this.numInteriorPersonaAutorizada = '';
-    this.estadoPersonaAutorizada = '';
-    this.coloniaPersonaAutorizada = '';
-    this.codigoPostalPersonaAutorizada = '';
-    this.cvePaisPersonaAutorizada = '';
-    this.correoElectronicoPersonaAutorizada = '';
-    this.telefonoPersonaAutorizada = '';
+    this.datosPersonaOirRecibirForm.reset();
+  }
+
+  /**
+   * Se ejecuta al destruir el componente.
+   * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destruirNotificador$.next();
+    this.destruirNotificador$.complete();
   }
 }

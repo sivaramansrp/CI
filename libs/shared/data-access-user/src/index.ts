@@ -118,3 +118,5 @@ export * from './tramites/components/acuse/acuse.component';
 
 export * from './core/models/shared/configuracion-columna.model';
 export * from './core/enums/tabla-seleccion.enum';
+
+export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
