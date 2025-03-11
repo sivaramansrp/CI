@@ -134,6 +134,13 @@ const ROUTES: Routes = [
       import('./tramites/80208/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
       ),
+  },
+  {
+    path: 'autorizacion-programa-nuevo',
+    loadChildren: () =>
+      import('./tramites/80102/autorizacion-programa-nuevo.module').then(
+        (m) => m.AutorizacionProgrmaNuevoModule
+      ),
   }
 ];
 
