@@ -14,6 +14,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store'
+
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 /**
  * Servicio para la gestión de solicitudes de certificado zoosanitario.
  * Este servicio proporciona métodos para configurar y enviar la información de la solicitud.
@@ -23,7 +25,7 @@ import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store'
   providedIn: 'root',
 })
 export class CertificadoZoosanitarioServiceService {
-  constructor(private readonly zoosanitarioStore: ZoosanitarioStore) {
+  constructor(private readonly zoosanitarioStore: ZoosanitarioStore, private readonly seccionStore: SeccionLibStore) {
     // Constructor logic can be added here if needed
   }
   updateSolicitante(solicitante: Solicitante): void {
@@ -79,5 +81,12 @@ export class CertificadoZoosanitarioServiceService {
   getFormData(): Observable<CapturarSolicitud> {
     return this.zoosanitarioStore._select(state => state);
   }
+
+  actualizarDesdeBotonHabilitado(validacionFormulario: boolean) {
+    this.seccionStore.establecerSeccion([validacionFormulario]);
+    this.seccionStore.establecerFormaValida([validacionFormulario])
+  }
+
+
 
 }

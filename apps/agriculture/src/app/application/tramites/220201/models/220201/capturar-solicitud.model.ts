@@ -71,6 +71,7 @@ export interface DatosDeLaSolicitud {
   numeroGuia: string;
   certificacion: string;
   regimen: string;
+  datosDeMercancia: string;
 }
 
 /**
@@ -131,7 +132,8 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
       nombreVeterinario: '',
       numeroGuia: '',
       certificacion: '',
-      regimen: ''
+      regimen: '',
+      datosDeMercancia: ''
     },
     datosParaMovilizacionNacional: params.datosParaMovilizacionNacional || { // Initialize as an object
       coordenadas: '',

@@ -5,6 +5,7 @@ import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { skip } from 'rxjs';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos para la movilización nacional.
@@ -62,11 +63,11 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    */
   constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient, private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService) {
     this.movilizacionForm = this.fb.group({
-      coordenadas: ['', Validators.required],
+      coordenadas: [''],
       nombre: ['', Validators.required],
-      medio: ['Aereo', Validators.required],
-      transporte: ['', [Validators.required]],
-      punto: ['', [Validators.required]]
+      medio: ['', Validators.required],
+      transporte: [''],
+      punto: ['']
     });
   }
 
@@ -75,6 +76,9 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @method ngOnInit
    */
   ngOnInit(): void {
+    this.movilizacionForm.valueChanges.pipe(skip(1)).subscribe((changes) => {
+      this.certificadoZoosanitarioServices.actualizarDesdeBotonHabilitado(this.movilizacionForm.valid)
+    });
     this.obtenerListasDesplegables();
   }
 

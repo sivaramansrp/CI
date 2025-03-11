@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Catalogo, InputFecha, RespuestaCatalogos } from '@ng-mf/data-access-user';
 
@@ -11,6 +11,8 @@ import { FECHA_DE_PAGO } from '../../constantes/certificado-zoosanitario.enum';
 import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+
+import { skip } from 'rxjs';
 
 /**
  * @fileoverview Componente para la gestión del formulario de pago de derechos.
@@ -29,7 +31,7 @@ import { CertificadoZoosanitarioServiceService } from '../../services/220201/cer
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss']
 })
-export class PagoDeDerechosComponent implements OnDestroy {
+export class PagoDeDerechosComponent implements OnDestroy, OnInit {
 
   /**
    * Configuración para el input de fecha de pago.
@@ -55,7 +57,7 @@ export class PagoDeDerechosComponent implements OnDestroy {
    */
   pagoForm: FormGroup = this.fb.group({
     exentoPago: [{ value: '', disabled: false }],
-    justificacion: [{ value: '', disabled: false }],
+    justificacion: [{ value: '', disabled: false }, Validators.required],
     claveReferencia: [{ value: '', disabled: true }],
     cadenaDependencia: [{ value: '', disabled: true }],
     banco: [{ value: '', disabled: true }],
@@ -94,6 +96,11 @@ export class PagoDeDerechosComponent implements OnDestroy {
     this.obtenerDetallesDeListaDeOpciones();
   }
 
+  ngOnInit(): void {
+    this.pagoForm.valueChanges.pipe(skip(1)).subscribe((changes) => {
+      this.certificadoZoosanitarioServices.actualizarDesdeBotonHabilitado(this.pagoForm.valid)
+    });
+  }
 
 
   /**
@@ -127,6 +134,7 @@ export class PagoDeDerechosComponent implements OnDestroy {
     });
   }
   ngOnDestroy(): void {
+    console.log(this.pagoForm.value)
     const FORMA_VALIDA_ACTUALIZADA = {
       pagoDeformaValida: false,
     };

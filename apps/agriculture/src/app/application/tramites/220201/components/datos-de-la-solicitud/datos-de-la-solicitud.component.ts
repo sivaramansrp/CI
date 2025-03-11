@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { skip } from 'rxjs';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos de la solicitud.
@@ -158,6 +159,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
+    this.datosDelaSolicitud.valueChanges.pipe(skip(1)).subscribe((changes) => {
+      this.certificadoZoosanitarioServices.actualizarDesdeBotonHabilitado(this.datosDelaSolicitud.valid)
+    });
     this.obtenerListasDesplegables();
   }
 
@@ -170,12 +174,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       aduanaIngreso: ['', Validators.required],
       oficinaInspeccion: ['', Validators.required],
       puntoInspeccion: ['', Validators.required],
-      claveUCON: ['', [Validators.required]],
+      claveUCON: [''],
       establecimientoTIFs: [''],
-      nombreVeterinario: ['', Validators.required],
+      nombreVeterinario: [''],
       numeroGuia: [''],
       certficacion: [''],
-      regimen: ['', Validators.required]
+      regimen: ['', Validators.required],
+      datosDeMercancia: ['', Validators.required],
     });
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
   }
