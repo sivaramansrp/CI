@@ -5,8 +5,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { DatosDeLaStore } from '../../estados/tramites/datos-de-la110101.store';
-import { DatosDeLaQuery } from '../../estados/queries/datos-de-la.query110101';
+import { DatosMercanciaStore } from '../../estados/tramites/datos-mercancia110101.store';
+import { DatosMercanciaQuery } from '../../estados/queries/datos-mercancia110101.query';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { ELVALORALERTA } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -83,8 +83,8 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
  */
   constructor(private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-    private datosDeLaStore: DatosDeLaStore,
-    private datosDeLaQuery: DatosDeLaQuery
+    private datosDeLaStore: DatosMercanciaStore,
+    private datosDeLaQuery: DatosMercanciaQuery
   ) {
     this.createFormMercancia();
   }

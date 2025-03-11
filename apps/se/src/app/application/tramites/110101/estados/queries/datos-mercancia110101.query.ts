@@ -1,6 +1,6 @@
-import { DatosDeLaState } from '../tramites/datos-de-la110101.store';
-import { DatosDeLaStore } from '../tramites/datos-de-la110101.store';
-import { FormMercancia } from '../tramites/datos-de-la110101.store';
+import { DatosMercanciaState } from '../tramites/datos-mercancia110101.store';
+import { DatosMercanciaStore } from '../tramites/datos-mercancia110101.store';
+import { FormMercancia } from '../tramites/datos-mercancia110101.store';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Query } from '@datorama/akita';
@@ -11,7 +11,7 @@ import { Query } from '@datorama/akita';
  */
 @Injectable({ providedIn: 'root' })
 
-export class DatosDeLaQuery extends Query<DatosDeLaState> {
+export class DatosMercanciaQuery extends Query<DatosMercanciaState> {
   /**
    * **Constructor del servicio de consultas (Query) para DatosDeLa**
    *
@@ -20,7 +20,7 @@ export class DatosDeLaQuery extends Query<DatosDeLaState> {
    *
    * @param store - Instancia de `DatosDeLaStore` que gestiona el estado de los datos de la mercancía.
    */
-  constructor(protected override store: DatosDeLaStore) {
+  constructor(protected override store: DatosMercanciaStore) {
     super(store);
   }
 
