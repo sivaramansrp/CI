@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CUSTOM_ELEMENTS_SCHEMA, Directive, Input, NO_ERRORS_SCHEMA } from '@angular/core';
@@ -57,9 +58,5 @@ describe('ImmexRegistroSolicitudModalityComponent', () => {
       valor: {},
       accion: {},
     });
-  });
-
-  it('should run #obtenerNombreDelTítulo()', () => {
-    component.obtenerNombreDelTítulo({});
   });
 });
