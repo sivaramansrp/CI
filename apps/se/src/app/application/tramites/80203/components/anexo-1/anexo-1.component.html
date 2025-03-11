@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="row  mt-5" *ngIf="showTableExport">
-        <app-tabla-dinamica *ngIf="ImmexTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="ImmexTableDatos"></app-tabla-dinamica>
+        <app-tabla-dinamica *ngIf="immexTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="immexTableDatos"></app-tabla-dinamica>
 
         <div class="container text-end mt-5">
           <button class="btn btn-primary me-2" (click)="showFraccionExportacion()">Mostrar detalle mercancía</button>
@@ -41,10 +41,10 @@
         </div>
         <div class="row  mt-5" *ngIf="showTableFractionExp">
           <app-tabla-dinamica 
-          *ngIf="FraccionTablaDatos.length > 0"
+          *ngIf="fraccionTablaDatos.length > 0"
           [tipoSeleccionTabla]="tablaSeleccionRadio"
           [configuracionTabla]="fraccionExportacionTabla"
-          [datos]="FraccionTablaDatos">
+          [datos]="fraccionTablaDatos">
         </app-tabla-dinamica>
           <div class="container text-end mt-5">
             <button class="btn btn-primary me-2" (click)="showProductoImportacion()">Mostrar detalle mercancía</button>
@@ -85,8 +85,8 @@
         <div class="row  mt-5" *ngIf="showTableNicoExp">
           <h6>Nico</h6>
           <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
-            <app-tabla-dinamica *ngIf="NicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
-            [datos]="NicoTablaDatos"></app-tabla-dinamica>
+            <app-tabla-dinamica *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
+            [datos]="nicoTablaDatos"></app-tabla-dinamica>
           </div>
           <div class="container text-start mt-5">
             <button class="btn btn-default me-2">Eliminar Nico</button>
@@ -115,7 +115,7 @@
         </div>
       </div>
       <div class="row  mt-5" *ngIf="showTableImport">
-        <app-tabla-dinamica *ngIf="ImmexTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="ImmexTableDatos"></app-tabla-dinamica>
+        <app-tabla-dinamica *ngIf="immexTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="immexTableDatos"></app-tabla-dinamica>
         <div class="container text-end mt-5">
           <button class="btn btn-primary me-2" (click)="showCommodityImportacion()">Mostrar detalle mercancía</button>
         </div>
@@ -168,8 +168,8 @@
         <div class="row  mt-5" *ngIf="showTableNicoImp">
           <h6>Nico</h6>
           <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
-            <app-tabla-dinamica  *ngIf="NicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
-            [datos]="NicoTablaDatos"></app-tabla-dinamica>
+            <app-tabla-dinamica  *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
+            [datos]="nicoTablaDatos"></app-tabla-dinamica>
           </div>
           <div class="container text-start mt-5">
             <button class="btn btn-default me-2">Eliminar Nico</button>
@@ -181,10 +181,10 @@
         </div>  
         <div class="row  mt-5">
           <app-tabla-dinamica 
-          *ngIf="FraccionTablaDatos.length > 0"
+          *ngIf="fraccionTablaDatos.length > 0"
           [tipoSeleccionTabla]="tablaSeleccionRadio"
           [configuracionTabla]="fraccionExportacionTabla"
-          [datos]="FraccionTablaDatos">
+          [datos]="fraccionTablaDatos">
         </app-tabla-dinamica>
         
         </div> 

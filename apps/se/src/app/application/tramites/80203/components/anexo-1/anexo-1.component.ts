@@ -2,10 +2,11 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 /**
  * @component Anexo1Component
- * @description Este componente es responsable de manejar el formulario de registro IMMEX.
- * Incluye la lógica para la obtención de datos y la gestión de formularios.
+ * @description Componente responsable de manejar el formulario de registro IMMEX.
+ * Contiene la lógica para la obtención de datos y la gestión de formularios.
  */
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -62,7 +63,15 @@ import { Validators } from '@angular/forms';
   ]
 })
 export class Anexo1Component implements OnInit, OnDestroy {
+    /**
+   * Formulario principal del registro IMMEX.
+   * @type {FormGroup}
+   */
   immexRegistroform!: FormGroup;
+    /**
+   * Estado del formulario de registro IMMEX.
+   * @type {immexRegistroform}
+   */
   immexRegitroAnexoState!: immexRegistroform;
 
   /**
@@ -72,17 +81,16 @@ export class Anexo1Component implements OnInit, OnDestroy {
   tablaSeleccionRadio: TablaSeleccion = TablaSeleccion.RADIO;
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
-  // Mesa IMMEX
   /**
-   * Configuración de las columnas de la tabla.
+   * Configuración de las columnas de la tabla para servicios IMMEX.
    * @type {ConfiguracionColumna<immexInfo>[]}
    */
   permisoImmexTabla: ConfiguracionColumna<immexInfo>[] = IMMEX_SERVICIO;
   /**
    * Datos de los servicios IMMEX.
-   * @type {immexInfo[]} 
+   * @type {immexInfo[]}
    */
-  ImmexTableDatos: immexInfo[] = [];
+  immexTableDatos: immexInfo[] = [];
 
   // Mesa FRACCION EXPORTACION
   /**
@@ -93,32 +101,26 @@ export class Anexo1Component implements OnInit, OnDestroy {
   fraccionExportacionTabla: ConfiguracionColumna<fraccionInfo>[] = FRACCION_EXPORTACION;
   /**
    * Datos de las fracciones arancelarias.
-   * @type {fraccionInfo[]} 
-   * Datos de ejemplo:
+   * @type {fraccionInfo[]}
    */
-  // FraccionTablaDatos: fraccionInfo[] = [];
-  FraccionTablaDatos: fraccionInfo[] = [];
-  // Mesa NICO
+  fraccionTablaDatos: fraccionInfo[] = [];
   /**
-   * Configuración de las columnas de la tabla.
+   * Configuración de las columnas de la tabla para NICO.
    * @type {ConfiguracionColumna<nicoInfo>[]}
    */
   nicoTabla: ConfiguracionColumna<nicoInfo>[] = NICO_TABLA;
 
-
   /**
-   * Datos de los servicios.
-   * @type {nicoInfo[]} 
-   * Datos de ejemplo:
+   * Datos de NICO.
+   * @type {nicoInfo[]}
    */
-
-  NicoTablaDatos: nicoInfo[] = [];
+  nicoTablaDatos: nicoInfo[] = [];
 
 
   /**
- * @propiedad immexRegistro
- * @tipo string
- */
+   * Variable de estado para IMMEX Registro.
+   * @type {string}
+   */
   immexRegistro!: string;
 
   /**
@@ -148,7 +150,9 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @property {CatalogosSelect} nico
    */
   nico: Catalogo[] = [];
-
+  /**
+   * Estado de visibilidad de las tablas y secciones del formulario.
+   */
   showFraccionExport: boolean = false;
   showTableExport: boolean = false;
   showTableImport: boolean = false;
@@ -164,7 +168,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @constructor
    * @param {FormBuilder} fb - Constructor de formularios.
    * @param {PermisoImmexDatosService} permisoImmexDatosService - Servicio para obtener datos de permiso IMMEX.
-   * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.
+   * @param {HttpClient} httpServicios - Cliente HTTP para solicitudes HTTP.
    * @param {NicoService} nicoService - Servicio para obtener datos de NICO.
    */
   constructor(
@@ -178,6 +182,10 @@ export class Anexo1Component implements OnInit, OnDestroy {
     private seccionStore: SeccionLibStore,
 
   ) { }
+    /**
+   * @method ngOnDestroy
+   * @description Maneja la limpieza de recursos antes de destruir el componente.
+   */
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
@@ -186,9 +194,8 @@ export class Anexo1Component implements OnInit, OnDestroy {
   }
 
   /**
-   * @returns {void}
    * @method ngOnInit
-   * @description Inicializa el componente y obtiene los datos de los fabricantes.
+   * @description Inicializa el componente y obtiene los datos necesarios.
    */
 
   ngOnInit(): void {
@@ -296,9 +303,9 @@ export class Anexo1Component implements OnInit, OnDestroy {
             Array.isArray(response.fraccionDatos) &&
             Array.isArray(response.nicoDatos)) {
             // Para introducir datos en la tabla
-            this.ImmexTableDatos = response.permisoImmexDatos;
-            this.NicoTablaDatos = response.nicoDatos;
-            this.FraccionTablaDatos = response.fraccionDatos;
+            this.immexTableDatos = response.permisoImmexDatos;
+            this.nicoTablaDatos = response.nicoDatos;
+            this.fraccionTablaDatos = response.fraccionDatos;
 
             // Para asignar valores al campo de entrada
             this.permisoImmexDatos = response.permisoImmexDatos;
