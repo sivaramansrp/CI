@@ -23,6 +23,7 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 import { provideHttpClient } from '@angular/common/http';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
 
 
 
@@ -45,7 +46,8 @@ import { provideHttpClient } from '@angular/common/http';
     RepresentacionComponent,
     TituloComponent,
     UsoEspicificoComponent,
-    WizardComponent    
+    WizardComponent,
+    SolicitanteComponent   
   ],
   providers: [
     provideHttpClient(),
