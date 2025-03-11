@@ -108,9 +108,12 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
       this.form.markAllAsTouched();
     }
   }
-
+  
+  /**
+   * Obtiene el valor seleccionado del campo de cantidad solicitada y lo establece en el store.
+   */
   getCantidadSolicitada(): void {
     const CANTIDAD_SOLICITADA = this.form.get('cantidadSolicitada')?.value;
-    this.tramite120402Store.setCantidadSolicitada(CANTIDAD_SOLICITADA);    
+    this.tramite120402Store.setCantidadSolicitada(CANTIDAD_SOLICITADA);
   }
 }

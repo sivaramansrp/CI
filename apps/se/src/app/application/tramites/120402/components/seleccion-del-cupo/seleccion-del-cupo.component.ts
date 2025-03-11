@@ -85,8 +85,8 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   regimen$: Observable<Catalogo | null> = this.tramite120402Query.regimen$;
   tratado$: Observable<Catalogo | null> = this.tramite120402Query.tratado$;
   producto$: Observable<Catalogo | null> = this.tramite120402Query.producto$;
-  subproducto$: Observable<Catalogo | null> = this.tramite120402Query.subproducto$;
-
+  subproducto$: Observable<Catalogo | null> =
+    this.tramite120402Query.subproducto$;
 
   /**
    * Constructor del componente.
@@ -220,23 +220,35 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Obtiene el valor seleccionado del campo de régimen aduanero y lo establece en el store.
+   */
   getRegimen(): void {
     const SELECTED_REGIMEN = this.seleccionForm.get('regimen')?.value;
-    this.tramite120402Store.setRegimen(SELECTED_REGIMEN);    
+    this.tramite120402Store.setRegimen(SELECTED_REGIMEN);
   }
 
+  /**
+   * Obtiene el valor seleccionado del campo de tratado comercial y lo establece en el store.
+   */
   getTratado(): void {
     const SELECTED_TRATADO = this.seleccionForm.get('tratado')?.value;
-    this.tramite120402Store.setTratado(SELECTED_TRATADO);    
+    this.tramite120402Store.setTratado(SELECTED_TRATADO);
   }
 
+  /**
+   * Obtiene el valor seleccionado del campo de producto y lo establece en el store.
+   */
   obtenerValorProducto(): void {
     const SELECTED_PRODUCTO = this.seleccionForm.get('producto')?.value;
-    this.tramite120402Store.setProducto(SELECTED_PRODUCTO);    
+    this.tramite120402Store.setProducto(SELECTED_PRODUCTO);
   }
 
+  /**
+   * Obtiene el valor seleccionado del campo de subproducto y lo establece en el store.
+   */
   getSubproducto(): void {
     const SELECTED_SUBPRODUCTO = this.seleccionForm.get('subproducto')?.value;
-    this.tramite120402Store.setSubproducto(SELECTED_SUBPRODUCTO);    
+    this.tramite120402Store.setSubproducto(SELECTED_SUBPRODUCTO);
   }
 }

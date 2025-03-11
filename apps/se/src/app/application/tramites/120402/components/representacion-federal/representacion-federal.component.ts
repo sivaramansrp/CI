@@ -35,12 +35,11 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   RepresentacionFederalService,
-  TituloComponent
+  TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
 import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
-
 
 /**
  * @class RepresentacionFederalComponent
@@ -95,11 +94,10 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   public representacion: Catalogo[] = [];
 
-  entidad$: Observable<Catalogo | null> =
-  this.tramite120402Query.entidad$;
+  entidad$: Observable<Catalogo | null> = this.tramite120402Query.entidad$;
 
   representacion$: Observable<Catalogo | null> =
-  this.tramite120402Query.representacion$;
+    this.tramite120402Query.representacion$;
 
   /**
    * @constructor
@@ -195,10 +193,10 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
       });
   }
 
-   /**
+  /**
    * Carga la información de la representacion desde el servicio y la asigna al formulario.
    */
-   loadRepresentacion(): void {
+  loadRepresentacion(): void {
     this.service
       .getEntidad()
       .pipe(takeUntil(this.destroyed$))
@@ -208,13 +206,20 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Obtiene el valor seleccionado del campo de entidad federativa y lo establece en el store.
+   */
   getEntidad(): void {
     const SELECTED_ENTIDAD = this.representacionForm.get('entidad')?.value;
-    this.tramite120402Store.setEntidad(SELECTED_ENTIDAD);    
+    this.tramite120402Store.setEntidad(SELECTED_ENTIDAD);
   }
 
+  /**
+   * Obtiene el valor seleccionado del campo de representación federal y lo establece en el store.
+   */
   getRepresentacion(): void {
-    const SELECTED_REPRESENTACION = this.representacionForm.get('representacion')?.value;
-    this.tramite120402Store.setRepresentacion(SELECTED_REPRESENTACION);    
+    const SELECTED_REPRESENTACION =
+      this.representacionForm.get('representacion')?.value;
+    this.tramite120402Store.setRepresentacion(SELECTED_REPRESENTACION);
   }
 }
