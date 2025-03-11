@@ -596,6 +596,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tramite5701Store.setTipoSolicitud(tipoSolicitud);
   }
 
+  obtenerRangoFechas(): string[] {
+    const F_INICIO = this.datosServicio.get('fechaInicio')?.value;
+    const F_FINAL = this.datosServicio.get('fechaFinal')?.value;
+    const H_INICIO = this.datosServicio.get('horaInicio')?.value;
+    const H_FINAL = this.datosServicio.get('horaFinal')?.value;
+
+    console.log('FECHA_INICIO', F_INICIO);
+    console.log('FECHA_FINAL', F_FINAL);
+    console.log('HORA_INICIO', H_INICIO);
+    console.log('HORA_FINAL', H_FINAL);
+    
+    return [];
+  }
   rango_fechas(): void {
     const fechaInicial = this.datosServicio.get('fechaInicio')?.value;
     const fechaFinal = this.datosServicio.get('fechaFinal')?.value;
@@ -716,7 +729,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
-    console.log(this.datosServicio);
+
+    if( !this.individual()) {
+      this.obtenerRangoFechas();
+     
+    }
 
   }
 
