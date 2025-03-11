@@ -200,12 +200,5 @@ this.agregarQuery.selectSolicitud$
    ngOnDestroy(): void {
       this.destroyNotifier$.next();
       this.destroyNotifier$.complete();
-    }
-
-
-  /**
-   * @method docSeleccionado
-   * @description Método placeholder para la funcionalidad de documento seleccionado.
-   */
- 
+    } 
 }

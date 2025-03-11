@@ -83,7 +83,7 @@ export class TransporteComponent implements OnDestroy, OnInit {
       mediodeTransporte: ['', [Validators.required]],
       identificationDelTransporte: [this.solicitudState?.identificationDelTransporte],
       numerodeContenedor:[this.solicitudState?.numerodeContenedor],
-      fetchdeEmbarque:[this.solicitudState?.fetchdeEmbarque],
+      fechdeEmbarque:[this.solicitudState?.fechdeEmbarque],
       numerodeFlejes:[this.solicitudState?.numerodeFlejes]
      });
   }

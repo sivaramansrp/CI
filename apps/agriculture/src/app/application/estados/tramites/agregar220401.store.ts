@@ -30,7 +30,7 @@ export interface solicitud220401State {
   numerodeContenedor: string;
 
   /** Fecha de embarque de la mercancía. */
-  fetchdeEmbarque: string;
+  fechdeEmbarque: string;
 
   /** Número de flejes de seguridad. */
   numerodeFlejes: string;
@@ -123,7 +123,7 @@ export function createInitialState(): solicitud220401State {
     numerodeContenedor: '',
   
     /** Fecha de embarque de la mercancía. */
-    fetchdeEmbarque: '',
+    fechdeEmbarque: '',
   
     /** Número de flejes de seguridad. */
     numerodeFlejes: '',
@@ -262,13 +262,13 @@ export class Agregar220401Store extends Store<solicitud220401State> {
 
   /**
    * @method setfetchdeEmbarque
-   * @description Establece el valor de 'fetchdeEmbarque'.
-   * @param {string} fetchdeEmbarque - El valor de 'fetchdeEmbarque'.
+   * @description Establece el valor de 'fechdeEmbarque'.
+   * @param {string} fechdeEmbarque - El valor de 'fechdeEmbarque'.
    */
-  public setfetchdeEmbarque(fetchdeEmbarque: string) {
+  public setfetchdeEmbarque(fechdeEmbarque: string) {
     this.update((state) => ({
       ...state,
-      fetchdeEmbarque,
+      fechdeEmbarque,
     }));
   }
 

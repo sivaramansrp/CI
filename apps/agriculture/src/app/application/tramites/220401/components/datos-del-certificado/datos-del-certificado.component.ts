@@ -73,7 +73,6 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   /** Formulario de datos del certificado. */
   datosdelForm!: FormGroup;
   radioBoton = unidadRadioFields; // import data from Json
-  // public datosState!: solicitud220401State;
   public solicitudState!: solicitud220401State;
   estadoJson: catalogoResponse[] = [];
   /**
