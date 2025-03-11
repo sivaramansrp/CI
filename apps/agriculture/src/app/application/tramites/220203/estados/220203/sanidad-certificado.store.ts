@@ -11,7 +11,7 @@ import { Acuicultura, DatosMercancia220203, FormularioMovilizacion, FormularioPa
 @Injectable({
     providedIn: 'root',
 })
-@StoreConfig({ name: 'seccion', resettable: true })
+@StoreConfig({ name: 'importacion-de-acuicultura', resettable: true })
 export class AcuiculturaStore extends Store<Acuicultura> {
     constructor() {
         super(createDatosState());
