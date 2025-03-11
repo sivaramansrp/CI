@@ -43,7 +43,7 @@ export interface Nacional {
   }
   export interface DatosDelVehículoPaisEmisor {
     clave1: string;
-    descripcion2: string;
+    descripcion2:string;
   }
   export interface Catalogo {
     id: number;

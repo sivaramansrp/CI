@@ -10,7 +10,7 @@ import { DatosDelVehículo, DatosDelVehículoPaisEmisor } from 'libs/shared/data
 @Component({
   selector: 'app-vehiculos',
   templateUrl: './vehiculos.component.html',
-  styleUrl: './vehiculos.component.scss',
+  styleUrl:'./vehiculos.component.scss',
 })
 export class VehiculosComponent implements AfterViewInit {
   @ViewChild('exampleModal', { static: false }) modalElement!: ElementRef;

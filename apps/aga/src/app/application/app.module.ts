@@ -42,4 +42,4 @@ import { TituloComponent } from "@ng-mf/data-access-user";
   ],
   bootstrap: [AppComponent],
 })
-export class App5701Module {}
+export class AppAgaModule {}

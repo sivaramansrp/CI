@@ -5,7 +5,7 @@ import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
-import { SeccionQuery } from '@ng-mf/data-access-user';
+// import { SeccionQuery } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 interface AccionBoton {
   accion: string;
@@ -29,7 +29,7 @@ export class SolicitantePageComponent {
     txtBtnSig: 'Continuar',
   };
   constructor(
-    private seccionQuery: SeccionQuery,
+    // private seccionQuery: SeccionQuery,
     private seccionStore: SeccionStore
   ) {}
 
@@ -41,17 +41,17 @@ export class SolicitantePageComponent {
       }
       return paso;
     });
-    console.log('Updated pasos:', this.pasos);
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccion = seccionState;
-        })
-      )
-      .subscribe();
+    // console.log('Updated pasos:', this.pasos);
+    // this.seccionQuery.selectSeccionState$
+    //   .pipe(
+    //     takeUntil(this.destroyNotifier$),
+    //     map((seccionState) => {
+    //       this.seccion = seccionState;
+    //     })
+    //   )
+    //   .subscribe();
 
-    this.asignarSecciones();
+    // this.asignarSecciones();
   }
 
   seleccionaTab(i: number): void {
