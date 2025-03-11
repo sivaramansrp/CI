@@ -1,4 +1,4 @@
-import { AdministrarResiduosService, Catalogo } from '@ng-mf/data-access-user';
+import { AdministrarResiduosService } from '@ng-mf/data-access-user';
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -8,7 +8,6 @@ import { Subject } from 'rxjs';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { takeUntil } from 'rxjs';
-
 
 /**
  * Componente para administrar residuos
@@ -44,11 +43,12 @@ export class AdministrarResiduosComponent implements OnInit {
   /**
    * Constructor de la clase
    * @param fb - FormBuilder para crear formularios reactivos
+   * @param service - Servicio para administrar residuos
    */
-  constructor(private fb: FormBuilder, private service: AdministrarResiduosService,
-  ) {
+  constructor(private fb: FormBuilder, private service: AdministrarResiduosService) {
     // constructor
   }
+
   /**
    * Método de inicialización del componente
    */
@@ -84,14 +84,17 @@ export class AdministrarResiduosComponent implements OnInit {
     this.formularioParaRecuentoTotal.patchValue({ recuentoTotalDeFilas: TOTAL_ROW_COUNT });
   }
 
-    loadAdministrarResiduos(): void {
-      this.service
-        .getAdministrarResiduos()
-        .pipe(
-          takeUntil(this.destroyed$) // Se usa takeUntil para asegurarse de que las suscripciones se cancelen al destruirse el componente
-        )
-        .subscribe((data): void => {
-          this.getEstablecimientoTableData = data;
-        });
-    }
+  /**
+   * Carga los datos para administrar residuos
+   */
+  loadAdministrarResiduos(): void {
+    this.service
+      .getAdministrarResiduos()
+      .pipe(
+        takeUntil(this.destroyed$) // Se usa takeUntil para asegurarse de que las suscripciones se cancelen al destruirse el componente
+      )
+      .subscribe((data): void => {
+        this.getEstablecimientoTableData = data;
+      });
+  }
 }
