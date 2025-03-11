@@ -6,27 +6,46 @@
       <form [formGroup]="detallestransporte">
         <div class="row">
           <div class="col-md-4">
-            <label class="form-label" for="puertodeEmbarque">Puerto de embarque: </label>
+            <label class="form-label" for="puertodeEmbarque">Puerto de embarque:</label>
             <input type="text" class="form-control" id="puertodeEmbarque" placeholder="Veracruz" formControlName="puertodeEmbarque" (change)="onDetallestransporteChange('puertodeEmbarque')">
+            <div *ngIf="detallestransporte.get('puertodeEmbarque')?.touched && detallestransporte.get('puertodeEmbarque')?.invalid">
+              <small class="text-danger">Corrija el nombre.</small>
+            </div>
           </div>
+      
           <div class="col-md-4">
             <label class="form-label" for="puertodeDesembarque">Puerto de desembarque:</label>
-            <input type="text" class="form-control" id="puertodeDesembarque"  placeholder="mexico" formControlName="puertodeDesembarque" (change)="onDetallestransporteChange('puertodeDesembarque')">
+            <input type="text" class="form-control" id="puertodeDesembarque" placeholder="Mexico" formControlName="puertodeDesembarque" (change)="onDetallestransporteChange('puertodeDesembarque')">
+            <div *ngIf="detallestransporte.get('puertodeDesembarque')?.touched && detallestransporte.get('puertodeDesembarque')?.invalid">
+              <small class="text-danger">Corrija el nombre.</small>
+            </div>
           </div>
+      
           <div class="col-md-4">
             <label class="form-label" for="puertodeTránsito">Puerto de tránsito:</label>
-            <input type="text" class="form-control" id="puertodeTránsito" placeholder="veracruz norte" formControlName="puertodeTránsito" (change)="onDetallestransporteChange('puertodeTránsito')">
+            <input type="text" class="form-control" id="puertodeTránsito" placeholder="Veracruz norte" formControlName="puertodeTránsito" (change)="onDetallestransporteChange('puertodeTránsito')">
+            <div *ngIf="detallestransporte.get('puertodeTránsito')?.touched && detallestransporte.get('puertodeTránsito')?.invalid">
+              <small class="text-danger">Corrija el nombre.</small>
+            </div>
           </div>
+      
           <div class="col-md-4">
             <label class="form-label" for="nombredelaEmbarcación">Nombre de la embarcación:</label>
-            <input type="text" class="form-control" id="nombredelaEmbarcación" placeholder="puerto boca" formControlName="nombredelaEmbarcación" (change)="onDetallestransporteChange('nombredelaEmbarcación')">
+            <input type="text" class="form-control" id="nombredelaEmbarcación" placeholder="Puerto Boca" formControlName="nombredelaEmbarcación" (change)="onDetallestransporteChange('nombredelaEmbarcación')">
+            <div *ngIf="detallestransporte.get('nombredelaEmbarcación')?.touched && detallestransporte.get('nombredelaEmbarcación')?.invalid">
+              <small class="text-danger">Corrija el nombre.</small>
+            </div>
           </div>
+      
           <div class="col-md-4">
             <label class="form-label" for="númerodeVuelo">Número de vuelo:</label>
             <input type="text" class="form-control" id="númerodeVuelo" placeholder="0115 I" formControlName="númerodeVuelo" (change)="onDetallestransporteChange('númerodeVuelo')">
+            <div *ngIf="detallestransporte.get('númerodeVuelo')?.touched && detallestransporte.get('númerodeVuelo')?.invalid">
+              <small class="text-danger">Ingrese solo dígitos.</small>
+            </div>
           </div>
-          
         </div>
       </form>
+      
     </div>
 </div>

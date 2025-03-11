@@ -3,7 +3,7 @@ import { Component,OnDestroy, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
@@ -122,20 +122,22 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     private service: CertificadoTecnicoJaponService
   ) {
     this.datosdeldestinatario = this.fb.group({
-      nombre: [''],
-      primerApellido: [''],
-      segundoApellido: [''],
-      númeroderegistroFiscal: [''],
-      razónSocial: [''],
+      nombre: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Solo letras y espacios, obligatorio
+      primerApellido: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Opcional, pero solo letras permitidas
+      segundoApellido: [{ value: '', disabled: true }], // Campo de solo lectura, sin validación
+      númeroderegistroFiscal: ['', [Validators.required, Validators.pattern('^[A-Z0-9]+$')]], // Solo mayúsculas y números, obligatorio
+      razónSocial: ['', [Validators.required]], // Campo obligatorio
     });
+    
     this.domiciliodeldestinatario = this.fb.group({
-      calle: [''],
-      númeroLetra: [''],
-      ciudad: [''],
-      correoElectrónico: [''],
-      fax: [''],
-      teléfono: [''],
+      calle: ['', Validators.required], // Campo obligatorio
+      númeroLetra: ['', Validators.required], // Campo obligatorio
+      ciudad: ['', Validators.required], // Campo obligatorio
+      correoElectrónico: ['', [Validators.required, Validators.email]], // Obligatorio y debe ser un correo válido
+      fax: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Solo se permiten dígitos
+      teléfono: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Obligatorio y solo se permiten dígitos
     });
+    
   }
 
   /**

@@ -41,12 +41,12 @@ export class TratadosComponent implements OnInit {
    */
   constructor(private fb: FormBuilder, private service: CertificadoTecnicoJaponService) {
     this.detallesdeltransporte = this.fb.group({
-      tratadoAcuerdo: [""],
-      paísBloque: [""],
-      paísdeOrigen: [""],
-      paísDestino: [""],
-      fechadeExpedición: [""],
-      fechadeVencimiento: [""],
+      tratadoAcuerdo: [{ value: '', disabled: true }],
+      paísBloque: [{ value: '', disabled: true }],
+      paísdeOrigen: [{ value: '', disabled: true }],
+      paísDestino: [{ value: '', disabled: true }],
+      fechadeExpedición: [{ value: '', disabled: true }],
+      fechadeVencimiento: [{ value: '', disabled: true }],
     });
   }
 

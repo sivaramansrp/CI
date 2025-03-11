@@ -5,32 +5,65 @@
       ></ng-titulo>
       <form [formGroup]="datosdelexportador">
         <div class="row">
+          
+          <!-- Nombre del representante -->
           <div class="col-md-12">
-            <label class="form-label" for="nombredelRepresentante">Nombre del representante legal del exportador *: </label>
-            <input type="text" class="form-control bg-white" placeholder="Jose Alberto martinez juarez" id="nombredelRepresentante" formControlName="nombredelRepresentante" (change)="onDatosdelexportadorChange('nombredelRepresentante')">
+            <label class="form-label" for="nombredelRepresentante">Nombre del representante legal del exportador *:</label>
+            <input type="text" class="form-control bg-white" id="nombredelRepresentante" formControlName="nombredelRepresentante">
+            <div *ngIf="datosdelexportador.get('nombredelRepresentante')?.touched && datosdelexportador.get('nombredelRepresentante')?.invalid">
+              <small *ngIf="datosdelexportador.get('nombredelRepresentante')?.hasError('required')" class="text-danger">Este campo es obligatorio.</small>
+              <small *ngIf="datosdelexportador.get('nombredelRepresentante')?.hasError('pattern')" class="text-danger">Corrija el nombre de la persona.</small>
+            </div>
           </div>
+      
+          <!-- Empresa (Read-Only) -->
           <div class="col-md-8">
             <label class="form-label" for="empresa">Empresa *:</label>
             <input type="text" class="form-control" id="empresa" formControlName="empresa" readonly>
           </div>
+      
+          <!-- Cargo -->
           <div class="col-md-4">
             <label class="form-label" for="cargo">Cargo *:</label>
-            <input type="text" class="form-control bg-white" id="cargo" placeholder="REPRESENTANTE LEGA" formControlName="cargo" (change)="onDatosdelexportadorChange('cargo')">
+            <input type="text" class="form-control bg-white" id="cargo" formControlName="cargo">
+            <div *ngIf="datosdelexportador.get('cargo')?.touched && datosdelexportador.get('cargo')?.invalid">
+              <small class="text-danger">Este campo es obligatorio.</small>
+            </div>
           </div>
+      
+          <!-- Teléfono -->
           <div class="col-md-4">
             <label class="form-label" for="teléfonos">Teléfono *:</label>
-            <input type="text" class="form-control bg-white" id="teléfonos" placeholder="5646844" formControlName="teléfonos" (change)="onDatosdelexportadorChange('teléfonos')">
+            <input type="text" class="form-control bg-white" id="teléfonos" formControlName="teléfonos">
+            <div *ngIf="datosdelexportador.get('teléfonos')?.touched && datosdelexportador.get('teléfonos')?.invalid">
+              <small *ngIf="datosdelexportador.get('teléfonos')?.hasError('required')" class="text-danger">Este campo es obligatorio.</small>
+              <small *ngIf="datosdelexportador.get('teléfonos')?.hasError('pattern')" class="text-danger">Ingrese solo dígitos.</small>
+            </div>
           </div>
+      
+          <!-- Fax -->
           <div class="col-md-4">
             <label class="form-label" for="faxs">Fax *:</label>
-            <input type="text" class="form-control bg-white" id="faxs" placeholder="49887498789" formControlName="faxs" (change)="onDatosdelexportadorChange('faxs')">
+            <input type="text" class="form-control bg-white" id="faxs" formControlName="faxs">
+            <div *ngIf="datosdelexportador.get('faxs')?.touched && datosdelexportador.get('faxs')?.invalid">
+              <small *ngIf="datosdelexportador.get('faxs')?.hasError('required')" class="text-danger">Este campo es obligatorio.</small>
+              <small *ngIf="datosdelexportador.get('faxs')?.hasError('pattern')" class="text-danger">Ingrese solo dígitos.</small>
+            </div>
           </div>
+      
+          <!-- Correo Electrónico -->
           <div class="col-md-4">
-            <label class="form-label" for="correoElectrónicos">Correo electrónico *:</label>
-            <input type="text" class="form-control bg-white" id="correoElectrónicos" placeholder="Ultra@correo.com" formControlName="correoElectrónicos" (change)="onDatosdelexportadorChange('correoElectrónicos')">
+            <label class="form-label" for="correoElectronico">Correo electrónico *:</label>
+            <input type="text" class="form-control bg-white" id="correoElectronico" formControlName="correoElectronico">
+            <div *ngIf="datosdelexportador.get('correoElectronico')?.touched && datosdelexportador.get('correoElectronico')?.invalid">
+              <small *ngIf="datosdelexportador.get('correoElectronico')?.hasError('required')" class="text-danger">Este campo es obligatorio.</small>
+              <small *ngIf="datosdelexportador.get('correoElectronico')?.hasError('email')" class="text-danger">Ingrese una dirección de correo válida.</small>
+            </div>
           </div>
-          
+      
         </div>
-        </form>
+      </form>
+      
+      
     </div>
 </div>
