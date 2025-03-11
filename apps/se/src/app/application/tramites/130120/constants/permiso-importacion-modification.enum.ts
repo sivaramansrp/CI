@@ -453,7 +453,7 @@ export const DATOS_PRODUCTOR = [
         validators: ['required'],
         placeholder: '',
         availableRadioOptions: ['Física', 'Moral', 'Ninguno'],
-        
+
     },
 ];
 
@@ -513,7 +513,7 @@ export const DATOS_EXPORTADOR = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
-        availableRadioOptions: ['Física', 'Moral'], 
+        availableRadioOptions: ['Física', 'Moral'],
     },
     {
         labelNombre: 'Observaciones:',
@@ -523,7 +523,7 @@ export const DATOS_EXPORTADOR = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
-        availableRadioOptions: ['Física', 'Moral'], 
+        availableRadioOptions: ['Física', 'Moral'],
     },
 ];
 
