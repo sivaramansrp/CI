@@ -7,6 +7,7 @@ import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-acce
 import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
+import { error } from 'console';
 
 interface DatoTabla {
   solicitud: string;
@@ -202,6 +203,8 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this.datosMercanciaFormGroup.valueChanges.subscribe((changes) => {
       this.verificarEstadoDelBoton();
+    }, (error) => {
+      console.error(error);
     })
   }
   /**
@@ -211,33 +214,43 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('transporte.json').subscribe((data => {
       this.aduanaDeIngresoList = data.data as Catalogo[];
       this.tipoRequisitoList = data.data as Catalogo[];
-    }));
+    }), (error) => {
+      console.error(error);
+    });
   }
   obtenerCatalogosArancelaria() {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').subscribe((data => {
       this.oficinaInspeccionList = data.data as Catalogo[];
       this.oficinaInspeccionList = data.data as Catalogo[];
-    }));
+    }), (error) => {
+      console.error(error);
+    });
   }
   obtenerCatalogosUMC() {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('aduana_de_ingreso.json').subscribe((data => {
       this.umcList = data.data as Catalogo[];
       this.arancelariaList = data.data as Catalogo[];
-    }));
+    }), (error) => {
+      console.error(error);
+    });
   }
   obtenerCatalogosUMT() {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('empresa.json').subscribe((data => {
       this.regimenList = data.data as Catalogo[];
       this.nicoList = data.data as Catalogo[];
       this.puntoInspeccionList = data.data as Catalogo[];
-    }));
+    }), (error) => {
+      console.error(error);
+    });
   }
   obtenerCatalogosUSO() {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('oficina_de_inspeccion.json').subscribe((data => {
       this.usoList = data.data as Catalogo[];
       this.paisDeOrigenList = data.data as Catalogo[];
       this.paisDeProcedenciaList = data.data as Catalogo[];
-    }));
+    }), (error) => {
+      console.error(error);
+    });
   }
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;

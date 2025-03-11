@@ -5,6 +5,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
+import { error } from 'console';
 /**
  * @title Datos para la Movilización (Data for Mobilization)
  * @description Este componente gestiona la información relacionada con la movilización de la acuicultura.
@@ -53,6 +54,8 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.formularioMovilizacion.valueChanges.subscribe((changes) => {
       this.verificarEstadoDelBoton();
+    }, (error) => {
+      console.error(error);
     })
     this.obtenerCatalogosTransporte();
     this.obtenerCatalogosPuntos();
@@ -64,7 +67,9 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
   obtenerCatalogosTransporte() {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('transporte.json').subscribe((data => {
       this.transportes = data.data as Catalogo[];
-    }));
+    }), (error) => {
+      console.error(error);
+    });
   }
 
   /**
@@ -73,7 +78,9 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
   obtenerCatalogosPuntos() {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').subscribe((data => {
       this.puntos = data.data as Catalogo[];
-    }));
+    }), (error) => {
+      console.error(error);
+    });
   }
   verificarEstadoDelBoton() {
     let DATOS = {

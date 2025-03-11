@@ -9,7 +9,7 @@ import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO } from '../../constantes/220203/im
 import { OpcionDeRadio } from '../../models/220203/importacion-de-acuicultura.module';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
-import { channel } from 'diagnostics_channel';
+
 
 /**
  * @description Componente para el pago de derechos en la importación de acuicultura.
@@ -63,6 +63,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.formularioPago.valueChanges.subscribe((changes) => {
       this.verificarEstadoDelBoton();
+    }, (error) => {
+      console.error(error);
     })
 
     this.obtenerListaJustificacion();
@@ -115,6 +117,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   private obtenerListaBanco(): void {
     this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('banco.json').subscribe((data) => {
       this.bancoCatalogo = data.data as Catalogo[];
+    }, (error) => {
+      console.error(error);
     });
   }
 
@@ -134,6 +138,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   private obtenerListaJustificacion(): void {
     this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json').subscribe((data) => {
       this.justificacionCatalogo = data.data as Catalogo[];
+    }, (error) => {
+      console.error(error);
     });
   }
   ngOnDestroy(): void {
