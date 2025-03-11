@@ -121,24 +121,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       "Descripción de la fracción",
       "Nico",
     ],
-    body: [
-      {
-        tbodyData: [
-          "1",
-          "Número de Oficio con Medidas Zoosanitarias",
-          "023-15-643-ARG",
-          "00102899",
-          "51012102",
-          "Lana esquilada",
-          "00",
-        ]
-      }
-    ]
+
 
   };
 
   encabezadoDeTabla: string[] = this.tableData.header;
-  mesaCuerpo: string[] = this.tableData.body[0].tbodyData;
+  mesaCuerpo: string[] = [];
 
 
 
