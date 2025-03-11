@@ -19,10 +19,8 @@ import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { Observable } from 'rxjs';
 import { RegistroDigitalizarDocumentosService } from '../../services/registro-digitalizar-documentos.service';
-// import { TipoDocumento } from '@libs/shared/data-access-user/src/core/models/701/tipo-documento.model';
+import { TipoDocumento } from '../../models/tipo-documento.model';
 
-import { TipoDocumentoStore } from '../../state/store';
-import { TipoDocumentoQuery } from '../../state/query';
 /**
  * Componente para filtrar archivos de digitalización.
  */
@@ -42,7 +40,7 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
   /**
    * Lista de documentos tipo.
    */
-  TipoDocumento: TipoDocumentoStore[] = [];
+  TipoDocumento: TipoDocumento[] = [];
 
 
   /**
@@ -72,8 +70,8 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
   /**
    * Lista de documentos específicos.
    */
-  documentosEspecificos: TipoDocumentoStore[] = [];
-  TipoDocumentoStore: any;
+  documentosEspecificos: TipoDocumento[] = [];
+ 
 
   /**
    * Constructor del componente.
@@ -88,8 +86,7 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
     private toastr: ToastrService,
     private http: HttpClient,
     private registrodigitalizar: RegistroDigitalizarDocumentosService,
-    private store: TipoDocumentoStore,
-    private query: TipoDocumentoQuery
+    
   ) {
     this.tipoDocumentosForm = this.fb.group({
       solicitud: this.fb.group({
@@ -198,7 +195,7 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
                 this.documentoSeleccionado?.descripcion
             );
             if (selectedDocument) {
-              this.TipoDocumentoStore.push(selectedDocument);
+              this.TipoDocumento.push(selectedDocument);
               this.toastr.success('Documento agregado exitosamente');
               this.tipoDocumentosForm.get('tipoDocumento')?.reset();
             } else {

@@ -22,7 +22,7 @@ import { CatalogosService } from  '@ng-mf/data-access-user';
 import { RegistroDigitalizarDocumentosService } from '../../services/registro-digitalizar-documentos.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { map, Subscription } from 'rxjs';
+
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
@@ -129,10 +129,7 @@ export class AnexarPageComponent implements OnInit {
   /**
    * Documentos disponibles para selección.
    */
-  // disponiblesDocumentos: Catalogo[] = ['Document A','Document B','Document C'];
-
-  // catalogo: Catalogo[] = this.disponiblesDocumentos;
-   
+  
 
   /**
    * Documentos seleccionados por el usuario.

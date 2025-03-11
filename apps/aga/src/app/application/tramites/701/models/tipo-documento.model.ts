@@ -1,11 +1,10 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Catalogo } from '@libs/shared/data-access-user/src';
-
 /**
  * Interfaz que representa un tipo de documento.
  */
 export interface TipoDocumento {
-  descripcion: string | null;
+  descripcion: string;
   /**
    * Indica si el documento está seleccionado.
    */
@@ -14,25 +13,15 @@ export interface TipoDocumento {
   /**
    * Información del tipo de documento.
    */
-  tipoDocumento?: Catalogo | null;
+  tipoDocumento?: Catalogo;
 
   /**
    * RFC para consulta.
    */
-  rfcParaConsulta?: string | null;
+  rfcParaConsulta?: string;
 
   /**
    * Nombre o razón social del documento.
    */
-  nombre?: string[];
-}
-export function createInitialState(): TipoDocumento {
-  return {
-    descripcion: null,
-    selected: false,
-    tipoDocumento: null,
-    rfcParaConsulta: null,
-    nombre: [],
-   
-  };
+  nombre?: string;
 }

@@ -30,7 +30,6 @@ export * from './tramites/constantes/constantes';
 export * from  './core/services/220471/servicios-pantallas.service';
 export * from  './core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 
-export * from './core/services/701/registro-digitalizar-documentos.service';
 export * from  './tramites/constantes/constantes';
 
 export * from './tramites/components/crosslist/crosslist.component';

@@ -5,9 +5,8 @@
 /* eslint-disable sort-imports */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { TipoDocumentoStore } from '../state/store';
 import { Catalogo, CatalogosSelect, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-
+import { TipoDocumento } from '../models/tipo-documento.model';
 @Injectable({
   providedIn: 'root',
 })
@@ -26,7 +25,7 @@ export class RegistroDigitalizarDocumentosService {
   }
   
   getDocumentoSelect(){
-    return this.http.get<TipoDocumentoStore[]>(
+    return this.http.get<TipoDocumento[]>(
        'assets/json/701/documento-select.json'
     )
   }
