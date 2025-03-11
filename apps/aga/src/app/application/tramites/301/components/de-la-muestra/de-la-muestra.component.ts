@@ -91,7 +91,6 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna nada, ya que es un método sin lógica por el momento.
    */
   validarFormulario(): void {
-    // const MERCANCIA = this.mercancia;
     // Este método puede incluir lógica de validación en el futuro.
   }
 

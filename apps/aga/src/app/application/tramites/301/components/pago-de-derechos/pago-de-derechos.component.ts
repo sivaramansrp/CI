@@ -38,7 +38,7 @@ import { Tramite301Query } from '../../../../estados/queries/tramite301.query';
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo que contiene los campos de datos del importador/exportador.
-   * El formulario incluye un campo 'Linea' y un campo 'monto' con validaciones de 'required'.
+   * El formulario incluye un campo 'linea' y un campo 'monto' con validaciones de 'required'.
    *
    * @type {FormGroup}
    */
@@ -75,7 +75,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Método del ciclo de vida `ngOnInit()`.
    * Este método se ejecuta cuando el componente se inicializa y realiza las siguientes acciones:
-   * - Inicializa el formulario reactivo `FormSolicitud` con dos campos: `Linea` y `monto`.
+   * - Inicializa el formulario reactivo `FormSolicitud` con dos campos: `linea` y `monto`.
    * - Llama al método `updateformfied()` para configurar el campo 'monto', deshabilitándolo y estableciendo un valor predeterminado.
    *
    * @memberof PagoDeDerechosComponent
@@ -95,9 +95,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
     this.FormSolicitud = this.fb.group({
       pagodederechos: this.fb.group({
-        Linea: [this.solicitudState?.Linea, Validators.required],
+        linea: [this.solicitudState?.linea, Validators.required],
         monto: ['', Validators.required],
-        Lineacheckbox: [this.solicitudState?.Lineacheckbox],
+        lineaCheckbox: [this.solicitudState?.lineaCheckbox],
       }),
     });
 
