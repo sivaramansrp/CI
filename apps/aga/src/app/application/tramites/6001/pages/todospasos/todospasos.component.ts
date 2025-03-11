@@ -5,6 +5,13 @@ import { DatosPasos, ListaPasosWizard, Todospasos, WizardComponent } from '@ng-m
 import { PANTA_PASOS } from '../../services/registro-cuentas-bancarias.enum';
 import { AccionBoton } from 'libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
 
+
+
+/**
+ * Componente Todospasos que se utiliza para mostrar y gestionar los Todospasos.
+ * 
+ * @component
+ */
 @Component({
   selector: 'app-todospasos',
   templateUrl: './todospasos.component.html',
@@ -20,6 +27,10 @@ export class TodospasosComponent {
   */
  indice: number = 1;
 
+/**
+ * Una propiedad pública que contiene la referencia al objeto `Todospasos`.
+ * Esta propiedad se utiliza para acceder a varios textos o constantes definidos en el objeto `Todospasos`.
+ */
  public TEXTOS = Todospasos;
 
 
@@ -38,6 +49,14 @@ export class TodospasosComponent {
     * @param txtBtnSig - El texto del botón siguiente.
     */
 
+  /**
+   * Represents the data for the steps in the process.
+   * 
+   * @property {number} nroPasos - The number of steps.
+   * @property {number} indice - The current index of the step.
+   * @property {string} txtBtnAnt - The text for the "Previous" button.
+   * @property {string} txtBtnSig - The text for the "Continue" button.
+   */
    public datosPasos: DatosPasos = {
      nroPasos: this.pantallasPasos.length,
      indice: this.indice,

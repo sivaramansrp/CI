@@ -8,6 +8,16 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/mod
 import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RegistroDeSolicitudesTabla } from '../../models/registro-cuentas-bancarias.model';
+
+
+/**
+ * Componente DatosGenerales que se utiliza para mostrar y gestionar los DatosGenerales.
+ * 
+ * Este componente utiliza varios subcomponentes como TituloComponent, CommonModule,
+ * ReactiveFormsModule para mostrar información y permitir al usuario seleccionar y datos generales.
+ * 
+ * @component
+ */
 @Component({
   selector: 'app-datos-generales',
   standalone: true,
@@ -17,7 +27,16 @@ import { RegistroDeSolicitudesTabla } from '../../models/registro-cuentas-bancar
 })
 export class DatosGeneralesComponent implements OnInit {
 
+  /**
+   * Una instancia de FormGroup que representa el formulario para datos generales.
+   * Este formulario se utiliza para capturar y validar la información general
+   * requerida en el proceso de solicitud.
+   */
   public formDatosGenerales!: FormGroup;
+
+  /**
+   * Un array de objetos `RegistroDeSolicitudesTabla` que representa los datos para la tabla de solicitudes.
+   */
   public registroDeSolicitudesTablaDatos: RegistroDeSolicitudesTabla[] = [];
 
   /** Configuración de la tabla de sectores */
@@ -36,6 +55,12 @@ export class DatosGeneralesComponent implements OnInit {
   ];
 
 
+  /**
+   * Constructor para el componente DatosGenerales.
+   * 
+   * @param _registroCuentasBancariasSvc - Servicio para gestionar registros de cuentas bancarias.
+   * @param fb - Instancia de FormBuilder para crear formularios reactivos.
+   */
   constructor(
     private _registroCuentasBancariasSvc: RegistroCuentasBancariasService,
     private fb: FormBuilder,
@@ -44,20 +69,49 @@ export class DatosGeneralesComponent implements OnInit {
   }
 
 
+  /**
+   * Gancho de ciclo de vida que se llama después de que se inicializan las propiedades enlazadas a datos de una directiva.
+   * Inicializa el componente creando el formulario de datos generales, obteniendo la tabla de solicitudes
+   * y obteniendo los detalles del formulario de datos generales.
+   *
+   * @memberof DatosGeneralesComponent
+   */
   ngOnInit(): void {
     this.crearFormDatosGenerales();
     this.getSolicitudesTabla();
     this.obtenerFormDatosGeneralesDatos();
   }
 
+  /**
+   * Verifica si el valor proporcionado es un objeto.
+   *
+   * @param value - El valor a verificar.
+   * @returns `true` si el valor es un objeto y no es nulo, de lo contrario `false`.
+   */
   public isObject(value: unknown): boolean {
     return value !== null && typeof value === 'object';
   }
 
+  /**
+   * Verifica si el valor proporcionado es un array no vacío.
+   *
+   * @param value - El valor a verificar.
+   * @returns `true` si el valor es un array y tiene al menos un elemento, de lo contrario `false`.
+   */
   public isValidArray(value: unknown): boolean {
     return Array.isArray(value) && value.length > 0;
   }
 
+  /**
+   * Inicializa el grupo de formularios `formDatosGenerales` con valores predeterminados y deshabilita todos los controles del formulario.
+   * El grupo de formularios contiene los siguientes controles:
+   * - `aduanaAdicional`: Un control de formulario deshabilitado con una cadena vacía como valor predeterminado.
+   * - `nombre`: Un control de formulario deshabilitado con una cadena vacía como valor predeterminado.
+   * - `federalDeContribuyentes`: Un control de formulario deshabilitado con una cadena vacía como valor predeterminado.
+   * - `tipoDePersona`: Un control de formulario deshabilitado con una cadena vacía como valor predeterminado.
+   *
+   * @returns {void} Este método no devuelve ningún valor.
+   */
   public crearFormDatosGenerales():void {
     this.formDatosGenerales = this.fb.group({
       aduanaAdicional: [{ value: '', disabled: true }],
@@ -67,12 +121,30 @@ export class DatosGeneralesComponent implements OnInit {
     });
   }
 
+  /**
+   * Obtiene los datos de solicitudes del servicio y los asigna a la propiedad del componente.
+   * 
+   * Este método llama al método `getSolicitudesTabla` del servicio `_registroCuentasBancariasSvc`,
+   * se suscribe al observable que devuelve y asigna los datos recibidos a la propiedad `registroDeSolicitudesTablaDatos`.
+   * 
+   * @returns {void}
+   */
   public getSolicitudesTabla(): void {
     this._registroCuentasBancariasSvc.getSolicitudesTabla().subscribe((data) => {
       this.registroDeSolicitudesTablaDatos = data;
     });
   }
 
+  /**
+   * Obtiene la información del formulario de datos generales desde la API y actualiza los campos del formulario con los datos de la respuesta.
+   * 
+   * Este método llama al servicio `obtenerDatosDeFormularioDeAPI` para obtener los datos de la API.
+   * Si la respuesta es un objeto y contiene un array válido en la propiedad `data`, actualiza los campos del formulario
+   * `aduanaAdicional`, `nombre`, `federalDeContribuyentes` y `tipoDePersona` con los valores correspondientes
+   * del primer elemento del array `data`.
+   * 
+   * @returns {void}
+   */
   public obtenerFormDatosGeneralesDatos(): void {
     this._registroCuentasBancariasSvc.obtenerDatosDeFormularioDeAPI().subscribe((response) => {
       if(this.isObject(response) && this.isValidArray(response.data)) {
@@ -85,6 +157,14 @@ export class DatosGeneralesComponent implements OnInit {
     });
   }
 
+  /**
+   * Inicia el proceso para agregar una nueva cuenta bancaria.
+   * Este método cambia el componente actual a 'AgregarCuenta' utilizando el 
+   * servicio _registroCuentasBancariasSvc.
+   *
+   * @public
+   * @returns {void}
+   */
   public altaDeCuenta(): void {
     this._registroCuentasBancariasSvc.cambiarComponente('AgregarCuenta');
   }
