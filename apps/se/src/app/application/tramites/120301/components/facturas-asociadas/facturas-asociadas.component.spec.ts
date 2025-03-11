@@ -4,12 +4,12 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { formularioAsociacionFactura } from './facturas-asociadas.component';
+import { FormularioAsociacionFacturaComponent } from './facturas-asociadas.component';
 import { of, throwError } from 'rxjs';
 
 describe('formularioAsociacionFactura', () => {
-  let component: formularioAsociacionFactura;
-  let fixture: ComponentFixture<formularioAsociacionFactura>;
+  let component: FormularioAsociacionFacturaComponent;
+  let fixture: ComponentFixture<FormularioAsociacionFacturaComponent>;
   let facturasAsociadasService: FacturasAsociadasService;
 
   beforeEach(async () => {
@@ -20,11 +20,11 @@ describe('formularioAsociacionFactura', () => {
         TableComponent,
         TituloComponent
       ],
-      declarations: [formularioAsociacionFactura],
+      declarations: [FormularioAsociacionFacturaComponent],
       providers: [FacturasAsociadasService]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(formularioAsociacionFactura);
+    fixture = TestBed.createComponent(FormularioAsociacionFacturaComponent);
     component = fixture.componentInstance;
     facturasAsociadasService = TestBed.inject(FacturasAsociadasService);
     fixture.detectChanges();
