@@ -7,7 +7,7 @@ import { Tramite110101Store } from '../tramites/solicitante110101.store';
  * Query para acceder al estado del solicitante.
  */
 @Injectable({ providedIn: 'root' })
-export class Tramite110101Query extends Query<Solicitante110101State> {
+export class Solicitante110101Query extends Query<Solicitante110101State> {
   
   /**
    * Selecciona el estado completo del solicitante

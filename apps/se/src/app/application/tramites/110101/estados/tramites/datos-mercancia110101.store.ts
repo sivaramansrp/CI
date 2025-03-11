@@ -71,17 +71,17 @@ export function createInitialState(): DatosMercanciaState {
 }
 
 /**
- * **Store para gestionar el estado de DatosDeLa**
+ * **Store para gestionar el estado de DatosMercancia**
  * 
  * Esta clase extiende `Store<DatosMercanciaState>` y se encarga de gestionar el estado 
- * de los datos relacionados con `DatosDeLa`. Se inicializa con el estado predeterminado
+ * de los datos relacionados con `DatosMercancia`. Se inicializa con el estado predeterminado
  * definido en `createInitialState()`.
  * 
  * - `@Injectable({ providedIn: 'root' })` permite que el servicio esté disponible en toda la aplicación.
- * - `@StoreConfig({ name: 'datosDeLa' })` define la configuración del store, asignándole un nombre.
+ * - `@StoreConfig({ name: 'DatosMercancia' })` define la configuración del store, asignándole un nombre.
  */
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'datosDeLa' })
+@StoreConfig({ name: 'DatosMercancia' })
 export class DatosMercanciaStore extends Store<DatosMercanciaState> {
   /**
   * **Constructor de la tienda**
