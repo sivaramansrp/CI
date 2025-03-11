@@ -3,802 +3,803 @@ import { Injectable } from '@angular/core';
 
 
 /**
- * Interface representing the state of Solicitud31601.
+ * Interfaz que representa el estado de Solicitud31601.
  */
 export interface Solicitud31601State {
     /**
-     * The autorizacionIVAIEPS value.
+     * El valor de autorizacionIVAIEPS.
      */
     autorizacionIVAIEPS: string;
     
     /**
-     * The regimen_0 value.
+     * El valor de regimen_0.
      */
     regimen_0: boolean;
     
     /**
-     * The regimen_1 value.
+     * El valor de regimen_1.
      */
     regimen_1: boolean;
     
     /**
-     * The regimen_2 value.
+     * El valor de regimen_2.
      */
     regimen_2: boolean;
     
     /**
-     * The regimen_3 value.
+     * El valor de regimen_3.
      */
     regimen_3: boolean;
     
     /**
-     * The sectorProductivo value.
+     * El valor de sectorProductivo.
      */
     sectorProductivo: string;
     
     /**
-     * The servicio value.
+     * El valor de servicio.
      */
     servicio: string;
     
     /**
-     * The preOperativo value.
+     * El valor de preOperativo.
      */
     preOperativo: boolean;
     
     /**
-     * The indiqueSi value.
+     * El valor de indiqueSi.
      */
     indiqueSi: boolean;
     
     /**
-     * The senale value.
+     * El valor de senale.
      */
     senale: boolean;
     
     /**
-     * The empPropios value.
+     * El valor de empPropios.
      */
     empPropios: string;
     
     /**
-     * The bimestre value.
+     * El valor de bimestre.
      */
     bimestre: string;
     
     /**
-     * The senaleSi value.
+     * El valor de senaleSi.
      */
     senaleSi: boolean;
     
     /**
-     * The seMomento value.
+     * El valor de seMomento.
      */
     seMomento: boolean;
     
     /**
-     * The cumplir value.
+     * El valor de cumplir.
      */
     cumplir: boolean;
     
     /**
-     * The indique value.
+     * El valor de indique.
      */
     indique: boolean;
     
     /**
-     * The encuentra value.
+     * El valor de encuentra.
      */
     encuentra: boolean;
     
     /**
-     * The delMismo value.
+     * El valor de delMismo.
      */
     delMismo: boolean;
     
     /**
-     * The senaleMomento value.
+     * El valor de senaleMomento.
      */
     senaleMomento: boolean;
     
     /**
-     * The enCaso value.
+     * El valor de enCaso.
      */
     enCaso: boolean;
     
     /**
-     * The comboBimestresIDCSeleccione value.
+     * El valor de comboBimestresIDCSeleccione.
      */
     comboBimestresIDCSeleccione: string;
     
     /**
-     * The ingresar value.
+     * El valor de ingresar.
      */
     ingresar: boolean;
     
     /**
-     * The encuentraSus value.
+     * El valor de encuentraSus.
      */
     encuentraSus: boolean;
     
     /**
-     * The registrosQue value.
+     * El valor de registrosQue.
      */
     registrosQue: string;
     
     /**
-     * The registrosQue2 value.
+     * El valor de registrosQue2.
      */
     registrosQue2: string;
     
     /**
-     * The momentoIngresar value.
+     * El valor de momentoIngresar.
      */
     momentoIngresar: boolean;
     
     /**
-     * The indiqueCuenta value.
+     * El valor de indiqueCuenta.
      */
     indiqueCuenta: boolean;
     
     /**
-     * The nombreDel value.
+     * El valor de nombreDel.
      */
     nombreDel: string;
     
     /**
-     * The lugarDeRadicacion value.
+     * El valor de lugarDeRadicacion.
      */
     lugarDeRadicacion: string;
     
     /**
-     * The contabilidad value.
+     * El valor de contabilidad.
      */
     contabilidad: boolean;
     
     /**
-     * The rmfRadio value.
+     * El valor de rmfRadio.
      */
     rmfRadio: boolean;
     
     /**
-     * The vinculacionRegistroCancelado value.
+     * El valor de vinculacionRegistroCancelado.
      */
     vinculacionRegistroCancelado: boolean;
     
     /**
-     * The proveedoresListadoSAT value.
+     * El valor de proveedoresListadoSAT.
      */
     proveedoresListadoSAT: boolean;
     
     /**
-     * The indiqueCheck value.
+     * El valor de indiqueCheck.
      */
     indiqueCheck: boolean;
     
     /**
-     * The resigtro value.
+     * El valor de resigtro.
      */
     resigtro: string;
     
     /**
-     * The telefono value.
+     * El valor de telefono.
      */
     telefono: string;
     
     /**
-     * The correo value.
+     * El valor de correo.
      */
     correo: string;
     
     /**
-     * The manifieste value.
+     * El valor de manifieste.
      */
     manifieste: string;
     
     /**
-     * The indiqueIva value.
+     * El valor de indiqueIva.
      */
     indiqueIva: string;
     
     /**
-     * The empleados value.
+     * El valor de empleados.
      */
     empleados: boolean;
     
     /**
-     * The infraestructura value.
+     * El valor de infraestructura.
      */
     infraestructura: boolean;
     
     /**
-     * The monto value.
+     * El valor de monto.
      */
     monto: boolean;
     
     /**
-     * The antiguedad value.
+     * El valor de antiguedad.
      */
     antiguedad: boolean;
     
     /**
-     * The tipoDe value.
+     * El valor de tipoDe.
      */
     tipoDe: string;
     
     /**
-     * The valorPesos value.
+     * El valor de valorPesos.
      */
     valorPesos: string;
     
     /**
-     * The descripcion value.
+     * El valor de descripcion.
      */
     descripcion: string;
     
     /**
-     * The haContado value.
+     * El valor de haContado.
      */
     haContado: string;
     
     /**
-     * The enCasoIva value.
+     * El valor de enCasoIva.
      */
     enCasoIva: string;
     
     /**
-     * The numeroOperacion value.
+     * El valor de numeroOperacion.
      */
     numeroOperacion: string;
     
     /**
-     * The banco value.
+     * El valor de banco.
      */
     banco: string;
     
     /**
-     * The llavePago value.
+     * El valor de llavePago.
      */
     llavePago: string;
     
     /**
-     * The importaciones value.
+     * El valor de importaciones.
      */
     importaciones: string;
     
     /**
-     * The infraestructuraIndique value.
+     * El valor de infraestructuraIndique.
      */
     infraestructuraIndique: string;
     
     /**
-     * The ultimosMeses value.
+     * El valor de ultimosMeses.
      */
     ultimosMeses: string;
     
     /**
-     * The operacionesmeses value.
+     * El valor de operacionesmeses.
      */
     operacionesmeses: string;
     
     /**
-     * The valor value.
+     * El valor de valor.
      */
     valor: string;
     
     /**
-     * The transferencias value.
+     * El valor de transferencias.
      */
     transferencias: number;
     
     /**
-     * The transferenciasVir value.
+     * El valor de transferenciasVir.
      */
     transferenciasVir: number;
     
     /**
-     * The retornos value.
+     * El valor de retornos.
      */
     retornos: number;
     
     /**
-     * The retornosSe value.
+     * El valor de retornosSe.
      */
     retornosSe: number;
     
     /**
-     * The constancias value.
+     * El valor de constancias.
      */
     constancias: number;
     
     /**
-     * The constanciasDe value.
+     * El valor de constanciasDe.
      */
     constanciasDe: number;
     
     /**
-     * The empleadosPropios value.
+     * El valor de empleadosPropios.
      */
     empleadosPropios: string;
     
     /**
-     * The numeroEmpleados value.
+     * El valor de numeroEmpleados.
      */
     numeroEmpleados: number;
     
     /**
-     * The numeroEmpleadosDos value.
+     * El valor de numeroEmpleadosDos.
      */
     numeroEmpleadosDos: number;
     
     /**
-     * The numeroEmpleadosTres value.
+     * El valor de numeroEmpleadosTres.
      */
     numeroEmpleadosTres: number;
     
     /**
-     * The comboBimestresUno value.
+     * El valor de comboBimestresUno.
      */
     comboBimestresUno: string;
     
     /**
-     * The comboBimestresDos value.
+     * El valor de comboBimestresDos.
      */
     comboBimestresDos: string;
     
     /**
-     * The comboBimestresTres value.
+     * El valor de comboBimestresTres.
      */
     comboBimestresTres: string;
     
     /**
-     * The proveedorCumplimiento value.
+     * El valor de proveedorCumplimiento.
      */
     proveedorCumplimiento: string;
     
     /**
-     * The declaracionISR value.
+     * El valor de declaracionISR.
      */
     declaracionISR: string;
     
     /**
-     * The cancelacion value.
+     * El valor de cancelacion.
      */
     cancelacion: string;
     
     /**
-     * The cumplimientoReglas value.
+     * El valor de cumplimientoReglas.
      */
     cumplimientoReglas: string;
     
     /**
-     * The recintoFiscalizado value.
+     * El valor de recintoFiscalizado.
      */
     recintoFiscalizado: string;
     
     /**
-     * The recintoEstrategico value.
+     * El valor de recintoEstrategico.
      */
     recintoEstrategico: string;
     
     /**
-     * The cumplimientoLineamientos value.
+     * El valor de cumplimientoLineamientos.
      */
     cumplimientoLineamientos: string;
 }
 /**
- * Function to create the initial state of Solicitud31601.
- * @returns {Solicitud31601State} The initial state of Solicitud31601.
+ * Función para crear el estado inicial de Solicitud31601.
+ * @returns {Solicitud31601State} El estado inicial de Solicitud31601.
  */
 export function createInitialState(): Solicitud31601State {
     return {
         /**
-         * The autorizacionIVAIEPS value.
+         * El valor de autorizacionIVAIEPS.
          */
         autorizacionIVAIEPS: '',
         
         /**
-         * The regimen_0 value.
+         * El valor de regimen_0.
          */
         regimen_0: false,
         
         /**
-         * The regimen_1 value.
+         * El valor de regimen_1.
          */
         regimen_1: false,
         
         /**
-         * The regimen_2 value.
+         * El valor de regimen_2.
          */
         regimen_2: false,
         
         /**
-         * The regimen_3 value.
+         * El valor de regimen_3.
          */
         regimen_3: false,
         
         /**
-         * The sectorProductivo value.
+         * El valor de sectorProductivo.
          */
         sectorProductivo: '',
         
         /**
-         * The servicio value.
+         * El valor de servicio.
          */
         servicio: '',
         
         /**
-         * The preOperativo value.
+         * El valor de preOperativo.
          */
         preOperativo: false,
         
         /**
-         * The indiqueSi value.
+         * El valor de indiqueSi.
          */
         indiqueSi: false,
         
         /**
-         * The senale value.
+         * El valor de senale.
          */
         senale: false,
         
         /**
-         * The empPropios value.
+         * El valor de empPropios.
          */
         empPropios: '',
         
         /**
-         * The bimestre value.
+         * El valor de bimestre.
          */
         bimestre: '',
         
         /**
-         * The senaleSi value.
+         * El valor de senaleSi.
          */
         senaleSi: false,
         
         /**
-         * The seMomento value.
+         * El valor de seMomento.
          */
         seMomento: false,
         
         /**
-         * The cumplir value.
+         * El valor de cumplir.
          */
         cumplir: false,
         
         /**
-         * The indique value.
+         * El valor de indique.
          */
         indique: false,
         
         /**
-         * The encuentra value.
+         * El valor de encuentra.
          */
         encuentra: false,
         
         /**
-         * The delMismo value.
+         * El valor de delMismo.
          */
         delMismo: false,
         
         /**
-         * The senaleMomento value.
+         * El valor de senaleMomento.
          */
         senaleMomento: false,
         
         /**
-         * The enCaso value.
+         * El valor de enCaso.
          */
         enCaso: false,
         
         /**
-         * The comboBimestresIDCSeleccione value.
+         * El valor de comboBimestresIDCSeleccione.
          */
         comboBimestresIDCSeleccione: '',
         
         /**
-         * The ingresar value.
+         * El valor de ingresar.
          */
         ingresar: false,
         
         /**
-         * The encuentraSus value.
+         * El valor de encuentraSus.
          */
         encuentraSus: false,
         
         /**
-         * The registrosQue value.
+         * El valor de registrosQue.
          */
         registrosQue: '',
         
         /**
-         * The registrosQue2 value.
+         * El valor de registrosQue2.
          */
         registrosQue2: '',
         
         /**
-         * The momentoIngresar value.
+         * El valor de momentoIngresar.
          */
         momentoIngresar: false,
         
         /**
-         * The indiqueCuenta value.
+         * El valor de indiqueCuenta.
          */
         indiqueCuenta: false,
         
         /**
-         * The nombreDel value.
+         * El valor de nombreDel.
          */
         nombreDel: '',
         
         /**
-         * The lugarDeRadicacion value.
+         * El valor de lugarDeRadicacion.
          */
         lugarDeRadicacion: '',
         
         /**
-         * The contabilidad value.
+         * El valor de contabilidad.
          */
         contabilidad: false,
         
         /**
-         * The rmfRadio value.
+         * El valor de rmfRadio.
          */
         rmfRadio: false,
         
         /**
-         * The vinculacionRegistroCancelado value.
+         * El valor de vinculacionRegistroCancelado.
          */
         vinculacionRegistroCancelado: false,
         
         /**
-         * The proveedoresListadoSAT value.
+         * El valor de proveedoresListadoSAT.
          */
         proveedoresListadoSAT: false,
         
         /**
-         * The indiqueCheck value.
+         * El valor de indiqueCheck.
          */
         indiqueCheck: false,
         
         /**
-         * The resigtro value.
+         * El valor de resigtro.
          */
-        resigtro: 'HEUE780514BVA',
+        resigtro: '',
         
         /**
-         * The telefono value.
+         * El valor de telefono.
          */
-        telefono: '56457970',
+        telefono: '',
         
         /**
-         * The correo value.
+         * El valor de correo.
          */
-        correo: 'VUCEMcbp@vuem2_5@hotmail.com.com',
+        correo: '',
         
         /**
-         * The manifieste value.
+         * El valor de manifieste.
          */
-        manifieste: 'Si',
+        manifieste: '',
         
         /**
-         * The indiqueIva value.
+         * El valor de indiqueIva.
          */
-        indiqueIva: 'Si',
+        indiqueIva: '',
         
         /**
-         * The empleados value.
+         * El valor de empleados.
          */
         empleados: false,
         
         /**
-         * The infraestructura value.
+         * El valor de infraestructura.
          */
         infraestructura: false,
         
         /**
-         * The monto value.
+         * El valor de monto.
          */
         monto: false,
         
         /**
-         * The antiguedad value.
+         * El valor de antiguedad.
          */
         antiguedad: false,
         
         /**
-         * The tipoDe value.
+         * El valor de tipoDe.
          */
         tipoDe: '',
         
         /**
-         * The valorPesos value.
+         * El valor de valorPesos.
          */
         valorPesos: '',
         
         /**
-         * The descripcion value.
+         * El valor de descripcion.
          */
         descripcion: '',
         
         /**
-         * The haContado value.
+         * El valor de haContado.
          */
-        haContado: 'Si',
+        haContado: '',
         
         /**
-         * The enCasoIva value.
+         * El valor de enCasoIva.
          */
-        enCasoIva: 'Si',
+        enCasoIva: '',
         
         /**
-         * The numeroOperacion value.
+         * El valor de numeroOperacion.
          */
-        numeroOperacion: 'OP456',
+        numeroOperacion: '',
         
         /**
-         * The banco value.
+         * El valor de banco.
          */
         banco: '',
         
         /**
-         * The llavePago value.
+         * El valor de llavePago.
          */
-        llavePago: 'PAY789',
+        llavePago: '',
         
         /**
-         * The importaciones value.
+         * El valor de importaciones.
          */
-        importaciones: 'Yes',
+        importaciones: '',
         
         /**
-         * The infraestructuraIndique value.
+         * El valor de infraestructuraIndique.
          */
-        infraestructuraIndique: 'Yes',
+        infraestructuraIndique: '',
         
         /**
-         * The ultimosMeses value.
+         * El valor de ultimosMeses.
          */
-        ultimosMeses: 'Yes',
+        ultimosMeses: '',
         
         /**
-         * The operacionesmeses value.
+         * El valor de operacionesmeses.
          */
-        operacionesmeses: 'Yes',
+        operacionesmeses: '',
         
         /**
-         * The valor value.
+         * El valor de valor.
          */
         valor: '',
         
         /**
-         * The transferencias value.
+         * El valor de transferencias.
          */
-        transferencias: 80,
+        transferencias: 0,
         
         /**
-         * The transferenciasVir value.
+         * El valor de transferenciasVir.
          */
-        transferenciasVir: 80,
+        transferenciasVir: 0,
         
         /**
-         * The retornos value.
+         * El valor de retornos.
          */
-        retornos: 10,
+        retornos: 0,
         
         /**
-         * The retornosSe value.
+         * El valor de retornosSe.
          */
-        retornosSe: 10,
+        retornosSe: 0,
         
         /**
-         * The constancias value.
+         * El valor de constancias.
          */
-        constancias: 10,
+        constancias: 0,
         
         /**
-         * The constanciasDe value.
+         * El valor de constanciasDe.
          */
-        constanciasDe: 10,
+        constanciasDe: 0,
         
         /**
-         * The empleadosPropios value.
+         * El valor de empleadosPropios.
          */
-        empleadosPropios: 'Yes',
+        empleadosPropios: '',
         
         /**
-         * The numeroEmpleados value.
+         * El valor de numeroEmpleados.
          */
         numeroEmpleados: 1,
         
         /**
-         * The numeroEmpleadosDos value.
+         * El valor de numeroEmpleadosDos.
          */
         numeroEmpleadosDos: 1,
         
         /**
-         * The numeroEmpleadosTres value.
+         * El valor de numeroEmpleadosTres.
          */
         numeroEmpleadosTres: 1,
         
         /**
-         * The comboBimestresUno value.
+         * El valor de comboBimestresUno.
          */
         comboBimestresUno: '',
         
         /**
-         * The comboBimestresDos value.
+         * El valor de comboBimestresDos.
          */
         comboBimestresDos: '',
         
         /**
-         * The comboBimestresTres value.
+         * El valor de comboBimestresTres.
          */
         comboBimestresTres: '',
         
         /**
-         * The proveedorCumplimiento value.
+         * El valor de proveedorCumplimiento.
          */
-        proveedorCumplimiento: 'Yes',
+        proveedorCumplimiento: '',
         
         /**
-         * The declaracionISR value.
+         * El valor de declaracionISR.
          */
-        declaracionISR: 'Yes',
+        declaracionISR: '',
         
         /**
-         * The cancelacion value.
+         * El valor de cancelacion.
          */
-        cancelacion: 'Yes',
+        cancelacion: '',
         
         /**
-         * The cumplimientoReglas value.
+         * El valor de cumplimientoReglas.
          */
-        cumplimientoReglas: 'Yes',
+        cumplimientoReglas: '',
         
         /**
-         * The recintoFiscalizado value.
+         * El valor de recintoFiscalizado.
          */
-        recintoFiscalizado: 'Yes',
+        recintoFiscalizado: '',
         
         /**
-         * The recintoEstrategico value.
+         * El valor de recintoEstrategico.
          */
-        recintoEstrategico: 'Yes',
+        recintoEstrategico: '',
         
         /**
-         * The cumplimientoLineamientos value.
+         * El valor de cumplimientoLineamientos.
          */
-        cumplimientoLineamientos: 'Yes'
+        cumplimientoLineamientos: ''
     };
 }
 
  /**
- * Injectable decorator to make the store available at the root level.
+ * Decorador Injectable para hacer que la tienda esté disponible a nivel raíz.
  */
 @Injectable({
     providedIn: 'root',
 })
 /**
- * StoreConfig decorator to configure the store with a name and resettable option.
- * @param {Object} config - The configuration object.
- * @param {string} config.name - The name of the store.
- * @param {boolean} config.resettable - Indicates if the store is resettable.
+ * Decorador StoreConfig para configurar la tienda con un nombre y una opción de restablecimiento.
+ * @param {Object} config - El objeto de configuración.
+ * @param {string} config.name - El nombre de la tienda.
+ * @param {boolean} config.resettable - Indica si la tienda es restablecible.
  */
 @StoreConfig({ name: 'tramite31601', resettable: true })
 
 export class Tramite31601Store extends Store<Solicitud31601State>{
     /**
-     * Creates an instance of Tramite31601Store.
-     * Initializes the store with the initial state.
+     * Crea una instancia de Tramite31601Store.
+     * Inicializa la tienda con el estado inicial.
      */
     constructor() {
         super(createInitialState());
     }
+
     /**
-     * Sets the autorizacionIVAIEPS state.
-     * @param autorizacionIVAIEPS - The autorizacionIVAIEPS value.
+     * Establece el estado de autorizacionIVAIEPS.
+     * @param autorizacionIVAIEPS - El valor de autorizacionIVAIEPS.
      */
     public setAutorizacionIVAIEPS(autorizacionIVAIEPS: string) {
         this.update((state) => ({
@@ -808,8 +809,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the regimen_0 state.
-     * @param regimen_0 - The regimen_0 value.
+     * Establece el estado de regimen_0.
+     * @param regimen_0 - El valor de regimen_0.
      */
     public setRegimen_0(regimen_0: boolean) {
         this.update((state) => ({
@@ -819,8 +820,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the regimen_1 state.
-     * @param regimen_1 - The regimen_1 value.
+     * Establece el estado de regimen_1.
+     * @param regimen_1 - El valor de regimen_1.
      */
     public setRegimen_1(regimen_1: boolean) {
         this.update((state) => ({
@@ -830,8 +831,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the regimen_2 state.
-     * @param regimen_2 - The regimen_2 value.
+     * Establece el estado de regimen_2.
+     * @param regimen_2 - El valor de regimen_2.
      */
     public setRegimen_2(regimen_2: boolean) {
         this.update((state) => ({
@@ -841,8 +842,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the regimen_3 state.
-     * @param regimen_3 - The regimen_3 value.
+     * Establece el estado de regimen_3.
+     * @param regimen_3 - El valor de regimen_3.
      */
     public setRegimen_3(regimen_3: boolean) {
         this.update((state) => ({
@@ -852,8 +853,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the sectorProductivo state.
-     * @param sectorProductivo - The sectorProductivo value.
+     * Establece el estado de sectorProductivo.
+     * @param sectorProductivo - El valor de sectorProductivo.
      */
     public setSectorProductivo(sectorProductivo: string) {
         this.update((state) => ({
@@ -863,8 +864,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the servicio state.
-     * @param servicio - The servicio value.
+     * Establece el estado de servicio.
+     * @param servicio - El valor de servicio.
      */
     public setServicio(servicio: string) {
         this.update((state) => ({
@@ -874,8 +875,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the preOperativo state.
-     * @param preOperativo - The preOperativo value.
+     * Establece el estado de preOperativo.
+     * @param preOperativo - El valor de preOperativo.
      */
     public setPreOperativo(preOperativo: boolean) {
         this.update((state) => ({
@@ -885,8 +886,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the indiqueSi state.
-     * @param indiqueSi - The indiqueSi value.
+     * Establece el estado de indiqueSi.
+     * @param indiqueSi - El valor de indiqueSi.
      */
     public setIndiqueSi(indiqueSi: boolean) {
         this.update((state) => ({
@@ -896,8 +897,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the senale state.
-     * @param senale - The senale value.
+     * Establece el estado de senale.
+     * @param senale - El valor de senale.
      */
     public setSenale(senale: boolean) {
         this.update((state) => ({
@@ -907,8 +908,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the empPropios state.
-     * @param empPropios - The empPropios value.
+     * Establece el estado de empPropios.
+     * @param empPropios - El valor de empPropios.
      */
     public setEmpPropios(empPropios: string) {
         this.update((state) => ({
@@ -918,8 +919,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the bimestre state.
-     * @param bimestre - The bimestre value.
+     * Establece el estado de bimestre.
+     * @param bimestre - El valor de bimestre.
      */
     public setBimestre(bimestre: string) {
         this.update((state) => ({
@@ -929,8 +930,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the senaleSi state.
-     * @param senaleSi - The senaleSi value.
+     * Establece el estado de senaleSi.
+     * @param senaleSi - El valor de senaleSi.
      */
     public setSenaleSi(senaleSi: boolean) {
         this.update((state) => ({
@@ -940,8 +941,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the seMomento state.
-     * @param seMomento - The seMomento value.
+     * Establece el estado de seMomento.
+     * @param seMomento - El valor de seMomento.
      */
     public setSeMomento(seMomento: boolean) {
         this.update((state) => ({
@@ -951,8 +952,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the cumplir state.
-     * @param cumplir - The cumplir value.
+     * Establece el estado de cumplir.
+     * @param cumplir - El valor de cumplir.
      */
     public setCumplir(cumplir: boolean) {
         this.update((state) => ({
@@ -962,8 +963,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the indique state.
-     * @param indique - The indique value.
+     * Establece el estado de indique.
+     * @param indique - El valor de indique.
      */
     public setIndique(indique: boolean) {
         this.update((state) => ({
@@ -973,8 +974,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the encuentra state.
-     * @param encuentra - The encuentra value.
+     * Establece el estado de encuentra.
+     * @param encuentra - El valor de encuentra.
      */
     public setEncuentra(encuentra: boolean) {
         this.update((state) => ({
@@ -984,8 +985,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the delMismo state.
-     * @param delMismo - The delMismo value.
+     * Establece el estado de delMismo.
+     * @param delMismo - El valor de delMismo.
      */
     public setDelMismo(delMismo: boolean) {
         this.update((state) => ({
@@ -995,8 +996,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the senaleMomento state.
-     * @param senaleMomento - The senaleMomento value.
+     * Establece el estado de senaleMomento.
+     * @param senaleMomento - El valor de senaleMomento.
      */
     public setSenaleMomento(senaleMomento: boolean) {
         this.update((state) => ({
@@ -1006,8 +1007,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the enCaso state.
-     * @param enCaso - The enCaso value.
+     * Establece el estado de enCaso.
+     * @param enCaso - El valor de enCaso.
      */
     public setEnCaso(enCaso: boolean) {
         this.update((state) => ({
@@ -1017,8 +1018,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the comboBimestresIDCSeleccione state.
-     * @param comboBimestresIDCSeleccione - The comboBimestresIDCSeleccione value.
+     * Establece el estado de comboBimestresIDCSeleccione.
+     * @param comboBimestresIDCSeleccione - El valor de comboBimestresIDCSeleccione.
      */
     public setComboBimestresIDCSeleccione(comboBimestresIDCSeleccione: string) {
         this.update((state) => ({
@@ -1028,8 +1029,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the ingresar state.
-     * @param ingresar - The ingresar value.
+     * Establece el estado de ingresar.
+     * @param ingresar - El valor de ingresar.
      */
     public setIngresar(ingresar: boolean) {
         this.update((state) => ({
@@ -1039,8 +1040,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the encuentraSus state.
-     * @param encuentraSus - The encuentraSus value.
+     * Establece el estado de encuentraSus.
+     * @param encuentraSus - El valor de encuentraSus.
      */
     public setEncuentraSus(encuentraSus: boolean) {
         this.update((state) => ({
@@ -1050,8 +1051,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the registrosQue state.
-     * @param registrosQue - The registrosQue value.
+     * Establece el estado de registrosQue.
+     * @param registrosQue - El valor de registrosQue.
      */
     public setRegistrosQue(registrosQue: string) {
         this.update((state) => ({
@@ -1061,8 +1062,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the registrosQue2 state.
-     * @param registrosQue2 - The registrosQue2 value.
+     * Establece el estado de registrosQue2.
+     * @param registrosQue2 - El valor de registrosQue2.
      */
     public setRegistrosQue2(registrosQue2: string) {
         this.update((state) => ({
@@ -1072,8 +1073,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the momentoIngresar state.
-     * @param momentoIngresar - The momentoIngresar value.
+     * Establece el estado de momentoIngresar.
+     * @param momentoIngresar - El valor de momentoIngresar.
      */
     public setMomentoIngresar(momentoIngresar: boolean) {
         this.update((state) => ({
@@ -1083,8 +1084,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the indiqueCuenta state.
-     * @param indiqueCuenta - The indiqueCuenta value.
+     * Establece el estado de indiqueCuenta.
+     * @param indiqueCuenta - El valor de indiqueCuenta.
      */
     public setIndiqueCuenta(indiqueCuenta: boolean) {
         this.update((state) => ({
@@ -1094,8 +1095,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the nombreDel state.
-     * @param nombreDel - The nombreDel value.
+     * Establece el estado de nombreDel.
+     * @param nombreDel - El valor de nombreDel.
      */
     public setNombreDel(nombreDel: string) {
         this.update((state) => ({
@@ -1105,8 +1106,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the lugarDeRadicacion state.
-     * @param lugarDeRadicacion - The lugarDeRadicacion value.
+     * Establece el estado de lugarDeRadicacion.
+     * @param lugarDeRadicacion - El valor de lugarDeRadicacion.
      */
     public setLugarDeRadicacion(lugarDeRadicacion: string) {
         this.update((state) => ({
@@ -1116,8 +1117,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the contabilidad state.
-     * @param contabilidad - The contabilidad value.
+     * Establece el estado de contabilidad.
+     * @param contabilidad - El valor de contabilidad.
      */
     public setContabilidad(contabilidad: boolean) {
         this.update((state) => ({
@@ -1127,8 +1128,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the rmfRadio state.
-     * @param rmfRadio - The rmfRadio value.
+     * Establece el estado de rmfRadio.
+     * @param rmfRadio - El valor de rmfRadio.
      */
     public setRmfRadio(rmfRadio: boolean) {
         this.update((state) => ({
@@ -1138,8 +1139,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the vinculacionRegistroCancelado state.
-     * @param vinculacionRegistroCancelado - The vinculacionRegistroCancelado value.
+     * Establece el estado de vinculacionRegistroCancelado.
+     * @param vinculacionRegistroCancelado - El valor de vinculacionRegistroCancelado.
      */
     public setVinculacionRegistroCancelado(vinculacionRegistroCancelado: boolean) {
         this.update((state) => ({
@@ -1149,8 +1150,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the proveedoresListadoSAT state.
-     * @param proveedoresListadoSAT - The proveedoresListadoSAT value.
+     * Establece el estado de proveedoresListadoSAT.
+     * @param proveedoresListadoSAT - El valor de proveedoresListadoSAT.
      */
     public setProveedoresListadoSAT(proveedoresListadoSAT: boolean) {
         this.update((state) => ({
@@ -1160,8 +1161,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the indiqueCheck state.
-     * @param indiqueCheck - The indiqueCheck value.
+     * Establece el estado de indiqueCheck.
+     * @param indiqueCheck - El valor de indiqueCheck.
      */
     public setIndiqueCheck(indiqueCheck: boolean) {
         this.update((state) => ({
@@ -1171,8 +1172,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the resigtro state.
-     * @param resigtro - The resigtro value.
+     * Establece el estado de resigtro.
+     * @param resigtro - El valor de resigtro.
      */
     public setResigtro(resigtro: string) {
         this.update((state) => ({
@@ -1182,8 +1183,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the telefono state.
-     * @param telefono - The telefono value.
+     * Establece el estado de telefono.
+     * @param telefono - El valor de telefono.
      */
     public setTelefono(telefono: string) {
         this.update((state) => ({
@@ -1193,8 +1194,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the correo state.
-     * @param correo - The correo value.
+     * Establece el estado de correo.
+     * @param correo - El valor de correo.
      */
     public setCorreo(correo: string) {
         this.update((state) => ({
@@ -1204,8 +1205,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the manifieste state.
-     * @param manifieste - The manifieste value.
+     * Establece el estado de manifieste.
+     * @param manifieste - El valor de manifieste.
      */
     public setManifieste(manifieste: string) {
         this.update((state) => ({
@@ -1215,8 +1216,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the indiqueIva state.
-     * @param indiqueIva - The indiqueIva value.
+     * Establece el estado de indiqueIva.
+     * @param indiqueIva - El valor de indiqueIva.
      */
     public setIndiqueIva(indiqueIva: string) {
         this.update((state) => ({
@@ -1226,8 +1227,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the empleados state.
-     * @param empleados - The empleados value.
+     * Establece el estado de empleados.
+     * @param empleados - El valor de empleados.
      */
     public setEmpleados(empleados: boolean) {
         this.update((state) => ({
@@ -1237,8 +1238,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the infraestructura state.
-     * @param infraestructura - The infraestructura value.
+     * Establece el estado de infraestructura.
+     * @param infraestructura - El valor de infraestructura.
      */
     public setInfraestructura(infraestructura: boolean) {
         this.update((state) => ({
@@ -1248,8 +1249,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the monto state.
-     * @param monto - The monto value.
+     * Establece el estado de monto.
+     * @param monto - El valor de monto.
      */
     public setMonto(monto: boolean) {
         this.update((state) => ({
@@ -1259,8 +1260,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the antiguedad state.
-     * @param antiguedad - The antiguedad value.
+     * Establece el estado de antiguedad.
+     * @param antiguedad - El valor de antiguedad.
      */
     public setAntiguedad(antiguedad: boolean) {
         this.update((state) => ({
@@ -1270,8 +1271,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the tipoDe state.
-     * @param tipoDe - The tipoDe value.
+     * Establece el estado de tipoDe.
+     * @param tipoDe - El valor de tipoDe.
      */
     public setTipoDe(tipoDe: string) {
         this.update((state) => ({
@@ -1281,8 +1282,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the valorPesos state.
-     * @param valorPesos - The valorPesos value.
+     * Establece el estado de valorPesos.
+     * @param valorPesos - El valor de valorPesos.
      */
     public setValorPesos(valorPesos: string) {
         this.update((state) => ({
@@ -1292,8 +1293,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the descripcion state.
-     * @param descripcion - The descripcion value.
+     * Establece el estado de descripcion.
+     * @param descripcion - El valor de descripcion.
      */
     public setDescripcion(descripcion: string) {
         this.update((state) => ({
@@ -1303,8 +1304,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the haContado state.
-     * @param haContado - The haContado value.
+     * Establece el estado de haContado.
+     * @param haContado - El valor de haContado.
      */
     public setHaContado(haContado: string) {
         this.update((state) => ({
@@ -1314,8 +1315,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the enCasoIva state.
-     * @param enCasoIva - The enCasoIva value.
+     * Establece el estado de enCasoIva.
+     * @param enCasoIva - El valor de enCasoIva.
      */
     public setEnCasoIva(enCasoIva: string) {
         this.update((state) => ({
@@ -1325,8 +1326,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the numeroOperacion state.
-     * @param numeroOperacion - The numeroOperacion value.
+     * Establece el estado de numeroOperacion.
+     * @param numeroOperacion - El valor de numeroOperacion.
      */
     public setNumeroOperacion(numeroOperacion: string) {
         this.update((state) => ({
@@ -1336,8 +1337,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the banco state.
-     * @param banco - The banco value.
+     * Establece el estado de banco.
+     * @param banco - El valor de banco.
      */
     public setBanco(banco: string) {
         this.update((state) => ({
@@ -1347,8 +1348,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the llavePago state.
-     * @param llavePago - The llavePago value.
+     * Establece el estado de llavePago.
+     * @param llavePago - El valor de llavePago.
      */
     public setLlavePago(llavePago: string) {
         this.update((state) => ({
@@ -1358,8 +1359,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the importaciones state.
-     * @param importaciones - The importaciones value.
+     * Establece el estado de importaciones.
+     * @param importaciones - El valor de importaciones.
      */
     public setImportaciones(importaciones: string) {
         this.update((state) => ({
@@ -1369,8 +1370,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the infraestructuraIndique state.
-     * @param infraestructuraIndique - The infraestructuraIndique value.
+     * Establece el estado de infraestructuraIndique.
+     * @param infraestructuraIndique - El valor de infraestructuraIndique.
      */
     public setInfraestructuraIndique(infraestructuraIndique: string) {
         this.update((state) => ({
@@ -1380,8 +1381,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the ultimosMeses state.
-     * @param ultimosMeses - The ultimosMeses value.
+     * Establece el estado de ultimosMeses.
+     * @param ultimosMeses - El valor de ultimosMeses.
      */
     public setUltimosMeses(ultimosMeses: string) {
         this.update((state) => ({
@@ -1391,8 +1392,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the operacionesmeses state.
-     * @param operacionesmeses - The operacionesmeses value.
+     * Establece el estado de operacionesmeses.
+     * @param operacionesmeses - El valor de operacionesmeses.
      */
     public setOperacionesmeses(operacionesmeses: string) {
         this.update((state) => ({
@@ -1402,8 +1403,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the valor state.
-     * @param valor - The valor value.
+     * Establece el estado de valor.
+     * @param valor - El valor de valor.
      */
     public setValor(valor: string) {
         this.update((state) => ({
@@ -1413,8 +1414,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the transferencias state.
-     * @param transferencias - The transferencias value.
+     * Establece el estado de transferencias.
+     * @param transferencias - El valor de transferencias.
      */
     public setTransferencias(transferencias: number) {
         this.update((state) => ({
@@ -1424,8 +1425,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the transferenciasVir state.
-     * @param transferenciasVir - The transferenciasVir value.
+     * Establece el estado de transferenciasVir.
+     * @param transferenciasVir - El valor de transferenciasVir.
      */
     public setTransferenciasVir(transferenciasVir: number) {
         this.update((state) => ({
@@ -1435,8 +1436,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the retornos state.
-     * @param retornos - The retornos value.
+     * Establece el estado de retornos.
+     * @param retornos - El valor de retornos.
      */
     public setRetornos(retornos: number) {
         this.update((state) => ({
@@ -1446,8 +1447,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the retornosSe state.
-     * @param retornosSe - The retornosSe value.
+     * Establece el estado de retornosSe.
+     * @param retornosSe - El valor de retornosSe.
      */
     public setRetornosSe(retornosSe: number) {
         this.update((state) => ({
@@ -1457,8 +1458,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the constancias state.
-     * @param constancias - The constancias value.
+     * Establece el estado de constancias.
+     * @param constancias - El valor de constancias.
      */
     public setConstancias(constancias: number) {
         this.update((state) => ({
@@ -1468,8 +1469,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the constanciasDe state.
-     * @param constanciasDe - The constanciasDe value.
+     * Establece el estado de constanciasDe.
+     * @param constanciasDe - El valor de constanciasDe.
      */
     public setConstanciasDe(constanciasDe: number) {
         this.update((state) => ({
@@ -1479,8 +1480,8 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the empleadosPropios state.
-     * @param empleadosPropios - The empleadosPropios value.
+     * Establece el estado de empleadosPropios.
+     * @param empleadosPropios - El valor de empleadosPropios.
      */
     public setEmpleadosPropios(empleadosPropios: string) {
         this.update((state) => ({
@@ -1490,145 +1491,146 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Sets the numeroEmpleados state.
-     * @param numeroEmpleados - The numeroEmpleados value.
-     */
-    public setNumeroEmpleados(numeroEmpleados: number) {
-        this.update((state) => ({
-            ...state,
-            numeroEmpleados,
-        }));
-    }
-
-    /**
-     * Sets the numeroEmpleadosDos state.
-     * @param numeroEmpleadosDos - The numeroEmpleadosDos value.
-     */
-    public setNumeroEmpleadosDos(numeroEmpleadosDos: number) {
-        this.update((state) => ({
-            ...state,
-            numeroEmpleadosDos,
-        }));
-    }
-
-    /**
-     * Sets the numeroEmpleadosTres state.
-     * @param numeroEmpleadosTres - The numeroEmpleadosTres value.
-     */
-    public setNumeroEmpleadosTres(numeroEmpleadosTres: number) {
-        this.update((state) => ({
-            ...state,
-            numeroEmpleadosTres,
-        }));
-    }
-    /**
- * Sets the comboBimestresUno state.
- * @param comboBimestresUno - The comboBimestresUno value.
+ * Establece el estado de numeroEmpleados.
+ * @param numeroEmpleados - El valor de numeroEmpleados.
  */
-    public setComboBimestresUno(comboBimestresUno: string) {
-        this.update((state) => ({
-            ...state,
-            comboBimestresUno,
-        }));
-    }
+public setNumeroEmpleados(numeroEmpleados: number) {
+    this.update((state) => ({
+        ...state,
+        numeroEmpleados,
+    }));
+}
 
-    /**
-     * Sets the comboBimestresDos state.
-     * @param comboBimestresDos - The comboBimestresDos value.
-     */
-    public setComboBimestresDos(comboBimestresDos: string) {
-        this.update((state) => ({
-            ...state,
-            comboBimestresDos,
-        }));
-    }
+/**
+ * Establece el estado de numeroEmpleadosDos.
+ * @param numeroEmpleadosDos - El valor de numeroEmpleadosDos.
+ */
+public setNumeroEmpleadosDos(numeroEmpleadosDos: number) {
+    this.update((state) => ({
+        ...state,
+        numeroEmpleadosDos,
+    }));
+}
 
-    /**
-     * Sets the comboBimestresTres state.
-     * @param comboBimestresTres - The comboBimestresTres value.
-     */
-    public setComboBimestresTres(comboBimestresTres: string) {
-        this.update((state) => ({
-            ...state,
-            comboBimestresTres,
-        }));
-    }
+/**
+ * Establece el estado de numeroEmpleadosTres.
+ * @param numeroEmpleadosTres - El valor de numeroEmpleadosTres.
+ */
+public setNumeroEmpleadosTres(numeroEmpleadosTres: number) {
+    this.update((state) => ({
+        ...state,
+        numeroEmpleadosTres,
+    }));
+}
 
-    /**
-     * Sets the proveedorCumplimiento state.
-     * @param proveedorCumplimiento - The proveedorCumplimiento value.
-     */
-    public setProveedorCumplimiento(proveedorCumplimiento: string) {
-        this.update((state) => ({
-            ...state,
-            proveedorCumplimiento,
-        }));
-    }
+/**
+ * Establece el estado de comboBimestresUno.
+ * @param comboBimestresUno - El valor de comboBimestresUno.
+ */
+public setComboBimestresUno(comboBimestresUno: string) {
+    this.update((state) => ({
+        ...state,
+        comboBimestresUno,
+    }));
+}
 
-    /**
-     * Sets the declaracionISR state.
-     * @param declaracionISR - The declaracionISR value.
-     */
-    public setDeclaracionISR(declaracionISR: string) {
-        this.update((state) => ({
-            ...state,
-            declaracionISR,
-        }));
-    }
+/**
+ * Establece el estado de comboBimestresDos.
+ * @param comboBimestresDos - El valor de comboBimestresDos.
+ */
+public setComboBimestresDos(comboBimestresDos: string) {
+    this.update((state) => ({
+        ...state,
+        comboBimestresDos,
+    }));
+}
 
-    /**
-     * Sets the cancelacion state.
-     * @param cancelacion - The cancelacion value.
-     */
-    public setCancelacion(cancelacion: string) {
-        this.update((state) => ({
-            ...state,
-            cancelacion,
-        }));
-    }
+/**
+ * Establece el estado de comboBimestresTres.
+ * @param comboBimestresTres - El valor de comboBimestresTres.
+ */
+public setComboBimestresTres(comboBimestresTres: string) {
+    this.update((state) => ({
+        ...state,
+        comboBimestresTres,
+    }));
+}
 
-    /**
-     * Sets the cumplimientoReglas state.
-     * @param cumplimientoReglas - The cumplimientoReglas value.
-     */
-    public setCumplimientoReglas(cumplimientoReglas: string) {
-        this.update((state) => ({
-            ...state,
-            cumplimientoReglas,
-        }));
-    }
+/**
+ * Establece el estado de proveedorCumplimiento.
+ * @param proveedorCumplimiento - El valor de proveedorCumplimiento.
+ */
+public setProveedorCumplimiento(proveedorCumplimiento: string) {
+    this.update((state) => ({
+        ...state,
+        proveedorCumplimiento,
+    }));
+}
 
-    /**
-     * Sets the recintoFiscalizado state.
-     * @param recintoFiscalizado - The recintoFiscalizado value.
-     */
-    public setRecintoFiscalizado(recintoFiscalizado: string) {
-        this.update((state) => ({
-            ...state,
-            recintoFiscalizado,
-        }));
-    }
+/**
+ * Establece el estado de declaracionISR.
+ * @param declaracionISR - El valor de declaracionISR.
+ */
+public setDeclaracionISR(declaracionISR: string) {
+    this.update((state) => ({
+        ...state,
+        declaracionISR,
+    }));
+}
 
-    /**
-     * Sets the recintoEstrategico state.
-     * @param recintoEstrategico - The recintoEstrategico value.
-     */
-    public setRecintoEstrategico(recintoEstrategico: string) {
-        this.update((state) => ({
-            ...state,
-            recintoEstrategico,
-        }));
-    }
+/**
+ * Establece el estado de cancelacion.
+ * @param cancelacion - El valor de cancelacion.
+ */
+public setCancelacion(cancelacion: string) {
+    this.update((state) => ({
+        ...state,
+        cancelacion,
+    }));
+}
 
-    /**
-     * Sets the cumplimientoLineamientos state.
-     * @param cumplimientoLineamientos - The cumplimientoLineamientos value.
-     */
-    public setCumplimientoLineamientos(cumplimientoLineamientos: string) {
-        this.update((state) => ({
-            ...state,
-            cumplimientoLineamientos,
-        }));
-    }
+/**
+ * Establece el estado de cumplimientoReglas.
+ * @param cumplimientoReglas - El valor de cumplimientoReglas.
+ */
+public setCumplimientoReglas(cumplimientoReglas: string) {
+    this.update((state) => ({
+        ...state,
+        cumplimientoReglas,
+    }));
+}
+
+/**
+ * Establece el estado de recintoFiscalizado.
+ * @param recintoFiscalizado - El valor de recintoFiscalizado.
+ */
+public setRecintoFiscalizado(recintoFiscalizado: string) {
+    this.update((state) => ({
+        ...state,
+        recintoFiscalizado,
+    }));
+}
+
+/**
+ * Establece el estado de recintoEstrategico.
+ * @param recintoEstrategico - El valor de recintoEstrategico.
+ */
+public setRecintoEstrategico(recintoEstrategico: string) {
+    this.update((state) => ({
+        ...state,
+        recintoEstrategico,
+    }));
+}
+
+/**
+ * Establece el estado de cumplimientoLineamientos.
+ * @param cumplimientoLineamientos - El valor de cumplimientoLineamientos.
+ */
+public setCumplimientoLineamientos(cumplimientoLineamientos: string) {
+    this.update((state) => ({
+        ...state,
+        cumplimientoLineamientos,
+    }));
+}
 } 
   

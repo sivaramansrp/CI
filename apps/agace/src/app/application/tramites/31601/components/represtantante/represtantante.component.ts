@@ -76,13 +76,13 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.represtantante = this.fb.group({
-      resigtro: [this.solicitudState?.resigtro, Validators.required],
+      resigtro: [this.solicitudState?.resigtro && this.solicitudState?.resigtro !='' ? this.solicitudState?.resigtro : this.datosRepresentativos.resigtro, Validators.required],
       rfc: ['', Validators.required],
       nombre: ['', Validators.required],
       apellidoPaterno: ['', Validators.required],
       apellidoMaterno: ['', Validators.required],
-      telefono: [this.solicitudState?.telefono, Validators.required],
-      correo: [this.solicitudState?.correo, Validators.required],
+      telefono: [this.solicitudState?.telefono && this.solicitudState?.telefono !='' ? this.solicitudState?.telefono : this.datosRepresentativos.telefono, Validators.required],
+      correo: [this.solicitudState?.correo && this.solicitudState?.correo !='' ? this.solicitudState?.correo : this.datosRepresentativos.correo, Validators.required],
     });
 
     // Deshabilita los campos que no deben ser modificados

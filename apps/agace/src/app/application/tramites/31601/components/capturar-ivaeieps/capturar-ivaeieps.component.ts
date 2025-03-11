@@ -249,7 +249,9 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
   poblarPagoForm(data: PagoData): void {
     this.formularioDePago.patchValue({
       claveReferencia: data.claveReferencia,
+      numeroOperacion: this.solicitudState?.numeroOperacion && this.solicitudState?.numeroOperacion != '' ? this.solicitudState?.numeroOperacion : data.numeroOperacion,
       cadenaDependencia: data.cadenaDependencia,
+      llavePago: this.solicitudState?.llavePago && this.solicitudState?.llavePago != ''?this.solicitudState?.llavePago : data.llavePago,
       fechaPago: data.fechaPago,
       importePago: data.importePago,
     });

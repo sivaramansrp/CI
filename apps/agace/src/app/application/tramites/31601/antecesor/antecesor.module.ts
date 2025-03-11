@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { AntecesorRoutingModule } from './antecesor-routing.module';
 import { DatosComponent } from '../pages/datos/datos.component';
 import { PantallasComponent } from '../pages/pantallas/pantallas.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { SolicitanteComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { NavComponent } from '@ng-mf/data-access-user';
 import { ReprestantanteComponent } from '../components/represtantante/represtantante.component';
 import { EnlaceComponent } from '../components/enlace/enlace.component';
@@ -36,6 +36,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     ReprestantanteComponent,
     EnlaceComponent,
     PersonaComponent,
+    SolicitanteComponent,
 
     NavComponent,
     AduaneroComponent,
