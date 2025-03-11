@@ -133,7 +133,6 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {  
-        console.log('Solicitud130102State', seccionState);
         this.solicitudState = seccionState;
       })
     )

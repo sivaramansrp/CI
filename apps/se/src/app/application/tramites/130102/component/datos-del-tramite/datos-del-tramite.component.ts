@@ -37,7 +37,7 @@ import { Subject, map, takeUntil } from 'rxjs';
  * Componente para la gestión de solicitudes y tipos de documentos en un trámite.
  */
 @Component({
-  selector: 'app-detos-del-tramite',
+  selector: 'app-datos-del-tramite',
   standalone: true,
   imports: [
     TituloComponent,
@@ -46,7 +46,7 @@ import { Subject, map, takeUntil } from 'rxjs';
     InputRadioComponent,
     CatalogoSelectComponent,
   ],
-  templateUrl: './detos-del-tramite.component.html',
+  templateUrl: './datos-del-tramite.component.html',
 })
 export class DetosDelTramiteComponent implements OnInit, OnDestroy {
   /**
@@ -117,7 +117,6 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {  
-        console.log('Solicitud130102State', seccionState);
         this.solicitudState = seccionState;
       })
     )

@@ -24,11 +24,11 @@ import { Tramite130102Query } from '../../../../estados/queries/tramite130102.qu
 import { Subject, map, takeUntil } from 'rxjs'; 
 
 @Component({
-  selector: 'app-uso-espicifico',
+  selector: 'app-uso-especifico',
   standalone: true,
   imports: [TituloComponent, CatalogoSelectComponent, TableComponent, ReactiveFormsModule, CommonModule],
-  templateUrl: './uso-espicifico.component.html',
-  styleUrl: './uso-espicifico.component.scss'
+  templateUrl: './uso-especifico.component.html',
+  styleUrl: './uso-especifico.component.scss'
 })
 export class UsoEspicificoComponent implements OnInit {
 
@@ -98,14 +98,13 @@ export class UsoEspicificoComponent implements OnInit {
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {  
-        console.log('Solicitud130102State', seccionState);
         this.solicitudState = seccionState;
       })
     )
     .subscribe();
 
     this.usoEspicificoForm = this.formbuilt.group({
-      fracciónarancelaria: [ this.solicitudState?.fracciónarancelaria, Validators.required],
+      fraccionArancelariaProsec: [ this.solicitudState?.fraccionArancelariaProsec, Validators.required],
       descripción: [{ value: '', disabled: true }]
     });
   }

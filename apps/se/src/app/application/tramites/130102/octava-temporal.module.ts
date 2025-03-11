@@ -6,13 +6,13 @@ import { OctavaTemporalRoutingModule } from './octava-temporal-routing.module';
 
 import { CriterioDeDictComponent } from './component/criterio-de-dict/criterio-de-dict.component';
 import { DetosDelLaMarcaciaComponent } from './component/datos-de-la-mercacia/datos-de-la-mercacia.component';
-import { DetosDelTramiteComponent } from './component/detos-del-tramite/detos-del-tramite.component';
+import { DetosDelTramiteComponent } from './component/datos-del-tramite/datos-del-tramite.component';
 import { PaisProcendenciaComponent } from './component/pais-procendencia/pais-procendencia.component';
 import { SolicitanteOctavaTemporalComponent } from './component/solicitante-octava-temporal/solicitante-octava-temporal.component';
 
 import { PartidasDeLaComponent } from './component/partidas-de-la/partidas-de-la.component';
 import { RepresentacionComponent } from './component/representacion/representacion.component';
-import { UsoEspicificoComponent } from './component/uso-espicifico/uso-espicifico.component';
+import { UsoEspicificoComponent } from './component/uso-especifico/uso-especifico.component';
 
 import { DatosComponent } from './pages/datos/datos.component';
 
@@ -24,6 +24,8 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 import { provideHttpClient } from '@angular/common/http';
+
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 
 
 
@@ -46,7 +48,8 @@ import { provideHttpClient } from '@angular/common/http';
     RepresentacionComponent,
     TituloComponent,
     UsoEspicificoComponent,
-    WizardComponent    
+    WizardComponent,
+    FirmaElectronicaComponent 
   ],
   providers: [
     provideHttpClient(),
