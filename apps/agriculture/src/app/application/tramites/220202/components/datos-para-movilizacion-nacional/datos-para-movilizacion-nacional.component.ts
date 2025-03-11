@@ -47,7 +47,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
    * @param {AgriculturaApiService} agriculturaApiService - Servicio HttpClient para realizar peticiones.
    */
   constructor(private readonly agriculturaApiService: AgriculturaApiService) {
-    console.log('constructor');
+    // Constructor logic can be added here if needed
   }
   /**
    * @description Inicializa el componente.
