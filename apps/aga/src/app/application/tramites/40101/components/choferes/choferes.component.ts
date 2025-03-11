@@ -4,6 +4,7 @@ import {
   ViewChild,
   OnInit,
   AfterViewInit,
+  Input,
 } from '@angular/core';
 import {
   FormControl,
@@ -13,12 +14,12 @@ import {
   FormGroup,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Catalogo, SharedModule } from '@ng-mf/data-access-user';
+import { SharedModule } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Nacional } from 'libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
-import { extranjero } from 'libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
+import { extranjero, Catalogo } from 'libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
 import { LayoutChoferNacionalService } from 'libs/shared/data-access-user/src/core/services/40101/layout-chofer-nacional.service';
 import { StoreService } from 'libs/shared/data-access-user/src/core/services/40101/store/store.service';
 import { ChangeDetectorRef } from '@angular/core';
@@ -26,16 +27,17 @@ import { Chofer40101Store, Choferesnacionales40101State } from '../../estados/ch
 import { Chofer40101Query } from '../../estados/chofer40101.query';
 import { Chofer40101Service } from '../../estados/chofer40101.service';
 import { CatalogosService } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+
 
 @Component({
   selector: 'app-choferes',
   templateUrl: './choferes.component.html',
   styleUrls: ['./choferes.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, SharedModule],
+  imports: [ReactiveFormsModule, CommonModule, SharedModule, CatalogoSelectComponent],
 })
 export class ChoferesComponent implements OnInit {
-[x: string]: any;
   solicitudTituloChoferExtranjero: string = 'Datos del chofer extranjero';
   labelSolicitudPersonaNombre: string = 'Nombre';
   labelSolicitudPersonaPrimerApellido: string = 'Primer Apellido ';
@@ -84,6 +86,7 @@ export class ChoferesComponent implements OnInit {
   choferesList$: Observable<any[]> = new Observable();
   choferesextranjerosList$: Observable<any[]> = new Observable();
   @ViewChild('modalRef', { static: false }) modalRef!: ElementRef;
+  @Input() catalogo: Catalogo[] = [];
   /**
    * Establece la pestaña activa.
    * @param tab La pestaña que se establecerá como activa.

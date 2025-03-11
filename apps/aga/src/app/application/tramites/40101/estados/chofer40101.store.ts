@@ -6,6 +6,7 @@ export interface Choferesnacionales40101State {
   choferesextranjero: string[];
   vehiculos: string[];
   unidadesdearrastre: string[];
+  estado?: string;
 }
 
 export function createChoferState(): Choferesnacionales40101State {
@@ -15,6 +16,7 @@ export function createChoferState(): Choferesnacionales40101State {
     choferesextranjero: [],
     vehiculos: [],
     unidadesdearrastre: [],
+    estado:''
   };
 }
 

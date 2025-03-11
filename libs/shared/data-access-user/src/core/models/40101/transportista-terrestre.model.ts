@@ -45,5 +45,12 @@ export interface Nacional {
     clave1: string;
     descripcion2: string;
   }
+  export interface Catalogo {
+    id: number;
+    descripcion: string;
+    clave?: string;
+    tam?: string;
+    dpi?: string
+  }
   
   
