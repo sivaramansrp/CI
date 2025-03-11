@@ -8,13 +8,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import { DatosPasos } from '../../../core/models/shared/components.model';
-import { WizardComponent } from '../wizard/wizard.component';
 import { WizardService } from '../../../core/services/shared/wizard/wizard.service';
 import { SeccionLibQuery } from '../../../core/queries/seccion.query';
-import {
-  SeccionLibState,
-  SeccionLibStore,
-} from '../../../core/estados/seccion.store';
+import { SeccionLibState } from '../../../core/estados/seccion.store';
 import { map, Subject, takeUntil } from 'rxjs';
 
 interface AccionBoton {
@@ -42,7 +38,7 @@ export class BtnContinuarComponent {
   private destroyNotifier$: Subject<void> = new Subject();
   public habilitarBoton: boolean = false;
 
-  constructor(private seccionQuery: SeccionLibQuery) {}
+  constructor(private seccionQuery: SeccionLibQuery) { }
 
   ngOnInit() {
     this.seccionQuery.selectSeccionState$
