@@ -19,7 +19,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @type { TablaSeleccion}
    */
-  @Input() tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.UNDEFINED;
+  @Input() tipoSeleccionTabla!: TablaSeleccion;
 
 
   /**
@@ -31,7 +31,7 @@ export class TablaDinamicaComponent<T> {
    * @type {typeof TablaSeleccion}
    */
   TablaSeleccion = TablaSeleccion;
-
+  
   /**
    * Configuración de las columnas de la tabla.
    * Contiene la información sobre cómo se deben mostrar las columnas, incluyendo el nombre, el orden,
@@ -73,7 +73,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @type {number}
    */
-  idFilaSeleccionada: number = -1
+  idFilaSeleccionada!: number;
 
   /**
    * Almacena un array de los índices de las filas seleccionadas.
