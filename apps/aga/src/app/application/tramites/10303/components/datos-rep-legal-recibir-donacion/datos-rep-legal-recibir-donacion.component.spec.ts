@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DatosRepLegalRecibirDonacionComponent } from './datos-rep-legal-recibir-donacion.component';
-import { DonacionesExtranjerasService } from 'libs/shared/data-access-user/src/core/services/10303/donaciones-extranjeras/donaciones-extranjeras.service';
 import { of, throwError } from 'rxjs';
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-// import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { DatosRepLegalRecibirDonacionComponent } from './datos-rep-legal-recibir-donacion.component';
+import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 
 describe('DatosRepLegalRecibirDonacionComponent', () => {
   let component: DatosRepLegalRecibirDonacionComponent;
@@ -13,7 +13,7 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
   let donacionesExtranjerasService: jest.Mocked<DonacionesExtranjerasService>;
 
   beforeEach(async () => {
-    const donacionesExtranjerasServiceMock = {
+    const DONACIONES_EXTRANJERAS_SERVICE_MOCK = {
       getPaises: jest.fn(),
       buscarContribuyente: jest.fn()
     };
@@ -22,7 +22,7 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
       declarations: [DatosRepLegalRecibirDonacionComponent],
       imports: [CatalogoSelectComponent],
       providers: [
-        { provide: DonacionesExtranjerasService, useValue: donacionesExtranjerasServiceMock },
+        { provide: DonacionesExtranjerasService, useValue: DONACIONES_EXTRANJERAS_SERVICE_MOCK },
         NO_ERRORS_SCHEMA
       ]
     }).compileComponents();
@@ -42,8 +42,8 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
   });
 
   it('should call `inicializaCatalogos` and populate pais catalog', () => {
-    const paises: Catalogo[] = [{ id: 1, descripcion: 'México' }];
-    donacionesExtranjerasService.getPaises.mockReturnValue(of({ code: 200, data: paises, message: 'Success' }));
+    const PAISES: Catalogo[] = [{ id: 1, descripcion: 'México' }];
+    donacionesExtranjerasService.getPaises.mockReturnValue(of({ code: 200, data: PAISES, message: 'Success' }));
 
     component.inicializaCatalogos();
 
@@ -52,16 +52,16 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
   });
 
   it('should initialize catalogos correctly', () => {
-    const paises: Catalogo[] = [{ id: 1, descripcion: 'United States' }, { id: 2, descripcion: 'México' }];
-    donacionesExtranjerasService.getPaises.mockReturnValue(of({ code: 200, data: paises, message: 'Success' }));
+    const PAISES: Catalogo[] = [{ id: 1, descripcion: 'United States' }, { id: 2, descripcion: 'México' }];
+    donacionesExtranjerasService.getPaises.mockReturnValue(of({ code: 200, data: PAISES, message: 'Success' }));
 
     component.ngOnInit();
 
-    expect(component.pais).toEqual(paises);
+    expect(component.pais).toEqual(PAISES);
   });
 
   it('should populate form with valid data when contributor is found', () => {
-    const contributorData = {
+    const CONTRIBUTOR_DATA = {
       rfc: '123456789012',
       razonSocial: 'Company XYZ',
       nombre: 'John',
@@ -78,7 +78,7 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
       telefono: '1234567890'
     };
 
-    donacionesExtranjerasService.buscarContribuyente.mockReturnValue(of({ data: [contributorData] }));
+    donacionesExtranjerasService.buscarContribuyente.mockReturnValue(of({ data: [CONTRIBUTOR_DATA] }));
 
     component.buscarContribuyenteRfc(3, '123456789012');
 
@@ -128,12 +128,12 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
   });
 
   it('should call getPaises and populate pais', () => {
-    const paises: Catalogo[] = [{ id: 1, descripcion: 'United States' }];
-    donacionesExtranjerasService.getPaises.mockReturnValue(of({ code: 200, data: paises, message: 'Success' }));
+    const PAISES: Catalogo[] = [{ id: 1, descripcion: 'United States' }];
+    donacionesExtranjerasService.getPaises.mockReturnValue(of({ code: 200, data: PAISES, message: 'Success' }));
 
     component.inicializaCatalogos();
 
-    expect(component.pais).toEqual(paises);
+    expect(component.pais).toEqual(PAISES);
     expect(donacionesExtranjerasService.getPaises).toHaveBeenCalled();
   });
 

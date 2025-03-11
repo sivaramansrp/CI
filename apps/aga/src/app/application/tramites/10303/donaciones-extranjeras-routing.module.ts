@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 
 import { RegistroSolicitudPageComponent } from './pages/registro-solicitud-page/registro-solicitud-page.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
     path: 'solicitud',
     component: RegistroSolicitudPageComponent,
@@ -18,7 +18,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class DonacionesExtranjerasRoutingModule { }

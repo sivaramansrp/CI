@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
+
+import { AlertComponent, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 import { RegistroDeDonacionComponent } from './registro-de-donacion.component';
-import { DonacionesExtranjerasService } from 'libs/shared/data-access-user/src/core/services/10303/donaciones-extranjeras/donaciones-extranjeras.service';
-import { CatalogoSelectComponent, TituloComponent, AlertComponent } from '@ng-mf/data-access-user';
 
 describe('RegistroDeDonacionComponent', () => {
   let component: RegistroDeDonacionComponent;
@@ -11,7 +12,7 @@ describe('RegistroDeDonacionComponent', () => {
   let donacionesExtranjerasService: jest.Mocked<DonacionesExtranjerasService>;
 
   beforeEach(async () => {
-    const spy = {
+    const SPY = {
       getAduana: jest.fn().mockReturnValue(of({ data: [] })),
       getDestinoDonacion: jest.fn().mockReturnValue(of({ data: [] })),
       getTipoDeMercancia: jest.fn().mockReturnValue(of({ data: [] })),
@@ -28,7 +29,7 @@ describe('RegistroDeDonacionComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [RegistroDeDonacionComponent],
       imports: [ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, AlertComponent],
-      providers: [{ provide: DonacionesExtranjerasService, useValue: spy }]
+      providers: [{ provide: DonacionesExtranjerasService, useValue: SPY }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegistroDeDonacionComponent);
@@ -97,8 +98,8 @@ describe('RegistroDeDonacionComponent', () => {
   });
 
   it('should handle file change', () => {
-    const event = { target: { files: [{ name: 'test-file.txt' }] } };
-    component.onCambioDeArchivo(event);
+    const EVENT = { target: { files: [{ name: 'test-file.txt' }] } };
+    component.onCambioDeArchivo(EVENT as unknown as Event);
     expect(component.archivoMedicamentos?.name).toBe('test-file.txt');
     expect(component.etiquetaDeArchivo).toBe('test-file.txt');
   });
@@ -111,12 +112,12 @@ describe('RegistroDeDonacionComponent', () => {
   });
 
   it('should activate file selection', () => {
-    const input = document.createElement('input');
-    input.id = 'archivoMedicamentos';
-    document.body.appendChild(input);
-    jest.spyOn(input, 'click');
+    const INPUT = document.createElement('input');
+    INPUT.id = 'archivoMedicamentos';
+    document.body.appendChild(INPUT);
+    jest.spyOn(INPUT, 'click');
     component.activarSeleccionArchivo();
-    expect(input.click).toHaveBeenCalled();
-    document.body.removeChild(input);
+    expect(INPUT.click).toHaveBeenCalled();
+    document.body.removeChild(INPUT);
   });
 });

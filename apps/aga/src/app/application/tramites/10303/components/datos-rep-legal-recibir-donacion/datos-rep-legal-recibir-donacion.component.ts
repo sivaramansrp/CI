@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { map, merge } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subject, map, merge, takeUntil } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { DonacionesExtranjerasService } from 'libs/shared/data-access-user/src/core/services/10303/donaciones-extranjeras/donaciones-extranjeras.service';
+import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 
-import { Contribuyente, ContribuyenteRespuesta } from 'libs/shared/data-access-user/src/core/models/10303/donaciones-extranjeras.model';
-import { CATALOGOS_ID } from 'libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
+import { Contribuyente, ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
+import { RegistroDeDonacion10303State, Tramite10303Store } from '../../estados/tramites/tramite10303.store';
+import { Tramite10303Query } from '../../estados/queries/tramite10303.query';
 
 /**
  * Componente para gestionar los datos del representante legal autorizado para recibir donaciones.
@@ -15,66 +18,26 @@ import { CATALOGOS_ID } from 'libs/shared/data-access-user/src/tramites/constant
   templateUrl: './datos-rep-legal-recibir-donacion.component.html',
   styleUrl: './datos-rep-legal-recibir-donacion.component.scss'
 })
-export class DatosRepLegalRecibirDonacionComponent implements OnInit {
+export class DatosRepLegalRecibirDonacionComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario de datos del representante legal autorizado para recibir donaciones.
+   */
+  datosRepLegalRecibirDonacionForm!: FormGroup;
+
+  /**
+   * Subject para destruir las suscripciones.
+   */
+  private destruirNotificador$: Subject<void> = new Subject();
+
   /**
    * Lista de países obtenida desde el servicio.
    */
   pais!: Catalogo[];
 
   /**
-   * RFC del representante legal autorizado para recibir donaciones.
-   */
-  rfcRepLegalAutorizado: string = '';
-
-  /**
-   * Nombre completo del representante legal autorizado.
-   */
-  nombreRepLegalAutorizado: string = '';
-
-  /**
-   * Calle del representante legal autorizado.
-   */
-  calleRepLegalAutorizado: string = '';
-
-  /**
-   * Número exterior del representante legal autorizado.
-   */
-  numExteriorRepLegalAutorizado: string = '';
-
-  /**
-   * Número interior del representante legal autorizado.
-   */
-  numInteriorRepLegalAutorizado: string = '';
-
-  /**
-   * Estado del representante legal autorizado.
-   */
-  estadoRepLegalAutorizado: string = '';
-
-  /**
-   * Colonia del representante legal autorizado.
-   */
-  coloniaRepLegalAutorizado: string = '';
-
-  /**
-   * Código postal del representante legal autorizado.
-   */
-  codigoPostalRepLegalAutorizado: string = '';
-
-  /**
-   * Clave del país del representante legal autorizado.
-   */
-  cvePaisRepLegalAutorizado: string = '';
-
-  /**
-   * Correo electrónico del representante legal autorizado.
-   */
-  correoElectronicoRepLegalAutorizado: string = '';
-
-  /**
-   * Teléfono del representante legal autorizado.
-   */
-  telefonoRepLegalAutorizado: string = '';
+    * Estado de la registro de donacion.
+    */
+  public registroDeDonacionState: RegistroDeDonacion10303State | undefined;
 
   /**
    * Constructor del componente.
@@ -82,7 +45,11 @@ export class DatosRepLegalRecibirDonacionComponent implements OnInit {
    * @param donacionesExtranjerasService Servicio para gestionar las donaciones extranjeras.
    */
   constructor(
-    private donacionesExtranjerasService: DonacionesExtranjerasService
+    private donacionesExtranjerasService: DonacionesExtranjerasService,
+    private fb: FormBuilder,
+    private tramite10303Store: Tramite10303Store,
+    private tramite10303Query: Tramite10303Query,
+    private toastr: ToastrService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -93,6 +60,40 @@ export class DatosRepLegalRecibirDonacionComponent implements OnInit {
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
+
+    this.tramite10303Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.registroDeDonacionState = seccionState;
+        })
+      )
+      .subscribe();
+
+    // Inicializar el formulario principal
+    this.crearDatosRepLegalRecibirDonacionForm();
+
+    this.paisSeleccion();
+  }
+
+  /**
+    * Inicializa el formulario reactivo
+    * @returns {void}
+    */
+  crearDatosRepLegalRecibirDonacionForm(): void {
+    this.datosRepLegalRecibirDonacionForm = this.fb.group({
+      rfcRepLegalAutorizado: [this.registroDeDonacionState?.rfcRepLegalAutorizado],
+      nombreRepLegalAutorizado: [{ value: this.registroDeDonacionState?.nombreRepLegalAutorizado, disabled: true }],
+      calleRepLegalAutorizado: [{ value: this.registroDeDonacionState?.calleRepLegalAutorizado, disabled: true }],
+      numExteriorRepLegalAutorizado: [{ value: this.registroDeDonacionState?.numExteriorRepLegalAutorizado, disabled: true }],
+      numInteriorRepLegalAutorizado: [{ value: this.registroDeDonacionState?.numInteriorRepLegalAutorizado, disabled: true }],
+      cvePaisRepLegalAutorizado: [{ value: this.registroDeDonacionState?.cvePaisRepLegalAutorizado, disabled: true }],
+      codigoPostalRepLegalAutorizado: [{ value: this.registroDeDonacionState?.codigoPostalRepLegalAutorizado, disabled: true }],
+      estadoRepLegalAutorizado: [{ value: this.registroDeDonacionState?.estadoRepLegalAutorizado, disabled: true }],
+      coloniaRepLegalAutorizado: [{ value: this.registroDeDonacionState?.coloniaRepLegalAutorizado, disabled: true }],
+      correoElectronicoRepLegalAutorizado: [{ value: this.registroDeDonacionState?.correoElectronicoRepLegalAutorizado, disabled: true }],
+      telefonoRepLegalAutorizado: [{ value: this.registroDeDonacionState?.telefonoRepLegalAutorizado, disabled: true }]
+    });
   }
 
   /**
@@ -100,17 +101,26 @@ export class DatosRepLegalRecibirDonacionComponent implements OnInit {
    * Llama al servicio `donacionesExtranjerasService` para obtener la lista de países.
    */
   inicializaCatalogos(): void {
-    const pais$ = this.donacionesExtranjerasService
+    const PAIS$ = this.donacionesExtranjerasService
       .getPaises(CATALOGOS_ID.CAT_PAIS)
       .pipe(
         map((resp) => {
           this.pais = resp.data;
-        })
+        }),
+        takeUntil(this.destruirNotificador$)
       );
 
     merge(
-      pais$
+      PAIS$
     ).subscribe();
+  }
+
+  /**
+   * Establece el país seleccionado en el store de tramite10303.
+   */
+  paisSeleccion(): void {
+    const PAIS = this.datosRepLegalRecibirDonacionForm.get('cvePaisRepLegalAutorizado')?.value;
+    this.tramite10303Store.setCvePaisRepLegalAutorizado(PAIS);
   }
 
   /**
@@ -120,21 +130,23 @@ export class DatosRepLegalRecibirDonacionComponent implements OnInit {
    */
   buscarContribuyenteRfc(valor: number, id: string): void {
     // Implement the logic to search for the contributor by RFC
-    this.donacionesExtranjerasService.buscarContribuyente(id).subscribe({
+    this.donacionesExtranjerasService.buscarContribuyente(id).pipe(
+      takeUntil(this.destruirNotificador$)
+    ).subscribe({
       next: (result: ContribuyenteRespuesta) => {
-        const data = result?.data[0];
-        if (data !== null) {
+        const DATA = result?.data[0];
+        if (DATA !== null) {
           if (valor === 3) {
-            this.construirRLAu(data, true);
+            this.construirRepLegalAutorizado(DATA, true);
           }
           else {
-            alert("Valor erronio");
+            this.toastr.error("Valor erronio");
           }
         } else {
           if (valor === 3) {
-            this.construirRLAu(data, false);
+            this.construirRepLegalAutorizado(DATA, false);
           } else {
-            alert("Valor erronio");
+            this.toastr.error("Valor erronio");
           }
         }
       }
@@ -146,23 +158,22 @@ export class DatosRepLegalRecibirDonacionComponent implements OnInit {
    * @param {Contribuyente} data - Datos del contribuyente obtenidos de la búsqueda.
    * @param {boolean} encontrado - Indica si el contribuyente fue encontrado.
    */
-  construirRLAu(data: Contribuyente, encontrado: boolean): void {
+  construirRepLegalAutorizado(data: Contribuyente, encontrado: boolean): void {
     if (encontrado) {
-      if (data.rfc.length === 12) {
-        this.nombreRepLegalAutorizado = data.razonSocial ?? '';
-      } else {
-        this.nombreRepLegalAutorizado = `${data.nombre} ${data.apellidoPaterno} ${data.apellidoMaterno}`;
-      }
+      const VALORES_DE_FORMATO = {
+        nombreRepLegalAutorizado: data.rfc.length === 12 ? data.razonSocial ?? '' : `${data.nombre} ${data.apellidoPaterno} ${data.apellidoMaterno}`,
+        calleRepLegalAutorizado: data.calle,
+        numExteriorRepLegalAutorizado: data.numeroExterior,
+        numInteriorRepLegalAutorizado: data.numeroInterior ?? '',
+        estadoRepLegalAutorizado: data.estado,
+        coloniaRepLegalAutorizado: data.colonia,
+        codigoPostalRepLegalAutorizado: data.codigoPostal,
+        cvePaisRepLegalAutorizado: data.pais,
+        correoElectronicoRepLegalAutorizado: data.correoElectronico,
+        telefonoRepLegalAutorizado: data.telefono
+      };
 
-      this.calleRepLegalAutorizado = data.calle;
-      this.numExteriorRepLegalAutorizado = data.numeroExterior;
-      this.numInteriorRepLegalAutorizado = data.numeroInterior ?? '';
-      this.estadoRepLegalAutorizado = data.estado;
-      this.coloniaRepLegalAutorizado = data.colonia;
-      this.codigoPostalRepLegalAutorizado = data.codigoPostal;
-      this.cvePaisRepLegalAutorizado = data.pais;
-      this.correoElectronicoRepLegalAutorizado = data.correoElectronico;
-      this.telefonoRepLegalAutorizado = data.telefono;
+      this.datosRepLegalRecibirDonacionForm.patchValue(VALORES_DE_FORMATO);
     } else {
       this.restablecerFormulario();
     }
@@ -172,16 +183,28 @@ export class DatosRepLegalRecibirDonacionComponent implements OnInit {
    * Resetea todos los campos del formulario a sus valores iniciales.
    */
   restablecerFormulario(): void {
-    this.rfcRepLegalAutorizado = '';
-    this.nombreRepLegalAutorizado = '';
-    this.calleRepLegalAutorizado = '';
-    this.numExteriorRepLegalAutorizado = '';
-    this.numInteriorRepLegalAutorizado = '';
-    this.estadoRepLegalAutorizado = '';
-    this.coloniaRepLegalAutorizado = '';
-    this.codigoPostalRepLegalAutorizado = '';
-    this.cvePaisRepLegalAutorizado = '';
-    this.correoElectronicoRepLegalAutorizado = '';
-    this.telefonoRepLegalAutorizado = '';
+    this.datosRepLegalRecibirDonacionForm.reset();
+  }
+
+  /**
+    * Establece los valores en el store de tramite5701.
+    *
+    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+    * @returns {void}
+    */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite10303Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite10303Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
+
+  /**
+   * Se ejecuta al destruir el componente.
+   * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destruirNotificador$.next();
+    this.destruirNotificador$.complete();
   }
 }

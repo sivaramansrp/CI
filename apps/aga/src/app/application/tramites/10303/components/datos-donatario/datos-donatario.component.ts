@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { map, merge } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subject, map, merge, takeUntil } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { DonacionesExtranjerasService } from 'libs/shared/data-access-user/src/core/services/10303/donaciones-extranjeras/donaciones-extranjeras.service';
+import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 
-import { Contribuyente, ContribuyenteRespuesta } from 'libs/shared/data-access-user/src/core/models/10303/donaciones-extranjeras.model';
-import { CATALOGOS_ID } from 'libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
+import { Contribuyente, ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
+import { RegistroDeDonacion10303State, Tramite10303Store } from '../../estados/tramites/tramite10303.store';
+import { Tramite10303Query } from '../../estados/queries/tramite10303.query';
 
 /**
  * Componente para gestionar los datos del donantario.
@@ -15,78 +18,27 @@ import { CATALOGOS_ID } from 'libs/shared/data-access-user/src/tramites/constant
   templateUrl: './datos-donatario.component.html',
   styleUrl: './datos-donatario.component.scss'
 })
-export class DatosDonatarioComponent implements OnInit {
+export class DatosDonatarioComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario de datos del donatario.
+   */
+  datosDonatarioForm!: FormGroup;
+
+  /**
+   * Subject para destruir las suscripciones.
+   */
+  private destruirNotificador$: Subject<void> = new Subject();
+
   /** 
    * Lista de países obtenida desde el servicio.
    * @type {Catalogo[]}
    */
   pais!: Catalogo[];
 
-  /** 
-   * RFC del donatario.
-   * @type {string}
-   */
-  rfcDonatario: string = '';
-
-  /** 
-   * Nombre completo del donatario.
-   * @type {string}
-   */
-  nombreDonatario: string = '';
-
-  /** 
-   * Calle del donatario.
-   * @type {string}
-   */
-  calleDonatario: string = '';
-
-  /** 
-   * Número exterior de la dirección del donatario.
-   * @type {string}
-   */
-  numExteriorDonatario: string = '';
-
-  /** 
-   * Número interior de la dirección del donatario.
-   * @type {string}
-   */
-  numInteriorDonatario: string = '';
-
-  /** 
-   * Estado del donatario.
-   * @type {string}
-   */
-  estadoDonatario: string = '';
-
-  /** 
-   * Colonia del donatario.
-   * @type {string}
-   */
-  coloniaDonatario: string = '';
-
-  /** 
-   * Código postal del donatario.
-   * @type {string}
-   */
-  codigoPostalDonatario: string = '';
-
-  /** 
-   * Clave del país del donatario.
-   * @type {string}
-   */
-  cvePaisDonatario: string = '';
-
-  /** 
-   * Correo electrónico del donatario.
-   * @type {string}
-   */
-  correoElectronicoDonatario: string = '';
-
-  /** 
-  * Teléfono del donatario.
-  * @type {string}
-  */
-  telefonoDonatario: string = '';
+  /**
+    * Estado de la registro de donacion.
+    */
+  public registroDeDonacionState: RegistroDeDonacion10303State | undefined;
 
   /**
    * Constructor del componente.
@@ -95,6 +47,10 @@ export class DatosDonatarioComponent implements OnInit {
    */
   constructor(
     private donacionesExtranjerasService: DonacionesExtranjerasService,
+    private fb: FormBuilder,
+    private tramite10303Store: Tramite10303Store,
+    private tramite10303Query: Tramite10303Query,
+    private toastr: ToastrService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -105,23 +61,66 @@ export class DatosDonatarioComponent implements OnInit {
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
+
+    this.tramite10303Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.registroDeDonacionState = seccionState;
+        })
+      )
+      .subscribe();
+
+    // Inicializar el formulario principal
+    this.crearDatosDonatarioForm();
+
+    this.paisSeleccion();
+  }
+
+  /**
+    * Inicializa el formulario reactivo
+    * @returns {void}
+    */
+  crearDatosDonatarioForm(): void {
+    this.datosDonatarioForm = this.fb.group({
+      rfcDonatario: [this.registroDeDonacionState?.rfcDonatario],
+      nombreDonatario: [{ value: this.registroDeDonacionState?.nombreDonatario, disabled: true }],
+      calleDonatario: [{ value: this.registroDeDonacionState?.calleDonatario, disabled: true }],
+      numExteriorDonatario: [{ value: this.registroDeDonacionState?.numExteriorDonatario, disabled: true }],
+      numInteriorDonatario: [{ value: this.registroDeDonacionState?.numInteriorDonatario, disabled: true }],
+      cvePaisDonatario: [{ value: this.registroDeDonacionState?.cvePaisDonatario, disabled: true }],
+      codigoPostalDonatario: [{ value: this.registroDeDonacionState?.codigoPostalDonatario, disabled: true }],
+      estadoDonatario: [{ value: this.registroDeDonacionState?.estadoDonatario, disabled: true }],
+      coloniaDonatario: [{ value: this.registroDeDonacionState?.coloniaDonatario, disabled: true }],
+      correoElectronicoDonatario: [{ value: this.registroDeDonacionState?.correoElectronicoDonatario, disabled: true }],
+      telefonoDonatario: [{ value: this.registroDeDonacionState?.telefonoDonatario, disabled: true }]
+    });
   }
 
   /**
    * Inicializa los catálogos necesarios, como el de países.
    */
   inicializaCatalogos(): void {
-    const pais$ = this.donacionesExtranjerasService
+    const PAIS$ = this.donacionesExtranjerasService
       .getPaises(CATALOGOS_ID.CAT_PAIS)
       .pipe(
         map((resp) => {
           this.pais = resp.data;
-        })
+        }),
+        takeUntil(this.destruirNotificador$)
       );
 
     merge(
-      pais$
+      PAIS$
     ).subscribe();
+  }
+
+  /**
+   * Establece el país seleccionado en el store de tramite10303.
+   */
+  paisSeleccion(): void {
+    const PAIS = this.datosDonatarioForm.get('cvePaisDonatario')?.value;
+    this.tramite10303Store.setCvePaisDonatario(PAIS);
   }
 
   /**
@@ -131,25 +130,28 @@ export class DatosDonatarioComponent implements OnInit {
    */
   buscarContribuyenteRfc(valor: number, id: string): void {
     //Implementar la lógica para buscar el colaborador por RFC
-    this.donacionesExtranjerasService.buscarContribuyente(id).subscribe({
-      next: (result: ContribuyenteRespuesta) => {
-        const data = result?.data[0];
-        if (data !== null) {
-          if (valor === 1) {
-            this.construirDonatario(data, true);
-          }
-          else {
-            alert("Valor erronio");
-          }
-        } else {
-          if (valor === 1) {
-            this.construirDonatario(data, false);
+    this.donacionesExtranjerasService.buscarContribuyente(id).pipe(
+      takeUntil(this.destruirNotificador$)
+    )
+      .subscribe({
+        next: (result: ContribuyenteRespuesta) => {
+          const DATA = result?.data[0];
+          if (DATA !== null) {
+            if (valor === 1) {
+              this.construirDonatario(DATA, true);
+            }
+            else {
+              this.toastr.error("Valor erronio");
+            }
           } else {
-            alert("Valor erronio");
+            if (valor === 1) {
+              this.construirDonatario(DATA, false);
+            } else {
+              this.toastr.error("Valor erronio");
+            }
           }
         }
-      }
-    });
+      });
   }
 
   /**
@@ -159,40 +161,51 @@ export class DatosDonatarioComponent implements OnInit {
    */
   construirDonatario(data: Contribuyente, encontrado: boolean): void {
     if (encontrado) {
-      if (data.rfc.length === 12) {
-        this.nombreDonatario = data.razonSocial ?? '';
-      } else {
-        this.nombreDonatario = `${data.nombre} ${data.apellidoPaterno} ${data.apellidoMaterno}`;
-      }
+      const VALORES_DE_FORMATO = {
+        nombreDonatario: data.rfc.length === 12 ? data.razonSocial ?? '' : `${data.nombre} ${data.apellidoPaterno} ${data.apellidoMaterno}`,
+        calleDonatario: data.calle,
+        numExteriorDonatario: data.numeroExterior,
+        numInteriorDonatario: data.numeroInterior ?? '',
+        estadoDonatario: data.estado,
+        coloniaDonatario: data.colonia,
+        codigoPostalDonatario: data.codigoPostal,
+        cvePaisDonatario: data.pais,
+        correoElectronicoDonatario: data.correoElectronico,
+        telefonoDonatario: data.telefono
+      };
 
-      this.calleDonatario = data.calle;
-      this.numExteriorDonatario = data.numeroExterior;
-      this.numInteriorDonatario = data.numeroInterior ?? '';
-      this.estadoDonatario = data.estado;
-      this.coloniaDonatario = data.colonia;
-      this.codigoPostalDonatario = data.codigoPostal;
-      this.cvePaisDonatario = data.pais;
-      this.correoElectronicoDonatario = data.correoElectronico;
-      this.telefonoDonatario = data.telefono;
+      this.datosDonatarioForm.patchValue(VALORES_DE_FORMATO);
     } else {
       this.restablecerFormulario();
     }
   }
 
   /**
+    * Establece los valores en el store de tramite5701.
+    *
+    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+    * @returns {void}
+    */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite10303Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite10303Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
+
+  /**
    * Resetea todos los campos del formulario a sus valores iniciales.
    */
   restablecerFormulario(): void {
-    this.rfcDonatario = '';
-    this.nombreDonatario = '';
-    this.calleDonatario = '';
-    this.numExteriorDonatario = '';
-    this.numInteriorDonatario = '';
-    this.estadoDonatario = '';
-    this.coloniaDonatario = '';
-    this.codigoPostalDonatario = '';
-    this.cvePaisDonatario = '';
-    this.correoElectronicoDonatario = '';
-    this.telefonoDonatario = '';
+    this.datosDonatarioForm.reset();
+  }
+
+  /**
+   * Se ejecuta al destruir el componente.
+   * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destruirNotificador$.next();
+    this.destruirNotificador$.complete();
   }
 }

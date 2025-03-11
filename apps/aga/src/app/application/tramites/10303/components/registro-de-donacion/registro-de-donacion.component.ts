@@ -1,17 +1,18 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { map, merge } from 'rxjs';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject, map, merge, takeUntil } from 'rxjs';
+import { Modal } from 'bootstrap';
 
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { DonacionesExtranjerasService } from 'libs/shared/data-access-user/src/core/services/10303/donaciones-extranjeras/donaciones-extranjeras.service';
-import { FECHA_CADUCIDAD, PANELS, TEXTOS } from 'libs/shared/data-access-user/src/tramites/constantes/10303/donaciones-extranjeras.enum';
+import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 import mercanciaTable from 'libs/shared/theme/assets/json/10303/mercancia-table.json';
 
-import { BasicRequerimientos, BasicRequerimientosRespuesta, Manifiestos, ManifiestosRespuesta } from 'libs/shared/data-access-user/src/core/models/10303/donaciones-extranjeras.model';
-import { OpcionesDeBotonDeRadio } from 'libs/shared/data-access-user/src/tramites/constantes/10303/donaciones-extranjeras.enum';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { InputFecha } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { CATALOGOS_ID } from 'libs/shared/data-access-user/src/tramites/constantes/constantes';
-
+import { BasicRequerimientos, BasicRequerimientosRespuesta, Manifiestos, ManifiestosRespuesta } from '../../models/donaciones-extranjeras.model';
+import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
+import { FECHA_CADUCIDAD, OPCIONES_DE_BOTON_DE_RADIO, PANELS, TEXTOS } from '../../constantes/donaciones-extranjeras.enum';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { RegistroDeDonacion10303State, Tramite10303Store } from '../../estados/tramites/tramite10303.store';
+import { InputFecha } from '@ng-mf/data-access-user';
+import { Tramite10303Query } from '../../estados/queries/tramite10303.query';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 /**
  * Componente para gestionar el registro de donación.
  */
@@ -20,13 +21,18 @@ import { CATALOGOS_ID } from 'libs/shared/data-access-user/src/tramites/constant
   templateUrl: './registro-de-donacion.component.html',
   styleUrl: './registro-de-donacion.component.scss'
 })
-export class RegistroDeDonacionComponent implements OnInit {
+export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario reactivo para el registro de donación.
+   */
+  registroDonacionForm!: FormGroup;
+
   /**
    * Formulario reactivo para agregar mercancías.
    */
 
   agregarMercanciasForm!: FormGroup;
-  
+
   /**
    * Lista de manifiestos obtenidos desde el servicio.
    */
@@ -135,7 +141,7 @@ export class RegistroDeDonacionComponent implements OnInit {
   /**
    * Opciones de botón de radio.
    */
-  opcionDeBotonDeRadio = OpcionesDeBotonDeRadio;
+  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
    * Archivo de medicamentos seleccionado.
@@ -159,16 +165,28 @@ export class RegistroDeDonacionComponent implements OnInit {
   colapsable: boolean = false;
 
   /**
+   * Estado de la registro de donacion.
+   */
+  public registroDeDonacionState!: RegistroDeDonacion10303State;
+
+  /**
+   * Subject para destruir notificador.
+   */
+  private destruirNotificador$: Subject<void> = new Subject();
+
+  /**
    * Constructor del componente.
    * 
    * @param donacionesExtranjerasService Servicio para gestionar las donaciones extranjeras.
    */
   constructor(
     private donacionesExtranjerasService: DonacionesExtranjerasService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private tramite10303Store: Tramite10303Store,
+    private tramite10303Query: Tramite10303Query,
+    private validacionesService: ValidacionesFormularioService
   ) {
-    // Inicializar el formulario principal
-    this.crearFormSolicitud();
+    // El constructor se utiliza para la inyección de dependencias   
   }
 
   /**
@@ -177,85 +195,166 @@ export class RegistroDeDonacionComponent implements OnInit {
   ngOnInit(): void {
     this.inicializaCatalogos();
 
-    this.obtenerManifiestos();
     this.obtenerBasicoRequerimientos();
+
+    this.tramite10303Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.registroDeDonacionState = seccionState;
+        })
+      )
+      .subscribe();
+
+    // Inicializar el formulario principal
+    this.crearDatosDelFabricanteForm();
+
+    this.obtenerManifiestos();
     this.obtenerMercancia();
+
+    this.aduanaSeleccion();
+  }
+
+  /**
+   * Obtiene el grupo de formulario 'datosMercancia' del formulario principal 'RegistroDonacionForm'.
+   */
+  get datosMercancia(): FormGroup {
+    return this.registroDonacionForm.get('datosMercancia') as FormGroup;
+  }
+
+  /**
+   * Obtiene el grupo de formulario 'datosCofepris' del formulario principal 'AgregarMercanciasForm'.
+   */
+  get datosCofepris(): FormGroup {
+    return this.agregarMercanciasForm.get('datosCofepris') as FormGroup;
   }
 
   /**
    * Getter para obtener el control de formulario
    */
-  get descripcionMercanciaOtro() {
-    return this.agregarMercanciasForm.get('datosMercancia.descripcionMercanciaOtro');
+  get descripcionMercanciaOtro(): FormControl {
+    return this.agregarMercanciasForm.get('datosMercancia.descripcionMercanciaOtro') as FormControl;
+  }
+
+  /**
+   * Obtiene el FormArray correspondiente al campo 'seleccionadaBasicoRequerimiento' 
+   * dentro del formulario de registro de donación.
+   * 
+   * @returns {FormArray} El FormArray del campo 'seleccionadaBasicoRequerimiento'.
+   */
+  get seleccionadaBasicoRequerimiento(): FormArray {
+    return this.registroDonacionForm.get('manifiesto.seleccionadaBasicoRequerimiento') as FormArray;
   }
 
   /**
    * Inicializa el formulario reactivo
    * @returns {void}
    */
-  crearFormSolicitud(): void {
+  crearDatosDelFabricanteForm(): void {
+    this.registroDonacionForm = this.fb.group({
+      manifiesto: this.fb.group({
+        aduana: [
+          this.registroDeDonacionState?.aduana,
+          [Validators.required]
+        ],
+        basicoRequerimiento: this.fb.array([]),
+        seleccionadaBasicoRequerimiento:
+          this.fb.array(this.registroDeDonacionState?.seleccionadaBasicoRequerimiento)
+      })
+    });
     this.agregarMercanciasForm = this.fb.group({
       datosMercancia: this.fb.group({
         numeroConsecutivo: [
-          { value: '1', disabled: true },
+          { value: this.registroDeDonacionState?.numeroConsecutivo, disabled: true },
           [Validators.required, Validators.maxLength(5)]
         ],
         destinoDonacion: [
-          '',
+          this.registroDeDonacionState?.destinoDonacion,
           Validators.required
         ],
-        posibleFraccion: ['', [Validators.maxLength(10)]],
+        posibleFraccion: [
+          this.registroDeDonacionState?.posibleFraccion,
+          [Validators.maxLength(10)]
+        ],
         descripcionFraccion: [
-          { value: '', disabled: true }
+          { value: this.registroDeDonacionState?.descripcionFraccion, disabled: true }
+        ],
+        solicitudDeInspeccion: [
+          this.registroDeDonacionState?.solicitudDeInspeccion,
+          [Validators.required]
         ],
         justificacionMerca: [
-          '',
+          this.registroDeDonacionState?.justificacionMerca,
           [
             Validators.required,
             Validators.maxLength(400)
           ]
         ],
         descripcionMercanciaOtro: [
-          '',
+          this.registroDeDonacionState?.descripcionMercanciaOtro,
           [
             Validators.required,
             Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ\s]+$/),
             Validators.maxLength(400)
           ]
         ],
-        tipoDeMercancia: ['', Validators.required],
-        cantidadUMC: ['', [Validators.required, Validators.maxLength(5)]],
-        cantidadUMT: ['', [Validators.required, Validators.maxLength(5)]],
-        unidadMedida: ['', Validators.required],
-        UMT: ['', Validators.required],
-        paisProcedenciaOtro: ['', Validators.required],
-        condicionMercanciaA: ['', Validators.required]
+        tipoDeMercancia: [
+          this.registroDeDonacionState?.tipoDeMercancia,
+          Validators.required
+        ],
+        cantidadUMC: [
+          this.registroDeDonacionState?.cantidadUMC,
+          [Validators.required, Validators.maxLength(5)]
+        ],
+        cantidadUMT: [
+          this.registroDeDonacionState?.cantidadUMT,
+          [Validators.required, Validators.maxLength(5)]
+        ],
+        unidadMedida: [
+          this.registroDeDonacionState?.unidadMedida,
+          Validators.required
+        ],
+        UMT: [
+          this.registroDeDonacionState?.UMT,
+          Validators.required
+        ],
+        paisProcedenciaOtro: [
+          this.registroDeDonacionState?.paisProcedenciaOtro,
+          Validators.required
+        ],
+        condicionMercancia: [
+          this.registroDeDonacionState?.condicionMercancia,
+          Validators.required
+        ]
       }),
       datosCofepris: this.fb.group({
+        fechaCaducidad: [
+          this.registroDeDonacionState?.fechaCaducidad
+        ],
         ingredienteActivo: [
-          '',
+          this.registroDeDonacionState?.ingredienteActivo,
           [
             Validators.required,
             Validators.maxLength(100)
           ],
         ],
         tipoMedicamento: [
-          '',
+          this.registroDeDonacionState?.tipoMedicamento,
           [
             Validators.required,
             Validators.maxLength(100)
           ]
         ],
         presentacionFarma: [
-          '',
+          this.registroDeDonacionState?.presentacionFarma,
           [Validators.required, Validators.maxLength(100)]
         ],
         paisOrigenMedicamento: [
-          '',
+          this.registroDeDonacionState?.paisOrigenMedicamento,
           Validators.required
         ],
         paisProcedenciaMedicamento: [
-          '',
+          this.registroDeDonacionState?.paisProcedenciaMedicamento,
           [
             Validators.required
           ]
@@ -269,7 +368,7 @@ export class RegistroDeDonacionComponent implements OnInit {
    * @returns {void}
    */
   private inicializaCatalogos(): void {
-    const aduana$ = this.donacionesExtranjerasService
+    const ADUANA$ = this.donacionesExtranjerasService
       .getAduana(CATALOGOS_ID.CAT_ADUANA)
       .pipe(
         map((resp) => {
@@ -277,7 +376,7 @@ export class RegistroDeDonacionComponent implements OnInit {
         })
       );
 
-    const destinoDonacion$ = this.donacionesExtranjerasService
+    const DESTINO_DONACION$ = this.donacionesExtranjerasService
       .getDestinoDonacion(CATALOGOS_ID.CAT_DESTINO_DONACION)
       .pipe(
         map((resp) => {
@@ -285,7 +384,7 @@ export class RegistroDeDonacionComponent implements OnInit {
         })
       );
 
-    const tipoDeMercancia$ = this.donacionesExtranjerasService
+    const TIPO_DE_MERCANCIA$ = this.donacionesExtranjerasService
       .getTipoDeMercancia(CATALOGOS_ID.CAT_TIPO_DE_MERCANCIA)
       .pipe(
         map((resp) => {
@@ -293,7 +392,7 @@ export class RegistroDeDonacionComponent implements OnInit {
         })
       );
 
-    const unidadMedida$ = this.donacionesExtranjerasService
+    const UNIDAD_MEDIDA$ = this.donacionesExtranjerasService
       .getUnidadMedida(CATALOGOS_ID.CAT_UMC)
       .pipe(
         map((resp) => {
@@ -301,7 +400,7 @@ export class RegistroDeDonacionComponent implements OnInit {
         })
       );
 
-    const umt$ = this.donacionesExtranjerasService
+    const UMT$ = this.donacionesExtranjerasService
       .getUmt(CATALOGOS_ID.CAT_UMT)
       .pipe(
         map((resp) => {
@@ -309,7 +408,7 @@ export class RegistroDeDonacionComponent implements OnInit {
         })
       );
 
-    const paisProcedenciaOtro$ = this.donacionesExtranjerasService
+    const PAIS_PROCEDENCIA_OTRO$ = this.donacionesExtranjerasService
       .getProcedenciaOtro(CATALOGOS_ID.CAT_PROCEDENCIA_OTRO)
       .pipe(
         map((resp) => {
@@ -317,7 +416,7 @@ export class RegistroDeDonacionComponent implements OnInit {
         })
       );
 
-    const condicionMercancia$ = this.donacionesExtranjerasService
+    const CONDICION_MERCANCIA$ = this.donacionesExtranjerasService
       .getCondicionMercancia(CATALOGOS_ID.CAT_CONDICION_MERCANCIA)
       .pipe(
         map((resp) => {
@@ -325,7 +424,7 @@ export class RegistroDeDonacionComponent implements OnInit {
         })
       );
 
-    const paisOrigenMedicamento$ = this.donacionesExtranjerasService
+    const PAIS_ORIGEN_MEDICAMENTO$ = this.donacionesExtranjerasService
       .getPaisOrigenMedicamento(CATALOGOS_ID.CAT_PAIS_ORIGEN_MEDICAMENTO)
       .pipe(
         map((resp) => {
@@ -333,7 +432,7 @@ export class RegistroDeDonacionComponent implements OnInit {
         })
       );
 
-    const paisProcedenciaMedicamento$ = this.donacionesExtranjerasService
+    const PAIS_PROCEDENCIA_MEDICAMENTO$ = this.donacionesExtranjerasService
       .getPaisProcedenciaMedicamento(CATALOGOS_ID.CAT_PAIS_PROCEDENCIA_MEDICAMENTO)
       .pipe(
         map((resp) => {
@@ -342,16 +441,123 @@ export class RegistroDeDonacionComponent implements OnInit {
       );
 
     merge(
-      aduana$,
-      destinoDonacion$,
-      tipoDeMercancia$,
-      unidadMedida$,
-      umt$,
-      paisProcedenciaOtro$,
-      condicionMercancia$,
-      paisOrigenMedicamento$,
-      paisProcedenciaMedicamento$
+      ADUANA$,
+      DESTINO_DONACION$,
+      TIPO_DE_MERCANCIA$,
+      UNIDAD_MEDIDA$,
+      UMT$,
+      PAIS_PROCEDENCIA_OTRO$,
+      CONDICION_MERCANCIA$,
+      PAIS_ORIGEN_MEDICAMENTO$,
+      PAIS_PROCEDENCIA_MEDICAMENTO$
     ).subscribe();
+  }
+
+  /**
+   * Método para seleccionar la aduana.
+   */
+  aduanaSeleccion(): void {
+    const ADUANA = this.registroDonacionForm.get('manifiesto.aduana')?.value;
+    this.tramite10303Store.setAduana(ADUANA);
+  }
+
+  /**
+   * Método para seleccionar la destino donacion.
+   */
+  destinoDonacionSeleccion(): void {
+    const DESTINO_DONACION = this.agregarMercanciasForm.get('datosMercancia.destinoDonacion')?.value;
+    this.tramite10303Store.setDestinoDonacion(DESTINO_DONACION);
+  }
+
+  /**
+   * Método para seleccionar la tipo de mercancia.
+   */
+  tipoDeMercanciaSeleccion(): void {
+    const TIPO_DE_MERCANCIA = this.agregarMercanciasForm.get('datosMercancia.tipoDeMercancia')?.value;
+    this.tramite10303Store.setTipoDeMercancia(TIPO_DE_MERCANCIA);
+  }
+
+  /**
+   * Método para seleccionar la unidad medida.
+   */
+  unidadMedidaSeleccion(): void {
+    const UNIDAD_MEDIDA = this.agregarMercanciasForm.get('datosMercancia.unidadMedida')?.value;
+    this.tramite10303Store.setUnidadMedida(UNIDAD_MEDIDA);
+  }
+
+  /**
+   * Método para seleccionar la umt.
+   */
+  umtSeleccion(): void {
+    const UMT = this.agregarMercanciasForm.get('datosMercancia.UMT')?.value;
+    this.tramite10303Store.setUMT(UMT);
+  }
+
+  /**
+   * Método para seleccionar la pais procedencia otro.
+   */
+  paisProcedenciaOtroSeleccion(): void {
+    const PAIS_PROCEDENCIAOTRO = this.agregarMercanciasForm.get('datosMercancia.paisProcedenciaOtro')?.value;
+    this.tramite10303Store.setPaisProcedenciaOtro(PAIS_PROCEDENCIAOTRO);
+  }
+
+  /**
+   * Método para seleccionar la condicion mercancia.
+   */
+  condicionMercanciaSeleccion(): void {
+    const CONDICION_MERCANCIA = this.agregarMercanciasForm.get('datosMercancia.condicionMercancia')?.value;
+    this.tramite10303Store.setCondicionMercancia(CONDICION_MERCANCIA);
+  }
+
+  /**
+   * Método para seleccionar la pais origen medicamento.
+   */
+  paisOrigenMedicamentoSeleccion(): void {
+    const PAIS_ORIGEN_MEDICAMENTO = this.agregarMercanciasForm.get('datosCofepris.paisOrigenMedicamento')?.value;
+    this.tramite10303Store.setPaisOrigenMedicamento(PAIS_ORIGEN_MEDICAMENTO);
+  }
+
+  /**
+   * Método para seleccionar la pais procedencia medicamento.
+   */
+  paisProcedenciaMedicamentoSeleccion(): void {
+    const PAIS_PROCEDENCIA_MEDICAMENTO = this.agregarMercanciasForm.get('datosCofepris.paisProcedenciaMedicamento')?.value;
+    this.tramite10303Store.setPaisProcedenciaMedicamento(PAIS_PROCEDENCIA_MEDICAMENTO);
+  }
+
+  /**
+   * Actualiza la fecha de caducidad en el formulario de registro de donación y en el store de trámite 10303.
+   *
+   * @param {string} nuevo_valor - El nuevo valor de la fecha de caducidad.
+   * @returns {void}
+   */
+  cambioFechaCaducidad(nuevo_valor: string): void {
+    this.registroDonacionForm.get('fechaCaducidad')?.setValue(nuevo_valor);
+    this.tramite10303Store.setFechaCaducidad(nuevo_valor);
+  }
+
+  /**
+   * Verifica si un campo específico de un formulario es válido.
+   *
+   * @param {FormGroup} form - El formulario que contiene el campo a validar.
+   * @param {string} field - El nombre del campo a validar.
+   * @returns {boolean} - Retorna `true` si el campo es válido, de lo contrario `false`.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
+
+  /**
+   * Establece los valores en el store de tramite5701.
+   *
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   * @returns {void}
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite10303Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite10303Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
   /**
@@ -380,6 +586,18 @@ export class RegistroDeDonacionComponent implements OnInit {
   }
 
   /**
+   * Maneja el evento de cambio de estado de un checkbox.
+   *
+   * @param event - El evento que se dispara al cambiar el estado del checkbox.
+   * @param index - El índice del control en el formulario que se va a actualizar.
+   */
+  onCheckboxChange(event: Event, index: number): void {
+    const VALOR_ENTRADA = event.target as HTMLInputElement;
+    this.seleccionadaBasicoRequerimiento.controls[index].setValue(VALOR_ENTRADA.checked);
+    this.setValoresStore(this.registroDonacionForm, 'manifiesto.seleccionadaBasicoRequerimiento', 'setSeleccionadaBasicoRequerimiento');
+  }
+
+  /**
    * Método para obtener los datos de las mercancías.
    * 
    * Este método asigna los datos del encabezado y del cuerpo de la tabla de mercancías
@@ -390,16 +608,6 @@ export class RegistroDeDonacionComponent implements OnInit {
   public obtenerMercancia(): void {
     this.mercanciaHeaderData = this.getMercanciaTableData.tableHeader;
     this.mercanciaBodyData = this.getMercanciaTableData.tableBody;
-  }
-
-  /**
-   * Genera un identificador para el manifiesto basado en el índice.
-   * 
-   * @param {number} index - Índice del manifiesto.
-   * @returns {string} El identificador del manifiesto.
-   */
-  getManifiestoId(index: number): string {
-    return `manifiesto-${index}`;
   }
 
   /**
@@ -421,9 +629,9 @@ export class RegistroDeDonacionComponent implements OnInit {
    * @returns {void}
    */
   mostrar_colapsable(index: number): void {
-    const isCurrentlyOpen = this.panels[index].isCollapsed;
+    const IS_CURRENTLY_OPEN = this.panels[index].isCollapsed;
     this.panels.forEach((panel, i) => {
-      panel.isCollapsed = i === index ? !isCurrentlyOpen : true;
+      panel.isCollapsed = i === index ? !IS_CURRENTLY_OPEN : true;
     });
   }
 
@@ -443,7 +651,10 @@ export class RegistroDeDonacionComponent implements OnInit {
    * @returns {void}
    */
   abrirDialogoMercancias(): void {
-    this.modal = 'show';
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
   }
 
   /**
@@ -452,7 +663,9 @@ export class RegistroDeDonacionComponent implements OnInit {
    * @returns {void}
    */
   cerrarModal(): void {
-    this.closeModal.nativeElement.click();
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
+    }
   }
 
   /**
@@ -463,8 +676,8 @@ export class RegistroDeDonacionComponent implements OnInit {
     if (!this.agregarMercanciasForm.valid) {
       return;
     }
-    const mercancia = this.agregarMercanciasForm.value;
-    this.getMercanciaTableData.tableBody.push(mercancia);
+    const MERCANCIA = this.agregarMercanciasForm.value;
+    this.getMercanciaTableData.tableBody.push(MERCANCIA);
     this.agregarMercanciasForm.reset();
     this.cerrarModal();
   }
@@ -476,9 +689,11 @@ export class RegistroDeDonacionComponent implements OnInit {
    * 
    * @returns {void}
    */
-  onCambioDeArchivo(event: any): void {
-    this.archivoMedicamentos = event.target.files[0];
-    if (this.archivoMedicamentos && this.archivoMedicamentos.length > 0) {
+  onCambioDeArchivo(event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+
+    if (TARGET.files && TARGET.files.length > 0) {
+      this.archivoMedicamentos = TARGET.files[0];
       this.etiquetaDeArchivo = this.archivoMedicamentos.name;
     } else {
       this.etiquetaDeArchivo = TEXTOS.ETIQUETA_DE_ARCHIVO;
@@ -499,9 +714,9 @@ export class RegistroDeDonacionComponent implements OnInit {
    * @returns {void}
    */
   activarSeleccionArchivo(): void {
-    const entradaArchivo = document.getElementById('archivoMedicamentos') as HTMLInputElement;
-    if (entradaArchivo) {
-      entradaArchivo.click();
+    const ENTRADA_ARCHIVO = document.getElementById('archivoMedicamentos') as HTMLInputElement;
+    if (ENTRADA_ARCHIVO) {
+      ENTRADA_ARCHIVO.click();
     }
   }
 
@@ -510,22 +725,30 @@ export class RegistroDeDonacionComponent implements OnInit {
    * 
    * @param tipo Tipo de archivo a cargar.
    */
-  cargarArchivo(tipo: string): void { }
+  cargarArchivo(): void {
+    // Implementar la lógica para Tipo de archivo a cargar.
+  }
 
   /**
    * Limpia la información de las mercancías.
    */
-  limpiarMercancias(): void { }
-
-  /**
-   * Obtiene la fracción correspondiente.
-   */
-  obtenerFraccion(): void { }
+  limpiarMercancias(): void {
+    // Implementar la lógica para limpiar las mercancías.
+  }
 
   /**
    * Maneja el evento de cambio de valor.
-   * 
-   * @param event Evento de cambio de valor.
    */
-  enCambioDeValor(event: any) { }
+  enCambioDeValor(): void {
+    // Implementar la lógica para evento de cambio de valor.
+  }
+
+  /**
+   * Se ejecuta al destruir el componente.
+   * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destruirNotificador$.next();
+    this.destruirNotificador$.complete();
+  }
 }
