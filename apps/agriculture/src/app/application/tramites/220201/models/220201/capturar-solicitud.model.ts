@@ -14,6 +14,7 @@ export interface CapturarSolicitud {
   datosParaMovilizacionNacional: DatosParaMovilizacionNacional;
   tercerosRelacionados: TercerosRelacionados;
   pagoDeDerechos: PagoDeDerechos;
+  validarEnvio: ValidarEnvio;
 }
 
 /**
@@ -32,6 +33,20 @@ export interface Solicitante {
   correo: string;
 }
 
+
+/**
+ * Interface Solicitante
+ * @export
+ * @interface SubmitValidator
+ * @property {boolean} pagoDeformaValida - Registro Federal de Contribuyentes (RFC).
+ * @property {boolean} dataParaMovilizacion - Nombre o razón social del solicitante.
+ * @property {boolean} dataDeLaSolicitud - Apellido paterno del solicitante.
+ */
+export interface ValidarEnvio {
+  pagoDeformaValida: boolean,
+  dataParaMovilizacion: boolean,
+  dataDeLaSolicitud: boolean,
+}
 /**
  * Modelo de datos de la solicitud
  * @export
@@ -56,6 +71,7 @@ export interface DatosDeLaSolicitud {
   numeroGuia: string;
   certificacion: string;
   regimen: string;
+  datosDeMercancia: string;
 }
 
 /**
@@ -116,7 +132,8 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
       nombreVeterinario: '',
       numeroGuia: '',
       certificacion: '',
-      regimen: ''
+      regimen: '',
+      datosDeMercancia: ''
     },
     datosParaMovilizacionNacional: params.datosParaMovilizacionNacional || { // Initialize as an object
       coordenadas: '',
@@ -138,6 +155,12 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
       llavePago: '',
       importePago: ''
     },
+    validarEnvio: params.validarEnvio || {
+      pagoDeformaValida: false,
+      dataParaMovilizacion: false,
+      dataDeLaSolicitud: false,
+    }
+
   };
 }
 /**

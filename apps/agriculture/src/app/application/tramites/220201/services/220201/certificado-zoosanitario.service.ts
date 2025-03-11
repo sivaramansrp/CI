@@ -1,14 +1,22 @@
-import { Injectable } from '@angular/core';
+
+
 import {
   CapturarSolicitud,
-  Solicitante,
   DatosDeLaSolicitud,
   DatosParaMovilizacionNacional,
-  TercerosRelacionados,
   PagoDeDerechos,
-} from 'libs/shared/data-access-user/src/core/models/220201/capturar-solicitud.model';
-import { Observable } from 'rxjs';
-import { ZoosanitarioStore } from '../../../../../../../apps/agriculture/src/app/application/estados/220201/zoosanitario.store'
+  Solicitante,
+  TercerosRelacionados,
+  ValidarEnvio,
+} from '../../models/220201/capturar-solicitud.model';
+
+import { Injectable } from '@angular/core';
+
+import { Observable, map, } from 'rxjs';
+
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store'
+
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 /**
  * Servicio para la gestión de solicitudes de certificado zoosanitario.
  * Este servicio proporciona métodos para configurar y enviar la información de la solicitud.
@@ -18,10 +26,14 @@ import { ZoosanitarioStore } from '../../../../../../../apps/agriculture/src/app
   providedIn: 'root',
 })
 export class CertificadoZoosanitarioServiceService {
-  constructor(private zoosanitarioStore: ZoosanitarioStore) { }
+  constructor(private readonly zoosanitarioStore: ZoosanitarioStore, private readonly seccionStore: SeccionLibStore) {
+    // Constructor logic can be added here if needed
+  }
   updateSolicitante(solicitante: Solicitante): void {
     this.zoosanitarioStore.actualizarSolicitante(solicitante);
   }
+
+
 
   updateDatosDeLaSolicitud(datosDeLaSolicitud: DatosDeLaSolicitud): void {
     this.zoosanitarioStore.actualizarDatosDeLaSolicitud(datosDeLaSolicitud);
@@ -39,11 +51,11 @@ export class CertificadoZoosanitarioServiceService {
     this.zoosanitarioStore.actualizarPagoDeDerechos(pagoDeDerechos);
   }
 
+
+
   limpiarFormulario(): void {
     this.zoosanitarioStore.limpiarFormulario();
   }
-
-  // --- Getting Data ---
 
   getSolicitante(): Observable<Solicitante> {
     return this.zoosanitarioStore._select(state => state.solicitante); // Use _select for observable
@@ -61,16 +73,38 @@ export class CertificadoZoosanitarioServiceService {
     return this.zoosanitarioStore._select(state => state.tercerosRelacionados);
   }
 
-  getTerceros(): Observable<any> { // Or Observable<Tercero[]> if you have a Tercero interface
-    return this.zoosanitarioStore._select(state => state.tercerosRelacionados.terceros);
-  }
-
   getPagoDeDerechos(): Observable<PagoDeDerechos> {
     return this.zoosanitarioStore._select(state => state.pagoDeDerechos);
+  }
+  getValidarEnvio(): Observable<ValidarEnvio> {
+    return this.zoosanitarioStore._select(state => state.validarEnvio);
   }
 
   getFormData(): Observable<CapturarSolicitud> {
     return this.zoosanitarioStore._select(state => state);
   }
+
+  actualizarFormaValida(updatedFormaValida: { [key: string]: boolean }): void {
+    this.zoosanitarioStore.actualizarformaValida(updatedFormaValida);
+    this.obtenerTodosLosStatus().subscribe((result: boolean) => {
+      if (result) {
+        this.seccionStore.establecerSeccion([true]);
+        this.seccionStore.establecerFormaValida([true]);
+      } else {
+        this.seccionStore.establecerSeccion([true]);
+        this.seccionStore.establecerFormaValida([false]);
+      }
+    });
+  }
+
+  obtenerTodosLosStatus(): Observable<boolean> {
+    return this.zoosanitarioStore._select(state => state.validarEnvio).pipe(
+      map((formaValida: ValidarEnvio) => {
+        return Object.values(formaValida).every(value => value === true);
+      })
+    );
+  }
+
+
 
 }

@@ -19,22 +19,16 @@ export const PASOS = [
     },
     {
         indice: 2,
-        titulo: 'Requisitos necesarios',
+        titulo: 'Anexar requisitos',
         activo: false,
         completado: false,
     },
     {
         indice: 3,
-        titulo: 'Anexar necesarios',
-        activo: false,
-        completado: false,
-    },
-    {
-        indice: 4,
         titulo: 'Firmar solicitud',
         activo: false,
         completado: false,
-    },
+    }
 ];
 
 
@@ -179,3 +173,20 @@ export const FECHA_DE_PAGO = {
     required: true,
     habilitado: true,
 };
+/**
+ * @description Constante que define la configuración para el input de fecha de pago.
+ * @constant {Object} TEXTOS_REQUISITOS
+ */
+export const TEXTOS_REQUISITOS = {
+    INSTRUCCIONES: `<h6>Instrucciones</h6>
+    <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
+    <p>- En caso de que no requieras algún documento, selecciónalo y elimínalo</p>
+    <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`,
+    ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"</p>`,
+};
+/**
+ * @description Constante que define la configuración para el input de fecha de pago.
+ * Esta constante contiene la ruta relativa a los archivos JSON necesarios para la configuración.
+ * @constant {Object} URL
+ */
+export const URL = '../../../../../assets/json/220202/';

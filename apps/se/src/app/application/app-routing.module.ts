@@ -125,9 +125,6 @@ const ROUTES: Routes = [
         (m) => m.RegistroSolicitudModule
       ),
   }
-
-
-
 ];
 
 @NgModule({
