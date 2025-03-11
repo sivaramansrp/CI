@@ -14,7 +14,7 @@ export interface CapturarSolicitud {
   datosParaMovilizacionNacional: DatosParaMovilizacionNacional;
   tercerosRelacionados: TercerosRelacionados;
   pagoDeDerechos: PagoDeDerechos;
-  submitValidator: SubmitValidator;
+  validarEnvio: ValidarEnvio;
 }
 
 /**
@@ -42,7 +42,7 @@ export interface Solicitante {
  * @property {boolean} dataParaMovilizacion - Nombre o razón social del solicitante.
  * @property {boolean} dataDeLaSolicitud - Apellido paterno del solicitante.
  */
-export interface SubmitValidator {
+export interface ValidarEnvio {
   pagoDeformaValida: boolean,
   dataParaMovilizacion: boolean,
   dataDeLaSolicitud: boolean,
@@ -153,7 +153,7 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
       llavePago: '',
       importePago: ''
     },
-    submitValidator: params.submitValidator || {
+    validarEnvio: params.validarEnvio || {
       pagoDeformaValida: false,
       dataParaMovilizacion: false,
       dataDeLaSolicitud: false,

@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable, map } from 'rxjs';
+import { URL } from '../../constantes/220202/fitosanitario.enums';
 
 
 
@@ -14,9 +15,9 @@ import { Observable, map } from 'rxjs';
   providedIn: 'root'
 })
 export class AgriculturaApiService {
-  url: string = '../../../../../assets/json/220202/';
+  url: string = URL;
   constructor(private readonly http: HttpClient) {
-    console.log('AgriculturaApiService');
+    // Constructor logic can be added here if needed
   }
   /**
    * Obtiene la lista de bancos.

@@ -24,7 +24,7 @@ import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store'
 })
 export class CertificadoZoosanitarioServiceService {
   constructor(private readonly zoosanitarioStore: ZoosanitarioStore) {
-    console.log('CertificadoZoosanitarioServiceService');
+    // Constructor logic can be added here if needed
   }
   updateSolicitante(solicitante: Solicitante): void {
     this.zoosanitarioStore.actualizarSolicitante(solicitante);

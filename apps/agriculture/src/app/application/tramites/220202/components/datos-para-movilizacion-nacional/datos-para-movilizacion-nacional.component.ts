@@ -11,7 +11,7 @@ import { Catalogo } from '@ng-mf/data-access-user';
  * @module datosParaMovilizacionNacional
  */
 /**
- * * Componente para el formulario de datos para movilización nacional.
+ * Componente para el formulario de datos para movilización nacional.
  * @class DatosParaMovilizacionNacionalComponent
  * @implements {OnInit}
  */

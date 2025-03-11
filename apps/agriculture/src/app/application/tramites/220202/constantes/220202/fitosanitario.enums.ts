@@ -19,7 +19,7 @@ export const PASOS = [
     },
     {
         indice: 2,
-        titulo: 'Anexar necesarios',
+        titulo: 'Anexar requisitos',
         activo: false,
         completado: false,
     },
@@ -184,3 +184,9 @@ export const TEXTOS_REQUISITOS = {
     <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`,
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"</p>`,
 };
+/**
+ * @description Constante que define la configuración para el input de fecha de pago.
+ * Esta constante contiene la ruta relativa a los archivos JSON necesarios para la configuración.
+ * @constant {Object} URL
+ */
+export const URL = '../../../../../assets/json/220202/';

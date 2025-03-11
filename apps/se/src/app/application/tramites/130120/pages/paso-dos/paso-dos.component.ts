@@ -1,8 +1,9 @@
 import { AlertComponent } from "libs/shared/data-access-user/src/tramites/components/alert/alert.component";
 import { AnexarDocumentosComponent } from "libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component";
 import { Component } from '@angular/core';
-import { TEXTOS_REQUISITOS } from '../../../../../../../../agriculture/src/app/application/tramites/220201/constantes/certificado-zoosanitario.enum';
+
 import { TituloComponent } from "libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
+import { TEXTOS_REQUISITOS } from "../../constants/permiso-importacion-modification.enum";
 
 @Component({
   selector: 'app-paso-dos',

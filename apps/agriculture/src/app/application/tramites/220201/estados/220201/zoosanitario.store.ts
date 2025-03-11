@@ -78,7 +78,7 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
         this.update(state => ({
             ...state,
             formaValida: {
-                ...state?.submitValidator,
+                ...state?.validarEnvio,
                 ...updatedFormaValida, // Only the updated fields are merged here
             }
         }));
