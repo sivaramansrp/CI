@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { Catalogo, InputFecha } from '@ng-mf/data-access-user';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import { skip } from 'rxjs';
 
 /**
  * Componente para el formulario de pago de derechos.
@@ -25,7 +26,7 @@ interface RadioOption {
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss']
 })
-export class PagoDeDerechosComponent implements OnInit {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Configuración para el input de fecha de pago.
    * @property {InputFecha} fechaInicioInput
@@ -100,6 +101,15 @@ export class PagoDeDerechosComponent implements OnInit {
    * @method ngOnInit
    */
   ngOnInit(): void {
+    this.pagoForm.valueChanges.pipe(skip(1)).subscribe((changes) => {
+      const FORMA_VALIDA_ACTUALIZADA = {
+        validaciondeFormulariodePago: false,
+      };
+      if (this.pagoForm.valid) {
+        FORMA_VALIDA_ACTUALIZADA.validaciondeFormulariodePago = true;
+      }
+      this.agriculturaApiService.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
+    });
     this.obtenerDetallesDeListaDeOpciones();
   }
   /**
@@ -150,5 +160,8 @@ export class PagoDeDerechosComponent implements OnInit {
     if (name === 'banco') {
       this.pagoForm.get('banco')?.enable();
     }
+  }
+  ngOnDestroy(): void {
+    this.agriculturaApiService.updatePago(this.pagoForm.value);
   }
 }

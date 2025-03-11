@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 /**
  * Componente para mostrar el subtítulo del asistente.
  * @component PasoUnoComponent
@@ -43,6 +44,12 @@ export class PasoUnoComponent {
     { index: 5, title: 'Pago de derechos', component: 'pago-de-derechos' }
   ];
 
+
+
+  constructor(private readonly seccionStore: SeccionLibStore) {
+    this.seccionStore.establecerFormaValida([false]);
+    this.seccionStore.establecerSeccion([true])
+  }
   /**
    * @description 
    * Método que se ejecuta al seleccionar una pestaña/paso del formulario.

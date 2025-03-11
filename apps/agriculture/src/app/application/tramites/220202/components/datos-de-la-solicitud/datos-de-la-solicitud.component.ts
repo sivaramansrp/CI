@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosDeFila } from '../../models/220202/fitosanitario.model';
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
+
+import { skip } from 'rxjs';
 
 
 
@@ -17,7 +19,7 @@ import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.en
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss'
 })
-export class DatosDeLaSolicitudComponent implements OnInit {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
      * @description Indica si el panel de detalle está colapsado o no.
      * @type {boolean}
@@ -187,6 +189,15 @@ export class DatosDeLaSolicitudComponent implements OnInit {
  * @returns {void}
  */
   ngOnInit(): void {
+    this.forma?.valueChanges.pipe(skip(1)).subscribe((changes) => {
+      const FORMA_VALIDA_ACTUALIZADA = {
+        datosFormaValidacion: false,
+      };
+      if (this.forma?.valid) {
+        FORMA_VALIDA_ACTUALIZADA.datosFormaValidacion = true;
+      }
+      this.agriculturaApiService.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
+    })
     this.obtenerTodosLosDatosDeLaLista();
   }
   /**
@@ -222,7 +233,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     });
     const MERCANCIAS_ARRAY = this.forma.get('mercancias') as FormArray;
     MERCANCIAS_ARRAY.push(this.fb.group({
-      seleccionado: [''], // Checkbox
+      seleccionado: [''],
       noPartida: [''],
       tipoRequisito: [''],
       requisito: [''],
@@ -339,4 +350,14 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       this.productoList = data as Catalogo[];
     });
   }
+  /**
+ * @description Obtiene la lista de productos desde un archivo JSON.
+ * @method ngOnDestroy
+ */
+  ngOnDestroy(): void {
+    this.agriculturaApiService.updateDatosForma(this.forma?.value)
+  }
+
+
+
 }

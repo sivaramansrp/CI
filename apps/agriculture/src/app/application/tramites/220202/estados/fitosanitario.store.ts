@@ -3,8 +3,6 @@ import {
 
     ListaDeDatosFinal,
 
-    Mercancia,
-
     Movilizacion,
 
     PagoForm,
@@ -33,7 +31,7 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
     public actualizarDatosForma(datosForma: DatosForma): void {
         this.update(state => ({
             ...state,
-            datos: [datosForma], // Envuelve los datos en un array
+            datosForma, // Envuelve los datos en un array
         }));
     }
 
@@ -44,7 +42,7 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
     public actualizarMovilizacion(movilizacion: Movilizacion): void {
         this.update(state => ({
             ...state,
-            movilizacion: [movilizacion], // Envuelve los datos en un array
+            movilizacion, // Envuelve los datos en un array
         }));
     }
 
@@ -55,23 +53,26 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
     public actualizarPago(pago: PagoForm): void {
         this.update(state => ({
             ...state,
-            pago: [pago], // Envuelve los datos en un array
+            pago, // Envuelve los datos en un array
         }));
     }
+
+
 
 
     /**
-     * Actualiza las mercancías en el estado.
-     * @param mercancias Array de mercancías.
-     */
-    public actualizarMercancias(mercancias: Mercancia[]): void {
+    * Updates the 'formaValida' field.
+    * @param updatedFormaValida The updated boolean values for 'formaValida'.
+    */
+    public actualizarformaValida(updatedFormaValida: { [key: string]: boolean }): void {
         this.update(state => ({
             ...state,
-            datos: [{ ...state.datos[0], mercancias: mercancias }] // Actualiza las mercancías dentro de datos
+            formaValida: {
+                ...state?.finalEnviar,
+                ...updatedFormaValida, // Only the updated fields are merged here
+            }
         }));
     }
-
-
     /**
      * Restablece el estado a su estado inicial.
      */

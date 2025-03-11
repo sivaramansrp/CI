@@ -59,20 +59,26 @@ export interface DatosDeFila {
     cantidad: number;
     proveedor: string;
 }
+export interface FinalEnviar {
+    datosFormaValidacion: boolean;
+    movilizacionValidacion: boolean;
+    validaciondeFormulariodePago: boolean;
+}
 
 /**
  * @interface ListaDeDatosFinal
  * @description 
  * Interfaz que agrupa los datos principales, información de movilización y pago.
  * 
- * @property {DatosForma[]} datos - Información de los productos y mercancías.
- * @property {Movilizacion[]} movilizacion - Datos relacionados con el transporte.
- * @property {PagoForm[]} pago - Datos de pago asociados a la transacción.
+ * @property {DatosForma} datos - Información de los productos y mercancías.
+ * @property {Movilizacion} movilizacion - Datos relacionados con el transporte.
+ * @property {PagoForm} pago - Datos de pago asociados a la transacción.
  */
 export interface ListaDeDatosFinal {
-    datos: DatosForma[];
-    movilizacion: Movilizacion[];
-    pago: PagoForm[];
+    datos: DatosForma;
+    movilizacion: Movilizacion;
+    pago: PagoForm;
+    finalEnviar: FinalEnviar;
 }
 
 /**
@@ -203,8 +209,49 @@ export interface DatosForma {
  */
 export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): ListaDeDatosFinal {
     return {
-        datos: params.datos || [],
-        movilizacion: params.movilizacion || [],
-        pago: params.pago || []
+        datos: {
+            aduana: params.datos?.aduana || '',
+            agropecuaria: params.datos?.agropecuaria || '',
+            punto: params.datos?.punto || '',
+            guia: params.datos?.guia || '',
+            regimen: params.datos?.regimen || '',
+            ferrocarril: params.datos?.ferrocarril || '',
+            mercancias: params.datos?.mercancias || [],
+            aduanaMercancia: params.datos?.aduanaMercancia || '',
+            requisito: params.datos?.requisito || '',
+            numCertificadoInternacional: params.datos?.numCertificadoInternacional || '',
+            arancelaria: params.datos?.arancelaria || '',
+            descFraccionArancelaria: params.datos?.descFraccionArancelaria || '',
+            nico: params.datos?.nico || '',
+            descNico: params.datos?.descNico || '',
+            descripcion: params.datos?.descripcion || '',
+            cantidadUMT: params.datos?.cantidadUMT || '',
+            umt: params.datos?.umt || '',
+            cantidadUMC: params.datos?.cantidadUMC || '',
+            umc: params.datos?.umc || '',
+            uso: params.datos?.uso || '',
+            producto: params.datos?.producto || '',
+        },
+        movilizacion: {
+            transporte: params.movilizacion?.transporte || '',
+            guiaIdentificacion: params.movilizacion?.guiaIdentificacion || '',
+            empresaTransportista: params.movilizacion?.empresaTransportista || '',
+            punto: params.movilizacion?.punto || '',
+        },
+        pago: {
+            exentoPago: params.pago?.exentoPago || '',
+            justificacion: params.pago?.justificacion || '',
+            claveReferencia: params.pago?.claveReferencia || '',
+            cadenaDependencia: params.pago?.cadenaDependencia || '',
+            banco: params.pago?.banco || '',
+            llavePago: params.pago?.llavePago || '',
+            importePago: params.pago?.importePago || '',
+            fechaDePago: params.pago?.fechaDePago || ''
+        },
+        finalEnviar: {
+            datosFormaValidacion: params.finalEnviar?.datosFormaValidacion || false,
+            movilizacionValidacion: params.finalEnviar?.movilizacionValidacion || false,
+            validaciondeFormulariodePago: params.finalEnviar?.validaciondeFormulariodePago || false
+        }
     };
 }

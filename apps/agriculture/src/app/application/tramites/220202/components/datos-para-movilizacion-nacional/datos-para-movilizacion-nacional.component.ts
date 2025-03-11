@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 
 import { Catalogo } from '@ng-mf/data-access-user';
+import { skip } from 'rxjs';
 /**
  * @fileoverview Componente para la sección de datos para movilización nacional.
  * Este componente gestiona la lógica y la presentación del formulario de datos
@@ -26,7 +27,7 @@ import { Catalogo } from '@ng-mf/data-access-user';
   templateUrl: './datos-para-movilizacion-nacional.component.html',
   styleUrls: ['./datos-para-movilizacion-nacional.component.scss']
 })
-export class DatosParaMovilizacionNacionalComponent implements OnInit {
+export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy {
   /**
    * @description FormGroup que contiene los controles del formulario.
    * @type {FormGroup}
@@ -47,14 +48,6 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
    * @param {AgriculturaApiService} agriculturaApiService - Servicio HttpClient para realizar peticiones.
    */
   constructor(private readonly agriculturaApiService: AgriculturaApiService) {
-    // Constructor logic can be added here if needed
-  }
-  /**
-   * @description Inicializa el componente.
-   * Crea el FormGroup y obtiene los datos para los selectores.
-   * @method ngOnInit
-   */
-  ngOnInit(): void {
     this.forma = new FormGroup({
       transporte: new FormControl('', Validators.required),
       medioTransporte: new FormControl('', Validators.required),
@@ -62,8 +55,25 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
       empresaTransportista: new FormControl('', Validators.required),
       punto: new FormControl('', Validators.required)
     });
+  }
+  /**
+   * @description Inicializa el componente.
+   * Crea el FormGroup y obtiene los datos para los selectores.
+   * @method ngOnInit
+   */
+  ngOnInit(): void {
+    this.forma.valueChanges.pipe(skip(1)).subscribe((changes) => {
+      const FORMA_VALIDA_ACTUALIZADA = {
+        movilizacionValidacion: false,
+      };
+      if (this.forma.valid) {
+        FORMA_VALIDA_ACTUALIZADA.movilizacionValidacion = true;
+      }
+      this.agriculturaApiService.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
+    });
     this.obtenerTodosLosDatosDeOpciones();
   }
+
   /**
    * @description Obtiene los datos para los selectores.
    * @method obtenerTodosLosDatosDeOpciones
@@ -89,5 +99,8 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit {
     this.agriculturaApiService.obtenerSelectorList('punto.json').subscribe(data => {
       this.puntoList = data as Catalogo[];
     });
+  }
+  ngOnDestroy(): void {
+    this.agriculturaApiService.updateMovilizacion(this.forma.value);
   }
 }
