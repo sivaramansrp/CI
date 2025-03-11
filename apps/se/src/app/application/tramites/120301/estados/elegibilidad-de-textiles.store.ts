@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 
 
@@ -30,6 +31,7 @@ export interface TextilesState {
   factorConversionCategoriaTextil: string;
   fechaInicioVigencia: string;
   fechaFinVigencia: string;
+  cantidadFacturas: string;
   exportadorFabricanteMismo: string;
   numeroRegistroFiscal: string;
   tipo: string;
@@ -39,6 +41,7 @@ export interface TextilesState {
   ciudadImportador: string;
   cpImportador: string;
   PaisImportador: string;
+  formaValida: Catalogo[];
 }
 
 export function createInitialState(): TextilesState {
@@ -70,6 +73,7 @@ export function createInitialState(): TextilesState {
     factorConversionCategoriaTextil: '',
     fechaInicioVigencia: '',
     fechaFinVigencia: '',
+    cantidadFacturas: '',
     exportadorFabricanteMismo: '',
     numeroRegistroFiscal: '',
     tipo: '',
@@ -78,7 +82,8 @@ export function createInitialState(): TextilesState {
     domicilio: '',
     ciudadImportador: '',
     cpImportador: '',
-    PaisImportador: ''
+    PaisImportador: '',
+    formaValida: [],
   }
 }
 
@@ -178,7 +183,6 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
         ...state,
         estado,
     }));
-    console.log("111111",estado)
   }
 
   public setRepresentacionFederal(representacionFederal: string) {
@@ -202,7 +206,7 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
     }));
   }
 
-  public settratado(tratado: string) {
+  public setTratado(tratado: string) {
     this.update((state) => ({
         ...state,
         tratado,
@@ -227,6 +231,13 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
     this.update((state) => ({
         ...state,
         typoCategoria,
+    }));
+  }
+
+  public setTypoRegimen(typoRegimen: string) {
+    this.update((state) => ({
+        ...state,
+        typoRegimen,
     }));
   }
 
@@ -272,7 +283,14 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
     }));
   }
 
-  public setexportadorFabricanteMismo(exportadorFabricanteMismo: string) {
+  public setCantidadFacturas(cantidadFacturas: string) {
+    this.update((state) => ({
+        ...state,
+        cantidadFacturas,
+    }));
+  }
+
+  public setExportadorFabricanteMismo(exportadorFabricanteMismo: string) {
     this.update((state) => ({
         ...state,
         exportadorFabricanteMismo,
@@ -307,7 +325,7 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
     }));
   }
 
-  public setdomicilio(domicilio: string) {
+  public setDomicilio(domicilio: string) {
     this.update((state) => ({
         ...state,
         domicilio,
@@ -332,6 +350,13 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
     this.update((state) => ({
         ...state,
         PaisImportador,
+    }));
+  }
+
+  public setFormaValida(formaValida: Catalogo[]) {
+    this.update((state) => ({
+        ...state,
+        formaValida,
     }));
   }
 

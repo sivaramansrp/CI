@@ -112,8 +112,6 @@ export interface Solicitante {
   export interface HistoricoFabricantesForm {
     exportadorFabricanteMismo: string;
     numeroRegistroFiscal: string;
-    fabricantesNacionales: any[]; // Adjust type if there's a specific structure
-    fabricantesDatos: any[]; // Adjust type if there's a specific structure
   }
   export interface FormularioAsociacionFactura {
     cantidad: string;
@@ -164,4 +162,35 @@ export interface Solicitante {
 
   export interface ElegibilidadDeTextilesState {
     textileSolicitudCargaUtil: ElegibilidadDeTextiles;
+  }
+
+  export interface CapturarColumns {
+      NumeroDeLaFactura: string;
+      RazonSocial: string;
+      Domicilio: string;
+      FechaExpedicionFactura: string;
+      CantidadTotal: string,
+      CantidadDisponible: string;
+      UnidadMedida: string;
+      ValorDolares: string;
+  }
+
+  export interface AsociadasTableColumns {
+    CandidadAsociada: string;
+    NumeroDeLaFactura: string;
+    RazonSocial: string;
+    Domicilio: string;
+    FechaExpedicionFactura: string;
+    CantidadTotal: string;
+    CantidadDisponible: string;
+    UnidadMedida: string;
+    ValorDolares: string;
+  }
+
+  export interface HistoricoColumns {
+    NombreFabricante: string;
+    NumeroRegistroFiscal: string;
+    Direccion: string;
+    CorreoElectrónico: string;
+    Telefono: string;
   }

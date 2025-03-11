@@ -7,10 +7,11 @@
  * @import { FormBuilder, FormGroup, Validators } from '@angular/forms';
  */
 import { Component, OnInit } from '@angular/core';
-import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
+import { ElegibilidadDeTextilesStore, TextilesState, createInitialState } from '../../estados/elegibilidad-de-textiles.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConstanciaDelRegistroService } from '../../services/constancia-del-registro/constancia-del-registro.service';
+import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service'
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { SeccionLibQuery } from '@ng-mf/data-access-user';
@@ -58,7 +59,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
 
   private destroyNotifier$: Subject<void> = new Subject();
 
-  private constanciaState!: TextilesState;
+  private constanciaState: TextilesState = createInitialState();
 
   private seccionState!: SeccionLibState
 
@@ -74,22 +75,20 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     'Fecha fin vigencia',
   ];
 
-  /**
-   * @property {Array} federal - Array de datos de federal para mostrar en la tabla.
-   */
-  federal: any[] = [];
   constructor(
     private fb: FormBuilder,
     private constanciaDelRegistroService: ConstanciaDelRegistroService,
     private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private ElegibilidadTextilesService: ElegibilidadTextilesService,
   ) { 
     // Constructor logic can be added here if needed
   }
-
+  
   ngOnInit(): void {
+    this.initActionFormBuild();
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -106,59 +105,41 @@ export class ConstanciaDelRegistroComponent implements OnInit {
         })
       )
       .subscribe();
-    this.fetchData();
-    this.initActionFormBuild();
+
+      this.seccionStore.establecerFormaValida([false]);
+
+    if(this.constanciaState.formaValida && this.constanciaState.formaValida[0] && this.constanciaState.formaValida[0].descripcion === 'AllValida'){
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([true])
+    }
+    else{
+      this.seccionStore.establecerFormaValida([false]);
+    }
     
   }
 
   initActionFormBuild(): void {
     this.fitosanitarioForm = this.fb.group({
-      flexRadioRegistro: ['Datos'],
-      estado: [''],
-      representacionFederal: [''],
-      fraccionArancelaria: [''],
-      descripcionProducto: [''],
-      tratado: [''],
-      subproducto: [''],
-      mecanismo: [''],
-      typoCategoria: [''],
-      typoRegimen: [''],
-      descripcionCategoriaTextil: [''],
-      PaisDestino: [''],
-      unidadMedidaCategoriaTextil: [''],
-      factorConversionCategoriaTextil: [''],
-      fechaInicioVigencia: [''],
-      fechaFinVigencia: ['']
-    });
-  }
-  fetchData(): void {
-    this.constanciaDelRegistroService.getFederal().subscribe({
-      next: (response: any) => {
-        if (response && Array.isArray(response.federal)) {
-
-          this.federal = response.federal.map((item: any) => {
-            var data = {
-              tbodyData: item.tbodyData
-            }
-            return data;
-          }
-          );
-
-          this.federal = [...this.federal]
-
-        } else {
-          console.error('La respuesta de la API no tiene el formato esperado:', response);
-          this.federal = [];
-        }
-      },
-      error: (error: any) => {
-        console.error('Error al recuperar los datos:', error);
-        this.federal = [];
-      }
+      flexRadioRegistro: ['Todos'],
+      estado: [this.constanciaState.estado],
+      representacionFederal: [this.constanciaState.representacionFederal],
+      fraccionArancelaria: [this.constanciaState.fraccionArancelaria],
+      descripcionProducto: [this.constanciaState.descripcionProducto],
+      tratado: [this.constanciaState.tratado],
+      subproducto: [this.constanciaState.subproducto],
+      mecanismo: [this.constanciaState.mecanismo],
+      typoCategoria: [this.constanciaState.typoCategoria],
+      typoRegimen: [this.constanciaState.typoRegimen],
+      descripcionCategoriaTextil: [this.constanciaState.descripcionCategoriaTextil],
+      PaisDestino: [this.constanciaState.PaisDestino],
+      unidadMedidaCategoriaTextil: [this.constanciaState.unidadMedidaCategoriaTextil],
+      factorConversionCategoriaTextil: [this.constanciaState.factorConversionCategoriaTextil],
+      fechaInicioVigencia: [this.constanciaState.fechaInicioVigencia],
+      fechaFinVigencia: [this.constanciaState.fechaFinVigencia]
     });
   }
 
-  onValueChange(newValue: any) {
+  onValueChange(newValue: string) {
     this.selectedValue = newValue;
   }
 
@@ -169,7 +150,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     ): void {
       const VALOR = form.get(campo)?.value;
       console.log(VALOR);
-      (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: any) => void)(
+      (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(
         VALOR
       );
     }

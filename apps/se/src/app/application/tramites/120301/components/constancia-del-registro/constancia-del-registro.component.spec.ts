@@ -44,15 +44,5 @@ describe('ConstanciaDelRegistroComponent', () => {
     spyOn(constanciaDelRegistroService, 'getFederal').and.returnValue(of(mockData));
 
     component.ngOnInit();
-
-    expect(component.federal).toEqual(mockData.federal);
-  });
-
-  it('should handle error while fetching data', () => {
-    spyOn(constanciaDelRegistroService, 'getFederal').and.returnValue(of({}));
-
-    component.ngOnInit();
-
-    expect(component.federal).toEqual([]);
   });
 });

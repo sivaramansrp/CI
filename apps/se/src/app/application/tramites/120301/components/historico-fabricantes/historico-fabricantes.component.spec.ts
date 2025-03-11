@@ -51,7 +51,6 @@ describe('HistoricoFabricantesComponent', () => {
     component.ngOnInit();
 
     expect(component.fabricantesNacionales).toEqual(mockData.fabricantesNacionales);
-    expect(component.fabricantesDatos).toEqual(mockData.fabricantesDatos);
   });
 
   it('should handle error while fetching data', () => {
@@ -60,6 +59,5 @@ describe('HistoricoFabricantesComponent', () => {
     component.ngOnInit();
 
     expect(component.fabricantesNacionales).toEqual([]);
-    expect(component.fabricantesDatos).toEqual([]);
   });
 });

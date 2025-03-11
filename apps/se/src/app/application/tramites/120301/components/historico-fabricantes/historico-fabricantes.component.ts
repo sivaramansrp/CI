@@ -21,12 +21,28 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { CatalogosSelect, 
+  
+  ConfiguracionColumna, 
+  
+  SeccionLibQuery, 
+  
+  SeccionLibState, 
+  
+  SeccionLibStore, 
+  
+  TablaSeleccion } from '@ng-mf/data-access-user';
+import { ElegibilidadDeTextilesStore, TextilesState, createInitialState } from '../../estados/elegibilidad-de-textiles.store';
+import { Subject,delay, map, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { HISTORICO_TBCOL } from 'apps/se/src/app/application/tramites/120301/constantes/elegibilidad-de-textiles.enums';
+import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
+import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
 import { HistoricoFabricantesService } from '../../services/historico-fabricantes/historico-fabricantes.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { ServiciosElegibilidadDeTextilesService } from '../../services/servicios-elegibilidad-de-textiles.service';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import radioOptionsData from '@libs/shared/theme/assets/json/120301/tipos-de-fabricante-exportador.json';
@@ -42,7 +58,8 @@ import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json
     CommonModule,
     ReactiveFormsModule,
     TableComponent,
-    InputRadioComponent
+    InputRadioComponent,
+    TablaDinamicaComponent
   ]
 })
 export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
@@ -74,22 +91,55 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   /**
    * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
    */
-  tableColumns = HISTORICO_TBCOL;
+
+  TablaSeleccion = TablaSeleccion;
+
+  tableColumns: ConfiguracionColumna<HistoricoColumns>[] = [
+    { encabezado: 'Nombre del fabricante', 
+      clave: (fila) => fila.NombreFabricante, 
+      orden: 1 },
+    {
+      encabezado: 'Número de registro fiscal',
+      clave: (fila) => fila.NumeroRegistroFiscal,
+      orden: 2,
+    },
+    {
+      encabezado: 'Dirección',
+      clave: (fila) => fila.Direccion,
+      orden: 3,
+    },
+    {
+      encabezado: 'Correo Electrónico',
+      clave: (fila) => fila.CorreoElectrónico,
+      orden: 4,
+    },
+    {
+      encabezado: 'Teléfono',
+      clave: (fila) => fila.Telefono,
+      orden: 5,
+    },
+  ];
 
   /**
    * @property {any[]} fabricantesNacionales - Array de datos de fabricantes nacionales.
    */
-  fabricantesNacionales: any[] = [];
+  fabricantesNacionales: HistoricoColumns[] = [];
 
-  /**
-   * @property {any[]} fabricantesDatos - Array de datos de fabricantes.
-   */
-  fabricantesDatos: any[] = [];
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  private historicoState: TextilesState = createInitialState();
+
+  private seccionState!: SeccionLibState
 
   constructor(
     private fb: FormBuilder,
     private historicoFabricantesService: HistoricoFabricantesService,
-    private readonly serviciosElegibilidadDeTextilesService: ServiciosElegibilidadDeTextilesService
+    private readonly serviciosElegibilidadDeTextilesService: ServiciosElegibilidadDeTextilesService,
+    private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
+    private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
+    private seccionStore: SeccionLibStore,
+    private seccionQuery: SeccionLibQuery,
+    private elegibilidadTextilesService: ElegibilidadTextilesService
   ) { 
     // Constructor logic can be added here if needed
   }
@@ -99,40 +149,70 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * @description Inicializa el componente y obtiene los datos de los fabricantes.
    */
   ngOnInit(): void {
-    this.fetchData();
-    this.historicoFabricantesForm = this.fb.group({
-      exportadorFabricanteMismo: ['', Validators.required],
-      numeroRegistroFiscal: ['', [Validators.required, Validators.minLength(5)]],
-      fabricantesNacionales: [[]],
-      fabricantesDatos: [[]]
-    });
+    this.initActionFormBuild();
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
+    this.ElegibilidadDeTextilesQuery.selectTextile$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.historicoState = state as TextilesState;
+        })
+      )
+      .subscribe();
+
+    this.historicoFabricantesForm.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((_value) => {
+          if (this.historicoFabricantesForm.valid) {
+            this.ElegibilidadDeTextilesStore.setFormaValida([
+              ...this.historicoState.formaValida,
+              { id: 3, descripcion: "AllValida" }])
+          }
+        })
+      )
+      .subscribe();
+
+    this.recuperarDatos();
+    this.seccionStore.establecerFormaValida([false])
+
+    if(this.historicoState.formaValida && this.historicoState.formaValida[0] && this.historicoState.formaValida[0].descripcion === 'AllValida'){
+    this.seccionStore.establecerSeccion([true]);
+    this.seccionStore.establecerFormaValida([true])
+  }
+  else{
+    this.seccionStore.establecerFormaValida([false]);
+  }
   }
 
+  initActionFormBuild(): void {
+    this.historicoFabricantesForm = this.fb.group({
+      exportadorFabricanteMismo: [this.historicoState.exportadorFabricanteMismo,],
+      numeroRegistroFiscal: [this.historicoState.numeroRegistroFiscal, [Validators.required, Validators.minLength(5)]],
+      fabricantesNacionales: [[]],
+    });
+  }
   /**
    * @method fetchData
    * @description Obtiene los datos de los fabricantes desde el servicio.
    */
-  fetchData(): void {
-    this.historicoFabricantesService.getDatos().subscribe({
-      next: (response: any) => {
-        if (response && Array.isArray(response.fabricantesNacionales) && Array.isArray(response.fabricantesDatos)) {
-          this.fabricantesNacionales = response.fabricantesNacionales.map((item: any) => {
-            return { tbodyData: item.tbodyData };
-          });
-
-          this.fabricantesDatos = response.fabricantesDatos.map((item: any) => {
-            return { tbodyData: item.tbodyData };
-          });
-        } else {
-          console.error('La respuesta de la API no tiene el formato esperado:', response);
-          this.fabricantesNacionales = [];
-          this.fabricantesDatos = [];
-        }
+  recuperarDatos(): void {
+    this.elegibilidadTextilesService.obtenerTablaDatos('historico-fabricantes.json').subscribe({
+      next: (response: HistoricoColumns[]) => {
+        if (response && Array.isArray(response)) {
+          this.fabricantesNacionales = response
+        } 
       },
-      error: (error: any) => {
+      error: (error: HttpErrorResponse) => {
         console.error('Error al obtener los datos:', error);
-        this.fabricantesNacionales = [];
-        this.fabricantesDatos = [];
       }
     });
   }
@@ -177,5 +257,17 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.serviciosElegibilidadDeTextilesService.setSoliciante('historicoFabricantesForm', this.historicoFabricantesForm.value);
+  }
+
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof ElegibilidadDeTextilesStore
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    console.log(VALOR);
+    (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(
+      VALOR
+    );
   }
 }

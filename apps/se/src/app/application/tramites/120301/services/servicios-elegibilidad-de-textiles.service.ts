@@ -7,10 +7,10 @@ import {
   HistoricoFabricantesForm,
   ImportadorForm,
 } from '../models/elegibilidad-de-textiles.model';
+import { Store, StoreConfig } from '@datorama/akita'; // Import Akita
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs'; // Importa Observable
-import { Store, StoreConfig } from '@datorama/akita'; // Import Akita
 
 // Define the state interface
 export interface ElegibilidadDeTextilesState {
@@ -49,7 +49,9 @@ export class ServiciosElegibilidadDeTextilesService {
    * @constructor
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private readonly http: HttpClient, private elegibilidadDeTextilesStore: ElegibilidadDeTextilesStore) { }
+  constructor(private readonly http: HttpClient, private elegibilidadDeTextilesStore: ElegibilidadDeTextilesStore) { 
+    // Constructor logic can be added here if needed
+  }
 
   setSoliciante(name: string, value: any) {
     this.elegibilidadDeTextilesStore.update(state => ({
@@ -66,7 +68,7 @@ export class ServiciosElegibilidadDeTextilesService {
    * @returns {Observable<any>} - Un Observable que emite la respuesta del servidor.
    */
   textileSolicitudEnviar(): Observable<any> { // Especifica el tipo de retorno Observable<any>
-    const _url = 'http://localhost:3000/textileSolicitud';
-    return this.http.post<any>(_url, this.elegibilidadDeTextilesStore.getValue().textileSolicitudCargaUtil);
+    const URL = 'http://localhost:3000/textileSolicitud';
+    return this.http.post<any>(URL, this.elegibilidadDeTextilesStore.getValue().textileSolicitudCargaUtil);
   }
 }

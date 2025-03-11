@@ -33,10 +33,6 @@ export class ElegibilidadTextilesComponent {
 
   formGroup: FormGroup;
 
-  title(title: any) {
-    throw new Error('Método no implementado.');
-  }
-
   /**
    * @property {Array<ListaPasosWizard>} pasos - Array de pasos del wizard.
    */

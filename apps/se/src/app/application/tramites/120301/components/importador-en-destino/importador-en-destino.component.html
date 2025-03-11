@@ -12,80 +12,110 @@
             [required]="true"
             name="tipo"
             formControlName="tipo"
+            (change)="
+              setValoresStore(
+              importadorForm,
+              'tipo',
+              'setTipo'
+              )"
           ></app-catalogo-select>
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label class="form-label" for="Cantidad-total"
+            <label class="form-label" for="cantidadTotalImportador"
               >Valor (sin espacios, sin guiones)*:</label
             >
             <input
               class="form-control"
               value=""
               class="form-control"
-              id="Cantidad-total"
+              id="cantidadTotalImportador"
               placeholder=""
               type="text"
               appUppercase
-              name="Cantidad-total"
-              formControlName="cantidadTotal"
+              name="cantidadTotalImportador"
+              formControlName="cantidadTotalImportador"
+              (change)="
+              setValoresStore(
+              importadorForm,
+              'cantidadTotalImportador',
+              'setCantidadTotalImportador'
+              )"
             />
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label class="form-label" for="Razón-social">Razón social*:</label>
+            <label class="form-label" for="razonSocialImportador">Razón social*:</label>
             <input
               class="form-control"
               value=""
               class="form-control"
-              id="Razón-social"
+              id="razonSocialImportador"
               placeholder=""
               type="text"
               appUppercase
-              name="Razón-social"
-              formControlName="razonSocial"
+              name="razonSocialImportador"
+              formControlName="razonSocialImportador"
+              (change)="
+              setValoresStore(
+              importadorForm,
+              'razonSocialImportador',
+              'setRazonSocialImportador'
+              )"
             />
           </div>
         </div>
         <div class="col-md-6"></div>
         <div class="col-md-6">
           <div class="form-group">
-            <label class="form-label" for="Domicilio">Domicilio*:</label>
+            <label class="form-label" for="domicilio">Domicilio*:</label>
             <input
               class="form-control"
               value=""
               class="form-control"
-              id="Domicilio"
+              id="domicilio"
               placeholder=""
               type="text"
               appUppercase
-              name="Domicilio"
+              name="domicilio"
               formControlName="domicilio"
+              (change)="
+              setValoresStore(
+              importadorForm,
+              'domicilio',
+              'setDomicilio'
+              )"
             />
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label class="form-label" for="ciudad"
+            <label class="form-label" for="ciudadImportador"
               >Ciudad (población, estado o provincia)*:</label
             >
             <input
               class="form-control"
               value=""
               class="form-control"
-              id="ciudad"
+              id="ciudadImportador"
               placeholder=""
               type="text"
               appUppercase
-              name="ciudad"
-              formControlName="ciudad"
+              name="ciudadImportador"
+              formControlName="ciudadImportador"
+              (change)="
+                setValoresStore(
+                  importadorForm,
+                'ciudadImportador',
+                'setCiudadImportador'
+                )"
             />
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label class="form-label" for="cp">C P*:</label>
+            <label class="form-label" for="cpImportador">C P*:</label>
             <input
               class="form-control"
               value=""
@@ -96,12 +126,18 @@
               appUppercase
               name="cpImportador"
               formControlName="cpImportador"
+              (change)="
+              setValoresStore(
+              importadorForm,
+              'cpImportador',
+              'setCpImportador'
+              )"
             />
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label class="form-label" for="País">País*:</label>
+            <label class="form-label" for="PaisImportador">País*:</label>
             <input
               class="form-control"
               value=""
@@ -112,6 +148,12 @@
               appUppercase
               name="PaisImportador"
               formControlName="PaisImportador"
+              (change)="
+              setValoresStore(
+              importadorForm,
+              'PaisImportador',
+              'setPaisImportador'
+              )"
             />
           </div>
         </div>
