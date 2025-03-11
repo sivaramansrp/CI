@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable no-empty-function */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @nx/enforce-module-boundaries */
@@ -90,9 +92,7 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
    *
    * @returns {void} No retorna nada, ya que es un método sin lógica por el momento.
    */
-  validarFormulario(): void {
-    // Este método puede incluir lógica de validación en el futuro.
-  }
+  validarFormulario(): void {}
 
   /**
    * Método del ciclo de vida `ngOnInit()` de Angular.
