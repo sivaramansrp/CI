@@ -138,9 +138,6 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
       ],
     },
   ];
-  valoresSeleccionadosRadio: { [key: string]: string } = {
-    radio1: ''
-  };
   fiscal: FormularioDinamico[] = [];
   formulario!: FormGroup;
   tableData: {
@@ -192,14 +189,14 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit(): void {
-    this.renderGroup(this.configuracion);
+    this.renderizadoGrupo(this.configuracion);
   }
 
   /**
    * Pase la config para inicializar el formulario
    * @param config - La config para los controles del formulario.
    */
-  renderGroup(config: InputConfig[]): void { 
+  renderizadoGrupo(config: InputConfig[]): void { 
     config.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
     });
@@ -308,7 +305,6 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
    */
   cambioValorRadio(claveRadio: string, groupIndex: number, menuIndex: number, evento: string | number): void {
     this.configuracion[groupIndex].menu[menuIndex].props.radioSelectedValue = evento;
-    this.valoresSeleccionadosRadio[claveRadio] = evento.toString();
   }
 
   /**
@@ -336,7 +332,7 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
         switch (accione) {
           case BotonAccionesTipos.AGREGAR:
             this.esAgregarClicked = true;
-            this.renderGroup(this.configuracion_table);
+            this.renderizadoGrupo(this.configuracion_table);
             break;
           case BotonAccionesTipos.ELIMINAR:
             this.emitButtonAction.emit(false);

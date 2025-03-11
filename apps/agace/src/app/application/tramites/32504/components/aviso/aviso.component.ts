@@ -123,18 +123,6 @@ export class AvisoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const TIPO_CARGA = [
-      {
-        "label": "Manual",
-        "value": "manual"
-      },
-      {
-        "label": "Carga Masiva",
-        "value": "carga_masiva"
-      }
-    ];  
-    this.configuracion[1].menu[0].props.radioOptions = TIPO_CARGA;
-    this.configuracion[1].menu[0].props.radioSelectedValue = TIPO_CARGA[0].value;
     this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
     });
