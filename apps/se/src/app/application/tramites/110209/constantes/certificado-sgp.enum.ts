@@ -14,7 +14,7 @@ export const PASOS=[
   ];
 
   
-interface Mercancias{
+export interface Mercancias{
   numeroDeOrden: string;
   fraccionArancelaria: string;
   nombreTecnico: string;

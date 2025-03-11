@@ -1,13 +1,15 @@
 
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { Mercancias } from '../../constantes/certificado-sgp.enum';
 
 export interface Tramite110209State{
     medioDeTransporte: string;
     rutaCompleta: string,
     puertoDeEmbarque: string,
     puertoDeDesembarque: string,
-    observaciones: string
+    observaciones: string,
+    mercanciasSeleccionadas: Mercancias;
 
 }
 
@@ -17,7 +19,15 @@ export function createInitialState(): Tramite110209State {
         rutaCompleta: '',
         puertoDeEmbarque: '',
         puertoDeDesembarque: '',
-        observaciones: ''
+        observaciones: '',
+        mercanciasSeleccionadas: {
+            numeroDeOrden: '',
+            fraccionArancelaria: '',
+            nombreTecnico: '',
+            nombreComercial: '',
+            nombreIngles: '',
+            numeroDeRegistro: ''
+        }
     }
 }
 
@@ -64,6 +74,13 @@ public setMedioDeTransporte(medioDeTransporte: string):void {
         ...state,
         observaciones,
         }));
+    }
+
+    public setMercanciasSeleccionadas(mercanciasSeleccionadas:Mercancias):void{
+        this.update((state) => ({
+            ...state,
+            mercanciasSeleccionadas,
+            }));
     }
 
 }

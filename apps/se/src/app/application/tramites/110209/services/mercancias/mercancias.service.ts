@@ -16,4 +16,14 @@ export class MercanciasService {
     getMercancias(): Observable<any> {
        return this.http.get('assets/json/110209/mercancias.json');
      }
+
+
+     getTipoDeFactura():Observable<any> {
+      return this.http.get('assets/json/110209/tipo-de-factura.json');
+    }
+
+    getUnidad():Observable<any> {
+      return this.http.get('assets/json/110209/unidad.json');
+    }
+
 }

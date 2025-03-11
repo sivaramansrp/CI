@@ -5,7 +5,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Catalogo, CatalogoSelectComponent } from "@ng-mf/data-access-user";
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -60,9 +60,9 @@ export class TransporteComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder, private service: TransporteService, private tramite110209Store: Tramite110209Store, private tramite110209Query: Tramite110209Query) {
     this.transporteForm = this.fb.group({
       medioDeTransporte: [''],
-      rutaCompleta: [''],
-      puertoDeEmbarque: [''],
-      puertoDeDesembarque: ['']
+      rutaCompleta: ['',Validators.pattern(/^(?!\s)(.*\S)?$/)],
+      puertoDeEmbarque: ['',Validators.pattern(/^(?!\s)(.*\S)?$/)],
+      puertoDeDesembarque: ['',Validators.pattern(/^(?!\s)(.*\S)?$/)]
     });
   }
 

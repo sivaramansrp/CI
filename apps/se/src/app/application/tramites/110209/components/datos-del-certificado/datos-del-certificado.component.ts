@@ -7,9 +7,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
+import { CONFIGURACION_MERCANCIAS, Mercancias } from '../../constantes/certificado-sgp.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CONFIGURACION_MERCANCIAS } from '../../constantes/certificado-sgp.enum';
 import { MercanciasService } from '../../services/mercancias/mercancias.service';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
@@ -61,6 +61,8 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    * @type {any}
    */
   configuracionTabla = CONFIGURACION_MERCANCIAS;
+
+  mercanciasSeleccionadas!:Mercancias;
 
 
   /**
@@ -130,9 +132,13 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  onNavigate(): void {  
-   this.router.navigate(['/se/certificado-sgp/registro-de-mercancia']);
+  getMercanciasSeleccionadas($event:Mercancias):void{
+  this.mercanciasSeleccionadas=$event;
+  }
 
+  onNavigate(): void {  
+   this.tramite110209Store.setMercanciasSeleccionadas(this.mercanciasSeleccionadas);
+   this.router.navigate(['/se/certificado-sgp/registro-de-mercancia']);
   }
 
 
