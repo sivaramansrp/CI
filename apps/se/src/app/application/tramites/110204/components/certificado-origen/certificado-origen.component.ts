@@ -9,7 +9,7 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DomicilioInfo, Mercancia } from '../models/plantas-consulta.model';
+import {Mercancia } from '../../models/plantas-consulta.model';
 import {
   FormBuilder,
   FormControl,
@@ -18,13 +18,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { CONFIGURACION_MERCANCIA } from '../constantes/modificacion.enum';
-import { CertificadosOrigenGridService } from '../services/certificadosOrigenGrid.service';
+import { CONFIGURACION_MERCANCIA } from '../../constantes/modificacion.enum';
+import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '../models/configuracio-columna.model';
+import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
 import { ToastrService } from 'ngx-toastr';
-import { Tramite110204Query } from '../estados/tramite110204.query';
-import { Tramite110204Store } from '../estados/tramite110204.store';
+import { Tramite110204Query } from '../../estados/tramite110204.query';
+import { Tramite110204Store } from '../../estados/tramite110204.store';
 
 export const FECHA_INICIO = {
   labelNombre: 'Fecha iniciO',
@@ -55,9 +55,6 @@ export const FECHA_FINAL = {
 })
 export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   form!: FormGroup;
-  datosConfidencialesProductor: boolean = false;
-  productorMismoExportador: boolean = false;
-  mercanciasInvalidas: boolean = false;
   public fechaInicioInput: InputFecha = FECHA_INICIO;
   public fechaFinalInput: InputFecha = FECHA_FINAL;
 
@@ -99,6 +96,13 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    */
   datos: Mercancia[] = [];
 
+
+    /**
+     * Datos de ejemplo basados en la interfaz Mercancia.
+     * @type {Observable<Mercancia[]>}
+     */
+    datos1$: Observable<Mercancia[]>;
+
 /**
    * Selección de la tabla inicializada como indefinida.
    * @type {TablaSeleccion}
@@ -112,29 +116,16 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     public certificadoService: CertificadosOrigenGridService,
     private toastr: ToastrService
   ) {
-    this.certificadoService
-      .obtenerMercancia()
-      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando se destruye el componente.
-      .subscribe(
-        (data: Mercancia[]) => {
-          setTimeout(() => {
-            console.log(data);
-            
-            this.datos = [...data]; // Almacena los datos de la bitácora en la variable `datos`.
-            console.log(this.datos, 'datos');
-          }, 1000);
-        },
-        () => {
-          this.toastr.error('Error al cargar los estados'); // Manejo de errores.
-        }
-      );
+
     this.form = this.fb.group({
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
       bloque: ['', [Validators.required, Validators.min(0)]],
+      tercerOperador:['',[Validators.requiredTrue]]
     });
 
     this.estados$ = this.tramiteQuery.selectAltaPlanta$;
     this.pais$ = this.tramiteQuery.selectPaisBloque$;
+    this.datos1$ = this.tramiteQuery.selectBuscarMercancia$;
   }
 
   ngOnInit(): void {
@@ -179,7 +170,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.store.setEstado(estado);
   }
   tipoSeleccion(estado: Catalogo): void {
-    this.store.setEstado(estado);
+        this.store.setBloque([estado]);
+
   }
 
   ngOnDestroy(): void {
@@ -195,7 +187,9 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     return this.form.get('entidadFederativa') as FormControl;
   }
 
-  buscarDomicilios(): void {
+  buscarrMercancia(): void {
+    console.log(this.form,'form');
+    
     const ENTIDAD = this.formularioControl?.value;
 
     if (ENTIDAD && ENTIDAD !== '-1') {
@@ -204,12 +198,10 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe(
           (data: Mercancia[]) => {
-            console.log(data, 'data');
-
-            this.store.setbuscarDomicilios(data);
+            this.store.setbuscarMercancia(data);
           },
           () => {
-            this.toastr.error('Error al buscar domicilios');
+            this.toastr.error('Error al buscar Mercancia');
           }
         );
     } else {

@@ -1,16 +1,20 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
-import {DomicilioInfo, Mercancia } from '../models/plantas-consulta.model';
+import {Mercancia } from '../models/plantas-consulta.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
 
 export interface TramiteState {
+  idiomaDatos: Catalogo[];
+  entidadFederativaDatos: Catalogo[];
+  representacionFederalDatos: Catalogo[];
   altaPlanta: Catalogo[];
   estado: Catalogo;
   paisBloques: Catalogo[];
   paisBloque: Catalogo;
   formaValida: { [key: string]: boolean };
-  buscarDomicilios: Mercancia[];
+  buscarMercancia: Mercancia[];
+  
 }
 export interface Solicitud110204State{
   regimenMercancia: string;
@@ -49,11 +53,15 @@ export const INITIAL_STATE: TramiteState = {
   formaValida: {
     entidadFederativa: false
   },
-  buscarDomicilios: [],
+  buscarMercancia: [],
   paisBloque: {
     id: -1,
     descripcion: '',
-  }
+  },
+  idiomaDatos: [],
+  entidadFederativaDatos: [],
+  representacionFederalDatos: [],
+
 };
 
 /**
@@ -130,33 +138,10 @@ export class Tramite110204Store extends Store<TramiteState> {
     })
   }
 
-  /**
-   * Establece la lista de domicilios en el almacén.
-   * 
-   * @param {DomicilioInfo[]} domicilios - Un array de objetos `DomicilioInfo` que representa la lista de domicilios.
-   * 
-   * @returns {void} - No devuelve ningún valor.
-   */
-  setDomicilios(domicilios: DomicilioInfo[]): void {
+  setbuscarMercancia(buscarMercancia: Mercancia[]): void {
     this.update((state) => ({
       ...state,
-      domicilios,
-    }));
-  }
-
- 
-
-  /**
-   * Establece los domicilios que se van a buscar en el almacén.
-   * 
-   * @param {Mercancia[]} buscarDomicilios - Un array de objetos `DomicilioInfo` que representa la lista de domicilios que se van a buscar.
-   * 
-   * @returns {void} - No devuelve ningún valor.
-   */
-  setbuscarDomicilios(buscarDomicilios: Mercancia[]): void {
-    this.update((state) => ({
-      ...state,
-      buscarDomicilios,
+      buscarMercancia,
     }));
   }
   public setRegimenMercancia(regimenMercancia: string) {
@@ -218,6 +203,25 @@ export class Tramite110204Store extends Store<TramiteState> {
     this.update((state) => ({
       ...state,
       representacionFederal,
+    }));
+  }
+
+  setRepresentacionFederalDatos(representacionFederalDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalDatos,
+    }));
+  }
+setEntidadFederativaDatos(entidadFederativaDatos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      entidadFederativaDatos,
+    }));
+  }
+  public setIdiomaDatos(idiomaDatos: Catalogo[]):void {
+    this.update((state) => ({
+      ...state,
+      idiomaDatos,
     }));
   }
 

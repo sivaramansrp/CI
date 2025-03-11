@@ -19,8 +19,8 @@ export class Tramite110204Query extends Query<TramiteState> {
    return Object.values(state.formaValida).every(value => value === true);
   })
 
-  selectBuscarDomicilios$ = this.select((state) => {
-    return state.buscarDomicilios;
+  selectBuscarMercancia$ = this.select((state) => {    
+    return state.buscarMercancia;
   });
 
   selectAltaPlanta$ = this.select((state) => {
@@ -30,6 +30,16 @@ export class Tramite110204Query extends Query<TramiteState> {
     return state.paisBloques;
   })
 
+  selectIdioma$ = this.select((state) => {    
+    return state.idiomaDatos;
+  });
+
+  selectEntidadFederativa$ = this.select((state) => {
+    return state.entidadFederativaDatos;
+  });
+  selectrepresentaconFederal$ = this.select((state) => {
+    return state.representacionFederalDatos;
+  })
   constructor(protected override store: Tramite110204Store) {
     super(store);
   }

@@ -1,19 +1,30 @@
-<div>
 
-</div>
-
-<div>
+<div>   
     <form [formGroup]="form">
+        <div>
+            <ng-titulo titulo="Validación inicial del certificado de circulación de mercancías"/>
+
+            <div class="row">
+                <div class="col-md-12">  
+                  <label class="form-check-label text-justify" for="tercerOperador">
+                    ¿La operación se realizó con un tercer operador?
+                  </label>
+                </div>
+                <div class="col-md-12">
+                    <input class="form-check-input" type="checkbox" id="tercerOperador" formControlName="tercerOperador"  /> &nbsp;si
+                </div>
+              </div>
+            </div>    
         <ng-titulo titulo="Tratado y país o bloque" />
         <div class="row mb-3">
             <div class="col-md-6">
-                <app-catalogo-select [catalogo]="(estados$ | async) || []" [label]="'Tratado / Acuerdo*:'"
+                <app-catalogo-select [catalogo]="(estados$ | async) || []" [label]="'Tratado / Acuerdo'"
                     [required]="true" name="estado" formControlName="entidadFederativa"
                     (selectionChange)="tipoEstadoSeleccion($event)"></app-catalogo-select>
             </div>
 
             <div class="col-md-6">
-                <app-catalogo-select [catalogo]="(pais$ | async) || []" [label]="'País / Bloque*:'" [required]="true"
+                <app-catalogo-select [catalogo]="(pais$ | async) || []" [label]="'País / Bloque'" [required]="true"
                     name="estado" formControlName="bloque"
                     (selectionChange)="tipoSeleccion($event)"></app-catalogo-select>
             </div>
@@ -50,12 +61,20 @@
         
         <div class="row w-100">
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-              <button class="btn btn-primary"  (click)="buscarDomicilios()">Mercancia Disponibles</button>
+              <button class="btn btn-primary"  [disabled]="formularioControl.value <= 0"  (click)="buscarrMercancia()">Mercancia Disponibles</button>
             </div>
           </div>
 
+
+          <div class="row">
+                <div class="col-md-12">
+                    <ng-titulo titulo="Mercancías disponibles" />
+
+                </div>
+          </div>
           <app-tabla-dinamica  [configuracionTabla]="configuracionTabla"
-          [datos]="datos" [tipoSeleccionTabla]="seleccionTabla"></app-tabla-dinamica>
+          [datos]="(datos1$ | async) || []" [tipoSeleccionTabla]="seleccionTabla"></app-tabla-dinamica>
+          
     </form>
 
 </div>

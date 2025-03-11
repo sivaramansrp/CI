@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
-
+import { DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, WizardComponent } from '@ng-mf/data-access-user';
+import { PASOS } from "../../constantes/modificacion.enum";
 /**
  * Interfaz que define la estructura de una acción de botón.
  */
@@ -48,6 +48,19 @@ export class SolicitudPageComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+    /**
+ * 
+ * Una cadena que representa la clase CSS para una alerta de información.
+ * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+ */
+    public infoAlert = 'alert-info';
+    /**
+     * Una constante que contiene el valor del objeto 'PROTESTA'.
+     * Se utiliza para almacenar datos adicionales relacionados con el componente.
+     */
+  
+    TEXTOS = PAGO_DE_DERECHOS;
 
   /**
    * Selecciona una pestaña del asistente.

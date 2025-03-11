@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // filepath: certificadosOrigenGrid.service.ts
-import { Mercancia, Operacions } from '../../110204/models/plantas-consulta.model';
+import { Mercancia } from '../../110204/models/plantas-consulta.model';
 import { Observable, map } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
@@ -35,13 +35,20 @@ export class CertificadosOrigenGridService {
       .get<Mercancia[]>('assets/json/110204/mercancia.json')
       .pipe(map((res: any) => res.data));
   }
-
-
-  obtenerOperacion(): Observable<Operacions[]> {
+  obtenerIdioma(): Observable<Catalogo[]> {
     return this.http
-      .get<Operacions[]>('assets/json/110204/operacion.json')
+      .get<Catalogo[]>('assets/json/110204/idioma.json')
       .pipe(map((res: any) => res.data));
   }
 
-
+  obtenerEntidadFederativa(): Observable<Catalogo[]> {
+    return this.http
+      .get<Mercancia[]>('assets/json/110204/entidad-federativa.json')
+      .pipe(map((res: any) => res.data));
+  }
+  obtenerRepresentacionFederal(): Observable<Catalogo[]> {
+    return this.http
+      .get<Mercancia[]>('assets/json/110204/representacion-federal.json')
+      .pipe(map((res: any) => res.data));
+  }
 }
