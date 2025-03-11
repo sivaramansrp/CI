@@ -209,9 +209,10 @@ export class DatosAdicionalesComponent implements OnInit {
     const NEWVALUES = this.formulario.value;
     this.datosAdicionalesQuery.formValues$.pipe(take(1)).subscribe((currentValues) => {
       if (JSON.stringify(currentValues) !== JSON.stringify(NEWVALUES)) {
-        this.datosAdicionalesStore.update({ formValues: NEWVALUES });
+        this.datosAdicionalesStore.actualizarValoresFormulario(NEWVALUES);
       }
     });
   }
+
 
 }

@@ -65,5 +65,18 @@ export class DatosAdicionalesStore extends Store<DatosAdicionalesState> {
     super(createInitialState());
   }
 
+  /**
+   * **Actualiza los valores del formulario en la tienda (store)**
+   *
+   * - Recibe un objeto `DatosAdicionalesForm` con los nuevos valores del formulario.
+   * - Utiliza `this.update()` para modificar el estado en la store.
+   * - Se debe llamar a este método cuando los valores del formulario cambien y sea necesario almacenarlos.
+   *
+   * @param {DatosAdicionalesForm} nuevosValoresFormulario - Nuevos valores del formulario.
+   */
+  actualizarValoresFormulario(nuevosValoresFormulario: DatosAdicionalesForm): void {
+    this.update({ formValues: nuevosValoresFormulario });
+  }
+
 }
 
