@@ -34,7 +34,7 @@ export class ImportacionDeAcuiculturaService {
    * @param http Cliente HTTP para realizar las peticiones.
    */
   constructor(private readonly http: HttpClient, private readonly acuiculturaStore: AcuiculturaStore, private readonly seccionStore: SeccionLibStore) {
-    console.log('ImportacionDeAcuiculturaService');
+    // Constructor logic can be added here if needed
   }
 
   /**

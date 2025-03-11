@@ -7,6 +7,7 @@ import {
   TEXTOS,
 
 } from '@ng-mf/data-access-user';
+import { DOCUMENTOSSELECCIONADOS } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
 
 
@@ -55,10 +56,7 @@ export class PasoDosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
-    this.documentosSeleccionados = [
-      { id: 1, descripcion: 'Documentos que ampare el valor de la mercancía' },
-      { id: 2, descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)' },
-    ];
+    this.documentosSeleccionados = DOCUMENTOSSELECCIONADOS;
   }
 
   /**

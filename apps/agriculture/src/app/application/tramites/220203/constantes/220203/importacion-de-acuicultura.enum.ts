@@ -1,3 +1,5 @@
+import exp from "constants";
+
 /**
  * @description Constantes con la información de los pasos del wizard.
  */
@@ -49,3 +51,8 @@ export const FECHA_SALIDA_ACUICULTURA = {
  * @description Constantes con el mensaje para el doble clic en un registro.
  */
 export const MENSAJE_DOBLE_CLIC = "Al dar doble clic en el registro seleccionado creará una nueva solicitud con los mismos datos de la solicitud elegida.";
+
+export const DOCUMENTOSSELECCIONADOS = [
+    { id: 1, descripcion: 'Documentos que ampare el valor de la mercancía' },
+    { id: 2, descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)' },
+]
