@@ -7,7 +7,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 
@@ -121,8 +121,8 @@ export class DatosCertificadoComponent implements OnInit {
     private router: Router
   ) {
     this.datosdelcertificado = this.fb.group({
-      lugar: [''],
-      observaciones: [''],
+      lugar: ['', Validators.required], // Required field
+      observaciones: ['']
     });
   }
   /**
@@ -140,7 +140,6 @@ export class DatosCertificadoComponent implements OnInit {
   getTabledatas(): void {
     this.service.getDatosCertificado().subscribe((data: any) => {
       this.datos = data;
-      console.log(this.datos);
     });
   }
   /**

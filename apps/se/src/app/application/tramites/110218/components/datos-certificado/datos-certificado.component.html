@@ -5,18 +5,21 @@
             <div class="row">
                 <div class="col-md-12">
                     <label class="form-label" for="lugar">Lugar *: </label>
-                    <input type="text" placeholder="Tamaulipas 15 cl: centro" class="form-control bg-white" id="lugar" formControlName="lugar" (change)="onDatosdelcertificadoChange('lugar')">
+                    <input type="text" placeholder="Tamaulipas 15 cl: centro" class="form-control bg-white" id="lugar"
+                        formControlName="lugar" (change)="onDatosdelcertificadoChange('lugar')">
+                    <div *ngIf="datosdelcertificado.get('lugar')?.touched && datosdelcertificado.get('lugar')?.invalid">
+                        <small class="text-danger">Este campo es obligatorio.</small>
+                    </div>
                 </div>
+
                 <div class="col-md-12">
                     <label class="form-label" for="observaciones">Observaciones:</label>
-                    <textarea type="text" placeholder="OTRAS OBSERVACIONES" class="form-control custom-textarea bg-white" id="observaciones"
-                        formControlName="observaciones" (change)="onDatosdelcertificadoChange('observaciones')"></textarea>
+                    <textarea type="text" placeholder="OTRAS OBSERVACIONES"
+                        class="form-control custom-textarea bg-white" id="observaciones" formControlName="observaciones"
+                        (change)="onDatosdelcertificadoChange('observaciones')"></textarea>
                 </div>
-
             </div>
         </form>
-
-
     </div>
     <h6>Mercancías seleccionadas</h6>
     <app-tabla-dinamica [configuracionTabla]="configTableArray" [datos]="datos" [tipoSeleccionTabla]="tableradio"
@@ -25,8 +28,8 @@
     </app-tabla-dinamica>
     <div class="col-md-12">
         <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3" (click)="onModifyForm()">
-          Modificar 
+            Modificar
         </button>
     </div>
-    
+
 </div>

@@ -1,9 +1,9 @@
-import { Component,OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
@@ -77,11 +77,11 @@ export class TransporteComponent implements OnInit, OnDestroy {
     private tramite110218Query: Tramite110218Query
   ) {
     this.detallestransporte = this.fb.group({
-      puertodeEmbarque: [''],
-      puertodeDesembarque: [''],
-      puertodeTránsito: [''],
-      nombredelaEmbarcación: [''],
-      númerodeVuelo: [''],
+      puertodeEmbarque: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Campo obligatorio, solo letras y espacios
+      puertodeDesembarque: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Campo obligatorio, solo letras y espacios
+      puertodeTránsito: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Campo obligatorio, solo letras y espacios
+      nombredelaEmbarcación: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Campo obligatorio, solo letras y espacios
+      númerodeVuelo: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Campo obligatorio, solo números permitidos
     });
   }
 

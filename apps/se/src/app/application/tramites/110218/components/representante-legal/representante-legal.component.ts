@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Observable, Subject, takeUntil } from 'rxjs';
 
@@ -82,13 +82,14 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
     private service: CertificadoTecnicoJaponService
   ) {
     this.datosdelexportador = this.fb.group({
-      nombredelRepresentante: [''],
-      empresa: [''],
-      cargo: [''],
-      teléfonos: [''],
-      faxs: [''],
-      correoElectrónicos: [''],
+      nombredelRepresentante: ['', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚÑáéíóúñ ]+$/)]], // Campo obligatorio, solo letras y espacios
+      empresa: [{ value: '', disabled: true }], // Campo de solo lectura, sin validación necesaria
+      cargo: ['', Validators.required], // Campo obligatorio
+      teléfonos: ['', [Validators.required, Validators.pattern(/^\d+$/)]], // Campo obligatorio, solo números permitidos
+      faxs: ['', [Validators.required, Validators.pattern(/^\d+$/)]], // Campo obligatorio, solo números permitidos
+      correoElectronico: ['', [Validators.required, Validators.email]] // Campo obligatorio, debe ser un correo válido
     });
+
   }
 
   /**
