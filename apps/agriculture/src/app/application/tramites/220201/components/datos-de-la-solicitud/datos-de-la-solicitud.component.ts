@@ -186,7 +186,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       numeroGuia: [''],
       certficacion: [''],
       regimen: ['', Validators.required],
-      datosDeMercancia: ['', Validators.required],
     });
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
   }
