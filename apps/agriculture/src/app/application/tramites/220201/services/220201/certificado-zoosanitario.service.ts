@@ -12,7 +12,7 @@ import {
 
 import { Injectable } from '@angular/core';
 
-import { map, Observable } from 'rxjs';
+import { Observable, map, } from 'rxjs';
 
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store'
 

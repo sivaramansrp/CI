@@ -102,6 +102,13 @@ export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.servi
 export * from './core/services/110102/representacion-federal/representacionFederal.service';
 export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';
+export * from './core/models/shared/configuracion-columna.model';
+
+export * from './core/enums/tabla-seleccion.enum';
+export * from './tramites/constantes/120602/datos-empresa.enum';
+
+export * from './core/services/120602/empresa-frontera-solicitud.enum';
+
 export * from './core/estados/seccion.store';
 export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';

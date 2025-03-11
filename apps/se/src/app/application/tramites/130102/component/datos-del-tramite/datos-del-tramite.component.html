@@ -21,9 +21,9 @@
             [label]="inputFields[i].label"
             [placeholder]="inputFields[i].placeholder"
             [required]="inputFields[i].required"
-         
             formControlName="fraccion"
-          ></app-catalogo-select>
+            (change)="setValoresStore(formDelTramite,'fraccion', 'setFraccion')">
+        </app-catalogo-select>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { UsoEspicificoComponent } from './uso-espicifico.component';
+
+import { UsoEspicificoComponent } from './uso-especifico.component'
 
 import { CatalogoSelectComponent } from "../../../../shared/components/catalogo-select/catalogo-select/catalogo-select.component";
 import { CommonModule } from '@angular/common';
@@ -8,6 +9,7 @@ import { TableComponent } from '../../../../shared/components/table/table.compon
 import { TituloComponent } from "../../../../shared/components/titulo/titulo.component";
 
 import fraccionOptionJson from '../../../../../assets/json/130102/fracciónarancelaria-options.json';
+
 
 describe('UsoEspicificoComponent', () => {
   let component: UsoEspicificoComponent;
