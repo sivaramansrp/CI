@@ -37,6 +37,12 @@ const routes: Routes = [
       import('./tramites/130118/pexim.module').then((m) => m.PeximModule),
   },
   {
+    path: 'expansion-de-productores',
+    loadChildren: () =>
+      import('./tramites/90201/expansion-de-productores/expansion-de-productores.module').then(
+        (m) => m.ExpansionDeProductoresModule),
+  },
+  {
     path: 'pexim',
     loadChildren: () =>
       import('./tramites/110204/pexim.module').then((m) => m.PeximModule),
