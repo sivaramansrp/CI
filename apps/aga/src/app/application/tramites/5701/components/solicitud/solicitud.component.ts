@@ -267,6 +267,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+ * Verifica si hay un error de intervalo de fecha en los datos del servicio.
+ * @returns {boolean} - `true` si hay un error de intervalo de fecha y el campo ha sido tocado, de lo contrario `false`.
+ */
+  fechaInicioPasadaFechaFinalError(): boolean {
+    return (
+      this.datosServicio.hasError('endDateBeforeStartDate') &&
+      this.datosServicio.touched
+    );
+  }
+
+
   private inicializaCatalogos(): void {
     /**
      * Obtiene los tipos de solicitud desde el catálogo y los asigna a `datosTiposSolicitud`.
@@ -375,7 +387,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           [Validators.maxLength(25)],
         ],
         programa: [this.solicitudState?.programa, [Validators.maxLength(300)]],
-        desdesImmex: [this.solicitudState?.desImmex],
+        desImmex: [this.solicitudState?.desImmex],
         desIndustrialAutomotriz: [this.solicitudState?.desIndustrialAutomotriz],
         tipoEmpresaCertificada: [this.solicitudState?.tipoEmpresaCertificada],
         socioComercial: [this.solicitudState?.socioComercial],
@@ -495,11 +507,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       const differenceInTime = fechaFinal.getTime() - fechaInicio.getTime();
       const differenceInHours = differenceInTime / (1000 * 3600);
 
+      if (differenceInTime <= 0) {
+        this.datosServicio.setErrors({ endDateBeforeStartDate: true });
+        return;
+      }
+
       if (
         this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL &&
         differenceInHours > 24
       ) {
         this.datosServicio.setErrors({ invalidIntervalo: true });
+        return;
       }
 
       const differenceInDays = differenceInTime / (1000 * 3600 * 24);
@@ -512,17 +530,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.datosServicio
           .get('fechaFinal')!
           .setErrors({ invalidIntervalo: true });
+        return;
       }
 
-      if (differenceInTime < 0) {
-        this.datosServicio.setErrors({ endDateBeforeStartDate: true });
-      }
-
-      // Validación adicional
-      if (fechaFinal.getTime() <= fechaInicio.getTime()) {
-        this.datosServicio.get('fechaFinal')?.setErrors({ invalidIntervalo: true });
-        this.datosServicio.get('horaFinal')?.setErrors({ invalidIntervalo: true });
-      } 
     }
   }
 
@@ -706,8 +716,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
-    console.log(this.datosImportadorExportador);
-    
+    console.log(this.datosServicio);
+
   }
 
   /**

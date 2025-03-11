@@ -363,6 +363,10 @@
           <div class="mensaje-error">Fecha no válida, elija otro día</div>
           } @if (intervaloFechaError()) {
           <div class="mensaje-error">Intervalo de fecha no válido</div>
+          } @if (fechaInicioPasadaFechaFinalError()) {
+          <div class="mensaje-error">
+            La fecha de incio no debe ser despues que la fecha final
+          </div>
           }
         </div>
 
@@ -376,6 +380,10 @@
           ></input-hora>
           @if (intervaloFechaError()) {
           <div class="mensaje-error">Intervalo de fecha no válido</div>
+          } @if (fechaInicioPasadaFechaFinalError()) {
+          <div class="mensaje-error">
+            La fecha de incio no debe ser despues que la fecha final
+          </div>
           }
         </div>
       </div>
