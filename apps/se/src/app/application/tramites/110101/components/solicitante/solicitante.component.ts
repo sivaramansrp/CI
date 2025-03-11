@@ -49,7 +49,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
   /**
   * Suscripción utilizada para restaurar los valores del formulario desde el estado de la tienda.
   */
-  private restoreSubscription!: Subscription;
+  private restoreSubscription$!: Subscription;
 
 
 
@@ -109,7 +109,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    * La suscripción se completa después de recibir el primer valor.
    */
   private restoreFormValues(): void {
-    this.restoreSubscription = this.tramite110101Query.selectSolicitante$
+    this.restoreSubscription$ = this.tramite110101Query.selectSolicitante$
       .pipe(
         distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
         take(1)
@@ -130,8 +130,8 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
     if (this.formSubscription) {
       this.formSubscription.unsubscribe();
     }
-    if (this.restoreSubscription) {
-      this.restoreSubscription.unsubscribe();
+    if (this.restoreSubscription$) {
+      this.restoreSubscription$.unsubscribe();
     }
     this.destroy$.next();
     this.destroy$.complete();

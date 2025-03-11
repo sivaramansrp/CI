@@ -8,7 +8,7 @@ import { NavComponent } from '@ng-mf/data-access-user';
 import { PantallasComponent } from '../pages/pantallas/pantallas.component';
 import { DatosComponent } from '../pages/datos/datos.component';
 import { SolicitanteComponent } from '../components/solicitante/solicitante.component';
-import { DatosDeLaComponent } from '../components/datos-de-la/datos-de-la.component';
+import { DatosMercanciaComponent } from '../components/DatosMercancia/datos-mercancia.component';
 import { DatosAdicionalesComponent } from '../components/datos-adicionales/datos-adicionales.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TratadosComponent } from '../components/tratados/tratados.component';
@@ -27,7 +27,7 @@ import { TratadosComponent } from '../components/tratados/tratados.component';
     WizardComponent,
     NavComponent,
     SolicitanteComponent,
-    DatosDeLaComponent,
+    DatosMercanciaComponent,
     DatosAdicionalesComponent,
     TratadosComponent
   ]

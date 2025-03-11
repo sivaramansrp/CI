@@ -21,13 +21,13 @@ import { distinctUntilChanged, Subject, take, takeUntil } from 'rxjs';
 * @returns Validaciones del formulario
 */
 @Component({
-  selector: 'app-datos-de-la',
-  templateUrl: './datos-de-la.component.html',
-  styleUrl: './datos-de-la.component.scss',
+  selector: 'app-datos-mercancia',
+  templateUrl: './datos-mercancia.component.html',
+  styleUrl: './datos-mercancia.component.scss',
   standalone: true,
   imports: [TituloComponent, CommonModule, AlertComponent, ReactiveFormsModule]
 })
-export class DatosDeLaComponent implements OnInit, OnDestroy {
+export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   /**
    * Una cadena que representa la clase CSS para una alerta de advertencia.
@@ -95,7 +95,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    */
 
   ngOnInit(): void {
-    // this.getFormDatosDeMercancia();
+    this.getFormDatosDeMercancia();
     this.obtenerDatosFormularioDesdeStore();
     this.formMercancia.valueChanges
       .pipe(distinctUntilChanged(), takeUntil(this.destroy$))
