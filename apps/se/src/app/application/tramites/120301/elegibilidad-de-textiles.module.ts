@@ -25,6 +25,7 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { FormularioAsociacionFacturaComponent } from './components/facturas-asociadas/facturas-asociadas.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     FirmaElectronicaComponent,
     RouterModule,
     CapturarFacturasComponent,
-    formularioAsociacionFactura,
+    FormularioAsociacionFacturaComponent,
     HistoricoFabricantesComponent,
     TableComponent,
     CatalogoSelectComponent,
