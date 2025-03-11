@@ -1,6 +1,6 @@
 import { AdministrarResiduosService } from '@ng-mf/data-access-user';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -19,7 +19,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './administrar-residuos.component.html',
   styleUrl: './administrar-residuos.component.scss',
 })
-export class AdministrarResiduosComponent implements OnInit {
+export class AdministrarResiduosComponent implements OnInit, OnDestroy {
   /**
    * Datos del encabezado de la tabla
    */
@@ -53,10 +53,13 @@ export class AdministrarResiduosComponent implements OnInit {
    * Método de inicialización del componente
    */
   ngOnInit(): void {
-    this.getEstablecimiento();
     this.crearFormularioParaRecuentoTotal();
-    this.actualizarRecuentoTotalDeFilas();
     this.loadAdministrarResiduos();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   /**
@@ -65,7 +68,7 @@ export class AdministrarResiduosComponent implements OnInit {
   public getEstablecimiento(): void {
     this.tableHeaderData = this.getEstablecimientoTableData.tableHeader;
     this.tableBodyData = this.getEstablecimientoTableData.tableBody;
-  }
+}
 
   /**
    * Crea el formulario para el recuento total de filas
@@ -82,7 +85,7 @@ export class AdministrarResiduosComponent implements OnInit {
   public actualizarRecuentoTotalDeFilas(): void {
     const TOTAL_ROW_COUNT = this.tableBodyData.length;
     this.formularioParaRecuentoTotal.patchValue({ recuentoTotalDeFilas: TOTAL_ROW_COUNT });
-  }
+}
 
   /**
    * Carga los datos para administrar residuos
@@ -93,8 +96,11 @@ export class AdministrarResiduosComponent implements OnInit {
       .pipe(
         takeUntil(this.destroyed$) // Se usa takeUntil para asegurarse de que las suscripciones se cancelen al destruirse el componente
       )
-      .subscribe((data): void => {
+      .subscribe((data) => {
         this.getEstablecimientoTableData = data;
+        this.getEstablecimiento();
+        this.actualizarRecuentoTotalDeFilas();
+        console.log(data, 'table data');
       });
   }
 }
