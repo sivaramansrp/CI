@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SECCIONES_TRAMITE_230401 } from '../../enum/pantallas-constante.enum';
+import { SECCIONES_TRAMITE_230401 } from '../../enum/nuevo-programa.enum';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 
 @Component({
@@ -31,8 +31,8 @@ export class PasoUnoCsComponent {
     const PREDETERMINADO = SECCIONES_TRAMITE_230401
     for (const LLAVE_SECCION in PREDETERMINADO.PASO_1) {
       if (Object.prototype.hasOwnProperty.call(PREDETERMINADO.PASO_1, LLAVE_SECCION)) {
-        // @ts-expect-error - fix this
-        SECCIONES.push(PREDETERMINADO.PASO_1[LLAVE_SECCION]);
+        const KEY = LLAVE_SECCION as keyof typeof PREDETERMINADO.PASO_1;
+        SECCIONES.push(PREDETERMINADO.PASO_1[KEY]);
         FORMA_VALIDA.push(false);
       }
     }
