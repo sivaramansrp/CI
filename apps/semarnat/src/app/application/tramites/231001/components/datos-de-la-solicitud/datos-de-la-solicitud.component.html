@@ -1,0 +1,57 @@
+<div class="container mb-5">
+
+    <!-- detos de la solicitud -->
+    <form [formGroup]="solicitudForm" (ngSubmit)="onSubmit()">
+      <div class="form" formGroupName="datosdelForm">
+        <ng-titulo titulo="Datos generales del solicitante" />
+  
+        <div class="row mb-3">
+            <div class="col-md-4 form-group">
+                <label for="numeroRegistroAmbiental">Número de Registro Ambiental*:</label>
+                <input type="text" class="form-control" placeholder="123123"
+                formControlName="numeroRegistroAmbiental" id="numeroRegistroAmbiental" maxlength="13" size="30" [ngClass]="isInvalid('numeroRegistroAmbiental') ? 'required' : ''" />
+                <div *ngIf="isInvalid('numeroRegistroAmbiental')" class="text-danger">
+                    Este campo es obligatorio
+                  </div>
+            </div>
+            <div class="col-md-8 form-group">
+                <label for="descripcionGenerica1">Giro industrial del importador*: </label>
+                <input type="text" class="form-control" placeholder="Giro industrial del importador" formControlName="descripcionGenerica1" id="descripcionGenerica1" maxlength="150" size="105" [ngClass]="isInvalid('descripcionGenerica1') ? 'required' : ''" />
+                <div *ngIf="isInvalid('descripcionGenerica1')" class="text-danger">
+                    Este campo es obligatorio
+                </div>
+            </div>
+            </div>
+            <div class="row mb-3">
+            <div class="col-md-4 form-group">
+                <app-catalogo-select [catalogo]='aduanas' formControlName="numeroProgramaImmex" [label]="'Número de autorización Immex'"
+                  [required]="true"></app-catalogo-select>
+              
+                <div *ngIf="isInvalid('numeroProgramaImmex')" class="text-danger">
+                    Este campo es obligatorio
+                </div>
+            </div>
+        </div>
+      </div>
+    </form>
+    <app-administrar-residuos></app-administrar-residuos>
+  </div>
+<div class="container">
+  <form [formGroup]="datosForm">
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]='aduanas' formControlName="aduanas" [label]="'Aduana de entrada'"
+          [required]="true" (change)="onAduanaSelect()"></app-catalogo-select>
+      </div>
+    </div>
+    <btn-continuar [datos]="datosPasos"></btn-continuar>
+    <div *ngIf="selectedAduana">
+      <app-datos-de-los-residuos></app-datos-de-los-residuos>
+    </div>
+    <div class="row">
+        <ng-alert [CONTENIDO]="texto"></ng-alert>
+    </div>
+  </form>
+</div>
+
+

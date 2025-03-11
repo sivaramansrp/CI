@@ -1,12 +1,18 @@
 import { Route } from '@angular/router';
-import { loadRemoteModule } from '@nx/angular/mf';
-import { AppComponent } from './app.component';
+//import { loadRemoteModule } from '@nx/angular/mf';
+import { loadRemoteModule } from '@angular-architects/module-federation';
 
-export const appRoutes: Route[] = [ 
+import { SeleccionTramiteDesdePanelComponent } from './seleccion-tramite-desde-panel/seleccion-tramite-desde-panel.component';
+
+export const appRoutes: Route[] = [
   {
     path: 'login',
     loadChildren: () =>
-      loadRemoteModule('login', './Routes').then((m) => m.remoteRoutes),
+      loadRemoteModule({
+        remoteEntry: 'http://localhost:4201/remoteAppEntry.js',
+        remoteName: 'login',
+        exposedModule: './Module'
+      }).then((m) => m.RemoteEntryModule)
   },
   {
     path: '',
@@ -14,23 +20,57 @@ export const appRoutes: Route[] = [
     pathMatch: 'full'
   },
   {
+    path: 'seleccion-tramite',
+    component: SeleccionTramiteDesdePanelComponent
+  },
+  {
     path: 'aga',
     loadChildren: () =>
-      loadRemoteModule('aga', './Routes').then((m) => m.remoteRoutes),
+      loadRemoteModule({
+        remoteEntry: 'http://localhost:4202/remoteAppEntry.js',
+        remoteName: 'aga',
+        exposedModule: './Module'
+      }).then((m) => m.AppAgaModule)
   },
   {
     path: 'agriculture',
     loadChildren: () =>
-      loadRemoteModule('agriculture', './Routes').then((m) => m.remoteRoutes),
+      loadRemoteModule({
+        remoteEntry: 'http://localhost:4204/remoteAppEntry.js',
+        remoteName: 'agriculture',
+        exposedModule: './Module'
+      }).then((m) => m.AppAgriculturaModule)
   },
   {
     path: 'se',
     loadChildren: () =>
-      loadRemoteModule('se', './Routes').then((m) => m.remoteRoutes),
+      loadRemoteModule({
+        remoteEntry: 'http://localhost:4205/remoteAppEntry.js',
+        remoteName: 'se',
+        exposedModule: './Module'
+      }).then((m) => m.AppSEModule)
   },
   {
     path: 'semarnat',
     loadChildren: () =>
-      loadRemoteModule('semarnat', './Routes').then((m) => m.remoteRoutes),
+      loadRemoteModule({
+        remoteEntry: 'http://localhost:4206/remoteAppEntry.js',
+        remoteName: 'semarnat',
+        exposedModule: './Module'
+      }).then((m) => m.AppSemarnatModule)
+  },
+  {
+    path: 'funcionario',
+    loadChildren: () =>
+      loadRemoteModule('funcionario', './Routes').then((m) => m.remoteRoutes),
+  },
+  {
+    path: 'agace',
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: 'http://localhost:4209/remoteAppEntry.js',
+        remoteName: 'agace',
+        exposedModule: './Module'
+      }).then((m) => m.AppAgaceModule)
   }
 ];

@@ -1,38 +1,63 @@
 <div class="page">
-    <div class="container">
-      <ng-titulo titulo="Selecci&oacute;n de tr&aacute;mite" />
-      <div class="row">
-        <table class="table table-responsive table-striped table-hover">
-          <thead>
-            <tr>
-              <th>
-                Tipo tr&aacute;mite
-              </th>
-              <th>
-                URL
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                5701
-              </td>
-              <td>
-                <a routerLink="/aga/pago/servicios-extraordinarios/solicitud">{{ruta}}/servicios-extraordinarios/solicitud</a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                220401
-              </td>
-              <td>
-                <a routerLink="/220401/pago">{{ruta}}/220401/pago</a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>    
+  <div class="container">
+    <ng-titulo titulo="Selecci&oacute;n de tr&aacute;mite" />
+    <div class="row">
+      <table class="table table-responsive table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Tipo tr&aacute;mite</th>
+            <th>URL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>5701</td>
+            <td>
+              <a routerLink="/aga/pago/servicios-extraordinarios/solicitud"
+                >{{ ruta }}/servicios-extraordinarios/solicitud</a
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>220401</td>
+            <td>
+              <a routerLink="/220401/pago">{{ ruta }}/220401/pago</a>
+            </td>
+          </tr>
+          <tr>
+            <td>220501</td>
+            <td>
+              <a routerLink="/pago/sagarpa/datosdelasolicitud"
+                >{{ ruta }}/pago/sagarpa/datosdelasolicitud</a
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>220502</td>
+            <td>
+              <a routerLink="/pago/inspeccion-fisica/pantallas"
+                >{{ ruta }}/pago/inspeccion-fisica/pantallas</a
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>220201</td>
+            <td>
+              <a routerLink="/agriculture/certificado-zoosanitario/zoosanitario"
+                >{{ ruta }}/pago/certificado-zoosanitario/zoosanitario</a
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>220202</td>
+            <td>
+              <a routerLink="/agriculture/certificado-fitosanitario/agriculture"
+                >{{ ruta }}/pago/certificado-fitosanitario/agriculture</a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
-  

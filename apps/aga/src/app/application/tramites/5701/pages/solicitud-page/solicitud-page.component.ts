@@ -1,11 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
+import {
+  DatosPasos, SeccionLibQuery, SeccionLibState,
+  SeccionLibStore,
+} from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
-import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
-import { SeccionQuery } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 interface AccionBoton {
@@ -20,7 +21,7 @@ interface AccionBoton {
 export class SolicitudPageComponent {
   pasos: ListaPasosWizard[] = PASOS;
   indice: number = 1;
-  public seccion!: SeccionState;
+  public seccion!: SeccionLibState;
   private destroyNotifier$: Subject<void> = new Subject();
 
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
@@ -33,9 +34,9 @@ export class SolicitudPageComponent {
   };
 
   constructor(
-    private seccionQuery: SeccionQuery,
-    private seccionStore: SeccionStore
-  ) {}
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore
+  ) { }
 
   ngOnInit() {
     this.seccionQuery.selectSeccionState$

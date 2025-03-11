@@ -3,11 +3,14 @@ import { PerfilUsuario } from '@ng-mf/data-access-user';
 import { Rol } from  '@ng-mf/data-access-user';
 import { Router } from '@angular/router'; 
 import { TipoPersona } from '@ng-mf/data-access-user';
-import { UsuarioStore } from './../../estados/usuario.store';
+import * as uuid from 'uuid';
 
+import { UsuarioStore } from './../../estados/usuario.store';
 @Component({
+  selector : 'auth-page',
   templateUrl: './auth-page.component.html',
   styleUrl: './auth-page.component.scss',
+  host: { 'hostID': uuid.v4().toString() }
 })
 export class AuthPageComponent {
   indice: number = 1;
@@ -21,6 +24,7 @@ export class AuthPageComponent {
 
   seleccionaTab(i: number): void {
     this.indice = i;
+
   }
 
   validarEFirma(login: boolean) {
@@ -37,7 +41,7 @@ export class AuthPageComponent {
       }
       this.usuarioStore.establecerUsuario('LEQI', perfilUsuario, roles, '');
 
-      this.router.navigateByUrl('/aga/pago/seleccion-tramite');
+      window.location.href = '/seleccion-tramite';
     }
   }
 }

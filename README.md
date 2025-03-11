@@ -1,4 +1,4 @@
-# NgMf
+# NgMf     
 
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
@@ -64,10 +64,12 @@ It will show tasks that you can run with Nx.
 ## Setup in local
 
 - npm install --force
-- npx nx serve dashboard (host)
 - npx nx serve aga
 - npx nx serve se
 - npx nx serve login
+- npx nx serve funcionario
+- npx nx serve dashboard (host)
+- npx nx serve dashboard --port 5200
 - manifest.json for the port
 - Create new application - npx nx g @nx/angular:remote apps/aga
 - Angular 18.0.3
@@ -103,7 +105,26 @@ It will show tasks that you can run with Nx.
 - "include": ["apps/aga/src/**/*.ts"], - change aga into your procedure/dept
 
 ## Unittesing Module
-- npm run test:aga
+- npx nx run test:aga
 - If application / procedure specific
-- Goto aga/tsconfig.spec.js
-- "include": ["src/220401/**/*.ts"], - change aga into your procedure/dept
+- npx nx test se --testPathPattern=apps/se/src/app/application/tramites/120301
+
+# Lint
+- npx nx run lint:aga
+- If application / procedure specific
+- npx nx lint aga --lint-file-patterns="apps/aga/src/app/application/tramites/120301/**/*"
+
+# Remove cache
+- Step 1
+    - close the vscode, open the command prompt
+    - Remove .nx if required
+    - npx nx reset
+    - npx nx clear-cache
+    - npx nx run serve dashboard
+   -  refer - https://nx.dev/nx-api/nx/documents/reset
+- Step 2
+    - Resolved the node build verbose issue
+    - Resolved the screen not render issue
+    - Resolve webcache 
+    - npm i webpack@5.91.0
+    - Follow step1

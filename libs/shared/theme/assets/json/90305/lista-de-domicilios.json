@@ -1,0 +1,38 @@
+[
+    {
+        "calle": "CALLE 5", 
+        "numeroExterior": "SN",
+        "numeroInterior" : " ",
+        "codigoPostal": "81124",
+        "colonia": "OTRA NO ESPECIFICADA EN EL CATALOGO",
+        "localidad":"EJIDO COREREPE",
+        "municipioOAlcaldia":"GUASAVE",
+        "entidadFederativa":"entidadFederativa",
+        "pais":"pais",
+        "telefono":"telefono"
+    },
+    {
+        "calle": "CARRETERA AL CAMPO 35 KM 2.3", 
+        "numeroExterior": "S/N",
+        "numeroInterior" : " ",
+        "codigoPostal": "81360",
+        "colonia": "OTRA NO ESPECIFICADA EN EL CATALOGO",
+        "localidad":"LOS MOCHIS",
+        "municipioOAlcaldía":"AHOME",
+        "entidadFederativa":"entidadFederativa",
+        "pais":"pais",
+        "telefono":"telefono"
+    },
+    {
+        "calle": "CARRETERA INTERNACIONAL NO. 15 MEX-NOG KM 203", 
+        "numeroExterior": "SN",
+        "numeroInterior" : " ",
+        "codigoPostal": "81210",
+        "colonia": "MIGUEL HIDALGO",
+        "localidad":"LOS MOCHIS",
+        "municipioOAlcaldía":"AHOME",
+        "entidadFederativa":"entidadFederativa",
+        "pais":"pais",
+        "telefono":"telefono"
+    }
+  ]
