@@ -8,6 +8,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   imports: [CommonModule],
   templateUrl: './alert.component.html',
   styleUrl: './alert.component.scss',
+  host: {}
 })
 export class AlertComponent implements OnInit {
   @Input() CONTENIDO!: string;

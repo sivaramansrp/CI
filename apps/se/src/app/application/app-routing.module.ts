@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
+
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
@@ -23,6 +24,13 @@ const ROUTES: Routes = [
       import('./tramites/110102/exportador-autorizado.module').then(
         (m) => m.ExportadorautorizadoModule
       ),
+  },
+  {
+    path: 'empresa-frontera',
+    loadChildren: () =>
+      import('./tramites/120602/empresa-frontera-solicitud.module').then(
+        (m) => m.EmpresaFronteraSolicitudModule
+      )
   },
   {
     path: 'prosec-modificacion',
@@ -117,9 +125,6 @@ const ROUTES: Routes = [
         (m) => m.RegistroSolicitudModule
       ),
   }
-
-
-
 ];
 
 @NgModule({

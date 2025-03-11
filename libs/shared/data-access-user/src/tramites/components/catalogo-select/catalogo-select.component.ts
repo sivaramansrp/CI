@@ -28,7 +28,8 @@ import { CommonModule } from '@angular/common';
       useExisting: forwardRef(() => CatalogoSelectComponent),
       multi: true,
     },
-  ]
+  ],
+  host: {}
 })
 export class CatalogoSelectComponent
   implements ControlValueAccessor, OnChanges {

@@ -24,7 +24,7 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() commonTableHeader: string[] = [];
   /**
    * @description
-   * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero
+   * commonTableBody se utiliza para obtener datos del cuerpo de la tabla de la componente
    */
   @Input() commonTableBody: any = [];
 

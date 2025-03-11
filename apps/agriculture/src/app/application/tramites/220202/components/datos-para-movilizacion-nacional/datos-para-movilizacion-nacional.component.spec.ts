@@ -1,7 +1,10 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosParaMovilizacionNacionalComponent } from './datos-para-movilizacion-nacional.component';
-
+import { of } from 'rxjs';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 describe('DatosParaMovilizacionNacionalComponent', () => {
   let component: DatosParaMovilizacionNacionalComponent;
@@ -9,9 +12,10 @@ describe('DatosParaMovilizacionNacionalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DatosParaMovilizacionNacionalComponent]
-    })
-      .compileComponents();
+      declarations: [DatosParaMovilizacionNacionalComponent],
+      imports: [ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, AlertComponent, TablaDinamicaComponent], // Importa ReactiveFormsModule
+      providers: [{ provide: HttpClient }] // Inyectamos el mock en lugar del servicio real
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DatosParaMovilizacionNacionalComponent);
     component = fixture.componentInstance;
