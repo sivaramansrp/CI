@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DetosDelTramiteComponent } from './detos-del-tramite.component';
+import { DetosDelTramiteComponent } from './datos-del-tramite.component';
 
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
