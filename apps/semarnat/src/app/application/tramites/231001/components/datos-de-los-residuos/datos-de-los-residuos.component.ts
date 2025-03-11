@@ -2,29 +2,28 @@
  * @module DatosDeLosResiduosComponent
  * Este módulo define el componente `DatosDeLosResiduosComponent` que maneja la información de los residuos.
  */
-
-import { CommonModule } from '@angular/common';
-
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { Subject, takeUntil, map, Observable } from 'rxjs';
-
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
-import { MateriaprimaformserviceService } from 'libs/shared/data-access-user/src/core/services/231001/materia-prima-formservice.service';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { MateriaprimaformserviceService } from '@ng-mf/data-access-user';
+import { map } from 'rxjs';
+
+import { Observable } from 'rxjs';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite231001Query } from '../../../../tramites/231001/estados/queries/tramite231001.query';
-import {
-  Solicitud231001State,
-  Tramite231001Store,
-} from '../../../../tramites/231001/estados/tramites/tramite231001.store';
+import { Tramite231001Store } from '../../../../tramites/231001/estados/tramites/tramite231001.store';
+import { Validators } from '@angular/forms';
 
 /**
  * Componente que maneja los datos relacionados con los residuos, incluidos los formularios y catálogos.
@@ -328,7 +327,7 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite231001Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite231001Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite231001Store[metodoNombre] as (value: string | number | null) => void)(VALOR);
   }
   /**
    * @method cambiaFraccion

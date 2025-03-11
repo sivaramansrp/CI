@@ -1,9 +1,3 @@
-import {
-  catalogoResponse,
-  Personas,
-  ResponsablesDespacho,
-} from '@ng-mf/data-access-user';
-
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
@@ -52,7 +46,7 @@ export class Tramite231001Store extends Store<Solicitud231001State> {
     super(createInitialState());
   }
 
-  public setNumeroRegistroAmbiental(numeroRegistroAmbiental: string) {
+  public setNumeroRegistroAmbiental(numeroRegistroAmbiental: string): void {
     this.update((state) => ({
       ...state,
       numeroRegistroAmbiental,

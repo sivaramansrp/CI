@@ -1,11 +1,14 @@
+import { AdministrarResiduosService, Catalogo } from '@ng-mf/data-access-user';
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { takeUntil } from 'rxjs';
 
-import administrarResiduosMesa from 'libs/shared/theme/assets/json/231001/administrar-residuos-mesa.json';
 
 /**
  * Componente para administrar residuos
@@ -29,16 +32,21 @@ export class AdministrarResiduosComponent implements OnInit {
   /**
    * Datos de la tabla obtenidos de un archivo JSON
    */
-  public getEstablecimientoTableData = administrarResiduosMesa;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public getEstablecimientoTableData: any;
   /**
    * Formulario para el recuento total de filas
    */
   formularioParaRecuentoTotal!: FormGroup;
+
+  private destroyed$ = new Subject<void>();
+  
   /**
    * Constructor de la clase
    * @param fb - FormBuilder para crear formularios reactivos
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private service: AdministrarResiduosService,
+  ) {
     // constructor
   }
   /**
@@ -48,6 +56,7 @@ export class AdministrarResiduosComponent implements OnInit {
     this.getEstablecimiento();
     this.crearFormularioParaRecuentoTotal();
     this.actualizarRecuentoTotalDeFilas();
+    this.loadAdministrarResiduos();
   }
 
   /**
@@ -74,4 +83,15 @@ export class AdministrarResiduosComponent implements OnInit {
     const TOTAL_ROW_COUNT = this.tableBodyData.length;
     this.formularioParaRecuentoTotal.patchValue({ recuentoTotalDeFilas: TOTAL_ROW_COUNT });
   }
+
+    loadAdministrarResiduos(): void {
+      this.service
+        .getAdministrarResiduos()
+        .pipe(
+          takeUntil(this.destroyed$) // Se usa takeUntil para asegurarse de que las suscripciones se cancelen al destruirse el componente
+        )
+        .subscribe((data): void => {
+          this.getEstablecimientoTableData = data;
+        });
+    }
 }
