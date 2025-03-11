@@ -39,7 +39,7 @@ import { tap } from 'rxjs';
   ],
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
-  host: { 'hostID': crypto.randomUUID().toString() }
+ host: { 'hostID': crypto.randomUUID().toString() }
 })
 export class SolicitanteComponent implements OnInit {
   @Input() tabindex!: number;
