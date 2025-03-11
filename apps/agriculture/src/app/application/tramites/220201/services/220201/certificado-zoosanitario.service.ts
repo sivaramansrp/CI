@@ -12,7 +12,7 @@ import {
 
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store'
 
@@ -33,9 +33,7 @@ export class CertificadoZoosanitarioServiceService {
     this.zoosanitarioStore.actualizarSolicitante(solicitante);
   }
 
-  actualizarFormaValida(updatedFormaValida: { [key: string]: boolean }): void {
-    this.zoosanitarioStore.actualizarformaValida(updatedFormaValida);
-  }
+
 
   updateDatosDeLaSolicitud(datosDeLaSolicitud: DatosDeLaSolicitud): void {
     this.zoosanitarioStore.actualizarDatosDeLaSolicitud(datosDeLaSolicitud);
@@ -86,9 +84,25 @@ export class CertificadoZoosanitarioServiceService {
     return this.zoosanitarioStore._select(state => state);
   }
 
-  actualizarDesdeBotonHabilitado(validacionFormulario: boolean) {
-    this.seccionStore.establecerSeccion([validacionFormulario]);
-    this.seccionStore.establecerFormaValida([validacionFormulario])
+  actualizarFormaValida(updatedFormaValida: { [key: string]: boolean }): void {
+    this.zoosanitarioStore.actualizarformaValida(updatedFormaValida);
+    this.obtenerTodosLosStatus().subscribe((result: boolean) => {
+      if (result) {
+        this.seccionStore.establecerSeccion([true]);
+        this.seccionStore.establecerFormaValida([true]);
+      } else {
+        this.seccionStore.establecerSeccion([true]);
+        this.seccionStore.establecerFormaValida([false]);
+      }
+    });
+  }
+
+  obtenerTodosLosStatus(): Observable<boolean> {
+    return this.zoosanitarioStore._select(state => state.validarEnvio).pipe(
+      map((formaValida: ValidarEnvio) => {
+        return Object.values(formaValida).every(value => value === true);
+      })
+    );
   }
 
 

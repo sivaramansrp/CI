@@ -77,7 +77,13 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    */
   ngOnInit(): void {
     this.movilizacionForm.valueChanges.pipe(skip(1)).subscribe((changes) => {
-      this.certificadoZoosanitarioServices.actualizarDesdeBotonHabilitado(this.movilizacionForm.valid)
+      const FORMA_VALIDA_ACTUALIZADA = {
+        dataParaMovilizacion: false, // Example boolean to update
+      };
+      if (this.movilizacionForm.valid) {
+        FORMA_VALIDA_ACTUALIZADA.dataParaMovilizacion = true;
+      }
+      this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
     });
     this.obtenerListasDesplegables();
   }
@@ -137,13 +143,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
     });
   }
   ngOnDestroy(): void {
-    const FORMA_VALIDA_ACTUALIZADA = {
-      dataParaMovilizacion: false, // Example boolean to update
-    };
-    if (this.movilizacionForm.valid) {
-      FORMA_VALIDA_ACTUALIZADA.dataParaMovilizacion = true;
-    }
-    this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
+
     this.certificadoZoosanitarioServices.updatePagoDeDerechos(this.movilizacionForm.value);
   }
 }

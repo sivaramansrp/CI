@@ -98,7 +98,13 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit {
 
   ngOnInit(): void {
     this.pagoForm.valueChanges.pipe(skip(1)).subscribe((changes) => {
-      this.certificadoZoosanitarioServices.actualizarDesdeBotonHabilitado(this.pagoForm.valid)
+      const FORMA_VALIDA_ACTUALIZADA = {
+        pagoDeformaValida: false,
+      };
+      if (this.pagoForm.valid) {
+        FORMA_VALIDA_ACTUALIZADA.pagoDeformaValida = true;
+      }
+      this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
     });
   }
 
@@ -134,14 +140,7 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit {
     });
   }
   ngOnDestroy(): void {
-    console.log(this.pagoForm.value)
-    const FORMA_VALIDA_ACTUALIZADA = {
-      pagoDeformaValida: false,
-    };
-    if (this.pagoForm.valid) {
-      FORMA_VALIDA_ACTUALIZADA.pagoDeformaValida = true;
-    }
-    this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
+
     this.certificadoZoosanitarioServices.updatePagoDeDerechos(this.pagoForm.value);
   }
 }

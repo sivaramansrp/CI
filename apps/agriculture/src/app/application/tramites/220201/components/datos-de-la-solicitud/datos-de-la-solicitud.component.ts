@@ -160,7 +160,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.datosDelaSolicitud.valueChanges.pipe(skip(1)).subscribe((changes) => {
-      this.certificadoZoosanitarioServices.actualizarDesdeBotonHabilitado(this.datosDelaSolicitud.valid)
+      const FORMA_VALIDA_ACTUALIZADA = {
+        dataDeLaSolicitud: false, // Example boolean to update
+      };
+      if (this.datosDelaSolicitud.valid) {
+        FORMA_VALIDA_ACTUALIZADA.dataDeLaSolicitud = true;
+      }
+      this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
     });
     this.obtenerListasDesplegables();
   }
@@ -273,13 +279,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    const FORMA_VALIDA_ACTUALIZADA = {
-      dataDeLaSolicitud: false, // Example boolean to update
-    };
-    if (this.datosDelaSolicitud.valid) {
-      FORMA_VALIDA_ACTUALIZADA.dataDeLaSolicitud = true;
-    }
-    this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
+
     this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(this.datosDelaSolicitud.value);
   }
 }
