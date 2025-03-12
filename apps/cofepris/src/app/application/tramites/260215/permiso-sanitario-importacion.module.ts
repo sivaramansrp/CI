@@ -6,6 +6,10 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { SanitarioComponent } from './pages/sanitario/sanitario.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { BtnContinuarComponent } from '@libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
+import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 
 @NgModule({
   declarations: [
@@ -13,8 +17,14 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
     SanitarioComponent,
     PasoDosComponent,
     PasoUnoComponent,
-    
   ],
-  imports: [CommonModule, PermisoSanitarioImportacionRoutingModule],
+  imports: [
+    CommonModule,
+    PermisoSanitarioImportacionRoutingModule,
+    BtnContinuarComponent,
+    WizardComponent,
+    TercerosRelacionadosComponent,
+    PagoDeDerechosComponent,
+  ],
 })
 export class PermisoSanitarioImportacionModule {}
