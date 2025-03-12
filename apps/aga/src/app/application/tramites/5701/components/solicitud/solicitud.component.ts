@@ -7,6 +7,9 @@ import {
   FECHA_INICIO,
   HORA_FINAL,
   HORA_INICIO,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
 } from '@ng-mf/data-access-user';
 
 import {
@@ -39,8 +42,6 @@ import { FormulariosService } from '@ng-mf/data-access-user';
 import { datosAgregarFormulario } from '@ng-mf/data-access-user';
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
-import { SeccionQuery } from '../../../../estados/queries/seccion.query';
 import { Tramite5701Query } from '../../../../estados/queries/tramite5701.query';
 
 @Component({
@@ -83,12 +84,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   diaMinimo!: string;
 
   private destroyNotifier$: Subject<void> = new Subject();
-  private seccion!: SeccionState;
+  private seccion!: SeccionLibState;
   public solicitudState!: Solicitud5701State;
 
   constructor(
-    private seccionQuery: SeccionQuery,
-    private seccionStore: SeccionStore,
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore,
     private tramite5701Store: Tramite5701Store,
     private tramite5701Query: Tramite5701Query,
     private fechaService: FechasService,
@@ -127,7 +128,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         delay(10),
         tap((_value) => {
-          let seccion: number = 0;
+          let seccion: number | null = 0;
           const formasValidadas = this.seccion.formaValida;
 
           for (let i = 0; i < this.seccion.seccion.length; i++) {
@@ -137,15 +138,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             ) {
               seccion = i;
               break;
+            } else {
+              seccion = null;
             }
           }
-          if (this.FormSolicitud.valid) {
-            formasValidadas[seccion] = true;
-            this.seccionStore.establecerFormaValida(formasValidadas);
-          } else {
-            formasValidadas[seccion] = false;
-            this.seccionStore.establecerFormaValida(formasValidadas);
+
+          if (seccion !== null) {
+            if (this.FormSolicitud.valid) {
+              formasValidadas[seccion] = true;
+              this.seccionStore.establecerFormaValida(formasValidadas);
+            } else {
+              formasValidadas[seccion] = false;
+              this.seccionStore.establecerFormaValida(formasValidadas);
+            }
           }
+
         })
       )
       .subscribe();
@@ -418,7 +425,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         idAduana: [this.solicitudState?.idAduana, [Validators.required]],
         descripcionAduana: [
           this.solicitudState?.descripcionAduana,
-          [Validators.required],
         ],
         idSeccionAduanera: [this.solicitudState?.idSeccionAduanera],
         seccionAduanera: [this.solicitudState?.seccionAduanera],
@@ -470,10 +476,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
         lineaCaptura: [
           this.solicitudState?.lineaCaptura,
-          [Validators.required],
+          [Validators.required]
         ],
-        monto: [this.solicitudState?.monto, [Validators.required]],
-      }),
+        montoModal: [this.solicitudState.montoModal, [Validators.required]],
+      })
     });
   }
 
@@ -581,12 +587,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   tipoSolicitudSeleccion(): void {
-    if (this.solicitudState?.tipoSolicitud) {
-
-      console.log('Al elegir un nuevo tipo de solicitud se borraran todos los datos que ya ha lllenado');
-
-    }
-
     this.tipoSolicitudSeleccionada = parseInt(
       this.FormSolicitud.get('tipoSolicitud')?.value,
       10
