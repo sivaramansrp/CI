@@ -1,7 +1,7 @@
 import { FormGroup } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { datosAgregarFormulario } from '../../../models/shared/forms-model';
+import { datosAgregarFormulario } from 'libs/shared/data-access-user/src/core/models/shared/forms-model';
 
 @Injectable({
   providedIn: 'root',

@@ -2,7 +2,7 @@
   <ng-titulo titulo="Representante Legal" />
   <div>
     <form [formGroup]="represtantante">
-      <ng-container formGroupName="datosImportadorExportador">
+      <ng-container >
         <H6>*Registro Federal de Contribuyentes:</H6>
         <div class="row">
           <div class="col-md-4">
@@ -12,6 +12,7 @@
                 id="resigtro"
                 formControlName="resigtro"
                 type="text"
+                (change)="setValoresStore(represtantante,'resigtro', 'setResigtro')"
               />
             </div>
           </div>
@@ -83,6 +84,7 @@
                 id="telefono"
                 formControlName="telefono"
                 type="text"
+                (change)="setValoresStore(represtantante,'telefono', 'setTelefono')"
               />
             </div>
           </div>
@@ -94,6 +96,7 @@
                 id="correo"
                 formControlName="correo"
                 type="text"
+                (change)="setValoresStore(represtantante,'correo', 'setCorreo')"
               />
             </div>
           </div>
