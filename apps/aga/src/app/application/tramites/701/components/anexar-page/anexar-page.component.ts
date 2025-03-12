@@ -129,16 +129,18 @@ export class AnexarPageComponent implements OnInit {
    * Indicador para mostrar el modal.
    */
   mostrarModal: boolean = false;
-
+  
+   
   /**
    * URL de vista previa del documento.
    */
   URLdevistapreviadeldocumento: SafeResourceUrl | null = null;
-  disponiblesDocumentos!: CatalogosSelect;
+
+  disponiblesDocumentos: any = { catalogos: [] }; 
   /**
    * Documentos disponibles para selección.
    */
-
+  
   /**
    * Documentos seleccionados por el usuario.
    */
@@ -164,6 +166,7 @@ export class AnexarPageComponent implements OnInit {
   resoluciones: string[] = new Array(this.tiposDeDocumentos.length).fill('');
   getTiposDocumentosSubscription: any;
   getTipoDocumentoSubscription: any;
+  getDocumentosSubscription: any;
 
   /**
    * Constructor del componente.
@@ -190,7 +193,7 @@ export class AnexarPageComponent implements OnInit {
    * Obtiene los tipos de documentos del catálogo.
    */
   getTiposDocumentos(): void {
-    this.catalogosServices
+    this.getTiposDocumentosSubscription = this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
       .subscribe({
         next: (resp): void => {
@@ -206,10 +209,9 @@ export class AnexarPageComponent implements OnInit {
    * Obtiene el tipo de documento del servicio de registro y digitalización.
    */
   getTipoDocumento(): void {
-    this.registrodigitalizar.getTipoDocumento().subscribe((resp) => {
+    this.getTipoDocumentoSubscription = this.registrodigitalizar.getTipoDocumento().subscribe((resp) => {
       if (resp.code === 200) {
         const response = resp.data;
-
         this.TipoDocumento = {
           labelNombre: 'Tipo de documento',
           required: false,
@@ -221,10 +223,9 @@ export class AnexarPageComponent implements OnInit {
   }
 
   getDocumentos(): void {
-    this.registrodigitalizar.getDocumentos().subscribe((resp) => {
+    this.getDocumentosSubscription = this.registrodigitalizar.getDocumentos().subscribe((resp) => {
       if (resp.code === 200) {
         const response = resp.data;
-
         this.disponiblesDocumentos = {
           labelNombre: '',
           required: false,
@@ -343,6 +344,9 @@ export class AnexarPageComponent implements OnInit {
     }
     if (this.getTipoDocumentoSubscription) {
       this.getTipoDocumentoSubscription.unsubscribe();
+    }
+    if (this.getDocumentosSubscription) {
+      this.getDocumentosSubscription.unsubscribe();
     }
   }
 }

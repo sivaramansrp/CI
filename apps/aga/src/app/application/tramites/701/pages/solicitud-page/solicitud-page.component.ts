@@ -10,8 +10,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { SeccionQuery } from './estados/queries/seccion.query';
-import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
+import { SeccionLibQuery } from '@ng-mf/data-access-user';
+import { SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
@@ -51,7 +51,7 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Estado de la sección.
    */
-  public seccion: SeccionState | undefined;
+  public seccion: SeccionLibState | undefined;
 
   /**
    * Notificador para destruir observables.
@@ -79,8 +79,8 @@ export class SolicitudPageComponent implements OnInit {
    * @param seccionStore Almacenamiento de la sección.
    */
   constructor(
-    private seccionQuery: SeccionQuery,
-    private seccionStore: SeccionStore,
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore,
   ) {}
 
   /**

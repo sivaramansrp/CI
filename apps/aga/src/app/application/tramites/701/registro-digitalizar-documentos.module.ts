@@ -47,10 +47,6 @@ import { RegistroDigitalizarDocumentosService } from './services/registro-digita
     WizardComponent,
     SharedModule,
     
-    
-  
-
-    
   ],
   providers: [ToastrService,CatalogosService,RegistroDigitalizarDocumentosService],
 })
