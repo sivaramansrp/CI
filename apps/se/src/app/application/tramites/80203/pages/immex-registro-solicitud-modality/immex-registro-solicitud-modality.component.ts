@@ -27,11 +27,6 @@ interface AccionBoton {
 export class ImmexRegistroSolicitudModalityComponent {
   asistenteSolicitud: any;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  establecerTitulo(title: any) {
-    throw new Error('Método no implementado.');
-  }
-
   /**
    * @property {Array<ListaPasosWizard>} pasos - Array de pasos del wizard.
    */
@@ -81,8 +76,4 @@ export class ImmexRegistroSolicitudModalityComponent {
    * Obtener un título para todas las páginas.
    * @param valor - valor del índice de página. --80203
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  obtenerNombreDelTítulo(valor: number): any {
-    throw new Error('Método no implementado.');
-  }
 }
