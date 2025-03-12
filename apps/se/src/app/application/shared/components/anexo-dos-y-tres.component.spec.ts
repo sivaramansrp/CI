@@ -36,9 +36,8 @@ describe('AnexoDosYTresComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule, AnexoDosYTresComponent ],
       declarations: [
-        AnexoDosYTresComponent,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
@@ -54,7 +53,6 @@ describe('AnexoDosYTresComponent', () => {
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
     fixture.destroy();
   });
 
@@ -66,14 +64,14 @@ describe('AnexoDosYTresComponent', () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.createAnexoDosForm();
-    // expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #createAnexoTresForm()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.createAnexoTresForm();
-    // expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #eliminarAnexoDos()', async () => {
@@ -82,7 +80,7 @@ describe('AnexoDosYTresComponent', () => {
     component.obtenerAnexoDosDevolverLaLlamada = component.obtenerAnexoDosDevolverLaLlamada || {};
     component.obtenerAnexoDosDevolverLaLlamada.emit = jest.fn();
     component.eliminarAnexoDos();
-    // expect(component.obtenerAnexoDosDevolverLaLlamada.emit).toHaveBeenCalled();
+    expect(component.obtenerAnexoDosDevolverLaLlamada.emit).toHaveBeenCalled();
   });
 
   it('should run #agregarAnexoDos()', async () => {
@@ -95,9 +93,9 @@ describe('AnexoDosYTresComponent', () => {
     component.obtenerAnexoDosDevolverLaLlamada = component.obtenerAnexoDosDevolverLaLlamada || {};
     component.obtenerAnexoDosDevolverLaLlamada.emit = jest.fn();
     component.agregarAnexoDos();
-    // expect(component.anexoDosFormGroup.get).toHaveBeenCalled();
-    // expect(component.anexoDosTablaLista.push).toHaveBeenCalled();
-    // expect(component.obtenerAnexoDosDevolverLaLlamada.emit).toHaveBeenCalled();
+    expect(component.anexoDosFormGroup.get).toHaveBeenCalled();
+    expect(component.anexoDosTablaLista.push).toHaveBeenCalled();
+    expect(component.obtenerAnexoDosDevolverLaLlamada.emit).toHaveBeenCalled();
   });
 
   it('should run #eliminarAnexoTres()', async () => {
@@ -106,7 +104,7 @@ describe('AnexoDosYTresComponent', () => {
     component.obtenerAnexoTresDevolverLaLlamada = component.obtenerAnexoTresDevolverLaLlamada || {};
     component.obtenerAnexoTresDevolverLaLlamada.emit = jest.fn();
     component.eliminarAnexoTres();
-    // expect(component.obtenerAnexoTresDevolverLaLlamada.emit).toHaveBeenCalled();
+    expect(component.obtenerAnexoTresDevolverLaLlamada.emit).toHaveBeenCalled();
   });
 
   it('should run #agregarAnexoTres()', async () => {
@@ -119,9 +117,9 @@ describe('AnexoDosYTresComponent', () => {
     component.obtenerAnexoTresDevolverLaLlamada = component.obtenerAnexoTresDevolverLaLlamada || {};
     component.obtenerAnexoTresDevolverLaLlamada.emit = jest.fn();
     component.agregarAnexoTres();
-    // expect(component.anexoTresFormGroup.get).toHaveBeenCalled();
-    // expect(component.anexoTresTablaLista.push).toHaveBeenCalled();
-    // expect(component.obtenerAnexoTresDevolverLaLlamada.emit).toHaveBeenCalled();
+    expect(component.anexoTresFormGroup.get).toHaveBeenCalled();
+    expect(component.anexoTresTablaLista.push).toHaveBeenCalled();
+    expect(component.obtenerAnexoTresDevolverLaLlamada.emit).toHaveBeenCalled();
   });
 
   it('should run #setAnexoDosLista()', async () => {
@@ -134,6 +132,102 @@ describe('AnexoDosYTresComponent', () => {
 
     component.setAnexoTresLista({});
 
+  });
+
+  it('should run #setAnexoTresLista() and update the list correctly', async () => {
+    const event = [
+      { ENCABEZADO_FRACCION: '001', ENCABEZADO_DESCRIPCION: 'Description 1', estatus: false },
+      { ENCABEZADO_FRACCION: '002', ENCABEZADO_DESCRIPCION: 'Description 2', estatus: false }
+    ];
+    component.anexoTresTablaLista = [
+      { ENCABEZADO_FRACCION: '001', ENCABEZADO_DESCRIPCION: 'Description 1', estatus: false },
+      { ENCABEZADO_FRACCION: '003', ENCABEZADO_DESCRIPCION: 'Description 3', estatus: false }
+    ];
+    component.obtenerAnexoTresDevolverLaLlamada = component.obtenerAnexoTresDevolverLaLlamada || {};
+    component.obtenerAnexoTresDevolverLaLlamada.emit = jest.fn();
+    component.setAnexoTresLista(event);
+    expect(component.anexoTresTablaLista[0].estatus).toBe(true);
+    expect(component.anexoTresTablaLista[1].estatus).toBe(false);
+    expect(component.obtenerAnexoTresDevolverLaLlamada.emit).toHaveBeenCalledWith(component.anexoTresTablaLista);
+  });
+  
+  it('should run #setAnexoDosLista() and update the list correctly', async () => {
+    const event = [
+      { ENCABEZADO_FRACCION: '001', ENCABEZADO_DESCRIPCION: 'Description 1', estatus: false },
+      { ENCABEZADO_FRACCION: '002', ENCABEZADO_DESCRIPCION: 'Description 2', estatus: false }
+    ];
+    component.anexoDosTablaLista = [
+      { ENCABEZADO_FRACCION: '001', ENCABEZADO_DESCRIPCION: 'Description 1', estatus: false },
+      { ENCABEZADO_FRACCION: '003', ENCABEZADO_DESCRIPCION: 'Description 3', estatus: false }
+    ];
+    component.obtenerAnexoDosDevolverLaLlamada = component.obtenerAnexoDosDevolverLaLlamada || {};
+    component.obtenerAnexoDosDevolverLaLlamada.emit = jest.fn();
+    component.setAnexoDosLista(event);
+    expect(component.anexoDosTablaLista[0].estatus).toBe(true);
+    expect(component.anexoDosTablaLista[1].estatus).toBe(false);
+    expect(component.obtenerAnexoDosDevolverLaLlamada.emit).toHaveBeenCalledWith(component.anexoDosTablaLista);
+  });
+
+  it('should run #eliminarAnexoDos() and remove items without status', async () => {
+    component.anexoDosTablaLista = [
+      { ENCABEZADO_FRACCION: '001', ENCABEZADO_DESCRIPCION: 'Description 1', estatus: true },
+      { ENCABEZADO_FRACCION: '002', ENCABEZADO_DESCRIPCION: 'Description 2', estatus: false }
+    ];
+    component.obtenerAnexoDosDevolverLaLlamada = component.obtenerAnexoDosDevolverLaLlamada || {};
+    component.obtenerAnexoDosDevolverLaLlamada.emit = jest.fn();
+    component.eliminarAnexoDos();
+    expect(component.anexoDosTablaLista.length).toBe(1);
+    expect(component.anexoDosTablaLista[0].ENCABEZADO_FRACCION).toBe('002');
+    expect(component.obtenerAnexoDosDevolverLaLlamada.emit).toHaveBeenCalledWith(component.anexoDosTablaLista);
+  });
+
+  it('should run #eliminarAnexoTres() and remove items without status', async () => {
+    component.anexoTresTablaLista = [
+      { ENCABEZADO_FRACCION: '001', ENCABEZADO_DESCRIPCION: 'Description 1', estatus: true },
+      { ENCABEZADO_FRACCION: '002', ENCABEZADO_DESCRIPCION: 'Description 2', estatus: false }
+    ];
+    component.obtenerAnexoTresDevolverLaLlamada = component.obtenerAnexoTresDevolverLaLlamada || {};
+    component.obtenerAnexoTresDevolverLaLlamada.emit = jest.fn();
+    component.eliminarAnexoTres();
+    expect(component.anexoTresTablaLista.length).toBe(1);
+    expect(component.anexoTresTablaLista[0].ENCABEZADO_FRACCION).toBe('002');
+    expect(component.obtenerAnexoTresDevolverLaLlamada.emit).toHaveBeenCalledWith(component.anexoTresTablaLista);
+  });
+
+  it('should run #agregarAnexoDos() and add a new item correctly', async () => {
+    component.anexoDosFormGroup = component.anexoDosFormGroup || {};
+    component.anexoDosFormGroup.get = jest.fn().mockReturnValue({
+      value: 'test value'
+    });
+    component.anexoDosTablaLista = [];
+    component.obtenerAnexoDosDevolverLaLlamada = component.obtenerAnexoDosDevolverLaLlamada || {};
+    component.obtenerAnexoDosDevolverLaLlamada.emit = jest.fn();
+    component.agregarAnexoDos();
+    expect(component.anexoDosFormGroup.get).toHaveBeenCalledWith('fraccionArancelaria');
+    expect(component.anexoDosFormGroup.get).toHaveBeenCalledWith('descripcion');
+    expect(component.anexoDosTablaLista.length).toBe(1);
+    expect(component.anexoDosTablaLista[0].ENCABEZADO_FRACCION).toBe('test value');
+    expect(component.anexoDosTablaLista[0].ENCABEZADO_DESCRIPCION).toBe('test value');
+    expect(component.anexoDosTablaLista[0].estatus).toBe(false);
+    expect(component.obtenerAnexoDosDevolverLaLlamada.emit).toHaveBeenCalledWith(component.anexoDosTablaLista);
+  });
+
+  it('should run #agregarAnexoTres() and add a new item correctly', async () => {
+    component.anexoTresFormGroup = component.anexoTresFormGroup || {};
+    component.anexoTresFormGroup.get = jest.fn().mockReturnValue({
+      value: 'test value'
+    });
+    component.anexoTresTablaLista = [];
+    component.obtenerAnexoTresDevolverLaLlamada = component.obtenerAnexoTresDevolverLaLlamada || {};
+    component.obtenerAnexoTresDevolverLaLlamada.emit = jest.fn();
+    component.agregarAnexoTres();
+    expect(component.anexoTresFormGroup.get).toHaveBeenCalledWith('fraccionArancelaria');
+    expect(component.anexoTresFormGroup.get).toHaveBeenCalledWith('descripcion');
+    expect(component.anexoTresTablaLista.length).toBe(1);
+    expect(component.anexoTresTablaLista[0].ENCABEZADO_FRACCION).toBe('test value');
+    expect(component.anexoTresTablaLista[0].ENCABEZADO_DESCRIPCION).toBe('test value');
+    expect(component.anexoTresTablaLista[0].estatus).toBe(false);
+    expect(component.obtenerAnexoTresDevolverLaLlamada.emit).toHaveBeenCalledWith(component.anexoTresTablaLista);
   });
 
 });

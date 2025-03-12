@@ -128,7 +128,7 @@ export class AnexoDosYTresComponent {
    * Elimina elementos del Anexo Tres que no tienen estatus
    */
   eliminarAnexoTres(): void {
-    this.anexoTresTablaLista = this.anexoDosTablaLista.filter((idx) => {
+    this.anexoTresTablaLista = this.anexoTresTablaLista.filter((idx) => {
       return !idx.estatus;
     });
     this.obtenerAnexoTresDevolverLaLlamada.emit(this.anexoTresTablaLista);
