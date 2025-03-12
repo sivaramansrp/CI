@@ -8,7 +8,7 @@
                     <div class="form-group">
                         <label class="form-label" for="cantidad">Cantidad*:</label>
                         <input class="form-control" type="text" id="cantidad" formControlName="cantidad" appUppercase
-                            aria-labelledby="cantidad">
+                            aria-labelledby="cantidad"   (change)="setValoresStore(form,'cantidad', 'setCantidad_partidas')" >
                             <div *ngIf="esInvalido('cantidad')" class="text-danger">
                                 <small *ngIf="form.controls['cantidad'].hasError('required')">Cantidad es obligatoria.</small>
                                 <small *ngIf="form.controls['cantidad'].hasError('pattern')">Solo se permiten números.</small>
@@ -20,15 +20,15 @@
                     <div class="form-group">
                         <label class="form-label" for="fraccionArancelariaTIGIE">Fracción Arancelaria TIGIE*:</label>
                         <input class="form-control" type="text" id="fraccionArancelariaTIGIE"
-                            formControlName="fraccionArancelariaTIGIE" aria-labelledby="fraccionArancelariaTIGIE">
+                            formControlName="fraccionArancelariaTIGIE" aria-labelledby="fraccionArancelariaTIGIE" (change)="setValoresStore(form,'fraccionArancelariaTIGIE', 'setFraccionArancelariaTIGIE')">
                             <div *ngIf="esInvalido('fraccionArancelariaTIGIE')" class="text-danger">
                                 <small>Debe seleccionar una fracción.</small>
                             </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <app-catalogo-select [catalogo]="fraccionArancelariaTIGIE"
-                    [required]="true" (change)="fraccionArancelariaTIGIESelection()"></app-catalogo-select>
+                    <app-catalogo-select [catalogo]="fraccionArancelariaTIGIE"  formControlName="fraccionArancelariaTIGIE_TIGIE"
+                    [required]="true" (change)="fraccionArancelariaTIGIESelection(); setValoresStore(form,'fraccionArancelariaTIGIE_TIGIE', 'setFraccionArancelariaTIGIE_TIGIE')"></app-catalogo-select>
                         <div *ngIf="esInvalido('fraccionArancelariaTIGIE')" class="text-danger">
                             <small>Debe seleccionar una fracción.</small>
                         </div>
@@ -39,7 +39,7 @@
                     <div class="form-group">
                         <label class="form-label" for="descripcion">Descripción*:</label>
                         <textarea class="form-control height" rows="3" id="descripcion" formControlName="descripcion"
-                            aria-labelledby="descripcion"></textarea>
+                            aria-labelledby="descripcion" (change)="setValoresStore(form,'descripcion', 'setdescripcion_partidas')"></textarea>
                             <div *ngIf="esInvalido('descripcion')" class="text-danger">
                                 <small *ngIf="form.controls['descripcion'].hasError('required')">Descripción es obligatoria.</small>
                                 <small *ngIf="form.controls['descripcion'].hasError('maxlength')">Máximo 255 caracteres.</small>
@@ -50,7 +50,7 @@
                     <div class="form-group">
                         <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
                         <input class="form-control" type="number" id="valorPartidaUSD" formControlName="valorPartidaUSD"
-                            aria-labelledby="valorPartidaUSD">
+                            aria-labelledby="valorPartidaUSD" (change)="setValoresStore(form,'valorPartidaUSD', 'setvalorPartidaUSD')">
                             <div *ngIf="esInvalido('valorPartidaUSD')" class="text-danger">
                                 <small *ngIf="form.controls['valorPartidaUSD'].hasError('required')">Este campo es obligatorio.</small>
                                 <small *ngIf="form.controls['valorPartidaUSD'].hasError('pattern')">Ingrese un número válido.</small>
