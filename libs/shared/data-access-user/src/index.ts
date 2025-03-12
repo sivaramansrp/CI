@@ -110,3 +110,4 @@ export * from './tramites/components/requerimiento-informacion/requerimiento-inf
 export * from './tramites/components/acuse/acuse.component';
 export * from './core/enums/forma-validators.enum';
 export * from './tramites/directives/Uppercase/uppercase.directive';
+export * from './core/models/301/servicios-pantallas.model';
