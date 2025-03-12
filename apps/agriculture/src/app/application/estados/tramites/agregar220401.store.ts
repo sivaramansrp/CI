@@ -100,6 +100,8 @@ export interface solicitud220401State {
 
   /** Fecha en la que se realizó el pago. */
   fechaPago: string;
+
+  Banco:string;
 }
 
 /**
@@ -192,7 +194,8 @@ export function createInitialState(): solicitud220401State {
     llaveDePago: '',
   
     /** Fecha en la que se realizó el pago. */
-    fechaPago: ''
+    fechaPago: '',
+    Banco:''
   };
   
 }
@@ -545,6 +548,12 @@ export class Agregar220401Store extends Store<solicitud220401State> {
     this.update((state) => ({
       ...state,
       fechaPago,
+    }));
+  }
+  public setBanco(Banco: string) {
+    this.update((state) => ({
+      ...state,
+      Banco,
     }));
   }
 }

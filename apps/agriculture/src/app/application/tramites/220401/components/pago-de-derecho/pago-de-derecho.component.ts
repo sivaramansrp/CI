@@ -31,15 +31,14 @@ import { map, Subject, takeUntil } from 'rxjs';
   standalone: true,
 })
 export class PagoDeDerechoComponent implements OnInit, OnDestroy {
-  FormSolicitud!: FormGroup; // Objeto de formulario reactivo para manejar los datos del formulario
-   private destroyNotifier$: Subject<void> = new Subject();
+  FormSolicitud!: FormGroup; 
+  private destroyNotifier$: Subject<void> = new Subject();
     public solicitudState!: solicitud220401State;
   answer: string = ''; // Respuesta seleccionada por el usuario
   
   public Justificacion!: Catalogo[]; // Opciones disponibles para justificar el pago
   public Banco!: Catalogo[]; // Opciones disponibles para seleccionar el banco
-
-  // eslint-disable-next-line no-empty-function
+   // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder,
     private agregar220401Store: Agregar220401Store,
     private agregarQuery: AgregarQuery,
@@ -70,22 +69,25 @@ this.agregarQuery.selectSolicitud$
     this.FormSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
         exentoDePago: ['No', Validators.required],
-       Justificacion: [this.solicitudState?.llaveDePago || '', [Validators.required]],
+       Justificacion: [this.solicitudState?.Justificacion || '', [Validators.required]],
         nombreImportExport: ['', Validators.required],
         rfcImportExport: ['', Validators.required],
         cadenaDependencia: ['', Validators.required],
-        Banco: ['', Validators.required],
-        llaveDePago:['', Validators.required],
-        fechaPago:['', Validators.required],
+        
+        Banco:[this.solicitudState?.Banco],
+        llaveDePago:[this.solicitudState?.llaveDePago],
+       
+        fechaPago:[this.solicitudState?.fechaPago,[ Validators.required]],
        importePago: ['', Validators.required],
       }),
+     
     });
     
 
     // Se activa la lógica para actualizar campos según el valor inicial de 'exentoDePago'
     this.updateFormFieldsBasedOnExentoDePago('No');
 
-    // Escucha los cambios en el valor de 'exentoDePago' y actualiza los campos del formulario
+     // Escucha los cambios en el valor de 'exentoDePago' y actualiza los campos del formulario
     this.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.valueChanges.subscribe((value) => {
       this.updateFormFieldsBasedOnExentoDePago(value);
     });
@@ -169,7 +171,9 @@ this.agregarQuery.selectSolicitud$
    * @memberof PagoDeDerechoComponent
    */
   // eslint-disable-next-line no-empty-function
-  BancoSeleccion(): void { }
+  BancoSeleccion(): void {
+    
+   }
 
   /**
    * Método para validar el formulario y registrar los valores si el formulario es válido.

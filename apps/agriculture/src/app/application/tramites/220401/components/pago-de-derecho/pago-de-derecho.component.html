@@ -28,7 +28,7 @@
                
 
                 <app-catalogo-select [catalogo]="Justificacion" formControlName="Justificacion" [label]="'Justificación*:'"
-                [required]="true" name="Justificacion"    (change)="setValoresStore(FormSolicitud,'Justificacion', 'setJustificacion')"></app-catalogo-select>
+                [required]="true" name="Justificacion"  (change)="setValoresStore(FormSolicitud,'Justificacion', 'setJustificacion')"></app-catalogo-select>
               </div>
             </div>
           </div>
@@ -53,26 +53,27 @@
               <div class="form-group">
                 
                 <app-catalogo-select [catalogo]="Banco" formControlName="Banco" [label]="'Banco*:'"
-                [required]="true" name="Banco"  (change)="BancoSeleccion()" ></app-catalogo-select>
-               
-             </div>
+                [required]="true" name="Banco"  
+                (change)="setValoresStore(FormSolicitud,'Banco', 'setBanco')" ></app-catalogo-select>
+               </div>
             </div>
-           
-          </div>
+           </div>
   
           <!-- Llave de pago, Fecha de pago, Importe de pago -->
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="llaveDePago">Llave de pago*:</label>
-                <input class="form-control" id="llaveDePago" formControlName="llaveDePago"  type="text">
+                <input class="form-control" id="llaveDePago" formControlName="llaveDePago"  type="text"
+                (change)="setValoresStore(FormSolicitud,'llaveDePago', 'setllaveDePago')">
               </div>
             </div>
   
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="fechaPago">Fecha de pago*:</label>
-                <input class="form-control" id="fechaPago" formControlName="fechaPago"  type="date">
+                <input class="form-control" id="fechaPago" formControlName="fechaPago"  type="date" 
+                (change)="setValoresStore(FormSolicitud,'fechaPago', 'setfechaPago')">
                 
               </div>
             </div>
