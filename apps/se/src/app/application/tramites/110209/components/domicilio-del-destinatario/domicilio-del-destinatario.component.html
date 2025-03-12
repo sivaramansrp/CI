@@ -1,0 +1,78 @@
+<div class="container">
+    <ng-titulo [titulo]="'Domicilio del destinatario'"></ng-titulo>
+    <form [formGroup]="domicilioDelDestinatarioForm">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="form-label width-unset" for="calle">Calle*:</label>
+                    <input type="text" class="form-control" id="calle" formControlName="calle" placeholder="Pruebas" required />
+                    <div *ngIf="
+                    domicilioDelDestinatarioForm.controls['calle'].invalid &&
+                    domicilioDelDestinatarioForm.controls['calle'].touched
+                    " class="text-danger">
+                        Este campo es obligatorio.
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label width-unset" for="numeroLetra">Número y/o letra*:</label>
+                    <input type="text" class="form-control" id="numeroLetra" formControlName="numeroLetra" placeholder="12 Pruebas" required />
+                    <div *ngIf="
+                    domicilioDelDestinatarioForm.controls['numeroLetra'].invalid &&
+                    domicilioDelDestinatarioForm.controls['numeroLetra'].touched
+                    " class="text-danger">
+                        Este campo es obligatorio.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="form-label width-unset" for="ciudad">Ciudad(población,estado o provincia)*:</label>
+                    <input type="text" class="form-control" id="ciudad" formControlName="ciudad" placeholder="lerdo de tejada ver" required />
+                    <div *ngIf="
+                    domicilioDelDestinatarioForm.controls['ciudad'].invalid &&
+                    domicilioDelDestinatarioForm.controls['ciudad'].touched
+                    " class="text-danger">
+                        Este campo es obligatorio.
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label width-unset" for="correoElectronico">Correo electrónico*:</label>
+                    <input type="email" class="form-control" id="correoElectronico" formControlName="correoElectronico"
+                       placeholder="correo@correo.com" required />
+                    <div *ngIf="domicilioDelDestinatarioForm.controls['correoElectronico'].hasError('required') && 
+                    domicilioDelDestinatarioForm.controls['correoElectronico'].touched" class="text-danger">
+                        Este campo es obligatorio.
+                    </div>
+                    <div *ngIf="domicilioDelDestinatarioForm.controls['correoElectronico'].hasError('email') && 
+                    domicilioDelDestinatarioForm.controls['correoElectronico'].touched" class="text-danger">
+                        Por favor, escriba una dirección de correo válida.
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label width-unset" for="fax">Fax:</label>
+                        <input type="text" class="form-control" id="fax" formControlName="fax" placeholder="44323665654"/>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label width-unset" for="telefono">Teléfono:</label>
+                        <input type="number" class="form-control" id="telefono" formControlName="telefono" placeholder="44323665654" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
