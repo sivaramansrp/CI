@@ -6,7 +6,7 @@ import { Catalogo, InputFecha } from '@ng-mf/data-access-user';
 
 import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
-import { OpcionDeRadio } from '../../models/220203/importacion-de-acuicultura.module';
+import { FormularioPago, OpcionDeRadio } from '../../models/220203/importacion-de-acuicultura.module';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
@@ -154,12 +154,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         console.error(error);
       });
   }
+
   setValoresStore(
     form: FormGroup,
     campo: string,
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.importacionAcuiculturaServicio.actualizarFormularioPago as (value: any) => void)(
+    (this.importacionAcuiculturaServicio.actualizarFormularioPago as (value: FormularioPago) => void)(
       VALOR
     );
   }

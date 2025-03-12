@@ -9,6 +9,7 @@ import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuic
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
 import { Subject, takeUntil } from 'rxjs';
+import { DatosMercancia220203 } from '../../models/220203/importacion-de-acuicultura.module';
 
 interface DatoTabla {
   solicitud: string;
@@ -283,7 +284,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     campo: string,
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.importacionDeAcuiculturaServices.actualizarFormaValida as (value: any) => void)(
+    (this.importacionDeAcuiculturaServices.actualizarDatosMercancia as (value: DatosMercancia220203) => void)(
       VALOR
     );
   }

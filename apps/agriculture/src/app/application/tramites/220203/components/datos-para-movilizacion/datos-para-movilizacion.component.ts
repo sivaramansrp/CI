@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
 import { Subject, takeUntil } from 'rxjs';
+import { FormularioMovilizacion } from '../../models/220203/importacion-de-acuicultura.module';
 /**
  * @title Datos para la Movilización (Data for Mobilization)
  * @description Este componente gestiona la información relacionada con la movilización de la acuicultura.
@@ -104,7 +105,7 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
     campo: string,
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.importacionDeAcuiculturaServices.actualizarFormularioMovilizacion as (value: any) => void)(
+    (this.importacionDeAcuiculturaServices.actualizarFormularioMovilizacion as (value: FormularioMovilizacion) => void)(
       VALOR
     );
   }
