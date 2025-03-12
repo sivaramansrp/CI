@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 
 import { PermisoSanitarioRoutingModule } from './permiso-sanitario-routing.module';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
-import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { DatosComponent } from './pages/datos/datos.component';
+import { DatosDeLaComponent } from './components/datosDeLa/datosDeLa.component';
 
 @NgModule({
   declarations: [PantallasComponent, DatosComponent],
@@ -13,7 +14,10 @@ import { DatosComponent } from './pages/datos/datos.component';
     PermisoSanitarioRoutingModule, 
     WizardComponent,
     SolicitanteComponent,
-    BtnContinuarComponent
+    BtnContinuarComponent,
+    AlertComponent,
+    DatosDeLaComponent,
+    
   ],
 })
 export class PermisoSanitarioModule {}
