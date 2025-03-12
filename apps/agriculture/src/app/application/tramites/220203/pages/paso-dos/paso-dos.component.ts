@@ -11,7 +11,6 @@ import { DOCUMENTOSSELECCIONADOS } from '../../constantes/220203/importacion-de-
 import { Subject } from 'rxjs';
 
 
-
 /**
  * Componente para manejar el paso dos en el proceso de importación de acuicultura.
  * Este componente permite seleccionar los tipos de documentos necesarios para el trámite.
@@ -25,31 +24,36 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
   /**
    * Texto utilizado en el componente.
+   * @type {typeof TEXTOS}
    */
   TEXTOS = TEXTOS;
 
   /**
    * Tipo de alerta utilizada.
+   * @type {string}
    */
   infoAlert = 'alert-info';
 
   /**
    * Lista de documentos disponibles para seleccionar.
+   * @type {Catalogo[]}
    */
   catalogoDocumentos: Catalogo[] = [];
 
   /**
    * Lista de documentos seleccionados por el usuario.
+   * @type {Catalogo[]}
    */
   documentosSeleccionados: Catalogo[] = [];
 
   private destroyNotifier$ = new Subject<void>();
+
   /**
    * Constructor que inyecta el servicio de catalogos.
-   * @param catalogosServices Servicio para obtener los catalogos.
+   * @param {CatalogosService} catalogosServices Servicio para obtener los catalogos.
    */
   constructor(private readonly catalogosServices: CatalogosService) {
-    // Constructor intentionally empty as we're only injecting services
+    // El constructor está vacío intencionalmente ya que solo se inyectan servicios.
   }
 
   /**
@@ -63,6 +67,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene el catálogo de los tipos de documentos disponibles para el trámite.
+   * Este método hace una solicitud al servicio de catálogos para cargar los tipos de documentos.
    */
   getTiposDocumentos(): void {
     this.catalogosServices
@@ -74,11 +79,16 @@ export class PasoDosComponent implements OnInit, OnDestroy {
           }
         },
         error: (error): void => {
-          // Handle error properly
+          // Maneja el error apropiadamente
           console.error('Error al cargar los documentos del catálogo:', error);
         },
       });
   }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Limpia las suscripciones y recursos del componente.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

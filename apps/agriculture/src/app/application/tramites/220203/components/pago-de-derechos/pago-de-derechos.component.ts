@@ -8,9 +8,9 @@ import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO } from '../../constantes/220203/im
 
 import { FormularioPago, OpcionDeRadio } from '../../models/220203/importacion-de-acuicultura.module';
 
-import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
-
 import { Subject, takeUntil } from 'rxjs';
+
+import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
 
 /**
@@ -23,35 +23,47 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
- * @description Formulario para el pago de derechos.
- */
+   * @description Formulario para el pago de derechos.
+   * @type {FormGroup}
+   */
   formularioPago!: FormGroup;
+
   /**
    * @description Opciones de radio para la exención de pago.
+   * @type {OpcionDeRadio[]}
    */
   exentoPagoRadio: OpcionDeRadio[] = TIPO_RADIO;
+
   /**
    * @description Valor seleccionado para la exención de pago.
+   * @type {string}
    */
   exentoPagoValor = 'Si';
+
   /**
    * @description Catálogo de justificaciones para la exención de pago.
+   * @type {Catalogo[]}
    */
   justificacionCatalogo: Catalogo[] = [];
+
   /**
    * @description Catálogo de bancos para el pago.
+   * @type {Catalogo[]}
    */
   bancoCatalogo: Catalogo[] = [];
+
   /**
    * @description Configuración para el input de fecha de salida.
+   * @type {InputFecha}
    */
   fechaFinalInput: InputFecha = FECHA_SALIDA_ACUICULTURA;
 
   private destroyNotifier$ = new Subject<void>();
+
   /**
    * @description Constructor que inicializa el servicio de formularios y el servicio de importación de acuicultura.
-   * @param fb FormBuilder para la creación de formularios reactivos.
-   * @param importacionAcuiculturaServicio Servicio para obtener datos de importación.
+   * @param {FormBuilder} fb FormBuilder para la creación de formularios reactivos.
+   * @param {ImportacionDeAcuiculturasService} importacionAcuiculturasServicio Servicio para obtener datos de importación.
    */
   constructor(
     private readonly fb: FormBuilder,
@@ -68,10 +80,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
         () => {
-          this.verificarEstadoDelBoton(); // You can implement this method to handle button state changes
+          this.verificarEstadoDelBoton(); // Se puede implementar este método para manejar cambios en el estado del botón.
         },
         (error) => {
-          console.error('Error during form status changes:', error);
+          console.error('Error durante los cambios de estado del formulario:', error);
         }
       );
 
@@ -98,8 +110,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * @description Cambia el valor de un campo del formulario.
-   * @param nombreControl Nombre del campo del formulario.
-   * @param valor Nuevo valor a asignar.
+   * @param {string} nombreControl Nombre del campo del formulario.
+   * @param {string} valor Nuevo valor a asignar.
    */
   cambioValorRadio(nombreControl: string, valor: string): void {
     this.formularioPago.patchValue({
@@ -111,7 +123,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * @description Actualiza la fecha de pago en el formulario.
-   * @param nuevoValor Nueva fecha de pago.
+   * @param {string} nuevoValor Nueva fecha de pago.
    */
   cambioFechaFinal(nuevoValor: string): void {
     this.formularioPago.patchValue({
@@ -132,6 +144,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * @description Verifica si el formulario es válido y actualiza el estado del botón.
+   */
   verificarEstadoDelBoton() {
     const DATOS = {
       pagoDeformaValida: false,
@@ -147,7 +162,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   private obtenerListaJustificacion(): void {
     this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json')
-      .pipe(takeUntil(this.destroyNotifier$)) // Use takeUntil
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.justificacionCatalogo = data.data as Catalogo[];
       }, (error) => {
@@ -155,17 +170,22 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * @description Actualiza el valor de un campo en el formulario y lo guarda en el servicio de importación de acuicultura.
+   * @param {FormGroup} form El formulario con el campo que se está actualizando.
+   * @param {string} campo El nombre del campo que se actualizará.
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.importacionAcuiculturaServicio.actualizarFormularioPago as (value: FormularioPago) => void)(
-      VALOR
-    );
+    (this.importacionAcuiculturaServicio.actualizarFormularioPago as (value: FormularioPago) => void)(VALOR);
   }
 
-
+  /**
+   * @description Método que se ejecuta cuando el componente es destruido.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

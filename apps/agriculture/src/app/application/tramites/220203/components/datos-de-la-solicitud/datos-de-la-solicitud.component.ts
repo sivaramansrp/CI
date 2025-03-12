@@ -44,24 +44,34 @@ interface FilaSolicitud {
 })
 export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   private destroyNotifier$ = new Subject<void>();
+
   /**
    * @description Mensaje que se muestra en una alerta al hacer doble clic.
+   * @type {string}
    */
   alertMessage: string = MENSAJE_DOBLE_CLIC;
+
   /**
    * @description Tipo de selección para la tabla principal.
+   * @type {TablaSeleccion}
    */
   tipoSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
   /**
    * @description Tipo de selección para la tabla de solicitudes.
+   * @type {TablaSeleccion}
    */
   tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
+
   /**
    * @description Datos de la tabla de solicitudes.
+   * @type {DatoTabla[]}
    */
   cuerpoTablasoli: DatoTabla[] = [];
+
   /**
    * @description Configuración de columnas para la tabla principal.
+   * @type {ConfiguracionColumna<Fila>[]}
    */
   configuracionColumnas: ConfiguracionColumna<Fila>[] = [
     { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
@@ -72,9 +82,16 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
     { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
   ];
+
+  /**
+   * @description Datos de la tabla de detalles.
+   * @type {Fila[]}
+   */
   cuerpoTablaFila: Fila[] = [];
+
   /**
    * @description Configuración de columnas para la tabla de solicitudes.
+   * @type {ConfiguracionColumna<FilaSolicitud>[]}
    */
   configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
     { encabezado: 'Solicitud', clave: (fila) => fila.solicitud, orden: 1 },
@@ -83,79 +100,119 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     { encabezado: 'Cantidad', clave: (fila) => fila.cantidad.toString(), orden: 4 },
     { encabezado: 'Proveedor', clave: (fila) => fila.proveedor, orden: 5 },
   ];
+
   /**
    * @description Indica si la sección es colapsable.
+   * @type {boolean}
    */
   colapsable: boolean = false;
+
   /**
    * @description Grupo de formularios para los datos de la mercancía.
+   * @type {FormGroup}
    */
   datosMercanciaFormGroup!: FormGroup;
+
   /**
    * @description Lista de catálogos para las aduanas de ingreso.
+   * @type {Catalogo[]}
    */
   aduanaDeIngresoList: Catalogo[] = [];
+
   /**
    * @description Lista de catálogos para las oficinas de inspección.
+   * @type {Catalogo[]}
    */
   oficinaInspeccionList: Catalogo[] = [];
+
   /**
    * @description Lista de catálogos para los puntos de inspección.
+   * @type {Catalogo[]}
    */
   puntoInspeccionList: Catalogo[] = [];
+
   /**
    * @description Lista de catálogos para los tipos de requisitos.
+   * @type {Catalogo[]}
    */
   tipoRequisitoList: Catalogo[] = [];
+
   /**
    * @description Lista de catálogos para las fracciones arancelarias.
+   * @type {Catalogo[]}
    */
   arancelariaList: Catalogo[] = [];
+
   /**
    * @description Lista de catálogos para los regímenes.
+   * @type {Catalogo[]}
    */
   regimenList: Catalogo[] = [];
+
   /**
    * @description Lista de catálogos para los NICO (Números de Identificación Comercial).
+   * @type {Catalogo[]}
    */
   nicoList: Catalogo[] = [];
+
   /**
    * @description Lista de catálogos para las UMC (Unidades de Medida Comercial).
+   * @type {Catalogo[]}
    */
   umcList: Catalogo[] = [];
+
   /**
    * @description Lista de catálogos para los usos.
+   * @type {Catalogo[]}
    */
   usoList: Catalogo[] = [];
+
   /**
    * @description Lista de catálogos para los países de origen.
+   * @type {Catalogo[]}
    */
   paisDeOrigenList: Catalogo[] = [];
+
   /**
    * @description Lista de catálogos para los países de procedencia.
+   * @type {Catalogo[]}
    */
   paisDeProcedenciaList: Catalogo[] = [];
+
   /**
    * @description Encabezados de la tabla de detalles.
+   * @type {string[]}
    */
   detalleTable: string[] = ["Nombre científico"];
+
   /**
    * @description Datos de la tabla de detalles.
+   * @type {string[]}
    */
   detallecuerpoTabla: string[] = [];
+
   /**
    * @description Datos de la tabla principal.
+   * @type {FilaSolicitud[]}
    */
   cuerpoTabla: FilaSolicitud[] = [];
+
+  /**
+   * @description Datos de la tabla de solicitudes.
+   * @type {FilaSolicitud[]}
+   */
   cuerpoTablaSolicitud: FilaSolicitud[] = [];
+
   /**
    * @description Indica si se debe mostrar la barra de desplazamiento.
+   * @type {boolean}
    */
   myScrollbarValue: boolean = true;
+
   /**
    * @description Constructor del componente.
-   * @param fb Servicio para construir formularios.
-   * @param importacionDeAcuiculturaServices Servicio para obtener datos de catálogos.
+   * @param {FormBuilder} fb Servicio para construir formularios.
+   * @param {ImportacionDeAcuiculturaService} importacionDeAcuiculturaServices Servicio para obtener datos de catálogos.
    */
   constructor(private readonly fb: FormBuilder, private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService) {
     this.createFromGroup();
@@ -165,6 +222,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     this.obtenerCatalogosUMT();
     this.obtenerCatalogosUSO();
   }
+
   /**
    * @description Crea el grupo de formularios para los datos de la mercancía.
    */
@@ -201,8 +259,9 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
       detalles: this.fb.group({
         nombreCientifico: ['']
       })
-    })
+    });
   }
+
   ngOnInit(): void {
     this.datosMercanciaFormGroup.statusChanges
       .pipe(takeUntil(this.destroyNotifier$))
@@ -212,9 +271,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
         console.error(error);
       });
   }
+
   /**
-  * @description Obtiene los datos del catálogo de transporte.
-  */
+   * @description Obtiene los datos del catálogo de transporte.
+   */
   obtenerCatalogosTransporte() {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
       .pipe(takeUntil(this.destroyNotifier$))
@@ -225,16 +285,23 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
         console.error(error);
       });
   }
+
+  /**
+   * @description Obtiene los datos del catálogo de arancelaria.
+   */
   obtenerCatalogosArancelaria() {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.oficinaInspeccionList = data.data as Catalogo[];
-        this.oficinaInspeccionList = data.data as Catalogo[];
       }, (error) => {
         console.error(error);
       });
   }
+
+  /**
+   * @description Obtiene los datos del catálogo de UMC.
+   */
   obtenerCatalogosUMC() {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('aduana_de_ingreso.json')
       .pipe(takeUntil(this.destroyNotifier$))
@@ -245,6 +312,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
         console.error(error);
       });
   }
+
+  /**
+   * @description Obtiene los datos del catálogo de UMT.
+   */
   obtenerCatalogosUMT() {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('empresa.json')
       .pipe(takeUntil(this.destroyNotifier$))
@@ -256,6 +327,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
         console.error(error);
       });
   }
+
+  /**
+   * @description Obtiene los datos del catálogo de USO.
+   */
   obtenerCatalogosUSO() {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('oficina_de_inspeccion.json')
       .pipe(takeUntil(this.destroyNotifier$))
@@ -267,18 +342,32 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
         console.error(error);
       });
   }
+
+  /**
+   * @description Muestra o esconde la sección colapsable.
+   */
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
   }
+
+  /**
+   * @description Verifica el estado del formulario y habilita o deshabilita el botón según su validez.
+   */
   verificarEstadoDelBoton() {
     const DATOS = {
       dataDeLaSolicitud: false,
-    }
+    };
     if (this.datosMercanciaFormGroup.valid) {
-      DATOS.dataDeLaSolicitud = true
+      DATOS.dataDeLaSolicitud = true;
     }
     this.importacionDeAcuiculturaServices.actualizarFormaValida(DATOS);
   }
+
+  /**
+   * @description Guarda los valores en el store.
+   * @param form El formulario que contiene los valores.
+   * @param campo El campo a guardar en el store.
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
@@ -288,6 +377,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
       VALOR
     );
   }
+
+  /**
+   * @description Método que se ejecuta al destruir el componente.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
