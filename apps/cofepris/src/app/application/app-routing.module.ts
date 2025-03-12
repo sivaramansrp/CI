@@ -7,7 +7,15 @@ const ROUTES: Routes = [
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
+  },
+  {
+    path: 'permiso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260215/permiso-sanitario-importacion.module').then(
+        (m) => m.PermisoSanitarioImportacionModule
+      ),
   }
+
 ];
 
 @NgModule({
@@ -15,3 +23,4 @@ const ROUTES: Routes = [
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
+
