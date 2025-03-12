@@ -5,10 +5,10 @@ FROM node:22-slim AS node
 WORKDIR /app
 
 # Install dependencies
-COPY package*.json ./
-COPY tsconfig.base.json nx.json ./
 COPY . .
-RUN npm ci
+# RUN npm ci
+RUN npm install --force
+RUN npm i webpack@5.91.0
 
 # Install Nx CLI globally
 RUN npm install -g @nrwl/cli

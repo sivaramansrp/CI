@@ -8,7 +8,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
+import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
+
+import { Router } from '@angular/router';
 
 /**
  * Componente para el formulario de mercancías seleccionadas.
@@ -24,7 +27,7 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './mercancias-seleccionadas-form.component.html',
   styleUrl: './mercancias-seleccionadas-form.component.scss',
 })
-export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy{
+export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
   /**
    * Opciones para la unidad de medida de comercialización.
    * MercanciasSeleccionadasFormComponent
@@ -43,14 +46,31 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy{
    */
   modifydatosdelcertificado: FormGroup;
 
+  /**
+   * Subject para la destrucción del componente.
+   * MercanciasSeleccionadasFormComponent
+   */
   private destroyed$ = new Subject<void>();
+
+  /**
+   * Datos recibidos para la tabla.
+   * MercanciasSeleccionadasFormComponent
+   */
+  receivedData: any;
 
   /**
    * Constructor del componente.
    *
    * Constructor de formularios.
+   * Servicio para obtener datos del certificado técnico de Japón.
+   * Query para el trámite 110218.
    */
-  constructor(private fb: FormBuilder, private service: CertificadoTecnicoJaponService) {
+  constructor(
+    private fb: FormBuilder,
+    private service: CertificadoTecnicoJaponService,
+    private tramite110218Query: Tramite110218Query,
+    private router: Router
+  ) {
     this.modifydatosdelcertificado = this.fb.group({
       nombreComercial: [''],
       nombreIngles: [''],
@@ -65,45 +85,73 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy{
     });
   }
 
+  /**
+   * Método de inicialización del componente.
+   * MercanciasSeleccionadasFormComponent
+   */
   ngOnInit(): void {
     this.unidadMedidaData();
     this.tipoDeFactura();
-    this.tableDataValues()
+
+    this.tramite110218Query.tableDataDatos$.subscribe((data) => {
+      this.receivedData = data;
+      console.log('Received data:', this.receivedData[0].nombreComercial);
+    });
+
+    this.tableDataValues();
   }
 
-  unidadMedidaData():void{
-    this.service.getUnidadMedida().subscribe(
-      (data:any) => {
-        this.unidaddeMedidadeComercializacionOptions = data;
-      }
-    );
+  /**
+   * Obtiene los datos de la unidad de medida desde el servicio.
+   * MercanciasSeleccionadasFormComponent
+   */
+  unidadMedidaData(): void {
+    this.service.getUnidadMedida().subscribe((data: any) => {
+      this.unidaddeMedidadeComercializacionOptions = data;
+    });
   }
 
-  tipoDeFactura():void{
-    this.service.getTipodeFctura().subscribe(
-      (data:any) => {
-        this.tipodeFacturaOptions = data;
-      }
-    );
+  /**
+   * Obtiene los datos del tipo de factura desde el servicio.
+   * MercanciasSeleccionadasFormComponent
+   */
+  tipoDeFactura(): void {
+    this.service.getTipodeFctura().subscribe((data: any) => {
+      this.tipodeFacturaOptions = data;
+    });
   }
 
-  tableDataValues():void{
-    this.service.getDatosCertificado().pipe(takeUntil(this.destroyed$)).subscribe(
-      (data:any[])=>{
-        this.modifydatosdelcertificado.patchValue({
-          nombreComercial:data[0].nombreComercial,
-          nombreIngles: data[0].nombreIngles,
-          cantidad:'100',
-          fechadelaFactura: '2024-11-13'        
-        }
-       
-        )
-      }
-    )
+  /**
+   * Establece los valores de los datos de la tabla en el formulario.
+   * MercanciasSeleccionadasFormComponent
+   */
+  tableDataValues(): void {
+    if (this.receivedData) {
+      this.modifydatosdelcertificado.patchValue({
+        nombreComercial: this.receivedData[0].nombreComercial,
+        nombreIngles: this.receivedData[0].nombreIngles,
+        cantidad: '100',
+        fechadelaFactura: '2024-11-13',
+      });
+    }
   }
-  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+
+  /**
+   * Método de destrucción del componente.
+   * MercanciasSeleccionadasFormComponent
+   */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+
+/**
+ * Redirige al usuario a la pantalla de validación del certificado técnico de Japón.
+ * 
+ * Este método se ejecuta cuando la modificación del formulario se completa exitosamente.
+ * Utiliza el servicio de enrutamiento (`Router`) para navegar a la página correspondiente.
+ */
+modificarSuccess(): void {
+  this.router.navigate(['pago/certificado-tecnico-japon/validar-certificado-tecnico-japon']);
+}
 }
