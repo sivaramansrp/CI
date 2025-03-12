@@ -4,7 +4,7 @@
 
 import { CommonModule } from '@angular/common';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from "@ng-mf/data-access-user";
@@ -13,6 +13,7 @@ import { MercanciasService } from '../../services/mercancias/mercancias.service'
 import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
+import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 /**
  * Este componente maneja el formulario de registro de mercancía.
  */
@@ -51,6 +52,12 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
 
   /**
+   * Evento que se emite cuando se modifica la mercancía.
+   * @type {EventEmitter<boolean>}
+   */
+  @Output() modificarEventMercancia: EventEmitter<boolean> = new EventEmitter<boolean>(false);
+
+  /**
    * Constructor del componente.
    * Servicio para la creación de formularios reactivos y para obtener datos de mercancías.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
@@ -58,7 +65,7 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
    * @param {Router} router - Servicio para la navegación.
    * @param {Tramite110209Query} tramite110209Query - Servicio para consultar el estado del trámite.
    */
-  constructor(private fb: FormBuilder, private service: MercanciasService, private router: Router, private tramite110209Query: Tramite110209Query) {
+  constructor(private fb: FormBuilder, private service: MercanciasService, private router: Router, private tramite110209Query: Tramite110209Query,private tramite110209Store:Tramite110209Store) {
     this.mercanciaFrom = this.fb.group({
       nombreComercial: [{ value: '', disabled: true }],
       nombreIngles: [{ value: '', disabled: true }],
@@ -121,17 +128,41 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
           nombreComercial: data.mercanciasSeleccionadas.nombreComercial,
           nombreIngles: data.mercanciasSeleccionadas.nombreIngles,
           cantidad: 21343,
-          fechaFactura: '2025-02-25'
+          fechaFactura: '2025-02-25',
+          descripcion:data.descripcion,
+          marca:data.marca,
+          valorMercancia:data.valorMercancia,
+          unidadMedida:data.unidadMedida,
+          numeroFactura:data.numeroFactura,
+          tipoFactura:data.tipoFactura
         });
       }
     );
   }
 
+
+    /**
+     * Sets the value in the Tramite110209Store if the specified form field is valid.
+     *
+     * @param {FormGroup} form - The form group containing the field.
+     * @param {string} campo - The name of the field to check and retrieve the value from.
+     * @param {keyof Tramite110209Store} metodoNombre - The name of the method in Tramite110209Store to call with the field's value.
+     * @returns {void}
+     */
+    setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110209Store): void {
+      if(form.get(campo)?.valid){
+      const VALOR = form.get(campo)?.value;
+      (this.tramite110209Store[metodoNombre] as (value: unknown) => void)(VALOR);
+      }
+    }
+  
+
   /**
-   * Navega a la ruta especificada.
+   * Navega a la página anterior y emite un evento de modificación de mercancía.
    */
-  onNavigate(): void {
-    this.router.navigate(['/se/certificado-sgp/solicitud']);
+  regresar(): void {
+    //this.router.navigate(['/se/certificado-sgp/solicitud']);
+    this.modificarEventMercancia.emit(true);
   }
 
   /**

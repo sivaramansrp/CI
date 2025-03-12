@@ -2,7 +2,7 @@
  * Componente que representa la página para capturar la solicitud.
  */
 
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 /**
  * Componente que representa la página para capturar la solicitud.
@@ -16,12 +16,15 @@ import { Component } from '@angular/core';
  * Componente que representa la página para capturar la solicitud.
  */
 export class CapturarSolicitudComponent {
+  /**
+   * Índice del tab seleccionado.
+   */
+  @Input() indice: number = 1;
 
   /**
-   * Índice del tab actual.
-   * @type {number}
+   * Evento que se emite cuando se modifica la captura.
    */
-  indice: number = 1;
+  @Output() modificarEventCapturar: EventEmitter<boolean> = new EventEmitter<boolean>(true);
 
   /**
    * Selecciona el tab especificado por el índice.

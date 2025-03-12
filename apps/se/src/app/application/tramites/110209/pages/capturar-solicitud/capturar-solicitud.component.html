@@ -33,7 +33,7 @@
               <app-transporte></app-transporte>
         }
         @case (5) {
-           <app-datos-del-certificado></app-datos-del-certificado>
+           <app-datos-del-certificado (modificarEventCertificado)="modificarEventCapturar.emit($event)"></app-datos-del-certificado>
         }
         }
       </ng-container>

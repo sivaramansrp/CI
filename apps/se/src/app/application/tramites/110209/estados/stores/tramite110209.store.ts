@@ -16,6 +16,13 @@ export interface Tramite110209State {
   puertoDeDesembarque: string;
   observaciones: string;
   mercanciasSeleccionadas: Mercancias;
+  descripcion:string;
+  marca:string;
+  valorMercancia:string;
+  unidadMedida:string;
+  numeroFactura:string;
+  tipoFactura:string;
+  
 }
 
 /**
@@ -24,20 +31,26 @@ export interface Tramite110209State {
  */
 export function createInitialState(): Tramite110209State {
   return {
-    medioDeTransporte: '',
-    rutaCompleta: '',
-    puertoDeEmbarque: '',
-    puertoDeDesembarque: '',
-    observaciones: '',
-    mercanciasSeleccionadas: {
-      numeroDeOrden: '',
-      fraccionArancelaria: '',
-      nombreTecnico: '',
-      nombreComercial: '',
-      nombreIngles: '',
-      numeroDeRegistro: ''
-    }
-  };
+  medioDeTransporte: '',
+  rutaCompleta: '',
+  puertoDeEmbarque: '',
+  puertoDeDesembarque: '',
+  observaciones: '',
+  mercanciasSeleccionadas: {
+    numeroDeOrden: '',
+    fraccionArancelaria: '',
+    nombreTecnico: '',
+    nombreComercial: '',
+    nombreIngles: '',
+    numeroDeRegistro: ''
+  },
+  descripcion: '',
+  marca: '',
+  valorMercancia: '',
+  unidadMedida: '',
+  numeroFactura: '',
+  tipoFactura: ''
+};
 }
 
 @Injectable({
@@ -120,4 +133,71 @@ export class Tramite110209Store extends Store<Tramite110209State> {
       mercanciasSeleccionadas,
     }));
   }
+
+  /**
+   * Establece la descripción en el estado.
+   * @param {string} descripcion - La descripción.
+   */
+  public setDescripcion(descripcion: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcion,
+    }));
+  }
+
+  /**
+   * Establece la marca en el estado.
+   * @param {string} marca - La marca.
+   */
+  public setMarca(marca: string): void {
+    this.update((state) => ({
+      ...state,
+      marca,
+    }));
+  }
+
+  /**
+   * Establece el valor de la mercancía en el estado.
+   * @param {string} valorMercancia - El valor de la mercancía.
+   */
+  public setValorMercancia(valorMercancia: string): void {
+    this.update((state) => ({
+      ...state,
+      valorMercancia,
+    }));
+  }
+
+  /**
+   * Establece la unidad de medida en el estado.
+   * @param {string} unidadMedida - La unidad de medida.
+   */
+  public setUnidadMedida(unidadMedida: string): void {
+    this.update((state) => ({
+      ...state,
+      unidadMedida,
+    }));
+  }
+
+  /**
+   * Establece el número de factura en el estado.
+   * @param {string} numeroFactura - El número de factura.
+   */
+  public setNumeroFactura(numeroFactura: string): void {
+    this.update((state) => ({
+      ...state,
+      numeroFactura,
+    }));
+  }
+
+  /**
+   * Establece el tipo de factura en el estado.
+   * @param {string} tipoFactura - El tipo de factura.
+   */
+  public setTipoFactura(tipoFactura: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoFactura,
+    }));
+  }
+
 }

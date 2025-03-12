@@ -3,7 +3,7 @@
  * Este componente maneja el formulario de datos del certificado.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -67,6 +67,12 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    * @type {Mercancias}
    */
   mercanciasSeleccionadas!: Mercancias;
+
+  /**
+   * Evento que se emite para modificar el certificado.
+   * @type {EventEmitter<boolean>}
+   */
+  @Output() modificarEventCertificado: EventEmitter<boolean> = new EventEmitter<boolean>(false);
 
 
   /**
@@ -145,11 +151,18 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Navega a la ruta de registro de mercancía y establece las mercancías seleccionadas en el store.
+   * Navega a una nueva ruta y emite un evento para modificar el certificado.
+   * 
+   * Este método realiza las siguientes acciones:
+   * 1. Establece las mercancías seleccionadas en el store `tramite110209Store`.
+   * 2. Emite un evento `modificarEventCertificado` con el valor `false`.
+   * 
+   * @returns {void}
    */
-  onNavigate(): void {  
+  navegar(): void {  
     this.tramite110209Store.setMercanciasSeleccionadas(this.mercanciasSeleccionadas);
-    this.router.navigate(['/se/certificado-sgp/registro-de-mercancia']);
+    //this.router.navigate(['/se/certificado-sgp/registro-de-mercancia']);
+    this.modificarEventCertificado.emit(false);
   }
 
 

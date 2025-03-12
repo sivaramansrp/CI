@@ -48,6 +48,32 @@ export class SolicitudPageComponent {
     txtBtnSig: 'Continuar',
   };
 
+
+  
+  /**
+   * Indica si se debe mostrar el formulario de mercancía.
+   * @type {boolean}
+   */
+  showMercanciaForm: boolean = true;
+
+  /**
+   * Índice del tap capturado.
+   * @type {number}
+   */
+  capturarTapIndice=1;
+
+
+  /**
+   * Muestra u oculta el formulario de mercancía y captura el índice de la pestaña.
+   * 
+   * @param $event - Indica si se debe mostrar (true) u ocultar (false) el formulario de mercancía.
+   * @param ind - Índice de la pestaña que se está capturando.
+   * @returns {void}
+   */
+  showMercancia($event: boolean,tapIndice:number):void {
+    this.showMercanciaForm=$event;
+    this.capturarTapIndice=tapIndice
+  }
   /**
    * Actualiza el índice del paso actual y navega al siguiente o anterior paso.
    * @param {any} e - Evento que contiene el valor del índice y la acción a realizar.
