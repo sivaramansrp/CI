@@ -19,9 +19,7 @@ describe('CapturarFacturasComponent', () => {
       imports: [
         HttpClientTestingModule,
         ReactiveFormsModule,
-        CapturarFacturasComponent
-      ],
-      declarations: [
+        CapturarFacturasComponent,
         TableComponent,
         TituloComponent,
         SelectCatalogosComponent,

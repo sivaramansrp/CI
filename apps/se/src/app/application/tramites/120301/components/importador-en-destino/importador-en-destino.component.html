@@ -6,19 +6,18 @@
       <div class="row mt-5">
         <div class="col-md-6">
           <app-catalogo-select
-            [label]="'Tipo'"
-            [catalogo]="tipoData"
-            formControlName="tipo"
-            [required]="true"
-            name="tipo"
-            formControlName="tipo"
-            (change)="
-              setValoresStore(
-              importadorForm,
-              'tipo',
-              'setTipo'
-              )"
-          ></app-catalogo-select>
+                    [catalogo]="tipoData"
+                    formControlName="tipo"
+                    [label]="'Tipo*:'"
+                    [required]="true"
+                    name="tipo"
+                    (change)="
+                      setValoresStore(
+                      importadorForm,
+                      'tipo',
+                      'setTipo'
+                      )"
+                  ></app-catalogo-select>
         </div>
         <div class="col-md-6">
           <div class="form-group">

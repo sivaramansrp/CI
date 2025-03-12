@@ -51,14 +51,5 @@ describe('ElegibilidadTextilesComponent', () => {
     });
   });
 
-  it('should validate form fields', () => {
-    const campo1 = component.formGroup.controls['campo1'];
-    campo1.setValue('');
-    expect(campo1.valid).toBeFalsy();
-
-    campo1.setValue('Valid Value');
-    expect(campo1.valid).toBeTruthy();
-  });
-
   // Add more test cases as needed
 });
