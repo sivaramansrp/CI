@@ -1,11 +1,16 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable sort-imports */
 import { Component, OnInit } from '@angular/core';
-import { BtnContinuarComponent, Catalogo } from '@ng-mf/data-access-user';
+import {BtnContinuarComponent, Catalogo } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AnexarPageComponent } from '../../components/anexar-page/anexar-page.component';
 import { FiltrarArchivosDigitalizacionComponent } from '../../components/filtrar-archivos-digitalizacion/filtrar-archivos-digitalizacion.component';
@@ -17,9 +22,16 @@ import { FiltrarArchivosDigitalizacionComponent } from '../../components/filtrar
   selector: 'paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
-   standalone: true,
-          imports: [BtnContinuarComponent,FormsModule,ReactiveFormsModule,CommonModule,AnexarPageComponent,FiltrarArchivosDigitalizacionComponent],
-    
+  standalone: true,
+  imports: [
+    BtnContinuarComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    AnexarPageComponent,
+    // AnexarDocumentosComponent,
+    FiltrarArchivosDigitalizacionComponent,
+  ],
 })
 export class PasoDosComponent implements OnInit {
   /**

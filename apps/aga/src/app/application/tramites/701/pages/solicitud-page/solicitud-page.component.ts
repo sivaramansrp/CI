@@ -10,7 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { SeccionQuery } from '../../../../estados/queries/seccion.query';
+import { SeccionQuery } from './estados/queries/seccion.query';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
@@ -34,6 +34,7 @@ interface AccionBoton {
   templateUrl: './solicitud-page.component.html',
   styles: ``,
    standalone: true,
+   
     imports: [BtnContinuarComponent,CommonModule,FormsModule,PasoTresComponent,PasoDosComponent,PasoUnoComponent,ReactiveFormsModule,WizardComponent],
 })
 export class SolicitudPageComponent implements OnInit {

@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable sort-imports */
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, CatalogosService } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { AnexarPageComponent } from './components/anexar-page/anexar-page.component';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
@@ -19,13 +19,13 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 import { SharedModule } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { RegistroDigitalizarDocumentosService } from './services/registro-digitalizar-documentos.service';
 
 
 @NgModule({
   declarations: [
    
-  
+    
    ],
   imports: [
     AnexarPageComponent,
@@ -46,8 +46,12 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
     TituloComponent,
     WizardComponent,
     SharedModule,
-    TablaDinamicaComponent
+    
+    
+  
+
+    
   ],
-  providers: [ToastrService],
+  providers: [ToastrService,CatalogosService,RegistroDigitalizarDocumentosService],
 })
 export class RegistroDigitalizarDocumentosModule {}

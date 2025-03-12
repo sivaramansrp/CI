@@ -23,12 +23,11 @@ import { TEXTOS } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
-import { RegistroDigitalizarDocumentosService } from '../../services/701/registro-digitalizar-documentos.service';
+import { RegistroDigitalizarDocumentosService } from '../../services/registro-digitalizar-documentos.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+
 /**
  * Constante de texto de alerta para terceros.
  */
@@ -55,7 +54,6 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
     FormsModule,
     ReactiveFormsModule,
     AlertComponent,
-    TablaDinamicaComponent,
     CatalogoSelectComponent,
   ],
 })
@@ -136,11 +134,10 @@ export class AnexarPageComponent implements OnInit {
    * URL de vista previa del documento.
    */
   URLdevistapreviadeldocumento: SafeResourceUrl | null = null;
-
+  disponiblesDocumentos!: CatalogosSelect;
   /**
    * Documentos disponibles para selección.
    */
-  disponiblesDocumentos: any[] = ['Document A'];
 
   /**
    * Documentos seleccionados por el usuario.
@@ -186,6 +183,7 @@ export class AnexarPageComponent implements OnInit {
   ngOnInit(): void {
     this.getTiposDocumentos();
     this.getTipoDocumento();
+    this.getDocumentos();
   }
 
   /**
@@ -222,6 +220,20 @@ export class AnexarPageComponent implements OnInit {
     });
   }
 
+  getDocumentos(): void {
+    this.registrodigitalizar.getDocumentos().subscribe((resp) => {
+      if (resp.code === 200) {
+        const response = resp.data;
+
+        this.disponiblesDocumentos = {
+          labelNombre: '',
+          required: false,
+          primerOpcion: '--Adjunta nuveo documento',
+          catalogos: response,
+        };
+      }
+    });
+  }
   /**
    * Verifica si todos los documentos han sido seleccionados.
    * @returns Verdadero si todos los documentos han sido seleccionados, falso en caso contrario.
@@ -232,9 +244,9 @@ export class AnexarPageComponent implements OnInit {
 
   /**
    * Maneja la selección de un documento.
-   * @param index Índice del documento seleccionado.
+   * @param _index Índice del documento seleccionado.
    */
-  enDocumentSelect(index: number): void {}
+  enDocumentSelect(_index: number): void {}
 
   /**
    * Muestra la vista previa del documento.
@@ -324,8 +336,6 @@ export class AnexarPageComponent implements OnInit {
     this.mostrarTablaArchivosSubidos = false;
     this.procesoCompletado = true;
   }
-
-  
 
   ngOnDestroy(): void {
     if (this.getTiposDocumentosSubscription) {

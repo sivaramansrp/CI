@@ -1,3 +1,7 @@
+/* eslint-disable dot-notation */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable @nx/enforce-module-boundaries */
@@ -13,9 +17,8 @@ import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
-import { Observable } from 'rxjs';
-import { RegistroDigitalizarDocumentosService } from '@ng-mf/data-access-user';
-import { TipoDocumento } from '../../models/701/tipo-documento.model';
+import { RegistroDigitalizarDocumentosService } from '../../services/registro-digitalizar-documentos.service';
+import { TipoDocumento } from '../../models/tipo-documento.model';
 
 /**
  * Componente para filtrar archivos de digitalización.
@@ -37,6 +40,7 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
    * Lista de documentos tipo.
    */
   TipoDocumento: TipoDocumento[] = [];
+
 
   /**
    * Documento seleccionado.
@@ -66,6 +70,7 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
    * Lista de documentos específicos.
    */
   documentosEspecificos: TipoDocumento[] = [];
+ 
 
   /**
    * Constructor del componente.
@@ -80,6 +85,7 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
     private toastr: ToastrService,
     private http: HttpClient,
     private registrodigitalizar: RegistroDigitalizarDocumentosService,
+    
   ) {
     this.tipoDocumentosForm = this.fb.group({
       solicitud: this.fb.group({
@@ -121,8 +127,8 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
    * Obtiene los documentos desde un archivo JSON.
    * @returns {Observable<TipoDocumento[]>} Un observable con la lista de documentos.
    */
-  getDocumentos(): Observable<TipoDocumento[]> {
-    console.log("hi");
+  getDocumentos() {
+   
      return this.registrodigitalizar.getDocumentoSelect();
   
   }
@@ -177,17 +183,14 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
    */
   addDoctoEspecifico(): void {
     if (this.documentoSeleccionado) {
-      
-      this.http
-    .get<TipoDocumento[]>(
-     './shared/theme/assets/json/701/documento-select.json'
-    )
+    this.registrodigitalizar.getDocumentoSelect()
+
         .subscribe({
           next: (data) => {
 
             const selectedDocument = data.find(
               (doc) =>
-                doc.tipoDocumento?.descripcion ===
+                doc['tipoDocumento']?.descripcion ===
                 this.documentoSeleccionado?.descripcion
             );
             if (selectedDocument) {
