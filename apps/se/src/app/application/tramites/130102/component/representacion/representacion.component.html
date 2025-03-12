@@ -7,7 +7,7 @@
           [catalogo]="entidadFederativaLista"
           [label]="'Entidad federativa'"
           [required]="true"
-          (selectionChange)="fetchEntidadFederativa($event)"
+          (selectionChange)="fetchEntidadFederativa($event);setValoresStore(frmRepresentacion,'entidad', 'setEntidad')"
           [placeholder]="'Seleccione un valor'"
           formControlName="entidad"
         ></app-catalogo-select>
@@ -29,7 +29,7 @@
           [catalogo]="representacionFederalLista"
           [label]="'Representación federal'"
           [required]="true"
-          (selectionChange)="fetchRepresentacionFederal($event)"
+          (selectionChange)="fetchRepresentacionFederal($event);setValoresStore(frmRepresentacion,'representacion', 'setRepresentacion')"
           [placeholder]="'Seleccione un valor'"
           formControlName="representacion"
         ></app-catalogo-select>
