@@ -54,15 +54,9 @@
                     formControlName="fechadelaFactura" readonly>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3 mb-3">
-                    Cancelar 
-                  </button><span class="mr-3"></span>
-                  <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3 mb-3">
-                    Modificar 
-                  </button>
-            </div>
+        <div class="d-flex justify-content-end mt-4 p-5">
+            <button type="button" class="btn btn-default" disabled>Cancelar</button>
+            <button type="button" class="btn btn-primary ms-3" (click)="modificarSuccess()">Modificar</button>
         </div>
     </form>
 </div>

@@ -11,6 +11,8 @@ import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/sr
 import { Subject } from 'rxjs';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 
+import { Router } from '@angular/router';
+
 /**
  * Componente para el formulario de mercancías seleccionadas.
  *
@@ -66,7 +68,8 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private service: CertificadoTecnicoJaponService,
-    private tramite110218Query: Tramite110218Query
+    private tramite110218Query: Tramite110218Query,
+    private router: Router
   ) {
     this.modifydatosdelcertificado = this.fb.group({
       nombreComercial: [''],
@@ -140,5 +143,9 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+  }
+
+  modificarSuccess(): void {
+    this.router.navigate(['pago/certificado-tecnico-japon/validar-certificado-tecnico-japon']);
   }
 }
