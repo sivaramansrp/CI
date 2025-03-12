@@ -8,6 +8,9 @@ import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
+import { fraccionInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { immexInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { nicoInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +19,7 @@ export class PermisoImmexDatosService {
   /**
    * @property {string} jsonUrl - URL del archivo JSON que contiene los datos del permiso IMMEX.
    */
-  private jsonUrl = '/assets/json/80203/permiso-immex-datos.json';
+  private jsonUrl = '/assets/json/80203/immex-table.json';
   /**
    * @constructor
    * @param {HttpClient} httpClient - Cliente HTTP para realizar solicitudes.
@@ -29,12 +32,8 @@ export class PermisoImmexDatosService {
    * @returns {Observable<any[]>} Observable con los datos del permiso IMMEX.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getDatos(): Observable<any[]> {
+  getDatos(): Observable<any> {
     return this.httpClient.get<any[]>(this.jsonUrl).pipe(
-      catchError(error => {
-        console.error('Error fetching data from:', this.jsonUrl, error);
-        return of([]);
-      })
     );
-  }
+  }  
 }
