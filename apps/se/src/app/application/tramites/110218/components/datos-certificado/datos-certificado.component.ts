@@ -142,7 +142,6 @@ export class DatosCertificadoComponent implements OnInit {
 
     this.tramite110218Query.tableDataDatos$.subscribe((data)=>{
       this.selectedTableFromStore = data;
-      console.log("selectedTableFromStore",this.selectedTableFromStore)
     }
     )
   }
@@ -162,7 +161,6 @@ export class DatosCertificadoComponent implements OnInit {
    */
   handleFilaSeleccionada(fila: CompliMentaria): void {
     this.selectedRow = fila;
-    console.log("selected row data",this.selectedRow)
   }
   /**
    * Maneja la selección de múltiples filas en la tabla.
@@ -227,7 +225,6 @@ export class DatosCertificadoComponent implements OnInit {
           break;
 
       default:
-          console.warn(`Nombre de control no manejado: ${controlName}`);
           break;
   }
 

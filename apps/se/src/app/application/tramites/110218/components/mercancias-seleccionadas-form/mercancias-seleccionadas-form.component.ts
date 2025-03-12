@@ -95,7 +95,6 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
 
     this.tramite110218Query.tableDataDatos$.subscribe((data) => {
       this.receivedData = data;
-      console.log('Received data:', this.receivedData[0].nombreComercial);
     });
 
     this.tableDataValues();

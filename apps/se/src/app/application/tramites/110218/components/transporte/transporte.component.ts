@@ -149,7 +149,6 @@ export class TransporteComponent implements OnInit, OnDestroy {
         this.tramite110218Store.setPuertodeTránsito(VALUE);
         break;
       default:
-        console.warn(`Nombre de control no manejado: ${controlName}`);
         break;
     }
   }
