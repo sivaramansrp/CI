@@ -7,7 +7,8 @@ import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-acce
 import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
-import { error } from 'console';
+
+import { Subject, takeUntil } from 'rxjs';
 
 interface DatoTabla {
   solicitud: string;
@@ -41,6 +42,7 @@ interface FilaSolicitud {
   styleUrl: './datos-de-la-solicitud.component.scss'
 })
 export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
+  private destroyNotifier$ = new Subject<void>();
   /**
    * @description Mensaje que se muestra en una alerta al hacer doble clic.
    */
@@ -201,56 +203,68 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     })
   }
   ngOnInit(): void {
-    this.datosMercanciaFormGroup.valueChanges.subscribe((changes) => {
-      this.verificarEstadoDelBoton();
-    }, (error) => {
-      console.error(error);
-    })
+    this.datosMercanciaFormGroup.valueChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((changes) => {
+        this.verificarEstadoDelBoton();
+      }, (error) => {
+        console.error(error);
+      });
   }
   /**
   * @description Obtiene los datos del catálogo de transporte.
   */
   obtenerCatalogosTransporte() {
-    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('transporte.json').subscribe((data => {
-      this.aduanaDeIngresoList = data.data as Catalogo[];
-      this.tipoRequisitoList = data.data as Catalogo[];
-    }), (error) => {
-      console.error(error);
-    });
+    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.aduanaDeIngresoList = data.data as Catalogo[];
+        this.tipoRequisitoList = data.data as Catalogo[];
+      }, (error) => {
+        console.error(error);
+      });
   }
   obtenerCatalogosArancelaria() {
-    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').subscribe((data => {
-      this.oficinaInspeccionList = data.data as Catalogo[];
-      this.oficinaInspeccionList = data.data as Catalogo[];
-    }), (error) => {
-      console.error(error);
-    });
+    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.oficinaInspeccionList = data.data as Catalogo[];
+        this.oficinaInspeccionList = data.data as Catalogo[];
+      }, (error) => {
+        console.error(error);
+      });
   }
   obtenerCatalogosUMC() {
-    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('aduana_de_ingreso.json').subscribe((data => {
-      this.umcList = data.data as Catalogo[];
-      this.arancelariaList = data.data as Catalogo[];
-    }), (error) => {
-      console.error(error);
-    });
+    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('aduana_de_ingreso.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.umcList = data.data as Catalogo[];
+        this.arancelariaList = data.data as Catalogo[];
+      }, (error) => {
+        console.error(error);
+      });
   }
   obtenerCatalogosUMT() {
-    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('empresa.json').subscribe((data => {
-      this.regimenList = data.data as Catalogo[];
-      this.nicoList = data.data as Catalogo[];
-      this.puntoInspeccionList = data.data as Catalogo[];
-    }), (error) => {
-      console.error(error);
-    });
+    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('empresa.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.regimenList = data.data as Catalogo[];
+        this.nicoList = data.data as Catalogo[];
+        this.puntoInspeccionList = data.data as Catalogo[];
+      }, (error) => {
+        console.error(error);
+      });
   }
   obtenerCatalogosUSO() {
-    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('oficina_de_inspeccion.json').subscribe((data => {
-      this.usoList = data.data as Catalogo[];
-      this.paisDeOrigenList = data.data as Catalogo[];
-      this.paisDeProcedenciaList = data.data as Catalogo[];
-    }), (error) => {
-      console.error(error);
-    });
+    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('oficina_de_inspeccion.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.usoList = data.data as Catalogo[];
+        this.paisDeOrigenList = data.data as Catalogo[];
+        this.paisDeProcedenciaList = data.data as Catalogo[];
+      }, (error) => {
+        console.error(error);
+      });
   }
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
@@ -265,6 +279,8 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     this.importacionDeAcuiculturaServices.actualizarFormaValida(DATOS);
   }
   ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
     const DATOS = {
       dataDeLaSolicitud: false,
     }

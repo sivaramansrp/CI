@@ -10,6 +10,8 @@ import { OpcionDeRadio } from '../../models/220203/importacion-de-acuicultura.mo
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
+import { Subject, takeUntil } from 'rxjs';
+
 
 /**
  * @description Componente para el pago de derechos en la importación de acuicultura.
@@ -45,6 +47,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   fechaFinalInput: InputFecha = FECHA_SALIDA_ACUICULTURA;
 
+  private destroyNotifier$ = new Subject<void>();
   /**
    * @description Constructor que inicializa el servicio de formularios y el servicio de importación de acuicultura.
    * @param fb FormBuilder para la creación de formularios reactivos.
@@ -115,11 +118,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @description Obtiene la lista de bancos desde el servicio.
    */
   private obtenerListaBanco(): void {
-    this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('banco.json').subscribe((data) => {
-      this.bancoCatalogo = data.data as Catalogo[];
-    }, (error) => {
-      console.error(error);
-    });
+    this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('banco.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.bancoCatalogo = data.data as Catalogo[];
+      }, (error) => {
+        console.error(error);
+      });
   }
 
   verificarEstadoDelBoton() {
@@ -136,13 +141,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @description Obtiene la lista de justificaciones desde el servicio.
    */
   private obtenerListaJustificacion(): void {
-    this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json').subscribe((data) => {
-      this.justificacionCatalogo = data.data as Catalogo[];
-    }, (error) => {
-      console.error(error);
-    });
+    this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json')
+      .pipe(takeUntil(this.destroyNotifier$)) // Use takeUntil
+      .subscribe((data) => {
+        this.justificacionCatalogo = data.data as Catalogo[];
+      }, (error) => {
+        console.error(error);
+      });
   }
   ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
     this.importacionAcuiculturaServicio.actualizarFormularioPago(this.formularioPago.value);
   }
 }

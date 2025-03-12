@@ -5,7 +5,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
-import { error } from 'console';
+
+import { Subject, takeUntil } from 'rxjs';
 /**
  * @title Datos para la Movilización (Data for Mobilization)
  * @description Este componente gestiona la información relacionada con la movilización de la acuicultura.
@@ -31,6 +32,7 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
    */
   formularioMovilizacion: FormGroup;
 
+  private destroyNotifier$ = new Subject<void>();
   /**
    * @description Constructor del componente.
    * @param fb Servicio para construir formularios.
@@ -52,11 +54,13 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
    * @description Método del ciclo de vida que se ejecuta cuando el componente se inicializa.
    */
   ngOnInit(): void {
-    this.formularioMovilizacion.valueChanges.subscribe((changes) => {
-      this.verificarEstadoDelBoton();
-    }, (error) => {
-      console.error(error);
-    })
+    this.formularioMovilizacion.valueChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((changes) => {
+        this.verificarEstadoDelBoton();
+      }, (error) => {
+        console.error(error);
+      });
     this.obtenerCatalogosTransporte();
     this.obtenerCatalogosPuntos();
   }
@@ -65,22 +69,26 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
    * @description Obtiene los datos del catálogo de transporte.
    */
   obtenerCatalogosTransporte() {
-    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('transporte.json').subscribe((data => {
-      this.transportes = data.data as Catalogo[];
-    }), (error) => {
-      console.error(error);
-    });
+    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('transporte.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.transportes = data.data as Catalogo[];
+      }, (error) => {
+        console.error(error);
+      });
   }
 
   /**
    * @description Obtiene los datos del catálogo de puntos de verificación.
    */
   obtenerCatalogosPuntos() {
-    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').subscribe((data => {
-      this.puntos = data.data as Catalogo[];
-    }), (error) => {
-      console.error(error);
-    });
+    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.puntos = data.data as Catalogo[];
+      }, (error) => {
+        console.error(error);
+      });
   }
   verificarEstadoDelBoton() {
     const DATOS = {
@@ -93,6 +101,8 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
     this.importacionDeAcuiculturaServices.actualizarFormularioMovilizacion(this.formularioMovilizacion.value);
   }
 }
