@@ -41,7 +41,7 @@ export interface Solicitud130102State {
   valorPartidaUSD: number;
 
   /** Alternativa de código para la fracción arancelaria (puede ser de otra normativa o formato). */
-  fracciónarancelaria: string;
+  fraccionArancelariaProsec: string;
 
   /** Tipo de trámite solicitado relacionado con la mercancía (importación, exportación, etc.). */
   solicitudMercancia: string;
@@ -81,7 +81,7 @@ export function createInitialState(): Solicitud130102State {
     fraccionArancelariaTIGIE_TIGIE: '', // Valor inicial vacío.
     descripcionPartidas: '', // Sin descripción inicial.
     valorPartidaUSD: 0, // Valor de partida inicial en cero.
-    fracciónarancelaria: '', // Sin fracción arancelaria inicial.
+    fraccionArancelariaProsec: '', // Sin fracción arancelaria inicial.
     solicitudMercancia: '', // Sin solicitud asignada.
     entidad: '', // Entidad no definida.
     representacion: '', // Representación vacía.
@@ -228,12 +228,12 @@ export class Tramite130102Store extends Store<Solicitud130102State> {
 
   /**
    * Actualiza la fracción arancelaria.
-   * @param {string} fracciónarancelaria - Nueva fracción.
+   * @param {string} fraccionArancelariaProsec - Nueva fracción.
    */
-  public setfraccionarancelaria(fracciónarancelaria: string) {
+  public setFraccionArancelariaProsec(fraccionArancelariaProsec: string) {
     this.update((state) => ({
       ...state,
-      fracciónarancelaria,
+      fraccionArancelariaProsec,
     }));
   }
 

@@ -79,7 +79,6 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    * compo doc
    * @property {string} defaultSelect - Valor predeterminado para el selector de productos.
    */
-  //defaultSelect: string = 'Nuevo';
 
   /**
    * compo doc
@@ -119,7 +118,6 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {  
-        console.log('Solicitud130102State', seccionState);
         this.solicitudState = seccionState;
       })
     )
@@ -188,7 +186,6 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    */
   fetchProductoOptions(): void {
     this.producto = productoOptions.options;
-    //this.defaultSelect = productoOptions.defaultSelect;
   }
 
   /**

@@ -1,7 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component } from '@angular/core';
 
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
 
 import { PASOS } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
@@ -32,16 +31,4 @@ export class Solicitante130102Component {
    */
   indice: number = 1;
 
-  /**
-   * @property {DatosPasos} datosPasos
-   * @description 
-   * Datos que controlan la navegación en el asistente, como el número total de pasos 
-   * y los textos de los botones de navegación.
-   */
-  datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length,
-    indice: this.indice,
-    txtBtnAnt: 'Anterior',
-    txtBtnSig: 'Continuar',
-  };
 }

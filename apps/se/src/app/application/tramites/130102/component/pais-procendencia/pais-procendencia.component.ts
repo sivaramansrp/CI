@@ -131,7 +131,6 @@ export class PaisProcendenciaComponent implements OnInit {
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {  
-            console.log('Solicitud130102State', seccionState);
             this.solicitudState = seccionState;
           })
         )
