@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import {
   CATALOGOS_ID,
@@ -8,6 +8,7 @@ import {
 
 } from '@ng-mf/data-access-user';
 import { DOCUMENTOSSELECCIONADOS } from '../../constantes/220203/importacion-de-acuicultura.enum';
+import { Subject } from 'rxjs';
 
 
 
@@ -20,7 +21,7 @@ import { DOCUMENTOSSELECCIONADOS } from '../../constantes/220203/importacion-de-
   templateUrl: './paso-dos.component.html',
   styleUrls: ['./paso-dos.component.scss'],
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit, OnDestroy {
 
   /**
    * Texto utilizado en el componente.
@@ -42,6 +43,7 @@ export class PasoDosComponent implements OnInit {
    */
   documentosSeleccionados: Catalogo[] = [];
 
+  private destroyNotifier$ = new Subject<void>();
   /**
    * Constructor que inyecta el servicio de catalogos.
    * @param catalogosServices Servicio para obtener los catalogos.
@@ -76,5 +78,9 @@ export class PasoDosComponent implements OnInit {
           console.error('Error al cargar los documentos del catálogo:', error);
         },
       });
+  }
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

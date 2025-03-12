@@ -4,7 +4,8 @@ import {
   CatalogosService,
   TEXTOS
 } from '@ng-mf/data-access-user';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 /**
  * Componente para manejar el paso tres en el proceso de importación de acuicultura.
  * Este componente permite seleccionar los tipos de documentos necesarios para el trámite.
@@ -14,7 +15,8 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './paso-tres.component.html',
   styleUrls: ['./paso-tres.component.scss']
 })
-export class PasoTresComponent implements OnInit {
+export class PasoTresComponent implements OnInit, OnDestroy {
+  private destroyNotifier$ = new Subject<void>();
   /**
    * Texto utilizado en el componente.
    */
@@ -59,5 +61,9 @@ export class PasoTresComponent implements OnInit {
           }
         }
       });
+  }
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
