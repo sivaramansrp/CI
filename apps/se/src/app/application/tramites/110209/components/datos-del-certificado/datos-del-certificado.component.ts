@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /**
  * Este componente maneja el formulario de datos del certificado.
  */
@@ -47,7 +47,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    * Datos que se mostrarán en la tabla.
    * @type {any}
    */
-  datosTabla!: any;
+  datosTabla!: Mercancias[];
 
   /**
    * Subject que emite un evento cuando el componente es destruido,
@@ -62,7 +62,11 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    */
   configuracionTabla = CONFIGURACION_MERCANCIAS;
 
-  mercanciasSeleccionadas!:Mercancias;
+  /**
+   * Mercancías seleccionadas en la tabla.
+   * @type {Mercancias}
+   */
+  mercanciasSeleccionadas!: Mercancias;
 
 
   /**
@@ -97,7 +101,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
     this.service.getMercancias().pipe(
       takeUntil(this.destroyed$)
     ).subscribe(
-      (data: string[]) => {
+      (data:Mercancias[]) => {
         this.datosTabla = data;
       }
     );
@@ -132,13 +136,20 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  getMercanciasSeleccionadas($event:Mercancias):void{
-  this.mercanciasSeleccionadas=$event;
+  /**
+   * Obtiene las mercancías seleccionadas desde el evento.
+   * @param {Mercancias} $event - Las mercancías seleccionadas.
+   */
+  getMercanciasSeleccionadas($event: Mercancias): void {
+    this.mercanciasSeleccionadas = $event;
   }
 
+  /**
+   * Navega a la ruta de registro de mercancía y establece las mercancías seleccionadas en el store.
+   */
   onNavigate(): void {  
-   this.tramite110209Store.setMercanciasSeleccionadas(this.mercanciasSeleccionadas);
-   this.router.navigate(['/se/certificado-sgp/registro-de-mercancia']);
+    this.tramite110209Store.setMercanciasSeleccionadas(this.mercanciasSeleccionadas);
+    this.router.navigate(['/se/certificado-sgp/registro-de-mercancia']);
   }
 
 

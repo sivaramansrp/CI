@@ -75,7 +75,9 @@ const ROUTES: Routes = [
     path: 'certificado-sgp',
     loadChildren: () =>
       import('./tramites/110209/certificado-sgp.module').then(
-        (m) => m.CertificadoSGPModule
+        (m) => m.CertificadoSGPModule)
+  },
+  {
     path: 'certificado-registro',
     loadChildren: () =>
       import('./tramites/80205/certificado-registro.module').then(
