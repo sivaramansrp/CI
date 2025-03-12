@@ -21,6 +21,25 @@ export const CROSLISTA_DE_PAISES: string[] = [
     "BHUTAN (KINGDOM OF)"
   ];
 
+export const TEXTOS_REQUISITOS = {
+  INSTRUCCIONES: `<h6>Instrucciones</h6>
+      <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
+      <p>- En caso de que no requieras algún documento, selecciónalo y elimínalo</p>
+      <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`,
+  ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"</p>`,
+};
+
+/**
+* Interfaz para definir la acción y el valor del botón.
+* @interface AccionBoton
+* @property {string} accion - La acción del botón ('cont' o 'atras').
+* @property {number} valor - El índice del paso al que se navega.
+*/
+export interface AccionBoton {
+  accion: string;
+  valor: number;
+}
+
   export const LISTA_DE_ENTRADA_PERSONALIZADA: string[] = [
     "ACAPULCO, PUERTO Y AEROPUERTO",
     "ADUANA DE PANTACO",
@@ -37,3 +56,20 @@ export const CROSLISTA_DE_PAISES: string[] = [
 
 /** "t" se utiliza para continuar el botón que se usa globalmente para el procedimiento 230401 */
   export const CONTINUAR: string = "t";
+
+/**
+* Secciones a mostrar dentro de cada Paso de acuerdo al trámite
+*/
+export const SECCIONES_TRAMITE_230401 = {
+  PASO_1: {
+    VALIDACION_SECCION_1: false,
+    VALIDACION_SECCION_2: true,
+    VALIDACION_SECCION_3: true,
+  },
+  PASO_2: {
+    VALIDACION_SECCION: true,
+  },
+  PASO_3: {
+    requiereValidacion: true,
+  },
+};
