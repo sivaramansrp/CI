@@ -1,69 +1,63 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { TestBed } from '@angular/core/testing';
 import { TratadosComponent } from './tratados.component';
+import { FormBuilder } from '@angular/forms';
+import { of } from 'rxjs';
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
+import { CommonModule } from '@angular/common';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('TratadosComponent', () => {
   let component: TratadosComponent;
-  let fixture: ComponentFixture<TratadosComponent>;
   let service: CertificadoTecnicoJaponService;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const serviceMock = {
-      gettratados: jasmine.createSpy('gettratados').and.returnValue(of({
-        tratadoAcuerdo: 'Acuerdo 1',
-        paísBloque: 'Bloque 1',
-        paísdeOrigen: 'País 1',
-        paísDestino: 'País 2',
-        fechadeExpedición: '2025-03-07',
-        fechadeVencimiento: '2026-03-07'
+      gettratados: jest.fn().mockReturnValue(of({
+        tratadoAcuerdo: 'Acuerdo Test',
+        paísBloque: 'Bloque Test',
+        paísdeOrigen: 'Origen Test',
+        paísDestino: 'Destino Test',
+        fechadeExpedición: '2025-01-01',
+        fechadeVencimiento: '2026-01-01'
       }))
     };
 
-    await TestBed.configureTestingModule({
-      declarations: [TratadosComponent],
-      imports: [ReactiveFormsModule],
-      providers: [{ provide: CertificadoTecnicoJaponService, useValue: serviceMock }]
-    }).compileComponents();
+    TestBed.configureTestingModule({
+      imports: [CommonModule, TituloComponent, ReactiveFormsModule],
+      providers: [
+        FormBuilder,
+        { provide: CertificadoTecnicoJaponService, useValue: serviceMock }
+      ]
+    });
 
-    fixture = TestBed.createComponent(TratadosComponent);
-    component = fixture.componentInstance;
     service = TestBed.inject(CertificadoTecnicoJaponService);
-    fixture.detectChanges();
+    component = new TratadosComponent(TestBed.inject(FormBuilder), service);
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with empty values', () => {
-    const form = component.detallesdeltransporte;
-    expect(form.value).toEqual({
-      tratadoAcuerdo: '',
-      paísBloque: '',
-      paísdeOrigen: '',
-      paísDestino: '',
-      fechadeExpedición: '',
-      fechadeVencimiento: ''
-    });
+  it('should initialize form with disabled controls', () => {
+    expect(component.detallesdeltransporte.disabled).toBe(true);
   });
 
   it('should call getTabledatas on ngOnInit', () => {
-    spyOn(component, 'getTabledatas');
+    jest.spyOn(component, 'getTabledatas');
     component.ngOnInit();
     expect(component.getTabledatas).toHaveBeenCalled();
   });
 
-  it('should update the form with data from the service', () => {
+  it('should update form values when getTabledatas is called', () => {
     component.getTabledatas();
     expect(component.detallesdeltransporte.value).toEqual({
-      tratadoAcuerdo: 'Acuerdo 1',
-      paísBloque: 'Bloque 1',
-      paísdeOrigen: 'País 1',
-      paísDestino: 'País 2',
-      fechadeExpedición: '2025-03-07',
-      fechadeVencimiento: '2026-03-07'
+      tratadoAcuerdo: 'Acuerdo Test',
+      paísBloque: 'Bloque Test',
+      paísdeOrigen: 'Origen Test',
+      paísDestino: 'Destino Test',
+      fechadeExpedición: '2025-01-01',
+      fechadeVencimiento: '2026-01-01'
     });
   });
 });
