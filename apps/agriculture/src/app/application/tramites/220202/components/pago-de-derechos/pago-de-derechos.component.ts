@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Catalogo, InputFecha } from '@ng-mf/data-access-user';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { skip, Subscription } from 'rxjs';
+import { ListaDeDatosFinal } from '../../models/220202/fitosanitario.model';
 
 /**
  * Componente para el formulario de pago de derechos.
@@ -104,13 +105,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
-    this.pagoForm.valueChanges.pipe(skip(1)).subscribe((changes) => {
-      const FORMA_VALIDA_ACTUALIZADA = {
-        validaciondeFormulariodePago: false,
-      };
-      FORMA_VALIDA_ACTUALIZADA.validaciondeFormulariodePago = this.pagoForm.valid ? true : FORMA_VALIDA_ACTUALIZADA.validaciondeFormulariodePago;
-      this.agriculturaApiService.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
-    });
     this.obtenerDetallesDeListaDeOpciones();
   }
   /**
@@ -142,7 +136,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       if (data) {
         this.justificacionSelector = data;
       }
-
     })
   }
   /**
@@ -162,10 +155,20 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       this.pagoForm.get('banco')?.enable();
     }
   }
+
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof ListaDeDatosFinal
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.agriculturaApiService.updatePago as (value: any) => void)(
+      VALOR
+    );
+  }
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-    this.agriculturaApiService.updatePago(this.pagoForm.value);
   }
 }

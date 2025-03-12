@@ -5,6 +5,7 @@ import { AgriculturaApiService } from '../../services/220202/agricultura-api.ser
 import { Catalogo } from '@ng-mf/data-access-user';
 
 import { Subscription, skip } from 'rxjs';
+import { ListaDeDatosFinal } from '../../models/220202/fitosanitario.model';
 /**
  * @fileoverview Componente para la sección de datos para movilización nacional.
  * Este componente gestiona la lógica y la presentación del formulario de datos
@@ -65,7 +66,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @method ngOnInit
    */
   ngOnInit(): void {
-    this.forma.valueChanges.pipe(skip(1)).subscribe((changes) => {
+    this.forma.statusChanges.pipe(skip(1)).subscribe((changes) => {
       const FORMA_VALIDA_ACTUALIZADA = {
         movilizacionValidacion: false,
       };
@@ -101,10 +102,19 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
       this.puntoList = data as Catalogo[];
     });
   }
+
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.agriculturaApiService.updateMovilizacion as (value: any) => void)(
+      VALOR
+    );
+  }
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-    this.agriculturaApiService.updateMovilizacion(this.forma.value);
   }
 }

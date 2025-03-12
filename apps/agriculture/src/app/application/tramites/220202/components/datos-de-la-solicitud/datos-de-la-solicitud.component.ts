@@ -355,11 +355,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * @description Obtiene la lista de productos desde un archivo JSON.
  * @method ngOnDestroy
  */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.agriculturaApiService.updateDatosForma as (value: any) => void)(
+      VALOR
+    );
+  }
+
+
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-    this.agriculturaApiService.updateDatosForma(this.forma?.value)
   }
 
 

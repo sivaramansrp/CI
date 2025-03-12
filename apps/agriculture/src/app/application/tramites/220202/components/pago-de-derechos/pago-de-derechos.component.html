@@ -16,6 +16,13 @@
           [label]="'Justificación'"
           [required]="true"
           name="justificacionSelect"
+          (change)="
+          setValoresStore(
+            pagoForm,
+            'justificacion',
+            'updatePago'
+          )
+        "
         ></app-catalogo-select>
       </div>
       <div class="col-md-8"></div>
@@ -31,8 +38,15 @@
             placeholder=""
             type="text"
             [disabled]="true"
-            name="referenceKeyInput"
+            name="claveReferencia"
             formControlName="claveReferencia"
+            (change)="
+            setValoresStore(
+              pagoForm,
+              'claveReferencia',
+              'updatePago'
+            )
+          "
           />
         </div>
       </div>
@@ -49,8 +63,15 @@
             type="text"
             appUppercase
             [disabled]="true"
-            name="dependencyChainInput"
+            name="cadenaDependencia"
             formControlName="cadenaDependencia"
+            (change)="
+            setValoresStore(
+              pagoForm,
+              'cadenaDependencia',
+              'updatePago'
+            )
+          "
           />
         </div>
       </div>
@@ -63,6 +84,13 @@
           [required]="true"
           [isDisabled]="true"
           name="bankSelect"
+          (change)="
+          setValoresStore(
+            pagoForm,
+            'banco',
+            'updatePago'
+          )
+        "
         ></app-catalogo-select>
       </div>
 
@@ -71,36 +99,56 @@
           <label class="form-label" for="paymentKey">Llave de pago</label>
           <input
             class="form-control"
-            id="paymentKey"
+            id="llavePago"
             placeholder=""
             type="text"
             appUppercase
             [disabled]="true"
-            name="paymentKeyInput"
+            name="llavePago"
             formControlName="llavePago"
+            (change)="
+          setValoresStore(
+            pagoForm,
+            'llavePago',
+            'updatePago'
+          )
+        "
           />
         </div>
       </div>
 
       <div class="col-md-4">
         <div class="form-group">
-          <input-fecha [datos]="fechaInicioInput"></input-fecha>
+          <input-fecha [datos]="fechaInicioInput"   formControlName="fechaInicioInput"   (change)="
+          setValoresStore(
+            pagoForm,
+            'fechaInicioInput',
+            'updatePago'
+          )
+        "></input-fecha>
         </div>
       </div>
 
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="paymentAmount"
+          <label class="form-label" for="importePago"
             >Importe de pago*:</label
           >
           <input
             class="form-control"
-            id="paymentAmount"
+            id="importePago"
             placeholder=""
             type="text"
             [disabled]="true"
-            name="paymentAmountInput"
+            name="importePago"
             formControlName="importePago"
+            (change)="
+          setValoresStore(
+            pagoForm,
+            'importePago',
+            'updatePago'
+          )
+        "
           />
         </div>
       </div>

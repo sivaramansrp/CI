@@ -65,6 +65,14 @@
           [required]="true"
           [isDisabled]="false"
           name="aduana"
+        
+          (change)="
+          setValoresStore(
+            forma,
+            'aduana',
+          )
+        "
+          
         ></app-catalogo-select>
       </div>
       <div class="col-md-12">
@@ -75,6 +83,12 @@
           [required]="true"
           [isDisabled]="false"
           name="agropecuaria"
+          (change)="
+          setValoresStore(
+            forma,
+            'agropecuaria',
+          )
+        "
         ></app-catalogo-select>
       </div>
       <div class="col-md-12">
@@ -85,11 +99,22 @@
           [required]="true"
           [isDisabled]="false"
           name="punto"
+          (change)="
+          setValoresStore(
+            forma,
+            'punto',
+          )
+        "
         ></app-catalogo-select>
       </div>
       <div class="col-md-6 mt-2">
         <label class="control-label" for="guia">Número de guía:</label>
-        <input class="form-control" id="guia" placeholder="" type="text" />
+        <input class="form-control" id="guia" placeholder="" type="text"  formControlName="guia"   (change)="
+        setValoresStore(
+          forma,
+          'guia',
+        )
+      "/>
       </div>
       <div class="col-md-6">
         <app-catalogo-select
@@ -99,13 +124,24 @@
           [required]="true"
           [isDisabled]="false"
           name="regimen"
+          (change)="
+        setValoresStore(
+          forma,
+          'regimen',
+        )
+      "
         ></app-catalogo-select>
       </div>
       <div class="col-md-6">
         <label class="control-label" for="ferrocarril"
           >Número de Carro de Ferrocarril:</label
         >
-        <input class="form-control" id="ferrocarril" placeholder="" type="text" />
+        <input class="form-control" id="ferrocarril"   formControlName="ferrocarril" placeholder="" type="text"    (change)="
+        setValoresStore(
+          forma,
+          'ferrocarril',
+        )
+      "/>
       </div>
       <div class="col-md-12">
         <h5>Mercancías</h5>
@@ -130,11 +166,22 @@
           [required]="true"
           [isDisabled]="false"
           name="tiporequisito"
+          (change)="
+        setValoresStore(
+          forma,
+          'tiporequisito',
+        )
+      "
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <label class="control-label" for="requisito">Requisito:</label>
-        <input class="form-control" id="requisito" placeholder="" type="text" />
+        <input class="form-control" id="requisito" placeholder=""   formControlName="requisito" type="text"(change)="
+        setValoresStore(
+          forma,
+          'requisito',
+        )
+      "/>
       </div>
       <div class="col-md-4">
         <label class="control-label" for="internacional"
@@ -145,6 +192,13 @@
           id="internacional"
           placeholder=""
           type="text"
+          formControlName="internacional"
+          (change)="
+        setValoresStore(
+          forma,
+          'internacional',
+        )
+      "
         />
       </div>
       <div class="col-md-4">
@@ -155,6 +209,12 @@
           [required]="true"
           [isDisabled]="false"
           name="arancelaria"
+          (change)="
+          setValoresStore(
+            forma,
+            'arancelaria',
+          )
+        "
         ></app-catalogo-select>
       </div>
       <div class="col-md-8">
@@ -165,9 +225,16 @@
           class="form-control"
           id="fraccionArancelaria"
           name="fraccionArancelaria"
+          formControlName="fraccionArancelaria"
           placeholder=""
           type="text"
           disabled="true"
+          (change)="
+          setValoresStore(
+            forma,
+            'fraccionArancelaria',
+          )
+        "
         />
       </div>
       <div class="col-md-4">
@@ -178,6 +245,12 @@
           [required]="true"
           [isDisabled]="false"
           name="nico"
+          (change)="
+          setValoresStore(
+            forma,
+            'nico',
+          )
+        "
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 mt-2">
@@ -188,15 +261,32 @@
           placeholder=""
           type="text"
           disabled="true"
+          formControlName="descFraccion"
+          (change)="
+          setValoresStore(
+            forma,
+            'descFraccion',
+          )
+        "
         />
       </div>
       <div class="col-md-12 mt-2">
         <label class="control-label" for="Descripción">Descripción*:</label>
-        <textarea class="form-control" name="" rows="12"></textarea>
+        <textarea class="form-control" name="" rows="12" formControlName="descripción" (change)="
+        setValoresStore(
+          forma,
+          'descripción',
+        )
+      "></textarea>
       </div>
       <div class="col-md-4 mt-2">
         <label class="control-label" for="umc">Cantidad UMT:*</label>
-        <input class="form-control" id="umc" placeholder="" type="text" />
+        <input class="form-control" id="umc" placeholder="" formControlName="umc" type="text" (change)="
+        setValoresStore(
+          forma,
+          'umc',
+        )
+      "/>
       </div>
       <div class="col-md-4 mt-2">
         <label class="control-label" for="umt">UMT:*</label>
@@ -206,11 +296,24 @@
           placeholder=""
           type="text"
           disabled="true"
+          formControlName="umt" 
+          (change)="
+        setValoresStore(
+          forma,
+          'umc',
+        )
+      "
         />
       </div>
       <div class="col-md-4 mt-2">
         <label class="control-label" for="cantidadUMC">Cantidad UMC*:</label>
-        <input class="form-control" id="cantidadUMC" placeholder="" type="text" />
+        <input class="form-control" id="cantidadUMC" placeholder="" type="text"  formControlName="cantidadUMC" 
+        (change)="
+      setValoresStore(
+        forma,
+        'cantidadUMC',
+      )
+    " />
       </div>
       <div class="col-md-4">
         <app-catalogo-select
@@ -219,7 +322,12 @@
           [label]="'Umc'"
           [required]="true"
           [isDisabled]="false"
-          name="umc"
+        (change)="
+      setValoresStore(
+        forma,
+        'umc',
+      )
+    " 
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -230,6 +338,12 @@
           [required]="true"
           [isDisabled]="false"
           name="uso"
+          (change)="
+          setValoresStore(
+            forma,
+            'uso',
+          )
+        " 
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -240,6 +354,12 @@
           [required]="true"
           [isDisabled]="false"
           name="producto"
+          (change)="
+          setValoresStore(
+            forma,
+            'producto',
+          )
+        " 
         ></app-catalogo-select>
       </div>
     </div>
