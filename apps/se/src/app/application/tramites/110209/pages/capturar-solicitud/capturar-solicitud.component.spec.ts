@@ -7,9 +7,11 @@ describe('CapturarSolicitudComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CapturarSolicitudComponent],
+      declarations: [CapturarSolicitudComponent]
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(CapturarSolicitudComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -17,5 +19,17 @@ describe('CapturarSolicitudComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should initialize indice with default value 1', () => {
+    expect(component.indice).toBe(1);
+  });
+
+  it('should change indice value when seleccionaTab is called', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
+
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
   });
 });

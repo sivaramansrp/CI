@@ -1,8 +1,15 @@
-import { Component } from '@angular/core';
 
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
+/**
+ * Este componente maneja la lógica y la interfaz de usuario para la página de solicitud,
+ */
+import { AccionBoton, PASOS } from '../../constantes/certificado-sgp.enum';
+import { Component, ViewChild } from '@angular/core';
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 
 
+/**
+ * Componente que representa la página de solicitud.
+ */
 
 @Component({
   templateUrl: './solicitud-page.component.html',
@@ -14,38 +21,45 @@ import { ListaPasosWizard } from '@ng-mf/data-access-user';
 export class SolicitudPageComponent {
   /**
    * Lista de pasos del asistente.
+   * @type {ListaPasosWizard[]}
    */
-  pasos: ListaPasosWizard[] =
-     [
-      {
-        indice: 1,
-        titulo: 'Capturar solicitud',
-        activo: true,
-        completado: true,
-      },
-      {
-        indice: 2,
-        titulo: 'Firmar solicitud',
-        activo: false,
-        completado: false,
-      },
-    ];
-  
+  pasos: ListaPasosWizard[] = PASOS;
+
+  /**
+   * Referencia al componente del asistente.
+   * @type {WizardComponent}
+   */
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
    * Índice del paso actual.
+   * @type {number}
    */
   indice: number = 1;
 
+  /**
+   * Datos de los pasos del asistente.
+   * @type {DatosPasos}
+   */
+  datosPasos: DatosPasos = {
+    nroPasos: this.pasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
+  };
 
   /**
-   * Selecciona una pestaña del asistente.
-   * @param i Índice de la pestaña a seleccionar.
+   * Actualiza el índice del paso actual y navega al siguiente o anterior paso.
+   * @param {any} e - Evento que contiene el valor del índice y la acción a realizar.
    */
-  seleccionaTab(i: number): void {
-    this.indice = i;
+  getValorIndice(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
   }
-
-
 }
-
