@@ -3,6 +3,10 @@ import { UppercaseDirective } from './tramites/directives/Uppercase/uppercase.di
 export * from './tramites/pages/acuse-page/acuse-page.component';
 
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
+export * from '../../../../apps/agace/src/app/application/directives/customMock.directive.mock';
+export * from '../../../../apps/agace/src/app/application/pipes/seguroHtml.pipe.mock';
+export * from '../../../../apps/agace/src/app/application/pipes/traducir.pipe.mock';
+export * from '../../../../apps/agace/src/app/application/pipes/número-de-teléfono.pipe.mock';
 
 export * from './core/services/shared/formularios/formularios.service';
 
@@ -71,12 +75,21 @@ export * from './tramites/components/anexar-documentos/anexar-documentos.compone
 export * from './core/models/5701/servicios-extraordinarios.model';
 export * from './core/models/303/secciones.model';
 export * from './core/models/usuario/perfilUsuario.model';
+export * from './core/models/shared/catalogos.model';
 export * from './core/models/usuario/rol.model';
+export * from './core/models/shared/forms-model';
 export * from './core/services/shared/http/http.service';
 export * from './core/services/shared/wizard/wizard.service';
 export * from './core/services/220471/servicios-pantallas.enum';
 export * from './tramites/constantes/regex.constants';
+export * from './tramites/constantes/solicitante-constantes.enum';
+export * from './core/services/shared/solicitante/solicitante.service';
 export * from './core/services/130118/pexim/pexim.service';
+export * from '../../../../apps/agace/src/app/application/tramites/32502/services/aviso.service';
+export * from './core/services/shared/documento/documento.service';
+export * from './core/services/shared/inicio-sesion/inicio-sesion.service';
+export * from './core/services/shared/subir-documento/subir-documento.service';
+export * from './core/services/shared/documento/documento.service';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 

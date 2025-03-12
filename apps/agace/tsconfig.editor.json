@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/app/application/directives/customMock.directive.mock.ts", "src/app/application/pipes/número-de-teléfono.pipe.mock.ts", "src/app/application/pipes/seguroHtml.pipe.mock.ts", "src/app/application/pipes/traducir.pipe.mock.ts"],
   "compilerOptions": {},
   "exclude": ["jest.config.ts", "src/**/*.test.ts", "src/**/*.spec.ts"]
 }
