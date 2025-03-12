@@ -1,6 +1,6 @@
-import { ANEXO_SERVICIO } from '../../../shared/enum/anexo-dos-y-tres.enum';
-import { AnexoDosYTresComponent } from '../../../shared/components/anexo-dos-y-tres.component';
-import { AnexoEncabezado } from '../../../shared/models/se-shared.model';
+import { ANEXO_SERVICIO } from '../../../../shared/enum/anexo-dos-y-tres.enum';
+import { AnexoDosYTresComponent } from '../../../../shared/components/anexo-dos-y-tres.component/anexo-dos-y-tres.component';
+import { AnexoEncabezado } from '../../../../shared/models/se-shared.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';

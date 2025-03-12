@@ -1,7 +1,7 @@
-import { ANEXO_TRES_ALERTA } from '../enum/anexo-dos-y-tres.enum';
+import { ANEXO_TRES_ALERTA } from '../../enum/anexo-dos-y-tres.enum';
 import { AlertComponent } from '@ng-mf/data-access-user';
-import { Anexo1y3Configuartion } from '../models/se-shared.model';
-import { AnexoEncabezado } from '../models/se-shared.model';
+import { Anexo1y3Configuartion } from '../../models/se-shared.model';
+import { AnexoEncabezado } from '../../models/se-shared.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { EventEmitter } from '@angular/core';
