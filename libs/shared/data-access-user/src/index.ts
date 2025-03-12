@@ -29,22 +29,22 @@ export * from './core/enums/tabla-seleccion.enum';
 export * from './core/services/shared/solicitante/solicitante.service';
 
 export * from './tramites/constantes/servicios-extraordinarios.enum';
-export * from  './core/services/220471/servicios-pantallas.service';
-export * from  './core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
-export * from  './tramites/constantes/constantes';
+export * from './core/services/220471/servicios-pantallas.service';
+export * from './core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
+export * from './tramites/constantes/constantes';
 
 export * from './tramites/components/crosslist/crosslist.component';
 export * from './tramites/components/firma-electronica/firma-electronica.component';
 export * from './tramites/components/informacion-usuario/informacion-usuario.component';
 export * from './tramites/components/modal-confirmar/modal-confirmar.component';
-export * from  './tramites/components/nav/nav.component';
-export * from  './tramites/components/representante-fiscal/representante-fiscal.component';
-export * from  './tramites/components/select-paises/select-paises.component';
-export * from  './tramites/components/solicitante/solicitante.component';
-export * from  './tramites/components/table/table.component';
-export * from  './tramites/components/tabla-dinamica/tabla-dinamica.component';
-export * from  './tramites/components/terceros/terceros.component';
-export * from  './tramites/components/titulo/titulo.component';
+export * from './tramites/components/nav/nav.component';
+export * from './tramites/components/representante-fiscal/representante-fiscal.component';
+export * from './tramites/components/select-paises/select-paises.component';
+export * from './tramites/components/solicitante/solicitante.component';
+export * from './tramites/components/table/table.component';
+export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
+export * from './tramites/components/terceros/terceros.component';
+export * from './tramites/components/titulo/titulo.component';
 export * from './tramites/components/crosslist/crosslist.component';
 // export * from './lib/data-access-user/data-access-user.component';
 export * from './lib/user.service';
@@ -80,10 +80,10 @@ export * from './core/services/130118/pexim/pexim.service';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 
-export {ConfiguracionColumna} from './core/models/shared/configuracion-columna.model';
-export {TablaSeleccion} from './core/enums/tabla-seleccion.enum';
-export {TablaDinamicaComponent} from './tramites/components/tabla-dinamica/tabla-dinamica.component';
-export {TituloComponent} from './tramites/components/titulo/titulo.component';
+export { ConfiguracionColumna } from './core/models/shared/configuracion-columna.model';
+export { TablaSeleccion } from './core/enums/tabla-seleccion.enum';
+export { TablaDinamicaComponent } from './tramites/components/tabla-dinamica/tabla-dinamica.component';
+export { TituloComponent } from './tramites/components/titulo/titulo.component';
 export * from './core/models/shared/configuracion-columna.model'
 export * from './core/services/220501/revision.service';
 export * from './core/services/220501/sagarpa/sagarpa.service';
@@ -95,15 +95,7 @@ export { TEXTOS as TEXTOS_220501 } from './tramites/constantes/220501/texto-enum
 
 export { CATALOGOS_ID as CATALOGOS_ID_220501 } from './tramites/constantes/220501/constantes';
 export { FECHA_INSPECCION_INPUT as FECHA_INSPECCION_INPUT_220502 } from './tramites/constantes/220502/texto-enum';
-export { PASOS as TODAPASOS } from './tramites/constantes/certificado-zoosanitario.enum';
 export * from './core/enums/tabla-seleccion.enum';
-export * from './tramites/directives/Uppercase/uppercase.directive'
-export * from './tramites/directives/Uppercase/uppercase.directive';
-export {
-  TEXTOS_REQUISITOS as TEXTOS_REQUISITOS_80202,
-  MENSAJE_DE_EXITO_ETAPA_UNO,
-} from './tramites/constantes/certificado-zoosanitario.enum';
-
 export * from './tramites/constantes/110102/datos-tratados-acuerdos.enum';
 export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuerdos.service';
 export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.service';
@@ -115,6 +107,12 @@ export * from './core/enums/solicitar-transferencia.enum';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './core/enums/tabla-seleccion.enum'
 export * from './core/services/120501/licitacionesDisponibles.service'
+export * from './core/models/shared/configuracion-columna.model';
+
+export * from './tramites/constantes/120602/datos-empresa.enum';
+
+export * from './core/services/120602/empresa-frontera-solicitud.enum';
+
 export * from './core/estados/seccion.store';
 export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
@@ -123,3 +121,5 @@ export * from './tramites/components/acuse/acuse.component';
 
 export * from './core/models/shared/configuracion-columna.model';
 export * from './core/enums/tabla-seleccion.enum';
+export * from './tramites/directives/Uppercase/uppercase.directive'
+export * from './tramites/directives/Uppercase/uppercase.directive';
