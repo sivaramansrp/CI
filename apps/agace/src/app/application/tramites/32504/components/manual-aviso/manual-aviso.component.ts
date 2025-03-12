@@ -350,6 +350,10 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Esta función maneja el comportamiento del botón de la tabla secundaria
+   * @param accione - Parámetro que tiene la acción de ser del tipo BotonAccionesTipos.
+   */
   botonDeTablaInfantilAccion(action: BotonAccionesTipos): void {
     switch (action) {
       case BotonAccionesTipos.AGREGAR:
