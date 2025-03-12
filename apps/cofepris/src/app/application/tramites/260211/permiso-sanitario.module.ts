@@ -5,6 +5,9 @@ import { PermisoSanitarioRoutingModule } from './permiso-sanitario-routing.modul
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { DatosComponent } from './pages/datos/datos.component';
+import { DerechosComponent } from './components/derechos/derechos.component';
+import { TercerosRelacionadosComponent } from './components/tercerosRelacionados/tercerosRelacionados.component';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 @NgModule({
   declarations: [PantallasComponent, DatosComponent],
@@ -13,7 +16,10 @@ import { DatosComponent } from './pages/datos/datos.component';
     PermisoSanitarioRoutingModule, 
     WizardComponent,
     SolicitanteComponent,
-    BtnContinuarComponent
+    BtnContinuarComponent,
+    DerechosComponent,
+    TercerosRelacionadosComponent,
+    TituloComponent
   ],
 })
 export class PermisoSanitarioModule {}
