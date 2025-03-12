@@ -8,6 +8,7 @@ import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { Tramite32502Query } from '../../../../estados/queries/tramite3250.query';
 
 
 /**
@@ -58,7 +59,8 @@ export class SolicitudComponent implements OnInit {
     private avisoService: AvisoService,
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-    public tramite32502Store: Tramite32502Store
+    public tramite32502Store: Tramite32502Store,
+     private tramite32502Query: Tramite32502Query
   ) {
     // Inicializar el formulario principal
     this.crearFormSolicitud();
@@ -75,10 +77,10 @@ export class SolicitudComponent implements OnInit {
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
-    this.fraccionArancelariaSeleccion();
-    this.fraccionReglaSeleccion();
-    this.onEntidadFederativaChange();
-    this.sanitizeNumPedimento();
+    this.tramite32502Query.select().subscribe(state => {
+      this.solicitudState = state;
+      this.crearFormSolicitud();
+    });
   }
 
   /**
@@ -143,7 +145,7 @@ export class SolicitudComponent implements OnInit {
       }),
       extranjeroAvisoAgace: this.fb.group({
         razonSocial: [
-          this.solicitudState?.razonSocial,
+          this.solicitudState?.razonSocial || '',
           Validators.required
         ],
         rfc: [
@@ -281,7 +283,7 @@ export class SolicitudComponent implements OnInit {
    */
   fraccionArancelariaSeleccion(): void {
     const FRACCION_ARANCELATIA = this.FormSolicitud.get('fraccionArancelaria')?.value;
-    this.tramite32502Store.setFraccionArancelaria(FRACCION_ARANCELATIA);
+    this.tramite32502Store.setCveFraccionArancelaria(FRACCION_ARANCELATIA);
   }
 
   /**
@@ -320,8 +322,34 @@ export class SolicitudComponent implements OnInit {
   const VALOR = form.get(campo)?.value;
 
   const METHODMAP: Record<string, (value: string | number | boolean) => void> = {
-    setFraccionArancelaria: (value) => this.tramite32502Store.setFraccionArancelaria(String(value)),
-    setFraccionRegla: (value) => this.tramite32502Store.setFraccionRegla(String(value)),
+    setRazonSocial: (value) => this.tramite32502Store.setRazonSocial(String(value)),
+    setRfcExtranjero: (value) => this.tramite32502Store.setRfcExtranjero(String(value)),
+    setFraccionArancelaria: (value) => this.tramite32502Store.setCveFraccionArancelaria(String(value)),
+    setFraccionRegla: (value) => this.tramite32502Store.setReglaFraccion(String(value)),
+    setEntidadFederativa: (value) => this.tramite32502Store.setEntidadFederativa(String(value)),
+    setNumeroPedimento: (value) => this.tramite32502Store.setNumeroPedimento(String(value)),
+    setFechaInicio: (value) => this.tramite32502Store.setFechaInicio(String(value)),
+    setRfc: (value) => this.tramite32502Store.setRfc(String(value)),
+    setDescripcionMercancia: (value) => this.tramite32502Store.setDescripcionMercancia(String(value)),
+    setInformacionExtra: (value) => this.tramite32502Store.setInformacionExtra(String(value)),
+    setDelegacionMunicipio: (value) => this.tramite32502Store.setDelegacionMunicipio(String(value)),
+    setColonia: (value) => this.tramite32502Store.setColonia(String(value)),
+    setCalle: (value) => this.tramite32502Store.setCalle(String(value)),
+    setNumeroExterior: (value) => this.tramite32502Store.setNumeroExterior(String(value)),
+    setNumeroInterior: (value) => this.tramite32502Store.setNumeroInterior(String(value)),
+    setCodigoPostal: (value) => this.tramite32502Store.setCodigoPostal(String(value)),
+    setPatenteAutorizacion: (value) => this.tramite32502Store.setPatenteAutorizacion(String(value)),
+    setRfcAgenteAduanal: (value) => this.tramite32502Store.setRfcAgenteAduanal(String(value)),
+    setClaveAduana: (value) => this.tramite32502Store.setClaveAduana(String(value)),
+    setNombre: (value) => this.tramite32502Store.setNombre(String(value)),
+    setPrimerApellido: (value) => this.tramite32502Store.setPrimerApellido(String(value)),
+    setSegundoApellido: (value) => this.tramite32502Store.setSegundoApellido(String(value)),
+    setAdace: (value) => this.tramite32502Store.setAdace(String(value)),
+    setNico: (value) => this.tramite32502Store.setNico(String(value)),
+    setValorUSD: (value) => this.tramite32502Store.setValorUSD(String(value)),
+    setMarca: (value) => this.tramite32502Store.setMarca(String(value)),
+    setPeso: (value) => this.tramite32502Store.setPeso(String(value)),
+    setNumeroSerie: (value) => this.tramite32502Store.setNumeroSerie(String(value)),
   };
 
   if (METHODMAP[metodoNombre]) {

@@ -1,6 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { SolicitudPageComponent } from './solicitud-page.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
@@ -8,7 +13,15 @@ describe('SolicitudPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SolicitudPageComponent]
+      imports: [
+        WizardComponent,
+        PasoUnoComponent,
+        PasoDosComponent,
+        PasoTresComponent,
+        BtnContinuarComponent
+      ],
+      declarations: [SolicitudPageComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     })
     .compileComponents();
     
@@ -19,5 +32,16 @@ describe('SolicitudPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should select tab', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
+  });
+
+  it('should get value index', () => {
+    const event = { accion: 'cont', valor: 2 };
+    component.getValorIndice(event);
+    expect(component.indice).toBe(2);
   });
 });

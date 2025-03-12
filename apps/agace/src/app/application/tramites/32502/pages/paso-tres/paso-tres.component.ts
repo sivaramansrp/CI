@@ -1,9 +1,9 @@
+import { catchError, map } from 'rxjs';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 import { TramiteStore } from 'apps/aga/src/app/application/estados/tramite.store';
-import { catchError, map } from 'rxjs';
 
 @Component({
   selector: 'app-paso-tres',

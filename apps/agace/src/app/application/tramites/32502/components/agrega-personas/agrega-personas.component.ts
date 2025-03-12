@@ -4,6 +4,12 @@ import { Component } from '@angular/core';
 import { Persona } from '@ng-mf/data-access-user';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
+import { Tramite32502Query } from '../../../../estados/queries/tramite3250.query';
+import { map, Subject, takeUntil } from 'rxjs';
+import { SeccionAgaceState, SeccionAgaceStore } from '../../../../estados/seccion.store';
+import { Solicitud32502State, Tramite32502Store } from '../../../../estados/tramites/tramite32502.store';
+
+
 @Component({
   selector: 'agrega-personas',
   standalone: true,
@@ -12,23 +18,51 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
   styleUrl: './agrega-personas.component.scss',
 })
 export class AgregaPersonasComponent {
+  private seccion!: SeccionAgaceState;
+  public solicitudState!: Solicitud32502State;
   gafete: FormControl = new FormControl('', [Validators.maxLength(25)]);
 
   personaForm: FormGroup = this.fb.group({
-    nombre: [{ value: '', disabled: true }],
-    primerApellido: [{ value: '', disabled: true }],
-    segundoApellido: [{ value: '', disabled: true }],
+    nombre: [{value: this.tramite32502Store?.setNombre || "nombre", disabled: true }],
+    primerApellido: [{ value: this.tramite32502Store.setPrimerApellido, disabled: true }],
+    segundoApellido: [{ value: this.tramite32502Store.setSegundoApellido, disabled: true }],
   });
 
   persona!: Persona;
 
   personas: Array<Persona> = [];
+  private destroyNotifier$: Subject<void> = new Subject();
 
   constructor(
     private fb: FormBuilder,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private tramite32502Store: Tramite32502Store,
+    private tramite32502Query: Tramite32502Query,
+    private seccionQuery: Tramite32502Query
   ) {
     //
+  }
+
+  ngOnInit() {
+
+    // this.tramite32502Query.selectSolicitud$
+    //   .pipe(
+    //     takeUntil(this.destroyNotifier$),
+    //     map((seccionState) => {
+    //       this.solicitudState = seccionState;
+    //     })
+    //   )
+    //   .subscribe();
+
+    // this.seccionQuery.selectSolicitud$
+    //   .pipe(
+    //     takeUntil(this.destroyNotifier$),
+    //     map((SeccionAgaceState) => {
+    //       this.seccion = SeccionAgaceState;
+    //     })
+    //   )
+    //   .subscribe();
+    // this.personaForm;
   }
 
   isValid(field: string) {
@@ -45,12 +79,12 @@ export class AgregaPersonasComponent {
     const GAFETE = this.gafete.value;
 
     if (!GAFETE) {
-      console.warn('No has proporcionado información que es requerida.');
+      alert('No has proporcionado información que es requerida.');
       return;
     }
 
     if (!this.persona) {
-      console.warn(
+      alert(
         'No se encontraron datos con el número de gafete, intenta de nuevo o agrega los datos restantes.'
       );
       this.habilitarCamposFormulario();
@@ -79,7 +113,7 @@ export class AgregaPersonasComponent {
     this.gafete.updateValueAndValidity();
 
     if (this.gafete.invalid || this.personaForm.invalid) {
-      console.warn('Debes capturar todos los datos marcados como obligatorios.');
+      alert('Debes capturar todos los datos marcados como obligatorios.');
       this.gafete.markAllAsTouched();
       this.personaForm.markAllAsTouched();
       this.habilitarCamposFormulario();
@@ -87,7 +121,7 @@ export class AgregaPersonasComponent {
     }
 
     if (this.personas.length >= 5) {
-      console.warn('Solo puede agregar hasta 5 personas');
+      alert('Solo puede agregar hasta 5 personas');
       return;
     }
 

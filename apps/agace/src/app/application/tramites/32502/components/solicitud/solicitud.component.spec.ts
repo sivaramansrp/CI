@@ -1,12 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { CUSTOM_ELEMENTS_SCHEMA, Input, NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Input, NO_ERRORS_SCHEMA, Pipe, PipeTransform, Injectable } from '@angular/core';
 import { ComponentFixture, TestBed, async} from '@angular/core/testing';
 import { FormControl,FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { isPlatformBrowser } from '@angular/common';
-
+import { SolicitudComponent } from './solicitud.component';
+import { AvisoService } from '@ng-mf/data-access-user';
 import { Component, Directive } from '@angular/core';
 import { AgregaPersonasComponent } from './agrega-personas.component';
 import { FormBuilder } from '@angular/forms';
@@ -15,6 +16,8 @@ import { PhoneNumberPipe } from '@ng-mf/data-access-user';
 import { SafeHtmlPipe } from '@ng-mf/data-access-user';
 import { TranslatePipe } from '@ng-mf/data-access-user';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { Tramite32502Store } from '../../../../estados/queries/tramite3250.query';
+import { compileDeferResolverFunction } from '@angular/compiler';
 
 @Injectable()
 class MockTramite32502Store {}
@@ -41,15 +44,18 @@ describe('SolicitudComponent', () => {
     }).overrideComponent(SolicitudComponent, {
 
     }).compileComponents();
+    await compileDeferResolverFunction(TestBed);
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.debugElement.componentInstance;
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {
-      //
-    };
-    fixture.destroy();
+    // component.ngOnDestroy = function() {
+    //   //
+    // };
+    if (fixture) {
+      fixture.destroy();
+    }
   });
 
   it('should run #constructor()', () => {
