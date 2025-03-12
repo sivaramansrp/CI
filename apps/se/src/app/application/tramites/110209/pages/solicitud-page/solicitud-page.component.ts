@@ -1,10 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/**
+ * Este componente maneja la lógica y la interfaz de usuario para la página de solicitud,
+ */
+import { AccionBoton, PASOS } from '../../constantes/certificado-sgp.enum';
 import { Component, ViewChild } from '@angular/core';
-
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
-import {PASOS} from '../../constantes/certificado-sgp.enum';
 
 
+/**
+ * Componente que representa la página de solicitud.
+ */
 
 @Component({
   templateUrl: './solicitud-page.component.html',
@@ -16,25 +21,26 @@ import {PASOS} from '../../constantes/certificado-sgp.enum';
 export class SolicitudPageComponent {
   /**
    * Lista de pasos del asistente.
+   * @type {ListaPasosWizard[]}
    */
   pasos: ListaPasosWizard[] = PASOS;
-     
+
+  /**
+   * Referencia al componente del asistente.
+   * @type {WizardComponent}
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
    * Índice del paso actual.
+   * @type {number}
    */
   indice: number = 1;
 
-
   /**
-   * Selecciona una pestaña del asistente.
-   * @param i Índice de la pestaña a seleccionar.
+   * Datos de los pasos del asistente.
+   * @type {DatosPasos}
    */
-  seleccionaTab(i: number): void {
-    this.indice = i;
-  }
-
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
@@ -42,7 +48,11 @@ export class SolicitudPageComponent {
     txtBtnSig: 'Continuar',
   };
 
-  getValorIndice(e:any):void{
+  /**
+   * Actualiza el índice del paso actual y navega al siguiente o anterior paso.
+   * @param {any} e - Evento que contiene el valor del índice y la acción a realizar.
+   */
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -52,8 +62,4 @@ export class SolicitudPageComponent {
       }
     }
   }
-
-
-
 }
-
