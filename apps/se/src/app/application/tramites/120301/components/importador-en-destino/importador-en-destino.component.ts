@@ -92,6 +92,8 @@ export class ImportadorEnDestinoComponent implements OnInit{
       .subscribe();
       this.initActionFormBuild();
       this.obtenerListasDesplegables();
+      
+    this.seccionStore.establecerFormaValida([false])
 
       this.importadorForm.statusChanges
       .pipe(
@@ -103,18 +105,20 @@ export class ImportadorEnDestinoComponent implements OnInit{
               ...this.importadorState.formaValida,
               { id: 4, descripcion: "AllValida" }])
           }
+          this.seccionStore.establecerSeccion([true]);
+          this.seccionStore.establecerFormaValida([true])
         })
       )
       .subscribe();
-    
-    this.seccionStore.establecerFormaValida([false])
-    if(this.importadorState.formaValida && this.importadorState.formaValida[0] && this.importadorState.formaValida[0].descripcion === 'AllValida'){
-      this.seccionStore.establecerSeccion([true]);
-      this.seccionStore.establecerFormaValida([true])
-    }
-    else{
-      this.seccionStore.establecerFormaValida([false]);
-    }
+    console.log("444444",this.importadorState)
+    // if(this.importadorState.formaValida && this.importadorState.formaValida[0] && this.importadorState.formaValida[0].descripcion === 'AllValida'){
+      
+    //   this.seccionStore.establecerSeccion([true]);
+    //   this.seccionStore.establecerFormaValida([true])
+    // }
+    // else{
+    //   this.seccionStore.establecerFormaValida([false]);
+    // }
   }
 
   /**
