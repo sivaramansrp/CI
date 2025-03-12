@@ -1,5 +1,6 @@
 
-{
+[
+  {
   "CandidadAsociada": "5",
   "NumeroDeLaFactura": "prueba leav26agosto2024",
   "RazonSocial": "ESPERANCITAS.CO",
@@ -7,4 +8,5 @@
   "FechaExpedicionFactura": "2024-11-07 00:00:00.0 GMT 06:00",
   "CantidadTotal": "1134",
   "CantidadDisponible": "12345"
-}
+  }
+  ]

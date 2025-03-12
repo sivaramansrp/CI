@@ -93,7 +93,7 @@ export const HISTORICO_TBCOL = [
     'Teléfono',
   ];
 
-export const ASOCIADAS_TBCOl = [
+export const ASOCIADAS_TBCOL = [
     'Candidad asociada',
     'número de la factura',
     'razón social',
@@ -112,4 +112,10 @@ export const CPATURAR_TBCOL = [
     'Cantidad disponible',
     'Unidad de medida',
     'Valor en dólares',
+  ];
+
+export const CATALOGOS = [ 
+    { id: 1, descripcion: 'Option 1' },
+    { id: 2, descripcion: 'Option 2' },
+    { id: 3, descripcion: 'Option 3' }
   ];

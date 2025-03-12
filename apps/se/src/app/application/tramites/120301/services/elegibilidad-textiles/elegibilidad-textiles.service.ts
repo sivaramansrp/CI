@@ -1,8 +1,8 @@
 import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
-import { map, Observable } from 'rxjs';
+import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
+import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
 
 @Injectable({
   providedIn: 'root'
@@ -24,9 +24,9 @@ export class ElegibilidadTextilesService {
     );
   }
 
-  obtenerTablaDatos(fileName: string): Observable<any[]> {
+  obtenerTablaDatos<T>(fileName: string): Observable<T[]> {
     const JSONURL = this.url + fileName;
-      return this.http.get<any[]>(JSONURL);
+      return this.http.get<T[]>(JSONURL);
   }
 
   getFormData(): Observable<TextilesState> {

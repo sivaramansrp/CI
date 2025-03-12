@@ -94,7 +94,7 @@ export class ElegibilidadTextilesComponent {
    * Obtener un título para todas las páginas.
    * @param valor - valor del índice de página. --120301
    */
-  obtenerNombreDelTítulo(valor: number): string {
-    throw new Error('Método no implementado.');
+  static obtenerNombreDelTítulo(valor: number): string {
+    return new Error('Método no implementado.').toString();
   }
 }

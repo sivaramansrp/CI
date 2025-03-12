@@ -14,14 +14,14 @@
  * @import { TableComponent } from '../../../../shared/components/table/table.component';
  * @import unidadRadioFields from '../../../../../assets/json/220401/unidad.json';
  * @import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
- * @import { HistoricoFabricantesService } from '../../../../core/services/120301/historico-fabricantes/historico-fabricantes.service';
- * @import { ServiciosElegibilidadDeTextilesService } from '../../../../core/services/120301/servicios-elegibilidad-de-textiles.service';
  * @import { HISTORICO_TBCOL } from '../../../../shared/constantes/elegibilidad-de-textiles.enums';
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CatalogosSelect, 
+
+import { 
+  CatalogosSelect, 
   
   ConfiguracionColumna, 
   
@@ -31,17 +31,18 @@ import { CatalogosSelect,
   
   SeccionLibStore, 
   
-  TablaSeleccion } from '@ng-mf/data-access-user';
+  TablaSeleccion
+ } from '@ng-mf/data-access-user';
+
 import { ElegibilidadDeTextilesStore, TextilesState, createInitialState } from '../../estados/elegibilidad-de-textiles.store';
 import { Subject,delay, map, takeUntil, tap } from 'rxjs';
+import { CATALOGOS } from '../../constantes/elegibilidad-de-textiles.enums';
 import { CommonModule } from '@angular/common';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
-import { HistoricoFabricantesService } from '../../services/historico-fabricantes/historico-fabricantes.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { ServiciosElegibilidadDeTextilesService } from '../../services/servicios-elegibilidad-de-textiles.service';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -62,7 +63,7 @@ import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json
     TablaDinamicaComponent
   ]
 })
-export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
+export class HistoricoFabricantesComponent implements OnInit {
   /**
    * @property {FormGroup} historicoFabricantesForm - El grupo de formularios para capturar los datos de los fabricantes.
    */
@@ -133,8 +134,6 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private historicoFabricantesService: HistoricoFabricantesService,
-    private readonly serviciosElegibilidadDeTextilesService: ServiciosElegibilidadDeTextilesService,
     private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
@@ -205,16 +204,15 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * @description Obtiene los datos de los fabricantes desde el servicio.
    */
   recuperarDatos(): void {
-    this.elegibilidadTextilesService.obtenerTablaDatos('historico-fabricantes.json').subscribe({
-      next: (response: HistoricoColumns[]) => {
-        if (response && Array.isArray(response)) {
-          this.fabricantesNacionales = response
-        } 
-      },
-      error: (error: HttpErrorResponse) => {
+    this.elegibilidadTextilesService.obtenerTablaDatos<HistoricoColumns>('historico-fabricantes.json').subscribe(
+      (response) => {
+          this.fabricantesNacionales = response as HistoricoColumns[]
+          console.log("response",response)
+        },
+      (error) => {
         console.error('Error al obtener los datos:', error);
       }
-    });
+    );
   }
 
   /**
@@ -222,7 +220,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * @description Maneja el cambio de valor del radio.
    * @param {any} newValue - El nuevo valor seleccionado.
    */
-  onValueChange(newValue: any) {
+  onValueChange(newValue: number|string) {
     this.selectedValue = newValue;
   }
 
@@ -232,32 +230,12 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * @property {CatalogosSelect[]} dropdownConfigs - Configuraciones de los dropdowns.
    */
   dropdownConfigs: CatalogosSelect[] = [
-    { labelNombre: 'Delegaciones estatales SAGARPA', required: true, catalogos: this.getCatalogos(), primerOpcion: '' },
-    { labelNombre: 'OSIA', required: true, catalogos: this.getCatalogos(), primerOpcion: '' },
-    { labelNombre: 'Oficina Central', required: true, catalogos: this.getCatalogos(), primerOpcion: '' },
-    { labelNombre: 'Distrito Desarrollo Rural (DDR)', required: false, catalogos: this.getCatalogos(), primerOpcion: '' }
+    { labelNombre: 'Delegaciones estatales SAGARPA', required: true, catalogos: CATALOGOS, primerOpcion: '' },
+    { labelNombre: 'OSIA', required: true, catalogos: CATALOGOS, primerOpcion: '' },
+    { labelNombre: 'Oficina Central', required: true, catalogos: CATALOGOS, primerOpcion: '' },
+    { labelNombre: 'Distrito Desarrollo Rural (DDR)', required: false, catalogos: CATALOGOS, primerOpcion: '' }
   ];
 
-  /**
-   * @method getCatalogos
-   * @description Obtiene los catálogos para los dropdowns.
-   * @returns {any[]} Array de catálogos.
-   */
-  private getCatalogos() {
-    return [
-      { id: 1, descripcion: 'Option 1' },
-      { id: 2, descripcion: 'Option 2' },
-      { id: 3, descripcion: 'Option 3' }
-    ];
-  }
-
-  /**
-   * @method ngOnDestroy
-   * @description Guarda el estado del formulario antes de destruir el componente.
-   */
-  ngOnDestroy(): void {
-    this.serviciosElegibilidadDeTextilesService.setSoliciante('historicoFabricantesForm', this.historicoFabricantesForm.value);
-  }
 
   setValoresStore(
     form: FormGroup,

@@ -10,9 +10,8 @@ import { Component, OnInit } from '@angular/core';
 import { ElegibilidadDeTextilesStore, TextilesState, createInitialState } from '../../estados/elegibilidad-de-textiles.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { ConstanciaDelRegistroService } from '../../services/constancia-del-registro/constancia-del-registro.service';
-import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service'
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
+import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service'
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { SeccionLibQuery } from '@ng-mf/data-access-user';
 import { SeccionLibState } from '@ng-mf/data-access-user';
@@ -77,7 +76,6 @@ export class ConstanciaDelRegistroComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private constanciaDelRegistroService: ConstanciaDelRegistroService,
     private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
@@ -139,7 +137,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     });
   }
 
-  onValueChange(newValue: string) {
+  onValueChange(newValue: number|string) {
     this.selectedValue = newValue;
   }
 

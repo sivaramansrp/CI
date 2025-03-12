@@ -1,8 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ImportadorEnDestinoComponent } from './importador-en-destino.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule, TituloComponent } from '@libs/shared/data-access-user/src';
 import { of } from 'rxjs';
 
 describe('ImportadorEnDestinoComponent', () => {
@@ -13,8 +16,9 @@ describe('ImportadorEnDestinoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ImportadorEnDestinoComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule],
-      providers: [ElegibilidadTextilesService]
+      imports: [ReactiveFormsModule, TituloComponent,CommonModule,SharedModule, HttpClientTestingModule],
+      providers: [ElegibilidadTextilesService],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
   });
 
@@ -52,7 +56,7 @@ describe('ImportadorEnDestinoComponent', () => {
     component.obtenerIngresoSelectList();
 
     expect(elegibilidadTextilesService.obtenerMenuDesplegable).toHaveBeenCalledWith('tipo.json');
-    expect(component.tipo).toEqual(MOCKDATA);
+    expect(component.tipoData).toEqual(MOCKDATA);
   });
 
   it('should validate importadorForm fields', () => {

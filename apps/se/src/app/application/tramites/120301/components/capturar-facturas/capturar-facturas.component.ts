@@ -16,7 +16,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Subject, delay, map, takeUntil, tap} from 'rxjs';
 import { CapturarColumns } from '../../models/elegibilidad-de-textiles.model';
-import { CapturarFacturasService } from '../../services/capturar-facturas/capturar-facturas.service';
 import { Catalogo} from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { EXPEDICION_FACTURA_FECHA } from '../../constantes/elegibilidad-de-textiles.enums';
@@ -26,8 +25,8 @@ import { ElegibilidadTextilesService } from '../../services/elegibilidad-textile
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
-import { TableComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({
@@ -125,7 +124,6 @@ export class CapturarFacturasComponent implements OnInit {
   private seccionState!: SeccionLibState
 
   constructor(
-    private capturarFacturasService: CapturarFacturasService,
     private ElegibilidadTextilesService: ElegibilidadTextilesService,
     private readonly httpServicios: HttpClient,
     private readonly fb: FormBuilder,
@@ -242,16 +240,16 @@ export class CapturarFacturasComponent implements OnInit {
   }
 
   recuperarDatos(): void {
-    this.ElegibilidadTextilesService.obtenerTablaDatos('capturar-facturas.json').subscribe({
-      next: (response: CapturarColumns[]) => {
+    this.ElegibilidadTextilesService.obtenerTablaDatos<CapturarColumns>('capturar-facturas.json').subscribe(
+      (response) => {
         if (response && Array.isArray(response)) {
-          this.facturas = response
+          this.facturas = response as CapturarColumns[]
         } 
       },
-      error: (error: HttpErrorResponse) => {
+      (error) => {
         console.error('Error al obtener los datos:', error);
       }
-    });
+    );
   }
 
 }

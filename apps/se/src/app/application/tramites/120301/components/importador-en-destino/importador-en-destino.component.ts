@@ -11,13 +11,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject,delay, map, takeUntil, tap } from 'rxjs';
-import { Catalogo, 
+
+import { 
+  Catalogo, 
   
   SeccionLibQuery, 
   
   SeccionLibState, 
   
-  SeccionLibStore } from '@ng-mf/data-access-user';
+  SeccionLibStore 
+
+} from '@ng-mf/data-access-user';
+
 import { ElegibilidadDeTextilesStore, TextilesState, createInitialState } from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
@@ -39,7 +44,7 @@ export class ImportadorEnDestinoComponent implements OnInit{
    */
   importadorEnDestino!: FormGroup;
 
-  tipo: Catalogo[] = [];
+  tipoData: Catalogo[] = [];
 
   private destroyNotifier$: Subject<void> = new Subject();
 
@@ -142,7 +147,7 @@ export class ImportadorEnDestinoComponent implements OnInit{
    */
   obtenerIngresoSelectList() {
     this.ElegibilidadTextilesService.obtenerMenuDesplegable('tipo.json').subscribe(data => {
-      this.tipo = data as Catalogo[];
+      this.tipoData = data as Catalogo[];
     })
   }
 

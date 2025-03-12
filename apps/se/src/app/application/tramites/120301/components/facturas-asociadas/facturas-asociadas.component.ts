@@ -13,6 +13,7 @@
 import { AsociadasTableColumns, CapturarColumns } from '../../models/elegibilidad-de-textiles.model';
 import { Component, OnInit } from '@angular/core';
 import { ElegibilidadDeTextilesStore, TextilesState, createInitialState } from '../../estados/elegibilidad-de-textiles.store';
+
 import { 
   ConfiguracionColumna, 
 
@@ -24,7 +25,9 @@ import {
 
   TablaDinamicaComponent, 
 
-  TablaSeleccion } from '@ng-mf/data-access-user';
+  TablaSeleccion
+ } from '@ng-mf/data-access-user';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject,delay, map, takeUntil,tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -236,28 +239,24 @@ export class FormularioAsociacionFacturaComponent implements OnInit {
    * @description Obtiene los datos de las facturas disponibles y asociadas desde el servicio.
    */
   recuperarDatos(): void {
-    this.elegibilidadTextilesService.obtenerTablaDatos('facturas-asociadas.json').subscribe({
-      next: (response: CapturarColumns[]) => {
-        if (response && Array.isArray(response)) {
-          this.facturasDisponible = response
-        } 
+    this.elegibilidadTextilesService.obtenerTablaDatos<CapturarColumns>('facturasDisponible.json').subscribe(
+      (response) => {
+          this.facturasDisponible = response as CapturarColumns[]
       },
-      error: (error: HttpErrorResponse) => {
+      (error) => {
         console.error('Error al obtener los datos:', error);
       }
-    });
+    );
   }
   recuperarDatosAsociadas(): void {
-    this.elegibilidadTextilesService.obtenerTablaDatos('facturas-asociadas.json').subscribe({
-      next: (response: AsociadasTableColumns[]) => {
-        if (response && Array.isArray(response)) {
-          this.facturasAsociadas = response
-        } 
+    this.elegibilidadTextilesService.obtenerTablaDatos<AsociadasTableColumns>('facturas-asociadas.json').subscribe(
+      (response) => {
+          this.facturasAsociadas = response as AsociadasTableColumns[]
       },
-      error: (error: HttpErrorResponse) => {
+      (error) => {
         console.error('Error al obtener los datos:', error);
       }
-    });
+    );
   }
 
   setValoresStore(

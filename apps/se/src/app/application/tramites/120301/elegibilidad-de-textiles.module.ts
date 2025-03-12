@@ -10,10 +10,10 @@ import { CrosslistComponent } from '@ng-mf/data-access-user';
 import { ElegibilidadDeTextilesRoutingModule } from './elegibilidad-de-textiles-routing.module';
 import { ElegibilidadTextilesComponent } from './pages/elegibilidad-textiles/elegibilidad-textiles.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { FormularioAsociacionFacturaComponent } from './components/facturas-asociadas/facturas-asociadas.component';
 import { HistoricoFabricantesComponent } from './components/historico-fabricantes/historico-fabricantes.component';
 import { ImportadorEnDestinoComponent } from './components/importador-en-destino/importador-en-destino.component';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -25,7 +25,6 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { FormularioAsociacionFacturaComponent } from './components/facturas-asociadas/facturas-asociadas.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +33,6 @@ import { FormularioAsociacionFacturaComponent } from './components/facturas-asoc
     PasoTresComponent,
     PasoUnoComponent,
     ImportadorEnDestinoComponent,
-    PasoCuatroComponent
   ],
   imports: [
     CommonModule,
