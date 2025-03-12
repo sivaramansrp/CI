@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 
 import { Catalogo } from '@ng-mf/data-access-user';
-import { TEXTOS_REQUISITOS_80202 } from '@ng-mf/data-access-user';
+import { TEXTOS_REQUISITOS } from '../../constants/immex-ampliacion-sensibles.enums';
+
 
 @Component({
   selector: 'app-paso-dos',
@@ -11,5 +12,5 @@ import { TEXTOS_REQUISITOS_80202 } from '@ng-mf/data-access-user';
 export class PasoDosComponent {
   catalogoDocumentos: Catalogo[] = [];
   infoAlert = 'alert-info';
-  TEXTOS = TEXTOS_REQUISITOS_80202;
+  TEXTOS = TEXTOS_REQUISITOS;
 }
