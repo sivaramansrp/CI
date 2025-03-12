@@ -3,12 +3,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Solicitud32502State, Tramite32502Store } from '../../../../estados/tramites/tramite32502.store';
 import { map, merge } from 'rxjs';
 
-import { AvisoService } from '@ng-mf/data-access-user';
+
+import { AvisoService } from '../../services/aviso.service';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Tramite32502Query } from '../../../../estados/queries/tramite3250.query';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 
 /**

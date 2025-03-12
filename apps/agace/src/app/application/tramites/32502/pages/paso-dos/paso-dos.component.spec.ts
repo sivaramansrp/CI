@@ -9,10 +9,10 @@ import { By } from '@angular/platform-browser';
 import { PasoDosComponent } from './paso-dos.component';
 import { DocumentoService } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
-import { TranslatePipe } from '@ng-mf/data-access-user';
-import { PhoneNumberPipe } from '@ng-mf/data-access-user';
-import { SafeHtmlPipe } from '@ng-mf/data-access-user';
-import { MyCustomDirective } from '@ng-mf/data-access-user';
+import { TranslatePipe } from '../../pipes/traducir.pipe.mock';
+import { PhoneNumberPipe } from '../../pipes/número-de-teléfono.pipe.mock';
+import { SafeHtmlPipe } from '../../pipes/seguroHtml.pipe.mock';
+import { MyCustomDirective } from '../../directives/customMock.directive.mock';
 import { Tramite32502Store } from '../../../../estados/tramites/tramite32502.store';
 import { Tramite32502Query } from '../../../../estados/queries/tramite3250.query';
 

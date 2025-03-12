@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 import { FormsModule } from '@angular/forms';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 

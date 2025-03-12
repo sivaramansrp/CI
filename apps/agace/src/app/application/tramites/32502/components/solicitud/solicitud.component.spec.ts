@@ -1,100 +1,96 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { CUSTOM_ELEMENTS_SCHEMA, Input, NO_ERRORS_SCHEMA, Pipe, PipeTransform, Injectable } from '@angular/core';
-import { ComponentFixture, TestBed, async} from '@angular/core/testing';
-import { FormControl,FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Injectable } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { Observable, of as observableOf } from 'rxjs';
 import { By } from '@angular/platform-browser';
-import { isPlatformBrowser } from '@angular/common';
+
 import { SolicitudComponent } from './solicitud.component';
-import { AvisoService } from '@ng-mf/data-access-user';
-import { Component, Directive } from '@angular/core';
-import { AgregaPersonasComponent } from './agrega-personas.component';
-import { FormBuilder } from '@angular/forms';
-import { MyCustomDirective } from '@ng-mf/data-access-user';
+import { AvisoService } from '../../services/aviso.service';
+import { TranslatePipe } from '@ng-mf/data-access-user';
 import { PhoneNumberPipe } from '@ng-mf/data-access-user';
 import { SafeHtmlPipe } from '@ng-mf/data-access-user';
-import { TranslatePipe } from '@ng-mf/data-access-user';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Tramite32502Store } from '../../../../estados/queries/tramite3250.query';
-import { compileDeferResolverFunction } from '@angular/compiler';
+import { Tramite32502Query } from '../../../../estados/queries/tramite3250.query';
 
 @Injectable()
 class MockTramite32502Store {}
 
 describe('SolicitudComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<SolicitudComponent>;
+  let component: SolicitudComponent;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule],
       declarations: [
         SolicitudComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         AvisoService,
         FormBuilder,
         ValidacionesFormularioService,
-        { provide: Tramite32502Store, useClass: MockTramite32502Store }
+        { provide: Tramite32502Store, useClass: MockTramite32502Store },
+        Tramite32502Query
       ]
-    }).overrideComponent(SolicitudComponent, {
-
     }).compileComponents();
-    await compileDeferResolverFunction(TestBed);
+
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.debugElement.componentInstance;
   });
 
   afterEach(() => {
-    // component.ngOnDestroy = function() {
-    //   //
-    // };
     if (fixture) {
       fixture.destroy();
     }
   });
 
-  it('should run #constructor()', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should initialize the form on ngOnInit', () => {
+    component.ngOnInit();
+    expect(component.FormSolicitud).toBeDefined();
   });
 
   it('should run GetterDeclaration #adaceForm', () => {
     component.FormSolicitud = component.FormSolicitud || {};
     component.FormSolicitud.get = jest.fn();
     const ADACE_FORM = component.adaceForm;
-    // expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalledWith('adaceForm');
   });
 
   it('should run GetterDeclaration #extranjeroAvisoAgace', () => {
     component.FormSolicitud = component.FormSolicitud || {};
     component.FormSolicitud.get = jest.fn();
     const EXTRANJERO_AVISO_AGACE = component.extranjeroAvisoAgace;
-    // expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalledWith('extranjeroAvisoAgace');
   });
 
   it('should run GetterDeclaration #mercanciaST', () => {
     component.FormSolicitud = component.FormSolicitud || {};
     component.FormSolicitud.get = jest.fn();
     const MERCENCIA_ST = component.mercanciaST;
-    // expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalledWith('mercanciaST');
   });
 
   it('should run GetterDeclaration #direccionST', () => {
     component.FormSolicitud = component.FormSolicitud || {};
     component.FormSolicitud.get = jest.fn();
     const DIRECCION_ST = component.direccionST;
-    // expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalledWith('direccionST');
   });
 
   it('should run GetterDeclaration #pedimentoST', () => {
     component.FormSolicitud = component.FormSolicitud || {};
     component.FormSolicitud.get = jest.fn();
     const PEDIMENTO_ST = component.pedimentoST;
-    // expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalledWith('pedimentoST');
   });
 
   it('should run #ngOnInit()', () => {
@@ -104,18 +100,18 @@ describe('SolicitudComponent', () => {
     component.onEntidadFederativaChange = jest.fn();
     component.sanitizeNumPedimento = jest.fn();
     component.ngOnInit();
-    // expect(component.inicializaCatalogos).toHaveBeenCalled();
-    // expect(component.fraccionArancelariaSeleccion).toHaveBeenCalled();
-    // expect(component.fraccionReglaSeleccion).toHaveBeenCalled();
-    // expect(component.onEntidadFederativaChange).toHaveBeenCalled();
-    // expect(component.sanitizeNumPedimento).toHaveBeenCalled();
+    expect(component.inicializaCatalogos).toHaveBeenCalled();
+    expect(component.fraccionArancelariaSeleccion).toHaveBeenCalled();
+    expect(component.fraccionReglaSeleccion).toHaveBeenCalled();
+    expect(component.onEntidadFederativaChange).toHaveBeenCalled();
+    expect(component.sanitizeNumPedimento).toHaveBeenCalled();
   });
 
   it('should run #isValid()', () => {
     component.validacionesService = component.validacionesService || {};
     component.validacionesService.isValid = jest.fn();
     component.isValid({}, {});
-    // expect(component.validacionesService.isValid).toHaveBeenCalled();
+    expect(component.validacionesService.isValid).toHaveBeenCalled();
   });
 
   it('should run #crearFormSolicitud()', () => {
@@ -148,55 +144,20 @@ describe('SolicitudComponent', () => {
     component.solicitudState.numeroPedimento = 'numeroPedimento';
     component.solicitudState.claveAduana = 'claveAduana';
     component.crearFormSolicitud();
-    // expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #inicializaCatalogos()', () => {
     component.avisoService = component.avisoService || {};
     component.avisoService.getFraccionArancelariaCatalogo = jest.fn().mockReturnValue(observableOf({
-      0: "f",
-      1: "r",
-      2: "a",
-      3: "c",
-      4: "c",
-      5: "i",
-      6: "o",
-      7: "n",
-      8: "A",
-      9: "r",
-      10: "a",
-      11: "n",
-      12: "c",
-      13: "e",
-      14: "l",
-      15: "a",
-      16: "r",
-      17: "i",
-      18: "a",
-      19: "$"
+      data: []
     }));
     component.avisoService.getFraccionReglaCatalogo = jest.fn().mockReturnValue(observableOf({
-      0: "r",
-      1: "e",
-      2: "g",
-      3: "l",
-      4: "a",
-      5: "A",
-      6: "r",
-      7: "a",
-      8: "n",
-      9: "c",
-      10: "e",
-      11: "l",
-      12: "a",
-      13: "r",
-      14: "i",
-      15: "a",
-      16: "$"
+      data: []
     }));
     component.inicializaCatalogos();
-    // expect(component.avisoService.getFraccionArancelariaCatalogo).toHaveBeenCalled();
-    // expect(component.avisoService.getFraccionReglaCatalogo).toHaveBeenCalled();
+    expect(component.avisoService.getFraccionArancelariaCatalogo).toHaveBeenCalled();
+    expect(component.avisoService.getFraccionReglaCatalogo).toHaveBeenCalled();
   });
 
   it('should run #fraccionArancelariaSeleccion()', () => {
@@ -205,10 +166,10 @@ describe('SolicitudComponent', () => {
       value: {}
     });
     component.tramite32502Store = component.tramite32502Store || {};
-    component.tramite32502Store.setFraccionArancelaria = jest.fn();
+    component.tramite32502Store.setCveFraccionArancelaria = jest.fn();
     component.fraccionArancelariaSeleccion();
-    // expect(component.FormSolicitud.get).toHaveBeenCalled();
-    // expect(component.tramite32502Store.setFraccionArancelaria).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalledWith('fraccionArancelaria');
+    expect(component.tramite32502Store.setCveFraccionArancelaria).toHaveBeenCalled();
   });
 
   it('should run #fraccionReglaSeleccion()', () => {
@@ -219,8 +180,8 @@ describe('SolicitudComponent', () => {
     component.tramite32502Store = component.tramite32502Store || {};
     component.tramite32502Store.setFraccionRegla = jest.fn();
     component.fraccionReglaSeleccion();
-    // expect(component.FormSolicitud.get).toHaveBeenCalled();
-    // expect(component.tramite32502Store.setFraccionRegla).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalledWith('reglaFraccion');
+    expect(component.tramite32502Store.setFraccionRegla).toHaveBeenCalled();
   });
 
   it('should run #onEntidadFederativaChange()', () => {
@@ -231,8 +192,8 @@ describe('SolicitudComponent', () => {
     component.tramite32502Store = component.tramite32502Store || {};
     component.tramite32502Store.setFraccionRegla = jest.fn();
     component.onEntidadFederativaChange();
-    // expect(component.FormSolicitud.get).toHaveBeenCalled();
-    // expect(component.tramite32502Store.setFraccionRegla).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalledWith('reglaFraccion');
+    expect(component.tramite32502Store.setFraccionRegla).toHaveBeenCalled();
   });
 
   it('should run #sanitizeNumPedimento()', () => {
@@ -243,8 +204,8 @@ describe('SolicitudComponent', () => {
     component.tramite32502Store = component.tramite32502Store || {};
     component.tramite32502Store.setFraccionRegla = jest.fn();
     component.sanitizeNumPedimento();
-    // expect(component.FormSolicitud.get).toHaveBeenCalled();
-    // expect(component.tramite32502Store.setFraccionRegla).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalledWith('reglaFraccion');
+    expect(component.tramite32502Store.setFraccionRegla).toHaveBeenCalled();
   });
 
   it('should run #setValoresStore()', () => {
@@ -257,17 +218,23 @@ describe('SolicitudComponent', () => {
           value: {}
         };
       }
-    }, {}, {});
-    // expect(component.tramite32502Store.setFraccionArancelaria).toHaveBeenCalled();
-    // expect(component.tramite32502Store.setFraccionRegla).toHaveBeenCalled();
+    }, 'fraccionArancelaria', 'setFraccionArancelaria');
+    expect(component.tramite32502Store.setFraccionArancelaria).toHaveBeenCalled();
+    component.setValoresStore({
+      get: function() {
+        return {
+          value: {}
+        };
+      }
+    }, 'fraccionRegla', 'setFraccionRegla');
+    expect(component.tramite32502Store.setFraccionRegla).toHaveBeenCalled();
   });
 
   it('should run #validarFormulario()', () => {
     component.FormSolicitud = component.FormSolicitud || {};
-    component.FormSolicitud.invalid = 'invalid';
+    component.FormSolicitud.invalid = true;
     component.FormSolicitud.markAllAsTouched = jest.fn();
     component.validarFormulario();
-    // expect(component.FormSolicitud.markAllAsTouched).toHaveBeenCalled();
+    expect(component.FormSolicitud.markAllAsTouched).toHaveBeenCalled();
   });
-
 });

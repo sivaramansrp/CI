@@ -4,10 +4,10 @@ import { Component } from '@angular/core';
 import { Persona } from '@ng-mf/data-access-user';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
-import { Tramite32502Query } from '../../../../estados/queries/tramite3250.query';
-import { map, Subject, takeUntil } from 'rxjs';
-import { SeccionAgaceState, SeccionAgaceStore } from '../../../../estados/seccion.store';
 import { Solicitud32502State, Tramite32502Store } from '../../../../estados/tramites/tramite32502.store';
+import { SeccionAgaceState } from '../../../../estados/seccion.store';
+import { Subject } from 'rxjs';
+import { Tramite32502Query } from '../../../../estados/queries/tramite3250.query';
 
 
 @Component({
@@ -41,28 +41,6 @@ export class AgregaPersonasComponent {
     private seccionQuery: Tramite32502Query
   ) {
     //
-  }
-
-  ngOnInit() {
-
-    // this.tramite32502Query.selectSolicitud$
-    //   .pipe(
-    //     takeUntil(this.destroyNotifier$),
-    //     map((seccionState) => {
-    //       this.solicitudState = seccionState;
-    //     })
-    //   )
-    //   .subscribe();
-
-    // this.seccionQuery.selectSolicitud$
-    //   .pipe(
-    //     takeUntil(this.destroyNotifier$),
-    //     map((SeccionAgaceState) => {
-    //       this.seccion = SeccionAgaceState;
-    //     })
-    //   )
-    //   .subscribe();
-    // this.personaForm;
   }
 
   isValid(field: string) {

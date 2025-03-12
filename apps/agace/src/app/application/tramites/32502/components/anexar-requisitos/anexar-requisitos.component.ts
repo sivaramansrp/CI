@@ -2,11 +2,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { CommonModule } from '@angular/common';
 
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { CatalogoSelectComponent, TEXTOS } from '@ng-mf/data-access-user';
-import documentosTable from '../../../32502/theme/assets/json/32502/anexar.json';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AlertComponent } from '@ng-mf/data-access-user';
+import documentosTable from 'libs/shared/theme/assets/json/32502/anexar.json';
 
 /**
  * @Component - AnexarRequisitosComponent
@@ -62,27 +62,27 @@ export class AnexarRequisitosComponent implements OnInit {
    */
 
   anexarEquisitosForm(): void {
-    let group: any = {};
+    const GROUP: any = {};
     this.documentos.forEach((_, index) => {
-      group['valorSeleccionado' + index] = new FormControl('');
+      GROUP['valorSeleccionado' + index] = new FormControl('');
     });
-    this.anexarForm = this.fb.group(group);
+    this.anexarForm = this.fb.group(GROUP);
   }
 
   cambioDeArchivo(event: any, index: number): void {
-    const file = event.target.files[0]; // Get the selected file
-    if (file) {
-      const fileUrl = URL.createObjectURL(file); // Create a URL for the selected file
-      this.documentos[index].archivoDisponible.descripcion = file.name;
-      this.documentos[index].fileUrl = fileUrl;
-      this.anexarForm.patchValue({ ['valorSeleccionado' + index]: file });
+    const FILE = event.target.files[0]; // Get the selected file
+    if (FILE) {
+      const FILE_URL = URL.createObjectURL(FILE); // Create a URL for the selected file
+      this.documentos[index].archivoDisponible.descripcion = FILE.name;
+      this.documentos[index].fileUrl = FILE_URL;
+      this.anexarForm.patchValue({ ['valorSeleccionado' + index]: FILE });
     }
   }
 
   verDocumento(index: number): void {
-    const fileUrl = this.documentos[index].fileUrl;
-    if (fileUrl) {
-      window.open(fileUrl, '_blank');
+    const FILE_URL = this.documentos[index].fileUrl;
+    if (FILE_URL) {
+      window.open(FILE_URL, '_blank');
     }
   }
 }

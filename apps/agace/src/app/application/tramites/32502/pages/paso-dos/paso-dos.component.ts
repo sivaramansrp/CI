@@ -1,14 +1,15 @@
-import { Catalogo, CatalogosSelect } from '@ng-mf/data-access-user';
 import { Component, Input, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Solicitud32502State, Tramite32502Store } from '../../../../estados/tramites/tramite32502.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { AvisoService } from '../../services/aviso.service';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { DocumentoService } from '@ng-mf/data-access-user';
 import { DocumentosCargados } from '@ng-mf/data-access-user';
 import { PDF } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Solicitud32502State, Tramite32502Store } from '../../../../estados/tramites/tramite32502.store';
 import { Tramite32502Query } from '../../../../estados/queries/tramite3250.query';
-import { map, Subject, takeUntil } from 'rxjs';
 /**
  * Este componente se muestra en PasaDos
  */
@@ -37,7 +38,7 @@ export class PasoDosComponent implements OnInit{
   /**
    * Tipo de documento.
    */
-  tipodocumento: any;
+  tipodocumento: { catalogos: Catalogo[], labelNombre: string, primerOpcion: string };
 
   /**
    * Token de autenticación.
@@ -69,6 +70,7 @@ export class PasoDosComponent implements OnInit{
     { id: 5, name: 'Poderes', checked: false },
     { id: 6, name: 'Otros', checked: false }
   ]
+  
 
   /**
    * Estado de los checkboxes seleccionados.
@@ -102,7 +104,8 @@ export class PasoDosComponent implements OnInit{
     private DocumentoService: DocumentoService,
     private toastr: ToastrService,
     public tramite32502Store: Tramite32502Store,
-    private tramite32502Query: Tramite32502Query
+    private tramite32502Query: Tramite32502Query,
+    private avisoService: AvisoService // Inject the AvisoService
   ) {
     this.tipodocumento = {
       catalogos: [],
@@ -123,7 +126,8 @@ export class PasoDosComponent implements OnInit{
     )
     .subscribe();
     this.crearCheckboxForm();
-    console.log()
+    console.log();
+    this.fetchCatalogoDocumentos(); // Fetch the catalogo documentos
   }
 
   private destroyNotifier$: Subject<void> = new Subject();
@@ -141,24 +145,24 @@ export class PasoDosComponent implements OnInit{
   }
 
   onCheckboxChange(event: Event, index: number): void {
-    const target = event.target as HTMLInputElement;
-    if (target) {
-      this.individualCheckbox.controls[index].setValue(target.checked);
+    const TARGET = event.target as HTMLInputElement;
+    if (TARGET) {
+      this.individualCheckbox.controls[index].setValue(TARGET.checked);
     }
     this.setValoresStore(this.checkboxForm,'individualCheckbox', 'setIndividualCheckbox');
   }
 
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite32502Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite32502Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite32502Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
    * Toggle all checkboxes based on "Tipo de documento" checkbox state.
    */
   toggleAllCheckboxes(event: Event): void {
-    const checked = (event.target as HTMLInputElement).checked;
-    this.individualCheckbox.controls.forEach(control => control.setValue(checked));
+    const CHECKED = (event.target as HTMLInputElement).checked;
+    this.individualCheckbox.controls.forEach(control => control.setValue(CHECKED));
     this.setValoresStore(this.checkboxForm, 'commonCheckbox', 'setCommonCheckbox');
     this.setValoresStore(this.checkboxForm, 'individualCheckbox', 'setIndividualCheckbox');
   }
@@ -231,5 +235,12 @@ export class PasoDosComponent implements OnInit{
    */
   get btnDesactivado(): boolean {
     return (this.documentoSeleccionado && this.documentoSeleccionado.id !== 0);
+  }
+
+  private fetchCatalogoDocumentos(): void {
+    this.avisoService.getTipoDocumento('tipoDocumento').subscribe(response => {
+      this.catalogoDocumentos = response.data;
+      console.log(this.catalogoDocumentos);
+    });
   }
 }

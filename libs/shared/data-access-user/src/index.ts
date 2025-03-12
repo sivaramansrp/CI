@@ -1,11 +1,6 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 export * from './tramites/pages/acuse-page/acuse-page.component';
 
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
-export * from '../../../../apps/agace/src/app/application/directives/customMock.directive.mock';
-export * from '../../../../apps/agace/src/app/application/pipes/seguroHtml.pipe.mock';
-export * from '../../../../apps/agace/src/app/application/pipes/traducir.pipe.mock';
-export * from '../../../../apps/agace/src/app/application/pipes/número-de-teléfono.pipe.mock';
 
 export * from './core/services/shared/formularios/formularios.service';
 
@@ -79,7 +74,6 @@ export * from './tramites/constantes/regex.constants';
 export * from './tramites/constantes/solicitante-constantes.enum';
 export * from './core/services/shared/solicitante/solicitante.service';
 export * from './core/services/130118/pexim/pexim.service';
-export * from '../../../../apps/agace/src/app/application/tramites/32502/services/aviso.service';
 export * from './core/services/shared/documento/documento.service';
 export * from './core/services/shared/inicio-sesion/inicio-sesion.service';
 export * from './core/services/shared/subir-documento/subir-documento.service';

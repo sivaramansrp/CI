@@ -1,9 +1,8 @@
+import { Component, Inject } from '@angular/core';
 import { catchError, map } from 'rxjs';
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
-import { TramiteStore } from 'apps/aga/src/app/application/estados/tramite.store';
+import { TramiteAgaceStore } from 'apps/agace/src/app/application/estados/tramite.store';
 
 @Component({
   selector: 'app-paso-tres',
@@ -25,7 +24,7 @@ export class PasoTresComponent {
   constructor(
     private router: Router,
     private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
-    private tramiteStore: TramiteStore
+    @Inject(TramiteAgaceStore) private tramiteStore: TramiteAgaceStore
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -43,13 +42,13 @@ export class PasoTresComponent {
    * @param ev La cadena de texto que representa la firma obtenida.
    */
   obtieneFirma(ev: string): void {
-    const firma: string = ev;
-    if (firma) {
+    const FIRMA: string = ev;
+    if (FIRMA) {
       this.serviciosExtraordinariosServices
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {
-            this.tramiteStore.establecerTramite(tramite.data, firma);
+            this.tramiteStore.establecerTramite(tramite.data, FIRMA);
             this.router.navigate(['servicios-extraordinarios/acuse']);
           }),
           catchError((_error) => {
