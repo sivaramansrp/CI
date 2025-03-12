@@ -13,11 +13,14 @@ import { DatosAdicionalesComponent } from '../components/datos-adicionales/datos
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TratadosComponent } from '../components/tratados/tratados.component';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { FirmarSolicitudComponent } from '../pages/firmar-solicitud/firmar-solicitud.component';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
   declarations: [
     DatosComponent,
-    PantallasComponent
+    PantallasComponent,
+    FirmarSolicitudComponent
   ],
   imports: [
     CommonModule,
@@ -30,7 +33,8 @@ import { BtnContinuarComponent } from '@ng-mf/data-access-user';
     DatosMercanciaComponent,
     DatosAdicionalesComponent,
     TratadosComponent,
-    BtnContinuarComponent
+    BtnContinuarComponent,
+    FirmaElectronicaComponent
   ]
 })
 
