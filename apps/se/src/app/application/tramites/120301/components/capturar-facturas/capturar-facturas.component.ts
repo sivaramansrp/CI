@@ -65,6 +65,18 @@ export class CapturarFacturasComponent implements OnInit {
    */
   ConstanciaDelRegistro!: FormGroup;
 
+  /**
+    * @property {Array} facturas - Array de datos de facturas para mostrar en la tabla.
+    *    * @param {FormBuilder} fb - Servicio para la creación de formularios.
+    * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.--120301
+    */
+  facturas: CapturarColumns[] = [];
+
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  private capturarState!: TextilesState
+
+  private seccionState!: SeccionLibState
 
   TablaSeleccion = TablaSeleccion;
   /**
@@ -110,18 +122,7 @@ export class CapturarFacturasComponent implements OnInit {
         orden: 8,
       },
     ];
-  /**
-  * @property {Array} facturas - Array de datos de facturas para mostrar en la tabla.
-  *    * @param {FormBuilder} fb - Servicio para la creación de formularios.
-  * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.--120301
-  */
-  facturas: CapturarColumns[] = [];
-
-  private destroyNotifier$: Subject<void> = new Subject();
-
-  private capturarState: TextilesState =createInitialState();
-
-  private seccionState!: SeccionLibState
+  
 
   constructor(
     private ElegibilidadTextilesService: ElegibilidadTextilesService,
@@ -136,7 +137,6 @@ export class CapturarFacturasComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.initActionFormBuild();
     this.seccionQuery.selectSeccionState$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -153,6 +153,9 @@ export class CapturarFacturasComponent implements OnInit {
         })
       )
       .subscribe();
+      this.initActionFormBuild();
+      this.obtenerListasDesplegables();
+      this.recuperarDatos();
 
   this.seccionStore.establecerFormaValida([false]);
   
@@ -176,10 +179,6 @@ export class CapturarFacturasComponent implements OnInit {
   else{
     this.seccionStore.establecerFormaValida([false]);
   }
-
-  this.obtenerListasDesplegables();
-  
-  this.recuperarDatos();
   }
 
   initActionFormBuild(): void {

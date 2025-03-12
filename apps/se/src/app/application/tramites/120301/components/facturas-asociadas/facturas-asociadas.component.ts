@@ -68,7 +68,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit {
 
   private destroyNotifier$: Subject<void> = new Subject();
   
-  private facturasState: TextilesState = createInitialState();
+  private facturasState!: TextilesState;
   
   private seccionState!: SeccionLibState
 
@@ -186,7 +186,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit {
    * @description Inicializa el componente y obtiene los datos de las facturas.
    */
   ngOnInit(): void {
-    this.initActionFormBuild();
+    
     this.seccionQuery.selectSeccionState$
           .pipe(
             takeUntil(this.destroyNotifier$),
@@ -203,6 +203,10 @@ export class FormularioAsociacionFacturaComponent implements OnInit {
             })
           )
           .subscribe();
+          this.initActionFormBuild();
+          this.recuperarDatos();
+          this.recuperarDatosAsociadas();
+
     this.formularioAsociacionFactura.statusChanges
           .pipe(
             takeUntil(this.destroyNotifier$),
@@ -224,9 +228,6 @@ export class FormularioAsociacionFacturaComponent implements OnInit {
       else{
         this.seccionStore.establecerFormaValida([false]);
       }
-    
-    this.recuperarDatos();
-    this.recuperarDatosAsociadas();
   }
   initActionFormBuild(): void {
     this.formularioAsociacionFactura = this.fb.group({

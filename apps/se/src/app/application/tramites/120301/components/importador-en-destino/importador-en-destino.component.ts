@@ -48,7 +48,7 @@ export class ImportadorEnDestinoComponent implements OnInit{
 
   private destroyNotifier$: Subject<void> = new Subject();
 
-  private importadorState: TextilesState = createInitialState();
+  private importadorState!: TextilesState;
 
   private seccionState!: SeccionLibState
 
@@ -74,7 +74,6 @@ export class ImportadorEnDestinoComponent implements OnInit{
    */
   ngOnInit(): void {
     
-    this.initActionFormBuild();
     this.seccionQuery.selectSeccionState$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -91,6 +90,9 @@ export class ImportadorEnDestinoComponent implements OnInit{
         })
       )
       .subscribe();
+      this.initActionFormBuild();
+      this.obtenerListasDesplegables();
+
       this.importadorForm.statusChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -105,7 +107,6 @@ export class ImportadorEnDestinoComponent implements OnInit{
       )
       .subscribe();
     
-    this.obtenerListasDesplegables();
     this.seccionStore.establecerFormaValida([false])
     if(this.importadorState.formaValida && this.importadorState.formaValida[0] && this.importadorState.formaValida[0].descripcion === 'AllValida'){
       this.seccionStore.establecerSeccion([true]);

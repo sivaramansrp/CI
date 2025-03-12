@@ -128,7 +128,7 @@ export class HistoricoFabricantesComponent implements OnInit {
 
   private destroyNotifier$: Subject<void> = new Subject();
 
-  private historicoState: TextilesState = createInitialState();
+  private historicoState!: TextilesState;
 
   private seccionState!: SeccionLibState
 
@@ -148,7 +148,6 @@ export class HistoricoFabricantesComponent implements OnInit {
    * @description Inicializa el componente y obtiene los datos de los fabricantes.
    */
   ngOnInit(): void {
-    this.initActionFormBuild();
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -165,6 +164,8 @@ export class HistoricoFabricantesComponent implements OnInit {
         })
       )
       .subscribe();
+      this.initActionFormBuild();
+      this.recuperarDatos();
 
     this.historicoFabricantesForm.statusChanges
       .pipe(
@@ -180,7 +181,6 @@ export class HistoricoFabricantesComponent implements OnInit {
       )
       .subscribe();
 
-    this.recuperarDatos();
     this.seccionStore.establecerFormaValida([false])
 
     if(this.historicoState.formaValida && this.historicoState.formaValida[0] && this.historicoState.formaValida[0].descripcion === 'AllValida'){
@@ -207,7 +207,6 @@ export class HistoricoFabricantesComponent implements OnInit {
     this.elegibilidadTextilesService.obtenerTablaDatos<HistoricoColumns>('historico-fabricantes.json').subscribe(
       (response) => {
           this.fabricantesNacionales = response as HistoricoColumns[]
-          console.log("response",response)
         },
       (error) => {
         console.error('Error al obtener los datos:', error);

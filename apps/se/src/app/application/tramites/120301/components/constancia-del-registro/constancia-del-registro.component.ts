@@ -7,7 +7,7 @@
  * @import { FormBuilder, FormGroup, Validators } from '@angular/forms';
  */
 import { Component, OnInit } from '@angular/core';
-import { ElegibilidadDeTextilesStore, TextilesState, createInitialState } from '../../estados/elegibilidad-de-textiles.store';
+import { ElegibilidadDeTextilesStore, TextilesState} from '../../estados/elegibilidad-de-textiles.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
@@ -58,7 +58,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
 
   private destroyNotifier$: Subject<void> = new Subject();
 
-  private constanciaState: TextilesState = createInitialState();
+  private constanciaState!: TextilesState;
 
   private seccionState!: SeccionLibState
 
@@ -86,7 +86,6 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   }
   
   ngOnInit(): void {
-    this.initActionFormBuild();
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -103,6 +102,8 @@ export class ConstanciaDelRegistroComponent implements OnInit {
         })
       )
       .subscribe();
+      
+    this.initActionFormBuild();
 
       this.seccionStore.establecerFormaValida([false]);
 
