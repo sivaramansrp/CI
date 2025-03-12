@@ -6,7 +6,7 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosDeFila } from '../../models/220202/fitosanitario.model';
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
 
-import { skip } from 'rxjs';
+import { skip, Subscription } from 'rxjs';
 
 
 
@@ -169,6 +169,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    */
   formularioDeTransporte?: FormGroup;
+
+
+  private subscription: Subscription = new Subscription();
   /**
     * @constructor
     * @param {AgriculturaApiService} agriculturaApiService - Servicio HttpClient para realizar peticiones HTTP.
@@ -353,6 +356,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * @method ngOnDestroy
  */
   ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
     this.agriculturaApiService.updateDatosForma(this.forma?.value)
   }
 

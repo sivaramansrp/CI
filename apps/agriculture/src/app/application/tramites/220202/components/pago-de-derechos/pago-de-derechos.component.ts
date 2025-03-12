@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { Catalogo, InputFecha } from '@ng-mf/data-access-user';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
-import { skip } from 'rxjs';
+import { skip, Subscription } from 'rxjs';
 
 /**
  * Componente para el formulario de pago de derechos.
@@ -70,6 +70,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @property {string} selectedValue
    */
   selectedValue: string = 'no';
+
+
+  private subscription: Subscription = new Subscription();
   /**
    * @description Método para actualizar la fecha de pago en el formulario.
    * @param {string} nuevo_valor - Nueva fecha a establecer.
@@ -160,6 +163,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     }
   }
   ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
     this.agriculturaApiService.updatePago(this.pagoForm.value);
   }
 }

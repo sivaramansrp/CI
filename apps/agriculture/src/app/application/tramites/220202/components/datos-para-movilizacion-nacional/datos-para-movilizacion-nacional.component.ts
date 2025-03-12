@@ -3,7 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 
 import { Catalogo } from '@ng-mf/data-access-user';
-import { skip } from 'rxjs';
+
+import { Subscription, skip } from 'rxjs';
 /**
  * @fileoverview Componente para la sección de datos para movilización nacional.
  * Este componente gestiona la lógica y la presentación del formulario de datos
@@ -43,10 +44,12 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @type {Catalogo}
    */
   puntoList: Catalogo[] = [];
+
   /**
    * @constructor
    * @param {AgriculturaApiService} agriculturaApiService - Servicio HttpClient para realizar peticiones.
    */
+  private subscription: Subscription = new Subscription();
   constructor(private readonly agriculturaApiService: AgriculturaApiService) {
     this.forma = new FormGroup({
       transporte: new FormControl('', Validators.required),
@@ -99,6 +102,9 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
     });
   }
   ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
     this.agriculturaApiService.updateMovilizacion(this.forma.value);
   }
 }
