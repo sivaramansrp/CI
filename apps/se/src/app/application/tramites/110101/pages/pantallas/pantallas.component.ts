@@ -7,16 +7,28 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@ng-mf/data-access-user';
 
 /**
- * **Estructura para representar una acción de botón**  
- *
- * - Define los datos asociados a una acción ejecutada por un botón en la interfaz.  
- * - `accion`: Nombre o tipo de acción que se realizará (ejemplo: 'guardar', 'cancelar').  
- * - `valor`: Identificador numérico o código asociado a la acción.  
+ * **Interfaz que representa una acción de un botón en la interfaz**  
+ * 
+ * Define la estructura de datos para gestionar las acciones ejecutadas  
+ * al interactuar con botones en la aplicación.  
  */
 interface AccionBoton {
-  accion: string; // Tipo de acción del botón (ejemplo: 'guardar', 'cancelar').
-  valor: number; // Código numérico asociado a la acción.
+  /** 
+   * **Tipo de acción que realizará el botón**  
+   * Especifica la acción asociada al botón cuando el usuario lo presiona.  
+   * Puede ser valores como `'guardar'`, `'cancelar'`, `'eliminar'`, `'continuar'`, etc.  
+   */
+  accion: string;
+
+  /** 
+   * **Valor numérico asociado a la acción del botón**  
+   * Representa un identificador que proporciona contexto a la acción.  
+   * Puede indicar el índice de un paso en un asistente, un ID de elemento,  
+   * o cualquier otro valor numérico relevante para la lógica de la aplicación.  
+   */
+  valor: number;
 }
+
 
 /**
  * Este componente se utiliza para mostrar los pasos del asistente - 110101
