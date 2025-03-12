@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 
 import { BasicRequerimientosRespuesta, ContribuyenteRespuesta, ManifiestosRespuesta } from '../../models/donaciones-extranjeras.model';
 import { Observable } from 'rxjs';
-import { RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 /**
  * Servicio para gestionar las donaciones extranjeras y acceder a diversos recursos como manifiestos, requerimientos,

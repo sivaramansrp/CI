@@ -21,6 +21,7 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
   templateUrl: './registro-de-donacion.component.html',
   styleUrl: './registro-de-donacion.component.scss'
 })
+/*eslint class-methods-use-this: ["error", { "exceptMethods": ["cargarArchivo", "limpiarMercancias", "enCambioDeValor"] }] */
 export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para el registro de donación.
@@ -173,6 +174,13 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
    * Subject para destruir notificador.
    */
   private destruirNotificador$: Subject<void> = new Subject();
+
+  /**
+   * Elemento de entrada de archivo HTML.
+   * 
+   * @type {HTMLInputElement}
+   */
+  entradaArchivo!: HTMLInputElement;
 
   /**
    * Constructor del componente.
@@ -567,7 +575,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite10303Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite10303Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite10303Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
@@ -615,8 +623,8 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   public obtenerMercancia(): void {
-    this.mercanciaHeaderData = this.getMercanciaTableData.tableHeader;
-    this.mercanciaBodyData = this.getMercanciaTableData.tableBody;
+    this.mercanciaHeaderData = this.getMercanciaTableData.mercanciaTable.tableHeader;
+    this.mercanciaBodyData = this.getMercanciaTableData.mercanciaTable.tableBody;
   }
 
   /**
@@ -689,7 +697,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       return;
     }
     const MERCANCIA = this.agregarMercanciasForm.value;
-    this.getMercanciaTableData.tableBody.push(MERCANCIA);
+    this.getMercanciaTableData.mercanciaTable.tableBody.push(MERCANCIA);
     this.agregarMercanciasForm.reset();
     this.cerrarModal();
   }
@@ -726,9 +734,9 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   activarSeleccionArchivo(): void {
-    const ENTRADA_ARCHIVO = document.getElementById('archivoMedicamentos') as HTMLInputElement;
-    if (ENTRADA_ARCHIVO) {
-      ENTRADA_ARCHIVO.click();
+    this.entradaArchivo = document.getElementById('archivoMedicamentos') as HTMLInputElement;
+    if (this.entradaArchivo) {
+      this.entradaArchivo.click();
     }
   }
 

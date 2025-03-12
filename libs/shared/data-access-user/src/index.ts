@@ -121,3 +121,4 @@ export * from './core/enums/tabla-seleccion.enum';
 export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
 export * from './tramites/directives/Uppercase/uppercase.directive'
 export * from './tramites/directives/Uppercase/uppercase.directive';
+export { RespuestaCatalogos } from './core/models/shared/catalogos.model';

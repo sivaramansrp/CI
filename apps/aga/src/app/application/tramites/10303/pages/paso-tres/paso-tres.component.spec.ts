@@ -2,15 +2,19 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PasoTresComponent } from './paso-tres.component';
 import { TramiteStore } from '../../../../estados/tramite.store';
+import { FirmaElectronicaComponent, ServiciosExtraordinariosService } from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrService } from 'ngx-toastr';
 
-describe('PasoTresComponent', () => {
+fdescribe('PasoTresComponent', () => {
   let component: PasoTresComponent;
   let fixture: ComponentFixture<PasoTresComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PasoTresComponent],
-      providers: [TramiteStore]
+      imports: [FirmaElectronicaComponent, HttpClientTestingModule],
+      providers: [ServiciosExtraordinariosService, TramiteStore, ToastrService]
     })
     .compileComponents();
     

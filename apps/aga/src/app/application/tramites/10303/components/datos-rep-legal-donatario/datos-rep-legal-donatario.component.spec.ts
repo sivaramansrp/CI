@@ -1,6 +1,6 @@
 import { DatosRepLegalDonatarioComponent } from './datos-rep-legal-donatario.component';
 import { FormBuilder } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 
 describe('DatosRepLegalDonatarioComponent', () => {
   let component: DatosRepLegalDonatarioComponent;
@@ -31,6 +31,22 @@ describe('DatosRepLegalDonatarioComponent', () => {
       mockTramite10303Query,
       mockToastr
     );
+
+    component.datosRepLegalDonatarioForm = new FormBuilder().group({
+      rfcRepLegalDonatario: [''],
+      nombreRepLegalDonatario: [''],
+      calleRepLegalDonatario: [''],
+      numExteriorRepLegalDonatario: [''],
+      numInteriorRepLegalDonatario: [''],
+      cvePaisRepLegalDonatario: [''],
+      codigoPostalRepLegalDonatario: [''],
+      estadoRepLegalDonatario: [''],
+      coloniaRepLegalDonatario: [''],
+      correoElectronicoRepLegalDonatario: [''],
+      telefonoRepLegalDonatario: ['']
+    });
+
+    (component as any).destruirNotificador$ = new Subject();
   });
 
   it('should create the form on initialization', () => {
@@ -45,9 +61,7 @@ describe('DatosRepLegalDonatarioComponent', () => {
   });
 
   it('should set the selected country in store', () => {
-    component.datosRepLegalDonatarioForm = new FormBuilder().group({
-      cvePaisRepLegalDonatario: ['IN']
-    });
+    component.datosRepLegalDonatarioForm.patchValue({ cvePaisRepLegalDonatario: 'IN' });
     component.paisSeleccion();
     expect(mockTramite10303Store.setCvePaisRepLegalDonatario).toHaveBeenCalledWith('IN');
   });
@@ -92,7 +106,7 @@ describe('DatosRepLegalDonatarioComponent', () => {
 
     component.construirRLdonatario(mockContribuyente, true);
     expect(component.datosRepLegalDonatarioForm.value).toEqual({
-      rfcRepLegalDonatario: undefined,
+      rfcRepLegalDonatario: 'XYZ123',
       nombreRepLegalDonatario: 'Jane Doe ',
       calleRepLegalDonatario: 'Park Avenue',
       numExteriorRepLegalDonatario: '10',

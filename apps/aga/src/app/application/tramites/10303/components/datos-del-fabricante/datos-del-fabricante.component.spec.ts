@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -9,6 +9,7 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
 import { DatosDelFabricanteComponent } from './datos-del-fabricante.component';
 import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
+import { ToastrService, TOAST_CONFIG } from 'ngx-toastr';
 
 const MOCK_PAISES: Catalogo[] = [
   { id: 1, descripcion: 'País 1' },
@@ -38,8 +39,16 @@ describe('DatosDelFabricanteComponent', () => {
   let component: DatosDelFabricanteComponent;
   let fixture: ComponentFixture<DatosDelFabricanteComponent>;
   let service: DonacionesExtranjerasService;
+  let mockToastr: any;
 
   beforeEach(waitForAsync(() => {
+    mockToastr = {
+      error: jest.fn(),
+      success: jest.fn(),
+      info: jest.fn(),
+      warning: jest.fn()
+    };
+
     TestBed.configureTestingModule({
       declarations: [DatosDelFabricanteComponent],
       imports: [
@@ -49,7 +58,23 @@ describe('DatosDelFabricanteComponent', () => {
         CatalogoSelectComponent,
         AlertComponent
       ],
-      providers: [DonacionesExtranjerasService]
+      providers: [
+        DonacionesExtranjerasService,
+        { provide: ToastrService, useValue: mockToastr },
+        {
+          provide: TOAST_CONFIG,
+          useValue: {
+            iconClasses: {
+              error: 'toast-error',
+              info: 'toast-info',
+              success: 'toast-success',
+              warning: 'toast-warning'
+            },
+            positionClass: 'toast-top-right',
+            preventDuplicates: true
+          }
+        }
+      ]
     }).compileComponents();
   }));
 
@@ -57,16 +82,33 @@ describe('DatosDelFabricanteComponent', () => {
     fixture = TestBed.createComponent(DatosDelFabricanteComponent);
     component = fixture.componentInstance;
     service = TestBed.inject(DonacionesExtranjerasService);
+    
+    (component as any).destruirNotificador$ = new Subject();
+
+    component.datosDelFabricanteForm = new FormBuilder().group({
+      rfcFabricante: [''],
+      nombreFabricante: [''],
+      calleFabricante: [''],
+      numExteriorFabricante: [''],
+      numInteriorFabricante: [''],
+      cvePaisFabricante: [''],
+      codigoPostalFabricante: [''],
+      estadoFabricante: [''],
+      coloniaFabricante: [''],
+      correoElectronicoFabricante: [''],
+      telefonoFabricante: ['']
+    });
   });
 
   it('should create', () => {
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
   it('should initialize the catalogos on ngOnInit', () => {
-    const SPY = jest.spyOn(service, 'getPaises').mockReturnValue(of({ code: 200, data: MOCK_PAISES, message: 'Success' }));
+    const spy = jest.spyOn(service, 'getPaises').mockReturnValue(of({ code: 200, data: MOCK_PAISES, message: 'Success' }));
     component.ngOnInit();
-    expect(SPY).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 
   it('should initialize catalogos', () => {
@@ -82,8 +124,8 @@ describe('DatosDelFabricanteComponent', () => {
   });
 
   it('should process the fabricante data', () => {
-    const CONTRIBUYENTE = MOCK_CONTRIBUYENTE_RESPUESTA.data[0];
-    component.fabricante(CONTRIBUYENTE, true);
+    const contribuyente = MOCK_CONTRIBUYENTE_RESPUESTA.data[0];
+    component.fabricante(contribuyente, true);
     expect(component.datosDelFabricanteForm.get('nombreFabricante')?.value).toEqual('Nombre Ejemplo Apellido Paterno Apellido Materno');
     expect(component.datosDelFabricanteForm.get('calleFabricante')?.value).toEqual('Calle Ejemplo');
   });
@@ -95,14 +137,16 @@ describe('DatosDelFabricanteComponent', () => {
   });
 
   it('should set valores in store', () => {
-    const SPY = jest.spyOn(component['tramite10303Store'], 'setCvePaisFabricante');
+    const spy = jest.spyOn(component['tramite10303Store'], 'setCvePaisFabricante');
     component.setValoresStore(component.datosDelFabricanteForm, 'cvePaisFabricante', 'setCvePaisFabricante');
-    expect(SPY).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 
   it('should destroy subscriptions on ngOnDestroy', () => {
-    const SPY = jest.spyOn(component['destruirNotificador$'], 'next');
+    const spyNext = jest.spyOn((component as any).destruirNotificador$, 'next');
+    const spyComplete = jest.spyOn((component as any).destruirNotificador$, 'complete');
     component.ngOnDestroy();
-    expect(SPY).toHaveBeenCalled();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 });

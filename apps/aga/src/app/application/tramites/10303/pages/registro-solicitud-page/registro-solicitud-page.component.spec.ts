@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { RegistroSolicitudPageComponent } from './registro-solicitud-page.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -12,11 +12,15 @@ describe('RegistroSolicitudPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [
-        RegistroSolicitudPageComponent,
+      imports: [
+        FormsModule, 
+        ReactiveFormsModule,
         WizardComponent,
-        AlertComponent
+        AlertComponent,
+        BtnContinuarComponent
+      ],
+      declarations: [
+        RegistroSolicitudPageComponent        
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     }).compileComponents();

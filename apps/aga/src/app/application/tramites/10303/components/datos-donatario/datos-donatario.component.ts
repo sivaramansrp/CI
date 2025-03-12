@@ -190,7 +190,7 @@ export class DatosDonatarioComponent implements OnInit, OnDestroy {
     */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite10303Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite10303Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite10303Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

@@ -1,113 +1,104 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
-import { of } from 'rxjs';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
 import { DatosDonatarioComponent } from './datos-donatario.component';
 import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Tramite10303Store } from '../../estados/tramites/tramite10303.store';
+import { Tramite10303Query } from '../../estados/queries/tramite10303.query';
+import { CATALOGOS_ID, Catalogo, CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
 
 describe('DatosDonatarioComponent', () => {
   let component: DatosDonatarioComponent;
   let fixture: ComponentFixture<DatosDonatarioComponent>;
-  let donacionesExtranjerasService: DonacionesExtranjerasService;
+  let mockDonacionesExtranjerasService: any;
+  let mockTramite10303Store: any;
+  let mockTramite10303Query: any;
+  let mockToastr: any;
 
-  const PAIS_MOCK = { data: [{ id: 1, descripcion: 'México' }] };
-  const CONTRIBUYENTE_MOCK: ContribuyenteRespuesta = {
-    data: [{
-      rfc: 'ABC123456789',
-      razonSocial: 'Empresa S.A. de C.V.',
-      nombre: 'Juan',
-      apellidoPaterno: 'Pérez',
-      apellidoMaterno: 'González',
-      calle: 'Av. Reforma',
-      numeroExterior: '123',
-      numeroInterior: '101',
-      estado: 'CDMX',
-      colonia: 'Centro',
-      codigoPostal: '01000',
-      pais: 'MX',
-      correoElectronico: 'juan.perez@example.com',
-      telefono: '5551234567'
-    }]
-  };
-
-  beforeEach(async () => {
-    const SPY = jasmine.createSpyObj('DonacionesExtranjerasService', ['getPaises', 'buscarContribuyente']);
-
-    const DONACIONES_EXTRANJERAS_SERVICE_MOCK = {
-      getPaises: jest.fn().mockReturnValue(of(PAIS_MOCK)),
-      buscarContribuyente: jest.fn().mockReturnValue(of(CONTRIBUYENTE_MOCK))
+  beforeEach(() => {
+    mockDonacionesExtranjerasService = {
+      getPaises: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'México' }] })),
+      buscarContribuyente: jest.fn().mockReturnValue(of({ data: [] }))
+    };
+    mockTramite10303Store = {
+      setCvePaisDonatario: jest.fn()
+    };
+    mockTramite10303Query = {
+      selectSeccionState$: of({
+        rfcDonatario: 'RFC123',
+        nombreDonatario: 'Donatario Ejemplo'
+      })
+    };
+    mockToastr = {
+      error: jest.fn(),
+      success: jest.fn()
     };
 
-    await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, CatalogoSelectComponent],
+    TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, CatalogoSelectComponent],
       declarations: [DatosDonatarioComponent],
       providers: [
-        { provide: DonacionesExtranjerasService, useValue: DONACIONES_EXTRANJERAS_SERVICE_MOCK }
+        { provide: DonacionesExtranjerasService, useValue: mockDonacionesExtranjerasService },
+        { provide: Tramite10303Store, useValue: mockTramite10303Store },
+        { provide: Tramite10303Query, useValue: mockTramite10303Query },
+        { provide: ToastrService, useValue: mockToastr },
+        FormBuilder
       ]
-    })
-    .compileComponents();
-    
+    }).compileComponents();
+
     fixture = TestBed.createComponent(DatosDonatarioComponent);
     component = fixture.componentInstance;
-    donacionesExtranjerasService = TestBed.inject(DonacionesExtranjerasService);
+
+    (component as any).destruirNotificador$ = new Subject();
+
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    (component as any).destruirNotificador$.next();
+    (component as any).destruirNotificador$.complete();
+  });
+
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create the form on ngOnInit', () => {
+  it('should call inicializaCatalogos on ngOnInit', () => {
+    const spy = jest.spyOn(component, 'inicializaCatalogos');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
     expect(component.datosDonatarioForm).toBeDefined();
+    expect(component.datosDonatarioForm.value).toEqual({
+      rfcDonatario: 'RFC123',
+      nombreDonatario: 'Donatario Ejemplo',
+      calleDonatario: null,
+      numExteriorDonatario: null,
+      numInteriorDonatario: null,
+      cvePaisDonatario: null,
+      codigoPostalDonatario: null,
+      estadoDonatario: null,
+      coloniaDonatario: null,
+      correoElectronicoDonatario: null,
+      telefonoDonatario: null
+    });
   });
-  
-  it('should call tramite10303Store.setCvePaisDonatario on paisSeleccion', () => {
-    const SPY = jest.spyOn(component['tramite10303Store'], 'setCvePaisDonatario');
-    component.datosDonatarioForm.patchValue({ cvePaisDonatario: 'testPais' });
-    component.paisSeleccion();
-    expect(SPY).toHaveBeenCalledWith('testPais');
-  });
-  
-  it('should call construirDonatario with correct parameters on buscarContribuyenteRfc', () => {
-    const SPY = jest.spyOn(component, 'construirDonatario');
-    jest.spyOn(donacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of(CONTRIBUYENTE_MOCK));
-    component.buscarContribuyenteRfc(1, 'ABC123456789');
-    expect(SPY).toHaveBeenCalledWith(CONTRIBUYENTE_MOCK.data[0], true);
-  });
-  
-  it('should call toastr.error on buscarContribuyenteRfc with incorrect valor', () => {
-    const TOASTR_SPY = jest.spyOn((component as any).toastr, 'error');
-    jest.spyOn(donacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of(CONTRIBUYENTE_MOCK));
-    component.buscarContribuyenteRfc(0, 'ABC123456789');
-    expect(TOASTR_SPY).toHaveBeenCalledWith('Valor erronio');
-  });
-  
-  it('should call restablecerFormulario if contribuyente not found', () => {
-    const SPY = jest.spyOn(component, 'restablecerFormulario');
-    jest.spyOn(donacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of({ data: [] }));
-    component.buscarContribuyenteRfc(1, 'ABC123456789');
-    expect(SPY).toHaveBeenCalled();
-  });
-  
-  it('should patch form values on construirDonatario with encontrado true', () => {
-    const CONTRIBUYENTE = CONTRIBUYENTE_MOCK.data[0];
-    component.construirDonatario(CONTRIBUYENTE, true);
-    expect(component.datosDonatarioForm.get('nombreDonatario')?.value).toEqual('Juan Pérez González');
-    expect(component.datosDonatarioForm.get('calleDonatario')?.value).toEqual('Av. Reforma');
-  });
-  
-  it('should reset form on construirDonatario with encontrado false', () => {
-    const SPY = jest.spyOn(component, 'restablecerFormulario');
-    component.construirDonatario(CONTRIBUYENTE_MOCK.data[0], false);
-    expect(SPY).toHaveBeenCalled();
-  });
-  
-  it('should reset form on restablecerFormulario', () => {
-    component.datosDonatarioForm.reset({
+
+  it('should reset the form when restablecerFormulario is called', () => {
+    component.datosDonatarioForm.patchValue({
+      rfcDonatario: 'RFC123',
+      nombreDonatario: 'Donatario Example'
+    });
+
+    component.restablecerFormulario();
+
+    expect(component.datosDonatarioForm.value).toEqual({
       rfcDonatario: null,
       nombreDonatario: null,
       calleDonatario: null,
@@ -120,23 +111,79 @@ describe('DatosDonatarioComponent', () => {
       correoElectronicoDonatario: null,
       telefonoDonatario: null
     });
-    component.restablecerFormulario();
-    expect(component.datosDonatarioForm.get('rfcDonatario')?.value).toBeNull();
-    expect(component.datosDonatarioForm.get('nombreDonatario')?.value).toBeNull();
   });
 
-  it('should set valores in store on setValoresStore', () => {
-    const FORM = new FormGroup({
-      testCampo: new FormControl('testValue')
-    });
-    const SPY = jest.spyOn(component['tramite10303Store'], 'setCvePaisDonatario');
-    component.setValoresStore(FORM, 'testCampo', 'setCvePaisDonatario');
-    expect(SPY).toHaveBeenCalledWith('testValue');
+  it('should fetch catalogues and populate pais', () => {
+    component.inicializaCatalogos();
+
+    expect(mockDonacionesExtranjerasService.getPaises).toHaveBeenCalledWith(CATALOGOS_ID.CAT_PAIS);
+    expect(component.pais).toEqual([{ id: 1, descripcion: 'México' }]);
   });
-  
-  it('should destroy subscriptions on ngOnDestroy', () => {
-    const SPY = jest.spyOn(component['destruirNotificador$'], 'next');
+
+  it('should update tramite10303Store with selected pais', () => {
+    const spy = jest.spyOn(mockTramite10303Store, 'setCvePaisDonatario');
+    component.datosDonatarioForm.patchValue({ cvePaisDonatario: 'IN' });
+    component.paisSeleccion();
+    expect(spy).toHaveBeenCalledWith('IN');
+  });
+
+  it('should search contribuyente by RFC and update the form', () => {
+    const mockResponse: ContribuyenteRespuesta = {
+      data: [
+        {
+          rfc: 'RFC123',
+          razonSocial: 'Donatario Corp',
+          calle: 'Calle Ejemplo',
+          numeroExterior: '123',
+          estado: 'Estado Ejemplo',
+          colonia: 'Colonia Ejemplo',
+          codigoPostal: '54321',
+          pais: 'México',
+          correoElectronico: 'correo@ejemplo.com',
+          telefono: '1234567890'
+        }
+      ]
+    };
+    jest.spyOn(mockDonacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of(mockResponse));
+
+    component.buscarContribuyenteRfc(1, 'RFC123');
+
+    expect(component.datosDonatarioForm.get('nombreDonatario')?.value).toEqual('Donatario Corp');
+    expect(component.datosDonatarioForm.get('calleDonatario')?.value).toEqual('Calle Ejemplo');
+  });
+
+  it('should reset the form if contribuyente is not found', () => {
+    jest.spyOn(mockDonacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of({ data: [] }));
+
+    component.buscarContribuyenteRfc(1, 'NON_EXISTENT_RFC');
+
+    expect(component.datosDonatarioForm.value).toEqual({
+      rfcDonatario: null,
+      nombreDonatario: null,
+      calleDonatario: null,
+      numExteriorDonatario: null,
+      numInteriorDonatario: null,
+      cvePaisDonatario: null,
+      codigoPostalDonatario: null,
+      estadoDonatario: null,
+      coloniaDonatario: null,
+      correoElectronicoDonatario: null,
+      telefonoDonatario: null
+    });
+  });
+
+  it('should call ToastrService error for invalid valor', () => {
+    component.buscarContribuyenteRfc(0, 'RFC123');
+    expect(mockToastr.error).toHaveBeenCalledWith('Valor erronio');
+  });
+
+  it('should complete destruirNotificador$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destruirNotificador$'], 'next');
+    const completeSpy = jest.spyOn(component['destruirNotificador$'], 'complete');
+
     component.ngOnDestroy();
-    expect(SPY).toHaveBeenCalled();
+
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

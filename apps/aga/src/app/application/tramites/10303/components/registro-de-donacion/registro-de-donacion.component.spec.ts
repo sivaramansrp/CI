@@ -2,9 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 
-import { AlertComponent, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 import { RegistroDeDonacionComponent } from './registro-de-donacion.component';
+import { DatosDonanteExtranjeroComponent } from '../datos-donante-extranjero/datos-donante-extranjero.component';
 
 describe('RegistroDeDonacionComponent', () => {
   let component: RegistroDeDonacionComponent;
@@ -27,8 +28,18 @@ describe('RegistroDeDonacionComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [RegistroDeDonacionComponent],
-      imports: [ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, AlertComponent],
+      declarations: [
+        RegistroDeDonacionComponent,
+        DatosDonanteExtranjeroComponent
+      ],
+      imports: [
+        ReactiveFormsModule, 
+        TituloComponent, 
+        CatalogoSelectComponent, 
+        AlertComponent, 
+        TableComponent,
+        InputRadioComponent
+      ],
       providers: [{ provide: DonacionesExtranjerasService, useValue: SPY }]
     }).compileComponents();
 
@@ -87,7 +98,7 @@ describe('RegistroDeDonacionComponent', () => {
       }
     });
     component.agregarMercancias();
-    expect(component.getMercanciaTableData.tableBody.length).toBe(1);
+    expect(component.getMercanciaTableData.mercanciaTable.tableBody.length).toBe(1);
     expect(component.cerrarModal).toHaveBeenCalled();
   });
 

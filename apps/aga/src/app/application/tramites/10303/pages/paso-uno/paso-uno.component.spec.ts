@@ -2,8 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-import { AlertComponent, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, SolicitanteComponent, SolicitanteService } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from './paso-uno.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -11,9 +13,10 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({ 
-      declarations: [PasoUnoComponent, SolicitanteComponent, AlertComponent],
-      imports: [CommonModule],
-      providers: [NO_ERRORS_SCHEMA]
+      declarations: [PasoUnoComponent],
+      imports: [CommonModule, SolicitanteComponent, AlertComponent],
+      providers: [SolicitanteService, HttpClientTestingModule, HttpClient],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
