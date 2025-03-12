@@ -5,7 +5,10 @@ import {
   TEXTOS
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+
 import { Subject } from 'rxjs';
+
+import { DOCUMENTOSSELECCIONADOS } from '../../constantes/220203/importacion-de-acuicultura.enum';
 /**
  * Componente para manejar el paso tres en el proceso de importación de acuicultura.
  * Este componente permite seleccionar los tipos de documentos necesarios para el trámite.
@@ -65,10 +68,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
-    this.documentosSeleccionados = [
-      { id: 1, descripcion: 'Documentos que ampare el valor de la mercancía' },
-      { id: 2, descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)' },
-    ];
+    this.documentosSeleccionados = DOCUMENTOSSELECCIONADOS;
   }
 
   /**
