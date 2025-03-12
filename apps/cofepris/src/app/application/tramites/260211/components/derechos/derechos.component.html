@@ -21,12 +21,13 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                  <!-- <app-catalogo-select
-                    [catalogo]="aduanas"
-                    [tooltipQuestionCircle]="false"
-                    [label]="'Sexo'"
+                  <app-catalogo-select
+                    [catalogo]="derechosList"
+                   
+                    [label]="'benco'"
                     [placeholder]="'Seleccione una aduana'"
-                  ></app-catalogo-select> -->
+                    formControlName="benco"
+                  ></app-catalogo-select>
                 </div>
               </div>
           </div>
@@ -55,7 +56,6 @@
           </div>
           <div class="row mt-5 mb-2">
             <div class="col-md-8">
-                <p>* Campos obligatorios</p>
             </div>
             <div class="col-md-4">
               <div class="btn-group">
