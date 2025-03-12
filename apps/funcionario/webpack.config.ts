@@ -1,8 +1,3 @@
-// import { withModuleFederation } from '@nx/angular/module-federation';
-// import config from './module-federation.config';
-
-// export default withModuleFederation(config);
-
 const { ModuleFederationPlugin } = require('webpack').container;
 const mf = require('@angular-architects/module-federation/webpack');
 const path = require('path');

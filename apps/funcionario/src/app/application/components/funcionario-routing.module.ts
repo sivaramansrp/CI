@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SeleccionModuloComponent } from '../seleccion-modulo/seleccion-modulo.component';
-import { EvaluarSolicitudComponent } from './evaluar-solicitud/evaluar-solicitud.component';
 import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirmar-notificacion.component';
 import { AtenderRequerimientoComponent } from './atender-requerimiento/atender-requerimiento.component';
 import { BandejaPendientesComponent } from './bandeja-pendientes/bandeja-pendientes.component';
 import { AutorizarDictamenComponent } from './autorizar-dictamen/autorizar-dictamen.component';
+import { SolicitudPageComponent } from './evaluar-solicitud/solicitud-page/solicitud-page.component';
+import { GenerarDictamenComponent } from './evaluar-solicitud/generar-dictamen/generar-dictamen.component';
 
 const routes: Routes = [
   {
@@ -22,7 +23,7 @@ const routes: Routes = [
   },
   {
     path: 'evaluar-solicitud',
-    component: EvaluarSolicitudComponent,
+    component: SolicitudPageComponent,
   },
   {
     path: 'seleccion-modulo',

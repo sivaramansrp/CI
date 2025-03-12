@@ -1,0 +1,41 @@
+<div class="page">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <h2>Evaluar solicitud</h2>
+        </div>
+      </div>
+      <lib-encabezado-requerimiento
+        [numFolioTramite]="'02309482934723832'"
+        [tipoTramite]="'Registro de solicitud de servicios extraordinarios'"
+      ></lib-encabezado-requerimiento>
+    <br>
+    <div class="row margin-top">
+      <ul class="nav nav-tabs justify-content-center">
+        <li [ngClass]="indice === 1 ? 'active' : ''">
+          <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
+            (keydown.space)="seleccionaTab(1)" role="button" tabindex="0">Dictamen</a>
+        </li>
+        <li [ngClass]="indice === 2 ? 'active' : ''">
+          <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
+            (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Requerimiento de información</a>
+        </li>
+      </ul>
+      <ng-container>
+        @switch (indice) {
+        @case (1) {
+          <app-generar-dictamen></app-generar-dictamen>
+        }
+        @case (2) {
+          <app-requerimiento-informacion></app-requerimiento-informacion>
+        } 
+        }
+      </ng-container>
+
+    </div>
+    <div class="d-flex justify-content-lg-end">
+        <button type="button" class="btn btn-default ms-2">Cancelar</button> 
+        <button class="btn  btn-primary ms-2" type="button" (click)="guardarFirmar()">Guardar y firmar</button>
+  </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+<div class="container rounded p-3 bg-light">
+    <div class="row padding-top">
+            <form>
+                <div class="row">
+                    <div class="col-md-12">
+                        <br>
+                        <div class="col-md-4">
+                            <label for="tipoRequerimiento" class="fw-bold">
+                                Tipo de requerimiento <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select form-control" aria-label=".form-select-sm example">
+                                <option selected>Datos y documentos</option>
+                                <option value="1">Datos</option>
+                                <option value="2">Documentos</option>
+                            </select>
+                        </div>
+                        <div class="col-md-8"></div>
+                        <div class="col-md-12">
+                            <label for="justificacion" class="fw-bold">
+                                Justificación del requerimiento <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control" rows="3" id="justificacion" formControlName="descripcion"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <div class="col-md-12">
+                    <p class="text-danger small">*Campos obligatorios</p>
+                </div>
+            </form>
+    </div>
+</div>

@@ -44,3 +44,6 @@ Thumbs.db
 ./.package-lock.json
 .package-lock.json
 .bablerc
+/.vs/frontend/FileContentIndex
+*.sqlite-journal
+/.vs/slnx.sqlite
