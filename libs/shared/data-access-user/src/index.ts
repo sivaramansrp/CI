@@ -85,7 +85,6 @@ export { TablaSeleccion } from './core/enums/tabla-seleccion.enum';
 export { TablaDinamicaComponent } from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export { TituloComponent } from './tramites/components/titulo/titulo.component';
 export * from './core/models/shared/configuracion-columna.model'
-export { PASOS as TODAPASOS } from './tramites/constantes/certificado-zoosanitario.enum';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './core/enums/tabla-seleccion.enum';
 export * from './tramites/constantes/110102/datos-tratados-acuerdos.enum';
