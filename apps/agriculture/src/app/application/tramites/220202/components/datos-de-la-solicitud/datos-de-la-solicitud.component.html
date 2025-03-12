@@ -65,14 +65,7 @@
           [required]="true"
           [isDisabled]="false"
           name="aduana"
-        
-          (change)="
-          setValoresStore(
-            forma,
-            'aduana',
-          )
-        "
-          
+          (change)="setValoresStore(forma, 'aduana')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-12">
@@ -83,12 +76,7 @@
           [required]="true"
           [isDisabled]="false"
           name="agropecuaria"
-          (change)="
-          setValoresStore(
-            forma,
-            'agropecuaria',
-          )
-        "
+          (change)="setValoresStore(forma, 'agropecuaria')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-12">
@@ -99,22 +87,19 @@
           [required]="true"
           [isDisabled]="false"
           name="punto"
-          (change)="
-          setValoresStore(
-            forma,
-            'punto',
-          )
-        "
+          (change)="setValoresStore(forma, 'punto')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-6 mt-2">
         <label class="control-label" for="guia">Número de guía:</label>
-        <input class="form-control" id="guia" placeholder="" type="text"  formControlName="guia"   (change)="
-        setValoresStore(
-          forma,
-          'guia',
-        )
-      "/>
+        <input
+          class="form-control"
+          id="guia"
+          placeholder=""
+          type="text"
+          formControlName="guia"
+          (change)="setValoresStore(forma, 'guia')"
+        />
       </div>
       <div class="col-md-6">
         <app-catalogo-select
@@ -124,40 +109,30 @@
           [required]="true"
           [isDisabled]="false"
           name="regimen"
-          (change)="
-        setValoresStore(
-          forma,
-          'regimen',
-        )
-      "
+          (change)="setValoresStore(forma, 'regimen')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-6">
-        <label class="control-label" for="ferrocarril"
-          >Número de Carro de Ferrocarril:</label
-        >
-        <input class="form-control" id="ferrocarril"   formControlName="ferrocarril" placeholder="" type="text"    (change)="
-        setValoresStore(
-          forma,
-          'ferrocarril',
-        )
-      "/>
+        <label class="control-label" for="ferrocarril">Número de Carro de Ferrocarril:</label>
+        <input
+          class="form-control"
+          id="ferrocarril"
+          formControlName="ferrocarril"
+          placeholder=""
+          type="text"
+          (change)="setValoresStore(forma, 'ferrocarril')"
+        />
       </div>
       <div class="col-md-12">
         <h5>Mercancías</h5>
       </div>
       <div class="col-md-12">
-        
         <ng-table
           [commonTableHeader]="mesaColumnas"
           [commonTableBody]="mesaCuerpo"
         ></ng-table>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <ng-titulo titulo="Datos mercancía"></ng-titulo>
-      </div>
+      <!-- Form Controls for Mercancia -->
       <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="aduanaList"
@@ -166,39 +141,29 @@
           [required]="true"
           [isDisabled]="false"
           name="tiporequisito"
-          (change)="
-        setValoresStore(
-          forma,
-          'tiporequisito',
-        )
-      "
+          (change)="setValoresStore(forma, 'tiporequisito')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <label class="control-label" for="requisito">Requisito:</label>
-        <input class="form-control" id="requisito" placeholder=""   formControlName="requisito" type="text"(change)="
-        setValoresStore(
-          forma,
-          'requisito',
-        )
-      "/>
+        <input
+          class="form-control"
+          id="requisito"
+          placeholder=""
+          formControlName="requisito"
+          type="text"
+          (change)="setValoresStore(forma, 'requisito')"
+        />
       </div>
       <div class="col-md-4">
-        <label class="control-label" for="internacional"
-          >Número de certificado internacional:*:</label
-        >
+        <label class="control-label" for="internacional">Número de certificado internacional:</label>
         <input
           class="form-control"
           id="internacional"
           placeholder=""
           type="text"
-          formControlName="internacional"
-          (change)="
-        setValoresStore(
-          forma,
-          'internacional',
-        )
-      "
+          formControlName="numCertificadoInternacional"
+          (change)="setValoresStore(forma, 'numCertificadoInternacional')"
         />
       </div>
       <div class="col-md-4">
@@ -209,32 +174,20 @@
           [required]="true"
           [isDisabled]="false"
           name="arancelaria"
-          (change)="
-          setValoresStore(
-            forma,
-            'arancelaria',
-          )
-        "
+          (change)="setValoresStore(forma, 'arancelaria')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8">
-        <label class="control-label" for="fraccionArancelaria"
-          >Descripción de la fracción arancelaria:*</label
-        >
+        <label class="control-label" for="fraccionArancelaria">Descripción de la fracción arancelaria:</label>
         <input
           class="form-control"
           id="fraccionArancelaria"
           name="fraccionArancelaria"
-          formControlName="fraccionArancelaria"
+          formControlName="descFraccionArancelaria"
           placeholder=""
           type="text"
           disabled="true"
-          (change)="
-          setValoresStore(
-            forma,
-            'fraccionArancelaria',
-          )
-        "
+          (change)="setValoresStore(forma, 'fraccionArancelaria')"
         />
       </div>
       <div class="col-md-4">
@@ -245,39 +198,32 @@
           [required]="true"
           [isDisabled]="false"
           name="nico"
-          (change)="
-          setValoresStore(
-            forma,
-            'nico',
-          )
-        "
+          (change)="setValoresStore(forma, 'nico')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 mt-2">
-        <label class="control-label" for="descFraccion">Descripción Nico:*</label>
+        <label class="control-label" for="descFraccion">Descripción Nico:</label>
         <input
           class="form-control"
           id="descFraccion"
           placeholder=""
           type="text"
           disabled="true"
-          formControlName="descFraccion"
-          (change)="
-          setValoresStore(
-            forma,
-            'descFraccion',
-          )
-        "
+          formControlName="descNico"
+          (change)="setValoresStore(forma, 'descNico')"
         />
       </div>
       <div class="col-md-12 mt-2">
-        <label class="control-label" for="Descripción">Descripción*:</label>
-        <textarea class="form-control" name="" rows="12" formControlName="descripción" (change)="
-        setValoresStore(
-          forma,
-          'descripción',
-        )
-      "></textarea>
+        <label class="control-label" for="descripcion">Descripción:</label>
+        <textarea
+          class="form-control"
+          name=""
+          rows="12"
+          formControlName="descripcion"
+          (change)="setValoresStore(forma, 'descripcion')"
+        ></textarea>
+      </div>
+      
       </div>
       <div class="col-md-4 mt-2">
         <label class="control-label" for="umc">Cantidad UMT:*</label>
