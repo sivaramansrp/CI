@@ -8,6 +8,8 @@ import {
 } from '@angular/forms';
 import { DatosTramiteService } from 'libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
 import mockData from 'libs/shared/theme/assets/json/11202/contenedor-mockdata.json';
+import {TEXTOS_REQUISITOS} from '../../../../constantes/11202/retorno-contenedores.enum'
+
 @Component({
   selector: 'app-contenedor',
    templateUrl: './contenedor.component.html',
@@ -16,6 +18,8 @@ import mockData from 'libs/shared/theme/assets/json/11202/contenedor-mockdata.js
 
 })
 export class ContenedorComponent   {
+  TEXTOS = TEXTOS_REQUISITOS;
+
 onPageChange($event: Event) {
 throw new Error('Method not implemented.');
 }
@@ -38,6 +42,7 @@ throw new Error('Method not implemented.');
   exceptionCaught: boolean = false;
   actionBean = { requiereGuardadoParcial: false };
   nonSelectionTextTipoContendor:string = 'Selecciona un valor';
+  cargarArchivo: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -172,6 +177,7 @@ cargarCatalogContenedores(): void {
       this.seccionContenedor = true;
       this.seccionAduanaaFechaVisible = true;
       this.seccionExcelVisible = false;
+      this.cargarArchivo=true;
     } else if (tipoBusqueda === 'Archivo CSV') {
       this.seccionExcelVisible = true;
       this.seccionAduanaaFechaVisible = true;

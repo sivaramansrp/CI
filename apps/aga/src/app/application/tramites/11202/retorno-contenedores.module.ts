@@ -28,12 +28,16 @@ import {
 } from '@ng-mf/data-access-user';
 
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 @NgModule({
   declarations: [
     SolicitanteComponent,
     ContenedorComponent,
     PasoUnoComponent,
     SolicitantePageComponent,
+    PasoDosComponent,
+    PasoTresComponent
   ],
   imports: [
     CommonModule,
@@ -55,6 +59,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     SelectPaisesComponent,
     CatalogoSelectComponent,
     RepresentanteFiscalComponent,
+    
   ],
   exports: [SolicitanteComponent, ContenedorComponent, PasoUnoComponent],
   providers: [CatalogosService, ToastrService],

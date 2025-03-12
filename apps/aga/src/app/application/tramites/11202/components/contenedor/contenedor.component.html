@@ -47,6 +47,7 @@
           </div>
         </div>
       </div>
+      
       <div id="seccionAduanaaFecha" *ngIf="seccionAduanaaFechaVisible">
         <div class="row">
           <div class="col-md-12">
@@ -178,6 +179,7 @@
         </div>
       </div>
     
+     
     </div>
       <div id="seccionContenedor" *ngIf="seccionContenedorVisible">
         <div class="row">
@@ -253,7 +255,7 @@
         </div>
       </div>
 
-
+<!-- Tipo de equipo -->
       <div id="agregarTipoContenedor" *ngIf="agregarTipoContenedorVisible">
         <div class="row">
           <div class="col-md-4">
@@ -312,7 +314,7 @@
           </div>
         </div>
       </div>
-
+<!-- adjuntar archio -->
       <div id="seccionExcel" *ngIf="seccionExcelVisible">
         <div class="row">
           <div class="col-md-12">
@@ -356,6 +358,7 @@
       </div>
 
       <br />
+      <!-- Table related code  -->
       <div class="col-md-12" id="idGridContenedoresRC">
         <div class="table-responsive">
           <div class="innercontainer">
@@ -381,7 +384,7 @@
                         <td>{{ contenedor.digito }}</td>
                         <td>{{ contenedor.tipo }}</td>
                         <td>{{ contenedor.aduana }}</td>
-                        <td>{{ contenedor.aduana }}</td>
+                        <td>{{ contenedor.tipo }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -396,6 +399,7 @@
         </div>
       </div>
       <br />
+      
 
       <div *ngIf="exceptionCaught">
         <div class="row" style="margin-top: 30px;">
@@ -449,7 +453,19 @@
         </div>
       </div>
 
+<!-- cargar archivo -->
 
+<div id="seccionContenedor" *ngIf="cargarArchivo">
+  <div class="row">
+    <div class="col-md-12">
+      <h3>Cargar Archivo</h3>
+      <hr class="red" />
+    </div>
+  </div>
+  <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
+  
+</div>
+ <!-- cargar archivo -->
       <!-- Modal Cancelar Tramite -->
   <div
   class="modal fade"

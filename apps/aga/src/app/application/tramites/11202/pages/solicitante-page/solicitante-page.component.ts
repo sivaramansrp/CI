@@ -3,7 +3,7 @@ import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
+import { PASOS } from '../../../../constantes/11202/retorno-contenedores.enum';
 import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
 import { SeccionQuery } from '../../../../estados/queries/seccion.query';
 
@@ -18,7 +18,7 @@ interface AccionBoton {
   styleUrl: './solicitante-page.component.scss',
 })
 export class SolicitantePageComponent {
-  pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
+  pasos: Array<ListaPasosWizard> = PASOS;
   indice: number = 1;
   public seccion!: SeccionState;
   private destroyNotifier$: Subject<void> = new Subject();
@@ -35,7 +35,7 @@ export class SolicitantePageComponent {
   ) {}
 
   ngOnInit() {
-    this.pasos = PASOS.slice(0, 2);
+    this.pasos = PASOS;
     this.pasos = this.pasos.map((paso) => {
       if (paso.indice === 2 && paso.titulo === 'Anexar necesarios') {
         return { ...paso, titulo: 'Firmar solicitud' };
