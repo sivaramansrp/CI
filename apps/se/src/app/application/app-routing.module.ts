@@ -44,6 +44,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'asignacion-directa-de-cupo',
+    loadChildren: () =>
+      import('./tramites/120402/asignacion-directa-de-cupo.module').then(
+        (m) => m.AsignacionDirectaDeCupoModule
+      ),
+  },
+  {
     path: 'pexim',
     loadChildren: () =>
       import('./tramites/130118/pexim.module').then((m) => m.PeximModule),
