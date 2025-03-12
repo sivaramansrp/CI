@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { Subscription, skip } from 'rxjs';
+import { Subject, Subscription, skip } from 'rxjs';
 
 /**
  * @fileoverview Componente para la sección de datos para movilización nacional.
@@ -52,6 +52,12 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @type {Catalogo[]}
    */
   puntoList: Catalogo[] = [];
+  /**
+   * @description Subject para manejar la destrucción de las suscripciones.
+   * Se utiliza para emitir cuando el componente es destruido, limpiando todas las suscripciones.
+   */
+  private destroyNotifier$ = new Subject<void>();
+
 
   /**
    * @description Suscripción para manejar cambios en el estado del formulario.

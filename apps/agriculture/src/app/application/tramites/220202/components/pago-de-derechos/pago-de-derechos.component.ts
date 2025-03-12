@@ -16,7 +16,7 @@ import {
 
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 import { ListaDeDatosFinal } from '../../models/220202/fitosanitario.model';
 
@@ -46,7 +46,7 @@ interface RadioOption {
   styleUrls: ['./pago-de-derechos.component.scss']
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
-
+  private destroyNotifier$ = new Subject<void>();
   /**
    * Configuración para el input de fecha de pago.
    * Este objeto contiene la configuración para el campo de fecha de inicio del pago.
@@ -102,8 +102,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   selectedValue: string = 'no';
 
-  private subscription: Subscription = new Subscription();
-
   /**
    * Método para actualizar la fecha de pago en el formulario.
    * Este método se usa para cambiar el valor de la fecha de pago en el formulario.
@@ -143,6 +141,21 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.pagoForm.statusChanges
+      .pipe(takeUntil(this.destroyNotifier$)) // Ensures unsubscribe on component destruction
+      .subscribe(
+        () => {
+
+          const FORMA_VALIDA_ACTUALIZADA = {
+            validaciondeFormulariodePago: false,
+          };
+          FORMA_VALIDA_ACTUALIZADA.validaciondeFormulariodePago = this.pagoForm.valid ? true : FORMA_VALIDA_ACTUALIZADA.validaciondeFormulariodePago;
+          this.agriculturaApiService.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA); // Implement this method to handle button state changes
+        },
+        (error) => {
+          console.error('Error during form status changes:', error);
+        }
+      );
     this.obtenerDetallesDeListaDeOpciones();
   }
 
@@ -164,11 +177,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerBancoSelectorList() {
-    this.agriculturaApiService.obtenerSelectorList('banco.json').subscribe(data => {
-      if (data) {
-        this.bancoSelector = data;
-      }
-    });
+    this.agriculturaApiService.obtenerSelectorList('banco.json')
+      .pipe(takeUntil(this.destroyNotifier$))  // Ensure this subscription is unsubscribed
+      .subscribe(data => {
+        if (data) {
+          this.bancoSelector = data;
+        }
+      });
   }
 
   /**
@@ -178,11 +193,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerListaDeJustificaciones() {
-    this.agriculturaApiService.obtenerSelectorList('Justificación.json').subscribe(data => {
-      if (data) {
-        this.justificacionSelector = data;
-      }
-    });
+    this.agriculturaApiService.obtenerSelectorList('Justificación.json')
+      .pipe(takeUntil(this.destroyNotifier$))  // Ensure this subscription is unsubscribed
+      .subscribe(data => {
+        if (data) {
+          this.justificacionSelector = data;
+        }
+      });
   }
 
   /**
@@ -232,8 +249,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
