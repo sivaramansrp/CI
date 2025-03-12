@@ -1,4 +1,8 @@
-import { Catalogo, RespuestaCatalogos, SeccionLibStore } from '@ng-mf/data-access-user';
+import {
+  Catalogo,
+  RespuestaCatalogos,
+  SeccionLibStore
+} from '@ng-mf/data-access-user';
 
 import { Injectable } from '@angular/core';
 
@@ -9,7 +13,13 @@ import { Observable, map } from 'rxjs';
 import { URL } from '../../constantes/220202/fitosanitario.enums';
 
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
-import { DatosForma, FinalEnviar, Movilizacion, PagoForm } from '../../models/220202/fitosanitario.model';
+
+import {
+  DatosForma,
+  FinalEnviar,
+  Movilizacion,
+  PagoForm
+} from '../../models/220202/fitosanitario.model';
 
 
 
