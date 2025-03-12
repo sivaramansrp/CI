@@ -3,11 +3,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable,throwError } from 'rxjs';
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class SanitarioService {
-
+  
   constructor( private http: HttpClient) { }
 
   getDatos(): Observable<unknown> {
@@ -16,9 +17,9 @@ export class SanitarioService {
         return throwError(() => error);
       })
     );
-    
-  }
+ }
+}
 
   
   
-}
+
