@@ -48,7 +48,13 @@ const routes: Routes = [
     path: 'importacion-acuacultura',
     loadChildren: () =>
       import('./tramites/220203/importacion-de-acuicultura.module').then(
-        (m) => m.ImportacionDeAcuiculturaModule
+        (m) => m.ImportacionDeAcuiculturaModule)
+  },
+  {
+    path: 'pantallas-captura',
+    loadChildren: () =>
+      import('./tramites/220402/pantallas-captura.module').then(
+        (m) => m.PantallasCapturaModule
       )
   }
 ];
