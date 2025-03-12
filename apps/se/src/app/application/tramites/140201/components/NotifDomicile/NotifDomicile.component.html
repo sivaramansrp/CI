@@ -1,0 +1,113 @@
+<ng-titulo titulo="Domicilio para oír y recibir notificaciones"></ng-titulo>
+<form [formGroup]="notifDomicileForm">
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <label class="form-label" for="calle"
+        ><span class="require">* </span>Calle</label
+      >
+      <input
+        class="form-control"
+        id="calle"
+        placeholder=""
+        type="text"
+        formControlName="calle"
+      />
+    </div>
+
+    <div class="col-md-2">
+      <label class="form-label" for="numeroExterior"
+        ><span class="require">* </span>Número exterior</label
+      >
+      <input
+        class="form-control"
+        id="numeroExterior"
+        placeholder=""
+        type="text"
+        formControlName="numeroExterior"
+      />
+    </div>
+    <div class="col-md-2">
+      <label class="form-label" for="numeroInterior">Número Interior</label>
+      <input
+        class="form-control"
+        id="numeroInterior"
+        placeholder=""
+        type="text"
+        formControlName="numeroInterior"
+      />
+    </div>
+    <div class="col-md-2">
+      <label class="form-label" for="codigoPostal"
+        ><span class="require">* </span>Código postal</label
+      >
+      <input
+        class="form-control"
+        id="codigoPostal"
+        placeholder=""
+        type="text"
+        formControlName="codigoPostal"
+      />
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <label class="form-label" for="pais">País</label>
+      <input
+        class="form-control"
+        id="pais"
+        placeholder=""
+        type="text"
+        formControlName="pais"
+      />
+    </div>
+    <div class="col-md-6">
+      <app-catalogo-select
+        [catalogo]="entidadFederativa"
+        [label]="'Entidad Federativa*'"
+        [placeholder]="'Seleccione un valor'"
+        formControlName="entidadFederativa"
+        (change)="getEntidad()"
+      ></app-catalogo-select>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-6">
+     
+      <app-catalogo-select
+      [catalogo]="municipioAlcaldia"
+      [label]="'Municipio o alcaldía'"
+      [placeholder]="'Seleccione un valor'"
+      formControlName="municipioAlcaldia"
+      (change)="getMunicipiosOalcaldia()"
+    ></app-catalogo-select>
+    </div>
+    <div class="col-md-6">
+         <app-catalogo-select
+        [catalogo]="colonia"
+        [label]="'Colonia'"
+        [placeholder]="'Seleccione un valor'"
+        formControlName="colonia"
+        (change)="getColonia()"
+      ></app-catalogo-select>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-6">   <app-catalogo-select
+        [catalogo]="localidad"
+        [label]="'Localidad'"
+        [placeholder]="'Seleccione un valor'"
+        formControlName="localidad"
+        (change)="getLocalidad()"
+      ></app-catalogo-select></div>
+    <div class="col-md-6">
+        <label class="form-label" for="telefona">Telefona</label>
+      <input
+        class="form-control"
+        id="telefona"
+        placeholder=""
+        type="text"
+        formControlName="telefona"
+      />
+    </div>
+  </div>
+</form>
