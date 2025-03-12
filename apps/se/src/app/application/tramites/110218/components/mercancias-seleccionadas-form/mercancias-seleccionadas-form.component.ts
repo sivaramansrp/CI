@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 
 import { Router } from '@angular/router';
+import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
 /**
  * Componente para el formulario de mercancías seleccionadas.
@@ -59,6 +60,12 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
   receivedData: any;
 
   /**
+   * Observable para la unidad de medida de comercialización.
+   */
+  unidaddeMedidadeComercializacion$: Observable<Catalogo | null> = this.tramite110218Query.unidaddeMedidadeComercializacion$;
+  
+  @Output() modificarSuccessBtn = new EventEmitter<boolean>();
+  /**
    * Constructor del componente.
    *
    * Constructor de formularios.
@@ -69,17 +76,18 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private service: CertificadoTecnicoJaponService,
     private tramite110218Query: Tramite110218Query,
+    private tramite110218Store: Tramite110218Store,
     private router: Router
   ) {
     this.modifydatosdelcertificado = this.fb.group({
-      nombreComercial: [''],
-      nombreIngles: [''],
+      nombreComercial: [{ value: '', disabled: true }],
+      nombreIngles: [{ value: '', disabled: true }],
       complementoDelaDescripcion: [''],
-      marca: [''],
-      valorMercancia: [''],
-      cantidad: [''],
+      marca: ['', Validators.pattern(/^(?!\s)(.*\S)?$/)],
+      valorMercancia: ['', Validators.pattern(/^\d{0,15}(\.\d{1,4})?$/)],
+      cantidad: [{ value: '', disabled: true }, Validators.pattern(/^\d{0,15}(\.\d{1,4})?$/)],
       unidaddeMedidadeComercializacion: [''],
-      numerodeFactura: [''],
+      numerodeFactura:  ['', Validators.pattern(/^[A-Za-z0-9Ññ]+$/)],
       tipodeFactura: [''],
       fechadelaFactura: [''],
     });
@@ -98,6 +106,12 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
     });
 
     this.tableDataValues();
+
+    this.unidaddeMedidadeComercializacion$.subscribe((unidaddeMedidadeComercializacion) => {
+      if (unidaddeMedidadeComercializacion) {
+        this.modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.setValue(unidaddeMedidadeComercializacion);
+      }
+    });
   }
 
   /**
@@ -150,7 +164,17 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
  * Este método se ejecuta cuando la modificación del formulario se completa exitosamente.
  * Utiliza el servicio de enrutamiento (`Router`) para navegar a la página correspondiente.
  */
-modificarSuccess(): void {
-  this.router.navigate(['pago/certificado-tecnico-japon/validar-certificado-tecnico-japon']);
+
+modificarSuccess() :void{
+  this.modificarSuccessBtn.emit(true); 
+
 }
+
+  /**
+   * Maneja el cambio en la unidad de medida y actualiza el store.
+   */
+  onChangeUnidadMedida(): void {
+    const UNIDADDE_MEDIDA = this.modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.value;
+    this.tramite110218Store.setUnidadeMedida(UNIDADDE_MEDIDA);
+  }
 }

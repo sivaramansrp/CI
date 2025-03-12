@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
 
 import { CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
 
+import { Catalogo } from '@libs/shared/data-access-user/src';
+
 /**
  * Creacion del estado inicial para la interfaz de tramite 
  * @returns Solicitud120501
@@ -31,7 +33,8 @@ export interface Solicitud110218State {
   correoElectrónicos:string
   lugar:string,
   observaciones:string,
-  tableDataDatos:CompliMentaria[]
+  tableDataDatos:CompliMentaria[],
+  unidaddeMedidadeComercializacion: Catalogo | null
 }
 
 
@@ -59,7 +62,8 @@ export function createInitialState(): Solicitud110218State {
     correoElectrónicos:'',
     lugar:'',
     observaciones:'',
-    tableDataDatos: []
+    tableDataDatos: [],
+    unidaddeMedidadeComercializacion: null
   }
 }
 
@@ -215,6 +219,11 @@ export class Tramite110218Store extends Store<Solicitud110218State> {
         
       });
     }
-    
+    public setUnidadeMedida(unidaddeMedidadeComercializacion: Catalogo):void{
+      this.update((state) => ({
+        ...state,
+        unidaddeMedidadeComercializacion,
+      }));
+    }
 }
 

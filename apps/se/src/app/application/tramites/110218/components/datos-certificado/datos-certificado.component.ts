@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -18,10 +18,9 @@ import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 
 import { Observable, Subject, takeUntil } from 'rxjs';
 
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { CERTIFICADO_TABLA, CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
-
 
 /**
  * Componente para mostrar y manejar los datos del certificado técnico de Japón.
@@ -111,6 +110,9 @@ export class DatosCertificadoComponent implements OnInit {
    * Datos seleccionados previamente en la tabla, obtenidos desde el store.
   */
   selectedTableFromStore: any;
+  indice: number=5;
+
+  @Output() modificarEventCertificado: EventEmitter<boolean> = new EventEmitter<boolean>(false);
   /**
    * Constructor del componente.
    *
@@ -125,13 +127,15 @@ export class DatosCertificadoComponent implements OnInit {
     private service: CertificadoTecnicoJaponService,
     private tramite110218Store: Tramite110218Store,
     private tramite110218Query: Tramite110218Query,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.datosdelcertificado = this.fb.group({
       lugar: ['', Validators.required], // Required field
       observaciones: ['']
     });
   }
+  
   /**
    * Método de inicialización del componente.
    * DatosCertificadoComponent
@@ -144,6 +148,8 @@ export class DatosCertificadoComponent implements OnInit {
       this.selectedTableFromStore = data;
     }
     )
+
+    
   }
   /**
    * Obtiene los datos de la tabla desde el servicio.
@@ -176,9 +182,7 @@ export class DatosCertificadoComponent implements OnInit {
    */
   onModifyForm(): void {
     this.tramite110218Store.storeTableValues(this.selectedRow);
-    this.router.navigate(['pago/certificado-tecnico-japon/mercancias-seleccionadas-form']);
-    // this.router.navigate(['pago/certificado-tecnico-japon/mercancias-seleccionadas-form']);
-
+    this.modificarEventCertificado.emit(false);
     
   }
   /**
@@ -229,4 +233,6 @@ export class DatosCertificadoComponent implements OnInit {
   }
 
  }
+
+
 }
