@@ -9,6 +9,7 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/
 export class PasoUnoCsComponent {
   indice: number = 1;
 
+
   constructor(private seccionStore: SeccionLibStore){
     this.asignarSecciones();
   }

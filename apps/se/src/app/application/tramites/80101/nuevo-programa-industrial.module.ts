@@ -1,5 +1,5 @@
 import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { AnexoDosYTresComponent } from '../../shared/components/anexo-dos-y-tres.component';
+import { AnexoVistaDosYTresComponent } from './component/anexo-vista-dos-y-tres.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { NuevoProgramaIndustrialRoutingModule } from './nuevo-programa-industrial-routing.module';
@@ -32,7 +32,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     SolicitanteComponent,
     TituloComponent,
     WizardComponent,
-    AnexoDosYTresComponent
+    AnexoVistaDosYTresComponent
+    
   ]
 })
 export class NuevoProgramaIndustrialModule { }

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, PASOS4, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@ng-mf/data-access-user';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { AccionBoton } from 'libs/shared/data-access-user/src/core/models/220201/certificado-zoosanitario.model';
 
@@ -23,12 +23,6 @@ export class PasoCapturarSolicitudComponent {
  * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
  */
   public infoAlert = 'alert-info';
-  /**
-   * Una constante que contiene el valor del objeto 'PROTESTA'.
-   * Se utiliza para almacenar datos adicionales relacionados con el componente.
-   */
-
-  TEXTOS = PAGO_DE_DERECHOS;
 
   /**
    * Obtiene el valor del índice de la acción del botón.
