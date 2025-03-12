@@ -1,120 +1,72 @@
-<!-- <div class="bg-gray-100 min-h-screen p-8">
-    <h3 class="text-2xl font-bold mb-4">Bandeja de tareas pendientes</h3>
-  
-    <div class="bg-white shadow-md rounded-lg p-6">
-      <div class="mb-4">
-        <p class="font-semibold">Folio del trámite: 
-          <span class="font-normal">01057001000020242470000032</span>
-        </p>
-      </div>
-      <div class="mb-6">
-        <p class="font-semibold">Tipo de solicitud: 
-          <span class="font-normal">Registro de solicitud de servicios extraordinarios</span>
-        </p>
-      </div>
-  
-      <div class="flex space-x-4 mb-4">
-      </div>
-  
-      <div class="mb-4">
-        <label class="block text-gray-600 mb-2">Sentido dictamen / Justificación del dictamen*</label>
-        <textarea class="w-full border rounded p-2" placeholder="Justificación del dictamen"></textarea>
-      </div>
-  
-      <div class="flex justify-end space-x-2">
-        <button class="border px-4 py-2 rounded">Observaciones</button>
-        <button class="bg-purple-800 text-white px-4 py-2 rounded">Autorizar</button>
+<div class="container mt-2">
+  <form [formGroup]="dictamenForm">
+    <div class="row">
+      <div class="col-md-12">
+        <h2 class="titulo mt-5 mb-5">Autorizar dictamen</h2>
       </div>
     </div>
-  </div>
-   -->
 
-
-   <div class="page">
-    <div class="container">
-      <div class="row">
-        <div class="col-md">
-          <h1>Bandeja de tareas pendientes</h1>
-        </div>
+    <div class="row">
+      <div class="col-md-12 mt-3 mb-3">
+        <lib-encabezado-requerimiento
+          [numFolioTramite]="'02309482934723832'"
+          [tipoTramite]="'Registro de solicitud de servicios extraordinarios'"
+        ></lib-encabezado-requerimiento>
       </div>
-      <div class="card card-funcionario">
-        <div class="card-body">
-          <div class="alert alert-funcionario" role="alert">
-            <div class="row">
-              <div class="col-md-6 alineacion"> 
-                <span class="texto_resaltado">Funcionario: </span>
-                <span class="texto">Ignacio Eduardo Leos Quiñones </span>
-              </div>
-            <div class="col-md-6 alineacion">
-              <span class="texto_resaltado">RFC: </span>
-              <span class="texto"> LEQI8101314S7 </span>
-            </div>
-            </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-md-offset-2 col-md-6 alineacion text-center">
+        <div class="d-flex gap-3 justify-content-center">
+          <div class="border px-4 py-2 d-flex align-items-center radiobutton">
+            <input
+              class="form-check-input me-3 seleccion-radio"
+              type="radio"
+              name="cumplimiento"
+              id="sentidoDictamenAceptado"
+              value="1"
+              formControlName="cumplimiento"
+            />
+            <label class="control-label" for="sentidoDictamen">Aceptado</label>
           </div>
-          <div class="accordion accordion-flush" id="accordionExample">
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                  <div class="alineacion-texto">
-                    B&uacute;squeda
-                  </div>
-                </button>
-              </h2>
-              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                  <form [formGroup]="FormBusqueda">
-                    <div class="row">
-                      <div class="col-md-4 form-group">
-                        <label class="form-label" for="folio">Folio:</label>
-                        <input class="form-control" id="folio" placeholder="Ingrese un folio" type="text" formControlName="folio">
-                      </div>
-                      <div class="col-md-4 form-group">
-                        <!-- <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaInicio($event)"></input-fecha> -->
-                      </div>
-                      <div class="col-md-4">
-                          <!-- <input-fecha [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"></input-fecha> -->
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md">
-                        <button type="button" class="btn boton-buscar">Buscar</button>
-                        <button type="button" class="btn boton-borrar">Borrar</button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
+          <div class="border px-4 py-2 d-flex align-items-center radiobutton">
+            <input
+              class="form-check-input me-3 seleccion-radio"
+              type="radio"
+              name="cumplimiento"
+              value="2"
+              id="sentidoDictamenRechazado"
+              formControlName="cumplimiento"
+            />
+            <label class="control-label" for="sentidoDictamen">Rechazado</label>
           </div>
         </div>
       </div>
-  
-      <div class="row">
-        <div class="col-md">
-          <h1>Lista de pendientes</h1>
-        </div>
-      </div>
-  
-      <table class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th scope="col">Folio tr&aacute;mite</th>
-            <th scope="col">Tipo de tr&aacute;mite</th>
-            <th scope="col">Nombre de la tarea</th>
-            <th scope="col">Fecha de asignaci&oacute;n</th>
-            <th scope="col">Estado de tr&aacute;mite</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
     </div>
-  </div>
-  
+
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <label for="razonSocial" class="form-label texto_resaltado">
+          Sentido dictamen / Justificación del dictamen*
+        </label>
+        <textarea
+          id="mensajeDictamen"
+          class="form-control"
+          style="height: 50%; resize: none"
+          formControlName="mensajeDictamen"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="row mt-5 mb-5">
+      <div class="col-md-12 d-flex justify-content-end">
+        <button type="button" class="btn btn-default me-3">
+          Observaciones
+        </button>
+        <button type="button" class="btn btn-primary" (click)="BtnAutorizar()">
+          Autorizar
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
