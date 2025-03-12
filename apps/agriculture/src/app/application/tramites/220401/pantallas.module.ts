@@ -17,13 +17,14 @@ import { TercerosRelacionadosComponent } from './components/terceros-relacionado
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { TransporteComponent } from './pages/transporte/transporte.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
 
 import { DatosDelCertificadoComponent } from './components/datos-del-certificado/datos-del-certificado.component';
 import { DatosGeneralesAnimalesComponent } from './components/datos-generales-animales/datos-generales-animales.component';
 import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
-  declarations: [
+  declarations: [ 
     PantallasComponent,
     DatosComponent,
     TransporteComponent
@@ -44,7 +45,8 @@ import { provideHttpClient } from '@angular/common/http';
     TercerosRelacionadosComponent,
     AgregarDestinatoriaComponent,
     DatosGeneralesAnimalesComponent,
-    SelectCatalogosComponent 
+    SelectCatalogosComponent,
+    SolicitanteComponent
   ],
   providers: [
       provideHttpClient(),

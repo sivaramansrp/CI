@@ -7,9 +7,9 @@
           <label for="producto">Producto*:</label>
           <app-input-radio
             [radioOptions]="producto"
-            [selectedValue]="defaultSelect"
             [isRequired]="true"
-            (valueChange)="onValueChange($event)"
+            formControlName="productos"
+            (change)="setValoresStore(formDelLa,'productos','setProducto')"
             [layout]="'vertical'"
           ></app-input-radio>
         </div>
@@ -24,6 +24,7 @@
           placeholder="Descripcion de la mercancia"
           rows="8"
           formControlName="descripcion"
+          (change)="setValoresStore(formDelLa,'descripcion', 'setDescripcion')"
         ></textarea>
         <div
           *ngIf="
@@ -49,17 +50,17 @@
         [catalogo]="fraccionF"
         [label]="'Fracción arancelaria'"
         [required]="true"
-        (change)="fetchFraccion()"
+        (change)="fetchFraccion();setValoresStore(formDelLa,'fraccionArancelaria', 'setFraccionArancelaria')"
         [placeholder]="'Seleccione un documento'"
-        formControlName="fraccion"
+        formControlName="fraccionArancelaria"
       ></app-catalogo-select>
       <div
         *ngIf="
-          formDelLa.controls['fraccion'].invalid && formDelLa.controls['fraccion'].touched
+          formDelLa.controls['fraccionArancelaria'].invalid && formDelLa.controls['fraccionArancelaria'].touched
         "
         class="text-danger"
       >
-        <small *ngIf="formDelLa.controls['fraccion'].errors?.['required']"
+        <small *ngIf="formDelLa.controls['fraccionArancelaria'].errors?.['required']"
           >Debe seleccionar un valor.</small
         >
       </div>
@@ -70,7 +71,7 @@
           [catalogo]="Unidad"
           [label]="'Unidad de medida'"
           [required]="true"
-          (change)="fetchUnidad()"
+          (change)="fetchUnidad(); setValoresStore(formDelLa,'unidadMedida', 'setUnidadMedida') "
          [placeholder]="'Seleccione una unidad de medida'"
          formControlName="unidadMedida"
         ></app-catalogo-select>
@@ -96,6 +97,8 @@
           placeholder=""
           type="text"
           formControlName="cantidad"
+          (change)="setValoresStore(formDelLa,'cantidad', 'setcantidad')"
+       
         />
         <div
           *ngIf="
@@ -129,6 +132,7 @@
           placeholder=""
           type="text"
           formControlName="valorFacturaUSD"
+          (change)="setValoresStore(formDelLa,'valorFacturaUSD', 'setValorFacturaUSD')"
         />
         <div
           *ngIf="
