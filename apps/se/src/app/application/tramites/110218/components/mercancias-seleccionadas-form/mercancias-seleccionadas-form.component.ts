@@ -63,7 +63,15 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
    * Observable para la unidad de medida de comercialización.
    */
   unidaddeMedidadeComercializacion$: Observable<Catalogo | null> = this.tramite110218Query.unidaddeMedidadeComercializacion$;
-  
+  tipodeFactura$: Observable<Catalogo | null> = this.tramite110218Query.tipodeFactura$;
+  complementoDelaDescripcion$: Observable<string | null> = this.tramite110218Query.complementoDelaDescripcion$;
+  marca$: Observable<string | null> = this.tramite110218Query.marca$;
+  valorMercancia$: Observable<string | null> = this.tramite110218Query.valorMercancia$;
+  numerodeFactura: Observable<string | null> = this.tramite110218Query.numerodeFactura$;
+
+  /**
+   * Evento que se emite cuando la modificación se realiza con éxito.
+   */
   @Output() modificarSuccessBtn = new EventEmitter<boolean>();
   /**
    * Constructor del componente.
@@ -112,6 +120,35 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
         this.modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.setValue(unidaddeMedidadeComercializacion);
       }
     });
+
+    this.tipodeFactura$.subscribe((tipodeFactura) => {
+      if (tipodeFactura) {
+        this.modifydatosdelcertificado.get('tipodeFactura')?.setValue(tipodeFactura);
+      }
+    });
+    this.complementoDelaDescripcion$.subscribe((complementoDelaDescripcion) => {
+      if (complementoDelaDescripcion) {
+        this.modifydatosdelcertificado.get('complementoDelaDescripcion')?.setValue(complementoDelaDescripcion);
+      }
+    });
+
+    this.marca$.subscribe((marca) => {
+      if (marca) {
+        this.modifydatosdelcertificado.get('marca')?.setValue(marca);
+      }
+    })
+    this.valorMercancia$.subscribe((valorMercancia) => {
+      if (valorMercancia) {
+        this.modifydatosdelcertificado.get('valorMercancia')?.setValue(valorMercancia);
+      }
+    })
+
+    this.numerodeFactura.subscribe((numerodeFactura) => {
+      if (numerodeFactura) {
+        this.modifydatosdelcertificado.get('numerodeFactura')?.setValue(numerodeFactura);
+      }
+    })
+ 
   }
 
   /**
@@ -176,5 +213,37 @@ modificarSuccess() :void{
   onChangeUnidadMedida(): void {
     const UNIDADDE_MEDIDA = this.modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.value;
     this.tramite110218Store.setUnidadeMedida(UNIDADDE_MEDIDA);
+  }
+
+  /**
+   * Maneja cambios en el tipo de factura y actualiza el estado en el store.
+   */
+  onChangeTipodeFactura(): void {
+    const TIPODE_FACTURA = this.modifydatosdelcertificado.get('tipodeFactura')?.value;
+    this.tramite110218Store.setTipodeFactura(TIPODE_FACTURA);
+  }
+
+    /**
+   * Maneja cambios en los valores de ciertos campos del formulario y los actualiza en el store.
+   * Nombre del campo que ha cambiado.
+   */
+  onMercanciaSeleccionadasChange(controlName: string): void { 
+    const VALUE = this.modifydatosdelcertificado.get(controlName)?.value;
+    switch (controlName) {
+      case 'complementoDelaDescripcion':
+        this.tramite110218Store.setComplementoDelaDescripcion(VALUE);
+        break;
+      case 'marca':
+        this.tramite110218Store.setMarca(VALUE);
+        break;
+      case 'valorMercancia':
+        this.tramite110218Store.setValorMercancia(VALUE);
+        break;
+      case 'numerodeFactura': 
+        this.tramite110218Store.setNumerodeFactura(VALUE);
+        break; 
+        default:
+          break; 
+    }
   }
 }

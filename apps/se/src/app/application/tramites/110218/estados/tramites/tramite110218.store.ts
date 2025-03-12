@@ -8,7 +8,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 
- * @returns Solicitud120501
+ * Solicitud120501
  */
 export interface Solicitud110218State {
   puertodeEmbarque: string,
@@ -34,7 +34,12 @@ export interface Solicitud110218State {
   lugar:string,
   observaciones:string,
   tableDataDatos:CompliMentaria[],
-  unidaddeMedidadeComercializacion: Catalogo | null
+  unidaddeMedidadeComercializacion: Catalogo | null,
+  tipodeFactura: Catalogo | null,
+  complementoDelaDescripcion: string,
+  marca: string,
+  valorMercancia: string,
+  numerodeFactura: string
 }
 
 
@@ -63,7 +68,12 @@ export function createInitialState(): Solicitud110218State {
     lugar:'',
     observaciones:'',
     tableDataDatos: [],
-    unidaddeMedidadeComercializacion: null
+    unidaddeMedidadeComercializacion: null,
+    tipodeFactura: null,
+    complementoDelaDescripcion: '',
+    marca: '',
+    valorMercancia: '',
+    numerodeFactura: ''
   }
 }
 
@@ -225,5 +235,39 @@ export class Tramite110218Store extends Store<Solicitud110218State> {
         unidaddeMedidadeComercializacion,
       }));
     }
+    public setTipodeFactura(tipodeFactura:Catalogo):void{
+      this.update((state) => ({
+        ...state,
+        tipodeFactura,
+      }));
+    }
+
+    public setComplementoDelaDescripcion(complementoDelaDescripcion: string): void {
+      this.update((state) => ({
+         ...state,
+          complementoDelaDescripcion 
+        }));
+    }
+
+    public setMarca(marca: string): void {
+      this.update((state) => ({
+         ...state,
+          marca 
+        }));
+    }
+
+    public setValorMercancia(valorMercancia: string): void {
+      this.update((state) => ({
+         ...state,
+         valorMercancia 
+        }));
+    }
+    public setNumerodeFactura(numerodeFactura: string): void {
+      this.update((state) => ({
+         ...state, 
+         numerodeFactura 
+        }));
+      }
+    
 }
 
