@@ -1,11 +1,13 @@
-import { FirmaElectronicaComponent, ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { catchError, map, Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
 import { Component, OnDestroy } from '@angular/core';
+import {
+  FirmaElectronicaComponent,
+  ServiciosExtraordinariosService,
+} from '@ng-mf/data-access-user';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Subscription, catchError, map } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TramiteStore } from '../../../../estados/tramite.store';
-
 
 /**
  * Componente que representa el paso tres del trámite.
@@ -15,13 +17,18 @@ import { TramiteStore } from '../../../../estados/tramite.store';
   templateUrl: './paso-tres.component.html',
   styleUrls: ['./paso-tres.component.scss'],
   standalone: true,
-  imports:[FirmaElectronicaComponent, CommonModule, FormsModule, ReactiveFormsModule]
+  imports: [
+    FirmaElectronicaComponent,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
 })
 export class PasoTresComponent implements OnDestroy {
- /**
+  /**
    * Suscripción para obtener el trámite.
    */
-  obtienerTramiteSubscriber! : Subscription;
+  obtienerTramiteSubscriber!: Subscription;
   /**
    * Tipo de persona.
    */
@@ -56,7 +63,7 @@ export class PasoTresComponent implements OnDestroy {
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
     if (FIRMA) {
-    this.obtienerTramiteSubscriber =  this.serviciosExtraordinariosServices
+      this.obtienerTramiteSubscriber = this.serviciosExtraordinariosServices
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {
@@ -70,7 +77,7 @@ export class PasoTresComponent implements OnDestroy {
         .subscribe();
     }
   }
-/**
+  /**
    * Método de limpieza que se ejecuta cuando el componente se destruye.
    */
   ngOnDestroy(): void {
@@ -78,5 +85,4 @@ export class PasoTresComponent implements OnDestroy {
       this.obtienerTramiteSubscriber.unsubscribe();
     }
   }
-
 }

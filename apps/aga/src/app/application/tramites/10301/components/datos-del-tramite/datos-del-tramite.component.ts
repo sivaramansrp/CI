@@ -6,13 +6,27 @@ import {
   InputRadioComponent,
   TableComponent,
   TituloComponent,
+  ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  Catalogo,
+  Solicitud10301State,
+  Tramite10301Store,
+} from '../../estados/tramite10301.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ImportadorExportadorService } from '../../services/importador-exportador.service';
-import { Subscription } from 'rxjs';
 import { SELECCION } from '../../constantes/importador-exportador.enum';
+import { Tramite10301Query } from '../../estados/tramite10301.query';
 
 /**
  * Texto de adjuntar para terceros.
@@ -40,6 +54,20 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
   ],
 })
 export class DatosDelTramiteComponent implements OnInit, OnDestroy {
+  /**
+   * Suscripciones a observables.
+   */
+  private subscriptions: Subscription[] = [];
+
+  /**
+   * Estado de la solicitud.
+   */
+  public solicitudState!: Solicitud10301State;
+
+  /**
+   * Notificador para destruir observables.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Suscripción para obtener el catálogo de aduanas.
    */
@@ -113,16 +141,17 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Lista de rangos de días seleccionados.
    */
-  selectRangoDias: string[] = [];
+  selectRangoDias: [] = [];
   /**
    * Lista de fechas seleccionadas.
    */
-  fechasSeleccionadas: string[] = [];
+
+  fechasSeleccionadas: Catalogo[] = [];
 
   /**
    * Lista de datos de fechas disponibles.
    */
-  fechasDatos: string[] = [];
+  fechasDatos: Catalogo[] = [];
   /**
    * Control de formulario para la fecha.
    */
@@ -132,6 +161,28 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Control de formulario para la fecha seleccionada.
    */
   fechaSeleccionada: FormControl = new FormControl('');
+  /**
+   * Formulario de trámite.
+   */
+  tramiteForm!: FormGroup;
+
+  /**
+   * Valor seleccionado del radio.
+   */
+  valorSeleccionado!: string;
+
+  /**
+   * Encabezados de la tabla.
+   */
+  encabezadosTabla: string[] = [
+    'Fines a los que se destinará la mercancía',
+    'Tipo de mercancía',
+    'Año',
+    'Modelo',
+    'Marca',
+    'Número de serie',
+    'Uso específico de la mercancía',
+  ];
 
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
@@ -161,12 +212,31 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor que se utiliza para la inyección de dependencias.
+   * Constructor que se utiliza para la inyección de dependencias.
    * @param importarExportar Servicio de importador/exportador.
+   * @param importarExportar Servicio de importador/exportador.
+   * @param store Store de Akita para gestionar el estado.
+   * @param query Query de Akita para seleccionar el estado.
    */
-  constructor(private importarExportar: ImportadorExportadorService) {
+
+  constructor(
+    private importarExportar: ImportadorExportadorService,
+    private store: Tramite10301Store,
+    private query: Tramite10301Query,
+    private fb: FormBuilder,
+    private validacionesService: ValidacionesFormularioService
+  ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
+  /**
+   * Este método se utiliza para marcar los controles del formulario como tocados. - 10301
+   */
+  validarDestinatarioFormulario(): void {
+    if (this.tramiteForm.invalid) {
+      this.tramiteForm.markAllAsTouched();
+    }
+  }
   /**
    * Método de inicialización del componente.
    */
@@ -175,8 +245,63 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     this.getAno();
     this.getCondicion();
     this.getPais();
-  }
 
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.donanteDomicilio();
+
+    this.subscriptions.push(
+      this.query.selectFechasSeleccionadas$.subscribe((fechas) => {
+        this.fechasSeleccionadas = fechas ?? [];
+      })
+    );
+    this.subscriptions.push(
+      this.query.selectAduana$.subscribe((aduana) => {
+        this.aduana = {
+          labelNombre: 'Aduana por la que ingresará la mercancía',
+          required: false,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: aduana ?? [],
+        };
+      })
+    );
+    this.subscriptions.push(
+      this.query.selectAno$.subscribe((ano) => {
+        this.ano = {
+          labelNombre: 'Año',
+          required: false,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: ano || [],
+        };
+      })
+    );
+    this.subscriptions.push(
+      this.query.selectCondicion$.subscribe((condicion) => {
+        this.condicion = {
+          labelNombre: 'Condición de la mercancía',
+          required: false,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: condicion ?? [],
+        };
+      })
+    );
+    this.subscriptions.push(
+      this.query.selectPais$.subscribe((pais) => {
+        this.pais = {
+          labelNombre: 'País',
+          required: false,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: pais ?? [],
+        };
+      })
+    );
+  }
   /**
    * Agrega elementos a la lista de fechas según el tipo especificado.
    * @param {string} tipo - Tipo de acción a realizar.
@@ -186,10 +311,18 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       this.fechasSeleccionadas = [...this.selectRangoDias];
       this.fechasDatos = [];
     } else {
-      const FECHA_VALOR = this.fecha.value.map(Number);
-      this.fechasSeleccionadas.push(this.fechasDatos[FECHA_VALOR]);
-      this.fechasDatos.splice(FECHA_VALOR, 1);
+      const FECHA_VALOR = this.fecha.value;
+      const SELECTEDFECHA = this.fechasDatos.find(
+        (fecha) => fecha.id === FECHA_VALOR
+      );
+      if (SELECTEDFECHA) {
+        this.fechasSeleccionadas.push(SELECTEDFECHA);
+        this.fechasDatos = this.fechasDatos.filter(
+          (fecha) => fecha.id !== FECHA_VALOR
+        );
+      }
     }
+    this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
   }
 
   /**
@@ -201,10 +334,18 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       this.fechasDatos = [...this.fechasSeleccionadas];
       this.fechasSeleccionadas = [];
     } else {
-      const FECHA_VALOR = this.fechaSeleccionada.value.map(Number);
-      this.fechasDatos.push(this.fechasSeleccionadas[FECHA_VALOR]);
-      this.fechasSeleccionadas.splice(FECHA_VALOR, 1);
+      const FECHA_VALOR = this.fechaSeleccionada.value;
+      const SELECTEDFECHA = this.fechasSeleccionadas.find(
+        (fecha) => fecha.id === FECHA_VALOR
+      );
+      if (SELECTEDFECHA) {
+        this.fechasDatos.push(SELECTEDFECHA);
+        this.fechasSeleccionadas = this.fechasSeleccionadas.filter(
+          (fecha) => fecha.id !== FECHA_VALOR
+        );
+      }
     }
+    this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
   }
 
   /**
@@ -214,51 +355,13 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     { label: 'Sí', value: 'sí' },
     { label: 'No', value: 'no' },
   ];
-
-  /**
-   * Valor seleccionado del radio.
-   */
-  valorSeleccionado: string | null = null;
-
-  /**
-   * Encabezados de la tabla.
-   */
-  encabezadosTabla: string[] = [
-    'Fines a los que se destinará la mercancía',
-    'Tipo de mercancía',
-    'Año',
-    'Modelo',
-    'Marca',
-    'Número de serie',
-    'Uso específico de la mercancía',
-  ];
-
   /**
    * Cambia el valor seleccionado del radio.
    * @param value Valor seleccionado.
    */
   cambiarRadio(value: string | number) {
     this.valorSeleccionado = value as string;
-  }
-
-  /**
-   * Obtiene el catálogo de aduanas.
-   */
-  getAduanaIngresara(): void {
-    this.getAduanaIngresaraSubscription = this.importarExportar
-      .getAduanaIngresara()
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          const RESPONSE = resp.data;
-
-          this.aduana = {
-            labelNombre: 'Aduana por la que ingresará la mercancía',
-            required: false,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: RESPONSE,
-          };
-        }
-      });
+    this.store.setValorSeleccionado(this.valorSeleccionado);
   }
 
   /**
@@ -270,13 +373,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
-
-          this.ano = {
-            labelNombre: 'Año',
-            required: false,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: RESPONSE,
-          };
+          this.store.setAno(RESPONSE);
         }
       });
   }
@@ -290,13 +387,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
-
-          this.condicion = {
-            labelNombre: 'Condición de la mercancía',
-            required: false,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: RESPONSE,
-          };
+          this.store.setCondicion(RESPONSE);
         }
       });
   }
@@ -310,13 +401,18 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
+          this.store.setPais(RESPONSE);
+        }
+      });
+  }
 
-          this.pais = {
-            labelNombre: 'País',
-            required: false,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: RESPONSE,
-          };
+  getAduanaIngresara(): void {
+    this.getAduanaIngresaraSubscription = this.importarExportar
+      .getAduanaIngresara()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.store.setAduana(RESPONSE);
         }
       });
   }
@@ -326,6 +422,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   openPopup() {
     this.isPopupOpen = true;
+    this.store.setIsPopupOpen(this.isPopupOpen);
   }
 
   /**
@@ -334,6 +431,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   closePopup() {
     this.isPopupOpen = false;
     this.isPopupClose = false;
+    this.store.setIsPopupOpen(this.isPopupOpen);
+    this.store.setIsPopupClose(this.isPopupClose);
   }
 
   /**
@@ -341,7 +440,116 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   nextTabla() {
     this.showTabla = false;
+    this.store.setShowTabla(this.showTabla);
   }
+
+  /**
+   * Verifica si un campo del formulario es válido.
+   *
+   * @param {FormGroup} form - El formulario que contiene el campo.
+   * @param {string} field - El nombre del campo a verificar.
+   * @returns {boolean} - Retorna true si el campo es válido, de lo contrario false.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
+
+  /**
+   * Establece los valores en el store de tramite5701.
+   *
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   * @returns {void}
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite10301Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+  /**
+   * Obtiene el grupo de formulario de importador/exportador.
+   *
+   * @returns {FormGroup} - El grupo de formulario de importador/exportador.
+   */
+  get importadorExportador(): FormGroup {
+    return this.tramiteForm.get('importadorExportador') as FormGroup;
+  }
+  /**
+   * Inicializa el formulario de donante y domicilio con los valores del estado de la solicitud.
+   */
+  donanteDomicilio(): void {
+    this.tramiteForm = this.fb.group({
+      importadorExportador: this.fb.group({
+        aduana: [this.solicitudState?.aduana, [Validators.required]],
+        nombre: [
+          this.solicitudState?.nombre,
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        tipoMercancia: [
+          this.solicitudState?.tipoMercancia,
+          [Validators.required, Validators.maxLength(100)],
+        ],
+        usoEspecifico: [
+          this.solicitudState?.usoEspecifico,
+          [Validators.required, Validators.maxLength(512)],
+        ],
+        condicion: [this.solicitudState?.condicion, Validators.required],
+        marca: [
+          this.solicitudState?.marca,
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        ano: [this.solicitudState?.ano, [Validators.required]],
+        modelo: [
+          this.solicitudState?.modelo,
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        serie: [
+          this.solicitudState?.serie,
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        manifesto: [this.solicitudState?.manifesto, Validators.required],
+        calle: [
+          this.solicitudState?.calle,
+          [Validators.required, Validators.maxLength(100)],
+        ],
+        numeroExterior: [
+          this.solicitudState?.numeroExterior,
+          [Validators.required, Validators.maxLength(10)],
+        ],
+        numeroInterior: [
+          this.solicitudState?.numeroInterior,
+          [Validators.maxLength(10)],
+        ],
+        telefono: [
+          this.solicitudState?.telefono,
+          [Validators.required, Validators.pattern(/^\d{10}$/)],
+        ],
+        correoElectronico: [
+          this.solicitudState?.correoElectronico,
+          [Validators.required, Validators.email],
+        ],
+        pais: [this.solicitudState?.pais, Validators.required],
+        codigoPostal: [
+          this.solicitudState?.codigoPostal,
+          [Validators.required, Validators.pattern(/^\d{5}$/)],
+        ],
+        estado: [
+          this.solicitudState?.estado,
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        colonia: [
+          this.solicitudState?.colonia,
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        opcion: [this.solicitudState?.opcion],
+      }),
+    });
+  }
+
   /**
    * Método de limpieza que se ejecuta cuando el componente se destruye.
    */
@@ -358,5 +566,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     if (this.getCondicionSubscription) {
       this.getCondicionSubscription.unsubscribe();
     }
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

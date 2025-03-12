@@ -7,14 +7,24 @@ import {
   CatalogosService,
   TEXTOS,
   TituloComponent,
+  ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud10301State,
+  Tramite10301Store,
+} from '../../estados/tramite10301.store';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ImportadorExportadorService } from '../../services/importador-exportador.service';
-import { Subscription } from 'rxjs';
-
-
+import { Tramite10301Query } from '../../estados/tramite10301.query';
 /**
  * Texto de adjuntar para terceros.
  */
@@ -44,14 +54,46 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
   ],
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
-   /**
+  /**
    * Suscripción para obtener los tipos de documentos.
    */
   getTiposDocumentosSubscription!: Subscription;
+
+  /**
+   * Suscripciones a observables.
+   */
+  private subscriptions: Subscription[] = [];
+
+  /**
+   * Estado de la solicitud.
+   */
+  public solicitudState!: Solicitud10301State;
+
   /**
    * Suscripción para obtener el tipo de documento.
    */
   getTipoDocumentoSubscription!: Subscription;
+
+  /**
+   * Formulario de trámite.
+   */
+  tramiteForm!: FormGroup;
+
+  /**
+   * Suscripción para obtener los documentos.
+   */
+  getDocumentosSubscription!: Subscription;
+
+  /**
+   * Notificador para destruir observables.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Lista de fechas seleccionadas.
+   */
+
+  fechasSeleccionadas: Catalogo[] = [];
   /**
    * Constantes de texto.
    */
@@ -71,6 +113,10 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Tipo de documento.
    */
   tipoDocumento!: CatalogosSelect;
+  /**
+   * Documentos.
+   */
+  documentos!: CatalogosSelect;
 
   /**
    * Texto de alerta para terceros.
@@ -124,11 +170,10 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Documentos disponibles.
    */
   disponiblesDocumentos: string[] = ['Document A', 'Document B', 'Document C'];
-
   /**
    * Documentos seleccionados.
    */
-  documentosSeleccion: string[] = new Array(this.tiposDeDocumentos.length).fill(
+  documentoSeleccion: string[] = new Array(this.tiposDeDocumentos.length).fill(
     ''
   );
 
@@ -148,6 +193,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Resoluciones de los archivos.
    */
   resoluciones: string[] = new Array(this.tiposDeDocumentos.length).fill('');
+  documentosSeleccionados: any;
 
   /**
    * Constructor que se utiliza para la inyección de dependencias.
@@ -157,8 +203,21 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   constructor(
     public catalogosServices: CatalogosService,
     public importarExportar: ImportadorExportadorService,
-   ) {
+    private store: Tramite10301Store,
+    private query: Tramite10301Query,
+    private fb: FormBuilder,
+    private validacionesService: ValidacionesFormularioService
+  ) {
     // El constructor se utiliza para la inyección de dependencias.
+  }
+
+  /**
+   * Este método se utiliza para marcar los controles del formulario como tocados. - 10301
+   */
+  validarDestinatarioFormulario(): void {
+    if (this.tramiteForm.invalid) {
+      this.tramiteForm.markAllAsTouched();
+    }
   }
 
   /**
@@ -167,6 +226,44 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getTiposDocumentos();
     this.getTipoDocumento();
+    this.getDocumentos();
+
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.donanteDomicilio();
+
+    this.subscriptions.push(
+      this.query.selectFechasSeleccionadas$.subscribe((fechas) => {
+        this.fechasSeleccionadas = fechas ?? [];
+      })
+    );
+
+    this.subscriptions.push(
+      this.query.selectTipoDocumento$.subscribe((tipoDocumento) => {
+        this.tipoDocumento = {
+          labelNombre: 'Tipo de documento',
+          required: false,
+          primerOpcion: 'Seleccion una valor',
+          catalogos: tipoDocumento ?? [],
+        };
+      })
+    );
+    this.subscriptions.push(
+      this.query.selectDocumento$.subscribe((documentos) => {
+        this.documentos = {
+          labelNombre: '',
+          required: true,
+          primerOpcion: '-- Adjunta nuevo document',
+          catalogos: documentos ?? [],
+        };
+      })
+    );
   }
 
   /**
@@ -188,18 +285,28 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Obtiene el tipo de documento.
    */
   getTipoDocumento(): void {
-    this.importarExportar.getTipoDocumento().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
+    this.getTipoDocumentoSubscription = this.importarExportar
+      .getTipoDocumento()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.store.setTipoDocumento(RESPONSE);
+        }
+      });
+  }
 
-        this.tipoDocumento = {
-          labelNombre: 'Tipo de documento',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+  /**
+   * Obtiene el documento.
+   */
+  getDocumentos(): void {
+    this.getDocumentosSubscription = this.importarExportar
+      .getDocumentos()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.store.setDocumentos(RESPONSE);
+        }
+      });
   }
 
   /**
@@ -207,16 +314,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * @returns Verdadero si todos los documentos están seleccionados, falso en caso contrario.
    */
   todosDocumentos(): boolean {
-    return this.documentosSeleccion.every((doc) => doc !== '');
-  }
-
-  /**
-   * Método que se llama cuando se selecciona un documento en la lista.
-   * @param index Índice del documento seleccionado.
-   */
-  enDocumentoSelect(index: number): void {
-    // Este método se llama cuando se selecciona un documento en la lista.
-    // Aquí se puede agregar la lógica para manejar la selección del documento.
+    return this.documentoSeleccion.every((doc) => doc !== '');
   }
 
   /**
@@ -224,7 +322,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * @param index Índice del documento seleccionado.
    */
   verDocument(index: number): void {
-    if (this.documentosSeleccion[index]) {
+    if (this.documentoSeleccion[index]) {
       // Lógica para ver el documento seleccionado
     }
   }
@@ -245,10 +343,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
         this.resoluciones[index] = '';
         this.nombresArchivosSubidos[index] = '';
         return;
-      } else {
-        this.tamanosDeArchivos[index] = parseFloat(SIZE_MB.toFixed(2));
-        this.nombresArchivosSubidos[index] = FILE.name;
       }
+      this.tamanosDeArchivos[index] = parseFloat(SIZE_MB.toFixed(2));
+      this.nombresArchivosSubidos[index] = FILE.name;
 
       const READER = new FileReader();
       READER.onload = (e: any) => {
@@ -293,7 +390,61 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
     this.procesoCompletado = true;
   }
- /**
+  /**
+   * Verifica si un campo del formulario es válido.
+   *
+   * @param {FormGroup} form - El formulario que contiene el campo.
+   * @param {string} field - El nombre del campo a verificar.
+   * @returns {boolean} - Retorna true si el campo es válido, de lo contrario false.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
+
+  /**
+   * Establece los valores en el store de tramite5701.
+   *
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   * @returns {void}
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite10301Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: any) => void)(VALOR);
+  }
+  /**
+   * Obtiene el grupo de formulario de importador/exportador.
+   *
+   * @returns {FormGroup} - El grupo de formulario de importador/exportador.
+   */
+  get importadorExportador(): FormGroup {
+    return this.tramiteForm.get('importadorExportador') as FormGroup;
+  }
+
+  /**
+   * Inicializa el formulario de donante y domicilio con los valores del estado de la solicitud.
+   */
+  donanteDomicilio(): void {
+    this.tramiteForm = this.fb.group({
+      importadorExportador: this.fb.group({
+        tipoDocumento: [
+          this.solicitudState?.tipoDocumento,
+          [Validators.required],
+        ],
+        tableCheck: [this.solicitudState?.tableCheck],
+        persona: [this.solicitudState?.persona],
+        donacion: [this.solicitudState?.donacion],
+        otro: [this.solicitudState?.otro],
+        documentos: [this.solicitudState?.documentos, [Validators.required]],
+      }),
+    });
+  }
+  /**
    * Método de limpieza que se ejecuta cuando el componente se destruye.
    */
   ngOnDestroy(): void {
