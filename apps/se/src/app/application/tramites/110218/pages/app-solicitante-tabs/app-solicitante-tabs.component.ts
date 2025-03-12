@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+/* eslint-disable dot-notation */
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 /**
  * Componente para manejar las pestañas del solicitante.
@@ -12,12 +13,17 @@ import { Component } from '@angular/core';
   templateUrl: './app-solicitante-tabs.component.html',
 })
 export class AppSolicitanteTabsComponent {
+ 
+  /**
+   * Evento emitido cuando se produce una acción relacionada con el certificado.
+   */
+  @Output() SolicitanteEventCertificado: EventEmitter<boolean> = new EventEmitter<boolean>(false);
+
   /**
    * Índice de la pestaña actualmente seleccionada.
-   * AppSolicitanteTabsComponent
+   * Se puede recibir como entrada desde un componente padre.
    */
-  indice: number = 1;
-
+  @Input() indice: number = 1;
   /**
    * Selecciona una pestaña específica y actualiza el índice.
    * AppSolicitanteTabsComponent

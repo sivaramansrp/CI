@@ -45,7 +45,7 @@
       <app-representante-legal [tabindex]="5"></app-representante-legal>
       }
       @case (6) {
-        <app-datos-certificado [tabindex]="6"></app-datos-certificado>
+        <app-datos-certificado [tabindex]="6" (modificarEventCertificado)="SolicitanteEventCertificado.emit($event)"></app-datos-certificado>
       }
       }
     </ng-container>

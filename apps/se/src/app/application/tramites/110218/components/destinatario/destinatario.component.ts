@@ -221,7 +221,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
               this.tramite110218Store.setrazónSocial(VALUE);
               break;
           default:
-              console.warn(`Nombre de control no manejado: ${controlName}`);
               break;
       }
   }
@@ -254,7 +253,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
               this.tramite110218Store.setteléfono(VALUE);
               break;
           default:
-              console.warn(`Nombre de control no manejado: ${controlName}`);
               break;
       }
   }

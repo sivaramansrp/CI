@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 
 import { Router } from '@angular/router';
+import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
 /**
  * Componente para el formulario de mercancías seleccionadas.
@@ -59,6 +60,20 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
   receivedData: any;
 
   /**
+   * Observable para la unidad de medida de comercialización.
+   */
+  unidaddeMedidadeComercializacion$: Observable<Catalogo | null> = this.tramite110218Query.unidaddeMedidadeComercializacion$;
+  tipodeFactura$: Observable<Catalogo | null> = this.tramite110218Query.tipodeFactura$;
+  complementoDelaDescripcion$: Observable<string | null> = this.tramite110218Query.complementoDelaDescripcion$;
+  marca$: Observable<string | null> = this.tramite110218Query.marca$;
+  valorMercancia$: Observable<string | null> = this.tramite110218Query.valorMercancia$;
+  numerodeFactura: Observable<string | null> = this.tramite110218Query.numerodeFactura$;
+
+  /**
+   * Evento que se emite cuando la modificación se realiza con éxito.
+   */
+  @Output() modificarSuccessBtn = new EventEmitter<boolean>();
+  /**
    * Constructor del componente.
    *
    * Constructor de formularios.
@@ -69,17 +84,18 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private service: CertificadoTecnicoJaponService,
     private tramite110218Query: Tramite110218Query,
+    private tramite110218Store: Tramite110218Store,
     private router: Router
   ) {
     this.modifydatosdelcertificado = this.fb.group({
-      nombreComercial: [''],
-      nombreIngles: [''],
+      nombreComercial: [{ value: '', disabled: true }],
+      nombreIngles: [{ value: '', disabled: true }],
       complementoDelaDescripcion: [''],
-      marca: [''],
-      valorMercancia: [''],
-      cantidad: [''],
+      marca: ['', Validators.pattern(/^(?!\s)(.*\S)?$/)],
+      valorMercancia: ['', Validators.pattern(/^\d{0,15}(\.\d{1,4})?$/)],
+      cantidad: [{ value: '', disabled: true }, Validators.pattern(/^\d{0,15}(\.\d{1,4})?$/)],
       unidaddeMedidadeComercializacion: [''],
-      numerodeFactura: [''],
+      numerodeFactura:  ['', Validators.pattern(/^[A-Za-z0-9Ññ]+$/)],
       tipodeFactura: [''],
       fechadelaFactura: [''],
     });
@@ -95,10 +111,44 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
 
     this.tramite110218Query.tableDataDatos$.subscribe((data) => {
       this.receivedData = data;
-      console.log('Received data:', this.receivedData[0].nombreComercial);
     });
 
     this.tableDataValues();
+
+    this.unidaddeMedidadeComercializacion$.subscribe((unidaddeMedidadeComercializacion) => {
+      if (unidaddeMedidadeComercializacion) {
+        this.modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.setValue(unidaddeMedidadeComercializacion);
+      }
+    });
+
+    this.tipodeFactura$.subscribe((tipodeFactura) => {
+      if (tipodeFactura) {
+        this.modifydatosdelcertificado.get('tipodeFactura')?.setValue(tipodeFactura);
+      }
+    });
+    this.complementoDelaDescripcion$.subscribe((complementoDelaDescripcion) => {
+      if (complementoDelaDescripcion) {
+        this.modifydatosdelcertificado.get('complementoDelaDescripcion')?.setValue(complementoDelaDescripcion);
+      }
+    });
+
+    this.marca$.subscribe((marca) => {
+      if (marca) {
+        this.modifydatosdelcertificado.get('marca')?.setValue(marca);
+      }
+    })
+    this.valorMercancia$.subscribe((valorMercancia) => {
+      if (valorMercancia) {
+        this.modifydatosdelcertificado.get('valorMercancia')?.setValue(valorMercancia);
+      }
+    })
+
+    this.numerodeFactura.subscribe((numerodeFactura) => {
+      if (numerodeFactura) {
+        this.modifydatosdelcertificado.get('numerodeFactura')?.setValue(numerodeFactura);
+      }
+    })
+ 
   }
 
   /**
@@ -151,7 +201,49 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
  * Este método se ejecuta cuando la modificación del formulario se completa exitosamente.
  * Utiliza el servicio de enrutamiento (`Router`) para navegar a la página correspondiente.
  */
-modificarSuccess(): void {
-  this.router.navigate(['pago/certificado-tecnico-japon/validar-certificado-tecnico-japon']);
+
+modificarSuccess() :void{
+  this.modificarSuccessBtn.emit(true); 
+
 }
+
+  /**
+   * Maneja el cambio en la unidad de medida y actualiza el store.
+   */
+  onChangeUnidadMedida(): void {
+    const UNIDADDE_MEDIDA = this.modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.value;
+    this.tramite110218Store.setUnidadeMedida(UNIDADDE_MEDIDA);
+  }
+
+  /**
+   * Maneja cambios en el tipo de factura y actualiza el estado en el store.
+   */
+  onChangeTipodeFactura(): void {
+    const TIPODE_FACTURA = this.modifydatosdelcertificado.get('tipodeFactura')?.value;
+    this.tramite110218Store.setTipodeFactura(TIPODE_FACTURA);
+  }
+
+    /**
+   * Maneja cambios en los valores de ciertos campos del formulario y los actualiza en el store.
+   * Nombre del campo que ha cambiado.
+   */
+  onMercanciaSeleccionadasChange(controlName: string): void { 
+    const VALUE = this.modifydatosdelcertificado.get(controlName)?.value;
+    switch (controlName) {
+      case 'complementoDelaDescripcion':
+        this.tramite110218Store.setComplementoDelaDescripcion(VALUE);
+        break;
+      case 'marca':
+        this.tramite110218Store.setMarca(VALUE);
+        break;
+      case 'valorMercancia':
+        this.tramite110218Store.setValorMercancia(VALUE);
+        break;
+      case 'numerodeFactura': 
+        this.tramite110218Store.setNumerodeFactura(VALUE);
+        break; 
+        default:
+          break; 
+    }
+  }
 }

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container modify">
     <form [formGroup]="modifydatosdelcertificado">
         <div class="row">
             <div class="col-md-12">
@@ -13,17 +13,17 @@
             <div class="col-md-12">
                 <label class="form-label" for="complementoDelaDescripcion">Complemento de la descripción:  </label>
                 <input type="text" class="form-control bg-white" id="complementoDelaDescripcion"
-                    formControlName="complementoDelaDescripcion">
+                    formControlName="complementoDelaDescripcion" placeholder="complemento de prueba" (change)="onMercanciaSeleccionadasChange('complementoDelaDescripcion')">
             </div>
             <div class="col-md-4">
                 <label class="form-label" for="marca">Marca: </label>
                 <input type="text" class="form-control bg-white" id="marca"
-                    formControlName="marca">
+                    formControlName="marca" (change)="onMercanciaSeleccionadasChange('marca')" placeholder="marca de la prueba de japon ">
             </div>
             <div class="col-md-4">
                 <label class="form-label" for="valorMercancia">Valor mercancía: </label>
                 <input type="text" class="form-control bg-white" id="valorMercancia"
-                    formControlName="valorMercancia">
+                    formControlName="valorMercancia" (change)="onMercanciaSeleccionadasChange('valorMercancia')" placeholder="50000.0000 ">
             </div>
             <div class="col-md-4">
                 <label class="form-label" for="cantidad">Cantidad: </label>
@@ -35,18 +35,18 @@
         <div class="row">
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="unidaddeMedidadeComercializacionOptions" formControlName="unidaddeMedidadeComercializacion"
-            name="unidaddeMedidadeComercializacion" [label]="'Unidad de medida de comercialización'" class="Unidadformlabel"></app-catalogo-select>
+            name="unidaddeMedidadeComercializacion" [label]="'Unidad de medida de comercialización'" class="Unidadformlabel" (change)="onChangeUnidadMedida()"></app-catalogo-select>
             </div>
         </div>
         <div class="row">
             <div class="col-md-4">
                 <label class="form-label" for="numerodeFactura">Número de factura: </label>
                 <input type="text" class="form-control bg-white" id="numerodeFactura"
-                    formControlName="numerodeFactura" >
+                    formControlName="numerodeFactura" (change)="onMercanciaSeleccionadasChange('numerodeFactura')" placeholder="fact12345">
             </div>
             <div class="col-md-4">
                     <app-catalogo-select [catalogo]="tipodeFacturaOptions" formControlName="tipodeFactura" [label]="'Tipo de factura'"
-                   name="tipodeFactura"></app-catalogo-select>
+                   name="tipodeFactura" (change)="onChangeTipodeFactura()"></app-catalogo-select>
             </div>
             <div class="col-md-4">
                 <label class="form-label" for="fechadelaFactura">Fecha de la factura: </label>

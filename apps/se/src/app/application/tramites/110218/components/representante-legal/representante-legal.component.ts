@@ -169,7 +169,6 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
         this.tramite110218Store.setcorreoElectrónicos(VALUE);
         break;
       default:
-        console.warn(`Nombre de control no manejado: ${controlName}`);
         break;
     }
   }
