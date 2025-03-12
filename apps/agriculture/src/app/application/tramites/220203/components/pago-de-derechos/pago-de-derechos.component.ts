@@ -64,11 +64,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @description Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.formularioPago.valueChanges.subscribe((changes) => {
-      this.verificarEstadoDelBoton();
-    }, (error) => {
-      console.error(error);
-    })
+    this.formularioPago.statusChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(
+        () => {
+          this.verificarEstadoDelBoton(); // You can implement this method to handle button state changes
+        },
+        (error) => {
+          console.error('Error during form status changes:', error);
+        }
+      );
 
     this.obtenerListaJustificacion();
     this.obtenerListaBanco();
@@ -149,9 +154,19 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         console.error(error);
       });
   }
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.importacionAcuiculturaServicio.actualizarFormularioPago as (value: any) => void)(
+      VALOR
+    );
+  }
+
+
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-    this.importacionAcuiculturaServicio.actualizarFormularioPago(this.formularioPago.value);
   }
 }

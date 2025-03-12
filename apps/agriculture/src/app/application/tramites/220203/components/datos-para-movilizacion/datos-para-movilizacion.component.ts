@@ -99,10 +99,17 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
     }
     this.importacionDeAcuiculturaServices.actualizarFormaValida(DATOS);
   }
-
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.importacionDeAcuiculturaServices.actualizarFormularioMovilizacion as (value: any) => void)(
+      VALOR
+    );
+  }
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-    this.importacionDeAcuiculturaServices.actualizarFormularioMovilizacion(this.formularioMovilizacion.value);
   }
 }

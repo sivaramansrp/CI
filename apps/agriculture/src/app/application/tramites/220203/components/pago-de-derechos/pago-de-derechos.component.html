@@ -14,6 +14,12 @@
             [layout]="'horizontal'"
             formControlName="exentoPago"
             (valueChange)="cambioValorRadio('exentoPago', $event.toString())"
+            (change)="
+            setValoresStore(
+              formularioPago,
+              'exentoPago',
+            )
+          " 
           ></app-input-radio>
         </div>
       </div>
@@ -26,6 +32,12 @@
               [label]="'Justificación'"
               [required]="true"
               name="justificacion"
+              (change)="
+              setValoresStore(
+                formularioPago,
+                'justificacion',
+              )
+            " 
             ></app-catalogo-select>
           </ng-container>
           <ng-template #noTrack>
@@ -36,6 +48,12 @@
               [required]="true"
               [isDisabled]="true"
               name="justificacion"
+              (change)="
+              setValoresStore(
+                formularioPago,
+                'justificacion',
+              )
+            " 
             ></app-catalogo-select>
           </ng-template>
         </div>
@@ -51,6 +69,12 @@
             placeholder=""
             type="text"
             appUppercase
+            (change)="
+            setValoresStore(
+              formularioPago,
+              'claveReferencia',
+            )
+          " 
           />
         </div>
         <div class="col-md-4 form-group">
@@ -65,6 +89,12 @@
             placeholder=""
             type="text"
             appUppercase
+            (change)="
+            setValoresStore(
+              formularioPago,
+              'cadenaDependencia',
+            )
+          " 
           />
         </div>
         <div class="col-md-4">
@@ -76,6 +106,12 @@
               [required]="true"
               [isDisabled]="true"
               name="banco"
+              (change)="
+            setValoresStore(
+              formularioPago,
+              'banco',
+            )
+          " 
             ></app-catalogo-select>
           </ng-container>
           <ng-template #noBanco>
@@ -86,6 +122,12 @@
               [required]="true"
               [isDisabled]="false"
               name="banco"
+              (change)="
+              setValoresStore(
+                formularioPago,
+                'banco',
+              )
+            " 
             ></app-catalogo-select>
           </ng-template>
         </div>
@@ -101,6 +143,12 @@
             placeholder=""
             type="text"
             appUppercase
+            (change)="
+            setValoresStore(
+              formularioPago,
+              'llavePago',
+            )
+          " 
           />
         </div>
         <div class="col-md-4 form-group">
@@ -119,6 +167,12 @@
             placeholder=""
             type="text"
             appUppercase
+            (change)="
+            setValoresStore(
+              formularioPago,
+              'importePago',
+            )
+          " 
           />
         </div>
       </div>

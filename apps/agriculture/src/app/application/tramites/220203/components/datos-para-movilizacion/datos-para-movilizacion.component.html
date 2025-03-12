@@ -12,6 +12,12 @@
             [label]="'Medio de transporte'"
             [required]="true"
             name="medioDeTransporte"
+            (change)="
+            setValoresStore(
+              formularioMovilizacion,
+              'medioDeTransporte',
+            )
+          " 
           ></app-catalogo-select>
         </div>
         <div class="col-md-4 form-group">
@@ -25,6 +31,12 @@
             placeholder=""
             name="identificacionTransporte"
             type="text"
+            (change)="
+            setValoresStore(
+              formularioMovilizacion,
+              'identificacionTransporte',
+            )
+          " 
           />
         </div>
       </div>
@@ -36,6 +48,12 @@
             [label]="'Punto de verificación federal'"
             [required]="false"
             name="puntoVerificacion"
+            (change)="
+            setValoresStore(
+              formularioMovilizacion,
+              'puntoVerificacion',
+            )
+          " 
           ></app-catalogo-select>
         </div>
         <div class="col-md-8 form-group">
@@ -49,6 +67,12 @@
             name="nombreEmpresaTransportista"
             placeholder=""
             type="text"
+            (change)="
+            setValoresStore(
+              formularioMovilizacion,
+              'nombreEmpresaTransportista',
+            )
+          " 
           />
         </div>
       </div>

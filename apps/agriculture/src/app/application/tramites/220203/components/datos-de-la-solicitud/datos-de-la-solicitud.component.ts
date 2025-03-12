@@ -203,7 +203,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     })
   }
   ngOnInit(): void {
-    this.datosMercanciaFormGroup.valueChanges
+    this.datosMercanciaFormGroup.statusChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((changes) => {
         this.verificarEstadoDelBoton();
@@ -278,16 +278,17 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     }
     this.importacionDeAcuiculturaServices.actualizarFormaValida(DATOS);
   }
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.importacionDeAcuiculturaServices.actualizarFormaValida as (value: any) => void)(
+      VALOR
+    );
+  }
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-    const DATOS = {
-      dataDeLaSolicitud: false,
-    }
-    if (this.datosMercanciaFormGroup.valid) {
-      DATOS.dataDeLaSolicitud = true
-    }
-    this.importacionDeAcuiculturaServices.actualizarFormaValida(DATOS);
-    this.importacionDeAcuiculturaServices.actualizarDatosMercancia(this.datosMercanciaFormGroup.value);
   }
 }

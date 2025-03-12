@@ -53,6 +53,12 @@
           [label]="'Aduana de ingreso'"
           [required]="true"
           name="aduanaIngreso"
+          (change)="
+          setValoresStore(
+            realizarGroup,
+            'aduanaIngreso',
+          )
+        " 
         ></app-catalogo-select>
       </div>
       <div class="col-md-8">
@@ -62,6 +68,12 @@
           [label]="'Oficina de inspección de Sanidad Agropecuaria:'"
           [required]="true"
           name="oficinaInspeccion"
+          (change)="
+          setValoresStore(
+            realizarGroup,
+            'oficinaInspeccion',
+          )
+        " 
         ></app-catalogo-select>
       </div>
       <div class="col-md-8">
@@ -71,6 +83,12 @@
           [label]="'Punto de inspección'"
           [required]="true"
           name="puntoInspeccion"
+          (change)="
+          setValoresStore(
+            realizarGroup,
+            'puntoInspeccion',
+          )
+        " 
         ></app-catalogo-select>
       </div>
       <div class="col-md-4"></div>
@@ -83,6 +101,12 @@
           placeholder=""
           name="numeroGuia"
           type="text"
+          (change)="
+          setValoresStore(
+            realizarGroup,
+            'numeroGuia',
+          )
+        " 
         />
       </div>
       <div class="col-md-4">
@@ -92,6 +116,12 @@
           [label]="'Régimen'"
           [required]="true"
           name="regimen"
+          (change)="
+          setValoresStore(
+            realizarGroup,
+            'regimen',
+          )
+        " 
         ></app-catalogo-select>
       </div>
     </div>
@@ -132,6 +162,12 @@
           [label]="'Tipo de requisito'"
           [required]="true"
           name="tipoRequisito"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'tipoRequisito',
+          )
+        " 
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 form-group">
@@ -143,6 +179,12 @@
           placeholder=""
           name="requisito"
           type="text"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'requisito',
+          )
+        " 
         />
       </div>
       <div class="col-md-4 form-group">
@@ -156,6 +198,12 @@
           placeholder=""
           name="numeroCertificadoInternacional"
           type="text"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'numeroCertificadoInternacional',
+          )
+        " 
         />
       </div>
       <div class="col-md-4">
@@ -165,6 +213,12 @@
           [label]="'Fracción arancelaria'"
           [required]="true"
           name="fraccionArancelaria"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'fraccionArancelaria',
+          )
+        " 
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 form-group">
@@ -178,6 +232,12 @@
           placeholder=""
           name="descripcionFraccionArancelaria"
           type="text"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'descripcionFraccionArancelaria',
+          )
+        " 
         />
       </div>
       <div class="col-md-4">
@@ -187,6 +247,12 @@
           [label]="'Nico'"
           [required]="true"
           name="nico"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'nico',
+          )
+        " 
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 form-group">
@@ -200,6 +266,12 @@
           placeholder=""
           name="descripcionFraccionArancelaria"
           type="text"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'descripcionFraccionArancelaria',
+          )
+        " 
         />
       </div>
       <div class="col-md-12">
@@ -210,6 +282,12 @@
           id="descripcion"
           rows="10"
           formControlName="descripcion"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'descripcion',
+          )
+        " 
         ></textarea>
       </div>
       <div class="col-md-4 form-group">
@@ -221,6 +299,12 @@
           placeholder=""
           name="cantidadUMT"
           type="text"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'cantidadUMT',
+          )
+        " 
         />
       </div>
       <div class="col-md-4 form-group">
@@ -232,6 +316,12 @@
           placeholder=""
           name="umt"
           type="text"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'umt',
+          )
+        " 
         />
       </div>
       <div class="col-md-4"></div>
@@ -244,6 +334,12 @@
           placeholder=""
           name="cantidadUMC"
           type="text"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'cantidadUMC',
+          )
+        " 
         />
       </div>
       <div class="col-md-4">
@@ -252,7 +348,14 @@
           formControlName="umc"
           [label]="'UMC'"
           [required]="true"
-          name="umc"
+          name="umc" 
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'umc',
+          )
+        " 
+          
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -262,6 +365,12 @@
           [label]="'Uso'"
           [required]="true"
           name="uso"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'uso',
+          )
+        " 
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 form-group">
@@ -273,6 +382,12 @@
           placeholder=""
           name="numeroDeLote"
           type="text"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'numeroDeLote',
+          )
+        " 
         />
       </div>
       <div class="col-md-4 form-group">
@@ -286,6 +401,12 @@
           placeholder=""
           name="faseDeDesarrollo"
           type="text"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'faseDeDesarrollo',
+          )
+        " 
         />
       </div>
       <div class="col-md-4 form-group">
@@ -297,6 +418,12 @@
           placeholder=""
           name="especie"
           type="text"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'especie',
+          )
+        " 
         />
       </div>
       <div class="col-md-8">
@@ -306,6 +433,12 @@
           [label]="'País de origen'"
           [required]="true"
           name="paisDeOrigen"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'paisDeOrigen',
+          )
+        " 
         ></app-catalogo-select>
       </div>
       <div class="col-md-8">
@@ -315,6 +448,12 @@
           [label]="'País de procedencia'"
           [required]="true"
           name="paisDeProcedencia"
+          (change)="
+          setValoresStore(
+            mercanciaGroup,
+            'paisDeProcedencia',
+          )
+        " 
         ></app-catalogo-select>
       </div>
     </div>
@@ -331,6 +470,12 @@
           placeholder=""
           name="nombreCientifico"
           type="text"
+          (change)="
+          setValoresStore(
+            detalles,
+            'nombreCientifico',
+          )
+        " 
         />
       </div>
     </div>
