@@ -1,6 +1,6 @@
 /* eslint-disable @angular-eslint/component-selector */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { TableData } from '../../../core/models/shared/components.model';
 
 import { CommonModule } from '@angular/common';
@@ -13,20 +13,27 @@ import { CommonModule } from '@angular/common';
   imports: [
     CommonModule
   ],
-  host: { 'hostID': crypto.randomUUID().toString() }
+  host: {}
 })
-export class TableComponent {
+export class TableComponent implements OnInit, OnChanges {
   @Input() enableScrollbar: boolean = false;
   /**
-   * @description 
-   * commonTableHeader se utiliza para obtener datos de encabezado de tabla del componente 
+   * @description
+   * commonTableHeader se utiliza para obtener datos de encabezado de tabla del componente
    */
   @Input() commonTableHeader: string[] = [];
   /**
-   * @description 
+   * @description
    * commonTableBody se utiliza para obtener datos del cuerpo de la tabla de la componente
    */
-  @Input() commonTableBody: any =[];
+  @Input() commonTableBody: any = [];
+
+  /**
+  * @description
+  * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero
+  */
+
+
   /**
    * @description
    * tableData se utiliza para obtener datos de la tabla de la componente
@@ -35,7 +42,7 @@ export class TableComponent {
     tableHeader: [],
     tableBody: []
   };
-  
+
   /**
    * @description
    * ngOnInit se utiliza para inicializar la tabla de la componente
@@ -47,4 +54,14 @@ export class TableComponent {
     }
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    const TBODYKEY = 'commonTableHeader';
+    const TBODYDATA = 'commonTableBody';
+    if (changes[TBODYKEY]?.currentValue) {
+      this.tableData.tableHeader = changes[TBODYKEY]?.currentValue;
+    }
+    if (changes[TBODYDATA]?.currentValue) {
+      this.tableData.tableBody = changes[TBODYDATA]?.currentValue;
+    }
+  }
 }

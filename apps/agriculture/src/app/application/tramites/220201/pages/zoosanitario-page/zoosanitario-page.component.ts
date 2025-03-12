@@ -1,8 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { AccionBoton, ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/220201/certificado-zoosanitario.model';
-import { PASOS, SUCECESS_MESSAGE_STAGEONE } from 'libs/shared/data-access-user/src/tramites/constantes/certificado-zoosanitario.enum';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+
+import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
+
+import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
+
+import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente principal para el formulario de certificado zoosanitario.
@@ -17,7 +19,6 @@ import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/compo
   templateUrl: './zoosanitario-page.component.html',
 })
 export class ZoosanitarioPageComponent {
-
   /**
    * Array de pasos del asistente.
    * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
@@ -57,7 +58,11 @@ export class ZoosanitarioPageComponent {
    * Mensaje de éxito para el primer paso.
    * @property {string} mensajeDeTextoDeExito - Mensaje que se muestra si el primer paso se completa con éxito.
    */
-  mensajeDeTextoDeExito: string = SUCECESS_MESSAGE_STAGEONE;
+  mensajeDeTextoDeExito: string = MENSAJE_DE_EXITO_ETAPA_UNO;
+
+  constructor() {
+    this.pasos = PASOS;
+  }
 
   /**
    * Maneja la acción del botón y navega entre los pasos.
@@ -67,7 +72,6 @@ export class ZoosanitarioPageComponent {
   getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
-      this.tituloMensaje = this.obtenerNombreDelTítulo(e.valor);
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
@@ -76,26 +80,7 @@ export class ZoosanitarioPageComponent {
     }
   }
 
-  /**
-   * Obtiene el título para cada página según el índice.
-   * @method obtenerNombreDelTítulo
-   * @param {number} valor - El índice de la página.
-   * @returns {string} - El título correspondiente.
-   */
-  obtenerNombreDelTítulo(valor: number) {
-    switch (valor) {
-      case 1:
-        return 'Zoosanitario para importación';
-      case 2:
-        return 'Cargar archivos';
-      case 3:
-        return 'Zoosanitario para importación';
-      case 4:
-        return 'Firmar';
-      default:
-        return 'Zoosanitario para importación';
-    }
-  }
+
 
   /**
    * Cambia el título del mensaje según la pestaña seleccionada.

@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { TEXTOS } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
-
 /**
  * Componente para mostrar el subtítulo del asistente.
  * @component PasoTresComponent
@@ -14,11 +12,5 @@ import { TEXTOS } from 'libs/shared/data-access-user/src/tramites/constantes/ser
   styleUrls: ['./paso-tres.component.scss']
 })
 export class PasoTresComponent {
-
-  /**
-   * Objeto con las instrucciones.
-   * @property {string} TEXTOS - Instrucciones para el usuario. --220201
-   */
-  TEXTOS: string = TEXTOS?.INSTRUCCIONES;
 
 }
