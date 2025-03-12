@@ -6,7 +6,7 @@ import { DatosComponent } from './pages/datos/datos.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideHttpClient } from '@angular/common/http';
 import { RenunciaDeDerechosDePermisosComponent } from './pages/renuncia-de-derechos-de-permisos/renuncia-de-derechos-de-permisos.component';
-import { AlertComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@ng-mf/data-access-user';
 import {
   BtnContinuarComponent,
   SolicitanteComponent,
@@ -26,7 +26,6 @@ import { PermisoRenunciaDeDerechosComponent } from './components/permiso-renunci
     ReactiveFormsModule,
     RenunciaDeDerechosDeRoutingModule,
     WizardComponent,
-    AlertComponent,
     SolicitanteComponent,
     BtnContinuarComponent,
     PermisoRenunciaDeDerechosComponent

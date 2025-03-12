@@ -3,10 +3,13 @@
  * @packageDocumentation
  * @module PermisoRenunciaDeDerechosComponent
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AlertComponent, MANIFIESTO_BAJO_PROTESTA, PermisoFormInterface, TituloComponent } from '@ng-mf/data-access-user';
+import { MANIFIESTO_BAJO_PROTESTA, PermisoFormInterface, RenunciaDeDerechosAlServicio, TituloComponent } from '@ng-mf/data-access-user';
+import { map, Subject, takeUntil } from 'rxjs';
+import { Tramite140111Query } from '../../../../estados/queries/tramite140111.query';
+import { Tramite140111Store } from '../../../../estados/tramites/tramite140111.store';
 
 /**
  * PermisoRenunciaDeDerechosComponent es un componente que maneja la renuncia de derechos de permisos.
@@ -14,11 +17,11 @@ import { AlertComponent, MANIFIESTO_BAJO_PROTESTA, PermisoFormInterface, TituloC
 @Component({
   selector: 'app-permiso-renuncia-de-derechos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, AlertComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent],
   templateUrl: './permiso-renuncia-de-derechos.component.html',
   styleUrl: './permiso-renuncia-de-derechos.component.scss',
 })
-export class PermisoRenunciaDeDerechosComponent implements OnInit {
+export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Configuración del formulario de renuncia de derechos de permisos.
@@ -30,6 +33,10 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit {
    */
   public MANIFIESTO_BAJO_PROTESTA = MANIFIESTO_BAJO_PROTESTA;
 
+  /**
+   * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
+   */
+  public destroyed$ = new Subject<void>();
 
   /**
    * Inicializa el componente PermisoRenunciaDeDerechosComponent.
@@ -38,7 +45,7 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit {
    * @returns void
    * @description Inicializa el componente PermisoRenunciaDeDerechosComponent.
    */
-  constructor(private fb:FormBuilder) {}
+  constructor(private fb:FormBuilder, private Servicio: RenunciaDeDerechosAlServicio, private tramite140111Store:Tramite140111Store,private tramite140111Query:Tramite140111Query) {}
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -47,7 +54,8 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.crearpermisoForm();
-    // this.enPatchForm(PermisoFormMockData);
+    this.enPatchForm();
+    this.enPatchStoredFormData()
   }
 
    /**
@@ -83,7 +91,54 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit {
    * @returns void
    * @description Establece los valores del formulario de renuncia de derechos de permisos a partir de los datos proporcionados.
    */
-  enPatchForm(data: PermisoFormInterface): void {}
+  enPatchForm(): void {
+    this.Servicio.getDescripcionDelCupo()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data: PermisoFormInterface) => {
+      this.permisoForm.patchValue({
+        folioTrámite: data.folioTrámite,
+        tipoDeSolicitud: data.tipoDeSolicitud,
+        régimen: data.régimen,
+        clasificaciónDelRégimen: data.clasificaciónDelRégimen,
+        periodoDeVigencia: data.periodoDeVigencia,
+        unidadDeMedida: data.unidadDeMedida,
+        fracciónArancelaria: data.fracciónArancelaria,
+        cantidadAutorizada: data.cantidadAutorizada,
+        valorAutorizado: data.valorAutorizado,
+        nico: data.nico,
+        descripciónNico: data.descripciónNico,
+        acotación: data.acotación,
+        permisoVálidoDesde: data.permisoVálidoDesde,
+        permisoVálidoHasta: data.permisoVálidoHasta,
+      });
+    });
+  }
+
+   /**
+   * Obtiene el valor de un control en el formulario y lo pasa a un método del store para actualizar el estado.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite140111Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite140111Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Actualiza el formulario con datos del store
+   */
+  enPatchStoredFormData(): void {
+    this.tramite140111Query.selectTramite140111$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.permisoForm.patchValue(
+                {
+                  motivoRenunciaDeDerechos:seccionState.motivoRenunciaDeDerechos,
+                }
+              )
+          })
+        )
+        .subscribe();
+  }
 
    /**
    * Método para verificar si un control del formulario es inválido.
@@ -96,5 +151,13 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit {
       ? control.invalid && (control.touched || control.dirty)
       : false;
   }
+
+    /**
+   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   */
+    ngOnDestroy(): void {
+      this.destroyed$.next();
+      this.destroyed$.complete();
+    }
 
 }
