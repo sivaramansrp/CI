@@ -145,7 +145,13 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 
-  modificarSuccess(): void {
-    this.router.navigate(['pago/certificado-tecnico-japon/validar-certificado-tecnico-japon']);
-  }
+/**
+ * Redirige al usuario a la pantalla de validación del certificado técnico de Japón.
+ * 
+ * Este método se ejecuta cuando la modificación del formulario se completa exitosamente.
+ * Utiliza el servicio de enrutamiento (`Router`) para navegar a la página correspondiente.
+ */
+modificarSuccess(): void {
+  this.router.navigate(['pago/certificado-tecnico-japon/validar-certificado-tecnico-japon']);
+}
 }

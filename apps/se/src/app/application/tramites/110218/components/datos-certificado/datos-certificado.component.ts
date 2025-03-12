@@ -107,6 +107,9 @@ export class DatosCertificadoComponent implements OnInit {
    */
   private destroyed$ = new Subject<void>();
 
+  /**
+   * Datos seleccionados previamente en la tabla, obtenidos desde el store.
+  */
   selectedTableFromStore: any;
   /**
    * Constructor del componente.
