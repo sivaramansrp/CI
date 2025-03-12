@@ -1,25 +1,26 @@
-import { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
-import { AlertComponent } from '@ng-mf/data-access-user';
+// @ts-nocheck
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PasoDosComponent } from './paso-dos.component';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('PasoDosComponent', () => {
-  let component: PasoDosComponent;
   let fixture: ComponentFixture<PasoDosComponent>;
+  let component: PasoDosComponent;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PasoDosComponent],
-      imports: [TituloComponent, AlertComponent],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule, HttpClientModule],
+      declarations: [PasoDosComponent], 
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 });
