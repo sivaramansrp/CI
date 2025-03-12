@@ -8,11 +8,7 @@ const ROUTES: Routes = [
       path: 'solicitute',
       component:Cancelaciones140201Component ,
     },
-    {
-      path: '',
-      pathMatch: 'full',
-      redirectTo: 'intro-permiso',
-    },
+   
 ];
 
 @NgModule({

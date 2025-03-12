@@ -14,10 +14,15 @@ import { Cancelaciones140201Component } from './pages/cancelaciones-140201/cance
 import { Datos140201Component } from './pages/datos-140201/datos-140201.component';
 import { DatosDelLas140201Component } from './components/datos-del-las-140201/datos-del-las-140201.component';
 
+import { provideHttpClient } from '@angular/common/http';
+
+import { NotifDomicileComponent } from './components/NotifDomicile/NotifDomicile.component';
+
 @NgModule({
   declarations: [
     Cancelaciones140201Component,
     Datos140201Component,
+    
   ],
   imports: [
     CommonModule,
@@ -27,7 +32,9 @@ import { DatosDelLas140201Component } from './components/datos-del-las-140201/da
     SolicitanteComponent,
     FormsModule,
     ReactiveFormsModule,
-    DatosDelLas140201Component
+    DatosDelLas140201Component,
+ 
   ],
+  providers: [provideHttpClient()],
 })
 export class Cancelaciones140201Module {}
