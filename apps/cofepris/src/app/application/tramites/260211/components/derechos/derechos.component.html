@@ -1,43 +1,55 @@
 <p>derechos works!</p>
 
 <div class="container">
-    <ng-titulo titulo="Transporte" />   
+    <ng-titulo titulo="Pago de derechos" />   
     <form [formGroup]="derechosForm" (ngSubmit)="validarTransporteFormulario()">
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">                
-                  <!-- <select-catalogos [catalogosDatos]="tiposDocumentos"></select-catalogos> -->
+                <label class="form-label" for="referencia">Clave de referencia:</label>
+                <input class="form-control" id="referencia" formControlName="referencia"
+                  placeholder="" type="text">
               </div>
             </div>
             <div class="col-md-4">
 
               <div class="form-group">
-                <label class="form-label" for="identificationDelTransporte">Identification del transporte:</label>
-                <input class="form-control" id="identificationDelTransporte" formControlName="identificationDelTransporte"
+                <label class="form-label" for="Chandenadependencia">Chandena de la dependencia:</label>
+                <input class="form-control" id="Chandenadependencia" formControlName="Chandenadependencia"
                   placeholder="" type="text">
               </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="numerodeContenedor">Número de Contenedor:</label>
-                  <input class="form-control" id="numerodeContenedor" placeholder="" type="text"
-                    formControlName="numerodeContenedor" >
+                  <!-- <app-catalogo-select
+                    [catalogo]="aduanas"
+                    [tooltipQuestionCircle]="false"
+                    [label]="'Sexo'"
+                    [placeholder]="'Seleccione una aduana'"
+                  ></app-catalogo-select> -->
                 </div>
               </div>
           </div>
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="fetchdeEmbarque">Fetcha de Embarque:</label>
-                <input class="form-control" id="fetchdeEmbarque" placeholder="" type="text"
-                  formControlName="fetchdeEmbarque" >
+                <label class="form-label" for="Llave">Llave de page</label>
+                <input class="form-control" id="Llave" placeholder="" type="text"
+                  formControlName="Llave" >
               </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="numerodeFlejes">Número de Flejes:</label>
-                  <input class="form-control" id="numerodeFlejes" placeholder="" type="text"
-                    formControlName="numerodeFlejes" >
+                  <label class="form-label" for="deFetch">Fetch de page</label>
+                  <input class="form-control" id="deFetch" placeholder="" type="date"
+                    formControlName="deFetch" >
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="importe">Importe de pago</label>
+                  <input class="form-control" id="importe" placeholder="" type="text"
+                    formControlName="importe" >
                 </div>
               </div>
           </div>
@@ -47,8 +59,7 @@
             </div>
             <div class="col-md-4">
               <div class="btn-group">
-                <button class="btn btn-primary me-2" type="button">Guardar</button>
-                <button class="btn btn-danger" type="button">Continuar</button>
+                <button type="button" class="btn btn-outline-warning custom-button">Borrar datos del pago</button>
               </div>
             </div>
           </div>   
