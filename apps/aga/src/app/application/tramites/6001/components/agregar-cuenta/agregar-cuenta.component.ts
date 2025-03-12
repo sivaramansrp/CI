@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable sort-imports */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
@@ -9,6 +10,9 @@ import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/c
 import { RegistroCuentasBancariasService } from '../../services/registro-cuentas-bancarias.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { AgregarCuenta6001State, Tramite6001Store } from '../../estados/tramite6001.store';
+import { Tramite6001Query } from '../../estados/tramite6001.query';
+import { map, Subject, takeUntil } from 'rxjs';
 
 
 /**
@@ -26,7 +30,7 @@ import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes
   templateUrl: './agregar-cuenta.component.html',
   styleUrl: './agregar-cuenta.component.scss',
 })
-export class AgregarCuentaComponent implements OnInit {
+export class AgregarCuentaComponent implements OnInit,OnDestroy {
 
   /**
    * Representa el catálogo de tipos de personas.
@@ -58,6 +62,18 @@ export class AgregarCuentaComponent implements OnInit {
    */
   public agregarCuentaForm!: FormGroup;
 
+    /**
+   * Notificador para destruir observables.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+
+  /**
+   * Representa el estado para agregar una cuenta en el componente AgregarCuenta6001.
+   * Este estado se utiliza para gestionar los datos y el comportamiento asociado con el proceso de adición de cuentas.
+   */
+  public agregarCuentaState!: AgregarCuenta6001State;
+
   /**
    * Constructor del componente AgregarCuentaComponent.
    * 
@@ -66,8 +82,10 @@ export class AgregarCuentaComponent implements OnInit {
    */
   constructor( 
       private _registroCuentasBancariasSvc: RegistroCuentasBancariasService,
-      private fb: FormBuilder) { 
-        this.crearAgregarCuentaForm();
+      private fb: FormBuilder,
+      private tramite6001Store: Tramite6001Store,
+      private tramite6001Query: Tramite6001Query) { 
+        //
   }
 
   /**
@@ -81,6 +99,15 @@ export class AgregarCuentaComponent implements OnInit {
    * - `getEstado()`: Obtiene la información del estado.
    */
   ngOnInit(): void {
+    this.tramite6001Query.agregarCuenta$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.agregarCuentaState = seccionState;
+      })
+    )
+    .subscribe();
+    this.crearAgregarCuentaForm();
     this.getTipoDePersona();
     this.getPaisDondeRadica();
     this.getInstitucion();
@@ -119,15 +146,15 @@ export class AgregarCuentaComponent implements OnInit {
    */
   public crearAgregarCuentaForm():void {
     this.agregarCuentaForm = this.fb.group({
-      titularDeLaCuenta: ['',[Validators.required,Validators.maxLength(90)]],
-      persona: [''],
-      rfc: ['',[Validators.required,Validators.pattern(REGEX_RFC)]],
-      numeroDeCuenta: ['',[Validators.required,Validators.maxLength(30)]],
-      pais: [''],
-      institucion: [''],
-      estado: [''],
-      sucursal: ['',[Validators.required,Validators.maxLength(10),Validators.pattern(/[^0-9A-Za-z&_-]/)]],
-      numeroDePlaza: ['',[Validators.required,Validators.maxLength(10),Validators.pattern(/[^0-9A-Za-z]/)]]
+      titularDeLaCuenta: [this.agregarCuentaState.titularDeLaCuenta,[Validators.required,Validators.maxLength(90)]],
+      persona: [this.agregarCuentaState.tipoDePersona],
+      rfc: [this.agregarCuentaState.rfc,[Validators.required,Validators.pattern(REGEX_RFC)]],
+      numeroDeCuenta: [this.agregarCuentaState.numeroDeCuenta,[Validators.required,Validators.maxLength(30)]],
+      pais: [this.agregarCuentaState.paisDondeRadica],
+      institucion: [this.agregarCuentaState.institucion],
+      estado: [this.agregarCuentaState.estado],
+      sucursal: [this.agregarCuentaState.sucursal,[Validators.required,Validators.maxLength(10),Validators.pattern(/[^0-9A-Za-z&_-]/)]],
+      numeroDePlaza: [this.agregarCuentaState.numeroDePlaza,[Validators.required,Validators.maxLength(10),Validators.pattern(/[^0-9A-Za-z]/)]]
     })
   }
 
@@ -191,59 +218,25 @@ export class AgregarCuentaComponent implements OnInit {
     })
   }
 
-  /**
-   * Maneja la selección del tipo de persona en el formulario.
-   * 
-   * Este método verifica el valor del campo 'persona' en el grupo de formularios `agregarCuentaForm`.
-   * Si el campo tiene un valor, habilita el campo 'persona'.
-   * De lo contrario, deshabilita el campo 'persona'.
-   */
-  public tipoDePersonaSeleccion(): void {
-    if (this.agregarCuentaForm.get('persona')?.value) {
-      this.agregarCuentaForm.get('persona')?.enable();
-    } else {
-      this.agregarCuentaForm.get('persona')?.disable();
-    }
-  }
 
   /**
-   * Habilita o deshabilita el control de formulario 'pais' basado en su valor actual.
-   * Si el control de formulario 'pais' tiene un valor, se habilitará.
-   * De lo contrario, se deshabilitará.
+   * Establece el valor de un campo en el store de Tramite31601.
+   * @param form - El grupo de formularios que contiene el campo.
+   * @param campo - El nombre del campo cuyo valor se va a establecer.
+   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
-  public paisDondeRadicaSeleccion(): void {
-    if (this.agregarCuentaForm.get('pais')?.value) {
-      this.agregarCuentaForm.get('pais')?.enable();
-    } else {
-      this.agregarCuentaForm.get('pais')?.disable();
-    }
+
+  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite6001Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite6001Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
-  /**
-   * Habilita o deshabilita el control de formulario 'institucion' basado en su valor actual.
-   * Si el control de formulario 'institucion' tiene un valor, se habilitará.
-   * De lo contrario, se deshabilitará.
+    /**
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
    */
-  public institucionSeleccion(): void {
-    if (this.agregarCuentaForm.get('institucion')?.value) {
-      this.agregarCuentaForm.get('institucion')?.enable();
-    } else {
-      this.agregarCuentaForm.get('institucion')?.disable();
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
     }
-  }
-
-  /**
-   * Alterna el estado habilitado/deshabilitado del control de formulario 'estado' basado en su valor actual.
-   * 
-   * Si el control de formulario 'estado' tiene un valor, se habilitará. De lo contrario, se deshabilitará.
-   * 
-   * @returns {void}
-   */
-  public estadoSeleccion(): void {
-    if (this.agregarCuentaForm.get('estado')?.value) {
-      this.agregarCuentaForm.get('estado')?.enable();
-    } else {
-      this.agregarCuentaForm.get('estado')?.disable();
-    }
-  }
 }

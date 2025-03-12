@@ -9,7 +9,10 @@
                     <label for="titular" class="col-sm-3 col-form-label">Titular de la cuenta*:</label>
                     <div class="col-sm-9">
                         <div class="form-group">
-                            <input type="text" formControlName="titularDeLaCuenta" class="form-control" id="titular" >
+                            <input type="text" 
+                            formControlName="titularDeLaCuenta" 
+                            (change)="setValoresStore(agregarCuentaForm,'titularDeLaCuenta', 'setTitularDeLaCuenta')"
+                            class="form-control" id="titular" >
                         </div>
                         @if(agregarCuentaForm.controls['titularDeLaCuenta'].invalid && agregarCuentaForm.controls['titularDeLaCuenta'].touched) {
                             <div class="d-grid">
@@ -32,8 +35,8 @@
                             [required]="true"
                             [isInline]="true"
                             formControlName="persona"
-                             name="persona"  
-                            (change)="tipoDePersonaSeleccion()" >
+                            name="persona"  
+                            (change)="setValoresStore(agregarCuentaForm,'persona', 'setTipoDePersona')" >
                         </app-catalogo-select>
                     </div>
                 </div>
@@ -42,7 +45,9 @@
                     <label for="rfc" class="col-sm-3 col-form-label">RFC*:<i class="bi bi-question-circle-fill"></i></label>
                     <div class="col-sm-9">
                         <div class="form-group">
-                            <input type="text" id="rfc" formControlName="rfc" class="form-control">
+                            <input type="text" id="rfc" formControlName="rfc"
+                            (change)="setValoresStore(agregarCuentaForm,'rfc', 'setRfc')"
+                             class="form-control">
                         </div>
                         @if(agregarCuentaForm.controls['rfc'].invalid && agregarCuentaForm.controls['rfc'].touched) {
                             <div class="d-grid">
@@ -61,7 +66,10 @@
                     <label for="cuenta" class="col-sm-3 col-form-label">Número de cuenta*:</label>
                     <div class="col-sm-9">
                         <div class="form-group">
-                            <input type="text" formControlName="numeroDeCuenta" id="cuenta" class="form-control">
+                            <input type="text" formControlName="numeroDeCuenta"
+                            (change)="setValoresStore(agregarCuentaForm,'numeroDeCuenta', 'setNumeroDeCuenta')"
+                             id="cuenta" 
+                             class="form-control">
                         </div>
                         @if(agregarCuentaForm.controls['numeroDeCuenta'].invalid && agregarCuentaForm.controls['numeroDeCuenta'].touched) {
                             <div class="d-grid">
@@ -85,7 +93,7 @@
                             [isInline]="true" 
                             name="pais"
                             formControlName="pais"
-                            (change)="paisDondeRadicaSeleccion()" >
+                            (change)="setValoresStore(agregarCuentaForm,'pais', 'setPaisDondeRadica')" >
                         </app-catalogo-select>
                     </div>
                 </div>
@@ -99,7 +107,7 @@
                             [isInline]="true"
                             formControlName="institucion"
                             name="institucions"  
-                            (change)="institucionSeleccion()" >
+                            (change)="setValoresStore(agregarCuentaForm,'institucion', 'setInstitucion')" >
                         </app-catalogo-select>
                     </div>
                 </div>
@@ -114,7 +122,7 @@
                             [isInline]="true"
                             formControlName="estado"
                             name="estado"  
-                            (change)="estadoSeleccion()" >
+                            (change)="setValoresStore(agregarCuentaForm,'institucion', 'setInstitucion')" >
                         </app-catalogo-select>
                     </div>
                 </div>
@@ -124,7 +132,10 @@
                     <label for="sucursal" class="col-sm-3 col-form-label">Sucursal*:</label>
                     <div class="col-sm-9">
                         <div class="form-group">
-                            <input type="text" formControlName="sucursal" id="sucursal" class="form-control">
+                            <input type="text" formControlName="sucursal"
+                            (change)="setValoresStore(agregarCuentaForm,'sucursal', 'setSucursal')"
+                             id="sucursal" 
+                             class="form-control">
                         </div>
                         @if(agregarCuentaForm.controls['sucursal'].invalid && agregarCuentaForm.controls['sucursal'].touched) {
                             <div class="d-grid">
@@ -146,7 +157,10 @@
                     <label for="plaza" class="col-sm-3 col-form-label">Número de plaza*:</label>
                     <div class="col-sm-9">
                         <div class="form-group">
-                            <input type="text" formControlName="numeroDePlaza" id="plaza" class="form-control text-uppercase">
+                            <input type="text" formControlName="numeroDePlaza"
+                            (change)="setValoresStore(agregarCuentaForm,'numeroDePlaza', 'setNumeroDePlaza')"
+                             id="plaza" 
+                             class="form-control text-uppercase">
                         </div>
                         @if(agregarCuentaForm.controls['numeroDePlaza'].invalid && agregarCuentaForm.controls['numeroDePlaza'].touched) {
                             <div class="d-grid">
