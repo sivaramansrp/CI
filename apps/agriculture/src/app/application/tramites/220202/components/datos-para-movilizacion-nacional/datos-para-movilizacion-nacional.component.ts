@@ -1,11 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
-
 import { Catalogo } from '@ng-mf/data-access-user';
-
 import { Subscription, skip } from 'rxjs';
-import { ListaDeDatosFinal } from '../../models/220202/fitosanitario.model';
+
 /**
  * @fileoverview Componente para la sección de datos para movilización nacional.
  * Este componente gestiona la lógica y la presentación del formulario de datos
@@ -13,44 +11,60 @@ import { ListaDeDatosFinal } from '../../models/220202/fitosanitario.model';
  * datos y la gestión de los controles del formulario.
  * @module datosParaMovilizacionNacional
  */
+
 /**
  * Componente para el formulario de datos para movilización nacional.
  * @class DatosParaMovilizacionNacionalComponent
  * @implements {OnInit}
  */
+
 /**
  * Componente para mostrar el subtítulo del asistente.
  * @component DatosParaMovilizacionNacionalComponent
  * @selector app-datos-para-movilizacion-nacional
  * @templateUrl ./datos-para-movilizacion-nacional.component.html
  * @styleUrls ./datos-para-movilizacion-nacional.component.scss --220202
- */@Component({
+ */
+@Component({
   selector: 'app-datos-para-movilizacion-nacional',
   templateUrl: './datos-para-movilizacion-nacional.component.html',
   styleUrls: ['./datos-para-movilizacion-nacional.component.scss']
 })
 export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy {
+
   /**
    * @description FormGroup que contiene los controles del formulario.
+   * Este objeto `FormGroup` contiene los controles de formulario necesarios para capturar los datos de movilización nacional.
    * @type {FormGroup}
    */
   forma!: FormGroup;
+
   /**
-   * @description Configuración para el selector de medio de transporte.
-   * @type {Catalogo}
+   * @description Lista de opciones para el selector de medio de transporte.
+   * Este array contiene los objetos de tipo `Catalogo` que se utilizan para poblar el selector de medio de transporte en el formulario.
+   * @type {Catalogo[]}
    */
   transporteList: Catalogo[] = [];
+
   /**
-   * @description Configuración para el selector de punto de verificación federal.
-   * @type {Catalogo}
+   * @description Lista de puntos de verificación federal.
+   * Este array contiene los objetos de tipo `Catalogo` que se utilizan para poblar el selector de puntos de verificación federal en el formulario.
+   * @type {Catalogo[]}
    */
   puntoList: Catalogo[] = [];
 
   /**
-   * @constructor
-   * @param {AgriculturaApiService} agriculturaApiService - Servicio HttpClient para realizar peticiones.
+   * @description Suscripción para manejar cambios en el estado del formulario.
+   * Se utiliza para actualizar el estado del formulario en el servicio cuando cambia su validez.
+   * @type {Subscription}
    */
   private subscription: Subscription = new Subscription();
+
+  /**
+   * @constructor
+   * @param {AgriculturaApiService} agriculturaApiService - Servicio HttpClient para realizar peticiones.
+   * Este servicio se utiliza para obtener las listas de opciones para los selectores del formulario y para actualizar el estado de la forma.
+   */
   constructor(private readonly agriculturaApiService: AgriculturaApiService) {
     this.forma = new FormGroup({
       transporte: new FormControl('', Validators.required),
@@ -60,12 +74,16 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
       punto: new FormControl('', Validators.required)
     });
   }
+
   /**
    * @description Inicializa el componente.
-   * Crea el FormGroup y obtiene los datos para los selectores.
+   * Este método se llama automáticamente después de que se crea el componente.
+   * Crea el `FormGroup` y obtiene los datos para los selectores (medio de transporte y puntos de verificación).
    * @method ngOnInit
+   * @returns {void}
    */
   ngOnInit(): void {
+    // Se suscribe a los cambios de estado del formulario para actualizar su validez
     this.forma.statusChanges.pipe(skip(1)).subscribe((changes) => {
       const FORMA_VALIDA_ACTUALIZADA = {
         movilizacionValidacion: false,
@@ -73,45 +91,68 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
       FORMA_VALIDA_ACTUALIZADA.movilizacionValidacion = this.forma.valid ? true : FORMA_VALIDA_ACTUALIZADA.movilizacionValidacion;
       this.agriculturaApiService.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
     });
+
+    // Obtiene las listas de opciones (medio de transporte y puntos de verificación)
     this.obtenerTodosLosDatosDeOpciones();
   }
 
   /**
-   * @description Obtiene los datos para los selectores.
+   * @description Obtiene los datos para los selectores (medio de transporte y punto de verificación).
+   * Este método llama a otros métodos para obtener las listas de opciones desde el servicio.
    * @method obtenerTodosLosDatosDeOpciones
+   * @returns {void}
    */
-  obtenerTodosLosDatosDeOpciones(): void { // Added return type
+  obtenerTodosLosDatosDeOpciones(): void {
     this.obtenerListaDeJustificaciones();
     this.obtenerListaDePunto();
   }
+
   /**
    * @description Obtiene los datos para el selector de medio de transporte.
+   * Llama al servicio para obtener la lista de transportes y la asigna a `transporteList`.
    * @method obtenerListaDeJustificaciones
+   * @returns {void}
    */
-  obtenerListaDeJustificaciones(): void { // Added return type
+  obtenerListaDeJustificaciones(): void {
     this.agriculturaApiService.obtenerSelectorList('transporte.json').subscribe(data => {
       this.transporteList = data as Catalogo[];
     });
   }
+
   /**
    * @description Obtiene los datos para el selector de punto de verificación federal.
+   * Llama al servicio para obtener la lista de puntos y la asigna a `puntoList`.
    * @method obtenerListaDePunto
+   * @returns {void}
    */
-  obtenerListaDePunto(): void { // Added return type
+  obtenerListaDePunto(): void {
     this.agriculturaApiService.obtenerSelectorList('punto.json').subscribe(data => {
       this.puntoList = data as Catalogo[];
     });
   }
 
+  /**
+   * @description Actualiza los valores en el store del servicio.
+   * Este método obtiene el valor de un campo específico del formulario y lo actualiza en el servicio.
+   * @method setValoresStore
+   * @param {FormGroup} form - El formulario que contiene los datos a actualizar.
+   * @param {string} campo - El nombre del campo cuyo valor se actualizará en el servicio.
+   * @returns {void}
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.agriculturaApiService.updateMovilizacion as (value: any) => void)(
-      VALOR
-    );
+    this.agriculturaApiService.updateMovilizacion(VALOR);
   }
+
+  /**
+   * @description Limpia las suscripciones activas cuando el componente es destruido.
+   * Este método se llama automáticamente cuando el componente es destruido para evitar fugas de memoria.
+   * @method ngOnDestroy
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
