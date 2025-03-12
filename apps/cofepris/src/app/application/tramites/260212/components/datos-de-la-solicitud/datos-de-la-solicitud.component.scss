@@ -1,0 +1,36 @@
+/* Custom Table Styling */
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+  }
+  
+  /* Header Styling */
+  .custom-table thead {
+    background-color: #343a40;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .custom-table th, .custom-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #dee2e6;
+  }
+  
+  /* Center Align Column */
+  .custom-table .text-center {
+    text-align: center;
+  }
+  
+  /* Alternate Row Colors */
+  .custom-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+  
+  /* Row Hover Effect */
+  .custom-table tbody tr:hover {
+    background-color: #e9ecef;
+  }
+  
