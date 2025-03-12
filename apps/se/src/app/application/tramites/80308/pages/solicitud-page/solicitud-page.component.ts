@@ -31,14 +31,14 @@ interface AccionBoton {
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
-  host: { hostID: crypto.randomUUID().toString() },
+  host: {},
   imports: [
     WizardComponent,
     PasoUnoComponent,
     PasoDosComponent,
     PasoCuatroComponent,
     BtnContinuarComponent
-   ],
+  ],
   standalone: true
 })
 /**
@@ -52,7 +52,7 @@ export class SolicitudPageComponent implements OnDestroy {
    * @type {Subject<void>}
    */
   destroyNotifier$: Subject<void> = new Subject();
-  
+
   /**
    * Lista de pasos del asistente.
    */
@@ -84,8 +84,8 @@ export class SolicitudPageComponent implements OnDestroy {
    */
   tituloMensaje: string = TITULOMENSAJE;
 
-  constructor(private tramiteQuery: Tramite80308Query, private seccion: SeccionLibStore, 
-  ){
+  constructor(private tramiteQuery: Tramite80308Query, private seccion: SeccionLibStore,
+  ) {
 
     this.tramiteQuery.FormaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe(res => {
       this.seccion.establecerSeccion([true]);

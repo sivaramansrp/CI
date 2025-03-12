@@ -11,9 +11,10 @@
       [radioOptions]="radioBtn"
       [selectedValue]="valorSeleccionado"
       [isRequired]="true"
-      (valueChange)="cambioDeValor($event)"
       [layout]="'horizontal'"
       [gap]="'50px'"
+      formControlName="manifieste"
+      (change)="setValoresStore(ivaForm,'manifieste', 'setManifieste')"
     ></app-input-radio>
 
     <section class="body-text fw-bold mb-2 mt-2">
@@ -26,9 +27,11 @@
       [radioOptions]="radioBtn"
       [selectedValue]="predeterminadoSeleccionar"
       [isRequired]="true"
-      (valueChange)="cambioDeValorIndique($event)"
+      
       [layout]="'horizontal'"
       [gap]="'50px'"
+      formControlName="indiqueIva"
+      (change)="setValoresStore(ivaForm,'indiqueIva', 'setIndiqueIva')"
     ></app-input-radio>
 
     <p class="mt-4">
@@ -104,6 +107,7 @@
           type="checkbox"
           id="empleados"
           formControlName="empleados"
+          (change)="setValoresStore(ivaForm,'empleados', 'setEmpleados')"
         />
         <label class="fw-normal" for="empleados">Empleados</label>
       </div>
@@ -114,6 +118,7 @@
           type="checkbox"
           id="infraestructura"
           formControlName="infraestructura"
+          (change)="setValoresStore(ivaForm,'infraestructura', 'setInfraestructura')"
         />
         <label class="fw-normal" for="infraestructura">Infraestructura</label>
       </div>
@@ -123,6 +128,7 @@
           type="checkbox"
           id="monto"
           formControlName="monto"
+          (change)="setValoresStore(ivaForm,'monto', 'setMonto')"
         />
         <label class="fw-normal" for="monto">Monto de Inversión</label>
       </div>
@@ -132,6 +138,7 @@
           type="checkbox"
           id="antiguedad"
           formControlName="antiguedad"
+          (change)="setValoresStore(ivaForm,'antiguedad', 'setAntiguedad')"
         />
         <label class="fw-normal" for="antiguedad"
           >Antigüedad (Únicamente tratándose de las empresas que se mencionan en
@@ -149,8 +156,9 @@
           [label]="'Tipo de inversión'"
           [required]="false"
           name="tipoDe"
-          (change)="tipoDeInver()"
+          
           formControlName="tipoDe"
+          (change)="setValoresStore(ivaForm,'tipoDe', 'setTipoDe')"
         ></app-catalogo-select>
       </div>
 
@@ -162,6 +170,7 @@
           id="valorPesos"
           name="hora"
           formControlName="valorPesos"
+          (change)="setValoresStore(ivaForm,'valorPesos', 'setValorPesos')"
         />
       </div>
       <div class="col-4">
@@ -171,6 +180,7 @@
           type="text"
           name="hora"
           formControlName="descripcion"
+          (change)="setValoresStore(ivaForm,'descripcion', 'setDescripcion')"
         />
       </div>
       <div class="col-8 d-flex align-items-end justify-content-end">
@@ -221,6 +231,8 @@
       (valueChange)="cambioDeValor($event)"
       [layout]="'horizontal'"
       [gap]="'50px'"
+      formControlName="haContado"
+      (change)="setValoresStore(ivaForm,'haContado', 'setHaContado')"
     ></app-input-radio>
 
     <p>
@@ -235,6 +247,8 @@
       (valueChange)="cambioDeValorIndique($event)"
       [layout]="'horizontal'"
       [gap]="'50px'"
+      formControlName="enCasoIva"
+      (change)="setValoresStore(ivaForm,'enCasoIva', 'setEnCasoIva')"
     ></app-input-radio>
 
     <div class="row">
@@ -264,6 +278,7 @@
             class="form-control"
             id="numeroOperacion"
             formControlName="numeroOperacion"
+            (change)="setValoresStore(formularioDePago,'numeroOperacion', 'setNumeroOperacion')"
           />
         </div>
         <div class="col-md-6">
@@ -287,6 +302,7 @@
             [required]="true"
             name="banco"
             formControlName="banco"
+            (change)="setValoresStore(formularioDePago,'banco', 'setBanco')"
           ></app-catalogo-select>
         </div>
         <div class="col-md-3">
@@ -299,6 +315,7 @@
             class="form-control"
             id="llavePago"
             formControlName="llavePago"
+            (change)="setValoresStore(formularioDePago,'llavePago', 'setLlavePago')"
           />
           <div
             class="error"

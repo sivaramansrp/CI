@@ -105,14 +105,15 @@ export { TablePaginationComponent } from './tramites/components/table-pagination
 export * from './core/models/shared/configuracion-columna.model';
 
 export * from './core/enums/tabla-seleccion.enum';
+export * from './tramites/constantes/120602/datos-empresa.enum';
+
+export * from './core/services/120602/empresa-frontera-solicitud.enum';
 
 export * from './core/estados/seccion.store';
 export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
 export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
 export * from './tramites/components/acuse/acuse.component';
-
 export * from './core/models/shared/configuracion-columna.model';
 export * from './core/enums/tabla-seleccion.enum';
-export { TEXTOS_REQUISITOS } from './tramites/constantes/certificado-zoosanitario.enum';
-export * from './tramites/directives/Uppercase/uppercase.directive';
+export * from './tramites/directives/Uppercase/uppercase.directive'

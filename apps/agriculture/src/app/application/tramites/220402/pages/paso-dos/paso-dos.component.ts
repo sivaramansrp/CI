@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TEXTOS_REQUISITOS } from '@ng-mf/data-access-user';
+import { TEXTOS_REQUISITOS } from '../../constantes/certificado-zoosanitario.enum';
 
 /**
  * Componente para mostrar el subtítulo del asistente.
