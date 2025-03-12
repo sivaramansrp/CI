@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { CommonModule } from '@angular/common';
 
 import { Component, forwardRef } from '@angular/core';
