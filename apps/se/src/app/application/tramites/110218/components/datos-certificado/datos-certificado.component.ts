@@ -106,6 +106,8 @@ export class DatosCertificadoComponent implements OnInit {
    *
    */
   private destroyed$ = new Subject<void>();
+
+  selectedTableFromStore: any;
   /**
    * Constructor del componente.
    *
@@ -134,10 +136,11 @@ export class DatosCertificadoComponent implements OnInit {
   ngOnInit(): void {
     this.getTabledatas();
     this.subscribeToStoreChanges();
-    
-    this.tramite110218Query.tableDataDatos$.subscribe((data)=>
-      
-      console.log("table datas.",data)
+
+    this.tramite110218Query.tableDataDatos$.subscribe((data)=>{
+      this.selectedTableFromStore = data;
+      console.log("selectedTableFromStore",this.selectedTableFromStore)
+    }
     )
   }
   /**
@@ -171,8 +174,8 @@ export class DatosCertificadoComponent implements OnInit {
    * DatosCertificadoComponent
    */
   onModifyForm(): void {
-    this.tramite110218Store.storeTableValues(this.selectedRow)
-    this.router.navigate(['se/certificado-tecnico-japon/mercancias-seleccionadas-form']);
+    this.tramite110218Store.storeTableValues(this.selectedRow);
+    this.router.navigate(['pago/certificado-tecnico-japon/mercancias-seleccionadas-form']);
     // this.router.navigate(['pago/certificado-tecnico-japon/mercancias-seleccionadas-form']);
 
     
