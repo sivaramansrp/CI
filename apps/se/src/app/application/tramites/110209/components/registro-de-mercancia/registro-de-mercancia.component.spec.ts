@@ -40,8 +40,8 @@ describe('RegistroDeMercanciaComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [RegistroDeMercanciaComponent],
-      imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent],
+      declarations: [],
+      imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent,RegistroDeMercanciaComponent],
       providers: [
         { provide: MercanciasService, useValue: serviceMock },
         { provide: Tramite110209Query, useValue: queryMock },

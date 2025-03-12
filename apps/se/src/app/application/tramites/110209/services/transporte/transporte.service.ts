@@ -7,6 +7,10 @@ import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+/**
+ * Este servicio maneja las operaciones relacionadas con el transporte.
+ */
+
 @Injectable({
   providedIn: 'root'
 })
