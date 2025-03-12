@@ -1,25 +1,31 @@
 <div class="container">
     <div>
         <ng-titulo titulo="Datos del certificado"></ng-titulo>
-        <form [formGroup]="datosdelcertificado">
+        <form [formGroup]="datosdelcertificado" novalidate>
             <div class="row">
+
                 <div class="col-md-12">
-                    <label class="form-label" for="lugar">Lugar *: </label>
-                    <input type="text" placeholder="Tamaulipas 15 cl: centro" class="form-control bg-white" id="lugar"
-                        formControlName="lugar" (change)="onDatosdelcertificadoChange('lugar')">
-                    <div *ngIf="datosdelcertificado.get('lugar')?.touched && datosdelcertificado.get('lugar')?.invalid">
-                        <small class="text-danger">Este campo es obligatorio.</small>
-                    </div>
+                    <label class="form-label" for="lugar">Lugar *:</label>
+                    <input type="text" class="form-control bg-white" id="lugar" placeholder="Tamaulipas 15 cl: centro"
+                        formControlName="lugar"
+                        [class.is-invalid]="datosdelcertificado.get('lugar')?.touched && datosdelcertificado.get('lugar')?.invalid"
+                        (change)="onDatosdelcertificadoChange('lugar')">
+                    <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
 
                 <div class="col-md-12">
                     <label class="form-label" for="observaciones">Observaciones:</label>
-                    <textarea type="text" placeholder="OTRAS OBSERVACIONES"
-                        class="form-control custom-textarea bg-white" id="observaciones" formControlName="observaciones"
-                        (change)="onDatosdelcertificadoChange('observaciones')"></textarea>
+                    <textarea class="form-control custom-textarea bg-white" id="observaciones"
+                        placeholder="OTRAS OBSERVACIONES" formControlName="observaciones"
+                        [class.is-invalid]="datosdelcertificado.get('observaciones')?.touched && datosdelcertificado.get('observaciones')?.invalid"
+                        (change)="onDatosdelcertificadoChange('observaciones')">
+                </textarea>
+                    <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
+
             </div>
         </form>
+
     </div>
     <h6>Mercancías seleccionadas</h6>
     <app-tabla-dinamica [configuracionTabla]="configTableArray" [datos]="datos" [tipoSeleccionTabla]="tableradio"

@@ -1,103 +1,126 @@
 <div class="container">
     <div>
         <ng-titulo titulo="Datos del destinatario"></ng-titulo>
-        <form [formGroup]="datosdeldestinatario">
+
+        <form [formGroup]="datosdeldestinatario" novalidate>
             <div class="row">
-              <div class="col-md-4">
-                <label class="form-label" for="nombre">Nombre(s): </label>
-                <input type="text" class="form-control bg-white" id="nombre" placeholder="Pedro" formControlName="nombre" (change)="onDatosdeldestinatarioChange('nombre')">
-                <div *ngIf="datosdeldestinatario.get('nombre')?.touched && datosdeldestinatario.get('nombre')?.invalid">
-                  <small class="text-danger">Corrija el nombre.</small>
+
+                <div class="col-md-4">
+                    <label class="form-label" for="nombre">Nombre(s):</label>
+                    <input type="text" class="form-control bg-white" id="nombre" placeholder="Pedro"
+                        formControlName="nombre"
+                        [class.is-invalid]="datosdeldestinatario.get('nombre')?.touched && datosdeldestinatario.get('nombre')?.invalid"
+                        (change)="onDatosdeldestinatarioChange('nombre')">
+                    <div class="invalid-feedback">
+                        Corrija el nombre.
+                    </div>
                 </div>
-              </div>
-          
-              <div class="col-md-4">
-                <label class="form-label" for="primerApellido">Primer apellido:</label>
-                <input type="text" class="form-control bg-white" id="primerApellido" placeholder="Juarez" formControlName="primerApellido" (change)="onDatosdeldestinatarioChange('primerApellido')">
-                <div *ngIf="datosdeldestinatario.get('primerApellido')?.touched && datosdeldestinatario.get('primerApellido')?.invalid">
-                  <small class="text-danger">Corrija el nombre.</small>
+
+                <div class="col-md-4">
+                    <label class="form-label" for="primerApellido">Primer apellido:</label>
+                    <input type="text" class="form-control bg-white" id="primerApellido" placeholder="Juarez"
+                        formControlName="primerApellido"
+                        [class.is-invalid]="datosdeldestinatario.get('primerApellido')?.touched && datosdeldestinatario.get('primerApellido')?.invalid"
+                        (change)="onDatosdeldestinatarioChange('primerApellido')">
+                    <div class="invalid-feedback">
+                        Corrija el nombre.
+                    </div>
                 </div>
-              </div>
-          
-              <div class="col-md-4">
-                <label class="form-label" for="segundoApellido">Segundo apellido:</label>
-                <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido" readonly>
-              </div>
-          
-              <div class="col-md-4">
-                <label class="form-label" for="númeroderegistroFiscal">Número de registro fiscal *: </label>
-                <input type="text" class="form-control bg-white" id="númeroderegistroFiscal" placeholder="OEAE800904JL9" formControlName="númeroderegistroFiscal" (change)="onDatosdeldestinatarioChange('númeroderegistroFiscal')">
-                <div *ngIf="datosdeldestinatario.get('númeroderegistroFiscal')?.touched && datosdeldestinatario.get('númeroderegistroFiscal')?.invalid">
-                  <small class="text-danger">Corrija el RFC.</small>
+
+                <div class="col-md-4">
+                    <label class="form-label" for="segundoApellido">Segundo apellido:</label>
+                    <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido"
+                        readonly>
                 </div>
-              </div>
-          
-              <div class="col-md-8">
-                <label class="form-label" for="razónSocial">Razón social:</label>
-                <input type="text" class="form-control bg-white" id="razónSocial" formControlName="razónSocial" (change)="onDatosdeldestinatarioChange('razónSocial')">
-                <div *ngIf="datosdeldestinatario.get('razónSocial')?.touched && datosdeldestinatario.get('razónSocial')?.invalid">
-                  <small class="text-danger">Este campo es obligatorio.</small>
+
+                <div class="col-md-4">
+                    <label class="form-label" for="númeroderegistroFiscal">Número de registro fiscal *:</label>
+                    <input type="text" class="form-control bg-white" id="númeroderegistroFiscal"
+                        placeholder="OEAE800904JL9" formControlName="númeroderegistroFiscal"
+                        [class.is-invalid]="datosdeldestinatario.get('númeroderegistroFiscal')?.touched && datosdeldestinatario.get('númeroderegistroFiscal')?.invalid"
+                        (change)="onDatosdeldestinatarioChange('númeroderegistroFiscal')">
+                    <div class="invalid-feedback">
+                        Corrija el RFC.
+                    </div>
                 </div>
-              </div>
+
+                <div class="col-md-8">
+                    <label class="form-label" for="razónSocial">Razón social:</label>
+                    <input type="text" class="form-control bg-white" id="razónSocial" formControlName="razónSocial"
+                        [class.is-invalid]="datosdeldestinatario.get('razónSocial')?.touched && datosdeldestinatario.get('razónSocial')?.invalid"
+                        (change)="onDatosdeldestinatarioChange('razónSocial')">
+                    <div class="invalid-feedback">
+                        Este campo es obligatorio.
+                    </div>
+                </div>
+
             </div>
-          </form>
-          
+        </form>
+
     </div>
 </div>
 <div class="container">
     <div>
         <ng-titulo titulo="Domicilio del destinatario"></ng-titulo>
-        <form [formGroup]="domiciliodeldestinatario">
+        <form [formGroup]="domiciliodeldestinatario" novalidate>
             <div class="row">
-              <div class="col-md-8">
-                <label class="form-label" for="calle">Calle *: </label>
-                <input type="text" class="form-control bg-white" id="calle" placeholder="CALLE" formControlName="calle" (change)="onDomiciliodeldestinatarioChange('calle')">
-                <div *ngIf="domiciliodeldestinatario.get('calle')?.touched && domiciliodeldestinatario.get('calle')?.invalid">
-                  <small class="text-danger">Este campo es obligatorio.</small>
+
+                <div class="col-md-8">
+                    <label class="form-label" for="calle">Calle *:</label>
+                    <input type="text" class="form-control bg-white" id="calle" placeholder="CALLE"
+                        formControlName="calle"
+                        [class.is-invalid]="domiciliodeldestinatario.get('calle')?.touched && domiciliodeldestinatario.get('calle')?.invalid"
+                        (change)="onDomiciliodeldestinatarioChange('calle')">
+                    <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
-              </div>
-          
-              <div class="col-md-4">
-                <label class="form-label" for="númeroLetra">Número y/o letra *:</label>
-                <input type="text" class="form-control bg-white" id="númeroLetra" placeholder="NUMERO" formControlName="númeroLetra" (change)="onDomiciliodeldestinatarioChange('númeroLetra')">
-                <div *ngIf="domiciliodeldestinatario.get('númeroLetra')?.touched && domiciliodeldestinatario.get('númeroLetra')?.invalid">
-                  <small class="text-danger">Este campo es obligatorio.</small>
+
+                <div class="col-md-4">
+                    <label class="form-label" for="númeroLetra">Número y/o letra *:</label>
+                    <input type="text" class="form-control bg-white" id="númeroLetra" placeholder="NUMERO"
+                        formControlName="númeroLetra"
+                        [class.is-invalid]="domiciliodeldestinatario.get('númeroLetra')?.touched && domiciliodeldestinatario.get('númeroLetra')?.invalid"
+                        (change)="onDomiciliodeldestinatarioChange('númeroLetra')">
+                    <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
-              </div>
-          
-              <div class="col-md-8">
-                <label class="form-label" for="ciudad">Ciudad (población, estado o provincia) *:</label>
-                <input type="text" class="form-control bg-white" id="ciudad" placeholder="CIUDAD" formControlName="ciudad" (change)="onDomiciliodeldestinatarioChange('ciudad')">
-                <div *ngIf="domiciliodeldestinatario.get('ciudad')?.touched && domiciliodeldestinatario.get('ciudad')?.invalid">
-                  <small class="text-danger">Este campo es obligatorio.</small>
+
+                <div class="col-md-8">
+                    <label class="form-label" for="ciudad">Ciudad (población, estado o provincia) *:</label>
+                    <input type="text" class="form-control bg-white" id="ciudad" placeholder="CIUDAD"
+                        formControlName="ciudad"
+                        [class.is-invalid]="domiciliodeldestinatario.get('ciudad')?.touched && domiciliodeldestinatario.get('ciudad')?.invalid"
+                        (change)="onDomiciliodeldestinatarioChange('ciudad')">
+                    <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
-              </div>
-          
-              <div class="col-md-4">
-                <label class="form-label" for="correoElectrónico">Correo electrónico *:</label>
-                <input type="text" class="form-control bg-white" id="correoElectrónico" placeholder="correo@correo.com" formControlName="correoElectrónico" (change)="onDomiciliodeldestinatarioChange('correoElectrónico')">
-                <div *ngIf="domiciliodeldestinatario.get('correoElectrónico')?.touched && domiciliodeldestinatario.get('correoElectrónico')?.invalid">
-                  <small class="text-danger">Ingrese una dirección de correo electrónico válida.</small>
+
+                <div class="col-md-4">
+                    <label class="form-label" for="correoElectrónico">Correo electrónico *:</label>
+                    <input type="email" class="form-control bg-white" id="correoElectrónico"
+                        placeholder="correo@correo.com" formControlName="correoElectrónico"
+                        [class.is-invalid]="domiciliodeldestinatario.get('correoElectrónico')?.touched && domiciliodeldestinatario.get('correoElectrónico')?.invalid"
+                        (change)="onDomiciliodeldestinatarioChange('correoElectrónico')">
+                    <div class="invalid-feedback">Ingrese una dirección de correo válida.</div>
                 </div>
-              </div>
-          
-              <div class="col-md-4">
-                <label class="form-label" for="fax">Fax:</label>
-                <input type="text" class="form-control bg-white" id="fax" placeholder="546456" formControlName="fax" (change)="onDomiciliodeldestinatarioChange('fax')">
-                <div *ngIf="domiciliodeldestinatario.get('fax')?.touched && domiciliodeldestinatario.get('fax')?.invalid">
-                  <small class="text-danger">Ingrese solo dígitos.</small>
+
+                <div class="col-md-4">
+                    <label class="form-label" for="fax">Fax:</label>
+                    <input type="text" class="form-control bg-white" id="fax" placeholder="546456" formControlName="fax"
+                        [class.is-invalid]="domiciliodeldestinatario.get('fax')?.touched && domiciliodeldestinatario.get('fax')?.invalid"
+                        (change)="onDomiciliodeldestinatarioChange('fax')">
+                    <div class="invalid-feedback">Ingrese solo dígitos.</div>
                 </div>
-              </div>
-          
-              <div class="col-md-4">
-                <label class="form-label" for="teléfono">Teléfono:</label>
-                <input type="text" class="form-control bg-white" id="teléfono" placeholder="5555687" formControlName="teléfono" (change)="onDomiciliodeldestinatarioChange('teléfono')">
-                <div *ngIf="domiciliodeldestinatario.get('teléfono')?.touched && domiciliodeldestinatario.get('teléfono')?.invalid">
-                  <small class="text-danger">Ingrese solo dígitos.</small>
+
+                <div class="col-md-4">
+                    <label class="form-label" for="teléfono">Teléfono:</label>
+                    <input type="text" class="form-control bg-white" id="teléfono" placeholder="5555687"
+                        formControlName="teléfono"
+                        [class.is-invalid]="domiciliodeldestinatario.get('teléfono')?.touched && domiciliodeldestinatario.get('teléfono')?.invalid"
+                        (change)="onDomiciliodeldestinatarioChange('teléfono')">
+                    <div class="invalid-feedback">Ingrese solo dígitos.</div>
                 </div>
-              </div>
+
             </div>
-          </form>
-          
+        </form>
+
+
     </div>
 </div>

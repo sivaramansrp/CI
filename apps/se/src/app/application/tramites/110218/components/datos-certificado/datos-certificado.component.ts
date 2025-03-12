@@ -123,8 +123,8 @@ export class DatosCertificadoComponent implements OnInit {
     private router: Router
   ) {
     this.datosdelcertificado = this.fb.group({
-      lugar: ['', Validators.required], // Required field
-      observaciones: ['']
+      lugar: ['', Validators.required],
+      observaciones: ['', Validators.required]
     });
   }
   /**
@@ -134,10 +134,10 @@ export class DatosCertificadoComponent implements OnInit {
   ngOnInit(): void {
     this.getTabledatas();
     this.subscribeToStoreChanges();
-    
-    this.tramite110218Query.tableDataDatos$.subscribe((data)=>
-      
-      console.log("table datas.",data)
+
+    this.tramite110218Query.tableDataDatos$.subscribe((data) =>
+
+      console.log("table datas.", data)
     )
   }
   /**
@@ -156,7 +156,7 @@ export class DatosCertificadoComponent implements OnInit {
    */
   handleFilaSeleccionada(fila: CompliMentaria): void {
     this.selectedRow = fila;
-    console.log("selected row data",this.selectedRow)
+    console.log("selected row data", this.selectedRow)
   }
   /**
    * Maneja la selección de múltiples filas en la tabla.
@@ -175,7 +175,7 @@ export class DatosCertificadoComponent implements OnInit {
     this.router.navigate(['se/certificado-tecnico-japon/mercancias-seleccionadas-form']);
     // this.router.navigate(['pago/certificado-tecnico-japon/mercancias-seleccionadas-form']);
 
-    
+
   }
   /**
    * Suscribe a los cambios en el store y actualiza el formulario.
@@ -204,26 +204,26 @@ export class DatosCertificadoComponent implements OnInit {
     this.destroyed$.complete();
   }
 
- /**
-     * Maneja los cambios en los controles del formulario y actualiza el store.
-     * DatosCertificadoComponent
-     * Nombre del control del formulario.
-     */
- onDatosdelcertificadoChange(controlName: string): void {
-  const VALUE = this.datosdelcertificado.get(controlName)?.value;
+  /**
+      * Maneja los cambios en los controles del formulario y actualiza el store.
+      * DatosCertificadoComponent
+      * Nombre del control del formulario.
+      */
+  onDatosdelcertificadoChange(controlName: string): void {
+    const VALUE = this.datosdelcertificado.get(controlName)?.value;
 
-  switch (controlName) {
+    switch (controlName) {
       case 'lugar':
-          this.tramite110218Store.setlugar(VALUE);
-          break;
+        this.tramite110218Store.setlugar(VALUE);
+        break;
       case 'observaciones':
-          this.tramite110218Store.setobservaciones(VALUE);
-          break;
+        this.tramite110218Store.setobservaciones(VALUE);
+        break;
 
       default:
-          console.warn(`Nombre de control no manejado: ${controlName}`);
-          break;
-  }
+        console.warn(`Nombre de control no manejado: ${controlName}`);
+        break;
+    }
 
- }
+  }
 }
