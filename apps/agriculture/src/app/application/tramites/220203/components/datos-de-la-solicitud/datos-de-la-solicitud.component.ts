@@ -369,10 +369,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
    * @param campo El campo a guardar en el store.
    */
   setValoresStore(
-    form: FormGroup,
-    campo: string,
+    form?: FormGroup,
+    campo?: string,
   ): void {
-    const VALOR = form.get(campo)?.value;
+    const VALOR = this.datosMercanciaFormGroup.value;
     (this.importacionDeAcuiculturaServices.actualizarDatosMercancia as (value: DatosMercancia220203) => void)(
       VALOR
     );
