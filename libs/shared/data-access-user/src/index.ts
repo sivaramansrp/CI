@@ -118,3 +118,17 @@ export * from './tramites/components/acuse/acuse.component';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './core/models/shared/configuracion-columna.model';
 export * from './core/enums/tabla-seleccion.enum';
+
+export * from './core/models/shared/configuracion-columna.model';
+ 
+export * from './core/enums/tabla-seleccion.enum';
+export * from './tramites/constantes/120602/datos-empresa.enum';
+ 
+export * from './core/services/120602/empresa-frontera-solicitud.enum';
+
+export * from './core/estados/seccion.store';
+ 
+export * from './tramites/directives/Uppercase/uppercase.directive';
+ 
+export * from './core/enums/tabla-seleccion.enum';
+ 
