@@ -105,7 +105,7 @@ export { TablePaginationComponent } from './tramites/components/table-pagination
 export * from './core/services/140111/renuncia-de-derechos-de-permisos.enum';
 export * from './core/services/140111/permiso-renuncia-de-derechos.enum';
 export * from './core/models/140111/renuncia-de-derechos.model';
-
+export * from './core/services/140111/renuncia-de-derechos-al.service';
 export * from './core/models/shared/configuracion-columna.model';
 
 export * from './core/enums/tabla-seleccion.enum';

@@ -41,7 +41,6 @@
         </div>
       </div>
     </div>
-    <!-- row-->
 
     <div class="row mt-2">
       <div class="col-md-5">
@@ -84,7 +83,6 @@
         </div>
       </div>
     </div>
-    <!-- row-->
 
     <div class="row mt-2">
       <div class="col-md-5">
@@ -127,7 +125,6 @@
         </div>
       </div>
     </div>
-    <!-- row-->
 
     <div class="row mt-2">
       <div class="col-md-2">
@@ -166,7 +163,6 @@
         </div>
       </div>
     </div>
-    <!-- row-->
 
     <div class="row mt-2">
       <div class="col-md-5">
@@ -196,7 +192,6 @@
         </div>
       </div>
     </div>
-    <!-- row-->
 
     <hr class="red" />
 
@@ -209,6 +204,7 @@
             rows="4"
             name="motivoRenunciaDeDerechos"
             formControlName="motivoRenunciaDeDerechos"
+            (change)="setValoresStore(permisoForm,'motivoRenunciaDeDerechos','setMotivoRenunciaDeDerechos')"
           ></textarea>
 
           <div *ngIf="esInvalido('motivoRenunciaDeDerechos')" class="text-danger">
@@ -218,7 +214,6 @@
         </div>
       </div>
     </div>
-    <!-- row-->
 
     <div class="row mt-2">
       <div class="col-md-12">
@@ -233,6 +228,5 @@
       </div>
     </div>
 
-    <!-- row-->
   </form>
 </div>
