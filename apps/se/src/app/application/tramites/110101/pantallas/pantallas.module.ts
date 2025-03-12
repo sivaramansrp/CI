@@ -12,7 +12,7 @@ import { DatosMercanciaComponent } from '../components/DatosMercancia/datos-merc
 import { DatosAdicionalesComponent } from '../components/datos-adicionales/datos-adicionales.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TratadosComponent } from '../components/tratados/tratados.component';
-
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
   declarations: [
@@ -29,7 +29,8 @@ import { TratadosComponent } from '../components/tratados/tratados.component';
     SolicitanteComponent,
     DatosMercanciaComponent,
     DatosAdicionalesComponent,
-    TratadosComponent
+    TratadosComponent,
+    BtnContinuarComponent
   ]
 })
 
