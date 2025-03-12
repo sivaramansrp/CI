@@ -6,5 +6,6 @@
   "semarnat": "http://localhost:4206",
   "funcionario": "http://localhost:4210",
   "agace": "http://localhost:4209",
-  "sener": "http://localhost:4217"
+  "sener": "http://localhost:4217",
+  "cofepris": "http://localhost:4211"
 }

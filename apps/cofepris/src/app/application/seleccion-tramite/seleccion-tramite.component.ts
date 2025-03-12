@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AMBIENTES } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'seleccion-tramite',
   templateUrl: './seleccion-tramite.component.html',
 })
-export class SeleccionTramiteComponent {
+export class SeleccionTramiteComponent implements OnInit {
 
   /**
    * Variable para asingar el endpoint de la ruta
    */
-  public ruta: string = '';
+  public ruta = '';
   
   ngOnInit(): void {
     if (window.location.host.indexOf('localhost') !== -1) {
