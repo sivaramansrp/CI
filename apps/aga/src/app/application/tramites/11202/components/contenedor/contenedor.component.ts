@@ -9,6 +9,14 @@ import {
 import { DatosTramiteService } from 'libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
 import mockData from 'libs/shared/theme/assets/json/11202/contenedor-mockdata.json';
 import {TEXTOS_REQUISITOS} from '../../../../constantes/11202/retorno-contenedores.enum'
+import { Contenedor11202State, Contenedor11202Store } from '../../../../estados/tramites/contenedor11202.store';
+import { Contenedor11202Query } from '../../../../estados/queries/contenedor11202.query';
+import { map, Subject, takeUntil } from 'rxjs';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
+import * as XLSX from 'xlsx';
+ //import { Solicitud11202State, Solicitud11202Store } from "../../../../estados/tramites/solicitud11202.store";
+// import { Solicitud11202Query } from '../../../../estados/queries/solicitud11202.query';
+// import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-contenedor',
@@ -18,8 +26,60 @@ import {TEXTOS_REQUISITOS} from '../../../../constantes/11202/retorno-contenedor
 
 })
 export class ContenedorComponent   {
+
+  public contenedorState!: Contenedor11202State;
   TEXTOS = TEXTOS_REQUISITOS;
 
+//  for upload excel
+archivoSeleccionado1: string = '';
+  selectedFile: File | null = null;
+  excelData: any[] = []; // Store parsed Excel data
+  tableHeaders: string[] = []; // Store table headers dynamically
+  triggerFileInput() {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    fileInput.click();
+  }
+  
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+      this.archivoSeleccionado1 = this.selectedFile.name;
+    }
+
+    
+  }
+  procesarArchivo() {
+    console.log('inside procesarArchivo');
+    if (!this.selectedFile) {
+      alert('Por favor, seleccione un archivo antes de enviarlo.');
+      return;
+    }
+    console.log('inside procesarArchivo1');
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheetName = workbook.SheetNames[0]; // Get the first sheet
+      const worksheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+      if (jsonData.length > 0) {
+        this.tableHeaders = jsonData[0] as string[]; // First row as headers
+        this.excelData = jsonData.slice(1).map((row: any) =>
+          Object.fromEntries(row.map((cell: any, index: number) => [this.tableHeaders[index], cell]))
+        );
+      }
+    };
+
+    reader.readAsArrayBuffer(this.selectedFile);
+  }
+
+
+//end of upload excel
+
+
+   private destroyNotifier$: Subject<void> = new Subject();
 onPageChange($event: Event) {
 throw new Error('Method not implemented.');
 }
@@ -39,6 +99,7 @@ throw new Error('Method not implemented.');
   catalogContenedores: any[] = [];
   contenedores: any[] = [];
   archivoSeleccionado: string = '';
+  cargarArchivoVisible: boolean = false;
   exceptionCaught: boolean = false;
   actionBean = { requiereGuardadoParcial: false };
   nonSelectionTextTipoContendor:string = 'Selecciona un valor';
@@ -46,8 +107,18 @@ throw new Error('Method not implemented.');
 
   constructor(
     private fb: FormBuilder,
-    private datosTramiteService: DatosTramiteService
+    // private solicitudStore: Solicitud11202Store,
+    // private solicitudQuery: Solicitud11202Query,
+
+
+    private datosTramiteService: DatosTramiteService,
+
+    private contenedorStore:Contenedor11202Store,
+    private contenedorQuery:Contenedor11202Query,
+    
   ) {}
+
+ 
 
   ngOnInit(): void {
     this.inicializarFormulario();
@@ -56,6 +127,18 @@ throw new Error('Method not implemented.');
      this.tabSeleccionado();
      this.configurarValidaciones();
      this.setFormValues();
+    
+   
+     this.contenedorQuery.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.contenedorState = seccionState;
+      })
+    )
+    .subscribe();
+    this.crearFormSolicitud();
+    console.log();
      
   }
 
@@ -132,7 +215,6 @@ throw new Error('Method not implemented.');
   setFormValues() {
     this.solicitudForm.get('inicialesContenedor')?.setValue(mockData.inicialesContenedor);
     this.solicitudForm.get('numeroContenedor')?.setValue(mockData.numeroContenedor);
-
   
   }
 //incomplete
@@ -170,19 +252,31 @@ cargarCatalogContenedores(): void {
     // Aquí puedes configurar validaciones adicionales si es necesario
   }
 
+
+ 
+
+ 
+
+  
+
   mostrarCampos(): void {
+
+    console.log('inside mostrarCampos');
     const tipoBusqueda = this.solicitudForm.get('tipoBusqueda')?.value;
     if (tipoBusqueda === 'Contenedor') {
+      console.log('inside mostrarCamposwwww');
       this.seccionContenedorVisible = false;
       this.seccionContenedor = true;
       this.seccionAduanaaFechaVisible = true;
+      this.cargarArchivoVisible=false;
       this.seccionExcelVisible = false;
       this.cargarArchivo=true;
     } else if (tipoBusqueda === 'Archivo CSV') {
       this.seccionExcelVisible = true;
       this.seccionAduanaaFechaVisible = true;
       this.seccionContenedorVisible = true;
-    } else {
+      this.cargarArchivo=true;
+          } else {
       this.seccionAduanaaFechaVisible = false;
       this.seccionContenedorVisible = false;
       this.seccionExcelVisible = false;
@@ -200,12 +294,11 @@ datosCaptura(): void {
     this.datosTramiteService.submitSolicitud(this.solicitudForm.value).subscribe(
       response => {
         // Manejar la respuesta exitosa
-        console.log('Solicitud enviada exitosamente', response);
+        alert('Constancia no encontrada, ¿Deseas agregar una nueva constancia?.');
+
       },
       error => {
-        // Manejar el error
-        console.error('Error al enviar la solicitud', error);
-        this.exceptionCaught = true;
+               this.exceptionCaught = true;
       }
     );
   } else {
@@ -213,15 +306,17 @@ datosCaptura(): void {
   }
 }
 agregarAGrid(): void {
-  console.log('inside agregar button');
+   console.log('inside agregar button');
   const nuevoContenedor = {
-    tipoContenedor: this.solicitudForm.get('tipoContenedor')?.value,
+    tipoContenedor:this.datosContenedor.get('tipoContenedor')?.value,
+     //  tipoContenedor: this.solicitudForm.get('tipoContenedor')?.value,
     digito: this.solicitudForm.get('digitoDeControl')?.value,
-    aduana:this.solicitudForm.get('aduana')?.value,
-    inicialesContenedor:this.solicitudForm.get('inicialesContenedor')?.value,
-    numeroContenedor:this.solicitudForm.get('numeroContenedor')?.value,
+    aduana:this.datosGenerales.get('aduana')?.value,
+    inicialesContenedor:this.datosContenedor.get('inicialesContenedor')?.value,
+    numeroContenedor:this.datosContenedor.get('numeroContenedor')?.value,
     
   };
+  console.log('tipoContenedor'+nuevoContenedor.tipoContenedor);
   console.log('inside agregar button 1'+nuevoContenedor.aduana);
 
   if (nuevoContenedor.aduana ) {
@@ -232,38 +327,31 @@ agregarAGrid(): void {
       contenedores: '',
       digitoDeControl: ''
     });
+  }else{
+    this.exceptionCaught = true;
   }
 }
-
+//incomplete
 
 adjuntarArchivo(): void {
-  const archivoInput = document.getElementById('archivoSeleccionado') as HTMLInputElement;
-  if (archivoInput && archivoInput.files && archivoInput.files.length > 0) {
-    const archivo = archivoInput.files[0];
-    this.datosTramiteService.uploadArchivo(archivo).subscribe(
-      response => {
-        // Manejar la respuesta exitosa de la carga
-        console.log('Archivo cargado exitosamente', response);
-        this.archivoSeleccionado = archivo.name;
-      },
-      error => {
-        // Manejar el error de carga
-        console.error('Error al cargar el archivo', error);
-      }
-    );
+
+ this.cargarArchivoVisible=true;
   }
-}
+
+
 
   openModalCancelarTramite(): void {
-    // Implementar la lógica para abrir el modal "Cancelar Tramite"
-    // Dependiendo de la librería de modales que uses, puede variar
+    this.solicitudForm.reset();
+    this.contenedores = [];
+    this.archivoSeleccionado = '';
+    this.exceptionCaught = false;
+
   }
 
   tabSeleccionado(): void {
     const currentIdx = localStorage.getItem('currentIdx');
     if (currentIdx !== null) {
-      // Implementar la lógica para seleccionar la pestaña actual basada en currentIdx
-      // Por ejemplo, puedes usar una librería de tabs de Angular y establecer el índice activo
+      
     }
   }
 
@@ -281,5 +369,33 @@ adjuntarArchivo(): void {
     // Esta función fue referenciada en el HTML original
   }
 
+  crearFormSolicitud(): void {
+    this.solicitudForm = this.fb.group({
+      idSolicitud: [this.contenedorState?.idSolicitud],
+      tipoBusqueda: [this.contenedorState?.tipoBusqueda, Validators.required],  
+      datosGenerales: this.fb.group({
+        aduana: [this.contenedorState?.aduana],
+      }),
+
+      datosContenedor: this.fb.group({
+        inicialesContenedor: [this.contenedorState?.inicialesContenedor], 
+        numeroContenedor: [this.contenedorState?.numeroContenedor],
+        tipoContenedor: [this.contenedorState?.tipoContenedor],
+      }),
+          });
+  }
+
   
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Contenedor11202Store): void {
+    const valor = form.get(campo)?.value;
+    (this.contenedorStore[metodoNombre] as (value: any) => void)(valor);
+  }
+
+  get datosGenerales():FormGroup{
+    return this.solicitudForm.get('datosGenerales') as FormGroup;
+  }
+
+  get datosContenedor(): FormGroup {
+    return this.solicitudForm.get("datosContenedor") as FormGroup;
+  }
 }
