@@ -89,8 +89,8 @@ export class CatalogoSelectComponent
   private onTouched: () => void = () => { };
 
   writeValue(value: string): void {
-    if (value) {
-      this.formSelect.get('selectControl')?.setValue(value);
+    if (value && this.formSelect.get('selectControl')?.value !== value) {
+      this.formSelect.get('selectControl')?.setValue(value, { emitEvent: false });
     }
   }
 
