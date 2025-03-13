@@ -1,8 +1,5 @@
-/* eslint-disable sort-imports */
-import { NgModule } from '@angular/core';
-
 import { RouterModule, Routes } from '@angular/router';
-
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
@@ -47,6 +44,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'asignacion-directa-de-cupo',
+    loadChildren: () =>
+      import('./tramites/120402/asignacion-directa-de-cupo.module').then(
+        (m) => m.AsignacionDirectaDeCupoModule
+      ),
+  },
+  {
     path: 'pexim',
     loadChildren: () =>
       import('./tramites/130118/pexim.module').then((m) => m.PeximModule),
@@ -70,6 +74,12 @@ const ROUTES: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
+  }, 
+  {
+    path: 'cancelacion-de',
+    loadChildren: () =>
+      import('./tramites/140103/cancelacion-de.module').then(
+        (m) => m.CancelacionDeModule)
   },
   {
     path: 'certificado-sgp',
