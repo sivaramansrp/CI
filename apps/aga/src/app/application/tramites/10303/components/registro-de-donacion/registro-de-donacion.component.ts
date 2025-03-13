@@ -468,7 +468,9 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       CONDICION_MERCANCIA$,
       PAIS_ORIGEN_MEDICAMENTO$,
       PAIS_PROCEDENCIA_MEDICAMENTO$
-    ).subscribe();
+    )
+    .pipe(takeUntil(this.destruirNotificador$))
+    .subscribe();
   }
 
   /**
