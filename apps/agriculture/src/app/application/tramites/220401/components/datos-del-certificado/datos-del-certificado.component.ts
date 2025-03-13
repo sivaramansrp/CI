@@ -119,12 +119,13 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.formGroup1.addControl(
+            "osia", this.solicitudState?.osia || ''
+          );
         })
       )
       .subscribe();
-      this.formGroup1= this.fb.group({
-        osia:[this.solicitudState?.osia]
-      })
+
 
       this.datosdelForm= this.fb.group({
         datoscertificado:[this.solicitudState?.datoscertificado],
