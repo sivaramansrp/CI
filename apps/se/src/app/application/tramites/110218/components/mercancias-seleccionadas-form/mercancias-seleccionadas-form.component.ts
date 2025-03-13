@@ -88,17 +88,19 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
     private router: Router
   ) {
     this.modifydatosdelcertificado = this.fb.group({
-      nombreComercial: [{ value: '', disabled: true }],
-      nombreIngles: [{ value: '', disabled: true }],
-      complementoDelaDescripcion: [''],
-      marca: ['', Validators.pattern(/^(?!\s)(.*\S)?$/)],
-      valorMercancia: ['', Validators.pattern(/^\d{0,15}(\.\d{1,4})?$/)],
-      cantidad: [{ value: '', disabled: true }, Validators.pattern(/^\d{0,15}(\.\d{1,4})?$/)],
-      unidaddeMedidadeComercializacion: [''],
-      numerodeFactura:  ['', Validators.pattern(/^[A-Za-z0-9Ññ]+$/)],
-      tipodeFactura: [''],
-      fechadelaFactura: [''],
+      nombreComercial: [{ value: '', disabled: true }], // Campo de solo lectura
+      nombreIngles: [{ value: '', disabled: true }], // Campo de solo lectura
+      complementoDelaDescripcion: ['', [Validators.required]], // Campo obligatorio
+      marca: ['', [Validators.required]], // Campo obligatorio
+      valorMercancia: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/)]], // Campo obligatorio, solo números con hasta 4 decimales
+      cantidad: [{ value: '', disabled: true }], // Campo de solo lectura
+      unidaddeMedidadeComercializacion: ['', Validators.required], // Campo obligatorio, selección de lista desplegable
+      numerodeFactura: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]], // Campo obligatorio, solo alfanumérico
+      tipodeFactura: ['', Validators.required], // Campo obligatorio, selección de lista desplegable
+      fechadelaFactura: [{ value: '', disabled: true }] // Campo de solo lectura
     });
+    
+    
   }
 
   /**
