@@ -7,7 +7,7 @@ export const SOLICITAR_PASOS = [
     },
     {
       indice: 2,
-      titulo: 'Requisitos neccesarios',
+      titulo: 'Requisitos necesarios',
       activo: false,
       completado: false,
     },
