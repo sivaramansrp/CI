@@ -4,25 +4,31 @@ import { GenerarDictamenComponent } from '../generar-dictamen/generar-dictamen.c
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
 import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 import { RequerimientoInformacionComponent } from '../requerimiento-informacion/requerimiento-informacion.component';
-import { EncabezadoRequerimientoComponent } from '@libs/shared/data-access-user/src';
+import { EncabezadoRequerimientoComponent, FirmaPageComponent } from '@libs/shared/data-access-user/src';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-solicitud-page',
   standalone: true,
-  imports: [CommonModule, EncabezadoRequerimientoComponent, GenerarDictamenComponent, CapturarRequerimientoComponent, SolicitarDocumentosEvaluacionComponent, RequerimientoInformacionComponent], // <-- Importa los componentes aquí
+  imports: [CommonModule, EncabezadoRequerimientoComponent, GenerarDictamenComponent, CapturarRequerimientoComponent, SolicitarDocumentosEvaluacionComponent, RequerimientoInformacionComponent, FirmaPageComponent], // <-- Importa los componentes aquí
   templateUrl: './solicitud-page.component.html',
-  styleUrl: './solicitud-page.component.css',
+  styleUrl: './solicitud-page.component.scss',
 })
 export class SolicitudPageComponent {
-
+  constructor(
+    private router: Router
+  ){
+    
+  }
   /**
    * Índice de la pestaña seleccionada
    */
-  indice: number = 1;
+  indice: number = 2;
+
   /**
    * Variable para firmar
    */
-  // firmar: boolean = false;
+  firmar: boolean = false;
 
   /**
    * Método para seleccionar la pestaña
@@ -35,7 +41,7 @@ export class SolicitudPageComponent {
   /*
    * Método que se ejecuta para guardar y firmar
   */
-  // guardarFirmar(): void { 
-  //   this.firmar = true;
-  // }
+  guardarFirmar(): void { 
+    this.router.navigate(['funcionario/firma-electronica']);
+  }
 }
