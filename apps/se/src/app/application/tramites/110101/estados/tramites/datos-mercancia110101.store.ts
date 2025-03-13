@@ -95,4 +95,22 @@ export class DatosMercanciaStore extends Store<DatosMercanciaState> {
     super(createInitialState());
   }
 
+  /**
+   * **Actualiza los valores del formulario en el estado**
+   * 
+   * - Compara los valores actuales del estado con los nuevos valores.
+   * - Si hay cambios, actualiza el estado con los nuevos datos.
+   * - Evita actualizaciones innecesarias cuando los datos son iguales.
+   * 
+   * @param nuevosValores - Nuevos valores del formulario de mercancía.
+   */
+  actualizarValoresFormulario(nuevosValores: FormMercancia): void {
+    const VALORESACTUALES = this.getValue().formValues;
+    // Solo actualiza el estado si hay cambios
+    if (JSON.stringify(VALORESACTUALES) !== JSON.stringify(nuevosValores)) {
+      this.update({ formValues: nuevosValores });
+    }
+  }
+
+
 }

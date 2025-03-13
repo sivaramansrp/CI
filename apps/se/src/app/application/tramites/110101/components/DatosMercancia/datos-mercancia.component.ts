@@ -13,7 +13,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { INTRODUZCA_NUMERO, REQUERIDO } from 'libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 import mercancia from 'libs/shared/theme/assets/json/110101/mercancia.json'
-import { distinctUntilChanged, Subject, take, takeUntil } from 'rxjs';
+import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
 /**
 * Este componente se utiliza para mostrar la forma del datosdelamercancia. - 110101
@@ -160,26 +160,17 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
         }
       });
   }
-
-
   /**
    * **Actualiza el estado del store con los valores actuales del formulario**
    * 
    * - Obtiene los valores actuales del formulario `formMercancia`.
-   * - Se suscribe a `formValues$` de `datosDeLaQuery` y toma el último valor almacenado en el estado.
-   * - Compara los valores actuales del formulario con los valores en el estado para evitar actualizaciones innecesarias.
-   * - Si los valores son diferentes, actualiza el store con los nuevos valores.
-   * - La suscripción utiliza `take(1)` para obtener solo un valor y evitar suscripciones innecesarias.
+   * - Llama al método `updateFormValues` del store para actualizar el estado.
+   * - Centraliza la lógica de actualización en el store, manteniendo el componente más limpio.
    */
   private actualizarStore(): void {
     const NEWVALUES = this.formMercancia.value;
-    this.datosDeLaQuery.formValues$.pipe(take(1)).subscribe((currentValues) => {
-      if (JSON.stringify(currentValues) !== JSON.stringify(NEWVALUES)) {
-        this.datosDeLaStore.update({ formValues: NEWVALUES });
-      }
-    });
+    this.datosDeLaStore.actualizarValoresFormulario(NEWVALUES);
   }
-
 
   /**
    * **Limpia los recursos y finaliza las suscripciones al destruir el componente**
