@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { DatosDelCertificadoComponent } from "./components/datos-del-certificado/datos-del-certificado.component";
 import { DatosDelDestinatarioComponent } from './components/datos-del-destinatario/datos-del-destinatario.component';
 import { DetallesDelTransporteComponent } from './components/detalles-del-transporte/detalles-del-transporte.component';
+import { DomicilioDelDestinatarioComponent } from "./components/domicilio-del-destinatario/domicilio-del-destinatario.component";
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { FirmarSolicitudComponent } from './pages/firmar-solicitud/firmar-solicitud.component';
 import { NgModule } from '@angular/core';
@@ -15,11 +16,6 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 import { ToastrService } from 'ngx-toastr';
 import { TransporteComponent } from './components/transporte/transporte.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
-
-
-
-
-
 
 @NgModule({
   declarations: [
@@ -38,8 +34,9 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     FirmaElectronicaComponent,
     BtnContinuarComponent,
     DatosDelCertificadoComponent,
-    RegistroDeMercanciaComponent
-  ],
+    RegistroDeMercanciaComponent,
+    DomicilioDelDestinatarioComponent
+],
   providers: [ToastrService],
 })
 export class CertificadoSGPModule { }

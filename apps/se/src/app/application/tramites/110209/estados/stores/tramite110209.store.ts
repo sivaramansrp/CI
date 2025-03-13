@@ -1,7 +1,3 @@
-/**
- * Este es el store 110209
- */
-
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { Mercancias } from '../../constantes/certificado-sgp.enum';
@@ -221,66 +217,120 @@ export class Tramite110209Store extends Store<Tramite110209State> {
     }));
   }
 
+  /**
+   * Establece el nombre en el estado.
+   * @param {string} nombre - El nombre.
+   */
   public setNombre(nombre: string): void {
     this.update((state) => ({
       ...state,
       nombre,
     }));
   }
+
+  /**
+   * Establece el primer apellido en el estado.
+   * @param {string} primerApellido - El primer apellido.
+   */
   public setPrimerApellido(primerApellido: string): void {
     this.update((state) => ({
       ...state,
       primerApellido,
     }));
   }
+
+  /**
+   * Establece el segundo apellido en el estado.
+   * @param {string} segundoApellido - El segundo apellido.
+   */
   public setSegundoApellido(segundoApellido: string): void {
     this.update((state) => ({
       ...state,
       segundoApellido,
     }));
   }
+
+  /**
+   * Establece el número de registro fiscal en el estado.
+   * @param {string} numeroDeRegistroFiscal - El número de registro fiscal.
+   */
   public setNumeroDeRegistroFiscal(numeroDeRegistroFiscal: string): void {
     this.update((state) => ({
       ...state,
       numeroDeRegistroFiscal,
     }));
   }
+
+  /**
+   * Establece la razón social en el estado.
+   * @param {string} razonSocial - La razón social.
+   */
   public setRazonSocial(razonSocial: string): void {
     this.update((state) => ({
       ...state,
       razonSocial,
     }));
   }
+
+  /**
+   * Establece la calle en el estado.
+   * @param {string} calle - La calle.
+   */
   public setCalle(calle: string): void {
     this.update((state) => ({
       ...state,
       calle,
     }));
   }
+
+  /**
+   * Establece el número o letra en el estado.
+   * @param {string} numeroLetra - El número o letra.
+   */
   public setNumeroLetra(numeroLetra: string): void {
     this.update((state) => ({
       ...state,
       numeroLetra,
     }));
   }
+
+  /**
+   * Establece la ciudad en el estado.
+   * @param {string} ciudad - La ciudad.
+   */
   public setCiudad(ciudad: string): void {
     this.update((state) => ({
       ...state,
       ciudad,
     }));
   }
+
+  /**
+   * Establece el correo electrónico en el estado.
+   * @param {string} correoElectronico - El correo electrónico.
+   */
   public setCorreoElectronico(correoElectronico: string): void {
     this.update((state) => ({
       ...state,
       correoElectronico,
     }));
   }
+
+  /**
+   * Establece el fax en el estado.
+   * @param {number} fax - El fax.
+   */
   public setFax(fax: number): void {
     this.update((state) => ({
       ...state,
       fax,
     }));
   }
+
+  /**
+   * Establece el teléfono en el estado.
+   * @param {number} telefono - El teléfono.
+   */
   public setTelefono(telefono: number): void {
     this.update((state) => ({
       ...state,

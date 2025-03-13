@@ -1,116 +1,92 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { DatosDelDestinatarioComponent } from './datos-del-destinatario.component';
-import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
-import { of } from 'rxjs';
-
-jest.mock('../../estados/stores/tramite110209.store');
-jest.mock('../../estados/queries/tramite110209.query');
+import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
+import { of, Subject } from 'rxjs';
 
 describe('DatosDelDestinatarioComponent', () => {
   let component: DatosDelDestinatarioComponent;
   let fixture: ComponentFixture<DatosDelDestinatarioComponent>;
-  let tramite110209StoreMock: Tramite110209Store;
-  let tramite110209QueryMock: Tramite110209Query;
+  let tramite110209Query: Tramite110209Query;
+  let tramite110209Store: Tramite110209Store;
+
+  beforeEach(async () => {
+    const tramite110209QueryMock = {
+      selectTramite110102$: of({
+        nombre: 'John',
+        primerApellido: 'Doe',
+        segundoApellido: 'Smith',
+        numeroDeRegistroFiscal: '123456789',
+        razonSocial: 'Empresa S.A.'
+      })
+    };
+
+    const tramite110209StoreMock = {
+      setNombre: jest.fn(),
+      setPrimerApellido: jest.fn(),
+      setSegundoApellido: jest.fn(),
+      setNumeroDeRegistroFiscal: jest.fn(),
+      setRazonSocial: jest.fn()
+    };
+
+    await TestBed.configureTestingModule({
+      declarations: [],
+      imports: [CommonModule,DatosDelDestinatarioComponent, ReactiveFormsModule, TituloComponent],
+      providers: [
+        { provide: Tramite110209Query, useValue: tramite110209QueryMock },
+        { provide: Tramite110209Store, useValue: tramite110209StoreMock }
+      ]
+    }).compileComponents();
+
+    tramite110209Query = TestBed.inject(Tramite110209Query);
+    tramite110209Store = TestBed.inject(Tramite110209Store);
+  });
 
   beforeEach(() => {
-    tramite110209StoreMock = new Tramite110209Store();
-    tramite110209QueryMock = new Tramite110209Query(tramite110209StoreMock);
-
-    TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ReactiveFormsModule,DatosDelDestinatarioComponent],
-      providers: [
-        FormBuilder,
-        { provide: Tramite110209Store, useValue: tramite110209StoreMock },
-        { provide: Tramite110209Query, useValue: tramite110209QueryMock },
-      ],
-    });
-
     fixture = TestBed.createComponent(DatosDelDestinatarioComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  describe('getValoresStore', () => {
-    it('should patch form values from the store', () => {
-      // Mock the full state as expected by the store's select method
-      const mockStoreValues = {
-        medioDeTransporte: '',
-        rutaCompleta: '',
-        puertoDeEmbarque: '',
-        puertoDeDesembarque: '',
-        observaciones: '',
-        mercanciasSeleccionadas: {
-          numeroDeOrden: '',
-          fraccionArancelaria: '',
-          nombreTecnico: '',
-          nombreComercial: '',
-          nombreIngles: '',
-          numeroDeRegistro: ''
-        },
-        nombre: 'John',
-        primerApellido: 'Doe',
-        segundoApellido: 'Smith',
-        numeroDeRegistroFiscal: '12345',
-        razonSocial: 'Company X',
-        calle: '',
-        numeroLetra: '',
-        ciudad: '',
-        correoElectronico: '',
-        fax: 0,
-        telefono: 0,
-      };
-
-      // Spy on the `select` method to return the full mock store state
-      jest.spyOn(tramite110209QueryMock, 'select').mockReturnValue(of(mockStoreValues));
-
-      // Call the method
-      component.getValoresStore();
-
-      // Check if the form is patched correctly
-      expect(component.detosDelDestinatarioForm.get('nombre')?.value).toBe(mockStoreValues.nombre);
-      expect(component.detosDelDestinatarioForm.get('primerApellido')?.value).toBe(mockStoreValues.primerApellido);
-      expect(component.detosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.value).toBe(mockStoreValues.numeroDeRegistroFiscal);
-    });
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 
-  
-
-    describe('setValoresStore', () => {
-    it('should set values to the store based on form values', () => {
-      const mockFormValue = {
-        nombre: 'John',
-        primerApellido: 'Doe',
-        segundoApellido: 'Smith',
-        numeroDeRegistroFiscal: '12345',
-        razonSocial: 'Company X',
-      };
-
-      // Mock the form controls
-      component.detosDelDestinatarioForm.setValue(mockFormValue);
-
-      // Spy on store methods
-      const spySetNombre = jest.spyOn(tramite110209StoreMock, 'setNombre');
-      const spySetPrimerApellido = jest.spyOn(tramite110209StoreMock, 'setPrimerApellido');
-      const spySetNumeroDeRegistroFiscal = jest.spyOn(tramite110209StoreMock, 'setNumeroDeRegistroFiscal');
-
-      // Call the method
-      component.setValoresStore(component.detosDelDestinatarioForm, 'nombre', 'setNombre');
-      component.setValoresStore(component.detosDelDestinatarioForm, 'primerApellido', 'setPrimerApellido');
-      component.setValoresStore(component.detosDelDestinatarioForm, 'numeroDeRegistroFiscal', 'setNumeroDeRegistroFiscal');
-
-      // Check if the store methods were called with the correct values
-      expect(spySetNombre).toHaveBeenCalledWith(mockFormValue.nombre);
-      expect(spySetPrimerApellido).toHaveBeenCalledWith(mockFormValue.primerApellido);
-      expect(spySetNumeroDeRegistroFiscal).toHaveBeenCalledWith(mockFormValue.numeroDeRegistroFiscal);
-    });
+  it('should initialize the form with default values', () => {
+    expect(component.detosDelDestinatarioForm).toBeDefined();
+    expect(component.detosDelDestinatarioForm.get('nombre')?.value).toBe('');
+    expect(component.detosDelDestinatarioForm.get('primerApellido')?.value).toBe('');
+    expect(component.detosDelDestinatarioForm.get('segundoApellido')?.value).toBe('');
+    expect(component.detosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.value).toBe('');
+    expect(component.detosDelDestinatarioForm.get('razonSocial')?.value).toBe('');
   });
 
+  it('should fetch and set form values from store on init', () => {
+    component.ngOnInit();
+    expect(component.detosDelDestinatarioForm.get('nombre')?.value).toBe('John');
+    expect(component.detosDelDestinatarioForm.get('primerApellido')?.value).toBe('Doe');
+    expect(component.detosDelDestinatarioForm.get('segundoApellido')?.value).toBe('Smith');
+    expect(component.detosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.value).toBe('123456789');
+    expect(component.detosDelDestinatarioForm.get('razonSocial')?.value).toBe('Empresa S.A.');
+  });
+
+  it('should set values in store when setValoresStore is called', () => {
+    component.setValoresStore(component.detosDelDestinatarioForm, 'nombre', 'setNombre');
+    expect(tramite110209Store.setNombre).toHaveBeenCalledWith('');
+
+    component.detosDelDestinatarioForm.get('nombre')?.setValue('John');
+    component.setValoresStore(component.detosDelDestinatarioForm, 'nombre', 'setNombre');
+    expect(tramite110209Store.setNombre).toHaveBeenCalledWith('John');
+  });
+
+  it('should complete destroyed$ subject on destroy', () => {
+    const nextSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });
-
-
-
-
-

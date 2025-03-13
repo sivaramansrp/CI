@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
+
+import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
+import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 
 /**
  * Componente para gestionar el formulario de "Domicilio del Destinatario".
@@ -20,7 +21,7 @@ import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
   templateUrl: './domicilio-del-destinatario.component.html',
   styleUrl: './domicilio-del-destinatario.component.scss',
 })
-export class DomicilioDelDestinatarioComponent implements OnInit {
+export class DomicilioDelDestinatarioComponent implements OnInit, OnDestroy {
   /**
    * Formulario que contiene los datos del domicilio del destinatario.
    * @type {FormGroup}
@@ -28,30 +29,49 @@ export class DomicilioDelDestinatarioComponent implements OnInit {
   domicilioDelDestinatarioForm!: FormGroup;
 
   /**
+   * Subject que emite un evento cuando el componente es destruido,
+   * permitiendo la desuscripción de observables.
+   * @type {Subject<void>}
+   */
+  private destroyed$ = new Subject<void>();
+
+  /**
    * Constructor para inicializar el formulario con los campos requeridos.
    * 
    * @param {FormBuilder} fb - Servicio utilizado para construir el formulario reactivo.
+   * @param {Tramite110209Store} tramite110209Store - El store del trámite 110209.
+   * @param {Tramite110209Query} tramite110209Query - La consulta del trámite 110209.
    */
-
-  private destroyed$ = new Subject<void>();
   constructor(private fb: FormBuilder, private tramite110209Store: Tramite110209Store, private tramite110209Query: Tramite110209Query) {
     //
   }
 
-  createForm(): void {
+  /**
+   * Crea el formulario del componente.
+   */
+  crearFormulario(): void {
     this.domicilioDelDestinatarioForm = this.fb.group({
-      calle: [{ value: '', disabled: false }, Validators.required, Validators.pattern(/^\d{0,15}(\.\d{1,4})?$/)],
-      numeroLetra: [{ value: '', disabled: false }, Validators.required,Validators.pattern(/^\d{0,15}(\.\d{1,4})?$/)],
-      ciudad: [{ value: '', disabled: false }, Validators.required,Validators.pattern(/^\d{0,15}(\.\d{1,4})?$/)],
-      correoElectronico: [{ value: '', disabled: false }, [Validators.required, Validators.email]],
-      fax: [{ value: '', disabled: false },Validators.pattern(/^\d{0,15}(\.\d{1,4})?$/)],
-      telefono: [{ value: '', disabled: false },Validators.pattern(/^\d{0,15}(\.\d{1,4})?$/)],
+      calle: ['', [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/)]],
+      numeroLetra: [ '', [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/)]],
+      ciudad: ['' , [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/)]],
+      correoElectronico: ['', [Validators.required, Validators.email]],
+      fax: ['',Validators.pattern(/^\d+$/)],
+      telefono: ['' , Validators.pattern(/^\d+$/)],
     });
   }
+
+  /**
+   * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
+   * Crea el formulario del componente.
+   */
   ngOnInit(): void {
-    this.createForm();
+    this.crearFormulario();
+    this.getValoresStore()
   }
 
+  /**
+   * Obtiene los valores del store y los asigna al formulario.
+   */
   getValoresStore(): void {
     this.tramite110209Query.selectTramite110102$
       .pipe(
@@ -64,14 +84,29 @@ export class DomicilioDelDestinatarioComponent implements OnInit {
             correoElectronico: seccionState.correoElectronico,
             fax: seccionState.fax,
             telefono: seccionState.telefono,
-
           });
         })
       )
       .subscribe();
   }
+
+  /**
+   * Establece los valores en el store.
+   * @param {FormGroup} form - El formulario del cual se obtienen los valores.
+   * @param {string} campo - El nombre del campo del formulario.
+   * @param {keyof Tramite110209Store} metodoNombre - El nombre del método del store.
+   */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110209Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite110209Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Hook del ciclo de vida que se llama cuando la directiva se destruye.
+   * Completa el subject destroyed$ para desuscribirse de todos los observables.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

@@ -1,3 +1,7 @@
+
+/**
+ * Angular core imports for the component.
+ */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
@@ -5,26 +9,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
 // Finally, import relative services
-import { DetallesDelTransporteService } from '../../services/detalles-del-transporte.service';
-
-
-
-// Import your services last
-
-
-
-
+import { DetallesDelTransporteService } from '../../services/detalls-de-transporte/detalles-del-transporte.service';
 
 /**
  * Componente: DetallesDelTransporteComponent
- * 
- * Descripción:
- * Este componente forma parte del módulo Angular y es responsable de gestionar el
- * formulario "Detalles del Transporte". Utiliza el módulo ReactiveForms de Angular
- * para crear y gestionar un formulario con campos pre-llenados y deshabilitados. Estos campos contienen
- * información como el sistema de transporte, los países de origen y destino, así como las fechas de emisión y expiración.
- * El componente está marcado como 'independiente' y no depende de módulos o componentes externos
- * más allá de lo definido en su array de imports.
  * 
  */
 @Component({
@@ -54,8 +42,8 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy {
    * Constructor del componente DetallesDelTransporteComponent.
    * 
    * @param {FormBuilder} fb - El servicio FormBuilder proporcionado por Angular.
+   * @param {DetallesDelTransporteService} service - El servicio para obtener los detalles del transporte.
    */
-
   constructor(private fb: FormBuilder, private service: DetallesDelTransporteService) {
     this.detallesDeltransportForm = this.fb.group({
       tratado: [{ value: '', disabled: true }],
@@ -67,10 +55,17 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
+   * Obtiene los detalles del transporte.
+   */
   ngOnInit(): void {
     this.getMedioDeTransporte();
   }
 
+  /**
+   * Obtiene los detalles del transporte desde el servicio y los asigna al formulario.
+   */
   getMedioDeTransporte(): void {
     this.service.getMedioDeTransporte().pipe(
       takeUntil(this.destroyed$)
@@ -88,6 +83,10 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Hook del ciclo de vida que se llama cuando la directiva se destruye.
+   * Completa el subject destroyed$ para desuscribirse de todos los observables.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DetallesDelTransporteComponent } from './detalles-del-transporte.component';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { DetallesDelTransporteService } from '../../services/detalles-del-transporte.service';
+import { DetallesDelTransporteService } from '../../services/detalls-de-transporte/detalles-del-transporte.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 

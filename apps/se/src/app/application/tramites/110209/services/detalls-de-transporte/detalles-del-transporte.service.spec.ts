@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { DetallesDelTransporteService } from './detalles-del-transporte.service';
+import { DetallesDelTransporteService } from '../detalls-de-transporte/detalles-del-transporte.service';
 import { Observable, of } from 'rxjs';
 
 // Mock URL used in the service
