@@ -20,7 +20,7 @@
           (keydown.space)="seleccionaTab(2)"
           role="button"
           tabindex="2"
-          >Anexo II y III</a
+          >Anexo I</a
         >
       </li>
       <li [ngClass]="indice === 3 ? 'active' : ''">
@@ -31,7 +31,7 @@
           (keydown.space)="seleccionaTab(3)"
           role="button"
           tabindex="2"
-          >Federatarios y plantas</a
+          >Anexo II y III</a
         >
       </li>
     </ul>
@@ -40,9 +40,9 @@
       @switch (indice) { @case (1) {
       <solicitante [tabindex]="1"></solicitante>
       } @case (2) {
-      <app-anexo-vista-dos-y-tres></app-anexo-vista-dos-y-tres>
+      <app-anexo-vista-uno></app-anexo-vista-uno>
       } @case (3) {
-      <app-federatarios-y-plantas></app-federatarios-y-plantas>
+      <app-anexo-vista-dos-y-tres></app-anexo-vista-dos-y-tres>
       } }
     </ng-container>
   </div>

@@ -9,7 +9,8 @@ import {
   TituloComponent,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-import { AnexoVistaDosYTresComponent } from './component/anexo-vista-dos-y-tres.component';
+import { AnexoVistaDosYTresComponent } from './component/anexo-vista-dos-y-tres.component/anexo-vista-dos-y-tres.component';
+import { AnexoVistaUnoComponent } from './component/anexo-vista-uno/anexo-vista-uno.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
@@ -45,6 +46,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     WizardComponent,
     AnexoVistaDosYTresComponent,
     FederatariosYPlantasComponent,
+    AnexoVistaUnoComponent,
   ],
 })
 export class NuevoProgramaIndustrialModule {}

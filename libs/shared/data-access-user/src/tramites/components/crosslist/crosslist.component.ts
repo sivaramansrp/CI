@@ -17,9 +17,9 @@ export interface CrossListLable {
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './crosslist.component.html',
   styleUrl: './crosslist.component.scss',
-  host: { 'hostID': crypto.randomUUID().toString() }
+  host: {}
 })
-export class CrosslistComponent implements OnInit ,OnChanges {
+export class CrosslistComponent implements OnInit, OnChanges {
   @Input({ required: true }) fechas!: string[];
   @Input() botonField: any;
   @Input() botones: any;
@@ -32,13 +32,13 @@ export class CrosslistComponent implements OnInit ,OnChanges {
   @Input() showSearchInput2: boolean = false;
   ngOnInit() {
     this.fechasDatos = [...this.fechas];
-    if(!this.botones){
+    if (!this.botones) {
       this.setButtonDefault();
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(changes['fechas'].currentValue){
+    if (changes['fechas'].currentValue) {
       this.fechas = [...changes['fechas'].currentValue];
       this.fechasDatos = [...this.fechas]
     }
@@ -51,7 +51,7 @@ export class CrosslistComponent implements OnInit ,OnChanges {
    * 
    * @returns {void}
    */
-  setButtonDefault():void {
+  setButtonDefault(): void {
     this.botones = [
       {
         btnNombre: 'Agregar',
@@ -61,23 +61,23 @@ export class CrosslistComponent implements OnInit ,OnChanges {
       {
         btnNombre: 'Agregar todas',
         class: 'btn-default',
-  
+
         funcion: () => this.agregar('t'),
       },
       {
         btnNombre: 'Quitar',
         class: 'btn-danger',
-  
+
         funcion: () => this.quitar(''),
       },
       {
         btnNombre: 'Quitar todas',
         class: 'btn-default',
-  
+
         funcion: () => this.quitar('t'),
       },
     ];
-  
+
   }
 
 
