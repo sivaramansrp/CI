@@ -96,6 +96,19 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
     });
 
     this.formGroup1 = this.fb.group({});
+    /** Suscripción para obtener el estado de la solicitud. */
+    this.agregarQuery.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
+    this.formGroup1= this.fb.group({
+      osia:[this.solicitudState?.osia]
+    });
+    
     this.catalogConfigs.forEach((config) => {
       this.formGroup1.addControl(
         config.controlName,
@@ -113,19 +126,6 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
         }
       });
     });
-        /** Suscripción para obtener el estado de la solicitud. */
-    this.agregarQuery.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-          this.formGroup1.addControl(
-            "osia", this.solicitudState?.osia || ''
-          );
-        })
-      )
-      .subscribe();
-
 
       this.datosdelForm= this.fb.group({
         datoscertificado:[this.solicitudState?.datoscertificado],
