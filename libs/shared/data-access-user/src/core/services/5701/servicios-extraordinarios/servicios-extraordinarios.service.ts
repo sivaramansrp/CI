@@ -5,7 +5,7 @@ import { JSONResponse } from '../../../models/shared/catalogos.model';
 import { enviroment } from '../../../../enviroments/enviroment';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'any',
 })
 export class ServiciosExtraordinariosService {
   urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;

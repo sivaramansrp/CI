@@ -1,0 +1,108 @@
+<div class="container">
+  <ng-container>
+    <ng-titulo titulo="Requisitos obligatorios" />
+    <table class="table-hover table-bordered justify-content-center overflow-y-scroll">
+      <tr>
+        <td class="index">1</td>
+        <td>Comprobante de domicilio del lugar donde se montará la mercancía.</td>
+      </tr>
+      <tr>
+        <td class="index">2</td>
+        <td>Otro contenido aquí.</td>
+      </tr>
+      <tr>
+        <td class="index">3</td>
+        <td>Guía aérea/Bill of Lading</td>
+      </tr>
+    </table>
+    <div class="page-container">
+      <div class="page-number">1</div>
+    </div>
+  </ng-container>
+
+  <ng-container>
+    <form [formGroup]="checkboxForm">
+      <ng-titulo titulo="Requisitos opcionales" />
+
+      <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
+      <div class="col-md-6">
+        <app-catalogo-select
+          [catalogo]="catalogoDocumentos"
+          [label]="tipodocumento.labelNombre"
+          [placeholder]="tipodocumento.primerOpcion"
+          [required]="true" formControlName="dropdown" (change)="setValoresStore(checkboxForm,'dropdown', 'setDropdown')"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-6">
+        <div class="d-flex justify-content-center align-items-center">
+          <input class="me-3" type="checkbox" formControlName="commonCheckbox" (change)="toggleAllCheckboxes($event)" />
+          <span class="fw-bold">Tipo de documento</span>
+        </div>
+        <table class="table table-bordered" style="overflow-x: scroll">
+          <tbody>
+            <tr *ngFor="let item of documentList; let i = index">
+              <td class="grey-column">{{ i + 1 }}</td>
+              <td><input type="checkbox" [checked]="individualCheckbox.value[i]"
+                (change)="onCheckboxChange($event, i)" /></td>
+              <td>{{ item.name }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="row my-5">
+          <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
+            <button type="button" class="btn btn-default">
+              Elimiar
+            </button>
+            <button type="button" class="btn btn-primary ms-3">
+              Agregar nuevo
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>  
+  </ng-container>
+
+  <ng-container>
+    <ng-titulo titulo="Adjuntar documentos" />
+    <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR_DOCUMENTOS"></ng-alert>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Tipo de documento</th>
+          <th>Tamaño máximo permitido (en MB)</th>
+          <th>Resolucion minima de las imágenes contenidas (en DPIs)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Factura/Proforma/Documento comercial.</td>
+          <td>10</td>
+          <td>300</td>
+          <td>
+            <input type="file" class="form-control" id="file-input" (change)="cargarDoc($event)"
+              [disabled]="btnDesactivado">
+          </td>
+        </tr>
+        <tr>
+          <td>Guía aérea/Bill of Lading</td>
+          <td>10</td>
+          <td>300</td>
+          <td>
+            <input type="file" class="form-control" id="file-input" (change)="cargarDoc($event)"
+              [disabled]="btnDesactivado">
+          </td>
+        </tr>
+        <tr>
+          <td>Comprobante de domicilio del lugar donde se montará la mercancía.</td>
+          <td>10</td>
+          <td>300</td>
+          <td>
+            <input type="file" class="form-control" id="file-input" placeholder="Seleccionar archivo"
+              (change)="cargarDoc($event)" [disabled]="btnDesactivado">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR_WARNING"></ng-alert>
+  </ng-container>
+</div>
