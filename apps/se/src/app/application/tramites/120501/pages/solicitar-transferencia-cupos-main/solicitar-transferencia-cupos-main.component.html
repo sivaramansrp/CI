@@ -15,9 +15,9 @@
             @case(1){
                 <app-paso-solicitante></app-paso-solicitante>
             }@case(2){
-                <p><anexar-documentos></anexar-documentos></p>
+                <app-paso-dos></app-paso-dos>
             }@case(3){
-                <p><firma-electronica [tipo]="LOGIN"></firma-electronica></p>
+              <app-paso-tres></app-paso-tres>
             }
         }
         <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>

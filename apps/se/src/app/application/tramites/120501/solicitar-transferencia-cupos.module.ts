@@ -26,6 +26,9 @@ import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { LicitacionesVigentesComponent } from './component/licitaciones-vigentes/licitaciones-vigentes.component';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
+import { ToastrService } from 'ngx-toastr';
+import { PasoTresComponent } from '../120402/components/paso-tres/paso-tres.component';
+import { PasoDosComponent } from '../120402/components/paso-dos/paso-dos.component';
 
 @NgModule({
   declarations: [
@@ -46,10 +49,13 @@ import { AlertComponent } from '@ng-mf/data-access-user';
     AlertComponent,
     TablaDinamicaComponent,
     FirmaElectronicaComponent,
-    AnexarDocumentosComponent
+    AnexarDocumentosComponent,
+    PasoTresComponent,
+    PasoDosComponent
 
   ],
   exports: [TablaDinamicaComponent],
-  schemas: [NO_ERRORS_SCHEMA]
+  schemas: [NO_ERRORS_SCHEMA],
+  providers: [ToastrService]
 })
 export class SolicitarTransferenciaCuposModule { }
