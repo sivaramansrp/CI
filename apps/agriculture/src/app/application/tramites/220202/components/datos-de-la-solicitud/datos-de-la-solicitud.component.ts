@@ -339,7 +339,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   setValoresStore(
     form: FormGroup,
-    campo: string,
+    campo: string
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.agriculturaApiService.updateDatosForma as (value: any) => void)(VALOR);
