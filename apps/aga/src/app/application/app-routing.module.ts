@@ -33,14 +33,6 @@ const ROUTES: Routes = [
         (m) => m.Pantallas301Module
       ),
   },
-
-  {
-    path: 'transportista-terrestre',
-    loadChildren: () =>
-      import('./tramites/40102/transportista-terrestre.module').then(
-        (m) => m.TransportistaTerrestreModule
-      ),
-  },
   {
     path: 'atender-requerimientos',
     loadChildren: () => import('./atencion-requerimientos/atencion-requerimientos.module').then(

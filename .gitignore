@@ -4,8 +4,6 @@
 dist
 tmp
 /out-tsc
-documentation
-coverage
 
 # dependencies
 node_modules
@@ -46,4 +44,3 @@ Thumbs.db
 ./.package-lock.json
 .package-lock.json
 .bablerc
-.github
