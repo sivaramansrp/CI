@@ -53,9 +53,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @property {InputFecha} fechaInicioInput
    */
   fechaInicioInput: InputFecha = {
-    labelNombre: 'saddddddddddddddddd',
+    labelNombre: 'Fecha de pago',
     required: true,
-    habilitado: true
+    habilitado: false
   };
 
   /**
