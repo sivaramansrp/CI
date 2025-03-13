@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { OctavaTemporalComponent } from './pages/octava-temporal/octava-temporal.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
       path: 'solicitante',
       component: OctavaTemporalComponent,
@@ -11,7 +11,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
    exports: [RouterModule]
 })
 export class OctavaTemporalRoutingModule { }
