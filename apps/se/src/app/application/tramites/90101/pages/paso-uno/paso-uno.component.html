@@ -1,0 +1,34 @@
+<div class="container">
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li [ngClass]="indice === 1 ? 'active' : ''">
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
+            </li>
+            <li [ngClass]="indice === 2 ? 'active' : ''">
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(2)">Domicilios de plantas</a>
+            </li>
+            <li [ngClass]="indice === 3 ? 'active' : ''">
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Sectores y mercancías</a>
+            </li>
+            <li [ngClass]="indice === 4 ? 'active' : ''">
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Productor indirecto</a>
+            </li>
+        </ul>
+        <ng-container>
+            @switch (indice) {
+            @case (1) {
+            <solicitante></solicitante>
+            }
+            @case (2) {
+                <app-domicilios-de-plantas></app-domicilios-de-plantas>
+            }
+            @case (3) {
+                <app-sectores-y-mercancias></app-sectores-y-mercancias>
+                }
+            @case (4) {
+                <app-productor-indirecto></app-productor-indirecto>
+                }
+            }
+        </ng-container>
+    </div>
+</div>

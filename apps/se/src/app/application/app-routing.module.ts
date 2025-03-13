@@ -14,7 +14,6 @@ const ROUTES: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
-
   {
     path: 'exportador-autorizado',
     loadChildren: () =>
@@ -28,8 +27,22 @@ const ROUTES: Routes = [
       import('./tramites/120601/registro-como-empresa.module').then(
         (m) => m.RegistroComoEmpresaModule
       ),
-    },
-    {
+  },
+  {
+    path: 'empresa-frontera',
+    loadChildren: () =>
+      import('./tramites/120602/empresa-frontera-solicitud.module').then(
+        (m) => m.EmpresaFronteraSolicitudModule
+      )
+  },
+  {
+    path: 'prosec-modificacion',
+    loadChildren: () =>
+      import('./tramites/90305/prosec-modificacion.module').then(
+        (m) => m.ProsecModificacionModule
+      ),
+  },
+  {
     path: 'pantallas',
     loadChildren: () =>
       import('./tramites/110101/pantallas/pantallas.module').then(
@@ -37,9 +50,22 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'asignacion-directa-de-cupo',
+    loadChildren: () =>
+      import('./tramites/120402/asignacion-directa-de-cupo.module').then(
+        (m) => m.AsignacionDirectaDeCupoModule
+      ),
+  },
+  {
     path: 'pexim',
     loadChildren: () =>
       import('./tramites/130118/pexim.module').then((m) => m.PeximModule),
+  },
+  {
+    path: 'expansion-de-productores',
+    loadChildren: () =>
+      import('./tramites/90201/expansion-de-productores/expansion-de-productores.module').then(
+        (m) => m.ExpansionDeProductoresModule),
   },
   {
     path: 'elegibilidad-de-textiles',
@@ -54,6 +80,12 @@ const ROUTES: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
+  }, 
+  {
+    path: 'cancelacion-de',
+    loadChildren: () =>
+      import('./tramites/140103/cancelacion-de.module').then(
+        (m) => m.CancelacionDeModule)
   },
   {
     path: 'certificado-registro',
@@ -73,8 +105,8 @@ const ROUTES: Routes = [
       import('./tramites/80207/subfabricante-extension.module').then(
         (m) => m.SubfabricanteExtentionModule
       ),
-    },
-{
+  },
+  {
     path: 'immex-ampliacion-sensibles',
     loadChildren: () =>
       import('./tramites/80202/immex-ampliacion-sensibles.module').then(
@@ -87,7 +119,7 @@ const ROUTES: Routes = [
       import('./tramites/80203/immex-registro-de-solicitud-modalidad.modulo').then(
         (m) => m.ImmexRegistroDeSolicitudModalityModule
       )
-    },
+  },
   {
     path: 'modificacion',
     loadChildren: () =>
@@ -95,7 +127,20 @@ const ROUTES: Routes = [
         (m) => m.ModificacionSolicitudModule
       ),
   },
-
+  {
+    path: 'autorizacion-prosec',
+    loadChildren: () =>
+      import('./tramites/90101/autorizacion-prosec.module').then(
+        (m) => m.AutorizacionProsecModule
+      ),
+  },
+  {
+    path: 'solicitud-modalidad',
+    loadChildren: () =>
+      import('./tramites/80208/registro-solicitud.module').then(
+        (m) => m.RegistroSolicitudModule
+      ),
+  }
 ];
 
 @NgModule({

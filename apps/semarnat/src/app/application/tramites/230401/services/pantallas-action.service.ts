@@ -67,7 +67,7 @@ export class PantallasActionService {
     this.obtenerRespuestaPorUrl(this, 'numeroCas', '/230401/numeroCas.json');
     this.obtenerRespuestaPorUrl(this, 'clasificacion', '/230401/clasificacion.json');
     this.obtenerRespuestaPorUrl(this, 'estadoFisico', '/230401/estadoFisico.json');
-    this.obtenerRespuestaPorUrl(this, 'clasificacion', '/230401/datosObjecto.json');
+    this.obtenerRespuestaPorUrl(this, 'datosObjecto', '/230401/datosObjecto.json');
     this.obtenerRespuestaPorUrl(this, 'unidadDeMedida', '/230401/unidadDeMedida.json');
   }
 
