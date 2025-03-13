@@ -4,7 +4,7 @@ import { AgriculturaApiService } from '../../services/220202/agricultura-api.ser
 import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosDeFila } from '../../models/220202/fitosanitario.model';
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
-import { skip, Subject, Subscription, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 /**
  * @component DatosDeLaSolicitudComponent
