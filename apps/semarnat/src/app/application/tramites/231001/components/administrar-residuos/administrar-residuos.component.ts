@@ -100,7 +100,6 @@ export class AdministrarResiduosComponent implements OnInit, OnDestroy {
         this.getEstablecimientoTableData = data;
         this.getEstablecimiento();
         this.actualizarRecuentoTotalDeFilas();
-        console.log(data, 'table data');
       });
   }
 }
