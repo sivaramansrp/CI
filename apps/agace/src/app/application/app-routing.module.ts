@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
 const ROUTES: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' }, // Choose default as per requirement
+  { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
@@ -28,11 +28,11 @@ const ROUTES: Routes = [
       import('./tramites/32504/aviso-procesos.module').then(
         (m) => m.AvisoProcesosModule
       ),
-  }
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class AppRoutingModule { }

@@ -1,4 +1,4 @@
-import { ToastrModule, ToastrService, provideToastr } from 'ngx-toastr';
+import { ToastrModule, provideToastr } from 'ngx-toastr';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -14,7 +14,8 @@ import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 import { SolicitanteService } from '@ng-mf/data-access-user';
 import { SubirDocumentoService } from '@ng-mf/data-access-user';
-import { TituloComponent } from "@ng-mf/data-access-user";
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { ToastrService} from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
@@ -23,6 +24,7 @@ import { provideHttpClient } from '@angular/common/http';
     SeleccionTramiteComponent
   ],
   imports: [
+    CommonModule,
     AkitaNgDevtools,
     AppRoutingModule,
     CommonModule,
@@ -47,4 +49,5 @@ import { provideHttpClient } from '@angular/common/http';
   ],
   bootstrap: [AppComponent],
 })
-export class AppAgaceModule {} // or AppAgaceModule depending on requirement
+  
+export class AppAgaceModule {}

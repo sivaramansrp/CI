@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { CommonModule } from '@angular/common';
  
 import {
@@ -10,7 +11,7 @@ import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/compon
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { UppercaseDirective } from 'libs/shared/data-access-user/src/tramites/directives/Uppercase/uppercase.directive';
  
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { TEXTOS } from 'libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
 import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
@@ -19,7 +20,12 @@ import establecimientoTable from 'libs/shared/theme/assets/json/130102/partidas-
 import fraccionArancelariaTIGIE from 'libs/shared/theme/assets/json/130102/partidas-de-la-catalogos-select.json';
  
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
- 
+
+import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+
+import { Subject, map, takeUntil } from 'rxjs'; 
+
 @Component({
   selector: 'app-partidas-de-la',
   standalone: true,
@@ -35,7 +41,7 @@ import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramit
   templateUrl: './partidas-de-la.component.html',
   styleUrl: './partidas-de-la.component.scss',
 })
-export class PartidasDeLaComponent implements OnInit {
+export class PartidasDeLaComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo utilizado para gestionar los datos de las partidas de la mercancía.
    * @type {FormGroup}
@@ -78,42 +84,74 @@ export class PartidasDeLaComponent implements OnInit {
    */
   public getEstablecimientoTableData = establecimientoTable;
  
+    public solicitudState!: Solicitud130102State;
+    private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Constructor del formulario reactivo.
    * @param {FormBuilder} fb - Constructor del formulario reactivo.
    */
-  constructor(private fb: FormBuilder) {}
+  // eslint-disable-next-line no-empty-function
+  constructor(private fb: FormBuilder,
+      private tramite130102Store: Tramite130102Store,
+      private tramite130102Query: Tramite130102Query
+  ) {
+    //constructor
+  }
  
   /**
    * Método de inicialización del componente.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.crearFormulario();
     this.formularioTotalCount();
     this.getEstablecimiento();
     this.calculateTotals();
  
+    // eslint-disable-next-line dot-notation
     this.formForTotalCount.controls['cantidadTotal'].disable();
+    // eslint-disable-next-line dot-notation
     this.formForTotalCount.controls['valorTotalUSD'].disable();
   }
  
+    /**
+   * Asigna un valor del formulario al store.
+   *
+   * @param {FormGroup} form - Formulario reactivo.
+   * @param {string} campo - Campo del formulario a obtener.
+   * @param {keyof Tramite130102Store} metodoNombre - Método del store donde se guardará el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite130102Store[metodoNombre] as (value: string | number) => void)(VALOR);
+  }
   /**
    * Método para crear el formulario reactivo.
    */
   crearFormulario(): void {
+    this.tramite130102Query.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {  
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
+
     this.form = this.fb.group({
       cantidad: [
-        '',
+        this.solicitudState?.cantidadPartidas,
         [
           Validators.required,
           Validators.pattern('^[0-9]+$'),
           Validators.maxLength(18),
         ],
       ],
-      fraccionArancelariaTIGIE: ['', [Validators.required]],
-      descripcion: ['', [Validators.required, Validators.maxLength(255)]],
+      fraccionArancelariaTIGIE: [ this.solicitudState?.fraccionArancelariaTIGIE, [Validators.required]],
+      fraccionArancelariaTIGIE_TIGIE: [ this.solicitudState?.fraccionArancelariaTIGIE_TIGIE, [Validators.required]],
+      descripcion: [ this.solicitudState?.descripcionPartidas, [Validators.required, Validators.maxLength(255)]],
       valorPartidaUSD: [
-        '',
+        this.solicitudState?.valorPartidaUSD,
         [
           Validators.required,
           Validators.min(0),
@@ -128,19 +166,21 @@ export class PartidasDeLaComponent implements OnInit {
    * Método para calcular los totales de cantidad y valor en USD.
    */
   calculateTotals(): void {
-    const cantidadTotal = this.tableBodyData.reduce(
+    const CANTIDAD_TOTAL = this.tableBodyData.reduce(
       (sum: number, item: { tbodyData: string[] }) =>
         sum + parseFloat(item.tbodyData[0]),
       0
     );
-    const valorTotalUSD = this.tableBodyData.reduce(
-      (sum: number, item: { tbodyData: string[] }) =>
-        sum + parseFloat(item.tbodyData[5]),
-      0
-    );
- 
-    this.formForTotalCount.controls['cantidadTotal'].setValue(cantidadTotal);
-    this.formForTotalCount.controls['valorTotalUSD'].setValue(valorTotalUSD);
+const VALOR_TOTAL_USD = this.tableBodyData.reduce(
+  (sum: number, item: { tbodyData: string[] }) =>
+    sum + parseFloat(item.tbodyData[5]),
+  0
+);
+
+// eslint-disable-next-line dot-notation
+this.formForTotalCount.controls['cantidadTotal'].setValue(CANTIDAD_TOTAL);
+// eslint-disable-next-line dot-notation
+this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTAL_USD);
   }
  
   /**
@@ -157,14 +197,15 @@ export class PartidasDeLaComponent implements OnInit {
    * Método para manejar la selección de fracción arancelaria TIGIE.
    * @param {Catalogo} aduana - Datos del catálogo seleccionado.
    */
-  fraccionArancelariaTIGIESelection() : void{
+   // eslint-disable-next-line class-methods-use-this
+   fraccionArancelariaTIGIESelection() : void{
     // Implementar el método o eliminarlo si no es necesario
   }
  
   /**
    * Método para obtener los datos de establecimiento.
    */
-  public getEstablecimiento() {
+  public getEstablecimiento(): void {
     this.tableHeaderData = this.getEstablecimientoTableData.tableHeader;
     this.tableBodyData = this.getEstablecimientoTableData.tableBody;
   }
@@ -189,9 +230,14 @@ export class PartidasDeLaComponent implements OnInit {
    * @returns {boolean} - Retorna true si el control es inválido, de lo contrario false.
    */
   esInvalido(nombreControl: string): boolean {
-    const control = this.form.get(nombreControl);
-    return control
-      ? control.invalid && (control.touched || control.dirty)
+    const CONTROL = this.form.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
