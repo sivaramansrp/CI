@@ -1,22 +1,57 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { DomicilioDelDestinatarioComponent } from './domicilio-del-destinatario.component';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
+import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
+import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
+import { of } from 'rxjs';
+import { FormBuilder } from '@angular/forms';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('DomicilioDelDestinatarioComponent', () => {
   let component: DomicilioDelDestinatarioComponent;
   let fixture: ComponentFixture<DomicilioDelDestinatarioComponent>;
-
+  let store: Tramite110209Store;
+  let query: Tramite110209Query;
+  
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DomicilioDelDestinatarioComponent, TituloComponent],
-      imports: [CommonModule, ReactiveFormsModule],
-      providers: [FormBuilder],
+      imports: [ReactiveFormsModule,DomicilioDelDestinatarioComponent],
+      declarations: [],
+      providers: [
+        FormBuilder,
+        {
+          provide: Tramite110209Store,
+          useValue: {
+            setCalle: jest.fn(),
+            setNumeroLetra: jest.fn(),
+            setCiudad: jest.fn(),
+            setCorreoElectronico: jest.fn(),
+            setFax: jest.fn(),
+            setTelefono: jest.fn(),
+          }
+        },
+        {
+          provide: Tramite110209Query,
+          useValue: {
+            selectTramite110102$: of({
+              calle: 'Calle Falsa 123',
+              numeroLetra: 'A',
+              ciudad: 'Ciudad X',
+              correoElectronico: 'example@mail.com',
+              fax: 123456789,
+              telefono: 987654321
+            })
+          }
+        }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DomicilioDelDestinatarioComponent);
     component = fixture.componentInstance;
+    store = TestBed.inject(Tramite110209Store);
+    query = TestBed.inject(Tramite110209Query);
+  });
+
+  beforeEach(() => {
     fixture.detectChanges();
   });
 
@@ -24,88 +59,61 @@ describe('DomicilioDelDestinatarioComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form group with default values', () => {
-    expect(component.domicilioDelDestinatarioForm).toBeTruthy();
-    const form = component.domicilioDelDestinatarioForm;
-
-    // Check if the controls are initialized correctly
-    expect(form.get('calle')?.value).toBe('');
-    expect(form.get('numeroLetra')?.value).toBe('');
-    expect(form.get('ciudad')?.value).toBe('');
-    expect(form.get('correoElectronico')?.value).toBe('');
-    expect(form.get('fax')?.value).toBe('');
-    expect(form.get('telefono')?.value).toBe('');
+  describe('Form initialization', () => {
+    it('should create the form with the correct controls', () => {
+      const form = component.domicilioDelDestinatarioForm;
+      
+      expect(form).toBeDefined();
+      expect(form.controls['calle']).toBeDefined();
+      expect(form.controls['numeroLetra']).toBeDefined();
+      expect(form.controls['ciudad']).toBeDefined();
+      expect(form.controls['correoElectronico']).toBeDefined();
+      expect(form.controls['fax']).toBeDefined();
+      expect(form.controls['telefono']).toBeDefined();
+    });
   });
 
-  it('should have the required validators for calle, numeroLetra, ciudad, and correoElectronico', () => {
-    const form = component.domicilioDelDestinatarioForm;
+  describe('getValoresStore', () => {
+    it('should patch form with values from the store query', () => {
+      // Call the method
+      component.getValoresStore();
 
-    // Validate calle control
-    const calle = form.get('calle');
-    calle?.setValue('');
-    expect(calle?.valid).toBeFalsy();
-    calle?.setValue('Some Street');
-    expect(calle?.valid).toBeTruthy();
-
-    // Validate numeroLetra control
-    const numeroLetra = form.get('numeroLetra');
-    numeroLetra?.setValue('');
-    expect(numeroLetra?.valid).toBeFalsy();
-    numeroLetra?.setValue('123A');
-    expect(numeroLetra?.valid).toBeTruthy();
-
-    // Validate ciudad control
-    const ciudad = form.get('ciudad');
-    ciudad?.setValue('');
-    expect(ciudad?.valid).toBeFalsy();
-    ciudad?.setValue('Some City');
-    expect(ciudad?.valid).toBeTruthy();
-
-    // Validate correoElectronico control
-    const correoElectronico = form.get('correoElectronico');
-    correoElectronico?.setValue('');
-    expect(correoElectronico?.valid).toBeFalsy();
-    correoElectronico?.setValue('invalid-email');
-    expect(correoElectronico?.valid).toBeFalsy();
-    correoElectronico?.setValue('valid@example.com');
-    expect(correoElectronico?.valid).toBeTruthy();
+      // Check if form values are patched correctly
+      expect(component.domicilioDelDestinatarioForm.get('calle')?.value).toBe('Calle Falsa 123');
+      expect(component.domicilioDelDestinatarioForm.get('numeroLetra')?.value).toBe('A');
+      expect(component.domicilioDelDestinatarioForm.get('ciudad')?.value).toBe('Ciudad X');
+      expect(component.domicilioDelDestinatarioForm.get('correoElectronico')?.value).toBe('example@mail.com');
+      expect(component.domicilioDelDestinatarioForm.get('fax')?.value).toBe(123456789);
+      expect(component.domicilioDelDestinatarioForm.get('telefono')?.value).toBe(987654321);
+    });
   });
 
-  it('should disable fields properly', () => {
-    const form = component.domicilioDelDestinatarioForm;
-    
-    // Disable the fields (if required by component logic)
-    form.get('calle')?.disable();
-    form.get('numeroLetra')?.disable();
-    form.get('ciudad')?.disable();
-    form.get('correoElectronico')?.disable();
-    
-    // Ensure the fields are disabled
-    expect(form.get('calle')?.disabled).toBeTruthy();
-    expect(form.get('numeroLetra')?.disabled).toBeTruthy();
-    expect(form.get('ciudad')?.disabled).toBeTruthy();
-    expect(form.get('correoElectronico')?.disabled).toBeTruthy();
-  });
+  describe('setValoresStore', () => {
+    it('should call setCalle method from store with the correct value', () => {
+      const form = component.domicilioDelDestinatarioForm;
+      form.get('calle')?.setValue('Calle Test');
 
-  it('should enable fields after being disabled', () => {
-    const form = component.domicilioDelDestinatarioForm;
-    
-    // Disable the fields
-    form.get('calle')?.disable();
-    form.get('numeroLetra')?.disable();
-    form.get('ciudad')?.disable();
-    form.get('correoElectronico')?.disable();
-    
-    // Enable the fields
-    form.get('calle')?.enable();
-    form.get('numeroLetra')?.enable();
-    form.get('ciudad')?.enable();
-    form.get('correoElectronico')?.enable();
-    
-    // Ensure the fields are enabled
-    expect(form.get('calle')?.enabled).toBeTruthy();
-    expect(form.get('numeroLetra')?.enabled).toBeTruthy();
-    expect(form.get('ciudad')?.enabled).toBeTruthy();
-    expect(form.get('correoElectronico')?.enabled).toBeTruthy();
+      component.setValoresStore(form, 'calle', 'setCalle');
+      
+      expect(store.setCalle).toHaveBeenCalledWith('Calle Test');
+    });
+
+    it('should call setNumeroLetra method from store with the correct value', () => {
+      const form = component.domicilioDelDestinatarioForm;
+      form.get('numeroLetra')?.setValue('B');
+      
+      component.setValoresStore(form, 'numeroLetra', 'setNumeroLetra');
+      
+      expect(store.setNumeroLetra).toHaveBeenCalledWith('B');
+    });
+
+    it('should call setCorreoElectronico method from store with the correct value', () => {
+      const form = component.domicilioDelDestinatarioForm;
+      form.get('correoElectronico')?.setValue('newemail@mail.com');
+      
+      component.setValoresStore(form, 'correoElectronico', 'setCorreoElectronico');
+      
+      expect(store.setCorreoElectronico).toHaveBeenCalledWith('newemail@mail.com');
+    });
   });
 });

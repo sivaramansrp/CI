@@ -6,21 +6,40 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label width-unset" for="nombre">Nombre(s):</label>
-                    <input type="text" class="form-control" id="nombre" formControlName="nombre" placeholder="Juan" />
+                    <input type="text" (change)="setValoresStore(detosDelDestinatarioForm,'nombre','setNombre')"
+                        class="form-control" id="nombre" formControlName="nombre" placeholder="Juan" />
+                    <div
+                        *ngIf="detosDelDestinatarioForm.get('nombre')?.touched && detosDelDestinatarioForm.get('nombre')?.invalid">
+                        <small *ngIf="detosDelDestinatarioForm.get('nombre')?.errors?.['pattern']"
+                            class="text-danger"> Por favor, corrija el nombre de la persona.</small>
+                    </div>
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label width-unset" for="primerApellido">Primer apellido:</label>
-                    <input type="text" class="form-control" id="primerApellido" formControlName="primerApellido" placeholder="Perez"/>
+                    <input type="text"
+                        (change)="setValoresStore(detosDelDestinatarioForm,'primerApellido','setPrimerApellido')"
+                        class="form-control" id="primerApellido" formControlName="primerApellido" placeholder="Perez" />
+                    <div *ngIf="detosDelDestinatarioForm.get('nombre')?.invalid">
+                        <small *ngIf="detosDelDestinatarioForm.get('primerApellido')?.errors?.['pattern']"
+                            class="text-danger"> Por favor, corrija el nombre de la persona.</small>
+                    </div>
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label width-unset" for="segundoApellido">Segundo apellido:</label>
-                    <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido" placeholder="Perez"/>
+                    <input type="text"
+                        (change)="setValoresStore(detosDelDestinatarioForm,'segundoApellido','setSegundoApellido')"
+                        class="form-control" id="segundoApellido" formControlName="segundoApellido"
+                        placeholder="Perez" />
+                    <div *ngIf="detosDelDestinatarioForm.get('segundoApellido')?.invalid">
+                        <small *ngIf="detosDelDestinatarioForm.get('segundoApellido')?.errors?.['pattern']"
+                            class="text-danger">  Por favor, corrija el nombre de la persona.</small>
+                    </div>
                 </div>
             </div>
         </div>
@@ -31,17 +50,33 @@
                 <div class="form-group">
                     <label class="form-label width-unset" for="numeroDeRegistroFiscal">Número de registro
                         fiscal*:</label>
-                    <input type="text" class="form-control" id="numeroDeRegistroFiscal" formControlName="numeroDeRegistroFiscal" placeholder="3243254532"/>
+                    <input type="number"
+                        (change)="setValoresStore(detosDelDestinatarioForm,'numeroDeRegistroFiscal','setNumeroDeRegistroFiscal')"
+                        class="form-control" id="numeroDeRegistroFiscal" formControlName="numeroDeRegistroFiscal"
+                        placeholder="3243254532" />
+                    <div
+                        *ngIf="detosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.touched && detosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.invalid">
+                        <small *ngIf="detosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.errors?.['pattern']"
+                            class="text-danger">
+                            El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos
+                            decimales.</small>
+                    </div>
                 </div>
             </div>
 
             <div class="col-md-8">
                 <div class="form-group">
                     <label class="form-label width-unset" for="razonSocial">Razón social :</label>
-                    <input type="text" class="form-control" id="razonSocial" formControlName="razonSocial" readonly />
+                    <input type="text"
+                        (change)="setValoresStore(detosDelDestinatarioForm,'razonSocial','setRazonSocial')"
+                        class="form-control" id="razonSocial" formControlName="razonSocial" readonly />
+                        <div *ngIf="detosDelDestinatarioForm.get('razonSocial')?.invalid">
+                            <small *ngIf="detosDelDestinatarioForm.get('razonSocial')?.errors?.['pattern']"
+                                class="text-danger">  Por favor, corrija el nombre de la persona.</small>
+                        </div>
                 </div>
             </div>
-            
+
         </div>
     </form>
     <div class="mt-4">

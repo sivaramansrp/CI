@@ -39,9 +39,9 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy {
    * Representa el formulario del componente.
    * Se espera que esta propiedad sea de tipo 'FormGroup'.
    *
-   * @property {FormGroup} transportForm - El formulario del componente.
+   * @property {FormGroup} detallesDeltransportForm - El formulario del componente.
    */
-  transportForm!: FormGroup;
+  detallesDeltransportForm!: FormGroup;
 
   /**
    * Subject que emite un evento cuando el componente es destruido,
@@ -57,7 +57,7 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy {
    */
 
   constructor(private fb: FormBuilder, private service: DetallesDelTransporteService) {
-    this.transportForm = this.fb.group({
+    this.detallesDeltransportForm = this.fb.group({
       tratado: [{ value: '', disabled: true }],
       paisOBloque: [{ value: '', disabled: true }],
       paisOOrigin: [{ value: '', disabled: true }],
@@ -76,7 +76,7 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyed$)
     ).subscribe(
       (data) => {
-        this.transportForm.patchValue({
+        this.detallesDeltransportForm.patchValue({
           tratado: data.tratado,
           paisOBloque: data.paisOBloque,
           paisOOrigin: data.paisOOrigin,

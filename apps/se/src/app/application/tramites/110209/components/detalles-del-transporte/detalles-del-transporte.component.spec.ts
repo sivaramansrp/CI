@@ -40,7 +40,7 @@ describe('DetallesDelTransporteComponent', () => {
   });
 
   it('should initialize the form with default values', () => {
-    const form = component.transportForm;
+    const form = component.detallesDeltransportForm;
     expect(form).toBeDefined();
     expect(form.controls['tratado'].value).toBe('');
     expect(form.controls['paisOBloque'].value).toBe('');
@@ -59,12 +59,12 @@ describe('DetallesDelTransporteComponent', () => {
     expect(service.getMedioDeTransporte).toHaveBeenCalled();
 
     // Check if the form was patched correctly
-    expect(component.transportForm.controls['tratado'].value).toBe(mockData.tratado);
-    expect(component.transportForm.controls['paisOBloque'].value).toBe(mockData.paisOBloque);
-    expect(component.transportForm.controls['paisOOrigin'].value).toBe(mockData.paisOOrigin);
-    expect(component.transportForm.controls['paisODestino'].value).toBe(mockData.paisODestino);
-    expect(component.transportForm.controls['fetchaDeExpedicion'].value).toBe(mockData.fetchaDeExpedicion);
-    expect(component.transportForm.controls['fetchaDeVencimiento'].value).toBe(mockData.fetchaDeVencimiento);
+    expect(component.detallesDeltransportForm.controls['tratado'].value).toBe(mockData.tratado);
+    expect(component.detallesDeltransportForm.controls['paisOBloque'].value).toBe(mockData.paisOBloque);
+    expect(component.detallesDeltransportForm.controls['paisOOrigin'].value).toBe(mockData.paisOOrigin);
+    expect(component.detallesDeltransportForm.controls['paisODestino'].value).toBe(mockData.paisODestino);
+    expect(component.detallesDeltransportForm.controls['fetchaDeExpedicion'].value).toBe(mockData.fetchaDeExpedicion);
+    expect(component.detallesDeltransportForm.controls['fetchaDeVencimiento'].value).toBe(mockData.fetchaDeVencimiento);
   });
 
   it('should handle error in service call', () => {
@@ -73,11 +73,11 @@ describe('DetallesDelTransporteComponent', () => {
     component.getMedioDeTransporte();
 
     // Check that no data is patched in case of an error
-    expect(component.transportForm.controls['tratado'].value).toBe('');
-    expect(component.transportForm.controls['paisOBloque'].value).toBe('');
-    expect(component.transportForm.controls['paisOOrigin'].value).toBe('');
-    expect(component.transportForm.controls['paisODestino'].value).toBe('');
-    expect(component.transportForm.controls['fetchaDeExpedicion'].value).toBe('');
-    expect(component.transportForm.controls['fetchaDeVencimiento'].value).toBe('');
+    expect(component.detallesDeltransportForm.controls['tratado'].value).toBe('');
+    expect(component.detallesDeltransportForm.controls['paisOBloque'].value).toBe('');
+    expect(component.detallesDeltransportForm.controls['paisOOrigin'].value).toBe('');
+    expect(component.detallesDeltransportForm.controls['paisODestino'].value).toBe('');
+    expect(component.detallesDeltransportForm.controls['fetchaDeExpedicion'].value).toBe('');
+    expect(component.detallesDeltransportForm.controls['fetchaDeVencimiento'].value).toBe('');
   });
 });
