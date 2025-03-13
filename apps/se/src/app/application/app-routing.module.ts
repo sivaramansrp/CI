@@ -1,7 +1,5 @@
-/* eslint-disable sort-imports */
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const routes: Routes = [
@@ -44,6 +42,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tramites/110101/pantallas/pantallas.module').then(
         (m) => m.Pantallas110101Module
+      ),
+  },
+  {
+    path: 'asignacion-directa-de-cupo',
+    loadChildren: () =>
+      import('./tramites/120402/asignacion-directa-de-cupo.module').then(
+        (m) => m.AsignacionDirectaDeCupoModule
       ),
   },
   {
