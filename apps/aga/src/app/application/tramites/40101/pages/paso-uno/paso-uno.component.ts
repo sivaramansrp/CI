@@ -20,12 +20,11 @@ export class PasoUnoComponent implements AfterViewInit {
   persona: FormularioDinamico[] = [];
   domicilioFiscal: FormularioDinamico[] = [];
   indice: number = 1;
-  validacion: boolean = false; 
-  // @Input() validacion!: boolean;
+  validacion: boolean = false;
   @Input() datosNroPedimento!: any;
   /**
-* Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
-*/
+   * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
+   */
   ngAfterViewInit(): void {
     this.persona = PERSONA_MORAL_NACIONAL;
     this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;

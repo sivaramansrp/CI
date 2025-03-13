@@ -11,12 +11,12 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of as observableOf } from 'rxjs';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { SeccionQuery } from '@ng-mf/data-access-user';
-import { SeccionStore } from '../../../../estados/seccion.store';
+import { Chofer40101Store } from '../../estados/chofer40101.store';
+import { Chofer40101Query } from '../../estados/chofer40101.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Injectable()
-class MockSeccionStore {
+class MockChofer40101Store {
   establecerSeccion = jest.fn();
   establecerFormaValida = jest.fn();
 }
@@ -48,17 +48,17 @@ class SafeHtmlPipe implements PipeTransform {
 describe('SolicitantePageComponent', () => {
   let fixture: ComponentFixture<SolicitantePageComponent>;
   let component: SolicitantePageComponent;
-  let seccionQueryMock: jest.Mocked<SeccionQuery>;
-  let seccionStoreMock: MockSeccionStore;
+  let Chofer40101QueryMock: jest.Mocked<Chofer40101Query>;
+  let chofer40101StoreMock: MockChofer40101Store;
 
   beforeEach(async () => {
-    seccionQueryMock = {
+    Chofer40101QueryMock = {
       selectSeccionState$: observableOf({
         pasos: [],
         currentStep: 1,
       }),
-    } as unknown as jest.Mocked<SeccionQuery>;
-    seccionStoreMock = new MockSeccionStore();
+    } as unknown as jest.Mocked<Chofer40101Query>;
+    chofer40101StoreMock = new MockChofer40101Store();
     await TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -70,8 +70,8 @@ describe('SolicitantePageComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-        { provide: SeccionQuery, useValue: seccionQueryMock },
-        { provide: SeccionStore, useValue: seccionStoreMock },
+        { provide: Chofer40101Query, useValue: Chofer40101QueryMock },
+        { provide: Chofer40101Store, useValue: chofer40101StoreMock },
       ],
     }).compileComponents();
 
@@ -119,7 +119,7 @@ describe('SolicitantePageComponent', () => {
 
   it('should assign sections correctly using asignarSecciones()', () => {
     (component as any).asignarSecciones();
-    expect(seccionStoreMock.establecerSeccion).toHaveBeenCalled();
-    expect(seccionStoreMock.establecerFormaValida).toHaveBeenCalled();
+    expect(chofer40101StoreMock.establecerSeccion).toHaveBeenCalled();
+    expect(chofer40101StoreMock.establecerFormaValida).toHaveBeenCalled();
   });
 });

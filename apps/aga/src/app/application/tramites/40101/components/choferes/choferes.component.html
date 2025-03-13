@@ -512,10 +512,16 @@
                     <span class="require">*</span>
                   </div>
                   <div>
-                    <app-catalogo-select [catalogo]="estado" formControlName="estado"
-                    [required]="true" name="estado" (change)="estadoSeleccion()"></app-catalogo-select>
+                    <select class="form-control" formControlName="estado">
+                      <option
+                        *ngFor="let item of estado$ | async"
+                        [value]="item.id"
+                      >
+                        {{ item.descripcion }}
+                      </option>
+                    </select>
 
-                <!-- <input type="hidden" name="entidadSolicitud" />
+                    <!-- <input type="hidden" name="entidadSolicitud" />
                     <select
                       id="entidadFederativaCHN"
                       class="form-control"
@@ -751,46 +757,11 @@
             </div>
           </form>
         </div>
-
-        <div class="modal-footer">
-          <!-- <div class="col-md-9 mt-3">
-            <div class="pull-right">
-              <button
-                type="button"
-                id="limpiarChofer"
-                name="limpiar"
-                class="btn btn-default mid"
-              >
-                Limpiar
-              </button>
-
-              <button
-                type="button"
-                id="cancelarCHN"
-                name="cancelar"
-                class="btn btn-danger cancel"
-                data-bs-dismiss="modal"
-              >
-                Cancelar
-              </button>
-
-              <button
-                type="button"
-                id="guardarChofer"
-                name="guardar"
-                class="btn btn-primary"
-                (click)="saveData()"
-              >
-                Guardar
-              </button>
-            </div>
-          </div> -->
-        </div>
       </div>
     </div>
   </div>
 
-  <!-- second modal extranjeros start here -->
+  <!-- segundo modal extranjeros empieza aquí -->
   <div #modalRef class="modal fade" id="modalMiembros2" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-fullscreen">
       <div class="modal-content">
@@ -802,14 +773,7 @@
           ></button>
         </div>
         <div class="modal-body">
-          <!-- <div class="row">
-            <div class="col-md-12">
-              <h3>Datos del chofer extranjero</h3>
-              <hr class="red" />
-            </div>
-          </div> -->
           <form [formGroup]="formChoferes" class="container">
-            <!-- Sección: Chofer Extranjero -->
             <div>
               <div class="row">
                 <div class="col-md-12">
@@ -820,7 +784,6 @@
 
               <!-- Información Personal del Chofer Extranjero -->
               <div class="row">
-                <!-- Nombre -->
                 <div class="col-md-4">
                   <div>
                     <label for="nombreCHE">{{
@@ -838,7 +801,6 @@
                     />
                   </div>
                 </div>
-
                 <!-- Apellido Paterno -->
                 <div class="col-md-4">
                   <div>
@@ -855,7 +817,6 @@
                     />
                   </div>
                 </div>
-
                 <!-- Apellido Materno -->
                 <div class="col-md-4">
                   <div>
@@ -952,7 +913,6 @@
                     />
                   </div>
                 </div>
-
                 <!-- Identificación Fiscal -->
                 <div class="col-md-4">
                   <div>
@@ -1234,41 +1194,7 @@
             </div>
           </form>
         </div>
-
-        <div class="modal-footer">
-          <!-- <div class="col-md-9 mt-3">
-            <div class="pull-right">
-              <button
-                type="button"
-                id="limpiarChofer"
-                name="limpiar"
-                class="btn btn-default mid"
-              >
-                Limpiar
-              </button>
-
-              <button
-                type="button"
-                id="cancelarCHN"
-                name="cancelar"
-                class="btn btn-danger cancel"
-                data-bs-dismiss="modal"
-              >
-                Cancelar
-              </button>
-
-              <button
-                type="button"
-                id="guardarChofer"
-                name="guardar"
-                class="btn btn-primary"
-                (click)="saveData()"
-              >
-                Guardar
-              </button>
-            </div>
-          </div> -->
-        </div>
+        <div class="modal-footer"></div>
       </div>
     </div>
   </div>

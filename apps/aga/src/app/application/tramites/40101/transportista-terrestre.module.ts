@@ -33,6 +33,7 @@ import { DirectorGeneralComponent } from './components/director-general/director
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
 import { Chofer40101Service } from './estados/chofer40101.service';
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
+import {SubirDocumentoService} from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 @NgModule({
   declarations: [
     SolicitantePageComponent,
@@ -72,6 +73,6 @@ import { InicioSesionService } from '@libs/shared/data-access-user/src/core/serv
     PasoTresComponent,
     BtnContinuarComponent,
   ],
-  providers: [ToastrService, CatalogosService, Chofer40101Service, InicioSesionService],
+  providers: [ToastrService, CatalogosService, Chofer40101Service, InicioSesionService, SubirDocumentoService],
 })
 export class TransportistaTerrestreModule {}

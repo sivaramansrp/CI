@@ -195,13 +195,15 @@
                                     labelSolicitudVehiculoTipoVehiculo
                                   }}</label>
                                   <span class="require">*</span>
-                                  <app-catalogo-select
-                                    [catalogo]="vehiculoArrastr"
-                                    formControlName="solicitudVehiculoTipoVehiculo"
-                                    [required]="true"
-                                    name="solicitudVehiculoTipoVehiculo"
-                                    (change)="conVehiculoArrastre()"
-                                  ></app-catalogo-select>
+                                  <div class="anioVehiculoVEH">
+                                    <app-catalogo-select
+                                      [catalogo]="vehiculoArrastr"
+                                      formControlName="solicitudVehiculoTipoVehiculo"
+                                      [required]="true"
+                                      name="solicitudVehiculoTipoVehiculo"
+                                      (change)="conVehiculoArrastre()"
+                                    ></app-catalogo-select>
+                                  </div>
                                 </div>
                               </div>
 
@@ -275,15 +277,18 @@
                                     labelSolicitudVehiculoPaisEmisor
                                   }}</label>
                                   <span class="require">*</span>
-                                  <app-catalogo-select
-                                  [catalogo]="vehiculosA"
-                                  formControlName="solicitudVehiculoPaisEmisor"
-                                  [required]="true"
-                                  name="solicitudVehiculoPaisEmisor"
-                                  (change)="paisEmisorVehiculoArrastrer()"
-                                ></app-catalogo-select>
                                 </div>
-            
+                                <div class="anioVehiculoVEH">
+                                  <app-catalogo-select
+                                    [catalogo]="PaisEmisor2daPlaca"
+                                    formControlName="solicitudVehiculoPaisEmisor"
+                                    [required]="true"
+                                    name="solicitudVehiculoPaisEmisor"
+                                    (change)="
+                                      solicitudVehiculoPaisEmisor2daPlaca()
+                                    "
+                                  ></app-catalogo-select>
+                                </div>
                               </div>
 
                               <!-- Estado Input -->
@@ -424,19 +429,15 @@
                                   }}</label>
                                   <span class="require">*</span>
                                 </div>
-                                <div>
-                                  <select
-                                    id="anioVehiculoVEH"
+                                <div class="anioVehiculoVEH">
+                                  <app-catalogo-select
+                                    class="anioVehiculoVEH"
+                                    [catalogo]="VehiculoVEH"
                                     formControlName="anioVehiculoVEH"
-                                    class="form-control"
-                                  >
-                                    <option value="">
-                                      {{ nonSelectionTextAnios }}
-                                    </option>
-                                    <option *ngFor="let anio of anios">
-                                      {{ anio.descripcion }}
-                                    </option>
-                                  </select>
+                                    [required]="true"
+                                    name="anioVehiculoVEH"
+                                    (change)="anioVehiculoveh()"
+                                  ></app-catalogo-select>
                                 </div>
                               </div>
                             </div>
@@ -491,19 +492,15 @@
                                   }}</label>
                                   <span class="require">*</span>
                                 </div>
-                                <div>
-                                  <select
-                                    id="solicitudVehiculoColor"
+
+                                <div class="anioVehiculoVEH">
+                                  <app-catalogo-select
+                                    [catalogo]="VehiculoColors"
                                     formControlName="solicitudVehiculoColor"
-                                    class="form-control"
-                                  >
-                                    <option value="">
-                                      {{ nonSelectionTextColorAGA }}
-                                    </option>
-                                    <option *ngFor="let color of colorAGA">
-                                      {{ color.descripcion }}
-                                    </option>
-                                  </select>
+                                    [required]="true"
+                                    name="solicitudVehiculoColor"
+                                    (change)="solicitudVehiculoColor()"
+                                  ></app-catalogo-select>
                                 </div>
                               </div>
 
@@ -637,17 +634,17 @@
                                     >*</span
                                   >
                                 </div>
-                                <div>
-                                  <select
-                                    id="solicitudVehiculoPaisEmisor2daPlaca"
+
+                                <div class="anioVehiculoVEH">
+                                  <app-catalogo-select
+                                    [catalogo]="PaisEmisor2daPlaca"
                                     formControlName="solicitudVehiculoPaisEmisor2daPlaca"
-                                    class="form-control"
-                                  >
-                                    <!-- <option value="">{{ nonSelectionTextPaisEmisor2daPlaca }}</option> -->
-                                    <option *ngFor="let pais of paises">
-                                      {{ pais.descripcion }}
-                                    </option>
-                                  </select>
+                                    [required]="true"
+                                    name="solicitudVehiculoPaisEmisor2daPlaca"
+                                    (change)="
+                                      solicitudVehiculoPaisEmisor2daPlaca()
+                                    "
+                                  ></app-catalogo-select>
                                 </div>
                               </div>
                             </div>
@@ -696,7 +693,6 @@
                                     id="cancelarVehiculo"
                                     name="cancelar"
                                     class="cancel btn btn-danger"
-                                    (click)="closeDialogoCaptura()"
                                   >
                                     Cancelar
                                   </button>
@@ -706,7 +702,7 @@
                                     name="guardar"
                                     class="btn btn-primary"
                                   >
-                                    Guardar12
+                                    Guardar
                                   </button>
                                 </div>
                               </div>
@@ -848,7 +844,6 @@
                                     id="solicitudVehiculoArrastreTipoVehiculo"
                                     formControlName="tipoVehiculoArrastreAGA"
                                     class="form-control"
-                                    (change)="validarDescArrastre()"
                                   >
                                     <option value="">
                                       Seleccione un valor
@@ -923,26 +918,7 @@
                                   >
                                   <span class="require">*</span>
                                 </div>
-                                <div class="form-group">
-                                  <select
-                                    id="solicitudVehiculoArrastrePaisEmisor"
-                                    formControlName="paisEmisor"
-                                    class="form-control"
-                                  >
-                                    <option value="">
-                                      Seleccione un valor
-                                    </option>
-
-                                    Populate options dynamically in TypeScript
-                                    using the 'pais' catalog. Example:
-                                    <option
-                                      *ngFor="let pais of paises"
-                                      [value]="pais.clave"
-                                    >
-                                      {{ pais.descripcion }}
-                                    </option>
-                                  </select>
-                                </div>
+                                <div class="form-group"></div>
                               </div>
 
                               <div class="col-md-4">
@@ -1133,7 +1109,6 @@
                                     id="cancelarVehiculo"
                                     name="cancelar"
                                     class="cancel btn btn-danger"
-                                    (click)="closeDialogoCaptura()"
                                   >
                                     Cancelar
                                   </button>

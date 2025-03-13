@@ -10,11 +10,14 @@ import { Chofer40101Store } from '../../estados/chofer40101.store';
 })
 export class DirectorGeneralComponent implements OnInit {
   directorGeneralForm!: FormGroup;
-  constructor(private fb: FormBuilder, private chofer40101Query:Chofer40101Query, private chofer40101Store:Chofer40101Store) {}
+  constructor(
+    private fb: FormBuilder,
+    private chofer40101Query: Chofer40101Query,
+    private chofer40101Store: Chofer40101Store
+  ) {}
   /**
    * Crea el formulario para el director general.
    */
-
 
   /**
    * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
@@ -22,11 +25,12 @@ export class DirectorGeneralComponent implements OnInit {
   ngOnInit(): void {
     this.crearFormularioDirectorGeneral();
     this.setFormValues();
-    
+
     // Listen to form changes and update the store
     this.directorGeneralForm.valueChanges.subscribe((formData) => {
       this.updateStore(formData);
     });
+    this.updateStore(this.directorGeneralForm.value);
   }
   crearFormularioDirectorGeneral(): void {
     this.directorGeneralForm = this.fb.group({
@@ -50,17 +54,6 @@ export class DirectorGeneralComponent implements OnInit {
     }
   }
   updateStore(updatedData: any): void {
-    // Get existing data
-    const existingData = this.chofer40101Query.getChoferes();
-
-    // Merge updated form values into store
-    // const updatedChoferes = existingData.map((item) => ({
-    //   ...item,
-    //   nombre: updatedData.nombre,
-    //   primerApellido: updatedData.primerApellido,
-    //   segundoApellido: updatedData.segundoApellido,
-    // }));
-
-    // this.chofer40101Store.set(updatedChoferes);
+    const existingData = this.chofer40101Query.getValue().choferes;
   }
 }

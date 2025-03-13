@@ -1,11 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-// import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
+import { Chofer40101Store, Choferesnacionales40101State } from '../../estados/chofer40101.store';
+import { Chofer40101Query } from '../../estados/chofer40101.query';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
-// import { SeccionQuery } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 interface AccionBoton {
   accion: string;
@@ -19,7 +19,7 @@ interface AccionBoton {
 export class SolicitantePageComponent {
   pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
   indice: number = 1;
-  //  public seccion!: SeccionState;
+    public seccion!: Choferesnacionales40101State;
   private destroyNotifier$: Subject<void> = new Subject();
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   datosPasos: DatosPasos = {
@@ -29,8 +29,8 @@ export class SolicitantePageComponent {
     txtBtnSig: 'Continuar',
   };
   constructor(
-    // private seccionQuery: SeccionQuery,
-    // private seccionStore: SeccionStore
+    private chofer40101Query: Chofer40101Query,
+    private chofer40101Store: Chofer40101Store
   ) {}
 
   ngOnInit() {
@@ -41,17 +41,17 @@ export class SolicitantePageComponent {
       }
       return paso;
     });
-    // console.log('Updated pasos:', this.pasos);
-    // this.seccionQuery.selectSeccionState$
-    //   .pipe(
-    //     takeUntil(this.destroyNotifier$),
-    //     map((seccionState) => {
-    //       this.seccion = seccionState;
-    //     })
-    //   )
-    //   .subscribe();
+    console.log('Updated pasos:', this.pasos);
+    this.chofer40101Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
 
-    // this.asignarSecciones();
+    this.asignarSecciones();
   }
 
   seleccionaTab(i: number): void {
@@ -78,7 +78,7 @@ export class SolicitantePageComponent {
       secciones.push(SECCIONES_TRAMITE_5701.PASO_1[llaveSeccion]);
       formaValida.push(false);
     }
-    // this.seccionStore.establecerSeccion(secciones);
-    // this.seccionStore.establecerFormaValida(formaValida);
+    this.chofer40101Store.establecerSeccion(secciones);
+    this.chofer40101Store.establecerFormaValida(formaValida);
   }
 }

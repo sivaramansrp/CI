@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 export interface Choferesnacionales40101State {
-  choferes: string [];
+  choferes: string[];
   choferesextranjero: string[];
   vehiculos: string[];
   unidadesdearrastre: string[];
-  estado?: string;
+  estado: Catalogo[];
+  seccion: boolean[];
+  formaValida: boolean[];
+  nombre: string;
+  primerApellido: string;
+  segundoApellido: string;
 }
 
 export function createChoferState(): Choferesnacionales40101State {
@@ -16,7 +22,12 @@ export function createChoferState(): Choferesnacionales40101State {
     choferesextranjero: [],
     vehiculos: [],
     unidadesdearrastre: [],
-    estado:''
+    estado: [],
+    seccion: [],
+    formaValida: [],
+    nombre: "",
+    primerApellido: "",
+    segundoApellido: ""
   };
 }
 
@@ -43,30 +54,73 @@ export class Chofer40101Store extends Store<Choferesnacionales40101State> {
   setUnidadesdeArrastre(unidadesdearrastreArray: string[]) {
     this.update((state) => ({
       ...state,
-      unidadesdearrastre: unidadesdearrastreArray, 
+      unidadesdearrastre: unidadesdearrastreArray,
     }));
   }
   public setsolicitudVehiculoTipoVehiculo(solicitudVehiculo: string) {
-    console.log('Updating Store:', solicitudVehiculo); 
+    console.log('Updating Store:', solicitudVehiculo);
     this.update((state) => ({
       ...state,
       solicitudVehiculo,
     }));
   }
-  public setsolicitudVehiculoPaisEmisor(paisEmisor: string) {
-    console.log('Updating Store:', paisEmisor); 
-    this.update((state) => ({
-      ...state,
-      paisEmisor,
-    }));
-  }
-  public setEstado(estado: string) {
+    public setsolicitudVehiculoPaisEmisor(solicitudVehiculo: string) {
+      console.log('Updating Store:', solicitudVehiculo);
+      this.update((state) => ({
+        ...state,
+        solicitudVehiculo,
+      }));
+    }
+    public solicitudVehiculoColor(vehiculoColor: string) {
+      console.log('Updating Store:', vehiculoColor);
+      this.update((state) => ({
+        ...state,
+        vehiculoColor,
+      }));
+    }
+    public VehiculoPaisEmisor2daPlaca(PaisEmisor2daPlaca: string) {
+      console.log('Updating Store:', PaisEmisor2daPlaca);
+      this.update((state) => ({
+        ...state,
+        PaisEmisor2daPlaca,
+      }));
+    }
+    public setanioVehiculoVEH(VehiculoVEH: string) {
+      console.log('Updating Store:', VehiculoVEH);
+      this.update((state) => ({
+        ...state,
+        VehiculoVEH,
+      }));
+    }
+  setEstado(estado: Catalogo[]) {
     this.update((state) => ({
       ...state,
       estado,
     }));
   }
+
+  /**
+   * Guarda un elemento por cada sección que se encuentre
+   * @param seccion validacion
+   */
+  public establecerSeccion(seccion: boolean[]) {
+    this.update((state) => ({
+      ...state,
+      seccion,
+    }));
+  }
+
+  /**
+   * Agrega elementos por cada seccion indicando si el formulario es válido o no
+   * @param formaValida
+   */
+  public establecerFormaValida(formaValida: boolean[]) {
+    this.update((state) => ({
+      ...state,
+      formaValida,
+    }));
+  }
   public clearChoferes() {
-    this.reset(); 
+    this.reset();
   }
 }
