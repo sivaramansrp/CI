@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { Subject, Subscription, skip } from 'rxjs';
+import { Subject, Subscription, skip, takeUntil } from 'rxjs';
 
 /**
  * @fileoverview Componente para la sección de datos para movilización nacional.
@@ -31,7 +31,6 @@ import { Subject, Subscription, skip } from 'rxjs';
   styleUrls: ['./datos-para-movilizacion-nacional.component.scss']
 })
 export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy {
-
   /**
    * @description FormGroup que contiene los controles del formulario.
    * Este objeto `FormGroup` contiene los controles de formulario necesarios para capturar los datos de movilización nacional.
@@ -90,7 +89,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    */
   ngOnInit(): void {
     // Se suscribe a los cambios de estado del formulario para actualizar su validez
-    this.forma.statusChanges.pipe(skip(1)).subscribe((changes) => {
+    this.forma.statusChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
       const FORMA_VALIDA_ACTUALIZADA = {
         movilizacionValidacion: false,
       };
@@ -120,7 +119,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @returns {void}
    */
   obtenerListaDeJustificaciones(): void {
-    this.agriculturaApiService.obtenerSelectorList('transporte.json').subscribe(data => {
+    this.agriculturaApiService.obtenerSelectorList('transporte.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.transporteList = data as Catalogo[];
     });
   }
@@ -132,7 +131,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @returns {void}
    */
   obtenerListaDePunto(): void {
-    this.agriculturaApiService.obtenerSelectorList('punto.json').subscribe(data => {
+    this.agriculturaApiService.obtenerSelectorList('punto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.puntoList = data as Catalogo[];
     });
   }
@@ -160,8 +159,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @returns {void}
    */
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

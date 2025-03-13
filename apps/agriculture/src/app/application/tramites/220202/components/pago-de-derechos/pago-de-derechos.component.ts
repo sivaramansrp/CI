@@ -230,13 +230,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @method setValoresStore
    * @param {FormGroup} form - El formulario que contiene los datos a actualizar.
    * @param {string} campo - El nombre del campo cuyo valor se actualizará.
-   * @param {keyof ListaDeDatosFinal} metodoNombre - El nombre del campo que se actualizará en el servicio.
    * @returns {void}
    */
   setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof ListaDeDatosFinal
+
   ): void {
     const VALOR = form.get(campo)?.value;
     this.agriculturaApiService.updatePago(VALOR);

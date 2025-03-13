@@ -4,7 +4,7 @@ import { AgriculturaApiService } from '../../services/220202/agricultura-api.ser
 import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosDeFila } from '../../models/220202/fitosanitario.model';
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
-import { skip, Subscription } from 'rxjs';
+import { skip, Subject, Subscription, takeUntil } from 'rxjs';
 
 /**
  * @component DatosDeLaSolicitudComponent
@@ -128,7 +128,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   formularioDeTransporte?: FormGroup;
 
-  private subscription: Subscription = new Subscription();
+  private destroyNotifier$ = new Subject<void>();
 
   /**
    * @constructor
@@ -150,7 +150,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.forma?.valueChanges.pipe(skip(1)).subscribe((changes) => {
+    this.forma?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
       const FORMA_VALIDA_ACTUALIZADA = {
         datosFormaValidacion: false,
       };
@@ -237,7 +237,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getaduanaLista() {
-    this.agriculturaApiService.obtenerSelectorList('aduana_de_ingreso.json').subscribe(data => {
+    this.agriculturaApiService.obtenerSelectorList('aduana_de_ingreso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.aduanaList = data as Catalogo[];
     })
   }
@@ -248,7 +248,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getagropecuariaLista() {
-    this.agriculturaApiService.obtenerSelectorList('aduana_de_ingreso.json').subscribe(data => {
+    this.agriculturaApiService.obtenerSelectorList('aduana_de_ingreso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.agropecuariaList = data as Catalogo[];
     })
   }
@@ -259,7 +259,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getPuntoLista() {
-    this.agriculturaApiService.obtenerSelectorList('punto.json').subscribe(data => {
+    this.agriculturaApiService.obtenerSelectorList('punto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.puntoList = data as Catalogo[];
     })
   }
@@ -270,7 +270,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getRegimenLista() {
-    this.agriculturaApiService.obtenerSelectorList('regimen.json').subscribe(data => {
+    this.agriculturaApiService.obtenerSelectorList('regimen.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.regimeList = data as Catalogo[];
     })
   }
@@ -281,7 +281,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getArancelariaLista() {
-    this.agriculturaApiService.obtenerSelectorList('nombre.json').subscribe(data => {
+    this.agriculturaApiService.obtenerSelectorList('nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.arancelariaList = data as Catalogo[];
     })
   }
@@ -292,7 +292,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getNicoLista() {
-    this.agriculturaApiService.obtenerSelectorList('nombre.json').subscribe(data => {
+    this.agriculturaApiService.obtenerSelectorList('nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.nicoList = data as Catalogo[];
     })
   }
@@ -303,7 +303,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getUmCLista() {
-    this.agriculturaApiService.obtenerSelectorList('nombre.json').subscribe(data => {
+    this.agriculturaApiService.obtenerSelectorList('nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.umcList = data as Catalogo[];
     })
   }
@@ -314,7 +314,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getusoLista() {
-    this.agriculturaApiService.obtenerSelectorList('nombre.json').subscribe(data => {
+    this.agriculturaApiService.obtenerSelectorList('nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.usoList = data as Catalogo[];
     });
   }
@@ -325,9 +325,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getProductoLista() {
-    this.agriculturaApiService.obtenerSelectorList('nombre.json').subscribe(data => {
-      this.productoList = data as Catalogo[];
-    });
+    this.agriculturaApiService.obtenerSelectorList('nombre.json')
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+        this.productoList = data as Catalogo[];
+      });
   }
 
   /**
@@ -350,8 +351,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
