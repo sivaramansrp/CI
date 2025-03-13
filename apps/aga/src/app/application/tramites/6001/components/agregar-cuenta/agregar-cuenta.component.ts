@@ -231,6 +231,17 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
     (this.tramite6001Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
+  /**
+   * Activa el cambio del componente actual a 'DatosGenerales'.
+   * Este método se utiliza para guardar el estado actual y navegar al componente 'DatosGenerales'.
+   *
+   * @public
+   * @returns {void}
+   */
+  public guardar(): void {
+    this._registroCuentasBancariasSvc.cambiarComponente('DatosGenerales');
+  }
+
     /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.

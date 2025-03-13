@@ -51,30 +51,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>DESPACHOS ADUANALES ALCANTARA, SA DE CV</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>GRUPO PRIORITY ONE DEL PACIFICO, SC</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>LOGISTICA ADUANAL DEL PACIFICO, SC</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>LOGISTICA DE NUEVO LAREDO,SA DE CV</td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>PRIORITY ONE GROUP, SC</td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td>MISAEL BARRAGAN RUIZ, SC</td>
-                    </tr>
+                    @for (datos of sociedadDatos; let i = $index; track i) {
+                        <tr>
+                            <td>{{datos?.id}}</td>
+                            <td>{{datos?.descripcion}}</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>

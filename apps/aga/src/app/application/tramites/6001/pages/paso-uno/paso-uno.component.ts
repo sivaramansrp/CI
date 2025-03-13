@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { RegistroCuentasBancariasService } from '../../services/registro-cuentas-bancarias.service';
+import { Subscription } from 'rxjs';
 
 /**
  * PasoUnoComponent es responsable de manejar el primer paso del proceso.
@@ -10,7 +11,14 @@ import { RegistroCuentasBancariasService } from '../../services/registro-cuentas
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnDestroy {
+
+  /**
+   * Una instancia de Subscription que se utiliza para manejar la suscripción a eventos.
+   * Esta instancia se utiliza para manejar la suscripción a eventos y liberar recursos cuando el componente se destruye.
+   * @type {Subscription}
+   */
+  private subscription: Subscription = new Subscription();
 
   /**
    * Representa el componente actual que se está mostrando.
@@ -32,4 +40,12 @@ export class PasoUnoComponent {
       this.componenteActual = component;
     });
   }
+
+    /**
+   * Maneja el evento para cancelar la firma.
+   * Navega al componente anterior.
+   */
+    ngOnDestroy(): void {
+      this.subscription.unsubscribe();
+    } 
 }

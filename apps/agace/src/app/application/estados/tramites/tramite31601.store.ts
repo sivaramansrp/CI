@@ -777,9 +777,9 @@ export function createInitialState(): Solicitud31601State {
  /**
  * Decorador Injectable para hacer que la tienda esté disponible a nivel raíz.
  */
-    @Injectable({
-        providedIn: 'root',
-    })
+@Injectable({
+    providedIn: 'root',
+})
 /**
  * Decorador StoreConfig para configurar la tienda con un nombre y una opción de restablecimiento.
  * @param {Object} config - El objeto de configuración.

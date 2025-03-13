@@ -7,7 +7,7 @@ import { RegistroCuentasBancariasService } from '../../services/registro-cuentas
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { RegistroDeSolicitudesTabla } from '../../models/registro-cuentas-bancarias.model';
+import { RegistroDeSolicitudesTabla, Sociedad } from '../../models/registro-cuentas-bancarias.model';
 
 
 /**
@@ -39,15 +39,17 @@ export class DatosGeneralesComponent implements OnInit {
    */
   public registroDeSolicitudesTablaDatos: RegistroDeSolicitudesTabla[] = [];
 
+  public sociedadDatos: Array<Sociedad> = [];
+
   /** Configuración de la tabla de sectores */
   public configuracionTabla: ConfiguracionColumna<RegistroDeSolicitudesTabla>[] = [
     { encabezado: 'Tipo movimiento', clave: (item: RegistroDeSolicitudesTabla) => item.movimiento, orden: 1 },
     { encabezado: 'Titular cuenta', clave: (item: RegistroDeSolicitudesTabla) => item.cuenta, orden: 2 },
     { encabezado: 'RFC', clave: (item: RegistroDeSolicitudesTabla) => item.rfc, orden: 3 },
     { encabezado: 'Tipo persona', clave: (item: RegistroDeSolicitudesTabla) => item.persona, orden: 4 },
-    { encabezado: 'Número de cuenta', clave: (item: RegistroDeSolicitudesTabla) => item.numerodecuenta, orden: 5 },
+    { encabezado: 'Número de cuenta', clave: (item: RegistroDeSolicitudesTabla) => item.numeroDeCuenta, orden: 5 },
     { encabezado: 'Sucursal', clave: (item: RegistroDeSolicitudesTabla) => item.sucursal, orden: 6 },
-    { encabezado: 'Institución de crédito', clave: (item: RegistroDeSolicitudesTabla) => item.instituciondecredito, orden: 7 },
+    { encabezado: 'Institución de crédito', clave: (item: RegistroDeSolicitudesTabla) => item.institucionDeCredito, orden: 7 },
     { encabezado: 'Número de plaza', clave: (item: RegistroDeSolicitudesTabla) => item.numero, orden: 8 },
     { encabezado: 'Pais donde radica cuenta', clave: (item: RegistroDeSolicitudesTabla) => item.radicaCuenta, orden: 9 },
     { encabezado: 'Estado', clave: (item: RegistroDeSolicitudesTabla) => item.estado, orden: 10 },
@@ -79,8 +81,24 @@ export class DatosGeneralesComponent implements OnInit {
   ngOnInit(): void {
     this.crearFormDatosGenerales();
     this.getSolicitudesTabla();
+    this.getSociedadTabla();
     this.obtenerFormDatosGeneralesDatos();
   }
+
+
+    /**
+   * Crea una copia profunda del objeto proporcionado.
+   * 
+   * Este método serializa el objeto a una cadena JSON y luego lo analiza de nuevo a un nuevo objeto,
+   * creando efectivamente una copia profunda. Tenga en cuenta que este enfoque puede no manejar funciones,
+   * valores indefinidos o referencias circulares correctamente.
+   * 
+   * @param obj - El objeto que se va a copiar profundamente. Por defecto es un objeto vacío.
+   * @returns Una copia profunda del objeto proporcionado.
+   */
+    public deepCopy(obj = {}) {
+      return JSON.parse(JSON.stringify(obj));
+    }
 
   /**
    * Verifica si el valor proporcionado es un objeto.
@@ -169,4 +187,19 @@ export class DatosGeneralesComponent implements OnInit {
     this._registroCuentasBancariasSvc.cambiarComponente('AgregarCuenta');
   }
 
+
+  /**
+   * Obtiene los datos para la tabla "Sociedad" desde el servicio backend.
+   * Los datos se recuperan a través de una solicitud HTTP y luego se copian
+   * profundamente para evitar mutaciones directas. Los datos copiados se asignan
+   * a la propiedad `sociedadDatos`.
+   *
+   * @returns {void} Este método no devuelve ningún valor.
+   */
+  public getSociedadTabla(): void {
+    this._registroCuentasBancariasSvc.getSociedadTablaDatos().subscribe((response) => {
+      const API_RESPONSE = this.deepCopy(response);
+      this.sociedadDatos = API_RESPONSE.data;
+    });
+  }
 }

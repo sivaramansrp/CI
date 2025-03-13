@@ -1,7 +1,7 @@
 /* eslint-disable sort-imports */
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, map } from 'rxjs';
+import { catchError, map, Subscription } from 'rxjs';
 import { RegistroCuentasBancariasService } from '../../services/registro-cuentas-bancarias.service';
 
 /**
@@ -15,7 +15,15 @@ import { RegistroCuentasBancariasService } from '../../services/registro-cuentas
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
 })
-export class PasoDosComponent {
+export class PasoDosComponent implements OnDestroy {
+
+  /**
+   * Una instancia de Subscription que se utiliza para manejar la suscripción a eventos.
+   * Esta instancia se utiliza para manejar la suscripción a eventos y liberar recursos cuando el componente se destruye.
+   * @type {Subscription}
+   */
+  private subscription: Subscription = new Subscription();
+
 
   /**
    * Construye una instancia de PasoDosComponent.
@@ -52,4 +60,13 @@ export class PasoDosComponent {
           .subscribe();
       }
     }
+
+
+      /**
+   * Maneja el evento para cancelar la firma.
+   * Navega al componente anterior.
+   */
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 }

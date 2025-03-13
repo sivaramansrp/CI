@@ -154,4 +154,19 @@ export class RegistroCuentasBancariasService {
       })
     );
   }
+
+  /**
+   * Obtiene los datos de la tabla de sociedad desde un archivo JSON local.
+   *
+   * @returns {Observable<JSONResponse>} Un observable que emite la respuesta JSON.
+   *
+   * @throws Lanzará un error si la solicitud HTTP falla.
+   */
+  public getSociedadTablaDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/6001/sociedad-tabla.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
 }

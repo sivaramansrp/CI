@@ -3,9 +3,9 @@ export interface RegistroDeSolicitudesTabla {
     cuenta: string;
     rfc: string;
     persona: string;
-    numerodecuenta: string;
+    numeroDeCuenta: string;
     sucursal: string;
-    instituciondecredito: string;
+    institucionDeCredito: string;
     numero: string;
     radicaCuenta: string;
     estado: string;
@@ -21,4 +21,9 @@ export interface DATOS {
     nombre: string;
     federalDeContribuyentes: string;
     tipoDePersona: string;
+}
+
+export interface Sociedad {
+    id: string;
+    descripcion: string;
 }
