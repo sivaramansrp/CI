@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ServiciosComponent } from "../../components/servicios/servicios.component";
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 
 @Component({
@@ -12,8 +13,9 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    SolicitanteComponent
-  ],
+    SolicitanteComponent,
+    ServiciosComponent
+],
   host: { hostID: crypto.randomUUID().toString() },
 })
 export class PasoUnoComponent {
