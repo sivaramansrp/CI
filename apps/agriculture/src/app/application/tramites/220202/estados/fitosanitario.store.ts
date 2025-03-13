@@ -58,18 +58,12 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
     }
 
 
-
-
-    /**
-    * Updates the 'formaValida' field.
-    * @param updatedFormaValida The updated boolean values for 'formaValida'.
-    */
     public actualizarformaValida(updatedFormaValida: { [key: string]: boolean }): void {
         this.update(state => ({
             ...state,
             formaValida: {
                 ...state?.finalEnviar,
-                ...updatedFormaValida, // Only the updated fields are merged here
+                ...updatedFormaValida,
             }
         }));
     }
