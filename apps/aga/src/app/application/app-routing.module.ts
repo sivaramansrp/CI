@@ -38,6 +38,12 @@ const ROUTES: Routes = [
     ),
   },
   {
+    path: 'temporal-contenedores',
+    loadChildren: () => import('./tramites/11201/temporal-contenedores.module').then(
+      (m) => m.TemporalContenedoresModule
+    ),
+  },
+  {
     path: 'notificacion',
     component: NotificacionPageComponent
   },
