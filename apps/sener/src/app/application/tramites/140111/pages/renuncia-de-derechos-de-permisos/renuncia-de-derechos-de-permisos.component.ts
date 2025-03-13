@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PERMISOS, WizardComponent } from '@ng-mf/data-access-user';
-
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
+import { PERMISOS } from '../../enums/renuncia-de-derechos-de-permisos.enum'
 interface AccionBoton {
   /**
    * The action to be performed.
