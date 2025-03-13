@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PermisoFormInterface } from '../../models/140111/renuncia-de-derechos.model';
+import { PermisoFormInterface } from '../model/renuncia-de-derechos.model';
 @Injectable({
   providedIn: 'root'
 })

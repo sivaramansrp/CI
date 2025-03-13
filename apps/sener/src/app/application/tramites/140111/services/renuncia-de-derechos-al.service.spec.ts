@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { RenunciaDeDerechosAlServicio } from './renuncia-de-derechos-al.service';
-import { PermisoFormInterface } from '../../models/140111/renuncia-de-derechos.model';
+import { RenunciaDeDerechosAlServicio } from '../../../../../../../../libs/shared/data-access-user/src/core/services/140111/renuncia-de-derechos-al.service';
+import { PermisoFormInterface } from '../model/renuncia-de-derechos.model';
 
 describe('RenunciaDeDerechosAlServicio', () => {
   let service: RenunciaDeDerechosAlServicio;

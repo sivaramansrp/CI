@@ -102,10 +102,6 @@ export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.servi
 export * from './core/services/110102/representacion-federal/representacionFederal.service';
 export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';
-export * from './core/services/140111/renuncia-de-derechos-de-permisos.enum';
-export * from './core/services/140111/permiso-renuncia-de-derechos.enum';
-export * from './core/models/140111/renuncia-de-derechos.model';
-export * from './core/services/140111/renuncia-de-derechos-al.service';
 export * from './core/models/shared/configuracion-columna.model';
 
 export * from './core/enums/tabla-seleccion.enum';

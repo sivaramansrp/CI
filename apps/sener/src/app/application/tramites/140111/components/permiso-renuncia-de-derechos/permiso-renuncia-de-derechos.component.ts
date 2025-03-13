@@ -6,7 +6,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MANIFIESTO_BAJO_PROTESTA, PermisoFormInterface, RenunciaDeDerechosAlServicio, TituloComponent } from '@ng-mf/data-access-user';
+import { RenunciaDeDerechosAlServicio } from '../../services/renuncia-de-derechos-al.service';
+import { PermisoFormInterface } from '../../model/renuncia-de-derechos.model';
+import { MANIFIESTO_BAJO_PROTESTA } from '../../enums/permiso-renuncia-de-derechos.enum';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { map, Subject, takeUntil } from 'rxjs';
 import { Tramite140111Query } from '../../../../estados/queries/tramite140111.query';
 import { Tramite140111Store } from '../../../../estados/tramites/tramite140111.store';
