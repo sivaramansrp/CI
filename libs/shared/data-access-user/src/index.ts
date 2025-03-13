@@ -33,7 +33,7 @@ export * from './core/services/220471/servicios-pantallas.service';
 export * from './core/services/220501/revision.service';
 export * from './core/services/220501/sagarpa/sagarpa.service';
 export * from './core/services/220502/solicitud-pantallas.service';
-export * from './core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
+export * from './core/services/shared/tramite-folio/tramite-folio.service';
 export * from './core/services/shared/catalogos/catalogos.service';
 export * from './core/services/shared/fechas/fechas.service';
 export * from './core/services/shared/formularios/formularios.service';

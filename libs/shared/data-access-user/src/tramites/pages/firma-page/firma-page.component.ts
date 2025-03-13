@@ -1,7 +1,7 @@
 import { catchError, map, Subject, takeUntil } from 'rxjs';
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { ServiciosExtraordinariosService } from '../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
+import { TramiteFolioService } from '../../../core/services/shared/tramite-folio/tramite-folio.service';
 import { FirmaElectronicaComponent } from '../../components/firma-electronica/firma-electronica.component';
 
 @Component({
@@ -17,7 +17,7 @@ export class FirmaPageComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
   constructor(
     private router: Router,
-    private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
+    private serviciosExtraordinariosServices: TramiteFolioService,
   ) { }
 
   /**
