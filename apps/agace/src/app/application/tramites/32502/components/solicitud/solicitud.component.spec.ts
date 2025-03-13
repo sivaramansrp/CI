@@ -12,8 +12,8 @@ import { TranslatePipe } from '@ng-mf/data-access-user';
 import { PhoneNumberPipe } from '@ng-mf/data-access-user';
 import { SafeHtmlPipe } from '@ng-mf/data-access-user';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { Tramite32502Store } from '../../../../estados/queries/tramite3250.query';
-import { Tramite32502Query } from '../../../../estados/queries/tramite3250.query';
+import { Tramite32502Store } from '../../../../estados/queries/tramite32502.query';
+import { Tramite32502Query } from '../../../../estados/queries/tramite32502.query';
 
 @Injectable()
 class MockTramite32502Store {}

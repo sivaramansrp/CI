@@ -7,7 +7,7 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Solicitud32502State, Tramite32502Store } from '../../../../estados/tramites/tramite32502.store';
 import { SeccionAgaceState } from '../../../../estados/seccion.store';
 import { Subject } from 'rxjs';
-import { Tramite32502Query } from '../../../../estados/queries/tramite3250.query';
+import { Tramite32502Query } from '../../../../estados/queries/tramite32502.query';
 
 @Component({
   selector: 'agrega-personas',

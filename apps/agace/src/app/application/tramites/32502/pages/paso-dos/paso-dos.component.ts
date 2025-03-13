@@ -9,7 +9,7 @@ import { DocumentosCargados } from '@ng-mf/data-access-user';
 import { PDF } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
-import { Tramite32502Query } from '../../../../estados/queries/tramite3250.query';
+import { Tramite32502Query } from '../../../../estados/queries/tramite32502.query';
 
 /**
  * Este componente se muestra en PasoDos

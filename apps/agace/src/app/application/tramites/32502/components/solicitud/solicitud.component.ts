@@ -8,7 +8,7 @@ import { AvisoService } from '../../services/aviso.service';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
-import { Tramite32502Query } from '../../../../estados/queries/tramite3250.query';
+import { Tramite32502Query } from '../../../../estados/queries/tramite32502.query';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 

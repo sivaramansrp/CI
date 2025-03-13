@@ -14,7 +14,7 @@ import { PhoneNumberPipe } from '../../pipes/número-de-teléfono.pipe.mock';
 import { SafeHtmlPipe } from '../../pipes/seguroHtml.pipe.mock';
 import { MyCustomDirective } from '../../directives/customMock.directive.mock';
 import { Tramite32502Store } from '../../../../estados/tramites/tramite32502.store';
-import { Tramite32502Query } from '../../../../estados/queries/tramite3250.query';
+import { Tramite32502Query } from '../../../../estados/queries/tramite32502.query';
 
 describe('PasoDosComponent', () => {
   let fixture: ComponentFixture<PasoDosComponent>;
