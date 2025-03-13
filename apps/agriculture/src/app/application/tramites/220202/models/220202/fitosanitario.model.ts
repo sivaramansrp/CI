@@ -121,6 +121,7 @@ export interface PagoForm {
     llavePago: string;
     importePago: string;
     fechaDePago: string;
+    fechaInicioInput: string;
 }
 
 /**
@@ -246,7 +247,8 @@ export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): Lista
             banco: params.pago?.banco || '',
             llavePago: params.pago?.llavePago || '',
             importePago: params.pago?.importePago || '',
-            fechaDePago: params.pago?.fechaDePago || ''
+            fechaDePago: params.pago?.fechaDePago || '',
+            fechaInicioInput: params.pago?.fechaInicioInput || ''
         },
         finalEnviar: {
             datosFormaValidacion: params.finalEnviar?.datosFormaValidacion || false,

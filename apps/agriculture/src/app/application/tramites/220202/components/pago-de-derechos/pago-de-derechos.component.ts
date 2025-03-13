@@ -53,9 +53,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @property {InputFecha} fechaInicioInput
    */
   fechaInicioInput: InputFecha = {
-    labelNombre: '',
-    required: false,
-    habilitado: false
+    labelNombre: 'saddddddddddddddddd',
+    required: true,
+    habilitado: true
   };
 
   /**
@@ -130,6 +130,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       banco: [{ value: '', disabled: true }],
       llavePago: [{ value: '', disabled: false }],
       importePago: [{ value: '', disabled: true }],
+      fechaInicioInput: ['']
     });
   }
 
@@ -238,6 +239,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   ): void {
     const VALOR = form.get(campo)?.value;
+    this.agriculturaApiService.updatePago(VALOR);
+  }
+  /**
+    * Maneja el evento de cambio para la entrada de fecha.
+    * @param evento - El nuevo valor de la fecha como cadena.
+    */
+  fechaCambiado(evento: string): void {
+    // Manejar cambio de fecha
+    this.pagoForm.patchValue({
+      fechaInicioInput: evento
+    });
+    const VALOR = this.pagoForm.value;
     this.agriculturaApiService.updatePago(VALOR);
   }
 

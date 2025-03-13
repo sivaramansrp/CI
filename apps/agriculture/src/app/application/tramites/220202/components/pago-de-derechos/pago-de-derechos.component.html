@@ -109,11 +109,7 @@
 
       <div class="col-md-4">
         <div class="form-group">
-          <input-fecha [datos]="fechaInicioInput"   formControlName="fechaInicioInput"   (change)="
-          setValoresStore(
-            pagoForm,
-            'fechaInicioInput'
-          )"></input-fecha>
+          <input-fecha [datos]="fechaInicioInput" (valorCambiado)="fechaCambiado($event)"></input-fecha>
         </div>
       </div>
 
