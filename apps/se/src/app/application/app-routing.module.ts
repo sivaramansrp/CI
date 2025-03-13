@@ -82,6 +82,12 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDeModule)
   },
   {
+    path: 'desmantelar',
+    loadChildren: () =>
+      import('./tramites/130106/desmantelar.module').then(
+        (m) => m.DesmantelarModule)
+  },
+  {
     path: 'certificado-registro',
     loadChildren: () =>
       import('./tramites/80205/certificado-registro.module').then(
