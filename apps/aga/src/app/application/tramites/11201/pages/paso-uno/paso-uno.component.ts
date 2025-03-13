@@ -3,15 +3,15 @@ import { CommonModule } from '@angular/common';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-// import { ContenedorComponent } from '../../components/contenedor/contenedor.component';
 import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
+import { ContenedorComponent } from '../../components/contenedor/contenedor.component';
 
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [SolicitanteComponent, CommonModule]
+  imports: [SolicitanteComponent, CommonModule, ContenedorComponent]
 })
 export class PasoUnoComponent implements AfterViewInit {
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;

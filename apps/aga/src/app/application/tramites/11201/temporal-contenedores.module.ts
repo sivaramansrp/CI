@@ -19,7 +19,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     TemporalContenedoresRoutingModule,
     BtnContinuarComponent,
     PasoUnoComponent,
-    WizardComponent
+    WizardComponent,
   ],
   exports: [],
   providers: [
