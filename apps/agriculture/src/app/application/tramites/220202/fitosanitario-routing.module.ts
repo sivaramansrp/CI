@@ -13,7 +13,7 @@ export const ROUTES_FITOSANITARIO: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'agricultura',
+    redirectTo: 'agriculture',
   },
 
 ];
