@@ -2,9 +2,7 @@
     <ng-titulo titulo="Pago de derechos" />
     <div>
       <form [formGroup]="FormSolicitud" (ngSubmit)="validarFormulario()">
-        
-        <ng-container formGroupName="datosImportadorExportador">
-          <div>
+         <div>
             <label for="exentoDePago">Exento de pago*:</label>
             <div class="radio-container">
               <div class="radio-option">
@@ -92,9 +90,7 @@
               </div>
             </div>
           </div>
-  
-        </ng-container>
-      </form>
+        </form>
     </div>
   </div>
   

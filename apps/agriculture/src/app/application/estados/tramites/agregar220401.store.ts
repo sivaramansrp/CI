@@ -102,6 +102,16 @@ export interface solicitud220401State {
   fechaPago: string;
 
   Banco:string;
+  especie:string;
+  funcionZootecnica:string;
+  mercancia:string;
+  paisDestino:string;
+  nombreEstablecimiento:string;
+  tipoActividad:string;
+  aduanaSalida:string;
+  oisaSalida:string;
+  regimenMercancia:string;
+  paisOrigen:string;
 }
 
 /**
@@ -195,7 +205,17 @@ export function createInitialState(): solicitud220401State {
   
     /** Fecha en la que se realizó el pago. */
     fechaPago: '',
-    Banco:''
+    Banco:'',
+    especie:'',
+    funcionZootecnica:'',
+    mercancia:'',
+    paisDestino:'',
+    nombreEstablecimiento:'',
+    tipoActividad:'',
+    aduanaSalida:'',
+    oisaSalida:'',
+    regimenMercancia:'',
+    paisOrigen:''
   };
   
 }
@@ -554,6 +574,75 @@ export class Agregar220401Store extends Store<solicitud220401State> {
     this.update((state) => ({
       ...state,
       Banco,
+    }));
+  }
+
+  
+
+  public setespecie(especie: string) {
+    this.update((state) => ({
+      ...state,
+      especie,
+    }));
+  }
+public setfuncionZootecnica(funcionZootecnica: string) {
+    this.update((state) => ({
+      ...state,
+      funcionZootecnica,
+    }));
+  }
+
+  public setmercancia(mercancia: string) {
+    this.update((state) => ({
+      ...state,
+      mercancia,
+    }));
+  }
+
+  public setpaisDestino(paisDestino: string) {
+    this.update((state) => ({
+      ...state,
+      paisDestino,
+    }));
+  }
+
+  public setnombreEstablecimiento(nombreEstablecimiento: string) {
+    this.update((state) => ({
+      ...state,
+      nombreEstablecimiento,
+    }));
+  }
+
+  public settipoActividad(tipoActividad: string) {
+    this.update((state) => ({
+      ...state,
+      tipoActividad,
+    }));
+  }
+
+  public setaduanaSalida(aduanaSalida: string) {
+    this.update((state) => ({
+      ...state,
+      aduanaSalida,
+    }));
+  }
+  public setoisaSalida(oisaSalida: string) {
+    this.update((state) => ({
+      ...state,
+      oisaSalida,
+    }));
+  }
+
+  public setregimenMercancia(regimenMercancia: string) {
+    this.update((state) => ({
+      ...state,
+      regimenMercancia,
+    }));
+  }
+  public setpaisOrigen(paisOrigen: string) {
+    this.update((state) => ({
+      ...state,
+      paisOrigen,
     }));
   }
 }

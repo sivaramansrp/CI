@@ -10,8 +10,10 @@ import { FormBuilder } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
+
 import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
+
 import { map, Subject, takeUntil } from 'rxjs';
 
 /**
@@ -67,28 +69,24 @@ this.agregarQuery.selectSolicitud$
     this.getJustificacion(); // Obtiene las opciones para justificar el pago
     this.getBanco(); // Obtiene las opciones para seleccionar el banco
     this.FormSolicitud = this.fb.group({
-      datosImportadorExportador: this.fb.group({
+     
         exentoDePago: ['No', Validators.required],
        Justificacion: [this.solicitudState?.Justificacion || '', [Validators.required]],
         nombreImportExport: ['', Validators.required],
         rfcImportExport: ['', Validators.required],
         cadenaDependencia: ['', Validators.required],
-        
         Banco:[this.solicitudState?.Banco],
         llaveDePago:[this.solicitudState?.llaveDePago],
-       
-        fechaPago:[this.solicitudState?.fechaPago,[ Validators.required]],
+       fechaPago:[this.solicitudState?.fechaPago,[ Validators.required]],
        importePago: ['', Validators.required],
-      }),
-     
-    });
+      });
     
 
     // Se activa la lógica para actualizar campos según el valor inicial de 'exentoDePago'
     this.updateFormFieldsBasedOnExentoDePago('No');
 
      // Escucha los cambios en el valor de 'exentoDePago' y actualiza los campos del formulario
-    this.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.valueChanges.subscribe((value) => {
+    this.FormSolicitud.get('exentoDePago')?.valueChanges.subscribe((value) => {
       this.updateFormFieldsBasedOnExentoDePago(value);
     });
   }
@@ -104,29 +102,30 @@ this.agregarQuery.selectSolicitud$
    */
   updateFormFieldsBasedOnExentoDePago(value: string): void {
     if (value === 'No') {
-      this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.setValue('454000554');
-      this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValue('0001012A0000EX');
-      this.FormSolicitud.get('datosImportadorExportador.importePago')?.setValue('594.0');
-      this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.enable();
-      this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.enable();
+      this.FormSolicitud.get('rfcImportExport')?.setValue('454000554');
+      this.FormSolicitud.get('cadenaDependencia')?.setValue('0001012A0000EX');
+      this.FormSolicitud.get('importePago')?.setValue('594.0');
+      this.FormSolicitud.get('fechaPago')?.enable();
+      this.FormSolicitud.get('llaveDePago')?.enable();
       
-      this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.disable();
-      this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disable();
-      this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
+      this.FormSolicitud.get('rfcImportExport')?.disable();
+      this.FormSolicitud.get('cadenaDependencia')?.disable();
+      this.FormSolicitud.get('importePago')?.disable();
     } else {
-      this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.reset();
-      this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.reset();
-      this.FormSolicitud.get('datosImportadorExportador.importePago')?.reset();
+      this.FormSolicitud.get('rfcImportExport')?.reset();
+      this.FormSolicitud.get('cadenaDependencia')?.reset();
+      this.FormSolicitud.get('importePago')?.reset();
       
-      this.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.disable();
-      this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disable();
-      this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
-      this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.disable();
-      this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.disable();
+      this.FormSolicitud.get('rfcImportExport')?.disable();
+      this.FormSolicitud.get('cadenaDependencia')?.disable();
+      this.FormSolicitud.get('importePago')?.disable();
+      this.FormSolicitud.get('fechaPago')?.disable();
+      this.FormSolicitud.get('llaveDePago')?.disable();
     }
   }
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
     const VALOR = form.get(campo)?.value;
+    
    (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
   }
   /**
