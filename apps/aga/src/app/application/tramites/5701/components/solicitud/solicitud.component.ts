@@ -77,6 +77,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   colapsable: boolean = false;
 
   selectRangoDias: string[] = [];
+  mostrarRangoFechas: boolean = false;
 
   // Pedimento -crea una señal para validar
   validacionPedimento: boolean = false;
@@ -603,30 +604,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tramite5701Store.setTipoSolicitud(tipoSolicitud);
   }
 
-  obtenerRangoFechas(): string[] {
+  obtenerRangoFechas(): void {
     const F_INICIO = this.datosServicio.get('fechaInicio')?.value;
     const F_FINAL = this.datosServicio.get('fechaFinal')?.value;
-    const H_INICIO = this.datosServicio.get('horaInicio')?.value;
-    const H_FINAL = this.datosServicio.get('horaFinal')?.value;
-
-    console.log('FECHA_INICIO', F_INICIO);
-    console.log('FECHA_FINAL', F_FINAL);
-    console.log('HORA_INICIO', H_INICIO);
-    console.log('HORA_FINAL', H_FINAL);
-
-    return [];
-  }
-  rango_fechas(): void {
-    const fechaInicial = this.datosServicio.get('fechaInicio')?.value;
-    const fechaFinal = this.datosServicio.get('fechaFinal')?.value;
-
-    const formatoFechaInicial =
-      this.fechaService.formatoFechaGuion(fechaInicial);
-    const formatoFechaFinal = this.fechaService.formatoFechaGuion(fechaFinal);
 
     this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
-      formatoFechaInicial,
-      formatoFechaFinal
+      F_INICIO,
+      F_FINAL
     );
 
     this.colapsable = true;
@@ -709,7 +693,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {    
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
     const valor = form.get(campo)?.value;
     (this.tramite5701Store[metodoNombre] as (value: any) => void)(valor);
   }
@@ -746,8 +730,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
 
     if (!this.individual()) {
+      this.mostrarRangoFechas = true;
       this.obtenerRangoFechas();
-
     }
 
 

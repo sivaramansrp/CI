@@ -328,7 +328,7 @@
           />
 
           @if (isValid(datosServicio,'fechaInicio')) {
-          <div class="mensaje-error">Fecha no válida, elija otro día</div>
+          <div class="mensaje-error">Fecha no válida</div>
           }
         </div>
 
@@ -360,7 +360,7 @@
           />
 
           @if (isValid(datosServicio,'fechaFinal')) {
-          <div class="mensaje-error">Fecha no válida, elija otro día</div>
+          <div class="mensaje-error">Fecha no válida</div>
           } @if (intervaloFechaError()) {
           <div class="mensaje-error">Intervalo de fecha no válido</div>
           } @if (fechaInicioPasadaFechaFinalError()) {
@@ -388,7 +388,7 @@
         </div>
       </div>
 
-      <div class="row mt-5">
+      <div class="row mt-5" *ngIf="mostrarRangoFechas">
         <div class="col-md-12">
           <div class="panel-group ficha-collapse" id="accordion">
             <div class="panel panel-default">

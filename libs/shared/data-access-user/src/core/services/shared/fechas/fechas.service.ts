@@ -37,14 +37,9 @@ export class FechasService {
    * @param {string} fechaFinal, fecha final en formato string.
    * @returns {Array<string>} Array con las fechas comprendidas entre la fecha de inicio y la fecha final
    */
-  obtenerDiasEntreFechas(fechaInicio: string, fechaFinal: string): string[] {
-    const [diaInicio, mesInicio, anioInicio] = fechaInicio
-      .split('-')
-      .map(Number);
-    const [diaFin, mesFin, anioFin] = fechaFinal.split('-').map(Number);
-
-    const fechaPrincipio = new Date(anioInicio, mesInicio - 1, diaInicio);
-    const fechaFin = new Date(anioFin, mesFin - 1, diaFin);
+  obtenerDiasEntreFechas(fechaInicio: string, fechaFinal: string): string[] {  
+    const fechaPrincipio = new Date(fechaInicio);
+    const fechaFin = new Date(fechaFinal);
     const dias = [];
 
     while (fechaPrincipio <= new Date(fechaFin)) {
