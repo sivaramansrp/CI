@@ -112,6 +112,7 @@ export interface solicitud220401State {
   oisaSalida:string;
   regimenMercancia:string;
   paisOrigen:string;
+  exentoPago:string;
 }
 
 /**
@@ -215,7 +216,8 @@ export function createInitialState(): solicitud220401State {
     aduanaSalida:'',
     oisaSalida:'',
     regimenMercancia:'',
-    paisOrigen:''
+    paisOrigen:'',
+    exentoPago:''
   };
   
 }
@@ -643,6 +645,12 @@ public setfuncionZootecnica(funcionZootecnica: string) {
     this.update((state) => ({
       ...state,
       paisOrigen,
+    }));
+  }
+  public setexentoPago(exentoPago: string) {
+    this.update((state) => ({
+      ...state,
+      exentoPago,
     }));
   }
 }

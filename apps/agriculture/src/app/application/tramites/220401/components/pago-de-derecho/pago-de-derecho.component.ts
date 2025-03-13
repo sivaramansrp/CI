@@ -69,8 +69,7 @@ this.agregarQuery.selectSolicitud$
     this.getJustificacion(); // Obtiene las opciones para justificar el pago
     this.getBanco(); // Obtiene las opciones para seleccionar el banco
     this.FormSolicitud = this.fb.group({
-     
-        exentoDePago: ['No', Validators.required],
+     exentoDePago: [this.solicitudState?.exentoDePago || 'No', Validators.required],
        Justificacion: [this.solicitudState?.Justificacion || '', [Validators.required]],
         nombreImportExport: ['', Validators.required],
         rfcImportExport: ['', Validators.required],
@@ -89,7 +88,8 @@ this.agregarQuery.selectSolicitud$
     this.FormSolicitud.get('exentoDePago')?.valueChanges.subscribe((value) => {
       this.updateFormFieldsBasedOnExentoDePago(value);
     });
-  }
+
+}
 
   /**
    * Actualiza los campos del formulario en función del valor de 'exentoDePago'.
