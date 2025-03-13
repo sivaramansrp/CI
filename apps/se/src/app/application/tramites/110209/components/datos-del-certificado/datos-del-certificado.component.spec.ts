@@ -34,8 +34,8 @@ describe('DatosDelCertificadoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [DatosDelCertificadoComponent],
-      imports: [CommonModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent],
+      declarations: [],
+      imports: [CommonModule,DatosDelCertificadoComponent, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent],
       providers: [
         { provide: MercanciasService, useValue: serviceMock },
         { provide: Tramite110209Store, useValue: storeMock },
