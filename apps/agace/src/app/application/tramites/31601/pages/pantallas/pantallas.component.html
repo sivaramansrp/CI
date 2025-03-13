@@ -8,17 +8,16 @@
   <div class="row">
     @switch (indice) { @case (1) {
     <app-datos></app-datos>
-    } @case (2) {
-    <app-requisitos></app-requisitos>
-    } @case (3) {
+    }  @case (2) {
     <app-anexar-requisitos></app-anexar-requisitos>
-    } @case (4) {
+    } @case (3) {
     <app-firmar-solicitud></app-firmar-solicitud>
-    <btn-continuar
+    
+    } }
+  </div>
+  <btn-continuar
       [datos]="datosPasos"
       (continuarEvento)="getValorIndice($event)"
     >
     </btn-continuar>
-    } }
-  </div>
 </div>
