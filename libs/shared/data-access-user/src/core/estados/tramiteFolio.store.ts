@@ -1,19 +1,19 @@
-import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
+import { Injectable } from '@angular/core';
 
 /**
  * Estado para el número de trámite
  */
-export interface TramiteState {
+export interface TramiteFolioState {
   idTramite: string | null;
   firma: string | null;
 }
 
 /**
  * Creación del estado inicial para el trámite
- * @returns TramiteState
+ * @returns TramiteFolioState
  */
-export function createInitialState(): TramiteState {
+export function createInitialState(): TramiteFolioState {
   return {
     idTramite: null,
     firma: null,
@@ -24,7 +24,7 @@ export function createInitialState(): TramiteState {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite', resettable: true })
-export class TramiteStore extends Store<TramiteState> {
+export class TramiteFolioStore extends Store<TramiteFolioState> {
   constructor() {
     super(createInitialState());
   }

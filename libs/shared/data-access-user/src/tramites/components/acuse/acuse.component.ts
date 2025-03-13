@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ACUSE_SERVICIOS_EXTRAORDINARIOS } from '../../constantes/servicios-extraordinarios.enum';
+import { ACUSE_SERVICIOS_EXTRAORDINARIOS } from '../../../../../../../apps/aga/src/app/application/core/enums/5701/servicios-extraordinarios.enum';
 import { AlertComponent } from '../alert/alert.component';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '../titulo/titulo.component';

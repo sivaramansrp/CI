@@ -2,12 +2,12 @@ import {
   ACUSE_SERVICIOS_EXTRAORDINARIOS,
   TITULO_ACUSE,
   TXT_ALERTA_ACUSE,
-} from '../../constantes/servicios-extraordinarios.enum';
+} from '../../../../../../../apps/aga/src/app/application/core/enums/5701/servicios-extraordinarios.enum';
 import { Component, OnInit } from '@angular/core';
 import { AccionesTabla } from '../../../core/models/shared/components.model';
 import { AcuseComponent } from '../../components/acuse/acuse.component';
 import { CommonModule } from '@angular/common';
-import { TramitesQueries } from '../../../core/queries/tramites.queries';
+import { TramiteFolioQueries } from '../../../core/queries/tramiteFolio.queries';
 
 @Component({
   templateUrl: './acuse-page.component.html',
@@ -25,7 +25,7 @@ export class AcusePageComponent implements OnInit {
 
   folio!: string;
 
-  constructor(private tramiteQueries: TramitesQueries) {}
+  constructor(private tramiteQueries: TramiteFolioQueries) {}
 
   /**
    * Método de ciclo de vida de Angular que se llama una vez que el componente ha sido inicializado.

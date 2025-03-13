@@ -4,7 +4,7 @@
 import {
   Aviso,
   Importante,
-} from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
+} from 'apps/aga/src/app/application/core/enums/5701/servicios-extraordinarios.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -22,7 +22,7 @@ import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 

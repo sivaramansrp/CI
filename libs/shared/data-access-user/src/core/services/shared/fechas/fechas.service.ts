@@ -1,7 +1,7 @@
 import { DatosParaValidacionFecha } from 'libs/shared/data-access-user/src/core/models/shared/fechas.model';
 import { Injectable } from '@angular/core';
 import { MILISEGUNDOS } from 'libs/shared/data-access-user/src/tramites/constantes/constantes';
-import { SEMANA_D } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
+import { SEMANA_D } from 'apps/aga/src/app/application/core/enums/5701/servicios-extraordinarios.enum';
 
 @Injectable({
   providedIn: 'root',

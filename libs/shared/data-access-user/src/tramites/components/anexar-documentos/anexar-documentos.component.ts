@@ -19,7 +19,7 @@ import { SubirDocumentoService } from '../../../core/services/shared/subir-docum
 import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { URL_PRUEBA } from '../../constantes/servicios-extraordinarios.enum';
+import { URL_PRUEBA } from '../../../../../../../apps/aga/src/app/application/core/enums/5701/servicios-extraordinarios.enum';
 
 declare const bootstrap: any; // Importación para manejar Bootstrap en TS
 

@@ -1,7 +1,7 @@
 import {
   Personas,
   ResponsablesDespacho,
-} from '@ng-mf/data-access-user';
+} from '../../models/5701/tramite5701.model';
 
 import { Store, StoreConfig } from '@datorama/akita';
 

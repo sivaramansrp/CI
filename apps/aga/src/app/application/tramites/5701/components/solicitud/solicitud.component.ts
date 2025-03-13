@@ -21,7 +21,7 @@ import {
   InputHora,
 } from '@ng-mf/data-access-user';
 
-import { DatosComponentePedimento } from '@ng-mf/data-access-user';
+import { DatosComponentePedimento } from '../../../../core/models/5701/tramite5701.model';
 
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 

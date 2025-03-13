@@ -1,4 +1,3 @@
-import { Component } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -6,9 +5,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Persona } from '@ng-mf/data-access-user';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { Persona } from '../../../../core/models/5701/tramite5701.model';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'agrega-personas',

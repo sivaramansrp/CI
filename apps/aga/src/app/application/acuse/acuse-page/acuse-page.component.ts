@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { AccionesTabla } from '@libs/shared/data-access-user/src';
 import { AcuseComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { TITULO_ACUSE_NOTIFICACION } from '../../constantes/5701/notificacion.enum';
+import { TITULO_ACUSE_NOTIFICACION } from '../../core/enums/notificacion.enum';
 
 @Component({
   templateUrl: './acuse-page.component.html',

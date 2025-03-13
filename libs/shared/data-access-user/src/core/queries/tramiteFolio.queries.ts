@@ -1,13 +1,13 @@
 import { Query } from '@datorama/akita';
-import { TramiteStore } from 'apps/aga/src/app/application/core/estados/tramite.store';
-import { TramiteState } from 'apps/aga/src/app/application/core/estados/tramite.store';
+import { TramiteFolioStore } from '../estados/tramiteFolio.store';
+import { TramiteFolioState } from '../estados/tramiteFolio.store';
 import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 
-export class TramitesQueries extends Query<TramiteState> {
+export class TramiteFolioQueries extends Query<TramiteFolioState> {
   /**
    * Selecciona el número de trámite
    */
@@ -22,7 +22,7 @@ export class TramitesQueries extends Query<TramiteState> {
     return state.firma;
   });
 
-  constructor(protected override store: TramiteStore) {
+  constructor(protected override store: TramiteFolioStore) {
     super(store);
   }
 

@@ -1,16 +1,15 @@
-import { Component, Input, output, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges, forwardRef, output } from '@angular/core';
+import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { BooleanoSiNoPipe } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '@ng-mf/data-access-user';
-import { Pedimento } from '@ng-mf/data-access-user';
-import { DatosComponentePedimento } from '@ng-mf/data-access-user';
-import { BooleanoSiNoPipe } from '@ng-mf/data-access-user';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'c-pedimento',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, SharedModule, BooleanoSiNoPipe],
+  imports: [ReactiveFormsModule, CommonModule, SharedModule, forwardRef(() => BooleanoSiNoPipe)],
   templateUrl: './pedimento.component.html',
   styleUrl: './pedimento.component.scss',
 })
@@ -35,7 +34,7 @@ export class PedimentoComponent {
 
   pedimentos: Array<Pedimento> = [];
 
-  constructor(private validacionesService: ValidacionesFormularioService) {}
+  constructor(private validacionesService: ValidacionesFormularioService) { }
 
   get isValid() {
     return this.pedimentoForm.errors && this.pedimentoForm.touched;
@@ -50,12 +49,12 @@ export class PedimentoComponent {
       this.datosNroPedimento = changes['datosNroPedimento'].currentValue;
     }
   }
-  agregaPedimento() : void {
+  agregaPedimento(): void {
     this.validaCampos.emit();
     this.acciones();
   }
 
-  acciones() : void {
+  acciones(): void {
     if (this.validacion) {
       const nroPedimento = this.pedimentoForm.value
         ? parseInt(this.pedimentoForm.value, 10)
@@ -85,7 +84,7 @@ export class PedimentoComponent {
     }
   }
 
-  eliminar(i: number) : void {
+  eliminar(i: number): void {
     this.pedimentos.splice(i, 1)
     //modal de confirmacion de elimincacion
   }
