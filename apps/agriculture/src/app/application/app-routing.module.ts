@@ -43,6 +43,13 @@ const routes: Routes = [
       import('./tramites/220502/inspeccion-fisica.module').then(
         (m) => m.InspeccionFisicaModule
       ),
+  },
+  {
+    path: 'pantallas-captura',
+    loadChildren: () =>
+      import('./tramites/220402/pantallas-captura.module').then(
+        (m) => m.PantallasCapturaModule
+      )
   }
 ];
 

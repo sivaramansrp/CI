@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /**
  * CriterioDeDictComponent es un componente que maneja la selección de solicitudes de mercancía.
  * @packageDocumentation
@@ -14,7 +15,13 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import SolicitudMercanciaValues from 'libs/shared/theme/assets/json/130102/solicitud_mercancia.json';
+
 import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+
+import { Subject, map, takeUntil } from 'rxjs';
 
 /**
  * CriterioDeDictComponent es un componente que maneja la selección de solicitudes de mercancía.
@@ -48,6 +55,10 @@ export class CriterioDeDictComponent implements OnInit {
    */
   seleccionadaSolicitudMercancia: Catalogo = { id: 0, descripcion: '' };
 
+  
+  public solicitudState!: Solicitud130102State;
+  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Inicializa el componente CriterioDeDict.
    * @constructor
@@ -55,8 +66,11 @@ export class CriterioDeDictComponent implements OnInit {
    * @returns void
    * @description Inicializa el componente CriterioDeDict.
    */
-  constructor(private fb: FormBuilder) {
-    //
+  constructor(private fb: FormBuilder,
+    private tramite130102Store: Tramite130102Store,
+    private tramite130102Query: Tramite130102Query
+  ) {
+    //constructor
   }
 
   /**
@@ -67,14 +81,37 @@ export class CriterioDeDictComponent implements OnInit {
     this.seleccionadaSolicitudMercancia = e;
   }
 
+    /**
+   * Asigna un valor del formulario al store.
+   *
+   * @param {FormGroup} form - Formulario reactivo.
+   * @param {string} campo - Campo del formulario a obtener.
+   * @param {keyof Tramite130102Store} metodoNombre - Método del store donde se guardará el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130102Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite130102Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
   /**
    * Obtiene las solicitudes de mercancía.
    * @returns void
    * @description Obtiene las solicitudes de mercancía.
    */
   ngOnInit(): void {
+
+   this.tramite130102Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {  
+          console.log('Solicitud130102State', seccionState);
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
     this.frmCriterioDictamen = this.fb.group({
-      solicitudMercancia: ['', Validators.required],
+      solicitudMercancia: [this.solicitudState?.solicitudMercancia, Validators.required],
     });
   }
 }
