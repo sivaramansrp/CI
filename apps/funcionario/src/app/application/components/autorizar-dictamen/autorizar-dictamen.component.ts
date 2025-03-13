@@ -12,7 +12,10 @@ import { EncabezadoRequerimientoComponent } from '@libs/shared/data-access-user/
   styleUrl: './autorizar-dictamen.component.css',
 })
 export class AutorizarDictamenComponent implements OnInit{   
-  dictamenForm: FormGroup;
+  /**
+   * @description Variable que almacena el formulario de dictamen
+   */
+  public dictamenForm: FormGroup; 
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.dictamenForm = this.fb.group({
@@ -27,11 +30,17 @@ export class AutorizarDictamenComponent implements OnInit{
     this.dictamenForm.get('mensajeDictamen')?.disable();
   }
 
-  BtnAutorizar() {  
-    this.router.navigate(['funcionario/firma-electronica']);
+  /**
+   * @description Metodo que redirige a la pantalla de firma electronica
+   */
+  BtnAutorizar(): void {  
+    this.router.navigate(['funcionario/firma-electronica']);    
   } 
 
-  obtenerNombreDelTítulo(valor: number) {
+  /**
+   * @description Metodo que redirige a la pantalla de rechazo de dictamen
+   */
+  obtenerNombreDelTítulo(valor: number): string {
     switch (valor) {
       case 1:
         return 'Justificacion del dictamen 1';
