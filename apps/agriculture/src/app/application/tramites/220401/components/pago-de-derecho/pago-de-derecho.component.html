@@ -6,12 +6,13 @@
             <label for="exentoDePago">Exento de pago*:</label>
             <div class="radio-container">
               <div class="radio-option">
-                <input type="radio" id="no" formControlName="exentoDePago" value="No">
+                <input type="radio" id="no" formControlName="exentoDePago" value="No"
+                (change)="setValoresStore(FormSolicitud,'exentoDePago', 'setexentoDePago')">
                 <label for="no">No</label>
               </div>
               <div class="radio-option">
                 <input type="radio" id="yes" formControlName="exentoDePago" value="Yes"
-                >
+                (change)="setValoresStore(FormSolicitud,'exentoDePago', 'setexentoDePago')" >
                 <label for="yes">Si</label>
               </div>
              
