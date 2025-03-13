@@ -45,7 +45,9 @@ export class AnexarRequisitosComponent implements OnInit {
    * Constructor para AnexarRequisitosComponent.
    * @param fb: instancia de FormBuilder utilizada para crear controles de formulario.
    */
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) {
+    //do nothing
+  }
 
   /**
    * Enlace de ciclo de vida que se llama después de que se inicializan las propiedades vinculadas a datos de una directiva.

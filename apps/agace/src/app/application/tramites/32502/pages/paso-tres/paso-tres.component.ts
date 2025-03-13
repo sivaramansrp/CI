@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { catchError, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
-import { TramiteAgaceStore } from 'apps/agace/src/app/application/estados/tramite.store';
+import { TramiteAgaceStore } from '../../../../estados/tramite.store';
 
 @Component({
   selector: 'app-paso-tres',
