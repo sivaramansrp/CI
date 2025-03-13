@@ -35,6 +35,7 @@ import { GeneraDictamenComponent } from './components/genera-dictamen/genera-dic
 import { RequerimientoInformacionComponent } from './components/requerimiento-informacion/requerimiento-informacion.component';
 import { DocumentosExistentesComponent } from './components/documentos-existentes/documentos-existentes.component';
 import { EvaluarDictamenComponent } from './pages/evaluar-dictamen/evaluar-dictamen.component';
+import { BsModalService } from 'ngx-bootstrap/modal';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { EvaluarDictamenComponent } from './pages/evaluar-dictamen/evaluar-dicta
   exports: [],
   providers: [
     ToastrService,
-    CatalogosService
+    CatalogosService,
+    BsModalService
   ]
 })
 export class ServiciosExtraordinariosModule {}
