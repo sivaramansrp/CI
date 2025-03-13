@@ -21,8 +21,6 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 
 /**
-
-/**
  * Componente `RequisitosComponent`.
  * Este componente es responsable de manejar la interfaz de requisitos en la aplicación.
  * Permite al usuario seleccionar diferentes opciones de un catálogo y mostrar tablas con los requisitos relacionados.
@@ -47,7 +45,6 @@ import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/mode
  *   CatalogoSelectComponent
  * ]
  */
-
 @Component({
   selector: 'app-requisitos', // Selector para usar este componente en plantillas HTML
   templateUrl: './requisitos.component.html', // Ruta a la plantilla HTML
@@ -64,15 +61,18 @@ import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/mode
   ],
 })
 export class RequisitosComponent implements OnInit, OnDestroy {
-  // Se declara una variable llamada 'tipos', la cual es un arreglo (array) de objetos de tipo 'tipos'.
-  // Aquí 'tipos' representa la estructura o tipo de datos que se manejarán en este componente.
-  // En este caso, 'tipos' es una lista de objetos que contiene información sobre los tipos de documentos.
+  /**
+   * Se declara una variable llamada 'tipos', la cual es un arreglo (array) de objetos de tipo 'tipos'.
+   * Aquí 'tipos' representa la estructura o tipo de datos que se manejarán en este componente.
+   * En este caso, 'tipos' es una lista de objetos que contiene información sobre los tipos de documentos.
+   */
   tipos: Tipos[] = [];
 
-  // 'configuracionTabla' es una variable que almacena un arreglo de objetos de tipo 'ConfiguracionColumna'.
-  // Cada objeto dentro de este arreglo tiene información sobre cómo debe ser configurada cada columna de la tabla.
-  // 'ConfiguracionColumna<any>' es una interfaz que define las propiedades necesarias para configurar cada columna.
-
+  /**
+   * 'configuracionTabla' es una variable que almacena un arreglo de objetos de tipo 'ConfiguracionColumna'.
+   * Cada objeto dentro de este arreglo tiene información sobre cómo debe ser configurada cada columna de la tabla.
+   * 'ConfiguracionColumna<any>' es una interfaz que define las propiedades necesarias para configurar cada columna.
+   */
   configuracionTabla: ConfiguracionColumna<any>[] = [
     {
       // 'encabezado' es el nombre de la columna que se mostrará en el encabezado de la tabla.
@@ -131,6 +131,7 @@ export class RequisitosComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * @param {HttpClient} http - Instancia del cliente HTTP para realizar peticiones.
+   * @param {ServiciosPantallaService} pantallaSvc - Servicio para obtener los datos necesarios de los requisitos.
    */
   constructor(
     public http: HttpClient,

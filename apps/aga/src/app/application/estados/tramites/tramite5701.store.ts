@@ -69,7 +69,7 @@ export interface Solicitud5701State {
 
   montoPagar: string;
   lineaCaptura: string;
-  monto: number;
+  montoModal: string;
 
   tercerosRelacionados: Personas[];
 }
@@ -125,7 +125,7 @@ export function createInitialState(): Solicitud5701State {
     transporte: [],
     montoPagar: '',
     lineaCaptura: '',
-    monto: 0,
+    montoModal: '',
     tercerosRelacionados: [],
   };
 }
@@ -482,10 +482,10 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setMonto(monto: number) {
+  public setMonto(montoModal: string) {
     this.update((state) => ({
       ...state,
-      monto,
+      montoModal,
     }));
   }
 

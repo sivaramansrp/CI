@@ -7,7 +7,7 @@
           [catalogo]="solicitudMercanciaLista"
           [label]="'Solicitud mercancia esquema regla octava clave'"
           [required]="true"
-          (selectionChange)="fetchSolicitudMercancia($event)"
+          (selectionChange)="fetchSolicitudMercancia($event);setValoresStore(frmCriterioDictamen,'solicitudMercancia', 'setsolicitudMercancia')"
           [placeholder]="'Seleccione un valor'"
           formControlName="solicitudMercancia"
         ></app-catalogo-select>

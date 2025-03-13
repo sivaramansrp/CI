@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, PASOS4, WizardComponent } from '@ng-mf/data-access-user';
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { AccionBoton } from 'libs/shared/data-access-user/src/core/models/220201/certificado-zoosanitario.model';
+import { AccionBoton } from '../../enum/pantallas-constante.enum';
 
 @Component({
   selector: 'app-paso-capturar-solicitud',
@@ -32,9 +32,8 @@ export class PasoCapturarSolicitudComponent {
 
   /**
    * Obtiene el valor del índice de la acción del botón.
-   * @param e Acción del botón.
+   * @param e - event$: Acción del botón.
    */
-
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;

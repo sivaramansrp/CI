@@ -1,27 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
+  delay,
   map,
   takeUntil,
+  tap,
 } from 'rxjs';
 import { PagoDerechosState } from '../../models/tramies230401.models';
 import { PantallasActionService } from '../../services/pantallas-action.service';
-import { REGEX_FECHA_VALIDA } from '@libs/shared/data-access-user/src';
+import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
+import { SeccionLibState } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { Solicitud230401Query } from '../../estados/queries/solicitud230401.query';
 import { Subject } from 'rxjs';
 import { Tramite230401Store } from '../../estados/tramite230401.store';
-/**
- * Validador de fecha que verifica si el valor del control sigue el formato dd/mm/yyyy.
- * 
- * @returns {ValidatorFn} Una función de validador que toma un AbstractControl y devuelve un objeto de error o null.
- */
-export function dateValidator(): ValidatorFn {
-  return (control: AbstractControl): { [key: string] : any } | null => {
-    const IS_VALID = REGEX_FECHA_VALIDA.test(control.value);
-    return IS_VALID ? null : { 'invalidDate': { value: control.value } };
-  };
-}
 
 @Component({
   selector: 'app-pago-de-derechos',
@@ -33,9 +26,11 @@ export class PagoDeDerechosComponent implements OnInit {
   public clasificacion: string = '';
   private destroyNotifier$: Subject<void> = new Subject();
   public pagoDerechosState!: PagoDerechosState;
+  private seccion!: SeccionLibState;
 
   constructor(public pantallasService: PantallasActionService, private fb: FormBuilder,
-    public tramite230401Store:Tramite230401Store, public solicitud230401Query: Solicitud230401Query
+    public tramite230401Store:Tramite230401Store, public solicitud230401Query: Solicitud230401Query,
+    private seccionQuery: SeccionLibQuery,private seccionStore: SeccionLibStore
   ) {
     this.pantallasService.inicializaPagoDerechosCatalogo();
   }
@@ -54,6 +49,34 @@ export class PagoDeDerechosComponent implements OnInit {
           })
         ).subscribe();
     this.createPagoDerechos();
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
+    this.pagoDerechos.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((_value) => {
+          const SECCION: number = 2;
+          const FORMAS_VALIDADAS = this.seccion.formaValida;
+          const ES_VALIDO_EL_BANCO = this.pagoDerechos.get('banco')?.status;
+          const ES_VALIDO_EL_FECHO = this.pagoDerechos.get('fecha')?.status;
+          if (this.pagoDerechos.valid ||
+            (ES_VALIDO_EL_BANCO === 'VALID' && ES_VALIDO_EL_FECHO === 'VALID')) {
+            FORMAS_VALIDADAS[SECCION] = true;
+            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+          } else {
+            FORMAS_VALIDADAS[SECCION] = false;
+            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+          }
+        })
+      )
+      .subscribe();
   }
   /**
    * Este método inicializa el formulario `pagoDerechos` con varios campos predefinidos
@@ -64,7 +87,6 @@ export class PagoDeDerechosComponent implements OnInit {
    * - dependencia: Dependencia correspondiente, deshabilitado y con valor predeterminado.
    * - banco: Banco donde se realizará el pago, requerido.
    * - llavePago: Llave de pago, deshabilitado y con valor predeterminado.
-   * - fecha: Fecha del pago, requerido y validado con `dateValidator`.
    * - importePago: Importe del pago, deshabilitado y con valor predeterminado.
     */
   createPagoDerechos(): void {
@@ -73,7 +95,7 @@ export class PagoDeDerechosComponent implements OnInit {
       dependencia: [{ value: this.pagoDerechosState.dependencia, disabled: true }],
       banco: [this.pagoDerechosState.banco, [Validators.required]],
       llavePago: [{ value: this.pagoDerechosState.llavePago, disabled: true }],
-      fecha: [this.pagoDerechosState.fecha, [Validators.required, dateValidator()]],
+      fecha: [this.pagoDerechosState.fecha, [Validators.required]],
       importePago: [{ value: this.pagoDerechosState.importePago, disabled: true }],
     });
     const FETCHA_CONTROL = this.pagoDerechos.get('fecha');
