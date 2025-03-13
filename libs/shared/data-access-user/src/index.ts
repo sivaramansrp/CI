@@ -97,18 +97,6 @@ export * from './tramites/constantes/120601/datos-generales-socios-tabledata.enu
 
 
 
-import datosSociosTable from '../../theme/assets/json/120601/datosSocios-table.json';
-export { datosSociosTable };
-
-import tipoDeEmpresa from '../../theme/assets/json/120601/tipoDeEmpresa.json';
-export { tipoDeEmpresa };
-
-import representacionFederalTable from '../../theme/assets/json/120601/representacionFederal-table.json';
-export { representacionFederalTable };
-
-import representacionFederal from '../../theme/assets/json/120601/representacionFederal.json';
-export { representacionFederal };
-
 export * from './tramites/pages/acuse-page/acuse-page.component';
 export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';

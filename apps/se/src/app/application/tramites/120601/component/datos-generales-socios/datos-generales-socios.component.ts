@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 
 import { TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-// eslint-disable-next-line sort-imports
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 
@@ -12,14 +12,16 @@ import { AlertComponent } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 
-import { DatosPasos, datosSociosTable } from '@ng-mf/data-access-user';
-import { Subject, takeUntil } from 'rxjs';
 import { DATOS_GENERALES_EXTRANJEROS } from '@ng-mf/data-access-user';
 import { DATOS_GENERALES_SOCIOS } from '@ng-mf/data-access-user';
+import { DatosEmpresaService } from '../../services/datos-empresa.service';
+import { DatosPasos } from '@ng-mf/data-access-user';
+import { DatosSociosTable } from '../../modelos/datos-empresa.model';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { Tramite120601Query } from '../../estados/tramite-120601.query';
 import { Tramite120601Store } from '../../estados/tramite-120601.store';
+
 
 /**
  * Componente para gestionar los datos generales de socios.
@@ -73,10 +75,10 @@ export class DatosGeneralesSociosComponent implements OnInit, OnDestroy {
   configuracionTabla_Extranjeros = DATOS_GENERALES_EXTRANJEROS;
 
   /** Array de datos para socios */
-  datosSocios = datosSociosTable;
+  datosSocios: DatosSociosTable[] = [];
 
   /** Array de datos para socios extranjeros */
-  datos_Extranjeros = [];
+  datosExtranjeros = [];
 
   private destroyed$ = new Subject<void>();
 
@@ -84,7 +86,7 @@ export class DatosGeneralesSociosComponent implements OnInit, OnDestroy {
    * Constructor - inicializa el form builder.
    * @param fb - Instancia de FormBuilder
    */
-  constructor(private fb: FormBuilder, private store: Tramite120601Store, private query: Tramite120601Query) {
+  constructor(private fb: FormBuilder, private store: Tramite120601Store, private query: Tramite120601Query, private empresaService: DatosEmpresaService) {
     // Si es necesario, se puede agregar aquí la lógica del constructor.
   }
 
@@ -92,6 +94,8 @@ export class DatosGeneralesSociosComponent implements OnInit, OnDestroy {
    * Hook del ciclo de vida - inicializa el componente y los formularios.
    */
   ngOnInit(): void {
+    this.obtenerDatosTablaDeSocios();
+
     this.FormSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
         nacionalidad: ['No', Validators.required],
@@ -137,6 +141,12 @@ export class DatosGeneralesSociosComponent implements OnInit, OnDestroy {
       })
     });
 
+  }
+
+  obtenerDatosTablaDeSocios() {
+    this.empresaService.obtenerDatosTablaDeSocios().subscribe((data)=>{
+      this.datosSocios = data;
+    })
   }
 
   enCambioNacionalidad() {

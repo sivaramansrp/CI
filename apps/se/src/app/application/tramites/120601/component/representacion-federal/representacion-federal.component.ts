@@ -8,8 +8,8 @@ import { Catalogo, CatalogoSelectComponent, DATOS_GENERALES_REPRESENTACION, Sele
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Subject, takeUntil } from 'rxjs';
-import { representacionFederal, representacionFederalTable } from '@ng-mf/data-access-user';
-import { tipoDeEmpresa } from '@ng-mf/data-access-user';
+import { DatosEmpresaService } from '../../services/datos-empresa.service';
+import { RepresentacionFederal } from '../../modelos/datos-empresa.model';
 
 
 /**
@@ -68,7 +68,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   /**
    * Arreglo de datos para los socios.
    */
-  datos_Socios = representacionFederalTable;
+  datosSocios: RepresentacionFederal[] = [];
 
   /**
    * Representa la representación seleccionada del catálogo.
@@ -94,7 +94,8 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private query: Tramite120601Query,
-    private store: Tramite120601Store
+    private store: Tramite120601Store,
+    private datosEmpresaService: DatosEmpresaService
   ) {
     //constructor
   }
@@ -103,6 +104,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     this.crearFormulario();
     this.getEntidadFederativa();
     this.getRepresentacionFederal();
+    this.getDatosSocios();
 
     this.query.selectEstado$.pipe(
       takeUntil(this.destroyed$)
@@ -138,15 +140,26 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   public getEntidadFederativa(): void {
-    this.estado = tipoDeEmpresa;
+    this.datosEmpresaService.obtenerEstado().subscribe((data)=>{
+      this.estado = data;
+    });
+  }
+
+  getRepresentacionFederal() {
+    this.datosEmpresaService.obtenerDatosDeRepresentacionFederal().subscribe((data)=>{
+      this.representacion = data;
+    });
   }
 
   /**
    * Recupera y establece la información de la representación federal.
    * @returns {void}
    */
-  public getRepresentacionFederal(): void {
-    this.representacion = representacionFederal;
+  public getDatosSocios(): void {
+    this.datosEmpresaService.ObtenerTablaDeRepresentaciónFederal().subscribe((data)=>{
+      this.datosSocios = data;
+    })
+    
   }
 
   /**

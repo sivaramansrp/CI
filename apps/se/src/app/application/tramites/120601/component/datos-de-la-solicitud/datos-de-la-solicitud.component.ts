@@ -6,7 +6,7 @@ import { Tramite120601Store } from '../../estados/tramite-120601.store';
 
 import { Catalogo, CatalogoSelectComponent, SelectCatalogosComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
-import { tipoDeEmpresa} from '@ng-mf/data-access-user';
+import { DatosEmpresaService } from '../../services/datos-empresa.service';
 
 
 
@@ -44,7 +44,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Constructor de DatosDeLaSolicitudComponent.
    * @param fb El servicio FormBuilder.
    */
-  constructor(private fb: FormBuilder, private store: Tramite120601Store, private query: Tramite120601Query) {
+  constructor(private fb: FormBuilder, private store: Tramite120601Store, private query: Tramite120601Query, private service: DatosEmpresaService) {
     // Initialization logic can be added here if needed
   }
 
@@ -80,7 +80,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene la lista de tipos de empresa.
    */
   public getTipoDeEmpresa(): void {
-    this.tipoDeEmpresa = tipoDeEmpresa;
+    this.service.obtenerEstado().subscribe((data)=>{
+      this.tipoDeEmpresa = data;
+    })
   }
 
   /**
