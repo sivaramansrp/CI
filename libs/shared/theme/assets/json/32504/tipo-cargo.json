@@ -1,0 +1,10 @@
+[
+    {
+      "label": "Manual",
+      "value": "manual"
+    },
+    {
+      "label": "Carga Masiva",
+      "value": "carga_masiva"
+    }
+]
