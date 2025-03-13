@@ -21,7 +21,8 @@ export interface FormularioDinamico {
   tipo_input: string;
   disabled: boolean;
   validators: string[];
-  tooltip?: string;
+  tooltip?: boolean;
+  tooltipTxt?: string;
   placeholder?: string;
   AvailableRadioOptions?: string[];
 }

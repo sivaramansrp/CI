@@ -41,8 +41,9 @@ import { FechasService } from '@ng-mf/data-access-user';
 import { FormulariosService } from '@ng-mf/data-access-user';
 import { datosAgregarFormulario } from '@ng-mf/data-access-user';
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Tramite5701Query } from '../../../../estados/queries/tramite5701.query';
+import { MSJ_ERROR_FECHA, TITULO_MODAL_ERROR } from '../../../../constantes/5701/tramite5701.enum';
 
 @Component({
   selector: 'app-solicitud',
@@ -83,9 +84,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   diaMinimo!: string;
 
+  modal: string = '';
+  tituloModal!: string;
+  mensajeModal!: string;
+
   private destroyNotifier$: Subject<void> = new Subject();
   private seccion!: SeccionLibState;
   public solicitudState!: Solicitud5701State;
+
 
   constructor(
     private seccionQuery: SeccionLibQuery,
@@ -96,7 +102,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private formulariosService: FormulariosService,
     private catalogosServices: CatalogosService,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private elementRef: ElementRef,
   ) { }
 
   ngOnInit(): void {
@@ -478,7 +485,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.solicitudState?.lineaCaptura,
           [Validators.required]
         ],
-        montoModal: [this.solicitudState.montoModal, [Validators.required]],
+        monto: [this.solicitudState.monto, [Validators.required]],
       })
     });
   }
@@ -606,7 +613,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     console.log('FECHA_FINAL', F_FINAL);
     console.log('HORA_INICIO', H_INICIO);
     console.log('HORA_FINAL', H_FINAL);
-    
+
     return [];
   }
   rango_fechas(): void {
@@ -702,7 +709,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {    
     const valor = form.get(campo)?.value;
     (this.tramite5701Store[metodoNombre] as (value: any) => void)(valor);
   }
@@ -730,10 +737,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
 
-    if( !this.individual()) {
-      this.obtenerRangoFechas();
-     
+    if (this.datosServicio.hasError('endDateBeforeStartDate')) {
+      this.tituloModal = TITULO_MODAL_ERROR;
+      this.mensajeModal = MSJ_ERROR_FECHA;
+
+      this.abrirModal();
+      return;
     }
+
+    if (!this.individual()) {
+      this.obtenerRangoFechas();
+
+    }
+
 
   }
 
@@ -749,4 +765,26 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+* Abre el modal para eliminar un documento.
+* @param {number} i - El índice del documento.
+*/
+  abrirModal() {
+    this.modal = 'show';
+  }
+
+  /**
+ * Cierra el modal.
+ */
+  cerrarModal(tipo: string): void {
+    this.modal = '';
+    this.tituloModal = '';
+    this.mensajeModal = '';
+
+    if (tipo === 'fecha') {
+      this.datosServicio.reset();
+    }
+  }
+
 }

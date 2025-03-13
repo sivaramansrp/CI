@@ -97,9 +97,10 @@ export class ValidacionesFormularioService {
    * @returns {ValidationErrors} | null: La función devuelve un objeto ValidationErrors si la validación falla (es decir, si la fecha es igual o anterior a hoy), o null si la validación es exitosa.
    */
   validaFechaNoHoy(control: AbstractControl): ValidationErrors | null {
+    const inputDia = control.value;
+    const diaSeleccionado = new Date(inputDia + 'T00:00:00');
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
-    const diaSeleccionado = new Date(control.value);
-    return diaSeleccionado > hoy ? null : { minDate: true };
+    return diaSeleccionado >= hoy ? null : { fechaMinima: true };
   }
 }

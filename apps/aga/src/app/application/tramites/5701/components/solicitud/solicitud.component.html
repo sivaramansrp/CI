@@ -686,3 +686,39 @@
     }
   </form>
 </div>
+
+<!-- Modal error -->
+<div
+  class="modal"
+  [ngClass]="modal"
+  id="modalError"
+  #modalError
+  tabindex="-1"
+  aria-labelledby="modalErrorLabel"
+  aria-hidden="true"
+  data-bs-backdrop="static"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{ tituloModal }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <p>{{ mensajeModal }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-default"
+          (click)="cerrarModal('fecha')"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
