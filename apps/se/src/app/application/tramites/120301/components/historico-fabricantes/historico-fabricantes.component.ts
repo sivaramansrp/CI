@@ -97,26 +97,26 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
 
   tableColumns: ConfiguracionColumna<HistoricoColumns>[] = [
     { encabezado: 'Nombre del fabricante', 
-      clave: (fila) => fila.NombreFabricante, 
+      clave: (fila) => fila.nombreFabricante, 
       orden: 1 },
     {
       encabezado: 'Número de registro fiscal',
-      clave: (fila) => fila.NumeroRegistroFiscal,
+      clave: (fila) => fila.numeroRegistroFiscal,
       orden: 2,
     },
     {
       encabezado: 'Dirección',
-      clave: (fila) => fila.Direccion,
+      clave: (fila) => fila.direccion,
       orden: 3,
     },
     {
       encabezado: 'Correo Electrónico',
-      clave: (fila) => fila.CorreoElectrónico,
+      clave: (fila) => fila.correoElectrónico,
       orden: 4,
     },
     {
       encabezado: 'Teléfono',
-      clave: (fila) => fila.Telefono,
+      clave: (fila) => fila.telefono,
       orden: 5,
     },
   ];

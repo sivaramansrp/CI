@@ -1,7 +1,7 @@
 [{
-  "NombreFabricante": "LAURA CONTRERAS",
-  "NumeroRegistroFiscal": "AEVL621207B95",
-  "Direccion": "SAN GABRIEL 144 DURANGO",
-  "CorreoElectrónico": "laura2992@hotmail.com",
-  "Telefono": "044-6182999535"
+  "nombreFabricante": "LAURA CONTRERAS",
+  "numeroRegistroFiscal": "AEVL621207B95",
+  "direccion": "SAN GABRIEL 144 DURANGO",
+  "correoElectrónico": "laura2992@hotmail.com",
+  "telefono": "044-6182999535"
 }]

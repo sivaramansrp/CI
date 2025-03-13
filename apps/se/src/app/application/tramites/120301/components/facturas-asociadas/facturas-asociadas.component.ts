@@ -78,41 +78,41 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    */
   tableColumns: ConfiguracionColumna<CapturarColumns>[] = [
         { encabezado: 'Número de la factura', 
-          clave: (fila) => fila.NumeroDeLaFactura, 
+          clave: (fila) => fila.numeroDeLaFactura, 
           orden: 1 },
         {
           encabezado: 'Razón social',
-          clave: (fila) => fila.RazonSocial,
+          clave: (fila) => fila.razonSocial,
           orden: 2,
         },
         {
           encabezado: 'Domicilio',
-          clave: (fila) => fila.Domicilio,
+          clave: (fila) => fila.domicilio,
           orden: 3,
         },
         {
           encabezado: 'Fecha de expedición de la factura',
-          clave: (fila) => fila.FechaExpedicionFactura,
+          clave: (fila) => fila.fechaExpedicionFactura,
           orden: 4,
         },
         {
           encabezado: 'Cantidad total',
-          clave: (fila) => fila.CantidadTotal,
+          clave: (fila) => fila.cantidadTotal,
           orden: 5,
         },
         {
           encabezado: 'Cantidad disponible',
-          clave: (fila) => fila.CantidadDisponible,
+          clave: (fila) => fila.cantidadDisponible,
           orden: 6,
         },
         {
           encabezado: 'Unidad de medida',
-          clave: (fila) => fila.UnidadMedida,
+          clave: (fila) => fila.unidadMedida,
           orden: 7,
         },
         {
           encabezado: 'Valor en dólares',
-          clave: (fila) => fila.ValorDolares,
+          clave: (fila) => fila.valorDolares,
           orden: 8,
         },
       ];
@@ -124,37 +124,37 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   asociadastableColumns: ConfiguracionColumna<AsociadasTableColumns>[] = [
     { 
       encabezado: 'Candidad asociada', 
-      clave: (fila) => fila.CandidadAsociada, 
+      clave: (fila) => fila.candidadAsociada, 
       orden: 1 
     },
     { 
       encabezado: 'Número de la factura', 
-      clave: (fila) => fila.NumeroDeLaFactura, 
+      clave: (fila) => fila.numeroDeLaFactura, 
       orden: 2 
     },
     {
       encabezado: 'Razón social',
-      clave: (fila) => fila.RazonSocial,
+      clave: (fila) => fila.razonSocial,
       orden: 3,
     },
     {
       encabezado: 'Domicilio',
-      clave: (fila) => fila.Domicilio,
+      clave: (fila) => fila.domicilio,
       orden: 4,
     },
     {
       encabezado: 'Fecha de expedición de la factura',
-      clave: (fila) => fila.FechaExpedicionFactura,
+      clave: (fila) => fila.fechaExpedicionFactura,
       orden: 5,
     },
     {
       encabezado: 'Cantidad total',
-      clave: (fila) => fila.CantidadTotal,
+      clave: (fila) => fila.cantidadTotal,
       orden: 6,
     },
     {
       encabezado: 'Cantidad disponible',
-      clave: (fila) => fila.CantidadDisponible,
+      clave: (fila) => fila.cantidadDisponible,
       orden: 7,
     },
   ];

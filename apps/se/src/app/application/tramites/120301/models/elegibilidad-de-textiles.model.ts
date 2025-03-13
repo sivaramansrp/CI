@@ -165,32 +165,32 @@ export interface Solicitante {
   }
 
   export interface CapturarColumns {
-      NumeroDeLaFactura: string;
-      RazonSocial: string;
-      Domicilio: string;
-      FechaExpedicionFactura: string;
-      CantidadTotal: string,
-      CantidadDisponible: string;
-      UnidadMedida: string;
-      ValorDolares: string;
+      numeroDeLaFactura: string;
+      razonSocial: string;
+      domicilio: string;
+      fechaExpedicionFactura: string;
+      cantidadTotal: string,
+      cantidadDisponible: string;
+      unidadMedida: string;
+      valorDolares: string;
   }
 
   export interface AsociadasTableColumns {
-    CandidadAsociada: string;
-    NumeroDeLaFactura: string;
-    RazonSocial: string;
-    Domicilio: string;
-    FechaExpedicionFactura: string;
-    CantidadTotal: string;
-    CantidadDisponible: string;
-    UnidadMedida: string;
-    ValorDolares: string;
+    candidadAsociada: string;
+    numeroDeLaFactura: string;
+    razonSocial: string;
+    domicilio: string;
+    fechaExpedicionFactura: string;
+    cantidadTotal: string;
+    cantidadDisponible: string;
+    unidadMedida: string;
+    valorDolares: string;
   }
 
   export interface HistoricoColumns {
-    NombreFabricante: string;
-    NumeroRegistroFiscal: string;
-    Direccion: string;
-    CorreoElectrónico: string;
-    Telefono: string;
+    nombreFabricante: string;
+    numeroRegistroFiscal: string;
+    direccion: string;
+    correoElectrónico: string;
+    telefono: string;
   }
