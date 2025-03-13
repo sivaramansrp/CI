@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
 import {
   CatalogosSelect,
@@ -18,19 +18,20 @@ import { InicioSesionService } from '../../../core/services/shared/inicio-sesion
 import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
 import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { URL_PRUEBA } from '../../constantes/servicios-extraordinarios.enum';
 import { BsModalRef, BsModalService, ModalModule, ModalOptions } from 'ngx-bootstrap/modal';
 import {
   PreviewDocumentoComponent
 } from '@libs/shared/data-access-user/src/tramites/components/preview-documento/preview-documento.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 declare const bootstrap: any; // Importación para manejar Bootstrap en TS
 
 @Component({
   selector: 'anexar-documentos',
   standalone: true,
-  imports: [CatalogoSelectComponent, CommonModule, ReactiveFormsModule, ToastrModule, ModalModule],
+  imports: [CatalogoSelectComponent, CommonModule, ReactiveFormsModule, ToastrModule, ModalModule, NgSelectModule, FormsModule],
   templateUrl: './anexar-documentos.component.html',
   styleUrl: './anexar-documentos.component.scss'
 })
@@ -62,6 +63,7 @@ export class AnexarDocumentosComponent implements OnInit {
   readonly url: string = URL_PRUEBA;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   fileNames: string = '';
+  listDocOpcionalesAgregar: any[] = [];
 
 
   @ViewChild('modalConfirmacion') modalConfirmacion!: ElementRef;
@@ -80,6 +82,7 @@ export class AnexarDocumentosComponent implements OnInit {
     { descripcion: 'Documento_opcional_09', dpi: '308', id: '29', tam: '18000' },
     { descripcion: 'Documento_opcional_10', dpi: '309', id: '30', tam: '19000' }
   ];
+  archivosOpcionalesOriginal: any[] = []
   listDocOpcionales: any[] = [];
   listDocOpcionalesDuplicado: any[] = [];
   bsModalRef?: BsModalRef;
@@ -89,11 +92,13 @@ export class AnexarDocumentosComponent implements OnInit {
     private inicioSesionService: InicioSesionService,
     private subirDocumentoService: SubirDocumentoService,
     private fb: FormBuilder,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private cdr: ChangeDetectorRef
   ) {
   }
 
   ngOnInit() {
+    this.archivosOpcionalesOriginal = [...this.archivosOpcionales];
     this.obtenerToken(this.datosLogin);
     this.crearFormaDocumento();
     console.log(this.catalogoDocumentos);
@@ -330,12 +335,22 @@ export class AnexarDocumentosComponent implements OnInit {
   }
 
   agregarOpcionales(): void {
-    const index: number = this.listDocOpcionales.findIndex(f => f.id === this.documentosOpcionales.value);
-    if (index === -1) {
-      const opcional = this.archivosOpcionales.find(f => f.id === this.documentosOpcionales.value);
-      this.listDocOpcionales.push(opcional);
-      this.listDocOpcionalesDuplicado = this.listDocOpcionales.map(op => op.id);
-    }
+    this.listDocOpcionalesAgregar.forEach((doc: any) => {
+      const index = this.listDocOpcionales.findIndex((f: any) => f.id === doc);
+      if (index === -1) {
+        const opcional = this.archivosOpcionales.find(f => f.id === doc);
+        this.listDocOpcionales.push(opcional);
+        const indexOpcional = this.archivosOpcionales.findIndex(f => f.id === doc);
+        if (indexOpcional !== -1) {
+          // Se asigna una nueva propiedad que luego usaremos en el template
+          this.archivosOpcionales[indexOpcional] = {
+            ...this.archivosOpcionales[indexOpcional],
+            // disabled: true 
+          };
+        }
+        this.listDocOpcionalesDuplicado = this.listDocOpcionales.map(op => op.id);
+      }
+    })
   }
 
   cargarArchivos(): void {
@@ -348,5 +363,11 @@ export class AnexarDocumentosComponent implements OnInit {
       this.listDocOpcionales.splice(index, 1);
       this.listDocOpcionalesDuplicado = this.listDocOpcionales.map(op => op.id);
     }
+    const indexAgregar: number = this.listDocOpcionalesAgregar.findIndex(id => id === item.id);
+    if (indexAgregar !== -1) {
+      this.listDocOpcionalesAgregar.splice(indexAgregar, 1);
+      this.listDocOpcionalesAgregar = [...this.listDocOpcionalesAgregar];
+    }
+    this.cdr.detectChanges();
   }
 }

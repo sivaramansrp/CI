@@ -37,75 +37,75 @@
     <span class="h3">Documentos obligatorios</span>
     <div class="col-md-12 border rounded bg-file-container px-4">
       @for (item of catalogoDocumentos; track item.id; let i = $index) {
-        <div class="row py-3">
-          <div class="col-md-5 d-flex flex-column">
-            <span>Documento {{ item.descripcion }}</span>
-            <small>Tamaño(MB): {{ convertKbToMb(item.tam) }} {{ MB }}, Resolución(dpi) minima para
-              imagenes: {{ item.dpi }} {{ DPI }}</small>
-          </div>
-          <div class="col-md-5">
-            <div class="d-flex">
-              <label for="formFile" class="form-label"></label>
-              <input class="form-control custom-file-label" type="file" id="formFile" #fileInput
-                     (change)="cargarDoc($event, fileInput,item.id)">
-            </div>
-          </div>
-          <div class="col-md-2 d-flex justify-content-end">
-
-            <button type="button" class="btn file-btn-add" (click)="agregarParte(fileInput, item)">
-              <i class="bi bi-plus-circle-fill"></i>
-            </button>
-            @if (existePreview(item.id)) {
-              <button type="button" class="btn btn-link" (click)="verPdf(item.id)">
-                <i class="bi bi-eye bi-c"></i>
-              </button>
-            }
-            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
-                    (click)="limpiarFile(fileInput,item)">
-              <i class="bi bi-trash3 bi-c"></i>
-            </button>
+      <div class="row py-3">
+        <div class="col-md-5 d-flex flex-column">
+          <span>Documento {{ item.descripcion }}</span>
+          <small>Tamaño(MB): {{ convertKbToMb(item.tam) }} {{ MB }}, Resolución(dpi) minima para
+            imagenes: {{ item.dpi }} {{ DPI }}</small>
+        </div>
+        <div class="col-md-5">
+          <div class="d-flex">
+            <label for="formFile" class="form-label"></label>
+            <input class="form-control custom-file-label" type="file" id="formFile" #fileInput
+              (change)="cargarDoc($event, fileInput,item.id)">
           </div>
         </div>
+        <div class="col-md-2 d-flex justify-content-end">
+
+          <button type="button" class="btn file-btn-add" (click)="agregarParte(fileInput, item)">
+            <i class="bi bi-plus-circle-fill"></i>
+          </button>
+          @if (existePreview(item.id)) {
+          <button type="button" class="btn btn-link" (click)="verPdf(item.id)">
+            <i class="bi bi-eye bi-c"></i>
+          </button>
+          }
+          <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
+            (click)="limpiarFile(fileInput,item)">
+            <i class="bi bi-trash3 bi-c"></i>
+          </button>
+        </div>
+      </div>
       }
 
       @if (listDocOpcionales.length > 0) {
-        <span class="h3">Documentos opcionales</span>
+      <span class="h3">Documentos opcionales</span>
 
-        @for (item of listDocOpcionales; track item.id; let i = $index) {
-          <div class="row py-3">
-            <div class="col-md-5 d-flex flex-column">
-              <span>Documento {{ item.descripcion }}</span>
-              <small>Tamaño(MB): {{ convertKbToMb(item.tam) }} {{ MB }}, Resolución(dpi) minima para
-                imagenes: {{ item.dpi }} {{ DPI }}</small>
-            </div>
-            <div class="col-md-5">
-              <div class="d-flex">
-                <label for="formFileOpcionales" class="form-label"></label>
-                <input class="form-control custom-file-label" type="file" id="formFileOpcionales" #fileInput
-                       (change)="cargarDoc($event, fileInput,item.id)">
-              </div>
-            </div>
-            <div class="col-md-2 d-flex justify-content-end">
-
-              <button type="button" class="btn file-btn-add" (click)="agregarParte(fileInput, item)">
-                <i class="bi bi-plus-circle-fill"></i>
-              </button>
-              @if (existePreview(item.id)) {
-                <button type="button" class="btn btn-link" (click)="verPdf(item.id)">
-                  <i class="bi bi-eye bi-c"></i>
-                </button>
-              }
-              <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
-                      (click)="limpiarFile(fileInput,item)">
-                <i class="bi bi-trash3 bi-c"></i>
-              </button>
-              <button type="button" class="btn file-btn-add" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
-                      (click)="eliminarOpcionar(item)">
-                <i class="bi bi-x-circle-fill"></i>
-              </button>
-            </div>
+      @for (item of listDocOpcionales; track item.id; let i = $index) {
+      <div class="row py-3">
+        <div class="col-md-5 d-flex flex-column">
+          <span>Documento {{ item.descripcion }}</span>
+          <small>Tamaño(MB): {{ convertKbToMb(item.tam) }} {{ MB }}, Resolución(dpi) minima para
+            imagenes: {{ item.dpi }} {{ DPI }}</small>
+        </div>
+        <div class="col-md-5">
+          <div class="d-flex">
+            <label for="formFileOpcionales" class="form-label"></label>
+            <input class="form-control custom-file-label" type="file" id="formFileOpcionales" #fileInput
+              (change)="cargarDoc($event, fileInput,item.id)">
           </div>
-        }
+        </div>
+        <div class="col-md-2 d-flex justify-content-end">
+
+          <button type="button" class="btn file-btn-add" (click)="agregarParte(fileInput, item)">
+            <i class="bi bi-plus-circle-fill"></i>
+          </button>
+          @if (existePreview(item.id)) {
+          <button type="button" class="btn btn-link" (click)="verPdf(item.id)">
+            <i class="bi bi-eye bi-c"></i>
+          </button>
+          }
+          <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
+            (click)="limpiarFile(fileInput,item)">
+            <i class="bi bi-trash3 bi-c"></i>
+          </button>
+          <button type="button" class="btn file-btn-add" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
+            (click)="eliminarOpcionar(item)">
+            <i class="bi bi-x-circle-fill"></i>
+          </button>
+        </div>
+      </div>
+      }
       }
 
       <div class="d-flex justify-content-end w-100 mb-4">
@@ -118,13 +118,22 @@
     <span class="h3 mt-3">Documentos opcionales</span>
     <div class="col-md-12 border rounded bg-file-container px-4" style="min-height: 15rem">
       <div class="form-group py-3">
-        <select class="form-control" [formControl]="documentosOpcionales">
-          @for (option of archivosOpcionales; track option.id) {
-            @if (!listDocOpcionalesDuplicado.includes(option.id)) {
-              <option [value]="option.id">{{ option.descripcion }}</option>
-            }
-          }
-        </select>
+        
+
+        <ng-select [items]="archivosOpcionales" [multiple]="true" bindLabel="descripcion"
+          [closeOnSelect]="false" bindValue="id" [(ngModel)]="listDocOpcionalesAgregar">
+          <!-- <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected" /> {{ item.descripcion }}
+          </ng-template> -->
+
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <div [class.disabled-option]="item.disabled">
+              <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected" [disabled]="item.disabled" /> {{ item.descripcion }}
+            </div>
+          </ng-template>
+        </ng-select>
+
+
       </div>
 
       <div class="d-flex justify-content-end w-100 mb-4 my-3">
@@ -136,7 +145,7 @@
 
 <!-- Modal -->
 <div class="modal" [ngClass]="modal" id="modalConfirmacion" #modalConfirmacion tabindex="-1"
-     aria-labelledby="modalConfirmacionLabel" aria-hidden="true" data-bs-backdrop="static">
+  aria-labelledby="modalConfirmacionLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -152,3 +161,13 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+
+
+<!-- <select class="form-control" [formControl]="documentosOpcionales">
+          @for (option of archivosOpcionales; track option.id) {
+            @if (!listDocOpcionalesDuplicado.includes(option.id)) {
+              <option [value]="option.id">{{ option.descripcion }}</option>
+            }
+          }
+        </select> -->
