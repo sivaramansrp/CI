@@ -19,6 +19,10 @@ import { DatosDeLosResiduosComponent } from './components/datos-de-los-residuos/
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitanteDatosTabsComponent } from './pages/solicitante-datos-tabs/solicitante-datos-tabs.component';
+import { ToastrService } from 'ngx-toastr';
+
+import { PasoDosComponent } from './components/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +43,9 @@ import { SolicitanteDatosTabsComponent } from './pages/solicitante-datos-tabs/so
     BtnContinuarComponent,
     AlertComponent,
     SolicitanteComponent,
+    PasoDosComponent,
+    PasoTresComponent
   ],
+  providers : [ToastrService]
 })
 export class AvisodematerialesModule {}
