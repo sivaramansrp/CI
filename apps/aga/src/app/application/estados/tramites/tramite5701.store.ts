@@ -35,6 +35,9 @@ export interface Solicitud5701State {
   fechasSeleccionadas: string[];
 
   despacho: string;
+  lda: boolean;
+  dd: boolean;
+
   rfcAutorizacion: string;
   ddexAutorizacion: string;
   idAduana: string;
@@ -97,6 +100,8 @@ export function createInitialState(): Solicitud5701State {
     horaFinal: '',
     fechasSeleccionadas: [],
     despacho: '',
+    lda: false,
+    dd: false,
     rfcAutorizacion: '',
     ddexAutorizacion: '',
     idAduana: '',
@@ -276,6 +281,20 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     this.update((state) => ({
       ...state,
       despacho,
+    }));
+  }
+
+  public setLDA(lda: boolean): void {
+    this.update((state) => ({
+      ...state,
+      lda,
+    }));
+  }
+
+  public setDD(dd: boolean): void {
+    this.update((state) => ({
+      ...state,
+      dd,
     }));
   }
 

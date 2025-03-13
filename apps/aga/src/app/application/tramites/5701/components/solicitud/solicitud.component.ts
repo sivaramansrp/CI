@@ -88,6 +88,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   modal: string = '';
   tituloModal!: string;
   mensajeModal!: string;
+  tipoDespacho: boolean = false;
 
   private destroyNotifier$: Subject<void> = new Subject();
   private seccion!: SeccionLibState;
@@ -429,6 +430,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
       despacho: this.fb.group({
         despacho: [this.solicitudState?.despacho],
+        lda: [this.solicitudState?.lda],
+        dd: [this.solicitudState?.dd],
         autorizacion: [this.solicitudState?.rfcAutorizacion],
         idAduana: [this.solicitudState?.idAduana, [Validators.required]],
         descripcionAduana: [
@@ -695,6 +698,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
     const valor = form.get(campo)?.value;
+    console.log(valor);
+    
     (this.tramite5701Store[metodoNombre] as (value: any) => void)(valor);
   }
 
@@ -769,6 +774,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     if (tipo === 'fecha') {
       this.datosServicio.reset();
     }
+  }
+
+  changeDespachoLDA(): void {
+    this.tipoDespacho = true;
+    console.log('despacho lda');
+    
+
   }
 
 }
