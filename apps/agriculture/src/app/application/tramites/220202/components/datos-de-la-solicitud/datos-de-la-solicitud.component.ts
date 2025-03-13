@@ -114,7 +114,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @description Formulario principal. 
    * Este `FormGroup` contiene todos los controles del formulario.
    */
-  forma?: FormGroup;
+  forma!: FormGroup;
 
   /** 
    * @description Formulario para las mercancías. 
