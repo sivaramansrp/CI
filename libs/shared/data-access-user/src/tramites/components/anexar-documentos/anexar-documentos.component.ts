@@ -20,13 +20,17 @@ import { CatalogosService } from '../../../core/services/shared/catalogos/catalo
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { URL_PRUEBA } from '../../constantes/servicios-extraordinarios.enum';
+import { BsModalRef, BsModalService, ModalModule, ModalOptions } from 'ngx-bootstrap/modal';
+import {
+  PreviewDocumentoComponent
+} from '@libs/shared/data-access-user/src/tramites/components/preview-documento/preview-documento.component';
 
 declare const bootstrap: any; // Importación para manejar Bootstrap en TS
 
 @Component({
   selector: 'anexar-documentos',
   standalone: true,
-  imports: [CatalogoSelectComponent, CommonModule, ReactiveFormsModule, ToastrModule],
+  imports: [CatalogoSelectComponent, CommonModule, ReactiveFormsModule, ToastrModule, ModalModule],
   templateUrl: './anexar-documentos.component.html',
   styleUrl: './anexar-documentos.component.scss'
 })
@@ -78,12 +82,14 @@ export class AnexarDocumentosComponent implements OnInit {
   ];
   listDocOpcionales: any[] = [];
   listDocOpcionalesDuplicado: any[] = [];
+  bsModalRef?: BsModalRef;
 
   constructor(
     private toastr: ToastrService,
     private inicioSesionService: InicioSesionService,
     private subirDocumentoService: SubirDocumentoService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private modalService: BsModalService
   ) {
   }
 
@@ -242,14 +248,18 @@ export class AnexarDocumentosComponent implements OnInit {
   /**
    * Abre un archivo PDF en una nueva pestaña del navegador.
    *
-   * @param {string} url - La URL del archivo PDF que se va a abrir.
    * @returns {void}
+   * @param id
    */
   verPdf(id: any): void {
-
-    console.log(this.rutaArchivoPreview);
     const ruta = this.listadoArchivos.find(f => f.id === id)?.ruta;
-    window.open(ruta, '_blank');
+    const initialState: ModalOptions = {
+      initialState: {
+        ruta: ruta.toString(),
+        title: 'Vista previa documento'
+      }
+    };
+    this.bsModalRef = this.modalService.show(PreviewDocumentoComponent, initialState);
   }
 
   /**
