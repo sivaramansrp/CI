@@ -1,8 +1,8 @@
+import { CATALOGOS_ID, Catalogo, FECHA_SALIDA, InputFecha, PeximService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, merge } from 'rxjs';
 
-import { Catalogo, CATALOGOS_ID, FECHA_SALIDA, InputFecha, PeximService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Solicitud110204State, Tramite110204Store, } from '../../estados/tramite110204.store';
 
 
@@ -10,7 +10,7 @@ import { Solicitud110204State, Tramite110204Store, } from '../../estados/tramite
  * Componente para la vista de la solicitud de la sección de "130118".
  */
 @Component({
-  selector: 'solicitud',
+  selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
 })
@@ -102,7 +102,7 @@ export class SolicitudComponent implements OnInit {
     private peximService: PeximService,
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-    private tramite110204Store: Tramite110204Store
+    public tramite110204Store: Tramite110204Store
   ) {
     // Inicializar el formulario principal
     this.crearFormSolicitud();
@@ -324,23 +324,23 @@ export class SolicitudComponent implements OnInit {
    * Inicializa los catálogos necesarios para el formulario.
    */
   private inicializaCatalogos(): void {
-    const regimenMercancia$ = this.peximService
+    const REGIMEN_MERCANCIA$ = this.peximService
       .getRegimenMercancia(CATALOGOS_ID.CAT_REGIMEN_MERCANCIA)
       .pipe(
-        map((resp) => {
-          this.regimenMercancia = resp.data;
-        })
+      map((resp) => {
+        this.regimenMercancia = resp.data;
+      })
       );
 
-    const clasifiRegimen$ = this.peximService
+    const CLASIFI_REGIMEN$ = this.peximService
       .getClasifiRegimen(CATALOGOS_ID.CAT_CLASIFI_REGIMEN)
       .pipe(
-        map((resp) => {
-          this.clasifiRegimen = resp.data;
-        })
+      map((resp) => {
+        this.clasifiRegimen = resp.data;
+      })
       );
 
-    const fraccionArancelaria$ = this.peximService
+    const FRACCION_ARANCELARIA$ = this.peximService
       .getFraccionArancelariaCatalogo(CATALOGOS_ID.CAT_FRACCION_ARANCELARIA)
       .pipe(
         map((resp) => {
@@ -348,73 +348,73 @@ export class SolicitudComponent implements OnInit {
         })
       );
 
-    const nico$ = this.peximService
+    const NICO$ = this.peximService
       .getNicoCatalogo(CATALOGOS_ID.CAT_NICO)
       .pipe(
-        map((resp) => {
-          this.nico = resp.data;
-        })
+      map((resp) => {
+        this.nico = resp.data;
+      })
       );
 
-    const unidadMedidaTarifaria$ = this.peximService
+    const UNIDAD_MEDIDA_TARIFARIA$ = this.peximService
       .getUnidadMedidaTarifariaCatalogo(CATALOGOS_ID.CAT_UNIDAD_MEDIDA_TARIFARIA)
       .pipe(
-        map((resp) => {
-          this.unidadMedidaTarifaria = resp.data;
-        })
+      map((resp) => {
+        this.unidadMedidaTarifaria = resp.data;
+      })
       );
 
-    const paisOrigen$ = this.peximService
+    const PAIS_ORIGEN$ = this.peximService
       .getPaisOrigenCatalogo(CATALOGOS_ID.CAT_PAIS_ORIGEN)
       .pipe(
-        map((resp) => {
-          this.paisOrigen = resp.data;
-        })
+      map((resp) => {
+        this.paisOrigen = resp.data;
+      })
       );
 
-    const paisDestino$ = this.peximService
+    const PAIS_DESTINO$ = this.peximService
       .getPaisDestinoCatalogo(CATALOGOS_ID.CAT_PAIS_DESTINO)
       .pipe(
-        map((resp) => {
-          this.paisDestino = resp.data;
-        })
+      map((resp) => {
+        this.paisDestino = resp.data;
+      })
       );
 
-    const molino$ = this.peximService
+    const MOLINO$ = this.peximService
       .getMolinoCatalogo(CATALOGOS_ID.CAT_MOLINO)
       .pipe(
-        map((resp) => {
-          this.molino = resp.data;
-        })
+      map((resp) => {
+        this.molino = resp.data;
+      })
       );
 
-    const estado$ = this.peximService
+    const ESTADO$ = this.peximService
       .getEstadoCatalogo(CATALOGOS_ID.CAT_ESTADO)
       .pipe(
-        map((resp) => {
-          this.estado = resp.data;
-        })
+      map((resp) => {
+        this.estado = resp.data;
+      })
       );
 
-    const representacionFederal$ = this.peximService
+    const REPRESENTACION_FEDERAL$ = this.peximService
       .getRepresentacionFederal(CATALOGOS_ID.CAT_REPRESENTACION_FEDERAL)
       .pipe(
-        map((resp) => {
-          this.representacionFederal = resp.data;
-        })
+      map((resp) => {
+        this.representacionFederal = resp.data;
+      })
       );
 
     merge(
-      regimenMercancia$,
-      clasifiRegimen$,
-      fraccionArancelaria$,
-      nico$,
-      unidadMedidaTarifaria$,
-      paisOrigen$,
-      paisDestino$,
-      molino$,
-      estado$,
-      representacionFederal$
+      REGIMEN_MERCANCIA$,
+      CLASIFI_REGIMEN$,
+      FRACCION_ARANCELARIA$,
+      NICO$,
+      UNIDAD_MEDIDA_TARIFARIA$,
+      PAIS_ORIGEN$,
+      PAIS_DESTINO$,
+      MOLINO$,
+      ESTADO$,
+      REPRESENTACION_FEDERAL$
     ).subscribe();
   }
 
@@ -422,80 +422,80 @@ export class SolicitudComponent implements OnInit {
    * Selecciona el régimen de mercancía.
    */
   regimenMercanciaSeleccion(): void {
-    const regimenMercancia = this.FormSolicitud.get('regimenMercancia')?.value;
-    this.tramite110204Store.setRegimenMercancia(regimenMercancia);
+    const REGIMEN_MERCANCIA = this.FormSolicitud.get('regimenMercancia')?.value;
+    this.tramite110204Store.setRegimenMercancia(REGIMEN_MERCANCIA);
   }
 
   /**
    * Selecciona la clasificación de régimen.
    */
   clasifiRegimenSeleccion(): void {
-    const clasifiRegimen = this.FormSolicitud.get('clasifiRegimen')?.value;
-    this.tramite110204Store.setClasifiRegimen(clasifiRegimen);
+    const CLASIFI_REGIMEN = this.FormSolicitud.get('clasifiRegimen')?.value;
+    this.tramite110204Store.setClasifiRegimen(CLASIFI_REGIMEN);
   }
 
   /**
    * Selecciona la fracción arancelaria.
    */
   fraccionArancelariaSeleccion(): void {
-    const fraccionArancelaria = this.FormSolicitud.get('fraccionArancelaria')?.value;
-    this.tramite110204Store.setFraccionArancelaria(fraccionArancelaria);
+    const FRACCION_ARANCELARIA = this.FormSolicitud.get('fraccionArancelaria')?.value;
+    this.tramite110204Store.setFraccionArancelaria(FRACCION_ARANCELARIA);
   }
 
   /**
    * Selecciona el NICO.
    */
   nicoSeleccion(): void {
-    const nico = this.FormSolicitud.get('nico')?.value;
-    this.tramite110204Store.setNico(nico);
+    const NICO = this.FormSolicitud.get('nico')?.value;
+    this.tramite110204Store.setNico(NICO);
   }
 
   /**
    * Selecciona la unidad de medida tarifaria.
    */
   unidadMedidaTarifariaSeleccion(): void {
-    const unidadMedidaTarifaria = this.FormSolicitud.get('unidadMedidaTarifaria')?.value;
-    this.tramite110204Store.setUnidadMedidaTarifaria(unidadMedidaTarifaria);
+    const UNIDAD_MEDIDA_TARIFARIA$ = this.FormSolicitud.get('unidadMedidaTarifaria')?.value;
+    this.tramite110204Store.setUnidadMedidaTarifaria(UNIDAD_MEDIDA_TARIFARIA$);
   }
 
   /**
    * Selecciona el país de origen.
    */
   paisOrigenSeleccion(): void {
-    const paisOrigen = this.FormSolicitud.get('paisOrigen')?.value;
-    this.tramite110204Store.setPaisOrigen(paisOrigen);
+    const PAIS_ORIGEN = this.FormSolicitud.get('paisOrigen')?.value;
+    this.tramite110204Store.setPaisOrigen(PAIS_ORIGEN);
   }
 
   /**
    * Selecciona el país de destino.
    */
   paisDestinoSeleccion(): void {
-    const paisDestino = this.FormSolicitud.get('paisDestino')?.value;
-    this.tramite110204Store.setPaisDestino(paisDestino);
+    const PAIS_DESTINO = this.FormSolicitud.get('paisDestino')?.value;
+    this.tramite110204Store.setPaisDestino(PAIS_DESTINO);
   }
 
   /**
    * Selecciona el molino.
    */
   molinoSeleccion(): void {
-    const molino = this.FormSolicitud.get('molino')?.value;
-    this.tramite110204Store.setMolino(molino);
+    const MOLINO = this.FormSolicitud.get('molino')?.value;
+    this.tramite110204Store.setMolino(MOLINO);
   }
 
   /**
    * Selecciona el estado.
    */
   estadoSeleccion(): void {
-    const estado = this.FormSolicitud.get('estado')?.value;
-    this.tramite110204Store.setEstado(estado);
+    const ESTADO = this.FormSolicitud.get('estado')?.value;
+    this.tramite110204Store.setEstado(ESTADO);
   }
 
   /**
    * Selecciona la representación federal.
    */
   representacionFederalSeleccion(): void {
-    const representacionFederal = this.FormSolicitud.get('representacionFederal')?.value;
-    this.tramite110204Store.setRepresentacionFederal(representacionFederal);
+    const REPRESENTACION_FEDERAL = this.FormSolicitud.get('representacionFederal')?.value;
+    this.tramite110204Store.setRepresentacionFederal(REPRESENTACION_FEDERAL);
   }
 
   /**
@@ -513,7 +513,8 @@ export class SolicitudComponent implements OnInit {
    * @param value Cadena a escapar.
    * @returns {string} Cadena con comillas escapadas.
    */
-  escapeHtmlQuotes(value: string): string {
+ // eslint-disable-next-line class-methods-use-this
+ escapeHtmlQuotes(value: string): string {
     return value ? value.replace(/"/g, '&#34;') : '';
   }
 
@@ -522,13 +523,13 @@ export class SolicitudComponent implements OnInit {
    * @returns void
    */
   muestraCamposPersona(): void {
-    const razonSocial = this.FormSolicitud.get('datosProducto.razonSocial')?.value;
-    const nombre = this.FormSolicitud.get('datosProducto.nombre')?.value;
+    const RAZON_SOCIAL = this.FormSolicitud.get('datosProducto.razonSocial')?.value;
+    const NOMBRE = this.FormSolicitud.get('datosProducto.nombre')?.value;
 
-    if (razonSocial !== '' || razonSocial != null) {
+    if (RAZON_SOCIAL !== '' || RAZON_SOCIAL !== null) {
       this.personaMoral();
       this.FormSolicitud.get('datosProducto.tipoPersona')?.setValue('pmoral');
-    } else if (nombre !== '' || razonSocial != null) {
+    } else if (NOMBRE !== '' || RAZON_SOCIAL !== null) {
       this.personaFisica();
       this.FormSolicitud.get('datosProducto.tipoPersona')?.setValue('pfisica');
     }
@@ -582,25 +583,25 @@ export class SolicitudComponent implements OnInit {
    * Función para calcular el precio unitario en USD.
    */
   calcularPrecioUnitarioUSD(): void {
-    const cantidadUmt = this.FormSolicitud.get('datosMercancia.cantidadTarifaria')?.value;
-    const mercanciaAviso = this.FormSolicitud.get('datosMercancia.valorFacturaUSD')?.value;
+    const CANTIDAD_UMT = this.FormSolicitud.get('datosMercancia.cantidadTarifaria')?.value;
+    const MERCANCIA_AVISO = this.FormSolicitud.get('datosMercancia.valorFacturaUSD')?.value;
 
-    if (cantidadUmt != null && cantidadUmt.toString().length >= 1 &&
-      mercanciaAviso != null && mercanciaAviso.toString().length >= 1) {
+    if (CANTIDAD_UMT !== null && CANTIDAD_UMT.toString().length >= 1 &&
+    MERCANCIA_AVISO !== null && MERCANCIA_AVISO.toString().length >= 1) {
 
-      if (cantidadUmt === 0 || cantidadUmt.toString().length === 0) {
+      if (CANTIDAD_UMT === 0 || CANTIDAD_UMT.toString().length === 0) {
         this.FormSolicitud.get('precioUnitarioAcero')?.setValue('0');
       } else {
-        const factor = 10000000;
+        const FACTOR = 10000000;
         let resultPrecioUni: number;
 
-        if ((mercanciaAviso * 1000) < cantidadUmt) {
+        if ((MERCANCIA_AVISO * 1000) < CANTIDAD_UMT) {
           resultPrecioUni = 0;
         } else {
-          const resultPrecioUniAux = this.truncar(
-            (mercanciaAviso * factor) / cantidadUmt / factor
-          );
-          resultPrecioUni = resultPrecioUniAux;
+            const RESULT_PRECIO_UNI_AUX = this.trunCar(
+            (MERCANCIA_AVISO * FACTOR) / CANTIDAD_UMT / FACTOR
+            );
+          resultPrecioUni = RESULT_PRECIO_UNI_AUX;
         }
         this.FormSolicitud.get('datosMercancia.precioUnitarioUSD')?.setValue(resultPrecioUni);
       }
@@ -612,18 +613,19 @@ export class SolicitudComponent implements OnInit {
    * @param num Número a truncar.
    * @returns {number} Número truncado.
    */
-  truncar(num: number): number {
-    const numStr = num.toString();
-    if (numStr.indexOf('.') !== -1) {
-      const numArr = numStr.split('.');
-      if (numArr.length === 1) {
+ // eslint-disable-next-line class-methods-use-this
+ trunCar(num: number): number {
+    const NUM_STR = num.toString();
+    if (NUM_STR.indexOf('.') !== -1) {
+      const NUM_ARR = NUM_STR.split('.');
+      if (NUM_ARR.length === 1) {
         return Number(num);
-      } else {
-        return parseFloat(numArr[0] + '.' + numArr[1].slice(0, 3));
-      }
-    } else {
+      } 
+        return parseFloat(NUM_ARR[0] + '.' + NUM_ARR[1].slice(0, 3));
+      
+    } 
       return Number(num);
-    }
+    
   }
 
   /**

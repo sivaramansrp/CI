@@ -1,6 +1,6 @@
 
 <div>   
-    <form [formGroup]="form">
+    <form [formGroup]="formCertificado">
         <div>
             <ng-titulo titulo="Validación inicial del certificado de circulación de mercancías"/>
 
@@ -32,16 +32,16 @@
         <div class="row mb-3">
             <div class="col-md-4">
                 <label for="fracciónArancelaria" class="form-label">Fracción arancelaria:</label>
-                <input type="text" class="form-control"  id="fracciónArancelaria">
+                <input type="text" class="form-control" formControlName="fracciónArancelariaForm"  id="fracciónArancelaria">
             </div>
 
             <div class="col-md-4">
                 <label for="registroProducto" class="form-label"># Registro producto:</label>
-                <input type="text" class="form-control"  id="registroProducto">
+                <input type="text" class="form-control"  formControlName="registroProductoForm" id="registroProducto">
             </div>
             <div class="col-md-4">
                 <label for="nombreComercial" class="form-label">Nombre comercial:</label>
-                <input type="text" class="form-control"  id="nombreComercial">
+                <input type="text" class="form-control" formControlName="nombreComercialForm"  id="nombreComercial">
             </div>
         </div>
 
@@ -55,13 +55,13 @@
             <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
         </div>
         <div class="col-md-4 form-field">
-            <input-fecha [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+            <input-fecha [datos]="fechaFinalInput"   (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
         </div>
 
         
         <div class="row w-100">
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-              <button class="btn btn-primary"  [disabled]="formularioControl.value <= 0"  (click)="buscarrMercancia()">Mercancia Disponibles</button>
+              <button class="btn btn-primary"  [disabled]="formCertificado.status === 'INVALID' "  (click)="buscarrMercancia()">Mercancia Disponibles</button>
             </div>
           </div>
 

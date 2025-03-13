@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/adjacent-overload-signatures */
-import {Mercancia } from '../models/plantas-consulta.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
-
+import {Mercancia } from '../models/plantas-consulta.model';
 export interface TramiteState {
   idiomaDatos: Catalogo[];
   entidadFederativaDatos: Catalogo[];
@@ -12,8 +10,10 @@ export interface TramiteState {
   estado: Catalogo;
   paisBloques: Catalogo[];
   paisBloque: Catalogo;
-  formaValida: { [key: string]: boolean };
+  formCertificado: { [key: string]: undefined | boolean | string | number | object };
+  formDatesCerticado: { [key: string]: undefined | boolean | string | number | object };
   buscarMercancia: Mercancia[];
+  formaValida: { [key: string]: boolean };
   
 }
 export interface Solicitud110204State{
@@ -50,8 +50,20 @@ export const INITIAL_STATE: TramiteState = {
     id: -1,
     descripcion: '',
   },
-  formaValida: {
-    entidadFederativa: false
+  formaValida:{},
+  formCertificado: {
+    entidadFederativa:'',
+    tercerOperador:false ,
+    bloque:'',
+    nombreComercialForm: '',
+    registroProductoForm: '',
+    fracciónArancelariaForm: '',
+  },
+  formDatesCerticado: {
+    observacionesDates:'',
+    idiomaDates:'',
+    EntidadFederativaDates:'',
+    representacionFederalDates:'',
   },
   buscarMercancia: [],
   paisBloque: {
@@ -137,6 +149,23 @@ export class Tramite110204Store extends Store<TramiteState> {
       }
     })
   }
+  setFormDatesCerticado(values: { [key: string]: undefined | boolean | string | number | object }): void {
+    this.update(state => ({
+      formDatesCerticado: {
+        ...state.formDatesCerticado,
+        ...values
+      }
+    }));
+  }
+  
+  setFormCertificado(values: {[key: string]: undefined | boolean | string | number | object}): void {
+    this.update(state => ({
+      formCertificado: {
+        ...state.formCertificado,
+        ...values
+      }
+    }));
+  }
 
   setbuscarMercancia(buscarMercancia: Mercancia[]): void {
     this.update((state) => ({
@@ -144,62 +173,62 @@ export class Tramite110204Store extends Store<TramiteState> {
       buscarMercancia,
     }));
   }
-  public setRegimenMercancia(regimenMercancia: string) {
+  public setRegimenMercancia(regimenMercancia: string):void {
     this.update((state) => ({
       ...state,
       regimenMercancia,
     }));
   }
 
-  public setClasifiRegimen(clasifiRegimen: string) {
+  public setClasifiRegimen(clasifiRegimen: string):void {
     this.update((state) => ({
       ...state,
       clasifiRegimen,
     }));
   }
 
-  public setFraccionArancelaria(fraccionArancelaria: string) {
+  public setFraccionArancelaria(fraccionArancelaria: string):void {
     this.update((state) => ({
       ...state,
       fraccionArancelaria,
     }));
   }
 
-  public setNico(nico: string) {
+  public setNico(nico: string):void {
     this.update((state) => ({
       ...state,
       nico,
     }));
   }
 
-  public setUnidadMedidaTarifaria(unidadMedidaTarifaria: string) {
+  public setUnidadMedidaTarifaria(unidadMedidaTarifaria: string):void {
     this.update((state) => ({
       ...state,
       unidadMedidaTarifaria,
     }));
   }
 
-  public setPaisOrigen(paisOrigen: string) {
+  public setPaisOrigen(paisOrigen: string):void {
     this.update((state) => ({
       ...state,
       paisOrigen,
     }));
   }
 
-  public setPaisDestino(paisDestino: string) {
+  public setPaisDestino(paisDestino: string):void {
     this.update((state) => ({
       ...state,
       paisDestino,
     }));
   }
 
-  public setMolino(molino: string) {
+  public setMolino(molino: string):void {
     this.update((state) => ({
       ...state,
       molino,
     }));
   }
-  public setRepresentacionFederal(representacionFederal: string) {
+  public setRepresentacionFederal(representacionFederal: string):void {
     this.update((state) => ({
       ...state,
       representacionFederal,

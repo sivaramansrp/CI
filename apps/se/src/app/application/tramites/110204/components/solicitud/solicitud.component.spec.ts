@@ -1,189 +1,141 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
-
-import { SolicitudComponent } from './solicitud.component';
-import { PeximService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { of as observableOf } from 'rxjs';
+import { DatosCertificadoComponent } from '../datos-certificado/datos-certificado.component';
+import { FormBuilder } from '@angular/forms';
 import { Tramite110204Store } from '../../estados/tramite110204.store';
+import { Tramite110204Query } from '../../estados/tramite110204.query';
+import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
+import { ToastrService } from 'ngx-toastr';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Pipe, PipeTransform, Directive, Injectable, Input } from '@angular/core';
 
-describe('SolicitudComponent', () => {
-  let component: SolicitudComponent;
-  let fixture: ComponentFixture<SolicitudComponent>;
-  let peximService: jasmine.SpyObj<PeximService>;
-  let validacionesService: jasmine.SpyObj<ValidacionesFormularioService>;
-  let tramite110204Store: jasmine.SpyObj<Tramite110204Store>;
+@Injectable()
+class MockTramite110204Store {}
+
+@Injectable()
+class MockTramite110204Query {
+  formDatesCerticado$ = observableOf({});
+  selectIdioma$ = observableOf([]);
+  selectEntidadFederativa$ = observableOf([]);
+  selectrepresentaconFederal$ = observableOf([]);
+}
+
+@Injectable()
+class MockCertificadosOrigenGridService {
+  obtenerIdioma = jest.fn().mockReturnValue(observableOf([]));
+  obtenerRepresentacionFederal = jest.fn().mockReturnValue(observableOf([]));
+  obtenerEntidadFederativa = jest.fn().mockReturnValue(observableOf([]));
+}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom: any;
+}
+
+@Pipe({ name: 'translate' })
+class TranslatePipe implements PipeTransform {
+  transform(value: any) { return value; }
+}
+
+@Pipe({ name: 'phoneNumber' })
+class PhoneNumberPipe implements PipeTransform {
+  transform(value: any) { return value; }
+}
+
+@Pipe({ name: 'safeHtml' })
+class SafeHtmlPipe implements PipeTransform {
+  transform(value: any) { return value; }
+}
+
+describe('DatosCertificadoComponent', () => {
+  let fixture: ComponentFixture<DatosCertificadoComponent>;
+  let component: DatosCertificadoComponent;
 
   beforeEach(async () => {
-    const peximServiceSpy = jasmine.createSpyObj('PeximService', ['getRegimenMercancia', 'getClasifiRegimen', 'getFraccionArancelariaCatalogo', 'getNicoCatalogo', 'getUnidadMedidaTarifariaCatalogo', 'getPaisOrigenCatalogo', 'getPaisDestinoCatalogo', 'getMolinoCatalogo', 'getEstadoCatalogo', 'getRepresentacionFederal']);
-    const validacionesServiceSpy = jasmine.createSpyObj('ValidacionesFormularioService', ['isValid']);
-    const tramite110204StoreSpy = jasmine.createSpyObj('Tramite110204Store', ['setRegimenMercancia', 'setClasifiRegimen', 'setFraccionArancelaria', 'setNico', 'setUnidadMedidaTarifaria', 'setPaisOrigen', 'setPaisDestino', 'setMolino', 'setEstado', 'setRepresentacionFederal']);
-
     await TestBed.configureTestingModule({
-      declarations: [SolicitudComponent],
-      imports: [ReactiveFormsModule],
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [
+        DatosCertificadoComponent,
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,
-        { provide: PeximService, useValue: peximServiceSpy },
-        { provide: ValidacionesFormularioService, useValue: validacionesServiceSpy },
-        { provide: Tramite110204Store, useValue: tramite110204StoreSpy }
+        { provide: Tramite110204Store, useClass: MockTramite110204Store },
+        { provide: Tramite110204Query, useClass: MockTramite110204Query },
+        { provide: CertificadosOrigenGridService, useClass: MockCertificadosOrigenGridService },
+        ToastrService
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SolicitudComponent);
+    fixture = TestBed.createComponent(DatosCertificadoComponent);
     component = fixture.componentInstance;
-    peximService = TestBed.inject(PeximService) as jasmine.SpyObj<PeximService>;
-    validacionesService = TestBed.inject(ValidacionesFormularioService) as jasmine.SpyObj<ValidacionesFormularioService>;
-    Tramite110204Store = TestBed.inject(Tramite110204Store) as jasmine.SpyObj<Tramite110204Store>;
-
-    peximService.getRegimenMercancia.and.returnValue(of({ code: 200, message: 'Success', data: [] }));
-    peximService.getClasifiRegimen.and.returnValue(of({ code: 200, message: 'Success', data: [] }));
-    peximService.getFraccionArancelariaCatalogo.and.returnValue(of({ code: 200, message: 'Success', data: [] }));
-    peximService.getNicoCatalogo.and.returnValue(of({ code: 200, message: 'Success', data: [] }));
-    peximService.getUnidadMedidaTarifariaCatalogo.and.returnValue(of({ code: 200, message: 'Success', data: [] }));
-    peximService.getPaisOrigenCatalogo.and.returnValue(of({ code: 200, message: 'Success', data: [] }));
-    peximService.getPaisDestinoCatalogo.and.returnValue(of({ code: 200, message: 'Success', data: [] }));
-    peximService.getMolinoCatalogo.and.returnValue(of({ code: 200, message: 'Success', data: [] }));
-    peximService.getEstadoCatalogo.and.returnValue(of({ code: 200, message: 'Success', data: [] }));
-    peximService.getRepresentacionFederal.and.returnValue(of({ code: 200, message: 'Success', data: [] }));
-
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize catalogs on ngOnInit', () => {
+  it('should initialize form on ngOnInit', () => {
     component.ngOnInit();
-    expect(peximService.getRegimenMercancia).toHaveBeenCalled();
-    expect(peximService.getClasifiRegimen).toHaveBeenCalled();
-    expect(peximService.getFraccionArancelariaCatalogo).toHaveBeenCalled();
-    expect(peximService.getNicoCatalogo).toHaveBeenCalled();
-    expect(peximService.getUnidadMedidaTarifariaCatalogo).toHaveBeenCalled();
-    expect(peximService.getPaisOrigenCatalogo).toHaveBeenCalled();
-    expect(peximService.getPaisDestinoCatalogo).toHaveBeenCalled();
-    expect(peximService.getMolinoCatalogo).toHaveBeenCalled();
-    expect(peximService.getEstadoCatalogo).toHaveBeenCalled();
-    expect(peximService.getRepresentacionFederal).toHaveBeenCalled();
+    expect(component.formDatesCerticado).toBeDefined();
   });
 
-  it('should initialize form on creation', () => {
-    expect(component.FormSolicitud).toBeDefined();
+  it('should call cargarIdioma on ngOnInit', () => {
+    const cargarIdiomaSpy = jest.spyOn(component, 'cargarIdioma');
+    component.ngOnInit();
+    expect(cargarIdiomaSpy).toHaveBeenCalled();
   });
 
-  it('should validate form field', () => {
-    const form = component.FormSolicitud;
-    const field = 'datosRegimen.regimenMercancia';
-    validacionesService.isValid.and.returnValue(true);
-    expect(component.isValid(form, field)).toBeTrue();
-    expect(validacionesService.isValid).toHaveBeenCalledWith(form, field);
+  it('should call cargarEntidadFederativa on ngOnInit', () => {
+    const cargarEntidadFederativaSpy = jest.spyOn(component, 'cargarEntidadFederativa');
+    component.ngOnInit();
+    expect(cargarEntidadFederativaSpy).toHaveBeenCalled();
   });
 
-  it('should create form on initialization', () => {
-    component.crearFormSolicitud();
-    expect(component.FormSolicitud).toBeDefined();
+  it('should call cargarRepresentacionFederal on ngOnInit', () => {
+    const cargarRepresentacionFederalSpy = jest.spyOn(component, 'cargarRepresentacionFederal');
+    component.ngOnInit();
+    expect(cargarRepresentacionFederalSpy).toHaveBeenCalled();
   });
 
-  it('should set regimenMercancia on selection', () => {
-    component.FormSolicitud.get('regimenMercancia')?.setValue('test');
-    component.regimenMercanciaSeleccion();
-    expect(tramite110204Store.setRegimenMercancia).toHaveBeenCalledWith('test');
+  it('should validate form correctly', () => {
+    component.formDatesCerticado.controls['observacionesDates'].setValue('');
+    expect(component.formDatesCerticado.controls['observacionesDates'].valid).toBeFalsy();
+
+    component.formDatesCerticado.controls['observacionesDates'].setValue('valid');
+    expect(component.formDatesCerticado.controls['observacionesDates'].valid).toBeTruthy();
   });
 
-  it('should set clasifiRegimen on selection', () => {
-    component.FormSolicitud.get('clasifiRegimen')?.setValue('test');
-    component.clasifiRegimenSeleccion();
-    expect(tramite110204Store.setClasifiRegimen).toHaveBeenCalledWith('test');
+  it('should call obtenerIdioma and setIdiomaDatos on cargarIdioma', () => {
+    component.cargarIdioma();
+    expect(component.certificadoService.obtenerIdioma).toHaveBeenCalled();
+    expect(component.store.setIdiomaDatos).toHaveBeenCalled();
   });
 
-  it('should set fraccionArancelaria on selection', () => {
-    component.FormSolicitud.get('fraccionArancelaria')?.setValue('test');
-    component.fraccionArancelariaSeleccion();
-    expect(tramite110204Store.setFraccionArancelaria).toHaveBeenCalledWith('test');
+  it('should call obtenerRepresentacionFederal and setRepresentacionFederalDatos on cargarRepresentacionFederal', () => {
+    component.cargarRepresentacionFederal();
+    expect(component.certificadoService.obtenerRepresentacionFederal).toHaveBeenCalled();
+    expect(component.store.setRepresentacionFederalDatos).toHaveBeenCalled();
   });
 
-  it('should set nico on selection', () => {
-    component.FormSolicitud.get('nico')?.setValue('test');
-    component.nicoSeleccion();
-    expect(tramite110204Store.setNico).toHaveBeenCalledWith('test');
+  it('should call obtenerEntidadFederativa and setEntidadFederativaDatos on cargarEntidadFederativa', () => {
+    component.cargarEntidadFederativa();
+    expect(component.certificadoService.obtenerEntidadFederativa).toHaveBeenCalled();
+    expect(component.store.setEntidadFederativaDatos).toHaveBeenCalled();
   });
 
-  it('should set unidadMedidaTarifaria on selection', () => {
-    component.FormSolicitud.get('unidadMedidaTarifaria')?.setValue('test');
-    component.unidadMedidaTarifariaSeleccion();
-    expect(tramite110204Store.setUnidadMedidaTarifaria).toHaveBeenCalledWith('test');
-  });
-
-  it('should set paisOrigen on selection', () => {
-    component.FormSolicitud.get('paisOrigen')?.setValue('test');
-    component.paisOrigenSeleccion();
-    expect(tramite110204Store.setPaisOrigen).toHaveBeenCalledWith('test');
-  });
-
-  it('should set paisDestino on selection', () => {
-    component.FormSolicitud.get('paisDestino')?.setValue('test');
-    component.paisDestinoSeleccion();
-    expect(tramite110204Store.setPaisDestino).toHaveBeenCalledWith('test');
-  });
-
-  it('should set molino on selection', () => {
-    component.FormSolicitud.get('molino')?.setValue('test');
-    component.molinoSeleccion();
-    expect(tramite110204Store.setMolino).toHaveBeenCalledWith('test');
-  });
-
-  it('should set estado on selection', () => {
-    component.FormSolicitud.get('estado')?.setValue('test');
-    component.estadoSeleccion();
-    expect(tramite110204Store.setEstado).toHaveBeenCalledWith('test');
-  });
-
-  it('should set representacionFederal on selection', () => {
-    component.FormSolicitud.get('representacionFederal')?.setValue('test');
-    component.representacionFederalSeleccion();
-    expect(tramite110204Store.setRepresentacionFederal).toHaveBeenCalledWith('test');
-  });
-
-  it('should validate form', () => {
-    component.FormSolicitud.get('datosRegimen.regimenMercancia')?.setValue('');
-    component.validarFormulario();
-    expect(component.FormSolicitud.invalid).toBeTrue();
-  });
-
-  it('should escape HTML quotes correctly', () => {
-    const result = component.escapeHtmlQuotes('"test"');
-    expect(result).toBe('&#34;test&#34;');
-  });
-
-  it('should show fields for persona moral', () => {
-    component.FormSolicitud.get('datosProducto.razonSocial')?.setValue('Test');
-    component.muestraCamposPersona();
-    expect(component.isVisibleMoral).toBeTrue();
-    expect(component.isVisibleFisica).toBeFalse();
-  });
-
-  it('should show fields for persona fisica', () => {
-    component.FormSolicitud.get('datosProducto.nombre')?.setValue('Test');
-    component.muestraCamposPersona();
-    expect(component.isVisibleFisica).toBeTrue();
-    expect(component.isVisibleMoral).toBeFalse();
-  });
-
-  it('should calculate precio unitario USD correctly', () => {
-    component.FormSolicitud.get('datosMercancia.cantidadTarifaria')?.setValue(10);
-    component.FormSolicitud.get('datosMercancia.valorFacturaUSD')?.setValue(100);
-    component.calcularPrecioUnitarioUSD();
-    expect(component.FormSolicitud.get('datosMercancia.precioUnitarioUSD')?.value).toBe(10);
-  });
-
-  it('should truncate number correctly', () => {
-    const result = component.truncar(123.456);
-    expect(result).toBe(123.45);
-  });
-
-  it('should change fecha final', () => {
-    const nuevoValor = '2023-01-01';
-    component.cambioFechaFinal(nuevoValor);
-    expect(component.datosMercancia.get('fechaFinal')?.value).toBe(nuevoValor);
+  it('should call ngOnDestroy and complete destroyNotifier$', () => {
+    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

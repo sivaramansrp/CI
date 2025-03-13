@@ -1,22 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite110204Query } from '../../estados/tramite110204.query';
-import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
-import { ToastrService } from 'ngx-toastr';
-import { Tramite110204Store } from '../../estados/tramite110204.store';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
+import { Tramite110204Query } from '../../estados/tramite110204.query';
+import { Tramite110204Store } from '../../estados/tramite110204.store';
 
 @Component({
   selector: 'app-datos-certificado',
-  imports: [TituloComponent, ReactiveFormsModule, CatalogoSelectComponent,CommonModule],
+  imports: [TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, CommonModule],
   templateUrl: './datos-certificado.component.html',
   styleUrl: './datos-certificado.component.scss',
   standalone: true
 })
-export class DatosCertificadoComponent implements OnInit {
-  solicitudForm!: FormGroup;
+export class DatosCertificadoComponent implements OnInit, OnDestroy {
+  formDatesCerticado!: FormGroup;
   destroyNotifier$: Subject<void> = new Subject();
 
 
@@ -26,33 +26,52 @@ export class DatosCertificadoComponent implements OnInit {
 
 
   constructor(
-    private fb: FormBuilder, private store: Tramite110204Store,
+    private fb: FormBuilder, public store: Tramite110204Store,
     public tramiteQuery: Tramite110204Query,
     public certificadoService: CertificadosOrigenGridService,
     private toastr: ToastrService) {
-    this.solicitudForm = this.fb.group({
+    this.formDatesCerticado = this.fb.group({
+      observacionesDates: ['', [Validators.required]],
+      idiomaDates: ['', [Validators.required, Validators.min(0)]],
+      EntidadFederativaDates: ['', [Validators.required, Validators.min(0)]],
+      representacionFederalDates: ['', [Validators.required, Validators.min(0)]],
+    });
 
+    this.tramiteQuery.formDatesCerticado$.pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe(estado => {
+      if (estado) {
+        this.formDatesCerticado.patchValue(estado);
+
+      }
     });
     this.idioma$ = this.tramiteQuery.selectIdioma$;
     this.entidadFederativas$ = this.tramiteQuery.selectEntidadFederativa$;
     this.representaconFederal$ = this.tramiteQuery.selectrepresentaconFederal$;
   }
+  get formularioControl(): FormControl {
+    return this.formDatesCerticado.get('') as FormControl;
+  }
 
   ngOnInit(): void {
     this.cargarIdioma();
     this.cargarEntidadFederativa();
+    this.formDatesCerticado.valueChanges.subscribe(value => {
+      this.store.setFormDatesCerticado(value);
+    });
     this.cargarRepresentacionFederal();
   }
 
   idiomaSeleccion(estado: Catalogo): void {
-    this.store.setEstado(estado);
+    this.store.setIdiomaDatos([estado]);
   }
   entidadFederativaSeleccion(estado: Catalogo): void {
-    this.store.setBloque([estado]);
+    this.store.setEntidadFederativaDatos([estado]);
   }
   representacionFederalSeleccion(estado: Catalogo): void {
-    this.store.setEstado(estado);
+    this.store.setRepresentacionFederalDatos([estado]);
   }
+
 
 
   cargarIdioma(): void {

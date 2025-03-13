@@ -15,7 +15,7 @@ export interface InputConfig {
 
 export interface MenuConfig {
   inputType: string,
-  props: FormularioDinamico | CatalogosSelect | any,
+  props: FormularioDinamico | CatalogosSelect | undefined,
   class: string,
   visibility?: string,
   radioConfig?: string[],

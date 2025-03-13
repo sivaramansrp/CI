@@ -18,6 +18,14 @@ export class Tramite110204Query extends Query<TramiteState> {
   FormaValida$ = this.select((state) => {
    return Object.values(state.formaValida).every(value => value === true);
   })
+  
+  formCertificado$ = this.select((state) => {    
+    return state.formCertificado;
+   })
+
+   formDatesCerticado$ = this.select((state) => {    
+    return state.formDatesCerticado;
+   })
 
   selectBuscarMercancia$ = this.select((state) => {    
     return state.buscarMercancia;

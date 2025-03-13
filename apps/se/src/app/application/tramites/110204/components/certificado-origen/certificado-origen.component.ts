@@ -1,33 +1,18 @@
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  InputFecha,
-  InputFechaComponent,
-  MercanciaTablaData,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {Mercancia } from '../../models/plantas-consulta.model';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Observable, Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { CONFIGURACION_MERCANCIA } from '../../constantes/modificacion.enum';
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
+import { Mercancia } from '../../models/plantas-consulta.model';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110204Query } from '../../estados/tramite110204.query';
 import { Tramite110204Store } from '../../estados/tramite110204.store';
 
 export const FECHA_INICIO = {
-  labelNombre: 'Fecha iniciO',
+  labelNombre: 'Fecha inicio',
   required: true,
   habilitado: true,
 };
@@ -54,7 +39,7 @@ export const FECHA_FINAL = {
   styleUrl: './certificado-origen.component.scss',
 })
 export class CertificadoOrigenComponent implements OnInit, OnDestroy {
-  form!: FormGroup;
+  formCertificado!: FormGroup;
   public fechaInicioInput: InputFecha = FECHA_INICIO;
   public fechaFinalInput: InputFecha = FECHA_FINAL;
 
@@ -97,40 +82,76 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   datos: Mercancia[] = [];
 
 
-    /**
-     * Datos de ejemplo basados en la interfaz Mercancia.
-     * @type {Observable<Mercancia[]>}
-     */
-    datos1$: Observable<Mercancia[]>;
-
-/**
-   * Selección de la tabla inicializada como indefinida.
-   * @type {TablaSeleccion}
+  /**
+   * Datos de ejemplo basados en la interfaz Mercancia.
+   * @type {Observable<Mercancia[]>}
    */
+  datos1$: Observable<Mercancia[]>;
+
+  /**
+     * Selección de la tabla inicializada como indefinida.
+     * @type {TablaSeleccion}
+     */
   seleccionTabla = TablaSeleccion.UNDEFINED;
+  private seccion!: SeccionLibState;
 
   constructor(
     private fb: FormBuilder,
     private store: Tramite110204Store,
     public tramiteQuery: Tramite110204Query,
     public certificadoService: CertificadosOrigenGridService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private seccionQuery: SeccionLibQuery, private seccionStore: SeccionLibStore
   ) {
 
-    this.form = this.fb.group({
+    this.formCertificado = this.fb.group({
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
       bloque: ['', [Validators.required, Validators.min(0)]],
-      tercerOperador:['',[Validators.requiredTrue]]
+      tercerOperador: ['', [Validators.requiredTrue]],
+      fracciónArancelariaForm: ['', [Validators.required]],
+      registroProductoForm: ['', [Validators.required]],
+      nombreComercialForm: ['', [Validators.required]],
     });
+
+    this.tramiteQuery.formCertificado$.pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe(estado => {
+      if (estado) {
+        this.formCertificado.patchValue(estado);
+      }
+    });
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
+
 
     this.estados$ = this.tramiteQuery.selectAltaPlanta$;
     this.pais$ = this.tramiteQuery.selectPaisBloque$;
     this.datos1$ = this.tramiteQuery.selectBuscarMercancia$;
   }
-
+  esFormValido(): boolean {
+    // eslint-disable-next-line guard-for-in
+    for (const NOMBRE_DEL_CONTROL in this.formCertificado.controls) {
+      const CONTROL = this.formCertificado.get(NOMBRE_DEL_CONTROL);
+      if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
+        return false;
+      }
+    }
+    return true;
+  }
   ngOnInit(): void {
     this.cargarEstados();
     this.cargarBloque();
+    this.validarFormulario();
+    this.formCertificado.valueChanges.subscribe(value => {
+      this.store.setFormCertificado(value);
+    });
+  
   }
   /**
    * Establece el estado en el almacén (store) con el valor proporcionado.
@@ -153,6 +174,27 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       );
   }
 
+  validarFormulario(): void {
+    this.formCertificado.statusChanges
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      delay(10),
+      tap((_value) => {
+        const SECCION: number = 1;
+        const FORMAS_VALIDADAS = this.seccion.formaValida;
+        const ES_VALIDO_EL_FORM = this.esFormValido();
+        
+        if (this.formCertificado.valid || (ES_VALIDO_EL_FORM)) {
+          FORMAS_VALIDADAS[SECCION] = true;
+          this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+        } else {
+          FORMAS_VALIDADAS[SECCION] = false;
+          this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+        }
+      })
+    )
+    .subscribe();
+  }
   cargarBloque(): void {
     this.certificadoService
       .obtenerPaísBloque()
@@ -170,8 +212,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.store.setEstado(estado);
   }
   tipoSeleccion(estado: Catalogo): void {
-        this.store.setBloque([estado]);
-
+    this.store.setBloque([estado]);
   }
 
   ngOnDestroy(): void {
@@ -184,13 +225,11 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * @returns {FormControl} El control para la entidad federativa.
    */
   get formularioControl(): FormControl {
-    return this.form.get('entidadFederativa') as FormControl;
+    return this.formCertificado.get('') as FormControl;
   }
 
   buscarrMercancia(): void {
-    console.log(this.form,'form');
-    
-    const ENTIDAD = this.formularioControl?.value;
+    const ENTIDAD = this.formCertificado?.value;
 
     if (ENTIDAD && ENTIDAD !== '-1') {
       this.certificadoService
@@ -210,13 +249,13 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     }
   }
 
-  public cambioFechaInicio(nuevo_valor: string) {
-    this.form.get('fechaInicio')?.setValue(nuevo_valor);
-    this.form.get('fechaInicio')?.markAsUntouched();
+  public cambioFechaInicio(nuevo_valor: string): void {
+    this.formCertificado.get('fechaInicio')?.setValue(nuevo_valor);
+    this.formCertificado.get('fechaInicio')?.markAsUntouched();
   }
 
-  public cambioFechaFinal(nuevo_valor: string) {
-    this.form.get('fechaFinal')?.setValue(nuevo_valor);
-    this.form.get('fechaFinal')?.markAsUntouched();
+  public cambioFechaFinal(nuevo_valor: string): void {
+    this.formCertificado.get('fechaFinal')?.setValue(nuevo_valor);
+    this.formCertificado.get('fechaFinal')?.markAsUntouched();
   }
 }
