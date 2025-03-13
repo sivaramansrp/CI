@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import data  from '../../../../../../../../libs/shared/theme/assets/json/funcionario/cat-tipo-requerimiento.json';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-capturar-requerimiento',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CatalogoSelectComponent, ReactiveFormsModule],
   templateUrl: './capturar-requerimiento.component.html',
   styleUrl: './capturar-requerimiento.component.scss',
 })
@@ -25,7 +25,7 @@ export class CapturarRequerimientoComponent {
 
   formRequerimiento: FormGroup = this.fb.group({
     tipoRequerimiento: ['', [Validators.required]],
-    justificacionReq: ['', [Validators.required]]
+    justificacionRequerimiento: ['', [Validators.required]]
 
   });
 
