@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 /**
  * Interfaz que representa las etiquetas de la lista cruzada.
@@ -19,7 +19,7 @@ export interface CrossListLable {
   styleUrl: './crosslist.component.scss',
   host: { 'hostID': crypto.randomUUID().toString() }
 })
-export class CrosslistComponent implements OnInit ,OnChanges {
+export class CrosslistComponent implements OnInit ,OnChanges  {
   @Input({ required: true }) fechas!: string[];
   @Input() botonField: any;
   @Input() botones: any;
@@ -30,6 +30,7 @@ export class CrosslistComponent implements OnInit ,OnChanges {
   fechaSeleccionada: FormControl = new FormControl('');
   @Input() showSearchInput1: boolean = false;
   @Input() showSearchInput2: boolean = false;
+  @Output() fechasSeleccionadasChange = new EventEmitter<string[]>();
   ngOnInit() {
     this.fechasDatos = [...this.fechas];
     if(!this.botones){
@@ -89,6 +90,7 @@ export class CrosslistComponent implements OnInit ,OnChanges {
       const fechaValor = this.fecha.value.map(Number);
       this.fechasSeleccionadas.push(this.fechasDatos[fechaValor]);
       this.fechasDatos.splice(fechaValor, 1);
+      this.fechasSeleccionadasChange.emit(this.fechasSeleccionadas);
     }
   }
 
@@ -100,6 +102,7 @@ export class CrosslistComponent implements OnInit ,OnChanges {
       const fechaValor = this.fechaSeleccionada.value.map(Number);
       this.fechasDatos.push(this.fechasSeleccionadas[fechaValor]);
       this.fechasSeleccionadas.splice(fechaValor, 1);
-    }
+      this.fechasSeleccionadasChange.emit(this.fechasSeleccionadas);
+  }
   }
 }

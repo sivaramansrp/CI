@@ -1,10 +1,8 @@
-import { FirmaPageComponent } from '@ng-mf/data-access-user';
 import { RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
-import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
-import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
 import { AcusePageComponent } from './acuse/acuse-page/acuse-page.component';
-
+import { FirmaPageComponent } from '@ng-mf/data-access-user';import { NgModule } from '@angular/core';
+import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
+import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
@@ -48,7 +46,12 @@ const ROUTES: Routes = [
   {
     path: 'acuse',
     component: AcusePageComponent
-  }
+  },
+  {
+    path: 'cancelacion-servicios-extraordinarios',
+    loadChildren: () =>
+      import('./tramites/570101/cancelacion-servicios-extraordinarios.module').then((m) => m.CancelacionServiciosExtraordinariosModule),
+  },
 ];
 
 @NgModule({
