@@ -2,14 +2,13 @@ import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CONSTANTES } from '../../constantes/servicios-extraordinarios.enum';
 import { PersonaTerceros } from '../../../core/models/5701/servicios-extraordinarios.model';
-import { CommonModule } from '@angular/common';
 import { TituloComponent } from '../titulo/titulo.component';
 
 @Component({
-  selector: 'terceros',
+  selector: 'lib-terceros',
   templateUrl: './terceros.component.html',
   standalone: true,
-  imports: [ ReactiveFormsModule, CommonModule, FormsModule, TituloComponent],
+  imports: [ ReactiveFormsModule, FormsModule, TituloComponent],
   styleUrl: './terceros.component.scss',
 })
 export class TercerosComponent {

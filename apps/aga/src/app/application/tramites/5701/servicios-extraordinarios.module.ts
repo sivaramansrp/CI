@@ -1,5 +1,5 @@
-import { AgregaPersonasComponent } from './components/agrega-personas/agrega-personas.component';
 import { AgregarTransporteComponent, CatalogosService, UppercaseDirective } from '@ng-mf/data-access-user';
+import { AgregaPersonasComponent } from './components/agrega-personas/agrega-personas.component';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
@@ -30,11 +30,6 @@ import { TercerosComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { DetalleTramiteComponent } from './components/detalle-tramite/detalle-tramite.component';
-import { GeneraDictamenComponent } from './components/genera-dictamen/genera-dictamen.component';
-import { RequerimientoInformacionComponent } from './components/requerimiento-informacion/requerimiento-informacion.component';
-import { DocumentosExistentesComponent } from './components/documentos-existentes/documentos-existentes.component';
-import { EvaluarDictamenComponent } from './pages/evaluar-dictamen/evaluar-dictamen.component';
 
 @NgModule({
   declarations: [
@@ -43,11 +38,6 @@ import { EvaluarDictamenComponent } from './pages/evaluar-dictamen/evaluar-dicta
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    DetalleTramiteComponent,
-    GeneraDictamenComponent,
-    EvaluarDictamenComponent,
-    RequerimientoInformacionComponent,
-    DocumentosExistentesComponent
   ],
   imports: [
     forwardRef(() => TercerosComponent),
