@@ -1,0 +1,104 @@
+<div class="container">
+    <ng-titulo [titulo]="'Domicilio del destinatario'"></ng-titulo>
+    <form [formGroup]="domicilioDelDestinatarioForm">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="form-label width-unset" for="calle">Calle*:</label>
+                    <input type="text" (change)="setValoresStore(domicilioDelDestinatarioForm,'calle','setCalle')"
+                        class="form-control" id="calle" formControlName="calle" placeholder="Pruebas" required />
+                    <div *ngIf="
+                    domicilioDelDestinatarioForm.controls['calle'].invalid &&
+                    domicilioDelDestinatarioForm.controls['calle'].touched">
+                        <small *ngIf="domicilioDelDestinatarioForm.get('calle')?.errors?.['pattern']"
+                            class="text-danger"> Por favor, corrija el nombre de la persona.</small>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label width-unset" for="numeroLetra">Número y/o letra*:</label>
+                    <input type="text"
+                        (change)="setValoresStore(domicilioDelDestinatarioForm,'numeroLetra','setNumeroLetra')"
+                        class="form-control" id="numeroLetra" formControlName="numeroLetra" placeholder="12 Pruebas"
+                        required />
+                    <div *ngIf="
+                    domicilioDelDestinatarioForm.controls['numeroLetra'].invalid &&
+                    domicilioDelDestinatarioForm.controls['numeroLetra'].touched">
+                        <small *ngIf="domicilioDelDestinatarioForm.get('numeroLetra')?.errors?.['pattern']"
+                            class="text-danger"> Por favor, corrija el nombre de la persona.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="form-label width-unset" for="ciudad">Ciudad(población,estado o provincia)*:</label>
+                    <input type="text" (change)="setValoresStore(domicilioDelDestinatarioForm,'ciudad','setCiudad')"
+                        class="form-control" id="ciudad" formControlName="ciudad" placeholder="lerdo de tejada ver"
+                        required />
+                    <div *ngIf="
+                    domicilioDelDestinatarioForm.controls['ciudad'].invalid &&
+                    domicilioDelDestinatarioForm.controls['ciudad'].touched">
+                        <small *ngIf="domicilioDelDestinatarioForm.get('ciudad')?.errors?.['pattern']"
+                            class="text-danger"> Por favor, corrija el nombre de la persona.</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label width-unset" for="correoElectronico">Correo electrónico*:</label>
+                    <input type="email"
+                        (change)="setValoresStore(domicilioDelDestinatarioForm,'correoElectronico','setCorreoElectronico')"
+                        class="form-control" id="correoElectronico" formControlName="correoElectronico"
+                        placeholder="correo@correo.com" required />
+                    <div *ngIf="domicilioDelDestinatarioForm.controls['correoElectronico'].hasError('required') && 
+                    domicilioDelDestinatarioForm.controls['correoElectronico'].touched" class="text-danger">
+                        Este campo es obligatorio.
+                    </div>
+                    <div *ngIf="domicilioDelDestinatarioForm.controls['correoElectronico'].hasError('email') && 
+                    domicilioDelDestinatarioForm.controls['correoElectronico'].touched" class="text-danger">
+                        Por favor, escriba una dirección de correo válida.
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label width-unset" for="fax">Fax:</label>
+                        <input type="text" (change)="setValoresStore(domicilioDelDestinatarioForm,'fax','setFax')"
+                            class="form-control" id="fax" formControlName="fax" placeholder="44323665654" />
+                        <div
+                            *ngIf="domicilioDelDestinatarioForm.get('fax')?.touched && domicilioDelDestinatarioForm.get('fax')?.invalid">
+                            <small *ngIf="domicilioDelDestinatarioForm.get('fax')?.errors?.['pattern']"
+                                class="text-danger">
+                                El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos
+                                decimales.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label width-unset" for="telefono">Teléfono:</label>
+                        <input type="number"
+                            (change)="setValoresStore(domicilioDelDestinatarioForm,'telefono','setTelefono')"
+                            class="form-control" id="telefono" formControlName="telefono" placeholder="44323665654" />
+                        <div
+                            *ngIf="domicilioDelDestinatarioForm.get('Teléfono')?.touched && domicilioDelDestinatarioForm.get('Teléfono')?.invalid">
+                            <small *ngIf="domicilioDelDestinatarioForm.get('Teléfono')?.errors?.['pattern']"
+                                class="text-danger">
+                                El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos
+                                decimales.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

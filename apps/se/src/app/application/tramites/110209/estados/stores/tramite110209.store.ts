@@ -16,13 +16,23 @@ export interface Tramite110209State {
   puertoDeDesembarque: string;
   observaciones: string;
   mercanciasSeleccionadas: Mercancias;
-  descripcion:string;
-  marca:string;
-  valorMercancia:string;
-  unidadMedida:string;
-  numeroFactura:string;
-  tipoFactura:string;
-  
+  descripcion: string;
+  marca: string;
+  valorMercancia: string;
+  unidadMedida: string;
+  numeroFactura: string;
+  tipoFactura: string;
+  nombre: string;
+  primerApellido: string;
+  segundoApellido: string;
+  numeroDeRegistroFiscal: string;
+  razonSocial: string;
+  calle: string;
+  numeroLetra: string;
+  ciudad: string;
+  correoElectronico: string;
+  fax: number;
+  telefono: number;
 }
 
 /**
@@ -31,26 +41,37 @@ export interface Tramite110209State {
  */
 export function createInitialState(): Tramite110209State {
   return {
-  medioDeTransporte: '',
-  rutaCompleta: '',
-  puertoDeEmbarque: '',
-  puertoDeDesembarque: '',
-  observaciones: '',
-  mercanciasSeleccionadas: {
-    numeroDeOrden: '',
-    fraccionArancelaria: '',
-    nombreTecnico: '',
-    nombreComercial: '',
-    nombreIngles: '',
-    numeroDeRegistro: ''
-  },
-  descripcion: '',
-  marca: '',
-  valorMercancia: '',
-  unidadMedida: '',
-  numeroFactura: '',
-  tipoFactura: ''
-};
+    medioDeTransporte: '',
+    rutaCompleta: '',
+    puertoDeEmbarque: '',
+    puertoDeDesembarque: '',
+    observaciones: '',
+    mercanciasSeleccionadas: {
+      numeroDeOrden: '',
+      fraccionArancelaria: '',
+      nombreTecnico: '',
+      nombreComercial: '',
+      nombreIngles: '',
+      numeroDeRegistro: ''
+    },
+    descripcion: '',
+    marca: '',
+    valorMercancia: '',
+    unidadMedida: '',
+    numeroFactura: '',
+    tipoFactura: '',
+    nombre: '',
+    primerApellido: '',
+    segundoApellido: '',
+    numeroDeRegistroFiscal: '',
+    razonSocial: '',
+    calle: '',
+    numeroLetra: '',
+    ciudad: '',
+    correoElectronico: '',
+    fax: 0,
+    telefono: 0,
+  };
 }
 
 @Injectable({
@@ -200,4 +221,70 @@ export class Tramite110209Store extends Store<Tramite110209State> {
     }));
   }
 
+  public setNombre(nombre: string): void {
+    this.update((state) => ({
+      ...state,
+      nombre,
+    }));
+  }
+  public setPrimerApellido(primerApellido: string): void {
+    this.update((state) => ({
+      ...state,
+      primerApellido,
+    }));
+  }
+  public setSegundoApellido(segundoApellido: string): void {
+    this.update((state) => ({
+      ...state,
+      segundoApellido,
+    }));
+  }
+  public setNumeroDeRegistroFiscal(numeroDeRegistroFiscal: string): void {
+    this.update((state) => ({
+      ...state,
+      numeroDeRegistroFiscal,
+    }));
+  }
+  public setRazonSocial(razonSocial: string): void {
+    this.update((state) => ({
+      ...state,
+      razonSocial,
+    }));
+  }
+  public setCalle(calle: string): void {
+    this.update((state) => ({
+      ...state,
+      calle,
+    }));
+  }
+  public setNumeroLetra(numeroLetra: string): void {
+    this.update((state) => ({
+      ...state,
+      numeroLetra,
+    }));
+  }
+  public setCiudad(ciudad: string): void {
+    this.update((state) => ({
+      ...state,
+      ciudad,
+    }));
+  }
+  public setCorreoElectronico(correoElectronico: string): void {
+    this.update((state) => ({
+      ...state,
+      correoElectronico,
+    }));
+  }
+  public setFax(fax: number): void {
+    this.update((state) => ({
+      ...state,
+      fax,
+    }));
+  }
+  public setTelefono(telefono: number): void {
+    this.update((state) => ({
+      ...state,
+      telefono,
+    }));
+  }
 }
