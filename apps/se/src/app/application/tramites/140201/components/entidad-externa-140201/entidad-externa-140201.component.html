@@ -1,0 +1,35 @@
+<div class="container form-container">
+    <ng-titulo titulo="Datos requeridos"></ng-titulo>
+    <div>
+        <form [formGroup]="entidad">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="nombreDeEntidad" class="required-label">Nombre de la entidad externa.</label>
+                    <input type="text" id="nombreDeEntidad" class="form-control" placeholder="PRUEBAS" formControlName="nombreDeEntidad">
+                </div>
+                <div class="col-md-6">
+                    <label for="nombreDeQuien" class="required-label">Nombre de quien solicita IPC</label>
+                    <input type="text" id="nombreDeQuien" class="form-control" placeholder="PAGB" formControlName="nombreDeQuien">
+                </div>
+                <div class="col-md-6">
+                    <label for="cargoDeQuien" class="form-label">Cargo de quien solicita IPC</label>
+                    <input type="text" id="cargoDeQuien" class="form-control" placeholder="PAGB" formControlName="cargoDeQuien">
+                </div>
+                <div class="col-md-6">
+                    <label for="folioDelOficio" class="required-label">Folio del oficio de la solicitud IPC</label>
+                    <input type="text" id="folioDelOficio" class="form-control" placeholder="1234567890" formControlName="folioDelOficio">
+                </div>
+                <div class="col-md-6">
+                    <label for="fetchaDeOficio" class="form-label">Fecha de oficio de la solicitud IPC</label>
+                    <input type="date" id="fetchaDeOficio" class="form-control" formControlName="fetchaDeOficio">
+                </div>
+                <div class="col-md-6">
+                    <label for="correoElectronico" class="form-label">Correo electrónico de quien solicita IPC</label>
+                    <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+

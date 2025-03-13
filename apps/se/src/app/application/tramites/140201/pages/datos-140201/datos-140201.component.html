@@ -5,24 +5,26 @@
                 <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
             </li>
             <li [ngClass]="indice === 2 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(2)" (click)="seleccionaTab(2)">Cancelación de autorizaciones</a>
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(2)" (click)="seleccionaTab(2)">Cancelación de
+                    autorizaciones</a>
             </li>
             <li [ngClass]="indice === 3 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(3)" (click)="seleccionaTab(3)">Entidad externa</a>
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(3)" (click)="seleccionaTab(3)">Entidad
+                    externa</a>
             </li>
         </ul>
         <ng-container>
             @switch (indice) {
             @case (1) {
-        
-<solicitante #Solicitante></solicitante>
+
+            <solicitante #Solicitante></solicitante>
             }
             @case (2) {
-          <!-- <app-modificacion-90305></app-modificacion-90305> -->
+            <app-cancelacion-de-autorizaciones-140201> </app-cancelacion-de-autorizaciones-140201>
             }
-          @case (3) {
-<!-- <app-bitacora-90305></app-bitacora-90305> -->
-          }
+            @case (3) {
+            <app-entidad-externa-140201> </app-entidad-externa-140201>
+            }
             }
         </ng-container>
     </div>
