@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite
- * @returns RepresentacionFederaState
+ * @returns Tramites120601State
  */
 export interface Tramites120601State {
   datosGeneralesSocios: {
