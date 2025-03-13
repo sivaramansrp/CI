@@ -46,11 +46,10 @@
           [required]="true" (change)="onAduanaSelect()"></app-catalogo-select>
       </div>
     </div>
-    <btn-continuar [datos]="datosPasos"></btn-continuar>
     <div *ngIf="selectedAduana">
       <!-- <app-datos-de-los-residuos></app-datos-de-los-residuos> -->
     </div>
-    <div class="row">
+    <div class="row mt-5">
         <ng-alert [CONTENIDO]="texto"></ng-alert>
     </div>
   </form>
