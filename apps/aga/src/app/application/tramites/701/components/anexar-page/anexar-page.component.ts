@@ -14,9 +14,10 @@ import * as bootstrap from 'bootstrap';
 import {
   AlertComponent,
   CATALOGOS_ID,
+  TablaDinamicaComponent,
+  TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-
 // eslint-disable-next-line no-multi-spaces
 import { TEXTOS } from '@ng-mf/data-access-user';
 // eslint-disable-next-line no-multi-spaces
@@ -25,8 +26,11 @@ import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { RegistroDigitalizarDocumentosService } from '../../services/registro-digitalizar-documentos.service';
 import { CommonModule } from '@angular/common';
+import { OnDestroy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { ReplaySubject, takeUntil } from 'rxjs';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
 /**
  * Constante de texto de alerta para terceros.
@@ -55,9 +59,10 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
     ReactiveFormsModule,
     AlertComponent,
     CatalogoSelectComponent,
+    TablaDinamicaComponent
   ],
 })
-export class AnexarPageComponent implements OnInit {
+export class AnexarPageComponent implements OnInit,OnDestroy {
   /**
    * Constantes de textos.
    */
@@ -116,7 +121,7 @@ export class AnexarPageComponent implements OnInit {
   /**
    * Tipos de documentos disponibles.
    */
-  tiposDeDocumentos: string[] = ['Pago de Derechos*:'];
+  tiposDeDocumentos: any[] = [{Tipodedocumento:'Pago de Derechos*:'}];
 
   /**
    * Nombres de los archivos subidos.
@@ -131,6 +136,7 @@ export class AnexarPageComponent implements OnInit {
   mostrarModal: boolean = false;
   
    
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * URL de vista previa del documento.
    */
@@ -140,13 +146,20 @@ export class AnexarPageComponent implements OnInit {
   /**
    * Documentos disponibles para selección.
    */
-  
+  tabSelection: TablaSeleccion = TablaSeleccion.DROPDOWN;
+
   /**
    * Documentos seleccionados por el usuario.
    */
   documentosSeleccion: string[] = new Array(this.tiposDeDocumentos.length).fill(
     ''
   );
+
+  configuracionTabla: ConfiguracionColumna<any>[] = [
+    { encabezado: 'Tipo de documento', clave: (item: any) => item.Tipodedocumento, orden: 1 },
+    { encabezado: 'Documentos', clave: (item: any) => item.Documentos, orden: 2 },
+    { encabezado: 'Ver documento', clave: (item: any) => item.Verdocumento, orden: 3 },
+  ];
 
   /**
    * Indicador para mostrar la tabla.
@@ -156,7 +169,7 @@ export class AnexarPageComponent implements OnInit {
   /**
    * Tamaños de los archivos subidos.
    */
-  Tamanosdearchivo: (number | null)[] = new Array(
+  tamanosDeArchivo: (number | null)[] = new Array(
     this.tiposDeDocumentos.length
   ).fill(null);
 
@@ -164,9 +177,6 @@ export class AnexarPageComponent implements OnInit {
    * Resoluciones de los archivos subidos.
    */
   resoluciones: string[] = new Array(this.tiposDeDocumentos.length).fill('');
-  getTiposDocumentosSubscription: any;
-  getTipoDocumentoSubscription: any;
-  getDocumentosSubscription: any;
 
   /**
    * Constructor del componente.
@@ -193,8 +203,10 @@ export class AnexarPageComponent implements OnInit {
    * Obtiene los tipos de documentos del catálogo.
    */
   getTiposDocumentos(): void {
-    this.getTiposDocumentosSubscription = this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+    this.catalogosServices
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).pipe(
+        takeUntil(this.destroyed$)
+      )
       .subscribe({
         next: (resp): void => {
           if (resp.length > 0) {
@@ -209,7 +221,10 @@ export class AnexarPageComponent implements OnInit {
    * Obtiene el tipo de documento del servicio de registro y digitalización.
    */
   getTipoDocumento(): void {
-    this.getTipoDocumentoSubscription = this.registrodigitalizar.getTipoDocumento().subscribe((resp) => {
+   this.registrodigitalizar.getTipoDocumento().pipe(
+      takeUntil(this.destroyed$)
+    )
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const response = resp.data;
         this.TipoDocumento = {
@@ -223,7 +238,9 @@ export class AnexarPageComponent implements OnInit {
   }
 
   getDocumentos(): void {
-    this.getDocumentosSubscription = this.registrodigitalizar.getDocumentos().subscribe((resp) => {
+     this.registrodigitalizar.getDocumentos().pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe((resp) => {
       if (resp.code === 200) {
         const response = resp.data;
         this.disponiblesDocumentos = {
@@ -242,7 +259,20 @@ export class AnexarPageComponent implements OnInit {
   todosDocumentos(): boolean {
     return this.documentosSeleccion.every((doc) => doc !== '');
   }
-
+  disponiblesDocumentosChange(data:any){
+    switch(data.eventName){
+      case 'enDocumentSelect':
+        this.documentosSeleccion[data.index] =data.data;
+        break;
+      case 'verDocument':
+        this.verDocument(data.index)
+        break;
+        default:
+          break;
+    }
+    console.log(data);
+    
+  }
   /**
    * Maneja la selección de un documento.
    * @param _index Índice del documento seleccionado.
@@ -287,12 +317,12 @@ export class AnexarPageComponent implements OnInit {
       if (sizeMB > 3) {
         console.error('File size must be less than 3 MB');
         input.value = '';
-        this.Tamanosdearchivo[index] = null;
+        this.tamanosDeArchivo[index] = null;
         this.resoluciones[index] = '';
         this.nombresArchivosSubidos[index] = '';
         return;
       }
-      this.Tamanosdearchivo[index] = parseFloat(sizeMB.toFixed(2));
+      this.tamanosDeArchivo[index] = parseFloat(sizeMB.toFixed(2));
       this.nombresArchivosSubidos[index] = file.name;
 
       const reader = new FileReader();
@@ -339,14 +369,7 @@ export class AnexarPageComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    if (this.getTiposDocumentosSubscription) {
-      this.getTiposDocumentosSubscription.unsubscribe();
-    }
-    if (this.getTipoDocumentoSubscription) {
-      this.getTipoDocumentoSubscription.unsubscribe();
-    }
-    if (this.getDocumentosSubscription) {
-      this.getDocumentosSubscription.unsubscribe();
-    }
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

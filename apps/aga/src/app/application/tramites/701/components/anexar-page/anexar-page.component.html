@@ -1,47 +1,15 @@
 <div class="container">
   <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR"></ng-alert>
-  <table class="table">
-    <thead class="table-light">
-      <tr>
-        <th style="width: 690px">Tipo de documentos</th>
-        <th>Documentos</th>
-        <th>ver documento</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let docType of tiposDeDocumentos; let i = index">
-        <td>{{ docType }}</td>
-        <td>
-          <ng-container *ngIf="!procesoCompletado; else fileNameDisplay">
-          <app-catalogo-select
-          id="disponiblesDocumentos"
-          [catalogo]="disponiblesDocumentos.catalogos"
-          [label]="disponiblesDocumentos.labelNombre"
-          [placeholder]="disponiblesDocumentos.primerOpcion"
-          [required]="disponiblesDocumentos.required"
-          [isDisabled]="false"
-          [(ngModel)]="documentosSeleccion[i]" 
-          (change)="enDocumentSelect(i)"
-        ></app-catalogo-select>
-   
-          </ng-container>
-          <ng-template #fileNameDisplay>
-            {{ nombresArchivosSubidos[i] }}
-          </ng-template>
-        </td>
-        <td class="text-center">
-          <button
-            class="btn btn-link"
-            [disabled]="!documentosSeleccion[i]"
-            (click)="verDocument(i)"
-          >
-            <i class="bi bi-file-earmark-pdf" style="font-size: 1.5rem"></i>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
+  {{tiposDeDocumentos | json}}
+  <app-tabla-dinamica
+  [configuracionTabla]="configuracionTabla" 
+  [tipoSeleccionTabla]="tabSelection"
+  
+(disponiblesDocumentosChange)="disponiblesDocumentosChange($event)"
+    [datos]="tiposDeDocumentos" 
+    [disponiblesDocumentos]="disponiblesDocumentos"
+    >
+  ></app-tabla-dinamica>
 
   <div class="col-md-12 mt-5 d-flex justify-content-end">
     <button
@@ -63,6 +31,7 @@
   <div *ngIf="mostrarTabla" class="mt-4">
     <ng-titulo titulo="Adjuntar documentos" />
     <ng-alert [CONTENIDO]="TEXTO_DE_ADJUNTAR"></ng-alert>
+    
     <table class="table" *ngIf="mostrarTabla" >
       
       <thead class="table-light">
@@ -76,7 +45,7 @@
       <tbody>
         <tr *ngFor="let doc of documentosSeleccion; let i = index">
           <td>{{ tiposDeDocumentos[i] }}</td>
-          <td>{{ Tamanosdearchivo[i] !== null ? Tamanosdearchivo[i] + " MB" : "" }}</td>
+          <td>{{ tamanosDeArchivo[i] !== null ? tamanosDeArchivo[i] + " MB" : "" }}</td>
           <td>{{ resoluciones[i] }}</td>
           <td>
             <div class="custome-file-container">
@@ -98,7 +67,7 @@
         </tr>
       </tbody>
       </table>
-   
+
     <div class="alert alert-warning" role="alert">
       La carga del documento puede tardar varios segundos, este tiempo dependerá
       del tamaño de tu archivo y de tu velocidad de conexión
@@ -120,7 +89,7 @@
 
   <div *ngIf="mostrarTablaArchivosSubidos" class="mt-4">
   
-      <table class="table" >
+    <table class="table" >
       <thead class="table-light">
         <tr>
           <th>Documento</th>
@@ -136,7 +105,6 @@
         </tr>
       </tbody>
     </table>
-  
     <div class="col-md-12 mt-5 d-flex justify-content-end">
       <button class="btn btn-primary" (click)="cerrarProceso()">Cerrar</button>
     </div>

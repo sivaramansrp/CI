@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FormsModule } from '@angular/forms';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-tabla-dinamica',
   templateUrl: './tabla-dinamica.component.html',
   styleUrl: './tabla-dinamica.component.scss',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,CatalogoSelectComponent],
   host: {},
 })
 export class TablaDinamicaComponent<T> {
@@ -21,6 +22,9 @@ export class TablaDinamicaComponent<T> {
    */
 
   @Input() tipoSeleccionTabla!: TablaSeleccion;
+  @Input() disponiblesDocumentos!: any;
+  @Output() disponiblesDocumentosChange: EventEmitter<any> = new EventEmitter<any>();
+
 /*
    * Este valor es necesario para que la plantilla pueda acceder a los diferentes tipos de selección como "CHECKBOX", "RADIO", etc., que definen el comportamiento de la tabla.
    *
@@ -155,4 +159,17 @@ export class TablaDinamicaComponent<T> {
       this.listaDeFilaSeleccionada.emit([]);
     }
   }
+   enDocumentSelect(_index: number,event:any): void {
+    console.log('test',_index,event);
+    this.disponiblesDocumentosChange.emit({index:_index,data:event,eventName:'enDocumentSelect'});
+   }
+   verDocument(index: number): void {
+    this.disponiblesDocumentosChange.emit({index:index,eventName:'verDocument'});
+   }
+   cambioArchivo(_index: number,event:any): void {
+    console.log('test',_index,event);
+    this.disponiblesDocumentosChange.emit({index:_index,data:event,eventName:'cambioArchivo'});
+   }
+   
+
 }

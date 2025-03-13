@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable dot-notation */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
@@ -8,7 +9,7 @@
 /* eslint-disable sort-imports */
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
@@ -19,6 +20,7 @@ import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { RegistroDigitalizarDocumentosService } from '../../services/registro-digitalizar-documentos.service';
 import { TipoDocumento } from '../../models/tipo-documento.model';
+import { ReplaySubject, takeUntil } from 'rxjs';
 
 /**
  * Componente para filtrar archivos de digitalización.
@@ -30,7 +32,7 @@ import { TipoDocumento } from '../../models/tipo-documento.model';
   standalone: true,
   imports: [SelectCatalogosComponent, CommonModule, FormsModule,SharedModule],
 })
-export class FiltrarArchivosDigitalizacionComponent implements OnInit {
+export class FiltrarArchivosDigitalizacionComponent implements OnInit,OnDestroy {
   /**
    * Formulario para los tipos de documentos.
    */
@@ -71,7 +73,7 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
    */
   documentosEspecificos: TipoDocumento[] = [];
  
-
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * Constructor del componente.
    * @param fb Constructor de formularios.
@@ -160,7 +162,9 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
    */
   getTiposDocumentos(): void {
     this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).pipe(
+        takeUntil(this.destroyed$)
+      )
       .subscribe({
         next: (resp): void => {
           if (resp.length > 0) {
@@ -183,8 +187,9 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
    */
   addDoctoEspecifico(): void {
     if (this.documentoSeleccionado) {
-    this.registrodigitalizar.getDocumentoSelect()
-
+    this.registrodigitalizar.getDocumentoSelect().pipe(
+      takeUntil(this.destroyed$)
+    )
         .subscribe({
           next: (data) => {
 
@@ -234,4 +239,9 @@ export class FiltrarArchivosDigitalizacionComponent implements OnInit {
     const checked = (event.target as HTMLInputElement).checked;
     this.TipoDocumento.forEach((doc) => (doc.selected = checked));
   }
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
+
 }

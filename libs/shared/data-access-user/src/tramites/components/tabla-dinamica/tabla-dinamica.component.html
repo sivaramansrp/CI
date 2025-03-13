@@ -40,7 +40,6 @@
                 aria-label="Seleccionar"
               />
             </td>
-    
            }
            @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
             <td>
@@ -53,13 +52,40 @@
                 [checked]="filasSeleccionadas.includes(i)"
                 aria-label="Seleccionar"
               />
-            </td>
-    
+            </td>   
            }
           
           <!-- Renderizar cada columna de manera dinámica utilizando la función 'clave' -->
           <td *ngFor="let col of obtenerConfiguracionOrdenada()">
-            {{ col.clave(fila) || ' ' }}
+            <!-- {{col | json}}
+            {{fila | json}} -->
+            <ng-container [ngSwitch]="col.encabezado">
+              <ng-container *ngSwitchCase="'Documentos'">
+                <app-catalogo-select
+                id="disponiblesDocumentos"
+                [catalogo]="disponiblesDocumentos.catalogos"
+                [label]="disponiblesDocumentos.labelNombre"
+                [placeholder]="disponiblesDocumentos.primerOpcion"
+                [required]="disponiblesDocumentos.required"
+                [isDisabled]="false"
+                (selectionChange)="enDocumentSelect(i,$event)"
+      
+              ></app-catalogo-select>
+              </ng-container>
+              <ng-container *ngSwitchCase="'Ver documento'">
+                <button
+                class="btn btn-link"
+                (click)="verDocument(i)"
+              >
+                <i class="bi bi-file-earmark-pdf" style="font-size: 1.5rem"></i>
+              </button>
+              </ng-container> 
+              <ng-container *ngSwitchDefault>
+                {{ col.clave(fila) || ' ' }}
+              </ng-container>
+              
+              </ng-container>
+            
           </td>
         </tr>
       </tbody>

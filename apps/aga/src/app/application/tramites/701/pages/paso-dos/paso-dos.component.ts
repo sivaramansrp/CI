@@ -1,6 +1,7 @@
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable sort-imports */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,OnDestroy } from '@angular/core';
 import {BtnContinuarComponent, Catalogo } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
@@ -14,6 +15,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { AnexarPageComponent } from '../../components/anexar-page/anexar-page.component';
 import { FiltrarArchivosDigitalizacionComponent } from '../../components/filtrar-archivos-digitalizacion/filtrar-archivos-digitalizacion.component';
+import { ReplaySubject, takeUntil } from 'rxjs';
+
 
 /**
  * Componente para el paso dos del wizard.
@@ -29,11 +32,10 @@ import { FiltrarArchivosDigitalizacionComponent } from '../../components/filtrar
     ReactiveFormsModule,
     CommonModule,
     AnexarPageComponent,
-    // AnexarDocumentosComponent,
     FiltrarArchivosDigitalizacionComponent,
   ],
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit,OnDestroy {
   /**
    * Constantes de textos.
    */
@@ -58,6 +60,8 @@ export class PasoDosComponent implements OnInit {
    * Mensaje de error para el párrafo.
    */
   parrafoError: string = '';
+
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
    * Constructor del componente.
@@ -85,17 +89,6 @@ export class PasoDosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que ampare el valor de la mercancía',
-      },
-      {
-        id: 2,
-        descripcion:
-          'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-      },
-    ];
   }
 
   /**
@@ -103,7 +96,9 @@ export class PasoDosComponent implements OnInit {
    */
   getTiposDocumentos(): void {
     this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).pipe(
+        takeUntil(this.destroyed$)
+      )
       .subscribe((resp) => {
         if (resp.length > 0) {
           this.tiposDocumentos = resp;
@@ -129,5 +124,9 @@ export class PasoDosComponent implements OnInit {
    */
   eliminar(i: number): void {
     this.documentosSeleccionados.splice(i, 1);
+  }
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }
