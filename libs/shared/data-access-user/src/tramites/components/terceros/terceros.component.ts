@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CONSTANTES } from '../../../../../../../apps/aga/src/app/application/core/enums/5701/servicios-extraordinarios.enum';
+import { CONSTANTES } from '../../../core/enums/constantes-alertas.enum';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '../titulo/titulo.component';
 import { PersonaTerceros } from '../../../core/models/shared/datos-generales.model';

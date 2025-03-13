@@ -99,4 +99,4 @@ export { TramiteFolioQueries } from './core/queries/tramiteFolio.queries';
 export { TramiteFolioState, TramiteFolioStore } from './core/estados/tramiteFolio.store'
 
 export * from './core/models/shared/datos-generales.model';
-export * from '../../../../apps/aga/src/app/application/core/enums/5701/servicios-extraordinarios.enum';
+export * from './core/enums/constantes-alertas.enum';

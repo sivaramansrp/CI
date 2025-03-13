@@ -5,7 +5,7 @@ import {
 } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '../../../../core/enums/5701/servicios-extraordinarios.enum';
+import { PASOS } from '../../../../../../../../../libs/shared/data-access-user/src/core/enums/constantes-alertas.enum';
 import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 

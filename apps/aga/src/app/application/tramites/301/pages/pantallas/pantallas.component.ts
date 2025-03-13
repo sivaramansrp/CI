@@ -3,7 +3,7 @@ import { Component, ViewChild } from '@angular/core';
 import { AccionBoton } from 'libs/shared/data-access-user/src/core/models/301/servicios-pantallas.model';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from 'apps/aga/src/app/application/core/enums/5701/servicios-extraordinarios.enum';
+import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 /**

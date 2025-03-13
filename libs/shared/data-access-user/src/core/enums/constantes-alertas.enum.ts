@@ -31,21 +31,6 @@ export const TEXTOS = {
   ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
 };
 
-export const INDUSTRIA_AUTOMOTRIZ = {
-  labelNombre: 'Industria Automotriz',
-  maxlength: 25,
-  minlenght: 0,
-  required: false,
-  alfanumerico: true,
-};
-
-export const PROGRAMA_FOMENTO = {
-  labelNombre: 'Programa de fomento',
-  maxlength: 25,
-  minlenght: 0,
-  required: false,
-  alfanumerico: true,
-};
 
 export const IMMEX = {
   labelNombre: 'IMMEX (Número/aaaa)',
@@ -55,39 +40,6 @@ export const IMMEX = {
   alfanumerico: true,
 };
 
-export const SOCIO_COMERCIAL = {
-  labelNombre: 'ID Socio comercial',
-  maxlength: 10,
-  minlenght: 0,
-  required: false,
-  alfanumerico: true,
-};
-
-export const DESPACHO_LDA = {
-  labelNombre: 'RFC autorización LDA',
-  maxlength: 10,
-  minlenght: 0,
-  required: false,
-  alfanumerico: true,
-};
-
-export const DESPACHO_DD = {
-  labelNombre: 'Autorizacion DDEX',
-  maxlength: 10,
-  minlenght: 0,
-  required: false,
-  alfanumerico: true,
-};
-
-export const HORA_INICIO = {
-  labelNombre: 'Hora inicio',
-  required: true,
-};
-
-export const HORA_FINAL = {
-  labelNombre: 'Hora final',
-  required: true,
-};
 export const MESES = [
   { id: '1', mes: 'Enero' },
   { id: '2', mes: 'Febrero' },
@@ -123,24 +75,13 @@ export const SEMANA_D = [
   'Sabado',
 ];
 
-export const FECHA_INICIO = {
-  labelNombre: 'Fecha inicio',
-  required: true,
-  habilitado: true,
-};
-
-export const FECHA_FINAL = {
-  labelNombre: 'Fecha final',
-  required: true,
-  habilitado: true,
-};
 
 export const MENSAJEDEALERTA = {
   ADJUNTAR: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro</p>`,
 };
 
 export const MENSAJE_ALERTA_TRATADOS = {
-  MENSAJE_ALERTA:`
+  MENSAJE_ALERTA: `
 <ul>
   Para seleccionar un tratado y criterio, siga los siguientes pasos:
   <li>Primero seleccione un país o bloque</li>
@@ -158,7 +99,7 @@ export const PROTESTA = {
   <p>El/la que suscribe manifiesto(a) bajo protesta de decir verdad, que la información declarada en el presente trámite de REGISTRO ÚNICO DE PRODUCTOS ELEGIBLES PARA PREFERENCIAS Y CONCESIONES ARANCELARIAS es copia fiel, íntegra e inalterada de la información y documentación soporte que obra en poder del (de la) solicitante.</p>`,
 }
 export const FECHA_SALIDA = {
-  labelNombre:'Fecha de expedición de certificado de Molino o de calidad',
+  labelNombre: 'Fecha de expedición de certificado de Molino o de calidad',
   required: true,
   habilitado: false,
 }

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MESES, SEMANA } from '../../../../../../../apps/aga/src/app/application/core/enums/5701/servicios-extraordinarios.enum';
+import { MESES, SEMANA } from '../../../core/enums/constantes-alertas.enum';
 
 import * as moment from 'moment';
 import { InputFecha } from '../../../core/models/shared/components.model';

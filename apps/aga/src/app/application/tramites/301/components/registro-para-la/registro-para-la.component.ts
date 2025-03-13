@@ -4,7 +4,7 @@
 import {
   Aviso,
   Importante,
-} from 'apps/aga/src/app/application/core/enums/5701/servicios-extraordinarios.enum';
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,

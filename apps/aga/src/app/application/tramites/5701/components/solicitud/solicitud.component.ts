@@ -1,12 +1,13 @@
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 import {
-  DESPACHO_DD,
-  DESPACHO_LDA,
+  DESPACHO_DD, DESPACHO_LDA,
   FECHA_FINAL,
   FECHA_INICIO,
   HORA_FINAL,
   HORA_INICIO,
+} from '../../../../core/enums/5701/tramite5701.enum';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import {
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -43,6 +44,7 @@ import { datosAgregarFormulario } from '@ng-mf/data-access-user';
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+
 
 @Component({
   selector: 'app-solicitud',

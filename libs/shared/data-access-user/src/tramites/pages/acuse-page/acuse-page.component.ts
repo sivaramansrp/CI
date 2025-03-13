@@ -2,7 +2,7 @@ import {
   ACUSE_SERVICIOS_EXTRAORDINARIOS,
   TITULO_ACUSE,
   TXT_ALERTA_ACUSE,
-} from '../../../../../../../apps/aga/src/app/application/core/enums/5701/servicios-extraordinarios.enum';
+} from '../../../core/enums/constantes-alertas.enum';
 import { Component, OnInit } from '@angular/core';
 import { AccionesTabla } from '../../../core/models/shared/components.model';
 import { AcuseComponent } from '../../components/acuse/acuse.component';
