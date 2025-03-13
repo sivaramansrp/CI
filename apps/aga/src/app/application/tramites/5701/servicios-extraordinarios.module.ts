@@ -1,4 +1,4 @@
-import { AgregarTransporteComponent, CatalogosService } from '@ng-mf/data-access-user';
+import { AgregarTransporteComponent, CatalogosService, UppercaseDirective } from '@ng-mf/data-access-user';
 import { AgregaPersonasComponent } from './components/agrega-personas/agrega-personas.component';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
@@ -27,7 +27,6 @@ import { RouterModule } from '@angular/router';
 import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { ServiciosExtraordinariosRoutingModule } from './servicios-extraordinarios-routing.module';
-import { SharedModule } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
@@ -71,10 +70,10 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     forwardRef(() => SelectCatalogosComponent),
     forwardRef(() => SelectPaisesComponent),
     ServiciosExtraordinariosRoutingModule,
-    SharedModule,
     forwardRef(() => SolicitanteComponent),
     forwardRef(() => TituloComponent),
     forwardRef(() => WizardComponent),
+    forwardRef(() => UppercaseDirective),
     ToastrModule.forRoot()
   ],
   exports: [

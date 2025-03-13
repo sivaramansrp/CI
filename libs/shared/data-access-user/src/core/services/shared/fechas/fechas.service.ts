@@ -1,7 +1,5 @@
-import { DatosParaValidacionFecha } from 'libs/shared/data-access-user/src/core/models/shared/fechas.model';
 import { Injectable } from '@angular/core';
-import { MILISEGUNDOS } from 'libs/shared/data-access-user/src/tramites/constantes/constantes';
-import { SEMANA_D } from '@libs/shared/data-access-user/src/core/enums/constantes-alertas.enum';
+import { SEMANA_D } from '../../../enums/constantes-alertas.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +11,7 @@ export class FechasService {
    * @param {boolean} dma, si es false, regresa el formato 'AAAA-MM-DD'
    * @returns {string} Fecha en formato 'DD-MM-AAAA' o 'AAAA-MM-DD'
    */
-  formatoFechaGuion(fecha: string, dma: boolean = true): string {
+  formatoFechaGuion(fecha: string, dma = true): string {
     const [dia, mes, anio] = fecha.split('/');
     if (dma) {
       return `${dia}-${mes}-${anio}`;
@@ -57,65 +55,5 @@ export class FechasService {
       fechaPrincipio.setDate(fechaPrincipio.getDate() + 1);
     }
     return dias;
-  }
-
-  /**
-   * Valida si existen 24 horas en una fecha.
-   * @param {DatosParaValidacionFecha} datosFechas - Datos para validar la fecha.
-   * @returns {boolean} True si la fecha tiene 24 horas, false si no.
-   */
-  validacion24Horas(datosFechas: DatosParaValidacionFecha): boolean {
-    const { fechaInicio, horaInicio, fechaFin, horaFin } = datosFechas;
-
-    const fechaInicial = new Date(`${fechaInicio}T${horaInicio}:00`);
-    const fechaFinal = new Date(`${fechaFin}T${horaFin}:00`);
-
-    const milisegundosDia = MILISEGUNDOS.DIA;
-    const diferenciaFechas = fechaFinal.getTime() - fechaInicial.getTime();
-
-    if (diferenciaFechas <= milisegundosDia) {
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Valida si el rango de la fecha es igual o menor a una semana, es decir, 7 días.
-   * @param {DatosParaValidacionFecha} datosFechas - Datos para validar la fecha.
-   * @returns {boolean} True si el rango de la fecha es igual o menor a una semana, false si no.
-   */
-  validacionSemana(datosFechas: DatosParaValidacionFecha): boolean {
-    const { fechaInicio, fechaFin } = datosFechas;
-
-    const fechaInicial = new Date(fechaInicio);
-    const fechaFinal = new Date(fechaFin);
-
-    const milisegundosSemana = MILISEGUNDOS.SEMANA;
-    const diferenciaFechas = fechaFinal.getTime() - fechaInicial.getTime();
-
-    if (diferenciaFechas <= milisegundosSemana) {
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Valida si el rango de la fecha es igual o menor a un mes, es decir, 30 días.
-   * @param {DatosParaValidacionFecha} datosFechas - Datos para validar la fecha.
-   * @returns {boolean} True si el rango de la fecha es igual o menor a un mes, false si no.
-   */
-  validacionMes(datosFechas: DatosParaValidacionFecha): boolean {
-    const { fechaInicio, fechaFin } = datosFechas;
-
-    const fechaInicial = new Date(fechaInicio);
-    const fechaFinal = new Date(fechaFin);
-
-    const milisegundosMes = MILISEGUNDOS.MES;
-    const diferenciaFechas = fechaFinal.getTime() - fechaInicial.getTime();
-
-    if (diferenciaFechas <= milisegundosMes) {
-      return true;
-    }
-    return false;
   }
 }

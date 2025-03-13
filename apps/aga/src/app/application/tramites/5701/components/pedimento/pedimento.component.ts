@@ -1,15 +1,14 @@
+import { BooleanoSiNoPipe, SoloNumerosDirective } from '@ng-mf/data-access-user';
 import { Component, Input, SimpleChanges, forwardRef, output } from '@angular/core';
 import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BooleanoSiNoPipe } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '@ng-mf/data-access-user';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'c-pedimento',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, SharedModule, forwardRef(() => BooleanoSiNoPipe)],
+  imports: [ReactiveFormsModule, CommonModule, forwardRef(() => BooleanoSiNoPipe), forwardRef(() => SoloNumerosDirective)],
   templateUrl: './pedimento.component.html',
   styleUrl: './pedimento.component.scss',
 })

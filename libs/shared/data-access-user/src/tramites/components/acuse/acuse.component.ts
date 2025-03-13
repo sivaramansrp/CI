@@ -6,7 +6,7 @@ import { TituloComponent } from '../titulo/titulo.component';
 import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
 
 @Component({
-  selector: 'app-component-acuse',
+  selector: 'lib-component-acuse',
   standalone: true,
   imports: [CommonModule, AlertComponent, TituloComponent],
   templateUrl: './acuse.component.html',

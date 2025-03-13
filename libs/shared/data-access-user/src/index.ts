@@ -100,3 +100,4 @@ export { TramiteFolioState, TramiteFolioStore } from './core/estados/tramiteFoli
 
 export * from './core/models/shared/datos-generales.model';
 export * from './core/enums/constantes-alertas.enum';
+export * from './tramites/directives/solo-numeros/solo-numeros.directive'
