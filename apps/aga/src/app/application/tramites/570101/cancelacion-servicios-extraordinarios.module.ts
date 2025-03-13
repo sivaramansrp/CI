@@ -17,6 +17,7 @@ import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { ServiciosExtraordinariosService } from './service/servicios-extraordinarios.service';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   exports: [],
   providers: [
     ToastrService,
-    CancelarSolicitudService
+    CancelarSolicitudService,
+    ServiciosExtraordinariosService 
   ]
 })
 export class CancelacionServiciosExtraordinariosModule {}
