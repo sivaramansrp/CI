@@ -1,9 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+
 import { Catalogo } from '@ng-mf/data-access-user';
-import { DatosDeFila } from '../../models/220202/fitosanitario.model';
+
+import { DatosDeFila, DatosForma } from '../../models/220202/fitosanitario.model';
+
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
+
 import { Subject, takeUntil } from 'rxjs';
 
 /**
@@ -342,7 +348,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     campo: string
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.agriculturaApiService.updateDatosForma as (value: any) => void)(VALOR);
+    (this.agriculturaApiService.updateDatosForma as (value: DatosForma) => void)(VALOR);
   }
 
   /**

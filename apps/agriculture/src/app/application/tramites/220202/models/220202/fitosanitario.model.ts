@@ -201,6 +201,42 @@ export interface DatosForma {
 }
 
 /**
+ * @function getDefaultValue
+ * @description Función auxiliar para retornar el valor por defecto de cada propiedad.
+ * 
+ * @param {any} value - El valor a verificar.
+ * @param {any} defaultValue - El valor por defecto a retornar si `value` es undefined o null.
+ * @returns {any} - El valor o el valor por defecto.
+ */
+function getDefaultValue(value: string | undefined, defaultValue: string): string {
+    return value !== undefined && value !== null ? value : defaultValue;
+}
+
+/**
+ * @function getMercanciasDefault
+ * @description Función auxiliar específicamente para la propiedad `mercancias`.
+ * 
+ * @param {Mercancia[]} value - El valor a verificar para `mercancias`.
+ * @param {Mercancia[]} defaultValue - El valor por defecto (array vacío) para `mercancias` si `value` no es un array.
+ * @returns {Mercancia[]} - El array de `mercancias` o un array vacío si el valor no es un array.
+ */
+function getMercanciasDefault(value: Mercancia[], defaultValue: Mercancia[]): Mercancia[] {
+    return Array.isArray(value) ? value : defaultValue;
+}
+
+/**
+ * @function finalEnviar
+ * @description Función auxiliar para la propiedad `finalEnviar`.
+ * 
+ * @param {boolean} value - El valor a verificar para `finalEnviar`.
+ * @param {boolean} defaultValue - El valor por defecto para `finalEnviar` si `value` es undefined o null.
+ * @returns {boolean} - El valor o el valor por defecto.
+ */
+function finalEnviar(value: boolean, defaultValue: boolean): boolean {
+    return value !== undefined && value !== null ? value : defaultValue;
+}
+
+/**
  * @function createDatosState
  * @description 
  * Función que crea un estado inicial por defecto para `ListaDeDatosFinal`.
@@ -211,49 +247,49 @@ export interface DatosForma {
 export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): ListaDeDatosFinal {
     return {
         datos: {
-            aduana: params.datos?.aduana || '',
-            agropecuaria: params.datos?.agropecuaria || '',
-            punto: params.datos?.punto || '',
-            guia: params.datos?.guia || '',
-            regimen: params.datos?.regimen || '',
-            ferrocarril: params.datos?.ferrocarril || '',
-            mercancias: params.datos?.mercancias || [],
-            aduanaMercancia: params.datos?.aduanaMercancia || '',
-            requisito: params.datos?.requisito || '',
-            numCertificadoInternacional: params.datos?.numCertificadoInternacional || '',
-            arancelaria: params.datos?.arancelaria || '',
-            descFraccionArancelaria: params.datos?.descFraccionArancelaria || '',
-            nico: params.datos?.nico || '',
-            descNico: params.datos?.descNico || '',
-            descripcion: params.datos?.descripcion || '',
-            cantidadUMT: params.datos?.cantidadUMT || '',
-            umt: params.datos?.umt || '',
-            cantidadUMC: params.datos?.cantidadUMC || '',
-            umc: params.datos?.umc || '',
-            uso: params.datos?.uso || '',
-            producto: params.datos?.producto || '',
+            aduana: getDefaultValue(params.datos?.aduana, ''),
+            agropecuaria: getDefaultValue(params.datos?.agropecuaria, ''),
+            punto: getDefaultValue(params.datos?.punto, ''),
+            guia: getDefaultValue(params.datos?.guia, ''),
+            regimen: getDefaultValue(params.datos?.regimen, ''),
+            ferrocarril: getDefaultValue(params.datos?.ferrocarril, ''),
+            mercancias: getMercanciasDefault(params.datos?.mercancias as Mercancia[], []),
+            aduanaMercancia: getDefaultValue(params.datos?.aduanaMercancia, ''),
+            requisito: getDefaultValue(params.datos?.requisito, ''),
+            numCertificadoInternacional: getDefaultValue(params.datos?.numCertificadoInternacional, ''),
+            arancelaria: getDefaultValue(params.datos?.arancelaria, ''),
+            descFraccionArancelaria: getDefaultValue(params.datos?.descFraccionArancelaria, ''),
+            nico: getDefaultValue(params.datos?.nico, ''),
+            descNico: getDefaultValue(params.datos?.descNico, ''),
+            descripcion: getDefaultValue(params.datos?.descripcion, ''),
+            cantidadUMT: getDefaultValue(params.datos?.cantidadUMT, ''),
+            umt: getDefaultValue(params.datos?.umt, ''),
+            cantidadUMC: getDefaultValue(params.datos?.cantidadUMC, ''),
+            umc: getDefaultValue(params.datos?.umc, ''),
+            uso: getDefaultValue(params.datos?.uso, ''),
+            producto: getDefaultValue(params.datos?.producto, ''),
         },
         movilizacion: {
-            transporte: params.movilizacion?.transporte || '',
-            guiaIdentificacion: params.movilizacion?.guiaIdentificacion || '',
-            empresaTransportista: params.movilizacion?.empresaTransportista || '',
-            punto: params.movilizacion?.punto || '',
+            transporte: getDefaultValue(params.movilizacion?.transporte, ''),
+            guiaIdentificacion: getDefaultValue(params.movilizacion?.guiaIdentificacion, ''),
+            empresaTransportista: getDefaultValue(params.movilizacion?.empresaTransportista, ''),
+            punto: getDefaultValue(params.movilizacion?.punto, ''),
         },
         pago: {
-            exentoPago: params.pago?.exentoPago || '',
-            justificacion: params.pago?.justificacion || '',
-            claveReferencia: params.pago?.claveReferencia || '',
-            cadenaDependencia: params.pago?.cadenaDependencia || '',
-            banco: params.pago?.banco || '',
-            llavePago: params.pago?.llavePago || '',
-            importePago: params.pago?.importePago || '',
-            fechaDePago: params.pago?.fechaDePago || '',
-            fechaInicioInput: params.pago?.fechaInicioInput || ''
+            exentoPago: getDefaultValue(params.pago?.exentoPago, ''),
+            justificacion: getDefaultValue(params.pago?.justificacion, ''),
+            claveReferencia: getDefaultValue(params.pago?.claveReferencia, ''),
+            cadenaDependencia: getDefaultValue(params.pago?.cadenaDependencia, ''),
+            banco: getDefaultValue(params.pago?.banco, ''),
+            llavePago: getDefaultValue(params.pago?.llavePago, ''),
+            importePago: getDefaultValue(params.pago?.importePago, ''),
+            fechaDePago: getDefaultValue(params.pago?.fechaDePago, ''),
+            fechaInicioInput: getDefaultValue(params.pago?.fechaInicioInput, '')
         },
         finalEnviar: {
-            datosFormaValidacion: params.finalEnviar?.datosFormaValidacion || false,
-            movilizacionValidacion: params.finalEnviar?.movilizacionValidacion || false,
-            validaciondeFormulariodePago: params.finalEnviar?.validaciondeFormulariodePago || false
+            datosFormaValidacion: finalEnviar(params.finalEnviar?.datosFormaValidacion as boolean, false),
+            movilizacionValidacion: finalEnviar(params.finalEnviar?.movilizacionValidacion as boolean, false),
+            validaciondeFormulariodePago: finalEnviar(params.finalEnviar?.validaciondeFormulariodePago as boolean, false)
         }
     };
 }

@@ -1,8 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+
 import { Catalogo } from '@ng-mf/data-access-user';
-import { Subject, Subscription, skip, takeUntil } from 'rxjs';
+
+import { Subject, Subscription, takeUntil } from 'rxjs';
 
 /**
  * @fileoverview Componente para la sección de datos para movilización nacional.

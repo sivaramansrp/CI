@@ -179,7 +179,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   obtenerBancoSelectorList() {
     this.agriculturaApiService.obtenerSelectorList('banco.json')
-      .pipe(takeUntil(this.destroyNotifier$))  // Ensure this subscription is unsubscribed
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(data => {
         if (data) {
           this.bancoSelector = data;
@@ -195,7 +195,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   obtenerListaDeJustificaciones() {
     this.agriculturaApiService.obtenerSelectorList('Justificación.json')
-      .pipe(takeUntil(this.destroyNotifier$))  // Ensure this subscription is unsubscribed
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(data => {
         if (data) {
           this.justificacionSelector = data;
