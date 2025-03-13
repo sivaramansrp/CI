@@ -112,8 +112,7 @@ export class DatosDonanteExtranjeroComponent implements OnInit, OnDestroy {
       .pipe(
         map((resp) => {
           this.pais = resp.data;
-        }),
-        takeUntil(this.destruirNotificador$)
+        })        
       );
 
     const CVE_DOCUMENTO_RESIDENCIA$ = this.donacionesExtranjerasService
@@ -121,14 +120,15 @@ export class DatosDonanteExtranjeroComponent implements OnInit, OnDestroy {
       .pipe(
         map((resp) => {
           this.cveDocumentoResidencia = resp.data;
-        }),
-        takeUntil(this.destruirNotificador$)
+        })
       );
 
     merge(
       PAIS$,
       CVE_DOCUMENTO_RESIDENCIA$
-    ).subscribe();
+    )
+    .pipe(takeUntil(this.destruirNotificador$))
+    .subscribe();
   }
 
   /**

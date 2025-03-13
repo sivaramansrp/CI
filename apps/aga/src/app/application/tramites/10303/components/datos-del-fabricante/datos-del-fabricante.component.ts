@@ -104,13 +104,14 @@ export class DatosDelFabricanteComponent implements OnInit, OnDestroy {
       .pipe(
         map((resp) => {
           this.pais = resp.data;
-        }),
-        takeUntil(this.destruirNotificador$)
+        })        
       );
 
     merge(
       PAIS$
-    ).subscribe();
+    )
+    .pipe(takeUntil(this.destruirNotificador$))
+    .subscribe();
   }
 
   /**
