@@ -42,7 +42,6 @@
           <tbody>
             <tr *ngFor="let item of documentList; let i = index">
               <td class="grey-column">{{ i + 1 }}</td>
-              <!-- <td><input type="checkbox" [(ngModel)]="selectedCheckboxes[i]" formControlName="individualCheckbox" (change)="setValoresStore(checkboxForm,'individualCheckbox', 'setIndividualCheckbox')"/></td> -->
               <td><input type="checkbox" [checked]="individualCheckbox.value[i]"
                 (change)="onCheckboxChange($event, i)" /></td>
               <td>{{ item.name }}</td>

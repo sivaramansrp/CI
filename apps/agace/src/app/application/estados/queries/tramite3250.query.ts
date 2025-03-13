@@ -17,16 +17,4 @@ export class Tramite32502Query extends Query<Solicitud32502State> {
     protected override store: Tramite32502Store) {
     super(store);
   }
-
-  public selectNombre() {
-    return this.select(state => state.nombre);
-  }
-
-  public selectPrimerApellido() {
-    return this.select(state => state.primerApellido);
-  }
-
-  public selectSegundoApellido() {
-    return this.select(state => state.segundoApellido);
-  }
 }

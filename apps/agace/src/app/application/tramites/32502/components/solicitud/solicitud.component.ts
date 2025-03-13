@@ -13,7 +13,7 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 
 /**
- * Componente para la vista de la solicitud de la sección de "130118".
+ * Componente para la vista de la solicitud de la sección de "32502".
  */
 @Component({
   selector: 'solicitud',

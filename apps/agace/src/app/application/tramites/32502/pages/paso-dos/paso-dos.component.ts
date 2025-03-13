@@ -10,26 +10,26 @@ import { PDF } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite32502Query } from '../../../../estados/queries/tramite3250.query';
+
 /**
- * Este componente se muestra en PasaDos
+ * Este componente se muestra en PasoDos
  */
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
-export class PasoDosComponent implements OnInit{
+export class PasoDosComponent implements OnInit {
   /**
    * Obtener el valor de la instrucción e inicializar la variable
    */
   TEXTOS = TEXTOS;
+
   /**
    * Lista de documentos cargados.
    */
   documentosCargados: DocumentosCargados[] = [];
-  /**
-   * Documento seleccionado por el usuario.
-   */
+
   /**
    * Documento seleccionado por el usuario.
    */
@@ -53,15 +53,6 @@ export class PasoDosComponent implements OnInit{
   /**
    * Lista de documentos.
    */
-  // documentList: string[] = [
-  //   'Escrito libre a la aduana',
-  //   'Manifesto',
-  //   'ID Official',
-  //   'Actas',
-  //   'Poderes',
-  //   'Otros'
-  // ];
-
   documentList = [
     { id: 1, name: 'Escrito libre a la aduana', checked: false },
     { id: 2, name: 'Manifesto', checked: true },
@@ -69,8 +60,7 @@ export class PasoDosComponent implements OnInit{
     { id: 4, name: 'Actas', checked: false },
     { id: 5, name: 'Poderes', checked: false },
     { id: 6, name: 'Otros', checked: false }
-  ]
-  
+  ];
 
   /**
    * Estado de los checkboxes seleccionados.
@@ -82,23 +72,27 @@ export class PasoDosComponent implements OnInit{
    */
   selectAll: boolean = false;
 
-    /**
-     * Formulario principal de la solicitud.
-     */
-    checkboxForm!: FormGroup;
+  /**
+   * Formulario principal de la solicitud.
+   */
+  checkboxForm!: FormGroup;
+
+  /**
+   * Estado de la solicitud.
+   */
+  public solicitudState!: Solicitud32502State;
+
+  @Input() catalogoDocumentos: Catalogo[] = [];
 
   /**
    * Constructor del componente
+   * @param fb FormBuilder para crear formularios reactivos
    * @param DocumentoService Servicio para manejar documentos
    * @param toastr Servicio para mostrar notificaciones
+   * @param tramite32502Store Estado del trámite
+   * @param tramite32502Query Consulta del estado del trámite
+   * @param avisoService Servicio para manejar avisos
    */
-  
-    /**
-     * Estado de la solicitud.
-     */
-    public solicitudState!: Solicitud32502State;
-    @Input() catalogoDocumentos: Catalogo[] = [];
-
   constructor(
     private fb: FormBuilder,
     private DocumentoService: DocumentoService,
@@ -113,52 +107,75 @@ export class PasoDosComponent implements OnInit{
       primerOpcion: 'Seleccione una tipo de documento'
     };
     // Inicializar el formulario principal
- 
   }
 
+  /**
+   * Método de inicialización del componente
+   */
   ngOnInit(): void {
     this.tramite32502Query.selectSolicitud$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.solicitudState = seccionState;
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.crearCheckboxForm();
     console.log();
     this.fetchCatalogoDocumentos(); // Fetch the catalogo documentos
   }
 
+  /**
+   * Sujeto para notificar la destrucción del componente.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  crearCheckboxForm(){
+  /**
+   * Crear el formulario de checkboxes
+   */
+  crearCheckboxForm() {
     this.checkboxForm = this.fb.group({
       dropdown: [this.solicitudState?.dropdown, Validators.required],
       commonCheckbox: [this.solicitudState?.commonCheckbox],
       individualCheckbox: this.fb.array(this.solicitudState?.individualCheckbox)
     });
   }
-  
+
+  /**
+   * Obtener el array de checkboxes individuales
+   */
   get individualCheckbox() {
     return this.checkboxForm.get('individualCheckbox') as FormArray;
   }
 
+  /**
+   * Manejar el cambio de estado de un checkbox individual
+   * @param event Evento de cambio del checkbox
+   * @param index Índice del checkbox
+   */
   onCheckboxChange(event: Event, index: number): void {
     const TARGET = event.target as HTMLInputElement;
     if (TARGET) {
       this.individualCheckbox.controls[index].setValue(TARGET.checked);
     }
-    this.setValoresStore(this.checkboxForm,'individualCheckbox', 'setIndividualCheckbox');
+    this.setValoresStore(this.checkboxForm, 'individualCheckbox', 'setIndividualCheckbox');
   }
 
+  /**
+   * Establecer valores en el store del trámite
+   * @param form Formulario reactivo
+   * @param campo Nombre del campo
+   * @param metodoNombre Nombre del método en el store
+   */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite32502Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite32502Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
-   * Toggle all checkboxes based on "Tipo de documento" checkbox state.
+   * Alternar el estado de todos los checkboxes basados en el estado del checkbox "Seleccionar todo"
+   * @param event Evento de cambio del checkbox "Seleccionar todo"
    */
   toggleAllCheckboxes(event: Event): void {
     const CHECKED = (event.target as HTMLInputElement).checked;
@@ -228,7 +245,6 @@ export class PasoDosComponent implements OnInit{
     return kilobytes * 1024;
   }
 
-
   /**
    * Verifica si el botón está desactivado
    * @returns {boolean} Verdadero si el botón está desactivado, falso en caso contrario
@@ -237,6 +253,9 @@ export class PasoDosComponent implements OnInit{
     return (this.documentoSeleccionado && this.documentoSeleccionado.id !== 0);
   }
 
+  /**
+   * Obtiene el catálogo de documentos desde el servicio de avisos
+   */
   private fetchCatalogoDocumentos(): void {
     this.avisoService.getTipoDocumento('tipoDocumento').subscribe(response => {
       this.catalogoDocumentos = response.data;

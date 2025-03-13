@@ -24,15 +24,17 @@ import documentosTable from 'libs/shared/theme/assets/json/32502/anexar.json';
 })
 export class AnexarRequisitosComponent implements OnInit {
   /**
-     * Obtener el valor de la instrucción e inicializar la variable
-     */
-    TEXTOS = TEXTOS;
+   * Obtener el valor de la instrucción e inicializar la variable
+   */
+  TEXTOS = TEXTOS;
+
   /**
-   *Formar grupo para el componente anexar-requisitos.
+   * Formar grupo para el componente anexar-requisitos.
    * Este grupo de formulario se utiliza para administrar los controles del formulario y sus valores,
-   *validación y estatus del componente anexar-requisitos.
+   * validación y estatus del componente anexar-requisitos.
    */
   anexarForm!: FormGroup;
+
   /**
    * Relación de documentos del componente anexar-requisitos.
    * Esta lista se completa a partir de un archivo JSON externo.
@@ -40,15 +42,14 @@ export class AnexarRequisitosComponent implements OnInit {
   documentos = documentosTable.documentos;
 
   /**
-   * Constructor para AnexarEquisitosComponent.
+   * Constructor para AnexarRequisitosComponent.
    * @param fb: instancia de FormBuilder utilizada para crear controles de formulario.
    */
-  // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder) {}
+
   /**
    * Enlace de ciclo de vida que se llama después de que se inicializan las propiedades vinculadas a datos de una directiva.
    * Inicializa el componente llamando al método `anexarEquisitosForm`.
-   *
    */
   ngOnInit(): void {
     this.anexarEquisitosForm();
@@ -57,10 +58,7 @@ export class AnexarRequisitosComponent implements OnInit {
   /**
    * Inicializa el grupo de formularios `anexarForm` con un único control de formulario `valorSeleccionado`.
    * El control de formulario se inicializa con una cadena vacía como valor predeterminado.
-   *
-   * @returns {nulo}
    */
-
   anexarEquisitosForm(): void {
     const GROUP: any = {};
     this.documentos.forEach((_, index) => {
@@ -69,16 +67,28 @@ export class AnexarRequisitosComponent implements OnInit {
     this.anexarForm = this.fb.group(GROUP);
   }
 
+  /**
+   * Maneja el cambio de archivo en el campo de entrada de archivo.
+   * Actualiza la descripción del archivo y la URL del archivo en la lista de documentos.
+   *
+   * @param event - El evento de cambio de archivo.
+   * @param index - El índice del documento en la lista de documentos.
+   */
   cambioDeArchivo(event: any, index: number): void {
-    const FILE = event.target.files[0]; // Get the selected file
+    const FILE = event.target.files[0]; // Obtener el archivo seleccionado
     if (FILE) {
-      const FILE_URL = URL.createObjectURL(FILE); // Create a URL for the selected file
+      const FILE_URL = URL.createObjectURL(FILE); // Crear una URL para el archivo seleccionado
       this.documentos[index].archivoDisponible.descripcion = FILE.name;
       this.documentos[index].fileUrl = FILE_URL;
       this.anexarForm.patchValue({ ['valorSeleccionado' + index]: FILE });
     }
   }
 
+  /**
+   * Abre el documento seleccionado en una nueva ventana.
+   *
+   * @param index - El índice del documento en la lista de documentos.
+   */
   verDocumento(index: number): void {
     const FILE_URL = this.documentos[index].fileUrl;
     if (FILE_URL) {

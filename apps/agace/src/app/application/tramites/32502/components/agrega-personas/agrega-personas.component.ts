@@ -9,7 +9,6 @@ import { SeccionAgaceState } from '../../../../estados/seccion.store';
 import { Subject } from 'rxjs';
 import { Tramite32502Query } from '../../../../estados/queries/tramite3250.query';
 
-
 @Component({
   selector: 'agrega-personas',
   standalone: true,
@@ -18,19 +17,43 @@ import { Tramite32502Query } from '../../../../estados/queries/tramite3250.query
   styleUrl: './agrega-personas.component.scss',
 })
 export class AgregaPersonasComponent {
+  /**
+   * Estado de la sección actual.
+   */
   private seccion!: SeccionAgaceState;
+
+  /**
+   * Estado de la solicitud actual.
+   */
   public solicitudState!: Solicitud32502State;
+
+  /**
+   * Control de formulario para el campo `gafete`.
+   */
   gafete: FormControl = new FormControl('', [Validators.maxLength(25)]);
 
+  /**
+   * Formulario para capturar los datos de una persona.
+   */
   personaForm: FormGroup = this.fb.group({
     nombre: [{value: this.tramite32502Store?.setNombre || "nombre", disabled: true }],
     primerApellido: [{ value: this.tramite32502Store.setPrimerApellido, disabled: true }],
     segundoApellido: [{ value: this.tramite32502Store.setSegundoApellido, disabled: true }],
   });
 
+  /**
+   * Objeto que representa a una persona.
+   */
   persona!: Persona;
 
+  /**
+   * Lista de personas agregadas.
+   */
   personas: Array<Persona> = [];
+
+  /**
+   * Sujeto para notificar la destrucción del componente.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
   constructor(
@@ -43,17 +66,31 @@ export class AgregaPersonasComponent {
     //
   }
 
+  /**
+   * Verifica si un campo del formulario es válido.
+   * 
+   * @param field - El nombre del campo a verificar.
+   * @returns `true` si el campo es válido, `false` en caso contrario.
+   */
   isValid(field: string) {
     return this.validacionesService.isValid(this.personaForm, field);
   }
 
+  /**
+   * Verifica si el campo `gafete` es válido.
+   * 
+   * @returns `true` si el campo `gafete` tiene errores y ha sido tocado, `false` en caso contrario.
+   */
   get gafeteIsValid() {
     return this.gafete.errors && this.gafete.touched;
   }
 
+  /**
+   * Busca información de una persona por su gafete.
+   * 
+   * Si no se proporciona un gafete o no se encuentran datos, muestra una alerta.
+   */
   buscarGafete() {
-    // Aquí va a buscar por gafete a un endpoint
-
     const GAFETE = this.gafete.value;
 
     if (!GAFETE) {
@@ -70,6 +107,9 @@ export class AgregaPersonasComponent {
     }
   }
 
+  /**
+   * Habilita todos los campos del formulario y les asigna validadores.
+   */
   habilitarCamposFormulario(): void {
     Object.keys(this.personaForm.controls).forEach((campo) => {
       const CONTROL = this.personaForm.get(campo);
@@ -79,6 +119,9 @@ export class AgregaPersonasComponent {
     });
   }
 
+  /**
+   * Deshabilita todos los campos del formulario.
+   */
   deshabilitarCamposFormulario(): void {
     Object.keys(this.personaForm.controls).forEach((campo) => {
       const CONTROL = this.personaForm.get(campo);
@@ -86,6 +129,12 @@ export class AgregaPersonasComponent {
     });
   }
 
+  /**
+   * Agrega una persona a la lista de personas.
+   * 
+   * Si el formulario o el campo `gafete` son inválidos, muestra una alerta y marca todos los campos como tocados.
+   * Si ya hay 5 personas en la lista, muestra una alerta indicando que no se pueden agregar más personas.
+   */
   agregarPersona() {
     this.gafete.setValidators([Validators.required, Validators.maxLength(25)]);
     this.gafete.updateValueAndValidity();
@@ -115,6 +164,11 @@ export class AgregaPersonasComponent {
     this.deshabilitarCamposFormulario();
   }
 
+  /**
+   * Elimina una persona de la lista de personas.
+   * 
+   * @param i - El índice de la persona a eliminar.
+   */
   eliminar(i: number) {
     this.personas.splice(i, 1);
     //modal de confirmacion de elimincacion
