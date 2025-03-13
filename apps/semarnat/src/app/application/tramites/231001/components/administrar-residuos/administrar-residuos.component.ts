@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { AdministrarResiduosService } from '@ng-mf/data-access-user';
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-
-import administrarResiduosMesa from 'libs/shared/theme/assets/json/231001/administrar-residuos-mesa.json';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente para administrar residuos
@@ -17,7 +19,7 @@ import administrarResiduosMesa from 'libs/shared/theme/assets/json/231001/admini
   templateUrl: './administrar-residuos.component.html',
   styleUrl: './administrar-residuos.component.scss',
 })
-export class AdministrarResiduosComponent implements OnInit {
+export class AdministrarResiduosComponent implements OnInit, OnDestroy {
   /**
    * Datos del encabezado de la tabla
    */
@@ -29,25 +31,35 @@ export class AdministrarResiduosComponent implements OnInit {
   /**
    * Datos de la tabla obtenidos de un archivo JSON
    */
-  public getEstablecimientoTableData = administrarResiduosMesa;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public getEstablecimientoTableData: any;
   /**
    * Formulario para el recuento total de filas
    */
   formularioParaRecuentoTotal!: FormGroup;
+
+  private destroyed$ = new Subject<void>();
+  
   /**
    * Constructor de la clase
    * @param fb - FormBuilder para crear formularios reactivos
+   * @param service - Servicio para administrar residuos
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private service: AdministrarResiduosService) {
     // constructor
   }
+
   /**
    * Método de inicialización del componente
    */
   ngOnInit(): void {
-    this.getEstablecimiento();
     this.crearFormularioParaRecuentoTotal();
-    this.actualizarRecuentoTotalDeFilas();
+    this.loadAdministrarResiduos();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   /**
@@ -56,7 +68,7 @@ export class AdministrarResiduosComponent implements OnInit {
   public getEstablecimiento(): void {
     this.tableHeaderData = this.getEstablecimientoTableData.tableHeader;
     this.tableBodyData = this.getEstablecimientoTableData.tableBody;
-  }
+}
 
   /**
    * Crea el formulario para el recuento total de filas
@@ -71,7 +83,24 @@ export class AdministrarResiduosComponent implements OnInit {
    * Actualiza el recuento total de filas en el formulario
    */
   public actualizarRecuentoTotalDeFilas(): void {
-    const totalRowCount = this.tableBodyData.length;
-    this.formularioParaRecuentoTotal.patchValue({ recuentoTotalDeFilas: totalRowCount });
+    const TOTAL_ROW_COUNT = this.tableBodyData.length;
+    this.formularioParaRecuentoTotal.patchValue({ recuentoTotalDeFilas: TOTAL_ROW_COUNT });
+}
+
+  /**
+   * Carga los datos para administrar residuos
+   */
+  loadAdministrarResiduos(): void {
+    this.service
+      .getAdministrarResiduos()
+      .pipe(
+        takeUntil(this.destroyed$) // Se usa takeUntil para asegurarse de que las suscripciones se cancelen al destruirse el componente
+      )
+      .subscribe((data) => {
+        this.getEstablecimientoTableData = data;
+        this.getEstablecimiento();
+        this.actualizarRecuentoTotalDeFilas();
+        console.log(data, 'table data');
+      });
   }
 }

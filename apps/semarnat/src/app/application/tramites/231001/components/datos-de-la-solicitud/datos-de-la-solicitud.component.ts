@@ -1,30 +1,42 @@
 /**
  * Componente que representa el formulario de datos de la aduana.
- * 
+ *
  *    app-datos-dela
  *  ./datos-dela.component.html
  *  ./datos-dela.component.scss
  */
-import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AlertComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { Observable, Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogosService } from '@ng-mf/data-access-user';
+
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
+
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { OnInit } from '@angular/core';
 import { PASOS } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { map } from 'rxjs';
+
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Solicitud231001State } from '../../../../tramites/231001/estados/tramites/tramite231001.store';
+import { Subject } from 'rxjs';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite231001Query } from '../../../../tramites/231001/estados/queries/tramite231001.query';
-import {
-  Solicitud231001State,
-  Tramite231001Store,
-} from '../../../../tramites/231001/estados/tramites/tramite231001.store'
+import { Tramite231001Store } from '../../../../tramites/231001/estados/tramites/tramite231001.store';
+import { Validators } from '@angular/forms';
+import { ViewChild } from '@angular/core';
+import { WizardComponent } from '@ng-mf/data-access-user';
+import { takeUntil } from 'rxjs';
 
 /**
  * Decorador que define un componente de Angular.
- * 
+ *
  *  app-datos-dela - El selector CSS que identifica este componente en una plantilla.
  * ./datos-dela.component.html - La URL de la plantilla HTML del componente.
  * ./datos-dela.component.scss - La URL de la hoja de estilos del componente.
@@ -40,8 +52,8 @@ import {
     CatalogoSelectComponent,
     TituloComponent,
     ReactiveFormsModule,
-    BtnContinuarComponent
-  ]
+    BtnContinuarComponent,
+  ],
 })
 export class DatosDelaSolicitudeComponent implements OnInit {
   private destroyed$: Subject<void> = new Subject();
@@ -100,16 +112,18 @@ export class DatosDelaSolicitudeComponent implements OnInit {
    * @param {FormBuilder} fb - Servicio FormBuilder para la creación de formularios.
    * @param {CatalogosService} catalogosServices - Servicio para obtener los catálogos.
    */
-  constructor(public fb: FormBuilder, private catalogosServices: CatalogosService,
+  constructor(
+    public fb: FormBuilder,
+    private catalogosServices: CatalogosService,
     private tramite231001Query: Tramite231001Query,
-    private tramite231001Store: Tramite231001Store,
+    private tramite231001Store: Tramite231001Store
   ) {
     this.solicitudForm = this.fb.group({
       datosdelForm: this.fb.group({
         numeroRegistroAmbiental: ['', Validators.required],
         descripcionGenerica1: ['', Validators.required],
         numeroProgramaImmex: ['', Validators.required],
-      })
+      }),
     });
   }
 
@@ -119,19 +133,15 @@ export class DatosDelaSolicitudeComponent implements OnInit {
    * @returns {boolean | undefined} Verdadero si el control es inválido y ha sido tocado, falso en caso contrario.
    */
   isInvalid(id: string): boolean | undefined {
-    const control = this.solicitudForm.get('datosdelForm')?.get(id);
-    return control?.invalid && control?.touched;
+    const CONTROL = this.solicitudForm.get('datosdelForm')?.get(id);
+    return CONTROL?.invalid && CONTROL?.touched;
   }
 
   /**
    * Maneja el envío del formulario.
    */
-
-  // TODO
   onSubmit(): void {
-    if (this.solicitudForm.valid) {
-    } else {
-    }
+    this.solicitudForm.markAllAsTouched();
   }
 
   /**
@@ -158,13 +168,16 @@ export class DatosDelaSolicitudeComponent implements OnInit {
     this.datosForm = this.fb.group({
       aduanas: [null, Validators.required],
     });
+
     this.aduanasdata();
 
     this.tramite231001Query.numeroProgramaImmex$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((numeroProgramaImmex) => {
         if (numeroProgramaImmex) {
-          this.solicitudForm.get('numeroProgramaImmex')?.setValue(numeroProgramaImmex);
+          this.solicitudForm
+            .get('numeroProgramaImmex')
+            ?.setValue(numeroProgramaImmex);
         }
       });
 
@@ -188,7 +201,6 @@ export class DatosDelaSolicitudeComponent implements OnInit {
         })
       )
       .subscribe();
-
   }
 
   /**
@@ -196,12 +208,10 @@ export class DatosDelaSolicitudeComponent implements OnInit {
    */
   onAduanaSelect(): void {
     // this.selectedAduana = this.datosForm.get('aduanas')?.value;
-    this.selectedAduana = parseInt(this.datosForm.get('aduanas')?.value,
-      10
-    );
+    this.selectedAduana = parseInt(this.datosForm.get('aduanas')?.value, 10);
 
-    const aduanas = this.datosForm.get('aduanas')?.value
-    this.tramite231001Store.setAduanas(aduanas);
+    const ADUANAS = this.datosForm.get('aduanas')?.value;
+    this.tramite231001Store.setAduanas(ADUANAS);
   }
 
   /**
@@ -219,14 +229,25 @@ export class DatosDelaSolicitudeComponent implements OnInit {
       },
     });
   }
+
   getnumeroProgramaImmex(): void {
-    const selectedNumeroProgramaImmex = this.solicitudForm.get('datosdelForm.numeroProgramaImmex')?.value;
-    this.tramite231001Store.setnumeroProgramaImmex(selectedNumeroProgramaImmex);
+    const SELECTED_NUMERO_PROGRAMA_IMMEX = this.solicitudForm.get(
+      'datosdelForm.numeroProgramaImmex'
+    )?.value;
+    this.tramite231001Store.setnumeroProgramaImmex(
+      SELECTED_NUMERO_PROGRAMA_IMMEX
+    );
   }
 
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite231001Store): void {
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite231001Store
+  ): void {
     const VALOR = this.solicitudForm.get(['datosdelForm', campo])?.value;
-    
-    (this.tramite231001Store[metodoNombre] as (value: any) => void)(VALOR);
+
+    (this.tramite231001Store[metodoNombre] as (value: string | number) => void)(
+      VALOR
+    );
   }
 }
