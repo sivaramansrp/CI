@@ -11,8 +11,8 @@
  */
 
 import { AsociadasTableColumns, CapturarColumns } from '../../models/elegibilidad-de-textiles.model';
-import { Component, OnInit } from '@angular/core';
-import { ElegibilidadDeTextilesStore, TextilesState, createInitialState } from '../../estados/elegibilidad-de-textiles.store';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
 
 import { 
   ConfiguracionColumna, 
@@ -33,7 +33,6 @@ import { Subject,delay, map, takeUntil,tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
@@ -51,7 +50,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     TablaDinamicaComponent
   ]
 })
-export class FormularioAsociacionFacturaComponent implements OnInit {
+export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   
   formularioAsociacionFactura!: FormGroup;
   selectRangoDias: string[] = [];
@@ -240,37 +239,47 @@ export class FormularioAsociacionFacturaComponent implements OnInit {
    * @description Obtiene los datos de las facturas disponibles y asociadas desde el servicio.
    */
   recuperarDatos(): void {
-    this.elegibilidadTextilesService.obtenerTablaDatos<CapturarColumns>('facturasDisponible.json').subscribe(
-      (response) => {
+    this.elegibilidadTextilesService.obtenerTablaDatos<CapturarColumns>('facturasDisponible.json')
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
           this.facturasDisponible = response as CapturarColumns[]
       },
-      (error) => {
+      error: (error) => {
         console.error('Error al obtener los datos:', error);
-      }
+      }}
     );
   }
   recuperarDatosAsociadas(): void {
-    this.elegibilidadTextilesService.obtenerTablaDatos<AsociadasTableColumns>('facturas-asociadas.json').subscribe(
-      (response) => {
+    this.elegibilidadTextilesService.obtenerTablaDatos<AsociadasTableColumns>('facturas-asociadas.json')
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
           this.facturasAsociadas = response as AsociadasTableColumns[]
       },
-      (error) => {
+      error: (error) => {
         console.error('Error al obtener los datos:', error);
-      }
+      }}
     );
   }
 
   setValoresStore(
-        form: FormGroup,
-        campo: string,
-        metodoNombre: keyof ElegibilidadDeTextilesStore
-      ): void {
-        const VALOR = form.get(campo)?.value;
-        console.log(VALOR);
-        (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(
-          VALOR
-        );
-      }
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof ElegibilidadDeTextilesStore
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(
+      VALOR
+    );
+  }
 
+  /**
+   * @description Método que se ejecuta cuando el componente es destruido.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
   
 }

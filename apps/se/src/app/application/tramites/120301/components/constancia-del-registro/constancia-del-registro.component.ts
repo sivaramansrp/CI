@@ -148,7 +148,6 @@ export class ConstanciaDelRegistroComponent implements OnInit {
       metodoNombre: keyof ElegibilidadDeTextilesStore
     ): void {
       const VALOR = form.get(campo)?.value;
-      console.log(VALOR);
       (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(
         VALOR
       );

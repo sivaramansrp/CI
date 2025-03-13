@@ -17,7 +17,7 @@
  * @import { HISTORICO_TBCOL } from '../../../../shared/constantes/elegibilidad-de-textiles.enums';
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { 
@@ -63,7 +63,7 @@ import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json
     TablaDinamicaComponent
   ]
 })
-export class HistoricoFabricantesComponent implements OnInit {
+export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   /**
    * @property {FormGroup} historicoFabricantesForm - El grupo de formularios para capturar los datos de los fabricantes.
    */
@@ -204,13 +204,15 @@ export class HistoricoFabricantesComponent implements OnInit {
    * @description Obtiene los datos de los fabricantes desde el servicio.
    */
   recuperarDatos(): void {
-    this.elegibilidadTextilesService.obtenerTablaDatos<HistoricoColumns>('historico-fabricantes.json').subscribe(
-      (response) => {
+    this.elegibilidadTextilesService.obtenerTablaDatos<HistoricoColumns>('historico-fabricantes.json')
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
           this.fabricantesNacionales = response as HistoricoColumns[]
         },
-      (error) => {
+      error: (error) => {
         console.error('Error al obtener los datos:', error);
-      }
+      }}
     );
   }
 
@@ -242,9 +244,17 @@ export class HistoricoFabricantesComponent implements OnInit {
     metodoNombre: keyof ElegibilidadDeTextilesStore
   ): void {
     const VALOR = form.get(campo)?.value;
-    console.log(VALOR);
     (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(
       VALOR
     );
   }
+
+  /**
+   * @description Método que se ejecuta cuando el componente es destruido.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }

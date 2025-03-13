@@ -9,9 +9,9 @@
  */
 
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaSeleccion } from '@ng-mf/data-access-user';
-import { ElegibilidadDeTextilesStore, TextilesState,createInitialState } from '../../estados/elegibilidad-de-textiles.store';
+import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Subject, delay, map, takeUntil, tap} from 'rxjs';
@@ -44,7 +44,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     TablaDinamicaComponent
   ]
 })
-export class CapturarFacturasComponent implements OnInit {
+export class CapturarFacturasComponent implements OnInit, OnDestroy {
   /**
    * @property {FormGroup} forma - El grupo de formularios para capturar los datos de las facturas.
    */
@@ -221,7 +221,6 @@ export class CapturarFacturasComponent implements OnInit {
       metodoNombre: keyof ElegibilidadDeTextilesStore
     ): void {
       const VALOR = form.get(campo)?.value;
-      console.log(VALOR);
       (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(
         VALOR
       );
@@ -233,22 +232,39 @@ export class CapturarFacturasComponent implements OnInit {
    */
 
   obtenerIngresoSelectList() {
-    this.ElegibilidadTextilesService.obtenerMenuDesplegable('unidad-de-medida.json').subscribe(data => {
-      this.unidadDeMedida = data as Catalogo[];
+    this.ElegibilidadTextilesService.obtenerMenuDesplegable('unidad-de-medida.json')
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (data) => {
+        this.unidadDeMedida = data as Catalogo[];
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log('Error al obtener los datos:', error)
+      }
     })
   }
 
   recuperarDatos(): void {
-    this.ElegibilidadTextilesService.obtenerTablaDatos<CapturarColumns>('capturar-facturas.json').subscribe(
-      (response) => {
+    this.ElegibilidadTextilesService.obtenerTablaDatos<CapturarColumns>('capturar-facturas.json')
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
         if (response && Array.isArray(response)) {
           this.facturas = response as CapturarColumns[]
         } 
       },
-      (error) => {
+      error: (error) => {
         console.error('Error al obtener los datos:', error);
-      }
+      }}
     );
+  }
+
+  /**
+   * @description Método que se ejecuta cuando el componente es destruido.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }

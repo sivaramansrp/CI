@@ -8,7 +8,7 @@
  */
 
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject,delay, map, takeUntil, tap } from 'rxjs';
 
@@ -33,7 +33,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './importador-en-destino.component.html',
   styleUrl: './importador-en-destino.component.scss'
 })
-export class ImportadorEnDestinoComponent implements OnInit{
+export class ImportadorEnDestinoComponent implements OnInit, OnDestroy{
   /**
    * @property {FormGroup} forma - El grupo de formularios para capturar los datos del importador.
    */
@@ -110,15 +110,6 @@ export class ImportadorEnDestinoComponent implements OnInit{
         })
       )
       .subscribe();
-    console.log("444444",this.importadorState)
-    // if(this.importadorState.formaValida && this.importadorState.formaValida[0] && this.importadorState.formaValida[0].descripcion === 'AllValida'){
-      
-    //   this.seccionStore.establecerSeccion([true]);
-    //   this.seccionStore.establecerFormaValida([true])
-    // }
-    // else{
-    //   this.seccionStore.establecerFormaValida([false]);
-    // }
   }
 
   /**
@@ -151,7 +142,10 @@ export class ImportadorEnDestinoComponent implements OnInit{
    * @method obtenerIngresoSelectList
    */
   obtenerIngresoSelectList() {
-    this.ElegibilidadTextilesService.obtenerMenuDesplegable('tipo.json').subscribe(data => {
+    this.ElegibilidadTextilesService.obtenerMenuDesplegable('tipo.json')
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(
+      data => {
       this.tipoData = data as Catalogo[];
     })
   }
@@ -162,10 +156,17 @@ export class ImportadorEnDestinoComponent implements OnInit{
     metodoNombre: keyof ElegibilidadDeTextilesStore
   ): void {
     const VALOR = form.get(campo)?.value;
-    console.log(VALOR);
     (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(
       VALOR
     );
+  }
+
+  /**
+   * @description Método que se ejecuta cuando el componente es destruido.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }
