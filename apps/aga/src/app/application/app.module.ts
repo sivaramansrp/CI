@@ -21,7 +21,7 @@ import { TituloComponent } from "@ng-mf/data-access-user";
     SeleccionTramiteComponent
   ],
   imports: [
-    AkitaNgDevtools,
+     AkitaNgDevtools,
     AppRoutingModule,
     CommonModule,
     BreadcrumbComponent,
