@@ -8,45 +8,72 @@ import { Mercancia } from '../models/plantas-consulta.model';
   providedIn: 'root'
 })
 export class CertificadosOrigenGridService {
- // eslint-disable-next-line no-empty-function
-  constructor(private http: HttpClient){}
+  // eslint-disable-next-line no-empty-function
+  constructor(private http: HttpClient) {}
 
   /**
-   * Obtiene la lista de estados.
+   * Obtiene la lista de estados desde un archivo JSON local.
    * @method obtenerListaEstado
    * @returns {Observable<Catalogo[]>} Observable con la lista de estados.
    */
   obtenerListaEstado(): Observable<Catalogo[]> {
     return this.http
-      .get<{ data: Catalogo[] }>('./assets/json/110204/estado.json')
-      .pipe(map((res) => res.data));
+      .get<{ data: Catalogo[] }>('./assets/json/110204/estado.json') // Solicita los datos del archivo JSON
+      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
   }
 
-  obtenerPaísBloque(): Observable<Catalogo[]> {
+  /**
+   * Obtiene la lista de países bloque desde un archivo JSON local.
+   * @method obtenerPaisBloque
+   * @returns {Observable<Catalogo[]>} Observable con la lista de países bloque.
+   */
+  obtenerPaisBloque(): Observable<Catalogo[]> {
     return this.http
-      .get<{data: Catalogo[]}>('assets/json/110204/país-bloque.json')
-      .pipe(map((res) => res.data));
+      .get<{ data: Catalogo[] }>('assets/json/110204/país-bloque.json') // Solicita los datos del archivo JSON
+      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
   }
 
+  /**
+   * Obtiene la lista de mercancías desde un archivo JSON local.
+   * @method obtenerMercancia
+   * @returns {Observable<Mercancia[]>} Observable con la lista de mercancías.
+   */
   obtenerMercancia(): Observable<Mercancia[]> {
     return this.http
-      .get<{data:Mercancia[]}>('assets/json/110204/mercancia.json')
-      .pipe(map((res) => res.data));
-  }
-  obtenerIdioma(): Observable<Catalogo[]> {
-    return this.http
-      .get<{data: Catalogo[]}>('assets/json/110204/idioma.json')
-      .pipe(map((res) => res.data));
+      .get<{ data: Mercancia[] }>('assets/json/110204/mercancia.json') // Solicita los datos del archivo JSON
+      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
   }
 
+  /**
+   * Obtiene la lista de idiomas desde un archivo JSON local.
+   * @method obtenerIdioma
+   * @returns {Observable<Catalogo[]>} Observable con la lista de idiomas.
+   */
+  obtenerIdioma(): Observable<Catalogo[]> {
+    return this.http
+      .get<{ data: Catalogo[] }>('assets/json/110204/idioma.json') // Solicita los datos del archivo JSON
+      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
+  }
+
+  /**
+   * Obtiene la lista de entidades federativas desde un archivo JSON local.
+   * @method obtenerEntidadFederativa
+   * @returns {Observable<Catalogo[]>} Observable con la lista de entidades federativas.
+   */
   obtenerEntidadFederativa(): Observable<Catalogo[]> {
     return this.http
-      .get<{data:Catalogo[]}>('assets/json/110204/entidad-federativa.json')
-      .pipe(map((res) => res.data));
+      .get<{ data: Catalogo[] }>('assets/json/110204/entidad-federativa.json') // Solicita los datos del archivo JSON
+      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
   }
+
+  /**
+   * Obtiene la lista de representaciones federales desde un archivo JSON local.
+   * @method obtenerRepresentacionFederal
+   * @returns {Observable<Catalogo[]>} Observable con la lista de representaciones federales.
+   */
   obtenerRepresentacionFederal(): Observable<Catalogo[]> {
     return this.http
-      .get<{data:Catalogo[]}>('assets/json/110204/representacion-federal.json')
-      .pipe(map((res) => res.data));
+      .get<{ data: Catalogo[] }>('assets/json/110204/representacion-federal.json') // Solicita los datos del archivo JSON
+      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
   }
 }

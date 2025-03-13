@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Tramite110204Query } from '../../estados/tramite110204.query';
 import { Tramite110204Store } from '../../estados/tramite110204.store';
 
+// Constantes para las fechas
 export const FECHA_INICIO = {
   labelNombre: 'Fecha inicio',
   required: true,
@@ -23,6 +24,10 @@ export const FECHA_FINAL = {
   habilitado: true,
 };
 
+/**
+ * Componente para gestionar los certificados de origen.
+ * Se encarga de manejar los formularios, la carga de catálogos, la validación y la interacción con el store.
+ */
 @Component({
   selector: 'app-certificado-origen',
   standalone: true,
@@ -39,41 +44,54 @@ export const FECHA_FINAL = {
   styleUrl: './certificado-origen.component.scss',
 })
 export class CertificadoOrigenComponent implements OnInit, OnDestroy {
-  formCertificado!: FormGroup;
-  public fechaInicioInput: InputFecha = FECHA_INICIO;
-  public fechaFinalInput: InputFecha = FECHA_FINAL;
 
   /**
-   * Lista de catálogos que representan los estados.
+   * Formulario reactivo utilizado para la gestión de los datos del certificado.
+   * @type {FormGroup}
+   */
+  formCertificado!: FormGroup;
+
+  /**
+   * Configuración de las fechas de inicio y fin.
+   * @type {InputFecha}
+   */
+  public fechaInicioInput: InputFecha = FECHA_INICIO;
+  public fechaFinalInput: InputFecha = FECHA_FINAL;
+  /**
+   * Observable que emite la lista de estados disponibles.
    * @type {Observable<Catalogo[]>}
    */
   estados$!: Observable<Catalogo[]>;
 
   /**
-   * Estado seleccionado.
-   * @type {Catalogo}
-   */
-
-  /**
-   * @observable
-   * @name pais$
+   * Observable que emite la lista de países y bloques disponibles.
    * @type {Observable<Catalogo[]>}
-   * @description
-   * Observable que emite una lista de objetos de tipo Catalogo,
-   * representando los países y bloques disponibles.
    */
   pais$!: Observable<Catalogo[]>;
 
+  /**
+   * Estado seleccionado del catálogo.
+   * @type {Catalogo}
+   */
   estado!: Catalogo;
+
+  /**
+   * País o bloque seleccionado.
+   * @type {Catalogo}
+   */
   paisBloque!: Catalogo;
+
+  /**
+   * Subject para gestionar el ciclo de vida del componente.
+   * @type {Subject<void>}
+   */
   destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Configuración de las columnas de la tabla que muestra la bitácora.
+   * Configuración de las columnas de la tabla de bitácora.
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
-  configuracionTabla: ConfiguracionColumna<Mercancia>[] =
-    CONFIGURACION_MERCANCIA;
+  configuracionTabla: ConfiguracionColumna<Mercancia>[] = CONFIGURACION_MERCANCIA;
 
   /**
    * Datos de la bitácora obtenidos desde el servicio.
@@ -81,38 +99,59 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    */
   datos: Mercancia[] = [];
 
-
   /**
-   * Datos de ejemplo basados en la interfaz Mercancia.
+   * Observable que emite los datos de la mercancia obtenida.
    * @type {Observable<Mercancia[]>}
    */
   datos1$: Observable<Mercancia[]>;
 
   /**
-     * Selección de la tabla inicializada como indefinida.
-     * @type {TablaSeleccion}
-     */
+   * Estado de la selección de la tabla.
+   * @type {TablaSeleccion}
+   */
   seleccionTabla = TablaSeleccion.UNDEFINED;
+
+  /**
+   * Estado de la sección, gestionado mediante el store.
+   * @type {SeccionLibState}
+   */
   private seccion!: SeccionLibState;
 
+  /**
+   * Constructor del componente.
+   * Inicializa el formulario y las dependencias necesarias para la carga de datos.
+   * @param fb FormBuilder para la creación del formulario reactivo.
+   * @param store Store para gestionar los datos de estado.
+   * @param tramiteQuery Consulta de estado para obtener los valores del formulario.
+   * @param certificadoService Servicio para la gestión de los certificados.
+   * @param toastr Servicio de notificaciones para mostrar mensajes.
+   * @param seccionQuery Consulta para obtener el estado de la sección.
+   * @param seccionStore Store para actualizar el estado de la sección.
+   */
   constructor(
     private fb: FormBuilder,
     private store: Tramite110204Store,
     public tramiteQuery: Tramite110204Query,
     public certificadoService: CertificadosOrigenGridService,
     private toastr: ToastrService,
-    private seccionQuery: SeccionLibQuery, private seccionStore: SeccionLibStore
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore
   ) {
-
+    /**
+     * Inicializa el formulario con los campos requeridos y sus validaciones.
+     */
     this.formCertificado = this.fb.group({
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
       bloque: ['', [Validators.required, Validators.min(0)]],
       tercerOperador: ['', [Validators.requiredTrue]],
-      fracciónArancelariaForm: ['', [Validators.required]],
-      registroProductoForm: ['', [Validators.required]],
-      nombreComercialForm: ['', [Validators.required]],
+      fracciónArancelariaForm: [''],
+      registroProductoForm: [''],
+      nombreComercialForm: [''],
     });
 
+    /**
+     * Suscripción para cargar los valores del formulario desde el store.
+     */
     this.tramiteQuery.formCertificado$.pipe(
       takeUntil(this.destroyNotifier$)
     ).subscribe(estado => {
@@ -120,6 +159,10 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         this.formCertificado.patchValue(estado);
       }
     });
+
+    /**
+     * Suscripción al estado de la sección para obtener y actualizar el estado.
+     */
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -129,36 +172,47 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-
+    /**
+     * Asignación de los observables que contienen los catálogos de estados y países.
+     */
     this.estados$ = this.tramiteQuery.selectAltaPlanta$;
     this.pais$ = this.tramiteQuery.selectPaisBloque$;
     this.datos1$ = this.tramiteQuery.selectBuscarMercancia$;
   }
+
+  /**
+   * Verifica si el formulario es válido.
+   * @returns {boolean} Retorna true si el formulario es válido, de lo contrario false.
+   */
   esFormValido(): boolean {
-    // eslint-disable-next-line guard-for-in
+    // Recorre todos los controles del formulario para verificar si alguno es inválido.
     for (const NOMBRE_DEL_CONTROL in this.formCertificado.controls) {
-      const CONTROL = this.formCertificado.get(NOMBRE_DEL_CONTROL);
-      if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
-        return false;
+      if (Object.prototype.hasOwnProperty.call(this.formCertificado.controls,
+        NOMBRE_DEL_CONTROL)) {
+        const CONTROL = this.formCertificado.get(NOMBRE_DEL_CONTROL);
+        if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
+          return false;
+        }
       }
     }
     return true;
   }
+
+  /**
+   * Método del ciclo de vida ngOnInit. Se utiliza para cargar los datos iniciales
+   * y suscribirse a los cambios en el formulario.
+   */
   ngOnInit(): void {
     this.cargarEstados();
     this.cargarBloque();
-    this.validarFormulario();
     this.formCertificado.valueChanges.subscribe(value => {
       this.store.setFormCertificado(value);
+      this.validarFormulario();
     });
-  
   }
+
   /**
-   * Establece el estado en el almacén (store) con el valor proporcionado.
-   *
-   * @param {Catalogo} estado - El estado que se desea establecer en el almacén. Este parámetro debe ser de tipo `Catalogo`.
-   *
-   * @returns {void} - No devuelve ningún valor.
+   * Carga la lista de estados desde el servicio y actualiza el store con los datos.
    */
   cargarEstados(): void {
     this.certificadoService
@@ -174,30 +228,37 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       );
   }
 
+  /**
+   * Valida el formulario y actualiza el estado de la sección en el store.
+   */
   validarFormulario(): void {
     this.formCertificado.statusChanges
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      delay(10),
-      tap((_value) => {
-        const SECCION: number = 1;
-        const FORMAS_VALIDADAS = this.seccion.formaValida;
-        const ES_VALIDO_EL_FORM = this.esFormValido();
-        
-        if (this.formCertificado.valid || (ES_VALIDO_EL_FORM)) {
-          FORMAS_VALIDADAS[SECCION] = true;
-          this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-        } else {
-          FORMAS_VALIDADAS[SECCION] = false;
-          this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-        }
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((_value) => {
+          const SECCION: number = 1;
+          const FORMAS_VALIDADAS = this.seccion.formaValida;
+          const ES_VALIDO_EL_FORM = this.esFormValido();
+
+          if (this.formCertificado.valid || (ES_VALIDO_EL_FORM)) {
+            FORMAS_VALIDADAS[SECCION] = true;
+            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+          } else {
+            FORMAS_VALIDADAS[SECCION] = false;
+            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+          }
+        })
+      )
+      .subscribe();
   }
+
+  /**
+   * Carga la lista de países y bloques desde el servicio y actualiza el store con los datos.
+   */
   cargarBloque(): void {
     this.certificadoService
-      .obtenerPaísBloque()
+      .obtenerPaisBloque()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
         (data: Catalogo[]) => {
@@ -208,13 +269,26 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         }
       );
   }
+
+  /**
+   * Establece el estado seleccionado en el store.
+   * @param {Catalogo} estado El estado seleccionado.
+   */
   tipoEstadoSeleccion(estado: Catalogo): void {
     this.store.setEstado(estado);
   }
+
+  /**
+   * Establece el bloque seleccionado en el store.
+   * @param {Catalogo} estado El bloque seleccionado.
+   */
   tipoSeleccion(estado: Catalogo): void {
     this.store.setBloque([estado]);
   }
 
+  /**
+   * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
@@ -228,6 +302,9 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     return this.formCertificado.get('') as FormControl;
   }
 
+  /**
+   * Busca la mercancia y actualiza los datos en el store.
+   */
   buscarrMercancia(): void {
     const ENTIDAD = this.formCertificado?.value;
 
@@ -244,17 +321,26 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
           }
         );
     } else {
-      // Maneja el caso donde la selección de la entidad no es válida.
+      // Muestra un error si no se ha seleccionado una entidad federativa válida.
       this.toastr.error('Seleccione una entidad federativa válida.');
     }
   }
 
+  /**
+   * Cambia el valor de la fecha de inicio en el formulario.
+   * @param nuevo_valor Nuevo valor de la fecha.
+   */
   public cambioFechaInicio(nuevo_valor: string): void {
     this.formCertificado.get('fechaInicio')?.setValue(nuevo_valor);
     this.formCertificado.get('fechaInicio')?.markAsUntouched();
   }
 
+  /**
+   * Cambia el valor de la fecha final en el formulario.
+   * @param nuevo_valor Nuevo valor de la fecha final.
+   */
   public cambioFechaFinal(nuevo_valor: string): void {
+
     this.formCertificado.get('fechaFinal')?.setValue(nuevo_valor);
     this.formCertificado.get('fechaFinal')?.markAsUntouched();
   }

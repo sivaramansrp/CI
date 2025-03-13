@@ -8,6 +8,10 @@ import { ToastrService } from 'ngx-toastr';
 import { Tramite110204Query } from '../../estados/tramite110204.query';
 import { Tramite110204Store } from '../../estados/tramite110204.store';
 
+/**
+ * Componente que maneja los datos del certificado.
+ * Se encarga de la carga de información, el manejo de formularios y la interacción con el store.
+ */
 @Component({
   selector: 'app-datos-certificado',
   imports: [TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, CommonModule],
@@ -16,20 +20,50 @@ import { Tramite110204Store } from '../../estados/tramite110204.store';
   standalone: true
 })
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
+  
+  /**
+   * Formulario reactivo que contiene los datos del certificado.
+   * Utilizado para la validación y gestión de los datos en el formulario.
+   */
   formDatesCerticado!: FormGroup;
+
+  /**
+   * Subject utilizado para gestionar el ciclo de vida del componente y cancelar las suscripciones.
+   */
   destroyNotifier$: Subject<void> = new Subject();
 
-
+  /**
+   * Observable que contiene la lista de idiomas disponibles.
+   */
   idioma$!: Observable<Catalogo[]>;
+
+  /**
+   * Observable que contiene la lista de entidades federativas disponibles.
+   */
   entidadFederativas$!: Observable<Catalogo[]>;
+
+  /**
+   * Observable que contiene la lista de representaciones federales disponibles.
+   */
   representaconFederal$!: Observable<Catalogo[]>;
 
-
+  /**
+   * Constructor del componente. Inicializa el formulario y las dependencias necesarias.
+   * @param fb Instancia del FormBuilder para la creación del formulario.
+   * @param store Instancia del store para el manejo de datos.
+   * @param tramiteQuery Instancia del query para obtener datos de estado.
+   * @param certificadoService Servicio encargado de obtener los datos del certificado.
+   * @param toastr Servicio de notificaciones (Toastr).
+   */
   constructor(
     private fb: FormBuilder, public store: Tramite110204Store,
     public tramiteQuery: Tramite110204Query,
     public certificadoService: CertificadosOrigenGridService,
     private toastr: ToastrService) {
+
+    /**
+     * Inicialización del formulario reactivo con los controles y validaciones correspondientes.
+     */
     this.formDatesCerticado = this.fb.group({
       observacionesDates: ['', [Validators.required]],
       idiomaDates: ['', [Validators.required, Validators.min(0)]],
@@ -37,43 +71,78 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       representacionFederalDates: ['', [Validators.required, Validators.min(0)]],
     });
 
+    /**
+     * Suscripción al estado del formulario para actualizar los valores del formulario al obtener datos.
+     */
     this.tramiteQuery.formDatesCerticado$.pipe(
       takeUntil(this.destroyNotifier$)
     ).subscribe(estado => {
       if (estado) {
         this.formDatesCerticado.patchValue(estado);
-
       }
     });
+
+    /**
+     * Asignación de los observables que contienen los catálogos de datos a los que se puede suscribir el componente.
+     */
     this.idioma$ = this.tramiteQuery.selectIdioma$;
     this.entidadFederativas$ = this.tramiteQuery.selectEntidadFederativa$;
     this.representaconFederal$ = this.tramiteQuery.selectrepresentaconFederal$;
   }
+
+  /**
+   * Getter para acceder al control del formulario, utilizado para la validación.
+   * @returns FormControl del formulario.
+   */
   get formularioControl(): FormControl {
     return this.formDatesCerticado.get('') as FormControl;
   }
 
+  /**
+   * Método de ciclo de vida de Angular, se ejecuta al inicializar el componente.
+   * Se utiliza para cargar los datos y suscribirse a los cambios del formulario.
+   */
   ngOnInit(): void {
     this.cargarIdioma();
     this.cargarEntidadFederativa();
+    
+    /**
+     * Suscripción a los cambios de valor del formulario para enviar los datos al store.
+     */
     this.formDatesCerticado.valueChanges.subscribe(value => {
       this.store.setFormDatesCerticado(value);
     });
+    
     this.cargarRepresentacionFederal();
   }
 
+  /**
+   * Método que selecciona un idioma y actualiza el estado en el store.
+   * @param estado El estado del idioma seleccionado.
+   */
   idiomaSeleccion(estado: Catalogo): void {
     this.store.setIdiomaDatos([estado]);
   }
+
+  /**
+   * Método que selecciona una entidad federativa y actualiza el estado en el store.
+   * @param estado El estado de la entidad federativa seleccionada.
+   */
   entidadFederativaSeleccion(estado: Catalogo): void {
     this.store.setEntidadFederativaDatos([estado]);
   }
+
+  /**
+   * Método que selecciona una representación federal y actualiza el estado en el store.
+   * @param estado El estado de la representación federal seleccionada.
+   */
   representacionFederalSeleccion(estado: Catalogo): void {
     this.store.setRepresentacionFederalDatos([estado]);
   }
 
-
-
+  /**
+   * Método para cargar la lista de idiomas desde el servicio.
+   */
   cargarIdioma(): void {
     this.certificadoService
       .obtenerIdioma()
@@ -88,6 +157,9 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       );
   }
 
+  /**
+   * Método para cargar la lista de representaciones federales desde el servicio.
+   */
   cargarRepresentacionFederal(): void {
     this.certificadoService
       .obtenerRepresentacionFederal()
@@ -102,6 +174,9 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       );
   }
 
+  /**
+   * Método para cargar la lista de entidades federativas desde el servicio.
+   */
   cargarEntidadFederativa(): void {
     this.certificadoService
       .obtenerEntidadFederativa()
@@ -116,9 +191,12 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       );
   }
 
+  /**
+   * Método de ciclo de vida de Angular, se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

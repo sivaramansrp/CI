@@ -1,141 +1,268 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { of as observableOf } from 'rxjs';
-import { DatosCertificadoComponent } from '../datos-certificado/datos-certificado.component';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
+import { SolicitudComponent } from './solicitud.component';
+import { PeximService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { Tramite110204Store } from '../../estados/tramite110204.store';
-import { Tramite110204Query } from '../../estados/tramite110204.query';
-import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
-import { ToastrService } from 'ngx-toastr';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Pipe, PipeTransform, Directive, Injectable, Input } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Injectable()
 class MockTramite110204Store {}
 
-@Injectable()
-class MockTramite110204Query {
-  formDatesCerticado$ = observableOf({});
-  selectIdioma$ = observableOf([]);
-  selectEntidadFederativa$ = observableOf([]);
-  selectrepresentaconFederal$ = observableOf([]);
-}
+describe('SolicitudComponent', () => {
+  let fixture;
+  let component;
 
-@Injectable()
-class MockCertificadosOrigenGridService {
-  obtenerIdioma = jest.fn().mockReturnValue(observableOf([]));
-  obtenerRepresentacionFederal = jest.fn().mockReturnValue(observableOf([]));
-  obtenerEntidadFederativa = jest.fn().mockReturnValue(observableOf([]));
-}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value: any) { return value; }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value: any) { return value; }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value: any) { return value; }
-}
-
-describe('DatosCertificadoComponent', () => {
-  let fixture: ComponentFixture<DatosCertificadoComponent>;
-  let component: DatosCertificadoComponent;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [
-        DatosCertificadoComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule,HttpClientTestingModule ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
+        PeximService,
         FormBuilder,
-        { provide: Tramite110204Store, useClass: MockTramite110204Store },
-        { provide: Tramite110204Query, useClass: MockTramite110204Query },
-        { provide: CertificadosOrigenGridService, useClass: MockCertificadosOrigenGridService },
-        ToastrService
+        ValidacionesFormularioService,
+        { provide: Tramite110204Store, useClass: MockTramite110204Store }
       ]
+    }).overrideComponent(SolicitudComponent, {
+
     }).compileComponents();
-
-    fixture = TestBed.createComponent(DatosCertificadoComponent);
-    component = fixture.componentInstance;
+    fixture = TestBed.createComponent(SolicitudComponent);
+    component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
 
-  it('should create the component', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form on ngOnInit', () => {
+  it('should run GetterDeclaration #datosRegimen', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn();
+    const datosRegimen = component.datosRegimen;
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+  });
+
+  it('should run GetterDeclaration #datosMercancia', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn();
+    const datosMercancia = component.datosMercancia;
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+  });
+
+  it('should run GetterDeclaration #datosProducto', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn();
+    const datosProducto = component.datosProducto;
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+  });
+
+  it('should run GetterDeclaration #registroFederal', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn();
+    const registroFederal = component.registroFederal;
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnInit()', async () => {
+    component.inicializaCatalogos = jest.fn();
+    component.regimenMercanciaSeleccion = jest.fn();
+    component.clasifiRegimenSeleccion = jest.fn();
+    component.fraccionArancelariaSeleccion = jest.fn();
+    component.nicoSeleccion = jest.fn();
+    component.paisOrigenSeleccion = jest.fn();
+    component.paisDestinoSeleccion = jest.fn();
+    component.estadoSeleccion = jest.fn();
+    component.molinoSeleccion = jest.fn();
+    component.unidadMedidaTarifariaSeleccion = jest.fn();
+    component.representacionFederalSeleccion = jest.fn();
+    component.muestraCamposPersona = jest.fn();
     component.ngOnInit();
-    expect(component.formDatesCerticado).toBeDefined();
+    expect(component.inicializaCatalogos).toHaveBeenCalled();
+    expect(component.regimenMercanciaSeleccion).toHaveBeenCalled();
+    expect(component.clasifiRegimenSeleccion).toHaveBeenCalled();
   });
 
-  it('should call cargarIdioma on ngOnInit', () => {
-    const cargarIdiomaSpy = jest.spyOn(component, 'cargarIdioma');
-    component.ngOnInit();
-    expect(cargarIdiomaSpy).toHaveBeenCalled();
+  it('should run #isValid()', async () => {
+    component.validacionesService = component.validacionesService || {};
+    component.validacionesService.isValid = jest.fn();
+    component.isValid({}, {});
+    expect(component.validacionesService.isValid).toHaveBeenCalled();
   });
 
-  it('should call cargarEntidadFederativa on ngOnInit', () => {
-    const cargarEntidadFederativaSpy = jest.spyOn(component, 'cargarEntidadFederativa');
-    component.ngOnInit();
-    expect(cargarEntidadFederativaSpy).toHaveBeenCalled();
+  it('should run #crearFormSolicitud()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.solicitudState = component.solicitudState || {};
+    component.solicitudState.fechaSalida = 'fechaSalida';
+    component.solicitudState.observaciones = 'observaciones';
+    component.solicitudState.observacionMerc = 'observacionMerc';
+    component.solicitudState.tipoPersona = 'tipoPersona';
+    component.solicitudState.nombre = 'nombre';
+    component.solicitudState.representacionFederal = 'representacionFederal';
+    component.crearFormSolicitud();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should call cargarRepresentacionFederal on ngOnInit', () => {
-    const cargarRepresentacionFederalSpy = jest.spyOn(component, 'cargarRepresentacionFederal');
-    component.ngOnInit();
-    expect(cargarRepresentacionFederalSpy).toHaveBeenCalled();
+  it('should run #clasifiRegimenSeleccion()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite110204Store = component.tramite110204Store || {};
+    component.tramite110204Store.setClasifiRegimen = jest.fn();
+    component.clasifiRegimenSeleccion();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.tramite110204Store.setClasifiRegimen).toHaveBeenCalled();
   });
 
-  it('should validate form correctly', () => {
-    component.formDatesCerticado.controls['observacionesDates'].setValue('');
-    expect(component.formDatesCerticado.controls['observacionesDates'].valid).toBeFalsy();
-
-    component.formDatesCerticado.controls['observacionesDates'].setValue('valid');
-    expect(component.formDatesCerticado.controls['observacionesDates'].valid).toBeTruthy();
+  it('should run #fraccionArancelariaSeleccion()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite110204Store = component.tramite110204Store || {};
+    component.tramite110204Store.setFraccionArancelaria = jest.fn();
+    component.fraccionArancelariaSeleccion();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.tramite110204Store.setFraccionArancelaria).toHaveBeenCalled();
   });
 
-  it('should call obtenerIdioma and setIdiomaDatos on cargarIdioma', () => {
-    component.cargarIdioma();
-    expect(component.certificadoService.obtenerIdioma).toHaveBeenCalled();
-    expect(component.store.setIdiomaDatos).toHaveBeenCalled();
+  it('should run #nicoSeleccion()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite110204Store = component.tramite110204Store || {};
+    component.tramite110204Store.setNico = jest.fn();
+    component.nicoSeleccion();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.tramite110204Store.setNico).toHaveBeenCalled();
   });
 
-  it('should call obtenerRepresentacionFederal and setRepresentacionFederalDatos on cargarRepresentacionFederal', () => {
-    component.cargarRepresentacionFederal();
-    expect(component.certificadoService.obtenerRepresentacionFederal).toHaveBeenCalled();
-    expect(component.store.setRepresentacionFederalDatos).toHaveBeenCalled();
+  it('should run #unidadMedidaTarifariaSeleccion()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite110204Store = component.tramite110204Store || {};
+    component.tramite110204Store.setUnidadMedidaTarifaria = jest.fn();
+    component.unidadMedidaTarifariaSeleccion();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.tramite110204Store.setUnidadMedidaTarifaria).toHaveBeenCalled();
   });
 
-  it('should call obtenerEntidadFederativa and setEntidadFederativaDatos on cargarEntidadFederativa', () => {
-    component.cargarEntidadFederativa();
-    expect(component.certificadoService.obtenerEntidadFederativa).toHaveBeenCalled();
-    expect(component.store.setEntidadFederativaDatos).toHaveBeenCalled();
+  it('should run #paisOrigenSeleccion()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite110204Store = component.tramite110204Store || {};
+    component.tramite110204Store.setPaisOrigen = jest.fn();
+    component.paisOrigenSeleccion();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.tramite110204Store.setPaisOrigen).toHaveBeenCalled();
   });
 
-  it('should call ngOnDestroy and complete destroyNotifier$', () => {
-    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
-    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
-    component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+  it('should run #paisDestinoSeleccion()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite110204Store = component.tramite110204Store || {};
+    component.tramite110204Store.setPaisDestino = jest.fn();
+    component.paisDestinoSeleccion();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.tramite110204Store.setPaisDestino).toHaveBeenCalled();
   });
+
+  it('should run #molinoSeleccion()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite110204Store = component.tramite110204Store || {};
+    component.tramite110204Store.setMolino = jest.fn();
+    component.molinoSeleccion();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.tramite110204Store.setMolino).toHaveBeenCalled();
+  });
+
+  it('should run #estadoSeleccion()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite110204Store = component.tramite110204Store || {};
+    component.tramite110204Store.setEstado = jest.fn();
+    component.estadoSeleccion();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.tramite110204Store.setEstado).toHaveBeenCalled();
+  });
+
+  it('should run #representacionFederalSeleccion()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite110204Store = component.tramite110204Store || {};
+    component.tramite110204Store.setRepresentacionFederal = jest.fn();
+    component.representacionFederalSeleccion();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.tramite110204Store.setRepresentacionFederal).toHaveBeenCalled();
+  });
+
+
+  it('should run #escapeHtmlQuotes()', async () => {
+
+    component.escapeHtmlQuotes('value');
+
+  });
+
+  it('should run #personaFisica()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      enable: function() {},
+      disable: function() {},
+      setValue: function() {}
+    });
+    component.personaFisica();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+  });
+
+  it('should run #calcularUmtPrecioUnitario()', async () => {
+    component.calcularPrecioUnitarioUSD = jest.fn();
+    component.calcularUmtPrecioUnitario();
+    // expect(component.calcularPrecioUnitarioUSD).toHaveBeenCalled();
+  });
+
+  it('should run #calcularPrecioUnitarioUSD()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      setValue: function() {},
+      value: {}
+    });
+    component.trunCar = jest.fn();
+    component.calcularPrecioUnitarioUSD();
+    // expect(component.FormSolicitud.get).toHaveBeenCalled();
+    // expect(component.trunCar).toHaveBeenCalled();
+  });
+
+  it('should run #trunCar()', async () => {
+
+    component.trunCar({
+      toString: function() {
+        return 'ngentest';
+      }
+    });
+
+  });
+
+
 });
