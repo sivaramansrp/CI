@@ -1,6 +1,8 @@
 <div class="page">
   <div class="container">
-  @if(showMercanciaForm){
+
+  @if(!showMercanciaForm){
+
     <div class="row">
       <div class="col-md-12">
         <h2>Validar por motivos técnicos el certificado SGP </h2>
@@ -21,6 +23,7 @@
     </div>
   }
   @else{
+
     <div>
       <app-registro-de-mercancia (modificarEventMercancia)="showMercancia($event,5)"></app-registro-de-mercancia>
     </div>

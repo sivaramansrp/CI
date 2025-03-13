@@ -54,7 +54,7 @@ export class SolicitudPageComponent {
    * Indica si se debe mostrar el formulario de mercancía.
    * @type {boolean}
    */
-  showMercanciaForm: boolean = true;
+  showMercanciaForm: boolean = false;
 
   /**
    * Índice del tap capturado.

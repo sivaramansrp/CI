@@ -162,7 +162,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   navegar(): void {  
     this.tramite110209Store.setMercanciasSeleccionadas(this.mercanciasSeleccionadas);
     //this.router.navigate(['/se/certificado-sgp/registro-de-mercancia']);
-    this.modificarEventCertificado.emit(false);
+    this.modificarEventCertificado.emit(true);
   }
 
 

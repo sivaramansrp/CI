@@ -162,7 +162,7 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
    */
   regresar(): void {
     //this.router.navigate(['/se/certificado-sgp/solicitud']);
-    this.modificarEventMercancia.emit(true);
+    this.modificarEventMercancia.emit(false);
   }
 
   /**
