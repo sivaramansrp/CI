@@ -1,7 +1,7 @@
 import {
   Solicitud301State,
   Tramite301Store,
-} from '../tramites/tramite301.store';
+} from '../estados/tramites/tramite301.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 

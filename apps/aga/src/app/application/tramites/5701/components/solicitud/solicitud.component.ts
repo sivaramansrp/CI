@@ -33,7 +33,7 @@ import {
 import {
   Solicitud5701State,
   Tramite5701Store,
-} from '../../../../estados/tramites/tramite5701.store';
+} from '../../../../core/estados/tramites/tramite5701.store';
 import { Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
 import { CatalogosService } from '@ng-mf/data-access-user';
 
@@ -42,7 +42,7 @@ import { FormulariosService } from '@ng-mf/data-access-user';
 import { datosAgregarFormulario } from '@ng-mf/data-access-user';
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Tramite5701Query } from '../../../../estados/queries/tramite5701.query';
+import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
 @Component({
   selector: 'app-solicitud',
