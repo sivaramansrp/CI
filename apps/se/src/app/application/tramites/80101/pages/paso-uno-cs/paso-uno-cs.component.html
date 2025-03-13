@@ -7,7 +7,11 @@
       </li>
       <li [ngClass]="indice === 2 ? 'active' : ''">
         <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
-          (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Anexo II y III</a>
+          (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Anexo I</a>
+      </li>
+      <li [ngClass]="indice === 3 ? 'active' : ''">
+        <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
+          (keydown.space)="seleccionaTab(3)" role="button" tabindex="2">Anexo II y III</a>
       </li>
     </ul>
 
@@ -17,8 +21,11 @@
       <solicitante [tabindex]="1"></solicitante>
       }
       @case (2) {
-      <app-anexo-vista-dos-y-tres></app-anexo-vista-dos-y-tres>
+      <app-anexo-vista-uno></app-anexo-vista-uno>
       }
+      @case (3) {
+        <app-anexo-vista-dos-y-tres></app-anexo-vista-dos-y-tres>
+        }
       }
     </ng-container>
   </div>
