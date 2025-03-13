@@ -18,6 +18,14 @@ export class SanitarioService {
       })
     );
  }
+
+ getTable(): Observable<unknown> {
+  return this.http.get('assets/json/260211/terceros.json').pipe(
+    catchError((error: unknown) => {
+      return throwError(() => error);
+    })
+  );
+}
 }
 
   
