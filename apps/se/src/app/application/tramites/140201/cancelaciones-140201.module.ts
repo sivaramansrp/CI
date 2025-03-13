@@ -16,11 +16,15 @@ import { DatosDelLas140201Component } from './components/datos-del-las-140201/da
 
 import { CancelacionDeAutorizaciones140201Component } from './components/cancelacion-de-autorizaciones-140201/cancelacion-de-autorizaciones-140201.component';
 import { EntidadExterna140201Component } from './components/entidad-externa-140201/entidad-externa-140201.component';
+import { provideHttpClient } from '@angular/common/http';
+
+import { NotifDomicileComponent } from './components/NotifDomicile/NotifDomicile.component';
 
 @NgModule({
   declarations: [
     Cancelaciones140201Component,
     Datos140201Component,
+    
   ],
   imports: [
     CommonModule,
@@ -33,6 +37,8 @@ import { EntidadExterna140201Component } from './components/entidad-externa-1402
     DatosDelLas140201Component,
     CancelacionDeAutorizaciones140201Component,
     EntidadExterna140201Component
+ 
   ],
+  providers: [provideHttpClient()],
 })
 export class Cancelaciones140201Module {}

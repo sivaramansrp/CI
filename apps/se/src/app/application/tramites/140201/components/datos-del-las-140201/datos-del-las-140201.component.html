@@ -1,1 +1,56 @@
-<ng-titulo titulo="Datos de las personas autorizadas para oír y recibir notificaciones"></ng-titulo>
+<ng-titulo
+  titulo="Datos de las personas autorizadas para oír y recibir notificaciones"
+></ng-titulo>
+
+<form [formGroup]="authNotifPersonsForm">
+  <div class="row mt-5">
+    <div class="col-md-4 form-group">
+      <label class="form-label" for="nombre">Nombre(s):</label>
+      <input
+        class="form-control"
+        id="nombre"
+        placeholder=""
+        type="text"
+        formControlName="nombre"
+        (input)="updateNombre()"
+      />
+    </div>
+    <div class="col-md-4 form-group">
+      <label class="form-label" for="apellidoPaterno">  <span class="require">* </span>Apellido paterno:</label>
+      <input
+        class="form-control"
+        id="apellidoPaterno"
+        placeholder=""
+        type="text"
+        formControlName="apellidoPaterno"
+        (input)="updateApellidoPaterno()"
+      />
+    </div>
+    <div class="col-md-4 form-group">
+      <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
+      <input
+        class="form-control"
+        id="apellidoMaterno"
+        placeholder=""
+        type="text"
+        formControlName="apellidoMaterno"
+      />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 form-group">
+      <label class="form-label" for="correoElectronico"
+        >Correo electrónico:
+      </label>
+      <input
+        class="form-control"
+        id="correoElectronico"
+        placeholder=""
+        type="text"
+        formControlName="correoElectronico"
+        (input)="updateCorreoElectronico()"
+      />
+    </div>
+  </div>
+</form>
+<app-notif-domicile></app-notif-domicile>
