@@ -18,8 +18,6 @@ import { CancelacionDeAutorizaciones140201Component } from './components/cancela
 import { EntidadExterna140201Component } from './components/entidad-externa-140201/entidad-externa-140201.component';
 import { provideHttpClient } from '@angular/common/http';
 
-import { NotifDomicileComponent } from './components/NotifDomicile/NotifDomicile.component';
-
 @NgModule({
   declarations: [
     Cancelaciones140201Component,

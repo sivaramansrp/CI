@@ -1,13 +1,13 @@
 <div class="container form-container">
   <ng-titulo titulo="Datos requeridos"></ng-titulo>
   <div>
-    <form [formGroup]="cancelacion">
+    <form [formGroup]="cancelacionForm">
       <label class="required-label">RFC</label>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <input type="text" class="form-control" id="rfcIngresado" placeholder="AAL0409235E6" formControlName="rfcIngresado"    maxlength="13"
-            size="30"  />
+            <input type="text" class="form-control" id="rfcIngresado" placeholder="AAL0409235E6" formControlName="rfcIngresado"  maxlength="13"
+            size="30" (input)="updateRfcIngresado()" />
           </div>
         </div>
       </div>
@@ -27,13 +27,13 @@
         </div>
 
         <app-tabla-dinamica *ngIf="mostrarContenido" [configuracionTabla]="configuracionTabla" [datos]="cancelacionData"
-          [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" formControlName="cancelacionesDisponiblesIPC">
+          [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX">
         </app-tabla-dinamica>
       </div>
 
     <div class="mt-5">
       <label for="message" class="required-label">Motivos</label>
-      <textarea class="form-control" formControlName="motivoCancelacion" rows="5" placeholder="PRUEBAS QA" id="motivoCancelacion"></textarea>
+      <textarea class="form-control" formControlName="motivoCancelacion" rows="5" placeholder="PRUEBAS QA" id="motivoCancelacion" (input)="updateMotivoCancelacion()"></textarea>
   </div>
     
     </form>

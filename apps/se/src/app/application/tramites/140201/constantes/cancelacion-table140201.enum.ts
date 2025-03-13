@@ -1,3 +1,5 @@
+import { CancellationOfAuthorizations } from "../models/cancelacions.model";
+
 export const CANCELLATIONOFAUTHORIZATIONS=[
     {
         encabezado: 'Folio de programa',
