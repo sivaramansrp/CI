@@ -8,7 +8,6 @@ import { VehiculosComponent } from './components/vehiculos/vehiculos.component';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
@@ -38,7 +37,6 @@ import {SubirDocumentoService} from '@libs/shared/data-access-user/src/core/serv
   declarations: [
     SolicitantePageComponent,
     PasoUnoComponent,
-    PasoDosComponent,
     VehiculosComponent,
     PasoTresComponent,
     DirectorGeneralComponent,
@@ -69,7 +67,6 @@ import {SubirDocumentoService} from '@libs/shared/data-access-user/src/core/serv
   ],
   exports: [
     PasoUnoComponent,
-    PasoDosComponent,
     PasoTresComponent,
     BtnContinuarComponent,
   ],
