@@ -1,0 +1,96 @@
+<ng-titulo titulo="Detalle del cupo" />
+
+<div>
+    <form [formGroup]="DetalleForm" >
+        <div formGroupName="DetalleData">
+    
+    <div class="row"  style="padding-bottom: 20px;" >
+                <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label" for="regimen"> Régimen aduanero:</label>
+                      <input class="form-control" id="regimen" formControlName="regimen"  type="text">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label" for="descripcion">Descripción del producto:</label>
+                      <input class="form-control" id="descripcion" formControlName="descripcion"  type="text">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label" for="clasificacion">Clasificación del subproducto:</label>
+                      <input class="form-control" id="clasificacion" formControlName="clasificacion"  type="text">
+                    </div>
+                  </div>
+            </div>
+            <div class="row"  style="padding-bottom: 20px;" >
+                <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label" for="unidad">  Unidad de medida:</label>
+                      <input class="form-control" id="unidad" formControlName="unidad"  type="text">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label" for="mecanismo">Mecanismo de asignación:</label>
+                      <input class="form-control" id="mecanismo" formControlName="mecanismo"  type="text">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label" for="tratado">Tratado / Acuerdo:</label>
+                      <input class="form-control" id="tratado" formControlName="tratado"  type="text">
+                    </div>
+                  </div>
+            </div>
+            <div class="row"  style="padding-bottom: 20px;" >
+                <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="form-label" for="fracciones"> Fracciones arancelarias:</label>
+                      <textarea class="form-control" id="fracciones" formControlName="fracciones" style="height: 90px;"></textarea>
+                    </div>
+                  </div>
+                  </div>  
+                  <div class="row"  style="padding-bottom: 20px;" >
+                    <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="form-label" for="paises"> Países:</label>
+                          <textarea class="form-control" id="paises" formControlName="paises" style="height: 120px;"></textarea>
+                        </div>
+                      </div>
+                      </div> 
+                      <div class="row"  style="padding-bottom: 20px;" >
+                        <div class="col-md-12">
+                            <div class="form-group">
+                              <label class="form-label" for="observaciones">  Observaciones:</label>
+                              <textarea class="form-control" id="observaciones" formControlName="observaciones" style="height: 120px;"></textarea>
+                            
+                            </div>
+                          </div>
+                          </div> 
+                          <div class="row"  style="padding-bottom: 20px;" >
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                  <label class="form-label" for="fundamentos">  Fundamentos:</label>
+                                  <textarea class="form-control" id="fundamentos" formControlName="fundamentos" style="height: 120px;"></textarea>
+                                </div>
+                              </div>
+                              </div> 
+                              <div class="row"  style="padding-bottom: 20px;" >
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                      <label class="form-label" for="inicio">  Fecha de inicio de vigencia:</label>
+                                      <input class="form-control" id="inicio" formControlName="inicio"  type="date" placeholder="Selecciona una fecha">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                      <label class="form-label" for="fecha">  Fecha de fin de vigencia:</label>
+                                      <input class="form-control" id="fecha" formControlName="fecha"  type="date" placeholder="Selecciona una fecha">
+                                    </div>
+                                  </div>
+                                  </div>   
+    </div>
+    </form>
+    </div>
