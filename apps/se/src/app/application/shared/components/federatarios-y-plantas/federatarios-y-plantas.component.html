@@ -1,1 +1,129 @@
-<h1>tab</h1>
+<div class="container">
+  <ng-titulo titulo="Datos de los federatarios" />
+  <form [formGroup]="federatariosFormGroup">
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <div class="col">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="nombre">Nombre(s)*:</label>
+                  <input
+                    class="form-control min-hgt"
+                    id="nombre"
+                    formControlName="nombre"
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="primerApellido"
+                    >Primer apellido*</label
+                  >
+                  <input
+                    class="form-control min-hgt"
+                    id="primerApellido"
+                    formControlName="primerApellido"
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="segundoApellido"
+                    >Segundo apellido:</label
+                  >
+                  <input
+                    class="form-control min-hgt"
+                    id="segundoApellido"
+                    formControlName="segundoApellido"
+                    type="text"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-5">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="numeroDeActa"
+                >Número de acta*:</label
+              >
+              <input
+                class="form-control min-hgt"
+                id="numeroDeActa"
+                formControlName="numeroDeActa"
+                type="text"
+              />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <input-fecha
+                [datos]="fechaInicioInput"
+                formControlName="fechaInicioInput"
+              ></input-fecha>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="numeroDeNotaria"
+                >Número de notaría*:</label
+              >
+              <input
+                class="form-control min-hgt"
+                id="numeroDeNotaria"
+                formControlName="numeroDeNotaria"
+                type="text"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row mt-5">
+          <div class="col-md-4">
+            <app-catalogo-select
+              [catalogo]="estadoOptions"
+              formControlName="estado"
+              [label]="'Estado'"
+              [required]="true"
+              name="estado"
+            ></app-catalogo-select>
+          </div>
+          <div class="col-md-4">
+            <app-catalogo-select
+              [catalogo]="estadoOptions"
+              formControlName="estadoOptions"
+              [label]="'Municipio o alcaldía'"
+              [required]="true"
+              name="estado"
+            ></app-catalogo-select>
+          </div>
+        </div>
+        <div class="row mt-5">
+          <div class="col-12 container text-end mt-5">
+            <button class="btn btn-default me-2">Eliminar</button>
+            <button class="btn btn-primary">Agregar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="row">
+    <div class="col">
+      <div class="row">
+        <h5>Datos de los federatarios:</h5>
+      </div>
+      <div class="row">
+        <app-tabla-dinamica
+          [configuracionTabla]="federatariosConfig.FederatariosTablaEncabezado"
+          [tipoSeleccionTabla]="federatariosConfig.FederatariosTablaSeleccion"
+          [datos]="federatariosDatos"
+        ></app-tabla-dinamica>
+      </div>
+    </div>
+  </div>
+</div>
