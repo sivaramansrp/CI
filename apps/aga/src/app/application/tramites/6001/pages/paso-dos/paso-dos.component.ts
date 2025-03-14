@@ -47,7 +47,7 @@ export class PasoDosComponent implements OnDestroy {
       const FIRMA: string = ev;
       if (FIRMA) {
         // Obtiene el número de trámite
-        this._registroCuentasBancariasSvc
+        this.subscription.add(this._registroCuentasBancariasSvc
           .obtenerTramite(19)
           .pipe(
             map((tramite) => {
@@ -57,7 +57,7 @@ export class PasoDosComponent implements OnDestroy {
               return _error;
             })
           )
-          .subscribe();
+          .subscribe());
       }
     }
 

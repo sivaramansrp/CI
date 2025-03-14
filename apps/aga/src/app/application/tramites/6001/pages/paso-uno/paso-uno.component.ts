@@ -36,9 +36,9 @@ export class PasoUnoComponent implements OnDestroy {
    * cada vez que el componente actual cambia.
    */
   constructor(private _registroCuentasBancariasSvc: RegistroCuentasBancariasService,) {
-    this._registroCuentasBancariasSvc.componenteActual.subscribe(component => {
+    this.subscription.add(this._registroCuentasBancariasSvc.componenteActual.subscribe(component => {
       this.componenteActual = component;
-    });
+    }));
   }
 
     /**
