@@ -266,7 +266,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     campo?: string,
 
   ): void {
-    console.log(campo);
     if (campo === 'justificacion') {
       this.pagoForm.get('claveReferencia')?.enable();
       this.pagoForm.get('cadenaDependencia')?.enable();

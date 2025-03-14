@@ -95,7 +95,7 @@ export interface Movilizacion {
     transporte: string;
     guiaIdentificacion: string;
     empresaTransportista: string;
-    punto: string;
+    medioTransporte: string;
 }
 
 /**
@@ -274,7 +274,7 @@ export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): Lista
             transporte: getDefaultValue(params.movilizacion?.transporte, ''),
             guiaIdentificacion: getDefaultValue(params.movilizacion?.guiaIdentificacion, ''),
             empresaTransportista: getDefaultValue(params.movilizacion?.empresaTransportista, ''),
-            punto: getDefaultValue(params.movilizacion?.punto, ''),
+            medioTransporte: getDefaultValue(params.movilizacion?.medioTransporte, ''),
         },
         pago: {
             exentoPago: getDefaultValue(params.pago?.exentoPago, ''),

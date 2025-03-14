@@ -7,6 +7,7 @@ import { AgriculturaApiService } from '../../services/220202/agricultura-api.ser
 import { Catalogo } from '@ng-mf/data-access-user';
 
 import { Subject, Subscription, takeUntil } from 'rxjs';
+import { Movilizacion } from '../../models/220202/fitosanitario.model';
 
 /**
  * @fileoverview Componente para la sección de datos para movilización nacional.
@@ -60,7 +61,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * Se utiliza para emitir cuando el componente es destruido, limpiando todas las suscripciones.
    */
   private destroyNotifier$ = new Subject<void>();
-
+  formulariodataStore: Movilizacion = {} as Movilizacion;
 
   /**
    * @description Suscripción para manejar cambios en el estado del formulario.
@@ -75,13 +76,10 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * Este servicio se utiliza para obtener las listas de opciones para los selectores del formulario y para actualizar el estado de la forma.
    */
   constructor(private readonly agriculturaApiService: AgriculturaApiService) {
-    this.forma = new FormGroup({
-      transporte: new FormControl('', Validators.required),
-      medioTransporte: new FormControl('', Validators.required),
-      guiaIdentificacion: new FormControl('', Validators.required),
-      empresaTransportista: new FormControl('', Validators.required),
-      punto: new FormControl('', Validators.required)
-    });
+    this.agriculturaApiService.getAllDatosForma().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+      this.formulariodataStore = datos.movilizacion;
+    })
+
   }
 
   /**
@@ -92,6 +90,12 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @returns {void}
    */
   ngOnInit(): void {
+    this.forma = new FormGroup({
+      transporte: new FormControl(this.formulariodataStore.transporte || '', Validators.required),
+      medioTransporte: new FormControl(this.formulariodataStore.medioTransporte || ''),
+      guiaIdentificacion: new FormControl(this.formulariodataStore.guiaIdentificacion || ''),
+      empresaTransportista: new FormControl(this.formulariodataStore.empresaTransportista || '', Validators.required),
+    });
     // Se suscribe a los cambios de estado del formulario para actualizar su validez
     this.forma.statusChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
       const FORMA_VALIDA_ACTUALIZADA = {
@@ -149,10 +153,10 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @returns {void}
    */
   setValoresStore(
-    form: FormGroup,
-    campo: string,
+    form?: FormGroup,
+    campo?: string,
   ): void {
-    const VALOR = form.get(campo)?.value;
+    const VALOR = this.forma.value;
     this.agriculturaApiService.updateMovilizacion(VALOR);
   }
 

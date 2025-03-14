@@ -7,14 +7,14 @@
         <div class="col-md-6">
           <app-catalogo-select
             [catalogo]="transporteList"
-            formControlName="medioTransporte"
+            formControlName="transporte"
             [label]="'Medio de transporte'"
             [required]="true"
-            name="medioTransporte"
+            name="transporte"
             (change)="
           setValoresStore(
             forma,
-            'medioTransporte'
+            'transporte'
           )
         "
           ></app-catalogo-select>
@@ -25,15 +25,15 @@
           >
           <input
             class="form-control mt-1"
-            id="transporte"
+            id="medioTransporte"
             placeholder=""
             type="text"
-            name="transporte"
-            formControlName="transporte"
+            name="medioTransporte"
+            formControlName="medioTransporte"
             (change)="
             setValoresStore(
               forma,
-              'transporte'
+              'medioTransporte'
             )
           "
           />
@@ -41,14 +41,14 @@
         <div class="col-md-12">
           <app-catalogo-select
             [catalogo]="puntoList"
-            formControlName="punto"
+            formControlName="guiaIdentificacion"
             [label]="'Punto de verificación federal'"
             [required]="false"
-            name="punto"
+            name="guiaIdentificacion"
             (change)="
             setValoresStore(
               forma,
-              'punto'
+              'guiaIdentificacion'
             )
           "
           ></app-catalogo-select>
