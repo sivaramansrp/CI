@@ -232,7 +232,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.solicitudState?.valueTA,
           [
             Validators.required,
-            Validators.maxLength(2000)
+            Validators.maxLength(1000)
           ],
         ],
         fraccionArancelaria: [
