@@ -226,6 +226,7 @@
           >Descripción de la fracción arancelaria *:</label
         >
         <input
+        readonly
           class="form-control"
           id="descripcionFraccionArancelaria"
           formControlName="descripcionFraccionArancelaria"
@@ -242,6 +243,7 @@
       </div>
       <div class="col-md-4">
         <app-catalogo-select
+        
           [catalogo]="nicoList"
           formControlName="nico"
           [label]="'Nico'"
@@ -260,6 +262,7 @@
           >Descripción Nico*:</label
         >
         <input
+        readonly
           class="form-control"
           id="descripcionNico"
           formControlName="descripcionNico"
@@ -310,12 +313,14 @@
       <div class="col-md-4 form-group">
         <label class="form-label" for="umt">UMT*:</label>
         <input
+        readonly
           class="form-control"
           id="umt"
           formControlName="umt"
           placeholder=""
           name="umt"
           type="text"
+          disable="true"
           (change)="
           setValoresStore(
             datosMercanciaFormGroup,

@@ -10,6 +10,7 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
 
 import { Subject, takeUntil } from 'rxjs';
 import { DatosMercancia220203 } from '../../models/220203/importacion-de-acuicultura.module';
+import { isDisabledDay } from 'ngx-bootstrap/chronos';
 
 interface DatoTabla {
   solicitud: string;
@@ -216,9 +217,11 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
    */
   constructor(private readonly fb: FormBuilder, private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService) {
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+      console.log(datos);
       this.datosMercanciaStore = datos.datosMercancia;
     })
     this.createFromGroup();
+    console.log(this.datosMercanciaFormGroup.value);
     this.obtenerCatalogosTransporte();
     this.obtenerCatalogosArancelaria();
     this.obtenerCatalogosUMC();
@@ -254,28 +257,36 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
    * Creates the 'mercanciaGroup' form group.
    */
   createMercanciaGroup() {
-    return this.fb.group({
-      tipoRequisito: [this.datosMercanciaStore.mercanciaGroup.tipoRequisito || '', Validators.required],
-      requisito: [this.datosMercanciaStore.mercanciaGroup.requisito || '', Validators.required],
-      numeroCertificadoInternacional: [this.datosMercanciaStore.mercanciaGroup.numeroCertificadoInternacional || '', Validators.required],
-      numeroOficioCasoEspecial: [this.datosMercanciaStore.mercanciaGroup.numeroOficioCasoEspecial || ''],
-      fraccionArancelaria: [this.datosMercanciaStore.mercanciaGroup.fraccionArancelaria, Validators.required],
-      descripcionFraccionArancelaria: [{ value: this.datosMercanciaStore.mercanciaGroup.descripcionFraccionArancelaria || '', disabled: true }, Validators.required],
-      nico: [this.datosMercanciaStore.mercanciaGroup.nico || '', Validators.required],
-      descripcionNico: [{ value: this.datosMercanciaStore.mercanciaGroup.descripcionNico || '', disabled: true }, Validators.required],
-      descripcion: [this.datosMercanciaStore.mercanciaGroup.descripcion || '', Validators.required],
-      cantidadUMT: [this.datosMercanciaStore.mercanciaGroup.cantidadUMT || '', Validators.required],
-      umt: [{ value: this.datosMercanciaStore.mercanciaGroup.umt || '', disabled: true }, Validators.required],
-      cantidadUMC: [this.datosMercanciaStore.mercanciaGroup.cantidadUMC || '', Validators.required],
-      umc: [this.datosMercanciaStore.mercanciaGroup.umc || '', Validators.required],
-      uso: [this.datosMercanciaStore.mercanciaGroup.uso || '', Validators.required],
-      numeroDeLote: [this.datosMercanciaStore.mercanciaGroup.numeroDeLote || '', Validators.required],
-      faseDeDesarrollo: [this.datosMercanciaStore.mercanciaGroup.faseDeDesarrollo || '', Validators.required],
-      especie: [this.datosMercanciaStore.mercanciaGroup.especie || '', Validators.required],
-      paisDeOrigen: [this.datosMercanciaStore.mercanciaGroup.paisDeOrigen || '', Validators.required],
-      paisDeProcedencia: [this.datosMercanciaStore.mercanciaGroup.paisDeProcedencia || '', Validators.required],
+    const mercanciaData = this.datosMercanciaStore.mercanciaGroup || {};
+
+    const formGroup = this.fb.group({
+      tipoRequisito: [mercanciaData.tipoRequisito || '', Validators.required],
+      requisito: [mercanciaData.requisito || '', Validators.required],
+      numeroCertificadoInternacional: [mercanciaData.numeroCertificadoInternacional || '', Validators.required],
+      numeroOficioCasoEspecial: [mercanciaData.numeroOficioCasoEspecial || ''],
+      fraccionArancelaria: [mercanciaData.fraccionArancelaria || '', Validators.required],
+      descripcionFraccionArancelaria: [mercanciaData.descripcionFraccionArancelaria || '', Validators.required],
+      nico: [mercanciaData.nico || '', Validators.required],
+      descripcionNico: [mercanciaData.descripcionNico || '', Validators.required],
+      descripcion: [mercanciaData.descripcion || '', Validators.required],
+      cantidadUMT: [mercanciaData.cantidadUMT || '', Validators.required],
+      umt: [mercanciaData.umt, Validators.required],
+      cantidadUMC: [mercanciaData.cantidadUMC || '', Validators.required],
+      umc: [mercanciaData.umc || '', Validators.required],
+      uso: [mercanciaData.uso || '', Validators.required],
+      numeroDeLote: [mercanciaData.numeroDeLote || '', Validators.required],
+      faseDeDesarrollo: [mercanciaData.faseDeDesarrollo || '', Validators.required],
+      especie: [mercanciaData.especie || '', Validators.required],
+      paisDeOrigen: [mercanciaData.paisDeOrigen || '', Validators.required],
+      paisDeProcedencia: [mercanciaData.paisDeProcedencia || '', Validators.required],
     });
+
+    return formGroup;
   }
+
+
+
+
 
   /**
    * Creates the 'detalles' form group.
@@ -398,21 +409,28 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     campo?: string,
   ): void {
     if (campo === 'fraccionArancelaria') {
-      this.datosMercanciaFormGroup.get('mercanciaGroup')?.patchValue({
-        descripcionFraccionArancelaria: 'Nuevo valor para descripcion',
+      this.datosMercanciaFormGroup.patchValue({
+        mercanciaGroup: {
+          descripcionFraccionArancelaria: 'Nuevo valor para descripcion',
+        }
       });
     }
     else if (campo === 'nico') {
-      this.datosMercanciaFormGroup.get('mercanciaGroup')?.patchValue({
-        descripcionNico: 'Nuevo valor para descripcionNico',
+      this.datosMercanciaFormGroup.patchValue({
+        mercanciaGroup: {
+          descripcionNico: 'Nuevo valor para descripcionNico',
+        }
       });
     }
     else if (campo === 'cantidadUMT') {
-      this.datosMercanciaFormGroup.get('mercanciaGroup')?.patchValue({
-        umt: 'Nuevo valor para cantidadUMT',
+      this.datosMercanciaFormGroup.patchValue({
+        mercanciaGroup: {
+          umt: 'Nuevo valor para cantidadUMT',
+        }
       });
     }
     const VALOR = this.datosMercanciaFormGroup.value;
+    console.log(VALOR, 'FormGroup');
     (this.importacionDeAcuiculturaServices.actualizarDatosMercancia as (value: DatosMercancia220203) => void)(
       VALOR
     );
