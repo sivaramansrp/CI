@@ -5,7 +5,7 @@
       </div>
   <app-wizard [listaPasos]="pasos"></app-wizard>
        </div>
-  </div>
+
  <div>
     @switch (indice) {
     @case (1) {
@@ -23,4 +23,6 @@
   }
   </div>
   <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+</div>
+  
 

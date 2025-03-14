@@ -7,7 +7,7 @@ import { BtnContinuarComponent, CatalogoSelectComponent, SolicitanteComponent } 
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { AsignciontabComponent } from './component/asigncionTab/asigncion-tab.component';
-import { SolicitantetabComponent } from './component/solicitanteTab/solicitantetab.component';
+import { SolicitantetabComponent } from './component/solicitantetab/solicitantetab.component';
 
 import { EntidadLegalRoutingModule } from './entidad-legal-routing.module';
 

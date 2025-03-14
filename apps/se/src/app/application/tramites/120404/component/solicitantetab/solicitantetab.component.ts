@@ -13,7 +13,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { AlertComponent, DatosPasos, ListaPasosWizard, PASOS, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { SolicitanteasigncionserviceService } from '@ng-mf/data-access-user';
+import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-user/src/core/services/120404/solicitanteAsigncionservice.service';
 
 /**
  * Componente para la gestión del formulario de solicitante.

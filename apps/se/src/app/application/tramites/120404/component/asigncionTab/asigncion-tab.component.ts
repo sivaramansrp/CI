@@ -12,7 +12,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { SolicitantetabComponent } from '../solicitanteTab/solicitantetab.component';
+import { SolicitantetabComponent } from '../solicitantetab/solicitantetab.component';
 
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 
@@ -37,7 +37,7 @@ import { Tramite120404Store } from '../../estados/store/tramite120404.store';
 @Component({
   selector: 'app-asignciontab',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, SolicitantetabComponent, InputRadioComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent,SolicitantetabComponent, InputRadioComponent],
   templateUrl: './asigncion-tab.component.html',
   styleUrls: ['./asigncion-tab.component.scss'],
 })

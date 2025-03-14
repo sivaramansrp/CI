@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 // eslint-disable-next-line sort-imports
-import { AsignacionData } from 'libs/shared/data-access-user/src/core/models/120404/asignacionmodel';
+import { AsignacionData } from 'libs/shared/data-access-user/src/core/models/120404/entidadmodel';
 
 
 
@@ -61,7 +61,7 @@ describe('SolicitantetabComponent', () => {
       especie: 'Test Especie',
       funcionZootecnica: 'Test Funcion',
       autorizado: 'Test Autorizado',
-      Expendido: 'Test Expendido',
+      expendido: 'Test Expendido',
       disponible: 'Test Disponible',
       ampliar: 'Test Ampliar'
     };

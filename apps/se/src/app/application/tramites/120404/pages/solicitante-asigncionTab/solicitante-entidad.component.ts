@@ -31,4 +31,6 @@ export class SolicitanteAsigncionComponent {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+  
 }
