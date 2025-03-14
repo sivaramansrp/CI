@@ -58,6 +58,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   fechaFinalInput: InputFecha = FECHA_SALIDA_ACUICULTURA;
 
+  fechaPagoDate: string = '15/03/2025';
+
   private destroyNotifier$ = new Subject<void>();
   formularioPagoStore: FormularioPago = {} as FormularioPago;
   /**
@@ -133,6 +135,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.formularioPago.patchValue({
       fechaPago: nuevoValor,
     });
+    this.fechaPagoDate = nuevoValor;
   }
 
   /**
@@ -210,7 +213,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         fechaPago: HOY,
         importePago: 'valor',
       });
+      this.fechaPagoDate = HOY;
     }
+
     // Si el banco no está vacío y el campo exentoPago es 'No'
     else if (this.formularioPago.value.banco !== '' && this.formularioPagoStore.exentoPago === 'No') {
       this.formularioPago.patchValue({
@@ -221,7 +226,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         llavePago: 'valor',
         importePago: 'valor',
       });
+
     }
+    this.fechaPagoDate = HOY;
   }
 
   /**

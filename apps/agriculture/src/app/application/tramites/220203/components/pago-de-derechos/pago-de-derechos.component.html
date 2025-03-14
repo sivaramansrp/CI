@@ -150,7 +150,7 @@
             [datos]="fechaFinalInput"
             (valorCambiado)="cambioFechaFinal($event)"
             name="fechaPago"
-            formControlName="fechaPago"
+            [setFecha]="fechaPagoDate" 
           ></input-fecha>
         </div>
         <div class="col-md-4 form-group">
