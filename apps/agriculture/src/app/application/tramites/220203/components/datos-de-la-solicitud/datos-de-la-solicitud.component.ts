@@ -196,7 +196,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
    * @type {FilaSolicitud[]}
    */
   cuerpoTabla: FilaSolicitud[] = [];
-
+  datosMercanciaStore: DatosMercancia220203 = {} as DatosMercancia220203;
   /**
    * @description Datos de la tabla de solicitudes.
    * @type {FilaSolicitud[]}
@@ -215,6 +215,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
    * @param {ImportacionDeAcuiculturaService} importacionDeAcuiculturaServices Servicio para obtener datos de catálogos.
    */
   constructor(private readonly fb: FormBuilder, private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService) {
+    this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+      console.log(datos)
+      this.datosMercanciaStore = datos.datosMercancia;
+    })
     this.createFromGroup();
     this.obtenerCatalogosTransporte();
     this.obtenerCatalogosArancelaria();
@@ -229,35 +233,35 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   createFromGroup() {
     this.datosMercanciaFormGroup = this.fb.group({
       realizarGroup: this.fb.group({
-        aduanaIngreso: ['', Validators.required],
-        oficinaInspeccion: ['', Validators.required],
-        puntoInspeccion: ['', Validators.required],
-        numeroGuia: [''],
-        regimen: ['', Validators.required]
+        aduanaIngreso: [this.datosMercanciaStore.realizarGroup.aduanaIngreso || '', Validators.required],
+        oficinaInspeccion: [this.datosMercanciaStore.realizarGroup.oficinaInspeccion || '', Validators.required],
+        puntoInspeccion: [this.datosMercanciaStore.realizarGroup.puntoInspeccion || '', Validators.required],
+        numeroGuia: [this.datosMercanciaStore.realizarGroup.numeroGuia || ''],
+        regimen: [this.datosMercanciaStore.realizarGroup.regimen || '', Validators.required]
       }),
       mercanciaGroup: this.fb.group({
-        tipoRequisito: ['', Validators.required],
-        requisito: ['', Validators.required],
-        numeroCertificadoInternacional: ['', Validators.required],
-        numeroOficioCasoEspecial: [''],
-        fraccionArancelaria: ['', Validators.required],
-        descripcionFraccionArancelaria: [{ value: '', disabled: true }, Validators.required],
-        nico: ['', Validators.required],
-        descripcionNico: [{ value: '', disabled: true }, Validators.required],
-        descripcion: ['', Validators.required],
-        cantidadUMT: ['', Validators.required],
-        umt: [{ value: '', disabled: true }, Validators.required],
-        cantidadUMC: ['', Validators.required],
-        umc: ['', Validators.required],
-        uso: ['', Validators.required],
-        numeroDeLote: ['', Validators.required],
-        faseDeDesarrollo: ['', Validators.required],
-        especie: ['', Validators.required],
-        paisDeOrigen: ['', Validators.required],
-        paisDeProcedencia: ['', Validators.required]
+        tipoRequisito: [this.datosMercanciaStore.mercanciaGroup.tipoRequisito || '', Validators.required],
+        requisito: [this.datosMercanciaStore.mercanciaGroup.requisito || '', Validators.required],
+        numeroCertificadoInternacional: [this.datosMercanciaStore.mercanciaGroup.numeroCertificadoInternacional || '', Validators.required],
+        numeroOficioCasoEspecial: [this.datosMercanciaStore.mercanciaGroup.numeroOficioCasoEspecial || ''],
+        fraccionArancelaria: [this.datosMercanciaStore.mercanciaGroup.fraccionArancelaria, Validators.required],
+        descripcionFraccionArancelaria: [{ value: this.datosMercanciaStore.mercanciaGroup.descripcionFraccionArancelaria || '', disabled: true }, Validators.required],
+        nico: [this.datosMercanciaStore.mercanciaGroup.nico || '', Validators.required],
+        descripcionNico: [{ value: this.datosMercanciaStore.mercanciaGroup.descripcionNico || '', disabled: true }, Validators.required],
+        descripcion: [this.datosMercanciaStore.mercanciaGroup.descripcion || '', Validators.required],
+        cantidadUMT: [this.datosMercanciaStore.mercanciaGroup.cantidadUMT || '', Validators.required],
+        umt: [{ value: this.datosMercanciaStore.mercanciaGroup.umt || '', disabled: true }, Validators.required],
+        cantidadUMC: [this.datosMercanciaStore.mercanciaGroup.cantidadUMC || '', Validators.required],
+        umc: [this.datosMercanciaStore.mercanciaGroup.umc || '', Validators.required],
+        uso: [this.datosMercanciaStore.mercanciaGroup.uso || '', Validators.required],
+        numeroDeLote: [this.datosMercanciaStore.mercanciaGroup.numeroDeLote || '', Validators.required],
+        faseDeDesarrollo: [this.datosMercanciaStore.mercanciaGroup.faseDeDesarrollo || '', Validators.required],
+        especie: [this.datosMercanciaStore.mercanciaGroup.especie || '', Validators.required],
+        paisDeOrigen: [this.datosMercanciaStore.mercanciaGroup.paisDeOrigen || '', Validators.required],
+        paisDeProcedencia: [this.datosMercanciaStore.mercanciaGroup.paisDeProcedencia || '', Validators.required]
       }),
       detalles: this.fb.group({
-        nombreCientifico: ['']
+        nombreCientifico: [this.datosMercanciaStore.detalles.nombreCientifico || '']
       })
     });
   }
@@ -372,6 +376,21 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     form?: FormGroup,
     campo?: string,
   ): void {
+    if (campo == 'fraccionArancelaria') {
+      this.datosMercanciaFormGroup.get('mercanciaGroup')?.patchValue({
+        descripcionFraccionArancelaria: 'Nuevo valor para descripcion',
+      });
+    }
+    else if (campo == 'nico') {
+      this.datosMercanciaFormGroup.get('mercanciaGroup')?.patchValue({
+        descripcionNico: 'Nuevo valor para descripcionNico',
+      });
+    }
+    else if (campo == 'cantidadUMT') {
+      this.datosMercanciaFormGroup.get('mercanciaGroup')?.patchValue({
+        umt: 'Nuevo valor para cantidadUMT',
+      });
+    }
     const VALOR = this.datosMercanciaFormGroup.value;
     (this.importacionDeAcuiculturaServices.actualizarDatosMercancia as (value: DatosMercancia220203) => void)(
       VALOR
