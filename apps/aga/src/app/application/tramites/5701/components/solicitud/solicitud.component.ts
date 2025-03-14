@@ -4,6 +4,7 @@ import {
   FECHA_INICIO,
   HORA_FINAL,
   HORA_INICIO,
+  MSJ_ERROR_FECHA, TITULO_MODAL_ERROR
 } from '../../../../core/enums/5701/tramite5701.enum';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -106,7 +107,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private formulariosService: FormulariosService,
     private catalogosServices: CatalogosService,
     private validacionesService: ValidacionesFormularioService
-  // eslint-disable-next-line no-empty-function
+    // eslint-disable-next-line no-empty-function
   ) { }
 
   ngOnInit(): void {
@@ -751,7 +752,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
     const valor = form.get(campo)?.value;
     console.log(valor);
-    
+
     (this.tramite5701Store[metodoNombre] as (value: any) => void)(valor);
   }
 
@@ -831,7 +832,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   changeDespachoLDA(): void {
     this.tipoDespacho = true;
     console.log('despacho lda');
-    
+
 
   }
 
