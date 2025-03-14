@@ -1,10 +1,14 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
-import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
 import {
-  CatalogosSelect,
-  DocumentosCargados
-} from '../../../core/models/shared/components.model';
-import { Catalogo } from '../../../core/models/shared/catalogos.model';
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input, OnChanges, OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
+import { Catalogo, CatalogosSelect, DocumentosCargados } from '@libs/shared/data-access-user/src';
+
 import { CommonModule } from '@angular/common';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import {
@@ -16,7 +20,6 @@ import {
 import { Login } from '../../../core/models/shared/inicio-sesion.model';
 import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
 import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
-import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { URL_PRUEBA } from '../../constantes/servicios-extraordinarios.enum';
@@ -25,6 +28,8 @@ import {
   PreviewDocumentoComponent
 } from '@libs/shared/data-access-user/src/tramites/components/preview-documento/preview-documento.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { Subscription } from 'rxjs';
+import { MensajesDocumentos } from '@libs/shared/data-access-user/src/core/enums/mensajes-documentos.enum';
 
 declare const bootstrap: any; // Importación para manejar Bootstrap en TS
 
@@ -35,21 +40,23 @@ declare const bootstrap: any; // Importación para manejar Bootstrap en TS
   templateUrl: './anexar-documentos.component.html',
   styleUrl: './anexar-documentos.component.scss'
 })
-export class AnexarDocumentosComponent implements OnInit {
+export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
+
   @Input() catalogoDocumentos: Catalogo[] = [];
+  subscription: Subscription[] = [];
   documentoForma!: FormGroup;
 
   PDF = PDF;
   MB = MB;
   DPI = DPI;
 
-  tamMaximo: number = 0;
+  tamMaximo = 0;
   tiposDocumentos!: CatalogosSelect;
   documentosCargados: DocumentosCargados[] = [];
   documentoSeleccionado!: Catalogo;
-  mostrarModal: boolean = false;
+  mostrarModal = false;
 
-  modal: string = '';
+  modal = '';
   indiceDocumento!: number;
 
   datosLogin: Login = {
@@ -58,31 +65,31 @@ export class AnexarDocumentosComponent implements OnInit {
   };
 
   token!: string;
-  base64File: string = '';
+  base64File = '';
 
   readonly url: string = URL_PRUEBA;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
-  fileNames: string = '';
+  fileNames = '';
   listDocOpcionalesAgregar: any[] = [];
 
 
   @ViewChild('modalConfirmacion') modalConfirmacion!: ElementRef;
-  rutaArchivoPreview: string = '';
+  rutaArchivoPreview = '';
   listadoArchivos: any[] = [];
   documentosOpcionales: FormControl = new FormControl<any>('');
   archivosOpcionales: any[] = [
-    { descripcion: 'Documento_opcional_01', dpi: '300', id: '21', tam: '10000' },
-    { descripcion: 'Documento_opcional_02', dpi: '301', id: '22', tam: '11000' },
-    { descripcion: 'Documento_opcional_03', dpi: '302', id: '23', tam: '12000' },
-    { descripcion: 'Documento_opcional_04', dpi: '303', id: '24', tam: '13000' },
-    { descripcion: 'Documento_opcional_05', dpi: '304', id: '25', tam: '14000' },
-    { descripcion: 'Documento_opcional_06', dpi: '305', id: '26', tam: '15000' },
-    { descripcion: 'Documento_opcional_07', dpi: '306', id: '27', tam: '16000' },
-    { descripcion: 'Documento_opcional_08', dpi: '307', id: '28', tam: '17000' },
-    { descripcion: 'Documento_opcional_09', dpi: '308', id: '29', tam: '18000' },
-    { descripcion: 'Documento_opcional_10', dpi: '309', id: '30', tam: '19000' }
+    { descripcion: 'Documento_opcional_01', dpi: '300', id: '11', tam: '10000' },
+    { descripcion: 'Documento_opcional_02', dpi: '301', id: '12', tam: '11000' },
+    { descripcion: 'Documento_opcional_03', dpi: '302', id: '13', tam: '12000' },
+    { descripcion: 'Documento_opcional_04', dpi: '303', id: '14', tam: '13000' },
+    { descripcion: 'Documento_opcional_05', dpi: '304', id: '15', tam: '14000' },
+    { descripcion: 'Documento_opcional_06', dpi: '305', id: '16', tam: '15000' },
+    { descripcion: 'Documento_opcional_07', dpi: '306', id: '17', tam: '16000' },
+    { descripcion: 'Documento_opcional_08', dpi: '307', id: '18', tam: '17000' },
+    { descripcion: 'Documento_opcional_09', dpi: '308', id: '19', tam: '18000' },
+    { descripcion: 'Documento_opcional_10', dpi: '309', id: '20', tam: '19000' }
   ];
-  archivosOpcionalesOriginal: any[] = []
+  archivosOpcionalesOriginal: any[] = [];
   listDocOpcionales: any[] = [];
   listDocOpcionalesDuplicado: any[] = [];
   bsModalRef?: BsModalRef;
@@ -173,27 +180,25 @@ export class AnexarDocumentosComponent implements OnInit {
   /**
    * Maneja la carga de un documento.
    * @param {Event} event - El evento de carga del archivo.
+   * @param fileInput file proveniente del input
+   * @param id del catalog de documentos a cargar
    */
   cargarDoc(event: Event, fileInput: HTMLInputElement, id: any): void {
     const archivo = event.target as HTMLInputElement;
     const informacionArchivo = (archivo.files as FileList)[0];
-    console.log(informacionArchivo);
 
     if (informacionArchivo) {
       const extArchivo = informacionArchivo.name.split('.').pop()?.toLowerCase();
-
       if (extArchivo !== this.PDF.toLowerCase()) {
-        this.toastr.error('Solo se aceptan archivos pdf');
+        this.toastr.error(MensajesDocumentos.ONLYPDF);
         fileInput.value = '';
         return;
       }
 
-      // const tamanioRequerido = this.documentoSeleccionado.tam ? this.convertirKilobytesABytes(parseInt(this.documentoSeleccionado.tam, 10)) : 0;
-      const tamanioRequerido: number = 10 * 1048576;
-      const tamanioArchivo: number = informacionArchivo.size;
-      console.log(tamanioArchivo);
-      if (tamanioArchivo > tamanioRequerido) {
-        this.toastr.error('El tamaño del documento que intenta cargar excede el tamaño permitido');
+      const sizeRequire: number = 10 * 1048576;
+      const sizeFile: number = informacionArchivo.size;
+      if (sizeFile > sizeRequire) {
+        this.toastr.error(MensajesDocumentos.MAXSIZE);
         fileInput.value = '';
         return;
       }
@@ -203,31 +208,25 @@ export class AnexarDocumentosComponent implements OnInit {
         archivo: informacionArchivo,
         ruta: URL.createObjectURL(informacionArchivo)
       });
-      console.log(this.listadoArchivos);
-
-      /*this.documentosCargados.push({
-        tipoDocumento: this.documentoSeleccionado,
-        nombreArchivo: informacionArchivo.name
-      });*/
     }
   }
 
   existePreview(id: any): boolean {
-    // console.log(id);
     const encontrado = this.listadoArchivos.find(f => f.id === id);
     return encontrado !== undefined;
   }
 
   uploadFiles(informacionArchivo: any): void {
-    this.subirDocumentoService.subirDocumento(this.token, informacionArchivo).subscribe({
-      next: (): void => {
-        this.toastr.success('Documento subido');
-      },
-      error: (error): void => {
-        console.error(error);
-        this.toastr.error('Error al subir el documento');
-      }
-    });
+    this.subscription.push(
+      this.subirDocumentoService.subirDocumento(this.token, informacionArchivo).subscribe({
+        next: (): void => {
+          this.toastr.success(MensajesDocumentos.UPLOAD);
+        },
+        error: (error): void => {
+          console.error(error);
+          this.toastr.error(MensajesDocumentos.ERRORUPLOAD);
+        }
+      }));
   }
 
 
@@ -241,17 +240,7 @@ export class AnexarDocumentosComponent implements OnInit {
   }
 
   /**
-   * Convierte kilobytes a bytes.
-   * @param {number} kilobytes - El tamaño en kilobytes.
-   * @returns {number} El tamaño en bytes.
-   */
-  convertirKilobytesABytes(kilobytes: number): number {
-    return kilobytes * 1024;
-  }
-
-  /**
    * Abre un archivo PDF en una nueva pestaña del navegador.
-   *
    * @returns {void}
    * @param id
    */
@@ -321,26 +310,40 @@ export class AnexarDocumentosComponent implements OnInit {
   }
 
   agregarParte(fileInput: HTMLInputElement, item: any, origen: string) {
+    console.log(item);
     if (origen == 'obligatorios') {
-      const index = this.catalogoDocumentos.findIndex(doc => doc.id === item.id);
-  
+      const index: number = this.catalogoDocumentos.findIndex(doc => doc.id === item.id);
       if (index !== -1) {
-        const nuevoItem = {...item, uniqueId: crypto.randomUUID(), nuevo: true };
-        this.catalogoDocumentos.splice(index + 1, 0, nuevoItem);
+        const nuevoId: number = (this.catalogoDocumentos[index]?.adicionales?.length ?? 0) + 1;
+        const parteDocumento: any = {
+          id: `${item.id}-${nuevoId}`,
+          descripcion: item.descripcion,
+          clave: item.clave,
+          tam: item.tam,
+          dpi: item.dpi,
+          nuevo: true,
+          uniqueId: crypto.randomUUID()
+        };
+        this.catalogoDocumentos[index].adicionales?.push(parteDocumento);
       } else {
-        
+        return;
       }
-  
       fileInput.value = '';
     } else {
-
-      const index = this.listDocOpcionales.findIndex(doc => doc.id === item.id);
-  
+      const index: number = this.listDocOpcionales.findIndex(doc => doc.id === item.id);
       if (index !== -1) {
-        const nuevoItem = {...item, uniqueId: crypto.randomUUID(), nuevo: true };
-        this.listDocOpcionales.splice(index + 1, 0, nuevoItem);
+        const nuevoId: number = (this.listDocOpcionales[index]?.adicionales?.length ?? 0) + 1;
+        const parteDocumento: any = {
+          id: `${item.id}-${nuevoId}`,
+          descripcion: item.descripcion,
+          clave: item.clave,
+          tam: item.tam,
+          dpi: item.dpi,
+          nuevo: true,
+          uniqueId: crypto.randomUUID()
+        };
+        this.listDocOpcionales[index].adicionales?.push(parteDocumento);
       }
-  
       fileInput.value = '';
     }
   }
@@ -355,27 +358,33 @@ export class AnexarDocumentosComponent implements OnInit {
   agregarOpcionales(): void {
     this.listDocOpcionalesAgregar.forEach((doc: any) => {
       const index = this.listDocOpcionales.findIndex((f: any) => f.id === doc);
+      console.log(index);
       if (index === -1) {
-        const opcional = this.archivosOpcionales.find(f => f.id === doc);
+        const opcional = {
+          ...this.archivosOpcionales.find(f => f.id === doc),
+          adicionales: []
+        };
+        console.log(opcional);
         this.listDocOpcionales.push(opcional);
+        console.log(this.listDocOpcionales);
         const indexOpcional = this.archivosOpcionales.findIndex(f => f.id === doc);
         if (indexOpcional !== -1) {
           // Se asigna una nueva propiedad que luego usaremos en el template
           this.archivosOpcionales[indexOpcional] = {
-            ...this.archivosOpcionales[indexOpcional],
+            ...this.archivosOpcionales[indexOpcional]
             // disabled: true 
           };
         }
         this.listDocOpcionalesDuplicado = this.listDocOpcionales.map(op => op.id);
       }
-    })
+    });
   }
 
   cargarArchivos(): void {
     console.log(this.listadoArchivos);
   }
 
-  eliminarOpcionar(item: any): void {
+  eliminarOpcional(item: any): void {
     const index: number = this.listDocOpcionales.findIndex(f => f.id === item.id);
     if (index !== -1) {
       this.listDocOpcionales.splice(index, 1);
@@ -389,11 +398,27 @@ export class AnexarDocumentosComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  eliminarNuevo(item: any): void {
-    const index: number = this.catalogoDocumentos.findIndex(f => f.uniqueId === item.uniqueId);
-    if (index !== -1) {
-      this.catalogoDocumentos.splice(index, 1);
+  eliminarNuevo(item: any, adicional = false): void {
+    if (adicional) {
+      const indexAdicional = item.item.adicionales.findIndex((adicional: any) => adicional.id === item.adicional.id);
+      item.item.adicionales.splice(indexAdicional, 1);
     }
-    this.cdr.detectChanges();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['catalogoDocumentos']) {
+      this.catalogoDocumentos = this.catalogoDocumentos.map(item => ({
+        ...item,
+        nuevo: false,
+        uniqueId: '',
+        adicionales: []
+      }));
+      console.log(this.catalogoDocumentos);
+    }
+  }
+
+
+  ngOnDestroy(): void {
+    this.subscription.forEach((sub: Subscription) => sub.unsubscribe());
   }
 }

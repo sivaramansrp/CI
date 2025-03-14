@@ -12,7 +12,7 @@ export interface JSONResponse {
 
 export interface RespuestaCatalogos {
   code: number;
-  data: Catalogo[]
+  data: Catalogo[];
   message: string;
 }
 
@@ -24,6 +24,7 @@ export interface Catalogo {
   dpi?: string;
   nuevo?: boolean;
   uniqueId?: any;
+  adicionales?: any[];
 }
 
 export interface CatalogoPaises {
