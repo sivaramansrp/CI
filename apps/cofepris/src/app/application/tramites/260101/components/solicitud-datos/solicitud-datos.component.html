@@ -206,13 +206,55 @@
   </div>
 
   <div class="col-md-12">
-    <!-- <app-input-radio 
-    [description]=""
-    [showDescription]=""
-    [radioOptions]=""
-    [selectedValue]=""
-    [isRequired]=""
-    > 
-  </app-input-radio> -->
+    <ng-titulo titulo="Manifiestos y declaraciones" />
+
+    <ng-alert [CONTENIDO]="TEXTOS.TEXTOS_MANIFIESTOS"></ng-alert>
+  </div>
+
+  <div class="col-md-12">
+    <label class="form-label" for=""
+      >Los datos o anexos pueden contener informacion confidencial Esta de
+      acuerdo en hacerlos publicos?</label
+    >
+    <app-input-radio
+      [radioOptions]="hacerlosRadioOptions"
+      [selectedValue]="hacerlosPublicos"
+      [isRequired]="true"
+      [layout]="'vertical'"
+    >
+    </app-input-radio>
+  </div>
+
+  <div class="col-md-12">
+    <ng-titulo titulo="Representante legal" />
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label" for="">RFC*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+
+  <div class="col-md-2">
+    <button type="button" class="btn btn-default btn-space">Buscar</button>
+  </div>
+
+  <div class="col-md-6">
+
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label" for="">Nombre o Razon Social*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label" for="">Apellido paterno*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label" for="">Apellido materno:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
   </div>
 </div>
+<app-modificar-mercancias></app-modificar-mercancias>

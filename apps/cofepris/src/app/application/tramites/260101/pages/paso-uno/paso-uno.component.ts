@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
   styles: ``
 })
 export class PasoUnoComponent {
-  public indice = 1;
+  public indice = 3;
 
   seleccionaTab(i: number): void {
     this.indice = i;

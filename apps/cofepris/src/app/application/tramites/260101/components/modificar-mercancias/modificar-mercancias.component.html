@@ -1,0 +1,214 @@
+<div class="row mt-5">
+  <div class="col-md-12">
+    <ng-titulo titulo="Datos mercancia" />
+  </div>
+  <div class="col-md-8 mt-3">
+    <app-catalogo-select
+      [id]="'productos'"
+      [catalogo]="productosCatalogo.catalogos"
+      [label]="productosCatalogo.labelNombre"
+      [placeholder]="productosCatalogo.primerOpcion"
+      [required]="productosCatalogo.required"
+      (selectionChange)="seleccionaProductos($event)"
+    >
+    </app-catalogo-select>
+  </div>
+  <div class="col-md-8 mt-3">
+    <app-catalogo-select
+      [id]="'productos'"
+      [catalogo]="especificarCatalogo.catalogos"
+      [label]="especificarCatalogo.labelNombre"
+      [placeholder]="especificarCatalogo.primerOpcion"
+      [required]="especificarCatalogo.required"
+      (selectionChange)="seleccionaEspecificar($event)"
+    >
+    </app-catalogo-select>
+  </div>
+  <div class="col-md-8 mt-3">
+    <label class="form-label" for=""
+      >Denominacion especifica del producto*:</label
+    >
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+  <div class="col-md-8 mt-3">
+    <label class="form-label" for="">Marca*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+  <div class="col-md-8 mt-3">
+    <app-catalogo-select
+      [id]="'productos'"
+      [catalogo]="tipoProductoCatalogo.catalogos"
+      [label]="tipoProductoCatalogo.labelNombre"
+      [placeholder]="tipoProductoCatalogo.primerOpcion"
+      [required]="tipoProductoCatalogo.required"
+      (selectionChange)="seleccionaTipoProducto($event)"
+    >
+    </app-catalogo-select>
+  </div>
+  <div class="col-md-8 mt-3">
+    <label class="form-label" for="">Fraccion arancelaria*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+  <div class="col-md-8 mt-3">
+    <label class="form-label" for=""
+      >Descripcion de la fraccion arancelaria*:</label
+    >
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+  <div class="col-md-4 mt-3"></div>
+  <div class="col-md-4 mt-3">
+    <label class="form-label" for="">Cantidad UMT*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+  <div class="col-md-4 mt-3">
+    <label class="form-label" for="">UMT*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+  <div class="col-md-4 mt-3"></div>
+  <div class="col-md-4 mt-3">
+    <label class="form-label" for="">Cantidad UMC*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+  <div class="col-md-4 mt-3">
+    <label class="form-label" for="">UMC*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+  <div class="col-md-4 mt-3"></div>
+
+  <div class="col-md-12 mt-4">
+    <div class="panel-group ficha-collapse" id="accordion">
+      <div class="panel panel-default">
+        <div
+          class="panel-heading"
+          (click)="paisOrigen_colapsable()"
+          tabindex="0"
+        >
+          <h4 class="panel-title">Pais de origen</h4>
+          <button type="button" class="collpase-button collapsed"></button>
+        </div>
+        @if(paisOrigenColapsable){
+        <div class="panel-collapse collapse in" id="panel-01">
+          <div class="panel-body">
+            <crosslist
+              [label]="paisOrigenCrossList.paisOrigen"
+              [fechas]="paisOrigenCrossList.selectRangoDias"
+              [botones]="paisOrigenCrossList.botones"
+            ></crosslist>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12 mt-4">
+    <div class="panel-group ficha-collapse" id="accordion">
+      <div class="panel panel-default">
+        <div
+          class="panel-heading"
+          (click)="paisProcedencis_colapsable()"
+          tabindex="0"
+        >
+          <h4 class="panel-title">Pais de procedencis</h4>
+          <button type="button" class="collpase-button collapsed"></button>
+        </div>
+        @if(paisProcedencisColapsable){
+        <div class="panel-collapse collapse in" id="panel-01">
+          <div class="panel-body">
+            <crosslist
+              [label]="paisProcedencisCrossList.paisOrigen"
+              [fechas]="paisProcedencisCrossList.selectRangoDias"
+              [botones]="paisProcedencisCrossList.botones"
+            ></crosslist>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8 mt-3">
+    <label class="form-label" for="">Clave de los lotes*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+
+  <div class="col-md-4"></div>
+
+  <div class="col-md-4 mt-3">
+    <input-fecha
+      class="width"
+      [datos]="fechaFabricacion"
+      (valorCambiado)="seleccionarFechaFabricacion($event)"
+    ></input-fecha>
+  </div>
+
+  <div class="col-md-4 mt-3">
+    <input-fecha
+      class="width"
+      [datos]="fechaCaducidad"
+      (valorCambiado)="seleccionarFechaCaducidad($event)"
+    ></input-fecha>
+  </div>
+  <div class="col-md-12 mt-3">
+    <label class="form-label" for="">Lista Claves de los lotes*:</label>
+  </div>
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8 mt-3">
+    <app-tabla-dinamica
+    [tipoSeleccionTabla]='tipoSeleccionTabla'
+    [configuracionTabla]="configuracionTabla"
+    [datos]="tipos"
+    >
+  </app-tabla-dinamica>
+  </div>
+  <div class="col-md-2">
+
+  </div>
+
+  <div class="col-md-12 d-flex align-items-end">
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-space">Modificar</button>
+      <button class="btn btn-default" type="button">Eliminar</button>
+      <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal">
+        Agregar
+      </button>
+    </div>
+  </div>
+
+  <div class="col-md-12 mt-4">
+    <div class="panel-group ficha-collapse" id="accordion">
+      <div class="panel panel-default">
+        <div
+          class="panel-heading"
+          (click)="usoEspecifico_colapsable()"
+          tabindex="0"
+        >
+          <h4 class="panel-title">Uso especifico</h4>
+          <button type="button" class="collpase-button collapsed"></button>
+        </div>
+        @if(usoEspecificoColapsable){
+        <div class="panel-collapse collapse in" id="panel-01">
+          <div class="panel-body">
+            <crosslist
+              [label]="usoEspecificoCrossList.paisOrigen"
+              [fechas]="usoEspecificoCrossList.selectRangoDias"
+              [botones]="usoEspecificoCrossList.botones"
+            ></crosslist>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12 d-flex align-items-end">
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-space">Modificar</button>
+      <button class="btn btn-default" type="button">Eliminar</button>
+      <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal">
+        Agregar
+      </button>
+    </div>
+  </div>
+</div>

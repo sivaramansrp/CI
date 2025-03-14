@@ -1,0 +1,127 @@
+<div class="row mt-5">
+  <div class="col-md-12">
+    <ng-titulo titulo="Modificar destinatario (destino final)" />
+  </div>
+
+  <div class="col-md-12">
+    <label class="form-label" for="">Datos generales</label>
+  </div>
+  <div class="col-md-6"></div>
+  <div class="col-md-6">
+    <label class="form-label" for="">Tipo persona*:</label>
+    <app-input-radio
+      [radioOptions]="tipoRadioOptions"
+      [selectedValue]="tipoPublicos"
+      [isRequired]="true"
+      [layout]="'vertical'"
+    >
+    </app-input-radio>
+  </div>
+
+  <div class="col-md-4 mt-4">
+    <label class="form-label" for="">R.F.C.*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+  <div class="col-md-8"></div>
+  <div class="col-md-8 mt-4">
+    <label class="form-label" for="">Denominacion/razon social*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+  <div class="col-md-12 mt-5">
+    <label class="form-label" for="">Domicilio:</label>
+  </div>
+
+  <div class="col-md-4 mt-4">
+    <app-catalogo-select
+      [id]="'productos'"
+      [catalogo]="paisCatalogo.catalogos"
+      [label]="paisCatalogo.labelNombre"
+      [placeholder]="paisCatalogo.primerOpcion"
+      [required]="paisCatalogo.required"
+      (selectionChange)="seleccionaPais($event)"
+    >
+    </app-catalogo-select>
+  </div>
+  <div class="col-md-4 mt-4">
+    <app-catalogo-select
+      [id]="'productos'"
+      [catalogo]="estadoCatalogo.catalogos"
+      [label]="estadoCatalogo.labelNombre"
+      [placeholder]="estadoCatalogo.primerOpcion"
+      [required]="estadoCatalogo.required"
+      (selectionChange)="seleccionaEstado($event)"
+    >
+    </app-catalogo-select>
+  </div>
+  <div class="col-md-4 mt-4">
+    <app-catalogo-select
+      [id]="'productos'"
+      [catalogo]="municipioCatalogo.catalogos"
+      [label]="municipioCatalogo.labelNombre"
+      [placeholder]="municipioCatalogo.primerOpcion"
+      [required]="municipioCatalogo.required"
+      (selectionChange)="seleccionaMunicipio($event)"
+    >
+    </app-catalogo-select>
+  </div>
+  <div class="col-md-4 mt-4">
+    <app-catalogo-select
+      [id]="'productos'"
+      [catalogo]="localidadCatalogo.catalogos"
+      [label]="localidadCatalogo.labelNombre"
+      [placeholder]="localidadCatalogo.primerOpcion"
+      [required]="localidadCatalogo.required"
+      (selectionChange)="seleccionaLocalidad($event)"
+    >
+    </app-catalogo-select>
+  </div>
+  <div class="col-md-4 mt-4">
+    <app-catalogo-select
+      [id]="'productos'"
+      [catalogo]="codigoCatalogo.catalogos"
+      [label]="codigoCatalogo.labelNombre"
+      [placeholder]="codigoCatalogo.primerOpcion"
+      [required]="codigoCatalogo.required"
+      (selectionChange)="seleccionaCodigo($event)"
+    >
+    </app-catalogo-select>
+  </div>
+  <div class="col-md-4 mt-4">
+    <app-catalogo-select
+      [id]="'productos'"
+      [catalogo]="coloniaCatalogo.catalogos"
+      [label]="coloniaCatalogo.labelNombre"
+      [placeholder]="coloniaCatalogo.primerOpcion"
+      [required]="coloniaCatalogo.required"
+      (selectionChange)="seleccionaEspecificar($event)"
+    >
+    </app-catalogo-select>
+  </div>
+  <div class="col-md-8 mt-4">
+    <label class="form-label" for="">Calle*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+  <div class="col-md-4 mt-4">
+    <label class="form-label" for="">Numero exterior*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+  <div class="col-md-4 mt-4">
+    <label class="form-label" for="">Numero interior*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+
+  <div class="col-md-1 mt-4">
+    <label class="form-label" for="">Lada:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+
+  <div class="col-md-3 mt-4">
+    <label class="form-label" for="">Telefono:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+
+  <div class="col-md-4 mt-4">
+    <label class="form-label" for="">Correo electronioco:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+</div>

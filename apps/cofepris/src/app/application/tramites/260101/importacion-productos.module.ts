@@ -8,7 +8,7 @@ import { forwardRef } from '@angular/core';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-import { CatalogoSelectComponent, FirmaElectronicaComponent, InputRadioComponent, SolicitanteComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputFechaComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule } from 'ngx-toastr';
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
@@ -17,6 +17,10 @@ import { ToastrService } from 'ngx-toastr';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosService } from '@libs/shared/data-access-user/src';
 import { SolicitudDatosComponent } from './components/solicitud-datos/solicitud-datos.component';
+import { ModificarMercanciasComponent } from './components/modificar-mercancias/modificar-mercancias.component';
+import { PagoDerechosComponent } from './components/pago-derechos/pago-derechos.component';
+import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
+import { ModificarDestinatarioComponent } from './components/modificar-destinatario/modificar-destinatario.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +28,11 @@ import { SolicitudDatosComponent } from './components/solicitud-datos/solicitud-
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    SolicitudDatosComponent
+    SolicitudDatosComponent,
+    ModificarMercanciasComponent,
+    PagoDerechosComponent,
+    TercerosRelacionadosComponent,
+    ModificarDestinatarioComponent
   ],
   imports: [
     CommonModule,
@@ -41,6 +49,9 @@ import { SolicitudDatosComponent } from './components/solicitud-datos/solicitud-
     forwardRef(() => TableComponent),
     forwardRef(() => CatalogoSelectComponent),
     forwardRef(() => InputRadioComponent),
+    forwardRef(() => CrosslistComponent),
+    forwardRef(() => InputFechaComponent),
+    forwardRef(() => TablaDinamicaComponent),
     ToastrModule.forRoot(),
   ],
   providers: [ToastrService, CatalogosService],

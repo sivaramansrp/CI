@@ -7,12 +7,8 @@ import {
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 import { ImportacionProductosStore } from '../../estados/importacion-productos.store';
 import { ImportacionProductosQuery } from '../../estados/importacion-productos.query';
-import { filter, map, Subject, takeUntil } from 'rxjs';
-import {
-  Catalogo,
-  CatalogosSelect,
-  TableData,
-} from '@libs/shared/data-access-user/src';
+import { map, Subject, takeUntil } from 'rxjs';
+import { CatalogosSelect, TableData } from '@libs/shared/data-access-user/src';
 // import { Subject } from 'rxjs';
 
 /**
@@ -59,6 +55,19 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
 
   regimenCatalogo: CatalogosSelect = {} as CatalogosSelect;
   aduanaCatalogo: CatalogosSelect = {} as CatalogosSelect;
+
+  hacerlosRadioOptions = [
+    {
+      label: 'No',
+      value: 0,
+    },
+    {
+      label: 'Si',
+      value: 1,
+    },
+  ];
+  hacerlosPublicos = 1;
+
   constructor(
     public solicitudDatosService: SolicitudDatosService,
     public store: ImportacionProductosStore,
