@@ -1,6 +1,6 @@
 /* eslint-disable dot-notation */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DatosDeLaComponent } from './datos-de-la.component';
+import { DatosMercanciaComponent } from './datos-mercancia.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { FormBuilder } from '@angular/forms';
@@ -9,18 +9,18 @@ import mercancia from '../../../../../assets/json/110101/mercancia.json';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 fdescribe('DatosDeLaComponent', () => {
-  let component: DatosDeLaComponent;
-  let fixture: ComponentFixture<DatosDeLaComponent>;
+  let component: DatosMercanciaComponent;
+  let fixture: ComponentFixture<DatosMercanciaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, DatosDeLaComponent],
+      imports: [ReactiveFormsModule, DatosMercanciaComponent],
       providers: [FormBuilder, ValidacionesFormularioService],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DatosDeLaComponent);
+    fixture = TestBed.createComponent(DatosMercanciaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
