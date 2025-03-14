@@ -47,7 +47,7 @@
         </div>
       </div>
 
-      <form [formGroup]="anexoDosFormGroup">
+      <form  class="row mt-5" [formGroup]="anexoDosFormGroup">
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
@@ -70,13 +70,13 @@
         <div class="row">
             <div class="col-12 container text-end mt-5">
               <button class="btn btn-default me-2" (click)="eliminarAnexoDos()">Eliminar</button>
-              <button class="btn btn-primary me-2" >Agregar</button>
+              <button class="btn btn-primary me-2" (click)="agregarAnexoDos()">Agregar</button>
             </div>
           </div>
 
         <div class="row mt-5">
-            <app-tabla-dinamica [tipoSeleccionTabla]="anexoConfiguartion.anexoDosTablaSeleccionRadio" 
-             [configuracionTabla]="anexoConfiguartion.anexoDosEncabezadoDeTabla"
+            <app-tabla-dinamica [tipoSeleccionTabla]="anexoImportacionConfiguartion.anexoDosTablaSeleccionRadio" 
+             [configuracionTabla]="anexoImportacionConfiguartion.anexoDosEncabezadoDeTabla"
              [datos]="anexoDosTablaLista"
              (listaDeFilaSeleccionada)="setAnexoDosLista($event)"
              ></app-tabla-dinamica>

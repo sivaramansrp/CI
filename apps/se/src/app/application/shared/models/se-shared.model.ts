@@ -19,6 +19,8 @@ export interface Anexo1y3Configuartion<T> {
   export interface AnexoUnoConfiguartion<T> {
     anexoUnoTablaSeleccionRadio: TablaSeleccion,
     anexoUnoEncabezadoDeTabla: ConfiguracionColumna<T>[],
+  }
+  export interface AnexoImportacionConfiguartion<T> {
     anexoDosTablaSeleccionRadio: TablaSeleccion,
     anexoDosEncabezadoDeTabla: ConfiguracionColumna<T>[],
   }
@@ -35,3 +37,10 @@ export interface Anexo1y3Configuartion<T> {
     estatus: boolean;
   }
   
+  export interface AnexoImportacionEncabezado {
+    ENCABEZADO_FRACCION: string;
+    ENCABEZADO_FRACCION_EXPORTACION : string;
+    ENCABEZADO_DESCRIPCION_COMERCIAL : string;
+    ENCABEZADO_FRACCION_IMPORTACION : string;
+    estatus: boolean;
+  }

@@ -1,4 +1,4 @@
-import { AnexoUnoConfiguartion, AnexoUnoEncabezado } from '../../models/se-shared.model';
+import { AnexoImportacionConfiguartion, AnexoImportacionEncabezado, AnexoUnoConfiguartion, AnexoUnoEncabezado } from '../../models/se-shared.model';
 import { ANEXO_UNO_ALERTA } from '../../enum/anexo-dos-y-tres.enum';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -29,7 +29,10 @@ export class AnexoUnoComponent {
      * Configuración de Anexo 1 y 3
      */
     @Input() anexoConfiguartion!: AnexoUnoConfiguartion<AnexoUnoEncabezado>;
-  
+    /**
+     * Configuración de Anexo 1 y 3
+     */
+    @Input() anexoImportacionConfiguartion!: AnexoImportacionConfiguartion<AnexoImportacionEncabezado>;
     /**
      * Lista de tabla del Anexo Tres
      */
@@ -38,7 +41,7 @@ export class AnexoUnoComponent {
     /**
      * Lista de tabla del Anexo Dos
      */
-    @Input() anexoDosTablaLista: AnexoUnoEncabezado[] = [];
+    @Input() anexoDosTablaLista: AnexoImportacionEncabezado[] = [];
     /**
      * Evento para devolver la llamada del Anexo Uno
      */
@@ -47,7 +50,7 @@ export class AnexoUnoComponent {
   /**
    * Evento para devolver la llamada del Anexo Dos
    */
-  @Output() obtenerAnexoDosDevolverLaLlamada: EventEmitter<AnexoUnoEncabezado[]> = new EventEmitter<AnexoUnoEncabezado[]>(true);
+  @Output() obtenerAnexoDosDevolverLaLlamada: EventEmitter<AnexoImportacionEncabezado[]> = new EventEmitter<AnexoImportacionEncabezado[]>(true);
 
   constructor(private fb: FormBuilder){
     this.createAnexoUnoForm();
@@ -90,7 +93,7 @@ export class AnexoUnoComponent {
     this.anexoDosTablaLista = this.anexoDosTablaLista.filter((idx) => {
       return !idx.estatus;
     });
-    this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoDosTablaLista);
+    this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
   }
 
       /**
@@ -112,13 +115,29 @@ export class AnexoUnoComponent {
         this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
         this.anexoUnoFormGroup.reset();
       }
+
+          /**
+       * Agrega un nuevo elemento al Anexo Dos
+       */
+          agregarAnexoDos(): void {
+            const OBJECTO_IDX: AnexoImportacionEncabezado = {
+              ENCABEZADO_FRACCION: this.anexoDosFormGroup.get('fraccionArancelaria')?.value,
+              ENCABEZADO_DESCRIPCION_COMERCIAL: this.anexoDosFormGroup.get('descripcion')?.value,
+              ENCABEZADO_FRACCION_EXPORTACION: '',
+              ENCABEZADO_FRACCION_IMPORTACION: '',
+              estatus: false
+            };
+            this.anexoDosTablaLista.push(OBJECTO_IDX);
+            this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
+            this.anexoUnoFormGroup.reset();
+          }
     
     setAnexoUnoLista(event: AnexoUnoEncabezado[]): void {
       const LISTA_SELECCIONADA = event ? event : [];
       this.obtenerAnexoUnoDevolverLaLlamada.emit(LISTA_SELECCIONADA);
     }
 
-    setAnexoDosLista(event: AnexoUnoEncabezado[]): void {
+    setAnexoDosLista(event: AnexoImportacionEncabezado[]): void {
       const LISTA_SELECCIONADA = event ? event : [];
       this.obtenerAnexoDosDevolverLaLlamada.emit(LISTA_SELECCIONADA);
     }

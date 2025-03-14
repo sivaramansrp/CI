@@ -1,4 +1,4 @@
-import { AnexoEncabezado, AnexoUnoEncabezado } from "../models/se-shared.model";
+import { AnexoEncabezado, AnexoImportacionEncabezado, AnexoUnoEncabezado } from "../models/se-shared.model";
 
 export const ANEXO_SERVICIO = [
   {
@@ -61,4 +61,27 @@ export const ANEXO_I_SERVICIO = [
     clave: (ele: AnexoUnoEncabezado) => ele.ENCABEZADO_VALOR_EN_MERCADO,
     orden: 8
   },
+]
+
+export const ANEXO_IMPORTACION_SERVICIO = [
+  {
+    encabezado: 'Fracción',
+    clave: (ele: AnexoImportacionEncabezado) => ele.ENCABEZADO_FRACCION,
+    orden: 1
+  },
+  {
+    encabezado: 'Fracción arancelaria del producto de exportación',
+    clave: (ele: AnexoImportacionEncabezado) => ele.ENCABEZADO_FRACCION_EXPORTACION,
+    orden: 2
+  },
+  {
+    encabezado: 'Descripción comercial',
+    clave: (ele: AnexoImportacionEncabezado) => ele.ENCABEZADO_DESCRIPCION_COMERCIAL,
+    orden: 3
+  },
+  {
+    encabezado: 'Fracción arancelaria de la mercancía de importación',
+    clave: (ele: AnexoImportacionEncabezado) => ele.ENCABEZADO_FRACCION_IMPORTACION,
+    orden: 4
+  }
 ]

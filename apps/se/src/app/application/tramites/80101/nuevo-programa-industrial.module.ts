@@ -1,5 +1,5 @@
 import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { AnexoVistaDosYTresComponent } from './component/anexo-vista-dos-y-tres.component/anexo-vista-dos-y-tres.component';
+import { AnexoVistaDosYTresComponent } from './component/anexo-vista-dos-y-tres/anexo-vista-dos-y-tres.component';
 import { AnexoVistaUnoComponent } from './component/anexo-vista-uno/anexo-vista-uno.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';

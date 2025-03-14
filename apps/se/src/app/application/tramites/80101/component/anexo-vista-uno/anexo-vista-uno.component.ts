@@ -1,4 +1,6 @@
+import { ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/enum/anexo-dos-y-tres.enum';
 import { ANEXO_I_SERVICIO } from '../../../../shared/enum/anexo-dos-y-tres.enum';
+import { AnexoImportacionEncabezado } from '../../../../shared/models/se-shared.model';
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
 import { AnexoUnoEncabezado } from '../../../../shared/models/se-shared.model';
 import { CommonModule } from '@angular/common';
@@ -14,11 +16,13 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 })
 export class AnexoVistaUnoComponent {
 
-  public anexoConfig = {
+  public anexoUnoConfig = {
     anexoUnoTablaSeleccionRadio: TablaSeleccion.RADIO,
     anexoUnoEncabezadoDeTabla: ANEXO_I_SERVICIO,
+  }
+  public anexoImportacionConfig = {
     anexoDosTablaSeleccionRadio: TablaSeleccion.RADIO,
-    anexoDosEncabezadoDeTabla: ANEXO_I_SERVICIO,
+    anexoDosEncabezadoDeTabla: ANEXO_IMPORTACION_SERVICIO,
   }
 
   /**
@@ -31,14 +35,22 @@ export class AnexoVistaUnoComponent {
     * Lista de encabezados del anexo dos.
     * @type {AnexoEncabezado[]}
     */
-  public anexoDosTablaLista: AnexoUnoEncabezado[] = [];
+  public anexoDosTablaLista: AnexoImportacionEncabezado[] = [];
 
   /**
-   * Método para obtener la devolución de llamada del anexo tres.
-   * @param {T[]} event - Evento que contiene la lista de encabezados del anexo tres.
+   * Método para obtener la devolución de llamada del anexo Uno.
+   * @param {T[]} event - Evento que contiene la lista de encabezados del anexo Uno.
    * @returns {void}
    */
   public obtenerAnexoUnoDevolverLaLlamada(event: AnexoUnoEncabezado[]): void {
     this.anexoUnoTablaLista = event ? event : [];
+  }
+   /**
+   * Método para obtener la devolución de llamada del anexo Dos.
+   * @param {T[]} event - Evento que contiene la lista de encabezados del anexo Dos.
+   * @returns {void}
+   */
+   public obtenerAnexoDosDevolverLaLlamada(event: AnexoImportacionEncabezado[]): void {
+    this.anexoDosTablaLista = event ? event : [];
   }
 }
