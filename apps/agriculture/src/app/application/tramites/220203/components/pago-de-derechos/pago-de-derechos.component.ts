@@ -80,7 +80,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearFormularioPago();
-    this.exentoPagoValor = this.exentoPagoValor == this.formularioPago?.value.exentoPago ? this.exentoPagoRadio : this.formularioPago?.value.exentoPago;
     this.formularioPago.statusChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -120,10 +119,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   cambioValorRadio(nombreControl: string, valor: string): void {
     this.formularioPago.patchValue({
-      exentoPago: valor as string,
+      [nombreControl]: valor,
     });
     this.exentoPagoValor = valor;
-    this.setValoresStore(this.formularioPago, valor);
     this.crearFormularioPago();
   }
 
@@ -176,53 +174,60 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         console.error(error);
       });
   }
+
   /**
    * @description Actualiza el valor de un campo en el formulario y lo guarda en el servicio de importación de acuicultura.
-   * @param {FormGroup} formulario El formulario con el campo que se está actualizando.
+   * @param {FormGroup} form El formulario con el campo que se está actualizando.
    * @param {string} campo El nombre del campo que se actualizará.
    */
+  /**
+ * @description Actualiza el valor de un campo en el formulario y lo guarda en el servicio de importación de acuicultura.
+ * @param {FormGroup} formulario El formulario con el campo que se está actualizando.
+ * @param {string} campo El nombre del campo que se actualizará.
+ */
   setValoresStore(
     formulario: FormGroup,
     campo: string,
   ): void {
     this.actualizarValorAleatorio();
     const VALOR = this.formularioPago.value;
-    (this.importacionAcuiculturaServicio.actualizarFormularioPago as (valor: FormularioPago) => void)(VALOR);
+    (this.importacionAcuiculturaServicio.actualizarFormularioPago as (value: FormularioPago) => void)(VALOR);
   }
 
   /**
-   * @description Actualiza los valores del formulario con valores predeterminados según las condiciones.
+   * @description Actualiza ciertos valores en el formulario basados en condiciones.
+   * @remarks Si se cumple una condición, se actualizan los valores del formulario.
    */
   actualizarValorAleatorio(): void {
     const HOY = this.formatearFecha(new Date());
 
-    // Si 'justificacion' no está vacío y 'exentoPago' es 'Si', actualizamos ciertos campos
+    // Si la justificación no está vacía y el campo exentoPago es 'Si'
     if (this.formularioPago.value.justificacion != '' && this.formularioPagoStore.exentoPago == 'Si') {
       this.formularioPago.patchValue({
         claveReferencia: 'valor',
         cadenaDependencia: 'valor',
         banco: '170',
-        llavePago: 'valor',
         fechaPago: HOY,
         importePago: 'valor',
       });
     }
-    // Si 'banco' no está vacío y 'exentoPago' es 'No', actualizamos ciertos campos
+    // Si el banco no está vacío y el campo exentoPago es 'No'
     else if (this.formularioPago.value.banco != '' && this.formularioPagoStore.exentoPago == 'No') {
       this.formularioPago.patchValue({
         justificacion: '170',
         claveReferencia: 'valor',
         cadenaDependencia: 'valor',
         fechaPago: HOY,
+        llavePago: 'valor',
         importePago: 'valor',
       });
     }
   }
 
   /**
-   * @description Formatea la fecha en formato DD/MM/YYYY.
+   * @description Formatea la fecha en el formato 'dd/mm/yyyy'.
    * @param {Date} fecha La fecha a formatear.
-   * @returns {string} La fecha formateada.
+   * @returns {string} La fecha formateada como un string.
    */
   formatearFecha(fecha: Date): string {
     const dia = fecha.getDate().toString().padStart(2, '0'); // Asegura que el día tenga 2 dígitos
@@ -231,6 +236,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
     return `${dia}/${mes}/${año}`;
   }
+
 
   /**
    * @description Método que se ejecuta cuando el componente es destruido.
