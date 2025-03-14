@@ -119,3 +119,6 @@ It will show tasks that you can run with Nx.
 - npx nx clear-cache
 - Remove .nx if required
 - npx nx run serve dashboard --port=4500
+
+# Generate new component
+- nx g @nrwl/angular:component path/nameComponente
