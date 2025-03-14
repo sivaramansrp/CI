@@ -5,26 +5,29 @@ import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { MedioTransporte } from '../../models/medio-transporte.model';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
+import { SagarpaQuery } from '../../estados/sagarpa.query';
 import { SagarpaService } from '../../services/sagarpa/sagarpa.service';
+import { SagarpaStore } from '../../estados/sagarpa.store';
+import { Subject } from 'rxjs';
 import { TEXTOS } from '../../constantes/texto-enum';
-import { Tramite220501Store } from '../../../../estados/tramite220501.store';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import mercanciaTable from '../../../../../../../../../libs/shared/theme/assets/json/220501/mercancia-table.json';
 import { merge } from 'rxjs';
-
+import { takeUntil } from 'rxjs';
 /**
  * Componente para seleccionar el medio de transporte.
  */
 @Component({
   selector: 'app-medio-transporte',
   templateUrl: './medio-transporte.component.html',
-  styleUrl: './medio-transporte.component.scss'
+  styleUrl: './medio-transporte.component.scss',
 })
-export class MedioTransporteComponent implements OnInit {
-
+export class MedioTransporteComponent implements OnInit, OnDestroy {
   /**
    * Evento emitido cuando se selecciona un medio de transporte.
    */
@@ -69,9 +72,11 @@ export class MedioTransporteComponent implements OnInit {
    * Variable que contiene los datos del cuerpo para la tabla de mercancías.
    * El tipo se establece como unknown para permitir flexibilidad en la estructura de los datos.
    */
-  public mercanciaBodyData = [{
-    tbodyData: [] as string[]
-}];
+  public mercanciaBodyData = [
+    {
+      tbodyData: [] as string[],
+    },
+  ];
 
   /**
    * Variable que contiene los datos para la tabla de mercancías.
@@ -80,15 +85,22 @@ export class MedioTransporteComponent implements OnInit {
   public getMercanciaTableData = mercanciaTable;
 
   /**
+    * Subject para desuscribirse de los observables.
+    * @type {Subject<void>}
+    */
+  private destroyed$ = new Subject<void>();
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
    * @param sagarpaService Servicio para obtener datos de SAGARPA.
-   * @param tramite220501Store Almacén de estado para el trámite 220501.
+   * @param SagarpaStore Almacén de estado para el trámite 220501.
    */
   constructor(
     private fb: FormBuilder,
     private sagarpaService: SagarpaService,
-    private tramite220501Store: Tramite220501Store
+    private store: SagarpaStore,
+    private query: SagarpaQuery
   ) {
     this.crearFormulario();
   }
@@ -104,11 +116,22 @@ export class MedioTransporteComponent implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
+
+      this.query.seleccionarMedioTransporte$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((data: MedioTransporte) => {
+            this.medioTransporteForm.patchValue({
+              medioDeTransporte: data.medioDeTransporte,
+              identificacionTransporte: data.identificacionTransporte,
+              esSolicitudFerros: data.esSolicitudFerros,
+              totalGuias: data.totalGuias,
+            });
+          })
+        )
+        .subscribe();
     this.inicializaCatalogos();
-
     this.obtenerMercancia();
-
-    this.medioDeTransporteSeleccion();
   }
 
   /**
@@ -119,7 +142,7 @@ export class MedioTransporteComponent implements OnInit {
       medioDeTransporte: new FormControl('', [Validators.required]),
       identificacionTransporte: new FormControl('', [Validators.maxLength(30)]),
       esSolicitudFerros: new FormControl('', [Validators.required]),
-      totalGuias: new FormControl('', [Validators.maxLength(50)])
+      totalGuias: new FormControl('', [Validators.maxLength(50)]),
     });
   }
 
@@ -134,9 +157,7 @@ export class MedioTransporteComponent implements OnInit {
           this.medioDeTransporte = resp.data;
         })
       );
-    merge(
-      MEDIODETRANSPORTE$
-    ).subscribe();
+    merge(MEDIODETRANSPORTE$).subscribe();
   }
 
   /**
@@ -155,9 +176,8 @@ export class MedioTransporteComponent implements OnInit {
   /**
    * Selecciona la clasificación de régimen.
    */
-  medioDeTransporteSeleccion(): void {
-    const MEDIODETRANSPORTE = this.medioTransporteForm.get('medioDeTransporte')?.value;
-    this.tramite220501Store.setMedioDeTransporte(MEDIODETRANSPORTE);
+  medioDeTransporteSeleccion(event: Catalogo): void {
+    this.store.actualizarMedioDetransporte(event.descripcion);
   }
 
   /**
@@ -170,11 +190,11 @@ export class MedioTransporteComponent implements OnInit {
 
     if (this.esSolicitudFerrosValor === 1) {
       this.transporteSeleccionado.emit(true);
-    }
-    else {
+    } else {
       this.transporteSeleccionado.emit(false);
     }
     this.mostrarAgregarMercancia = false;
+    this.store.actualizarFerrocarrilPorPartes(this.esSolicitudFerrosValor);
   }
 
   /**
@@ -192,4 +212,33 @@ export class MedioTransporteComponent implements OnInit {
   obtenerAgregarMercanciaEvent(e: boolean): void {
     this.mostrarAgregarMercancia = e;
   }
+
+  /** 
+   * Obtiene el valor de la identificación del transporte desde el formulario 
+   * y actualiza el store con dicho valor.
+   */
+  getIdentificacionTransporte(): void {
+    const VALUE = this.medioTransporteForm.get('identificacionTransporte')?.value;
+    this.store.actualizarIdentificacionDelTransporte(VALUE);
+  }
+
+  /** 
+   * Obtiene el valor del total de guías amparadas desde el formulario 
+   * y actualiza el store con dicho valor.
+   */
+  getTotalGuiasAmparadas(): void {
+    const VALUE = this.medioTransporteForm.get('totalGuias')?.value;
+    this.store.actualizarTotalDeGuiasAmparadas(VALUE);
+  }
+
+
+      /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Desuscribe el componente de todos los observables.
+   * @returns {void}
+   * */
+      ngOnDestroy(): void {
+        this.destroyed$.next();
+        this.destroyed$.complete();
+      }
 }

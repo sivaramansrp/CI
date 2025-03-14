@@ -1,12 +1,20 @@
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
+import { DatosDelaSolicitud } from '../../models/datos-generales.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { Movilizacion } from '../../models/datos-generales.model';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { RevisionService } from '../../services/revision.service';
+import { SagarpaQuery } from '../../estados/sagarpa.query';
+import { SagarpaStore } from '../../estados/sagarpa.store';
+import { Subject } from 'rxjs';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 /**
  * Interfaz para definir la estructura de las filas.
  */
@@ -28,7 +36,7 @@ interface Row {
   templateUrl: './datos-generales.component.html',
   styleUrls: ['./datos-generales.component.scss'],
 })
-export class DatosGeneralesComponent implements OnInit {
+export class DatosGeneralesComponent implements OnInit, OnDestroy {
   /**
    * Formulario principal.
    * @type {FormGroup}
@@ -166,10 +174,18 @@ export class DatosGeneralesComponent implements OnInit {
    */
   empresadeTransportista!: Catalogo;
 
+  /**
+   * Subject para desuscribirse de los observables.
+   * @type {Subject<void>}
+   */
+  private destroyed$ = new Subject<void>();
+
   constructor(
     private readonly fb: FormBuilder,
     private revisionService: RevisionService,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    public store: SagarpaStore,
+    public query: SagarpaQuery
   ) {
     this.crearFormulario();
     this.initActionFormBuild();
@@ -193,6 +209,38 @@ export class DatosGeneralesComponent implements OnInit {
       foliodel: [{ value: '1502200200120240301000015', disabled: true }],
     });
 
+    this.query.seleccionarDatosDelaSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((data: DatosDelaSolicitud) => {
+          this.datosDelaSolicitud.patchValue({
+            aduanaIngreso: data.aduanaIngreso,
+            oficinaInspeccion: data.oficinaInspeccion,
+            puntoInspeccion: data.puntoInspeccion,
+            claveUCON: data.claveUCON,
+            establecimientoTIF: data.establecimientoTIF,
+            regimen: data.regimen,
+            foliodel: data.foliodel,
+          });
+        })
+      )
+      .subscribe();
+
+    this.query.seleccionarMovilizacion$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((data: Movilizacion) => {
+          this.datosDelaSolicitud.patchValue({
+            coordenadas: data.coordenadas,
+            nombre: data.nombre,
+            medio: data.medio,
+            transporte: data.transporte,
+            punto: data.punto,
+          });
+        })
+      )
+      .subscribe();
+
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
 
     this.getAduanaIngreso();
@@ -203,6 +251,30 @@ export class DatosGeneralesComponent implements OnInit {
     this.getMovilizacionNacional();
     this.getPuntoVerificacion();
     this.getEmpresaTransportista();
+    this.actualizarDatosDelaSolicitud();
+    this.actualizarMovilizacion();
+  }
+
+  /**
+   * Método para actualizar los datos de la solicitud.
+   * Realiza una llamada al servicio `getDatosDelaSolicitud()` para obtener los datos
+   * y luego actualiza el store con la respuesta recibida.
+   */
+  actualizarDatosDelaSolicitud(): void {
+    this.revisionService.getDatosDelaSolicitud().subscribe((resp) => {
+      this.store.actualizarDatosDelaSolicitud(resp);
+    });
+  }
+
+  /**
+   * Método para actualizar los datos de movilización.
+   * Realiza una llamada al servicio `getMovilizacion()` para obtener los datos de movilización
+   * y actualiza el store con la respuesta obtenida.
+   */
+  actualizarMovilizacion(): void {
+    this.revisionService.getMovilizacion().subscribe((resp) => {
+      this.store.actualizarMovilizacion(resp);
+    });
   }
 
   /**
@@ -474,5 +546,46 @@ export class DatosGeneralesComponent implements OnInit {
         };
       }
     });
+  }
+  /**
+   * Selecciona una aduana de ingreso y actualiza el store con la descripción correspondiente.
+   * @param event Objeto de tipo Catalogo que contiene la información de la aduana seleccionada.
+   */
+  seleccionarAduanaIngreso(event: Catalogo): void {
+    this.store.actualizarAduanaIngreso(event.descripcion);
+  }
+
+  /**
+   * Selecciona una oficina de inspección y actualiza el store con la descripción correspondiente.
+   * @param event Objeto de tipo Catalogo que contiene la información de la oficina seleccionada.
+   */
+  seleccionarOficianaInspeccion(event: Catalogo): void {
+    this.store.actualizarOficianaInspeccion(event.descripcion);
+  }
+
+  /**
+   * Selecciona un punto de inspección y actualiza el store con la descripción correspondiente.
+   * @param event Objeto de tipo Catalogo que contiene la información del punto seleccionado.
+   */
+  seleccionarPuntoInspeccion(event: Catalogo): void {
+    this.store.actualizarPuntoInspeccion(event.descripcion);
+  }
+
+  /**
+   * Selecciona una movilización nacional y actualiza el store con la descripción correspondiente.
+   * @param event Objeto de tipo Catalogo que contiene la información de la movilización seleccionada.
+   */
+  seleccionarMovilizacionNacional(event: Catalogo): void {
+    this.store.actualizarMovilizacionNacional(event.descripcion);
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Desuscribe el componente de todos los observables.
+   * @returns {void}
+   * */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

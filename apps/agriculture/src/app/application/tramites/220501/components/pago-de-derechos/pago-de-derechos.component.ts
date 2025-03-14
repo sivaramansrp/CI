@@ -3,8 +3,16 @@ import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { PagoDeDerechos } from '../../models/pago-de-derechos.model';
 import { RevisionService } from '../../services/revision.service';
+import { SagarpaQuery } from '../../estados/sagarpa.query';
+import { SagarpaStore } from '../../estados/sagarpa.store';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
 /**
  * Componente para gestionar el pago de derechos.
  */
@@ -13,7 +21,7 @@ import { RevisionService } from '../../services/revision.service';
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
 })
-export class PagoDeDerechosComponent implements OnInit {
+export class PagoDeDerechosComponent implements OnInit , OnDestroy{
   /**
    * Indica si el formulario está deshabilitado.
    * @type {boolean}
@@ -56,6 +64,13 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   private revisionService: RevisionService;
 
+    /**
+   * Subject para desuscribirse de los observables.
+   * @type {Subject<void>}
+   */
+    private destroyed$ = new Subject<void>();
+
+
   /**
    * Constructor del componente.
    *
@@ -64,7 +79,9 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   constructor(
     private readonly fb: FormBuilder,
-    revisionService: RevisionService
+    revisionService: RevisionService,
+    public store : SagarpaStore,
+    public query : SagarpaQuery
   ) {
     this.revisionService = revisionService;
   }
@@ -86,8 +103,40 @@ export class PagoDeDerechosComponent implements OnInit {
       fetchapago: [{ value: '01/08/24', disabled: true }],
     });
 
+    this.query.seleccionarPagoDeDerechos$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((data: PagoDeDerechos) => {
+        this.pagoForm.patchValue({
+          exentoPagoNo: data.exentoPagoNo,
+          exentoPagoSi: data.exentoPagoSi,
+          justificacion: data.justificacion,
+          claveReferencia: data.claveReferencia,
+          cadenaDependencia: data.cadenaDependencia,
+          banco: data.banco,
+          llavePago: data.llavePago,
+          importePago: data.importePago,
+          fetchapago: data.fetchapago,
+        });
+      })
+    )
+    .subscribe();
+
     this.getJustificacion();
     this.getBanco();
+    this.getPagoDeDerechos();
+  }
+
+  /** 
+ * Obtiene la información sobre el pago de derechos a través del servicio `revisionService` 
+ * y actualiza el store con la respuesta recibida.
+ */
+  getPagoDeDerechos(): void {
+    this.revisionService.getPagoDeDerechos().subscribe({
+      next: (resp: PagoDeDerechos) => {
+        this.store.actualizarPagoDeDerechos(resp);
+      },
+    });
   }
 
   /**
@@ -110,6 +159,23 @@ export class PagoDeDerechosComponent implements OnInit {
     });
   }
 
+  /** 
+   * Selecciona una justificación desde el catálogo y actualiza el store con la información correspondiente.
+   * @param event Objeto de tipo Catalogo que contiene la información de la justificación seleccionada.
+   */
+  selectJustificacionCatalogo(event: Catalogo): void {
+    this.store.actualizarJustificacionCatalogo(event);
+  }
+
+  /** 
+   * Selecciona un banco desde el catálogo y actualiza el store con la información correspondiente.
+   * @param event Objeto de tipo Catalogo que contiene la información del banco seleccionado.
+   */
+  selectBancoCatalogo(event: Catalogo): void {
+    this.store.actualizarBancoCatalogo(event);
+  }
+
+
   /**
    * Obtiene el banco para el pago.
    * Este método llama al servicio de revisión para obtener el banco.
@@ -129,4 +195,14 @@ export class PagoDeDerechosComponent implements OnInit {
       }
     });
   }
+
+    /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Desuscribe el componente de todos los observables.
+   * @returns {void}
+   * */
+    ngOnDestroy(): void {
+      this.destroyed$.next();
+      this.destroyed$.complete();
+    }
 }

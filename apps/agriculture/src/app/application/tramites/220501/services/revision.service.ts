@@ -1,5 +1,9 @@
+import { DatosDelaSolicitud } from '../models/datos-generales.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Movilizacion } from '../models/datos-generales.model';
+import { Observable } from 'rxjs';
+import { PagoDeDerechos } from '../models/pago-de-derechos.model';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 /**
@@ -104,5 +108,29 @@ export class RevisionService {
    */
   getBanco() {
     return this.http.get<RespuestaCatalogos>('assets/json/220501/banco.json');
+  }
+
+  /** 
+   * Servicio para obtener datos relacionados con la solicitud. 
+   */
+  getPagoDeDerechos(): Observable<PagoDeDerechos> {
+    /** Obtiene la información del pago de derechos desde un archivo JSON. */
+    return this.http.get<PagoDeDerechos>('assets/json/220501/pago-de-derechos.json');
+  }
+
+  /** 
+   * Servicio para obtener los datos generales de la solicitud. 
+   */
+  getDatosDelaSolicitud(): Observable<DatosDelaSolicitud> {
+    /** Obtiene los datos de la solicitud desde un archivo JSON. */
+    return this.http.get<DatosDelaSolicitud>('assets/json/220501/datos-dela-solicitud.json');
+  }
+
+  /** 
+   * Servicio para obtener los datos de movilización. 
+   */
+  getMovilizacion(): Observable<Movilizacion> {
+    /** Obtiene los datos de la movilización desde un archivo JSON. */
+    return this.http.get<Movilizacion>('assets/json/220501/movilizacion.json');
   }
 }

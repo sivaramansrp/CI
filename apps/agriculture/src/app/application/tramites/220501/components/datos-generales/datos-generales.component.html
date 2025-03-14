@@ -30,6 +30,7 @@
             [label]="aduanaIngreso.labelNombre"
             [placeholder]="aduanaIngreso.primerOpcion"
             [isDisabled]="false"
+            (selectionChange)="seleccionarAduanaIngreso($event)"
           ></app-catalogo-select>
         </div>
         <div class="col-md-8">
@@ -38,6 +39,7 @@
             [label]="oficianaInspeccion.labelNombre"
             [placeholder]="oficianaInspeccion.primerOpcion"
             [isDisabled]="false"
+            (selectionChange)="seleccionarOficianaInspeccion($event)"
           ></app-catalogo-select>
         </div>
       </div>
@@ -48,6 +50,7 @@
             [label]="puntoInspeccion.labelNombre"
             [placeholder]="puntoInspeccion.primerOpcion"
             [isDisabled]="false"
+            (selectionChange)="seleccionarPuntoInspeccion($event)"
           ></app-catalogo-select>
         </div>
       </div>
@@ -253,6 +256,7 @@
                 [label]="movilizacionNacional.labelNombre"
                 [placeholder]="movilizacionNacional.primerOpcion"
                 [isDisabled]="false"
+                (selectionChange)="seleccionarMovilizacionNacional($event)"
               ></app-catalogo-select>
             </div>
             <div class="col-md-8 form-group">
