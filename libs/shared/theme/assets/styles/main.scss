@@ -21,6 +21,18 @@
 
 .modal-header {
     justify-content: center;
+
+    .titulo {
+        font-weight: 400;
+        font-size: 32px;
+        font-family: Patria;
+        margin-top: 3rem;
+        margin-bottom: 3rem !important;
+    }
+
+    &-gold {
+        color: $color-oro;
+    }
 }
 
 .modal-body {
