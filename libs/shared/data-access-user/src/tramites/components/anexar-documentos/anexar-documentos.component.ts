@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
 import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
 import {
   CatalogosSelect,
@@ -101,7 +101,6 @@ export class AnexarDocumentosComponent implements OnInit {
     this.archivosOpcionalesOriginal = [...this.archivosOpcionales];
     this.obtenerToken(this.datosLogin);
     this.crearFormaDocumento();
-    console.log(this.catalogoDocumentos);
   }
 
   /**
@@ -321,10 +320,29 @@ export class AnexarDocumentosComponent implements OnInit {
     this.listadoArchivos.splice(index, 1);
   }
 
-  agregarParte(fileInput: HTMLInputElement, i: any) {
-    console.log(i);
-    console.log(fileInput);
+  agregarParte(fileInput: HTMLInputElement, item: any, origen: string) {
+    if (origen == 'obligatorios') {
+      const index = this.catalogoDocumentos.findIndex(doc => doc.id === item.id);
+  
+      if (index !== -1) {
+        const nuevoItem = {...item, uniqueId: crypto.randomUUID(), nuevo: true };
+        this.catalogoDocumentos.splice(index + 1, 0, nuevoItem);
+      } else {
+        
+      }
+  
+      fileInput.value = '';
+    } else {
 
+      const index = this.listDocOpcionales.findIndex(doc => doc.id === item.id);
+  
+      if (index !== -1) {
+        const nuevoItem = {...item, uniqueId: crypto.randomUUID(), nuevo: true };
+        this.listDocOpcionales.splice(index + 1, 0, nuevoItem);
+      }
+  
+      fileInput.value = '';
+    }
   }
 
   convertKbToMb(size: string | undefined): string {
@@ -367,6 +385,14 @@ export class AnexarDocumentosComponent implements OnInit {
     if (indexAgregar !== -1) {
       this.listDocOpcionalesAgregar.splice(indexAgregar, 1);
       this.listDocOpcionalesAgregar = [...this.listDocOpcionalesAgregar];
+    }
+    this.cdr.detectChanges();
+  }
+
+  eliminarNuevo(item: any): void {
+    const index: number = this.catalogoDocumentos.findIndex(f => f.uniqueId === item.uniqueId);
+    if (index !== -1) {
+      this.catalogoDocumentos.splice(index, 1);
     }
     this.cdr.detectChanges();
   }

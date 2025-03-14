@@ -47,6 +47,11 @@ export class PasoDosComponent implements OnInit {
         next: (resp): void => {
           if (resp.length > 0) {
             this.catalogoDocumentos = resp;
+            this.catalogoDocumentos = this.catalogoDocumentos.map(item => ({
+              ...item,
+              nuevo: false,
+              uniqueId: ''
+            }))
           }
         },
         error: (_error): void => { },

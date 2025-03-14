@@ -21,7 +21,9 @@ export interface Catalogo {
   descripcion: string;
   clave?: string;
   tam?: string;
-  dpi?: string
+  dpi?: string;
+  nuevo?: boolean;
+  uniqueId?: any;
 }
 
 export interface CatalogoPaises {
