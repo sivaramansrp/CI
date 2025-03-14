@@ -25,10 +25,9 @@ const ROUTES: Routes = [
   },
   { path: 'firma-electronica',
     component: FirmaPageComponent
-  }
-  { path: 'firma-electronica', component: FirmaPageComponent },
-  { path: 'acuse', component: AcusePageComponent }
-
+  },
+  { path: 'acuse', 
+    component: AcusePageComponent }
 ];
 
 @NgModule({

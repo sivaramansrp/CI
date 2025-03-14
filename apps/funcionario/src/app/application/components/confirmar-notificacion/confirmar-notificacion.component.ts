@@ -6,6 +6,6 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './confirmar-notificacion.component.html',
-  styleUrl: './confirmar-notificacion.component.css',
+  styleUrl: './confirmar-notificacion.component.scss',
 })
 export class ConfirmarNotificacionComponent {}

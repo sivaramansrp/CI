@@ -9,7 +9,7 @@ import { EncabezadoRequerimientoComponent } from '@libs/shared/data-access-user/
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, EncabezadoRequerimientoComponent],
   templateUrl: './autorizar-dictamen.component.html',
-  styleUrl: './autorizar-dictamen.component.css',
+  styleUrl: './autorizar-dictamen.component.scss',
 })
 export class AutorizarDictamenComponent implements OnInit{   
   /**

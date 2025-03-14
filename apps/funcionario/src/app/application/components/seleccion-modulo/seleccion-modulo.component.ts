@@ -8,7 +8,7 @@ import { AMBIENTES } from '@libs/shared/data-access-user/src';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './seleccion-modulo.component.html',
-  styleUrl: './seleccion-modulo.component.css',
+  styleUrl: './seleccion-modulo.component.scss',
 })
 export class SeleccionModuloComponent implements OnInit {
 

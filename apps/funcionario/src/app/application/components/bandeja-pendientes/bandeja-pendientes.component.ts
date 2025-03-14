@@ -28,12 +28,6 @@ export class BandejaPendientesComponent {
    public FormBusqueda!: FormGroup;
     public fechaInicioInput: InputFecha = FECHA_INICIO;
     public fechaFinalInput: InputFecha = FECHA_FINAL;
-    
-    public readonly tareasPendientesList = [
-      {
-        tbodyData: ['--','--','--','--','--'],
-      }
-    ];
   
     public constructor(
       protected readonly formBuilder: FormBuilder,
