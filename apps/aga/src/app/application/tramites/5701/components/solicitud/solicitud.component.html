@@ -276,21 +276,21 @@
     </div>
 
     <ng-titulo titulo="Datos del despacho para el servicio extraordinario" />
-
-    <div formGroupName="despacho">
+    <div formGroupName="despachoSeleccion">
       <div class="row">
         <div class="col-md-4">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="despachoLDA" (change)="changeDespachoLDA()">
-            <label class="form-check-label" for="despachoLDA" formControlName="lda">Despacho LDA:</label>
+            <input class="form-check-input" type="checkbox" id="despachoLDA" (change)="changeDespacho('LDA')"
+              formControlName="lda">
+            <label class="form-check-label" for="despachoLDA">Despacho LDA:</label>
           </div>
 
         </div>
         <div class="col-md-4">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="despachoDD" (change)="
-              setValoresStore(despacho, 'dd', 'setDD')">
-            <label class="form-check-label" for="despachoDD" formControlName="dd">Despacho DD:</label>
+            <input class="form-check-input" type="checkbox" id="despachoDD" (change)="changeDespacho('DD')"
+              formControlName="dd">
+            <label class="form-check-label" for="despachoDD">Despacho DD:</label>
           </div>
 
         </div>
@@ -299,13 +299,20 @@
       <div class="row" *ngIf="tipoDespacho">
         <div class="col-md-4">
           <div class="form-group">
-            <label for="tipo" class="form-label">RFC autorización LDA*:</label>
-            <input type="text" id="tipo" class="form-control">
-
+            <label for="tipo" class="form-label">{{this.labelTipoDespacho}}*:</label>
+            <input type="text" [id]="idNameAutorizacion" class="form-control" [formControlName]="idNameAutorizacion"
+              placeholder="" (change)="setValoresStore(mercancia, idNameAutorizacion, 'setAutorizacionDDEX')" [ngClass]="
+            isValid(despachoSeleccion, idNameAutorizacion)
+              ? 'required'
+              : ''
+          " />
           </div>
         </div>
       </div>
 
+    </div>
+
+    <div formGroupName="despacho">
       <div class="row">
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="aduanas" formControlName="idAduana" [label]="'Aduana'" [required]="true"
@@ -313,18 +320,23 @@
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="seccionAduanera" formControlName="idSeccionAduanera"
-            [label]="'Sección aduanera'" [required]="true" (change)="
-              setValoresStore(
-                despacho,
-                'idSeccionAduanera',
-                'setIdSeccionAduanera'
-              )
-            "></app-catalogo-select>
+            [label]="'Sección aduanera'" [required]="false" [isDisabled]="desactivarSelectSeccionAduanera"
+            (change)="changeSeccionAduanera()"></app-catalogo-select>
         </div>
+        @if (!tipoDespacho) {
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="seccionAduanera" formControlName="nombreRecinto"
-            [label]="'Nombre del recinto'" [required]="true" [isDisabled]="true"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="recintoCatalogo" formControlName="nombreRecinto"
+            [label]="'Nombre del recinto'" [required]="false" [isDisabled]="desactivarSelectRecinto"
+            (change)="changeRecinto()"></app-catalogo-select>
         </div>
+        } @else {
+        <div class="col-md-4">
+          <app-catalogo-select [catalogo]="selectCatalogoDespacho" formControlName="nombreRecinto"
+            [label]="'Tipo despacho'" [required]="false" [isDisabled]="activarCatalogoDespacho"></app-catalogo-select>
+        </div>
+
+        }
+
       </div>
 
       <div class="row">
@@ -401,18 +413,24 @@
     </div>
 
     @if (individual()) {
-    <ng-titulo titulo="Datos del transporte" />
+    <ng-titulo titulo="Datos del vehículo de como se presentará al despacho" />
 
     <div formGroupName="transporte">
       <div class="row">
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="tipoTransporte" formControlName="tipoTransporte"
+          <app-catalogo-select [catalogo]="tipoVehiculo" formControlName="tipoTransporte"
             [label]="'Tipo de transporte'" [required]="true" (change)="
               setValoresStore(transporte, 'tipoTransporte', 'setTipoTransporte')
             "></app-catalogo-select>
         </div>
       </div>
+      @if (transporte.get('tipoTransporte')?.value) {
+        <div class="row">
+          <lib-agregar-transporte [tipo]="transporte.get('tipoTransporte')?.value"></lib-agregar-transporte>
+        </div>
+      }
     </div>
+
 
     }
 

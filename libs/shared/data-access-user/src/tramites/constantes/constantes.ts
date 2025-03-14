@@ -34,6 +34,9 @@ export const CATALOGOS_ID = {
   CAT_REPRESENTACION_FEDERAL: 'representacion-federal',
   CAT_TIPO_TRANSPORTE: 29,
   DATOS_PERSONA_FISICA: 21,
+  CAT_RECINTO: 30,
+  CAT_DESPACHO_LDA: 31,
+  CAT_DESPACHO_DD: 32,
 };
 
 export const TIPO_PERSONA = {

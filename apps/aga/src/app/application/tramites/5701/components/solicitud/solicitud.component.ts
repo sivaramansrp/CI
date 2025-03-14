@@ -1,10 +1,16 @@
 import {
+  ADV_LIMPIA_CAMPOS,
   DESPACHO_DD, DESPACHO_LDA,
   FECHA_FINAL,
   FECHA_INICIO,
   HORA_FINAL,
   HORA_INICIO,
-  MSJ_ERROR_FECHA, TITULO_MODAL_ERROR
+  ID_NAME_DD,
+  ID_NAME_LDA,
+  LABEL_DESPACHO_DD,
+  LABEL_DESPACHO_LDA,
+  MSJ_ERROR_FECHA, TITULO_MODAL_ERROR,
+  VEHICULO
 } from '../../../../core/enums/5701/tramite5701.enum';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -62,6 +68,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   seccionAduanera!: Catalogo[];
   tipoOperacion!: Catalogo[];
   tipoTransporte!: Catalogo[];
+  tipoVehiculo!: Catalogo[];
+  recintoCatalogo!: Catalogo[];
+  despachoLdaCatalogo!: Catalogo[];
+  despachoDDCatalogo!: Catalogo[];
+
+  selectCatalogoDespacho!: Catalogo[];
+  activarCatalogoDespacho: boolean = false;
+
+  desactivarSelectSeccionAduanera: boolean = false;
+  desactivarSelectRecinto: boolean = false;
 
   tipoSolicitudSeleccionada!: number;
 
@@ -90,7 +106,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   modal: string = '';
   tituloModal!: string;
   mensajeModal!: string;
+
   tipoDespacho: boolean = false;
+  labelTipoDespacho!: string;
+
+  idNameAutorizacion!: string;
+  idTipoDespacho!: string;
 
   private destroyNotifier$: Subject<void> = new Subject();
   private seccion!: SeccionLibState;
@@ -171,6 +192,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     // Aqui se busca el nro de patente o autorizacion
     this.obtenerPatente();
     this.tipoSolicitudSeleccion();
+
+    this.desactivarSelectSeccionAduanera = (this.seccionAduanera && this.seccionAduanera.length === 0) ? true : false;
   }
 
   /**
@@ -189,6 +212,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   get datosServicio(): FormGroup {
     return this.FormSolicitud?.get('datosServicio') as FormGroup;
+  }
+
+  /**
+ * Obtiene el grupo de formulario 'despachoSeleccion' del formulario principal 'FormSolicitud'.
+ *
+ * @returns {FormGroup} El grupo de formulario 'despachoSeleccion'.
+ */
+  get despachoSeleccion(): FormGroup {
+    return this.FormSolicitud.get('despachoSeleccion') as FormGroup;
   }
 
   /**
@@ -354,7 +386,35 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .getCatalogoById(CATALOGOS_ID.CAT_TIPO_TRANSPORTE)
       .pipe(
         map((resp) => {
+          const CATALOGO_TRANSPORTE = JSON.parse(resp.data);
+          const TIPO_VEHICULO = VEHICULO;
+          this.tipoVehiculo = CATALOGO_TRANSPORTE.filter((elemento: Catalogo) => TIPO_VEHICULO.includes(elemento.descripcion));
+
           this.tipoTransporte = JSON.parse(resp.data);
+        })
+      );
+
+    const RECINTO$ = this.catalogosServices
+      .getCatalogoById(CATALOGOS_ID.CAT_RECINTO)
+      .pipe(
+        map((resp) => {
+          this.recintoCatalogo = JSON.parse(resp.data);
+        })
+      );
+
+    const CAT_DESPACHO_LDA$ = this.catalogosServices
+      .getCatalogoById(CATALOGOS_ID.CAT_DESPACHO_LDA)
+      .pipe(
+        map((resp) => {
+          this.despachoLdaCatalogo = JSON.parse(resp.data);
+        })
+      );
+
+    const CAT_DESPACHO_DD$ = this.catalogosServices
+      .getCatalogoById(CATALOGOS_ID.CAT_DESPACHO_DD)
+      .pipe(
+        map((resp) => {
+          this.despachoDDCatalogo = JSON.parse(resp.data);
         })
       );
 
@@ -366,6 +426,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       SECCIONES_ADUANERAS$,
       TIPO_OPERACION$,
       TIPO_TRANSPORTE$,
+      RECINTO$,
+      CAT_DESPACHO_LDA$,
+      CAT_DESPACHO_DD$
     ).subscribe();
   }
 
@@ -438,17 +501,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         fechasSeleccionadas: this.fb.array([]),
       }),
 
-      despacho: this.fb.group({
+      despachoSeleccion: this.fb.group({
         despacho: [this.solicitudState?.despacho],
         lda: [this.solicitudState?.lda],
+        autorizacionLDA: [this.solicitudState?.autorizacionLDA],
         dd: [this.solicitudState?.dd],
-        autorizacion: [this.solicitudState?.rfcAutorizacion],
+        autorizacionDDEX: [this.solicitudState?.autorizacionDDEX],
+      }),
+
+      despacho: this.fb.group({
         idAduana: [this.solicitudState?.idAduana, [Validators.required]],
         descripcionAduana: [
           this.solicitudState?.descripcionAduana,
         ],
         idSeccionAduanera: [this.solicitudState?.idSeccionAduanera],
         seccionAduanera: [this.solicitudState?.seccionAduanera],
+        idRecinto: [],
         nombreRecinto: [this.solicitudState?.nombreRecinto],
         tipoOperacion: [this.solicitudState?.tipoOperacion],
         patente: [{ value: this.solicitudState?.patente, disabled: true }],
@@ -750,10 +818,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
-    const valor = form.get(campo)?.value;
-    console.log(valor);
-
-    (this.tramite5701Store[metodoNombre] as (value: any) => void)(valor);
+    const VALOR = form.get(campo)?.value;
+    (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);
   }
 
   /**
@@ -829,11 +895,74 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-  changeDespachoLDA(): void {
-    this.tipoDespacho = true;
-    console.log('despacho lda');
+  changeDespacho(tipo: string): void {
+    const ADUANA = this.despacho.get('idAduana')?.value;
+    const SECCION_ADUANERA = this.despacho.get('idSeccionAduanera')?.value;
+    const RECINTO = this.despacho.get('nombreRecinto')?.value;
 
+    if (ADUANA || SECCION_ADUANERA || RECINTO) {
+      this.tituloModal = TITULO_MODAL_ERROR;
+      this.mensajeModal = ADV_LIMPIA_CAMPOS;
+      this.abrirModal();
+    }
 
+    this.tipoDespacho = !this.tipoDespacho;
+
+    if (!this.tipoDespacho) {
+      this.despachoSeleccion.get('lda')?.enable();
+      this.despachoSeleccion.get('dd')?.enable();
+      this.despachoSeleccion.get(this.idNameAutorizacion)?.clearValidators();
+      this.idNameAutorizacion = '';
+      this.labelTipoDespacho = '';
+    }
+
+    if (tipo === 'LDA' && this.tipoDespacho) {
+      this.labelTipoDespacho = LABEL_DESPACHO_LDA;
+      this.idNameAutorizacion = ID_NAME_LDA
+
+      this.despachoSeleccion.get('dd')?.disable();
+      this.setValoresStore(this.despacho, 'lda', 'setLDA');
+      this.selectCatalogoDespacho = this.despachoLdaCatalogo;
+    } else if (tipo === 'DD' && this.tipoDespacho) {
+      this.labelTipoDespacho = LABEL_DESPACHO_DD;
+      this.idNameAutorizacion = ID_NAME_DD;
+
+      this.despachoSeleccion.get('lda')?.disable();
+      this.setValoresStore(this.despacho, 'dd', 'setDD');
+      this.selectCatalogoDespacho = this.despachoDDCatalogo;
+      this.activarCatalogoDespacho = true;
+
+    }
+    this.despachoSeleccion.get(this.idNameAutorizacion)?.setValidators(Validators.required);
+    this.despachoSeleccion.get(this.idNameAutorizacion)?.updateValueAndValidity();
+  }
+
+  changeSeccionAduanera(): void {
+    const SECCION_ADUANERA = this.despacho.get('idSeccionAduanera')?.value;
+
+    if (SECCION_ADUANERA) {
+      this.desactivarSelectRecinto = true;
+    }
+
+    this.setValoresStore(
+      this.despacho,
+      'idSeccionAduanera',
+      'setIdSeccionAduanera'
+    )
+  }
+
+  changeRecinto(): void {
+    const RECINTO = this.despacho.get('nombreRecinto')?.value;
+
+    if (RECINTO) {
+      this.desactivarSelectSeccionAduanera = true;
+    }
+
+    this.setValoresStore(
+      this.despacho,
+      'nombreRecinto',
+      'setNombreRecinto'
+    )
   }
 
 }
