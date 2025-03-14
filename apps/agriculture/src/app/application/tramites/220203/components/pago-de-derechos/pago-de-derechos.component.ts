@@ -76,6 +76,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @description Método de inicialización del componente.
    */
   ngOnInit(): void {
+
     this.formularioPago.statusChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -95,17 +96,20 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @description Crea el formulario de pago según el valor de `exentoPagoValor`.
    */
   private crearFormularioPago(): void {
-    const ESEXENTO = this.exentoPagoValor === 'Si';
-    this.formularioPago = this.fb.group({
-      exentoPago: ['', Validators.required],
-      justificacion: ['', Validators.required],
-      claveReferencia: [{ value: '', disabled: true }, Validators.required],
-      cadenaDependencia: [{ value: '', disabled: true }, Validators.required],
-      banco: ['', Validators.required],
-      llavePago: [{ value: '', disabled: ESEXENTO }, Validators.required],
-      fechaPago: [{ value: '', disabled: true }, Validators.required],
-      importePago: [{ value: '', disabled: true }, Validators.required],
-    });
+    this.importacionAcuiculturaServicio.obtenerDatos().subscribe((data) => {
+      console.log(data.formularioPago);
+      const ESEXENTO = this.exentoPagoValor === 'Si';
+      this.formularioPago = this.fb.group({
+        exentoPago: [data.formularioPago.exentoPago, Validators.required],
+        justificacion: [data.formularioPago.justificacion || '', Validators.required],
+        claveReferencia: [{ value: data.formularioPago.claveReferencia || '', disabled: true }, Validators.required],
+        cadenaDependencia: [{ value: data.formularioPago.cadenaDependencia || '', disabled: true }, Validators.required],
+        banco: [data.formularioPago.cadenaDependencia || '', Validators.required],
+        llavePago: [{ value: data.formularioPago.llavePago || '', disabled: ESEXENTO }, Validators.required],
+        fechaPago: [{ value: data.formularioPago.fechaPago || '', disabled: true }, Validators.required],
+        importePago: [{ value: data.formularioPago.importePago || '', disabled: true }, Validators.required],
+      });
+    })
   }
 
   /**
@@ -138,6 +142,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('banco.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
+        this.justificacionCatalogo = data.data as Catalogo[];
         this.bancoCatalogo = data.data as Catalogo[];
       }, (error) => {
         console.error(error);
@@ -164,7 +169,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
-        this.justificacionCatalogo = data.data as Catalogo[];
+        // this.justificacionCatalogo = data.data as Catalogo[];
       }, (error) => {
         console.error(error);
       });
@@ -179,7 +184,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     form: FormGroup,
     campo: string,
   ): void {
-    const VALOR = form.get(campo)?.value;
+    const VALOR = this.formularioPago.value;
+    console.log(this.formularioPago.value);
     (this.importacionAcuiculturaServicio.actualizarFormularioPago as (value: FormularioPago) => void)(VALOR);
   }
 
