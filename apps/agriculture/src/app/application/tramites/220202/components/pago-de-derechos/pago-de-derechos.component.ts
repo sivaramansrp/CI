@@ -97,7 +97,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       "value": "Si"
     }
   ];
-  pagoStore: PagoForm = {} as PagoForm;
+  formularioPagoStore: PagoForm = {} as PagoForm;
   fechaPagoDate: string = '15/03/2025';
   fechaFinalInput: InputFecha = FECHA_SALIDA_ACUICULTURA;
   /**
@@ -136,8 +136,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   constructor(private readonly fb: FormBuilder, private readonly agriculturaApiService: AgriculturaApiService) {
     this.agriculturaApiService.getAllDatosForma().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
-      console.log(datos);
-      this.pagoStore = datos.pago;
+      this.formularioPagoStore = datos.pago;
     })
   }
 
@@ -150,14 +149,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.pagoForm = this.fb.group({
-      exentoPago: [this.pagoStore.exentoPago || ''],
-      justificacion: [this.pagoStore.justificacion || '', Validators.required],
-      claveReferencia: [this.pagoStore.claveReferencia || '', Validators.required],
-      cadenaDependencia: [this.pagoStore.cadenaDependencia, Validators.required],
-      banco: [this.pagoStore.banco || '', Validators.required],
-      llavePago: [this.pagoStore.llavePago || ''],
-      importePago: [this.pagoStore.importePago || '', , Validators.required],
-      fechaInicioInput: [this.pagoStore.fechaInicioInput || '', Validators.required]
+      exentoPago: [this.formularioPagoStore.exentoPago || 'Si', Validators.required],
+      justificacion: [this.formularioPagoStore.justificacion, Validators.required],
+      claveReferencia: [{ value: this.formularioPagoStore.claveReferencia || '', disabled: true }, Validators.required],
+      cadenaDependencia: [{ value: this.formularioPagoStore.cadenaDependencia || '', disabled: true }, Validators.required],
+      banco: [this.formularioPagoStore.banco, Validators.required],
+      llavePago: [{ value: this.formularioPagoStore.llavePago || '', disabled: true }, Validators.required],
+      fechaPago: [{ value: this.formularioPagoStore.fechaPago || '', disabled: true }, Validators.required],
+      importePago: [{ value: this.formularioPagoStore.importePago || '', disabled: true }, Validators.required],
     });
     this.pagoForm.statusChanges
       .pipe(takeUntil(this.destroyNotifier$)) // Ensures unsubscribe on component destruction
@@ -267,8 +266,31 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     campo?: string,
 
   ): void {
+    console.log(campo);
+    if (campo === 'justificacion') {
+      this.pagoForm.get('claveReferencia')?.enable();
+      this.pagoForm.get('cadenaDependencia')?.enable();
+      this.pagoForm.get('llavePago')?.enable();
+      this.pagoForm.get('fechaPago')?.enable();
+      this.pagoForm.get('importePago')?.enable();
+      // After patching the form with values
+      this.pagoForm.patchValue({
+        claveReferencia: 'CR-123456',
+        cadenaDependencia: 'Dependencia-34',
+        banco: '2',
+        llavePago: 'LL-7890',
+        fechaPago: '2025-03-14',
+        importePago: '500.00',
+      });
+
+    }
     const VALOR = this.pagoForm.value;
     this.agriculturaApiService.updatePago(VALOR);
+    this.pagoForm.get('claveReferencia')?.disable();
+    this.pagoForm.get('cadenaDependencia')?.disable();
+    this.pagoForm.get('llavePago')?.disable();
+    this.pagoForm.get('fechaPago')?.disable();
+    this.pagoForm.get('importePago')?.disable();
   }
   /**
     * Maneja el evento de cambio para la entrada de fecha.
