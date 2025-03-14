@@ -38,6 +38,7 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    */
   formularioMovilizacion!: FormGroup;
+  formularioMovilizacionStore: FormularioMovilizacion = {} as FormularioMovilizacion
 
   private destroyNotifier$ = new Subject<void>();
 
@@ -50,13 +51,8 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService
   ) {
-    this.importacionDeAcuiculturaServices.obtenerDatos().subscribe((data) => {
-      this.formularioMovilizacion = this.fb.group({
-        medioDeTransporte: [data.formularioMovilizacion.medioDeTransporte || '', Validators.required],
-        identificacionTransporte: [data.formularioMovilizacion.identificacionTransporte || ''],
-        puntoVerificacion: [data.formularioMovilizacion.puntoVerificacion || ''],
-        nombreEmpresaTransportista: [data.formularioMovilizacion.nombreEmpresaTransportista || '', Validators.required]
-      });
+    this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+      this.formularioMovilizacionStore = datos.formularioMovilizacion
     })
   }
 
@@ -65,6 +61,13 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
    * Inicializa los cambios del formulario y obtiene los datos necesarios de los catálogos.
    */
   ngOnInit(): void {
+
+    this.formularioMovilizacion = this.fb.group({
+      medioDeTransporte: [this.formularioMovilizacionStore.medioDeTransporte || '', Validators.required],
+      identificacionTransporte: [this.formularioMovilizacionStore.identificacionTransporte || ''],
+      puntoVerificacion: [this.formularioMovilizacionStore.puntoVerificacion || ''],
+      nombreEmpresaTransportista: [this.formularioMovilizacionStore.nombreEmpresaTransportista || '', Validators.required]
+    });
     this.formularioMovilizacion.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((changes) => {
@@ -126,7 +129,6 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
     campo: string,
   ): void {
     const VALOR = this.formularioMovilizacion.value;
-    console.log(VALOR);
     (this.importacionDeAcuiculturaServices.actualizarFormularioMovilizacion as (value: FormularioMovilizacion) => void)(
       VALOR
     );
