@@ -216,7 +216,6 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
    */
   constructor(private readonly fb: FormBuilder, private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService) {
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
-      console.log(datos)
       this.datosMercanciaStore = datos.datosMercancia;
     })
     this.createFromGroup();
