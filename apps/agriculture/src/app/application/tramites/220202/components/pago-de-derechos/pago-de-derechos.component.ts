@@ -6,7 +6,8 @@ import {
 
 import {
   FormBuilder,
-  FormGroup
+  FormGroup,
+  Validators
 } from '@angular/forms';
 
 import {
@@ -19,6 +20,8 @@ import { AgriculturaApiService } from '../../services/220202/agricultura-api.ser
 import { Subject, takeUntil } from 'rxjs';
 
 import { PagoForm } from '../../models/220202/fitosanitario.model';
+import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO } from '../../../220203/constantes/220203/importacion-de-acuicultura.enum';
+import { OpcionDeRadio } from '../../../220203/models/220203/importacion-de-acuicultura.module';
 
 /**
  * Componente para el formulario de pago de derechos.
@@ -61,16 +64,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Configuración para el selector de justificación.
    * Esta propiedad contiene la lista de justificaciones que se usan en el formulario.
-   * @property {Catalogo} justificacionSelector
+   * @property {Catalogo} justificacionCatalogo
    */
-  justificacionSelector: Catalogo[] = [];
+  justificacionCatalogo: Catalogo[] = [];
 
   /**
    * Configuración para el selector de banco.
    * Esta propiedad contiene la lista de bancos que se usan en el formulario.
-   * @property {Catalogo} bancoSelector
+   * @property {Catalogo} bancoCatalogo
    */
-  bancoSelector: Catalogo[] = [];
+  bancoCatalogo: Catalogo[] = [];
 
   /**
    * Grupo de formularios para el pago de derechos.
@@ -95,6 +98,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     }
   ];
   pagoStore: PagoForm = {} as PagoForm;
+  fechaPagoDate: string = '15/03/2025';
+  fechaFinalInput: InputFecha = FECHA_SALIDA_ACUICULTURA;
+  /**
+ * @description Valor seleccionado para la exención de pago.
+ * @type {string}
+ */
+  exentoPagoValor: string = 'Si';
+  exentoPagoRadio: OpcionDeRadio[] = TIPO_RADIO;
+
 
   /**
    * Valor seleccionado en el radio button de exención de pago.
@@ -123,9 +135,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param {AgriculturaApiService} agriculturaApiService - Cliente HTTP para realizar solicitudes a la API de Agricultura.
    */
   constructor(private readonly fb: FormBuilder, private readonly agriculturaApiService: AgriculturaApiService) {
-    this.agriculturaApiService.getPagoForma().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+    this.agriculturaApiService.getAllDatosForma().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       console.log(datos);
-      this.pagoStore = datos;
+      this.pagoStore = datos.pago;
     })
   }
 
@@ -138,14 +150,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.pagoForm = this.fb.group({
-      exentoPago: [this.pagoStore.exentoPago],
-      justificacion: [this.pagoStore.justificacion],
-      claveReferencia: [{ value: this.pagoStore.claveReferencia, disabled: true }],
-      cadenaDependencia: [{ value: this.pagoStore.cadenaDependencia, disabled: true }],
-      banco: [{ value: this.pagoStore.banco, disabled: true }],
-      llavePago: [{ value: this.pagoStore.llavePago, disabled: false }],
-      importePago: [{ value: this.pagoStore.importePago, disabled: true }],
-      fechaInicioInput: [this.pagoStore.fechaInicioInput]
+      exentoPago: [this.pagoStore.exentoPago || ''],
+      justificacion: [this.pagoStore.justificacion || '', Validators.required],
+      claveReferencia: [this.pagoStore.claveReferencia || '', Validators.required],
+      cadenaDependencia: [this.pagoStore.cadenaDependencia, Validators.required],
+      banco: [this.pagoStore.banco || '', Validators.required],
+      llavePago: [this.pagoStore.llavePago || ''],
+      importePago: [this.pagoStore.importePago || '', , Validators.required],
+      fechaInicioInput: [this.pagoStore.fechaInicioInput || '', Validators.required]
     });
     this.pagoForm.statusChanges
       .pipe(takeUntil(this.destroyNotifier$)) // Ensures unsubscribe on component destruction
@@ -176,6 +188,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.obtenerListaDeJustificaciones();
   }
 
+
+  /**
+   * @description Actualiza la fecha de pago en el formulario.
+   * @param {string} nuevoValor Nueva fecha de pago.
+   */
+  cambioFechaFinal(nuevoValor: string): void {
+    this.pagoForm.patchValue({
+      fechaPago: nuevoValor,
+    });
+    this.fechaPagoDate = nuevoValor;
+  }
+
   /**
    * Obtiene la lista de bancos para el selector.
    * Este método solicita la lista de bancos a la API y la asigna a la propiedad `bancoSelector`.
@@ -187,7 +211,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(data => {
         if (data) {
-          this.bancoSelector = data;
+          this.bancoCatalogo = data as Catalogo[];
         }
       });
   }
@@ -203,7 +227,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(data => {
         if (data) {
-          this.justificacionSelector = data;
+          this.justificacionCatalogo = data;
         }
       });
   }
@@ -239,11 +263,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   setValoresStore(
-    form: FormGroup,
-    campo: string,
+    form?: FormGroup,
+    campo?: string,
 
   ): void {
-    const VALOR = form.get(campo)?.value;
+    const VALOR = this.pagoForm.value;
     this.agriculturaApiService.updatePago(VALOR);
   }
   /**
@@ -257,6 +281,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     });
     const VALOR = this.pagoForm.value;
     this.agriculturaApiService.updatePago(VALOR);
+  }
+  /**
+ * @description Cambia el valor de un campo del formulario.
+ * @param {string} nombreControl Nombre del campo del formulario.
+ * @param {string} valor Nuevo valor a asignar.
+ */
+  cambioValorRadio(nombreControl: string, valor: string): void {
+    this.pagoForm.patchValue({
+      [nombreControl]: valor,
+    });
+    this.exentoPagoValor = valor;
   }
 
   /**
