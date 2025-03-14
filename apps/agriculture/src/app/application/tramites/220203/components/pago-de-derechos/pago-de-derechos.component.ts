@@ -199,10 +199,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @remarks Si se cumple una condición, se actualizan los valores del formulario.
    */
   actualizarValorAleatorio(): void {
-    const HOY = this.formatearFecha(new Date());
+    const HOY = PagoDeDerechosComponent.formatearFecha(new Date());
 
     // Si la justificación no está vacía y el campo exentoPago es 'Si'
-    if (this.formularioPago.value.justificacion != '' && this.formularioPagoStore.exentoPago == 'Si') {
+    if (this.formularioPago.value.justificacion !== '' && this.formularioPagoStore.exentoPago === 'Si') {
       this.formularioPago.patchValue({
         claveReferencia: 'valor',
         cadenaDependencia: 'valor',
@@ -212,7 +212,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       });
     }
     // Si el banco no está vacío y el campo exentoPago es 'No'
-    else if (this.formularioPago.value.banco != '' && this.formularioPagoStore.exentoPago == 'No') {
+    else if (this.formularioPago.value.banco !== '' && this.formularioPagoStore.exentoPago === 'No') {
       this.formularioPago.patchValue({
         justificacion: '170',
         claveReferencia: 'valor',
@@ -229,12 +229,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param {Date} fecha La fecha a formatear.
    * @returns {string} La fecha formateada como un string.
    */
-  formatearFecha(fecha: Date): string {
-    const dia = fecha.getDate().toString().padStart(2, '0'); // Asegura que el día tenga 2 dígitos
-    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // Asegura que el mes tenga 2 dígitos
-    const año = fecha.getFullYear();
+  static formatearFecha(fecha: Date): string {
+    const DIA = fecha.getDate().toString().padStart(2, '0'); // Asegura que el día tenga 2 dígitos
+    const MES = (fecha.getMonth() + 1).toString().padStart(2, '0'); // Asegura que el mes tenga 2 dígitos
+    const ANO = fecha.getFullYear();
 
-    return `${dia}/${mes}/${año}`;
+    return `${DIA}/${MES}/${ANO}`;
   }
 
 
