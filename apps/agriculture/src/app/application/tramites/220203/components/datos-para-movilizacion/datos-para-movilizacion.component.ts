@@ -37,7 +37,7 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
    * @description Formulario para los datos de movilización de acuicultura.
    * @type {FormGroup}
    */
-  formularioMovilizacion: FormGroup;
+  formularioMovilizacion!: FormGroup;
 
   private destroyNotifier$ = new Subject<void>();
 
@@ -50,12 +50,14 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService
   ) {
-    this.formularioMovilizacion = this.fb.group({
-      medioDeTransporte: ['', Validators.required],
-      identificacionTransporte: ['IDTERR'],
-      puntoVerificacion: [''],
-      nombreEmpresaTransportista: ['', Validators.required]
-    });
+    this.importacionDeAcuiculturaServices.obtenerDatos().subscribe((data) => {
+      this.formularioMovilizacion = this.fb.group({
+        medioDeTransporte: [data.formularioMovilizacion.medioDeTransporte || '', Validators.required],
+        identificacionTransporte: [data.formularioMovilizacion.identificacionTransporte || ''],
+        puntoVerificacion: [data.formularioMovilizacion.puntoVerificacion || ''],
+        nombreEmpresaTransportista: [data.formularioMovilizacion.nombreEmpresaTransportista || '', Validators.required]
+      });
+    })
   }
 
   /**
@@ -123,7 +125,8 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
     form: FormGroup,
     campo: string,
   ): void {
-    const VALOR = form.get(campo)?.value;
+    const VALOR = this.formularioMovilizacion.value;
+    console.log(VALOR);
     (this.importacionDeAcuiculturaServices.actualizarFormularioMovilizacion as (value: FormularioMovilizacion) => void)(
       VALOR
     );
