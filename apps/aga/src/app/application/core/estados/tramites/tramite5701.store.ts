@@ -1,0 +1,533 @@
+import {
+  Personas,
+  ResponsablesDespacho,
+} from '../../models/5701/tramite5701.model';
+
+import { Store, StoreConfig } from '@datorama/akita';
+
+import { Injectable } from '@angular/core';
+
+/**
+ * Creacion del estado inicial para la interfaz de tramite 5701
+ * @returns Solicitud5701
+ */
+export interface Solicitud5701State {
+  idSolicitud: string;
+  tipoSolicitud: string;
+
+  RFCImpExp: string;
+  nombre: string;
+  desNumeroRegistro: string;
+  programa: string;
+  desImmex: string;
+  desImmexValue: string;
+  desIndustrialAutomotriz: string;
+  tipoEmpresaCertificada: string;
+  idSocioComercial: string;
+  socioComercial: boolean;
+  opEconomicoAut: boolean;
+  revisionOrigen: boolean;
+
+  fechaInicio: string;
+  horaInicio: string;
+  fechaFinal: string;
+  horaFinal: string;
+  fechasSeleccionadas: string[];
+
+  despacho: string;
+  lda: boolean;
+  dd: boolean;
+
+  rfcAutorizacion: string;
+  ddexAutorizacion: string;
+  idAduana: string;
+  descripcionAduana: string;
+  idSeccionAduanera: string;
+  seccionAduanera: string;
+  nombreRecinto: string;
+  tipoDespacho: string;
+  tipoOperacion: string;
+  patente: string;
+  relacionSociedad: boolean;
+  encargoConferido: boolean;
+  domicilio: string;
+
+  paisOrigen: number;
+  paisProcedencia: number;
+  descripcion: string;
+  justificacion: string;
+
+  idPedimento: number;
+  patentePedimento: number;
+  pedimento: string;
+  aduana: number;
+  tipoPedimento: string;
+  numero: number;
+  comprobanteValor: string;
+  pedimentoValidado: boolean;
+
+  personasResponsablesDespacho: ResponsablesDespacho[];
+
+  tipoTransporte: string;
+  transporte: string[];
+
+  montoPagar: string;
+  lineaCaptura: string;
+  monto: string;
+
+  tercerosRelacionados: Personas[];
+}
+
+export function createInitialState(): Solicitud5701State {
+  return {
+    idSolicitud: '',
+    tipoSolicitud: '',
+    RFCImpExp: '',
+    nombre: '',
+    desNumeroRegistro: '',
+    programa: '',
+    desImmex: '',
+    desImmexValue: '',
+    desIndustrialAutomotriz: '',
+    tipoEmpresaCertificada: '',
+    idSocioComercial: '',
+    socioComercial: false,
+    opEconomicoAut: false,
+    revisionOrigen: false,
+    fechaInicio: '',
+    horaInicio: '',
+    fechaFinal: '',
+    horaFinal: '',
+    fechasSeleccionadas: [],
+    despacho: '',
+    lda: false,
+    dd: false,
+    rfcAutorizacion: '',
+    ddexAutorizacion: '',
+    idAduana: '',
+    descripcionAduana: '',
+    idSeccionAduanera: '',
+    seccionAduanera: '',
+    nombreRecinto: '',
+    tipoDespacho: '',
+    tipoOperacion: '',
+    patente: '',
+    relacionSociedad: false,
+    encargoConferido: false,
+    domicilio: '',
+    paisOrigen: 0,
+    paisProcedencia: 0,
+    descripcion: '',
+    justificacion: '',
+    idPedimento: 0,
+    patentePedimento: 0,
+    pedimento: '',
+    aduana: 0,
+    tipoPedimento: '',
+    numero: 0,
+    comprobanteValor: '',
+    pedimentoValidado: false,
+    personasResponsablesDespacho: [],
+    tipoTransporte: '',
+    transporte: [],
+    montoPagar: '',
+    lineaCaptura: '',
+    monto: '',
+    tercerosRelacionados: [],
+  };
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+@StoreConfig({ name: 'tramite5701', resettable: true })
+export class Tramite5701Store extends Store<Solicitud5701State> {
+  constructor() {
+    super(createInitialState());
+  }
+
+  /**
+   * Guarda el tipo de solicitud en el estado.
+   *
+   * @param tipoSolicitud - El tipo de solicitud que se va a guardar.
+   */
+  public setTipoSolicitud(tipoSolicitud: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoSolicitud,
+    }));
+  }
+
+  public setRFCImpExp(RFCImpExp: string): void {
+    this.update((state) => ({
+      ...state,
+      RFCImpExp,
+    }));
+  }
+
+  public setNombre(nombre: string): void {
+    this.update((state) => ({
+      ...state,
+      nombre,
+    }));
+  }
+
+  public setdesNumeroRegistro(desNumeroRegistro: string): void {
+    this.update((state) => ({
+      ...state,
+      desNumeroRegistro,
+    }));
+  }
+
+  public setPrograma(programa: string): void {
+    this.update((state) => ({
+      ...state,
+      programa,
+    }));
+  }
+
+  public setdesImmex(desImmex: string): void {
+    this.update((state) => ({
+      ...state,
+      desImmex,
+    }));
+  }
+
+  public setdesImmexValue(desImmexValue: string): void {
+    this.update((state) => ({
+      ...state,
+      desImmexValue,
+    }));
+  }
+
+  public setDesIndustriaAutomotriz(desIndustrialAutomotriz: string): void {
+    this.update((state) => ({
+      ...state,
+      desIndustrialAutomotriz,
+    }));
+  }
+
+  public setTipoEmpresaCertificada(tipoEmpresaCertificada: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoEmpresaCertificada,
+    }));
+  }
+
+  public setIdSocioComercial(idSocioComercial: string): void {
+    this.update((state) => ({
+      ...state,
+      idSocioComercial,
+    }));
+  }
+
+  public setSocioComercial(socioComercial: boolean): void {
+    this.update((state) => ({
+      ...state,
+      socioComercial,
+    }));
+  }
+
+  public setOpEconomicoAut(opEconomicoAut: boolean): void {
+    this.update((state) => ({
+      ...state,
+      opEconomicoAut,
+    }));
+  }
+
+  public setRevisionOrigen(revisionOrigen: boolean): void {
+    this.update((state) => ({
+      ...state,
+      revisionOrigen,
+    }));
+  }
+
+  public setFechaInicio(fechaInicio: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaInicio,
+    }));
+  }
+
+  public setHoraInicio(horaInicio: string): void {
+    this.update((state) => ({
+      ...state,
+      horaInicio,
+    }));
+  }
+
+  public setFechaFinal(fechaFinal: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaFinal,
+    }));
+  }
+
+  public setHoraFinal(horaFinal: string): void {
+    this.update((state) => ({
+      ...state,
+      horaFinal,
+    }));
+  }
+
+  public setFechasSeleccionadas(fechasSeleccionadas: string[]): void {
+    this.update((state) => ({
+      ...state,
+      fechasSeleccionadas,
+    }));
+  }
+
+  public setDespacho(despacho: string): void {
+    this.update((state) => ({
+      ...state,
+      despacho,
+    }));
+  }
+
+  public setLDA(lda: boolean): void {
+    this.update((state) => ({
+      ...state,
+      lda,
+    }));
+  }
+
+  public setDD(dd: boolean): void {
+    this.update((state) => ({
+      ...state,
+      dd,
+    }));
+  }
+
+  public setRfcAutorizacion(rfcAutorizacion: string): void {
+    this.update((state) => ({
+      ...state,
+      rfcAutorizacion,
+    }));
+  }
+
+  public setDdexAutorizacion(ddexAutorizacion: string): void {
+    this.update((state) => ({
+      ...state,
+      ddexAutorizacion,
+    }));
+  }
+
+  public setIdAduana(idAduana: string): void {
+    this.update((state) => ({
+      ...state,
+      idAduana,
+    }));
+  }
+
+  public setDescripcionAduana(descripcionAduana: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionAduana,
+    }));
+  }
+
+  public setIdSeccionAduanera(idSeccionAduanera: string): void {
+    this.update((state) => ({
+      ...state,
+      idSeccionAduanera,
+    }));
+  }
+
+  public setSeccionAduanera(seccionAduanera: string): void {
+    this.update((state) => ({
+      ...state,
+      seccionAduanera,
+    }));
+  }
+
+  public setNombreRecinto(nombreRecinto: string): void {
+    this.update((state) => ({
+      ...state,
+      nombreRecinto,
+    }));
+  }
+
+  public setTipoDespacho(tipoDespacho: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoDespacho,
+    }));
+  }
+
+  public setTipoOperacion(tipoOperacion: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoOperacion,
+    }));
+  }
+
+  public setPatente(patente: string): void {
+    this.update((state) => ({
+      ...state,
+      patente,
+    }));
+  }
+
+  public setRelacionSociedad(relacionSociedad: boolean): void {
+    this.update((state) => ({
+      ...state,
+      relacionSociedad,
+    }));
+  }
+
+  public setEncargoConferido(encargoConferido: boolean): void {
+    this.update((state) => ({
+      ...state,
+      encargoConferido,
+    }));
+  }
+
+  public setDomicilio(domicilio: string): void {
+    this.update((state) => ({
+      ...state,
+      domicilio,
+    }));
+  }
+
+  public setPaisOrigen(paisOrigen: number): void {
+    this.update((state) => ({
+      ...state,
+      paisOrigen,
+    }));
+  }
+
+  public setPaisProcedencia(paisProcedencia: number): void {
+    this.update((state) => ({
+      ...state,
+      paisProcedencia,
+    }));
+  }
+
+  public setDescripcion(descripcion: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcion,
+    }));
+  }
+
+  public setJustificacion(justificacion: string): void {
+    this.update((state) => ({
+      ...state,
+      justificacion,
+    }));
+  }
+
+  public setidPedimento(idPedimento: number): void {
+    this.update((state) => ({
+      ...state,
+      idPedimento,
+    }));
+  }
+
+  public setPatentePedimento(patentePedimento: number): void {
+    this.update((state) => ({
+      ...state,
+      patentePedimento,
+    }));
+  }
+
+  public setPedimento(pedimento: string): void {
+    this.update((state) => ({
+      ...state,
+      pedimento,
+    }));
+  }
+
+  public setAduana(aduana: number): void {
+    this.update((state) => ({
+      ...state,
+      aduana,
+    }));
+  }
+
+  public setTipoPedimento(tipoPedimento: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoPedimento,
+    }));
+  }
+
+  public setNumero(numero: number): void {
+    this.update((state) => ({
+      ...state,
+      numero,
+    }));
+  }
+
+  public setComprobanteValor(comprobanteValor: string): void {
+    this.update((state) => ({
+      ...state,
+      comprobanteValor,
+    }));
+  }
+
+  public setPedimentoValidado(pedimentoValidado: boolean): void {
+    this.update((state) => ({
+      ...state,
+      pedimentoValidado,
+    }));
+  }
+
+  public setPersonasResponsablesDespacho(
+    personasResponsablesDespacho: ResponsablesDespacho[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      personasResponsablesDespacho,
+    }));
+  }
+
+  public setTipoTransporte(tipoTransporte: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoTransporte,
+    }));
+  }
+
+  public setTransporte(transporte: string[]): void {
+    this.update((state) => ({
+      ...state,
+      transporte,
+    }));
+  }
+
+  public setMontoPagar(montoPagar: string): void {
+    this.update((state) => ({
+      ...state,
+      montoPagar,
+    }));
+  }
+
+  public setLineaCaptura(lineaCaptura: string): void {
+    this.update((state) => ({
+      ...state,
+      lineaCaptura,
+    }));
+  }
+
+  public setMonto(monto: string): void {
+    this.update((state) => ({
+      ...state,
+      monto,
+    }));
+  }
+
+  public setTercerosRelacionados(tercerosRelacionados: Personas[]): void {
+    this.update((state) => ({
+      ...state,
+      tercerosRelacionados,
+    }));
+  }
+
+  /**
+   * Limpia los datos de la solicitud
+   */
+  public limpiarSolicitud(): void {
+    this.reset();
+  }
+}

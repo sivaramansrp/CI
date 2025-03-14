@@ -9,7 +9,6 @@ export * from './core/estados/seccion.store';
 export * from './core/models/220502/solicitud-pantallas.model';
 export * from './core/models/301/servicios-pantallas.model';
 export * from './core/models/303/secciones.model';
-export * from './core/models/5701/servicios-extraordinarios.model';
 export { InputConfig, LabelValueDatos, ListaPasosWizard, MenuConfig, Props } from './core/models/forma-render.model';
 export * from './core/models/shared/catalogos.model';
 export * from './core/models/shared/components.model';
@@ -34,7 +33,7 @@ export * from './core/services/220471/servicios-pantallas.service';
 export * from './core/services/220501/revision.service';
 export * from './core/services/220501/sagarpa/sagarpa.service';
 export * from './core/services/220502/solicitud-pantallas.service';
-export * from './core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
+export * from './core/services/shared/tramite-folio/tramite-folio.service';
 export * from './core/services/shared/catalogos/catalogos.service';
 export * from './core/services/shared/fechas/fechas.service';
 export * from './core/services/shared/formularios/formularios.service';
@@ -89,10 +88,16 @@ export { PASOS as PASOS_CUATRO_STEPS } from './tramites/constantes/paso-cuatro-s
 export { PASOS as PASOS_TRES_STEPS } from './tramites/constantes/paso-tres-steps.enum';
 export * from './tramites/constantes/regex.constants';
 export * from './tramites/constantes/seccionesTramites';
-export * from './tramites/constantes/servicios-extraordinarios.enum';
+
 export * from './tramites/directives/Uppercase/uppercase.directive';
 export * from './tramites/pages/acuse-page/acuse-page.component';
 export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
 export * from './tramites/shared.module';
 
+export { TramiteFolioQueries } from './core/queries/tramiteFolio.queries';
+export { TramiteFolioState, TramiteFolioStore } from './core/estados/tramiteFolio.store'
+
+export * from './core/models/shared/datos-generales.model';
+export * from './core/enums/constantes-alertas.enum';
+export * from './tramites/directives/solo-numeros/solo-numeros.directive'

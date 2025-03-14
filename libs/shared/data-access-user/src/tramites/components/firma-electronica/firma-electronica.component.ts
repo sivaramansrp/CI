@@ -145,7 +145,6 @@ export class FirmaElectronicaComponent {
         );
       }
     } catch (error) {
-      console.log(error);
       this.toastrService.error('Error en la validación');
     }
   }

@@ -7,12 +7,12 @@ import TablaDatos from 'libs/shared/theme/assets/json/90201/acuse-tabla.json';
 import {
   firmar,
   solicitud,
-} from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
+} from '@libs/shared/data-access-user/src';
 import { AcuseTablaDatos } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { Router } from '@angular/router';
 import { ExpansionDeProductoresService } from 'libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
-import { TramiteStore } from 'apps/aga/src/app/application/estados/tramite.store';
+import { TramiteFolioStore } from '@libs/shared/data-access-user/src';
 import { catchError, map, Subscription } from 'rxjs';
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
@@ -88,7 +88,7 @@ export class FirmarSolicitudPasoDosComponent implements OnDestroy {
   constructor(
     private router: Router,
     private _expansionDesvc: ExpansionDeProductoresService,
-    private tramiteStore: TramiteStore
+    private tramiteStore: TramiteFolioStore
   ) {}
 
   /**

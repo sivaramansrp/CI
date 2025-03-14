@@ -1,5 +1,3 @@
-import { SEMANA } from './servicios-extraordinarios.enum';
-
 export const COOKIE = {
   NOMBRE_COOKIE_ID_USUARIO: 'sg-id-user',
   NOMBRE_COOKIE_ROL: 'sg-rol',

@@ -1,12 +1,13 @@
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-
 import {
-  DESPACHO_DD,
-  DESPACHO_LDA,
+  DESPACHO_DD, DESPACHO_LDA,
   FECHA_FINAL,
   FECHA_INICIO,
   HORA_FINAL,
   HORA_INICIO,
+} from '../../../../core/enums/5701/tramite5701.enum';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
+import {
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -21,7 +22,7 @@ import {
   InputHora,
 } from '@ng-mf/data-access-user';
 
-import { DatosComponentePedimento } from '@ng-mf/data-access-user';
+import { DatosComponentePedimento } from '../../../../core/models/5701/tramite5701.model';
 
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
@@ -33,17 +34,17 @@ import {
 import {
   Solicitud5701State,
   Tramite5701Store,
-} from '../../../../estados/tramites/tramite5701.store';
-import { Subject, delay, map, max, merge, takeUntil, tap } from 'rxjs';
+} from '../../../../core/estados/tramites/tramite5701.store';
+import { Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
 import { CatalogosService } from '@ng-mf/data-access-user';
 
 import { FechasService } from '@ng-mf/data-access-user';
 import { FormulariosService } from '@ng-mf/data-access-user';
 import { datosAgregarFormulario } from '@ng-mf/data-access-user';
 
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Tramite5701Query } from '../../../../estados/queries/tramite5701.query';
-import { MSJ_ERROR_FECHA, TITULO_MODAL_ERROR } from '../../../../constantes/5701/tramite5701.enum';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+
 
 @Component({
   selector: 'app-solicitud',
@@ -104,8 +105,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private formulariosService: FormulariosService,
     private catalogosServices: CatalogosService,
-    private validacionesService: ValidacionesFormularioService,
-    private elementRef: ElementRef,
+    private validacionesService: ValidacionesFormularioService
+  // eslint-disable-next-line no-empty-function
   ) { }
 
   ngOnInit(): void {
@@ -138,7 +139,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         delay(10),
         tap((_value) => {
           let seccion: number | null = 0;
-          const formasValidadas = this.seccion.formaValida;
+          const FORMAS_VALIDADAS = this.seccion.formaValida;
 
           for (let i = 0; i < this.seccion.seccion.length; i++) {
             if (
@@ -154,11 +155,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
           if (seccion !== null) {
             if (this.FormSolicitud.valid) {
-              formasValidadas[seccion] = true;
-              this.seccionStore.establecerFormaValida(formasValidadas);
+              FORMAS_VALIDADAS[seccion] = true;
+              this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
             } else {
-              formasValidadas[seccion] = false;
-              this.seccionStore.establecerFormaValida(formasValidadas);
+              FORMAS_VALIDADAS[seccion] = false;
+              this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
             }
           }
 
@@ -257,6 +258,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {boolean} - Retorna `true` si el campo es válido, de lo contrario `false`.
    */
   isValid(form: FormGroup, field: string): boolean {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this.validacionesService.isValid(form, field)!;
   }
 
@@ -301,7 +303,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
      *
      * Este método realiza una solicitud al servicio `catalogosServices` para obtener el catálogo de tipos de solicitud identificado por `CATALOGOS_ID.CAT_TIPO_SOL`. Una vez que recibe la  respuesta, verifica si la respuesta contiene elementos. Si es así, asigna los datos recibidos a la propiedad `datosTiposSolicitud` con la estructura adecuada.
      */
-    const catTipoSolicitud$ = this.catalogosServices
+    const CAT_TIPO_SOLICITUD$ = this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_SOL)
       .pipe(
         map((resp) => {
@@ -310,7 +312,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$)
       );
 
-    const catalogoPaises$ = this.catalogosServices
+    const CATALOGO_PAISES$ = this.catalogosServices
       .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
       .pipe(
         map((resp) => {
@@ -321,7 +323,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
-    const catalogoAduanas$ = this.catalogosServices
+    const CATALOGO_ADUANAS$ = this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_ADUANAS)
       .pipe(
         map((resp) => {
@@ -331,7 +333,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
-    const seccionesAduaneras$ = this.catalogosServices
+    const SECCIONES_ADUANERAS$ = this.catalogosServices
       .getCatalogoById(CATALOGOS_ID.CAT_SECCION_ADUANAS)
       .pipe(
         map((resp) => {
@@ -339,7 +341,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
-    const tipoOperacion$ = this.catalogosServices
+    const TIPO_OPERACION$ = this.catalogosServices
       .getCatalogoById(CATALOGOS_ID.CAT_TIPO_OPERACION)
       .pipe(
         map((resp) => {
@@ -347,7 +349,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
-    const tipoTransporte$ = this.catalogosServices
+    const TIPO_TRANSPORTE$ = this.catalogosServices
       .getCatalogoById(CATALOGOS_ID.CAT_TIPO_TRANSPORTE)
       .pipe(
         map((resp) => {
@@ -357,24 +359,31 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
 
     merge(
-      catTipoSolicitud$,
-      catalogoPaises$,
-      catalogoAduanas$,
-      catalogoAduanas$,
-      seccionesAduaneras$,
-      tipoOperacion$,
-      tipoTransporte$,
+      CAT_TIPO_SOLICITUD$,
+      CATALOGO_PAISES$,
+      CATALOGO_ADUANAS$,
+      SECCIONES_ADUANERAS$,
+      TIPO_OPERACION$,
+      TIPO_TRANSPORTE$,
     ).subscribe();
   }
 
+  /**
+   * Obtiene la patente y la agrega al formulario.
+   * 
+   * Este método realiza una búsqueda de la patente en algún endpoint y luego
+   * agrega el valor de la patente al formulario utilizando el servicio de formularios.
+   * @return {void} No retorna ningún valor.
+   * @private
+   */
   private obtenerPatente(): void {
     // Busqueda de la patente a algun endpoint
-    const datosPatente: datosAgregarFormulario = {
+    const DATOS_PATENTE: datosAgregarFormulario = {
       form: this.despacho,
       field: 'patente',
       valor: '3061',
     };
-    this.formulariosService.agregarValorCamposDesactivados(datosPatente);
+    this.formulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
   }
 
   /**
@@ -501,55 +510,60 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   fechaIntervaloValidator(): void {
     // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
-    const fechaInicio = new Date(this.datosServicio.get('fechaInicio')?.value);
-    const fechaFinal = new Date(this.datosServicio.get('fechaFinal')?.value);
-    const horaInicio = this.datosServicio.get('horaInicio')?.value;
-    const horaFinal = this.datosServicio.get('horaFinal')?.value;
-    const intervalDays = this.getIntervaloDias(this.tipoSolicitudSeleccionada);
+    const FECHA_INICIO = new Date(this.datosServicio.get('fechaInicio')?.value);
+    const FECHA_FINAL = new Date(this.datosServicio.get('fechaFinal')?.value);
+    const HORA_INICIO = this.datosServicio.get('horaInicio')?.value;
+    const HORA_FINAL = this.datosServicio.get('horaFinal')?.value;
+    const INTERVALO_DIAS = this.getIntervaloDias(this.tipoSolicitudSeleccionada);
     if (
-      fechaInicio &&
-      fechaFinal &&
-      horaInicio &&
-      horaFinal &&
-      intervalDays !== null
+      FECHA_INICIO &&
+      FECHA_FINAL &&
+      HORA_INICIO &&
+      HORA_FINAL &&
+      INTERVALO_DIAS !== null
     ) {
-      fechaInicio.setHours(
-        parseInt(horaInicio.split(':')[0], 10),
-        parseInt(horaInicio.split(':')[1], 10)
+      FECHA_INICIO.setHours(
+        parseInt(HORA_INICIO.split(':')[0], 10),
+        parseInt(HORA_INICIO.split(':')[1], 10)
       );
-      fechaFinal.setHours(
-        parseInt(horaFinal.split(':')[0], 10),
-        parseInt(horaFinal.split(':')[1], 10)
+      FECHA_FINAL.setHours(
+        parseInt(HORA_FINAL.split(':')[0], 10),
+        parseInt(HORA_FINAL.split(':')[1], 10)
       );
-      const differenceInTime = fechaFinal.getTime() - fechaInicio.getTime();
-      const differenceInHours = differenceInTime / (1000 * 3600);
+      const DIFERENCIA_EN_TIEMPO = FECHA_FINAL.getTime() - FECHA_INICIO.getTime();
+      const DIFERENCIA_EN_HORAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600);
 
-      if (differenceInTime <= 0) {
+      if (DIFERENCIA_EN_TIEMPO <= 0) {
         this.datosServicio.setErrors({ endDateBeforeStartDate: true });
         return;
       }
 
       if (
         this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL &&
-        differenceInHours > 24
+        DIFERENCIA_EN_HORAS > 24
       ) {
         this.datosServicio.setErrors({ invalidIntervalo: true });
         return;
       }
 
-      const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+      const DIFERENCIA_EN_DIAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600 * 24);
       if (
         (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL &&
-          differenceInDays > 7) ||
+          DIFERENCIA_EN_DIAS > 7) ||
         (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.MENSUAL &&
-          differenceInDays > 30)
+          DIFERENCIA_EN_DIAS > 30)
       ) {
-        this.datosServicio
-          .get('fechaFinal')!
-          .setErrors({ invalidIntervalo: true });
-        return;
+
+        const FECHA_FINAL_CONTROL = this.datosServicio.get('fechaFinal');
+        if (FECHA_FINAL_CONTROL) {
+          FECHA_FINAL_CONTROL.setErrors({ invalidIntervalo: true });
+        }
+        // return { invalidIntervalo: true };
       }
 
+      if (DIFERENCIA_EN_TIEMPO < 0) {
+        this.datosServicio.setErrors({ endDateBeforeStartDate: true });
+      }
     }
   }
 
@@ -559,6 +573,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param {number} intervalo - El tipo de intervalo, que puede ser uno de los valores definidos en TIPO_SOLICITUD.
    * @returns {number | null} El número de días correspondiente al intervalo proporcionado, o null si el intervalo no es válido.
    */
+  // eslint-disable-next-line class-methods-use-this
   getIntervaloDias(intervalo: number): number | null {
     switch (intervalo) {
       case TIPO_SOLICITUD.INDIVIDUAL:
@@ -597,14 +612,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     form.get(field)?.disable();
   }
 
+  /**
+   * Selecciona el tipo de solicitud y actualiza el estado correspondiente.
+   *
+   * @returns {void} Esta función no retorna ningún valor.
+   */
   tipoSolicitudSeleccion(): void {
     this.tipoSolicitudSeleccionada = parseInt(
       this.FormSolicitud.get('tipoSolicitud')?.value,
       10
     );
 
-    const tipoSolicitud = this.FormSolicitud.get('tipoSolicitud')?.value;
-    this.tramite5701Store.setTipoSolicitud(tipoSolicitud);
+    const TIPO_SOLICITUD = this.FormSolicitud.get('tipoSolicitud')?.value;
+    this.tramite5701Store.setTipoSolicitud(TIPO_SOLICITUD);
   }
 
   obtenerRangoFechas(): void {
@@ -619,10 +639,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.colapsable = true;
   }
 
+  /**
+  * Alterna el estado de visibilidad del componente colapsable.
+  *
+  * @returns {void} No retorna ningún valor.
+  */
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
+  /**
+ * Selecciona una aduana y actualiza los campos correspondientes en el formulario.
+ *
+ * @param aduana - El objeto de tipo Catalogo que contiene la información de la aduana seleccionada.
+ * @returns {void}
+ */
   aduanaSeleccion(aduana: Catalogo): void {
     this.darValorCampoFormulario(this.despacho, 'idAduana', aduana.id);
     this.darValorCampoFormulario(
@@ -632,28 +663,43 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     );
     this.validacionPedimento = true;
 
-    const patente = this.formulariosService.convertirValorANumero(
+    const PATENTE = this.formulariosService.convertirValorANumero(
       this.despacho,
       'patente'
     );
-    const idAduana = this.formulariosService.convertirValorANumero(
+    const ID_ADUANA = this.formulariosService.convertirValorANumero(
       this.despacho,
       'idAduana'
     );
 
     this.datosPedimentoComponente = {
-      patente: patente,
-      idAduana: idAduana,
+      patente: PATENTE,
+      idAduana: ID_ADUANA,
     };
   }
 
+  /**
+   * Valida el campo de la aduana en el formulario.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
   validaCampoPedimento(): void {
-    const aduanaValidacion = this.isValid(this.despacho, 'descripcionAduana');
-    if (aduanaValidacion === null) {
+    const ADUANA_VALIDACION = this.isValid(this.despacho, 'descripcionAduana');
+    if (ADUANA_VALIDACION === null) {
       this.validacionPedimento = true;
     }
   }
 
+
+  /**
+   * Establece el valor de un campo en un formulario.
+   *
+   * @param {FormGroup} form - El formulario en el que se va a establecer el valor del campo.
+   * @param {string} field - El nombre del campo en el formulario cuyo valor se va a establecer.
+   * @param {string | number} valor - El valor que se va a establecer en el campo.
+   * @returns {void} No retorna ningún valor.
+   */
+  // eslint-disable-next-line class-methods-use-this
   darValorCampoFormulario(
     form: FormGroup,
     field: string,
@@ -662,6 +708,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     form.get(field)?.setValue(valor);
   }
 
+
+  /**
+   * Activa el input de idSocioComercial si se selecciona un socio comercial.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
   socioComercialChange(): void {
     const SOCIO_COMERCIAL =
       this.datosImportadorExportador.get('socioComercial')?.value;
