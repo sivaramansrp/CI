@@ -28,6 +28,7 @@ import { BandejaTareasPendientesComponent } from './bandejaPendientes/bandeja-ta
     BandejaTareasPendientesComponent,
 ],
   providers: [
+    ToastrService,
     provideToastr({
       positionClass: 'toast-top-right',
     }),

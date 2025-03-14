@@ -1,14 +1,12 @@
 <div class="page">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8">
-          <h2>Evaluar solicitud</h2>
-        </div>
+  <div class="container bg-light">
+    <div class="row">
+      <div class="col-md-8">
+        <h2>Evaluar solicitud</h2>
       </div>
-      <lib-encabezado-requerimiento
-        [numFolioTramite]="'02309482934723832'"
-        [tipoTramite]="'Registro de solicitud de servicios extraordinarios'"
-      ></lib-encabezado-requerimiento>
+    </div>
+    <lib-encabezado-requerimiento [numFolioTramite]="'02309482934723832'"
+      [tipoTramite]="'Registro de solicitud de servicios extraordinarios'"></lib-encabezado-requerimiento>
     <br>
     <div class="row margin-top">
       <ul class="nav nav-tabs justify-content-center">
@@ -24,18 +22,18 @@
       <ng-container>
         @switch (indice) {
         @case (1) {
-          <app-generar-dictamen></app-generar-dictamen>
+        <app-generar-dictamen></app-generar-dictamen>
         }
         @case (2) {
-          <app-requerimiento-informacion></app-requerimiento-informacion>
-        } 
+        <app-requerimiento-informacion></app-requerimiento-informacion>
+        }
         }
       </ng-container>
-
     </div>
     <div class="d-flex justify-content-lg-end">
-        <button type="button" class="btn btn-default ms-2">Cancelar</button> 
-        <button class="btn  btn-primary ms-2" type="button" (click)="guardarFirmar()">Guardar y firmar</button>
-  </div>
+      <button type="button" class="btn btn-default ms-2">Cancelar</button>
+      <button *ngIf="!firmar" class="btn  btn-primary ms-2" type="button" (click)="guardarFirmar()">Continuar</button>
+      <button *ngIf="firmar" class="btn  btn-primary ms-2" type="button">Guardar y firmar</button>
     </div>
+  </div>
 </div>

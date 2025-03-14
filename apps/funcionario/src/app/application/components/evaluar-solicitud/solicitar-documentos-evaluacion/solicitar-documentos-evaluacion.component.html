@@ -1,10 +1,11 @@
 <div class="container rounded p-3 bg-light">
     <div class="row padding-top">
-        <form>
+        <form [formGroup]="formSolicitudDocumentos">
             <h5>Agregar Documento</h5>
             <div class="col-md-12">
                 <div class="row ">
                     <div class="col-md-6">
+                      <br>
                         <table class="table table-bordered mt-3">
                             <thead class="table-light">
                               <tr>
@@ -25,12 +26,11 @@
                           </table>
                     </div>
                     <div class="col-md-6">
-                      <select class="form-select" [(ngModel)]="documentoSeleccionado" name="documento">
-                        <option value="" disabled selected>Seleccione un tipo de documento</option>
-                        <option *ngFor="let doc of documentos" [value]="doc">{{ doc }}</option>
-                      </select>
-                        <br>
-                        <button class="btn btn-primary" (click)="agregarDocumento()">Agregar nuevo</button>
+                      <app-catalogo-select [catalogo]="catTipoDocumento" formControlName="tipoDocumento" [label]="'Tipo documento'"
+                      [required]="true" name="tipoDocumento" (change)="tipoDocumentoSeleccionado()"></app-catalogo-select>
+                      <br>
+                    <button class="btn btn-primary" (click)="agregarDocumento()">Agregar nuevo</button>
+                    <br>
                     </div>
                 </div>
             </div>

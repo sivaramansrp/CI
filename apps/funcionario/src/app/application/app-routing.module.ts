@@ -16,6 +16,16 @@ const ROUTES: Routes = [
         (m) => m.FuncionarioModule
       ),
   },
+  {
+    path: 'notificaciones',
+    loadChildren: () =>
+      import('./notificaciones/notificaciones.module').then(
+        (m) => m.NotificacionesModule
+      ),
+  },
+  { path: 'firma-electronica',
+    component: FirmaPageComponent
+  }
   { path: 'firma-electronica', component: FirmaPageComponent },
   { path: 'acuse', component: AcusePageComponent }
 

@@ -2,8 +2,8 @@ import { forwardRef, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FuncionarioRoutingModule } from './funcionario-routing.module';
-import { GenerarDictamenComponent } from './evaluar-solicitud/generar-dictamen/generar-dictamen.component';
-import { SolicitudPageComponent } from './evaluar-solicitud/solicitud-page/solicitud-page.component';
+import { CatalogoSelectComponent, CatalogosService, FirmaPageComponent, SelectCatalogosComponent } from '@libs/shared/data-access-user/src';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 
 @NgModule({
@@ -12,6 +12,14 @@ import { SolicitudPageComponent } from './evaluar-solicitud/solicitud-page/solic
   imports: [
     CommonModule,
     FuncionarioRoutingModule,
+    forwardRef(() => SelectCatalogosComponent),
+    forwardRef(() => CatalogoSelectComponent),
+    forwardRef(() => FirmaPageComponent),
+    ToastrModule.forRoot()
+  ],
+  providers: [
+    ToastrService,
+    CatalogosService
   ]
 })
 export class FuncionarioModule { }
