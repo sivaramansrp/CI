@@ -98,7 +98,7 @@ export class AnexarDocumentosComponent {
         this.token = resp.jwt;
       },
       error: (error): void => {
-        console.log(error);
+        return error;
       },
     });
   }
