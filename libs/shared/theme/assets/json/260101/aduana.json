@@ -1,0 +1,19 @@
+{
+    "labelNombre": "Aduana",
+    "required": "true",
+    "primerOpcion": "Selecciona un valor",
+    "catalogos": [
+        {
+            "id": 1,
+            "descripcion": "TECATE"
+        },
+        {
+            "id": 2,
+            "descripcion": "TIJUANA"
+        },
+        {
+            "id": 3,
+            "descripcion": "TUXPAN,VER,"
+        }
+    ]
+}

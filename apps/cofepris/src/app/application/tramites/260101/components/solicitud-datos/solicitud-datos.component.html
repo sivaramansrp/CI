@@ -1,0 +1,218 @@
+<div class="row mt-5">
+  <div class="col-md-12">
+    <div class="panel-group ficha-collapse" id="accordion">
+      <div class="panel panel-default">
+        <div
+          class="panel-heading"
+          (click)="mostrarColapsable()"
+          (keyup.enter)="mostrarColapsable()"
+          tabindex="0"
+        >
+          <h4 class="panel-title">
+            <a aria-label="Repeat"
+              ><i class="bi bi-repeat" aria-hidden="true"></i
+            ></a>
+            <span> Opciones de pre-IIenado de Solicitud</span>
+          </h4>
+          <button
+            type="button"
+            class="collpase-button collapsed"
+            (keydown)="mostrarColapsable()"
+          ></button>
+        </div>
+        @if(colapsable){
+        <div class="panel-collapse collapse in" id="panel-01">
+          <div class="panel-body">
+            <ng-alert [CONTENIDO]="TEXTOS.TEXTOS_SOLICITUD"></ng-alert>
+            <div class="col-md-12 mr-0">
+              <label for="solicitud">Solicitud</label>
+            </div>
+            <div class="col-md-12">
+              <table class="table table-responsive table-striped">
+                <thead>
+                  <tr>
+                    @for (item of tablaHeadData; track $index) {
+                    <th>{{ item }}</th>
+                    }
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of tablaFilaDatos; let i = $index; track i) {
+                  <tr>
+                    <td>{{ item.fechaCreacion }}</td>
+                    <td (click)="updateSCIANData(tablaFilaDatos, i)">
+                      {{ item.mercancia }}
+                    </td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>{{ item.proovedor }}</td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <ng-titulo titulo="Datos del establecimiento" />
+  </div>
+
+  <div class="col-md-12 d-flex align-items-end">
+    <div class="btn-group">
+      <button class="btn btn-primary ms-2" type="button">
+        Seleccionar establecimiento
+      </button>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <label class="form-label" for="">Denominacion o razón social*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label" for="">Correo electrónico*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+
+  <div class="col-md-12">
+    <ng-titulo titulo="Domicilio del establecimiento" />
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label" for="">Código postal*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label" for="">Estado*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label" for="">Municipio y alcaldía*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label" for="">Localidad:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label" for="">Colonia*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+
+  <div class="col-md-8">
+    <label class="form-label" for="">Calle*:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+
+  <div class="row">
+    <div class="col-md-1">
+      <label class="form-label" for="">Lada:</label>
+      <input class="form-control" id="" placeholder="" type="text" />
+    </div>
+    <div class="col-md-3">
+      <label class="form-label" for="">Teléfono*:</label>
+      <input class="form-control" id="" placeholder="" type="text" />
+    </div>
+  </div>
+
+  <div class="col-md-12 mt-5">
+    <label class="form-label mb-5" for="">S.C.I.A.N.*:</label>
+    <ng-table
+      [commonTableHeader]="tableDataSCIAN.tableHeader"
+      [commonTableBody]="tableDataSCIAN.tableBody"
+    ></ng-table>
+  </div>
+
+  <div class="col-md-4">
+    <div class="form-check mt-3">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="flexCheckDefault"
+        aria-label="Aviso de funcionamiento"
+      />
+      <label class="control-label" for="flexCheckDefault">
+        Aviso de funcionamiento
+      </label>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label" for="">No. de licencia sanitaria:</label>
+    <input class="form-control" id="" placeholder="" type="text" />
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-check mt-3">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="flexCheckDefault"
+        aria-label="Aviso de funcionamiento"
+      />
+      <label class="control-label" for="flexCheckDefault">
+        Marcar en caso de que sea VIVO/FRESCO/ENHIELADO
+      </label>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <app-catalogo-select
+      [id]="'regimenCatalogo'"
+      [catalogo]="regimenCatalogo.catalogos"
+      [label]="regimenCatalogo.labelNombre"
+      [placeholder]="regimenCatalogo.primerOpcion"
+      [required]="regimenCatalogo.required"
+    >
+    </app-catalogo-select>
+  </div>
+
+  <div class="col-md-4">
+    <app-catalogo-select
+      [id]="'aduana'"
+      [catalogo]="aduanaCatalogo.catalogos"
+      [label]="aduanaCatalogo.labelNombre"
+      [placeholder]="aduanaCatalogo.primerOpcion"
+      [required]="aduanaCatalogo.required"
+    >
+    </app-catalogo-select>
+  </div>
+
+  <div class="col-md-12 mt-5">
+    <label class="form-label mb-5" for="">mercancías*:</label>
+    <ng-table
+      [commonTableHeader]="tableDataMercancias.tableHeader"
+      [commonTableBody]="tableDataMercancias.tableBody"
+    ></ng-table>
+  </div>
+
+  <div class="col-md-12 d-flex align-items-end">
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-space">Modificar</button>
+      <button class="btn btn-default" type="button">Eliminar</button>
+      <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal">
+        Agregar
+      </button>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <!-- <app-input-radio 
+    [description]=""
+    [showDescription]=""
+    [radioOptions]=""
+    [selectedValue]=""
+    [isRequired]=""
+    > 
+  </app-input-radio> -->
+  </div>
+</div>
