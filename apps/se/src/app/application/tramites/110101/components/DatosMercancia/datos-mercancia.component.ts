@@ -1,15 +1,19 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 /* eslint-disable sort-imports */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { DatosMercanciaStore } from '../../estados/tramites/datos-mercancia110101.store';
+import { DatosMercanciaQuery } from '../../estados/queries/datos-mercancia110101.query';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { ELVALORALERTA } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { INTRODUZCA_NUMERO, REQUERIDO } from 'libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 import mercancia from 'libs/shared/theme/assets/json/110101/mercancia.json'
+import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
 /**
 * Este componente se utiliza para mostrar la forma del datosdelamercancia. - 110101
@@ -17,13 +21,13 @@ import mercancia from 'libs/shared/theme/assets/json/110101/mercancia.json'
 * @returns Validaciones del formulario
 */
 @Component({
-  selector: 'app-datos-de-la',
-  templateUrl: './datos-de-la.component.html',
-  styleUrl: './datos-de-la.component.scss',
+  selector: 'app-datos-mercancia',
+  templateUrl: './datos-mercancia.component.html',
+  styleUrl: './datos-mercancia.component.scss',
   standalone: true,
   imports: [TituloComponent, CommonModule, AlertComponent, ReactiveFormsModule]
 })
-export class DatosDeLaComponent implements OnInit {
+export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   /**
    * Una cadena que representa la clase CSS para una alerta de advertencia.
@@ -41,6 +45,17 @@ export class DatosDeLaComponent implements OnInit {
    * Este formulario se utiliza para capturar y validar los datos relacionados con Mercancia.
    */
   public formMercancia!: FormGroup;
+
+  /**
+   * **Subject para manejar la destrucción del componente**
+   * 
+   * Este `Subject` se utiliza para cancelar suscripciones y evitar 
+   * fugas de memoria cuando el componente es destruido.
+   * Se usa comúnmente en el operador `takeUntil` dentro de los observables.
+   */
+  private destroy$ = new Subject<void>();
+
+
   /** Adición de color de fondo dinámico al área de texto */
   public booleanVariable = '#cccccc';
   /**
@@ -67,7 +82,9 @@ export class DatosDeLaComponent implements OnInit {
  * @param validacionesService: Validaciones comunes del formulario.
  */
   constructor(private fb: FormBuilder,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private datosDeLaStore: DatosMercanciaStore,
+    private datosDeLaQuery: DatosMercanciaQuery
   ) {
     this.createFormMercancia();
   }
@@ -79,6 +96,10 @@ export class DatosDeLaComponent implements OnInit {
 
   ngOnInit(): void {
     this.getFormDatosDeMercancia();
+    this.obtenerDatosFormularioDesdeStore();
+    this.formMercancia.valueChanges
+      .pipe(distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe(() => this.actualizarStore());
   }
 
   /**
@@ -122,4 +143,45 @@ export class DatosDeLaComponent implements OnInit {
   isValid(field: string): boolean | null {
     return this.validacionesService.isValid(this.formMercancia, field);
   }
+
+  /**
+   * **Obtiene los valores del formulario desde el store y los aplica al formulario**
+   * 
+   * - Se suscribe a `formValues$` de `datosDeLaQuery` para recibir los valores almacenados en el estado.
+   * - Si existen valores, los asigna al formulario `formMercancia` sin disparar eventos (`emitEvent: false`).
+   * - La suscripción se gestiona con `takeUntil(this.destroy$)` para evitar fugas de memoria.
+   */
+  private obtenerDatosFormularioDesdeStore(): void {
+    this.datosDeLaQuery.formValues$
+      .pipe(takeUntil(this.destroy$)) // Cleanup on destroy
+      .subscribe((formValues) => {
+        if (formValues) {
+          this.formMercancia.patchValue(formValues, { emitEvent: false }); // Prevents triggering valueChanges
+        }
+      });
+  }
+  /**
+   * **Actualiza el estado del store con los valores actuales del formulario**
+   * 
+   * - Obtiene los valores actuales del formulario `formMercancia`.
+   * - Llama al método `updateFormValues` del store para actualizar el estado.
+   * - Centraliza la lógica de actualización en el store, manteniendo el componente más limpio.
+   */
+  private actualizarStore(): void {
+    const NEWVALUES = this.formMercancia.value;
+    this.datosDeLaStore.actualizarValoresFormulario(NEWVALUES);
+  }
+
+  /**
+   * **Limpia los recursos y finaliza las suscripciones al destruir el componente**
+   * 
+   * - `this.destroy$.next();` emite un valor para notificar a los observables dependientes que deben completarse.
+   * - `this.destroy$.complete();` finaliza el `Subject` para liberar memoria y evitar fugas de memoria.
+   * - Este método se ejecuta automáticamente cuando el componente se destruye, asegurando una gestión eficiente de las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
 }
