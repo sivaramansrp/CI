@@ -14,12 +14,6 @@
             [layout]="'horizontal'"
             formControlName="exentoPago"
             (valueChange)="cambioValorRadio('exentoPago', $event.toString())"
-            (change)="
-            setValoresStore(
-              formularioPago,
-              'exentoPago'
-            )
-          " 
           ></app-input-radio>
         </div>
       </div>
@@ -31,7 +25,7 @@
               formControlName="justificacion"
               [label]="'Justificación'"
               [required]="true"
-              name="justificacion"
+              [isDisabled]="false"
               (change)="
               setValoresStore(
                 formularioPago,
@@ -155,6 +149,8 @@
           <input-fecha
             [datos]="fechaFinalInput"
             (valorCambiado)="cambioFechaFinal($event)"
+            name="fechaPago"
+            formControlName="fechaPago"
           ></input-fecha>
         </div>
         <div class="col-md-4 form-group">

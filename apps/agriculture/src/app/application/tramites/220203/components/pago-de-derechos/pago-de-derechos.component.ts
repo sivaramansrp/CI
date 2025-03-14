@@ -38,7 +38,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @description Valor seleccionado para la exención de pago.
    * @type {string}
    */
-  exentoPagoValor = 'Si';
+  exentoPagoValor: string = 'Si';
 
   /**
    * @description Catálogo de justificaciones para la exención de pago.
@@ -59,7 +59,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   fechaFinalInput: InputFecha = FECHA_SALIDA_ACUICULTURA;
 
   private destroyNotifier$ = new Subject<void>();
-
+  formularioPagoStore: FormularioPago = {} as FormularioPago;
   /**
    * @description Constructor que inicializa el servicio de formularios y el servicio de importación de acuicultura.
    * @param {FormBuilder} fb FormBuilder para la creación de formularios reactivos.
@@ -69,14 +69,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private readonly importacionAcuiculturaServicio: ImportacionDeAcuiculturaService
   ) {
-    this.crearFormularioPago();
+    this.importacionAcuiculturaServicio.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+      this.formularioPagoStore = datos.formularioPago
+    })
+
   }
 
   /**
    * @description Método de inicialización del componente.
    */
   ngOnInit(): void {
-
+    this.crearFormularioPago();
+    this.exentoPagoValor = this.exentoPagoValor == this.formularioPago?.value.exentoPago ? this.exentoPagoRadio : this.formularioPago?.value.exentoPago;
     this.formularioPago.statusChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -96,20 +100,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @description Crea el formulario de pago según el valor de `exentoPagoValor`.
    */
   private crearFormularioPago(): void {
-    this.importacionAcuiculturaServicio.obtenerDatos().subscribe((data) => {
-      console.log(data.formularioPago);
-      const ESEXENTO = this.exentoPagoValor === 'Si';
-      this.formularioPago = this.fb.group({
-        exentoPago: [data.formularioPago.exentoPago, Validators.required],
-        justificacion: [data.formularioPago.justificacion || '', Validators.required],
-        claveReferencia: [{ value: data.formularioPago.claveReferencia || '', disabled: true }, Validators.required],
-        cadenaDependencia: [{ value: data.formularioPago.cadenaDependencia || '', disabled: true }, Validators.required],
-        banco: [data.formularioPago.cadenaDependencia || '', Validators.required],
-        llavePago: [{ value: data.formularioPago.llavePago || '', disabled: ESEXENTO }, Validators.required],
-        fechaPago: [{ value: data.formularioPago.fechaPago || '', disabled: true }, Validators.required],
-        importePago: [{ value: data.formularioPago.importePago || '', disabled: true }, Validators.required],
-      });
-    })
+    const ESEXENTO = this.formularioPagoStore.exentoPago === 'Si';
+    this.formularioPago = this.fb.group({
+      exentoPago: [this.formularioPagoStore.exentoPago || 'Si', Validators.required],
+      justificacion: [this.formularioPagoStore.justificacion, Validators.required],
+      claveReferencia: [{ value: this.formularioPagoStore.claveReferencia, disabled: true }, Validators.required],
+      cadenaDependencia: [{ value: this.formularioPagoStore.cadenaDependencia, disabled: true }, Validators.required],
+      banco: [this.formularioPagoStore.banco, Validators.required],
+      llavePago: [{ value: this.formularioPagoStore.llavePago, disabled: ESEXENTO }, Validators.required],
+      fechaPago: [{ value: this.formularioPagoStore.fechaPago, disabled: true }, Validators.required],
+      importePago: [{ value: this.formularioPagoStore.importePago, disabled: true }, Validators.required],
+    });
   }
 
   /**
@@ -119,9 +120,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   cambioValorRadio(nombreControl: string, valor: string): void {
     this.formularioPago.patchValue({
-      [nombreControl]: valor,
+      exentoPago: valor as string,
     });
     this.exentoPagoValor = valor;
+    this.setValoresStore(this.formularioPago, valor);
     this.crearFormularioPago();
   }
 
@@ -174,19 +176,60 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         console.error(error);
       });
   }
-
   /**
    * @description Actualiza el valor de un campo en el formulario y lo guarda en el servicio de importación de acuicultura.
-   * @param {FormGroup} form El formulario con el campo que se está actualizando.
+   * @param {FormGroup} formulario El formulario con el campo que se está actualizando.
    * @param {string} campo El nombre del campo que se actualizará.
    */
   setValoresStore(
-    form: FormGroup,
+    formulario: FormGroup,
     campo: string,
   ): void {
+    this.actualizarValorAleatorio();
     const VALOR = this.formularioPago.value;
-    console.log(this.formularioPago.value);
-    (this.importacionAcuiculturaServicio.actualizarFormularioPago as (value: FormularioPago) => void)(VALOR);
+    (this.importacionAcuiculturaServicio.actualizarFormularioPago as (valor: FormularioPago) => void)(VALOR);
+  }
+
+  /**
+   * @description Actualiza los valores del formulario con valores predeterminados según las condiciones.
+   */
+  actualizarValorAleatorio(): void {
+    const HOY = this.formatearFecha(new Date());
+
+    // Si 'justificacion' no está vacío y 'exentoPago' es 'Si', actualizamos ciertos campos
+    if (this.formularioPago.value.justificacion != '' && this.formularioPagoStore.exentoPago == 'Si') {
+      this.formularioPago.patchValue({
+        claveReferencia: 'valor',
+        cadenaDependencia: 'valor',
+        banco: '170',
+        llavePago: 'valor',
+        fechaPago: HOY,
+        importePago: 'valor',
+      });
+    }
+    // Si 'banco' no está vacío y 'exentoPago' es 'No', actualizamos ciertos campos
+    else if (this.formularioPago.value.banco != '' && this.formularioPagoStore.exentoPago == 'No') {
+      this.formularioPago.patchValue({
+        justificacion: '170',
+        claveReferencia: 'valor',
+        cadenaDependencia: 'valor',
+        fechaPago: HOY,
+        importePago: 'valor',
+      });
+    }
+  }
+
+  /**
+   * @description Formatea la fecha en formato DD/MM/YYYY.
+   * @param {Date} fecha La fecha a formatear.
+   * @returns {string} La fecha formateada.
+   */
+  formatearFecha(fecha: Date): string {
+    const dia = fecha.getDate().toString().padStart(2, '0'); // Asegura que el día tenga 2 dígitos
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // Asegura que el mes tenga 2 dígitos
+    const año = fecha.getFullYear();
+
+    return `${dia}/${mes}/${año}`;
   }
 
   /**
