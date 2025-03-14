@@ -201,22 +201,3 @@
     </div>
   </div>
 </div>
-
-<!-- Modal -->
-<div class="modal" [ngClass]="modal" id="modalConfirmacion" #modalConfirmacion tabindex="-1"
-     aria-labelledby="modalConfirmacionLabel" aria-hidden="true" data-bs-backdrop="static">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Eliminar archivo</h4>
-      </div>
-      <div class="modal-body">
-        <p>¿Desea eliminar el archivo</p>
-      </div>
-      <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" (click)="cerrarModal()">Cerrar</button>
-        <button type="button" class="btn btn-primary" (click)="eliminarDocumento(indiceDocumento)">Eliminar</button>
-      </div>
-    </div>
-  </div>
-</div>
