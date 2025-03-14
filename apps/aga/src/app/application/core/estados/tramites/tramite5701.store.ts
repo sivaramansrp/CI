@@ -144,308 +144,308 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    *
    * @param tipoSolicitud - El tipo de solicitud que se va a guardar.
    */
-  public setTipoSolicitud(tipoSolicitud: string) {
+  public setTipoSolicitud(tipoSolicitud: string): void {
     this.update((state) => ({
       ...state,
       tipoSolicitud,
     }));
   }
 
-  public setRfcImportExport(rfcImportExport: string) {
+  public setRfcImportExport(rfcImportExport: string): void {
     this.update((state) => ({
       ...state,
       rfcImportExport,
     }));
   }
 
-  public setNombreImportExport(nombreImportExport: string) {
+  public setNombreImportExport(nombreImportExport: string): void {
     this.update((state) => ({
       ...state,
       nombreImportExport,
     }));
   }
 
-  public setNroRegistro(nroRegistro: string) {
+  public setNroRegistro(nroRegistro: string): void {
     this.update((state) => ({
       ...state,
       nroRegistro,
     }));
   }
 
-  public setProgramaFomento(programaFomento: string) {
+  public setProgramaFomento(programaFomento: string): void {
     this.update((state) => ({
       ...state,
       programaFomento,
     }));
   }
 
-  public setImmex(immex: string) {
+  public setImmex(immex: string): void {
     this.update((state) => ({
       ...state,
       immex,
     }));
   }
 
-  public setImmexValue(immexValue: string) {
+  public setImmexValue(immexValue: string): void {
     this.update((state) => ({
       ...state,
       immexValue,
     }));
   }
 
-  public setIndustriaAutomotriz(industriaAutomotriz: string) {
+  public setIndustriaAutomotriz(industriaAutomotriz: string): void {
     this.update((state) => ({
       ...state,
       industriaAutomotriz,
     }));
   }
 
-  public setTipoEmpresaCertificada(tipoEmpresaCertificada: string) {
+  public setTipoEmpresaCertificada(tipoEmpresaCertificada: string): void {
     this.update((state) => ({
       ...state,
       tipoEmpresaCertificada,
     }));
   }
 
-  public setIdSocioComercial(idSocioComercial: string) {
+  public setIdSocioComercial(idSocioComercial: string): void {
     this.update((state) => ({
       ...state,
       idSocioComercial,
     }));
   }
 
-  public setSocioComercial(socioComercial: boolean) {
+  public setSocioComercial(socioComercial: boolean): void {
     this.update((state) => ({
       ...state,
       socioComercial,
     }));
   }
 
-  public setOpEconomicoAut(opEconomicoAut: boolean) {
+  public setOpEconomicoAut(opEconomicoAut: boolean): void {
     this.update((state) => ({
       ...state,
       opEconomicoAut,
     }));
   }
 
-  public setRevisionOrigen(revisionOrigen: boolean) {
+  public setRevisionOrigen(revisionOrigen: boolean): void {
     this.update((state) => ({
       ...state,
       revisionOrigen,
     }));
   }
 
-  public setFechaInicio(fechaInicio: string) {
+  public setFechaInicio(fechaInicio: string): void {
     this.update((state) => ({
       ...state,
       fechaInicio,
     }));
   }
 
-  public setHoraInicio(horaInicio: string) {
+  public setHoraInicio(horaInicio: string): void {
     this.update((state) => ({
       ...state,
       horaInicio,
     }));
   }
 
-  public setFechaFinal(fechaFinal: string) {
+  public setFechaFinal(fechaFinal: string): void {
     this.update((state) => ({
       ...state,
       fechaFinal,
     }));
   }
 
-  public setHoraFinal(horaFinal: string) {
+  public setHoraFinal(horaFinal: string): void {
     this.update((state) => ({
       ...state,
       horaFinal,
     }));
   }
 
-  public setFechasSeleccionadas(fechasSeleccionadas: string[]) {
+  public setFechasSeleccionadas(fechasSeleccionadas: string[]): void {
     this.update((state) => ({
       ...state,
       fechasSeleccionadas,
     }));
   }
 
-  public setDespacho(despacho: string) {
+  public setDespacho(despacho: string): void {
     this.update((state) => ({
       ...state,
       despacho,
     }));
   }
 
-  public setRfcAutorizacion(rfcAutorizacion: string) {
+  public setRfcAutorizacion(rfcAutorizacion: string): void {
     this.update((state) => ({
       ...state,
       rfcAutorizacion,
     }));
   }
 
-  public setDdexAutorizacion(ddexAutorizacion: string) {
+  public setDdexAutorizacion(ddexAutorizacion: string): void {
     this.update((state) => ({
       ...state,
       ddexAutorizacion,
     }));
   }
 
-  public setIdAduana(idAduana: string) {
+  public setIdAduana(idAduana: string): void {
     this.update((state) => ({
       ...state,
       idAduana,
     }));
   }
 
-  public setDescripcionAduana(descripcionAduana: string) {
+  public setDescripcionAduana(descripcionAduana: string): void {
     this.update((state) => ({
       ...state,
       descripcionAduana,
     }));
   }
 
-  public setIdSeccionAduanera(idSeccionAduanera: string) {
+  public setIdSeccionAduanera(idSeccionAduanera: string): void {
     this.update((state) => ({
       ...state,
       idSeccionAduanera,
     }));
   }
 
-  public setSeccionAduanera(seccionAduanera: string) {
+  public setSeccionAduanera(seccionAduanera: string): void {
     this.update((state) => ({
       ...state,
       seccionAduanera,
     }));
   }
 
-  public setNombreRecinto(nombreRecinto: string) {
+  public setNombreRecinto(nombreRecinto: string): void {
     this.update((state) => ({
       ...state,
       nombreRecinto,
     }));
   }
 
-  public setTipoDespacho(tipoDespacho: string) {
+  public setTipoDespacho(tipoDespacho: string): void {
     this.update((state) => ({
       ...state,
       tipoDespacho,
     }));
   }
 
-  public setTipoOperacion(tipoOperacion: string) {
+  public setTipoOperacion(tipoOperacion: string): void {
     this.update((state) => ({
       ...state,
       tipoOperacion,
     }));
   }
 
-  public setPatente(patente: string) {
+  public setPatente(patente: string): void {
     this.update((state) => ({
       ...state,
       patente,
     }));
   }
 
-  public setRelacionSociedad(relacionSociedad: boolean) {
+  public setRelacionSociedad(relacionSociedad: boolean): void {
     this.update((state) => ({
       ...state,
       relacionSociedad,
     }));
   }
 
-  public setEncargoConferido(encargoConferido: boolean) {
+  public setEncargoConferido(encargoConferido: boolean): void {
     this.update((state) => ({
       ...state,
       encargoConferido,
     }));
   }
 
-  public setDomicilio(domicilio: string) {
+  public setDomicilio(domicilio: string): void {
     this.update((state) => ({
       ...state,
       domicilio,
     }));
   }
 
-  public setPaisOrigen(paisOrigen: number) {
+  public setPaisOrigen(paisOrigen: number): void {
     this.update((state) => ({
       ...state,
       paisOrigen,
     }));
   }
 
-  public setPaisProcedencia(paisProcedencia: number) {
+  public setPaisProcedencia(paisProcedencia: number): void {
     this.update((state) => ({
       ...state,
       paisProcedencia,
     }));
   }
 
-  public setDescripcion(descripcion: string) {
+  public setDescripcion(descripcion: string): void {
     this.update((state) => ({
       ...state,
       descripcion,
     }));
   }
 
-  public setJustificacion(justificacion: string) {
+  public setJustificacion(justificacion: string): void {
     this.update((state) => ({
       ...state,
       justificacion,
     }));
   }
 
-  public setidPedimento(idPedimento: number) {
+  public setidPedimento(idPedimento: number): void {
     this.update((state) => ({
       ...state,
       idPedimento,
     }));
   }
 
-  public setPatentePedimento(patentePedimento: number) {
+  public setPatentePedimento(patentePedimento: number): void {
     this.update((state) => ({
       ...state,
       patentePedimento,
     }));
   }
 
-  public setPedimento(pedimento: string) {
+  public setPedimento(pedimento: string): void {
     this.update((state) => ({
       ...state,
       pedimento,
     }));
   }
 
-  public setAduana(aduana: number) {
+  public setAduana(aduana: number): void {
     this.update((state) => ({
       ...state,
       aduana,
     }));
   }
 
-  public setTipoPedimento(tipoPedimento: string) {
+  public setTipoPedimento(tipoPedimento: string): void {
     this.update((state) => ({
       ...state,
       tipoPedimento,
     }));
   }
 
-  public setNumero(numero: number) {
+  public setNumero(numero: number): void {
     this.update((state) => ({
       ...state,
       numero,
     }));
   }
 
-  public setComprobanteValor(comprobanteValor: string) {
+  public setComprobanteValor(comprobanteValor: string): void {
     this.update((state) => ({
       ...state,
       comprobanteValor,
     }));
   }
 
-  public setPedimentoValidado(pedimentoValidado: boolean) {
+  public setPedimentoValidado(pedimentoValidado: boolean): void {
     this.update((state) => ({
       ...state,
       pedimentoValidado,
@@ -454,42 +454,42 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
 
   public setPersonasResponsablesDespacho(
     personasResponsablesDespacho: ResponsablesDespacho[]
-  ) {
+  ): void {
     this.update((state) => ({
       ...state,
       personasResponsablesDespacho,
     }));
   }
 
-  public setTransporte(transporte: string[]) {
+  public setTransporte(transporte: string[]): void {
     this.update((state) => ({
       ...state,
       transporte,
     }));
   }
 
-  public setMontoPagar(montoPagar: string) {
+  public setMontoPagar(montoPagar: string): void {
     this.update((state) => ({
       ...state,
       montoPagar,
     }));
   }
 
-  public setLineaCaptura(lineaCaptura: string) {
+  public setLineaCaptura(lineaCaptura: string): void {
     this.update((state) => ({
       ...state,
       lineaCaptura,
     }));
   }
 
-  public setMonto(montoModal: string) {
+  public setMonto(montoModal: string): void {
     this.update((state) => ({
       ...state,
       montoModal,
     }));
   }
 
-  public setTercerosRelacionados(tercerosRelacionados: Personas[]) {
+  public setTercerosRelacionados(tercerosRelacionados: Personas[]): void {
     this.update((state) => ({
       ...state,
       tercerosRelacionados,
@@ -499,7 +499,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
   /**
    * Limpia los datos de la solicitud
    */
-  public limpiarSolicitud() {
+  public limpiarSolicitud(): void {
     this.reset();
   }
 }

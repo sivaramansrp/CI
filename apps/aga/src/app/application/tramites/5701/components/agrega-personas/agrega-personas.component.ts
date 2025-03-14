@@ -35,20 +35,20 @@ export class AgregaPersonasComponent {
     private validacionesService: ValidacionesFormularioService
   ) {}
 
-  isValid(field: string) {
+  isValid(field: string): boolean | null{
     return this.validacionesService.isValid(this.personaForm, field);
   }
 
-  get gafeteIsValid() {
+  get gafeteIsValid(): boolean | null {
     return this.gafete.errors && this.gafete.touched;
   }
 
-  buscarGafete() {
+  buscarGafete(): void {
     // Aquí va a buscar por gafete a un endpoint
 
-    const gafete = this.gafete.value;
+    const GAFETE = this.gafete.value;
 
-    if (!gafete) {
+    if (!GAFETE) {
       alert('No has proporcionado información que es requerida.');
       return;
     }
@@ -58,27 +58,26 @@ export class AgregaPersonasComponent {
         'No se encontraron datos con el número de gafete, intenta de nuevo o agrega los datos restantes.'
       );
       this.habilitarCamposFormulario();
-      return;
     }
   }
 
   habilitarCamposFormulario(): void {
     Object.keys(this.personaForm.controls).forEach((campo) => {
-      const control = this.personaForm.get(campo);
-      control?.enable();
-      control?.setValidators([Validators.required, Validators.maxLength(30)]);
-      control?.updateValueAndValidity();
+      const CONTROL = this.personaForm.get(campo);
+      CONTROL?.enable();
+      CONTROL?.setValidators([Validators.required, Validators.maxLength(30)]);
+      CONTROL?.updateValueAndValidity();
     });
   }
 
   deshabilitarCamposFormulario(): void {
     Object.keys(this.personaForm.controls).forEach((campo) => {
-      const control = this.personaForm.get(campo);
-      control?.disable();
+      const CONTROL = this.personaForm.get(campo);
+      CONTROL?.disable();
     });
   }
 
-  agregarPersona() {
+  agregarPersona(): void {
     this.gafete.setValidators([Validators.required, Validators.maxLength(25)]);
     this.gafete.updateValueAndValidity();
 
@@ -95,19 +94,19 @@ export class AgregaPersonasComponent {
       return;
     }
 
-    const responsable: Persona = {
+    const RESPONSABLE: Persona = {
       gafete: this.gafete.value,
       nombre: this.personaForm.get('nombre')?.value,
       primerApellido: this.personaForm.get('primerApellido')?.value,
       segundoApellido: this.personaForm.get('segundoApellido')?.value,
     };
 
-    this.personas.push(responsable);
+    this.personas.push(RESPONSABLE);
     this.personaForm.reset({});
     this.deshabilitarCamposFormulario();
   }
 
-  eliminar(i: number) {
+  eliminar(i: number) : void {
     this.personas.splice(i, 1);
     //modal de confirmacion de elimincacion
   }
