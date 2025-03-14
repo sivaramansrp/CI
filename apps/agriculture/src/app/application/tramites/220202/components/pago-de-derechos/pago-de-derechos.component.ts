@@ -18,7 +18,7 @@ import { AgriculturaApiService } from '../../services/220202/agricultura-api.ser
 
 import { Subject, takeUntil } from 'rxjs';
 
-import { ListaDeDatosFinal } from '../../models/220202/fitosanitario.model';
+import { PagoForm } from '../../models/220202/fitosanitario.model';
 
 /**
  * Componente para el formulario de pago de derechos.
@@ -94,6 +94,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       "value": "Si"
     }
   ];
+  pagoStore: PagoForm = {} as PagoForm;
 
   /**
    * Valor seleccionado en el radio button de exención de pago.
@@ -122,16 +123,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param {AgriculturaApiService} agriculturaApiService - Cliente HTTP para realizar solicitudes a la API de Agricultura.
    */
   constructor(private readonly fb: FormBuilder, private readonly agriculturaApiService: AgriculturaApiService) {
-    this.pagoForm = this.fb.group({
-      exentoPago: [''],
-      justificacion: [{ value: '', disabled: false }],
-      claveReferencia: [{ value: '', disabled: true }],
-      cadenaDependencia: [{ value: '', disabled: true }],
-      banco: [{ value: '', disabled: true }],
-      llavePago: [{ value: '', disabled: false }],
-      importePago: [{ value: '', disabled: true }],
-      fechaInicioInput: ['']
-    });
+    this.agriculturaApiService.getPagoForma().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+      console.log(datos);
+      this.pagoStore = datos;
+    })
   }
 
   /**
@@ -142,6 +137,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.pagoForm = this.fb.group({
+      exentoPago: [this.pagoStore.exentoPago],
+      justificacion: [this.pagoStore.justificacion],
+      claveReferencia: [{ value: this.pagoStore.claveReferencia, disabled: true }],
+      cadenaDependencia: [{ value: this.pagoStore.cadenaDependencia, disabled: true }],
+      banco: [{ value: this.pagoStore.banco, disabled: true }],
+      llavePago: [{ value: this.pagoStore.llavePago, disabled: false }],
+      importePago: [{ value: this.pagoStore.importePago, disabled: true }],
+      fechaInicioInput: [this.pagoStore.fechaInicioInput]
+    });
     this.pagoForm.statusChanges
       .pipe(takeUntil(this.destroyNotifier$)) // Ensures unsubscribe on component destruction
       .subscribe(

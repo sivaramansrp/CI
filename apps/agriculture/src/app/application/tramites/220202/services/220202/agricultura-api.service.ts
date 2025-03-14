@@ -17,6 +17,7 @@ import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import {
   DatosForma,
   FinalEnviar,
+  ListaDeDatosFinal,
   Movilizacion,
   PagoForm
 } from '../../models/220202/fitosanitario.model';
@@ -69,6 +70,10 @@ export class AgriculturaApiService {
   getMovilizacion(): Observable<Movilizacion> {
     return this.fitosanitarioStore._select(state => state.movilizacion); // Use _select for observable
   }
+  getAllDatosForma(): Observable<ListaDeDatosFinal> {
+    return this.fitosanitarioStore._select(state => state); // Select the entire state
+  }
+
   actualizarFormaValida(updatedFormaValida: { [key: string]: boolean }): void {
     this.fitosanitarioStore.actualizarformaValida(updatedFormaValida);
     this.obtenerTodosLosStatus().subscribe((result: boolean) => {
