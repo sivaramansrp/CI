@@ -16,13 +16,13 @@ interface AccionBoton {
   valor: number;
 }
 
+/**
+ * Componente que representa la página de solicitud.
+ */
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
 })
-/**
- * Componente que representa la página de solicitud.
- */
 export class SolicitudPageComponent {
   /**
    * Lista de pasos del asistente.
