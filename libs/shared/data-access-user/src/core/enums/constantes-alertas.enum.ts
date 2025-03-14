@@ -230,3 +230,15 @@ export const PASOS_REQUERIMIENTOS = [
     completado: false,
   },
 ];
+
+export const FECHA_INICIO = {
+  labelNombre: 'Fecha inicio',
+  required: true,
+  habilitado: true,
+};
+
+export const FECHA_FINAL = {
+  labelNombre: 'Fecha final',
+  required: true,
+  habilitado: true,
+};
