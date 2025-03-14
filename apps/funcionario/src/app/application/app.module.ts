@@ -33,6 +33,7 @@ import { BandejaTareasPendientesComponent } from './bandejaPendientes/bandeja-ta
       positionClass: 'toast-top-right',
     }),
     provideHttpClient(),
+    ToastrService
   ],
   bootstrap: [AppComponent],
 })

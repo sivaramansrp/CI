@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import data  from '../../../../../../../../libs/shared/theme/assets/json/funcionario/cat-tipo-requerimiento.json';
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';

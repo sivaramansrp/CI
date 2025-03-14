@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SeleccionModuloComponent } from './seleccion-modulo/seleccion-modulo.component';
-import { FirmaPageComponent } from '@libs/shared/data-access-user/src';
+import { AcusePageComponent, FirmaPageComponent } from '@libs/shared/data-access-user/src';
 
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'app-seleccion-modulo' },
@@ -26,6 +26,9 @@ const ROUTES: Routes = [
   { path: 'firma-electronica',
     component: FirmaPageComponent
   }
+  { path: 'firma-electronica', component: FirmaPageComponent },
+  { path: 'acuse', component: AcusePageComponent }
+
 ];
 
 @NgModule({
