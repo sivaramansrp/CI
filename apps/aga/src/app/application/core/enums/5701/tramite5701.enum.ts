@@ -42,9 +42,10 @@ export const DESPACHO_LDA = {
   export const ERR_INPUT_BUSQUEDA_VACIO = 'No has proporcionado información que es requerida.';
   export const ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS = 'No se encontraron datos con el número de gafete, intenta de nuevo o agrega los datos restantes.';
   export const ADV_MAXIMO_PERSONAS = 'Solo puede agregar hasta 5 personas.';
-  export const MSJ_ELIMINA_PERSONA = 'Datos eliminados correctamente.';
+  export const MSG_ELIMINA_ELEMENTO = 'Datos eliminados correctamente.';
 
-  
-
+  export const MSG_NRO_PEDIMENTO = 'Necesita agregar un número de pedimento';
+  export const MSG_ADUANA_PEDIMENTO = 'Necesita seleccionar una aduana de despacho y agregar un número de pedimento';
+  export const ERR_VALIDACION_PEDIMENTO = 'No se pudo validar el pedimento, favor de capturar los datos de pedimento faltante y anexar documento.';
   
   

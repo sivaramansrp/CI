@@ -1,4 +1,4 @@
-import { ADV_MAXIMO_PERSONAS, ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS, ERR_CAMPOS_OBLIGATORIOS, ERR_INPUT_BUSQUEDA_VACIO, MSJ_ELIMINA_PERSONA, TITULO_MODAL } from '../../../../core/enums/5701/tramite5701.enum';
+import { ADV_MAXIMO_PERSONAS, ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS, ERR_CAMPOS_OBLIGATORIOS, ERR_INPUT_BUSQUEDA_VACIO, MSG_ELIMINA_ELEMENTO, TITULO_MODAL } from '../../../../core/enums/5701/tramite5701.enum';
 import {
   FormBuilder,
   FormControl,
@@ -168,7 +168,7 @@ export class AgregaPersonasComponent {
   eliminar(i: number): void {
     this.personas.splice(i, 1);
     this.tituloModal = TITULO_MODAL;
-    this.mensajeModal = MSJ_ELIMINA_PERSONA;
+    this.mensajeModal = MSG_ELIMINA_ELEMENTO;
     this.abrirModal();
   }
 
