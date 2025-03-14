@@ -1,11 +1,11 @@
 // @import "bootstrap/scss/bootstrap";
 
-@import "_colores.scss";
-@import "_gobmx.scss";
-@import "_gobmxstyles.scss";
-@import "_fonts.scss";
-@import "_titulos.scss";
-@import "_gobmx.scss";
+@import '_colores.scss';
+@import '_gobmx.scss';
+@import '_gobmxstyles.scss';
+@import '_fonts.scss';
+@import '_titulos.scss';
+@import '_gobmx.scss';
 
 .bi-c {
   color: $color-primario;
@@ -15,32 +15,19 @@
   }
 }
 
-
 .required {
   border: #fe4a47 1px solid;
 }
 
-/* Tamaños personalizados del offcanvas */
+.titulo {
+  font-weight: 400;
+  font-size: 32px;
+  font-family: Patria;
+  margin-top: 3rem;
+  margin-bottom: 3rem !important;
 
-// .offcanvas-size-xl {
-//   --#{$prefix}offcanvas-width: min(95vw, 45%) !important;
-// }
-// .offcanvas-size-xxl {
-//   --#{$prefix}offcanvas-width: min(95vw, 90vw) !important;
-// }
-// .offcanvas-size-md {
-//   /* add Responsivenes to default offcanvas */
-//   --#{$prefix}offcanvas-width: min(95vw, 400px) !important;
-// }
-// .offcanvas-size-sm {
-//   --#{$prefix}offcanvas-width: min(95vw, 250px) !important;
-// }
-
-// .offcanvas-footer {
-//   padding: 10px;
-//   display: flex;
-//   justify-content: end;
-// }
-
-
+  &-gold {
+    color: $color-oro;
+  }
+}
 

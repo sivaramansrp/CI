@@ -6,6 +6,6 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './consulta.component.html',
-  styleUrl: './consulta.component.css',
+  styleUrl: './consulta.component.scss',
 })
 export class ConsultaComponent {}
