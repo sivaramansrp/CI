@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { TEXTOS } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
+import { TEXTOS } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'paso-dos',
@@ -48,7 +48,7 @@ export class PasoDosComponent implements OnInit {
             this.catalogoDocumentos = resp;
           }
         },
-        error: (_error): void => { },
+        error: (_error): void => { return _error; },
       });
   }
 }

@@ -1,10 +1,10 @@
 import { BooleanoSiNoPipe, SoloNumerosDirective } from '@ng-mf/data-access-user';
 import { Component, Input, OnChanges, SimpleChanges, forwardRef, output } from '@angular/core';
 import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
+import { ERR_VALIDACION_PEDIMENTO, MSG_ADUANA_PEDIMENTO, MSG_ELIMINA_ELEMENTO, MSG_NRO_PEDIMENTO } from '../../../../core/enums/5701/tramite5701.enum';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { MSG_ADUANA_PEDIMENTO, MSG_NRO_PEDIMENTO, ERR_VALIDACION_PEDIMENTO, MSG_ELIMINA_ELEMENTO } from '../../../../core/enums/5701/tramite5701.enum';
 
 @Component({
   selector: 'c-pedimento',
