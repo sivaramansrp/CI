@@ -12,12 +12,12 @@ import { Router } from '@angular/router';
   styleUrl: './paso-cuatro.component.scss',
   standalone: true,
   imports: [FirmaElectronicaComponent],
-  host: { hostID: crypto.randomUUID().toString() },
+  host: {},
 })
 export class PasoCuatroComponent {
 
   // eslint-disable-next-line no-empty-function
-  constructor(private router: Router){}
+  constructor(private router: Router) { }
 
   /**
    * Navega a la ruta 'servicios-extraordinarios/acuse' si el parámetro `ev` tiene un valor.

@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
   imports: [],
   templateUrl: './titulo.component.html',
   styleUrl: './titulo.component.scss',
-  host: { 'hostID': Math.random().toString() }
+  host: {}
 })
 export class TituloComponent {
   @Input() titulo!: string;
