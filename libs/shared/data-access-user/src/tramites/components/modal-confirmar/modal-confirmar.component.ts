@@ -1,41 +1,43 @@
 import { Component, Input, input } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
-  selector: 'app-modal-confirmar',
+  selector: 'lib-modal-confirmar',
   standalone: true,
   imports: [],
   templateUrl: './modal-confirmar.component.html',
-  styleUrl: './modal-confirmar.component.scss',
+  styleUrl: './modal-confirmar.component.scss'
 })
 export class ModalConfirmarComponent {
-  @Input() cancelarBtnTxt: string = '';
-  @Input() confirmarBtnTxt: string = '';
-  @Input() txtMensaje: string = '';
-  @Input() txtCuerpoHtml: string = '';
 
+  cancelarBtnTxt = 'Cancelar';
+  confirmarBtnTxt = 'Confirmar';
+  txtCuerpoHtml = '';
+  titulo?: string;
 
   txtHtml: SafeHtml | string = '';
 
-  constructor( private sanitizier : DomSanitizer ) {}
-
-
-  get getHtml() {
-    return this.txtCuerpoHtml !== '' ? true : false;
+  constructor(private sanitizier: DomSanitizer, public bsModalRef: BsModalRef) {
   }
 
-  ngOnInit() : void {
+  get getHtml() {
+    return this.txtCuerpoHtml !== '';
+  }
+
+  ngOnInit(): void {
     this.setHtml(this.txtCuerpoHtml);
   }
 
-  cerrarModal( result: boolean): void {
-  //  Cerrar Modal
+  cerrarModal(result: boolean): void {
+    console.log(result);
+    this.bsModalRef.onHide?.emit(result);
+    this.bsModalRef.hide();
   }
 
-  setHtml( html: string): void {
+  setHtml(html: string): void {
     this.txtHtml = this.sanitizier.bypassSecurityTrustHtml(html);
   }
-
 
 
 }
