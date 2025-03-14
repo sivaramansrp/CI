@@ -8,39 +8,21 @@
 @import "_gobmx.scss";
 
 .bi-c {
-  color: $color-primario;
+    color: $color-primario;
 
-  &:hover {
-    color: $color-danger;
-  }
+    &:hover {
+        color: $color-danger;
+    }
 }
-
 
 .required {
-  border: #fe4a47 1px solid;
+    border: #fe4a47 1px solid;
 }
 
-/* Tamaños personalizados del offcanvas */
+.modal-header {
+    justify-content: center;
+}
 
-// .offcanvas-size-xl {
-//   --#{$prefix}offcanvas-width: min(95vw, 45%) !important;
-// }
-// .offcanvas-size-xxl {
-//   --#{$prefix}offcanvas-width: min(95vw, 90vw) !important;
-// }
-// .offcanvas-size-md {
-//   /* add Responsivenes to default offcanvas */
-//   --#{$prefix}offcanvas-width: min(95vw, 400px) !important;
-// }
-// .offcanvas-size-sm {
-//   --#{$prefix}offcanvas-width: min(95vw, 250px) !important;
-// }
-
-// .offcanvas-footer {
-//   padding: 10px;
-//   display: flex;
-//   justify-content: end;
-// }
-
-
-
+.modal-body {
+    padding: 30px 30px 0px 30px;
+}

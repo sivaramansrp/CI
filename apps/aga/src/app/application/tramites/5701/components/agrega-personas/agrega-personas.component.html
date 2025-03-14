@@ -2,7 +2,7 @@
   <div class="col-md-4 form-group">
     <label class="form-label" for="gafete">Gafete:</label>
     <input class="form-control" id="gafete" [formControl]="gafete" placeholder="" type="text"
-      [ngClass]="gafeteIsValid ? 'required' : ''">
+      [ngClass]="gafeteIsValid ? 'required' : ''" libUppercase>
   </div>
   <div class="col-md-4 d-flex align-items-end">
     <div class="btn-group">
@@ -46,21 +46,45 @@
       </thead>
 
       <tbody>
+        @for (persona of personas; let i = $index; track i) {
         <tr>
-          @for (persona of personas; let i = $index; track i) {
-            <td>{{persona.gafete}}</td>
-            <td>{{persona.nombre}}</td>
-            <td>{{persona.primerApellido}}</td>
-            <td>{{persona.segundoApellido}}</td>
-            <td>
-              <button type="button" class="btn btn-link" title="Eliminar" (click)="eliminar(i)">
-                <i class="bi bi-trash3 bi-c"></i>
-              </button>
-            </td>
-          }
+          <td>{{persona.gafete}}</td>
+          <td>{{persona.nombre}}</td>
+          <td>{{persona.primerApellido}}</td>
+          <td>{{persona.segundoApellido}}</td>
+          <td>
+            <button type="button" class="btn btn-link" title="Eliminar" (click)="eliminar(i)">
+              <i class="bi bi-trash3 bi-c"></i>
+            </button>
+          </td>
         </tr>
+        }
       </tbody>
 
     </table>
+  </div>
+</div>
+
+<!-- Modal error -->
+<div class="modal" [ngClass]="modal" id="modalError" #modalError tabindex="-1" aria-labelledby="modalErrorLabel"
+  aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{ tituloModal }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <p>{{ mensajeModal }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="cerrarModal()">
+          Cerrar
+        </button>
+      </div>
+    </div>
   </div>
 </div>

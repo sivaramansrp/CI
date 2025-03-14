@@ -36,6 +36,14 @@ export const DESPACHO_LDA = {
     habilitado: true,
   };
 
+  // Mensajes de error en el modal
+  export const TITULO_MODAL = 'Aviso';
+  export const ERR_CAMPOS_OBLIGATORIOS = 'Debes capturar todos los datos marcados como obligatorios.';
+  export const ERR_INPUT_BUSQUEDA_VACIO = 'No has proporcionado información que es requerida.';
+  export const ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS = 'No se encontraron datos con el número de gafete, intenta de nuevo o agrega los datos restantes.';
+  export const ADV_MAXIMO_PERSONAS = 'Solo puede agregar hasta 5 personas.';
+  export const MSJ_ELIMINA_PERSONA = 'Datos eliminados correctamente.';
+
   
 
   
