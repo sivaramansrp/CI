@@ -22,6 +22,7 @@ import { PasoFirmarSolicitudComponent } from './pages/paso-firmar-solicitud/paso
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoCsComponent } from './pages/paso-uno-cs/paso-uno-cs.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FederatariosYPlantasVistaComponent } from './component/federatarios-y-plantas-vista/federatarios-y-plantas-vista.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     AnexoVistaDosYTresComponent,
     FederatariosYPlantasComponent,
     AnexoVistaUnoComponent,
+    FederatariosYPlantasVistaComponent,
   ],
 })
 export class NuevoProgramaIndustrialModule {}

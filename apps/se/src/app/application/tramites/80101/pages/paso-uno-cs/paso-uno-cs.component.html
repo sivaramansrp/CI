@@ -34,6 +34,17 @@
           >Anexo II y III</a
         >
       </li>
+      <li [ngClass]="indice === 4 ? 'active' : ''">
+        <a
+          data-toggle="tab"
+          (click)="seleccionaTab(4)"
+          (keydown.enter)="seleccionaTab(4)"
+          (keydown.space)="seleccionaTab(4)"
+          role="button"
+          tabindex="2"
+          >Federatarios y plantas</a
+        >
+      </li>
     </ul>
 
     <ng-container>
@@ -43,6 +54,8 @@
       <app-anexo-vista-uno></app-anexo-vista-uno>
       } @case (3) {
       <app-anexo-vista-dos-y-tres></app-anexo-vista-dos-y-tres>
+      } @case (4){
+      <app-federatarios-y-plantas-vista></app-federatarios-y-plantas-vista>
       } }
     </ng-container>
   </div>

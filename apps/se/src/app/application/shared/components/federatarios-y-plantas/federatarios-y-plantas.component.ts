@@ -20,6 +20,9 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import {
   FederatariosEncabezado,
   FederatariosYPlantasConfiguration,
+  PlantasDisponibles,
+  PlantasImmex,
+  TEXTO_DE_ALERTA,
 } from '../../models/federatarios-y-plantas.model';
 
 @Component({
@@ -36,23 +39,32 @@ import {
     FormsModule,
   ],
   templateUrl: './federatarios-y-plantas.component.html',
-  styleUrl: './federatarios-y-plantas.component.css',
+  styleUrl: './federatarios-y-plantas.component.scss',
 })
 export class FederatariosYPlantasComponent {
+  @Input()
+  federatariosConfig!: FederatariosYPlantasConfiguration<FederatariosEncabezado>;
+  @Input()
+  plantasDisponiblesConfig!: FederatariosYPlantasConfiguration<PlantasDisponibles>;
+  @Input() plantasImmexConfig!: FederatariosYPlantasConfiguration<PlantasImmex>;
+
+  @Input() federatariosDatos!: FederatariosEncabezado[];
+
+  @Input() plantasDisponiblesDatos!: PlantasDisponibles[];
+  @Input() plantasImmexDatos!: PlantasImmex[];
+
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
   estadoOptions: [] = [];
 
+  public textodAlerta = TEXTO_DE_ALERTA;
   //
-  @Input() federatariosDatos: FederatariosEncabezado[] = [];
-
-  @Input()
-  federatariosConfig!: FederatariosYPlantasConfiguration<FederatariosEncabezado>;
 
   public federatariosFormGroup!: FormGroup;
 
   constructor() {
     this.initFederatariosFormGroup();
   }
+
   initFederatariosFormGroup(): void {
     this.federatariosFormGroup = new FormGroup({
       nombre: new FormControl('', Validators.required),

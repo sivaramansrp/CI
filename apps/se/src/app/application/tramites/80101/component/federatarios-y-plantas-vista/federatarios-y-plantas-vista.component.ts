@@ -5,9 +5,12 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
 import {
   FEDERATARIOS,
   FederatariosEncabezado,
+  PLANTAS_DIPONIBLES,
+  PLANTAS_IMMEX,
+  PlantasDisponibles,
+  PlantasImmex,
 } from '../../../../shared/models/federatarios-y-plantas.model';
 import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-plantas/federatarios-y-plantas.component';
-
 @Component({
   selector: 'app-federatarios-y-plantas-vista',
   standalone: true,
@@ -17,9 +20,21 @@ import { FederatariosYPlantasComponent } from '../../../../shared/components/fed
 })
 export class FederatariosYPlantasVistaComponent {
   public federatariosTablaConfiguracion = {
-    FederatariosTablaSeleccion: TablaSeleccion.CHECKBOX,
-    FederatariosTablaEncabezado: FEDERATARIOS,
+    TablaSeleccion: TablaSeleccion.CHECKBOX,
+    TablaEncabezado: FEDERATARIOS,
+  };
+  //PLANTAS_DIPONIBLES
+  public plantasDisponiblesTablaConfiguracion = {
+    TablaSeleccion: TablaSeleccion.CHECKBOX,
+    TablaEncabezado: PLANTAS_DIPONIBLES,
+  };
+  //PLANTAS_IMMEX
+  public plantasImmexTablaConfiguracion = {
+    TablaSeleccion: TablaSeleccion.CHECKBOX,
+    TablaEncabezado: PLANTAS_IMMEX,
   };
 
   public federatariosTablaLista: FederatariosEncabezado[] = [];
+  public plantasDisponiblesTablaLista: PlantasDisponibles[] = [];
+  public plantasImmexTablaLista: PlantasImmex[] = [];
 }
