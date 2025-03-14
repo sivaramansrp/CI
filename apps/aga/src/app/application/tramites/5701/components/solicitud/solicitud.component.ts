@@ -98,6 +98,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private formulariosService: FormulariosService,
     private catalogosServices: CatalogosService,
     private validacionesService: ValidacionesFormularioService
+  // eslint-disable-next-line no-empty-function
   ) { }
 
   ngOnInit(): void {

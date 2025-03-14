@@ -4,7 +4,7 @@
       <div class="input-group">
         <input type="text" class="form-control" placeholder="" aria-label="RFC" aria-describedby="button-addon2"
           id="rfcBusqueda" [formControl]="rfcBusqueda" [ngClass]="isValid(rfcBusqueda) ? 'required' : ''" libUppercase>
-        <button class="btn btn-group-primary" type="button" id="buscarRFC" (click)="buscarRepresentanteFiscal()">
+        <button class="btn btn-group-primary" title="Buscar" type="button" id="buscarRFC" (click)="buscarRepresentanteFiscal()">
           <i class="bi bi-search"></i>
         </button>
       </div>
