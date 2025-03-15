@@ -217,13 +217,15 @@
               <tr>
                 <td>{{ doc.name }}</td>
                 <td>
-                  @if (doc.cargado) {
-                    <span class="text-success"><i class="bi bi-check-circle-fill"></i> Correcto</span>
-                  } @else {
-                    <span class="text-danger"><i class="bi bi-x-circle-fill"></i> Error al cargar</span>
+                  @if (doc.estatus !== 'Pendiente') {
+                    @if (doc.cargado) {
+                      <span class="text-success"><i class="bi bi-check-circle-fill"></i> {{ doc.mensaje }}</span>
+                    } @else {
+                      <span class="text-danger"><i class="bi bi-x-circle-fill"></i> {{ doc.mensaje }}</span>
+                    }
                   }
                 </td>
-                <td>{{ doc.cargado ? 'OK' : 'Pendiente' }}</td>
+                <td>{{ doc.estatus }}</td>
               </tr>
             }
           </tbody>
@@ -242,20 +244,21 @@
                 <tr>
                   <td>{{ doc.name }}</td>
                   <td>
-                    @if (doc.cargado) {
-                      <span class="text-success"><i class="bi bi-check-circle-fill"></i> Correcto</span>
-                    } @else {
-                      <span class="text-danger"><i class="bi bi-x-circle-fill"></i> Error al cargar</span>
+                    @if (doc.estatus !== 'Pendiente') {
+                      @if (doc.cargado) {
+                        <span class="text-success"><i class="bi bi-check-circle-fill"></i> {{ doc.mensaje }}</span>
+                      } @else {
+                        <span class="text-danger"><i class="bi bi-x-circle-fill"></i> {{ doc.mensaje }}</span>
+                      }
                     }
                   </td>
-                  <td>{{ doc.cargado ? 'OK' : 'Pendiente' }}</td>
+                  <td>{{ doc.estatus }}</td>
                 </tr>
               }
             </tbody>
           </table>
         }
       </div>
-
     </div>
   }
 

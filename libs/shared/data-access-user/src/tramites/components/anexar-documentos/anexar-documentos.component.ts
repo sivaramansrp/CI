@@ -9,34 +9,24 @@ import {
 } from '@angular/core';
 import {
   Catalogo,
-  CatalogosSelect,
   DocumentosCargados,
   ModalConfirmarComponent
 } from '@libs/shared/data-access-user/src';
-
 import { CommonModule } from '@angular/common';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
-import {
-  CATALOGOS_ID,
-  MB,
-  PDF,
-  DPI
-} from '../../constantes/constantes';
+import { MB, PDF, DPI } from '../../constantes/constantes';
 import { Login } from '../../../core/models/shared/inicio-sesion.model';
 import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
 import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { URL_PRUEBA } from '../../constantes/servicios-extraordinarios.enum';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService, ModalModule, ModalOptions } from 'ngx-bootstrap/modal';
 import {
   PreviewDocumentoComponent
 } from '@libs/shared/data-access-user/src/tramites/components/preview-documento/preview-documento.component';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { combineLatest, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MensajesDocumentos } from '@libs/shared/data-access-user/src/core/enums/mensajes-documentos.enum';
-
-declare const bootstrap: any; // Importación para manejar Bootstrap en TS
 
 @Component({
   selector: 'anexar-documentos',
@@ -48,6 +38,7 @@ declare const bootstrap: any; // Importación para manejar Bootstrap en TS
 export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() catalogoDocumentos: Catalogo[] = [];
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   subscription: Subscription[] = [];
   documentoForma!: FormGroup;
 
@@ -56,32 +47,16 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   DPI = DPI;
 
   tamMaximo = 0;
-  tiposDocumentos!: CatalogosSelect;
   documentosCargados: DocumentosCargados[] = [];
   documentoSeleccionado!: Catalogo;
-  mostrarModal = false;
-
   modal = '';
-  indiceDocumento!: number;
-
   datosLogin: Login = {
     user: 'user1@example.com',
     password: 'clave1'
   };
-
   token!: string;
-  base64File = '';
-
-  readonly url: string = URL_PRUEBA;
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
-  fileNames = '';
   listDocOpcionalesAgregar: any[] = [];
-
-
-  @ViewChild('modalConfirmacion') modalConfirmacion!: ElementRef;
-  rutaArchivoPreview = '';
   listadoArchivos: any[] = [];
-  documentosOpcionales: FormControl = new FormControl<any>('');
   archivosOpcionales: any[] = [
     { descripcion: 'Documento_opcional_01', dpi: '300', id: '11', tam: '10000' },
     { descripcion: 'Documento_opcional_02', dpi: '301', id: '12', tam: '11000' },
@@ -113,12 +88,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     private modalService: BsModalService,
     private cdr: ChangeDetectorRef
   ) {
-  }
-
-  ngOnInit() {
-    this.archivosOpcionalesOriginal = [...this.archivosOpcionales];
-    this.obtenerToken(this.datosLogin);
-    this.crearFormaDocumento();
   }
 
   /**
@@ -193,6 +162,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
    * @param {Event} event - El evento de carga del archivo.
    * @param fileInput file proveniente del input
    * @param id del catalog de documentos a cargar
+   * @param tipo de documento que se está agregando obligatorio u opcional
    */
   cargarDoc(event: Event, fileInput: HTMLInputElement, id: any, tipo: string): void {
     const archivo = event.target as HTMLInputElement;
@@ -219,7 +189,9 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         archivo: informacionArchivo,
         ruta: URL.createObjectURL(informacionArchivo),
         cargado: false,
-        tipo
+        tipo,
+        mensaje: '',
+        estatus: 'Pendiente'
       });
     }
   }
@@ -229,17 +201,13 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     return encontrado !== undefined;
   }
 
-  uploadFiles(informacionArchivo: any): void {
-    this.subscription.push(
+  uploadFiles(informacionArchivo: any): Promise<any> {
+    return new Promise((resolve) => {
       this.subirDocumentoService.subirDocumento(this.token, informacionArchivo).subscribe({
-        next: (): void => {
-          this.toastr.success(MensajesDocumentos.UPLOAD);
-        },
-        error: (error): void => {
-          console.error(error);
-          this.toastr.error(MensajesDocumentos.ERRORUPLOAD);
-        }
-      }));
+        next: () => resolve({ cargado: true, mensaje: 'Correcto', estatus: 'OK' }),
+        error: (error): void => resolve({ cargado: false, mensaje: 'Error al cargar', estatus: 'Error al cargar' })
+      });
+    });
   }
 
   /**
@@ -297,7 +265,10 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
           if (typeof response === 'boolean' && response) {
             console.log('cargando documentos');
             this.cargarDocumentos = true;
-            this.cargarArchivos();
+            this.archivosCargando.obligatorios = this.listadoArchivos.filter(f => f.tipo === 'obligatorio');
+            this.archivosCargando.opcionales = this.listadoArchivos.filter(f => f.tipo === 'opcional');
+            this.cargarArchivos(this.archivosCargando.obligatorios);
+            this.cargarArchivos(this.archivosCargando.opcionales);
           }
         })
       );
@@ -373,12 +344,13 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  cargarArchivos(): void {
-    console.log(this.listadoArchivos);
-    const obligatorios = this.listadoArchivos.filter(f => f.tipo === 'obligatorio');
-    const opcionales = this.listadoArchivos.filter(f => f.tipo === 'opcional');
-    this.archivosCargando.obligatorios = obligatorios;
-    this.archivosCargando.opcionales = opcionales;
+  async cargarArchivos(archivosCargando: any[]): Promise<void> {
+    for (const archivo of archivosCargando) {
+      const data = await this.uploadFiles(archivo.archivo);
+      archivo.mensaje = data.mensaje;
+      archivo.cargado = data.cargado;
+      archivo.estatus = data.estatus;
+    }
   }
 
   eliminarOpcional(item: any): void {
@@ -411,6 +383,12 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       const index: number = this.listadoArchivos.findIndex(f => f.id === item.id);
       this.listadoArchivos.splice(index, 1);
     }
+  }
+
+  ngOnInit() {
+    this.archivosOpcionalesOriginal = [...this.archivosOpcionales];
+    this.obtenerToken(this.datosLogin);
+    this.crearFormaDocumento();
   }
 
   ngOnChanges(changes: SimpleChanges) {
