@@ -1,7 +1,8 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
@@ -56,7 +57,14 @@ const routes: Routes = [
       import('./tramites/220402/pantallas-captura.module').then(
         (m) => m.PantallasCapturaModule
       )
-  }
+  },
+  {
+    path: 'inspeccion-fisica',
+    loadChildren: () =>
+      import('./tramites/220701/inspeccion-fisica-zoosanitario.module').then(
+        (m) => m.InspeccionFisicaZoosanitarioModule
+      )
+  },
 ];
 
 @NgModule({
