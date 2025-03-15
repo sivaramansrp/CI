@@ -9,6 +9,9 @@ import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 import { SolicitudService } from './services/solicitud.service';
+import { ClaveScianComponent } from './components/clave-scian/clave-scian.component';
+import { FormularioOperacionComercialComponent } from './components/formulario-operacion-comercial/formulario-operacion-comercial.component';
+import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
 
 @NgModule({
   declarations: [PermisoMaquilaComponent,
@@ -19,7 +22,10 @@ import { SolicitudService } from './services/solicitud.service';
     PermisoMaquilaRoutingModule,
     WizardComponent,
     TituloComponent,
-    DatosDeLaSolicitudComponent
+    DatosDeLaSolicitudComponent,
+    ClaveScianComponent,
+    FormularioOperacionComercialComponent,
+    RepresentanteLegalComponent
   ],
   providers: [provideHttpClient(), ToastrService,SolicitudService],
 })

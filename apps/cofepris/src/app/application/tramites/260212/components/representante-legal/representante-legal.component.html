@@ -1,0 +1,37 @@
+<form action="" [formGroup]="personaForm">
+<div class="row">
+    <div class="col-4">
+        <div class="form-group">
+          <label for="rfc" class="form-label">RFC *:</label>
+          <input
+            type="text"
+            id="rfc"
+            formControlName="rfc"
+            class="form-control"
+          />
+        </div>
+      </div>
+      <div class="col-4 d-flex align-items-end">
+        <div class="form-group">
+          <button type="button" class="btn btn-primary">Buscar</button>
+        </div>
+      </div>
+      </div>
+    <div class="row">
+      <div class="col-md-4 form-group">
+        <label class="control-label" for="nombre">Nombre(s):</label>
+        <input class="form-control" id="nombre" placeholder="" type="text" formControlName="nombre"
+          [ngClass]="isValid('nombre') ? 'required' : ''">
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="control-label" for="primerApellido">Apellido paterno:</label>
+        <input class="form-control" id="primerApellido" placeholder="" type="text" formControlName="primerApellido"
+          [ngClass]="isValid('primerApellido') ? 'required' : ''">
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="control-label" for="segundoApellido">Apellido materno:</label>
+        <input class="form-control" id="segundoApellido" placeholder="" type="text" formControlName="segundoApellido"
+          [ngClass]="isValid('segundoApellido') ? 'required' : ''">
+      </div>
+    </div>
+  </form>

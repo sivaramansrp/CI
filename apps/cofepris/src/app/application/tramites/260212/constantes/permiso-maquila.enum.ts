@@ -20,4 +20,10 @@ export const PERMISO_MAQUILA = [
 
 ]
 
+export const DATOS_ALERT={
+  DATOS_SOLICITUD:`<p>Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.<p>`,
+  }
 
+  export const MANIFIESTOS_ALERT={
+    DATOS_MANIFIESTOS:`<p>Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.<p>`,
+    }

@@ -4,3 +4,18 @@ export interface solicitudModel {
     cantidad:string;
     proveedor:string;
   }
+
+  export interface MercanciaModel {
+    clasificaciónProducto:string;
+    especificarClasificación:string;
+    denominaciónEspecífica:string;
+    denominaciónDistintiva:string;
+    denominaciónComún:string;
+    formaFarmacéutica:string;
+    estadoFsico:string;
+    }
+
+  export interface ClaveModel {
+    clave:string;
+    descripcíon:string;
+  }
