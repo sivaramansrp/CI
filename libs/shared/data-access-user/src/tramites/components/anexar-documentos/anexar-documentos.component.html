@@ -49,7 +49,7 @@
                 <div class="d-flex">
                   <label for="formFile{{item.id}}" class="form-label"></label>
                   <input class="form-control custom-file-label" type="file" id="formFile{{item.id}}" #fileInput
-                         (change)="cargarDoc($event, fileInput,item.id)">
+                         (change)="cargarDoc($event, fileInput,item.id,'obligatorio')">
                 </div>
               </div>
 
@@ -74,7 +74,7 @@
                   <div class="d-flex">
                     <label for="formFile{{adicional.id}}" class="form-label"></label>
                     <input class="form-control custom-file-label" type="file" id="formFile{{adicional.id}}" #fileInput
-                           (change)="cargarDoc($event, fileInput,adicional.id)">
+                           (change)="cargarDoc($event, fileInput,adicional.id,'obligatorio')">
                   </div>
                 </div>
 
@@ -116,7 +116,7 @@
                   <div class="d-flex">
                     <label for="formFileOpcionales{{item.id}}" class="form-label"></label>
                     <input class="form-control custom-file-label" type="file" id="formFileOpcionales{{item.id}}"
-                           #fileInput (change)="cargarDoc($event, fileInput,item.id)">
+                           #fileInput (change)="cargarDoc($event, fileInput,item.id,'opcional')">
                   </div>
                 </div>
                 <div class="col-md-3 d-flex justify-content-end">
@@ -147,7 +147,7 @@
                       <label for="formFileOpcionales{{adicional.id}}" class="form-label"></label>
                       <input class="form-control custom-file-label" type="file" id="formFileOpcionales{{adicional.id}}"
                              #fileInput
-                             (change)="cargarDoc($event, fileInput,adicional.id)">
+                             (change)="cargarDoc($event, fileInput,adicional.id,'opcional')">
                     </div>
                   </div>
                   <div class="col-md-3 mt-2 d-flex justify-content-end">
@@ -170,13 +170,12 @@
                 }
               </div>
             </div>
-
           </div>
         }
       }
 
       <div class="d-flex justify-content-end w-100 mb-4">
-        <button class="btn-primary rounded" (click)="cargarArchivos()">Cargar archivos</button>
+        <button class="btn-primary rounded" (click)="confirmUpload()">Cargar archivos</button>
       </div>
     </div>
   </div>
@@ -200,4 +199,65 @@
       </div>
     </div>
   </div>
+
+  @if (cargarDocumentos) {
+    <div class="row">
+      <span class="h4">Carga de documentos</span>
+      <div class="col-md-12">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Documento obligatorio</th>
+              <th>Estatus</th>
+              <th>Mensaje</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (doc of archivosCargando.obligatorios; track doc.id) {
+              <tr>
+                <td>{{ doc.name }}</td>
+                <td>
+                  @if (doc.cargado) {
+                    <span class="text-success"><i class="bi bi-check-circle-fill"></i> Correcto</span>
+                  } @else {
+                    <span class="text-danger"><i class="bi bi-x-circle-fill"></i> Error al cargar</span>
+                  }
+                </td>
+                <td>{{ doc.cargado ? 'OK' : 'Pendiente' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        @if (archivosCargando.opcionales.length > 0) {
+          <table class="table table-bordered mt-3">
+            <thead>
+              <tr>
+                <th>Documento opcionales</th>
+                <th>Estatus</th>
+                <th>Mensaje</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (doc of archivosCargando.opcionales; track doc.id) {
+                <tr>
+                  <td>{{ doc.name }}</td>
+                  <td>
+                    @if (doc.cargado) {
+                      <span class="text-success"><i class="bi bi-check-circle-fill"></i> Correcto</span>
+                    } @else {
+                      <span class="text-danger"><i class="bi bi-x-circle-fill"></i> Error al cargar</span>
+                    }
+                  </td>
+                  <td>{{ doc.cargado ? 'OK' : 'Pendiente' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+
+    </div>
+  }
+
 </div>
+
