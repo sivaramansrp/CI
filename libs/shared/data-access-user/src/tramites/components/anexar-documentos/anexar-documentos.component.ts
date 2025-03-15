@@ -7,7 +7,12 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { Catalogo, CatalogosSelect, DocumentosCargados } from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  CatalogosSelect,
+  DocumentosCargados,
+  ModalConfirmarComponent
+} from '@libs/shared/data-access-user/src';
 
 import { CommonModule } from '@angular/common';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -28,7 +33,7 @@ import {
   PreviewDocumentoComponent
 } from '@libs/shared/data-access-user/src/tramites/components/preview-documento/preview-documento.component';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { MensajesDocumentos } from '@libs/shared/data-access-user/src/core/enums/mensajes-documentos.enum';
 
 declare const bootstrap: any; // Importación para manejar Bootstrap en TS
@@ -93,6 +98,12 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   listDocOpcionales: any[] = [];
   listDocOpcionalesDuplicado: any[] = [];
   bsModalRef?: BsModalRef;
+  modalRef?: BsModalRef;
+  cargarDocumentos = false;
+  archivosCargando: any = {
+    obligatorios: [],
+    opcionales: []
+  };
 
   constructor(
     private toastr: ToastrService,
@@ -136,7 +147,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         this.token = resp.jwt;
       },
       error: (error): void => {
-        console.log(error);
+        console.error(error);
       }
     });
   }
@@ -183,7 +194,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
    * @param fileInput file proveniente del input
    * @param id del catalog de documentos a cargar
    */
-  cargarDoc(event: Event, fileInput: HTMLInputElement, id: any): void {
+  cargarDoc(event: Event, fileInput: HTMLInputElement, id: any, tipo: string): void {
     const archivo = event.target as HTMLInputElement;
     const informacionArchivo = (archivo.files as FileList)[0];
 
@@ -206,7 +217,9 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         name: informacionArchivo.name,
         id,
         archivo: informacionArchivo,
-        ruta: URL.createObjectURL(informacionArchivo)
+        ruta: URL.createObjectURL(informacionArchivo),
+        cargado: false,
+        tipo
       });
     }
   }
@@ -228,7 +241,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         }
       }));
   }
-
 
   /**
    * Convierte kilobytes a megabytes.
@@ -256,61 +268,49 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Abre el modal para eliminar un documento.
-   * @param {number} i - El índice del documento.
+   * Abre el modal para confirmar la carga de documentos
    */
-  abrirModal(i: number) {
-    this.modal = 'show';
-    this.indiceDocumento = i;
-  }
-
-  /**
-   * Muestra el modal para ver un documento.
-   * @param {number} i - El índice del documento.
-   * @param {string} accion - La acción a realizar.
-   */
-  verDocumento(i: number, accion: string) {
-    this.mostrarModal = accion === 'v';
-  }
-
-  /**
-   * Elimina un documento de la lista.
-   * @param {number} i - El índice del documento.
-   */
-  eliminarDocumento(i: number) {
-    this.documentosCargados.splice(i, 1);
-    this.cerrarModal();
-    this.toastr.success('Se ha eliminado el archivo exitosamente');
-  }
-
-  /**
-   * Cierra el modal.
-   */
-  cerrarModal(): void {
-    this.modal = '';
-    return;
-    const modalElement = this.modalConfirmacion.nativeElement;
-    const modalInstance = bootstrap.Modal.getInstance(modalElement);
-    if (modalInstance) {
-      modalInstance.hide();
-    }
-  }
-
-  onFileChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.fileNames = Array.from(input.files).map(file => file.name).join(', ');
+  confirmUpload(): void {
+    const initialState: ModalOptions = {
+      initialState: {
+        cancelarBtnTxt: 'Cerrar',
+        confirmarBtnTxt: 'Cargar archivos',
+        titulo: 'Carga de archivos',
+        txtCuerpoHtml: `
+          <div class="d-flex flex-column">
+            <div class="mb-3">
+              <span>Para poder adjuntar sus documentos, deberá cumplir con las siguientes caracteristicas:</span>
+            </div>
+            <div class="px-3">
+              <ul>
+                <li>Formato PDF, que no contenga formulario, objetos OLE incrustados, codigo javascript, etc.</li>
+                <li>No debe contener páginas en blanco</li>
+              </ul>
+            </div>
+          </div>`
+      }
+    };
+    this.modalRef = this.modalService.show(ModalConfirmarComponent, initialState);
+    if (this.modalRef?.onHide) {
+      this.subscription.push(
+        this.modalRef.onHide.subscribe((response: boolean | string) => {
+          if (typeof response === 'boolean' && response) {
+            console.log('cargando documentos');
+            this.cargarDocumentos = true;
+            this.cargarArchivos();
+          }
+        })
+      );
     }
   }
 
   limpiarFile(fileInput: HTMLInputElement, item: any): void {
     fileInput.value = '';
-    const index = this.listadoArchivos.findIndex(f => f.id === item.id);
+    const index: number = this.listadoArchivos.findIndex(f => f.id === item.id);
     this.listadoArchivos.splice(index, 1);
   }
 
   agregarParte(fileInput: HTMLInputElement, item: any, origen: string) {
-    console.log(item);
     if (origen == 'obligatorios') {
       const index: number = this.catalogoDocumentos.findIndex(doc => doc.id === item.id);
       if (index !== -1) {
@@ -328,7 +328,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       } else {
         return;
       }
-      fileInput.value = '';
     } else {
       const index: number = this.listDocOpcionales.findIndex(doc => doc.id === item.id);
       if (index !== -1) {
@@ -344,7 +343,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         };
         this.listDocOpcionales[index].adicionales?.push(parteDocumento);
       }
-      fileInput.value = '';
     }
   }
 
@@ -358,21 +356,16 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   agregarOpcionales(): void {
     this.listDocOpcionalesAgregar.forEach((doc: any) => {
       const index = this.listDocOpcionales.findIndex((f: any) => f.id === doc);
-      console.log(index);
       if (index === -1) {
         const opcional = {
           ...this.archivosOpcionales.find(f => f.id === doc),
           adicionales: []
         };
-        console.log(opcional);
         this.listDocOpcionales.push(opcional);
-        console.log(this.listDocOpcionales);
         const indexOpcional = this.archivosOpcionales.findIndex(f => f.id === doc);
         if (indexOpcional !== -1) {
-          // Se asigna una nueva propiedad que luego usaremos en el template
           this.archivosOpcionales[indexOpcional] = {
             ...this.archivosOpcionales[indexOpcional]
-            // disabled: true 
           };
         }
         this.listDocOpcionalesDuplicado = this.listDocOpcionales.map(op => op.id);
@@ -382,11 +375,24 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
 
   cargarArchivos(): void {
     console.log(this.listadoArchivos);
+    const obligatorios = this.listadoArchivos.filter(f => f.tipo === 'obligatorio');
+    const opcionales = this.listadoArchivos.filter(f => f.tipo === 'opcional');
+    this.archivosCargando.obligatorios = obligatorios;
+    this.archivosCargando.opcionales = opcionales;
   }
 
   eliminarOpcional(item: any): void {
     const index: number = this.listDocOpcionales.findIndex(f => f.id === item.id);
     if (index !== -1) {
+      if (this.listDocOpcionales[index].adicionales?.length > 0) {
+        this.listDocOpcionales[index].adicionales.forEach((adicional: any) => {
+          const indexListado: number = this.listadoArchivos.findIndex(f => f.id === adicional.id);
+          this.listadoArchivos.splice(indexListado, 1);
+        });
+      }
+      const indexListado: number = this.listadoArchivos.findIndex(f => f.id === item.id);
+      this.listadoArchivos.splice(indexListado, 1);
+
       this.listDocOpcionales.splice(index, 1);
       this.listDocOpcionalesDuplicado = this.listDocOpcionales.map(op => op.id);
     }
@@ -402,6 +408,8 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     if (adicional) {
       const indexAdicional = item.item.adicionales.findIndex((adicional: any) => adicional.id === item.adicional.id);
       item.item.adicionales.splice(indexAdicional, 1);
+      const index: number = this.listadoArchivos.findIndex(f => f.id === item.id);
+      this.listadoArchivos.splice(index, 1);
     }
   }
 
@@ -409,14 +417,10 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     if (changes['catalogoDocumentos']) {
       this.catalogoDocumentos = this.catalogoDocumentos.map(item => ({
         ...item,
-        nuevo: false,
-        uniqueId: '',
         adicionales: []
       }));
-      console.log(this.catalogoDocumentos);
     }
   }
-
 
   ngOnDestroy(): void {
     this.subscription.forEach((sub: Subscription) => sub.unsubscribe());
