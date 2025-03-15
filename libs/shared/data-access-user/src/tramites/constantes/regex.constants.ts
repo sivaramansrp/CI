@@ -61,3 +61,12 @@ export const REGEX_RFC = /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/;
  * - $: Aserción para el final de la cadena.
  */
 export const REGEX_FECHA_VALIDA = /^\d{2}\/\d{2}\/\d{4}$/;
+
+/**
+ * Expresión regular para reemplazar caracteres que no sean
+ * letras (a-z, A-Z) ni números (0-9).
+ * 
+ * - `[^a-zA-Z0-9]`: Coincide con cualquier carácter que no sea una letra o un número.
+ * - `g`: Bandera global que asegura que se reemplacen todas las coincidencias.
+ */
+export const REGEX_REEMPLAZAR = /[^a-zA-Z0-9]/g;
