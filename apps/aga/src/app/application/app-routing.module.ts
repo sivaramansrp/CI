@@ -27,6 +27,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
   },
+  {
+    path: 'modificarCaatTerrestre',
+    loadChildren: () =>
+      import('./tramites/40103/modificarCaatTerrestre.module').then(
+        (m) => m.ModificarCaatTerrestreModule
+      ),
+  },
 ];
 
 @NgModule({
