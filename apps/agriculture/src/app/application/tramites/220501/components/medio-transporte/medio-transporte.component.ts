@@ -5,13 +5,14 @@ import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { MedioTransporte } from '../../models/medio-transporte.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { OpcionesDeBotonDeRadio } from '../../enums/sagarpa.enum';
 import { Output } from '@angular/core';
-import { SagarpaQuery } from '../../estados/sagarpa.query';
 import { SagarpaService } from '../../services/sagarpa/sagarpa.service';
-import { SagarpaStore } from '../../estados/sagarpa.store';
+import { Solicitud220501Query } from '../../estados/tramites220501.query';
+import { Solicitud220501State } from '../../estados/tramites220501.store';
+import { Solicitud220501Store } from '../../estados/tramites220501.store';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '../../constantes/texto-enum';
 import { Validators } from '@angular/forms';
@@ -19,6 +20,7 @@ import { map } from 'rxjs';
 import mercanciaTable from '../../../../../../../../../libs/shared/theme/assets/json/220501/mercancia-table.json';
 import { merge } from 'rxjs';
 import { takeUntil } from 'rxjs';
+
 /**
  * Componente para seleccionar el medio de transporte.
  */
@@ -51,7 +53,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   /**
    * Indica si es una solicitud de ferrocarril.
    */
-  esSolicitudFerrosValor! : number;
+  esSolicitudFerrosValor! : number | string;
 
   /**
    * Constantes de texto.
@@ -90,6 +92,18 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
     */
   private destroyed$ = new Subject<void>();
 
+  /** 
+   * Estado de la solicitud 220501. 
+   * Se inicializa como un objeto vacío con la estructura de Solicitud220501State.
+   */
+  solicitud220501State: Solicitud220501State = {} as Solicitud220501State;
+
+ 
+    /** 
+     * Variable que almacena las opciones disponibles para el botón de radio. 
+     */
+    opcionDeBotonDeRadio = OpcionesDeBotonDeRadio;
+    
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
@@ -99,10 +113,10 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private sagarpaService: SagarpaService,
-    private store: SagarpaStore,
-    private query: SagarpaQuery
+    public solicitud220501Store:Solicitud220501Store,
+    public solicitud220501Query: Solicitud220501Query
   ) {
-    this.crearFormulario();
+    //
   }
 
   /**
@@ -116,16 +130,17 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-
-      this.query.seleccionarMedioTransporte$
+    this.crearFormulario();
+      this.solicitud220501Query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyed$),
-          map((data: MedioTransporte) => {
+          map((data: Solicitud220501State) => {
+            this.solicitud220501State = data;
             this.medioTransporteForm.patchValue({
-              medioDeTransporte: data.medioDeTransporte,
-              identificacionTransporte: data.identificacionTransporte,
-              esSolicitudFerros: data.esSolicitudFerros,
-              totalGuias: data.totalGuias,
+              medioDeTransporte: this.solicitud220501State.medioDeTransporte,
+              identificacionTransporte: this.solicitud220501State.identificacionTransporte,
+              esSolicitudFerros: this.solicitud220501State.esSolicitudFerros,
+              totalGuias: this.solicitud220501State.totalGuias,
             });
           })
         )
@@ -139,10 +154,10 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    */
   crearFormulario(): void {
     this.medioTransporteForm = this.fb.group({
-      medioDeTransporte: new FormControl('', [Validators.required]),
-      identificacionTransporte: new FormControl('', [Validators.maxLength(30)]),
-      esSolicitudFerros: new FormControl('', [Validators.required]),
-      totalGuias: new FormControl('', [Validators.maxLength(50)]),
+      medioDeTransporte: new FormControl(this.solicitud220501State.medioDeTransporte, [Validators.required]),
+      identificacionTransporte: new FormControl(this.solicitud220501State.identificacionTransporte, [Validators.maxLength(30)]),
+      esSolicitudFerros: new FormControl(this.solicitud220501State.esSolicitudFerros, [Validators.required]),
+      totalGuias: new FormControl(this.solicitud220501State.totalGuias, [Validators.maxLength(50)]),
     });
   }
 
@@ -177,16 +192,16 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    * Selecciona la clasificación de régimen.
    */
   medioDeTransporteSeleccion(event: Catalogo): void {
-    this.store.actualizarMedioDetransporte(event.descripcion);
+    this.solicitud220501Store.setMedioDeTransporte(event.id);
   }
 
   /**
    * Método para establecer la selección de solicitud de ferrocarril.
    * @param e Evento de cambio del input.
    */
-  estableceSeleccionSolicitudFerro(e: Event): void {
-    const TARGET = e.target as HTMLInputElement;
-    this.esSolicitudFerrosValor = Number(TARGET.value);
+  estableceSeleccionSolicitudFerro(value: number | string): void {
+    // const TARGET = e.target as HTMLInputElement;
+    this.esSolicitudFerrosValor = value;
 
     if (this.esSolicitudFerrosValor === 1) {
       this.transporteSeleccionado.emit(true);
@@ -194,7 +209,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
       this.transporteSeleccionado.emit(false);
     }
     this.mostrarAgregarMercancia = false;
-    this.store.actualizarFerrocarrilPorPartes(this.esSolicitudFerrosValor);
+    this.solicitud220501Store.setEsSolicitudFerros(this.esSolicitudFerrosValor)
   }
 
   /**
@@ -219,7 +234,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    */
   getIdentificacionTransporte(): void {
     const VALUE = this.medioTransporteForm.get('identificacionTransporte')?.value;
-    this.store.actualizarIdentificacionDelTransporte(VALUE);
+    this.solicitud220501Store.setIdentificacionTransporte(VALUE);
   }
 
   /** 
@@ -228,7 +243,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    */
   getTotalGuiasAmparadas(): void {
     const VALUE = this.medioTransporteForm.get('totalGuias')?.value;
-    this.store.actualizarTotalDeGuiasAmparadas(VALUE);
+    this.solicitud220501Store.setTotalGuias(VALUE);
   }
 
 

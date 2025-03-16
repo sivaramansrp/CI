@@ -11,8 +11,6 @@ import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { HistorialInspeccionFisica } from '../../models/solicitud-pantallas.model';
 import { HistorialInspeccionFisicaComponent } from '../../shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
-import { InspeccionFisicaQuery } from '../../estados/inspeccion-fisica.query';
-import { InspeccionFisicaStore } from '../../estados/inspeccion-fisica.store';
 import { MedioTransporteComponent } from '../../shared/medio-transporte/medio-transporte.component';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -51,7 +49,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   form: FormGroup;
 
   /** Encabezados y datos para mostrar información de mercancías. */
-  hMercanciaTabla: string[]= [];
+  hMercanciaTabla: string[] = [];
 
   /** Datos de mercancías para mostrar en la tabla. */
   dMercanciaBody: DatosDeMercancias[] = [];
@@ -60,16 +58,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   hSolicitud: string[] = [];
 
   /** Datos de solicitud para mostrar en la tabla */
-  dSolicitud: Solicitud[]= [];
+  dSolicitud: Solicitud[] = [];
 
   /** Información del catálogo para la selección del medio de transporte. */
-  mediodetransporte!: CatalogosSelect;
+  mediodetransporte: CatalogosSelect = {} as CatalogosSelect;
 
-   /** Matriz para contener datos para cada fila de la tabla */
+  /** Matriz para contener datos para cada fila de la tabla */
   tableData = {
     tableBody: [],
     tableHeader: [],
-  }
+  };
 
   /** Datos de vagones e historial de inspección física. */
   hCarroFerrocarril: string[] = [];
@@ -84,16 +82,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   dHistorialInspecciones: HistorialInspeccionFisica[] = [];
 
   /**
-     * Subject para desuscribirse de los observables.
-     * @type {Subject<void>}
-     */ 
+   * Subject para desuscribirse de los observables.
+   * @type {Subject<void>}
+   */
   private destroyed$ = new Subject<void>();
 
   /** Constructor para inyectar dependencias */
   constructor(
     private fb: FormBuilder,
-    private inspeccionFisicaStore: InspeccionFisicaStore,
-    private inspeccionFisicaQuery: InspeccionFisicaQuery,
     private solicitudService: SolicitudPantallasService /**Servicio para obtener datos de solicitud */
   ) {
     this.form = this.fb.group(
@@ -103,20 +99,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /** Gancho de ciclo de vida para cargar datos iniciales cuando se inicializa el componente */
   ngOnInit(): void {
-    this.inspeccionFisicaQuery.selectCargarDatosIniciales$.pipe(
-      takeUntil(this.destroyed$),
-        map((data: CargarDatosIniciales) => {
-          this.hHistorialinspeccion = data.hHistorialinspeccion;
-          this.dHistorialInspecciones = data.dHistorialInspecciones;
-          this.dCarrosDeFerrocarril = data.dCarrosDeFerrocarril;
-          this.hCarroFerrocarril = data.hCarroFerrocarril;
-          this.hSolicitud = data.hSolicitud;
-          this.dSolicitud = data.dSolicitud;
-          this.hMercanciaTabla = data.hMerchandise;
-          this.dMercanciaBody = data.dMercancia;
-          this.mediodetransporte = data.medioDeTransporte;
-        })
-    ).subscribe();
     this.cargarDatosIniciales();
   }
 
@@ -126,8 +108,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   cargarDatosIniciales(): void {
     this.solicitudService.getData().subscribe({
       next: (data: CargarDatosIniciales) => {
-        this.inspeccionFisicaStore.actualizarDatosIniciales(data);
-      }
+        this.hHistorialinspeccion = data.hHistorialinspeccion;
+        this.dHistorialInspecciones = data.dHistorialInspecciones;
+        this.dCarrosDeFerrocarril = data.dCarrosDeFerrocarril;
+        this.hCarroFerrocarril = data.hCarroFerrocarril;
+        this.hSolicitud = data.hSolicitud;
+        this.dSolicitud = data.dSolicitud;
+        this.hMercanciaTabla = data.hMerchandise;
+        this.dMercanciaBody = data.dMercancia;
+        this.mediodetransporte = data.medioDeTransporte;
+      },
     });
   }
 

@@ -17,27 +17,17 @@
             <label for="esSolicitudFerros">¿La solicitud de Inspección Física es para trámites que arriban
                 por
                 Ferrocarril o por Partes II?*:</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="esSolicitudFerros" id="SiSolicitudFerros" value="1"
-                    (click)="estableceSeleccionSolicitudFerro($event)">
-                <label class="form-check-label" for="SiSolicitudFerros">Sí</label>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="esSolicitudFerros" id="NoSolicitudFerros" value="0"
-                    (click)="estableceSeleccionSolicitudFerro($event)">
-                <label class="form-check-label" for="NoSolicitudFerros">No</label>
-            </div>
-        </div>
-    </div>
 
+                <app-input-radio
+                [radioOptions]="opcionDeBotonDeRadio"
+                [isRequired]="true"
+                [selectedValue]="esSolicitudFerrosValor"
+                [layout]="'vertical'"
+                formControlName="esSolicitudFerros"
+                (valueChange)="estableceSeleccionSolicitudFerro($event)"
+              ></app-input-radio>
+        </div>
+    </div>
     @if (esSolicitudFerrosValor === 1) {
     <ng-alert [CONTENIDO]="TEXTOS.SECCION_LEYENDA_CONFIRMAR_TEXTOS"></ng-alert>
     }

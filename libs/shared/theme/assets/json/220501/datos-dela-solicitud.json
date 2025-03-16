@@ -1,9 +1,17 @@
 {
-    "aduanaIngreso": "12345",
-    "oficinaInspeccion": "Oficina Central",
-    "puntoInspeccion": "Punto A",
+    "aduanaIngreso": 0,
+    "oficinaInspeccion": 0,
+    "puntoInspeccion": 1,
     "claveUCON": "UCON123",
-    "establecimientoTIF": "TIF-001",
-    "regimen": "Regimen General",
-    "foliodel": "1502200200120240301000015"
+    "establecimientoTIF": 1,
+    "regimen": 0,
+    "foliodel": "1502200200120240301000015",
+    "nombre": "Nombre",
+    "numeroguia": "Numeroguia",
+    "capturaDatosMercancia": 0,
+    "coordenadas": "Coordenadas",
+    "movilizacion": 0,
+    "transporte": "020202",
+    "punto": 0,
+    "nombreEmpresa": 1
 }

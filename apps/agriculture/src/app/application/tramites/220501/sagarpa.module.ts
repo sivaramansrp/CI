@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { AgregarMercanciaComponent } from './components/agregar-mercancia/agregar-mercancia.component';
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, InputRadioComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user'
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CarrosDeFerrocarrilComponent } from '../220502/shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
@@ -67,7 +67,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CarrosDeFerrocarrilComponent,
     HistorialInspeccionFisicaComponent,
     CatalogoSelectComponent,
-    TableComponent
+    TableComponent,
+    InputRadioComponent
   ],
   exports: [SolicitudComponent, SolicitudPageComponent],
 })

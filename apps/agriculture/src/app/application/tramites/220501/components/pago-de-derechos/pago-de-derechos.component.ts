@@ -5,10 +5,12 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { OpcionesDeBotonDeRadio } from '../../enums/sagarpa.enum';
 import { PagoDeDerechos } from '../../models/pago-de-derechos.model';
 import { RevisionService } from '../../services/revision.service';
-import { SagarpaQuery } from '../../estados/sagarpa.query';
-import { SagarpaStore } from '../../estados/sagarpa.store';
+import { Solicitud220501Query } from '../../estados/tramites220501.query';
+import { Solicitud220501State } from '../../estados/tramites220501.store';
+import { Solicitud220501Store } from '../../estados/tramites220501.store';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -50,13 +52,13 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
    * Justificación del pago.
    * @type {CatalogosSelect}
    */
-  justificacion!: CatalogosSelect;
+  justificacion: CatalogosSelect = {} as CatalogosSelect;
 
   /**
    * Banco seleccionado.
    * @type {CatalogosSelect}
    */
-  banco!: CatalogosSelect;
+  banco: CatalogosSelect = {} as CatalogosSelect;
 
   /**
    * Servicio de revisión.
@@ -70,6 +72,22 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
    */
     private destroyed$ = new Subject<void>();
 
+  /** 
+   * Estado de la solicitud 220501. 
+   * Se inicializa como un objeto vacío con la estructura de Solicitud220501State.
+   */
+  solicitud220501State: Solicitud220501State = {} as Solicitud220501State;
+
+  /** 
+   * Variable para almacenar el valor de la opción seleccionada en el botón de radio 
+   * relacionado con "esSolicitudFerros".
+   */
+  esSolicitudFerrosValor!: string;
+
+  /** 
+   * Enumeración u objeto que contiene las opciones disponibles para el botón de radio.
+   */
+  opcionDeBotonDeRadio = OpcionesDeBotonDeRadio;
 
   /**
    * Constructor del componente.
@@ -80,8 +98,8 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
   constructor(
     private readonly fb: FormBuilder,
     revisionService: RevisionService,
-    public store : SagarpaStore,
-    public query : SagarpaQuery
+    public solicitud220501Store : Solicitud220501Store,
+    public solicitud220501Query : Solicitud220501Query
   ) {
     this.revisionService = revisionService;
   }
@@ -91,32 +109,31 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
    * @returns {void}
    */
   ngOnInit(): void {
-    this.pagoForm = this.fb.group({
-      exentoPagoNo: [{ value: '', disabled: true }],
-      exentoPagoSi: [{ value: '', disabled: true }],
-      justificacion: [{ value: '', disabled: true }],
-      claveReferencia: [{ value: '454000554', disabled: true }],
-      cadenaDependencia: [{ value: '0003008010CEZI', disabled: true }],
-      banco: [{ value: '', disabled: true }],
-      llavePago: [{ value: 'A94FA47497834FBD', disabled: true }],
-      importePago: [{ value: '2562', disabled: true }],
-      fetchapago: [{ value: '01/08/24', disabled: true }],
+     this.pagoForm = this.fb.group({
+      exentoPagoNo: [{ value: this.solicitud220501State.exentoPagoNo}],
+      justificacion: [{ value: this.solicitud220501State.justificacion, disabled: true }],
+      claveReferencia: [{ value: this.solicitud220501State.claveReferencia, disabled: true }],
+      cadenaDependencia: [{ value: this.solicitud220501State.cadenaDependencia, disabled: true }],
+      banco: [{ value: this.solicitud220501State.banco, disabled: true }],
+      llavePago: [{ value: this.solicitud220501State.llavePago, disabled: true }],
+      importePago: [{ value: this.solicitud220501State.importePago, disabled: true }],
+      fetchapago: [{ value: this.solicitud220501State.fetchapago, disabled: true }],
     });
 
-    this.query.seleccionarPagoDeDerechos$
+    this.solicitud220501Query.selectSolicitud$
     .pipe(
       takeUntil(this.destroyed$),
-      map((data: PagoDeDerechos) => {
+      map((data: Solicitud220501State) => {
+        this.solicitud220501State = data;
         this.pagoForm.patchValue({
-          exentoPagoNo: data.exentoPagoNo,
-          exentoPagoSi: data.exentoPagoSi,
-          justificacion: data.justificacion,
-          claveReferencia: data.claveReferencia,
-          cadenaDependencia: data.cadenaDependencia,
-          banco: data.banco,
-          llavePago: data.llavePago,
-          importePago: data.importePago,
-          fetchapago: data.fetchapago,
+          exentoPagoNo: this.solicitud220501State.exentoPagoNo,
+          justificacion: this.solicitud220501State.justificacion,
+          claveReferencia: this.solicitud220501State.claveReferencia,
+          cadenaDependencia: this.solicitud220501State.cadenaDependencia,
+          banco: this.solicitud220501State.banco,
+          llavePago: this.solicitud220501State.llavePago,
+          importePago: this.solicitud220501State.importePago,
+          fetchapago: this.solicitud220501State.fetchapago,
         });
       })
     )
@@ -134,7 +151,13 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
   getPagoDeDerechos(): void {
     this.revisionService.getPagoDeDerechos().subscribe({
       next: (resp: PagoDeDerechos) => {
-        this.store.actualizarPagoDeDerechos(resp);
+        this.solicitud220501Store.setJustificacion(resp.justificacion);
+        this.solicitud220501Store.setClaveReferencia(resp.claveReferencia);
+        this.solicitud220501Store.setCadenaDependencia(resp.cadenaDependencia);
+        this.solicitud220501Store.setBanco(resp.banco);
+        this.solicitud220501Store.setIlavePago(resp.llavePago);
+        this.solicitud220501Store.setImportePago(resp.importePago);
+        this.solicitud220501Store.setFetchaPago(resp.fetchapago);
       },
     });
   }
@@ -164,15 +187,81 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
    * @param event Objeto de tipo Catalogo que contiene la información de la justificación seleccionada.
    */
   selectJustificacionCatalogo(event: Catalogo): void {
-    this.store.actualizarJustificacionCatalogo(event);
+    this.solicitud220501Store.setJustificacion(event.id);
   }
+
+  /** 
+   * Método para establecer la clave de referencia. 
+   * Captura el valor ingresado en el campo de entrada y lo actualiza en el estado.
+   * 
+   * @param event - Evento del input HTML que contiene la clave de referencia.
+   */
+  setClaveReferencia(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.solicitud220501Store.setClaveReferencia(VALUE);
+  }
+
+  /** 
+   * Método para establecer la cadena de dependencia. 
+   * Captura el valor ingresado en el campo de entrada y lo actualiza en el estado.
+   * 
+   * @param event - Evento del input HTML que contiene la cadena de dependencia.
+   */
+  setCadenaDependencia(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.solicitud220501Store.setCadenaDependencia(VALUE);
+  }
+
+  /** 
+   * Método para establecer si el pago está exento o no. 
+   * Recibe un valor numérico o de tipo string y lo actualiza en el estado.
+   * 
+   * @param value - Valor que indica si el pago es exento (string o number).
+   */
+  setExentoPagoNo(value: string | number): void {
+    this.solicitud220501Store.setExentoPagoNo(value);
+  }
+
 
   /** 
    * Selecciona un banco desde el catálogo y actualiza el store con la información correspondiente.
    * @param event Objeto de tipo Catalogo que contiene la información del banco seleccionado.
    */
   selectBancoCatalogo(event: Catalogo): void {
-    this.store.actualizarBancoCatalogo(event);
+    this.solicitud220501Store.setBanco(event.id);
+  }
+
+  /** 
+   * Método para establecer la llave de pago. 
+   * Captura el valor ingresado en el campo de entrada y lo actualiza en el estado.
+   * 
+   * @param event - Evento del input HTML que contiene el valor de la llave de pago.
+   */
+  setIlavePago(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.solicitud220501Store.setIlavePago(VALUE);
+  }
+
+  /** 
+   * Método para establecer la fecha de pago. 
+   * Captura el valor ingresado en el campo de entrada y lo actualiza en el estado.
+   * 
+   * @param event - Evento del input HTML que contiene la fecha de pago.
+   */
+  setFetchaPago(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.solicitud220501Store.setFetchaPago(VALUE);
+  }
+
+  /** 
+   * Método para establecer el importe de pago. 
+   * Captura el valor ingresado en el campo de entrada y lo actualiza en el estado.
+   * 
+   * @param event - Evento del input HTML que contiene el importe de pago.
+   */
+  setImportePago(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.solicitud220501Store.setImportePago(VALUE);
   }
 
 

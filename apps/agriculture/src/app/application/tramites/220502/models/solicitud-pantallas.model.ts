@@ -158,18 +158,3 @@ export interface TipoContenedor {
   tipoContenedor: CatalogosSelect;
 }
 
-/**
- * Interfaz que define la estructura de una inspección física.
- * Contiene información sobre los datos iniciales, catálogos disponibles
- * y los detalles del trámite a realizar.
- */
-export interface InspeccionFisica {
-  /** Método o propiedad para cargar los datos iniciales de la inspección */
-  cargarDatosIniciales: CargarDatosIniciales;
-
-  /** Catálogo de opciones disponibles para la inspección */
-  catalogosSelect: CatalogosSelect;
-
-  /** Datos específicos del trámite que se va a realizar */
-  datosDelTramiteRealizar: DatosDelTramiteRealizar;
-}

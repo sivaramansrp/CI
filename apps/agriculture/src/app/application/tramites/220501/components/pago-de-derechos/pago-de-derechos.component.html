@@ -6,26 +6,15 @@
         <div class="col-md-12">
           <label for="certficacion_a">Exento de pago</label>
         </div>
-        <div class="col-md-4">
-          <input
-            class="form-check-input me-3"
-            type="radio"
-            name="certficacion"
-            value="a"
-            id="certficacion_a"
-          />
-          <label class="form-label" for="certficacion_a">No</label>
-        </div>
-        <div class="col-md-12">
-          <input
-            class="form-check-input me-3"
-            type="radio"
-            name="certficacion"
-            value="aa"
-            id="certficacion_aa"
-          />
-          <label class="form-label" for="certficacion_aa">Sí</label>
-        </div>
+
+        <app-input-radio
+        [radioOptions]="opcionDeBotonDeRadio"
+        [isRequired]="true"
+        [selectedValue]="esSolicitudFerrosValor"
+        [layout]="'vertical'"
+        formControlName="exentoPagoNo"
+        (valueChange)="setExentoPagoNo($event)"
+      ></app-input-radio>
       </div>
       <div class="row">
         <div class="col-md-8">
@@ -34,6 +23,7 @@
             [label]="justificacion.labelNombre"
             [placeholder]="justificacion.primerOpcion"
             [isDisabled]="true"
+            formControlName="justificacion"
             (selectionChange)="selectJustificacionCatalogo($event)"
           ></app-catalogo-select>
         </div>
@@ -51,6 +41,7 @@
               type="text"
               value="454000554"
               formControlName="claveReferencia"
+              (change)="setClaveReferencia($event)"
             />
           </div>
         </div>
@@ -68,6 +59,7 @@
               readonly
               required
               formControlName="cadenaDependencia"
+              (change)="setCadenaDependencia($event)"
             />
           </div>
         </div>
@@ -77,6 +69,7 @@
             [label]="banco.labelNombre"
             [placeholder]="banco.primerOpcion"
             [isDisabled]="true"
+            formControlName="banco"
             (selectionChange)="selectBancoCatalogo($event)"
           ></app-catalogo-select>
         </div>
@@ -94,6 +87,7 @@
               type="text"
               appUppercase
               formControlName="llavePago"
+              (change)="setIlavePago($event)"
             />
           </div>
         </div>
@@ -109,6 +103,7 @@
               type="text"
               appUppercase
               formControlName="fetchapago"
+              (change)="setFetchaPago($event)"
             />
           </div>
         </div>
@@ -123,6 +118,7 @@
               placeholder=""
               type="text"
               formControlName="importePago"
+              (change)="setImportePago($event)"
             />
           </div>
         </div>

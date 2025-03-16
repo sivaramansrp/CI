@@ -7,12 +7,13 @@ import { ControlContainer } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
-import { InspeccionFisicaQuery } from '../../estados/inspeccion-fisica.query';
-import { InspeccionFisicaStore } from '../../estados/inspeccion-fisica.store';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { Solicitud220502Query } from '../../estados/tramites220502.query';
+import { Solicitud220502State } from '../../estados/tramites220502.store';
+import { Solicitud220502Store } from '../../estados/tramites220502.store';
 import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
 import { Subject } from 'rxjs';
 import { TipoContenedor } from '../../models/solicitud-pantallas.model';
@@ -68,9 +69,15 @@ export class ResponsableInspeccionEnPuntoComponent
    */
   private destroyed$ = new Subject<void>();
 
+/**
+ * Variable que almacena el estado actual de la solicitud.
+ * Se inicializa como un objeto vacío de tipo `Solicitud220502State`.
+ */
+solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
+
   constructor(
-    private inspeccionFisicaStore: InspeccionFisicaStore,
-    private inspeccionFisicaQuery: InspeccionFisicaQuery,
+    private solicitud220502Store: Solicitud220502Store,
+    private solicitud220502Query: Solicitud220502Query,
     private solicitudService: SolicitudPantallasService /**Servicio para obtener datos de solicitud */
   ) {
     /** Inyectar el ControlContainer principal para administrar los controles de formulario */
@@ -85,23 +92,36 @@ export class ResponsableInspeccionEnPuntoComponent
       this.grupoFormularioPadre.addControl(
         this.claveDeControl,
         new FormGroup({
-          nombre: new FormControl('', [
+          nombre: new FormControl(this.solicitud220502State.nombre, [
             Validators.required,
             Validators.maxLength(150),
           ]),
-          primerapellido: new FormControl('', [Validators.maxLength(80)]),
-          segundoapellido: new FormControl('', [Validators.maxLength(80)]),
-          mercancia: new FormControl('', [Validators.required]),
-          tipocontenedor: new FormControl('', []),
+          primerapellido: new FormControl(this.solicitud220502State.primerapellido, [Validators.maxLength(80)]),
+          segundoapellido: new FormControl(this.solicitud220502State.segundoapellido, [Validators.maxLength(80)]),
+          mercancia: new FormControl(this.solicitud220502State.mercancia, [Validators.required]),
+          tipocontenedor: new FormControl(this.solicitud220502State.tipocontenedor, []),
         })
       );
     }
 
-    this.inspeccionFisicaQuery.selectCatalogos$
+    this.solicitud220502Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
-        map((res: CatalogosSelect) => {
-          this.tipoContenedor = res;
+        map((res: Solicitud220502State) => {
+          this.solicitud220502State = res;
+          const FORM_GROUP = this.grupoFormularioPadre.get(
+            this.claveDeControl
+          ) as FormGroup;
+
+          if (FORM_GROUP) {
+            FORM_GROUP.patchValue({
+              nombre: this.solicitud220502State.nombre,
+              primerapellido: this.solicitud220502State.primerapellido,
+              segundoapellido: this.solicitud220502State.segundoapellido,
+              mercancia: this.solicitud220502State.mercancia,
+              tipocontenedor: this.solicitud220502State.tipocontenedor,
+            });
+          }
         })
       )
       .subscribe();
@@ -128,10 +148,60 @@ export class ResponsableInspeccionEnPuntoComponent
   cargarDatosIniciales(): void {
     this.solicitudService.getDataResponsableInspeccion().subscribe({
       next: (data: TipoContenedor) => {
-        this.inspeccionFisicaStore.actualizarCatalogosSelect(data.tipoContenedor);
+        this.tipoContenedor = data.tipoContenedor;
       },
-    })
+    });
   }
+/**
+ * Actualiza el nombre en el estado de la solicitud.
+ * 
+ * @param event - Evento del input que contiene el nuevo valor del nombre.
+ */
+setNombre(event: Event): void {
+  const VALUE = (event.target as HTMLInputElement).value;
+  this.solicitud220502Store.setNombre(VALUE);
+}
+
+/**
+ * Actualiza el primer apellido en el estado de la solicitud.
+ * 
+ * @param event - Evento del input que contiene el nuevo valor del primer apellido.
+ */
+setPrimerapellido(event: Event): void {
+  const VALUE = (event.target as HTMLInputElement).value;
+  this.solicitud220502Store.setPrimerapellido(VALUE);
+}
+
+/**
+ * Actualiza el segundo apellido en el estado de la solicitud.
+ * 
+ * @param event - Evento del input que contiene el nuevo valor del segundo apellido.
+ */
+setSegundoapellido(event: Event): void {
+  const VALUE = (event.target as HTMLInputElement).value;
+  this.solicitud220502Store.setSegundoapellido(VALUE);
+}
+
+/**
+ * Actualiza la mercancía en el estado de la solicitud.
+ * 
+ * @param event - Evento del input que contiene la descripción de la mercancía.
+ */
+setMercancia(event: Event): void {
+  const VALUE = (event.target as HTMLInputElement).value;
+  this.solicitud220502Store.setMercancia(VALUE);
+}
+
+/**
+ * Actualiza el tipo de contenedor en el estado de la solicitud.
+ * 
+ * @param event - Objeto de tipo Catalogo que contiene el identificador del tipo de contenedor.
+ */
+setTipoContenedor(event: Catalogo): void {
+  this.solicitud220502Store.setTipocontenedor(event.id);
+}
+
+
   /**
    * Gancho de ciclo de vida que limpia el componente.
    * Elimina el control de formulario del formulario principal.

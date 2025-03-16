@@ -3,7 +3,7 @@
  */
 export interface PagoDeDerechos {
   /** Indica si el pago no está exento. */
-  exentoPagoNo: string;
+  exentoPagoNo: string | number;
 
   /** Indica si el pago está exento. */
   exentoPagoSi: string;
@@ -18,7 +18,7 @@ export interface PagoDeDerechos {
   cadenaDependencia: string;
 
   /** Nombre del banco donde se realizó el pago. */
-  banco: string;
+  banco: number;
 
   /** Llave única de identificación del pago. */
   llavePago: string;
