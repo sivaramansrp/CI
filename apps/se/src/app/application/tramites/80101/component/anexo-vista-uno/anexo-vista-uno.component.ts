@@ -1,10 +1,12 @@
 import { ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/enum/anexo-dos-y-tres.enum';
 import { ANEXO_I_SERVICIO } from '../../../../shared/enum/anexo-dos-y-tres.enum';
+import { ActivatedRoute } from '@angular/router';
 import { AnexoImportacionEncabezado } from '../../../../shared/models/se-shared.model';
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
 import { AnexoUnoEncabezado } from '../../../../shared/models/se-shared.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 
 @Component({
@@ -36,6 +38,9 @@ export class AnexoVistaUnoComponent {
     * @type {AnexoEncabezado[]}
     */
   public anexoDosTablaLista: AnexoImportacionEncabezado[] = [];
+  constructor(private router: Router, private activatedRoute: ActivatedRoute){
+    // do nothing
+  }
 
   /**
    * Método para obtener la devolución de llamada del anexo Uno.
@@ -52,5 +57,9 @@ export class AnexoVistaUnoComponent {
    */
    public obtenerAnexoDosDevolverLaLlamada(event: AnexoImportacionEncabezado[]): void {
     this.anexoDosTablaLista = event ? event : [];
+  }
+
+  public rutaLaFraccionDeComplemento(): void{
+    this.router.navigate(['../complementar-fraccion'], { relativeTo: this.activatedRoute });
   }
 }

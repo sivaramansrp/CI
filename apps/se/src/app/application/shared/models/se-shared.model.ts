@@ -44,3 +44,38 @@ export interface Anexo1y3Configuartion<T> {
     ENCABEZADO_FRACCION_IMPORTACION : string;
     estatus: boolean;
   }
+
+  export interface Catalogo {
+    id: number;
+    descripcion: string;
+    clave?: string;
+    tam?: string;
+    dpi?: string
+  }
+
+  export interface ComplimentarFraccion {
+    fraccionArancelaria: string,
+    anexoDos: string,
+    tipo: string,
+    umt: string,
+    catagoria: string;
+    descripcion: string;
+    monedaNacionalMensual: number;
+    monedaNacionalDeDosPeriodos: number;
+    volumenMensual: number;
+    twoPeriodVolume: number;
+  }
+
+  export interface ComplimentarFraccionResoponse {
+    catagoria: string;
+    descripcion: string;
+    monedaNacionalMensual: number;
+    monedaNacionalDeDosPeriodos: number;
+    volumenMensual: number;
+    twoPeriodVolume: number;
+  }
+
+  export interface RutaNombre {
+    catagoria: string;
+  }
+
