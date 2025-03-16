@@ -20,4 +20,5 @@ export class SolicitudService {
   getclave(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/260212/clave.json');
   }
+
 }

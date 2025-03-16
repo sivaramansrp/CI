@@ -1,6 +1,8 @@
-import { Component, EventEmitter, Output} from '@angular/core';
+import { Component, EventEmitter, Output, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SolicitudService } from '../../services/solicitud.service';
 
 
 
@@ -12,20 +14,34 @@ import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloCompon
   templateUrl: './clave-scian.component.html',
   styleUrl: './clave-scian.component.scss',
 })
-export class ClaveScianComponent {
+export class ClaveScianComponent implements OnInit {
   @Output() cancel = new EventEmitter<void>();
 
   cancelar() {
     this.cancel.emit(); // Emit event to parent
   }
-  clave: Catalogo[] = [
-    {
-      id: 1,
-      descripcion: 'SINALOA',
-    },
-    {
-      id: 2,
-      descripcion: 'Opción 1',
+
+  clave:Catalogo[]=[];
+  claveForm!:FormGroup
+
+  constructor(private fb: FormBuilder,private solicitudService: SolicitudService) { }
+  
+  ngOnInit(): void {
+
+    this.claveScianForm()
+
+    this.solicitudService.getclave().subscribe((data) => {
+      this.clave = data;
     }
-  ];
+    );
+
+  }
+
+  claveScianForm(){
+     this.claveForm = this.fb.group({
+          clave: ['', Validators.required],
+          Descripcion:['']
+     })
+  
+  }
 }

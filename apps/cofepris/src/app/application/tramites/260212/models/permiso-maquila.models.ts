@@ -19,3 +19,8 @@ export interface solicitudModel {
     clave:string;
     descripcíon:string;
   }
+
+  export interface LosOption {
+    label: string;
+    value: string;
+  }

@@ -16,8 +16,10 @@
 <div class="row pb-5 mb-5">
     <div class="col-md-4">
         <div class="form-group">
-            <label class="form-label" for="régimen">Régimen*:</label>
-            <input class="form-control" type="text" id="régimen">
+            <!-- <label class="form-label" for="régimen">Régimen*:</label>
+            <input class="form-control" type="text" id="régimen"> -->
+            <app-catalogo-select [catalogo]="clave" [label]="'Régimen*:'" [required]="true" name="régimen">
+            </app-catalogo-select>
         </div>
     </div>
     <div class="col-md-8">

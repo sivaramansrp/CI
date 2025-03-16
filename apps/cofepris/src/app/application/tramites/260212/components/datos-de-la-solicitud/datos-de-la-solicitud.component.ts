@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -11,7 +11,7 @@ import { ClaveScianComponent } from '../clave-scian/clave-scian.component';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { FormularioOperacionComercialComponent } from '../formulario-operacion-comercial/formulario-operacion-comercial.component';
 import { MercanciasTableFormComponent } from '../mercancias-tabla-form/mercancias-table-form.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
 
 
@@ -19,31 +19,40 @@ import { RepresentanteLegalComponent } from '../representante-legal/representant
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
   imports: [CommonModule,
+    ReactiveFormsModule,
     TituloComponent,
     TablaDinamicaComponent,
     AlertComponent,
     ClaveScianComponent,
     FormularioOperacionComercialComponent,
     MercanciasTableFormComponent,
-    RepresentanteLegalComponent
+    RepresentanteLegalComponent,
+    CatalogoSelectComponent
 
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit {
-  datosDeSolicitudForm!: FormGroup;
+  datosEstablecimientoForm!: FormGroup;
+
   DATOS_ALERT = DATOS_ALERT
   MANIFIESTOS_ALERT= MANIFIESTOS_ALERT
+
   solicitudData: solicitudModel[] = [];
   mercanicaData: MercanciaModel[] = [];
+
+  plegable = true;
   mostrarFormularioScian = false;
-  colapsable = true;
+ 
   mostrarFormularioMercancias = false;
   mostrarFormulario = false;
 
+  estado: Catalogo[]=[]
 
-  configuracionTabla: ConfiguracionColumna<solicitudModel>[] = [
+  claveDatas: ClaveModel[] = [];
+  TablaSeleccion = TablaSeleccion;
+  configuracionTablaSolicitud: ConfiguracionColumna<solicitudModel>[] = [
     { encabezado: 'Fecha Creación', clave: (item: solicitudModel) => item.fechaCreación, orden: 1 },
     { encabezado: 'Mercancía', clave: (item: solicitudModel) => item.mercancía, orden: 2 },
     { encabezado: 'Cantidad', clave: (item: solicitudModel) => item.cantidad, orden: 3 },
@@ -56,53 +65,56 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     this.solicitudService.getSolicitudes().subscribe((data) => {
       this.solicitudData = data;
     });
+
+    this.solicitudService.getclave().subscribe((data) => {
+      this.estado = data;
+    })
   }
 
-  claveDatas: ClaveModel[] = [];
-  TablaSeleccion = TablaSeleccion;
-
-  configuracionTablas: ConfiguracionColumna<ClaveModel>[] = [
+  configuracionTablaScian: ConfiguracionColumna<ClaveModel>[] = [
     { encabezado: 'Clave S.C.A.N.', clave: (item: ClaveModel) => item.clave, orden: 1 },
     { encabezado: 'Descripcíon del S.C.I.A.N', clave: (item: ClaveModel) => item.descripcíon, orden: 2 },
   ];
 
   fomInitialize() {
-    this.datosDeSolicitudForm = this.fb.group({
-      rfcDelResponsableSanitario: ['', [Validators.required]],
+    this.datosEstablecimientoForm = this.fb.group({
+      rfcDelResponsableSanitario: [''],
       denominacionRazonSocial: ['', [Validators.required]],
-      correoElectronico: ['', [Validators.required]],
-      CódigoPostal: ['', [Validators.required]],
-      Estado: ['', [Validators.required]],
-      Municipio: ['', [Validators.required]],
-      Localidad: ['', [Validators.required]],
-      Colonia: ['', [Validators.required]],
+      correoElectronico: ['', [Validators.required,Validators.maxLength(30),Validators.email]],
+      codigoPostal: ['', [Validators.required]],
+      estado: ['', [Validators.required]],
+      municipio: ['', [Validators.required]],
+      localidad: ['', [Validators.required]],
+      colonia: ['', [Validators.required]],
       caller: ['', [Validators.required]],
       lada: ['', [Validators.required]],
-      teléfono: ['', [Validators.required]],
+      telefono: ['', [Validators.required]],
     });
   }
 
-  toggleFormulario() {
-    this.mostrarFormularioScian = !this.mostrarFormularioScian;
+  mostrarPlegable() {
+    this.plegable = !this.plegable;
   }
 
   toggleScianFormulario() {
     this.mostrarFormularioScian = true
   }
 
-  closeScianFormulario() {
+  // toggleFormulario() {
+  //   this.mostrarFormularioScian = !this.mostrarFormularioScian;
+  // }
+
+  cerrarScianFormulario() {
     this.mostrarFormularioScian = false;
   }
 
-  mostrar_colapsable() {
-    this.colapsable = !this.colapsable;
-  }
 
-  openForm() {
+
+  openMercanciasForm() {
     this.mostrarFormularioMercancias = true;
   }
 
-  closeForm() {
+  closeMercanciasForm() {
     this.mostrarFormularioMercancias = false;
   }
 
@@ -115,5 +127,6 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     { encabezado: 'Forma farmacéutica', clave: (item: MercanciaModel) => item.formaFarmacéutica, orden: 6 },
     { encabezado: 'Estado físico', clave: (item: MercanciaModel) => item.estadoFsico, orden: 7 }
 ];
+
 
 }
