@@ -165,7 +165,8 @@ export class AnexoUnoComponent {
   setRuta(nombre: string): void {
     if (nombre) {
       const RUTA_NOMBRE: RutaNombre = {
-        catagoria: nombre
+        catagoria: nombre,
+        id: 'EXPORT'
       }
       this.rutaLaFraccionDeComplemento.emit(RUTA_NOMBRE);
     }

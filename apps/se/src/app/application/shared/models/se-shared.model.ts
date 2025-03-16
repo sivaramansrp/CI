@@ -77,5 +77,6 @@ export interface Anexo1y3Configuartion<T> {
 
   export interface RutaNombre {
     catagoria: string;
+    id: string
   }
 

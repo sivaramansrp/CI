@@ -1,7 +1,7 @@
 import { ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/enum/anexo-dos-y-tres.enum';
 import { ANEXO_I_SERVICIO } from '../../../../shared/enum/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
-import { AnexoImportacionEncabezado } from '../../../../shared/models/se-shared.model';
+import { AnexoImportacionEncabezado, RutaNombre } from '../../../../shared/models/se-shared.model';
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
 import { AnexoUnoEncabezado } from '../../../../shared/models/se-shared.model';
 import { CommonModule } from '@angular/common';
@@ -59,7 +59,9 @@ export class AnexoVistaUnoComponent {
     this.anexoDosTablaLista = event ? event : [];
   }
 
-  public rutaLaFraccionDeComplemento(): void{
-    this.router.navigate(['../complementar-fraccion'], { relativeTo: this.activatedRoute });
+  public rutaLaFraccionDeComplemento(event: RutaNombre): void{
+    if(event && event.catagoria){
+      this.router.navigate([`../${event.catagoria}`], { relativeTo: this.activatedRoute });
+    }
   }
 }
