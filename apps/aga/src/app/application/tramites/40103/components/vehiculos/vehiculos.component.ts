@@ -18,7 +18,7 @@ import {
   Emisor2daPlaca,
   VehiculoColor,
   VehiculoVEHs,
-} from 'libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
+} from 'libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 @Component({
   selector: 'app-vehiculos',
   templateUrl: './vehiculos.component.html',

@@ -6,7 +6,7 @@ import {
   DatosDelVehículoPaisEmisor,
   VehiculoVEHs, VehiculoColor,
   Emisor2daPlaca
-} from 'libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
+} from 'libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({

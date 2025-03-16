@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import mockData from 'libs/shared/theme/assets/json/40101/director-general-mockdata.json';
+import mockData from 'libs/shared/theme/assets/json/40103/director-general-mockdata.json';
 import { Chofer40101Query } from '../../estados/chofer40101.query';
 import { Chofer40101Store } from '../../estados/chofer40101.store';
 @Component({

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import mockData from 'libs/shared/theme/assets/json/40101/solicitante-mockdata.json';
+import mockData from 'libs/shared/theme/assets/json/40103/solicitante-mockdata.json';
 
 /**
  * Componente para gestionar el formulario del solicitante.
