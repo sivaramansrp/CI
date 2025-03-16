@@ -63,12 +63,6 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
   private destroyNotifier$ = new Subject<void>();
   formulariodataStore: Movilizacion = {} as Movilizacion;
 
-  /**
-   * @description Suscripción para manejar cambios en el estado del formulario.
-   * Se utiliza para actualizar el estado del formulario en el servicio cuando cambia su validez.
-   * @type {Subscription}
-   */
-  private subscription: Subscription = new Subscription();
 
   /**
    * @constructor

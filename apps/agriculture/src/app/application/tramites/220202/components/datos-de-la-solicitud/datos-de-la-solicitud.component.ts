@@ -4,9 +4,9 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { DatosDeFila, DatosForma } from '../../models/220202/fitosanitario.model';
+import { DatosDeFila, DatosForma, FilaSolicitud } from '../../models/220202/fitosanitario.model';
 
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
 
@@ -130,7 +130,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   formularioDeTransporte?: FormGroup;
 
   formulariodataStore: DatosForma = {} as DatosForma;
-
+  tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
+  configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
+    { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
+    { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
+    { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
+    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
+    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
+    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
+    { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
+  ];
+  /**
+ * @description Datos de la tabla principal.
+ * @type {FilaSolicitud[]}
+ */
+  cuerpoTabla: FilaSolicitud[] = [];
   private destroyNotifier$ = new Subject<void>();
 
   /**
@@ -174,41 +188,68 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method createFromFields
    * @returns {void}
    */
+  /**
+ * Método para crear el formulario y sus campos iniciales.
+ */
   createFromFields() {
-    this.forma = this.fb.group({
-      aduanaDeIngreso: [this.formulariodataStore.aduanaDeIngreso || '', Validators.required],
-      oficinaDeInspeccion: [this.formulariodataStore.oficinaDeInspeccion || '', Validators.required],
-      puntoDeInspeccion: [this.formulariodataStore.puntoDeInspeccion || '', Validators.required],
-      numeroDeGuia: [this.formulariodataStore.numeroDeGuia || ''],
-      regimen: [this.formulariodataStore.regimen || '', Validators.required],
-      numeroDeCarro: [this.formulariodataStore.numeroDeCarro || ''],
-      tipoDeRequisito: [this.formulariodataStore.tipoDeRequisito || '', Validators.required],
-      requisito: [this.formulariodataStore.requisito || ''],
-      numeroCertificadoInternacional: [this.formulariodataStore.numeroCertificadoInternacional || ''],
-      fraccionArancelaria: [this.formulariodataStore.fraccionArancelaria || '', Validators.required],
-      descripcionFraccion: [this.formulariodataStore.descripcionFraccion || ''],
-      nico: [this.formulariodataStore.nico || '', Validators.required],
-      descripcionNico: [this.formulariodataStore.descripcionNico || ''],
-      descripcion: [this.formulariodataStore.descripcion || ''],
-      cantidadUMT: [this.formulariodataStore.cantidadUMT || '', Validators.required],
-      umt: [this.formulariodataStore.umt || '', Validators.required],
-      cantidadUMC: [this.formulariodataStore.cantidadUMC || '', Validators.required],
-      umc: [this.formulariodataStore.umc || '', Validators.required],
-      uso: [this.formulariodataStore.uso || '', Validators.required],
-      tipoDeProducto: [this.formulariodataStore.tipoDeProducto || '', Validators.required],
-    });
-    // const MERCANCIAS_ARRAY = this.forma.get('mercancias') as FormArray;
-    // MERCANCIAS_ARRAY.push(this.fb.group({
-    //   seleccionado: [''],
-    //   noPartida: [''],
-    //   tipoRequisito: [''],
-    //   requisito: [''],
-    //   numCertificadoInternacional: [''],
-    //   fraccionArancelaria: [''],
-    //   descFraccion: [''],
-    //   nico: [''],
-    // }));
+    this.forma = this.fb.group(this.inicializarCamposFormulario());
   }
+  /**
+   * Método que inicializa los campos del formulario.
+   * @returns Un objeto con los campos del formulario.
+   */
+  inicializarCamposFormulario() {
+
+    return {
+      ...this.crearCamposRequeridos(),
+      ...this.crearCamposOpcionales(),
+    };
+  }
+
+  /**
+ * Método para crear campos requeridos del formulario.
+ * @param FORMULARIO Datos de formulariodataStore.
+ * @returns Objeto con los campos requeridos.
+ */
+  crearCamposRequeridos() {
+    const FORMULARIO = this.formulariodataStore;
+    return {
+      aduanaDeIngreso: [FORMULARIO.aduanaDeIngreso || '', Validators.required],
+      oficinaDeInspeccion: [FORMULARIO.oficinaDeInspeccion || '', Validators.required],
+      puntoDeInspeccion: [FORMULARIO.puntoDeInspeccion || '', Validators.required],
+      regimen: [FORMULARIO.regimen || '', Validators.required],
+      numeroDeGuia: [FORMULARIO.numeroDeGuia || ''],
+      numeroDeCarro: [FORMULARIO.numeroDeCarro || ''],
+      tipoDeRequisito: [FORMULARIO.tipoDeRequisito || '', Validators.required],
+      fraccionArancelaria: [FORMULARIO.fraccionArancelaria || '', Validators.required],
+      nico: [FORMULARIO.nico || '', Validators.required],
+      cantidadUMT: [FORMULARIO.cantidadUMT || '', Validators.required],
+      umt: [FORMULARIO.umt || '', Validators.required],
+      cantidadUMC: [FORMULARIO.cantidadUMC || '', Validators.required],
+      umc: [FORMULARIO.umc || '', Validators.required],
+      uso: [FORMULARIO.uso || '', Validators.required],
+      tipoDeProducto: [FORMULARIO.tipoDeProducto || '', Validators.required],
+    };
+  }
+  /**
+   * Método para crear campos opcionales del formulario.
+   * @param FORMULARIO Datos de formulariodataStore.
+   * @returns Objeto con los campos opcionales.
+   */
+  crearCamposOpcionales() {
+    const FORMULARIO = this.formulariodataStore;
+    return {
+      numeroDeGuia: [FORMULARIO.numeroDeGuia || ''],
+      requisito: [FORMULARIO.requisito || ''],
+      numeroCertificadoInternacional: [FORMULARIO.numeroCertificadoInternacional || ''],
+      descripcionFraccion: [FORMULARIO.descripcionFraccion || ''],
+      descripcionNico: [FORMULARIO.descripcionNico || ''],
+      descripcion: [FORMULARIO.descripcion || ''],
+    };
+  }
+
+
+
 
   /**
    * @description Obtiene todos los datos para las listas de opciones (selects) del formulario.

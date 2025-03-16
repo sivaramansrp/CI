@@ -18,24 +18,12 @@
                 <h5>Solicita</h5>
                 <div class="row">
                   <div class="col-md-12">
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th class="text-center">Fecha Creación</th>
-                          <th class="text-center">Mercancía</th>
-                          <th class="text-center">Cantidad</th>
-                          <th class="text-center">Proveedor</th>
-                        </tr>
-                      </thead>
-                      <tbody class="text-center">
-                        <tr *ngFor="let persona of tablaDeDatosDeCelda; let i = index">
-                          <td>{{ persona.fechaCreacion }}</td>
-                          <td>{{ persona.mercancia }}</td>
-                          <td>{{ persona.cantidad }}</td>
-                          <td>{{ persona.proveedor }}</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <app-tabla-dinamica
+                    [tipoSeleccionTabla]="tipoSeleccionsoli"
+                    [configuracionTabla]="configuracionColumnasoli"
+                    [datos]="cuerpoTabla"
+                  >
+                  </app-tabla-dinamica>
                   </div>
                 </div>
               </div>

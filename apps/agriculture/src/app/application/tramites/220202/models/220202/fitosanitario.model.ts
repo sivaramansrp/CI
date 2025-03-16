@@ -204,7 +204,15 @@ export interface DatosForma {
     uso: string;
     tipoDeProducto: string;
 }
-
+export interface FilaSolicitud {
+    noPartida: string;
+    tipoRequisito: string;
+    requisito: string;
+    numeroCertificadoInternacional: string;
+    fraccionArancelaria: string;
+    descripcionFraccion: string;
+    nico: string;
+}
 /**
  * @function getDefaultValue
  * @description Función auxiliar para retornar el valor por defecto de cada propiedad.
