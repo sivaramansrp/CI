@@ -166,7 +166,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
           const FORMA_VALIDA_ACTUALIZADA = {
             validaciondeFormulariodePago: false,
           };
-          FORMA_VALIDA_ACTUALIZADA.validaciondeFormulariodePago = this.pagoForm.valid ? true : FORMA_VALIDA_ACTUALIZADA.validaciondeFormulariodePago;
+          FORMA_VALIDA_ACTUALIZADA.validaciondeFormulariodePago = this.pagoForm.valid ? true : false;
           this.agriculturaApiService.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA); // Implement this method to handle button state changes
         },
         (error) => {

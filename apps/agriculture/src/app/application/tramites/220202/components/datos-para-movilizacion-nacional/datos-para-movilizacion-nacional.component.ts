@@ -101,7 +101,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
       const FORMA_VALIDA_ACTUALIZADA = {
         movilizacionValidacion: false,
       };
-      FORMA_VALIDA_ACTUALIZADA.movilizacionValidacion = this.forma.valid ? true : FORMA_VALIDA_ACTUALIZADA.movilizacionValidacion;
+      FORMA_VALIDA_ACTUALIZADA.movilizacionValidacion = this.forma.valid ? true : false;
       this.agriculturaApiService.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
     });
 

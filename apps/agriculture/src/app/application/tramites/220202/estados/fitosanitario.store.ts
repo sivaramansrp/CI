@@ -18,7 +18,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 @Injectable({
     providedIn: 'root',
 })
-@StoreConfig({ name: 'seccion', resettable: true })
+@StoreConfig({ name: 'fitosanitariostore', resettable: true })
 export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
     constructor() {
         super(createDatosState());
@@ -26,13 +26,14 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
 
     /**
      * Actualiza el estado con la información del formulario.
-     * @param datosForma Datos del formulario.
+     * @param datos Datos del formulario.
      */
-    public actualizarDatosForma(datosForma: DatosForma): void {
+    public actualizarDatosForma(datos: DatosForma): void {
         this.update(state => ({
             ...state,
-            datosForma, // Envuelve los datos en un array
+            datos, // Envuelve los datos en un array
         }));
+
     }
 
     /**
@@ -58,11 +59,13 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
     }
 
 
+
+
     public actualizarformaValida(updatedFormaValida: { [key: string]: boolean }): void {
         this.update(state => ({
             ...state,
-            formaValida: {
-                ...state?.finalEnviar,
+            finalEnviar: {
+                ...state.finalEnviar,
                 ...updatedFormaValida,
             }
         }));

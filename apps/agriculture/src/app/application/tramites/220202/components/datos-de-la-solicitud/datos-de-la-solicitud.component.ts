@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 
@@ -122,17 +122,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   forma!: FormGroup;
 
-  /** 
-   * @description Formulario para las mercancías. 
-   * Este `FormGroup` se utiliza para gestionar los controles relacionados con la información de las mercancías.
-   */
-  mercanciaForma?: FormGroup;
 
   /** 
    * @description Formulario para el transporte. 
    * Este `FormGroup` contiene los controles para los campos del formulario relacionados con la información de transporte.
    */
   formularioDeTransporte?: FormGroup;
+
+  formulariodataStore: DatosForma = {} as DatosForma;
 
   private destroyNotifier$ = new Subject<void>();
 
@@ -145,7 +142,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private readonly agriculturaApiService: AgriculturaApiService
   ) {
-    this.createFromFields();
+    this.agriculturaApiService.getAllDatosForma().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+      this.formulariodataStore = datos.datos;
+    })
+
   }
 
   /**
@@ -156,11 +156,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.createFromFields();
     this.forma?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
       const FORMA_VALIDA_ACTUALIZADA = {
         datosFormaValidacion: false,
       };
-      FORMA_VALIDA_ACTUALIZADA.datosFormaValidacion = this.forma?.valid ? true : FORMA_VALIDA_ACTUALIZADA.datosFormaValidacion;
+      FORMA_VALIDA_ACTUALIZADA.datosFormaValidacion = this.forma?.valid ? true : false;
       this.agriculturaApiService.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
     })
     this.obtenerTodosLosDatosDeLaLista();
@@ -175,39 +176,38 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   createFromFields() {
     this.forma = this.fb.group({
-      aduana: [''],
-      agropecuaria: [''],
-      punto: [''],
-      guia: [''],
-      regimen: [''],
-      ferrocarril: [''],
-      mercancias: this.fb.array([]),
-      aduanaMercancia: [''],
-      requisito: [''],
-      numCertificadoInternacional: [''],
-      arancelaria: [''],
-      descFraccionArancelaria: [{ value: '', disabled: true }],
-      nico: [''],
-      descNico: [{ value: '', disabled: true }],
-      descripcion: [''],
-      cantidadUMT: [''],
-      umt: [{ value: '', disabled: true }],
-      cantidadUMC: [''],
-      umc: [''],
-      uso: [''],
-      producto: [''],
+      aduanaDeIngreso: [this.formulariodataStore.aduanaDeIngreso || '', Validators.required],
+      oficinaDeInspeccion: [this.formulariodataStore.oficinaDeInspeccion || '', Validators.required],
+      puntoDeInspeccion: [this.formulariodataStore.puntoDeInspeccion || '', Validators.required],
+      numeroDeGuia: [this.formulariodataStore.numeroDeGuia || ''],
+      regimen: [this.formulariodataStore.regimen || '', Validators.required],
+      numeroDeCarro: [this.formulariodataStore.numeroDeCarro || ''],
+      tipoDeRequisito: [this.formulariodataStore.tipoDeRequisito || '', Validators.required],
+      requisito: [this.formulariodataStore.requisito || ''],
+      numeroCertificadoInternacional: [this.formulariodataStore.numeroCertificadoInternacional || ''],
+      fraccionArancelaria: [this.formulariodataStore.fraccionArancelaria || '', Validators.required],
+      descripcionFraccion: [this.formulariodataStore.descripcionFraccion || ''],
+      nico: [this.formulariodataStore.nico || '', Validators.required],
+      descripcionNico: [this.formulariodataStore.descripcionNico || ''],
+      descripcion: [this.formulariodataStore.descripcion || ''],
+      cantidadUMT: [this.formulariodataStore.cantidadUMT || '', Validators.required],
+      umt: [this.formulariodataStore.umt || '', Validators.required],
+      cantidadUMC: [this.formulariodataStore.cantidadUMC || '', Validators.required],
+      umc: [this.formulariodataStore.umc || '', Validators.required],
+      uso: [this.formulariodataStore.uso || '', Validators.required],
+      tipoDeProducto: [this.formulariodataStore.tipoDeProducto || '', Validators.required],
     });
-    const MERCANCIAS_ARRAY = this.forma.get('mercancias') as FormArray;
-    MERCANCIAS_ARRAY.push(this.fb.group({
-      seleccionado: [''],
-      noPartida: [''],
-      tipoRequisito: [''],
-      requisito: [''],
-      numCertificadoInternacional: [''],
-      fraccionArancelaria: [''],
-      descFraccion: [''],
-      nico: [''],
-    }));
+    // const MERCANCIAS_ARRAY = this.forma.get('mercancias') as FormArray;
+    // MERCANCIAS_ARRAY.push(this.fb.group({
+    //   seleccionado: [''],
+    //   noPartida: [''],
+    //   tipoRequisito: [''],
+    //   requisito: [''],
+    //   numCertificadoInternacional: [''],
+    //   fraccionArancelaria: [''],
+    //   descFraccion: [''],
+    //   nico: [''],
+    // }));
   }
 
   /**
@@ -344,10 +344,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param {string} campo - El nombre del campo del formulario a obtener.
    */
   setValoresStore(
-    form: FormGroup,
-    campo: string
+    form?: FormGroup,
+    campo?: string
   ): void {
-    const VALOR = form.get(campo)?.value;
+    const VALOR = this.forma.value;
     (this.agriculturaApiService.updateDatosForma as (value: DatosForma) => void)(VALOR);
   }
 

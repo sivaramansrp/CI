@@ -177,28 +177,32 @@ export interface Mercancia {
  * @property {string} uso - Uso previsto del producto.
  * @property {string} producto - Nombre del producto.
  */
+// customs-form.interface.ts
+
+/**
+ * Interface representing the data structure for a customs import form
+ */
 export interface DatosForma {
-    aduana: string;
-    agropecuaria: string;
-    punto: string;
-    guia: string;
+    aduanaDeIngreso: string;
+    oficinaDeInspeccion: string;
+    puntoDeInspeccion: string;
+    numeroDeGuia?: string;
     regimen: string;
-    ferrocarril: string;
-    mercancias: Mercancia[];
-    aduanaMercancia: string;
-    requisito: string;
-    numCertificadoInternacional: string;
-    arancelaria: string;
-    descFraccionArancelaria: string;
+    numeroDeCarro?: string;
+    tipoDeRequisito: string;
+    requisito?: string;
+    numeroCertificadoInternacional?: string;
+    fraccionArancelaria: string;
+    descripcionFraccion?: string;
     nico: string;
-    descNico: string;
-    descripcion: string;
-    cantidadUMT: string;
+    descripcionNico?: string;
+    descripcion?: string;
+    cantidadUMT: string | number;
     umt: string;
-    cantidadUMC: string;
+    cantidadUMC: string | number;
     umc: string;
     uso: string;
-    producto: string;
+    tipoDeProducto: string;
 }
 
 /**
@@ -248,27 +252,26 @@ function finalEnviar(value: boolean, defaultValue: boolean): boolean {
 export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): ListaDeDatosFinal {
     return {
         datos: {
-            aduana: getDefaultValue(params.datos?.aduana, ''),
-            agropecuaria: getDefaultValue(params.datos?.agropecuaria, ''),
-            punto: getDefaultValue(params.datos?.punto, ''),
-            guia: getDefaultValue(params.datos?.guia, ''),
+            aduanaDeIngreso: getDefaultValue(params.datos?.aduanaDeIngreso, ''),
+            oficinaDeInspeccion: getDefaultValue(params.datos?.oficinaDeInspeccion, ''),
+            puntoDeInspeccion: getDefaultValue(params.datos?.puntoDeInspeccion, ''),
+            numeroDeGuia: getDefaultValue(params.datos?.numeroDeGuia, ''),
             regimen: getDefaultValue(params.datos?.regimen, ''),
-            ferrocarril: getDefaultValue(params.datos?.ferrocarril, ''),
-            mercancias: getMercanciasDefault(params.datos?.mercancias as Mercancia[], []),
-            aduanaMercancia: getDefaultValue(params.datos?.aduanaMercancia, ''),
+            numeroDeCarro: getDefaultValue(params.datos?.numeroDeCarro, ''),
+            tipoDeRequisito: getDefaultValue(params.datos?.tipoDeRequisito, ''),
             requisito: getDefaultValue(params.datos?.requisito, ''),
-            numCertificadoInternacional: getDefaultValue(params.datos?.numCertificadoInternacional, ''),
-            arancelaria: getDefaultValue(params.datos?.arancelaria, ''),
-            descFraccionArancelaria: getDefaultValue(params.datos?.descFraccionArancelaria, ''),
+            numeroCertificadoInternacional: getDefaultValue(params.datos?.numeroCertificadoInternacional, ''),
+            fraccionArancelaria: getDefaultValue(params.datos?.fraccionArancelaria, ''),
+            descripcionFraccion: getDefaultValue(params.datos?.descripcionFraccion, ''),
             nico: getDefaultValue(params.datos?.nico, ''),
-            descNico: getDefaultValue(params.datos?.descNico, ''),
+            descripcionNico: getDefaultValue(params.datos?.descripcion, ''),
             descripcion: getDefaultValue(params.datos?.descripcion, ''),
-            cantidadUMT: getDefaultValue(params.datos?.cantidadUMT, ''),
+            cantidadUMT: getDefaultValue(params.datos?.cantidadUMT as string, ''),
             umt: getDefaultValue(params.datos?.umt, ''),
-            cantidadUMC: getDefaultValue(params.datos?.cantidadUMC, ''),
+            cantidadUMC: getDefaultValue(params.datos?.cantidadUMC as string, ''),
             umc: getDefaultValue(params.datos?.umc, ''),
             uso: getDefaultValue(params.datos?.uso, ''),
-            producto: getDefaultValue(params.datos?.producto, ''),
+            tipoDeProducto: getDefaultValue(params.datos?.tipoDeProducto, ''),
         },
         movilizacion: {
             transporte: getDefaultValue(params.movilizacion?.transporte, ''),
