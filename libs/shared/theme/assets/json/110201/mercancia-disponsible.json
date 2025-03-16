@@ -1,0 +1,11 @@
+{
+  "tableHeader": [
+    "Fracción arancelaria",
+    "Nombre técnico",
+    "Nombre comercial",
+    "Número de registro de productos",
+    "Fecha expedición",
+    "Fecha vencimíento"
+  ],
+  "tableBody": []
+}

@@ -1,1 +1,59 @@
-<p>datos_certificado works!</p>
+<form [formGroup]="registroForm" (ngSubmit)="validarDestinatarioFormulario()">
+  <ng-titulo titulo="Datos del certificado" />
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <label>Observaciones:</label>
+      <div class="col-md-12 align-text-area">
+        <textarea cols="80" rows="5" readonly formControlName="observaciones"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 mb-3 ">
+      <label>Presica*:</label>
+      <div class="col-md-12 align-text-area">
+        <textarea cols="80" rows="5" readonly formControlName="presica"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <label>Presenta:</label>
+      <div class="col-md-12 align-text-area">
+        <textarea cols="80" rows="5" readonly formControlName="presenta"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 mb-3">
+        <app-catalogo-select
+          [catalogo]="idioma.catalogos"
+          [label]="idioma.labelNombre"
+          [placeholder]="idioma.primerOpcion"
+          [required]="true"
+          id="idioma"
+          formControlName="idioma"
+        ></app-catalogo-select>
+      </div>
+      <ng-titulo titulo="Representación federal" />
+      <div class="row">
+      <div class="col-md-4">
+      <app-catalogo-select
+      [catalogo]="entidad.catalogos"
+      [label]="entidad.labelNombre"
+      [placeholder]="entidad.primerOpcion"
+      [required]="true"
+      id="entidad"
+      formControlName="entidad"
+    ></app-catalogo-select></div>
+    <div class="col-md-4">
+    <app-catalogo-select
+    [catalogo]="representacion.catalogos"
+    [label]="representacion.labelNombre"
+    [placeholder]="representacion.primerOpcion"
+    [required]="true"
+    id="representacion"
+    formControlName="representacion"
+  ></app-catalogo-select></div></div>
+  </div>
+</form>

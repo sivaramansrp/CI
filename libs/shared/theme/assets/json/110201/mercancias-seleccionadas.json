@@ -1,0 +1,18 @@
+{
+    "tableHeader": [
+        "Fracción arancelaria",
+     "Cantidad",
+"Unidad de medida",
+"Valor mercancía",
+"Tipo de factura",
+  "Número factura",
+  "Nombre comercial",
+  "Nombre técnico",
+  "Número de registro",
+  "Fecha de emisión",
+  "Fecha vencimiento",
+  "Descripción del complemento",
+  "Fecha factura"
+    ],
+    "tableBody": []
+  }
