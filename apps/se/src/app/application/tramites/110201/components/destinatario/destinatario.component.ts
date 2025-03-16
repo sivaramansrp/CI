@@ -1,35 +1,51 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { RegistroService } from '../../services/registro.service';
 import { CatalogoSelectComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
-import { Solicitud110201State, Tramite110201Store } from '../../state/Tramite110201.store';
-import { map, Subject, takeUntil } from 'rxjs';
+import {
+  Solicitud110201State,
+  Tramite110201Store,
+} from '../../state/Tramite110201.store';
+import { map, Subject, Subscription, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-destinatario',
   standalone: true,
-  imports: [CommonModule, TituloComponent, CatalogoSelectComponent,ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    CatalogoSelectComponent,
+    ReactiveFormsModule,
+  ],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.css',
 })
-export class DestinatarioComponent implements OnInit {
- registroForm!: FormGroup;
-  pais!: CatalogosSelect;
+export class DestinatarioComponent implements OnInit, OnDestroy {
+  registroForm!: FormGroup;
+  nacion!: CatalogosSelect;
   transporte!: CatalogosSelect;
-   public solicitudState!: Solicitud110201State;
-    private destroyNotifier$: Subject<void> = new Subject();
+  private subscriptions: Subscription[] = [];
+  public solicitudState!: Solicitud110201State;
+  private destroyNotifier$: Subject<void> = new Subject();
+  getPaisDestinoSubscription!: Subscription;
+  getTransporteSubscription!: Subscription;
 
   constructor(
     private registroService: RegistroService,
     private fb: FormBuilder,
-           private store: Tramite110201Store,
-            private query: Tramite110201Query,
-            private validacionesService: ValidacionesFormularioService
+    private store: Tramite110201Store,
+    private query: Tramite110201Query,
+    private validacionesService: ValidacionesFormularioService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -41,61 +57,73 @@ export class DestinatarioComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.registroForm = this.fb.group({
-      pais: [''],
-      transporte: [''],
-    });
     this.getPaisDestino();
     this.getTransporte();
 
     this.query.selectSolicitud$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.solicitudState = seccionState;
-      })
-    )
-    .subscribe();
-  this.donanteDomicilio();
-  }
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.donanteDomicilio();
 
-  getPaisDestino(): void {
-    this.registroService.getPaisDestino().subscribe((resp) => {
-      if (resp.code === 200) {
-        const response = resp.data;
-
-        this.pais = {
+    this.subscriptions.push(
+      this.query.selectNacion$.subscribe((nacion) => {
+        this.nacion = {
           labelNombre: 'País destino',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: nacion ?? [],
         };
-      }
-    });
-  }
+      })
+    );
 
-  getTransporte(): void {
-    this.registroService.getTransporte().subscribe((resp) => {
-      if (resp.code === 200) {
-        const response = resp.data;
-
+    this.subscriptions.push(
+      this.query.selectTransporte$.subscribe((transporte) => {
         this.transporte = {
           labelNombre: 'Medio de transporte',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: transporte ?? [],
         };
-      }
-    });
+      })
+    );
+  }
+
+  getPaisDestino(): void {
+    this.getPaisDestinoSubscription = this.registroService
+      .getPaisDestino()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.store.setNacion(RESPONSE);
+        }
+      });
+  }
+
+  getTransporte(): void {
+    this.getTransporteSubscription = this.registroService
+      .getTransporte()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.store.setTransporte(RESPONSE);
+        }
+      });
   }
 
   onSubmit(): void {
     if (this.registroForm.valid) {
     }
   }
+
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
+
   setValoresStore(
     form: FormGroup,
     campo: string,
@@ -104,12 +132,52 @@ export class DestinatarioComponent implements OnInit {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
   get validacionForm(): FormGroup {
     return this.registroForm.get('validacionForm') as FormGroup;
   }
+
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
-      
+      validacionForm: this.fb.group({
+        nacion: [this.solicitudState?.nacion, [Validators.required]],
+        transporte: [this.solicitudState?.transporte, [Validators.required]],
+        nombre: [this.solicitudState?.nombre, [Validators.required]],
+        apellidoPrimer: [
+          this.solicitudState?.apellidoPrimer,
+          [Validators.required],
+        ],
+        apellidoSegundo: [
+          this.solicitudState?.apellidoSegundo,
+          [Validators.required],
+        ],
+        numeroFiscal: [
+          this.solicitudState?.numeroFiscal,
+          [Validators.required],
+        ],
+        razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
+        ciudad: [this.solicitudState?.ciudad, [Validators.required]],
+        calle: [this.solicitudState?.calle, [Validators.required]],
+        numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
+        lada: [this.solicitudState?.lada, [Validators.required]],
+        telefono: [this.solicitudState?.telefono, [Validators.required]],
+        fax: [this.solicitudState?.fax, [Validators.required]],
+        correoElectronico: [
+          this.solicitudState?.correoElectronico,
+          [Validators.required],
+        ],
+      }),
     });
+  }
+  ngOnDestroy(): void {
+    if (this.getPaisDestinoSubscription) {
+      this.getPaisDestinoSubscription.unsubscribe();
+    }
+    if (this.getTransporteSubscription) {
+      this.getTransporteSubscription.unsubscribe();
+    }
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

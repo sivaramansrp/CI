@@ -1,10 +1,12 @@
 <form [formGroup]="registroForm" (ngSubmit)="validarDestinatarioFormulario()">
+  <ng-container formGroupName="validacionForm">
   <ng-titulo titulo="Datos del certificado" />
   <div class="row">
     <div class="col-md-4 mb-3">
       <label>Observaciones:</label>
       <div class="col-md-12 align-text-area">
-        <textarea cols="80" rows="5" readonly formControlName="observaciones"></textarea>
+        <textarea cols="80" rows="5" formControlName="observaciones"
+        (change)="setValoresStore(validacionForm, 'observaciones', 'setObservaciones')"></textarea>
       </div>
     </div>
   </div>
@@ -12,7 +14,8 @@
     <div class="col-md-4 mb-3 ">
       <label>Presica*:</label>
       <div class="col-md-12 align-text-area">
-        <textarea cols="80" rows="5" readonly formControlName="presica"></textarea>
+        <textarea cols="80" rows="5" formControlName="presica"
+        (change)="setValoresStore(validacionForm, 'presica', 'setPresica')"></textarea>
       </div>
     </div>
   </div>
@@ -20,7 +23,8 @@
     <div class="col-md-4 mb-3">
       <label>Presenta:</label>
       <div class="col-md-12 align-text-area">
-        <textarea cols="80" rows="5" readonly formControlName="presenta"></textarea>
+        <textarea cols="80" rows="5" formControlName="presenta"
+        (change)="setValoresStore(validacionForm, 'presenta', 'setPresenta')"></textarea>
       </div>
     </div>
   </div>
@@ -33,6 +37,7 @@
           [required]="true"
           id="idioma"
           formControlName="idioma"
+          (change)="setValoresStore(validacionForm, 'idioma', 'setIdioma')"
         ></app-catalogo-select>
       </div>
       <ng-titulo titulo="Representación federal" />
@@ -43,8 +48,9 @@
       [label]="entidad.labelNombre"
       [placeholder]="entidad.primerOpcion"
       [required]="true"
-      id="entidad"
+      id="entidadFederativa"
       formControlName="entidad"
+      (change)="setValoresStore(validacionForm, 'entidad', 'setEntidad')"
     ></app-catalogo-select></div>
     <div class="col-md-4">
     <app-catalogo-select
@@ -54,6 +60,8 @@
     [required]="true"
     id="representacion"
     formControlName="representacion"
+    (change)="setValoresStore(validacionForm, 'representacion', 'setRepresentacion')"
   ></app-catalogo-select></div></div>
   </div>
+</ng-container>
 </form>

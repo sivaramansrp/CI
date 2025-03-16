@@ -45,7 +45,7 @@ const TERCEROS_TEXTO_DE_ALERTA =
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.css',
 })
-export class CertificadoDeOrigenComponent implements OnInit,OnDestroy {
+export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   registroForm!: FormGroup;
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
@@ -75,7 +75,7 @@ export class CertificadoDeOrigenComponent implements OnInit,OnDestroy {
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
-  
+
   validarDestinatarioFormulario(): void {
     if (this.registroForm.invalid) {
       this.registroForm.markAllAsTouched();
@@ -140,14 +140,14 @@ export class CertificadoDeOrigenComponent implements OnInit,OnDestroy {
   }
   giveError() {
     this.giveErrors = true;
+    this.cargarArchivo = false;
   }
 
   getTratado(): void {
     this.getTratadoSubscription = this.registroService
       .getTratado()
       .subscribe((resp) => {
-        console.log('response', resp);
-        if (resp.code === 200) {
+             if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.store.setTratado(RESPONSE);
         }
@@ -158,8 +158,7 @@ export class CertificadoDeOrigenComponent implements OnInit,OnDestroy {
     this.getPaisSubscription = this.registroService
       .getPais()
       .subscribe((resp) => {
-        console.log('response', resp);
-        if (resp.code === 200) {
+             if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.store.setPais(RESPONSE);
         }
@@ -178,6 +177,7 @@ export class CertificadoDeOrigenComponent implements OnInit,OnDestroy {
   onSubmit(): void {
     if (this.registroForm.valid) {
     }
+    
   }
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
@@ -215,7 +215,12 @@ export class CertificadoDeOrigenComponent implements OnInit,OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    throw new Error('Method not implemented.');
+    if (this.getTratadoSubscription) {
+      this.getTratadoSubscription.unsubscribe();
+    }
+    if (this.getPaisSubscription) {
+      this.getPaisSubscription.unsubscribe();
+    }
+    this.destroyNotifier$.next();
   }
-  
 }

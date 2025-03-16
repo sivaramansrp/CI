@@ -1,34 +1,55 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { CatalogoSelectComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { CatalogosSelect, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import {
+  CatalogosSelect,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
 import { RegistroService } from '../../services/registro.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
-import { Solicitud110201State, Tramite110201Store } from '../../state/Tramite110201.store';
-import { map, Subject, takeUntil } from 'rxjs';
+import {
+  Solicitud110201State,
+  Tramite110201Store,
+} from '../../state/Tramite110201.store';
+import { map, Subject, Subscription, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-datos-certificado',
   standalone: true,
-  imports: [CommonModule, TituloComponent, CatalogoSelectComponent,ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    CatalogoSelectComponent,
+    ReactiveFormsModule,
+  ],
   templateUrl: './datos_certificado.component.html',
   styleUrl: './datos_certificado.component.css',
 })
-export class DatosCertificadoComponent implements OnInit {
-   registroForm!: FormGroup;
+export class DatosCertificadoComponent implements OnInit,OnDestroy {
+  private subscriptions: Subscription[] = [];
+  getIdiomaSubscripcion!: Subscription;
+  getEntidadSubscripcion!: Subscription;
+  getRepresentacionSubscripcion!: Subscription;
+  registroForm!: FormGroup;
   idioma!: CatalogosSelect;
   entidad!: CatalogosSelect;
   representacion!: CatalogosSelect;
-   public solicitudState!: Solicitud110201State;
-    private destroyNotifier$: Subject<void> = new Subject();
+  public solicitudState!: Solicitud110201State;
+  private destroyNotifier$: Subject<void> = new Subject();
 
-  constructor(private registroService: RegistroService,
-     private fb: FormBuilder,
-     private store: Tramite110201Store,
-        private query: Tramite110201Query,
-        private validacionesService: ValidacionesFormularioService
+  constructor(
+    private registroService: RegistroService,
+    private fb: FormBuilder,
+    private store: Tramite110201Store,
+    private query: Tramite110201Query,
+    private validacionesService: ValidacionesFormularioService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -43,59 +64,82 @@ export class DatosCertificadoComponent implements OnInit {
     this.getIdioma();
     this.getEntidad();
     this.getRepresentacion();
+
     this.query.selectSolicitud$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.solicitudState = seccionState;
-      })
-    )
-    .subscribe();
-  this.donanteDomicilio();
-  }
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.donanteDomicilio();
 
-  getIdioma(): void {
-    this.registroService.getIdioma().subscribe((resp) => {
-      if (resp.code === 200) {
-        const response = resp.data;
-
+    this.subscriptions.push(
+      this.query.selectIdioma$.subscribe((idioma) => {
         this.idioma = {
           labelNombre: 'Idioma',
           required: true,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: idioma ?? [],
         };
-      }
-    });
-  }
-  getEntidad(): void {
-    this.registroService.getEntidad().subscribe((resp) => {
-      if (resp.code === 200) {
-        const response = resp.data;
+      })
+    );
 
+    this.subscriptions.push(
+      this.query.selectEntidad$.subscribe((entidad) => {
         this.entidad = {
           labelNombre: 'Entidad federativa',
           required: true,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: entidad ?? [],
         };
-      }
-    });
-  }
-  getRepresentacion(): void {
-    this.registroService.getRepresentacion().subscribe((resp) => {
-      if (resp.code === 200) {
-        const response = resp.data;
+      })
+    );
 
+    this.subscriptions.push(
+      this.query.selectRepresentacion$.subscribe((representacion) => {
         this.representacion = {
           labelNombre: 'Representación federal',
           required: true,
           primerOpcion: 'Selecciona un valor',
-          catalogos: response,
+          catalogos: representacion ?? [],
         };
-      }
-    });
+      })
+    );
   }
+
+  getIdioma(): void {
+    this.getIdiomaSubscripcion = this.registroService
+      .getIdioma()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.store.setIdioma(RESPONSE);
+        }
+      });
+  }
+  getEntidad(): void {
+    this.getEntidadSubscripcion = this.registroService
+      .getEntidad()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.store.setEntidad(RESPONSE);
+        }
+      });
+  }
+  getRepresentacion(): void {
+    this.getRepresentacionSubscripcion = this.registroService
+      .getRepresentacion()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.store.setRepresentacion(RESPONSE);
+        }
+      });
+  }
+
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
@@ -113,7 +157,33 @@ export class DatosCertificadoComponent implements OnInit {
   }
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
-      
+      validacionForm: this.fb.group({
+        observaciones: [
+          this.solicitudState?.observaciones,
+          [Validators.required],
+        ],
+        presica: [this.solicitudState?.presica, [Validators.required]],
+        presenta: [this.solicitudState?.presenta, [Validators.required]],
+        idioma: [this.solicitudState?.idioma, [Validators.required]],
+        entidadFederativa: [this.solicitudState?.entidad, [Validators.required]],
+        representacion: [
+          this.solicitudState?.representacion,
+          [Validators.required],
+        ],
+      }),
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.getIdiomaSubscripcion) {
+      this.getIdiomaSubscripcion.unsubscribe();
+    }
+    if (this.getEntidadSubscripcion) {  
+      this.getEntidadSubscripcion.unsubscribe();
+    }
+    if (this.getRepresentacionSubscripcion) {
+      this.getRepresentacionSubscripcion.unsubscribe();
+    }
+    this.destroyNotifier$.next();    
   }
 }
