@@ -43,7 +43,12 @@ export class DatosDeLaSolicitudeComponent implements OnInit {
     this.formulario = this.fb.group({
       Solicitud: ['', Validators.required],
       Régimen: ['', Validators.required],
-      Clasificación: ['', Validators.required]
+      Clasificación: ['', Validators.required],
+      Descripcion: ['', Validators.required],
+      Fraccion: ['', Validators.required],
+      Cantidad: ['', Validators.required],
+      Valor: ['', Validators.required],
+      Umt: ['', Validators.required]
     });
   }
 
@@ -53,7 +58,9 @@ export class DatosDeLaSolicitudeComponent implements OnInit {
 
   configuracionesDropdown = [
     { catalogos: SolicitudeDropdown.tramite },
-    { catalogos: SolicitudeDropdown.regimen }
+    { catalogos: SolicitudeDropdown.regimen },
+    { catalogos: SolicitudeDropdown.arancelaria },
+    { catalogos: SolicitudeDropdown.umt }
   ];
 
 }
