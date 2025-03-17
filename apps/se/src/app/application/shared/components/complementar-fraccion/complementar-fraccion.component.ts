@@ -13,9 +13,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 
-
-
-
 @Component({
   selector: 'app-complementar-fraccion',
   standalone: true,

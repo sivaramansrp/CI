@@ -1,4 +1,4 @@
-import { AnexoEncabezado, AnexoImportacionEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla } from "../models/se-shared.model";
+import { AnexoEncabezado, AnexoImportacionEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla, ProyectoImmexEncabezado } from "../models/se-shared.model";
 
 export const ANEXO_SERVICIO = [
   {
@@ -117,5 +117,43 @@ export const PROVEEDOR_CLIENTE_TABLA_CONFIG=[
     encabezado: 'Razón Social',
     clave: (ele: ProveedorClienteTabla) => ele.razonSocial,
     orden: 6
+  }
+]
+
+export const PROYECTO_IMMEX_CONFIG=[
+  {
+    encabezado: 'Fracción',
+    clave: (ele: ProyectoImmexEncabezado) => ele.ENCABEZADO_FRACCION,
+    orden: 1
+  },
+  {
+    encabezado: 'Tipo document',
+    clave: (ele: ProyectoImmexEncabezado) => ele.ENCABEZADO_TIPO_DOCUMENT,
+    orden: 2
+  },
+  {
+    encabezado: 'Descripción otro',
+    clave: (ele: ProyectoImmexEncabezado) => ele.ENCABEZADO_DESCRIPCION_OTRO,
+    orden: 3
+  },
+  {
+    encabezado: 'Fecha firma',
+    clave: (ele: ProyectoImmexEncabezado) => ele.ENCABEZADO_FECHA_FIRMA,
+    orden: 4
+  },
+  {
+    encabezado: 'Fecha fin vigencia',
+    clave: (ele: ProyectoImmexEncabezado) => ele.ENCABEZADO_FECHA_VIGENCIA,
+    orden: 5
+  },
+  {
+    encabezado: 'RFC de la parte firmante',
+    clave: (ele: ProyectoImmexEncabezado) => ele.ENCABEZADO_RFC,
+    orden: 6
+  },
+  {
+    encabezado: 'Nómbre/Razón social de la parte firmante',
+    clave: (ele: ProyectoImmexEncabezado) => ele.ENCABEZADO_RAZON_FIRMANTE,
+    orden: 7
   }
 ]

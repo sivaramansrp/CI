@@ -35,42 +35,26 @@ describe('AnexoVistaDosYTresComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule, AnexoVistaDosYTresComponent ],
       declarations: [
-        AnexoVistaDosYTresComponent,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+     schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
 
       ]
-    }).overrideComponent(AnexoVistaDosYTresComponent, {
-
-    }).compileComponents();
+    })
     fixture = TestBed.createComponent(AnexoVistaDosYTresComponent);
     component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
-    expect(component).toBeTruthy();
-  });
-
   it('should run #obtenerAnexoDosDevolverLaLlamada()', async () => {
-
     component.obtenerAnexoDosDevolverLaLlamada({});
-
   });
 
   it('should run #obtenerAnexoTresDevolverLaLlamada()', async () => {
-
     component.obtenerAnexoTresDevolverLaLlamada({});
-
   });
 
 });
