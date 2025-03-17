@@ -1,7 +1,22 @@
-import { Component, ViewChild } from '@angular/core';
-import { AccionBoton, DatosPasos, ListaPasosWizard, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
-import { PASOSACUICULTURA } from '../../constantes/fitosanitario.enum';
+import {
+  Component,
 
+  ViewChild
+} from '@angular/core';
+
+import {
+  AccionBoton,
+
+  DatosPasos,
+
+  ListaPasosWizard,
+
+  SeccionLibStore,
+
+  WizardComponent
+} from '@ng-mf/data-access-user';
+
+import { PASOSACUICULTURA } from '../../constantes/fitosanitario.enum';
 /**
  * Componente principal de la página de solicitud, que gestiona la navegación de pasos dentro de un formulario tipo wizard.
  * 

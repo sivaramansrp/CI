@@ -7,7 +7,7 @@ import {
 
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
-const routes: Routes = [
+const ROUTES_FITOSANITARO: Routes = [
   {
     path: 'invocarModulo',
     component: SolicitudPageComponent,
@@ -20,7 +20,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES_FITOSANITARO)],
   exports: [RouterModule]
 })
 export class FitosanitarioRoutingModule { }
