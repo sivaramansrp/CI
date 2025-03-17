@@ -43,6 +43,13 @@ const ROUTES: Routes = [
         (m) => m.DonacionesExtranjerasModule)
   },
   {
+    path: 'muestras-mercancias',
+    loadChildren: () =>
+      import('./tramites/30901/renovaciones-muestras-mercancias.module').then(
+        (m) => m.RenovacionesMuestrasMercanciasModule
+      ),
+  },
+  {
     path: 'atender-requerimientos',
     loadChildren: () => import('./atencion-requerimientos/atencion-requerimientos.module').then(
       (m) => m.AtencionRequerimientosModule
