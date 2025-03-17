@@ -1,10 +1,3 @@
-/**
- * Componente que representa el formulario de datos de la aduana.
- *
- *    app-datos-dela
- *  ./datos-dela.component.html
- *  ./datos-dela.component.scss
- */
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
@@ -34,28 +27,19 @@ import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { takeUntil } from 'rxjs';
 
-/**
- * Decorador que define un componente de Angular.
- *
- *  app-datos-dela - El selector CSS que identifica este componente en una plantilla.
- * ./datos-dela.component.html - La URL de la plantilla HTML del componente.
- * ./datos-dela.component.scss - La URL de la hoja de estilos del componente.
- */
 @Component({
-  selector: 'app-datos-dela',
-  templateUrl: './datos-de-la-solicitud.component.html',
-  styleUrl: './datos-de-la-solicitud.component.scss',
+  selector: 'app-datos-del-generador-de-residuos',
   standalone: true,
-  imports: [
-    CommonModule,
-    AlertComponent,
-    CatalogoSelectComponent,
-    TituloComponent,
-    ReactiveFormsModule,
-    BtnContinuarComponent,
-  ],
+  imports: [ CommonModule,
+      AlertComponent,
+      CatalogoSelectComponent,
+      TituloComponent,
+      ReactiveFormsModule,
+      BtnContinuarComponent,],
+  templateUrl: './datos-del-generador-de-residuos.component.html',
+  styleUrl: './datos-del-generador-de-residuos.component.scss',
 })
-export class DatosDelaSolicitudeComponent implements OnInit {
+export class DatosDelGeneradorDeResiduosComponent implements OnInit {
   private destroyed$: Subject<void> = new Subject();
   public solicitudState!: Solicitud231001State;
   /**
@@ -207,9 +191,7 @@ export class DatosDelaSolicitudeComponent implements OnInit {
    * Maneja la selección de una aduana.
    */
   onAduanaSelect(): void {
-    // this.selectedAduana = this.datosForm.get('aduanas')?.value;
     this.selectedAduana = parseInt(this.datosForm.get('aduanas')?.value, 10);
-
     const ADUANAS = this.datosForm.get('aduanas')?.value;
     this.tramite231001Store.setAduanas(ADUANAS);
   }
@@ -230,6 +212,11 @@ export class DatosDelaSolicitudeComponent implements OnInit {
     });
   }
 
+/**
+ * @method getnumeroProgramaImmex
+ * @description
+ * Obtiene el valor del campo `numeroProgramaImmex` del formulario y lo establece en el store.
+ */
   getnumeroProgramaImmex(): void {
     const SELECTED_NUMERO_PROGRAMA_IMMEX = this.solicitudForm.get(
       'datosdelForm.numeroProgramaImmex'
@@ -239,6 +226,14 @@ export class DatosDelaSolicitudeComponent implements OnInit {
     );
   }
 
+  /**
+ * @method setValoresStore
+ * @description
+ * Obtiene el valor de un campo específico del formulario y lo establece en el store utilizando el método proporcionado.
+ * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+ * @param {string} campo - El nombre del campo cuyo valor se va a obtener.
+ * @param {keyof Tramite231001Store} metodoNombre - El nombre del método del store que se utilizará para establecer el valor.
+ */
   setValoresStore(
     form: FormGroup,
     campo: string,

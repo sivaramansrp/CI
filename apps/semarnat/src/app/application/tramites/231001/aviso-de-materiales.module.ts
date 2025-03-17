@@ -5,7 +5,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AdministrarResiduosComponent } from './components/administrar-residuos/administrar-residuos.component';
 import { AvisodematerialesRoutingModule } from './aviso-de-materiales-routing.module';
 import { DatosComponent } from './pages/datos/datos.component';
-import { DatosDelaSolicitudeComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -15,6 +14,7 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { DatosDeLosResiduosComponent } from './components/datos-de-los-residuos/datos-de-los-residuos.component';
+import { DatosDelGeneradorDeResiduosComponent } from './components/datos-del-generador-de-residuos/datos-del-generador-de-residuos.component';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
@@ -38,7 +38,7 @@ import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
     TituloComponent,
     AdministrarResiduosComponent,
     DatosDeLosResiduosComponent,
-    DatosDelaSolicitudeComponent,
+    DatosDelGeneradorDeResiduosComponent,
     CatalogoSelectComponent,
     BtnContinuarComponent,
     AlertComponent,

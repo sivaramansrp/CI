@@ -11,19 +11,22 @@ import { DatosPasos } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { MateriaprimaformserviceService } from '@ng-mf/data-access-user';
-import { map } from 'rxjs';
-
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
+import { REGEX_NUMEROS_DECIMALES } from '@ng-mf/data-access-user';
+
+import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite231001Query } from '../../../../tramites/231001/estados/queries/tramite231001.query';
 import { Tramite231001Store } from '../../../../tramites/231001/estados/tramites/tramite231001.store';
 import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { merge } from 'rxjs';
+import { takeUntil } from 'rxjs';
+import { tap } from 'rxjs';
 
 /**
  * Componente que maneja los datos relacionados con los residuos, incluidos los formularios y catálogos.
@@ -136,7 +139,7 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
         '',
         [
           Validators.required,
-          Validators.pattern('^[0-9]+(\\.[0-9]{1,6})?$'),
+          Validators.pattern(REGEX_NUMEROS_DECIMALES),
           Validators.maxLength(18),
         ],
       ], // Valor numérico (requerido, número entero o decimal con hasta 6 decimales, máximo 18 caracteres)
@@ -157,13 +160,17 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    * Método que se ejecuta cuando el componente es inicializado. Carga los catálogos de unidad de medida y capítulo de fracción.
    */
   ngOnInit(): void {
-    this.loadComboUnidadMedida();
-    this.loadComboCapituloFraccion();
-    this.loadComboPartidaFraccion();
-    this.loadComboSubPartidaFraccion();
-    this.loadComboFraccionArancelariaParametros();
-
-    this.unidadMedidaComercial$.subscribe((unidadMedidaComercial) => {
+    merge(
+      this.loadComboUnidadMedida(),
+      this.loadComboCapituloFraccion(),
+      this.loadComboPartidaFraccion(),
+      this.loadComboSubPartidaFraccion(),
+      this.loadComboFraccionArancelariaParametros()
+    ).pipe(takeUntil(this.destroyed$)).subscribe();
+    
+    this.unidadMedidaComercial$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((unidadMedidaComercial) => {
       if (unidadMedidaComercial) {
         this.materiaPrimaForm
           .get('unidadMedidaComercial')
@@ -171,7 +178,9 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.capituloFraccion$.subscribe((capituloFraccion) => {
+    this.capituloFraccion$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((capituloFraccion) => {
       if (capituloFraccion) {
         this.materiaPrimaForm
           .get('capituloFraccion')
@@ -179,27 +188,33 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.partidaFraccion$.subscribe((partidaFraccion) => {
-      if (partidaFraccion) {
-        this.materiaPrimaForm.get('partidaFraccion')?.setValue(partidaFraccion);
-      }
-    });
+    this.partidaFraccion$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((partidaFraccion) => {
+        if (partidaFraccion) {
+          this.materiaPrimaForm.get('partidaFraccion')?.setValue(partidaFraccion);
+        }
+      });
 
-    this.subPartidaFraccion$.subscribe((subPartidaFraccion) => {
-      if (subPartidaFraccion) {
-        this.materiaPrimaForm
-          .get('subPartidaFraccion')
-          ?.setValue(subPartidaFraccion);
-      }
-    });
+      this.subPartidaFraccion$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((subPartidaFraccion) => {
+        if (subPartidaFraccion) {
+          this.materiaPrimaForm
+            .get('subPartidaFraccion')
+            ?.setValue(subPartidaFraccion);
+        }
+      });
 
-    this.fraccion$.subscribe((fraccion) => {
-      if (fraccion) {
-        this.materiaPrimaForm.get('fraccion')?.setValue(fraccion);
-      }
-    });
+      this.fraccion$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((fraccion) => {
+        if (fraccion) {
+          this.materiaPrimaForm.get('fraccion')?.setValue(fraccion);
+        }
+      });
 
-    this.tramite231001Query.selectSolicitud$
+      this.tramite231001Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((state) => {
@@ -216,67 +231,70 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
    * @method loadcomboUnidadMedida
    * Método que carga las opciones del catálogo de unidad de medida.
    */
-  loadComboUnidadMedida(): void {
-    this.service
-      .getUnidadMedida()
-      .pipe(
-        takeUntil(this.destroyed$) // Se usa takeUntil para asegurarse de que las suscripciones se cancelen al destruirse el componente
-      )
-      .subscribe((data): void => {
+  loadComboUnidadMedida(): Observable<Catalogo[]> {
+    return this.service.getUnidadMedida().pipe(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      tap((data: any) => {
         this.comboUnidadMedida = data as Catalogo[];
-      });
+      }),
+      takeUntil(this.destroyed$)
+    );
   }
 
   /**
    * @method loadComboCapituloFraccion
    * Método que carga las opciones del catálogo de capítulo de fracción.
    */
-  loadComboCapituloFraccion(): void {
-    this.service
-      .getCapituloFraccion()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data): void => {
+  loadComboCapituloFraccion(): Observable<Catalogo[]> {
+    return this.service.getCapituloFraccion().pipe(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      tap((data: any) => {
         this.comboCapituloFraccion = data as Catalogo[];
-      });
+      }),
+      takeUntil(this.destroyed$)
+    );
   }
 
   /**
    * @method loadComboPartidaFraccion
    * Método que carga las opciones del catálogo de partida de fracción
    */
-  loadComboPartidaFraccion(): void {
-    this.service
-      .getPartidaFraccion()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data): void => {
+  loadComboPartidaFraccion(): Observable<Catalogo[]> {
+    return this.service.getPartidaFraccion().pipe(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      tap((data:any) => {
         this.comboPartidaFraccion = data as Catalogo[];
-      });
+      }),
+      takeUntil(this.destroyed$)
+    );
   }
 
   /**
    * @method loadComboSubPartidaFraccion
    * Método que carga las opciones del catálogo de subpartida de fracción desde un archivo JSON.
    */
-  loadComboSubPartidaFraccion(): void {
-    this.service
-      .getSubPartidaFraccion()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data): void => {
+  loadComboSubPartidaFraccion(): Observable<Catalogo[]> {
+    return this.service.getSubPartidaFraccion().pipe(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      tap((data: any) => {
         this.comboSubPartidaFraccion = data as Catalogo[];
-      });
+      }),
+      takeUntil(this.destroyed$)
+    );
   }
 
   /**
    * @method loadcomboFraccionArancelariaParametros
    * Método que carga las opciones del catálogo de fracción arancelaria desde un archivo JSON.
    */
-  loadComboFraccionArancelariaParametros(): void {
-    this.service
-      .getFraccionArancelariaParametros()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data): void => {
+  loadComboFraccionArancelariaParametros(): Observable<Catalogo[]> {
+    return this.service.getFraccionArancelariaParametros().pipe(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      tap((data: any) => {
         this.comboFraccionArancelariaParametros = data as Catalogo[];
-      });
+      }),
+      takeUntil(this.destroyed$)
+    );
   }
 
   /**
