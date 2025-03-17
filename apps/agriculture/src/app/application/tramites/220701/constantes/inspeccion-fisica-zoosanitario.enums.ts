@@ -93,7 +93,11 @@ export const INSTRUCCION_DOBLE_CLIC = 'AI dar clic en el boton "Cargar" se crear
  * @constant {string} MANDATORY_INSTRUCTION
  */
 export const MANDATORY_INSTRUCTION = 'Se requieren las constantes que definen las tablas de instrucciones marcadas con un asterisco.';
-
+export const EXPEDICION_FACTURA_FECHA = {
+    labelNombre: 'Fecha de expedición de la factura:',
+    required: true,
+    habilitado: true,
+  };
 
 export const SECCIONES_TRAMITE_220701 = {
     PASO_1: {
