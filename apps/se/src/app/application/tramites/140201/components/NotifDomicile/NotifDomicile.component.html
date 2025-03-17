@@ -50,6 +50,19 @@
         formControlName="codigoPostal"
         (input)="updateCodigoPostal()"
       />
+
+      <div *ngIf="notifDomicileForm.get('codigoPostal')?.invalid && notifDomicileForm.get('codigoPostal')?.touched">
+        <small class="text-danger" *ngIf="notifDomicileForm.get('codigoPostal')?.errors?.['required']">
+          El código postal es obligatorio.
+        </small>
+        <small class="text-danger" *ngIf="notifDomicileForm.get('codigoPostal')?.errors?.['pattern']">
+          El código postal debe contener solo números.
+        </small>
+     
+        <small class="text-danger" *ngIf="notifDomicileForm.get('codigoPostal')?.errors?.['maxlength']">
+          El código postal no puede tener más de 10 dígitos.
+        </small>
+      </div>
     </div>
   </div>
   <div class="row mt-5">
@@ -72,6 +85,11 @@
         formControlName="entidadFederativa"
         (change)="getEntidad()"
       ></app-catalogo-select>
+      <div *ngIf="notifDomicileForm.get('entidadFederativa')?.invalid && notifDomicileForm.get('entidadFederativa')?.touched">
+        <small class="text-danger" *ngIf="notifDomicileForm.get('entidadFederativa')?.errors?.['required']">
+          La entidad federativa es obligatoria.
+        </small>
+      </div>
     </div>
   </div>
   <div class="row mt-5">

@@ -16,7 +16,10 @@ import { DatosDelLas140201Component } from './components/datos-del-las-140201/da
 
 import { provideHttpClient } from '@angular/common/http';
 
-import { NotifDomicileComponent } from './components/NotifDomicile/NotifDomicile.component';
+import { PasoTresComponent } from '../90305/component/paso-tres/paso-tres.component';
+import { ToastrService } from 'ngx-toastr';
+
+import { PasoDosComponent } from '../90305/component/paso-dos/paso-dos.component';
 
 @NgModule({
   declarations: [
@@ -33,8 +36,9 @@ import { NotifDomicileComponent } from './components/NotifDomicile/NotifDomicile
     FormsModule,
     ReactiveFormsModule,
     DatosDelLas140201Component,
+    PasoTresComponent,PasoDosComponent
  
   ],
-  providers: [provideHttpClient()],
+  providers: [provideHttpClient(),ToastrService],
 })
 export class Cancelaciones140201Module {}

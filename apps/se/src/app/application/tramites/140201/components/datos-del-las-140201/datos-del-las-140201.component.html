@@ -5,7 +5,7 @@
 <form [formGroup]="authNotifPersonsForm">
   <div class="row mt-5">
     <div class="col-md-4 form-group">
-      <label class="form-label" for="nombre">Nombre(s):</label>
+      <label class="form-label" for="nombre"><span class="require">* </span>Nombre(s):</label>
       <input
         class="form-control"
         id="nombre"
@@ -14,6 +14,14 @@
         formControlName="nombre"
         (input)="updateNombre()"
       />
+      <div *ngIf="authNotifPersonsForm.get('nombre')?.invalid && authNotifPersonsForm.get('nombre')?.touched">
+        <small class="text-danger" *ngIf="authNotifPersonsForm.get('nombre')?.errors?.['required']">
+          El nombre es obligatorio.
+        </small>
+        <small class="text-danger" *ngIf="authNotifPersonsForm.get('nombre')?.errors?.['minlength']">
+          Debe tener al menos 3 caracteres.
+        </small>
+      </div>
     </div>
     <div class="col-md-4 form-group">
       <label class="form-label" for="apellidoPaterno">  <span class="require">* </span>Apellido paterno:</label>
@@ -25,6 +33,11 @@
         formControlName="apellidoPaterno"
         (input)="updateApellidoPaterno()"
       />
+      <div *ngIf="authNotifPersonsForm.get('apellidoPaterno')?.invalid && authNotifPersonsForm.get('apellidoPaterno')?.touched">
+        <small class="text-danger" *ngIf="authNotifPersonsForm.get('apellidoPaterno')?.errors?.['required']">
+          El apellido paterno es obligatorio.
+        </small>
+      </div>
     </div>
     <div class="col-md-4 form-group">
       <label class="form-label" for="apellidoMaterno">Apellido materno:</label>

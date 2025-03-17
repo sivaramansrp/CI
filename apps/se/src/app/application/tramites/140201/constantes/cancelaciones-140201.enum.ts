@@ -18,7 +18,7 @@ export const CANCELACIONES_140201 = [
         completado: false,
       },
       {
-        indice: 3,
+        indice: 4,
         titulo: 'Firmar solicitud',
         activo: false,
         completado: false,
