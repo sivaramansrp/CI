@@ -1,0 +1,47 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <h5 class="form-label text-start">Fracción arancelaria </h5>
+                <p class="form-label text-start">{{proyectoImmexDatos.fraccionArancelaria}}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <h5 class="form-label text-start">Anexo II </h5>
+                <p class="form-label text-start">{{proyectoImmexDatos.anexoDos}}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <h5 class="form-label text-start">Tipo </h5>
+                <p class="form-label text-start">{{proyectoImmexDatos.tipo}}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <h5 class="form-label text-start">UMT </h5>
+                <p class="form-label text-start">{{proyectoImmexDatos.umt}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+                <ng-titulo titulo="Proyecto IMMEX"/>
+        </div>
+    </div>
+    <form [formGroup]="proyectoForm">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="descripcion" class="form-label text-start">Descripción comersial*:</label>
+                      <textarea id="descripcion" class="form-control" 
+                       style="height: 60%; resize: none;" formControlName="descripcion"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+</div>

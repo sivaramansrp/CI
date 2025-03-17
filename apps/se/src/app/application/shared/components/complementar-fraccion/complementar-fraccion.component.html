@@ -3,25 +3,25 @@
         <div class="col-md-3">
             <div class="form-group">
                 <h5 class="form-label text-start">Fracción arancelaria </h5>
-                <p class="form-label text-start"></p>
+                <p class="form-label text-start">{{complimentarFraccionDatos.fraccionArancelaria}}</p>
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group">
                 <h5 class="form-label text-start">Anexo II </h5>
-                <p class="form-label text-start"></p>
+                <p class="form-label text-start">{{complimentarFraccionDatos.anexoDos}}</p>
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group">
                 <h5 class="form-label text-start">Tipo </h5>
-                <p class="form-label text-start"></p>
+                <p class="form-label text-start">{{complimentarFraccionDatos.tipo}}</p>
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group">
                 <h5 class="form-label text-start">UMT </h5>
-                <p class="form-label text-start"></p>
+                <p class="form-label text-start">{{complimentarFraccionDatos.umt}}</p>
             </div>
         </div>
     </div>
@@ -36,7 +36,7 @@
           <div class="col-md-6">
             <div class="form-group">
                 <app-catalogo-select [catalogo]="catagoriaSeleccionDatos" formControlName="catagoria" [label]="'catagoria'"
-                  [required]="true" name="catagoria" (change)="catagoriaSeleccion()"></app-catalogo-select>
+                  [required]="true" name="catagoria"></app-catalogo-select>
             </div>
           </div>
         </div>
@@ -92,7 +92,7 @@
         </form>
         <div class="row">
             <div class="col-12 container text-end mt-5">
-              <button class="btn btn-default me-2">Guardar</button>
+              <button class="btn btn-default me-2" (change)="seleccionGuardar()">Guardar</button>
               <button class="btn btn-primary me-2" (click)="goBack()">Regresar Anexo </button>
             </div>
           </div>

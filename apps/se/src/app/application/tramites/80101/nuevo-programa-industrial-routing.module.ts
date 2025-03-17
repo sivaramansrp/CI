@@ -2,6 +2,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { ComplementarFraccionVistaComponent } from './component/complementar-fraccion-vista/complementar-fraccion-vista.component';
 import { NgModule } from '@angular/core';
 import { PasoCapturarSolicitudComponent } from './pages/paso-capturar-solicitud/paso-capturar-solicitud.component';
+import { ProveedorPorArchivoVistaComponent } from './component/proveedor-por-archivo-vista/proveedor-por-archivo-vista.component';
+import { ProyectoImmexVistaComponent } from './component/proyecto-immex-vista/proyecto-immex-vista.component';
 
 const ROUTES: Routes = [
   {
@@ -17,6 +19,14 @@ const ROUTES: Routes = [
     path: 'complementar-fraccion',
     component: ComplementarFraccionVistaComponent,
   },
+  {
+    path: 'proyecto-immex',
+    component: ProyectoImmexVistaComponent
+  },
+  {
+    path: 'proveedor-por-archivo',
+    component: ProveedorPorArchivoVistaComponent
+  }
 ];
 
 @NgModule({

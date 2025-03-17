@@ -10,12 +10,9 @@ import { Location } from '@angular/common';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
-import { delay } from 'rxjs';
-import { takeUntil } from 'rxjs';
-import { tap } from 'rxjs';
+
 
 
 
@@ -54,11 +51,6 @@ export class ComplementarFraccionComponent implements OnInit {
   public complimentarForm!: FormGroup;
 
   /**
-   * Notificador para destruir observables.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
-
-  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
    * @param ubicaccion Servicio de ubicación para navegación.
@@ -71,13 +63,6 @@ export class ComplementarFraccionComponent implements OnInit {
    */
   ngOnInit(): void {
     this.createComplimentarForm();
-    this.complimentarForm.statusChanges.pipe(
-      takeUntil(this.destroyNotifier$),
-      delay(10),
-      tap(() => {
-        this.emitirComplimentarFraccionDatos.emit(this.complimentarForm.value);
-      })
-    ).subscribe();
   }
 
   /**
@@ -97,7 +82,7 @@ export class ComplementarFraccionComponent implements OnInit {
   /**
    * Método para seleccionar categoría.
    */
-  catagoriaSeleccion(): void {
+  seleccionGuardar(): void {
     this.emitirComplimentarFraccionDatos.emit(this.complimentarForm.value);
   }
 

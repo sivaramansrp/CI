@@ -80,3 +80,17 @@ export interface Anexo1y3Configuartion<T> {
     id: string
   }
 
+  export interface PoryectoDatos {
+    fraccionArancelaria: string,
+    anexoDos: string,
+    tipo: string,
+    umt: string,
+    
+    catagoria: string;
+    descripcion: string;
+    monedaNacionalMensual: number;
+    monedaNacionalDeDosPeriodos: number;
+    volumenMensual: number;
+    twoPeriodVolume: number;
+  }
+
