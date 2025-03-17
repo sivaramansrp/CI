@@ -10,8 +10,16 @@
 </div>        
     </div>
     <div class="row">
-<div class="col-md-12">
-    
-</div>
+    <div class="col-md-12">
+        <label for="mercancia">Mercancías*:</label>
+      </div>
+      <div class="col-md-12">
+        <app-tabla-dinamica
+        [tipoSeleccionTabla]="tipoSeleccionsoli"
+        [configuracionTabla]="configuracionColumnasoli"
+        [datos]="cuerpoTabla"
+      >
+      </app-tabla-dinamica>
+      </div>
     </div>
 </div>
