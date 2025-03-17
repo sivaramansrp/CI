@@ -46,17 +46,17 @@ export class AmpliacionServiciosQuery extends Query<AmpliacionServiciosState> {
 
   //empresas-submanufacturer-estadaos
   datosSubcontratistaEstado$ = this.select((state) => {
-    return state.datosSubcontratista
+    return state.empressaSubFabricantePlantas.datosSubcontratista
   });
   plantasSubfabricantesAgregar$ = this.select((state) => {
-    return state.plantasSubfabricantesAgregar
+    return state.empressaSubFabricantePlantas.plantasSubfabricantesAgregar
   });
   plantasBuscadas$ = this.select((state) => {
-    return state.plantasBuscadas
+    return state.empressaSubFabricantePlantas.plantasBuscadas
   });
 
   plantasPorCompletar$ = this.select((state) => {
-    return state.plantasPorCompletar
+    return state.empressaSubFabricantePlantas.plantasPorCompletar
   });
 
   indicePrevioRuta$ = this.select((state) => {

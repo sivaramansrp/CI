@@ -5,7 +5,7 @@ import {
   ServicioInmex,
   Servicios,
 } from '../models/autorizacion-programa-nuevo.model';
-import { DatosSubcontratista, PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
+import { DatosSubcontratista, EmpressaSubFabricantePlantas, PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { Injectable } from '@angular/core';
@@ -28,12 +28,9 @@ export interface AmpliacionServiciosState {
 
   datosComplimentos: DatosComplimentos;
 
- datosSubcontratista:DatosSubcontratista;
-  plantasBuscadas:PlantasSubfabricante[],
-  plantasSubfabricantesAgregar:PlantasSubfabricante [],
-  plantasPorCompletar:PlantasSubfabricante[],
-  indicePrevioRuta:number
-
+ empressaSubFabricantePlantas:EmpressaSubFabricantePlantas
+ indicePrevioRuta:number
+ 
 }
 
 export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
@@ -111,15 +108,18 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
       },
     },
   },
-
-  datosSubcontratista:{
+ 
+  empressaSubFabricantePlantas:{
+    datosSubcontratista:{
     rfc: '',
     estado: '',
   },
     plantasBuscadas:[],
     plantasSubfabricantesAgregar: [],
     plantasPorCompletar:[],
-    indicePrevioRuta:0
+    
+},
+indicePrevioRuta:0,
 };
 
 /**
@@ -275,10 +275,14 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
     }));
   }
 
-  setDatosSubcontratista(datosSubcontratista: { rfc: string; estado: string }): void {
+  setDatosSubcontratista(datosSubcontratista:DatosSubcontratista): void {
     this.update((state) => ({
       ...state,
-      datosSubcontratista: datosSubcontratista,
+      empressaSubFabricantePlantas: {
+        ...state.empressaSubFabricantePlantas,
+        datosSubcontratista: datosSubcontratista,
+      },
+  
     }));
   }
 
@@ -287,25 +291,36 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
   ): void {
     this.update((state) => ({
       ...state,
-      plantasSubfabricantesAgregar: plantasSubfabricantesAgregar,
+      empressaSubFabricantePlantas: {
+        ...state.empressaSubFabricantePlantas,
+        plantasSubfabricantesAgregar: plantasSubfabricantesAgregar,
+      },
     }));
   }
 
   setPlantasBuscadas(plantasBuscadas:PlantasSubfabricante[]):void{
-    this.update((state) => ({
-      ...state,
-      plantasBuscadas: plantasBuscadas,
-    }));
+    this.update((state) => (
+      {
+        ...state,
+        empressaSubFabricantePlantas: {
+          ...state.empressaSubFabricantePlantas,
+          plantasBuscadas: plantasBuscadas,
+        },
+      }
+    ));
   }
 
   eliminarPlantas(eliminarPlantas:PlantasSubfabricante[]): void {
     this.update(state => {
-      const PLANTAS = [...state.plantasSubfabricantesAgregar].filter(ele => 
+      const PLANTAS = [...state.empressaSubFabricantePlantas.plantasSubfabricantesAgregar].filter(ele => 
         !eliminarPlantas.some((plantas)=>plantas.calle===ele.calle)
       );
       return {
         ...state,
-        plantasSubfabricantesAgregar: PLANTAS
+      empressaSubFabricantePlantas: {
+        ...state.empressaSubFabricantePlantas,
+        plantasSubfabricantesAgregar: PLANTAS,
+      },
       }
     })
   }
@@ -313,7 +328,10 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
   setPlantasPorCompletar(plantasPorCompletar:PlantasSubfabricante[]):void{
     this.update((state) => ({
       ...state,
-      plantasPorCompletar: plantasPorCompletar,
+      empressaSubFabricantePlantas: {
+        ...state.empressaSubFabricantePlantas,
+        plantasSubfabricantesAgregar: plantasPorCompletar,
+      },
     }));
   }
 
