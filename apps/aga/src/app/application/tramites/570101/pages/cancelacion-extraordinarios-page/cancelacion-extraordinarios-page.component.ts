@@ -25,7 +25,7 @@ export class CancelacionExtraordinariosPageComponent implements AfterViewInit {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
-    txtBtnSig: 'Guardar by firmar',
+    txtBtnSig: 'Guardar y firmar',
   };
   accionBoton!: AccionBoton;
 

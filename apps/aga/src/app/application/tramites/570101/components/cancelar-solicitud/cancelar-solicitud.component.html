@@ -42,7 +42,7 @@
             </div>
           </div>
           <div class="row mb-3">
-            <label>Especifique los dias que se cancelaron dentro del periodo:</label>
+            <label>Especifique los días que se cancelaron dentro del periodo:</label>
             <crosslist [fechas]="selectRangoDias" formControlName="selectedFechas" 
             [label]="fechasCancelaranLabel" 
             (fechasSeleccionadasChange)="onFechasSeleccionadasChange($event)"></crosslist>
@@ -51,7 +51,7 @@
         <div class="row mb-3">
           <div class="col-md-8">
             <div class="form-group">
-              <label for="descripcion" class="form-label">Motivo de cancelacion*:</label>
+              <label for="descripcion" class="form-label">Motivo de cancelación*:</label>
               <textarea class="form-control" rows="3" id="descripcion" formControlName="descripcion" 
               [ngClass]="isValid(formCancelorSolicitud,'descripcion') ? 'required' : ''" 
               (change)="onDescripcionChange()"></textarea>
