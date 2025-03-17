@@ -71,8 +71,8 @@ export class InputRadioComponent implements OnInit {
       seleccion: [this.selectedValue || '', validators],
     });
   }
-  private onChange: (value: any) => void = () => {};
-  private onTouched: () => void = () => {};
+  private onChange: (value: any) => void = () => { };
+  private onTouched: () => void = () => { };
   /**
    * Maneja el evento de cambio de selección y emite el nuevo valor.
    * @param value - El nuevo valor seleccionado.
