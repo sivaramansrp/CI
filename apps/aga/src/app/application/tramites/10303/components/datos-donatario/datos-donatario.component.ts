@@ -176,6 +176,17 @@ export class DatosDonatarioComponent implements OnInit, OnDestroy {
       };
 
       this.datosDonatarioForm.patchValue(VALORES_DE_FORMATO);
+      
+      this.tramite10303Store.setNombreDonatario(VALORES_DE_FORMATO.nombreDonatario);
+      this.tramite10303Store.setCalleDonatario(VALORES_DE_FORMATO.calleDonatario);
+      this.tramite10303Store.setNumExteriorDonatario(VALORES_DE_FORMATO.numExteriorDonatario);
+      this.tramite10303Store.setNumInteriorDonatario(VALORES_DE_FORMATO.numInteriorDonatario);
+      this.tramite10303Store.setEstadoDonatario(VALORES_DE_FORMATO.estadoDonatario);
+      this.tramite10303Store.setColoniaDonatario(VALORES_DE_FORMATO.coloniaDonatario);
+      this.tramite10303Store.setCodigoPostalDonatario(VALORES_DE_FORMATO.codigoPostalDonatario);
+      this.tramite10303Store.setCvePaisDonatario(VALORES_DE_FORMATO.cvePaisDonatario);
+      this.tramite10303Store.setCorreoElectronicoDonatario(VALORES_DE_FORMATO.correoElectronicoDonatario);
+      this.tramite10303Store.setTelefonoDonatario(VALORES_DE_FORMATO.telefonoDonatario);
     } else {
       this.restablecerFormulario();
     }

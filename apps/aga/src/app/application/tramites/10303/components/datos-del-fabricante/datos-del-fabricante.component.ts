@@ -173,6 +173,15 @@ export class DatosDelFabricanteComponent implements OnInit, OnDestroy {
       };
 
       this.datosDelFabricanteForm.patchValue(VALORES_DE_FORMATO);
+
+      this.tramite10303Store.setNombreFabricante(VALORES_DE_FORMATO.nombreFabricante);
+      this.tramite10303Store.setCalleFabricante(VALORES_DE_FORMATO.calleFabricante);
+      this.tramite10303Store.setNumExteriorFabricante(VALORES_DE_FORMATO.numExteriorFabricante);
+      this.tramite10303Store.setNumInteriorFabricante(VALORES_DE_FORMATO.numInteriorFabricante);
+      this.tramite10303Store.setEstadoFabricante(VALORES_DE_FORMATO.estadoFabricante);
+      this.tramite10303Store.setColoniaFabricante(VALORES_DE_FORMATO.coloniaFabricante);
+      this.tramite10303Store.setCodigoPostalFabricante(VALORES_DE_FORMATO.codigoPostalFabricante);
+      this.tramite10303Store.setCvePaisFabricante(VALORES_DE_FORMATO.cvePaisFabricante);
     } else {
       this.restablecerFormulario();
     }

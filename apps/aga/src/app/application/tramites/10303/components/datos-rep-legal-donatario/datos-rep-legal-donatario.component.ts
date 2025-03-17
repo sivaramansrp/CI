@@ -177,6 +177,17 @@ export class DatosRepLegalDonatarioComponent implements OnInit, OnDestroy {
       };
 
       this.datosRepLegalDonatarioForm.patchValue(VALORES_DE_FORMATO);
+
+      this.tramite10303Store.setNombreRepLegalDonatario(VALORES_DE_FORMATO.nombreRepLegalDonatario);
+      this.tramite10303Store.setCalleRepLegalDonatario(VALORES_DE_FORMATO.calleRepLegalDonatario);
+      this.tramite10303Store.setNumExteriorRepLegalDonatario(VALORES_DE_FORMATO.numExteriorRepLegalDonatario);
+      this.tramite10303Store.setNumInteriorRepLegalDonatario(VALORES_DE_FORMATO.numInteriorRepLegalDonatario);
+      this.tramite10303Store.setEstadoRepLegalDonatario(VALORES_DE_FORMATO.estadoRepLegalDonatario);
+      this.tramite10303Store.setColoniaRepLegalDonatario(VALORES_DE_FORMATO.coloniaRepLegalDonatario);
+      this.tramite10303Store.setCodigoPostalRepLegalDonatario(VALORES_DE_FORMATO.codigoPostalRepLegalDonatario);
+      this.tramite10303Store.setCvePaisRepLegalDonatario(VALORES_DE_FORMATO.cvePaisRepLegalDonatario);
+      this.tramite10303Store.setCorreoElectronicoRepLegalDonatario(VALORES_DE_FORMATO.correoElectronicoRepLegalDonatario);
+      this.tramite10303Store.setTelefonoRepLegalDonatario(VALORES_DE_FORMATO.telefonoRepLegalDonatario);
     } else {
       this.restablecerFormulario();
     }

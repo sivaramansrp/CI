@@ -175,6 +175,17 @@ export class DatosRepLegalRecibirDonacionComponent implements OnInit, OnDestroy 
       };
 
       this.datosRepLegalRecibirDonacionForm.patchValue(VALORES_DE_FORMATO);
+
+      this.tramite10303Store.setNombreRepLegalAutorizado(VALORES_DE_FORMATO.nombreRepLegalAutorizado);
+      this.tramite10303Store.setCalleRepLegalAutorizado(VALORES_DE_FORMATO.calleRepLegalAutorizado);
+      this.tramite10303Store.setNumExteriorRepLegalAutorizado(VALORES_DE_FORMATO.numExteriorRepLegalAutorizado);
+      this.tramite10303Store.setNumInteriorRepLegalAutorizado(VALORES_DE_FORMATO.numInteriorRepLegalAutorizado);
+      this.tramite10303Store.setEstadoRepLegalAutorizado(VALORES_DE_FORMATO.estadoRepLegalAutorizado);
+      this.tramite10303Store.setColoniaRepLegalAutorizado(VALORES_DE_FORMATO.coloniaRepLegalAutorizado);
+      this.tramite10303Store.setCodigoPostalRepLegalAutorizado(VALORES_DE_FORMATO.codigoPostalRepLegalAutorizado);
+      this.tramite10303Store.setCvePaisRepLegalAutorizado(VALORES_DE_FORMATO.cvePaisRepLegalAutorizado);
+      this.tramite10303Store.setCorreoElectronicoRepLegalAutorizado(VALORES_DE_FORMATO.correoElectronicoRepLegalAutorizado);
+      this.tramite10303Store.setTelefonoRepLegalAutorizado(VALORES_DE_FORMATO.telefonoRepLegalAutorizado);
     } else {
       this.restablecerFormulario();
     }

@@ -175,6 +175,17 @@ export class DatosPersonaOirRecibirComponent implements OnInit, OnDestroy {
       };
 
       this.datosPersonaOirRecibirForm.patchValue(VALORES_DE_FORMATO);
+
+      this.tramite10303Store.setNombrePersonaAutorizada(VALORES_DE_FORMATO.nombrePersonaAutorizada);
+      this.tramite10303Store.setCallePersonaAutorizada(VALORES_DE_FORMATO.callePersonaAutorizada);
+      this.tramite10303Store.setNumExteriorPersonaAutorizada(VALORES_DE_FORMATO.numExteriorPersonaAutorizada);
+      this.tramite10303Store.setNumInteriorPersonaAutorizada(VALORES_DE_FORMATO.numInteriorPersonaAutorizada);
+      this.tramite10303Store.setEstadoPersonaAutorizada(VALORES_DE_FORMATO.estadoPersonaAutorizada);
+      this.tramite10303Store.setColoniaPersonaAutorizada(VALORES_DE_FORMATO.coloniaPersonaAutorizada);
+      this.tramite10303Store.setCodigoPostalPersonaAutorizada(VALORES_DE_FORMATO.codigoPostalPersonaAutorizada);
+      this.tramite10303Store.setCvePaisPersonaAutorizada(VALORES_DE_FORMATO.cvePaisPersonaAutorizada);
+      this.tramite10303Store.setCorreoElectronicoPersonaAutorizada(VALORES_DE_FORMATO.correoElectronicoPersonaAutorizada);
+      this.tramite10303Store.setTelefonoPersonaAutorizada(VALORES_DE_FORMATO.telefonoPersonaAutorizada);
     } else {
       this.restablecerFormulario();
     }
