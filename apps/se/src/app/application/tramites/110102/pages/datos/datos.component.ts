@@ -1,7 +1,23 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { ASIGNACION, AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { PASSOS } from '../../constants/exportador-autorizado.enum';
 
+
+/**
+ * Interface representing an action button.
+ */
+export interface AccionBoton {
+  /**
+   * The action to be performed by the button.
+   */
+  accion: string;
+
+  /**
+   * The value associated with the action.
+   */
+  valor: number;
+}
 /**
  * Componente DatosComponent.
  *
@@ -22,7 +38,7 @@ export class DatosComponent {
   /**
    * Lista de pasos para el asistente (wizard) de asignación directa.
    */
-  pantallasPasos: ListaPasosWizard[] = ASIGNACION;
+  pantallasPasos: ListaPasosWizard[] = PASSOS;
  
   /**
    * Índice actual del paso en el asistente.
