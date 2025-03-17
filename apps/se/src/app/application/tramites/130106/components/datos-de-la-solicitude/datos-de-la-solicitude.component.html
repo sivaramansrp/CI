@@ -26,4 +26,48 @@
             </div>
         </div>
     </form>
+    <ng-titulo titulo="Datos de la mercancía" />
+    <form>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="producto">Producto*:</label>
+                <div>
+                    <input type="radio" id="nuevo" name="producto" value="nuevo" checked> Nuevo
+                </div>
+                <div>
+                    <input type="radio" id="usado" name="producto" value="usado"> Usado
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="descripcion">Descripción de la mercancía*:</label>
+                <textarea id="descripcion" name="descripcion" class="form-control" rows="4"></textarea>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label for="fraccion">Fracción arancelaria*:</label>
+                <select id="fraccion" name="fraccion" class="form-control">
+                    <option value="">Selecciona un valor</option>
+                    <!-- Add options here -->
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="cantidad">Cantidad*:</label>
+                <input type="number" id="cantidad" name="cantidad" class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label for="valor">Valor factura USD*:</label>
+                <input type="number" id="valor" name="valor" class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label for="umt">UMT*:</label>
+                <select id="umt" name="umt" class="form-control">
+                    <option value="">Selecciona un valor</option>
+                    <!-- Add options here -->
+                </select>
+            </div>
+        </div>
+    </form>
 </div>
