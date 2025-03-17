@@ -44,6 +44,6 @@ export interface DatosCatalago {
   class: string;
   tipo_input: string;
   required: boolean;
-  opciones?: CatalogoPaises[];
+  opciones?: CatalogoPaises[] | Catalogo[] | any[];
   orden: number;
 }

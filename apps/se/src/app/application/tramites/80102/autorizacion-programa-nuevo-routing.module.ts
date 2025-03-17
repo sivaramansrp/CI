@@ -1,6 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { producerUpdatesAllowed } from '@angular/core/primitives/signals';
 
 const ROUTES: Routes = [
    {
@@ -19,3 +20,5 @@ const ROUTES: Routes = [
   exports: [RouterModule]
 })
 export class AutorizacionProgrmaNuevoRoutingModule { }
+
+

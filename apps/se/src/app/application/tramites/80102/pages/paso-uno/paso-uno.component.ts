@@ -1,3 +1,4 @@
+import { AggregarComplimentosComponent } from '../../components/aggregar-complimentos/aggregar-complimentos.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
@@ -14,7 +15,8 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
     CommonModule,
     ReactiveFormsModule,
     SolicitanteComponent,
-    ServiciosComponent
+    ServiciosComponent,
+    AggregarComplimentosComponent
 ],
   host: { hostID: crypto.randomUUID().toString() },
 })

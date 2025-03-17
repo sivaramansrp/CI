@@ -6,6 +6,7 @@ import {
   Servicios,
 } from '../models/autorizacion-programa-nuevo.model';
 import { Store, StoreConfig } from '@datorama/akita';
+import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { Injectable } from '@angular/core';
 
 export interface AmpliacionServiciosState {
@@ -23,6 +24,8 @@ export interface AmpliacionServiciosState {
   paisesOrigen: CatalogoPaises[];
   datosEmpresaExtranjera: DatosEmpresaExtranjera[];
   formaEmpresaExtranjera: DatosEmpresaExtranjera;
+
+  datosComplimentos: DatosComplimentos;
 }
 
 export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
@@ -55,6 +58,38 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
     entidadFederativaEmpresaExt: '',
     nombreEmpresaExt: '',
     direccionEmpresaExtranjera: '',
+  },
+  datosComplimentos: {
+    modalidad: '',
+    programaPreOperativo: '',
+    datosGeneralis: {
+      paginaWWeb: '',
+      localizacion: '',
+    },
+    obligacionesFiscales: {
+      opinionPositiva: '',
+      fechaExpedicion: '',
+      aceptarObligacionFiscal: '',
+    },
+    formaModificaciones: {
+      nombreDelFederatario: '',
+      nombreDeNotaria: '',
+      estado: '',
+      nombreDeActa: '',
+      fechaDeActa: '',
+      rfc: '',
+      nombreDeRepresentante: '',
+    },
+    formaCertificacion: {
+      certificada: '',
+      fechaInicio: '',
+      fechaVigencia: '',
+    },
+    formaSocioAccionistas: {
+      nationalidadMaxicana: '',
+      tipoDePersona: '',
+      formaDatos: {},
+    },
   },
 };
 
@@ -181,15 +216,12 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
     this.update((state) => {
       const DATOS = {
         ...datosEmpresaExtranjera,
-        id: crypto.randomUUID().toString()
+        id: crypto.randomUUID().toString(),
       };
 
       return {
         ...state,
-        datosEmpresaExtranjera: [
-          ...state.datosEmpresaExtranjera,
-          DATOS,
-        ],
+        datosEmpresaExtranjera: [...state.datosEmpresaExtranjera, DATOS],
       };
     });
   }
@@ -197,13 +229,20 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
     datosEmpresaExtranjera: DatosEmpresaExtranjera[]
   ): void {
     this.update((state) => {
-      const DOMICILIOS = [...state.datosEmpresaExtranjera].filter(
-        (ele) => datosEmpresaExtranjera.some(datos => ele.id !== datos.id)  
+      const DOMICILIOS = [...state.datosEmpresaExtranjera].filter((ele) =>
+        datosEmpresaExtranjera.some((datos) => ele.id !== datos.id)
       );
       return {
         ...state,
         datosEmpresaExtranjera: DOMICILIOS,
       };
     });
+  }
+
+  setDatosComplimentos(datosComplimentos: DatosComplimentos): void {
+    this.update((state) => ({
+      ...state,
+      datosComplimentos,
+    }));
   }
 }

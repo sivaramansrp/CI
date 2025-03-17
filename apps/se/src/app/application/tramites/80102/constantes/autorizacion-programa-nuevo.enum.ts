@@ -30,7 +30,6 @@ export const TITULOMENSAJE =
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
-
 export const CONFIGURACION_DOMICILIOS = [
   {
     encabezado: 'Servicio',
@@ -75,22 +74,26 @@ export const CONFIGURACION_SERVICIO_IMMEX = [
 export const CONFIGURACION_EMPRESA_ECTRANJERA = [
   {
     encabezado: 'Tax ID',
-    clave: (ele: DatosEmpresaExtranjera): string | undefined => ele.taxIdEmpresaExt,
+    clave: (ele: DatosEmpresaExtranjera): string | undefined =>
+      ele.taxIdEmpresaExt,
     orden: 1,
   },
   {
     encabezado: 'Nombre del empresa',
-    clave: (ele: DatosEmpresaExtranjera): string | undefined => ele.nombreEmpresaExt,
+    clave: (ele: DatosEmpresaExtranjera): string | undefined =>
+      ele.nombreEmpresaExt,
     orden: 2,
   },
   {
     encabezado: 'País',
-    clave: (ele: DatosEmpresaExtranjera): string | undefined => ele.entidadFederativaEmpresaExt,
+    clave: (ele: DatosEmpresaExtranjera): string | undefined =>
+      ele.entidadFederativaEmpresaExt,
     orden: 2,
   },
   {
     encabezado: 'Dirección',
-    clave: (ele: DatosEmpresaExtranjera): string | undefined => ele.direccionEmpresaExtranjera,
+    clave: (ele: DatosEmpresaExtranjera): string | undefined =>
+      ele.direccionEmpresaExtranjera,
     orden: 2,
   },
 ];
@@ -101,7 +104,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     class: 'col-md-4 col-sm-10',
     tipo_input: 'text',
     required: true,
-    orden: 1
+    orden: 1,
   },
   {
     labelNombre: 'Nombre del empresa',
@@ -109,7 +112,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     class: 'col-md-4 col-sm-10',
     tipo_input: 'text',
     required: true,
-    orden: 2
+    orden: 2,
   },
   {
     labelNombre: 'País',
@@ -118,7 +121,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     tipo_input: 'select',
     required: true,
     opciones: [],
-    orden: 3
+    orden: 3,
   },
   {
     labelNombre: 'Dirección',
@@ -126,6 +129,8 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     class: 'col-md-10 col-10',
     tipo_input: 'textarea',
     required: true,
-    orden: 4
-  }
+    orden: 4,
+  },
 ];
+
+

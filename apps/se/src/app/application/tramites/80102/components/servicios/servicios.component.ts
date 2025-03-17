@@ -41,6 +41,8 @@ import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-pro
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
+const ENTIDADFEDERATIVA = 'entidadFederativaEmpresaExt';
+
 @Component({
   selector: 'app-servicios',
   standalone: true,
@@ -70,7 +72,6 @@ export class ServiciosComponent implements OnInit, OnDestroy {
   domicilioFiscal: FormularioDinamico[] = [];
   serviciosDropDown: string = '';
   recibioDatos: Servicio[] = [];
-  formularioInfoRegistro!: FormGroup;
   tablaSeleccion = TablaSeleccion;
   rfcEmpresa: string = '';
   numeroPrograma: string = '';
@@ -109,7 +110,6 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     private readonly autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService,
     private catalogosServices: CatalogosService
   ) {
-    this.inicializarFormularioInfoRegistro();
     this.formulario = this.fb.group({
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
     });
@@ -158,7 +158,8 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       this.catalogosServices
         .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
         .subscribe((datos) => {
-          this.camposFormulario[2].opciones = datos;
+          const INDICE = this.camposFormulario.findIndex( ele => ele.campo === ENTIDADFEDERATIVA)
+          this.camposFormulario[INDICE].opciones = datos;
           this.ampliacionServiciosStore.setPaisesOrigen(datos);
         })
     );
@@ -212,7 +213,6 @@ export class ServiciosComponent implements OnInit, OnDestroy {
         if (respuesta) {
           // Store the response data in the store
           this.ampliacionServiciosStore.setInfoRegistro(respuesta);
-          this.initializeFormFromStore();
         }
       })
     );
@@ -221,33 +221,6 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     // Subscribe to `datosImmex` from the store to keep the component updated reactively
     this.ampliacionServiciosQuery.selectDatosImmex$.subscribe((datosImmex) => {
       this.datosImmex = datosImmex; // Update local variable with the latest data from the store
-    });
-  }
-  initializeFormFromStore(): void {
-    this.ampliacionServiciosQuery.selectInfoRegistro$.subscribe(
-      (infoRegistro) => {
-        // If the store has data, initialize the form
-        this.formularioInfoRegistro = this.fb.group({
-          seleccionaLaModalidad: [
-            { value: infoRegistro.seleccionaLaModalidad, disabled: true },
-          ],
-          folio: [{ value: infoRegistro.folio, disabled: true }],
-          ano: [{ value: infoRegistro.ano, disabled: true }],
-        });
-      }
-    );
-  }
-
-  /**
-   * Inicializa el formulario de información de registro.
-   * @method inicializarFormularioInfoRegistro
-   */
-
-  inicializarFormularioInfoRegistro(): void {
-    this.formularioInfoRegistro = this.fb.group({
-      seleccionaLaModalidad: [{ value: '', disabled: true }],
-      folio: [{ value: '', disabled: true }],
-      ano: [{ value: '', disabled: true }],
     });
   }
 
