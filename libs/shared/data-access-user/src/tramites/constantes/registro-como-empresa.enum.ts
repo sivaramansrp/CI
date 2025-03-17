@@ -16,12 +16,5 @@ export const PASOS_REGISTRO = [
         titulo: 'Anexar necesarios',
         activo: false,
         completado: false,
-    },
-    {
-        indice: 4,
-        titulo: 'Firmar solicitud',
-        activo: false,
-        completado: false,
-    },
-    
+    }
 ];
