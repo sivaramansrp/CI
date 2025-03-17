@@ -99,7 +99,7 @@ export class ComplimentosComponent implements OnInit {
       }),
       obligacionesFiscales: this.fb.group({
         opinionPositiva: [{ value: '', disabled: true }],
-        fechaExpedicion: [{ value: '', disabled: true }],
+        fechaExpedicion: [{ value: '01-01-2000', disabled: true }],
         aceptarObligacionFiscal: [''],
       }),
       formaModificaciones: this.fb.group({

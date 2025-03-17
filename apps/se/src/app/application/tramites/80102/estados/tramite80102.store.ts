@@ -88,7 +88,19 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
     formaSocioAccionistas: {
       nationalidadMaxicana: '',
       tipoDePersona: '',
-      formaDatos: {},
+      formaDatos: {
+        rfc: '',
+        taxId: '',
+        razonSocial: '',
+        pais: '',
+        codigoPostal: '',
+        estado: '',
+        correoElectronico: '',
+        nombre: '',
+        apellidoPaterno: '',
+        apellidoMaterno: '',
+        cp: '',
+      },
     },
   },
 };
