@@ -6,9 +6,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Chofer40102Query } from '../../estados/chofer40102.query';
-import { Chofer40102Service } from '../../estados/chofer40102.service';
-import { Chofer40102Store } from '../../estados/chofer40102.store';
+import { Chofer40102Query } from '../../estados/tramite40102.query';
+import { Chofer40102Service } from '../../estados/tramite40102.service';
+import { Chofer40102Store } from '../../estados/tramite40102.store';
 import { Modal } from 'bootstrap';
 import { Observable } from 'rxjs/internal/Observable';
 import { ToastrService } from 'ngx-toastr';
@@ -173,13 +173,11 @@ export class VehiculosComponent implements AfterViewInit {
     this.chofer40102Query.getvehiculos$.subscribe((vehiculos: any) => {
       this.vehiculos = vehiculos;
     });
-    console.log('✅ Loaded vehicle data:', this.vehiculos);
     this.unidadesdearrastreList$ = this.chofer40102Query.getUnidadesdeArrastre$;
     this.UnidadesDearrastre();
     this.chofer40102Query.getUnidadesdeArrastre$.subscribe(
       (unidadesdearrastre: any) => {
         this.unidadesdearrastre = unidadesdearrastre;
-        console.log('✅ loaded Unidades  data:', this.unidadesdearrastre);
       }
     );
     this.conVehiculoArrastre();
@@ -235,7 +233,7 @@ export class VehiculosComponent implements AfterViewInit {
     );
 
     if (vinExists) {
-      this.toastr.error('⚠️ This VIN already exists!');
+      this.toastr.error('⚠️ Esta VIN ya existe!');
       return;
     }
 
@@ -247,7 +245,7 @@ export class VehiculosComponent implements AfterViewInit {
     // Actualizar el estado de Akita
     this.chofer40102Store.setVehiculos([...this.vehiculos, newVehiculo]);
     this.formVehiculo.reset();
-    this.toastr.success('🚗 Vehiculo added successfully!');
+    this.toastr.success('🚗 Vehiculo agregado exitosamente!');
     this.closeModal();
   }
 
@@ -336,7 +334,6 @@ export class VehiculosComponent implements AfterViewInit {
     const solicitudVehiculoTipoVehiculo = this.formVehiculo.get(
       'solicitudVehiculoTipoVehiculo'
     )?.value;
-    console.log('Selected Value:', solicitudVehiculoTipoVehiculo);
     this.chofer40102Store.setsolicitudVehiculoTipoVehiculo(
       solicitudVehiculoTipoVehiculo
     );
@@ -349,7 +346,6 @@ export class VehiculosComponent implements AfterViewInit {
   }
   anioVehiculoveh() {
     const anioVehiculoVEH = this.formVehiculo.get('anioVehiculoVEH')?.value;
-    console.log('Selected Value:', anioVehiculoVEH);
     this.chofer40102Store.setanioVehiculoVEH(anioVehiculoVEH);
     this.chofer40102Service.getVehiculoVEH().subscribe({
       next: (data: VehiculoVEHs[]) => {
@@ -363,7 +359,6 @@ export class VehiculosComponent implements AfterViewInit {
     const solicitudVehiculoColor = this.formVehiculo.get(
       'solicitudVehiculoColor'
     )?.value;
-    console.log('Selected Value:', solicitudVehiculoColor);
     this.chofer40102Store.solicitudVehiculoColor(solicitudVehiculoColor);
     this.chofer40102Service.getVehiculoColor().subscribe({
       next: (data: VehiculoColor[]) => {
@@ -374,7 +369,6 @@ export class VehiculosComponent implements AfterViewInit {
   }
   solicitudVehiculoPaisEmisor2daPlaca() {
     const solicitudVehiculo = this.formVehiculo.get('solicitudVehiculo')?.value;
-    console.log('Selected Value:', solicitudVehiculo);
     this.chofer40102Store.VehiculoPaisEmisor2daPlaca(solicitudVehiculo);
     this.chofer40102Service.getPaisEmisor2daPlaca().subscribe({
       next: (data: Emisor2daPlaca[]) => {

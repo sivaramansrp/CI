@@ -3,7 +3,7 @@ import { Query } from '@datorama/akita';
 import {
   Chofer40102Store,
   Choferesnacionales40102State,
-} from './chofer40102.store';
+} from './tramite40102.store';
 
 @Injectable({ providedIn: 'root' })
 export class Chofer40102Query extends Query<Choferesnacionales40102State> {

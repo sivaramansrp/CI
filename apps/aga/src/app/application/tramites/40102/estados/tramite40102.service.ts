@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { Chofer40102Store } from './chofer40102.store';
+import { Chofer40102Store } from './tramite40102.store';
 import { Injectable } from '@angular/core';
 import {
   DatosDelVehículo,
@@ -29,8 +29,6 @@ export class Chofer40102Service {
 
   addChofer(nuevoMiembro: any, isExtranjero: boolean = false) {
     if (!nuevoMiembro) return;
-    console.log('Adding Chofer:', nuevoMiembro);
-
     let storageKey = isExtranjero ? 'choferesextranjeroList' : 'choferesList';
     let storedData = localStorage.getItem(storageKey);
     let choferArray: any[] = storedData ? JSON.parse(storedData) : [];
@@ -47,8 +45,6 @@ export class Chofer40102Service {
     if (isExtranjero) {
       this.choferesListSubject.next(choferArray);
     }
-
-    console.log('Updated Akita Store:', choferArray);
   }
   getClasifiRegimen(): Observable<DatosDelVehículo[]> {
     return of([

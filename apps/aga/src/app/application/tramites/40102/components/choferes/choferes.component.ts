@@ -1,10 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  ViewChild,
-  OnInit,
-  Input,
-} from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, Input } from '@angular/core';
 import {
   ReactiveFormsModule,
   Validators,
@@ -26,9 +20,9 @@ import { ChangeDetectorRef } from '@angular/core';
 import {
   Chofer40102Store,
   Choferesnacionales40102State,
-} from '../../estados/chofer40102.store';
-import { Chofer40102Query } from '../../estados/chofer40102.query';
-import { Chofer40102Service } from '../../estados/chofer40102.service';
+} from '../../estados/tramite40102.store';
+import { Chofer40102Query } from '../../estados/tramite40102.query';
+import { Chofer40102Service } from '../../estados/tramite40102.service';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
@@ -180,16 +174,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.choferesextranjerosList$ =
       this.chofer40102Query.getchoferesextranjero$;
 
-    this.choferesList$.subscribe((choferes) => {
-      console.log('Updated Choferes:', choferes);
-    });
-
-    this.choferesextranjerosList$.subscribe((choferesextranjeros) => {
-      console.log('Updated Extranjero Choferes:', choferesextranjeros);
-    });
-
     // Comprobar si la tienda tiene datos sincrónicamente
-    console.log('Initial Store Value:', this.chofer40102Query.getChoferes());
     this.chofernacionalForm();
     this.loadStoredData();
     this.fetchChoferes();
@@ -215,7 +200,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       this.modalRef.nativeElement.classList.remove('show');
       this.modalRef.nativeElement.style.display = 'none';
       document.body.classList.remove('modal-open');
-        const backdrop = document.querySelector('.modal-backdrop');
+      const backdrop = document.querySelector('.modal-backdrop');
       if (backdrop) {
         backdrop.remove();
       }
@@ -223,7 +208,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       console.error('modalRef is undefined');
     }
   }
-  
+
   /**
    * Guarda los datos del formulario del chofer extranjero.
    */
@@ -232,10 +217,11 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     if (this.formChoferes.invalid) {
     }
     const nuevoMiembro = this.formChoferes.getRawValue();
-    console.log('Form Values:', nuevoMiembro);
 
     if (!nuevoMiembro || Object.keys(nuevoMiembro).length === 0) {
-      this.toastr.error('Invalid form data. Please try again.');
+      this.toastr.error(
+        'Datos del formulario no válidos. Por favor inténtalo de nuevo.'
+      );
       return;
     }
     // Utilice el servicio para agregar el nuevo registro a la lista de extranjeros
@@ -243,7 +229,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
 
     //Restablecer el formulario
     this.formChoferes.reset();
-    this.toastr.success('Chofer extranjero added successfully');
+    this.toastr.success('Chofer extranjero agregado exitosamente');
     // cerrar el modal
     this.cerrarModal();
 
@@ -256,23 +242,22 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    * Guarda los datos del formulario de selección.
    */
   Guardar() {
-    console.log('Adding a new member...');
-
     if (this.formChoferes.invalid) {
     }
 
     const nuevoMiembro = this.formChoferes.getRawValue();
-    console.log('Form Values:', nuevoMiembro);
-
     if (!nuevoMiembro || Object.keys(nuevoMiembro).length === 0) {
-      this.toastr.error('Invalid form data. Please try again.');
+      this.toastr.error(
+        'Datos del formulario no válidos. Por favor inténtalo de nuevo.'
+      );
       return;
     }
-    
 
     // Llamar al método de servicio para agregar el nuevo miembro
     this.chofer40102Service.addChofer(nuevoMiembro);
-    this.toastr.success('Chofer Nacional forms data added successfully');
+    this.toastr.success(
+      'Datos de formularios del Chofer Nacional agregados exitosamente'
+    );
     this.formChoferes.reset();
     this.cerrarModal();
     setTimeout(() => {
@@ -317,9 +302,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   /**
    * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
    */
-  ngAfterViewInit() {
-    console.log('modalRef:', this.modalRef);
-  }
+  ngAfterViewInit() {}
 
   /**
    * Busca un chofer por CURP.
@@ -414,7 +397,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     if (!claveEstado) return;
     this.chofer40102Service.getMunicipios(claveEstado).subscribe(
       (data) => {
-        console.log('Municipios:', data);
         this.municipios = data;
       },
       (error) => {
@@ -428,7 +410,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
 
     this.chofer40102Service.getColonias(claveMunicipio).subscribe(
       (data) => {
-        console.log('Colonias:', data);
         this.colonias = data;
       },
       (error) => {

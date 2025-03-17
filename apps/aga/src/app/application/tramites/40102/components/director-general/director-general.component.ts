@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import mockData from 'libs/shared/theme/assets/json/40102/director-general-mockdata.json';
-import { Chofer40102Query } from '../../estados/chofer40102.query';
-import { Chofer40102Store } from '../../estados/chofer40102.store';
+import { Chofer40102Query } from '../../estados/tramite40102.query';
+import { Chofer40102Store } from '../../estados/tramite40102.store';
 @Component({
   selector: 'app-director-general',
   templateUrl: './director-general.component.html',

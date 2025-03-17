@@ -58,35 +58,30 @@ export class Chofer40102Store extends Store<Choferesnacionales40102State> {
     }));
   }
   public setsolicitudVehiculoTipoVehiculo(solicitudVehiculo: string) {
-    console.log('Updating Store:', solicitudVehiculo);
     this.update((state) => ({
       ...state,
       solicitudVehiculo,
     }));
   }
     public setsolicitudVehiculoPaisEmisor(solicitudVehiculo: string) {
-      console.log('Updating Store:', solicitudVehiculo);
       this.update((state) => ({
         ...state,
         solicitudVehiculo,
       }));
     }
     public solicitudVehiculoColor(vehiculoColor: string) {
-      console.log('Updating Store:', vehiculoColor);
       this.update((state) => ({
         ...state,
         vehiculoColor,
       }));
     }
     public VehiculoPaisEmisor2daPlaca(PaisEmisor2daPlaca: string) {
-      console.log('Updating Store:', PaisEmisor2daPlaca);
       this.update((state) => ({
         ...state,
         PaisEmisor2daPlaca,
       }));
     }
     public setanioVehiculoVEH(VehiculoVEH: string) {
-      console.log('Updating Store:', VehiculoVEH);
       this.update((state) => ({
         ...state,
         VehiculoVEH,
