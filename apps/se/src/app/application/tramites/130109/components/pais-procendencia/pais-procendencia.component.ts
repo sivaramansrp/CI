@@ -15,12 +15,14 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { CrosslistComponent } from 'libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { Pais } from '../../enum/vehiculos-adaptados.enum';
 
-import paisProcJson from 'libs/shared/theme/assets/json/130109/pais-procenia.json';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+
+import paisProcJson from '@libs/shared/theme/assets/json/130109/pais-procenia.json';
 
 /**
  * Componente para la gestión de la selección de países de procedencia.
@@ -89,10 +91,9 @@ export class PaisProcendenciaComponent implements OnInit {
 
   /**
    * compo doc
-   * @property {any[]} paisesPorBloque - Lista de países por bloque.
+   * @property {Pais[]} paisesPorBloque - Lista de países por bloque.
    */
-  paisesPorBloque: any[] = [];
-
+  paisesPorBloque:Pais[] = [];
   /**
    * compo doc
    * @property {Array<{ btnNombre: string; class: string; funcion: Function }>} botonField - Configuración de botones.
@@ -101,7 +102,7 @@ export class PaisProcendenciaComponent implements OnInit {
     {
       btnNombre: 'Agregar todos',
       class: 'btn-primary',
-      funcion: () => {
+      funcion: (): void =>{
         if (this.crosslistComponent) {
           this.crosslistComponent.agregar('t');
         }
@@ -110,7 +111,7 @@ export class PaisProcendenciaComponent implements OnInit {
     {
       btnNombre: 'Agregar selección',
       class: 'btn-default',
-      funcion: () => {
+      funcion: (): void => {
         if (this.crosslistComponent) {
           this.crosslistComponent.agregar('');
         }
@@ -119,7 +120,7 @@ export class PaisProcendenciaComponent implements OnInit {
     {
       btnNombre: 'Restar selección',
       class: 'btn-danger',
-      funcion: () => {
+      funcion: (): void => {
         if (this.crosslistComponent) {
           this.crosslistComponent.quitar('');
         }
@@ -128,7 +129,7 @@ export class PaisProcendenciaComponent implements OnInit {
     {
       btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: () => {
+      funcion: (): void => {
         if (this.crosslistComponent) {
           this.crosslistComponent.quitar('t');
         }
@@ -142,14 +143,16 @@ export class PaisProcendenciaComponent implements OnInit {
    * @param {HttpClient} http - Cliente HTTP para solicitudes.
    * @param {FormBuilder} fb - Constructor de formularios reactivos.
    */
-  constructor(private http: HttpClient, private fb: FormBuilder) {}
+  constructor(private http: HttpClient, private fb: FormBuilder) {
+     // Constructor del componente
+  }
 
   /**
    * compo doc
    * @method ngOnInit
    * @description Inicializa el formulario y carga datos de países de procedencia.
    */
-  ngOnInit() {
+  ngOnInit() :void {
     this.paisForm = this.fb.group({
       bloque: [''],
       descripcioneSpecffico:['',Validators.required],
@@ -164,16 +167,16 @@ export class PaisProcendenciaComponent implements OnInit {
    * @method fetchPaisProc
    * @description Carga las opciones de países de procedencia desde el JSON.
    */
-  fetchPaisProc() {
+  fetchPaisProc(): void {
     this.http
       .get<Catalogo[]>('/assets/json/130109/pais-procenia.json')
       .subscribe((data) => {
         this.paisProc = data;
       });
-      const selectedBloque = (this.paisForm.get('bloque') as FormControl).value;
-      if (selectedBloque) {
-        this.fetchPaisesPorBloque(selectedBloque);
-      }
+    const SELECTED_BLOQUE = (this.paisForm.get('bloque') as FormControl).value;
+    if (SELECTED_BLOQUE) {
+      this.fetchPaisesPorBloque(SELECTED_BLOQUE);
+    }
   }
 
   /**
@@ -182,12 +185,12 @@ export class PaisProcendenciaComponent implements OnInit {
    * @description Obtiene información de países por bloque.
    * @param {number} bloqueId - ID del bloque seleccionado.
    */
-  fetchPaisesPorBloque(bloqueId: number) {
-    console.log(bloqueId)
-    this.http.get<any>('/assets/json/130109/paises-por-bloque.json')
-    .subscribe((data) => {
-      this.paisesPorBloque = data;
-      this.selectRangoDias = this.paisesPorBloque.map((pais => pais.descripcion));
-    });
+  fetchPaisesPorBloque(_bloqueId: number): void {
+    this.http
+      .get<Pais[]>('/assets/json/130109/paises-por-bloque.json')
+      .subscribe((data: Pais[]) => {
+        this.paisesPorBloque = data;
+        this.selectRangoDias = this.paisesPorBloque.map((pais: Pais) => pais.descripcion);
+      });
   }
 }

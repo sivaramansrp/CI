@@ -14,15 +14,18 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+
+import { HttpClient } from '@angular/common/http';
+
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import EntidadFederativaOptions from '@libs/shared/theme/assets/json/130109/entidad-federativa.json';
 import RepresentacionFederalOptions from '@libs/shared/theme/assets/json/130109/representacion-federal.json';
 import { TEXTOS } from '../../enum/representacion-federal.enum';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+
 
 @Component({
   selector: 'app-representacion',

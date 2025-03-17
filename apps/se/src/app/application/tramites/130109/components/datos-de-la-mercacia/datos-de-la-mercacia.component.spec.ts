@@ -7,7 +7,7 @@ import productoOptions from 'libs/shared/theme/assets/json/130109/producto-otion
 import unidadOptions from 'libs/shared/theme/assets/json/130109/unidad_da.json';
 import fractionValues from 'libs/shared/theme/assets/json/130109/fraccion_arancelaria.json';
 
-describe('DatosDeLaMercaciaComponent', () => {
+describe('DatosDeLaMercanciaComponent', () => {
   let component: DatosDeLaMercaciaComponent;
   let fixture: ComponentFixture<DatosDeLaMercaciaComponent>;
 

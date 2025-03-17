@@ -1,19 +1,32 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
+/**
+ * Componente para el paso tres del proceso.
+ */
 @Component({
-  selector: 'paso-tres',
+  selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
-  styleUrl: './paso-tres.component.scss'
+  styleUrls: ['./paso-tres.component.scss']
 })
-export class PasoTresComponent {
-constructor(private router: Router) {}
+export class PasoTresComponent{
+   /**
+   * componente doc
+   * @constructor
+   * @param {Router} router - Servicio de Angular para la navegación entre rutas.
+   */
+   constructor(private router: Router) {
+    // Constructor del componente
+  }
 
-  obtieneFirma(ev: string){
-    const firma: string = ev;
-    if (firma) {
+  /**
+   * Obtiene la firma y navega a la página de acuse.
+   * @param ev - Evento que contiene la firma.
+   */
+  obtieneFirma(ev: string): void {
+    const FIRMA: string = ev;
+    if (FIRMA) {
       this.router.navigate(['servicios-extraordinarios/acuse']);
-
     }
   }
 }

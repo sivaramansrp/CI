@@ -1,22 +1,29 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { of } from 'rxjs';
 import { PartidasDeLaComponent } from './partidas-de-la.component';
+import { CatalogosService } from '@ng-mf/data-access-user';
 
 describe('PartidasDeLaComponent', () => {
   let component: PartidasDeLaComponent;
   let fixture: ComponentFixture<PartidasDeLaComponent>;
+  let mockCatalogosService;
 
   beforeEach(async () => {
+    mockCatalogosService = {
+      getCatalogos: jasmine.createSpy('getCatalogos').and.returnValue(of({ /* mock data */ }))
+    };
+
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, PartidasDeLaComponent]
+      imports: [ReactiveFormsModule],
+      declarations: [PartidasDeLaComponent],
+      providers: [{ provide: CatalogosService, useValue: mockCatalogosService }]
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PartidasDeLaComponent);
     component = fixture.componentInstance;
-    component.ngOnInit();
     fixture.detectChanges();
   });
 

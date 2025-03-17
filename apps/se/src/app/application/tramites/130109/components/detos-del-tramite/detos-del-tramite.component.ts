@@ -17,15 +17,15 @@ import {
 import {
   ProductoOption,
   ProductoResponse,
-} from 'libs/shared/data-access-user/src/core/services/130109/vehiculos-adaptados.enum';
+} from '../../enum/vehiculos-adaptados.enum';
 
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { InputRadioComponent } from 'libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
-import solicitudeSelectVal from 'libs/shared/theme/assets/json/130109/solicitud-select.json';
+import solicitudeSelectVal from '@libs/shared/theme/assets/json/130109/solicitud-select.json';
 
 /**
  * Componente para la gestión de solicitudes y tipos de documentos en un trámite.

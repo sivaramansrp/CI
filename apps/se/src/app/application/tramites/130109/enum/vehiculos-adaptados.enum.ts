@@ -1,23 +1,16 @@
-export const Vehiculas_Adaptados = [
-    {
-        indice: 1,
-        titulo: 'Capturar solicitud',
-        activo: true,
-        completado: false,
-      },
-      {
-        indice: 2,
-        titulo: 'Firmar solicitud',
-        activo: false,
-        completado: false,
-      }
-
-]
+export interface AccionBoton {
+  accion: string;
+  valor: number;
+}
 export interface ProductoOption {
     label: string;
     value: string;
-  }
+}
   export interface ProductoResponse {
     options: ProductoOption[];
     defaultSelect: string;
-  }
+}
+export interface Pais {
+  id: number;
+  descripcion: string;
+}

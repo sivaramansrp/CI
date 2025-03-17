@@ -28,7 +28,7 @@
                 </div>
                 <div class="col-md-4">
                     <app-catalogo-select [catalogo]="fraccionArancelariaTIGIE"
-                    [required]="true" (change)="fraccionArancelariaTIGIESelection()"></app-catalogo-select>
+                    [required]="true"></app-catalogo-select>
                         <div *ngIf="esInvalido('fraccionArancelariaTIGIE')" class="text-danger">
                             <small>Debe seleccionar una fracción.</small>
                         </div>

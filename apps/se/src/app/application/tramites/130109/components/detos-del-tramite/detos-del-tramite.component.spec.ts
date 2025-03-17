@@ -1,11 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DetosDelTramiteComponent } from './detos-del-tramite.component';
-
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-
 
 describe('DetosDelTramiteComponent', () => {
   let component: DetosDelTramiteComponent;
@@ -16,13 +13,14 @@ describe('DetosDelTramiteComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
-        HttpClientTestingModule,
+        HttpClientTestingModule
+      ],
+      declarations: [
         DetosDelTramiteComponent,
         CatalogoSelectComponent,
         InputRadioComponent,
         TituloComponent
       ],
-      
       providers: [FormBuilder]
     }).compileComponents();
   });
@@ -32,18 +30,16 @@ describe('DetosDelTramiteComponent', () => {
     component = fixture.componentInstance;
     httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
-  
-    // ✅ Mock the API request expected on component initialization
+
+    // Mock the API request expected on component initialization
     const req = httpMock.expectOne('/assets/json/130109/solicitude-options.json');
     req.flush({ options: [], defaultSelect: '' }); // Send an empty mock response
   });
-  
 
   afterEach(() => {
-    httpMock.match('/assets/json/130109/solicitude-options.json').forEach(req => req.flush({ options: [], defaultSelect: '' }));
-    httpMock.verify(); // ✅ Ensure no open requests
+    httpMock.verify(); // Ensure no open requests
   });
-  
+
   it('should create component', () => {
     expect(component).toBeTruthy();
   });

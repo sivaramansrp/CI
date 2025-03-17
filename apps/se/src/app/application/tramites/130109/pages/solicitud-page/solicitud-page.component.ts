@@ -1,21 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
+import {AccionBoton} from '../../enum/vehiculos-adaptados.enum';
+
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constantes/vehiculos-usados-adaptados.enums';
 
-/**
- * Interfaz que define la estructura de una acción de botón.
- */
-interface AccionBoton {
-  /**
-   * La acción que se realizará.
-   */
-  accion: string;
-  
-  /**
-   * El valor asociado a la acción.
-   */
-  valor: number;
-}
 
 @Component({
   templateUrl: './solicitud-page.component.html',

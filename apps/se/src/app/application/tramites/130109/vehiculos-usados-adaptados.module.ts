@@ -1,10 +1,10 @@
 import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, SelectPaisesComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { DetosDelLaMarcaciaComponent } from './components/datos-de-la-mercacia/datos-de-la-mercacia.component';
+import { DatosDeLaMercaciaComponent } from './components/datos-de-la-mercacia/datos-de-la-mercacia.component';
 import { DetosDelTramiteComponent } from './components/detos-del-tramite/detos-del-tramite.component';
 import { PaisProcendenciaComponent } from './components/pais-procendencia/pais-procendencia.component';
 import { PartidasDeLaComponent } from './components/partidas-de-la/partidas-de-la.component';
@@ -42,7 +42,7 @@ import { VehiculosUsadosAdaptadosRoutingModule } from './vehiculos-usados-adapta
     AnexarDocumentosComponent,
     AlertComponent,
     CatalogoSelectComponent,
-    DetosDelLaMarcaciaComponent,
+    DatosDeLaMercaciaComponent,
     DetosDelTramiteComponent,
     PaisProcendenciaComponent,
     PartidasDeLaComponent,

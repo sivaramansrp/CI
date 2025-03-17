@@ -7,6 +7,8 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { of, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { FormBuilder } from '@angular/forms';
 
 describe('RepresentacionComponent', () => {
   let component: RepresentacionComponent;
@@ -15,15 +17,16 @@ describe('RepresentacionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [RepresentacionComponent],
       imports: [
         HttpClientTestingModule,
         ReactiveFormsModule,
         CommonModule,
+        RepresentacionComponent, // Moved to imports array
         CatalogoSelectComponent,
         TituloComponent,
         AlertComponent
-      ]
+      ],
+      providers: [HttpClient, FormBuilder]
     }).compileComponents();
 
     fixture = TestBed.createComponent(RepresentacionComponent);
@@ -44,6 +47,7 @@ describe('RepresentacionComponent', () => {
   });
 
   it('should initialize the form with default values', () => {
+    component.ngOnInit();
     expect(component.frmRepresentacion.value).toEqual({
       entidad: '',
       representacion: '',
