@@ -131,6 +131,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   formulariodataStore: DatosForma = {} as DatosForma;
   tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
+  tipoSeleccionsoliMercancias: TablaSeleccion = TablaSeleccion.CHECKBOX;
   configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
     { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
     { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
