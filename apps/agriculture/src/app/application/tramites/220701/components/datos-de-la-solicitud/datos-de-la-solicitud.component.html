@@ -1,0 +1,126 @@
+<div class="container">
+  <form [formGroup]="forma">
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="panel-group ficha-collapse" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading" (click)="mostrarColapsable()">
+                        <h4 class="panel-title">
+                            <a aria-label="Repeat"><i class="bi bi-repeat" aria-hidden="true"></i></a>
+                        </h4>
+                        <button type="button" class="collpase-button collapsed"></button>
+                    </div>
+                    @if(colapsable) {
+                    <div class="panel-collapse collapse in" id="panel-01">
+                        <div class="panel-body">
+                            <div class="row">
+                                <ng-alert [CONTENIDO]="instruccionDobleClic"></ng-alert>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+      
+            <div class="col-md-12">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label for="justification">Justificación</label>
+                        <textarea id="justification" rows="3" formControlName="justification"
+                            class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row" formGroupName="datosDelaSolicitud">
+                <ng-titulo titulo="Datos del trámite a realizar"></ng-titulo>
+                <div class="col-md-12">
+                    <app-catalogo-select
+                      [catalogo]="aduanaDeIngreso"
+                      formControlName="aduanaIngreso"
+                      [label]="'Aduana de ingreso'"
+                      [required]="true"
+                      name="aduanaIngreso"
+                    ></app-catalogo-select>
+                  </div>
+                  <div class="col-md-12">
+                    <app-catalogo-select
+                      [catalogo]="sanidadAgropecuaria"
+                      formControlName="oficinaInspeccion"
+                      [label]="'Oficina de inspección de sanidad Agropecuaria'"
+                      [required]="true"
+                      name="oficinaInspeccion"
+                    ></app-catalogo-select>
+                  </div>
+                  <div class="col-md-12">
+                    <app-catalogo-select
+                      [catalogo]="puntoInspeccion"
+                      formControlName="puntoInspeccion"
+                      [label]="'Punto de inspección'"
+                      [required]="true"
+                      name="puntoInspeccion"
+                    ></app-catalogo-select>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label" for="claveUCON"
+                        >Clave UCON*:
+                        <i
+                          class="bi bi-question-circle-fill"
+                          style="margin-bottom: '5px'"
+                        ></i
+                      ></label>
+                      <input
+                        formControlName="claveUCON"
+                        value=""
+                        class="form-control"
+                        id="claveUCON"
+                        placeholder=""
+                        type="text"
+                        appUppercase
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <app-catalogo-select
+                      [catalogo]="establecimientoTIF"
+                      formControlName="establecimientoTIFs"
+                      [label]="'Establecimiento TIF'"
+                      [required]="false"
+                      name="establecimientoTIFs"
+                    ></app-catalogo-select>
+                  </div>
+                  <div class="col-md-12">
+                    <app-catalogo-select
+                      [catalogo]="veterinario"
+                      formControlName="nombreVeterinario"
+                      [label]="'Nombre del médico veterinario'"
+                      [required]="false"
+                      name="nombreVeterinario"
+                    ></app-catalogo-select>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label" for="numeroGuia">Número de guia</label>
+                      <input
+                        class="form-control"
+                        id="numeroGuia"
+                        placeholder=""
+                        type="text"
+                        appUppercase
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <app-catalogo-select
+                      [catalogo]="regimen"
+                      formControlName="regimen"
+                      [label]="'Régimen'"
+                      [required]="true"
+                      name="regimen"
+                    ></app-catalogo-select>
+                  </div>
+            </div>
+    </div>
+  </form>
+</div>
