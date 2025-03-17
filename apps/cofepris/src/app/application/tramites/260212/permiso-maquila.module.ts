@@ -12,6 +12,9 @@ import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-d
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 import { SolicitudService } from './services/solicitud.service';
+import { ClaveScianComponent } from './components/clave-scian/clave-scian.component';
+import { FormularioOperacionComercialComponent } from './components/formulario-operacion-comercial/formulario-operacion-comercial.component';
+import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
 
 
 @NgModule({
@@ -26,6 +29,9 @@ import { SolicitudService } from './services/solicitud.service';
     DatosDeLaSolicitudComponent,
     TercerosRelacionadosComponent,
     PagoDeDerechosComponent,
+    ClaveScianComponent,
+    FormularioOperacionComercialComponent,
+    RepresentanteLegalComponent
   ],
   providers: [provideHttpClient(), ToastrService,SolicitudService],
 })
