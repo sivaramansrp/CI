@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { IntroPermisoComponent } from './intro-permiso.component';
+import { SolicitanteService } from '@libs/shared/data-access-user/src';
 
 describe('IntroPermisoComponent', () => {
   let component: IntroPermisoComponent;
@@ -8,7 +9,13 @@ describe('IntroPermisoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [IntroPermisoComponent]
+      imports: [
+        IntroPermisoComponent,
+        HttpClientTestingModule
+      ],
+      providers: [
+        SolicitanteService
+      ]
     })
     .compileComponents();
     
