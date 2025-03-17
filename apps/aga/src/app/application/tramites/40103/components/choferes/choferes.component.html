@@ -68,13 +68,20 @@
                 <tr *ngFor="let nacion of choferesList$ | async; let i = index">
                   <td>{{ i + 1 }}</td>
                   <td>
-                    <input type="checkbox" (change)="toggleRowSelection(nacion)" />
+                    <input
+                      type="checkbox"
+                      (change)="toggleRowSelection(nacion)"
+                    />
                   </td>
-                  <td *ngIf="!isEditing || selectedRow !== nacion">{{ nacion.curp }}</td>
+                  <td *ngIf="!isEditing || selectedRow !== nacion">
+                    {{ nacion.curp }}
+                  </td>
                   <td *ngIf="isEditing && selectedRow === nacion">
                     <input type="text" [(ngModel)]="selectedRow.curp" />
                   </td>
-                  <td *ngIf="!isEditing || selectedRow !== nacion">{{ nacion.nombre }}</td>
+                  <td *ngIf="!isEditing || selectedRow !== nacion">
+                    {{ nacion.nombre }}
+                  </td>
                   <td *ngIf="isEditing && selectedRow === nacion">
                     <input type="text" [(ngModel)]="selectedRow.nombre" />
                   </td>
@@ -101,9 +108,21 @@
         <div class="row mt-3">
           <div class="col-md-12 text-end">
             <div class="btn-group">
-              <button class="btn btn-default" type="button" (click)="editarFilaSeleccionada()">Modificar</button>
-              
-              <button class="btn btn-default" type="button" (click)="eliminar()">Eliminar</button>
+              <button
+                class="btn btn-default"
+                type="button"
+                (click)="editarFilaSeleccionada()"
+              >
+                Modificar
+              </button>
+
+              <button
+                class="btn btn-default"
+                type="button"
+                (click)="eliminar()"
+              >
+                Eliminar
+              </button>
               <button
                 class="btn btn-primary ms-2"
                 data-bs-toggle="modal"
@@ -149,10 +168,18 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let exterior of choferesextranjerosList$ | async; let i = index">
+                <tr
+                  *ngFor="
+                    let exterior of choferesextranjerosList$ | async;
+                    let i = index
+                  "
+                >
                   <td>{{ i + 1 }}</td>
                   <td>
-                    <input type="checkbox" (change)="toggleRowSelection(exterior)" />
+                    <input
+                      type="checkbox"
+                      (change)="toggleRowSelection(exterior)"
+                    />
                   </td>
                   <td>{{ exterior.nombres }}</td>
                   <td>{{ exterior.nombre }}</td>
@@ -180,7 +207,13 @@
         <div class="row mt-3">
           <div class="col-md-12 text-end">
             <div class="btn-group">
-              <button class="btn btn-default" type="button" (click)="editarFilaSeleccionada()">Modificar</button>
+              <button
+                class="btn btn-default"
+                type="button"
+                (click)="editarFilaSeleccionada()"
+              >
+                Modificar
+              </button>
               <button class="btn btn-default" type="button">Eliminar</button>
               <button
                 type="submit"

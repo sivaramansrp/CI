@@ -12,7 +12,7 @@ import {
   Validators,
   FormBuilder,
   FormGroup,
-  FormsModule
+  FormsModule,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
@@ -22,7 +22,6 @@ import { ToastrService } from 'ngx-toastr';
 import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Nacional } from 'libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
-
 
 import {
   extranjero,
@@ -40,7 +39,6 @@ import { CatalogosService } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import mockData from 'libs/shared/theme/assets/json/40103/director-general-mockdata.json';
 
-
 @Component({
   selector: 'app-choferes',
   templateUrl: './choferes.component.html',
@@ -51,7 +49,7 @@ import mockData from 'libs/shared/theme/assets/json/40103/director-general-mockd
     CommonModule,
     SharedModule,
     CatalogoSelectComponent,
-    FormsModule
+    FormsModule,
   ],
 })
 export class ChoferesComponent implements OnInit {
@@ -188,16 +186,13 @@ export class ChoferesComponent implements OnInit {
 Gancho del ciclo de vida angular que se llama después de que se inicializan las propiedades enlazadas a datos.
    */
   ngOnInit(): void {
-    
     this.choferesList$ = this.chofer40101Query.getChoferes$;
     this.choferesextranjerosList$ =
       this.chofer40101Query.getchoferesextranjero$;
 
-    this.choferesList$.subscribe((choferes) => {
-    });
+    this.choferesList$.subscribe((choferes) => {});
 
-    this.choferesextranjerosList$.subscribe((choferesextranjeros) => {
-    });
+    this.choferesextranjerosList$.subscribe((choferesextranjeros) => {});
 
     // Comprobar si la tienda tiene datos sincrónicamente
     this.chofernacionalForm();
@@ -223,7 +218,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       this.modalRef.nativeElement.classList.remove('show');
       this.modalRef.nativeElement.style.display = 'none';
       document.body.classList.remove('modal-open');
-        const backdrop = document.querySelector('.modal-backdrop');
+      const backdrop = document.querySelector('.modal-backdrop');
       if (backdrop) {
         backdrop.remove();
       }
@@ -231,7 +226,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       console.error('modalRef is undefined');
     }
   }
-  
+
   /**
    * Guarda los datos del formulario del chofer extranjero.
    */
@@ -263,7 +258,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    * Guarda los datos del formulario de selección.
    */
   Guardar() {
-
     if (this.formChoferes.invalid) {
     }
 
@@ -273,7 +267,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       this.toastr.error('Invalid form data. Please try again.');
       return;
     }
-    
 
     // Llamar al método de servicio para agregar el nuevo miembro
     this.chofer40101Service.addChofer(nuevoMiembro);
@@ -322,7 +315,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   /**
    * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
    */
- 
 
   /**
    * Busca un chofer por CURP.
@@ -478,7 +470,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       });
     }
   }
-  
 
   toggleRowSelection(row: any) {
     this.selectedRow = row;
@@ -501,7 +492,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     if (this.selectedRow) {
       // Create a new object with the updated values
       const updatedRow = { ...this.selectedRow, ...this.formChoferes.value };
-  
+
       // Update the data source (choferesList$)
       this.choferesList$ = this.choferesList$.pipe(
         map((choferes: any) => {
@@ -513,10 +504,10 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
           });
         })
       );
-  
+
       // Refresh the table
       this.choferesList$.subscribe();
-  
+
       // Close the modal
       this.isEditing = false;
       const modal = Modal.getInstance(this.modalRef.nativeElement);
@@ -525,11 +516,11 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       }
     }
   }
-  extranjeroGuardars(){
+  extranjeroGuardars() {
     if (this.selectedRow) {
       // Create a new object with the updated values
       const updatedRow = { ...this.selectedRow, ...this.formChoferes.value };
-  
+
       // Update the data source (choferesList$)
       this.choferesextranjerosList$ = this.choferesextranjerosList$.pipe(
         map((choferesextranjero: any) => {
@@ -541,10 +532,10 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
           });
         })
       );
-  
+
       // Refresh the table
       this.choferesextranjerosList$.subscribe();
-  
+
       // Close the modal
       this.isEditing = false;
       const modal = Modal.getInstance(this.modalRef.nativeElement);
@@ -552,7 +543,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
         modal.hide();
       }
     }
-
   }
   estadoSeleccion(): void {
     const estado = this.formChoferes.get('estado')?.value;
@@ -562,6 +552,4 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     // this.personas.splice(i, 1);
     //modal de confirmacion de elimincacion
   }
-
-  
 }
