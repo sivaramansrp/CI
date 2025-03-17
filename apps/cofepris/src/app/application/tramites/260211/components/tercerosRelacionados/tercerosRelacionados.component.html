@@ -1,78 +1,9 @@
 <div class="container table-container">
     <ng-titulo titulo="Terceros relacionados" />
     <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
-     <!-- <div class="row">
-        <div class="col-md-12">
-            <h6 class="mb-5">Establecimiento de Origen *</h6>
-            <ng-table [commonTableHeader]="tableHeaderData" [commonTableBody]="establecimientoBodyData"></ng-table>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination d-flex justify-content-center">
-                    
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    
-                </ul>
-            </nav>
-            <div class="container-fluid text-end mt-5">
-                <button class="btn btn-agregar me-3" (click)="agregar('Agregar')">Agregar</button>
-                <button class="btn btn-buscar">Buscar</button>
-            </div>
-        </div>
-     </div>
-     @if(hasAgregar) {
-        <app-agregar-facturator></app-agregar-facturator>
-    }
-
-     <div class="row">
-        <div class="col-md-12">
-            <h6 class="mb-5">Destinatario (destino final)*</h6>
-            <ng-table [commonTableHeader]="tableHeaderData" [commonTableBody]="destinatarioBodyData"></ng-table>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination d-flex justify-content-center">
-                    
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                   
-                </ul>
-            </nav>
-            <div class="container-fluid text-end mt-5">
-                <button class="btn btn-agregar me-3" (click)="agregar('Agregar')">Agregar</button>
-                <button class="btn btn-buscar">Buscar</button>
-            </div>
-        </div>
-     </div>
-     
-@if(hasAgregar) {
-    <app-agregar-requerida></app-agregar-requerida>
-}
-
-     <div class="row">
-        <div class="col-md-12">
-            <h6 class="mb-5">Importador*</h6>
-            <ng-table [commonTableHeader]="tableHeaderData" [commonTableBody]="importadorBodyData"></ng-table>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination d-flex justify-content-center">
-                    
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                   
-                </ul>
-            </nav>
-            <div class="container-fluid text-end mt-5">
-                <button class="btn btn-agregar me-3">Agregar</button>
-                <button class="btn btn-buscar">Buscar</button>
-            </div>
-        </div>
-     </div>
-</div>
-<ng-table
-[commonTableHeader]="tableHeaderData"
-[commonTableBody]="tableBodyData"
-[enableScrollbar]="true"
-></ng-table> -->
-
-
-<div class="row">
+    <div class="row">
     <div class="col-md-12">
-        <h6 class="mb-5">Fabricante*</h6>
-
+<h6 class="mb-5">Fabricante*</h6>
 <app-tabla-dinamica
 [configuracionTabla]="configuracionTabla"
 [datos]="tercerosProd"
