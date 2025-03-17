@@ -27,6 +27,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'muestras-mercancias',
+    loadChildren: () =>
+      import('./tramites/30901/renovaciones-muestras-mercancias.module').then(
+        (m) => m.RenovacionesMuestrasMercanciasModule
+      ),
+  },
+  {
     path: 'importante',
     loadChildren: () =>
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
