@@ -1,4 +1,4 @@
-import { AnexoEncabezado, AnexoImportacionEncabezado, AnexoUnoEncabezado } from "../models/se-shared.model";
+import { AnexoEncabezado, AnexoImportacionEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla } from "../models/se-shared.model";
 
 export const ANEXO_SERVICIO = [
   {
@@ -83,5 +83,39 @@ export const ANEXO_IMPORTACION_SERVICIO = [
     encabezado: 'Fracción arancelaria de la mercancía de importación',
     clave: (ele: AnexoImportacionEncabezado) => ele.ENCABEZADO_FRACCION_IMPORTACION,
     orden: 4
+  }
+
+  
+]
+export const PROVEEDOR_CLIENTE_TABLA_CONFIG=[
+  {
+    encabezado: 'Fracción',
+    clave: (ele: ProveedorClienteTabla) => ele.fraccion,
+    orden: 1
+  },
+  {
+    encabezado: 'Pais de origen',
+    clave: (ele: ProveedorClienteTabla) => ele.paisDeOrigin,
+    orden: 2
+  },
+  {
+    encabezado: 'Razón Social Proveedor',
+    clave: (ele: ProveedorClienteTabla) => ele.razonSocialProveedor,
+    orden: 3
+  },
+  {
+    encabezado: 'Pais destino',
+    clave: (ele: ProveedorClienteTabla) => ele.paisDestino,
+    orden: 4
+  },
+  {
+    encabezado: 'RFC/Tax ID Cliente',
+    clave: (ele: ProveedorClienteTabla) => ele.rfcClinte,
+    orden: 5
+  },
+  {
+    encabezado: 'Razón Social',
+    clave: (ele: ProveedorClienteTabla) => ele.razonSocial,
+    orden: 6
   }
 ]

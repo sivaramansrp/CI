@@ -1,3 +1,4 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { AnexoImportacionConfiguartion, AnexoImportacionEncabezado, AnexoUnoConfiguartion, AnexoUnoEncabezado, RutaNombre } from '../../models/se-shared.model';
 import { ANEXO_UNO_ALERTA } from '../../enum/anexo-dos-y-tres.enum';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
@@ -52,7 +53,9 @@ export class AnexoUnoComponent {
    */
   @Output() obtenerAnexoDosDevolverLaLlamada: EventEmitter<AnexoImportacionEncabezado[]> = new EventEmitter<AnexoImportacionEncabezado[]>(true);
   @Output() rutaLaFraccionDeComplemento: EventEmitter<RutaNombre> = new EventEmitter<RutaNombre>();
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private router:Router,
+    private activatedRoute: ActivatedRoute
+  ) {
     this.createAnexoUnoForm();
     this.createAnexoDosForm();
   }
@@ -171,4 +174,9 @@ export class AnexoUnoComponent {
       this.rutaLaFraccionDeComplemento.emit(RUTA_NOMBRE);
     }
   }
+
+  navegarAProveedorCliente(): void {
+    this.router.navigate(['../contenedor-proveedor-cliente'],{relativeTo: this.activatedRoute});
+
+}
 }
