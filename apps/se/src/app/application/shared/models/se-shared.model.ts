@@ -22,6 +22,10 @@ export interface AnexoImportacionConfiguartion<T> {
   anexoDosTablaSeleccionRadio: TablaSeleccion;
   anexoDosEncabezadoDeTabla: ConfiguracionColumna<T>[];
 }
+export interface ProyectoImmexConfiguartion<T> {
+  proyectoImmexSeleccionCheckBox: TablaSeleccion;
+  proyectoImmexTabla: ConfiguracionColumna<T>[];
+}
 
 export interface AnexoUnoEncabezado {
   ENCABEZADO_FRACCION: string;
@@ -40,6 +44,17 @@ export interface AnexoImportacionEncabezado {
   ENCABEZADO_FRACCION_EXPORTACION: string;
   ENCABEZADO_DESCRIPCION_COMERCIAL: string;
   ENCABEZADO_FRACCION_IMPORTACION: string;
+  estatus: boolean;
+}
+
+export interface ProyectoImmexEncabezado {
+  ENCABEZADO_FRACCION : string;
+  ENCABEZADO_TIPO_DOCUMENT : string;
+  ENCABEZADO_DESCRIPCION_OTRO : string;
+  ENCABEZADO_FECHA_FIRMA : string;
+  ENCABEZADO_FECHA_VIGENCIA : string;
+  ENCABEZADO_RFC : string;
+  ENCABEZADO_RAZON_FIRMANTE : string;
   estatus: boolean;
 }
 
@@ -78,13 +93,12 @@ export interface ComplimentarFraccionResoponse {
     anexoDos: string,
     tipo: string,
     umt: string,
-    
-    catagoria: string;
     descripcion: string;
-    monedaNacionalMensual: number;
-    monedaNacionalDeDosPeriodos: number;
-    volumenMensual: number;
-    twoPeriodVolume: number;
+    tipoDeDocumente: string;
+    fechaDeFirma: string;
+    fechaDeVigencia: string;
+    rfcTaxId: number;
+    razonSocial: string
   }
 
 export interface RutaNombre {

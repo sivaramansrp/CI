@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { PantallasModuloModule } from '../../pantallas-modulo.module';
 import { PasoDosComponent } from './paso-dos.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule } from 'ngx-toastr';
@@ -13,7 +12,7 @@ describe('PasoDosComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PasoDosComponent],
-      imports: [ TituloComponent, AlertComponent, AnexarDocumentosComponent, PantallasModuloModule,HttpClientTestingModule,ToastrModule.forRoot() ],
+      imports: [ TituloComponent, AlertComponent, AnexarDocumentosComponent, HttpClientTestingModule,ToastrModule.forRoot() ],
       providers: [
         { provide: 'ToastConfig', useValue: {} }
       ],
