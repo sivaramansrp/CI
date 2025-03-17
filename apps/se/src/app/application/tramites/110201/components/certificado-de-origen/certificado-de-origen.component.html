@@ -109,19 +109,29 @@
           </div>
         </div>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-primary ms-3">
+          <button
+            type="button"
+            class="btn btn-primary ms-3"
+            (click)="buscarMercancias()"
+          >
             Buscar mercancías
           </button>
         </div>
         <div class="row mt-5">
           <label>Mercancías disponibles</label>
         </div>
-
-        <div class="table-container mt-5">
-          <ng-table
-            class="custom-table"
-            [commonTableHeader]="mercanciasdisponibles"
-          ></ng-table>
+        <div class="table-container mt-5" *ngIf="!isDisponibles">
+          <app-tabla-dinamica
+            [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+            [configuracionTabla]="tableData.headers"
+          ></app-tabla-dinamica>
+        </div>
+        <div class="table-container mt-5" *ngIf="isDisponibles">
+          <app-tabla-dinamica
+            [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+            [configuracionTabla]="tableData.headers"
+            [datos]="tableData.data"
+          ></app-tabla-dinamica>
         </div>
         <i id="bi-1-square" class="bi bi-1-square" viewBox="0 0 16 16"></i>
       </ng-container>
@@ -210,11 +220,11 @@
           <label>Mercancías seleccionadas</label>
         </div>
         <div class="table-container mt-5">
-          <ng-table
-            class="custom-table"
-            [commonTableHeader]="encabezadosTablas"
-          >
-          </ng-table>
+          <app-tabla-dinamica
+            [tipoSeleccionTabla]="TablaSeleccion.RADIO"
+            [configuracionTabla]="tableSeleccionadas.headers"
+            [datos]="tableSeleccionadas.data"
+          ></app-tabla-dinamica>
         </div>
         <i id="bi-1-square" class="bi bi-1-square" viewBox="0 0 16 16"></i>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
@@ -247,6 +257,236 @@
           ></ng-table>
         </div>
       </ng-container>
+    </ng-container>
+  </form>
+</div>
+<div class="container">
+  <ng-titulo titulo="Datos de la mercancía" />
+  <form [formGroup]="mercanciaForm" (ngSubmit)="validarmercanciaForm()">
+    <ng-container formGroupName="validacionMercanciaForm">
+      <div class="row">
+        <div class="col-md-4">
+          <label>Fracción arancelaria:</label>
+          <input
+            type="text"
+            required="true"
+            class="form-control"
+            formControlName="fraccionMercanArancelaria"
+            value=""
+            [disabled]="true"
+            (change)="
+              setValoresStore(
+                validacionMercanciaForm,
+                'fraccionMercanArancelaria',
+                'setfraccionMercanArancelaria'
+              )
+            "
+          />
+        </div>
+        <div class="col-md-8">
+          <label
+            >Nombre comercial de la mercancía(igual que en la factura):</label
+          >
+          <input
+            type="text"
+            required="true"
+            class="form-control"
+            formControlName="nombrecomercialdelamercancia"
+            value=""
+            [disabled]="true"
+            (change)="
+              setValoresStore(
+                validacionMercanciaForm,
+                'nombrecomercialdelamercancia',
+                'setnombrecomercialdelamercancia'
+              )
+            "
+          />
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-md-8">
+          <label>Nombre técnico:</label>
+          <input
+            type="text"
+            required="true"
+            class="form-control"
+            formControlName="nombretecnico"
+            value=""
+            [disabled]="true"
+            (change)="
+              setValoresStore(
+                validacionMercanciaForm,
+                'nombretecnico',
+                'setnombretecnico'
+              )
+            "
+          />
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-md-8">
+          <label>Nomre en inglés:</label>
+          <input
+            type="text"
+            required="true"
+            class="form-control"
+            formControlName="nomreeningles"
+            value=""
+            [disabled]="true"
+            (change)="
+              setValoresStore(
+                validacionMercanciaForm,
+                'nomreeningles',
+                'setnomreeningles'
+              )
+            "
+          />
+        </div>
+        <div class="col-md-4">
+          <label>Criterio para conferir origen:</label>
+          <input
+            type="text"
+            required="true"
+            class="form-control"
+            formControlName="criterioparaconferir"
+            value=""
+            [disabled]="true"
+            (change)="
+              setValoresStore(
+                validacionMercanciaForm,
+                'criterioparaconferir',
+                'setcriterioparaconferir'
+              )
+            "
+          />
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-md-8">
+          <label>Marca:</label>
+          <input
+            type="text"
+            required="true"
+            class="form-control"
+            formControlName="marca"
+            (change)="
+              setValoresStore(validacionMercanciaForm, 'marca', 'setmarca')
+            "
+          />
+        </div>
+        <div class="col-md-4">
+          <label>Cantidad:</label>
+          <input
+            type="text"
+            required="true"
+            class="form-control"
+            formControlName="cantidad"
+            (change)="
+              setValoresStore(
+                validacionMercanciaForm,
+                'cantidad',
+                'setcantidad'
+              )
+            "
+          />
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-md-4">
+          <label>UMC*:</label>
+          <input
+            type="text"
+            required="true"
+            class="form-control"
+            formControlName="umc"
+            (change)="setValoresStore(validacionMercanciaForm, 'umc', 'setumc')"
+          />
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-md-4">
+          <label>Valor de la mercancía(dólares)*:</label>
+          <input
+            type="text"
+            required="true"
+            class="form-control"
+            formControlName="valordelamercancia"
+            (change)="
+              setValoresStore(
+                validacionMercanciaForm,
+                'valordelamercancia',
+                'setvalordelamercancia'
+              )
+            "
+          />
+        </div>
+        <div class="col-md-8">
+          <label>Complemento de la descripción*:</label>
+          <textarea
+            cols="80"
+            rows="3"
+            formControlName="complementodeladescripcion"
+            (change)="
+              setValoresStore(
+                validacionMercanciaForm,
+                'complementodeladescripcion',
+                'setcomplementodeladescripcion'
+              )
+            "
+          ></textarea>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-md-4">
+          <label>Masa bruta*:</label>
+          <input
+            type="text"
+            required="true"
+            class="form-control"
+            formControlName="masabruta"
+            (change)="
+              setValoresStore(
+                validacionMercanciaForm,
+                'masabruta',
+                'setmasabruta'
+              )
+            "
+          />
+        </div>
+        <div class="col-md-8">
+          Unidad de medida de la masa bruta*:
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <label>Fecha de factura*:</label>
+          <input
+            type="text"
+            required="true"
+            class="form-control"
+            formControlName=""
+          />
+        </div>
+        <div class="col-md-4">
+          <label>N° factura*:</label>
+          <input
+            type="text"
+            required="true"
+            class="form-control"
+            formControlName=""
+          />
+        </div>
+        <div class="col-md-4">
+          <label>Tipo de factura*:</label>
+          <input
+            type="text"
+            required="true"
+            class="form-control"
+            formControlName=""
+          />
+        </div>
+      </div>
     </ng-container>
   </form>
 </div>

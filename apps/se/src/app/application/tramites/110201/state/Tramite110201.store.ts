@@ -38,6 +38,17 @@ export interface Solicitud110201State {
   correoElectronico: string;
   nacion: Catalogo[] | null;
   transporte: Catalogo[] | null;
+  fraccionMercanArancelaria: string;
+  nombretecnico: string;
+  nomreeningles: string;
+  criterioparaconferir: string;
+  marca: string;
+  cantidad: string;
+  umc: string;
+  valordelamercancia: string;
+  complementodeladescripcion: string;
+  masabruta: string;
+  nombrecomercialdelamercancia: string;
 }
 
 export function createInitialState(): Solicitud110201State {
@@ -70,6 +81,17 @@ export function createInitialState(): Solicitud110201State {
     correoElectronico: '',
     nacion: null,
     transporte: null,
+    fraccionMercanArancelaria:'',
+    nombretecnico:'',
+    nomreeningles:'',
+    criterioparaconferir:'',
+    marca:'',
+    cantidad:'',
+    umc:'',
+    valordelamercancia:'',
+    complementodeladescripcion:'',
+    masabruta:'',
+    nombrecomercialdelamercancia:'',
   };
 }
 
@@ -100,7 +122,84 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
       ...state,
       fraccionArancelaria,
     }));
+  } 
+
+  public setfraccionMercanArancelaria(fraccionMercanArancelaria: string) {
+    this.update((state) => ({
+      ...state,
+      fraccionMercanArancelaria,
+    }));
   }
+
+  public setnombretecnico(nombretecnico: string) {
+    this.update((state) => ({
+      ...state,
+      nombretecnico,
+    }));
+  }
+
+  public setnomreeningles(nomreeningles: string) {
+    this.update((state) => ({
+      ...state,
+      nomreeningles,
+    }));
+  }
+
+  public setcriterioparaconferir(criterioparaconferir: string) {
+    this.update((state) => ({
+      ...state,
+      criterioparaconferir,
+    }));
+  } 
+
+  public setmarca(marca: string) {
+    this.update((state) => ({
+      ...state,
+      marca,
+    }));
+  }
+
+  public setcantidad(cantidad: string) {
+    this.update((state) => ({
+      ...state,
+      cantidad,
+    }));
+  } 
+
+  public setumc(umc: string) {
+    this.update((state) => ({
+      ...state,
+      umc,
+    }));
+  }
+
+  public setvalordelamercancia(valordelamercancia: string) {
+    this.update((state) => ({
+      ...state,
+      valordelamercancia,
+    }));
+  } 
+
+  public setcomplementodeladescripcion(complementodeladescripcion: string) {
+    this.update((state) => ({
+      ...state,
+      complementodeladescripcion,
+    }));
+  } 
+
+  public setmasabruta(masabruta: string) {
+    this.update((state) => ({
+      ...state,
+      masabruta,
+    }));
+  } 
+
+  public setnombrecomercialdelamercancia(nombrecomercialdelamercancia: string) {
+    this.update((state) => ({
+      ...state,
+      nombrecomercialdelamercancia,
+    }));
+  } 
 
   public setNumRegistro(numRegistro: string) {
     this.update((state) => ({

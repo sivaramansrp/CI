@@ -7,5 +7,16 @@
     "Fecha expedición",
     "Fecha vencimíento"
   ],
-  "tableBody": []
+  "tableBody": [
+    {
+      "tbodyData":[
+        "0101.21.01",
+        "Caballos",
+        "Caballos",
+        "123456",
+        "2021-01-01",
+        "2021-01-01"
+      ]
+    }
+  ]
 }

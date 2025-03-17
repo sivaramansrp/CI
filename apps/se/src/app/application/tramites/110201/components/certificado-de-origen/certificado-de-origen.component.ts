@@ -25,7 +25,9 @@ import {
 } from '../../state/Tramite110201.store';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
 import { map, Subject, Subscription, takeUntil } from 'rxjs';
-import { OnReadOpts } from 'net';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { ColumnasTabla, SeleccionadasTabla } from '../../models/registro.model';
 
 const TERCEROS_TEXTO_DE_ALERTA =
   'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
@@ -41,6 +43,7 @@ const TERCEROS_TEXTO_DE_ALERTA =
     ReactiveFormsModule,
     TableComponent,
     AlertComponent,
+    TablaDinamicaComponent,
   ],
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.css',
@@ -48,6 +51,7 @@ const TERCEROS_TEXTO_DE_ALERTA =
 export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   registroForm!: FormGroup;
+  mercanciaForm!: FormGroup;
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
   pais!: CatalogosSelect;
   tratado!: CatalogosSelect;
@@ -65,6 +69,142 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   getTratadoSubscription!: Subscription;
   getPaisSubscription!: Subscription;
+  isDisponibles: boolean = false;
+  TablaSeleccion = TablaSeleccion;
+  Tratadodescripcion: unknown[] = [];
+  selectTratado: string | null = null;
+  //MercanciaDisponsibles
+  tableData: {
+    headers: {
+      encabezado: string;
+      clave: (ele: ColumnasTabla) => string;
+      orden: number;
+    }[];
+    data: {
+      fraccionArancelaria: string;
+      nombreTecnico: string;
+      nombreComercial: string;
+      numeroRegistroProductos: string;
+      fechaExpedicion: string;
+      fechaVencimiento: string;
+    }[];
+  } = {
+    headers: [
+      {
+        encabezado: 'Fracción arancelaria',
+        clave: (ele: ColumnasTabla) => ele.fraccionArancelaria,
+        orden: 1,
+      },
+      {
+        encabezado: 'Nombre técnico',
+        clave: (ele: ColumnasTabla) => ele.nombreTecnico,
+        orden: 2,
+      },
+      {
+        encabezado: 'Nombre comercial',
+        clave: (ele: ColumnasTabla) => ele.nombreComercial,
+        orden: 3,
+      },
+      {
+        encabezado: 'Número de registro de productos',
+        clave: (ele: ColumnasTabla) => ele.numeroRegistroProductos,
+        orden: 4,
+      },
+      {
+        encabezado: 'Fecha expedición',
+        clave: (ele: ColumnasTabla) => ele.fechaExpedicion,
+        orden: 5,
+      },
+      {
+        encabezado: 'Fecha vencimíento',
+        clave: (ele: ColumnasTabla) => ele.fechaVencimiento,
+        orden: 6,
+      },
+    ],
+    data: [
+      {
+        fraccionArancelaria: '123456789',
+        nombreTecnico: 'Los demás',
+        nombreComercial: 'NOM COMERCIAL',
+        numeroRegistroProductos: '112233445566',
+        fechaVencimiento: '2041-12-01',
+        fechaExpedicion: '2021-12-01',
+      },
+    ],
+  };
+  //MercanciaSeleccionadas
+  tableSeleccionadas: {
+    headers: {
+      encabezado: string;
+      clave: (ele: SeleccionadasTabla) => string;
+      orden: number;
+    }[];
+    data: {
+      fraccionArancelaria: string;
+      cantidad: string;
+      unidadMedida: string;
+      valorMercancia: string;
+      tipoFactura: string;
+      numFactura: string;
+      complementoDescripcion: string;
+      fechaFactura: string;
+    }[];
+  } = {
+    headers: [
+      {
+        encabezado: 'Fracción arancelaria',
+        clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
+        orden: 1,
+      },
+      {
+        encabezado: 'Cantidad',
+        clave: (ele: SeleccionadasTabla) => ele.cantidad,
+        orden: 2,
+      },
+      {
+        encabezado: 'Unidad de medida',
+        clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
+        orden: 3,
+      },
+      {
+        encabezado: 'Valor mercancía',
+        clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
+        orden: 4,
+      },
+      {
+        encabezado: 'Tipo de factura',
+        clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
+        orden: 5,
+      },
+      {
+        encabezado: 'Número factura',
+        clave: (ele: SeleccionadasTabla) => ele.numFactura,
+        orden: 6,
+      },
+      {
+        encabezado: 'Complemento descripción',
+        clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
+        orden: 7,
+      },
+      {
+        encabezado: 'Fecha factura',
+        clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
+        orden: 8,
+      },
+    ],
+    data: [
+      {
+        fraccionArancelaria: '123456789',
+        cantidad: '1',
+        unidadMedida: 'Kilogramos',
+        valorMercancia: '1000',
+        tipoFactura: 'Factura',
+        numFactura: '123456',
+        complementoDescripcion: 'Complemento',
+        fechaFactura: '2021-12-01',
+      },
+    ],
+  };
 
   constructor(
     private registroService: RegistroService,
@@ -79,6 +219,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   validarDestinatarioFormulario(): void {
     if (this.registroForm.invalid) {
       this.registroForm.markAllAsTouched();
+    }
+  }
+
+  validarmercanciaForm(): void {
+    if (this.mercanciaForm.invalid) {
+      this.mercanciaForm.markAllAsTouched();
     }
   }
 
@@ -107,6 +253,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
           primerOpcion: 'Selecciona un valor',
           catalogos: tratado ?? [],
         };
+        this.Tratadodescripcion = this.tratado.catalogos;
       })
     );
 
@@ -121,6 +268,14 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       })
     );
   }
+
+  buscarMercancias() {
+    if (this.Tratadodescripcion.includes('1')) {
+      this.isDisponibles = true;
+    }
+  }
+
+ 
 
   public mercanciaDisponsible(): void {
     this.mercanciasdisponibles =
@@ -147,7 +302,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.getTratadoSubscription = this.registroService
       .getTratado()
       .subscribe((resp) => {
-             if (resp.code === 200) {
+        if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.store.setTratado(RESPONSE);
         }
@@ -158,7 +313,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.getPaisSubscription = this.registroService
       .getPais()
       .subscribe((resp) => {
-             if (resp.code === 200) {
+        if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.store.setPais(RESPONSE);
         }
@@ -177,8 +332,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.registroForm.valid) {
     }
-    
   }
+
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
@@ -194,6 +349,11 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   get validacionForm(): FormGroup {
     return this.registroForm.get('validacionForm') as FormGroup;
   }
+
+  get validacionMercanciaForm(): FormGroup {
+    return this.mercanciaForm.get('validacionMercanciaForm') as FormGroup;
+  }
+
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
       validacionForm: this.fb.group({
@@ -211,6 +371,28 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         fechInicioB: [this.solicitudState?.fechInicioB, [Validators.required]],
         fechFinB: [this.solicitudState?.fechFinB, [Validators.required]],
         archivo: [this.solicitudState?.archivo, [Validators.required]],
+      }),
+    });
+    this.mercanciaForm = this.fb.group({
+      validacionMercanciaForm: this.fb.group({
+        fraccionMercanArancelaria: [
+          this.solicitudState?.fraccionMercanArancelaria,
+          [Validators.required],
+        ],
+        nombretecnico: [this.solicitudState?.nombretecnico, [Validators.required]],
+        nombrecomercialdelamercancia: [this.solicitudState?.nombrecomercialdelamercancia, [Validators.required]],
+
+        criterioparaconferir: [
+          this.solicitudState?.criterioparaconferir,
+          [Validators.required],
+        ],
+        nomreeningles: [this.solicitudState?.nomreeningles, [Validators.required]],
+        marca: [this.solicitudState?.marca, [Validators.required]],
+        cantidad: [this.solicitudState?.cantidad, [Validators.required]],
+        umc: [this.solicitudState?.umc, [Validators.required]],
+        valordelamercancia: [this.solicitudState?.valordelamercancia, [Validators.required]],
+        complementodeladescripcion: [ this.solicitudState?.complementodeladescripcion, [Validators.required]],
+        masabruta: [this.solicitudState?.masabruta, [Validators.required]],
       }),
     });
   }
