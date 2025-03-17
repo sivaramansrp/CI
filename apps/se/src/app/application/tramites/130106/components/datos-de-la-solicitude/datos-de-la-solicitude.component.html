@@ -1,28 +1,21 @@
 <div class="container">
     <ng-titulo titulo="Datos del tramite a realizer" />
-    <form>
+    <form [formGroup]="formulario">
         <div class="row mb-3">
             <div class="col-md-4">
                 <label for="solicitud">Solicitud*:</label>
                 <div>
-                    <input type="radio" id="solicitud" name="solicitud" value="inicial" checked> Inicial
+                    <input type="radio" id="solicitudInicial" formControlName="Solicitud" name="Solicitud" value="inicial" checked> Inicial
                 </div>
             </div>
             <div class="col-md-6">
-                <label for="regimen">Régimen al que se destinará la mercancía*:</label>
-                <select id="regimen" name="regimen" class="form-control">
-                    <option value="">Selecciona un valor</option>
-                    <option value="importacion">Importación</option>
-                    <option value="exportacion">Exportación</option>
-                    <option value="transito">Tránsito</option>
-                </select><br>
-                <label for="clasificacion">Clasificación del régimen*:</label>
-                <select id="clasificacion" name="clasificacion" class="form-control">
-                    <option value="">Selecciona un valor</option>
-                    <option value="definitivo">Definitivo</option>
-                    <option value="temporal">Temporal</option>
-                    <option value="deposito">Depósito</option>
-                </select>
+                <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="Régimen"
+                    [label]="'Régimen al que se destinará la mercancía'" [required]="true"
+                    name="Régimen al que se destinará la mercancía"></app-catalogo-select>
+                <br>
+                <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="Clasificación"
+                    [label]="'Clasificación del régimen'" [required]="true"
+                    name="Clasificación del régimen"></app-catalogo-select>
             </div>
         </div>
     </form>

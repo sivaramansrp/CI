@@ -1,0 +1,20 @@
+{
+    "tramite": [
+        { "id": 1, "descripcion": "Definitivos" },
+        { "id": 2, "descripcion": "Temporales" },
+        { "id": 3, "descripcion": "Depósito Fiscal" },
+        { "id": 4, "descripcion": "Tránsito de mercancías" },
+        { "id": 5, "descripcion": "Elaboración, transformación o reparación en recinto fiscalizado" },
+        { "id": 6, "descripcion": "Recinto fiscalizado estratégico" },
+        { "id": 7, "descripcion": "Importacion" },
+        { "id": 8, "descripcion": "Exportación" },
+        { "id": 9, "descripcion": "Tránsito internacional" },
+        { "id": 10, "descripcion": "Depósito fiscal de gas licuado de petróleo o de gas natural" },
+        { "id": 11, "descripcion": "Depósito fiscal de vehículos" },
+        { "id": 12, "descripcion": "Definitivo de importación" }
+    ],
+    "regimen": [
+        { "id": 1, "descripcion": "De importación" },
+        { "id": 2, "descripcion": "De exportación" }
+    ]
+}
