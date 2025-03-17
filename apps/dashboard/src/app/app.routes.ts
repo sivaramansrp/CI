@@ -72,7 +72,11 @@ export const appRoutes: Route[] = [
   {
     path: 'funcionario',
     loadChildren: () =>
-      loadRemoteModule('funcionario', './Routes').then((m) => m.remoteRoutes),
+        loadRemoteModule({
+            remoteEntry: 'http://localhost:4210/remoteAppEntry.js',
+            remoteName: 'funcionario',
+            exposedModule: './Module'
+        }).then((m) => m.AppFuncionarioModule)
   },
   {
     path: 'agace',
