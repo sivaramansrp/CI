@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from 'libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 @Component({
@@ -14,7 +15,18 @@ export class PasoUnoComponent implements AfterViewInit {
   persona: FormularioDinamico[] = [];
   domicilioFiscal: FormularioDinamico[] = [];
   indice: number = 1;
-
+  
+  constructor(private route:ActivatedRoute) { }
+  ngOnInit() : void {
+    this.route.queryParams.subscribe(params => {
+      // eslint-disable-next-line dot-notation
+      if (params['indice']) {
+      
+      // eslint-disable-next-line dot-notation
+        this.indice = Number(params['indice']); 
+      }
+    });
+  }
   ngAfterViewInit(): void {
 
     this.persona = PERSONA_MORAL_NACIONAL;
