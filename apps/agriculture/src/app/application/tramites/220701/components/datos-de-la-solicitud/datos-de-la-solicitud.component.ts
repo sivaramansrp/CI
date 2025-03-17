@@ -7,7 +7,10 @@ import { AcuicolaService } from '../../servicios/acuicola.service';
 import { AlertComponent} from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConfiguracionColumna} from '@libs/shared/data-access-user/src';
 import { DatosDelTramite } from '../../modelos/acuicola.model';
 import { EXPEDICION_FACTURA_FECHA } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 import { FormBuilder } from '@angular/forms';
@@ -15,17 +18,22 @@ import { FormGroup } from '@angular/forms';
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 import { InputFecha } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { JsonPipe } from '@angular/common';
+import { MEDIO_SERVICIO } from '../../modelos/datos-de-interfaz.model';
+import { MedioDeTransporteService } from '../../servicios/medio-de-transporte';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsableInspección } from '../../modelos/acuicola.model';
 import { Subject } from 'rxjs';
 import { TEXTOS_220501 } from '@libs/shared/data-access-user/src';
-import { TableComponent } from '@libs/shared/data-access-user/src';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 
+import { medioInfo } from '../../modelos/datos-de-interfaz.model';
 @Component({
   selector: 'datos-de-la-solicitud',
   standalone: true,
@@ -34,8 +42,10 @@ import { takeUntil } from 'rxjs';
     TituloComponent,
     CatalogoSelectComponent,
     InputFechaComponent,
-    TableComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TablaDinamicaComponent,
+    JsonPipe,
+    CommonModule
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss'
@@ -72,11 +82,35 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     ],
   };
 
+  /**
+   * Tipo de selección de la tabla.
+   * @type {TablaSeleccion}
+   */
+       tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+     /**
+      * Configuración de las columnas de la tabla para servicios MERCANCIA.
+      * @type {ConfiguracionColumna<medioInfo>[]}
+      */
+     exportadorTabla: ConfiguracionColumna<medioInfo>[] = MEDIO_SERVICIO;
+       /**
+        * Datos de los servicios MERCANCIA.
+        * @type {medioInfo[]}
+        */
+       medioTableDatos: medioInfo[] = [];
+   
+         /**
+      * @property {any[]} medioContenido - Array de datos Medio de transporte.
+      */
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     medioContenido: any[] = [];
+
   private destroyNotifier$: Subject<void> = new Subject();
 
   constructor(
     private readonly fb: FormBuilder,
     private readonly acuicolaService: AcuicolaService,
+    private readonly medioDeTransporteService: MedioDeTransporteService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -89,6 +123,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.getTipoContenedor();
     this.obtenerResponsableDatos();
     this.getMedioDeTransporte();
+    this.fetchData();
   }
 
   iniciarFormulario(): void {
@@ -110,7 +145,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       esSolicitudFerros: ['', Validators.required]
     });
   }
-
+  fetchData(): void {
+    this.medioDeTransporteService.getDatos()
+    .subscribe({
+      next: (response: any) => {
+        if (response && Array.isArray(response.medioContenido)) {
+          this.medioTableDatos = response.medioContenido;
+          this.cdr.detectChanges(); 
+        } else {
+          console.error("La respuesta de la API no tiene el formato esperado: ", response);
+        }
+      },
+      error: (error) => {
+        console.error("Error al obtener datos: ", error);
+      }
+    });
+  }
   mostrarColapsable(): void {
     this.colapsable = !this.colapsable;
   }

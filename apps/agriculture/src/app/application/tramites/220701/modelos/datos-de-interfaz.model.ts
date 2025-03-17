@@ -227,3 +227,54 @@ export interface destinoInfo {
 }
 
 
+/**
+ * @constant MEDIO_SERVICIO
+ * @description Configuración de las columnas de la tabla para el servicio IMMEX.
+ */
+export const MEDIO_SERVICIO = [
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (ele: medioInfo) => ele.TABLA_Columna_1,
+    orden: 1
+  },
+  {
+    encabezado: 'Teléfono',
+    clave: (ele: medioInfo) => ele.TABLA_Columna_2,
+    orden: 2
+  },
+  {
+    encabezado: 'Correo electrónico',
+    clave: (ele: medioInfo) => ele.TABLA_Columna_3,
+    orden: 3
+  },
+  {
+    encabezado: 'Domicilio',
+    clave: (ele: medioInfo) => ele.TABLA_Columna_4,
+    orden: 4
+  },
+  {
+    encabezado: 'País',
+    clave: (ele: medioInfo) => ele.TABLA_Columna_5,
+    orden: 5
+  },
+  {
+    encabezado: 'País',
+    clave: (ele: medioInfo) => ele.TABLA_Columna_6,
+    orden: 6
+  }
+]
+
+/**
+ * @interface medioInfo
+ * @description Interfaz para la información de IMMEX.
+ */
+export interface medioInfo {
+  TABLA_Columna_1: string;
+  TABLA_Columna_2: string;
+  TABLA_Columna_3: string;
+  TABLA_Columna_4: string;
+  TABLA_Columna_5: string;
+  TABLA_Columna_6: string;
+  estatus: boolean;
+}
+

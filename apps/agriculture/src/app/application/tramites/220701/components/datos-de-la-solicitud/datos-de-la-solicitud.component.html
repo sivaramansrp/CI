@@ -235,11 +235,16 @@
         <ng-alert
           [CONTENIDO]="TEXTOS.SECCION_LEYENDA_CONFIRMAR_TEXTOS"
         ></ng-alert>
-        <h6>Datos de la mercancía:</h6>
-        <ng-table
-          [commonTableHeader]="tableData.header"
-          [commonTableBody]="mercanciaDatos"
-        ></ng-table>
+        <div class="row">
+          <div class="col-md-12">
+            <h6>Datos de la mercancía:</h6>
+            </div>
+            <div class="col-md-12 mt-5">
+              <div class="table-container">
+                  <app-tabla-dinamica *ngIf="medioTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="exportadorTabla" [datos]="medioTableDatos"></app-tabla-dinamica>
+              </div>
+            </div>
+      </div>
       </div>
     </div>
   </form>
