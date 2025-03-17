@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { AnexoUnoEncabezado, ProveedorClienteTabla } from '../../models/se-shared.model';
+import { AnexoUnoEncabezado, ProveedorClienteTabla } from '../../models/nuevo-programa-industrial.model';
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -15,7 +15,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { PROVEEDOR_CLIENTE_TABLA_CONFIG } from '../../enum/anexo-dos-y-tres.enum';
+import { PROVEEDOR_CLIENTE_TABLA_CONFIG } from '../../constants/anexo-dos-y-tres.enum';
 
 @Component({
   selector: 'app-proveedor-cliente',
@@ -72,7 +72,7 @@ export class ProveedorClienteComponent{
 
   inicializarFormularioProveedorCliente(): void {
     this.formularioProveedorCliente = this.fb.group({
-      descripcionComercial: ['', Validators.required, { disabled: true }],
+      descripcionComercial: ['Test Complementar', Validators.required],
       paisDestino: [0, Validators.required],
       rfc: ['', Validators.required],
       razonSocialCliente: ['', Validators.required],

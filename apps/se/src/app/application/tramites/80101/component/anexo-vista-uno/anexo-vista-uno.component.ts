@@ -1,13 +1,13 @@
-import { ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/enum/anexo-dos-y-tres.enum';
-import { ANEXO_I_SERVICIO } from '../../../../shared/enum/anexo-dos-y-tres.enum';
+import { ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constants/anexo-dos-y-tres.enum';
+import { ANEXO_I_SERVICIO } from '../../../../shared/constants/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
-import { AnexoImportacionEncabezado } from '../../../../shared/models/se-shared.model';
+import { AnexoImportacionEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
-import { AnexoUnoEncabezado } from '../../../../shared/models/se-shared.model';
+import { AnexoUnoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { RutaNombre } from '../../../../shared/models/se-shared.model';
+import { RutaNombre } from '../../../../shared/models/nuevo-programa-industrial.model';
 
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 

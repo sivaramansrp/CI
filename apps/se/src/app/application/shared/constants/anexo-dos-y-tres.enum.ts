@@ -1,4 +1,4 @@
-import { AnexoEncabezado, AnexoImportacionEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla, ProyectoImmexEncabezado } from "../models/se-shared.model";
+import { AnexoEncabezado, AnexoImportacionEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla, ProyectoImmexEncabezado } from "../models/nuevo-programa-industrial.model";
 
 export const ANEXO_SERVICIO = [
   {

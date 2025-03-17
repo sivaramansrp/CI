@@ -1,10 +1,10 @@
-import { Catalogo } from '../../../../shared/models/se-shared.model';
+import { Catalogo } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { PROYECTO_IMMEX_CONFIG } from '../../../../shared/enum/anexo-dos-y-tres.enum';
-import { PoryectoDatos } from '../../../../shared/models/se-shared.model';
+import { PROYECTO_IMMEX_CONFIG } from '../../../../shared/constants/anexo-dos-y-tres.enum';
+import { PoryectoDatos } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { ProyectoImmexComponent } from '../../../../shared/components/proyecto-immex/proyecto-immex.component';
-import { ProyectoImmexEncabezado } from '../../../../shared/models/se-shared.model';
+import { ProyectoImmexEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 
 @Component({

@@ -1,4 +1,4 @@
-import { Catalogo, ComplimentarFraccion, ComplimentarFraccionResoponse } from '../../models/se-shared.model';
+import { Catalogo, ComplimentarFraccion, ComplimentarFraccionResoponse } from '../../models/nuevo-programa-industrial.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';

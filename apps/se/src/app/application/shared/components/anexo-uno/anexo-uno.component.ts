@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { AnexoImportacionConfiguartion, AnexoImportacionEncabezado, AnexoUnoConfiguartion, AnexoUnoEncabezado, RutaNombre } from '../../models/se-shared.model';
-import { ANEXO_UNO_ALERTA } from '../../enum/anexo-dos-y-tres.enum';
+import { AnexoImportacionConfiguartion, AnexoImportacionEncabezado, AnexoUnoConfiguartion, AnexoUnoEncabezado, RutaNombre } from '../../models/nuevo-programa-industrial.model';
+import { ANEXO_UNO_ALERTA } from '../../constants/anexo-dos-y-tres.enum';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';

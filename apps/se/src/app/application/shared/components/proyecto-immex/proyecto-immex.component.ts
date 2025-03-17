@@ -1,4 +1,4 @@
-import { Catalogo, ProyectoImmexConfiguartion, ProyectoImmexEncabezado } from '../../models/se-shared.model';
+import { Catalogo, ProyectoImmexConfiguartion, ProyectoImmexEncabezado } from '../../models/nuevo-programa-industrial.model';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -9,7 +9,7 @@ import { Input } from '@angular/core';
 import { Location } from '@angular/common';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
-import { PoryectoDatos } from '../../models/se-shared.model';
+import { PoryectoDatos } from '../../models/nuevo-programa-industrial.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
