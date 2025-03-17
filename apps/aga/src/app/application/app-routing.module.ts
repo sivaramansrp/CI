@@ -10,7 +10,7 @@ const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent,
+    component: SeleccionTramiteComponent
   },
   {
     path: 'servicios-extraordinarios',
@@ -34,9 +34,7 @@ const ROUTES: Routes = [
   {
     path: 'importante',
     loadChildren: () =>
-      import('./tramites/301/pantallas.module').then(
-        (m) => m.Pantallas301Module
-      ),
+      import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
   },
   {
     path: 'atender-requerimientos',
