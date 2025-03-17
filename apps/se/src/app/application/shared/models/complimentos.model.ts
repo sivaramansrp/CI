@@ -1,3 +1,5 @@
+
+
 export interface SociaoAccionistas {
   rfc?: string;
   taxId?: string;
@@ -44,3 +46,5 @@ export interface DatosComplimentos {
     formaDatos: { [key: string]: string };
   };
 }
+
+
