@@ -1,8 +1,9 @@
+import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { InfoServicios, Servicio } from '../models/autorizacion-programa-nuevo.model';
 import { Observable, map } from 'rxjs';
-import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +33,33 @@ export class AutorizacionProgrmaNuevoService {
     .get<Catalogo[]>("assets/json/80205/ampliacion-IMMEX-dropdown.json")
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .pipe(map((res: any) => res.data));
+  }
+
+   /**
+   * Obtiene la lista de estados.
+   * @method obtenerListaEstado
+   * @returns {Observable<RespuestaCatalogos>} Observable con la lista de estados.
+   */
+   obtenerListaEstado(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(
+      'assets/json/80207/estado-datos.json'
+    );
+  }
+
+  /**
+   * Obtiene la lista de subfabricantes disponibles.
+   * @method getSubfabricantesDisponibles
+   * @returns {Observable<TableData>} Observable con la lista de subfabricantes disponibles.
+   */
+  getSubfabricantesDisponibles(): Observable<PlantasSubfabricante[]> {
+    return (
+      this.http
+        .get<PlantasSubfabricante[]>(
+          'assets/json/80207/submanufactureras-disponibles-datos.json'
+        )
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .pipe(map((response: any) => response.data))
+    );
   }
 
 }

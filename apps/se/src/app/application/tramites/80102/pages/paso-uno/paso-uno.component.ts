@@ -1,10 +1,14 @@
+import { Component, OnDestroy ,OnInit} from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { AggregarComplimentosComponent } from '../../components/aggregar-complimentos/aggregar-complimentos.component';
+import { AmpliacionServiciosQuery } from '../../estados/tramite80102.query';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { EmpresasSubfabricanteComponent } from '../../components/empresas-subfabricante/empresas-subfabricante.component';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ServiciosComponent } from "../../components/servicios/servicios.component";
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
+
 
 @Component({
   selector: 'app-paso-uno',
@@ -16,11 +20,12 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
     ReactiveFormsModule,
     SolicitanteComponent,
     ServiciosComponent,
-    AggregarComplimentosComponent
+    AggregarComplimentosComponent,
+    EmpresasSubfabricanteComponent
 ],
   host: { hostID: crypto.randomUUID().toString() },
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Representa el tipo de persona (por ejemplo, persona moral o física).
    * @type {number}
@@ -34,11 +39,36 @@ export class PasoUnoComponent {
   domicilioFiscal: FormularioDinamico[] = [];
 
   /**
+   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+   * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+   *
+   * @property {Subject<void>} destroyNotifier$
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
    * Índice que controla la selección de las pestañas en la interfaz.
    * @type {number}
    */
   indice: number = 1;
 
+  constructor(private query:AmpliacionServiciosQuery){
+    //constructor vacío
+  }
+
+  ngOnInit():void{
+    
+    this.query.indicePrevioRuta$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((indice) => {
+     if(indice){
+      this.seleccionaTab(indice);
+     }
+     else{
+      this.seleccionaTab(1);
+     }
+      });
+  }
 
   /**
    * Cambia el índice de la pestaña seleccionada.
@@ -48,5 +78,15 @@ export class PasoUnoComponent {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+   /**
+     * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+     * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
+     * @method ngOnDestroy
+     */
+   ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
