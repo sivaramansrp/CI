@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@ng-mf/data-access-user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DatosDelTramiteComponent } from '../../components/datos-del-tramite/datos-del-tramite.component';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 
 /**
  * Componente que representa el paso uno del trámite.
