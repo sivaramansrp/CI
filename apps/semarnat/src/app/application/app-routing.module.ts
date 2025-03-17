@@ -12,6 +12,11 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/230401/pantallas-modulo.module').then((m) => m.PantallasModuloModule),
   },
+  {
+    path: 'tramites-disponibles',
+    loadChildren: () =>
+      import('./tramites/230101/tramites-disponsibles.module').then((m) => m.TramitesDisponiblesModule),
+  }
 ];
 
 @NgModule({
