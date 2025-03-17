@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosDeLaSolicitudComponent } from '../../component/datos-de-la-solicitud/datos-de-la-solicitud.component';
-import { PagoDerechosComponent } from '../../component/pago-derechos/pago-derechos.component';
+import { PagoDeDerechosComponent } from '../../component/pago-de-derechos/pago-de-derechos.component';
 import { RevisionDocumentalComponent } from '../../component/revision-documental/revision-documental.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
@@ -13,7 +13,7 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
     SolicitanteComponent,
     DatosDeLaSolicitudComponent,
     RevisionDocumentalComponent,
-    PagoDerechosComponent
+    PagoDeDerechosComponent
   ],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss'
