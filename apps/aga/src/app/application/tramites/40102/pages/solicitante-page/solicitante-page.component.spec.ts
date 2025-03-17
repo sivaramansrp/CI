@@ -11,8 +11,8 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of as observableOf } from 'rxjs';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { Chofer40102Store } from '../../estados/chofer40102.store';
-import { Chofer40102Query } from '../../estados/chofer40102.query';
+import { Chofer40102Store } from '../../estados/tramite40102.store';
+import { Chofer40102Query } from '../../estados/tramite40102.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Injectable()

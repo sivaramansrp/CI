@@ -26,7 +26,7 @@ export class DirectorGeneralComponent implements OnInit {
     this.crearFormularioDirectorGeneral();
     this.setFormValues();
 
-    // Listen to form changes and update the store
+    // Escuche los cambios de formulario y actualice la tienda.
     this.directorGeneralForm.valueChanges.subscribe((formData) => {
       this.updateStore(formData);
     });

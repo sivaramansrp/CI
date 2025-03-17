@@ -66,15 +66,12 @@ describe('DirectorGeneralComponent', () => {
     component.crearFormularioDirectorGeneral = jest.fn();
     component.setFormValues = jest.fn();
     component.ngOnInit();
-    // expect(component.crearFormularioDirectorGeneral).toHaveBeenCalled();
-    // expect(component.setFormValues).toHaveBeenCalled();
   });
 
   it('should run #crearFormularioDirectorGeneral()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.crearFormularioDirectorGeneral();
-    // expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #setFormValues()', async () => {
@@ -82,7 +79,6 @@ describe('DirectorGeneralComponent', () => {
     component.directorGeneralForm.patchValue = jest.fn();
     component.directorGeneralForm.value = 'value';
     component.setFormValues();
-    // expect(component.directorGeneralForm.patchValue).toHaveBeenCalled();
   });
 
 });

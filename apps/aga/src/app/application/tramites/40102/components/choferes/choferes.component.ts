@@ -205,14 +205,13 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
         backdrop.remove();
       }
     } else {
-      console.error('modalRef is undefined');
+      this.toastr.error('modalRef no está definida');
     }
   }
 
   /**
    * Guarda los datos del formulario del chofer extranjero.
    */
-
   extranjeroGuardar() {
     if (this.formChoferes.invalid) {
     }
@@ -267,7 +266,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
         document.body.classList.remove('modal-open');
         document.getElementsByClassName('modal-backdrop')[0]?.remove();
       } else {
-        console.error('modalRef is undefined');
+        this.toastr.error('modalRef no está definida');
       }
     });
   }
@@ -295,7 +294,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
         this.paises = response;
       },
       (error) => {
-        console.error('Error fetching data:', error);
+        this.toastr.error('Error al obtener datos:', error);
       }
     );
   }
@@ -316,7 +315,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   }
   buscarChoferNacional(curp: string) {
     if (!curp) {
-      console.warn('CURP is empty!');
+      this.toastr.error('CURP está vacía');
       return;
     }
 
@@ -400,7 +399,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
         this.municipios = data;
       },
       (error) => {
-        console.error('Error loading municipalities:', error);
+        this.toastr.error('Error loading municipalities:', error);
       }
     );
   }
@@ -413,7 +412,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
         this.colonias = data;
       },
       (error) => {
-        console.error('Error loading colonies:', error);
+        this.toastr.error('Error al cargar colonias:', error);
       }
     );
   }
@@ -427,7 +426,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   onEstadoChange(event: Event): Promise<void> {
     return new Promise((resolve) => {
       const selectedEstado = (event.target as HTMLSelectElement).value;
-
       resolve();
     });
   }
@@ -435,7 +433,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   onMunicipioChange(event: Event): Promise<void> {
     return new Promise((resolve) => {
       const selectedMunicipio = (event.target as HTMLSelectElement).value;
-
       resolve();
     });
   }

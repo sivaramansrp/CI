@@ -20,7 +20,7 @@ export class SolicitanteComponent implements OnInit {
    * Constructor para inyectar las dependencias necesarias.
    * @param fb - Servicio FormBuilder para crear formularios reactivos.
    */
-  // eslint-disable-next-line no-empty-function
+  // eslint-deshabilitar-la-siguiente-línea-sin-función-vacía
   constructor(private fb: FormBuilder) { }
 
   /**
@@ -62,7 +62,6 @@ export class SolicitanteComponent implements OnInit {
    * Este método asume que `mockData` contiene los campos necesarios
    * y que `solicitudForm` está correctamente inicializado.
    */
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   setFormValues() {
     this.solicitudForm.get('rfc')?.setValue(mockData.rfc);
     this.solicitudForm.get('denominacion')?.setValue(mockData.denominacion);

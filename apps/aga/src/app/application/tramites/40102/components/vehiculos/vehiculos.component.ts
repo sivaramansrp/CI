@@ -192,7 +192,7 @@ export class VehiculosComponent implements AfterViewInit {
     if (this.modalInstance) {
       this.modalInstance.hide();
     } else {
-      console.error('Modal instance is not initialized!');
+      this.toastr.error('La instancia modal no está inicializada!');
     }
     const newVehiculo = {
       id: (this.vehiculos?.length || 0) + 1,
@@ -341,7 +341,7 @@ export class VehiculosComponent implements AfterViewInit {
       next: (data: DatosDelVehículo[]) => {
         this.vehiculoArrastr = data;
       },
-      error: (error) => console.error('Error fetching data:', error),
+      error: (error) => this.toastr.error('Error al obtener datos:', error),
     });
   }
   anioVehiculoveh() {
@@ -351,7 +351,7 @@ export class VehiculosComponent implements AfterViewInit {
       next: (data: VehiculoVEHs[]) => {
         this.VehiculoVEH = data;
       },
-      error: (error) => console.error('Error fetching data:', error),
+      error: (error) => this.toastr.error('Error al obtener datos:', error),
     });
   }
 
@@ -364,7 +364,7 @@ export class VehiculosComponent implements AfterViewInit {
       next: (data: VehiculoColor[]) => {
         this.VehiculoColors = data;
       },
-      error: (error) => console.error('Error fetching data:', error),
+      error: (error) => this.toastr.error('Error al obtener datos:', error),
     });
   }
   solicitudVehiculoPaisEmisor2daPlaca() {
@@ -374,7 +374,7 @@ export class VehiculosComponent implements AfterViewInit {
       next: (data: Emisor2daPlaca[]) => {
         this.PaisEmisor2daPlaca = data;
       },
-      error: (error) => console.error('Error fetching data:', error),
+      error: (error) => this.toastr.error('Error al obtener datos:', error),
     });
   }
 
