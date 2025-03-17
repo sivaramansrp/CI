@@ -1,6 +1,20 @@
+/**
+ * @description
+ * Interfaz que representa los datos de cancelación de autorizaciones.
+ */
 export interface CancellationOfAuthorizations {
-	FolioDePrograma: string;
-	TipoPrograma: string;
-    SeleccionaLaModalidad:string;
+    /**
+     * Folio del programa.
+     */
+    FolioDePrograma: string;
 
+    /**
+     * Tipo de programa.
+     */
+    TipoPrograma: string;
+
+    /**
+     * Modalidad seleccionada.
+     */
+    SeleccionaLaModalidad: string;
 }

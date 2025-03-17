@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -10,6 +10,9 @@ import { Cancelaciones140201Store } from '../../estados/cancelaciones.store';
 
 import { Cancelaciones140201Query } from '../../estados/cancelaciones.query';
 
+import { Subject } from 'rxjs';
+
+import { takeUntil } from 'rxjs/operators';
 /**
  * @description
  * Componente para manejar la entidad externa en el trámite 140201.
@@ -25,11 +28,16 @@ import { Cancelaciones140201Query } from '../../estados/cancelaciones.query';
   templateUrl: './entidad-externa-140201.component.html',
   styleUrl: './entidad-externa-140201.component.scss',
 })
-export class EntidadExterna140201Component implements OnInit {
+export class EntidadExterna140201Component implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para la entidad externa.
    */
   entidadForm!: FormGroup;
+
+  /**
+   * @ignore
+   */
+  private destroy$ = new Subject<void>();
 
   /**
    * Observable para la entidad externa.
@@ -86,31 +94,31 @@ export class EntidadExterna140201Component implements OnInit {
    * Actualiza el estado del formulario con los datos observables.
    */
   updateState(): void {
-    this.entidadExterna$.subscribe((entidadExterna) => {
+    this.entidadExterna$.pipe(takeUntil(this.destroy$)).subscribe((entidadExterna) => {
       if (entidadExterna) {
         this.entidadForm.get('entidadExterna')?.setValue(entidadExterna);
       }
     });
 
-    this.nombreSolicitanteIPC$.subscribe((nombreSolicitanteIPC) => {
+    this.nombreSolicitanteIPC$.pipe(takeUntil(this.destroy$)).subscribe((nombreSolicitanteIPC) => {
       if (nombreSolicitanteIPC) {
         this.entidadForm.get('nombreSolicitanteIPC')?.setValue(nombreSolicitanteIPC);
       }
     });
 
-    this.cargoSolicitanteIPC$.subscribe((cargoSolicitanteIPC) => {
+    this.cargoSolicitanteIPC$.pipe(takeUntil(this.destroy$)).subscribe((cargoSolicitanteIPC) => {
       if (cargoSolicitanteIPC) {
         this.entidadForm.get('cargoSolicitanteIPC')?.setValue(cargoSolicitanteIPC);
       }
     });
 
-    this.folioOficioSolicitudIPC$.subscribe((folioOficioSolicitudIPC) => {
+    this.folioOficioSolicitudIPC$.pipe(takeUntil(this.destroy$)).subscribe((folioOficioSolicitudIPC) => {
       if (folioOficioSolicitudIPC) {
         this.entidadForm.get('folioOficioSolicitudIPC')?.setValue(folioOficioSolicitudIPC);
       }
     });
 
-    this.correoSolicitanteIPC$.subscribe((correoSolicitanteIPC) => {
+    this.correoSolicitanteIPC$.pipe(takeUntil(this.destroy$)).subscribe((correoSolicitanteIPC) => {
       if (correoSolicitanteIPC) {
         this.entidadForm.get('correoSolicitanteIPC')?.setValue(correoSolicitanteIPC);
       }
@@ -155,5 +163,13 @@ export class EntidadExterna140201Component implements OnInit {
   updateCorreoSolicitanteIPC() {
     const CORREOSOLICITANTEIPC = this.entidadForm.get('correoSolicitanteIPC')?.value;
     this.cancelaciones140201Store.setCorreoSolicitanteIPC(CORREOSOLICITANTEIPC);
+  }
+
+  /**
+ * Destruye las suscripciones para evitar fugas de memoria.
+ */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
