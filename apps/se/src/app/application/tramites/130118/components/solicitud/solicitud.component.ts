@@ -147,7 +147,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destruirNotificador$),
         map((seccionState) => {
-          console.log(seccionState)
           this.solicitudState = seccionState;
         })
       )
