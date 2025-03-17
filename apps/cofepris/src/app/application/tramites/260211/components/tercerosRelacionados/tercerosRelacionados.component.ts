@@ -26,11 +26,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 })
 export class TercerosRelacionadosComponent {
  proveedorForm!:FormGroup;
+ requeridaForm!:FormGroup;
    private destroyed$ = new Subject<void>();
    public proveedorList!: Catalogo[];
    public  localidadList !: Catalogo[];
    public modal = 'modal';
-  
+   
+   public hideCurp = true;
 
   // private destroyed$ = new Subject<void>();
   tableHeaderData: string[] = [  'Nombre/denominacion o razon social', 'RFC', 'CURP','Telefono','corro electronica','calle'];
@@ -82,8 +84,12 @@ export class TercerosRelacionadosComponent {
   ];
   ngOnInit():void {
     this.loadMercancias();
+    this.getRegistroForm();
   }
-
+  JustificacionSeleccion():void{
+    this.hasAgregar = false;
+  }
+ 
   loadMercancias(): void {
     this.service.getTable()
     .pipe(takeUntil(this.destroyed$))
@@ -91,6 +97,7 @@ export class TercerosRelacionadosComponent {
       this.tercerosProd = resp;
     });
   }
+
 
   public agregar(agregar:string) {
     if(agregar === 'Agregar'){
@@ -121,17 +128,22 @@ export class TercerosRelacionadosComponent {
     this.getRegistroForm(); // Carga los datos en el formulario
   }
 
+  // abrirModalrequerida(){
+  //   this.modal = 'show'; // Muestra el modal
+  //   this.getFormrequerida();
+  // }
+
   getRegistroForm() {
 
      this.proveedorForm = this.fb.group({
-          nacional: [false],
+          nacional: ["nacional", Validators.required],
           extranjero: [false],
           fisica: [false],
-          moral: [false],
+          moral: ["moral", Validators.required],
           rfc: ['', Validators.required],
           curp: ['', Validators.required],
           denominacion: ['', Validators.required],
-          pail: ['', Validators.required],
+          pail: [{value:'',disabled:true}, Validators.required ],
           localidad: ['', Validators.required],
           municipio: ['', Validators.required],
           nombrelocalidad: ['', Validators.required],
@@ -147,8 +159,54 @@ export class TercerosRelacionadosComponent {
         });
         this.loadComboUnidad();
         this.loadLocalidad();
-       
+      
       }
+
+
+      // getFormrequerida(){
+
+      //   this.requeridaForm = this.fb.group({
+      //        profisica: ["", Validators.required],
+      //        promoral: ["", Validators.required],
+      //        tiporfc: ['', Validators.required],
+      //        tipocurp: ['', Validators.required],
+      //        tipodenominacion: ['', Validators.required],
+      //        tipopail: ['', Validators.required],
+      //        numeroEstado: ['', Validators.required],
+      //       numeroCalle: ['', Validators.required],
+      //        numbroexperior: ['', Validators.required],
+      //        numbrointerior: [''],
+      //        numbrolada: [''],
+      //        numerotelefono: [''],
+      //        tipocorreoElectronico: ['', [Validators.required, Validators.email]]
+      //      });
+          
+      // }
+
+      // setupCurpVisibilityListener(): void {
+      //   this.proveedorForm.get('nacional')?.valueChanges.subscribe(() => {
+      //     this.updateCurpVisibility();
+      //   });
+      //   this.proveedorForm.get('moral')?.valueChanges.subscribe(() => {
+      //     this.updateCurpVisibility();
+      //   });
+      // }
+    
+      // updateCurpVisibility(): void {
+      //   const nacional = this.proveedorForm.get('nacional')?.value;
+      //   const moral = this.proveedorForm.get('moral')?.value;
+    
+      //   this.hideCurp = nacional && moral;
+    
+      //   if (this.hideCurp) {
+      //     this.proveedorForm.get('curp')?.setValidators(null); // Remove validation
+      //     this.proveedorForm.get('curp')?.setValue(''); // Clear the field
+      //   } else {
+      //     this.proveedorForm.get('curp')?.setValidators(Validators.required);
+      //   }
+      //   this.proveedorForm.get('curp')?.updateValueAndValidity();
+      // }
+    
 
       loadComboUnidad(): void {
         this.service.getProveedordata().pipe(
