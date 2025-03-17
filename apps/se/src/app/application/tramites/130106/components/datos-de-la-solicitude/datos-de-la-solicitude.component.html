@@ -3,7 +3,7 @@
     <form [formGroup]="formulario">
         <div class="row mb-3">
             <div class="col-md-4">
-                <label for="solicitud">Solicitud*:</label>
+                <label for="solicitud" class="form-label">Solicitud*:</label>
                 <div>
                     <input type="radio" id="solicitudInicial" formControlName="Solicitud" name="Solicitud"
                         value="inicial" checked> Inicial
@@ -24,7 +24,7 @@
     <form [formGroup]="formulario">
         <div class="row mb-3">
             <div class="col-md-4">
-                <label for="producto">Producto*:</label>
+                <label for="producto" class="form-label">Producto*:</label>
                 <app-input-radio [radioOptions]="radioOptions" [selectedValue]="selectedValue" [isRequired]="true"
                     (valueChange)="onValueChange($event)" [layout]="'vertical'"></app-input-radio>
             </div>
@@ -43,11 +43,11 @@
         </div>
         <div class="row mb-3">
             <div class="col-md-4">
-                <label for="cantidad">Cantidad*:</label>
+                <label for="cantidad" class="form-label">Cantidad*:</label>
                 <input type="number" id="cantidad" name="cantidad" class="form-control" formControlName="Cantidad">
             </div>
             <div class="col-md-4">
-                <label for="valor">Valor factura USD*:</label>
+                <label for="valor" class="form-label">Valor factura USD*:</label>
                 <input type="number" id="valor" name="valor" class="form-control" formControlName="Valor">
             </div>
             <div class="col-md-4">
