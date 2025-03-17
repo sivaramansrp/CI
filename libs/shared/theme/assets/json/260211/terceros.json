@@ -3,13 +3,12 @@
   
   [
         {
-            "Nombre":  "Establecimiento 1",
-            "RFC":"000",
-            "CURP":"000",
+            "Nombre":  "QAS",
+            "RFC":"AALO409235E6",
+            "CURP":"---",
            "Teléfono": "123-456-7890",
-             "CorreoElectrónico":"correo",
-           "calle":"12345"
-            
-        }
-    ]
+            "CorreoElectrónico":"QAS@GMAIL.COM",
+           "calle":"av revolucion"
+             }
+            ]
 

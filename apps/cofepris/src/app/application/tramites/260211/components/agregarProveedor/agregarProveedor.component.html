@@ -1,17 +1,232 @@
+
 <p>agregarProveedor works!</p>
-<h2>Fill Out the Form</h2>
 
-<form [formGroup]="form" (ngSubmit)="submitForm()">
-  <div>
-    <label>Name</label>
-    <input type="text" formControlName="name" class="form-control">
+<div class="container">
+  <ng-titulo titulo="Agregar Fabricante" />
+  <form [formGroup]="proveedorForm"  (ngSubmit)="guardarProveedor()">
+  <h6>Datos generales</h6>
+  <div class="row mb-3">
+      <div class="col-md-6">
+      <div class="col-md-12">
+        <label class="form-label" for="tipoPersona">Terceros Naciolalidad:</label>
+      </div>
+      
+      <div class="col-md-12">
+        <input type="radio" id="fisica" name="tipoPersona" formControlName="nacional" >
+        <label for="fisica">Nacional</label>
+      </div>
+      <div class="col-md-12">
+        <input type="radio" id="moral" name="extranjero" formControlName="extranjero">
+        <label for="moral">Extranjero</label>
+      </div>
+    </div>
+<div class="col-md-6">
+      <div class="col-md-12">
+        <label class="form-label" for="tipoPersona">Tipo persona*:</label>
+      </div>
+      <div class="col-md-12">
+        <input type="radio" id="fisica" name="fisica" formControlName="fisica" >
+        <label for="fisica">Física</label>
+      </div>
+      <div class="col-md-12">
+        <input type="radio" id="moral" name="moral" formControlName="moral">
+        <label for="moral">Moral</label>
+      </div>
+    </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 ">
+        <label class="form-label" for="rfc">R.F.C:</label>
+        <input type="text" class="form-control" id="nombre" formControlName="rfc">
+      </div>
+      <div class="col-md-6 ">
+          <label class="form-label" for="curp">C.U.R.P*:</label>
+          <input type="text" class="form-control" id="curp" formControlName="curp">
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8 mb-3">
+        <label class="form-label" for="denominación">Denominación/razón social*:</label>
+        <input type="text" class="form-control" id="denominacion" formControlName="denominacion">
+      </div>
+  </div>
+  <ng-titulo titulo="Domicilio" />
+
+  <div class="row">
+    <div class="col-md-4 ">
+      <!-- <label class="form-label" for="nombre">Pail*:</label> -->
+      <!-- <input type="text" class="form-control" id="nombre"> -->
+      <app-catalogo-select
+      [catalogo]="proveedorList"
+      formControlName="pail"
+      [label]="'Pail*'"
+      [placeholder]="'Seleccione una aduana'"
+      formControlName="benco"
+    ></app-catalogo-select>
+      
+    </div>
+    <div class="col-md-4 mb-3">
+      <!-- <label class="form-label" for="localidad">Estado/localidad*:</label>
+      <input type="text" class="form-control" id="localidad" formControlName="localidad"> -->
+      <app-catalogo-select
+      [catalogo]=" localidadList "
+      formControlName="pail"
+      [label]="'localidad'"
+      [placeholder]="'Seleccione una aduana'"
+      formControlName="benco"
+    ></app-catalogo-select>
+    
+    </div>
+    <div class="col-md-4 mb-3">
+      <!-- <label class="form-label" for="municipio">Municipio/alcalda*:</label>
+      <input type="text" class="form-control" id="Municipio" formControlName="municipio"> -->
+      <app-catalogo-select
+      [catalogo]=" localidadList "
+      formControlName="municipio"
+      [label]="'Municipio/alcalda*'"
+      [placeholder]="'Seleccione una aduana'"
+      formControlName="benco"
+    ></app-catalogo-select>
+    </div>
   </div>
 
-  <div>
-    <label>Email</label>
-    <input type="email" formControlName="email" class="form-control">
+  <div class="row">
+    <div class="col-md-4 ">
+      <!-- <label class="form-label" for="nombrelocalidad">Localidad*:</label>
+      <input type="text" class="form-control" id="nombrelocalidad" formControlName="nombrelocalidad"> -->
+      <app-catalogo-select
+      [catalogo]=" localidadList "
+     [label]="'Localidad*'"
+      [placeholder]="'Seleccione una aduana'"
+      formControlName="nombrelocalidad"
+    ></app-catalogo-select>
+    </div>
+    <div class="col-md-4 mb-3">
+      <!-- <label class="form-label" for="primerApellido">Cadigo Postal oequd:</label>
+      <input type="text" class="form-control" id="primerApellido" formControlName="primerApellido"> -->
+      <app-catalogo-select
+      [catalogo]=" localidadList "
+     [label]="'Cadigo Postal oequd'"
+      [placeholder]="'Seleccione una aduana'"
+      formControlName="primerApellido"
+    ></app-catalogo-select>
+    </div>
+    <div class="col-md-4 ">
+      <!-- <label class="form-label" for="segundoApellido">Colonia:</label>
+      <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido"> -->
+      <app-catalogo-select
+      [catalogo]=" localidadList "
+       [label]="'Colonia'"
+      [placeholder]="'Seleccione una aduana'"
+      formControlName="segundoApellido"
+    ></app-catalogo-select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 ">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="equivalente">Colonia o equivalente:</label>
+      <input type="text" class="form-control" id="equivalente" formControlName="equivalente">
+    </div>
+    <div class="col-md-4 ">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <label class="form-label" for="numeroCalle">Calle*:</label>
+      <input type="text" class="form-control" id="numeroCalle" formControlName="numeroCalle">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="experior">Numero experior*:</label>
+      <input type="text" class="form-control" id="experior" formControlName="experior">
+    </div>
+</div>
+<div class="row">
+  <div class="col-md-4">
+    <label class="form-label" for="interior">Numero interior:</label>
+    <input type="text" class="form-control" id="interior" formControlName="interior">
+  </div>
+  <div class="col-md-1 mb-3">
+    <label class="form-label" for="lada">Lada:</label>
+    <input type="text" class="form-control" id="lada" formControlName="lada">
+  </div>
+  <div class="col-md-3 mb-3">
+    <label class="form-label" for="numerotelefono">Teléfono:</label>
+    <input type="text" class="form-control" id="numerotelefono" formControlName="numerotelefono">
+  </div>
+  <div class="col-md-4 mb-3">
+    <label class="form-label" for="correoElectronico">Correo electrónico:</label>
+    <div class="input-group">
+      <input type="email" class="form-control" id="correoElectronico" formControlName="correoElectronico">
+      </div>
+  </div>
+</div>
+
+  <!-- <ng-titulo titulo="Datos personales" />
+   @if (fisica) {
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label class="form-label" for="nombre">Nombre(s)*:</label>
+        <input type="text" class="form-control" id="nombre">
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label" for="primerApellido">Primer apellido*:</label>
+        <input type="text" class="form-control" id="primerApellido">
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label" for="segundoApellido">Segundo apellido:</label>
+        <input type="text" class="form-control" id="segundoApellido">
+      </div>
+    </div>
+   }
+
+   @if (moral) {
+    <div class="row">
+        <div class="col-md-8 mb-3">
+          <label class="form-label" for="denominación">Denominación/razón social*:</label>
+          <input type="text" class="form-control" id="denominacion">
+        </div>
+    </div>
+   }
+  
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <select-catalogos [catalogosDatos]="pais"
+                       (valorSeleccion)="docSeleccionado($event)">
+      </select-catalogos>
+    </div>
   </div>
 
-  <button type="submit" class="btn btn-success" [disabled]="form.invalid">Submit</button>
+  <div class="row">
+      <div class="col-md-8 mb-3">
+          <label class="form-label" for="domicilio">Domicilio*:</label>
+          <textarea class="form-control" id="domicilio" rows="2" height="50" placeholder="Calle, No Ext, No Int, Ciudad, C.P." style="height: 100px;"></textarea>
+      </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-1 mb-3">
+      <label class="form-label" for="lada">Lada:</label>
+      <input type="text" class="form-control" id="lada">
+    </div>
+    <div class="col-md-3 mb-3">
+      <label class="form-label" for="telefono">Teléfono:</label>
+      <input type="text" class="form-control" id="telefono">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label class="form-label" for="correoElectronico">Correo electrónico:</label>
+      <div class="input-group">
+        <input type="email" class="form-control" id="correoElectronico">
+        <span class="input-group-text"></span>
+      </div>
+    </div>
+  </div>
+</div> -->
+<div class="container-fluid text-end mt-5">
+    <button class="btn btn-buscar me-2">Cancelar</button>
+    <button class="btn btn-agregar">Limpia</button>
+    <button class="btn btn-agregar">Guardar</button>
+</div>
 </form>
-
+</div>
