@@ -12,18 +12,14 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+
 import { Cancelaciones140201Service } from '../../services/cancelaciones-140201.service';
 import { Cancelaciones140201Store } from '../../estados/cancelaciones.store';
 
 import { Cancelaciones140201Query } from '../../estados/cancelaciones.query';
 
 import { Subject, takeUntil } from 'rxjs';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 /**
  * Componente NotifDomicileComponent
  *

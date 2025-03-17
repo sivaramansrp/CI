@@ -5,11 +5,11 @@ import { CommonModule } from '@angular/common';
 import { Cancelaciones140201RoutingModule } from './cancelaciones-140201-routing.module';
 
 import {
+  AnexarDocumentosComponent,
   BtnContinuarComponent,
   SolicitanteComponent,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Cancelaciones140201Component } from './pages/cancelaciones-140201/cancelaciones-140201.component';
 import { Datos140201Component } from './pages/datos-140201/datos-140201.component';
 import { DatosDelLas140201Component } from './components/datos-del-las-140201/datos-del-las-140201.component';
@@ -22,6 +22,7 @@ import { PasoTresComponent } from '../90305/component/paso-tres/paso-tres.compon
 import { ToastrService } from 'ngx-toastr';
 
 import { PasoDosComponent } from '../90305/component/paso-dos/paso-dos.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { PasoDosComponent } from '../90305/component/paso-dos/paso-dos.component
   ],
   imports: [
     CommonModule,
+    AnexarDocumentosComponent,
     Cancelaciones140201RoutingModule,
     WizardComponent,
     BtnContinuarComponent,

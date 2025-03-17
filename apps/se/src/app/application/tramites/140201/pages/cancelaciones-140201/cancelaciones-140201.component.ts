@@ -25,9 +25,8 @@ export class Cancelaciones140201Component {
    * @default 1
    */
   indice: number = 1;
-  pasos: ListaPasosWizard[] = PASOS;
   datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length,
+    nroPasos: this.pantallasPasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
