@@ -26,7 +26,7 @@
             <div class="col-12 container text-end mt-5">
               <button class="btn btn-default me-2" (click)="eliminarAnexoUno()">Eliminar</button>
               <button class="btn btn-primary me-2" (click)="agregarAnexoUno()">Agregar</button>
-              <button class="btn btn-primary">Carga por archivo</button>
+              <button class="btn btn-primary" (click)="setRuta('proveedor-por-archivo')">Carga por archivo</button>
             </div>
           </div>
 
@@ -45,7 +45,7 @@
           <button class="btn btn-primary me-2" (click)="navegarAProveedorCliente(true)">Proveedor Cliente</button>
           <button class="btn btn-primary me-2" (click)="setRuta('proyecto-immex')">Proyecto IMMEX</button>
 
-          <button class="btn btn-primary" >Proveedor Cliente por Archivo</button>
+          <button class="btn btn-primary" (click)="setRuta('proveedor-por-archivo')" >Proveedor Cliente por Archivo</button>
         </div>
       </div>
 
