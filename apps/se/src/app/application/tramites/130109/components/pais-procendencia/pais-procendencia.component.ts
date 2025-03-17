@@ -21,7 +21,8 @@ import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/c
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-
+ import { Tramite130109Query } from '../../estados/queries/tramite130109.query';
+ import { Tramite130109Store } from '../../estados/tramites/tramites130109.store';
 import paisProcJson from '@libs/shared/theme/assets/json/130109/pais-procenia.json';
 
 /**
@@ -93,7 +94,7 @@ export class PaisProcendenciaComponent implements OnInit {
    * compo doc
    * @property {Pais[]} paisesPorBloque - Lista de países por bloque.
    */
-  paisesPorBloque:Pais[] = [];
+  paisesPorBloque: Pais[] = [];
   /**
    * compo doc
    * @property {Array<{ btnNombre: string; class: string; funcion: Function }>} botonField - Configuración de botones.
@@ -102,11 +103,11 @@ export class PaisProcendenciaComponent implements OnInit {
     {
       btnNombre: 'Agregar todos',
       class: 'btn-primary',
-      funcion: (): void =>{
+      funcion: (): void => {
         if (this.crosslistComponent) {
           this.crosslistComponent.agregar('t');
         }
-      }
+      },
     },
     {
       btnNombre: 'Agregar selección',
@@ -115,7 +116,7 @@ export class PaisProcendenciaComponent implements OnInit {
         if (this.crosslistComponent) {
           this.crosslistComponent.agregar('');
         }
-      }
+      },
     },
     {
       btnNombre: 'Restar selección',
@@ -124,7 +125,7 @@ export class PaisProcendenciaComponent implements OnInit {
         if (this.crosslistComponent) {
           this.crosslistComponent.quitar('');
         }
-      }
+      },
     },
     {
       btnNombre: 'Restar todos',
@@ -133,7 +134,7 @@ export class PaisProcendenciaComponent implements OnInit {
         if (this.crosslistComponent) {
           this.crosslistComponent.quitar('t');
         }
-      }
+      },
     },
   ];
 
@@ -143,8 +144,9 @@ export class PaisProcendenciaComponent implements OnInit {
    * @param {HttpClient} http - Cliente HTTP para solicitudes.
    * @param {FormBuilder} fb - Constructor de formularios reactivos.
    */
-  constructor(private http: HttpClient, private fb: FormBuilder) {
-     // Constructor del componente
+  constructor(private http: HttpClient, private fb: FormBuilder,private tramite130109Store: Tramite130109Store,
+    private tramite130109Query: Tramite130109Query) {
+    // Constructor del componente
   }
 
   /**
@@ -152,10 +154,10 @@ export class PaisProcendenciaComponent implements OnInit {
    * @method ngOnInit
    * @description Inicializa el formulario y carga datos de países de procedencia.
    */
-  ngOnInit() :void {
+  ngOnInit(): void {
     this.paisForm = this.fb.group({
       bloque: [''],
-      descripcioneSpecffico:['',Validators.required],
+      descripcioneSpecffico: ['', Validators.required],
       descripcionJustificacion: ['', [Validators.required]],
       observaciones: [''],
     });
@@ -190,7 +192,27 @@ export class PaisProcendenciaComponent implements OnInit {
       .get<Pais[]>('/assets/json/130109/paises-por-bloque.json')
       .subscribe((data: Pais[]) => {
         this.paisesPorBloque = data;
-        this.selectRangoDias = this.paisesPorBloque.map((pais: Pais) => pais.descripcion);
+        this.selectRangoDias = this.paisesPorBloque.map(
+          (pais: Pais) => pais.descripcion
+        );
       });
+  }
+  /**
+   * compo doc
+   * @method setValoresStore
+   * @description Establece valores en el store del trámite.
+   * @param {FormGroup} paisForm - Formulario reactivo.
+   * @param {string} campo - Nombre del campo del formulario.
+   * @param {keyof Tramite130109Store} metodoNombre - Nombre del método del store.
+   */
+  setValoresStore(
+    paisForm: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite130109Store
+  ): void {
+    const VALOR = paisForm.get(campo)?.value;
+    (this.tramite130109Store[metodoNombre] as (value: string | number) => void)(
+      VALOR
+    );
   }
 }

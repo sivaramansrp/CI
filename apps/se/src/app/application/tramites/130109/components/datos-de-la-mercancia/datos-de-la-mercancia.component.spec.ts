@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DatosDeLaMercaciaComponent } from './datos-de-la-mercacia.component';
+import { DatosDeLaMercanciaComponent } from './datos-de-la-mercancia.component';
 import { CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
 import productoOptions from 'libs/shared/theme/assets/json/130109/producto-otions.json';
 import unidadOptions from 'libs/shared/theme/assets/json/130109/unidad_da.json';
 import fractionValues from 'libs/shared/theme/assets/json/130109/fraccion_arancelaria.json';
 
 describe('DatosDeLaMercanciaComponent', () => {
-  let component: DatosDeLaMercaciaComponent;
-  let fixture: ComponentFixture<DatosDeLaMercaciaComponent>;
+  let component: DatosDeLaMercanciaComponent;
+  let fixture: ComponentFixture<DatosDeLaMercanciaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -20,12 +20,12 @@ describe('DatosDeLaMercanciaComponent', () => {
         InputRadioComponent,
         TituloComponent,
       ],
-      declarations: [DatosDeLaMercaciaComponent],
+      declarations: [DatosDeLaMercanciaComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DatosDeLaMercaciaComponent);
+    fixture = TestBed.createComponent(DatosDeLaMercanciaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

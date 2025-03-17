@@ -10,6 +10,7 @@
           (change)="fetchEntidadFederativa()"
           [placeholder]="'Seleccione un valor'"
           formControlName="entidad"
+          (change)="setValoresStore(frmRepresentacion, 'entidad', 'setEntidad')"
         ></app-catalogo-select>
         <div
           *ngIf="
@@ -32,6 +33,7 @@
           (change)="fetchRepresentacionFederal()"
           [placeholder]="'Seleccione un valor'"
           formControlName="representacion"
+          (change)="setValoresStore(frmRepresentacion, 'representacion', 'setRepresentacion')"
         ></app-catalogo-select>
         <div
           *ngIf="

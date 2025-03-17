@@ -24,11 +24,16 @@ import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/c
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-
+import { Tramite130109Query } from '../../estados/queries/tramite130109.query';
+import { Tramite130109Store } from '../../estados/tramites/tramites130109.store';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130109/solicitud-select.json';
+
 
 /**
  * Componente para la gestión de solicitudes y tipos de documentos en un trámite.
+ * @component
+ * @example
+ * <app-detos-del-tramite></app-detos-del-tramite>
  */
 @Component({
   selector: 'app-detos-del-tramite',
@@ -94,7 +99,8 @@ export class DetosDelTramiteComponent implements OnInit {
    * @param {HttpClient} http - Servicio para realizar peticiones HTTP.
    * @param {FormBuilder} fb - Utilidad para la construcción de formularios reactivos.
    */
-  constructor(private http: HttpClient, private fb: FormBuilder) {
+  constructor(private http: HttpClient, private fb: FormBuilder,private tramite130109Store: Tramite130109Store,
+      private tramite130109Query: Tramite130109Query) {
     //constructor
   }
 
@@ -136,10 +142,18 @@ export class DetosDelTramiteComponent implements OnInit {
 
   fetchSolicitudeOptions(): void {
     this.http
-      .get<ProductoResponse>('/assets/json/130111/solicitude-options.json')
+      .get<ProductoResponse>('/assets/json/130109/solicitude-options.json')
       .subscribe((data) => {
         this.solicitude = data.options;
         this.defaultSelect = data.defaultSelect;
       });
+  }
+  setValoresStore(
+    formDelTramite: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite130109Store
+  ): void {
+    const VALOR = formDelTramite.get(campo)?.value;
+    (this.tramite130109Store[metodoNombre] as (value: string | number) => void)(VALOR);
   }
 }

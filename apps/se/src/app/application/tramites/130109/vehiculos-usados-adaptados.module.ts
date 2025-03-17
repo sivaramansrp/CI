@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { DatosDeLaMercaciaComponent } from './components/datos-de-la-mercacia/datos-de-la-mercacia.component';
+import { DatosDeLaMercanciaComponent } from './components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { DetosDelTramiteComponent } from './components/detos-del-tramite/detos-del-tramite.component';
 import { PaisProcendenciaComponent } from './components/pais-procendencia/pais-procendencia.component';
 import { PartidasDeLaComponent } from './components/partidas-de-la/partidas-de-la.component';
@@ -42,7 +42,7 @@ import { VehiculosUsadosAdaptadosRoutingModule } from './vehiculos-usados-adapta
     AnexarDocumentosComponent,
     AlertComponent,
     CatalogoSelectComponent,
-    DatosDeLaMercaciaComponent,
+    DatosDeLaMercanciaComponent,
     DetosDelTramiteComponent,
     PaisProcendenciaComponent,
     PartidasDeLaComponent,

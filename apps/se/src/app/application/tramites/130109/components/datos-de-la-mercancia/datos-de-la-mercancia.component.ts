@@ -3,6 +3,97 @@
  * @fileoverview Componente DatosDeLaMercancia: maneja la lógica del formulario
  * para la gestión de productos, fracciones arancelarias y unidades de medida.
  */
+
+/**
+ *compo doc
+ * @class DatosDeLaMercaciaComponent
+ * @description Componente para la gestión de datos relacionados con productos,
+ * fracciones arancelarias y unidades de medida en un formulario reactivo.
+ */
+
+/**
+ * compo doc
+ * @property {any} prodData - Datos de productos importados desde un archivo JSON.
+ */
+
+/**
+ * compo doc
+ * @property {FormGroup} formDelLa - Estructura del formulario reactivo.
+ */
+
+/**
+ * compo doc
+ * @property {Array<{ label: string; value: string }>} producto - Lista de productos disponibles.
+ */
+
+/**
+ * compo doc
+ * @property {string} selectedValue - Opción seleccionada por defecto.
+ */
+
+/**
+ * compo doc
+ * @property {string} defaultSelect - Valor predeterminado para el selector de productos.
+ */
+
+/**
+ * compo doc
+ * @property {Catalogo[]} Unidad - Catálogo de unidades de medida.
+ */
+
+/**
+ * compo doc
+ * @property {Catalogo[]} fraccionF - Catálogo de fracciones arancelarias.
+ */
+
+/**
+ * compo doc
+ * @constructor
+ * @param {HttpClient} http - Cliente HTTP para solicitudes.
+ * @param {FormBuilder} fb - Constructor de formularios reactivos.
+ */
+
+/**
+ * compo doc
+ * @method ngOnInit
+ * @description Inicializa el formulario con validaciones y carga datos de productos.
+ */
+
+/**
+ * compo doc
+ * @method onValueChange
+ * @description Actualiza el valor seleccionado.
+ * @param {string | number} value - Nuevo valor seleccionado.
+ *
+ * Este método es para la etiqueta de radio de producto.
+ */
+
+/**
+ * compo doc
+ * @method fetchProductoOptions
+ * @description Carga las opciones de productos desde el JSON.
+ */
+
+/**
+ * compo doc
+ * @method fetchFraccion
+ * @description Obtiene información de fracción arancelaria.
+ */
+
+/**
+ * compo doc
+ * @method fetchUnidad
+ * @description Obtiene información de unidad de medida.
+ */
+
+/**
+ * compo doc
+ * @method setValoresStore
+ * @description Establece valores en el store de trámites.
+ * @param {FormGroup} formDelLa - Formulario reactivo.
+ * @param {string} campo - Nombre del campo del formulario.
+ * @param {keyof Tramite130109Store} metodoNombre - Nombre del método del store.
+ */
  import { Component, OnInit } from '@angular/core';
  import { CommonModule } from '@angular/common';
  import { HttpClient } from '@angular/common/http';
@@ -23,8 +114,9 @@
  import { InputRadioComponent } from '@ng-mf/data-access-user';
  import { REG_X } from '@ng-mf/data-access-user';
  import { TituloComponent } from '@ng-mf/data-access-user';
- 
- 
+ import { Tramite130109Query } from '../../estados/queries/tramite130109.query';
+ import { Tramite130109Store } from '../../estados/tramites/tramites130109.store';
+
  /**
   *compo doc
   * @class DatosDeLaMercaciaComponent
@@ -41,10 +133,10 @@
      InputRadioComponent,
      CatalogoSelectComponent,
    ],
-   templateUrl: './datos-de-la-mercacia.component.html',
-   styleUrl: './datos-de-la-mercacia.component.scss',
+   templateUrl: './datos-de-la-mercancia.component.html',
+   styleUrl: './datos-de-la-mercancia.component.scss',
  })
- export class DatosDeLaMercaciaComponent implements OnInit {
+ export class DatosDeLaMercanciaComponent implements OnInit {
    /**
     * compo doc
     * @property {any} prodData - Datos de productos importados desde un archivo JSON.
@@ -93,7 +185,8 @@
     * @param {HttpClient} http - Cliente HTTP para solicitudes.
     * @param {FormBuilder} fb - Constructor de formularios reactivos.
     */
-   constructor(private http: HttpClient, private fb: FormBuilder) {
+   constructor(private http: HttpClient, private fb: FormBuilder,private tramite130109Store: Tramite130109Store,
+    private tramite130109Query: Tramite130109Query) {
      //constructor
      this.prodData = productoOptions;
    }
@@ -105,7 +198,7 @@
     */
    ngOnInit(): void {
      this.formDelLa = this.fb.group({
-       descripcion: [
+      descripcion: [
          '',
          [
            Validators.required,
@@ -175,4 +268,12 @@
    fetchUnidad(): void {
      this.selectedValue = 'Nuevo';
    }
+     setValoresStore(
+      formDelLa: FormGroup,
+       campo: string,
+       metodoNombre: keyof Tramite130109Store
+     ): void {
+       const VALOR = formDelLa.get(campo)?.value;
+       (this.tramite130109Store[metodoNombre] as (value: string | number) => void)(VALOR);
+     }
  }

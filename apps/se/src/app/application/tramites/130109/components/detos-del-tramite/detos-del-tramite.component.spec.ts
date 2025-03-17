@@ -22,7 +22,7 @@ describe('DetosDelTramiteComponent', () => {
     httpMock = TestBed.inject(HttpTestingController);
 
     fixture.detectChanges(); 
-    const req = httpMock.expectOne('/assets/json/130111/solicitude-options.json');
+    const req = httpMock.expectOne('/assets/json/130109/solicitude-options.json');
     req.flush({ options: [], defaultSelect: 'Inicial' }); 
   });
 
@@ -55,7 +55,7 @@ describe('DetosDelTramiteComponent', () => {
 
     component.fetchSolicitudeOptions(); 
 
-    const req = httpMock.expectOne('/assets/json/130111/solicitude-options.json');
+    const req = httpMock.expectOne('/assets/json/130109/solicitude-options.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse); 
 

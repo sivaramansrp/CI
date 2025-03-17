@@ -17,7 +17,9 @@ export class PasoUnoComponent implements OnInit,AfterViewInit {
   domicilioFiscal: FormularioDinamico[] = [];
   indice: number = 1;
   
-  constructor(private route:ActivatedRoute) { }
+  constructor(private route:ActivatedRoute) { 
+     // Constructor del componente
+  }
   ngOnInit() : void {
     this.route.queryParams.subscribe(params => {
       // eslint-disable-next-line dot-notation

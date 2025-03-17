@@ -25,7 +25,8 @@ import EntidadFederativaOptions from '@libs/shared/theme/assets/json/130109/enti
 import RepresentacionFederalOptions from '@libs/shared/theme/assets/json/130109/representacion-federal.json';
 import { TEXTOS } from '../../enum/representacion-federal.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-
+import { Tramite130109Query } from '../../estados/queries/tramite130109.query';
+import { Tramite130109Store } from '../../estados/tramites/tramites130109.store';
 
 @Component({
   selector: 'app-representacion',
@@ -60,7 +61,8 @@ export class RepresentacionComponent implements OnInit {
    */
   public TEXTOS = TEXTOS;
 
-  constructor(private http: HttpClient, private fb: FormBuilder) {
+  constructor(private http: HttpClient, private fb: FormBuilder, private tramite130109Store: Tramite130109Store,
+      private tramite130109Query: Tramite130109Query) {
     //
   }
 
@@ -93,6 +95,24 @@ export class RepresentacionComponent implements OnInit {
       .subscribe((data) => {
         this.representacionFederal = data;
       });
+  }
+
+  /**
+   * @method setValoresStore
+   * @description Establece los valores en el store de Tramite130109.
+   * @param {FormGroup} frmRepresentacion - Formulario reactivo.
+   * @param {string} campo - Nombre del campo.
+   * @param {keyof Tramite130109Store} metodoNombre - Nombre del método en el store.
+   */
+  setValoresStore(
+    frmRepresentacion: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite130109Store
+  ): void {
+    const VALOR = frmRepresentacion.get(campo)?.value;
+    (this.tramite130109Store[metodoNombre] as (value: string | number) => void)(
+      VALOR
+    );
   }
 }
 
