@@ -11,7 +11,7 @@ export interface Solicitud5701 {
   datosServicio: DatosServicio;
   datosDespacho: DatosDespacho;
   datosPedimento: DatosPedimento;
-  mercancia: DatosMercancia;
+  satosMercancia: DatosMercancia;
   responsablesDespacho: ResponsablesDespacho[];
   pagos: DatosPago;
 
