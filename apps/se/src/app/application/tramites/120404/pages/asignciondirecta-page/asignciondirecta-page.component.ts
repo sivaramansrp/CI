@@ -7,12 +7,11 @@
 
 import { Component, ViewChild } from '@angular/core';
 
-import { ASIGNACION, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { ASIGNACION } from '../../constants/asignacion.enum';
 
 
-
-import { ASIGNACION_REGISTRO } from '@ng-mf/data-access-user';
 
 
 
@@ -46,7 +45,6 @@ export class AsignciondirectaPageComponent {
    * Lista de pasos del wizard.
    */
   pasos: ListaPasosWizard[] = ASIGNACION;
-  pantallasPasos: ListaPasosWizard[] = ASIGNACION_REGISTRO;
   
 
   /**
@@ -58,7 +56,7 @@ export class AsignciondirectaPageComponent {
    * The data for the steps in the wizard.
    */
   datosPasos: DatosPasos = {
-    nroPasos: this.pantallasPasos.length,
+    nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',

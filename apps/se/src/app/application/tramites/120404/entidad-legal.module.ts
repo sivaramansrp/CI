@@ -12,11 +12,15 @@ import { SolicitantetabComponent } from './component/solicitantetab/solicitantet
 import { EntidadLegalRoutingModule } from './entidad-legal-routing.module';
 
 import { AsignciondirectaPageComponent } from './pages/asignciondirecta-page/asignciondirecta-page.component';
+import { PasoDosComponent } from '../120404/component/paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../120404/component/paso-tres/paso-tres.component';
 import { SolicitanteAsigncionComponent } from './pages/solicitante-asigncionTab/solicitante-entidad.component';
+
 @NgModule({
 
 declarations: [SolicitanteAsigncionComponent,AsignciondirectaPageComponent],
   imports: [
+    PasoDosComponent,PasoTresComponent,
     CommonModule,WizardComponent,
     EntidadLegalRoutingModule,SolicitanteComponent,ReactiveFormsModule,AsignciontabComponent, CatalogoSelectComponent,SolicitantetabComponent,BtnContinuarComponent]
   
