@@ -175,7 +175,8 @@ export class AnexoUnoComponent {
     }
   }
 
-  navegarAProveedorCliente(): void {
+  navegarAProveedorCliente(esDeImportación:boolean): void {
+    //set a value in store as from import or export using esDeImportación
     this.router.navigate(['../contenedor-proveedor-cliente'],{relativeTo: this.activatedRoute});
 
 }

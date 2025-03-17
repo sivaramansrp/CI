@@ -1,4 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { AnexoUnoEncabezado, ProveedorClienteTabla } from '../../models/se-shared.model';
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -6,6 +7,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -13,9 +15,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { PROVEEDOR_CLIENTE_TABLA_CONFIG } from '../../enum/anexo-dos-y-tres.enum';
-import { ProveedorClienteTabla } from '../../models/se-shared.model';
 
 @Component({
   selector: 'app-proveedor-cliente',
@@ -30,8 +30,12 @@ import { ProveedorClienteTabla } from '../../models/se-shared.model';
   templateUrl: './proveedor-cliente.component.html',
   styleUrl: './proveedor-cliente.component.scss',
 })
-export class ProveedorClienteComponent {
+export class ProveedorClienteComponent{
+  @Input() public fraccionTablaDatos!: AnexoUnoEncabezado;
+  @Output() public datosActualizadosProveedorCliente = new EventEmitter<ProveedorClienteTabla[]>();
   public formularioProveedorCliente!: FormGroup;
+
+  
 
   public paisDestinoCatalog: Catalogo[] = [
     {
@@ -57,6 +61,9 @@ export class ProveedorClienteComponent {
     this.inicializarFormularioProveedorCliente();
   }
 
+     //in NgOnInit using store value of isfromImport or export set fraccionTablaDatos
+    //accordingly
+
   cambioPaisDestino(event: Catalogo): void {
     this.formularioProveedorCliente.patchValue({
       paisDestino: event.id,
@@ -76,7 +83,7 @@ export class ProveedorClienteComponent {
   limpar(): void {
     this.formularioProveedorCliente.setValue({
       descripcionComercial: '',
-      paisDestino: 0,
+      paisDestino: {id:-1,descripcion:''},
       rfc: '',
       razonSocialCliente: '',
     })
@@ -100,7 +107,7 @@ export class ProveedorClienteComponent {
   }
 
   obtenerValorPaisDeDestino(id: number): string {
-    const PAIS = this.paisDestinoCatalog.find((ele) => ele.id === id);
+    const PAIS = this.paisDestinoCatalog.find((ele) => ele.id === parseInt(id.toString(),10));
     return PAIS ? PAIS.descripcion : '';
   }
 
@@ -127,6 +134,7 @@ export class ProveedorClienteComponent {
   }
 
   regrssarAnnexoI():void{
+    this.datosActualizadosProveedorCliente .emit(this.proveedorClienteTablsDatos);
       this.router.navigate(['../action'], { relativeTo: this.activatedRoute });
   }
 

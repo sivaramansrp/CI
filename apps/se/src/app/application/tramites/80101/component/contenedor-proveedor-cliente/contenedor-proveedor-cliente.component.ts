@@ -1,3 +1,4 @@
+import { AnexoImportacionEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla } from '../../../../shared/models/se-shared.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ProveedorClienteComponent } from '../../../../shared/components/proveedor-cliente/proveedor-cliente.component';
@@ -9,4 +10,13 @@ import { ProveedorClienteComponent } from '../../../../shared/components/proveed
   templateUrl: './contenedor-proveedor-cliente.component.html',
   styleUrl: './contenedor-proveedor-cliente.component.scss',
 })
-export class ContenedorProveedorClienteComponent {}
+export class ContenedorProveedorClienteComponent {
+  fraccionTablaDatos!:AnexoUnoEncabezado;
+  datosDelProveedor:ProveedorClienteTabla[]=[];
+
+  public datosActualizadosProveedorCliente($event:ProveedorClienteTabla[]):void{
+    this.datosDelProveedor=$event;
+    //Datos del proveedor
+  }
+
+}
