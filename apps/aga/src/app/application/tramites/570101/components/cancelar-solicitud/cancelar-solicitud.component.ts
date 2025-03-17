@@ -19,16 +19,7 @@ import { CancelarSolicitudStore } from '../../estados/tramite570101.store';
 export class CancelarSolicitudComponent implements OnInit, OnDestroy {
 
   // Definimos el tipo de solicitud (Total o Parcial)
-  tipoSolicitud: CancelarModalidad[] = [
-    {
-      id: 1,
-      descripcion: "Total"
-    },
-    {
-      id: 2,
-      descripcion: "Parcial"
-    }
-  ];
+  tipoSolicitud: CancelarModalidad[] = [];
 
   // Etiquetas que se muestran en la interfaz de usuario
   public fechasCancelaranLabel: CrossListLable = {
@@ -75,26 +66,27 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
     this.crearFormSolicitud();
     this.rango_fechas();
     this.getCancelarSolicitud();
+    this.getTipoSolicitud();
   }
 
   // Método para crear el formulario de la solicitud
   crearFormSolicitud(): void {
     this.formCancelorSolicitud = this.fb.group({
       folioSVEX: [
-        this.cancelarSolicitudFormState?.folioSVEX,
+        {value: this.cancelarSolicitudFormState?.folioSVEX, disabled: true},
       ],
       folioVUCEM: [
-        this.cancelarSolicitudFormState?.folioVUCEM,
+        {value: this.cancelarSolicitudFormState?.folioVUCEM, disabled: true}
       ],
       tipoDeCancelacion: [
         this.cancelarSolicitudFormState?.tipoDeCancelacion,
         [Validators.required],
       ],
       horaInicio: [
-        this.cancelarSolicitudFormState?.horaIncio,
+        {value: this.cancelarSolicitudFormState?.horaInicio, disabled: true}
       ],
       horaFin: [
-        this.cancelarSolicitudFormState?.horaFin,
+        {value: this.cancelarSolicitudFormState?.horaFin, disabled: true}
       ],
       descripcion: [
         this.cancelarSolicitudFormState?.descripcion,
@@ -120,16 +112,25 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
 
   // Método para calcular el rango de fechas
   rango_fechas(): void {
-    const FECHA_INICIO = "01-03-2025"; // 1 de marzo de 2025
-    const FECHA_FINAL = "05-03-2025"; // 5 de marzo de 2025
-  
-    // Obtenemos los días entre las fechas y los asignamos al array selectRangoDias
-    this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
-      FECHA_INICIO,
-      FECHA_FINAL
-    );
+    this.cancelarSolictudService.getSelectRangoDias()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        // Actualizamos los valores del formulario con los datos obtenidos
+        this.selectRangoDias = data;
+      });
   }
-  
+
+  /**
+  * Método para obtener las opciones de tipo de solicitud (Total o Parcial).
+  * Este método suscribe al servicio de cancelación y asigna los datos obtenidos a la variable 'tipoSolicitud'.
+  */
+  getTipoSolicitud(): void {
+    this.cancelarSolictudService.getTipoSolicitud()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.tipoSolicitud = data;
+      });
+  }
 
   // Método para manejar el cambio del tipo de solicitud seleccionado
   tipoSolicitudSeleccion():void {
@@ -155,14 +156,7 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
     this.cancelarSolicitudStore.setDescripcion(DESCRIPCION);
   }
 
-  // Método que se ejecuta cuando se destruye el componente
-  ngOnDestroy(): void {
-    // Liberamos los recursos y notificamos a todos los observadores
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
 
-  
   /**
    * Verifica si un campo específico en un formulario es válido.
    *
@@ -173,4 +167,11 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) ?? false;
   }  
+
+  // Método que se ejecuta cuando se destruye el componente
+  ngOnDestroy(): void {
+    // Liberamos los recursos y notificamos a todos los observadores
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

@@ -27,15 +27,15 @@ describe('CancelarSolicitudService', () => {
 
   it('should fetch cancelarSolicitud data from the specified URL', () => {
     const mockData: CancelarSolicitudForm = {
-      folioSVEX: '123',
-      folioVUCEM: '456',
-      tipoDeCancelacion: 'Parcial',
-      horaIncio: '09:00',
-      horaFin: '18:00',
-      descripcion: 'Prueba de cancelación',
+      folioSVEX: "SVEX470000012025",
+      folioVUCEM: "01057001000120252470000002",
+      tipoDeCancelacion: "",
+      horaInicio: "06:00",
+      horaFin: "23:00",
+      descripcion: "",
       fechasSeleccionadas: {
-        selectedFechas: ['2025-03-01'],
-      },
+          selectedFechas: [] 
+      }
     };
 
     service.getCancelarSolicitud().subscribe((data) => {
@@ -60,5 +60,32 @@ describe('CancelarSolicitudService', () => {
     const req = httpMock.expectOne('/assets/json/570101/cancelarSolicitud.json');
     expect(req.request.method).toBe('GET');
     req.flush(errorMessage, { status: 500, statusText: 'Internal Server Error' });
+  });
+
+  it('should fetch selectRangoDias data from the specified URL', () => {
+    const mockData: string[] = ['2023-01-01', '2023-01-02'];
+
+    service.getSelectRangoDias().subscribe((data) => {
+      expect(data).toEqual(mockData);
+    });
+
+    const req = httpMock.expectOne('/assets/json/570101/selectRangoDias.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
+  });
+
+  it('should fetch tipoSolicitud data from the specified URL', () => {
+    const mockData = [
+      { modalidad: 'Total' },
+      { modalidad: 'Parcial' },
+    ];
+
+    service.getTipoSolicitud().subscribe((data) => {
+      expect(data).toEqual(mockData);
+    });
+
+    const req = httpMock.expectOne('/assets/json/570101/tipoSolicitud.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
   });
 });
