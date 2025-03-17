@@ -10,6 +10,7 @@ import { BtnContinuarComponent } from '@libs/shared/data-access-user/src/tramite
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-d
     WizardComponent,
     TercerosRelacionadosComponent,
     PagoDeDerechosComponent,
+    SolicitanteComponent,
   ],
 })
 export class PermisoSanitarioImportacionModule {}
