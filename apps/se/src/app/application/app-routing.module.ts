@@ -134,7 +134,14 @@ const ROUTES: Routes = [
       import('./tramites/80208/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
       ),
-  }
+  },
+  {
+    path: 'importacion',
+    loadChildren: () =>
+      import('./tramites/130109/vehiculos-usados-adaptados.module').then(
+        (m) => m.VehiculosUsadosAdaptadosModule
+      ),
+  }, 
 ];
 
 @NgModule({

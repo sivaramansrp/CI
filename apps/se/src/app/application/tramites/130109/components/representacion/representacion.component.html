@@ -1,0 +1,55 @@
+<div class="container">
+  <ng-titulo titulo="Representación federal"></ng-titulo>
+  <form [formGroup]="frmRepresentacion">
+    <div class="row">
+      <div class="col-md-4 form-group">
+        <app-catalogo-select
+          [catalogo]="entidadFederativa"
+          [label]="'Entidad federativa'"
+          [required]="true"
+          (change)="fetchEntidadFederativa()"
+          [placeholder]="'Seleccione un valor'"
+          formControlName="entidad"
+        ></app-catalogo-select>
+        <div
+          *ngIf="
+            frmRepresentacion.controls['entidad'].invalid &&
+            frmRepresentacion.controls['entidad'].touched
+          "
+          class="text-danger"
+        >
+          <small
+            *ngIf="frmRepresentacion.controls['entidad'].errors?.['required']"
+            >Debe seleccionar un valor.</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4 form-group">
+        <app-catalogo-select
+          [catalogo]="representacionFederal"
+          [label]="'Representación federal'"
+          [required]="true"
+          (change)="fetchRepresentacionFederal()"
+          [placeholder]="'Seleccione un valor'"
+          formControlName="representacion"
+        ></app-catalogo-select>
+        <div
+          *ngIf="
+            frmRepresentacion.controls['representacion'].invalid &&
+            frmRepresentacion.controls['representacion'].touched
+          "
+          class="text-danger"
+        >
+          <small
+            *ngIf="frmRepresentacion.controls['representacion'].errors?.['required']"
+            >Debe seleccionar un valor.</small
+          >
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div style="margin-top: 40px;">
+  <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES_REPRESENTACION_FEDERAL"></ng-alert>
+</div>
