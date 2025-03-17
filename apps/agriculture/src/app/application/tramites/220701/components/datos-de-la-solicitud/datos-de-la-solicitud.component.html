@@ -76,6 +76,7 @@
               [label]="horaDeInspeccion.labelNombre"
               [placeholder]="horaDeInspeccion.primerOpcion"
               [isDisabled]="true"
+              formControlName="horaDeInspeccion"
             ></app-catalogo-select>
           </div>
         </div>
@@ -86,6 +87,7 @@
               [label]="aduanaDeIngreso.labelNombre"
               [placeholder]="aduanaDeIngreso.primerOpcion"
               [isDisabled]="false"
+              formControlName="aduanaDeIngreso"
             ></app-catalogo-select>
           </div>
         </div>
@@ -96,6 +98,7 @@
               [label]="oficinaDeInspeccion.labelNombre"
               [placeholder]="oficinaDeInspeccion.primerOpcion"
               [isDisabled]="true"
+              formControlName="sanidadAgropecuaria"
             ></app-catalogo-select>
           </div>
         </div>
@@ -106,6 +109,7 @@
               [label]="puntoDeInspeccion.labelNombre"
               [placeholder]="puntoDeInspeccion.primerOpcion"
               [isDisabled]="true"
+              formControlName="puntoDeInspeccion"
             ></app-catalogo-select>
           </div>
         </div>
@@ -168,6 +172,7 @@
             [label]="tipoContenedor.labelNombre"
             [placeholder]="tipoContenedor.primerOpcion"
             [isDisabled]="false"
+            formControlName="tipoContenedor"
           ></app-catalogo-select>
         </div>
       </div>
@@ -182,6 +187,7 @@
             [label]="medioDeTransporte.labelNombre"
             [placeholder]="medioDeTransporte.primerOpcion"
             [isDisabled]="true"
+            formControlName="medioDeTransporte"
           ></app-catalogo-select>
         </div>
         <div class="col-md-4 form-group">

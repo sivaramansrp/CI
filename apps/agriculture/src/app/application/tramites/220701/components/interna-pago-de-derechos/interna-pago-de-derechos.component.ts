@@ -5,7 +5,7 @@ import { Catalogo, InputFecha } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
-import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO } from '../../constantes/importacion-de-acuicultura.enum';
+import { EXPEDICION_FACTURA_FECHA } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 
 import { FormularioPago, OpcionDeRadio } from '../../modelos/importacion-de-acuicultura.module';
 
@@ -15,6 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ImportacionDeAcuiculturaService } from '../../servicios/importacion-de-acuicultura.service';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { TIPO_RADIO } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 @Component({
@@ -60,7 +61,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    * @description Configuración para el input de fecha de salida.
    * @type {InputFecha}
    */
-  fechaFinalInput: InputFecha = FECHA_SALIDA_ACUICULTURA;
+  fechaFinalInput: InputFecha = EXPEDICION_FACTURA_FECHA;
 
   fechaPagoDate: string = '15/03/2025';
 

@@ -1,32 +1,87 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 /**
- * @interface immexRegistroform
- * @description Interfaz para el formulario de registro IMMEX.
+ * @interface datosDeLaSolicitudForm
+ * @description Interfaz para el formulario de Datos de la solicitud.
  */
-export interface immexRegistroform {
-  candidadPorPeriodo: string;
-  capacidadPeriodo: string;
-  candiadAnual: string;
-  commodityNicoDescImportacion: string;
-  nicoDatos: string;
-  exportacionDescExportacion: string;
-  FraccionDescExportacion: string;
-  fraccionArancelariaDesc: string;
-  permisoImmexDatos: number;
-  fraccionArancelariaExportacion: string;
-  productoDescExportacion: string;
-  productoArancelariaExportacion: number;
-  Nico: string;
-  fraccionDatos: number;
-  commodityCandiadAnual: number;
-  commodityCapacidadInstalda: string;
-  commodityCandidadPor: string;
-  commodityFraccionImportacion: number;
-  commodityImportacion: number;
-  commodityDescImportacion: string;
-  nicoDescImportacion: string;
+export interface datosDeLaSolicitudForm {
+  justificacion: string;
+  certificadosAutorizados: string;
+  fechaInicio: string;
+  horaDeInspeccion: string;
+  aduanaDeIngreso: string;
+  sanidadAgropecuaria: string;
+  puntoDeInspeccion: string;
+  nombreInsp: string;
+  primerApellido: number;
+  segundoApellido: string;
+  cantidadContenedores: string;
+  tipoContenedor: string;
+  medioDeTransporte: string;
+  identificacionTransporte: string;
+  esSolicitudFerros: string;
 }
+
+/**
+ * @interface forma
+ * @description Interfaz para el formulario de Datos Generales.
+ */
+export interface forma {
+  foliodel: number;
+  aduanaIngreso: string;
+  oficinaInspeccion: string;
+  puntoInspeccion: string;
+  claveUCON: string;
+  establecimientoTIFs: string;
+  nombreVeterinario: string;
+  numeroGuia: string;
+  regimen: string;
+  capturaMercancia: string;
+  animalesVivos: string;
+  coordenadas: string;
+  movilizacionNacional: string;
+  identTransporte: string;
+  puntoVerificacion: string;
+  empresaTransportista: string;
+}
+
+/**
+ * @interface formularioPago
+ * @description Interfaz para el formulario de Pago de derechos(Revisión Documental).
+ */
+export interface formularioPago {
+  exentoPago: string;
+  justificacion: string;
+  claveReferencia: string;
+  cadenaDependencia: string;
+  banco: string;
+  llavePago: string;
+  fechaFactura: string;
+  importePago: string;
+}
+/**
+ * @interface pagosDeDerechosForm
+ * @description Interfaz para el formulario de Pago de derechos.
+ */
+export interface pagosDeDerechosForm {
+  claveDeReferencia: string;
+  cadenaDependencia: string;
+  banco: string;
+  llaveDePago: string;
+  fechaInicio: string;
+  importeDePago: string;
+  claveDeReferenciaRevision: string;
+  bancoRevision: string;
+  llaveDePagoRevision: string;
+  fechaInicioRevision: string;
+  importeDePagoRevision: string;
+}
+
+
+/**
+ * @interface Mercancia
+ * @description Interfaz para los datos de la mercancía.
+ */
 export interface Mercancia {
   Partida: string;
   Tiporequisito: string;
@@ -40,7 +95,7 @@ export interface Mercancia {
 
 /**
  * @constant MERCANCIA_SERVICIO
- * @description Configuración de las columnas de la tabla para el servicio IMMEX.
+ * @description Configuración de las columnas de la tabla para el servicio MERANCIA.
  */
 export const MERCANCIA_SERVICIO = [
   {
@@ -82,7 +137,7 @@ export const MERCANCIA_SERVICIO = [
 
 /**
  * @interface mercanciaInfo
- * @description Interfaz para la información de IMMEX.
+ * @description Interfaz para la información de MERCANCIA.
  */
 export interface mercanciaInfo {
   TABLA_Columna_1: string;
@@ -97,7 +152,7 @@ export interface mercanciaInfo {
 
 /**
  * @constant EXPORTADOR_SERVICIO
- * @description Configuración de las columnas de la tabla para el servicio IMMEX.
+ * @description Configuración de las columnas de la tabla para el servicio EXPORTADOR.
  */
 export const EXPORTADOR_SERVICIO = [
   {
@@ -129,7 +184,7 @@ export const EXPORTADOR_SERVICIO = [
 
 /**
  * @interface exportadorInfo
- * @description Interfaz para la información de IMMEX.
+ * @description Interfaz para la información de EXPORTADOR.
  */
 export interface exportadorInfo {
   TABLA_Columna_1: string;
@@ -143,7 +198,7 @@ export interface exportadorInfo {
 
 /**
  * @constant DESTINO_SERVICIO
- * @description Configuración de las columnas de la tabla para el servicio IMMEX.
+ * @description Configuración de las columnas de la tabla para el servicio DESTINO.
  */
 export const DESTINO_SERVICIO = [
   {
@@ -209,7 +264,7 @@ export const DESTINO_SERVICIO = [
 
 /**
  * @interface exportadorInfo
- * @description Interfaz para la información de IMMEX.
+ * @description Interfaz para la información de Exportador.
  */
 export interface destinoInfo {
   TABLA_Columna_1: string;
@@ -229,7 +284,7 @@ export interface destinoInfo {
 
 /**
  * @constant MEDIO_SERVICIO
- * @description Configuración de las columnas de la tabla para el servicio IMMEX.
+ * @description Configuración de las columnas de la tabla para el servicio MEDIO.
  */
 export const MEDIO_SERVICIO = [
   {

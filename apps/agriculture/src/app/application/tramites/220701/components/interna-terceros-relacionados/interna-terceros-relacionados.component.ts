@@ -51,7 +51,7 @@ export class InternaTercerosRelacionadosComponent implements OnInit {
      exportadorTableDatos: exportadorInfo[] = [];
  
        /**
-    * @property {any[]} exportadorContenido - Array de datos permiso immex.
+    * @property {any[]} exportadorContenido - Array de datos MERCANCIA.
     */
    // eslint-disable-next-line @typescript-eslint/no-explicit-any
    exportadorContenido: any[] = [];
@@ -69,7 +69,7 @@ export class InternaTercerosRelacionadosComponent implements OnInit {
       destinoTableDatos: destinoInfo[] = [];
   
         /**
-     * @property {any[]} exportadorContenido - Array de datos permiso immex.
+     * @property {any[]} exportadorContenido - Array de datos MERCANCIA.
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     destinoContenido: any[] = [];

@@ -101,6 +101,7 @@
                                 id="numeroGuia"
                                 placeholder=""
                                 type="text"
+                                formControlName="numeroGuia"
                                 appUppercase
                               />
                             </div>
@@ -119,27 +120,29 @@
               <div class="row">
                 <ng-titulo titulo="Tipo de Mercancía" />
                 <div class="col-md-12">
-                  <label for="certficacion_a">Captura de datos de mercancía*:</label>
+                  <label for="capturaMercancia">Captura de datos de mercancía*:</label>
                 </div>
                 <div class="col-md-12">
                   <input
                     class="form-check-input me-3"
                     type="radio"
-                    name="certficacion"
+                    name="capturaMercancia"
+                    formControlName="capturaMercancia"
                     value="a"
                     id="certficacion_a"
                   />
-                  <label class="form-label" for="certficacion_a">Animales Vivos:</label>
+                  <label class="form-label" for="animalesVivos">Animales Vivos:</label>
                 </div>
                 <div class="col-md-12">
                   <input
                     class="form-check-input me-3"
                     type="radio"
-                    name="certficacion"
+                    name="animalesVivos"
+                    formControlName="animalesVivos"
                     value="aa"
                     id="certficacion_aa"
                   />
-                  <label class="form-label" for="certficacion_aa"
+                  <label class="form-label" for="animalesVivos"
                     >Productos Subproductos</label
                   >
                 </div>
@@ -181,6 +184,7 @@
                           [label]="movilizacionNacional.labelNombre"
                           [placeholder]="movilizacionNacional.primerOpcion"
                           [isDisabled]="false"
+                          formControlName="movilizacionNacional"
                         ></app-catalogo-select>
                       </div>
                       <div class="col-md-8 form-group">
@@ -193,7 +197,7 @@
                           readonly
                           placeholder=""
                           type="text"
-                          formControlName="transporte"
+                          formControlName="identTransporte"
                         />
                       </div>
                       <div class="col-md-4">
@@ -202,6 +206,7 @@
                           [label]="puntoVerificacion.labelNombre"
                           [placeholder]="puntoVerificacion.primerOpcion"
                           [isDisabled]="false"
+                          formControlName="puntoVerificacion"
                         ></app-catalogo-select>
                       </div>
                       <div class="col-md-8">
@@ -210,6 +215,7 @@
                           [label]="empresaTransportista.labelNombre"
                           [placeholder]="empresaTransportista.primerOpcion"
                           [isDisabled]="true"
+                          formControlName="empresaTransportista"
                         ></app-catalogo-select>
                       </div>
                     </div>

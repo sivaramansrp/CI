@@ -98,7 +98,16 @@ export const EXPEDICION_FACTURA_FECHA = {
     required: true,
     habilitado: true,
   };
-
+  export const TIPO_RADIO = [
+    {
+        label: "No",
+        value: "No"
+    },
+    {
+        label: "Sí",
+        value: "Si"
+    }
+];
 export const SECCIONES_TRAMITE_220701 = {
     PASO_1: {
         VALIDACION_SECCION_1: false,

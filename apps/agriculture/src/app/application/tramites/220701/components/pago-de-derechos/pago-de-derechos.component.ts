@@ -1,10 +1,22 @@
-import { CatalogoSelectComponent, CatalogosSelect, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PagoDeDerechos, PagoDeDerechosRevision } from '../../modelos/acuicola.model';
-import { Subject, takeUntil } from 'rxjs';
 import { AcuicolaService } from '../../servicios/acuicola.service';
+import { CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
+import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { Component } from '@angular/core';
+import { EXPEDICION_FACTURA_FECHA } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 import { FECHA_DE_PAGO } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { InputFecha } from '@libs/shared/data-access-user/src';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { PagoDeDerechos } from '../../modelos/acuicola.model';
+import { PagoDeDerechosRevision } from '../../modelos/acuicola.model';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'pago-de-derechos',
@@ -24,7 +36,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   banco!: CatalogosSelect;
 
-  fechaInicioInput: InputFecha = FECHA_DE_PAGO;
+  fechaInicioInput: InputFecha = EXPEDICION_FACTURA_FECHA;
 
   private destroyNotifier$: Subject<void> = new Subject();
 
