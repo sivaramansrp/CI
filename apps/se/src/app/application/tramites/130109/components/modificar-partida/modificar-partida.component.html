@@ -1,7 +1,7 @@
 <div class="container">
   <form [formGroup]="form">
     <div>
-      <ng-titulo titulo="Partidas de la mercancía"></ng-titulo>
+      <ng-titulo titulo="Modificar partida"></ng-titulo>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
@@ -13,7 +13,6 @@
               formControlName="cantidad"
               appUppercase
               aria-labelledby="cantidad"
-              (change)="setValoresStore(form, 'cantidad', 'setCantidad')"
             />
             <div *ngIf="esInvalido('cantidad')" class="text-danger">
               <small *ngIf="form.controls['cantidad'].hasError('required')"
@@ -39,9 +38,6 @@
               id="valorPartidaUSD"
               formControlName="valorPartidaUSD"
               aria-labelledby="valorPartidaUSD"
-              (change)="
-                setValoresStore(form, 'valorPartidaUSD', 'setvalorPartidaUSD')
-              "
             />
             <div *ngIf="esInvalido('valorPartidaUSD')" class="text-danger">
               <small
@@ -73,7 +69,6 @@
               id="descripcion"
               formControlName="descripcion"
               aria-labelledby="descripcion"
-              (change)="setValoresStore(form, 'descripcion', 'setDescripcion')"
             ></textarea>
             <div *ngIf="esInvalido('descripcion')" class="text-danger">
               <small *ngIf="form.controls['descripcion'].hasError('required')"
@@ -95,97 +90,18 @@
       <div class="row">
         <div class="col-md-8"></div>
         <div class="col-md-4 text-end">
-          <div class="btn-group">
+          <div class="btn-group mb-4">
             <button
               class="btn btn-primary me-2"
               type="button"
-              (click)="navigateToCargarArchivo()"
+              (click)="navegar()"
             >
-              Cargar archivo
+              cancelar
             </button>
-            <button
-              class="btn btn-danger"
-              type="button"
-              (click)="validarYEnviarFormulario()"
-            >
-              Agregar
-            </button>
+            <button class="btn btn-danger" type="button">modificar</button>
           </div>
         </div>
       </div>
     </div>
   </form>
-
-  <div class="row">
-    <div>
-      <h6>Partidas</h6>
-      <div *ngIf="mostrarTabla">
-        <app-tabla-dinamica
-          [configuracionTabla]="tableHeaderData"
-          [datos]="tableBodyData"
-          [tipoSeleccionTabla]="CHECKBOX"
-          (listaDeFilaSeleccionada)="handleListaDeFilaSeleccionada($event)"
-        >
-        </app-tabla-dinamica>
-      </div>
-
-      <form [formGroup]="formForTotalCount">
-        <div class="row">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="cantidadTotal"
-                >Cantidad total:</label
-              >
-              <input
-                class="form-control"
-                type="number"
-                id="cantidadTotal"
-                formControlName="cantidadTotal"
-                aria-labelledby="cantidadTotal"
-              />
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="valorTotalUSD"
-                >Valor Total USD:</label
-              >
-              <input
-                class="form-control"
-                type="number"
-                id="valorTotalUSD"
-                formControlName="valorTotalUSD"
-                aria-labelledby="valorTotalUSD"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div class="row mt-5">
-          <div class="col-md-4"></div>
-          <div class="col-md-8">
-            <hr />
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-6 col-sm-6"></div>
-          <div class="col-md-6 col-sm-6 text-end">
-            <div class="btn-group">
-              <button class="btn btn-primary me-2" type="button">
-                Elimina Partida
-              </button>
-              <button
-                class="btn btn-danger"
-                type="button"
-                (click)="navegarParaModificarPartida()"
-              >
-                Mofificar partida
-              </button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
 </div>

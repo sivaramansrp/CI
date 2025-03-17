@@ -1,25 +1,36 @@
-import { CommonModule } from '@angular/common';
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/**
+ * @component
+ * @name PartidasDeLaComponent
+ * @description Este componente se utiliza para gestionar las partidas de una tabla dinámica. Proporciona funcionalidades para editar partidas, calcular totales y gestionar la selección de filas.
+ * @selector app-partidas-de-la
+ * @standalone true
+ * @imports CommonModule, ReactiveFormsModule, TituloComponent, UppercaseDirective, AlertComponent, TableComponent, CatalogoSelectComponent, TablaDinamicaComponent
+ * @templateUrl ./partidas-de-la.component.html
+ * @styleUrl ./partidas-de-la.component.scss
+ */
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { UppercaseDirective } from '@libs/shared/data-access-user/src/tramites/directives/Uppercase/uppercase.directive';
-
-import { Component, OnInit } from '@angular/core';
-import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { TEXTOS } from '@libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
-import { TableComponent } from '@libs/shared/data-access-user/src/tramites/components/table/table.component';
-
-import establecimientoTable from '@libs/shared/theme/assets/json/130109/partidas-de-la.json';
-import fraccionArancelariaTIGIE from '@libs/shared/theme/assets/json/130109/partidas-de-la-catalogos-select.json';
-
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-
+import { Subject, map, takeUntil } from 'rxjs';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import PartidasdelaTable from '@libs/shared/theme/assets/json/130109/partidas-de-la.json';
+import { Router } from '@angular/router';
+import { TEXTOS } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { Tramite130109Query } from '../../estados/queries/tramite130109.query';
+import { Tramite130109Store } from '../../estados/tramites/tramites130109.store';
+import { UppercaseDirective } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-partidas-de-la',
   standalone: true,
@@ -31,77 +42,114 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
     AlertComponent,
     TableComponent,
     CatalogoSelectComponent,
+    TablaDinamicaComponent,
   ],
   templateUrl: './partidas-de-la.component.html',
   styleUrl: './partidas-de-la.component.scss',
 })
 export class PartidasDeLaComponent implements OnInit {
   /**
-   * Formulario reactivo utilizado para gestionar los datos de las partidas de la mercancía.
-   * @type {FormGroup}
+   * @property {any} filaSeleccionada
+   * @description Fila seleccionada de la tabla.
+   */
+  filaSeleccionada: any = null;
+
+  /**
+   * @property {Subject<void>} destroyed$
+   * @description Sujeto utilizado para gestionar el ciclo de vida del componente y liberar recursos.
+   */
+  private destroyed$: Subject<void> = new Subject();
+  /**
+   * @property {boolean} mostrarTabla
+   * @description Indica si la tabla debe mostrarse en el componente.
+   */
+  mostrarTabla = false;
+  /**
+   * @property {FormGroup} form
+   * @description Formulario reactivo utilizado para gestionar los datos de las partidas de mercancía.
    */
   form!: FormGroup;
 
   /**
-   * Formulario reactivo utilizado para gestionar los totales de cantidad y valor en USD.
-   * @type {FormGroup}
+   * @property {FormGroup} formForTotalCount
+   * @description Formulario reactivo utilizado para gestionar los totales de cantidad y valor en USD.
    */
   formForTotalCount!: FormGroup;
 
   /**
-   * Constantes de texto utilizadas en el componente.
-   * @type {any}
+   * @property {any} TEXTOS
+   * @description Constantes de texto utilizadas en el componente.
    */
   TEXTOS = TEXTOS;
 
   /**
-   * Datos del catálogo de fracciones arancelarias TIGIE.
-   * @type {CatalogosSelect}
+   * @property {ConfiguracionColumna<any>[]} tableHeaderData
+   * @description Encabezados de la tabla.
    */
-  fraccionArancelariaTIGIE: Catalogo[] = fraccionArancelariaTIGIE.catalogos;
+  tableHeaderData: ConfiguracionColumna<any>[] = [];
 
   /**
-   * Datos del encabezado de la tabla.
-   * @type {string[]}
+   * @property {any[]} tableBodyData
+   * @description Datos del cuerpo de la tabla.
    */
-  tableHeaderData: string[] = [];
+
+  tableBodyData: any[] = [];
+  /**
+   * @property {TablaSeleccion} CHECKBOX
+   * @description Tipo de selección de la tabla.
+   */
+  CHECKBOX = TablaSeleccion.CHECKBOX;
 
   /**
-   * Datos del cuerpo de la tabla.
-   * @type {Array<{ tbodyData: string[] }>}
+   * @property {any} getEstablecimientoTableData
+   * @description Datos del establecimiento provenientes de un archivo JSON.
    */
-  tableBodyData: { tbodyData: string[] }[] = [];
+  public getEstablecimientoTableData = PartidasdelaTable;
 
   /**
-   * Datos de la tabla de establecimiento.
-   * @type {any}
+   * Constructor
+   * @param {FormBuilder} fb - Servicio de creación de formularios
+   * @param {Router} router - Angular router
+   * @param {HttpClient} http - HTTP client service
+   * @param {Tramite130109Store} tramite130109Store - State management store
+   * @param {Tramite130109Query} tramite130109Query - Query service
    */
-  public getEstablecimientoTableData = establecimientoTable;
-
-  /**
-   * Constructor del formulario reactivo.
-   * @param {FormBuilder} fb - Constructor del formulario reactivo.
-   */
-  constructor(private fb: FormBuilder) {
-    // Constructor del componente
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private tramite130109Store: Tramite130109Store,
+    private tramite130109Query: Tramite130109Query
+  ) {
+    // Constructor necesario para la inyección de dependencias
   }
 
   /**
-   * Método de inicialización del componente.
+   * @method ngOnInit
+   * @description Ciclo de vida de Angular que inicializa el formulario, obtiene los datos de la tabla y calcula los totales.
    */
   ngOnInit(): void {
     this.crearFormulario();
     this.formularioTotalCount();
     this.getEstablecimiento();
     this.calculateTotals();
-    /* eslint-disable dot-notation */
-    this.formForTotalCount.controls['cantidadTotal'].disable();
-    this.formForTotalCount.controls['valorTotalUSD'].disable();
-    /* eslint-enable dot-notation */
+
+    this.tramite130109Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.form.patchValue({
+            cantidad: seccionState.cantidad,
+            valorPartidaUSD: seccionState.valorPartidaUSD,
+            descripcion: seccionState.descripcion,
+          });
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Método para crear el formulario reactivo.
+   * @method crearFormulario
+   * @description Crea el formulario reactivo para gestionar los datos de las partidas.
    */
   crearFormulario(): void {
     this.form = this.fb.group({
@@ -113,7 +161,6 @@ export class PartidasDeLaComponent implements OnInit {
           Validators.maxLength(18),
         ],
       ],
-      fraccionArancelariaTIGIE: ['', [Validators.required]],
       descripcion: ['', [Validators.required, Validators.maxLength(255)]],
       valorPartidaUSD: [
         '',
@@ -128,7 +175,8 @@ export class PartidasDeLaComponent implements OnInit {
   }
 
   /**
-   * Método para calcular los totales de cantidad y valor en USD.
+   * @method calculateTotals
+   * @description Calcula los totales de cantidad y valor en USD basándose en los datos de la tabla.
    */
   calculateTotals(): void {
     const CANTIDAD_TOTAL = this.tableBodyData.reduce(
@@ -141,15 +189,15 @@ export class PartidasDeLaComponent implements OnInit {
         sum + parseFloat(item.tbodyData[5]),
       0
     );
-
-    /* eslint-disable dot-notation */
+    // eslint-disable-next-line dot-notation
     this.formForTotalCount.controls['cantidadTotal'].setValue(CANTIDAD_TOTAL);
+    // eslint-disable-next-line dot-notation
     this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTAL_USD);
-    /* eslint-enable dot-notation */
   }
 
   /**
-   * Método para crear el formulario de totales.
+   * @method formularioTotalCount
+   * @description Crea el formulario reactivo para gestionar los totales.
    */
   formularioTotalCount(): void {
     this.formForTotalCount = this.fb.group({
@@ -157,18 +205,34 @@ export class PartidasDeLaComponent implements OnInit {
       valorTotalUSD: [{ value: '', disabled: true }],
     });
   }
-
   /**
-   * Método para manejar la selección de fracción arancelaria TIGIE.
-   * @param {Catalogo} aduana - Datos del catálogo seleccionado.
-   */
-
-  /**
-   * Método para obtener los datos de establecimiento.
+   * @method getEstablecimiento
+   * @description Carga los datos de establecimiento en la tabla desde un archivo JSON.
    */
   public getEstablecimiento(): void {
-    this.tableHeaderData = this.getEstablecimientoTableData.tableHeader;
+    this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map(
+      (header, index) => ({
+        encabezado: header,
+        clave: (fila: any): string => fila.tbodyData[index],
+        orden: index,
+      })
+    );
+
     this.tableBodyData = this.getEstablecimientoTableData.tableBody;
+  }
+
+  /**
+   * @method handleListaDeFilaSeleccionada
+   * @description Maneja la selección de múltiples filas en la tabla.
+   * @param {any[]} filasSeleccionadas Lista de filas seleccionadas.
+   */
+  handleListaDeFilaSeleccionada(filasSeleccionadas: any[]): void {
+    this.filaSeleccionada = filasSeleccionadas.length
+      ? filasSeleccionadas[0]
+      : null;
+    if (this.filaSeleccionada) {
+      this.tramite130109Store.storeTableValues(this.filaSeleccionada);
+    }
   }
 
   /**
@@ -177,11 +241,14 @@ export class PartidasDeLaComponent implements OnInit {
   validarYEnviarFormulario(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      /*eslint-disable-next-line no-console*/
       console.log(
         'El formulario tiene errores. Corríjalos antes de continuar.'
       );
     } else {
+      /*eslint-disable-next-line no-console*/
       console.log('Formulario enviado con éxito', this.form.value);
+      this.mostrarTabla = true;
     }
   }
 
@@ -195,5 +262,33 @@ export class PartidasDeLaComponent implements OnInit {
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
+  }
+
+  /**
+   * Navega a la página de carga de archivo.
+   */
+  navigateToCargarArchivo(): void {
+    this.router.navigate(['/pago/importacion/carger-archivo']);
+  }
+
+  /**
+   * @method navegarParaModificarPartida
+   * @description Navega a la página de modificación de partida con la fila seleccionada.
+   */
+  navegarParaModificarPartida(): void {
+    if (this.filaSeleccionada) {
+      this.router.navigate(['/pago/importacion/modificar-partida'], {
+        state: { filaSeleccionada: this.filaSeleccionada },
+      });
+    }
+  }
+
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite130109Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite130109Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 }

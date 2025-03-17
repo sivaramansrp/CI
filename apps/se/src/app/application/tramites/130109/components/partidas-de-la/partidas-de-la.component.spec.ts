@@ -1,99 +1,149 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
 import { PartidasDeLaComponent } from './partidas-de-la.component';
-import { CatalogosService } from '@ng-mf/data-access-user';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Tramite130109Query } from '../../estados/queries/tramite130109.query';
+import { Tramite130109Store } from '../../estados/tramites/tramites130109.store';
+import { of, Subject } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 describe('PartidasDeLaComponent', () => {
   let component: PartidasDeLaComponent;
   let fixture: ComponentFixture<PartidasDeLaComponent>;
-  let mockCatalogosService;
+  let mockRouter: any;
+  let mockTramite130109Query: any;
+  let mockTramite130109Store: any;
 
   beforeEach(async () => {
-    mockCatalogosService = {
-      getCatalogos: jasmine.createSpy('getCatalogos').and.returnValue(of({ /* mock data */ }))
+ 
+    mockRouter = { navigate: jest.fn() };
+
+    mockTramite130109Query = {
+      selectSolicitud$: new Subject(),
     };
 
-    await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [PartidasDeLaComponent],
-      providers: [{ provide: CatalogosService, useValue: mockCatalogosService }]
-    }).compileComponents();
-  });
+   
+    mockTramite130109Store = {
+      storeTableValues: jest.fn(),
+    };
 
-  beforeEach(() => {
+    
+    await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, CommonModule, PartidasDeLaComponent],
+      providers: [
+        FormBuilder,
+        { provide: Router, useValue: mockRouter },
+        { provide: Tramite130109Query, useValue: mockTramite130109Query },
+        { provide: Tramite130109Store, useValue: mockTramite130109Store },
+      ],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(PartidasDeLaComponent);
     component = fixture.componentInstance;
+
+   
+    component.getEstablecimientoTableData = {
+      tableHeader: ['Column1', 'Column2', 'Column3'],
+      tableBody: [
+        { tbodyData: ['10', '', '', 'Description1', '', '100'] },
+        { tbodyData: ['20', '', '', 'Description2', '', '200'] },
+      ],
+    };
+
+    
+    component.getEstablecimiento();
+
+    
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have invalid form when empty', () => {
-    expect(component.form.valid).toBeFalsy();
+  it('Debería inicializar los formularios correctamente', () => {
+    expect(component.form).toBeDefined();
+    expect(component.formForTotalCount).toBeDefined();
   });
 
-  it('should validate cantidad field', () => {
-    const cantidad = component.form.controls['cantidad'];
-    expect(cantidad.valid).toBeFalsy();
-
-    cantidad.setValue('');
-    expect(cantidad.hasError('required')).toBeTruthy();
-
-    cantidad.setValue('abc');
-    expect(cantidad.hasError('pattern')).toBeTruthy();
-
-    cantidad.setValue('1234567890123456789');
-    expect(cantidad.hasError('maxlength')).toBeTruthy();
-
-    cantidad.setValue('123456');
-    expect(cantidad.valid).toBeTruthy();
+  it('Debería deshabilitar los controles del formulario de recuento total en la inicialización', () => {
+    expect(component.formForTotalCount.get('cantidadTotal')?.disabled).toBe(true);
+    expect(component.formForTotalCount.get('valorTotalUSD')?.disabled).toBe(true);
   });
 
-  it('should validate fraccionArancelariaTIGIE field', () => {
-    const fraccionArancelariaTIGIE = component.form.controls['fraccionArancelariaTIGIE'];
-    expect(fraccionArancelariaTIGIE.valid).toBeFalsy();
-
-    fraccionArancelariaTIGIE.setValue('');
-    expect(fraccionArancelariaTIGIE.hasError('required')).toBeTruthy();
-
-    fraccionArancelariaTIGIE.setValue('some value');
-    expect(fraccionArancelariaTIGIE.valid).toBeTruthy();
+  it('Debería calcular los totales correctamente', () => {
+    component.calculateTotals();
+    expect(component.formForTotalCount.get('cantidadTotal')?.value).toBe(30); 
+    expect(component.formForTotalCount.get('valorTotalUSD')?.value).toBe(300); 
   });
 
-  it('should validate descripcion field', () => {
-    const descripcion = component.form.controls['descripcion'];
-    expect(descripcion.valid).toBeFalsy();
+  it('debe actualizar el formulario con los datos de las filas de la tabla cuando se llama a handleListaDeFilaSeleccionada', () => {
+    const filaSeleccionada = { tbodyData: ['10', '', '', 'Sample description', '', '50'] };
+    component.handleListaDeFilaSeleccionada([filaSeleccionada]);
 
-    descripcion.setValue('');
-    expect(descripcion.hasError('required')).toBeTruthy();
-
-    descripcion.setValue('a'.repeat(256));
-    expect(descripcion.hasError('maxlength')).toBeTruthy();
-
-    descripcion.setValue('Valid description');
-    expect(descripcion.valid).toBeTruthy();
+    expect(component.filaSeleccionada).toEqual(filaSeleccionada);
+    expect(mockTramite130109Store.storeTableValues).toHaveBeenCalledWith(filaSeleccionada);
   });
 
-  it('should validate valorPartidaUSD field', () => {
-    const valorPartidaUSD = component.form.controls['valorPartidaUSD'];
-    expect(valorPartidaUSD.valid).toBeFalsy();
+  it('No se debe actualizar el formulario cuando no hay ninguna fila seleccionada en handleListaDeFilaSeleccionada', () => {
+    component.handleListaDeFilaSeleccionada([]);
+    expect(component.filaSeleccionada).toBeNull();
+  });
 
-    valorPartidaUSD.setValue('');
-    expect(valorPartidaUSD.hasError('required')).toBeTruthy();
+  it('Debería navegar a la página de carga de archivos cuando se llama a browseToCargarArchivo', () => {
+    component.navigateToCargarArchivo();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/pago/importacion/carger-archivo']);
+  });
 
-    valorPartidaUSD.setValue('-1');
-    expect(valorPartidaUSD.hasError('min')).toBeTruthy();
+  it('debe navegar para modificar la página con la fila seleccionada cuando se llama navegarParaModificarPartida', () => {
+    component.filaSeleccionada = { data: 'mockRow' };
+    component.navegarParaModificarPartida();
 
-    valorPartidaUSD.setValue('abc');
-    expect(valorPartidaUSD.hasError('pattern')).toBeTruthy();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(
+      ['/pago/importacion/modificar-partida'],
+      { state: { filaSeleccionada: component.filaSeleccionada } }
+    );
+  });
 
-    valorPartidaUSD.setValue('123456789012345678901');
-    expect(valorPartidaUSD.hasError('maxlength')).toBeTruthy();
+  it('No debe navegar para modificar la página si no hay ninguna fila seleccionada', () => {
+    component.filaSeleccionada = null;
+    component.navegarParaModificarPartida();
 
-    valorPartidaUSD.setValue('12345.67');
-    expect(valorPartidaUSD.valid).toBeTruthy();
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
+  });
+
+  it('debe validar el formulario correctamente', () => {
+    component.form.setValue({
+      cantidad: '',
+      descripcion: '',
+      valorPartidaUSD: '',
+    });
+
+    expect(component.form.invalid).toBe(true);
+    component.validarYEnviarFormulario();
+    expect(component.mostrarTabla).toBe(false);
+  });
+
+  it('Debe mostrar la tabla cuando el formulario sea válido', () => {
+    component.form.setValue({
+      cantidad: '10',
+      descripcion: 'Test description',
+      valorPartidaUSD: '100.00',
+    });
+
+    component.validarYEnviarFormulario();
+    expect(component.mostrarTabla).toBe(true);
+  });
+
+  it('debe determinar si un control de formulario no es válido', () => {
+    component.form.get('cantidad')?.setValue('');
+    component.form.get('cantidad')?.markAsTouched();
+
+    expect(component.esInvalido('cantidad')).toBe(true);
+  });
+
+  afterEach(() => {
+    component['destroyed$'].next();
+    component['destroyed$'].complete();
   });
 });

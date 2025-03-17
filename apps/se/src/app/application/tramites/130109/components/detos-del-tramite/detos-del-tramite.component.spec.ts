@@ -1,80 +1,76 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DetosDelTramiteComponent } from './detos-del-tramite.component';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ReactiveFormsModule } from '@angular/forms';
+import { DetosDelTramiteComponent } from './detos-del-tramite.component';
 
 describe('DetosDelTramiteComponent', () => {
   let component: DetosDelTramiteComponent;
   let fixture: ComponentFixture<DetosDelTramiteComponent>;
   let httpMock: HttpTestingController;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        ReactiveFormsModule,
-        HttpClientTestingModule
-      ],
-      declarations: [
-        DetosDelTramiteComponent,
-        CatalogoSelectComponent,
-        InputRadioComponent,
-        TituloComponent
-      ],
-      providers: [FormBuilder]
-    }).compileComponents();
-  });
-
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        DetosDelTramiteComponent, 
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+      ],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(DetosDelTramiteComponent);
     component = fixture.componentInstance;
     httpMock = TestBed.inject(HttpTestingController);
-    fixture.detectChanges();
 
-    // Mock the API request expected on component initialization
-    const req = httpMock.expectOne('/assets/json/130109/solicitude-options.json');
-    req.flush({ options: [], defaultSelect: '' }); // Send an empty mock response
+    fixture.detectChanges(); 
+    const req = httpMock.expectOne('/assets/json/130111/solicitude-options.json');
+    req.flush({ options: [], defaultSelect: 'Inicial' }); 
   });
 
   afterEach(() => {
-    httpMock.verify(); // Ensure no open requests
+    httpMock.verify(); 
   });
 
-  it('should create component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.formDelTramite).toBeDefined();
-    expect(component.formDelTramite.controls['solicitud']).toBeDefined();
-    expect(component.formDelTramite.controls['tipoDocumento']).toBeDefined();
-    expect(component.formDelTramite.controls['fraccion']).toBeDefined();
+  it('Debe inicializar el formulario con los controles necesarios', () => {
+    expect(component.formDelTramite.contains('solicitud')).toBeTruthy();
+    expect(component.formDelTramite.contains('tipoDocumento')).toBeTruthy();
+    expect(component.formDelTramite.contains('fraccion')).toBeTruthy();
   });
 
-  it('should fetch solicitude options and update component state', () => {
+  it('Debería marcar "fraccion" como inválida si está vacía', () => {
+    const fraccionControl = component.formDelTramite.get('fraccion');
+    fraccionControl?.setValue('');
+    expect(fraccionControl?.valid).toBeFalsy();
+    expect(fraccionControl?.errors).toEqual({ required: true });
+  });
+
+  it('Debería obtener las opciones de solicitud de la API', () => {
     const mockResponse = {
-      options: [{ value: '1', label: 'Test Data' }],
-      defaultSelect: '1'
+      options: [{ id: 1, name: 'Option 1' }],
+      defaultSelect: 'Option 1',
     };
 
-    component.fetchSolicitudeOptions();
+    component.fetchSolicitudeOptions(); 
 
-    const req = httpMock.expectOne('/assets/json/130109/solicitude-options.json');
+    const req = httpMock.expectOne('/assets/json/130111/solicitude-options.json');
     expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    req.flush(mockResponse); 
 
     expect(component.solicitude).toEqual(mockResponse.options);
-    expect(component.defaultSelect).toEqual(mockResponse.defaultSelect);
+    expect(component.defaultSelect).toBe(mockResponse.defaultSelect);
   });
 
-  it('should update selectedValue when onValueChange is called', () => {
-    component.onValueChange('TestValue');
-    expect(component.selectedValue).toEqual('TestValue');
+  it('debe actualizar el valor seleccionado en "onValueChange"', () => {
+    const newValue = 'Nuevo Valor';
+    component.onValueChange(newValue);
+    expect(component.selectedValue).toBe(newValue);
   });
 
-  it('should set selectedValue to "Nuevo" when tipoTransporte is called', () => {
+  it('Debe establecer el valor predeterminado para el método tipoTransporte', () => {
     component.tipoTransporte();
-    expect(component.selectedValue).toEqual('Nuevo');
+    expect(component.selectedValue).toBe('Nuevo');
   });
 });
