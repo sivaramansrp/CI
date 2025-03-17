@@ -134,6 +134,13 @@ const ROUTES: Routes = [
       import('./tramites/80208/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
       ),
+  },
+  {
+    path: 'exportacion-minerales',
+    loadChildren: () =>
+      import('./tramites/130202/exportacion-minerales-de-hierro.module').then(
+        (m) => m.ExportacionMineralesDeHierroModule
+      ),
   }
 ];
 
