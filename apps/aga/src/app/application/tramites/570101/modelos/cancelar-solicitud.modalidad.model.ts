@@ -3,7 +3,7 @@ export interface CancelarSolicitudForm {
     folioSVEX: string;
     folioVUCEM: string;
     tipoDeCancelacion: string;
-    horaIncio: string;
+    horaInicio: string;
     horaFin: string;
     descripcion: string;
     fechasSeleccionadas: { selectedFechas: string[] }
