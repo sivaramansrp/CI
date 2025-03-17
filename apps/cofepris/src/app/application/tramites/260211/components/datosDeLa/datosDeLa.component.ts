@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlDar, AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { DomicilloComponent } from '../domicillo/domicillo.component';
 
 @Component({
   selector: 'app-datos-de-la',
@@ -11,6 +12,7 @@ import { AlDar, AlertComponent, TituloComponent } from '@libs/shared/data-access
     ReactiveFormsModule,
     AlertComponent,
     TituloComponent,
+    DomicilloComponent
   ],
   templateUrl: './datosDeLa.component.html',
   styleUrl: './datosDeLa.component.css',

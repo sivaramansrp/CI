@@ -1,0 +1,26 @@
+<ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
+    <form [formGroup]="domicilio">
+        <div class="row>">
+            <div class="col-md-4">
+                <div class="form-group">
+                <label class="form-label" for="codigoPostal">Código postal*:</label>
+                <input
+                    class="form-control"
+                    id="codigoPostal"
+                    placeholder=""
+                    type="text"
+                    formControlName="codigoPostal"
+                />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <!-- <app-catalogo-select
+                    [catalogo]="estado"
+                    formControlName="estado"
+                    [label]="'Estado*:'"
+                    [required]="true"
+                    name="estado"
+                ></app-catalogo-select> -->
+            </div>
+        </div>
+    </form>
