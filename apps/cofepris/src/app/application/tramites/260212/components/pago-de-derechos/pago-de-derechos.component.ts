@@ -28,7 +28,7 @@ import { TableComponent } from '@ng-mf/data-access-user';
   standalone: true,
   imports: [CommonModule, TablaDinamicaComponent, TituloComponent, TableComponent, ReactiveFormsModule],
   templateUrl: './pago-de-derechos.component.html',
-  styleUrl: './pago-de-derechos.component.css',
+  styleUrl: './pago-de-derechos.component.scss',
 })
 export class PagoDeDerechosComponent {
   

@@ -21,6 +21,8 @@ import {
   TERCEROS_RELACIONADOS_FACTURADOR,
   TERCEROS_RELACIONADOS_PROVEEDOR,
 } from '../../constantes/permiso-maquila.enum';
+import { ModalComponent } from '../modal/modal.component';
+import { selectedRowData, tableData } from '../../models/permiso-maquila.models';
 
 /**
  * Constante que contiene el texto de alerta que se mostrará cuando las tablas con asterisco sean obligatorias.
@@ -33,49 +35,6 @@ import {
  */
 const TERCEROS_TEXTO_DE_ALERTA =
   'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
-
-
-/**
- * Interfaz que representa los datos de una fila de la tabla.
- * 
- * @interface tableData
- * @description Esta interfaz se utiliza para definir la estructura de los datos que se mostrarán en una fila de la tabla.
- * Cada fila contiene un conjunto de datos representado por un arreglo de cadenas (`string[]`).
- * 
- * @example
- * const fila: tableData = { 
- *   tbodyData: ['dato1', 'dato2', 'dato3']
- * };
- */
-interface tableData {
-  /**
-   * Datos de la fila representados por un arreglo de cadenas.
-   * 
-   * @property {string[]} tbodyData - Datos de la fila que se mostrarán en la tabla.
-   */
-  tbodyData: string[];
-}
-
-/**
- * Interfaz que representa los datos de una fila seleccionada de la tabla.
- * 
- * @interface selectedRowData
- * @description Esta interfaz extiende la interfaz `tableData` y agrega un campo adicional para controlar si la fila está seleccionada o no.
- * 
- * @example
- * const filaSeleccionada: selectedRowData = { 
- *   checked: true, 
- *   tbodyData: ['dato1', 'dato2', 'dato3']
- * };
- */
-interface selectedRowData extends tableData {
-  /**
-   * Indica si la fila está seleccionada o no.
-   * 
-   * @property {boolean} checked - Estado de selección de la fila.
-   */
-  checked: boolean;
-}
 
 
 /**
@@ -107,6 +66,7 @@ interface selectedRowData extends tableData {
     AlertComponent,
     FormsModule,
     ReactiveFormsModule,
+    ModalComponent
   ],
 })
 
@@ -205,17 +165,17 @@ export class TercerosRelacionadosComponent implements OnInit {
       pais: new FormControl('', [Validators.required]),
       estadoLocalidad: new FormControl('', [Validators.required]),
       municipioAlcaldia: new FormControl('', [Validators.required]),
-      localidad: new FormControl('', [Validators.required]),
+      localidad: new FormControl(''),
       entidadFederativa: new FormControl('', [Validators.required]),
       codigoPostaloEquivalente: new FormControl('', [Validators.required]),
-      colonia: new FormControl('', [Validators.required]),
-      coloniaoEquivalente: new FormControl('', [Validators.required]),
+      colonia: new FormControl(''),
+      coloniaoEquivalente: new FormControl(''),
       calle: new FormControl('', [Validators.required]),
       numeroExterior: new FormControl('', [Validators.required]),
-      numeroInterior: new FormControl('', [Validators.required]),
-      lada: new FormControl('', [Validators.required]),
-      telefono: new FormControl('', [Validators.required]),
-      correoElectronico: new FormControl('', [Validators.required]),
+      numeroInterior: new FormControl(''),
+      lada: new FormControl(''),
+      telefono: new FormControl(''),
+      correoElectronico: new FormControl(''),
     });
   }
 
