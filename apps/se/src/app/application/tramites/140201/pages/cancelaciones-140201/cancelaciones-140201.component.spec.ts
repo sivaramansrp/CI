@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Cancelaciones140201Component } from './cancelaciones-140201.component';
 
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
 import { WizardComponent, DatosPasos, ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../../80205/models/datos-info.model';
 import { CANCELACIONES_140201 } from '../../constantes/cancelaciones-140201.enum';
@@ -28,22 +30,38 @@ class MockWizardComponent {
 describe('Cancelaciones140201Component', () => {
   let component: Cancelaciones140201Component;
   let fixture: ComponentFixture<Cancelaciones140201Component>;
-  let wizardComponent: MockWizardComponent;
+  let wizardComponentMock: jest.Mocked<WizardComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [Cancelaciones140201Component, MockWizardComponent]
-    }).compileComponents();
+    wizardComponentMock = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as jest.Mocked<WizardComponent>;
 
+    await TestBed.configureTestingModule({
+      imports: [WizardComponent], 
+      declarations: [Cancelaciones140201Component],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA], 
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
     fixture = TestBed.createComponent(Cancelaciones140201Component);
     component = fixture.componentInstance;
-    wizardComponent = TestBed.createComponent(MockWizardComponent).componentInstance;
-    component.wizardComponent = wizardComponent;
+
+    component.wizardComponent = wizardComponentMock;
+
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('should not update indice if accion is invalid', () => {
+    const event: AccionBoton = { valor: 10, accion: 'invalid' };
+
+    component.getValorIndice(event);
+
+    expect(component.indice).toBe(1); 
+    expect(wizardComponentMock.siguiente).not.toHaveBeenCalled();
+    expect(wizardComponentMock.atras).not.toHaveBeenCalled();
   });
 
   it('should have initial indice value as 1', () => {
@@ -68,22 +86,22 @@ describe('Cancelaciones140201Component', () => {
   });
 
   it('should update indice and call wizardComponent.siguiente when getValorIndice is called with accion "cont"', () => {
-    const spySiguiente = jest.spyOn(wizardComponent, 'siguiente');
+    const spySiguiente = jest.spyOn(wizardComponentMock, 'siguiente');
     component.getValorIndice({ valor: 2, accion: 'cont' });
     expect(component.indice).toBe(2);
     expect(spySiguiente).toHaveBeenCalled();
   });
 
   it('should update indice and call wizardComponent.atras when getValorIndice is called with accion "atras"', () => {
-    const spyAtras = jest.spyOn(wizardComponent, 'atras');
+    const spyAtras = jest.spyOn(wizardComponentMock, 'atras');
     component.getValorIndice({ valor: 2, accion: 'atras' });
     expect(component.indice).toBe(2);
     expect(spyAtras).toHaveBeenCalled();
   });
 
   it('should not update indice or call wizardComponent methods when getValorIndice is called with invalid valor', () => {
-    const spySiguiente = jest.spyOn(wizardComponent, 'siguiente');
-    const spyAtras = jest.spyOn(wizardComponent, 'atras');
+    const spySiguiente = jest.spyOn(wizardComponentMock, 'siguiente');
+    const spyAtras = jest.spyOn(wizardComponentMock, 'atras');
     component.getValorIndice({ valor: 5, accion: 'cont' });
     expect(component.indice).toBe(1);
     expect(spySiguiente).not.toHaveBeenCalled();

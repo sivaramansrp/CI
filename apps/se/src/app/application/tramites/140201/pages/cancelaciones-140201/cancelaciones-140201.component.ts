@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../../80205/models/datos-info.model';
 import { CANCELACIONES_140201 } from '../../constantes/cancelaciones-140201.enum';
-
+//getCancelacionDeAutorizaciones
 @Component({
   selector: 'app-cancelaciones-140201',
   templateUrl: './cancelaciones-140201.component.html',
