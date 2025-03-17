@@ -50,6 +50,13 @@ const routes: Routes = [
       import('./tramites/220402/pantallas-captura.module').then(
         (m) => m.PantallasCapturaModule
       )
+  },
+  {
+    path: 'certificado-exportacion',
+    loadChildren: () =>
+      import('./tramites/220403/exportaccion-acuicola.module').then(
+        (m) => m.ExportaccionAcuicolaModule
+      )
   }
 ];
 
