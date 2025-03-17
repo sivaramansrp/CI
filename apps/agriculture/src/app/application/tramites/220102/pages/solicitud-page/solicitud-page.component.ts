@@ -63,7 +63,7 @@ export class SolicitudPageComponent {
    */
   constructor(private readonly seccionStore: SeccionLibStore) {
     this.seccionStore.establecerFormaValida([false]);
-    this.seccionStore.establecerSeccion([true]);
+    this.seccionStore.establecerSeccion([false]);
   }
 
   /**

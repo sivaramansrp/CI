@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { IMPORTANTE } from '../../constantes/fitosanitario.enum';
 
 
 @Component({
@@ -6,4 +7,6 @@ import { Component } from '@angular/core';
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.css',
 })
-export class DatosMercanciaComponent { }
+export class DatosMercanciaComponent {
+  IMPORTANTES: string = IMPORTANTE.Importante
+}
