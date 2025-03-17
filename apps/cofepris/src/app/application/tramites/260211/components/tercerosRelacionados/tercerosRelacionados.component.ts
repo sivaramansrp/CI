@@ -128,10 +128,10 @@ export class TercerosRelacionadosComponent {
     this.getRegistroForm(); // Carga los datos en el formulario
   }
 
-  // abrirModalrequerida(){
-  //   this.modal = 'show'; // Muestra el modal
-  //   this.getFormrequerida();
-  // }
+  abrirModalrequerida(){
+    this.modal = 'show'; // Muestra el modal
+    this.getFormrequerida();
+  }
 
   getRegistroForm() {
 
@@ -163,50 +163,27 @@ export class TercerosRelacionadosComponent {
       }
 
 
-      // getFormrequerida(){
+      getFormrequerida(){
 
-      //   this.requeridaForm = this.fb.group({
-      //        profisica: ["", Validators.required],
-      //        promoral: ["", Validators.required],
-      //        tiporfc: ['', Validators.required],
-      //        tipocurp: ['', Validators.required],
-      //        tipodenominacion: ['', Validators.required],
-      //        tipopail: ['', Validators.required],
-      //        numeroEstado: ['', Validators.required],
-      //       numeroCalle: ['', Validators.required],
-      //        numbroexperior: ['', Validators.required],
-      //        numbrointerior: [''],
-      //        numbrolada: [''],
-      //        numerotelefono: [''],
-      //        tipocorreoElectronico: ['', [Validators.required, Validators.email]]
-      //      });
+        this.requeridaForm = this.fb.group({
+             profisica: ["", Validators.required],
+             moral: ["", Validators.required],
+             tiporfc: ['', Validators.required],
+             tipocurp: ['', Validators.required],
+             tipodenominacion: ['', Validators.required],
+             tipopail: ['', Validators.required],
+             numeroEstado: ['', Validators.required],
+            numeroCalle: ['', Validators.required],
+             numbroexperior: ['', Validators.required],
+             numbrointerior: [''],
+             numbrolada: [''],
+             numerotelefono: [''],
+             tipocorreoElectronico: ['', [Validators.required, Validators.email]]
+           });
           
-      // }
+      }
 
-      // setupCurpVisibilityListener(): void {
-      //   this.proveedorForm.get('nacional')?.valueChanges.subscribe(() => {
-      //     this.updateCurpVisibility();
-      //   });
-      //   this.proveedorForm.get('moral')?.valueChanges.subscribe(() => {
-      //     this.updateCurpVisibility();
-      //   });
-      // }
-    
-      // updateCurpVisibility(): void {
-      //   const nacional = this.proveedorForm.get('nacional')?.value;
-      //   const moral = this.proveedorForm.get('moral')?.value;
-    
-      //   this.hideCurp = nacional && moral;
-    
-      //   if (this.hideCurp) {
-      //     this.proveedorForm.get('curp')?.setValidators(null); // Remove validation
-      //     this.proveedorForm.get('curp')?.setValue(''); // Clear the field
-      //   } else {
-      //     this.proveedorForm.get('curp')?.setValidators(Validators.required);
-      //   }
-      //   this.proveedorForm.get('curp')?.updateValueAndValidity();
-      // }
-    
+      
 
       loadComboUnidad(): void {
         this.service.getProveedordata().pipe(
