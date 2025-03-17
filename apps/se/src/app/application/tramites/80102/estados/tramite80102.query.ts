@@ -44,6 +44,25 @@ export class AmpliacionServiciosQuery extends Query<AmpliacionServiciosState> {
 
   selectDatosComplimento$ = this.select((state) => state.datosComplimentos);
 
+  //empresas-submanufacturer-estadaos
+  datosSubcontratistaEstado$ = this.select((state) => {
+    return state.datosSubcontratista
+  });
+  plantasSubfabricantesAgregar$ = this.select((state) => {
+    return state.plantasSubfabricantesAgregar
+  });
+  plantasBuscadas$ = this.select((state) => {
+    return state.plantasBuscadas
+  });
+
+  plantasPorCompletar$ = this.select((state) => {
+    return state.plantasPorCompletar
+  });
+
+  indicePrevioRuta$ = this.select((state) => {
+    return state.indicePrevioRuta
+  });
+
   constructor(protected override store: AmpliacionServiciosStore) {
     super(store);
   }

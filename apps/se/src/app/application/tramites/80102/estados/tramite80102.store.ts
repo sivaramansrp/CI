@@ -5,6 +5,7 @@ import {
   ServicioInmex,
   Servicios,
 } from '../models/autorizacion-programa-nuevo.model';
+import { DatosSubcontratista, PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { Injectable } from '@angular/core';
@@ -26,6 +27,13 @@ export interface AmpliacionServiciosState {
   formaEmpresaExtranjera: DatosEmpresaExtranjera;
 
   datosComplimentos: DatosComplimentos;
+
+ datosSubcontratista:DatosSubcontratista;
+  plantasBuscadas:PlantasSubfabricante[],
+  plantasSubfabricantesAgregar:PlantasSubfabricante [],
+  plantasPorCompletar:PlantasSubfabricante[],
+  indicePrevioRuta:number
+
 }
 
 export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
@@ -91,6 +99,15 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
       formaDatos: {},
     },
   },
+
+  datosSubcontratista:{
+    rfc: '',
+    estado: '',
+  },
+    plantasBuscadas:[],
+    plantasSubfabricantesAgregar: [],
+    plantasPorCompletar:[],
+    indicePrevioRuta:0
 };
 
 /**
@@ -243,6 +260,55 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
     this.update((state) => ({
       ...state,
       datosComplimentos,
+    }));
+  }
+
+  setDatosSubcontratista(datosSubcontratista: { rfc: string; estado: string }): void {
+    this.update((state) => ({
+      ...state,
+      datosSubcontratista: datosSubcontratista,
+    }));
+  }
+
+  setPlantasSubfabricantesAgregar(
+    plantasSubfabricantesAgregar: PlantasSubfabricante[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      plantasSubfabricantesAgregar: plantasSubfabricantesAgregar,
+    }));
+  }
+
+  setPlantasBuscadas(plantasBuscadas:PlantasSubfabricante[]):void{
+    this.update((state) => ({
+      ...state,
+      plantasBuscadas: plantasBuscadas,
+    }));
+  }
+
+  eliminarPlantas(eliminarPlantas:PlantasSubfabricante[]): void {
+    this.update(state => {
+      const PLANTAS = [...state.plantasSubfabricantesAgregar].filter(ele => 
+        !eliminarPlantas.some((plantas)=>plantas.calle===ele.calle)
+      );
+      return {
+        ...state,
+        plantasSubfabricantesAgregar: PLANTAS
+      }
+    })
+  }
+
+  setPlantasPorCompletar(plantasPorCompletar:PlantasSubfabricante[]):void{
+    this.update((state) => ({
+      ...state,
+      plantasPorCompletar: plantasPorCompletar,
+    }));
+  }
+
+  setindicePrevioRuta(indice:number):void{
+    this.update((state) => ({
+      ...state,
+      indicePrevioRuta: indice,
     }));
   }
 }
