@@ -432,4 +432,7 @@ export class VehiculosComponent implements AfterViewInit {
     // this.selectedAll = event.target.checked;
     // this.nacional.forEach(nacion => nacion.selected = this.selectedAll);
   }
+  editarFilaSeleccionada(): void {
+    
+  }
 }

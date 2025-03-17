@@ -12,11 +12,14 @@ import {
   Validators,
   FormBuilder,
   FormGroup,
+  FormsModule
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Modal } from 'bootstrap';
+
 import { SharedModule } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Nacional } from 'libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 
@@ -35,6 +38,8 @@ import { Chofer40101Query } from '../../estados/chofer40101.query';
 import { Chofer40101Service } from '../../estados/chofer40101.service';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import mockData from 'libs/shared/theme/assets/json/40103/director-general-mockdata.json';
+
 
 @Component({
   selector: 'app-choferes',
@@ -46,6 +51,7 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
     CommonModule,
     SharedModule,
     CatalogoSelectComponent,
+    FormsModule
   ],
 })
 export class ChoferesComponent implements OnInit {
@@ -96,6 +102,8 @@ export class ChoferesComponent implements OnInit {
   formChoferes!: FormGroup;
   choferesList$: Observable<any[]> = new Observable();
   choferesextranjerosList$: Observable<any[]> = new Observable();
+  isEditing: boolean = false;
+  selectedRow: any;
   @ViewChild('modalRef', { static: false }) modalRef!: ElementRef;
   @Input() catalogo: Catalogo[] = [];
   /**
@@ -180,6 +188,7 @@ export class ChoferesComponent implements OnInit {
 Gancho del ciclo de vida angular que se llama después de que se inicializan las propiedades enlazadas a datos.
    */
   ngOnInit(): void {
+    
     this.choferesList$ = this.chofer40101Query.getChoferes$;
     this.choferesextranjerosList$ =
       this.chofer40101Query.getchoferesextranjero$;
@@ -198,6 +207,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
 
     this.loadEstados();
     this.estadoSeleccion();
+    this.setFormValues();
   }
   /**
    * Obtiene los controles de formulario del formulario choferes.
@@ -457,12 +467,101 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.formChoferes.reset();
   }
   buscarChoferEx() {}
+  setFormValues(): void {
+    if (mockData) {
+      setTimeout(() => {
+        this.formChoferes.patchValue({
+          nombre: mockData.nombre || '',
+          primerApellido: mockData.primerApellido || '',
+          segundoApellido: mockData.segundoApellido || '',
+        });
+      });
+    }
+  }
+  
 
-  toggleAll(event: any) {
-    this.selectedAll = event.target.checked;
+  toggleRowSelection(row: any) {
+    this.selectedRow = row;
+    this.formChoferes.patchValue(row);
+  }
+
+  editarFilaSeleccionada() {
+    if (this.selectedRow) {
+      this.isEditing = true;
+      this.formChoferes.patchValue(this.selectedRow);
+      if (this.modalRef) {
+        const modal = new Modal(this.modalRef.nativeElement);
+        modal.show();
+      } else {
+        console.error('modalRef is undefined');
+      }
+    }
+  }
+  guardarFilaEditada() {
+    if (this.selectedRow) {
+      // Create a new object with the updated values
+      const updatedRow = { ...this.selectedRow, ...this.formChoferes.value };
+  
+      // Update the data source (choferesList$)
+      this.choferesList$ = this.choferesList$.pipe(
+        map((choferes: any) => {
+          return choferes.map((chofer: any) => {
+            if (chofer.id === this.selectedRow.id) {
+              return updatedRow;
+            }
+            return chofer;
+          });
+        })
+      );
+  
+      // Refresh the table
+      this.choferesList$.subscribe();
+  
+      // Close the modal
+      this.isEditing = false;
+      const modal = Modal.getInstance(this.modalRef.nativeElement);
+      if (modal) {
+        modal.hide();
+      }
+    }
+  }
+  extranjeroGuardars(){
+    if (this.selectedRow) {
+      // Create a new object with the updated values
+      const updatedRow = { ...this.selectedRow, ...this.formChoferes.value };
+  
+      // Update the data source (choferesList$)
+      this.choferesextranjerosList$ = this.choferesextranjerosList$.pipe(
+        map((choferesextranjero: any) => {
+          return choferesextranjero.map((choferesextranjero: any) => {
+            if (choferesextranjero.id === this.selectedRow.id) {
+              return updatedRow;
+            }
+            return choferesextranjero;
+          });
+        })
+      );
+  
+      // Refresh the table
+      this.choferesextranjerosList$.subscribe();
+  
+      // Close the modal
+      this.isEditing = false;
+      const modal = Modal.getInstance(this.modalRef.nativeElement);
+      if (modal) {
+        modal.hide();
+      }
+    }
+
   }
   estadoSeleccion(): void {
     const estado = this.formChoferes.get('estado')?.value;
     this.chofer40101Store.setEstado(estado);
   }
+  eliminar() {
+    // this.personas.splice(i, 1);
+    //modal de confirmacion de elimincacion
+  }
+
+  
 }

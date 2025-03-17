@@ -42,8 +42,9 @@
             <table class="table w-95 mx-auto mt-3">
               <thead>
                 <tr>
+                  <th>ID</th>
                   <th>
-                    <input type="checkbox" (change)="toggleAll($event)" />
+                    <input type="checkbox" />
                   </th>
                   <th>CURP</th>
                   <th>Nombre</th>
@@ -64,12 +65,19 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let nacion of choferesList$ | async">
+                <tr *ngFor="let nacion of choferesList$ | async; let i = index">
+                  <td>{{ i + 1 }}</td>
                   <td>
-                    <input type="checkbox" />
+                    <input type="checkbox" (change)="toggleRowSelection(nacion)" />
                   </td>
-                  <td>{{ nacion.curp }}</td>
-                  <td>{{ nacion.nombre }}</td>
+                  <td *ngIf="!isEditing || selectedRow !== nacion">{{ nacion.curp }}</td>
+                  <td *ngIf="isEditing && selectedRow === nacion">
+                    <input type="text" [(ngModel)]="selectedRow.curp" />
+                  </td>
+                  <td *ngIf="!isEditing || selectedRow !== nacion">{{ nacion.nombre }}</td>
+                  <td *ngIf="isEditing && selectedRow === nacion">
+                    <input type="text" [(ngModel)]="selectedRow.nombre" />
+                  </td>
                   <td>{{ nacion.calle }}</td>
                   <td>{{ nacion.numeroExterior }}</td>
                   <td>{{ nacion.numeroInterior }}</td>
@@ -93,8 +101,9 @@
         <div class="row mt-3">
           <div class="col-md-12 text-end">
             <div class="btn-group">
-              <button class="btn btn-default" type="button">Modificar</button>
-              <button class="btn btn-default" type="button">Eliminar</button>
+              <button class="btn btn-default" type="button" (click)="editarFilaSeleccionada()">Modificar</button>
+              
+              <button class="btn btn-default" type="button" (click)="eliminar()">Eliminar</button>
               <button
                 class="btn btn-primary ms-2"
                 data-bs-toggle="modal"
@@ -115,6 +124,10 @@
             <table class="table w-95 mx-auto mt-3">
               <thead>
                 <tr>
+                  <th>ID</th>
+                  <th>
+                    <input type="checkbox" />
+                  </th>
                   <th>Numero del seguro social</th>
                   <th>Nombre</th>
                   <th>Calle</th>
@@ -136,7 +149,11 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let exterior of choferesextranjerosList$ | async">
+                <tr *ngFor="let exterior of choferesextranjerosList$ | async; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    <input type="checkbox" (change)="toggleRowSelection(exterior)" />
+                  </td>
                   <td>{{ exterior.nombres }}</td>
                   <td>{{ exterior.nombre }}</td>
                   <td>{{ exterior.calle }}</td>
@@ -163,7 +180,7 @@
         <div class="row mt-3">
           <div class="col-md-12 text-end">
             <div class="btn-group">
-              <button class="btn btn-default" type="button">Modificar</button>
+              <button class="btn btn-default" type="button" (click)="editarFilaSeleccionada()">Modificar</button>
               <button class="btn btn-default" type="button">Eliminar</button>
               <button
                 type="submit"
@@ -745,7 +762,7 @@
                       id="guardarChofer"
                       name="guardar"
                       class="btn btn-primary"
-                      (click)="Guardar()"
+                      (click)="guardarFilaEditada()"
                     >
                       Guardar
                     </button>
@@ -1182,7 +1199,7 @@
                     <button
                       type="button"
                       class="btn btn-primary"
-                      (click)="extranjeroGuardar()"
+                      (click)="extranjeroGuardars()"
                     >
                       Guardar
                     </button>
