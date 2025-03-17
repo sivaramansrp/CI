@@ -1,18 +1,16 @@
+import { CatalogoSelectComponent, MenuConfig, Props } from "@ng-mf/data-access-user";
 import { Component, OnInit } from '@angular/core';
 import { DATOS_EXPORTACION, DATOS_EXPORTADOR, DATOS_MERCANCIA, DATOS_PRODUCTOR, DATOS_REALIZAR } from '../../constants/permiso-importacion-modification.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { CatalogoSelectComponent } from "libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component";
-import { CatalogosService } from 'libs/shared/data-access-user/src/core/services/shared/catalogos/catalogos.service';
+import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { FormularioDinamico } from 'libs/shared/data-access-user/src/core/models/shared/forms-model';
-import { InputConfig } from '../../models/permiso-importacion-modification.model';
-import { InputFechaComponent } from "libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component";
-import { InputRadioComponent } from "libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
-import { InputTypes } from '../../models/permiso-importacion-modification.enum';
-import { TituloComponent } from "libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
+import { FormularioDinamico } from '@ng-mf/data-access-user';
+import { InputConfig } from '@ng-mf/data-access-user';
+import { InputFechaComponent } from "@ng-mf/data-access-user";
+import { InputRadioComponent } from "@ng-mf/data-access-user";
+import { InputTypes } from '@ng-mf/data-access-user';
+import { TituloComponent } from "@ng-mf/data-access-user";
 import { map } from 'rxjs';
-import tipoDePersonaExportadorOptions from 'libs/shared/theme/assets/json/130120/tipo-de-persona-exportador.json';
-import tipoDePersonaProductorOptions from 'libs/shared/theme/assets/json/130120/tipo-de-persona-productor.json';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -30,12 +28,12 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       menu: [
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_REALIZAR[0],
+          props: DATOS_REALIZAR[0] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_REALIZAR[1],
+          props: DATOS_REALIZAR[1] as unknown as Props,
           class: 'col-md-8',
         }
       ],
@@ -46,147 +44,147 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       menu: [
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_MERCANCIA[0],
+          props: DATOS_MERCANCIA[0] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_MERCANCIA[1],
+          props: DATOS_MERCANCIA[1] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_MERCANCIA[2],
+          props: DATOS_MERCANCIA[2] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_MERCANCIA[3],
+          props: DATOS_MERCANCIA[3] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_MERCANCIA[4],
+          props: DATOS_MERCANCIA[4] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.BREAK_CONTENT,
-          props: [],
+          props: [] as unknown as Props,
           class: '',
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_MERCANCIA[5],
+          props: DATOS_MERCANCIA[5] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_MERCANCIA[6],
+          props: DATOS_MERCANCIA[6] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.BREAK_CONTENT,
-          props: [],
+          props: [] as unknown as Props,
           class: '',
         },
         {
           inputType: InputTypes.DATE,
-          props: DATOS_MERCANCIA[7],
+          props: DATOS_MERCANCIA[7] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_MERCANCIA[8],
+          props: DATOS_MERCANCIA[8] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.BREAK_CONTENT,
-          props: [],
+          props: [] as unknown as Props,
           class: '',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_MERCANCIA[9],
+          props: DATOS_MERCANCIA[9] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_MERCANCIA[10],
+          props: DATOS_MERCANCIA[10] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.BREAK_CONTENT,
-          props: [],
+          props: [] as unknown as Props,
           class: '',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_MERCANCIA[11],
+          props: DATOS_MERCANCIA[11] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_MERCANCIA[12],
+          props: DATOS_MERCANCIA[12] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.BREAK_CONTENT,
-          props: [],
+          props: [] as unknown as Props,
           class: '',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_MERCANCIA[13],
+          props: DATOS_MERCANCIA[13] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_MERCANCIA[14],
+          props: DATOS_MERCANCIA[14] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.BREAK_CONTENT,
-          props: [],
+          props: [] as unknown as Props,
           class: '',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_MERCANCIA[15],
+          props: DATOS_MERCANCIA[15] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_MERCANCIA[16],
+          props: DATOS_MERCANCIA[16] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.BREAK_CONTENT,
-          props: [],
+          props: [] as unknown as Props,
           class: '',
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_MERCANCIA[17],
+          props: DATOS_MERCANCIA[17] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_MERCANCIA[18],
+          props: DATOS_MERCANCIA[18] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.BREAK_CONTENT,
-          props: [],
+          props: [] as unknown as Props,
           class: '',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_MERCANCIA[19],
+          props: DATOS_MERCANCIA[19] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_MERCANCIA[20],
+          props: DATOS_MERCANCIA[20] as unknown as Props,
           class: 'col-md-8',
         },
       ],
@@ -197,52 +195,52 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       menu: [
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_EXPORTACION[0],
+          props: DATOS_EXPORTACION[0] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.DATE,
-          props: DATOS_EXPORTACION[1],
+          props: DATOS_EXPORTACION[1] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.BREAK_CONTENT,
-          props: [],
+          props: [] as unknown as Props,
           class: '',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_EXPORTACION[2],
+          props: DATOS_EXPORTACION[2] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.BREAK_CONTENT,
-          props: [],
+          props: [] as unknown as Props,
           class: '',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_EXPORTACION[3],
+          props: DATOS_EXPORTACION[3] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_EXPORTACION[4],
+          props: DATOS_EXPORTACION[4] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.BREAK_CONTENT,
-          props: [],
+          props: [] as unknown as Props,
           class: '',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_EXPORTACION[5],
+          props: DATOS_EXPORTACION[5] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_EXPORTACION[6],
+          props: DATOS_EXPORTACION[6] as unknown as Props,
           class: 'col-md-4',
         },
       ],
@@ -253,37 +251,37 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       menu: [
         {
           inputType: InputTypes.RADIO,
-          props: DATOS_PRODUCTOR[0],
+          props: DATOS_PRODUCTOR[0] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.BREAK_CONTENT,
-          props: [],
+          props: [] as unknown as Props,
           class: '',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_PRODUCTOR[1],
+          props: DATOS_PRODUCTOR[1] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_PRODUCTOR[2],
+          props: DATOS_PRODUCTOR[2] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_PRODUCTOR[3],
+          props: DATOS_PRODUCTOR[3] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_PRODUCTOR[4],
+          props: DATOS_PRODUCTOR[4] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_PRODUCTOR[5],
+          props: DATOS_PRODUCTOR[5] as unknown as Props,
           class: 'col-md-8',
         },
       ],
@@ -294,62 +292,85 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       menu: [
         {
           inputType: InputTypes.RADIO,
-          props: DATOS_EXPORTADOR[0],
+          props: DATOS_EXPORTADOR[0] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.BREAK_CONTENT,
-          props: [],
+          props: [] as unknown as Props,
           class: '',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_EXPORTADOR[1],
+          props: DATOS_EXPORTADOR[1] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_EXPORTADOR[2],
+          props: DATOS_EXPORTADOR[2] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_EXPORTADOR[3],
+          props: DATOS_EXPORTADOR[3] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_EXPORTADOR[4],
+          props: DATOS_EXPORTADOR[4] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_EXPORTADOR[5],
+          props: DATOS_EXPORTADOR[5] as unknown as Props,
           class: 'col-md-8',
         },
         {
           inputType: InputTypes.TEXT,
-          props: DATOS_EXPORTADOR[6],
+          props: DATOS_EXPORTADOR[6] as unknown as Props,
           class: 'col-md-8',
         },
       ],
     },
   ];
-  valoresSeleccionadosRadio: any = {};
   fiscal: FormularioDinamico[] = [];
   formulario!: FormGroup;
+  evento = {};
+  inputTypes = InputTypes;
 
   constructor(private fb: FormBuilder, private catalogosServicios: CatalogosService) {
     this.crearFormulario();
   }
 
-  ngOnInit() {
-    this.configuracion[3].menu[0].props.options = tipoDePersonaProductorOptions;
-    this.configuracion[3].menu[0].props.selectedValue = tipoDePersonaProductorOptions[0].value;
-    this.valoresSeleccionadosRadio.radio3 = tipoDePersonaProductorOptions[0].value;
-    this.configuracion[4].menu[0].props.options = tipoDePersonaExportadorOptions;
-    this.configuracion[4].menu[0].props.selectedValue = tipoDePersonaExportadorOptions[0].value;
-    this.valoresSeleccionadosRadio.radio4 = tipoDePersonaExportadorOptions[0].value;
+  ngOnInit(): void {
+    const PERSONA_EXPORTADOR = [
+      {
+        "label": "Física",
+        "value": "Física"
+      },
+      {
+        "label": "Moral",
+        "value": "Moral"
+      }
+    ];
+    const PERSONA_PRODUCTOR = [
+      {
+        "label": "Física",
+        "value": "Física"
+      },
+      {
+        "label": "Moral",
+        "value": "Moral"
+      },
+      {
+        "label": "Ninguno",
+        "value": "Ninguno"
+      }
+    ];
+    this.configuracion[3].menu[0].props.radioOptions = PERSONA_PRODUCTOR;
+    this.configuracion[3].menu[0].props.radioSelectedValue = PERSONA_PRODUCTOR[0].value;
+    this.configuracion[4].menu[0].props.radioOptions = PERSONA_EXPORTADOR;
+    this.configuracion[4].menu[0].props.radioSelectedValue = PERSONA_EXPORTADOR[0].value;
     this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
     });
@@ -375,17 +396,17 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * @param indiceGrupo - El índice del grupo en la matriz de configuración.
    */
   inicializarFormGroup(
-    configuracion: any[],
+    configuracion: MenuConfig[],
     nombreGrupo: string,
     indiceGrupo: number,
   ): void {
     const GRUPO = this.formulario.get(nombreGrupo) as FormGroup;
-    configuracion.forEach((campo: any, menuIndex: number) => {
-      const VALIDATORS = campo.validators ? this.getValidators(campo.validators) : [Validators.required];
+    configuracion.forEach((campo: MenuConfig, menuIndex: number) => {
+      const VALIDATORS = campo.props.validators ? DatosDeLaSolicitudComponent.getValidators(campo.props.validators) : [Validators.required];
       const CONTROL_NAME = campo.props.campo;
       GRUPO.addControl(
         CONTROL_NAME,
-        this.fb.control({ value: '', disabled: campo.disabled }, VALIDATORS)
+        this.fb.control({ value: '', disabled: campo.props.disabled }, VALIDATORS)
       );
       if (campo.inputType === InputTypes.SELECT) {
         this.obtenerValoresCatalogo(indiceGrupo, menuIndex, CONTROL_NAME);
@@ -405,7 +426,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       .pipe(
         map((resp) => {
           if (resp.length > 0) {
-            this.configuracion[indiceGrupo].menu[indiceMenu].props.catalogs = resp;
+            this.configuracion[indiceGrupo].menu[indiceMenu].props.catalogos = resp;
           }
         })
       )
@@ -417,7 +438,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * @param validadores - Una matriz de patrones regex que se utilizarán para la validación.
    * @returns Una matriz de validadores de formularios.
    */
-  getValidators(validadores: string[]): ValidatorFn[] {
+  static getValidators(validadores: string[]): ValidatorFn[] {
     const FORM_VALIDATORS: ValidatorFn[] = [];
     validadores.forEach((validadore) => {
       if (validadore === 'required') {
@@ -439,6 +460,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    */
   fechaCambiado(evento: string): void {
     // Manejar cambio de fecha
+    this.evento = evento;
   }
 
   /**
@@ -446,7 +468,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * @param nombreControlFormulario - El nombre del control del formulario a actualizar.
    * @param evento - El valor seleccionado del catálogo.
    */
-  seleccionCatalogo(nombreControlFormulario: string, evento: any): void {
+  seleccionCatalogo(nombreControlFormulario: string, evento: Event): void {
     this.formulario.get(nombreControlFormulario)?.setValue(evento);
   }
 
@@ -455,8 +477,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * @param claveRadio - La clave de la entrada de radio.
    * @param evento - El nuevo valor de la entrada de radio.
    */
-  cambioValorRadio(claveRadio: string, evento: string | number): void {
-    this.configuracion[3].menu[0].props.selectedValue = evento;
-    this.valoresSeleccionadosRadio[claveRadio] = evento;
+  cambioValorRadio(claveRadio: string, groupIndex: number, menuIndex: number, evento: string | number): void {
+    this.configuracion[groupIndex].menu[menuIndex].props.radioSelectedValue = evento;
   }
 }
