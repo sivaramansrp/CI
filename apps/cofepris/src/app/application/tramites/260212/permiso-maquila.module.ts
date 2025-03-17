@@ -5,10 +5,14 @@ import { TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { PermisoMaquilaComponent } from './pages/permiso-maquila/permiso-maquila.component';
 import { Datos260212Component } from './pages/datos-260212/datos-260212.component';
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
+import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
+
 
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 import { SolicitudService } from './services/solicitud.service';
+
 
 @NgModule({
   declarations: [PermisoMaquilaComponent,
@@ -19,7 +23,9 @@ import { SolicitudService } from './services/solicitud.service';
     PermisoMaquilaRoutingModule,
     WizardComponent,
     TituloComponent,
-    DatosDeLaSolicitudComponent
+    DatosDeLaSolicitudComponent,
+    TercerosRelacionadosComponent,
+    PagoDeDerechosComponent,
   ],
   providers: [provideHttpClient(), ToastrService,SolicitudService],
 })
