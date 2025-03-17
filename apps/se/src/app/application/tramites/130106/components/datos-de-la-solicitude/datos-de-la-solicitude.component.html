@@ -1,1 +1,29 @@
-<p>datos-de-la-solicitude works!</p>
+<div class="container">
+    <ng-titulo titulo="Datos del tramite a realizer" />
+    <form>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="solicitud">Solicitud*:</label>
+                <div>
+                    <input type="radio" id="solicitud" name="solicitud" value="inicial" checked> Inicial
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="regimen">Régimen al que se destinará la mercancía*:</label>
+                <select id="regimen" name="regimen" class="form-control">
+                    <option value="">Selecciona un valor</option>
+                    <option value="importacion">Importación</option>
+                    <option value="exportacion">Exportación</option>
+                    <option value="transito">Tránsito</option>
+                </select><br>
+                <label for="clasificacion">Clasificación del régimen*:</label>
+                <select id="clasificacion" name="clasificacion" class="form-control">
+                    <option value="">Selecciona un valor</option>
+                    <option value="definitivo">Definitivo</option>
+                    <option value="temporal">Temporal</option>
+                    <option value="deposito">Depósito</option>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
