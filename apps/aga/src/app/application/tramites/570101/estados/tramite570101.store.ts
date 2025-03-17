@@ -1,5 +1,4 @@
 import { Store, StoreConfig } from '@datorama/akita';
-import { CancelarSolicitudForm } from '../modelos/cancelar-solicitud.modalidad.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -11,7 +10,7 @@ export interface CancelarSolicitudState {
     folioSVEX: string;
     folioVUCEM: string;
     tipoDeCancelacion: string;
-    horaIncio: string;
+    horaInicio: string;
     horaFin: string;
     descripcion: string;
     fechasSeleccionadas: { selectedFechas: string[] }
@@ -25,13 +24,15 @@ export interface CancelarSolicitudState {
  */
 export function createInitialState(): CancelarSolicitudState {
     return {
-        folioSVEX: '',
-        folioVUCEM: '',
-        horaFin: '',
-        horaIncio: '',
-        tipoDeCancelacion: '',
-        descripcion: '',
-        fechasSeleccionadas: { selectedFechas: [] }
+        folioSVEX: "SVEX470000012025",
+        folioVUCEM: "01057001000120252470000002",
+        tipoDeCancelacion: "",
+        horaInicio: "06:00",
+        horaFin: "23:00",
+        descripcion: "",
+        fechasSeleccionadas: {
+            selectedFechas: [] 
+        }
     };
 }
 
@@ -41,7 +42,7 @@ export function createInitialState(): CancelarSolicitudState {
  * Administra el estado de la modalidad de cambio utilizando Akita.
  */
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'cancelar-solicitud' })
+@StoreConfig({ name: 'cancelar-solicitud', resettable: true })
 export class CancelarSolicitudStore extends Store<CancelarSolicitudState> {
     constructor() {
         super(createInitialState());
@@ -84,6 +85,12 @@ export class CancelarSolicitudStore extends Store<CancelarSolicitudState> {
             ...state,
             descripcion,
         }));
+    }
+      /**
+     * Restablece el estado a su estado inicial.
+     */
+      public limpiarFormulario(): void {
+        this.reset();
     }
 
 }

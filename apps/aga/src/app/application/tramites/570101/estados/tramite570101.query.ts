@@ -8,12 +8,11 @@
  */
 
 import { CancelarSolicitudState, CancelarSolicitudStore } from './tramite570101.store';
-import { Query, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { Query } from '@datorama/akita';
 
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({name: 'cancelarSolicitud', resettable: true})
 export class CancelarSolicitudQuery extends Query<CancelarSolicitudState> {
 
     /**
