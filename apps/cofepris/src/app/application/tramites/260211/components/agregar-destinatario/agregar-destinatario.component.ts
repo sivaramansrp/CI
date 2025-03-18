@@ -5,11 +5,16 @@ import { AlertComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { SanitarioService } from '../../services/sanitario.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { PermisoModel } from '../detos.model';
+import { Solicitud260211State, } from '../../../../estados/tramites/sanitario260211.store';
+
+import { Sanitario260211Store } from '../../../../estados/tramites/sanitario260211.store';
+
+import { Permiso260211Query } from '../../../../estados/queries/permiso260211.query';
 
 @Component({
   selector: 'app-agregar-destinatario',
@@ -21,12 +26,17 @@ import { PermisoModel } from '../detos.model';
 export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
   tercerosProd: PermisoModel [] = [];
   private destroyed$ = new Subject<void>();
+  private destroyNotifier$: Subject<void> = new Subject();
+  public solicitudState!: Solicitud260211State;
   destinatarioForm!:FormGroup;
   public proveedorList!: Catalogo[];
   public  localidadList !: Catalogo[];
   public modal = 'modal';
   TablaSeleccion = TablaSeleccion;
-constructor(private fb: FormBuilder,private service:SanitarioService){}
+constructor(private fb: FormBuilder,private service:SanitarioService,
+  private sanitario260211Store: Sanitario260211Store,
+        private permiso260211Query: Permiso260211Query
+){}
 
  @ViewChild('closeModal') closeModal!: ElementRef;
   configuracionTabla: ConfiguracionColumna<PermisoModel >[] = [
@@ -62,6 +72,14 @@ constructor(private fb: FormBuilder,private service:SanitarioService){}
   ];
 
   ngOnInit():void {
+    this.permiso260211Query.selectSolicitud$
+              .pipe(
+                takeUntil(this.destroyNotifier$),
+                map((seccionState) => {
+                  this.solicitudState = seccionState;
+                })
+              )
+              .subscribe();
     this.loadMercancias();
     this.getDestinatario();
     this.loadLocalidad();
@@ -94,8 +112,8 @@ constructor(private fb: FormBuilder,private service:SanitarioService){}
 this.destinatarioForm = this.fb.group({
           rediofisica: ["", Validators.required],
           rediomoral: ["", Validators.required],
-          destinatariorfc: ['', Validators.required],
-          destinatariodenominacion: ['', Validators.required],
+          destinatariorfc: [this.solicitudState?.destinatariorfc, Validators.required],
+          destinatariodenominacion: [this.solicitudState?.destinatariodenominacion, Validators.required],
           destinatariopail: ['', Validators.required],
           destinatariomunicipio: ['', Validators.required],
           destinatariolocalidad: ['', Validators.required],
@@ -103,22 +121,28 @@ this.destinatarioForm = this.fb.group({
          
           destinatarioequivalente: ['', Validators.required],
           destinatario: [''],
-          destinatarionumeroCalle: ['', Validators.required],
+          destinatarionumeroCalle: [this.solicitudState?.destinatarionumeroCalle, Validators.required],
        
-        destinatarioexperior: ['', Validators.required],
-        destinatariointerior: ['', Validators.required],
-        destinatariolada: [''],
-        destinatarionumerotelefono: [''],
-        destinatariocorreoElectronico: ['', [Validators.required, Validators.email]]
+        destinatarioexperior: [this.solicitudState?.destinatarioexperior, Validators.required],
+        destinatariointerior: [this.solicitudState?.destinatariointerior, Validators.required],
+        destinatariolada: [this.solicitudState?.destinatariolada],
+        destinatarionumerotelefono: [this.solicitudState?.destinatarionumerotelefono],
+        destinatariocorreoElectronico: [this.solicitudState?.destinatariocorreoElectronico, [Validators.required, Validators.email]]
         });
 
   }
   isValid(form: FormGroup, field: string): boolean {
     return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
   }
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Sanitario260211Store): void {
+    const valor = form.get(campo)?.value;
+    (this.sanitario260211Store[metodoNombre] as (value: any) => void)(valor);
+  }
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
 

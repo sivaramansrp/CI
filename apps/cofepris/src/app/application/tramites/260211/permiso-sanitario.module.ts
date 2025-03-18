@@ -47,7 +47,12 @@ import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core
     BtnContinuarComponent,
     TercerosRelacionadosComponent,
     DatosDeLaComponent,
-    DerechosComponent
+    DerechosComponent,
+    AnexarDocumentosComponent,
+    TituloComponent,
+    ToastrModule.forRoot(),
+    FirmaElectronicaComponent,
+    AlertComponent
   ],
   // providers:[SanitarioService]
   //   AnexarDocumentosComponent,

@@ -6,7 +6,8 @@
               <div class="form-group">                
                 <label class="form-label" for="referencia">Clave de referencia:</label>
                 <input class="form-control" id="referencia" formControlName="referencia"
-                  placeholder="" type="text">
+                  placeholder="" type="text"
+                  (change)="setValoresStore(derechosForm,'referencia', 'setreferencia')">
               </div>
             </div>
             <div class="col-md-4">
@@ -14,7 +15,8 @@
               <div class="form-group">
                 <label class="form-label" for="Chandenadependencia">Chandena de la dependencia:</label>
                 <input class="form-control" id="Chandenadependencia" formControlName="Chandenadependencia"
-                  placeholder="" type="text">
+                  placeholder="" type="text"
+                  (change)="setValoresStore(derechosForm,'Chandenadependencia', 'setChandenadependencia')">
               </div>
             </div>
             <div class="col-md-4">
@@ -25,7 +27,7 @@
                     [label]="'benco'"
                     [placeholder]="'Seleccione una aduana'"
                     formControlName="benco"
-                  ></app-catalogo-select>
+                    (change)="setValoresStore(derechosForm,'benco', 'setbenco')"></app-catalogo-select>
                 </div>
               </div>
           </div>
@@ -34,21 +36,22 @@
               <div class="form-group">
                 <label class="form-label" for="Llave">Llave de page</label>
                 <input class="form-control" id="Llave" placeholder="" type="text"
-                  formControlName="Llave" >
+                  formControlName="Llave" 
+                  (change)="setValoresStore(derechosForm,'Llave', 'setLlave')">
               </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="deFetch">Fetch de page</label>
                   <input class="form-control" id="deFetch" placeholder="" type="date"
-                    formControlName="deFetch" >
+                    formControlName="deFetch" (change)="setValoresStore(derechosForm,'deFetch', 'setdeFetch')">
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="importe">Importe de pago</label>
                   <input class="form-control" id="importe" placeholder="" type="text"
-                    formControlName="importe" >
+                    formControlName="importe" (change)="setValoresStore(derechosForm,'importe', 'setimporte')">
                 </div>
               </div>
           </div>

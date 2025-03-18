@@ -71,15 +71,18 @@
                         <h6>Datos Personales</h6>
                         <div class="col-md-4">
                           <label class="form-label" for="rfc">Nombre(s)*</label>
-                          <input type="text" class="form-control" id="nombres" formControlName="nombres"  [ngClass]="isValid(facturatorForm, 'nombres') ? 'required' : ''">
+                          <input type="text" class="form-control" id="nombres" formControlName="nombres"  [ngClass]="isValid(facturatorForm, 'nombres') ? 'required' : ''"
+                          (change)="setValoresStore(facturatorForm,'nombres', 'setnombres')">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="rfc">Primer apellido*:</label>
-                          <input type="text" class="form-control" id="facturatorapellido" formControlName="facturatorapellido" [ngClass]="isValid(facturatorForm, 'facturatorapellido') ? 'required' : ''">
+                          <input type="text" class="form-control" id="facturatorapellido" formControlName="facturatorapellido" [ngClass]="isValid(facturatorForm, 'facturatorapellido') ? 'required' : ''"
+                          (change)="setValoresStore(facturatorForm,'facturatorapellido', 'setfacturatorapellido')">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="rfc">segundoApellido</label>
-                          <input type="text" class="form-control" id="facturatorsapellido" formControlName="facturatorsapellido">
+                          <input type="text" class="form-control" id="facturatorsapellido" formControlName="facturatorsapellido"
+                          (change)="setValoresStore(facturatorForm,'facturatorsapellido', 'setfacturatorsapellido')">
                         </div>
 
                       </div>
@@ -102,7 +105,8 @@
                       <div class="col-md-4 mb-3">
                         
                         <label class="form-label" for="rfc">Estado*:</label>
-                        <input type="text" class="form-control" id="facturatorestado" formControlName="facturatorestado">
+                        <input type="text" class="form-control" id="facturatorestado" formControlName="facturatorestado"
+                        (change)="setValoresStore(facturatorForm,'facturatorestado', 'setfacturatorestado')">
                        
                      
                       
@@ -110,14 +114,16 @@
                       <div class="col-md-4 mb-3">
                         
                         <label class="form-label" for="rfc">Codigo Postal o equivalente</label>
-                          <input type="text" class="form-control" id="facturatorcp" formControlName="facturatorcp">
+                          <input type="text" class="form-control" id="facturatorcp" formControlName="facturatorcp"
+                          (change)="setValoresStore(facturatorForm,'facturatorcp', 'setfacturatorcp')">
                       </div>
                     </div>
                   
                     <div class="row">
                       <div class="col-md-4 ">
                         <label class="form-label" for="rfc">Colonia o equivalente</label>
-                        <input type="text" class="form-control" id="facturatorequivalente" formControlName="facturatorequivalente"  [ngClass]="isValid(facturatorForm, 'nombres') ? 'required' : ''">
+                        <input type="text" class="form-control" id="facturatorequivalente" formControlName="facturatorequivalente"  [ngClass]="isValid(facturatorForm, 'nombres') ? 'required' : ''"
+                        (change)="setValoresStore(facturatorForm,'facturatorequivalente', 'setfacturatorequivalente')">
                         
                       </div>
                       <div class="col-md-4 mb-3">
@@ -133,30 +139,36 @@
                     <div class="row">
                       <div class="col-md-8">
                         <label class="form-label" for="numeroCalle">Calle*:</label>
-                        <input type="text" class="form-control" id="facturatorcalle" formControlName="facturatorcalle">
+                        <input type="text" class="form-control" id="facturatorcalle" formControlName="facturatorcalle"
+                        (change)="setValoresStore(facturatorForm,'facturatorcalle', 'setfacturatorcalle')">
                       </div>
                       <div class="col-md-4">
                         <label class="form-label" for="experior">Numero experior*:</label>
-                        <input type="text" class="form-control" id="facturatorexperior" formControlName="facturatorexperior">
+                        <input type="text" class="form-control" id="facturatorexperior" formControlName="facturatorexperior"
+                        (change)="setValoresStore(facturatorForm,'facturatorexperior', 'setfacturatorexperior')">
                       </div>
                   </div>
                   <div class="row">
                     <div class="col-md-4">
                       <label class="form-label" for="interior">Numero interior:</label>
-                      <input type="text" class="form-control" id="facturatorinterior" formControlName="facturatorinterior">
+                      <input type="text" class="form-control" id="facturatorinterior" formControlName="facturatorinterior"
+                      (change)="setValoresStore(facturatorForm,'facturatorinterior', 'setfacturatorinterior')">
                     </div>
                     <div class="col-md-1 mb-3">
                       <label class="form-label" for="lada">Lada:</label>
-                      <input type="text" class="form-control" id="facturatorlada" formControlName="facturatorlada">
+                      <input type="text" class="form-control" id="facturatorlada" formControlName="facturatorlada"
+                      (change)="setValoresStore(facturatorForm,'facturatorlada', 'setfacturatorlada')">
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label" for="numerotelefono">Teléfono:</label>
-                      <input type="text" class="form-control" id="facturatorfono" formControlName="facturatortelefono">
+                      <input type="text" class="form-control" id="facturatortelefono" formControlName="facturatortelefono"
+                      (change)="setValoresStore(facturatorForm,'facturatortelefono', 'setfacturatortelefono')">
                     </div>
                     <div class="col-md-4 mb-3">
                       <label class="form-label" for="correoElectronico">Correo electrónico:</label>
                       <div class="input-group">
-                        <input type="email" class="form-control" id="facturatorElectronico" formControlName="facturatorElectronico">
+                        <input type="email" class="form-control" id="facturatorElectronico" formControlName="facturatorElectronico"
+                        (change)="setValoresStore(facturatorForm,'facturatorElectronico', 'setfacturatorElectronico')">
                         </div>
                     </div>
                   </div>

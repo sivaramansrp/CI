@@ -75,7 +75,8 @@
                   <div class="row">
                     <div class="col-md-6 ">
                       <label class="form-label" for="rfc">R.F.C*:</label>
-                      <input type="text" class="form-control" id="nombre" formControlName="rfc" [ngClass]="isValid(proveedorForm, 'rfc') ? 'required' : ''">
+                      <input type="text" class="form-control" id="nombre" formControlName="rfc" [ngClass]="isValid(proveedorForm, 'rfc') ? 'required' : ''"
+                     >
                     </div>
                     <div class="col-md-6 *ngIf=hideCurp ">
                         <!-- <label class="form-label" for="curp">C.U.R.P*:</label>
@@ -85,7 +86,8 @@
                   <div class="row">
                     <div class="col-md-8 mb-3">
                       <label class="form-label" for="denominación">Denominación/razón social*:</label>
-                      <input type="text" class="form-control" id="denominacion" formControlName="denominacion" [ngClass]="isValid(proveedorForm, 'denominacion') ? 'required' : ''">
+                      <input type="text" class="form-control" id="denominacion" formControlName="denominacion" [ngClass]="isValid(proveedorForm, 'denominacion') ? 'required' : ''"
+                      (change)="setValoresStore(proveedorForm,'denominacion', 'setdenominacion')">
                     </div>
                 </div>
                 <ng-titulo titulo="Domicilio" />
@@ -159,7 +161,8 @@
                   </div>
                   <div class="col-md-4">
                     <label class="form-label" for="equivalente">Colonia o equivalente:</label>
-                    <input type="text" class="form-control" id="equivalente" formControlName="equivalente">
+                    <input type="text" class="form-control" id="equivalente" formControlName="equivalente"
+                    (change)="setValoresStore(proveedorForm,'equivalente', 'setequivalente')">
                   </div>
                   <div class="col-md-4 ">
                   </div>
@@ -168,32 +171,38 @@
                   <div class="col-md-8">
                     <label class="form-label" for="numeroCalle">Calle*:</label>
                     <input type="text" class="form-control" id="numeroCalle" formControlName="numeroCalle"
-                    [ngClass]="isValid(proveedorForm, 'numeroCalle') ? 'required' : ''">
+                    [ngClass]="isValid(proveedorForm, 'numeroCalle') ? 'required' : ''"
+                    (change)="setValoresStore(proveedorForm,'numeroCalle', 'setnumeroCalle')">
                   </div>
                   <div class="col-md-4">
                     <label class="form-label" for="experior">Numero experior*:</label>
                     <input type="text" class="form-control" id="experior" formControlName="experior"
-                    [ngClass]="isValid(proveedorForm, 'experior') ? 'required' : ''">
+                    [ngClass]="isValid(proveedorForm, 'experior') ? 'required' : ''"
+                    (change)="setValoresStore(proveedorForm,'experior', 'setexperior')">
                   </div>
               </div>
               <div class="row">
                 <div class="col-md-4">
                   <label class="form-label" for="interior">Numero interior:</label>
-                  <input type="text" class="form-control" id="interior" formControlName="interior">
+                  <input type="text" class="form-control" id="interior" formControlName="interior"
+                  (change)="setValoresStore(proveedorForm,'interior', 'setinterior')">
                 </div>
                 <div class="col-md-1 mb-3">
                   <label class="form-label" for="lada">Lada:</label>
-                  <input type="text" class="form-control" id="lada" formControlName="lada">
+                  <input type="text" class="form-control" id="lada" formControlName="lada"
+                  (change)="setValoresStore(proveedorForm,'lada', 'setlada')">
                 </div>
                 <div class="col-md-3 mb-3">
                   <label class="form-label" for="numerotelefono">Teléfono:</label>
-                  <input type="text" class="form-control" id="numerotelefono" formControlName="numerotelefono">
+                  <input type="text" class="form-control" id="numerotelefono" formControlName="numerotelefono"
+                  (change)="setValoresStore(proveedorForm,'numerotelefono', 'setnumerotelefono')">
                 </div>
                 <div class="col-md-4 mb-3">
                   <label class="form-label" for="correoElectronico">Correo electrónico:</label>
                   <div class="input-group">
                     <input type="email" class="form-control" id="correoElectronico" formControlName="correoElectronico"
-                    [ngClass]="isValid(proveedorForm, 'correoElectronico') ? 'required' : ''">
+                    [ngClass]="isValid(proveedorForm, 'correoElectronico') ? 'required' : ''"
+                    (change)="setValoresStore(proveedorForm,'correoElectronico', 'setcorreoElectronico')">
                     </div>
                 </div>
               </div>
@@ -285,17 +294,20 @@
                       <div class="row">
                         <div class="col-md-6 ">
                           <label class="form-label" for="rfc">R.F.C:</label>
-                          <input type="text" class="form-control" id="nombre" formControlName="tiporfc">
+                          <input type="text" class="form-control" id="nombre" formControlName="tiporfc"
+                          (change)="setValoresStore(requeridaForm,'tiporfc', 'settiporfc')">
                         </div>
                         <div class="col-md-6 *ngIf=hideCurp ">
                             <label class="form-label" for="curp">C.U.R.P*:</label>
-                            <input type="text" class="form-control" id="curp" formControlName="tipocurp">
+                            <input type="text" class="form-control" id="curp" formControlName="tipocurp"
+                            (change)="setValoresStore(requeridaForm,'tipocurp', 'settipocurp')">
                           </div>
                       </div>
                       <div class="row">
                         <div class="col-md-8 mb-3">
                           <label class="form-label" for="denominación">Denominación/razón social*:</label>
-                          <input type="text" class="form-control" id="tipodenominacion" formControlName="tipodenominacion">
+                          <input type="text" class="form-control" id="tipodenominacion" formControlName="tipodenominacion"
+                          (change)="setValoresStore(requeridaForm,'tipodenominacion', 'settipodenominacion')">
                         </div>
                     </div>
                     <ng-titulo titulo="Domicilio" />
@@ -313,13 +325,15 @@
                       </div>
                       <div class="col-md-4 mb-3">
                         <label class="form-label" for="localidad">Estado*:</label>
-                        <input type="text" class="form-control" id="localidad" formControlName="numeroEstado">
+                        <input type="text" class="form-control" id="localidad" formControlName="numeroEstado"
+                        (change)="setValoresStore(requeridaForm,'tiponumeroEstado', 'setnumeroEstado')">
                         
                       
                       </div>
                       <div class="col-md-4">
                         <label class="form-label" for="municipio">Codigo postal o equivalente</label>
-                        <input type="text" class="form-control" id="numeropostal" formControlName="numeropostal">
+                        <input type="text" class="form-control" id="numeropostal" formControlName="numeropostal"
+                        (change)="setValoresStore(requeridaForm,'tiponumeroEstado', 'setnumeroEstado')">
                        
                       </div>
                     </div>
@@ -327,7 +341,8 @@
                     <div class="row">
                       <div class="col-md-4 ">
                         <label class="form-label" for="nombrelocalidad">Colonia o equivalente:</label>
-                        <input type="text" class="form-control" id="nombreequivalente" formControlName="nombreequivalente">
+                        <input type="text" class="form-control" id="nombreequivalente" formControlName="nombreequivalente"
+                        (change)="setValoresStore(requeridaForm,'nombreequivalente', 'setnombreequivalente')">
                         
                       </div>
                       <div class="col-md-4 mb-3">
@@ -341,30 +356,36 @@
                     <div class="row">
                       <div class="col-md-8">
                         <label class="form-label" for="numeroCalle">Calle*:</label>
-                        <input type="text" class="form-control" id="numeroCalle" formControlName="numeroCalle">
+                        <input type="text" class="form-control" id="numeroCalle" formControlName="numerosCalle"
+                        (change)="setValoresStore(requeridaForm,'numerosCalle', 'setnumerosCalle')">
                       </div>
                       <div class="col-md-4">
                         <label class="form-label" for="experior">Numero experior*:</label>
-                        <input type="text" class="form-control" id="experior" formControlName="numbroexperior">
+                        <input type="text" class="form-control" id="experior" formControlName="numbroexperior"
+                        (change)="setValoresStore(requeridaForm,'numbroexperior', 'setnumbroexperior')">
                       </div>
                   </div>
                   <div class="row">
                     <div class="col-md-4">
                       <label class="form-label" for="numbrointerior">Numero interior:</label>
-                      <input type="text" class="form-control" id="numbrointerior" formControlName="numbrointerior">
+                      <input type="text" class="form-control" id="numbrointerior" formControlName="numbrointerior"
+                      (change)="setValoresStore(requeridaForm,'numbrointerior', 'setnumbrointerior')">
                     </div>
                     <div class="col-md-1 mb-3">
                       <label class="form-label" for="numbrolada">Lada:</label>
-                      <input type="text" class="form-control" id="numbrolada" formControlName="numbrolada">
+                      <input type="text" class="form-control" id="numbrolada" formControlName="numbrolada"
+                      (change)="setValoresStore(requeridaForm,'numbrolada', 'setnumbrolada')">
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label" for="numerotelefono">Teléfono:</label>
-                      <input type="text" class="form-control" id="numerotelefono" formControlName="numerotelefono">
+                      <input type="text" class="form-control" id="numerostelefono" formControlName="numerostelefono"
+                      (change)="setValoresStore(requeridaForm,'numerostelefono', 'setnumerostelefono')">
                     </div>
                     <div class="col-md-4 mb-3">
                       <label class="form-label" for="correoElectronico">Correo electrónico:</label>
                       <div class="input-group">
-                        <input type="email" class="form-control" id="tipocorreoElectronico" formControlName="tipocorreoElectronico">
+                        <input type="email" class="form-control" id="tipocorreoElectronico" formControlName="tipocorreoElectronico"
+                        (change)="setValoresStore(requeridaForm,'tipocorreoElectronico', 'settipocorreoElectronico')">
                         </div>
                     </div>
                   </div>
