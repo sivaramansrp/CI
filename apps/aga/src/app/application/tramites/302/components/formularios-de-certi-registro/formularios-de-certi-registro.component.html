@@ -1,0 +1,74 @@
+<form [formGroup]="formargrupo">
+    <div class="form">
+      <div class="row">
+        @if (formularioTítulo) {
+            <div class="pt-1">
+                <ng-titulo [titulo]="formularioTítulo" />
+            </div>
+        }
+        @for (item of formularioDatos; track $index) {
+            @if (item.tipo_input === '') {
+                <div [ngClass]="item.class">
+                  <div class="form-group">
+                    <label class="form-label mt-5 mb-3" [for]="item.campo">{{
+                      item.labelNombre
+                    }}</label>
+                  </div>
+                </div>
+              } @else if (item.tipo_input === 'text') {
+            <div [ngClass]="item.class" class="mt-5">
+              <div class="form-group">
+                <label class="form-label" [for]="item.campo">{{
+                  item.labelNombre
+                }}</label>
+                <input
+                  class="form-control"
+                  [type]="item.tipo_input"
+                  [id]="item.campo"
+                  [placeholder]="item.placeholder"
+                  [formControlName]="item.campo"
+                />
+              </div>
+            </div>
+          } @else if (item.tipo_input === 'checkbox') {
+            <div
+              [ngClass]="item.class"
+              style="
+                display: flex;
+                justify-content: left;
+                align-items: center;
+                margin-top: 6rem;
+              "
+            >
+              <div class="form-group">
+                <input
+                  type="checkbox"
+                  [id]="item.campo"
+                  [placeholder]="item.placeholder"
+                  [formControlName]="item.campo"
+                />
+                <label class="form-label" [for]="item.campo">{{
+                  item.labelNombre
+                }}</label>
+              </div>
+            </div>
+          } @else if (item.tipo_input === 'textarea') {
+            <div [ngClass]="item.class" class="mt-5">
+              <label for="{{ item.campo }}">{{ item.labelNombre }}:</label>
+              <textarea
+                class="form-control"
+                name=""
+                id="{{ item.labelNombre }}"
+                rows="5"
+                [formControlName]="item.campo"
+              ></textarea>
+            </div>
+          } @else if (item.tipo_input === 'select-catalogos') {
+            <div [ngClass]="item.class" class="mt-5">
+              <select-catalogos [catalogosDatos]="menúDesplegableDatos ? menúDesplegableDatos : item?.listaDesplegable" (valorSeleccion)="docSeleccionado($event, formargrupo, item.campo)"></select-catalogos>
+            </div>
+          }
+       } 
+    </div>
+  </div>
+</form>

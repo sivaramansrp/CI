@@ -5,7 +5,6 @@ import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite
 import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
 import { AcusePageComponent } from './acuse/acuse-page/acuse-page.component';
 
-
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
@@ -30,6 +29,11 @@ const ROUTES: Routes = [
     path: 'importante',
     loadChildren: () =>
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
+  },
+  {
+    path: 'certi-registro',
+    loadChildren: () =>
+      import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
   },
   {
     path: 'atender-requerimientos',
