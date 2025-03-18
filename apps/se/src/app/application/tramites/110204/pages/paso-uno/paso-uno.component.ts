@@ -48,11 +48,11 @@ export class PasoUnoComponent implements AfterViewInit {
   /**
    * Este método permite que el usuario seleccione una pestaña cambiando el valor de `indice`.
    * 
-   * @param i El índice de la pestaña seleccionada.
+   * @param indice El índice de la pestaña seleccionada.
    */
-  seleccionaTab(i: number): void {
+  seleccionaTab(indice: number): void {
     // Establece el índice de la pestaña seleccionada
-    this.indice = i;
+    this.indice = indice;
   }
 
 }

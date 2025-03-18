@@ -4,27 +4,6 @@ import { Injectable } from '@angular/core';
 import { Mercancia } from '../models/plantas-consulta.model';
 
 // Interfaz que define el estado del trámite.
-/**
- * @interface TramiteState
- * @description Representa el estado de un trámite en la aplicación.
- * 
- * @property {Catalogo[]} idiomaDatos - Datos del catálogo de idiomas.
- * @property {Catalogo[]} entidadFederativaDatos - Datos del catálogo de entidades federativas.
- * @property {Catalogo[]} representacionFederalDatos - Datos del catálogo de representaciones federales.
- * @property {Catalogo[]} altaPlanta - Datos del catálogo de alta planta.
- * @property {Catalogo} estado - Estado del catálogo.
- * @property {Catalogo[]} factura - Datos del catálogo de facturas.
- * @property {Catalogo} facturas - Facturas del catálogo.
- * @property {Catalogo} umc - Unidad de medida del catálogo.
- * @property {Catalogo[]} umcs - Unidades de medida del catálogo.
- * @property {Catalogo[]} paisBloques - Datos del catálogo de bloques de países.
- * @property {Catalogo} paisBloque - Bloque de país del catálogo.
- * @property {{ [key: string]: undefined | boolean | string | number | object }} formCertificado - Formulario de certificado.
- * @property {{ [key: string]: undefined | boolean | string | number | object }} formDatesCerticado - Formulario de fechas de certificado.
- * @property {{ [key: string]: undefined | boolean | string | number | object }} mercanciaForm - Formulario de mercancía.
- * @property {Mercancia[]} buscarMercancia - Lista de mercancías buscadas.
- * @property {{ [key: string]: boolean }} formaValida - Validación del formulario.
- */
 export interface TramiteState {
   idiomaDatos: Catalogo[];
   entidadFederativaDatos: Catalogo[];
@@ -45,38 +24,6 @@ export interface TramiteState {
 }
 
 // Interfaz que define el estado de la solicitud 110204.
-/**
- * @interface Solicitud110204State
- * @description Representa el estado de una solicitud 110204.
- * 
- * @property {string} regimenMercancia - Régimen de la mercancía.
- * @property {string} clasifiRegimen - Clasificación del régimen.
- * @property {string} valueTA - Valor TA.
- * @property {string} fraccionArancelaria - Fracción arancelaria.
- * @property {string} nico - NICO.
- * @property {string} unidadMedidaTarifaria - Unidad de medida tarifaria.
- * @property {number} cantidadTarifaria - Cantidad tarifaria.
- * @property {number} valorFacturaUSD - Valor de la factura en USD.
- * @property {string} precioUnitarioUSD - Precio unitario en USD.
- * @property {string} paisOrigen - País de origen.
- * @property {string} paisDestino - País de destino.
- * @property {string} lote - Lote.
- * @property {string} fechaSalida - Fecha de salida.
- * @property {string} observaciones - Observaciones.
- * @property {string} observacionMerc - Observación de la mercancía.
- * @property {string} tipoPersona - Tipo de persona.
- * @property {string} nombre - Nombre.
- * @property {string} apellidoPaterno - Apellido paterno.
- * @property {string} apellidoMaterno - Apellido materno.
- * @property {string} razonSocial - Razón social.
- * @property {string} molino - Molino.
- * @property {string} domicilio - Domicilio.
- * @property {string} estado - Estado.
- * @property {string} paisBloque - País bloque.
- * @property {string} factura - Factura.
- * @property {string} umc - UMC.
- * @property {string} representacionFederal - Representación federal.
- */
 export interface Solicitud110204State {
   regimenMercancia: string;
   clasifiRegimen: string;
@@ -108,60 +55,6 @@ export interface Solicitud110204State {
 }
 
 // Estado inicial para el trámite.
-/**
- * @constant {TramiteState} INITIAL_STATE - Estado inicial de la aplicación para el trámite 110204.
- * 
- * @property {Array} altaPlanta - Lista de plantas altas.
- * @property {Array} paisBloques - Lista de bloques de países.
- * @property {Object} estado - Estado actual del trámite.
- * @property {number} estado.id - Identificador del estado.
- * @property {string} estado.descripcion - Descripción del estado.
- * @property {Object} umc - Unidad de medida y clasificación.
- * @property {number} umc.id - Identificador de la UMC.
- * @property {string} umc.descripcion - Descripción de la UMC.
- * @property {Array} umcs - Lista de UMCs.
- * @property {Array} factura - Lista de facturas.
- * @property {Object} formaValida - Validación del formulario.
- * @property {Object} formCertificado - Datos del formulario de certificado.
- * @property {string} formCertificado.entidadFederativa - Entidad federativa.
- * @property {boolean} formCertificado.tercerOperador - Indicador de tercer operador.
- * @property {string} formCertificado.bloque - Bloque.
- * @property {string} formCertificado.nombreComercialForm - Nombre comercial.
- * @property {string} formCertificado.registroProductoForm - Registro del producto.
- * @property {string} formCertificado.fracciónArancelariaForm - Fracción arancelaria.
- * @property {Object} formDatesCerticado - Fechas del certificado.
- * @property {string} formDatesCerticado.observacionesDates - Observaciones de las fechas.
- * @property {string} formDatesCerticado.idiomaDates - Idioma de las fechas.
- * @property {string} formDatesCerticado.EntidadFederativaDates - Entidad federativa de las fechas.
- * @property {string} formDatesCerticado.representacionFederalDates - Representación federal de las fechas.
- * @property {Object} mercanciaForm - Formulario de mercancía.
- * @property {string} mercanciaForm.fraccionNaladi - Fracción Naladi.
- * @property {string} mercanciaForm.fraccionNaladiSa93 - Fracción Naladi SA93.
- * @property {string} mercanciaForm.fraccionNaladiSa96 - Fracción Naladi SA96.
- * @property {string} mercanciaForm.fraccionNaladiSa02 - Fracción Naladi SA02.
- * @property {string} mercanciaForm.nombreTecnico - Nombre técnico.
- * @property {string} mercanciaForm.nombreComercial - Nombre comercial.
- * @property {string} mercanciaForm.normaOrigen - Norma de origen.
- * @property {string} mercanciaForm.id - Identificador.
- * @property {string} mercanciaForm.cantidad - Cantidad.
- * @property {string} mercanciaForm.umc - Unidad de medida y clasificación.
- * @property {string} mercanciaForm.tipoFactura - Tipo de factura.
- * @property {string} mercanciaForm.valorMercancia - Valor de la mercancía.
- * @property {string} mercanciaForm.fechaFinalInput - Fecha final.
- * @property {string} mercanciaForm.numeroFactura - Número de factura.
- * @property {string} mercanciaForm.nalad - Nalad.
- * @property {string} mercanciaForm.complementoClasificacion - Complemento de clasificación.
- * @property {Object} facturas - Facturas.
- * @property {number} facturas.id - Identificador de la factura.
- * @property {string} facturas.descripcion - Descripción de la factura.
- * @property {Array} buscarMercancia - Lista de búsqueda de mercancía.
- * @property {Object} paisBloque - Bloque de país.
- * @property {number} paisBloque.id - Identificador del bloque de país.
- * @property {string} paisBloque.descripcion - Descripción del bloque de país.
- * @property {Array} idiomaDatos - Lista de datos de idioma.
- * @property {Array} entidadFederativaDatos - Lista de datos de entidad federativa.
- * @property {Array} representacionFederalDatos - Lista de datos de representación federal.
- */
 export const INITIAL_STATE: TramiteState = {
   altaPlanta: [],
   paisBloques: [],
@@ -251,6 +144,11 @@ export class Tramite110204Store extends Store<TramiteState> {
     }));
   }
 
+  /**
+   * Establece la lista de facturas en el estado.
+   * 
+   * @param factura - Lista de objetos de tipo Catalogo que representan las facturas.
+   */
   setFactura(factura: Catalogo[]): void {    
     this.update((state) => ({
       ...state,
@@ -258,6 +156,11 @@ export class Tramite110204Store extends Store<TramiteState> {
     }));
   }
 
+  /**
+   * Establece el catálogo de UMCs en el estado de la tienda.
+   *
+   * @param umcs - Una lista de objetos de tipo `Catalogo` que representan las UMCs a establecer.
+   */
   setUmc(umcs: Catalogo[]): void {    
     this.update((state) => ({
       ...state,
