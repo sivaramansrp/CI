@@ -115,14 +115,14 @@ export interface EnviarDatos {
     dataParaMovilizacion: boolean,
     dataDeLaSolicitud: boolean,
 }
-export interface Acuicultura {
+export interface Agricultura {
     formularioPago: FormularioPago;
     formularioMovilizacion: FormularioMovilizacion;
     datosMercancia: DatosMercancia220701;
     formaValida: EnviarDatos;
 }
 
-export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura {
+export function createDatosState(params: Partial<Agricultura> = {}): Agricultura {
     return {
         formularioPago: params.formularioPago || {
             exentoPago: '',

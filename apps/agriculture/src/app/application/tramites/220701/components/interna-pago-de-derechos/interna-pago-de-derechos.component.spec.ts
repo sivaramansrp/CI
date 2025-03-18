@@ -21,7 +21,7 @@ import { of as observableOf } from 'rxjs';
 import { throwError } from 'rxjs';
 
 import { InternaPagoDeDerechosComponent } from './interna-pago-de-derechos.component';
-import { ImportacionDeAcuiculturaService } from '../../servicios/importacion-de-acuicultura.service';
+import { ImportacionDeAcuiculturaService } from '../../servicios/importacion-de-agricultura.service';
 import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { TramiteStore } from '../../estados/tramite220701.store';

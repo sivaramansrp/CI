@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 
 
-import { Acuicultura, DatosMercancia220701, FormularioMovilizacion, FormularioPago, createDatosState } from '../../220701/modelos/importacion-de-acuicultura.module';
+import { Agricultura, DatosMercancia220701, FormularioMovilizacion, FormularioPago, createDatosState } from '../../220701/modelos/importacion-de-acuicultura.module';
 
 
 
@@ -11,8 +11,8 @@ import { Acuicultura, DatosMercancia220701, FormularioMovilizacion, FormularioPa
 @Injectable({
     providedIn: 'root',
 })
-@StoreConfig({ name: 'importacion-de-acuicultura', resettable: true })
-export class AcuiculturaStore extends Store<Acuicultura> {
+@StoreConfig({ name: 'importacion-de-Agricultura', resettable: true })
+export class AgriculturaStore extends Store<Agricultura> {
     constructor() {
         super(createDatosState());
     }

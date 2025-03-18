@@ -12,7 +12,7 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormularioPago } from '../../modelos/importacion-de-acuicultura.module';
 import { FormularioPagoInt } from '../../modelos/datos-de-interfaz.model'; 
-import { ImportacionDeAcuiculturaService } from '../../servicios/importacion-de-acuicultura.service';
+import { ImportacionDeAcuiculturaService } from '../../servicios/importacion-de-agricultura.service';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
