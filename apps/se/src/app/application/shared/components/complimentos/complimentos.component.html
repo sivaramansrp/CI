@@ -118,7 +118,7 @@
           />
         </div>
         <div class="row">
-          <div class="col-md-4 mb-4">
+          <div class="col-md-4 mb-4 mt-3">
             <label for="Numero"> Número de Notario</label>
             <input
               type="text"
@@ -128,7 +128,7 @@
               formControlName="nombreDeNotaria"
             />
           </div>
-          <div class="col-4 mb-4">
+          <div class="col-4 mb-4 mt-1">
             <app-catalogo-select
               [catalogo]="(estados$ | async) || []"
               [label]="'Estado'"
@@ -211,6 +211,7 @@
                   formControlName="nationalidadMaxicana"
                   value="true"
                   id="nationalidadMaxicana"
+                  (change)="handleModificarForma()"
                 />
                 Si</label
               >
@@ -225,6 +226,7 @@
                   name="nationalidadMaxicana"
                   formControlName="nationalidadMaxicana"
                   value="false"
+                  (change)="handleModificarForma()"
                 />
                 No</label
               >
@@ -247,6 +249,7 @@
                   formControlName="tipoDePersona"
                   value="true"
                   id="tipoDePersona"
+                  (change)="handleModificarForma()"
                 />
                 Persona fisica</label
               >
@@ -261,6 +264,7 @@
                   name="tipoDePersona"
                   formControlName="tipoDePersona"
                   value="false"
+                  (change)="handleModificarForma()"
                 />
                 Persona Moral</label
               >

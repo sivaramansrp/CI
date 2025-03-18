@@ -8,7 +8,16 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {
   DatosComplimentos,
   SociaoAccionistas,
@@ -62,6 +71,7 @@ export class ComplimentosComponent implements OnInit {
   camposFormulario: DatosCatalago[] = FORMA_SOCIO_ACCIONISTAS;
   tipoFormulario = TIPO_FORMA.DEFAULT;
 
+  @Input() datosFormaComplimentos!: DatosComplimentos | null;
   @Input() datosSocioAccionistas: SociaoAccionistas[] = [];
   @Input() datosSocioAccionistasExtrenjeros: SociaoAccionistas[] = [];
 
@@ -99,7 +109,7 @@ export class ComplimentosComponent implements OnInit {
       }),
       obligacionesFiscales: this.fb.group({
         opinionPositiva: [{ value: '', disabled: true }],
-        fechaExpedicion: [{ value: '01-01-2000', disabled: true }],
+        fechaExpedicion: [{ value: '', disabled: true }],
         aceptarObligacionFiscal: [''],
       }),
       formaModificaciones: this.fb.group({
@@ -122,34 +132,24 @@ export class ComplimentosComponent implements OnInit {
         formaDatos: this.obtainerFormaDatos(TIPO_FORMA.DEFAULT),
       }),
     });
+    if (this.datosFormaComplimentos) {
+      this.formaComplimentos.patchValue(this.datosFormaComplimentos);
+    }
   }
+
   ngOnInit(): void {
     this.getCatalogoPaises();
     this.getCatalogoEstado();
 
     this.subscription.add(
-      this.formaComplimentos.valueChanges.pipe(delay(100)).subscribe((res) => {
-        if (res.formaSocioAccionistas.nationalidadMaxicana === 'true') {
-          this.modificarFormulario(
-            TIPO_FORMA.NATIONALIDAD_MEXICANA,
-            this.camposFormularioNationalidad
-          );
-        } else {
-          if (res.formaSocioAccionistas.tipoDePersona === 'true') {
-            this.modificarFormulario(
-              TIPO_FORMA.TIPO_PERSONA,
-              this.camposFormularioTipoPersona
-            );
-          } else {
-            this.modificarFormulario(
-              TIPO_FORMA.DEFAULT,
-              this.camposFormularioDefault
-            );
-          }
-        }
-        this.complimentosDatos.emit(res);
+      this.formaComplimentos.valueChanges.pipe(delay(100)).subscribe((_) => {
+        this.complimentosDatos.emit(this.formaComplimentos.value);
       })
     );
+
+    if (this.datosFormaComplimentos) {
+      this.formaComplimentos.patchValue(this.datosFormaComplimentos);
+    }
   }
 
   obtainerFormaDatos(tipoForma: number): FormGroup {
@@ -249,9 +249,13 @@ export class ComplimentosComponent implements OnInit {
   }
 
   aggregarAccionistas(): void {
-    const VALUE = this.formaComplimentos.get('formaDatos')?.value;
+    const CONTROL = this.formaComplimentos.get(
+      'formaSocioAccionistas'
+    ) as FormGroup;
+    const VALUE = CONTROL.get('formaDatos')?.value;
     if (VALUE) {
       this.accionistasAgregados.emit(VALUE);
+      CONTROL.reset();
     }
   }
   eliminarAccionistas(): void {
@@ -264,6 +268,28 @@ export class ComplimentosComponent implements OnInit {
       this.accionistasExtranjerosEliminado.emit(
         this.accionistasExtranjerosSeleccionados
       );
+    }
+  }
+
+  handleModificarForma(): void {
+    const VALUE = this.formaComplimentos.value;
+    if (VALUE.formaSocioAccionistas.nationalidadMaxicana === 'true') {
+      this.modificarFormulario(
+        TIPO_FORMA.NATIONALIDAD_MEXICANA,
+        this.camposFormularioNationalidad
+      );
+    } else {
+      if (VALUE.formaSocioAccionistas.tipoDePersona === 'true') {
+        this.modificarFormulario(
+          TIPO_FORMA.TIPO_PERSONA,
+          this.camposFormularioTipoPersona
+        );
+      } else {
+        this.modificarFormulario(
+          TIPO_FORMA.DEFAULT,
+          this.camposFormularioDefault
+        );
+      }
     }
   }
 }

@@ -32,8 +32,8 @@ import {
   Servicios,
 } from '../../models/autorizacion-programa-nuevo.model';
 import { Observable, Subscription } from 'rxjs';
-import { AmpliacionServiciosQuery } from '../../estados/tramite80102.query';
-import { AmpliacionServiciosStore } from '../../estados/tramite80102.store';
+import { Tramite80102Query } from '../../estados/tramite80102.query';
+import { Tramite80102Store } from '../../estados/tramite80102.store';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
 import { Input, OnDestroy, OnInit } from '@angular/core';
@@ -105,8 +105,8 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private ampliacionServiciosQuery: AmpliacionServiciosQuery,
-    private ampliacionServiciosStore: AmpliacionServiciosStore,
+    private Tramite80102Query: Tramite80102Query,
+    private Tramite80102Store: Tramite80102Store,
     private readonly autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService,
     private catalogosServices: CatalogosService
   ) {
@@ -114,7 +114,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
     });
 
-    this.ampliacionServiciosQuery.selectAduanaDeIngresoSelecion$
+    this.Tramite80102Query.selectAduanaDeIngresoSelecion$
       .pipe()
       .subscribe((aduanaDeIngresoSelecion) => {
         if (aduanaDeIngresoSelecion) {
@@ -122,7 +122,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
             entidadFederativa: aduanaDeIngresoSelecion.id,
           });
         }
-        this.ampliacionServiciosStore.setFormValida({
+        this.Tramite80102Store.setFormValida({
           entidadFederativa: this.formulario.valid,
         });
       });
@@ -137,7 +137,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       ],
     });
 
-    this.datosEmpresaExtranjera$ =this.ampliacionServiciosQuery.selectdatosEmpresaExtranjera$;
+    this.datosEmpresaExtranjera$ =this.Tramite80102Query.selectdatosEmpresaExtranjera$;
   }
 
   /**
@@ -160,20 +160,20 @@ export class ServiciosComponent implements OnInit, OnDestroy {
         .subscribe((datos) => {
           const INDICE = this.camposFormulario.findIndex( ele => ele.campo === ENTIDADFEDERATIVA)
           this.camposFormulario[INDICE].opciones = datos;
-          this.ampliacionServiciosStore.setPaisesOrigen(datos);
+          this.Tramite80102Store.setPaisesOrigen(datos);
         })
     );
   }
   enCambioDeCampo(fieldName: string, newValue: string): void {
     switch (fieldName) {
       case 'rfcEmpresa':
-        this.ampliacionServiciosStore.setRfcEmpresa(newValue);
+        this.Tramite80102Store.setRfcEmpresa(newValue);
         break;
       case 'numeroPrograma':
-        this.ampliacionServiciosStore.setNumeroPrograma(newValue);
+        this.Tramite80102Store.setNumeroPrograma(newValue);
         break;
       case 'tiempoPrograma':
-        this.ampliacionServiciosStore.setTiempoPrograma(newValue);
+        this.Tramite80102Store.setTiempoPrograma(newValue);
         break;
       default:
         break;
@@ -186,14 +186,14 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    */
   suscribirseADatos(): void {
     this.subscription.add(
-      this.ampliacionServiciosQuery.selectDatos$.subscribe((datos) => {
+      this.Tramite80102Query.selectDatos$.subscribe((datos) => {
         this.datos = datos; // Update local `datos` array when store data changes
       })
     );
   }
   suscribirseAFields(): void {
     this.subscription.add(
-      this.ampliacionServiciosQuery
+      this.Tramite80102Query
         .select((state) => ({
           rfcEmpresa: state.rfcEmpresa,
           numeroPrograma: state.numeroPrograma,
@@ -212,14 +212,14 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       this.autorizacionProgrmaNuevoService.getDatos().subscribe((respuesta) => {
         if (respuesta) {
           // Store the response data in the store
-          this.ampliacionServiciosStore.setInfoRegistro(respuesta);
+          this.Tramite80102Store.setInfoRegistro(respuesta);
         }
       })
     );
   }
   suscribirseADatosImmex(): void {
     // Subscribe to `datosImmex` from the store to keep the component updated reactively
-    this.ampliacionServiciosQuery.selectDatosImmex$.subscribe((datosImmex) => {
+    this.Tramite80102Query.selectDatosImmex$.subscribe((datosImmex) => {
       this.datosImmex = datosImmex; // Update local variable with the latest data from the store
     });
   }
@@ -242,10 +242,10 @@ export class ServiciosComponent implements OnInit, OnDestroy {
           const DATOS = data as Catalogo[];
 
           // Set the fetched data into the store
-          this.ampliacionServiciosStore.setAduanaDeIngreso(DATOS);
+          this.Tramite80102Store.setAduanaDeIngreso(DATOS);
 
           // You can also directly assign it to the component if needed, but it's better to use the store for reactivity
-          this.ampliacionServiciosQuery.selectAduanaDeIngreso$.subscribe(
+          this.Tramite80102Query.selectAduanaDeIngreso$.subscribe(
             (aduanaDeIngreso) => {
               this.aduanaDeIngreso = aduanaDeIngreso;
             }
@@ -267,7 +267,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     if (INDICE !== -1) {
       const DATOS_IMMEX_ACTUALIZADOS = [...this.datosImmex];
       DATOS_IMMEX_ACTUALIZADOS.splice(INDICE, 1);
-      this.ampliacionServiciosStore.setDatosImmex(DATOS_IMMEX_ACTUALIZADOS);
+      this.Tramite80102Store.setDatosImmex(DATOS_IMMEX_ACTUALIZADOS);
     }
   }
 
@@ -280,7 +280,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       descripiónDelServicio: this.recibioDatos[0].descripcion,
       tipode: this.recibioDatos[0].tipode,
     };
-    this.ampliacionServiciosStore.setDatosImmex([
+    this.Tramite80102Store.setDatosImmex([
       ...this.datosImmex,
       CUERPODATOS,
     ]);
@@ -299,7 +299,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     if (INDICE !== -1) {
       const DATOSACTUALIZADOS = [...this.datos];
       DATOSACTUALIZADOS.splice(INDICE, 1);
-      this.ampliacionServiciosStore.setDatos(DATOSACTUALIZADOS);
+      this.Tramite80102Store.setDatos(DATOSACTUALIZADOS);
     }
   }
 
@@ -317,11 +317,11 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     };
 
     const DATOSACTUALIZADOS = [...this.datos, CUERPODATOS];
-    this.ampliacionServiciosStore.setDatos(DATOSACTUALIZADOS);
+    this.Tramite80102Store.setDatos(DATOSACTUALIZADOS);
     this.rfcEmpresa = '';
     this.numeroPrograma = '';
     this.tiempoPrograma = '';
-    this.ampliacionServiciosStore.setCamposEmpresa(
+    this.Tramite80102Store.setCamposEmpresa(
       this.rfcEmpresa,
       this.numeroPrograma,
       this.tiempoPrograma
@@ -344,7 +344,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    */
   procesarDatosDelHijo(data: Catalogo | Catalogo[]): void {
     this.recibioDatos = Array.isArray(data) ? data : [data];
-    this.ampliacionServiciosStore.setAduanaDeIngresoSeleccion(data as Catalogo);
+    this.Tramite80102Store.setAduanaDeIngresoSeleccion(data as Catalogo);
   }
 
   /**
@@ -369,14 +369,14 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     if(!this.empresaExtranjeraSeleccionados.length) {
       return
     }
-    this.ampliacionServiciosStore.eliminarDatosEmpresaExtranjera(
+    this.Tramite80102Store.eliminarDatosEmpresaExtranjera(
       this.empresaExtranjeraSeleccionados
     );
     this.empresaExtranjeraSeleccionados = [];
   }
 
   agregarEmpresaExtranjera(): void {
-    this.ampliacionServiciosStore.agregarDdatosEmpresaExtranjera(
+    this.Tramite80102Store.agregarDdatosEmpresaExtranjera(
       this.formularioEmpresaExtranjera.value
     );
   }
