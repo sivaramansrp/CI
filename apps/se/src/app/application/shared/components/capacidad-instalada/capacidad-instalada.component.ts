@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CAPACIDAD_INSTALADA } from '../../constants/capacidad-instalada.enum';
+import { CAPACIDAD_INSTALADA } from '../../constantes/capacidad-instalada.enum';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 @Component({

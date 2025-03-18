@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { COMPLEMENTO_DE_PLANTA } from '../../constants/complementar-planta.enum';
+import { COMPLEMENTO_DE_PLANTA } from '../../constantes/complementar-planta.enum';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 

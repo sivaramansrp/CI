@@ -6,7 +6,7 @@ import {
   FECHA_DE_CEDULA,
   FECHA_DE_FIRMA,
   FECHA_FIN_VIGENCIA,
-} from '../../constants/empleados.enum';
+} from '../../constantes/empleados.enum';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
