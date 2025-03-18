@@ -23,14 +23,14 @@ import { Catalogo, CatalogosSelect, FormularioDinamico, InputCheckComponent, Sel
 })
 export class FormulariosDeCertiRegistroComponent {
 
-  @Input() formargrupo!: FormGroup;
+  @Input() formGroup!: FormGroup;
 
-  @Input() formularioDatos!: FormularioDinamico[];
+  @Input() formData!: FormularioDinamico[];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @Input() menúDesplegableDatos!: any;
+  @Input() dropdownData!: any;
 
-  @Input() formularioTítulo!: string;
+  @Input() formTitle!: string;
   
   constructor(
     private fb: FormBuilder
@@ -38,7 +38,7 @@ export class FormulariosDeCertiRegistroComponent {
   ) { }
 
   // eslint-disable-next-line class-methods-use-this
-  docSeleccionado(event: Catalogo, form: FormGroup, formControl: string) {
-    form?.get(formControl)?.setValue(event?.descripcion);
-  }
+    docSeleccionado(event: Catalogo, form: FormGroup, formControl: string) {
+      form?.get(formControl)?.setValue(event?.descripcion);
+    }
 }

@@ -1,12 +1,12 @@
-<form [formGroup]="formargrupo">
+<form [formGroup]="formGroup">
     <div class="form">
       <div class="row">
-        @if (formularioTítulo) {
+        @if (formTitle) {
             <div class="pt-1">
-                <ng-titulo [titulo]="formularioTítulo" />
+                <ng-titulo [titulo]="formTitle" />
             </div>
         }
-        @for (item of formularioDatos; track $index) {
+        @for (item of formData; track $index) {
             @if (item.tipo_input === '') {
                 <div [ngClass]="item.class">
                   <div class="form-group">
@@ -65,7 +65,7 @@
             </div>
           } @else if (item.tipo_input === 'select-catalogos') {
             <div [ngClass]="item.class" class="mt-5">
-              <select-catalogos [catalogosDatos]="menúDesplegableDatos ? menúDesplegableDatos : item?.listaDesplegable" (valorSeleccion)="docSeleccionado($event, formargrupo, item.campo)"></select-catalogos>
+              <select-catalogos [catalogosDatos]="dropdownData ? dropdownData : item?.listaDesplegable" (valorSeleccion)="docSeleccionado($event, formGroup, item.campo)"></select-catalogos>
             </div>
           }
        } 
