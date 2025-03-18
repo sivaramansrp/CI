@@ -14,7 +14,6 @@ const ROUTES: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
-
   {
     path: 'exportador-autorizado',
     loadChildren: () =>
@@ -30,6 +29,13 @@ const ROUTES: Routes = [
       )
     },
     {
+    path: 'registro-como-empresa',
+    loadChildren: () =>
+      import('./tramites/120601/registro-como-empresa.module').then(
+        (m) => m.RegistroComoEmpresaModule
+      ),
+  },
+  {
     path: 'empresa-frontera',
     loadChildren: () =>
       import('./tramites/120602/empresa-frontera-solicitud.module').then(
