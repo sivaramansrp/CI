@@ -29,7 +29,7 @@ export * from './core/services/120402/representacionFederal/representacion-feder
 export * from './core/services/120402/seleccion-del-cupo/seleccion-del-cupo.service';
 export * from './core/services/120602/empresa-frontera-solicitud.enum';
 export * from './core/services/130118/pexim/pexim.service';
-export * from './core/services/220471/servicios-pantallas.enum';
+export {PANTAPASOS} from './core/services/220471/servicios-pantallas.enum';
 export * from './core/services/220471/servicios-pantallas.service';
 export * from './core/services/220501/revision.service';
 export * from './core/services/220501/sagarpa/sagarpa.service';
@@ -49,6 +49,7 @@ export * from './tramites/components/agregar-archivo/agregar-archivo.component';
 export * from './tramites/components/agregar-transporte/agregar-transporte.component';
 export * from './tramites/components/alert/alert.component';
 export * from './tramites/components/anexar-documentos/anexar-documentos.component';
+export * from './tramites/constantes/registro-como-empresa.enum'
 export * from './tramites/components/breadcrumb/breadcrumb.component';
 export * from './tramites/components/btn-continuar/btn-continuar.component';
 export * from './tramites/components/catalogo-select/catalogo-select.component';
@@ -84,6 +85,17 @@ export { TEXTOS as TEXTOS_220501 } from './tramites/constantes/220501/texto-enum
 export { FECHA_INSPECCION_INPUT as FECHA_INSPECCION_INPUT_220502 } from './tramites/constantes/220502/texto-enum';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
+
+export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
+export * from './core/models/shared/configuracion-columna.model'
+export * from './core/services/220501/revision.service';
+export * from './core/services/220501/sagarpa/sagarpa.service';
+export * from './core/enums/220502/solicitud-pantallas.enum';
+export * from './core/services/220502/solicitud-pantallas.service';
+export * from './core/models/220502/solicitud-pantallas.model';
+export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
+export * from './core/enums/tabla-seleccion.enum';
+export * from './tramites/directives/Uppercase/uppercase.directive'
 export * from './tramites/constantes/constantes';
 export { PASOS as PASOS_CUATRO_STEPS } from './tramites/constantes/paso-cuatro-steps.enum';
 export { PASOS as PASOS_TRES_STEPS } from './tramites/constantes/paso-tres-steps.enum';
@@ -91,6 +103,11 @@ export * from './tramites/constantes/regex.constants';
 export * from './tramites/constantes/seccionesTramites';
 export * from './tramites/constantes/servicios-extraordinarios.enum';
 export * from './tramites/directives/Uppercase/uppercase.directive';
+export * from './tramites/constantes/solicitante-constantes.enum';
+export * from './tramites/constantes/120601/datos-generales-socios-tabledata.enum';
+
+
+
 export * from './tramites/pages/acuse-page/acuse-page.component';
 export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
