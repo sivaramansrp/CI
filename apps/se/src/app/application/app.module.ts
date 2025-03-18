@@ -13,6 +13,7 @@ import { SolicitanteService } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { provideHttpClient } from '@angular/common/http';
 
+
 @NgModule({
   declarations: [AppComponent, SeleccionTramiteComponent],
   imports: [
