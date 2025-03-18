@@ -43,9 +43,6 @@ export class DatosDeLaSolicitudeComponent implements OnInit, OnDestroy {
    */
   radioOptions = RadioOptionsData;
 
-  selectedValue: string | number = 'option1'; // Update the type to string | number
-  defaultSelect: string | number = 'oficina central';
-
 
   // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder,
@@ -82,10 +79,6 @@ export class DatosDeLaSolicitudeComponent implements OnInit, OnDestroy {
       Valor: [this.solicitudState.valor, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
       SolitudUMT: [this.solicitudState.solitudUMT, Validators.required]
     });
-  }
-
-  onValueChange(newValue: string | number): void {
-    this.selectedValue = newValue;
   }
 
   configuracionesDropdown = [
