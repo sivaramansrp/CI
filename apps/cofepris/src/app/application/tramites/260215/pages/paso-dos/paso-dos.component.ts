@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogosService } from '@libs/shared/data-access-user/src/core/services/shared/catalogos/catalogos.service';
-import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { TEXTOS } from '@libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
 
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
 })
-export class PasoDosComponent {
+export class PasoDosComponent implements OnInit {
   /**
    * Variable que almacena los textos de los componentes.
    */
@@ -30,7 +30,7 @@ export class PasoDosComponent {
    * @param {CatalogosService} catalogosServices - Servicio para obtener los catálogos.
    */
   constructor(private catalogosServices: CatalogosService) {
-    
+    // Constructor
   }
 
   /**
@@ -53,7 +53,9 @@ export class PasoDosComponent {
             this.catalogoDocumentos = resp;
           }
         },
-        error: (_error): void => {},
+        error: (_error): void => {
+          // error
+        },
       });
   }
 }

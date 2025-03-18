@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   Solicitud260215State,
   Tramite260215Store,
 } from '../../estados/tramites/tramite260215.store';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subscription, Subject, takeUntil, map } from 'rxjs';
-import { TituloComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { CommonModule } from '@angular/common';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
-import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { TituloComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 
 /**
  * Componente para la sección de pago de derechos.
@@ -125,8 +125,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     campo: string,
     metodoNombre: keyof Tramite260215Store
   ): void {
-    const valor = form.get(campo)?.value;
-    (this.tramite301Store[metodoNombre] as (value: any) => void)(valor);
+    const VALOR = form.get(campo)?.value;
+    (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
   /**

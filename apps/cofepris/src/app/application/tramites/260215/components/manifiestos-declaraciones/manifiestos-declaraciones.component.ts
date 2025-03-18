@@ -1,28 +1,37 @@
-import { Component } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  AlertComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud260215State,
+  Tramite260215Store,
+} from '../../estados/tramites/tramite260215.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { MensajeDeAlerta } from '../../enum/permiso.enum';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Solicitud260215State, Tramite260215Store } from '../../estados/tramites/tramite260215.store';
+import { MENSAJE_DE_ALERTA } from '../../enum/permiso.enum';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 
 @Component({
   selector: 'app-manifiestos',
   standalone: true,
-  imports: [
-    CommonModule,
-    TituloComponent,
-    AlertComponent,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, TituloComponent, AlertComponent, ReactiveFormsModule],
   templateUrl: './manifiestos-declaraciones.component.html',
   styleUrl: './manifiestos-declaraciones.component.css',
 })
-export class ManifiestosComponent {
+export class ManifiestosComponent implements OnInit, OnDestroy {
+  /**
+   * Mensaje de alerta.
+   */
+  public mensaje: string = MENSAJE_DE_ALERTA;
 
-  public mensaje:string = MensajeDeAlerta
-  
   /**
    * Estado de la solicitud.
    */
@@ -33,19 +42,31 @@ export class ManifiestosComponent {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-   constructor(private fb: FormBuilder,
+  /**
+   * Constructor del componente.
+   * @param fb
+   * @param tramite260215Store
+   * @param tramite260215Query
+   */
+  constructor(
+    private fb: FormBuilder,
     private tramite260215Store: Tramite260215Store,
     private tramite260215Query: Tramite260215Query
-   ){}
-  
-    /**
-     * Grupo de formularios principal.
-     * @property {FormGroup} manifiestos
-     */
-    manifiestos!: FormGroup;
+  ) {
+    // Se inicial
+  }
 
-    ngOnInit(): void {
-      this.tramite260215Query.selectSolicitud$
+  /**
+   * Grupo de formularios principal.
+   * @property {FormGroup} manifiestos
+   */
+  manifiestos!: FormGroup;
+
+  /**
+   * Método del ciclo de vida de Angular que se llama cuando el componente se inicializa.
+   */
+  ngOnInit(): void {
+    this.tramite260215Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -53,19 +74,24 @@ export class ManifiestosComponent {
         })
       )
       .subscribe();
-      this.manifiestos = this.fb.group({
-        cumplimiento: [this.solicitudState?.cumplimiento, Validators.required],
-      });
-    }
-    /**
+    this.manifiestos = this.fb.group({
+      cumplimiento: [this.solicitudState?.cumplimiento, Validators.required],
+    });
+  }
+
+  /**
    * Establece el valor de un campo en el store de Tramite31601.
    * @param form - El grupo de formularios que contiene el campo.
    * @param campo - El nombre del campo cuyo valor se va a establecer.
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260215Store): void {
-    const valor = form.get(campo)?.value;
-    (this.tramite260215Store[metodoNombre] as (value: any) => void)(valor);
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite260215Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite260215Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
   /**
@@ -76,5 +102,4 @@ export class ManifiestosComponent {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

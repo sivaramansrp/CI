@@ -1,13 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  AlDar,
+  AlertComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud260215State,
+  Tramite260215Store,
+} from '../../estados/tramites/tramite260215.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AlDar, AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-establecimiento.component';
 import { ManifiestosComponent } from '../manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Solicitud260215State, Tramite260215Store } from '../../estados/tramites/tramite260215.store';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
-import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-establecimiento.component';
 
 @Component({
   selector: 'app-datos-de-la',
@@ -19,13 +32,12 @@ import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-estab
     TituloComponent,
     DomicilioComponent,
     ManifiestosComponent,
-    RepresentanteLegalComponent
+    RepresentanteLegalComponent,
   ],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.css',
 })
-export class DatosDeLaComponent implements OnInit{
-
+export class DatosDeLaComponent implements OnInit, OnDestroy {
   /**
    * Estado de la solicitud.
    */
@@ -36,17 +48,26 @@ export class DatosDeLaComponent implements OnInit{
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  constructor(private readonly fb: FormBuilder,
+  /**
+   * Constructor del componente.
+   * @param fb
+   * @param tramite260215Store
+   * @param tramite260215Query
+   */
+  constructor(
+    private readonly fb: FormBuilder,
     private tramite260215Store: Tramite260215Store,
     private tramite260215Query: Tramite260215Query
-  ){}
+  ) {
+    // Inicializa el formulario.
+  }
 
   /**
    * Grupo de formularios principal.
    * @property {FormGroup} forma
    */
   forma!: FormGroup;
-  
+
   /**
    * Indica si la sección es colapsable.
    * @property {boolean} colapsable
@@ -55,7 +76,7 @@ export class DatosDeLaComponent implements OnInit{
 
   /**
    * Constantes importadas desde el archivo de enumeración que contienen textos importantes y de advertencia.
-   * 
+   *
    * @type {Importante}
    * @memberof RegistroParaLaComponent
    */
@@ -69,7 +90,10 @@ export class DatosDeLaComponent implements OnInit{
     this.colapsable = !this.colapsable;
   }
 
-  ngOnInit(){
+  /**
+   * Método que se llama cuando se inicializa el componente
+   * */
+  ngOnInit() {
     this.tramite260215Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -80,15 +104,25 @@ export class DatosDeLaComponent implements OnInit{
       .subscribe();
     this.forma = this.fb.group({
       rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true }],
-      denominacion: [{ value: this.solicitudState?.denominacion, disabled: true }, Validators.required],
-      correo: [{ value: this.solicitudState?.correo, disabled: true }, Validators.required],
+      denominacion: [
+        { value: this.solicitudState?.denominacion, disabled: true },
+        Validators.required,
+      ],
+      correo: [
+        { value: this.solicitudState?.correo, disabled: true },
+        Validators.required,
+      ],
     });
   }
+
+  /**
+   * Método que se llama cuando se envía el formulario.
+   */
   toggleFormControls() {
-    Object.keys(this.forma.controls).forEach(controlName => {
-      const control = this.forma.get(controlName);
-      if (control?.disabled) {
-        control.enable();
+    Object.keys(this.forma.controls).forEach((controlName) => {
+      const CONTROL = this.forma.get(controlName);
+      if (CONTROL?.disabled) {
+        CONTROL.enable();
       }
     });
   }
@@ -98,9 +132,13 @@ export class DatosDeLaComponent implements OnInit{
    * @param campo - El nombre del campo cuyo valor se va a establecer.
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260215Store): void {
-    const valor = form.get(campo)?.value;
-    (this.tramite260215Store[metodoNombre] as (value: any) => void)(valor);
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite260215Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite260215Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
   /**

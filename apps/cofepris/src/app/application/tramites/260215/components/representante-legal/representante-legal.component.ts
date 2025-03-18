@@ -1,76 +1,101 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud260215State,
+  Tramite260215Store,
+} from '../../estados/tramites/tramite260215.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud260215State, Tramite260215Store } from '../../estados/tramites/tramite260215.store';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
-import { map, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-representante-legal',
   standalone: true,
-  imports: [
-    CommonModule,
-    TituloComponent,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
   templateUrl: './representante-legal.component.html',
   styleUrl: './representante-legal.component.css',
 })
-export class RepresentanteLegalComponent implements OnInit{
+export class RepresentanteLegalComponent implements OnInit {
   /**
-     * Estado de la solicitud.
-     */
-    public solicitudState!: Solicitud260215State;
-  
-    /**
-     * Notificador para destruir observables.
-     */
-    private destroyNotifier$: Subject<void> = new Subject();
-    
-  constructor(private readonly fb: FormBuilder,   
+   * Estado de la solicitud.
+   */
+  public solicitudState!: Solicitud260215State;
+
+  /**
+   * Notificador para destruir observables.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Constructor del componente.
+   * @param fb
+   * @param tramite260215Store
+   * @param tramite260215Query
+   */
+  constructor(
+    private readonly fb: FormBuilder,
     private tramite260215Store: Tramite260215Store,
-      private tramite260215Query: Tramite260215Query){}
-    
-      /**
-       * Grupo de formularios principal.
-       * @property {FormGroup} representante
-       */
-      representante!: FormGroup;
+    private tramite260215Query: Tramite260215Query
+  ) {
+    // Inicializa el estado de la solicitud.
+  }
 
-    ngOnInit(): void {
-      this.tramite260215Query.selectSolicitud$
-            .pipe(
-              takeUntil(this.destroyNotifier$),
-              map((seccionState) => {
-                this.solicitudState = seccionState;
-              })
-            )
-            .subscribe();
-      this.representante = this.fb.group({
-        rfc:[this.solicitudState?.rfc,Validators.required],
-        nombre:[{value:'',disabled:true}, Validators.required],
-        apellidoPaterno:[{value:'',disabled:true}, Validators.required],
-        apellidoMaterno:[{value:'',disabled:true}],
-      });
-    }
+  /**
+   * Grupo de formularios principal.
+   * @property {FormGroup} representante
+   */
+  representante!: FormGroup;
 
-    obtenerValor(){
-      this.representante.patchValue({
-        nombre:47875,
-        apellidoPaterno:'Paterno',
-        apellidoMaterno:'Materno'
-      })
-    }
+  /**
+   * Inicializa el componente.
+   */
+  ngOnInit(): void {
+    this.tramite260215Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.representante = this.fb.group({
+      rfc: [this.solicitudState?.rfc, Validators.required],
+      nombre: [{ value: '', disabled: true }, Validators.required],
+      apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
+      apellidoMaterno: [{ value: '', disabled: true }],
+    });
+  }
 
-    /**
-       * Establece el valor de un campo en el store de Tramite31601.
-       * @param form - El grupo de formularios que contiene el campo.
-       * @param campo - El nombre del campo cuyo valor se va a establecer.
-       * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
-       */
-      setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260215Store): void {
-        const valor = form.get(campo)?.value;
-        (this.tramite260215Store[metodoNombre] as (value: any) => void)(valor);
-      }
+  /**
+   * Obtiene el valor de un campo en el store de Tramite31601.
+   */
+  obtenerValor() {
+    this.representante.patchValue({
+      nombre: 47875,
+      apellidoPaterno: 'Paterno',
+      apellidoMaterno: 'Materno',
+    });
+  }
+
+  /**
+   * Establece el valor de un campo en el store de Tramite31601.
+   * @param form - El grupo de formularios que contiene el campo.
+   * @param campo - El nombre del campo cuyo valor se va a establecer.
+   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite260215Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite260215Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
 }
