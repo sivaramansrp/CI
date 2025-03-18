@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Catalogo, ConfiguracionColumna, TableComponent } from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
@@ -14,7 +14,6 @@ import { PermisoModel } from '../detos.model';
 import { AgregarProveedorComponent } from '../agregarProveedor/agregarProveedor.component';
 import { AgregarFacturatorComponent } from '../agregarFacturator/agregarFacturator.component';
 import { AgregarRequeridaComponent } from '../agregarRequerida/agregarRequerida.component';
-// import { AgregarDestinatarioComponent } from '../agregar-destinatario/agregar-destinatario.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AgregarDestinatarioComponent } from '../agregar-destinatario/agregar-destinatario.component';
 
@@ -25,31 +24,22 @@ import { AgregarDestinatarioComponent } from '../agregar-destinatario/agregar-de
   templateUrl: './tercerosRelacionados.component.html',
   styleUrl: './tercerosRelacionados.component.css',
 })
-export class TercerosRelacionadosComponent {
+export class TercerosRelacionadosComponent implements OnInit {
  proveedorForm!:FormGroup;
  requeridaForm!:FormGroup;
    private destroyed$ = new Subject<void>();
    public proveedorList!: Catalogo[];
    public  localidadList !: Catalogo[];
    public modal = 'modal';
-   
    public hideCurp = true;
+tableHeaderData: string[] = [  'Nombre/denominacion o razon social', 'RFC', 'CURP','Telefono','corro electronica','calle'];
 
-  // private destroyed$ = new Subject<void>();
-  tableHeaderData: string[] = [  'Nombre/denominacion o razon social', 'RFC', 'CURP','Telefono','corro electronica','calle'];
-  // public derechosList!: tableHeaderData[];
   TablaSeleccion = TablaSeleccion;
   tercerosProd: PermisoModel [] = [];
   tableBodyData: { tbodyData: string[] }[] = [];
   public TEXTOS = MENSAJEDEALERTA;
   public infoAlert = 'alert-info';
-  public hasAgregar = false;
-  public hasdestinatario = false;
-  public hasproveedor = false;
-  public hasrequerida = false;
-
-  // public getEstablecimientoTableData = tercerostable;
-  constructor(private fb: FormBuilder,private service:SanitarioService){}
+ constructor(private fb: FormBuilder,private service:SanitarioService){}
 
   @ViewChild('closeModal') closeModal!: ElementRef;
   configuracionTabla: ConfiguracionColumna<PermisoModel >[] = [
@@ -87,9 +77,7 @@ export class TercerosRelacionadosComponent {
     this.loadMercancias();
     this.getRegistroForm();
   }
-  JustificacionSeleccion():void{
-    this.hasAgregar = false;
-  }
+  
  
   loadMercancias(): void {
     this.service.getTable()
@@ -100,29 +88,25 @@ export class TercerosRelacionadosComponent {
   }
 
 
-  public agregar(agregar:string) {
-    if(agregar === 'Agregar'){
-      this.hasAgregar = true;
-    }
-  }
+  
 
- public destinatario(destinatario:string) {
-    if(destinatario === 'destinatario'){
-      this.hasdestinatario = true;
-    }
-  }
+//  public destinatario(destinatario:string) {
+//     if(destinatario === 'destinatario'){
+//       this.hasdestinatario = true;
+//     }
+//   }
 
- public proveedor(proveedor:string) {
-    if(proveedor === 'proveedor'){
-      this.hasproveedor = true;
-    }
-  }
+//  public proveedor(proveedor:string) {
+//     if(proveedor === 'proveedor'){
+//       this.hasproveedor = true;
+//     }
+//   }
  
- public requerida(requerida:string) {
-    if(requerida === 'requerida'){
-      this.hasrequerida = true;
-    }
-  }
+//  public requerida(requerida:string) {
+//     if(requerida === 'requerida'){
+//       this.hasrequerida = true;
+//     }
+//   }
 
   public abrirModal() {
     this.modal = 'show'; // Muestra el modal
@@ -214,6 +198,7 @@ export class TercerosRelacionadosComponent {
         return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
       }
       
+// eslint-disable-next-line @angular-eslint/use-lifecycle-interface
 ngOnDestroy(): void {
         this.destroyed$.next();
         this.destroyed$.complete();

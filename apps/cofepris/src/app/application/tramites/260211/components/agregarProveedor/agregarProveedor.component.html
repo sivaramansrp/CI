@@ -1,9 +1,9 @@
-
+<!-- 
 <p>agregarProveedor works!</p>
 
 <div class="container">
   <ng-titulo titulo="Agregar Fabricante" />
-  <form [formGroup]="proveedorForm"  (ngSubmit)="guardarProveedor()">
+  <form [formGroup]="proveedorForm"  >
   <h6>Datos generales</h6>
   <div class="row mb-3">
       <div class="col-md-6">
@@ -54,8 +54,7 @@
 
   <div class="row">
     <div class="col-md-4 ">
-      <!-- <label class="form-label" for="nombre">Pail*:</label> -->
-      <!-- <input type="text" class="form-control" id="nombre"> -->
+    
       <app-catalogo-select
       [catalogo]="proveedorList"
       formControlName="pail"
@@ -66,8 +65,7 @@
       
     </div>
     <div class="col-md-4 mb-3">
-      <!-- <label class="form-label" for="localidad">Estado/localidad*:</label>
-      <input type="text" class="form-control" id="localidad" formControlName="localidad"> -->
+      
       <app-catalogo-select
       [catalogo]=" localidadList "
       formControlName="pail"
@@ -78,8 +76,7 @@
     
     </div>
     <div class="col-md-4 mb-3">
-      <!-- <label class="form-label" for="municipio">Municipio/alcalda*:</label>
-      <input type="text" class="form-control" id="Municipio" formControlName="municipio"> -->
+     
       <app-catalogo-select
       [catalogo]=" localidadList "
       formControlName="municipio"
@@ -92,8 +89,7 @@
 
   <div class="row">
     <div class="col-md-4 ">
-      <!-- <label class="form-label" for="nombrelocalidad">Localidad*:</label>
-      <input type="text" class="form-control" id="nombrelocalidad" formControlName="nombrelocalidad"> -->
+      
       <app-catalogo-select
       [catalogo]=" localidadList "
      [label]="'Localidad*'"
@@ -102,8 +98,7 @@
     ></app-catalogo-select>
     </div>
     <div class="col-md-4 mb-3">
-      <!-- <label class="form-label" for="primerApellido">Cadigo Postal oequd:</label>
-      <input type="text" class="form-control" id="primerApellido" formControlName="primerApellido"> -->
+      
       <app-catalogo-select
       [catalogo]=" localidadList "
      [label]="'Cadigo Postal oequd'"
@@ -112,8 +107,7 @@
     ></app-catalogo-select>
     </div>
     <div class="col-md-4 ">
-      <!-- <label class="form-label" for="segundoApellido">Colonia:</label>
-      <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido"> -->
+     
       <app-catalogo-select
       [catalogo]=" localidadList "
        [label]="'Colonia'"
@@ -161,7 +155,7 @@
       <input type="email" class="form-control" id="correoElectronico" formControlName="correoElectronico">
       </div>
   </div>
-</div>
+</div> -->
 
   <!-- <ng-titulo titulo="Datos personales" />
    @if (fisica) {

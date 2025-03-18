@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
-// import { CatalogosSelect } from '@ng-mf/data-access-user';
-import { Catalogo, catalogoResponse, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, TituloComponent } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { SanitarioService } from '../../services/sanitario.service';
@@ -45,11 +44,7 @@ this.loadComboUnidadMedida();
     });
   }
 
-  
-  validarTransporteFormulario(){
-
-  }
-  ngOnDestroy(): void {
+ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }

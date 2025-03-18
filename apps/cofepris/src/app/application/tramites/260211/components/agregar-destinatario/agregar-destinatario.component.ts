@@ -1,12 +1,8 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-// import {  ElementRef, ViewChild } from '@angular/core';
-
 import { Catalogo, ConfiguracionColumna, TableComponent } from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
-import { MENSAJEDEALERTA, TituloComponent } from '@ng-mf/data-access-user';
-// import terceros from 'libs/shared/theme/assets/json/260211/terceros.json';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { SanitarioService } from '../../services/sanitario.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
@@ -22,7 +18,7 @@ import { PermisoModel } from '../detos.model';
   templateUrl: './agregar-destinatario.component.html',
   styleUrl: './agregar-destinatario.component.css',
 })
-export class AgregarDestinatarioComponent {
+export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
   tercerosProd: PermisoModel [] = [];
   private destroyed$ = new Subject<void>();
   destinatarioForm!:FormGroup;

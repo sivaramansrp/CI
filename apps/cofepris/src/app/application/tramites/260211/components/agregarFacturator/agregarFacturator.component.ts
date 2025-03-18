@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PermisoModel } from '../detos.model';
@@ -13,7 +13,7 @@ import { SanitarioService } from '../../services/sanitario.service';
   templateUrl: './agregarFacturator.component.html',
   styleUrl: './agregarFacturator.component.css',
 })
-export class AgregarFacturatorComponent {
+export class AgregarFacturatorComponent implements OnDestroy, OnInit {
  
 tercerosProd: PermisoModel [] = [];
   private destroyed$ = new Subject<void>();
