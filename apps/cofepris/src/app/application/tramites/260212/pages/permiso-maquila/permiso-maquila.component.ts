@@ -6,6 +6,12 @@ interface AccionBoton {
   accion: string;
   valor: number;
 }
+/**
+ * @descripción
+ * Este componente se encarga de gestionar la funcionalidad del asistente (wizard) "Permiso Maquila".
+ * Proporciona la lista de pasos del asistente y administra el índice del paso actual.
+ */
+
 @Component({
   selector: 'app-permiso-maquila',
   standalone: false,
