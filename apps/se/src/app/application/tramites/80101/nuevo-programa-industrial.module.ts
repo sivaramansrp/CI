@@ -24,6 +24,7 @@ import { PasoFirmarSolicitudComponent } from './pages/paso-firmar-solicitud/paso
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoCsComponent } from './pages/paso-uno-cs/paso-uno-cs.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import {MontosDeInversionComponent} from '../../shared/components/montos-de-inversion/montos-de-inversion.component';
 @NgModule({
   declarations: [
     PasoCapturarSolicitudComponent,
@@ -50,6 +51,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     AnexoVistaUnoComponent,
     FederatariosYPlantasVistaComponent,
     ComplementarPlantaComponent,
+    MontosDeInversionComponent,
   ],
 })
 export class NuevoProgramaIndustrialModule {}
