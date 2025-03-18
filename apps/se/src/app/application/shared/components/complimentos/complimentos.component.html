@@ -274,7 +274,7 @@
       </div>
     </div>
     <div class="row mt-4">
-      <div formGroupName="formaDatos" class="row mb-4" *ngIf="getControls()">
+      <div formGroupName="formaDatos" class="row mb-4" *ngIf="obtenerControles()">
         @for (item of camposFormulario; track $index) { @if (item.tipo_input ===
         'select') {
         <div [ngClass]="item.class">
