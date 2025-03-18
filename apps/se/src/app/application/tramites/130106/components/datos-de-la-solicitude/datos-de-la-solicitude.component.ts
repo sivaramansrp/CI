@@ -51,7 +51,10 @@ export class DatosDeLaSolicitudeComponent implements OnInit, OnDestroy {
     // eslint-disable-next-line no-empty-function
   ) { }
 
-
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Inicializa el formulario de la solicitud.
+   */
   ngOnInit(): void {
     this.inicializarFormularioSolicitud();
   }
