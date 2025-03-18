@@ -1,12 +1,12 @@
 import { Component,OnDestroy,OnInit } from '@angular/core';
 import { ANEXO_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
-import { AmpliacionServiciosQuery } from '../../estados/tramite80102.query';
-import { AmpliacionServiciosStore } from '../../estados/tramite80102.store';
 import { AnexoDosYTresComponent } from '../../../../shared/components/anexo-dos-y-tres.component/anexo-dos-y-tres.component';
 import { AnexoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Tramite80102Query } from '../../estados/tramite80102.query';
+import { Tramite80102Store } from '../../estados/tramite80102.store';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -52,8 +52,8 @@ export class ContenedorAnnexoDosTresComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  constructor(private query: AmpliacionServiciosQuery,
-    private store: AmpliacionServiciosStore
+  constructor(private query: Tramite80102Query,
+    private store: Tramite80102Store
   ) {
     //constructor vacío
   }
