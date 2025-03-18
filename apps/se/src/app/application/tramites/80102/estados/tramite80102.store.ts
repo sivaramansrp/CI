@@ -1,20 +1,22 @@
-import { Catalogo, CatalogoPaises } from '@ng-mf/data-access-user';
 import {
-  DatosComplimentos,
-  SociaoAccionistas,
-} from '../../../shared/models/complimentos.model';
-import {
+  AnnexoDosTres,
   DatosEmpresaExtranjera,
   Servicio,
   ServicioInmex,
   Servicios,
 } from '../models/autorizacion-programa-nuevo.model';
+import { Catalogo, CatalogoPaises } from '@libs/shared/data-access-user/src';
+import {
+  DatosComplimentos,
+  SociaoAccionistas,
+} from '../../../shared/models/complimentos.model';
 import {
   DatosSubcontratista,
   EmpressaSubFabricantePlantas,
   PlantasSubfabricante,
 } from '../../../shared/models/empresas-subfabricanta.model';
 import { Store, StoreConfig } from '@datorama/akita';
+import { AnexoEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { Injectable } from '@angular/core';
 
 export interface Tramite80102State {
@@ -39,6 +41,8 @@ export interface Tramite80102State {
   tablaDatosComplimentosExtranjera: SociaoAccionistas[];
 
   empressaSubFabricantePlantas: EmpressaSubFabricantePlantas;
+  annexoDosTres: AnnexoDosTres,
+  
   indicePrevioRuta: number;
 }
 
@@ -127,9 +131,15 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
     plantasSubfabricantesAgregar: [],
     plantasPorCompletar: [],
   },
-  indicePrevioRuta: 0,
+  annexoDosTres:{
+    anexoDosTablaLista:[],
+    anexoTresTablaLista:[]
+  },
+  
   tablaDatosComplimentos: [],
   tablaDatosComplimentosExtranjera: [],
+
+  indicePrevioRuta: 0,
 };
 
 /**
@@ -344,13 +354,6 @@ export class Tramite80102Store extends Store<Tramite80102State> {
     }));
   }
 
-  setindicePrevioRuta(indice: number): void {
-    this.update((state) => ({
-      ...state,
-      indicePrevioRuta: indice,
-    }));
-  }
-
   aggregarTablaDatosComplimentos(datos: SociaoAccionistas): void {
     this.update((state) => {
       const DATOS = {
@@ -399,5 +402,35 @@ export class Tramite80102Store extends Store<Tramite80102State> {
     });
   }
 
+  //annexo dos y tres estados
+
+  setAnnexoDosTableLista(anexoDosTablaLista:AnexoEncabezado[]):void{
+    this.update((state) => ({
+      ...state,
+      annexoDosTres: {
+        ...state.annexoDosTres,
+        anexoDosTablaLista: anexoDosTablaLista,
+      }
+     
+    }));
+  }
+
+  setAnnexoTresTableLista(anexoTresTablaLista:AnexoEncabezado[]):void{
+    this.update((state) => ({
+      ...state,
+      annexoDosTres: {
+        ...state.annexoDosTres,
+        anexoTresTablaLista: anexoTresTablaLista,
+      }
+     
+    }));
+  }
+
+  setindicePrevioRuta(indice: number): void {
+    this.update((state) => ({
+      ...state,
+      indicePrevioRuta: indice,
+    }));
+  }
 
 }

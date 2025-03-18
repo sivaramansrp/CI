@@ -1,4 +1,5 @@
 import { Catalogo, CatalogoPaises } from "@ng-mf/data-access-user";
+import { AnexoEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
 
 export interface ServicioInmex {
   Servicio?: string;
@@ -47,4 +48,9 @@ export interface DatosCatalago {
   opciones?: CatalogoPaises[]
   opcionesCatalogo?: Catalogo[];
   orden: number;
+}
+
+export interface AnnexoDosTres{
+  anexoDosTablaLista: AnexoEncabezado[];
+  anexoTresTablaLista: AnexoEncabezado[];
 }
