@@ -7,8 +7,15 @@ const ROUTES: Routes = [
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
-  }
-];
+  },
+  {
+    path: 'territorio-nacional',
+    loadChildren: () =>
+      import('./tramites/260401/territorio-nacional-solicitude.module').then(
+        (m) => m.TerritorioNacionalSolicitudeModule
+      ),
+  },
+]; 
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],

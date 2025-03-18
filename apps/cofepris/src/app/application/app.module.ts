@@ -18,12 +18,12 @@ import { TituloComponent } from "@ng-mf/data-access-user";
 @NgModule({
   declarations: [
     AppComponent,
-    SeleccionTramiteComponent
+    SeleccionTramiteComponent,
+    
   ],
   imports: [
     AkitaNgDevtools,
     AppRoutingModule,
-    CommonModule,
     BreadcrumbComponent,
     FooterComponent,
     HeaderComponent,
