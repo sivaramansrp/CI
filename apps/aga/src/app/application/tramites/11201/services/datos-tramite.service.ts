@@ -1,14 +1,18 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { RespuestaCatalogos } from "@libs/shared/data-access-user/src";
 import { Observable, of } from "rxjs";
+import { RespuestaContenedor } from "libs/shared/data-access-user/src/core/models/11201/datos-tramite.model";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'any',
 })
 export class DatosTramiteService {
 
-  constructor()
+  constructor(
+    private http: HttpClient
+  )
   {
-    this.getAduanas,
     this.getContenedores,
     this.submitSolicitud,
     this.uploadArchivo
@@ -24,10 +28,11 @@ export class DatosTramiteService {
     ];
     return of(dummyContenedores);
   }
-   /**
-   * Get a dummy list of Aduanas
-   */
-   getAduanas(): Observable<any[]> {
+
+  /**
+* Get a dummy list of Aduanas
+*/
+  getAduanas(): Observable<any[]> {
     const dummyAduanas = [
       { id: 1, nombre: 'Aduana de México' },
       { id: 2, nombre: 'Aduana de Argentina' },
@@ -37,6 +42,7 @@ export class DatosTramiteService {
     ];
     return of(dummyAduanas);
   }
+
   
    /**
    * Simulate file upload
@@ -54,5 +60,34 @@ export class DatosTramiteService {
     return of({ success: true, message: 'Solicitud enviada exitosamente' });
   }
 
+  agregarSolicitud(): Observable<RespuestaContenedor> {
+    return of({
+      success: true, message: 'Solicitud enviada exitosamente',
+      datos: {
+        id: 1,
+        inicialesEquipo: 'BBZM',
+        numeroEquipo: 1098765,
+        digitoVerificador: 4,
+        tipoEquipo: 'AC',
+        aduana: 430,
+        fechaIngreso: '2024-03-13',
+        vigencia: '2025-03-13',
+        estadoConstancia: 'Válido',
+        existeEnVUCEM: 'Sí',
+        idConstancia: 'CONST12345',
+        numeroManifiesto: 'MANI67890',
+        idSolicitud: 'SOLICITUD001',
+        fechaInicio: '2024-03-01',
+      }
+    });
+  }
+
+  getTransporteList(catalogo: string) {
+    return this.http.get<RespuestaCatalogos>('assets/json/11201/transporteList.json');
+  }
+
+  getAduanaList(catalogo: string) {
+    return this.http.get<RespuestaCatalogos>('assets/json/11201/aduanaList.json');
+  }
   
 }

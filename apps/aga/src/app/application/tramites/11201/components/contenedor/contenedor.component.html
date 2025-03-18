@@ -1,208 +1,392 @@
-<form [formGroup]="solicitudForm" id="formSolicitud">
-    <div id="tabs">
-        <div id="adjuntarArchivo" *ngIf="showAdjuntarArchivo">
-            <!-- <app-adjuntar-archivo></app-adjuntar-archivo> -->
-        </div>
-    </div>
+<div class="container">
+    <form [formGroup]="solicitudForm" id="formSolicitud">
+        <ng-titulo titulo="Ingresar por:" />
+        <ng-container>
+            <div class="row">
+                <div class="col-md-12">
+                    <br><br>
+                    <div class="col-md-4">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" formControlName="tipoBusqueda" id="idRadioContenedor"
+                                    value="Contenedor" class="form-check-input">
+                                Contenedor
+                            </label>
+                        </div>
+                    </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <h3>
-                <label for="solicitud">Ingresar por:</label>
-            </h3>
-        </div>
-    </div>
+                    <div class="col-md-4">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" formControlName="tipoBusqueda" id="idRadioManifiesto"
+                                    value="No. de Manifiesto" class="form-check-input">
+                                No. de Manifiesto
+                            </label>
+                        </div>
+                    </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <br><br>
-            <div class="col-md-4">
-                <div class="radio">
-                    <label>
-                        <input type="radio" formControlName="tipoBusqueda" id="idRadioContenedor"
-                            (change)="mostrarCampos()" value="Contenedor" class="form-check-input">
-                        Contenedor
-                    </label>
+                    <div class="col-md-4">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" formControlName="tipoBusqueda" id="idRedioExcel"
+                                    value="Archivo CSV" class="form-check-input">
+                                Archivo CSV
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </ng-container>
 
-            <div class="col-md-4">
-                <div class="radio">
-                    <label>
-                        <input type="radio" formControlName="tipoBusqueda" id="idRadioManifiesto"
-                            (change)="mostrarCampos()" value="No. de Manifiesto" class="form-check-input">
-                        No. de Manifiesto
-                    </label>
+        <ng-container *ngIf="showSeccionAduanaaFecha">
+            <div id="seccionAduanaaFecha">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Datos generales</h3>
+                        <hr class="red">
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-md-4">
-                <div class="radio">
-                    <label>
-                        <input type="radio" formControlName="tipoBusqueda" id="idRedioExcel" (change)="mostrarCampos()"
-                            value="Archivo CSV" class="form-check-input">
-                        Archivo CSV
-                    </label>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="aduanas">Aduana/sección aduanera</label>
+                            <span class="require">*</span>
+                            <select formControlName="aduana" id="aduana" class="form-control" [ngClass]="isValid('aduana') ? 'required' : ''">
+                                <option value="" disabled selected>Selecciona un valor</option>
+                                <option *ngFor="let aduana of aduanas" [value]="aduana.id">
+                                    {{ aduana.nombre }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <div id="seccionAduanaaFecha" *ngIf="showSeccionAduanaaFecha">
-        <div class="row">
-            <div class="col-md-12">
-                <h3>Datos generales</h3>
-                <hr class="red">
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="aduanas">Aduana/sección aduanera</label>
-                    <span class="require">*</span>
-                    <select formControlName="aduana" id="aduana" class="form-control">
-                        <option value="" disabled selected>Selecciona un valor</option>
-                        <option *ngFor="let aduana of aduanas" [value]="aduana.clave">
-                            {{ aduana.descripcion }}
-                        </option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group datepicker-group">
-                    <label for="fechaIngreso">Fecha de ingreso</label>
-                    <span class="require">*</span>
-                    <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-                    <input type="text" formControlName="fechaIngreso" id="fechaIngreso" class="form-control"
-                        [readonly]="true" (blur)="quitarErrorInput('#fechaIngreso')" placeholder="dd/MM/yyyy">
-                </div>
-            </div>
-        </div>
-        <br><br>
-    </div>
-
-    <div id="seccionContenedor" *ngIf="showSeccionContenedor">
-        <div class="row">
-            <div class="col-md-12">
-                <h3>Datos del equipo</h3>
-                <hr class="red">
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="inicialesContenedor">Iniciales del equipo</label>
-                    <span class="require">*</span>
-                    <input type="text" formControlName="inicialesContenedor" id="inicialesContenedor" maxlength="10"
-                        class="form-control">
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="numeroContenedor">Número de equipo</label>
-                    <span class="require">*</span>
-                    <input type="text" formControlName="numeroContenedor" id="numeroContenedor" maxlength="15"
-                        class="form-control">
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="digitoDeControl">Dígito verificador</label>
-                    <input type="text" formControlName="digitoDeControl" id="digitoDeControl" maxlength="1"
-                        class="form-control">
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="contenedores">Tipo de equipo</label>
-                    <span class="require">*</span>
-                    <select formControlName="contenedores" id="contenedores" class="form-control">
-                        <option value="" disabled selected>Selecciona un valor</option>
-                        <option *ngFor="let contenedor of contenedores" [value]="contenedor.clave">
-                            {{ contenedor.descripcion }}
-                        </option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group pull-right">
-                    <button type="button" class="btn btn-default" (click)="limpiarCampos()">Limpiar</button>
-                    <button type="button" class="btn btn-primary" (click)="validarDigitoVerificador()">Agregar</button>
-                </div>
-            </div>
-        </div>
-    </div>  
-
-    <br>
-    <div id="mensaje" class="alert alert-warning" style="margin-top: 1em;" *ngIf="mostrarMensaje">
-        <p>Debes seleccionar al menos un registro para continuar.</p>
-    </div>
-
-    <div class="col-md-12" id="IdGridContenedoresITC">
-        <div class="table-responsive">
-            <div class="innercontainer">
-                <table class="table table-bordered" align="center">
-                    <tr>
-                        <td align="center" colspan="3">
-                            <table id="gridContenedoresITC" class="table table-striped">
-                                <!-- Angular implementation for gridContenedoresITC goes here -->
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div align="center" id="paginGridContenedoresITC">
-            <!-- Pagination controls go here -->
-        </div>
-    </div>
-    <br>
-
-    <div class="row" style="margin-top: 30px;">
-        <div class="form-group">
-            <div class="col-md-12">
-                <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">
-                    {{ mensajeCamposObligatorios }}
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group datepicker-group">
+                            <label for="fechaIngreso">Fecha de ingreso</label>
+                            <span class="require">*</span>
+                            <input class="form-control disabled " type="date" name="fechaIngreso" id="fechaIngreso"
+                                formControlName="fechaIngreso" [ngClass]="isValid('fechaIngreso') ? 'required' : ''">
+                        </div>
+                    </div>
                 </div>
                 <br><br>
-                <div style="margin-top: -50px;" class="pull-right">
-                    <div class="col-md-3">
-                        <button type="button" class="btn btn-danger" (click)="abrirModalCancelarTramite()">
-                            Cancelar
-                        </button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="showSeccionContenedor">
+            <div id="seccionContenedor">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Datos del equipo</h3>
+                        <hr class="red">
                     </div>
-                    <div class="col-md-3" *ngIf="requiereGuardadoParcial">
-                        <button type="button" class="btn btn-default" (click)="guardarParcial()">
-                            Guardar
-                        </button>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="inicialesContenedor">Iniciales del equipo</label>
+                            <span class="require">*</span>
+                            <input type="text" formControlName="inicialesContenedor" id="inicialesContenedor"
+                                maxlength="10" class="form-control" [ngClass]="isValid('inicialesContenedor') ? 'required' : ''">
+                        </div>
                     </div>
-                    <div class="col-md-3" id="botonGuardar">
-                        <button type="submit" class="btn btn-primary" (click)="esPago()">
-                            Continuar
-                        </button>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="numeroContenedor">Número de equipo</label>
+                            <span class="require">*</span>
+                            <input type="text" formControlName="numeroContenedor" id="numeroContenedor" maxlength="15"
+                                class="form-control" [ngClass]="isValid('numeroContenedor') ? 'required' : ''">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="digitoDeControl">Dígito verificador</label>
+                            <input type="text" formControlName="digitoDeControl" id="digitoDeControl" maxlength="1"
+                                class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="contenedores">Tipo de equipo</label>
+                            <span class="require">*</span>
+                            <select formControlName="contenedores" id="contenedores" class="form-control"  [ngClass]="isValid('contenedores') ? 'required' : ''"  (change)="setValoresStore(solicitudForm, 'contenedores','setContenedores' )">
+                                <option value="" disabled selected>Selecciona un valor</option>
+                                <option *ngFor="let contenedor of contenedores" [value]="contenedor.id">
+                                    {{ contenedor.tipo }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group pull-right">
+                            <button type="button" class="btn btn-default" (click)="limpiarCampos()">Limpiar</button>
+                            <button type="button" class="btn btn-primary"
+                                (click)="validarDigitoVerificador()">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="showSeccionNoManifiesto">
+            <div id="seccionNoManifiesto">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Ingresar por manifiesto</h3>
+                        <hr class="red">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <app-catalogo-select [catalogo]="catalogoList" [label]="transporteList.labelNombre"
+                            [placeholder]="transporteList.primerOpcion" formControlName="dropdown" (change)="setValoresStore(solicitudForm,'dropdown', 'setDropdown')" [required]="true"></app-catalogo-select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="numManifiesto">No. Manifiesto</label>
+                            <span class="require">*</span>
+                            <input type="text" formControlName="numManifiesto" id="numManifiesto" maxlength="50"
+                                class="form-control" (change)="setValoresStore(solicitudForm,'numManifiesto', 'setNumManifiesto')">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group pull-right">
+                            <button type="button" class="btn btn-primary" (click)="enviarManifiesto()">Buscar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="mensaje" style="margin-top: 1em;" *ngIf="mostrarMensaje">
+                <ng-alert [CONTENIDO]="TEXTOS.ADVERTENCIA"></ng-alert>
+                <div class="col-md-12" id="IdGridContenedoresITC">
+                    <div class="table-responsive">
+                        <div class="innercontainer">
+                            <table class="table table-bordered" align="center">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th><input type="checkbox" formControlName="commonCheckbox" (change)="toggleAllCheckboxes($event)" /></th>
+                                        <th>Iniciales del equipo</th>
+                                        <th>Número de equipo</th>
+                                        <th>Dígito Verificador</th>
+                                        <th>Tipo de equipo</th>
+                                        <th>Aduana</th>
+                                        <th>Fecha Ingreso</th>
+                                        <th>Vigencia</th>
+                                        <th>Estado de constancia</th>
+                                        <th>Existe en VUCEM</th>
+                                        <th>Id constancia</th>
+                                        <th>Número manifiesto</th>
+                                        <th>Id solicitud</th>
+                                        <th>Fecha inicio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of datosTabla; let i = index">
+                                        <td class="grey-column">{{ i + 1 }}</td>
+                                        <td><input type="checkbox" [checked]="individualCheckbox.value[i]"
+                                            (change)="onCheckboxChange($event, i)" /></td>
+                                        <td>{{ item.inicialesEquipo }}</td>
+                                        <td>{{ item.numeroEquipo }}</td>
+                                        <td>{{ item.digitoVerificador }}</td>
+                                        <td>{{ item.tipoEquipo }}</td>
+                                        <td>{{ item.aduana }}</td>
+                                        <td>{{ item.fechaIngreso }}</td>
+                                        <td>{{ item.vigencia }}</td>
+                                        <td>{{ item.estadoConstancia }}</td>
+                                        <td>{{ item.existeEnVUCEM }}</td>
+                                        <td>{{ item.idConstancia }}</td>
+                                        <td>{{ item.numeroManifiesto }}</td>
+                                        <td>{{ item.idSolicitud }}</td>
+                                        <td>{{ item.fechaInicio }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div align="center" id="paginGridContenedoresITC">
+                        <div class="page-container">
+                            <div class="page-number">1</div>
+                          </div>
+                    </div>
+
+                    <!-- <div>
+                        <ng-titulo titulo="Ingresor pago de contenedores:" />
+                        <label for="montoPagar" class="form-label">Monto a pagar:</label>
+                        <input type="text" formControlName="amount" id="montoPagar" class="form-control" readonly
+                        [disabled]="true">
+                    </div> -->
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="showAdjuntarArchivo">
+            <div id="tabs">
+                <div id="adjuntarArchivo">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <ng-titulo titulo="Datos generales" />
+                            <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
+                                [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduanaDropdown" (change)="setValoresStore(solicitudForm,'aduanaDropdown', 'setAduanaDropdown')"></app-catalogo-select>
+                            <label for="fechaDeIngreso" class="form-label">Fecha de ingreso*:</label>
+                            <input class="form-control" type="date" name="fechaDeIngreso" id="fechaDeIngreso" formControlName="fechaDeIngreso" (change)="setValoresStore(solicitudForm,'fechaDeIngreso', 'setFechaDeIngreso')" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <ng-titulo titulo="Adjuntar archivo" />
+                            <label for="archivoSeleccionado" class="form-label">Archivo Seleccionado*:</label>
+                            <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado" required>
+                        </div>
+                        <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
+                            <button type="button" class="btn btn-default" (click)="adjuntarArchivo($event)">Cargar Archivo</button>
+                        </div>
+                        <div *ngIf="showArchivoSeleccionadoTable">
+                            <table class="table table-bordered" align="center">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Iniciales del equipo</th>
+                                        <th>Número de equipo</th>
+                                        <th>Dígito Verificador</th>
+                                        <th>Tipo de equipo</th>
+                                        <th>Aduana</th>
+                                        <th>Fecha Ingreso</th>
+                                        <th>Vigencia</th>
+                                        <th>Estado de constancia</th>
+                                        <th>Existe en VUCEM</th>
+                                        <th>Id constancia</th>
+                                        <th>Número manifiesto</th>
+                                        <th>Id solicitud</th>
+                                        <th>Fecha inicio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of datosTabla; let i = index">
+                                        <td class="grey-column">{{ i + 1 }}</td>
+                                        <td>{{ item.inicialesEquipo }}</td>
+                                        <td>{{ item.numeroEquipo }}</td>
+                                        <td>{{ item.digitoVerificador }}</td>
+                                        <td>{{ item.tipoEquipo }}</td>
+                                        <td>{{ item.aduana }}</td>
+                                        <td>{{ item.fechaIngreso }}</td>
+                                        <td>{{ item.vigencia }}</td>
+                                        <td>{{ item.estadoConstancia }}</td>
+                                        <td>{{ item.existeEnVUCEM }}</td>
+                                        <td>{{ item.idConstancia }}</td>
+                                        <td>{{ item.numeroManifiesto }}</td>
+                                        <td>{{ item.idSolicitud }}</td>
+                                        <td>{{ item.fechaInicio }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            <ng-titulo titulo="Cargar Archivo" />
+                            <label for="cargarArchivo" class="form-label">Archivo Seleccionado*:</label>
+                            <input class="form-control" type="file" name="cargarArchivo" id="cargarArchivo" required>
+                        </div>
+                        <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
+                            <button type="button" class="btn btn-default" (click)="Archivo($event)">Enviar</button>
+                        </div>
+                        <div *ngIf="showCargarArchivoTable">
+                            <table class="table table-bordered" align="center">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Iniciales del equipo</th>
+                                        <th>Número de equipo</th>
+                                        <th>Dígito Verificador</th>
+                                        <th>Tipo de equipo</th>
+                                        <th>Aduana</th>
+                                        <th>Fecha Ingreso</th>
+                                        <th>Vigencia</th>
+                                        <th>Estado de constancia</th>
+                                        <th>Existe en VUCEM</th>
+                                        <th>Id constancia</th>
+                                        <th>Número manifiesto</th>
+                                        <th>Id solicitud</th>
+                                        <th>Fecha inicio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of datosTabla; let i = index">
+                                        <td class="grey-column">{{ i + 1 }}</td>
+                                        <td>{{ item.inicialesEquipo }}</td>
+                                        <td>{{ item.numeroEquipo }}</td>
+                                        <td>{{ item.digitoVerificador }}</td>
+                                        <td>{{ item.tipoEquipo }}</td>
+                                        <td>{{ item.aduana }}</td>
+                                        <td>{{ item.fechaIngreso }}</td>
+                                        <td>{{ item.vigencia }}</td>
+                                        <td>{{ item.estadoConstancia }}</td>
+                                        <td>{{ item.existeEnVUCEM }}</td>
+                                        <td>{{ item.idConstancia }}</td>
+                                        <td>{{ item.numeroManifiesto }}</td>
+                                        <td>{{ item.idSolicitud }}</td>
+                                        <td>{{ item.fechaInicio }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <div class="col-md-12" id="IdGridContenedoresITC">
+            <div class="table-responsive">
+                <div class="innercontainer">
+                    <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla"
+                        [datos]="datosDelContenedor"></app-tabla-dinamica>
+                </div>
+            </div>
+            <div align="center" id="paginGridContenedoresITC">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination d-flex justify-content-center">
+                        <li class="page-item"><a class="page-link" href="Javascript:;">1</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 30px;">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">
+                        {{ mensajeCamposObligatorios }}
+                    </div>
+                    <br><br>
+                    <div style="margin-top: -50px;" class="pull-right row">
+                        <div class="col-md-5">
+                            <button type="button" class="btn btn-danger">
+                                Cancelar
+                            </button>
+                        </div>
+                        <div class="col-md-5" *ngIf="requiereGuardadoParcial">
+                            <button type="button" class="btn btn-default">
+                                Guardar
+                            </button>
+                        </div>
+                        <div class="col-md-5" id="botonGuardar">
+                            <button type="submit" class="btn btn-primary" (click)="esPago()">
+                                Continuar
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-
-
-
-
-
-
-</form>
+    </form>
+</div>

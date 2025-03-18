@@ -7,6 +7,7 @@ import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-p
 import { TemporalContenedoresRoutingModule } from './temporal-contenedores-routing.module';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     TemporalContenedoresRoutingModule,
     BtnContinuarComponent,
     PasoUnoComponent,
+    PasoTresComponent,
     WizardComponent,
   ],
   exports: [],

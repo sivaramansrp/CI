@@ -29,6 +29,7 @@ export const TEXTOS = {
   <p>- En caso de que no requieras algún documento, seleccionalo y elíminalo</p>
   <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista.</p>`,
   ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
+  ADVERTENCIA: `Debes seleccionar al menos un registro para continuar`
 };
 
 export const INDUSTRIA_AUTOMOTRIZ = {
