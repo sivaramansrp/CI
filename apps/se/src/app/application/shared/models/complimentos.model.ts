@@ -1,6 +1,7 @@
 
 
 export interface SociaoAccionistas {
+  id?: string;
   rfc?: string;
   taxId?: string;
   razonSocial?: string;

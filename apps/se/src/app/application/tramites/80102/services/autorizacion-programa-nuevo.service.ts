@@ -1,6 +1,7 @@
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { InfoServicios, Servicio } from '../models/autorizacion-programa-nuevo.model';
 import { Observable, map } from 'rxjs';
+import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
@@ -60,6 +61,13 @@ export class AutorizacionProgrmaNuevoService {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .pipe(map((response: any) => response.data))
     );
+  }
+
+  obtenerComplimentos(): Observable<DatosComplimentos> {
+    return this.http
+    .get<DatosComplimentos>("assets/json/80102/datos-complimentos.json")
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .pipe(map((res: any) => res));
   }
 
 }

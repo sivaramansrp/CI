@@ -6,14 +6,14 @@ import { CommonModule } from '@angular/common';
 import { ComponentFixture } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { AmpliacionServiciosStore } from '../../estados/tramite80205.store';
-import { AmpliacionServiciosQuery } from '../../estados/tramite80205.query';
+import { Tramite80102Store } from '../../estados/tramite80205.store';
+import { Tramite80102Query } from '../../estados/tramite80205.query';
 
 describe('AmpliacionServiciosComponent', () => {
   let component: AmpliacionServiciosComponent;
   let fixture: ComponentFixture<AmpliacionServiciosComponent>;
-  let ampliacionServiciosStore: AmpliacionServiciosStore;
-  let ampliacionServiciosQuery: AmpliacionServiciosQuery;
+  let Tramite80102Store: Tramite80102Store;
+  let Tramite80102Query: Tramite80102Query;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -25,15 +25,15 @@ describe('AmpliacionServiciosComponent', () => {
         CatalogoSelectComponent,
         AmpliacionServiciosComponent, // Add the standalone component here
       ],
-      providers: [AmpliacionServiciosService, AmpliacionServiciosStore, AmpliacionServiciosQuery]
+      providers: [AmpliacionServiciosService, Tramite80102Store, Tramite80102Query]
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AmpliacionServiciosComponent);
     component = fixture.componentInstance;
-    ampliacionServiciosStore = TestBed.inject(AmpliacionServiciosStore);
-    ampliacionServiciosQuery = TestBed.inject(AmpliacionServiciosQuery);
+    Tramite80102Store = TestBed.inject(Tramite80102Store);
+    Tramite80102Query = TestBed.inject(Tramite80102Query);
     fixture.detectChanges();
   });
 
@@ -90,9 +90,9 @@ describe('AmpliacionServiciosComponent', () => {
     const newNumero = 'IMMEX456';
     const newTiempo = '2026';
 
-    const setRfcEmpresaSpy = jest.spyOn(ampliacionServiciosStore, 'setRfcEmpresa');
-    const setNumeroProgramaSpy = jest.spyOn(ampliacionServiciosStore, 'setNumeroPrograma');
-    const setTiempoProgramaSpy = jest.spyOn(ampliacionServiciosStore, 'setTiempoPrograma');
+    const setRfcEmpresaSpy = jest.spyOn(Tramite80102Store, 'setRfcEmpresa');
+    const setNumeroProgramaSpy = jest.spyOn(Tramite80102Store, 'setNumeroPrograma');
+    const setTiempoProgramaSpy = jest.spyOn(Tramite80102Store, 'setTiempoPrograma');
 
     component.enCambioDeCampo('rfcEmpresa', newRfc);
     component.enCambioDeCampo('numeroPrograma', newNumero);
@@ -105,7 +105,7 @@ describe('AmpliacionServiciosComponent', () => {
 
   it('should call procesarDatosDelHijo and update store with new data', () => {
     const newCatalogo: Catalogo = { id: 1, descripcion: 'Catalogo1' };
-    const setAduanaDeIngresoSeleccionSpy = jest.spyOn(ampliacionServiciosStore, 'setAduanaDeIngresoSeleccion');
+    const setAduanaDeIngresoSeleccionSpy = jest.spyOn(Tramite80102Store, 'setAduanaDeIngresoSeleccion');
 
     component.procesarDatosDelHijo(newCatalogo);
 
@@ -117,7 +117,7 @@ describe('AmpliacionServiciosComponent', () => {
     const selectedService = { descripiónDelServicio: 'Service 1' };
     component.domiciliosSeleccionados = [selectedService];
     component.datosImmex = [{ descripiónDelServicio: 'Service 1' }, { descripiónDelServicio: 'Service 2' }];
-    const setDatosImmexSpy = jest.spyOn(ampliacionServiciosStore, 'setDatosImmex');
+    const setDatosImmexSpy = jest.spyOn(Tramite80102Store, 'setDatosImmex');
 
     component.eliminarServiciosGrid();
 
@@ -130,7 +130,7 @@ describe('AmpliacionServiciosComponent', () => {
     const selectedEmpresa = { RegistroContribuyentes: '1234' };
     component.empresasSeleccionados = [selectedEmpresa];
     component.datos = [{ RegistroContribuyentes: '1234' }, { RegistroContribuyentes: '5678' }];
-    const setDatosSpy = jest.spyOn(ampliacionServiciosStore, 'setDatos');
+    const setDatosSpy = jest.spyOn(Tramite80102Store, 'setDatos');
 
     component.eliminarEmpresasNacionales();
 

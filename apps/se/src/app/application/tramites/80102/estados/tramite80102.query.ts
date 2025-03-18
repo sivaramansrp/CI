@@ -1,10 +1,9 @@
-import { AmpliacionServiciosState } from './tramite80102.store';
-import { AmpliacionServiciosStore } from './tramite80102.store';
+import { Tramite80102State, Tramite80102Store } from './tramite80102.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
-export class AmpliacionServiciosQuery extends Query<AmpliacionServiciosState> {
+export class Tramite80102Query extends Query<Tramite80102State> {
   selectInfoRegistro$ = this.select((state) => state.infoRegistro);
 
   selectServicios$ = this.select((state) => state.servicios);
@@ -46,17 +45,17 @@ export class AmpliacionServiciosQuery extends Query<AmpliacionServiciosState> {
 
   //empresas-submanufacturer-estadaos
   datosSubcontratistaEstado$ = this.select((state) => {
-    return state.empressaSubFabricantePlantas.datosSubcontratista
+    return state.empressaSubFabricantePlantas.datosSubcontratista;
   });
   plantasSubfabricantesAgregar$ = this.select((state) => {
-    return state.empressaSubFabricantePlantas.plantasSubfabricantesAgregar
+    return state.empressaSubFabricantePlantas.plantasSubfabricantesAgregar;
   });
   plantasBuscadas$ = this.select((state) => {
-    return state.empressaSubFabricantePlantas.plantasBuscadas
+    return state.empressaSubFabricantePlantas.plantasBuscadas;
   });
 
   plantasPorCompletar$ = this.select((state) => {
-    return state.empressaSubFabricantePlantas.plantasPorCompletar
+    return state.empressaSubFabricantePlantas.plantasPorCompletar;
   });
 
   //annexo-dos-tres-queries
@@ -70,10 +69,17 @@ export class AmpliacionServiciosQuery extends Query<AmpliacionServiciosState> {
   });
 
   indicePrevioRuta$ = this.select((state) => {
-    return state.indicePrevioRuta
+    return state.indicePrevioRuta;
   });
 
-  constructor(protected override store: AmpliacionServiciosStore) {
+  selectTablaDatosComplimentos$ = this.select(
+    (state) => state.tablaDatosComplimentos
+  );
+  selectTablaDatosComplimentosExtranjera$ = this.select(
+    (state) => state.tablaDatosComplimentosExtranjera
+  );
+
+  constructor(protected override store: Tramite80102Store) {
     super(store);
   }
 }

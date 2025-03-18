@@ -1,7 +1,6 @@
 import { Component, OnDestroy ,OnInit} from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { AggregarComplimentosComponent } from '../../components/aggregar-complimentos/aggregar-complimentos.component';
-import { AmpliacionServiciosQuery } from '../../estados/tramite80102.query';
 import { CommonModule } from '@angular/common';
 import { ContenedorAnnexoDosTresComponent } from '../../components/contenedor-annexo-dos-tres/contenedor-annexo-dos-tres.component';
 import { EmpresasSubfabricanteComponent } from '../../components/empresas-subfabricante/empresas-subfabricante.component';
@@ -9,6 +8,7 @@ import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ServiciosComponent } from "../../components/servicios/servicios.component";
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { Tramite80102Query } from '../../estados/tramite80102.query';
 
 
 @Component({
@@ -54,7 +54,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   indice: number = 1;
 
-  constructor(private query:AmpliacionServiciosQuery){
+  constructor(private query:Tramite80102Query){
     //constructor vacío
   }
 
@@ -62,7 +62,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     
     this.query.indicePrevioRuta$
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((indice) => {
+      .subscribe((indice: number) => {
      if(indice){
       this.seleccionaTab(indice);
      }

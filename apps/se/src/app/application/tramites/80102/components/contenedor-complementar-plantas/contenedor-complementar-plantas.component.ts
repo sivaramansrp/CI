@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy ,OnInit} from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { AmpliacionServiciosQuery} from '../../estados/tramite80102.query';
+import { Tramite80102Query} from '../../estados/tramite80102.query';
 import { CommonModule } from '@angular/common';
 import { DetallesPlantasComponent } from '../../../../shared/components/detalles-plantas/detalles-plantas.component';
 import { PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
@@ -24,7 +24,7 @@ export class ContenedorComplementarPlantasComponent implements OnInit, OnDestroy
     private destroyNotifier$: Subject<void> = new Subject();
 
     plantasSeleccionadas:PlantasSubfabricante[]=[]
-  constructor( private query: AmpliacionServiciosQuery,
+  constructor( private query: Tramite80102Query,
     private router:Router,
     private activatedRoute:ActivatedRoute
   )

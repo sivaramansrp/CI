@@ -5,14 +5,21 @@ import {
   ServicioInmex,
   Servicios,
 } from '../models/autorizacion-programa-nuevo.model';
-import { Catalogo, CatalogoPaises } from '@ng-mf/data-access-user';
-import { DatosSubcontratista, EmpressaSubFabricantePlantas, PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
+import { Catalogo, CatalogoPaises } from '@libs/shared/data-access-user/src';
+import {
+  DatosComplimentos,
+  SociaoAccionistas,
+} from '../../../shared/models/complimentos.model';
+import {
+  DatosSubcontratista,
+  EmpressaSubFabricantePlantas,
+  PlantasSubfabricante,
+} from '../../../shared/models/empresas-subfabricanta.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { AnexoEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
-import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { Injectable } from '@angular/core';
 
-export interface AmpliacionServiciosState {
+export interface Tramite80102State {
   infoRegistro: Servicios;
   aduanaDeIngreso: Catalogo[];
   datosImmex: Servicio[];
@@ -30,13 +37,16 @@ export interface AmpliacionServiciosState {
 
   datosComplimentos: DatosComplimentos;
 
- empressaSubFabricantePlantas:EmpressaSubFabricantePlantas,
- annexoDosTres: AnnexoDosTres,
- indicePrevioRuta:number
- 
+  tablaDatosComplimentos: SociaoAccionistas[];
+  tablaDatosComplimentosExtranjera: SociaoAccionistas[];
+
+  empressaSubFabricantePlantas: EmpressaSubFabricantePlantas;
+  annexoDosTres: AnnexoDosTres,
+  
+  indicePrevioRuta: number;
 }
 
-export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
+export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
   infoRegistro: {
     seleccionaLaModalidad: '',
     folio: '',
@@ -68,15 +78,15 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
     direccionEmpresaExtranjera: '',
   },
   datosComplimentos: {
-    modalidad: '',
+    modalidad: 'Servicios',
     programaPreOperativo: '',
     datosGeneralis: {
       paginaWWeb: '',
       localizacion: '',
     },
     obligacionesFiscales: {
-      opinionPositiva: '',
-      fechaExpedicion: '',
+      opinionPositiva: 'Si',
+      fechaExpedicion: '2025-03-15',
       aceptarObligacionFiscal: '',
     },
     formaModificaciones: {
@@ -84,47 +94,62 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
       nombreDeNotaria: '',
       estado: '',
       nombreDeActa: '',
-      fechaDeActa: '',
+      fechaDeActa: '2025-01-20',
       rfc: '',
-      nombreDeRepresentante: '',
+      nombreDeRepresentante: 'Maria Lopez',
     },
     formaCertificacion: {
-      certificada: '',
+      certificada: 'No',
       fechaInicio: '',
       fechaVigencia: '',
     },
     formaSocioAccionistas: {
-      nationalidadMaxicana: '',
-      tipoDePersona: '',
-      formaDatos: {},
+      nationalidadMaxicana: 'false',
+      tipoDePersona: 'false',
+      formaDatos: {
+        rfc: '',
+        taxId: '',
+        razonSocial: '',
+        pais: '',
+        codigoPostal: '',
+        estado: '',
+        correoElectronico: '',
+        nombre: '',
+        apellidoPaterno: '',
+        apellidoMaterno: '',
+        cp: '',
+      },
     },
   },
- 
-  empressaSubFabricantePlantas:{
-    datosSubcontratista:{
-    rfc: '',
-    estado: '',
-  },
-    plantasBuscadas:[],
+
+  empressaSubFabricantePlantas: {
+    datosSubcontratista: {
+      rfc: '',
+      estado: '',
+    },
+    plantasBuscadas: [],
     plantasSubfabricantesAgregar: [],
-    plantasPorCompletar:[],
-    
-},
-annexoDosTres:{
-  anexoDosTablaLista:[],
-  anexoTresTablaLista:[]
-},
-indicePrevioRuta:0,
+    plantasPorCompletar: [],
+  },
+  annexoDosTres:{
+    anexoDosTablaLista:[],
+    anexoTresTablaLista:[]
+  },
+  
+  tablaDatosComplimentos: [],
+  tablaDatosComplimentosExtranjera: [],
+
+  indicePrevioRuta: 0,
 };
 
 /**
  * AmpliacionServicios Store
  * @export
- * @class AmpliacionServiciosStore
+ * @class Tramite80102Store
  */
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'ampliacion-servicios', resettable: true })
-export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
+@StoreConfig({ name: 'tramite-80102', resettable: true })
+export class Tramite80102Store extends Store<Tramite80102State> {
   constructor() {
     super(INITIAL_AMPLIACION_SERVICIOS_STATE);
   }
@@ -264,20 +289,19 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
   }
 
   setDatosComplimentos(datosComplimentos: DatosComplimentos): void {
-    this.update((state) => ({
-      ...state,
-      datosComplimentos,
-    }));
+    this.update((state) => {
+      const VALUE = { ...state.datosComplimentos, ...datosComplimentos };
+      return { ...state, datosComplimentos: VALUE };
+    });
   }
 
-  setDatosSubcontratista(datosSubcontratista:DatosSubcontratista): void {
+  setDatosSubcontratista(datosSubcontratista: DatosSubcontratista): void {
     this.update((state) => ({
       ...state,
       empressaSubFabricantePlantas: {
         ...state.empressaSubFabricantePlantas,
         datosSubcontratista: datosSubcontratista,
       },
-  
     }));
   }
 
@@ -293,34 +317,34 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
     }));
   }
 
-  setPlantasBuscadas(plantasBuscadas:PlantasSubfabricante[]):void{
-    this.update((state) => (
-      {
-        ...state,
-        empressaSubFabricantePlantas: {
-          ...state.empressaSubFabricantePlantas,
-          plantasBuscadas: plantasBuscadas,
-        },
-      }
-    ));
+  setPlantasBuscadas(plantasBuscadas: PlantasSubfabricante[]): void {
+    this.update((state) => ({
+      ...state,
+      empressaSubFabricantePlantas: {
+        ...state.empressaSubFabricantePlantas,
+        plantasBuscadas: plantasBuscadas,
+      },
+    }));
   }
 
-  eliminarPlantas(eliminarPlantas:PlantasSubfabricante[]): void {
-    this.update(state => {
-      const PLANTAS = [...state.empressaSubFabricantePlantas.plantasSubfabricantesAgregar].filter(ele => 
-        !eliminarPlantas.some((plantas)=>plantas.calle===ele.calle)
+  eliminarPlantas(eliminarPlantas: PlantasSubfabricante[]): void {
+    this.update((state) => {
+      const PLANTAS = [
+        ...state.empressaSubFabricantePlantas.plantasSubfabricantesAgregar,
+      ].filter(
+        (ele) => !eliminarPlantas.some((plantas) => plantas.calle === ele.calle)
       );
       return {
         ...state,
-      empressaSubFabricantePlantas: {
-        ...state.empressaSubFabricantePlantas,
-        plantasSubfabricantesAgregar: PLANTAS,
-      },
-      }
-    })
+        empressaSubFabricantePlantas: {
+          ...state.empressaSubFabricantePlantas,
+          plantasSubfabricantesAgregar: PLANTAS,
+        },
+      };
+    });
   }
 
-  setPlantasPorCompletar(plantasPorCompletar:PlantasSubfabricante[]):void{
+  setPlantasPorCompletar(plantasPorCompletar: PlantasSubfabricante[]): void {
     this.update((state) => ({
       ...state,
       empressaSubFabricantePlantas: {
@@ -328,6 +352,54 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
         plantasSubfabricantesAgregar: plantasPorCompletar,
       },
     }));
+  }
+
+  aggregarTablaDatosComplimentos(datos: SociaoAccionistas): void {
+    this.update((state) => {
+      const DATOS = {
+        ...datos,
+        id: crypto.randomUUID().toString(),
+      };
+      return {
+        ...state,
+        tablaDatosComplimentos: [...state.tablaDatosComplimentos, DATOS],
+      };
+    });
+  }
+  eliminarTablaDatosComplimentos(datos: SociaoAccionistas[]): void {
+    this.update((state) => {
+      const DOMICILIOS = [...state.tablaDatosComplimentos].filter((ele) =>
+        datos.some((datos) => ele.id !== datos.id)
+      );
+      return {
+        ...state,
+        tablaDatosComplimentos: DOMICILIOS,
+      };
+    });
+  }
+
+  aggregarTablaDatosComplimentosExtranjera(datos: SociaoAccionistas): void {
+    this.update((state) => {
+      const DATOS = {
+        ...datos,
+        id: crypto.randomUUID().toString(),
+      };
+      return {
+        ...state,
+        tablaDatosComplimentosExtranjera: [...state.tablaDatosComplimentosExtranjera, DATOS],
+      };
+    });
+  }
+  eliminarTablaDatosComplimentosExtranjera(datos: SociaoAccionistas[]): void {
+    this.update((state) => {
+      const DOMICILIOS = [...state.tablaDatosComplimentosExtranjera].filter((ele) =>
+        datos.some((datos) => ele.id !== datos.id)
+      );
+      return {
+        ...state,
+        tablaDatosComplimentosExtranjera: DOMICILIOS,
+      };
+    });
   }
 
   //annexo dos y tres estados
@@ -354,12 +426,11 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
     }));
   }
 
-  setindicePrevioRuta(indice:number):void{
+  setindicePrevioRuta(indice: number): void {
     this.update((state) => ({
       ...state,
       indicePrevioRuta: indice,
     }));
   }
 
-  
 }
