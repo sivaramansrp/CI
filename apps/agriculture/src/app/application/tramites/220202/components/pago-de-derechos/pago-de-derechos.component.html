@@ -1,112 +1,148 @@
 <div class="container">
-  <form [formGroup]="pagoForm">
-    <div class="row">
-      <ng-titulo titulo="Pago de derechos"></ng-titulo>
-      <div class="row mt-2">
-        <div class="col-md-12">
-          <label for="paymentExempt">Exento de pago</label>
+  <div class="row">
+    <ng-titulo [titulo]="'Pago de derechos'"></ng-titulo>
+  </div>
+  <div class="row">
+    <form [formGroup]="pagoForm">
+      <div class="row">
+        <div class="col-md-8 form-group">
+          <label class="form-label" for="coordenadas">Exento de pago*:</label>
+          <app-input-radio
+            [radioOptions]="exentoPagoRadio"
+            [selectedValue]="exentoPagoValor"
+            [isRequired]="true"
+            [layout]="'horizontal'"
+            formControlName="exentoPago"
+            (valueChange)="cambioValorRadio('exentoPago', $event.toString())"
+          ></app-input-radio>
         </div>
-        <div class="col-md-4"></div>
       </div>
-
-      <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="justificacionSelector"
-          formControlName="justificacion"
-          [label]="'Justificación'"
-          [required]="true"
-          name="justificacionSelect"
-        ></app-catalogo-select>
+      <div class="row">
+        <div class="col-md-4">
+            <app-catalogo-select
+              [catalogo]="justificacionCatalogo"
+              formControlName="justificacion"
+              [label]="'Justificación'"
+              [required]="true"
+              [isDisabled]="false"
+              (change)="
+              setValoresStore(
+                pagoForm,
+                'justificacion'
+              )
+            " 
+            ></app-catalogo-select>
+        </div>
       </div>
-      <div class="col-md-8"></div>
-
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="referenceKey"
-            >Clave de referencia*</label
-          >
+      <div class="row">
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="claveUCON">Clave de referencia:</label>
           <input
-            class="form-control"
-            id="referenceKey"
-            placeholder=""
-            type="text"
-            [disabled]="true"
-            name="referenceKeyInput"
             formControlName="claveReferencia"
-          />
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="dependencyChain"
-            >Cadena de la dependencia*</label
-          >
-          <input
             class="form-control"
-            id="dependencyChain"
+            id="claveReferencia"
+            name="claveReferencia"
             placeholder=""
             type="text"
-            libUppercase
-            [disabled]="true"
-            name="dependencyChainInput"
+            appUppercase
+            (change)="
+            setValoresStore(
+              pagoForm,
+              'claveReferencia'
+            )
+          " 
+          />
+        </div>
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="claveUCON"
+            >Cadena de la dependencia:</label
+          >
+          <input
             formControlName="cadenaDependencia"
-          />
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="bancoSelector"
-          formControlName="banco"
-          [label]="'Banco'"
-          [required]="true"
-          [isDisabled]="true"
-          name="bankSelect"
-        ></app-catalogo-select>
-      </div>
-
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="paymentKey">Llave de pago</label>
-          <input
             class="form-control"
-            id="paymentKey"
+            id="cadenaDependencia"
+            name="cadenaDependencia"
             placeholder=""
             type="text"
-            libUppercase
-            [disabled]="true"
-            name="paymentKeyInput"
+            appUppercase
+            (change)="
+            setValoresStore(
+              pagoForm,
+              'cadenaDependencia'
+            )
+          " 
+          />
+        </div>
+        <div class="col-md-4">
+            <app-catalogo-select
+              [catalogo]="bancoCatalogo"
+              formControlName="banco"
+              [label]="'Banco'"
+              [required]="true"
+              [isDisabled]="true"
+              name="banco"
+              (change)="
+            setValoresStore(
+              pagoForm,
+              'banco'
+            )
+          " 
+            ></app-catalogo-select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="claveUCON">Llave de pago:</label>
+          <input
             formControlName="llavePago"
-          />
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="form-group">
-          <input-fecha [datos]="fechaInicioInput"></input-fecha>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="paymentAmount"
-            >Importe de pago*:</label
-          >
-          <input
             class="form-control"
-            id="paymentAmount"
+            id="llavePago"
+            name="llavePago"
             placeholder=""
             type="text"
-            [disabled]="true"
-            name="paymentAmountInput"
+            appUppercase
+            (change)="
+            setValoresStore(
+              pagoForm,
+              'llavePago'
+            )
+          " 
+          />
+        </div>
+        <div class="col-md-4 form-group">
+          <input-fecha
+            [datos]="fechaFinalInput"
+            (valorCambiado)="cambioFechaFinal($event)"
+            name="fechaPago"
+            [setFecha]="fechaPagoDate" 
+          ></input-fecha>
+        </div>
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="claveUCON">Importe de pago:</label>
+          <input
             formControlName="importePago"
+            class="form-control"
+            id="importePago"
+            name="importePago"
+            placeholder=""
+            type="text"
+            appUppercase
+            (change)="
+            setValoresStore(
+              pagoForm,
+              'importePago'
+            )
+          " 
           />
         </div>
       </div>
-    </div>
-  </form>
-  <div class="col-md-12 d-flex justify-content-end mt-5">
-    <button class="btn btn-primary" type="button">Borrar datos del pago</button>
+      <div class="row mt-3">
+        <div class="col-md-12 d-flex justify-content-end">
+          <div>
+            <button class="btn btn-primary">Borrar datos del pago</button>
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
 </div>
