@@ -42,10 +42,10 @@ export class TratadosComponent implements OnInit {
   constructor(private fb: FormBuilder, private service: CertificadoTecnicoJaponService) {
     this.detallesdeltransporte = this.fb.group({
       tratadoAcuerdo: [{ value: '', disabled: true }],
-      paísBloque: [{ value: '', disabled: true }],
-      paísdeOrigen: [{ value: '', disabled: true }],
-      paísDestino: [{ value: '', disabled: true }],
-      fechadeExpedición: [{ value: '', disabled: true }],
+      paisBloque: [{ value: '', disabled: true }],
+      paisdeOrigen: [{ value: '', disabled: true }],
+      paisDestino: [{ value: '', disabled: true }],
+      fechadeExpedicion: [{ value: '', disabled: true }],
       fechadeVencimiento: [{ value: '', disabled: true }],
     });
   }
@@ -67,10 +67,10 @@ export class TratadosComponent implements OnInit {
       (data: any) => {
         this.detallesdeltransporte.patchValue({
           tratadoAcuerdo: data.tratadoAcuerdo,
-          paísBloque: data.paísBloque,
-          paísdeOrigen: data.paísdeOrigen,
-          paísDestino: data.paísDestino,
-          fechadeExpedición: data.fechadeExpedición,
+          paisBloque: data.paisBloque,
+          paisdeOrigen: data.paisdeOrigen,
+          paisDestino: data.paisDestino,
+          fechadeExpedicion: data.fechadeExpedicion,
           fechadeVencimiento: data.fechadeVencimiento
         });
       }

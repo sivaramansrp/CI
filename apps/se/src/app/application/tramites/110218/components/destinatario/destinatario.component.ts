@@ -56,13 +56,13 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * DestinatarioComponent
    * 
    */
-  númeroderegistroFiscal$: Observable<string | null> = this.tramite110218Query.númeroderegistroFiscal$;
+  numeroderegistroFiscal$: Observable<string | null> = this.tramite110218Query.numeroderegistroFiscal$;
   /**
    * Observable para la razón social del destinatario.
    * DestinatarioComponent
    *
    */
-  razónSocial$: Observable<string | null> = this.tramite110218Query.razónSocial$;
+  razonSocial$: Observable<string | null> = this.tramite110218Query.razonSocial$;
   /**
    * Observable para la calle del domicilio del destinatario.
    * DestinatarioComponent
@@ -74,7 +74,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * DestinatarioComponent
    * 
    */
-  númeroLetra$: Observable<string | null> = this.tramite110218Query.númeroLetra$;
+  numeroLetra$: Observable<string | null> = this.tramite110218Query.numeroLetra$;
   /**
    * Observable para la ciudad del domicilio del destinatario.
    * DestinatarioComponent
@@ -86,7 +86,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * DestinatarioComponent
    * 
    */
-  correoElectrónico$: Observable<string | null> = this.tramite110218Query.correoElectrónico$;
+  correoElectronico$: Observable<string | null> = this.tramite110218Query.correoElectronico$;
   /**
    * Observable para el fax del destinatario.
    * DestinatarioComponent
@@ -94,11 +94,11 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    */
   fax$: Observable<string | null> = this.tramite110218Query.fax$;
   /**
-   * Observable para el teléfono del destinatario.
+   * Observable para el telefono del destinatario.
    * DestinatarioComponent
    *
    */
-  teléfono$: Observable<string | null> = this.tramite110218Query.teléfono$;
+  telefono$: Observable<string | null> = this.tramite110218Query.telefono$;
 
   /**
    * Subject para la destrucción del componente.
@@ -125,17 +125,17 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
       nombre: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Solo letras y espacios, obligatorio
       primerApellido: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Opcional, pero solo letras permitidas
       segundoApellido: [{ value: '', disabled: true }], // Campo de solo lectura, sin validación
-      númeroderegistroFiscal: ['', [Validators.required, Validators.pattern('^[A-Z0-9]+$')]], // Solo mayúsculas y números, obligatorio
-      razónSocial: ['', [Validators.required]], // Campo obligatorio
+      numeroderegistroFiscal: ['', [Validators.required, Validators.pattern('^[A-Z0-9]+$')]], // Solo mayúsculas y números, obligatorio
+      razonSocial: ['', [Validators.required]], // Campo obligatorio
     });
     
     this.domiciliodeldestinatario = this.fb.group({
       calle: ['', Validators.required], // Campo obligatorio
-      númeroLetra: ['', Validators.required], // Campo obligatorio
+      numeroLetra: ['', Validators.required], // Campo obligatorio
       ciudad: ['', Validators.required], // Campo obligatorio
-      correoElectrónico: ['', [Validators.required, Validators.email]], // Obligatorio y debe ser un correo válido
+      correoElectronico: ['', [Validators.required, Validators.email]], // Obligatorio y debe ser un correo válido
       fax: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Solo se permiten dígitos
-      teléfono: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Obligatorio y solo se permiten dígitos
+      telefono: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Obligatorio y solo se permiten dígitos
     });
     
   }
@@ -169,14 +169,14 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     const OBSERVABLES: Record<string, Observable<string | null>> = {
       nombre: this.nombre$,
       primerApellido: this.primerApellido$,
-      númeroderegistroFiscal: this.númeroderegistroFiscal$,
-      razónSocial: this.razónSocial$,
+      numeroderegistroFiscal: this.numeroderegistroFiscal$,
+      razonSocial: this.razonSocial$,
       calle: this.calle$,
-      númeroLetra: this.númeroLetra$,
+      numeroLetra: this.numeroLetra$,
       ciudad: this.ciudad$,
-      correoElectrónico: this.correoElectrónico$,
+      correoElectronico: this.correoElectronico$,
       fax: this.fax$,
-      teléfono: this.teléfono$,
+      telefono: this.telefono$,
     };
 
     Object.entries(OBSERVABLES).forEach(([controlName, observable$]) => {
@@ -214,10 +214,10 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
           case 'primerApellido':
               this.tramite110218Store.setprimerApellido(VALUE);
               break;
-          case 'númeroderegistroFiscal':
+          case 'numeroderegistroFiscal':
               this.tramite110218Store.setnúmeroderegistroFiscal(VALUE);
               break;
-          case 'razónSocial':
+          case 'razonSocial':
               this.tramite110218Store.setrazónSocial(VALUE);
               break;
           default:
@@ -237,19 +237,19 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
           case 'calle':
               this.tramite110218Store.setcalle(VALUE);
               break;
-          case 'númeroLetra':
+          case 'numeroLetra':
               this.tramite110218Store.setnúmeroLetra(VALUE);
               break;
           case 'ciudad':
               this.tramite110218Store.setciudad(VALUE);
               break;
-          case 'correoElectrónico':
+          case 'correoElectronico':
               this.tramite110218Store.setcorreoElectrónico(VALUE);
               break;
           case 'fax':
               this.tramite110218Store.setfax(VALUE);
               break;
-          case 'teléfono':
+          case 'telefono':
               this.tramite110218Store.setteléfono(VALUE);
               break;
           default:

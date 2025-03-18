@@ -15,10 +15,10 @@ describe('TratadosComponent', () => {
     const serviceMock = {
       gettratados: jest.fn().mockReturnValue(of({
         tratadoAcuerdo: 'Acuerdo Test',
-        paísBloque: 'Bloque Test',
-        paísdeOrigen: 'Origen Test',
-        paísDestino: 'Destino Test',
-        fechadeExpedición: '2025-01-01',
+        paisBloque: 'Bloque Test',
+        paisdeOrigen: 'Origen Test',
+        paisDestino: 'Destino Test',
+        fechadeExpedicion: '2025-01-01',
         fechadeVencimiento: '2026-01-01'
       }))
     };
@@ -53,10 +53,10 @@ describe('TratadosComponent', () => {
     component.getTabledatas();
     expect(component.detallesdeltransporte.value).toEqual({
       tratadoAcuerdo: 'Acuerdo Test',
-      paísBloque: 'Bloque Test',
-      paísdeOrigen: 'Origen Test',
-      paísDestino: 'Destino Test',
-      fechadeExpedición: '2025-01-01',
+      paisBloque: 'Bloque Test',
+      paisdeOrigen: 'Origen Test',
+      paisDestino: 'Destino Test',
+      fechadeExpedicion: '2025-01-01',
       fechadeVencimiento: '2026-01-01'
     });
   });

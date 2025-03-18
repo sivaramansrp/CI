@@ -25,9 +25,9 @@ describe('TransporteComponent', () => {
     queryMock = {
       puertodeEmbarque$: of('Tokio'),
       puertodeDesembarque$: of('Osaka'),
-      puertodeTránsito$: of('Nagoya'),
+      puertodeTransito$: of('Nagoya'),
       nombredelaEmbarcación$: of('Nippon Maru'),
-      númerodeVuelo$: of('1234'),
+      numerodeVuelo$: of('1234'),
     };
 
     await TestBed.configureTestingModule({
@@ -55,9 +55,9 @@ describe('TransporteComponent', () => {
     expect(component.detallestransporte.value).toEqual({
       puertodeEmbarque: 'Tokio',
       puertodeDesembarque: 'Osaka',
-      puertodeTránsito: 'Nagoya',
+      puertodeTransito: 'Nagoya',
       nombredelaEmbarcación: 'Nippon Maru',
-      númerodeVuelo: '1234',
+      numerodeVuelo: '1234',
     });
   });
 
@@ -66,8 +66,8 @@ describe('TransporteComponent', () => {
     component.onDetallestransporteChange('puertodeEmbarque');
     expect(storeMock.setpuertodeEmbarque).toHaveBeenCalledWith('Kobe');
 
-    component.detallestransporte.get('númerodeVuelo')?.setValue('5678');
-    component.onDetallestransporteChange('númerodeVuelo');
+    component.detallestransporte.get('numerodeVuelo')?.setValue('5678');
+    component.onDetallestransporteChange('numerodeVuelo');
     expect(storeMock.setnúmerodeVuelo).toHaveBeenCalledWith('5678');
   });
 

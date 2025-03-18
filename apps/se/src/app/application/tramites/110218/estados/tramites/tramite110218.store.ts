@@ -13,24 +13,24 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 export interface Solicitud110218State {
   puertodeEmbarque: string,
   puertodeDesembarque:string,
-  puertodeTránsito:string,
+  puertodeTransito:string,
   nombredelaEmbarcación:string,
-  númerodeVuelo:string,
+  numerodeVuelo:string,
   nombre:string,
   primerApellido:string,
-  númeroderegistroFiscal:string,
-  razónSocial:string,
+  numeroderegistroFiscal:string,
+  razonSocial:string,
   calle:string,
-  númeroLetra:string,
+  numeroLetra:string,
   ciudad:string,
-  correoElectrónico:string,
+  correoElectronico:string,
   fax:string,
-  teléfono:string,
+  telefono:string,
   nombredelRepresentante:string,
   cargo:string,
-  teléfonos:string,
+  telefonos:string,
   faxs:string,
-  correoElectrónicos:string
+  correoElectronicos:string
   lugar:string,
   observaciones:string,
   tableDataDatos:CompliMentaria[],
@@ -47,24 +47,24 @@ export function createInitialState(): Solicitud110218State {
   return{
     puertodeEmbarque:'',
     puertodeDesembarque:'',
-    puertodeTránsito:'',
+    puertodeTransito:'',
     nombredelaEmbarcación:'',
-    númerodeVuelo:'',
+    numerodeVuelo:'',
     nombre:'',
     primerApellido:'',
-    númeroderegistroFiscal:'',
-    razónSocial:'',
+    numeroderegistroFiscal:'',
+    razonSocial:'',
     calle:'',
-    númeroLetra:'',
+    numeroLetra:'',
     ciudad:'',
-    correoElectrónico:'',
+    correoElectronico:'',
     fax:'',
-    teléfono:'',
+    telefono:'',
     nombredelRepresentante:'',
     cargo:'',
-    teléfonos:'',
+    telefonos:'',
     faxs:'',
-    correoElectrónicos:'',
+    correoElectronicos:'',
     lugar:'',
     observaciones:'',
     tableDataDatos: [],
@@ -104,16 +104,16 @@ export class Tramite110218Store extends Store<Solicitud110218State> {
         nombredelaEmbarcación,
       }));
     }
-    public setnúmerodeVuelo(númerodeVuelo: string): void {
+    public setnúmerodeVuelo(numerodeVuelo: string): void {
       this.update((state) => ({
         ...state,
-        númerodeVuelo,
+        numerodeVuelo,
       }));
     }
-    public setPuertodeTránsito(puertodeTránsito : string):void{
+    public setPuertodeTránsito(puertodeTransito : string):void{
       this.update((state) => ({
         ...state,
-        puertodeTránsito,
+        puertodeTransito,
       }));
     }
     public setnombre(nombre : string):void{
@@ -128,16 +128,16 @@ export class Tramite110218Store extends Store<Solicitud110218State> {
         primerApellido,
       }));
     }
-    public setnúmeroderegistroFiscal(númeroderegistroFiscal : string):void{
+    public setnúmeroderegistroFiscal(numeroderegistroFiscal : string):void{
       this.update((state) => ({
         ...state,
-        númeroderegistroFiscal,
+        numeroderegistroFiscal,
       }));
     }
-    public setrazónSocial(razónSocial : string):void{
+    public setrazónSocial(razonSocial : string):void{
       this.update((state) => ({
         ...state,
-        razónSocial,
+        razonSocial,
       }));
     }
     public setcalle(calle : string):void{
@@ -146,10 +146,10 @@ export class Tramite110218Store extends Store<Solicitud110218State> {
         calle,
       }));
     }
-    public setnúmeroLetra(númeroLetra : string):void{
+    public setnúmeroLetra(numeroLetra : string):void{
       this.update((state) => ({
         ...state,
-        númeroLetra,
+        numeroLetra,
       }));
     }
     public setciudad(ciudad : string):void{
@@ -158,10 +158,10 @@ export class Tramite110218Store extends Store<Solicitud110218State> {
         ciudad,
       }));
     }
-    public setcorreoElectrónico(correoElectrónico : string):void{
+    public setcorreoElectrónico(correoElectronico : string):void{
       this.update((state) => ({
         ...state,
-        correoElectrónico,
+        correoElectronico,
       }));
     }
     public setfax(fax : string):void{
@@ -170,10 +170,10 @@ export class Tramite110218Store extends Store<Solicitud110218State> {
         fax,
       }));
     }
-    public setteléfono(teléfono : string):void{
+    public setteléfono(telefono : string):void{
       this.update((state) => ({
         ...state,
-        teléfono,
+        telefono,
       }));
     }
     public setnombredelRepresentante(nombredelRepresentante : string):void{
@@ -188,10 +188,10 @@ export class Tramite110218Store extends Store<Solicitud110218State> {
         cargo,
       }));
     }
-    public setteléfonos(teléfonos : string):void{
+    public setteléfonos(telefonos : string):void{
       this.update((state) => ({
         ...state,
-        teléfonos,
+        telefonos,
       }));
     }
     public setfaxs(faxs : string):void{
@@ -200,10 +200,10 @@ export class Tramite110218Store extends Store<Solicitud110218State> {
         faxs,
       }));
     }
-    public setcorreoElectrónicos(correoElectrónicos : string):void{
+    public setcorreoElectrónicos(correoElectronicos : string):void{
       this.update((state) => ({
         ...state,
-        correoElectrónicos,
+        correoElectronicos,
       }));
     }
     public setlugar(lugar : string):void{

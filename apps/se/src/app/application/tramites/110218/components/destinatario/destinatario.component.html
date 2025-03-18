@@ -34,21 +34,21 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label" for="númeroderegistroFiscal">Número de registro fiscal *:</label>
-                    <input type="text" class="form-control bg-white" id="númeroderegistroFiscal"
-                        placeholder="OEAE800904JL9" formControlName="númeroderegistroFiscal"
-                        [class.is-invalid]="datosdeldestinatario.get('númeroderegistroFiscal')?.touched && datosdeldestinatario.get('númeroderegistroFiscal')?.invalid"
-                        (change)="onDatosdeldestinatarioChange('númeroderegistroFiscal')">
+                    <label class="form-label" for="numeroderegistroFiscal">Número de registro fiscal *:</label>
+                    <input type="text" class="form-control bg-white" id="numeroderegistroFiscal"
+                        placeholder="OEAE800904JL9" formControlName="numeroderegistroFiscal"
+                        [class.is-invalid]="datosdeldestinatario.get('numeroderegistroFiscal')?.touched && datosdeldestinatario.get('numeroderegistroFiscal')?.invalid"
+                        (change)="onDatosdeldestinatarioChange('numeroderegistroFiscal')">
                     <div class="invalid-feedback">
                         Corrija el RFC.
                     </div>
                 </div>
 
                 <div class="col-md-8">
-                    <label class="form-label" for="razónSocial">Razón social:</label>
-                    <input type="text" class="form-control bg-white" id="razónSocial" formControlName="razónSocial"
-                        [class.is-invalid]="datosdeldestinatario.get('razónSocial')?.touched && datosdeldestinatario.get('razónSocial')?.invalid"
-                        (change)="onDatosdeldestinatarioChange('razónSocial')">
+                    <label class="form-label" for="razonSocial">Razón social:</label>
+                    <input type="text" class="form-control bg-white" id="razonSocial" formControlName="razonSocial"
+                        [class.is-invalid]="datosdeldestinatario.get('razonSocial')?.touched && datosdeldestinatario.get('razonSocial')?.invalid"
+                        (change)="onDatosdeldestinatarioChange('razonSocial')">
                     <div class="invalid-feedback">
                         Este campo es obligatorio.
                     </div>
@@ -75,11 +75,11 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label" for="númeroLetra">Número y/o letra *:</label>
-                    <input type="text" class="form-control bg-white" id="númeroLetra" placeholder="NUMERO"
-                        formControlName="númeroLetra"
-                        [class.is-invalid]="domiciliodeldestinatario.get('númeroLetra')?.touched && domiciliodeldestinatario.get('númeroLetra')?.invalid"
-                        (change)="onDomiciliodeldestinatarioChange('númeroLetra')">
+                    <label class="form-label" for="numeroLetra">Número y/o letra *:</label>
+                    <input type="text" class="form-control bg-white" id="numeroLetra" placeholder="NUMERO"
+                        formControlName="numeroLetra"
+                        [class.is-invalid]="domiciliodeldestinatario.get('numeroLetra')?.touched && domiciliodeldestinatario.get('numeroLetra')?.invalid"
+                        (change)="onDomiciliodeldestinatarioChange('numeroLetra')">
                     <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
 
@@ -93,11 +93,11 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label" for="correoElectrónico">Correo electrónico *:</label>
-                    <input type="email" class="form-control bg-white" id="correoElectrónico"
-                        placeholder="correo@correo.com" formControlName="correoElectrónico"
-                        [class.is-invalid]="domiciliodeldestinatario.get('correoElectrónico')?.touched && domiciliodeldestinatario.get('correoElectrónico')?.invalid"
-                        (change)="onDomiciliodeldestinatarioChange('correoElectrónico')">
+                    <label class="form-label" for="correoElectronico">Correo electrónico *:</label>
+                    <input type="email" class="form-control bg-white" id="correoElectronico"
+                        placeholder="correo@correo.com" formControlName="correoElectronico"
+                        [class.is-invalid]="domiciliodeldestinatario.get('correoElectronico')?.touched && domiciliodeldestinatario.get('correoElectronico')?.invalid"
+                        (change)="onDomiciliodeldestinatarioChange('correoElectronico')">
                     <div class="invalid-feedback">Ingrese una dirección de correo válida.</div>
                 </div>
 
@@ -110,11 +110,11 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label" for="teléfono">Teléfono:</label>
-                    <input type="text" class="form-control bg-white" id="teléfono" placeholder="5555687"
-                        formControlName="teléfono"
-                        [class.is-invalid]="domiciliodeldestinatario.get('teléfono')?.touched && domiciliodeldestinatario.get('teléfono')?.invalid"
-                        (change)="onDomiciliodeldestinatarioChange('teléfono')">
+                    <label class="form-label" for="telefono">Teléfono:</label>
+                    <input type="text" class="form-control bg-white" id="telefono" placeholder="5555687"
+                        formControlName="telefono"
+                        [class.is-invalid]="domiciliodeldestinatario.get('telefono')?.touched && domiciliodeldestinatario.get('telefono')?.invalid"
+                        (change)="onDomiciliodeldestinatarioChange('telefono')">
                     <div class="invalid-feedback">Ingrese solo dígitos.</div>
                 </div>
 

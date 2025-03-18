@@ -30,14 +30,14 @@ describe('DestinatarioComponent', () => {
     mockQuery = {
       nombre$: of('John'),
       primerApellido$: of('Doe'),
-      númeroderegistroFiscal$: of('ABC123'),
-      razónSocial$: of('Company Ltd'),
+      numeroderegistroFiscal$: of('ABC123'),
+      razonSocial$: of('Company Ltd'),
       calle$: of('123 Street'),
-      númeroLetra$: of('A1'),
+      numeroLetra$: of('A1'),
       ciudad$: of('Tokyo'),
-      correoElectrónico$: of('test@example.com'),
+      correoElectronico$: of('test@example.com'),
       fax$: of('123456'),
-      teléfono$: of('987654'),
+      telefono$: of('987654'),
     };
 
     mockService = {
@@ -68,38 +68,38 @@ describe('DestinatarioComponent', () => {
       nombre: '',
       primerApellido: '',
       segundoApellido: '',
-      númeroderegistroFiscal: '',
-      razónSocial: '',
+      numeroderegistroFiscal: '',
+      razonSocial: '',
     });
 
     expect(component.domiciliodeldestinatario.value).toEqual({
       calle: '',
-      númeroLetra: '',
+      numeroLetra: '',
       ciudad: '',
-      correoElectrónico: '',
+      correoElectronico: '',
       fax: '',
-      teléfono: '',
+      telefono: '',
     });
   });
 
   it('should validate required fields', () => {
     component.datosdeldestinatario.get('nombre')?.setValue('');
     component.datosdeldestinatario.get('primerApellido')?.setValue('');
-    component.datosdeldestinatario.get('númeroderegistroFiscal')?.setValue('');
-    component.datosdeldestinatario.get('razónSocial')?.setValue('');
+    component.datosdeldestinatario.get('numeroderegistroFiscal')?.setValue('');
+    component.datosdeldestinatario.get('razonSocial')?.setValue('');
 
     expect(component.datosdeldestinatario.get('nombre')?.valid).toBeFalsy();
     expect(component.datosdeldestinatario.get('primerApellido')?.valid).toBeFalsy();
-    expect(component.datosdeldestinatario.get('númeroderegistroFiscal')?.valid).toBeFalsy();
-    expect(component.datosdeldestinatario.get('razónSocial')?.valid).toBeFalsy();
+    expect(component.datosdeldestinatario.get('numeroderegistroFiscal')?.valid).toBeFalsy();
+    expect(component.datosdeldestinatario.get('razonSocial')?.valid).toBeFalsy();
   });
 
   it('should validate email format', () => {
-    component.domiciliodeldestinatario.get('correoElectrónico')?.setValue('invalid-email');
-    expect(component.domiciliodeldestinatario.get('correoElectrónico')?.valid).toBeFalsy();
+    component.domiciliodeldestinatario.get('correoElectronico')?.setValue('invalid-email');
+    expect(component.domiciliodeldestinatario.get('correoElectronico')?.valid).toBeFalsy();
 
-    component.domiciliodeldestinatario.get('correoElectrónico')?.setValue('test@example.com');
-    expect(component.domiciliodeldestinatario.get('correoElectrónico')?.valid).toBeTruthy();
+    component.domiciliodeldestinatario.get('correoElectronico')?.setValue('test@example.com');
+    expect(component.domiciliodeldestinatario.get('correoElectronico')?.valid).toBeTruthy();
   });
 
   it('should patch form values when getTabledatas() is called', () => {
@@ -119,10 +119,10 @@ describe('DestinatarioComponent', () => {
     component.onDatosdeldestinatarioChange('primerApellido');
     expect(mockStore.setprimerApellido).toHaveBeenCalled();
 
-    component.onDatosdeldestinatarioChange('númeroderegistroFiscal');
+    component.onDatosdeldestinatarioChange('numeroderegistroFiscal');
     expect(mockStore.setnúmeroderegistroFiscal).toHaveBeenCalled();
 
-    component.onDatosdeldestinatarioChange('razónSocial');
+    component.onDatosdeldestinatarioChange('razonSocial');
     expect(mockStore.setrazónSocial).toHaveBeenCalled();
   });
 
@@ -130,19 +130,19 @@ describe('DestinatarioComponent', () => {
     component.onDomiciliodeldestinatarioChange('calle');
     expect(mockStore.setcalle).toHaveBeenCalled();
 
-    component.onDomiciliodeldestinatarioChange('númeroLetra');
+    component.onDomiciliodeldestinatarioChange('numeroLetra');
     expect(mockStore.setnúmeroLetra).toHaveBeenCalled();
 
     component.onDomiciliodeldestinatarioChange('ciudad');
     expect(mockStore.setciudad).toHaveBeenCalled();
 
-    component.onDomiciliodeldestinatarioChange('correoElectrónico');
+    component.onDomiciliodeldestinatarioChange('correoElectronico');
     expect(mockStore.setcorreoElectrónico).toHaveBeenCalled();
 
     component.onDomiciliodeldestinatarioChange('fax');
     expect(mockStore.setfax).toHaveBeenCalled();
 
-    component.onDomiciliodeldestinatarioChange('teléfono');
+    component.onDomiciliodeldestinatarioChange('telefono');
     expect(mockStore.setteléfono).toHaveBeenCalled();
   });
 

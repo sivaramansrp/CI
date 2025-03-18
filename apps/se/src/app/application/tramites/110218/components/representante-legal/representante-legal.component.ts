@@ -46,10 +46,10 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    */
   cargo$: Observable<string | null> = this.tramite110218Query.cargo$;
   /**
-   * Observable para los teléfonos del representante legal.
+   * Observable para los telefonos del representante legal.
    * RepresentanteLegalComponent
    */
-  teléfonos$: Observable<string | null> = this.tramite110218Query.teléfonos$;
+  telefonos$: Observable<string | null> = this.tramite110218Query.telefonos$;
   /**
    * Observable para los fax del representante legal.
    * RepresentanteLegalComponent
@@ -59,7 +59,7 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    * Observable para los correos electrónicos del representante legal.
    * RepresentanteLegalComponent
    */
-  correoElectrónicos$: Observable<string | null> = this.tramite110218Query.correoElectrónicos$;
+  correoElectronicos$: Observable<string | null> = this.tramite110218Query.correoElectronicos$;
 
   /**
    * Subject para la destrucción del componente.
@@ -85,9 +85,9 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
       nombredelRepresentante: ['', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚÑáéíóúñ ]+$/)]], // Campo obligatorio, solo letras y espacios
       empresa: [{ value: '', disabled: true }], // Campo de solo lectura, sin validación necesaria
       cargo: ['', Validators.required], // Campo obligatorio
-      teléfonos: ['', [Validators.required, Validators.pattern(/^\d+$/)]], // Campo obligatorio, solo números permitidos
+      telefonos: ['', [Validators.required, Validators.pattern(/^\d+$/)]], // Campo obligatorio, solo números permitidos
       faxs: ['', [Validators.required, Validators.pattern(/^\d+$/)]], // Campo obligatorio, solo números permitidos
-      correoElectronico: ['', [Validators.required, Validators.email]] // Campo obligatorio, debe ser un correo válido
+      correoElectronicos: ['', [Validators.required, Validators.email]] // Campo obligatorio, debe ser un correo válido
     });
 
   }
@@ -121,9 +121,9 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
     const OBSERVABLES = {
       nombredelRepresentante: this.nombredelRepresentante$,
       cargo: this.cargo$,
-      teléfonos: this.teléfonos$,
+      telefonos: this.telefonos$,
       faxs: this.faxs$,
-      correoElectrónicos: this.correoElectrónicos$,
+      correoElectronicos: this.correoElectronicos$,
     };
 
     Object.entries(OBSERVABLES).forEach(([controlName, OBSERVABLES$]) => {
@@ -159,13 +159,13 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
       case 'cargo':
         this.tramite110218Store.setcargo(VALUE);
         break;
-      case 'teléfonos':
+      case 'telefonos':
         this.tramite110218Store.setteléfonos(VALUE);
         break;
       case 'faxs':
         this.tramite110218Store.setfaxs(VALUE);
         break;
-      case 'correoElectrónicos':
+      case 'correoElectronicos':
         this.tramite110218Store.setcorreoElectrónicos(VALUE);
         break;
       default:

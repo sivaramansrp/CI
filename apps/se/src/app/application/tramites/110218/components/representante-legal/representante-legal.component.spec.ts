@@ -28,9 +28,9 @@ describe('RepresentanteLegalComponent', () => {
     mockQuery = {
       nombredelRepresentante$: of('John Doe'),
       cargo$: of('Manager'),
-      teléfonos$: of('123456789'),
+      telefonos$: of('123456789'),
       faxs$: of('987654321'),
-      correoElectrónicos$: of('test@example.com'),
+      correoElectronicos$: of('test@example.com'),
     };
 
     mockService = {
@@ -67,7 +67,7 @@ describe('RepresentanteLegalComponent', () => {
       nombredelRepresentante: '',
       empresa: '',
       cargo: '',
-      teléfonos: '',
+      telefonos: '',
       faxs: '',
       correoElectronico: '',
     });
@@ -83,7 +83,7 @@ describe('RepresentanteLegalComponent', () => {
     component.subscribeToStoreChanges();
     expect(component.datosdelexportador.get('nombredelRepresentante')?.value).toBe('John Doe');
     expect(component.datosdelexportador.get('cargo')?.value).toBe('Manager');
-    expect(component.datosdelexportador.get('teléfonos')?.value).toBe('123456789');
+    expect(component.datosdelexportador.get('telefonos')?.value).toBe('123456789');
     expect(component.datosdelexportador.get('faxs')?.value).toBe('987654321');
     expect(component.datosdelexportador.get('correoElectronicos')?.value).toBe('test@example.com');
   });

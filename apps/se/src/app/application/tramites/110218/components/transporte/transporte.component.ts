@@ -46,7 +46,7 @@ export class TransporteComponent implements OnInit, OnDestroy {
    * Observable para el puerto de tránsito.
    * TransporteComponent
    */
-  puertodeTránsito$: Observable<string | null> = this.tramite110218Query.puertodeTránsito$;
+  puertodeTransito$: Observable<string | null> = this.tramite110218Query.puertodeTransito$;
   /**
    * Observable para el nombre de la embarcación.
    * TransporteComponent
@@ -56,7 +56,7 @@ export class TransporteComponent implements OnInit, OnDestroy {
    * Observable para el número de vuelo.
    * TransporteComponent
    */
-  númerodeVuelo$: Observable<string | null> = this.tramite110218Query.númerodeVuelo$;
+  numerodeVuelo$: Observable<string | null> = this.tramite110218Query.numerodeVuelo$;
 
   /**
    * Subject para la destrucción del componente.
@@ -79,9 +79,9 @@ export class TransporteComponent implements OnInit, OnDestroy {
     this.detallestransporte = this.fb.group({
       puertodeEmbarque: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Campo obligatorio, solo letras y espacios
       puertodeDesembarque: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Campo obligatorio, solo letras y espacios
-      puertodeTránsito: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Campo obligatorio, solo letras y espacios
+      puertodeTransito: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Campo obligatorio, solo letras y espacios
       nombredelaEmbarcación: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Campo obligatorio, solo letras y espacios
-      númerodeVuelo: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Campo obligatorio, solo números permitidos
+      numerodeVuelo: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Campo obligatorio, solo números permitidos
     });
   }
 
@@ -102,8 +102,8 @@ export class TransporteComponent implements OnInit, OnDestroy {
       puertodeEmbarque: this.puertodeEmbarque$,
       puertodeDesembarque: this.puertodeDesembarque$,
       nombredelaEmbarcación: this.nombredelaEmbarcación$,
-      númerodeVuelo: this.númerodeVuelo$,
-      puertodeTránsito: this.puertodeTránsito$,
+      numerodeVuelo: this.numerodeVuelo$,
+      puertodeTransito: this.puertodeTransito$,
     };
 
     Object.entries(OBSERVABLES).forEach(([controlName, OBSERVABLES$]) => {
@@ -142,10 +142,10 @@ export class TransporteComponent implements OnInit, OnDestroy {
       case 'nombredelaEmbarcación':
         this.tramite110218Store.setnombredelaEmbarcación(VALUE);
         break;
-      case 'númerodeVuelo':
+      case 'numerodeVuelo':
         this.tramite110218Store.setnúmerodeVuelo(VALUE);
         break;
-      case 'puertodeTránsito':
+      case 'puertodeTransito':
         this.tramite110218Store.setPuertodeTránsito(VALUE);
         break;
       default:

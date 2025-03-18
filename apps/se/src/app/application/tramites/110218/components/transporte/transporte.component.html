@@ -31,12 +31,12 @@
           </div>
       
           <div class="col-md-4">
-            <label class="form-label" for="puertodeTránsito">Puerto de tránsito:</label>
+            <label class="form-label" for="puertodeTransito">Puerto de tránsito:</label>
             <input 
-              type="text" class="form-control" id="puertodeTránsito" 
-              placeholder="Veracruz norte" formControlName="puertodeTránsito"
-              [class.is-invalid]="detallestransporte.get('puertodeTránsito')?.touched && detallestransporte.get('puertodeTránsito')?.invalid"
-              (change)="onDetallestransporteChange('puertodeTránsito')">
+              type="text" class="form-control" id="puertodeTransito" 
+              placeholder="Veracruz norte" formControlName="puertodeTransito"
+              [class.is-invalid]="detallestransporte.get('puertodeTransito')?.touched && detallestransporte.get('puertodeTransito')?.invalid"
+              (change)="onDetallestransporteChange('puertodeTransito')">
             <div class="invalid-feedback">
               Corrija el nombre.
             </div>
@@ -56,12 +56,12 @@
           </div>
       
          <div class="col-md-4">
-            <label class="form-label" for="númerodeVuelo">Número de vuelo:</label>
+            <label class="form-label" for="numerodeVuelo">Número de vuelo:</label>
             <input 
-              type="text" class="form-control" id="númerodeVuelo" 
-              placeholder="0115 I" formControlName="númerodeVuelo"
-              [class.is-invalid]="detallestransporte.get('númerodeVuelo')?.touched && detallestransporte.get('númerodeVuelo')?.invalid"
-              (change)="onDetallestransporteChange('númerodeVuelo')">
+              type="text" class="form-control" id="numerodeVuelo" 
+              placeholder="0115 I" formControlName="numerodeVuelo"
+              [class.is-invalid]="detallestransporte.get('numerodeVuelo')?.touched && detallestransporte.get('numerodeVuelo')?.invalid"
+              (change)="onDetallestransporteChange('numerodeVuelo')">
             <div class="invalid-feedback">
               Ingrese solo dígitos.
             </div>
