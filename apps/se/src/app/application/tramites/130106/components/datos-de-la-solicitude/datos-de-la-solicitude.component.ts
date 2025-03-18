@@ -38,7 +38,10 @@ export class DatosDeLaSolicitudeComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud130106State;
 
 
-  radioOptions = RadioOptionsData; // Use imported JSON data
+  /**
+   * Opciones para los botones de radio.
+   */
+  radioOptions = RadioOptionsData;
 
   selectedValue: string | number = 'option1'; // Update the type to string | number
   defaultSelect: string | number = 'oficina central';
