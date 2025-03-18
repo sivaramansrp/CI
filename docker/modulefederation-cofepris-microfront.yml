@@ -1,0 +1,18 @@
+services:
+#----------------------------------------------------------------
+  modulefederation-cofepris-microfront:
+    image: modulefederation-cofepris-microfront:1.0.0
+    build: 
+      context: ./../
+      dockerfile: apps/cofepris/Dockerfile
+    container_name: modulefederation-cofepris-microfront
+    restart: on-failure
+    expose:
+      - '4211'
+    ports:
+      - "4211:80"
+    networks:
+      - modulefederation-network
+#----------------------------------------------------------------
+networks:
+  modulefederation-network:

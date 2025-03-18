@@ -6,19 +6,18 @@ WORKDIR /app
 
 # Install dependencies
 COPY . .
-# RUN npm ci
-RUN npm install --force
-RUN npm i webpack@5.91.0
+# RUN pwd && ls
+RUN npm ci
 
 # Install Nx CLI globally
-RUN npm install -g @nrwl/cli
+RUN npm install -g nx
 
 # Build the app using Nx.
-RUN npx nx build agace
-#--configuration=production
-#RUN pwd && ls
+# RUN npm install --force --no-audit
+RUN npx nx build agace --configuration=development
+# RUN pwd && ls -a /app/dist/apps/agace
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine-slim
 COPY ./apps/agace/nginx.conf /etc/nginx/nginx.conf
-COPY --from=node app/dist/apps/agace /usr/share/nginx/html
+COPY --from=node /app/dist/apps/agace /usr/share/nginx/html
