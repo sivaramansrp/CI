@@ -14,6 +14,13 @@ const ROUTES: Routes = [
       import('./tramites/260912/mod-permiso-importacion.module').then(
         (m)=> m.ModPermisoImportacionModule
       )
+  },
+  {
+    path: 'modificación-del-permiso-sanitario-de-importación-de-insumos',
+    loadChildren: () =>
+      import('./tramites/260904/modificación-del-permiso-sanitario-de-importación-de-insumos.module').then(
+        (m)=> m.ModificaciónDelPermisoSanitarioDeImportaciónDeInsumosModule
+      )
   }
 ];
 
