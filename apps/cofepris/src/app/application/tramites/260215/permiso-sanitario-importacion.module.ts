@@ -11,6 +11,8 @@ import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/comp
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
+import { ServiciosPermisoSanitarioService } from './services/servicios-permiso-sanitario.service';
+import { DatosDeLaComponent } from './components/datos-solicitud/datos-solicitud.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,9 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites
     TercerosRelacionadosComponent,
     PagoDeDerechosComponent,
     SolicitanteComponent,
+    DatosDeLaComponent
+
   ],
+  providers:[ServiciosPermisoSanitarioService]
 })
 export class PermisoSanitarioImportacionModule {}
