@@ -1,6 +1,6 @@
 /* eslint-disable sort-imports */
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, TEXTOS, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud11201State, Tramite11201Store } from '../../../../estados/tramites/tramite11201.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -9,6 +9,7 @@ import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { Tramite11201Query } from '../../../../estados/queries/tramite11201.query';
 import { Aduanas, Contenedores, DatosDelContenedor } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import moment from 'moment';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 @Component({
   selector: 'app-contenedor',
   templateUrl: './contenedor.component.html',
@@ -23,6 +24,7 @@ import moment from 'moment';
     AlertComponent,
     TablaDinamicaComponent
   ],
+  providers: [BsModalService]
 })
 export class ContenedorComponent implements OnInit {
   solicitudForm!: FormGroup;
@@ -108,12 +110,17 @@ export class ContenedorComponent implements OnInit {
   ];
   public datosDelContenedor: DatosDelContenedor[] = [];
 
+  abiertoModeloDatos: string = '';
+  modalRef?: BsModalRef | null;
+  @ViewChild('plantillademodelo') plantillaDeModelo!: TemplateRef<Element>;
+
   constructor(
     private fb: FormBuilder,
     private datosTramiteService: DatosTramiteService,
     private validacionesService: ValidacionesFormularioService,
     public tramite11201Store: Tramite11201Store,
-    private tramite11201Query: Tramite11201Query // private modalService: NgbModal
+    private tramite11201Query: Tramite11201Query,
+    private modalService: BsModalService,
   ) {
     this.transporteList = {
       catalogos: [],
@@ -262,16 +269,6 @@ export class ContenedorComponent implements OnInit {
         console.error('Error al cargar contenedores', error);
       }
     );
-
-    // Verificar si requiere guardado parcial
-    // this.datosTramiteService.checkRequiereGuardadoParcial().subscribe(
-    //   (data) => {
-    //     this.requiereGuardadoParcial = data;
-    //   },
-    //   (error) => {
-    //     console.error('Error al verificar guardado parcial', error);
-    //   }
-    // );
   }
 
   mostrarCampos(): void {
@@ -308,7 +305,6 @@ export class ContenedorComponent implements OnInit {
     this.showSeccionExcel = false;
     this.mostrarMensaje = false;
     // Deshabilitar controles específicos si es necesario
-    this.solicitudForm.get('fechaIngreso')?.disable();
     this.solicitudForm.get('archivoSeleccionado')?.disable();
   }
 
@@ -508,5 +504,10 @@ export class ContenedorComponent implements OnInit {
       'commonCheckbox',
       'setCommonCheckbox'
     );
+  }
+
+  abiertoModelo(datos: string): void {
+    this.abiertoModeloDatos = datos;
+    this.modalRef = this.modalService.show(this.plantillaDeModelo, { id: 1, class: 'modal-sm' });
   }
 }

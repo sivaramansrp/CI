@@ -404,4 +404,23 @@
             </div>
         </div>
     </form>
+    <ng-template #plantillademodelo>
+        <div class="modal-header">
+            <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body p-5">
+            <ng-container [ngSwitch]="abiertoModeloDatos">
+                <ng-container *ngSwitchCase="'generarerror'"> No se puede generar la constancia, porque ya cuenta con
+                    una</ng-container>
+                <ng-container *ngSwitchCase="'verificadorerror'">
+                    Digito verificador incorrecto</ng-container>
+                <ng-container **ngSwitchDefault></ng-container>
+            </ng-container>
+        </div>
+        <div class="modal-footer m-auto">
+            <button type="button" class="btn btn-primary" (click)="modalRef?.hide()">
+                Aceptar
+            </button>
+        </div>
+    </ng-template>
 </div>
