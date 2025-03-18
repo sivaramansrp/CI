@@ -1,4 +1,4 @@
-export const PASSOS = [
+export const PASOS = [
     {
         indice: 1,
         titulo: 'Capturar solicitud',

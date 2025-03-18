@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
-import { PASSOS } from '../../constants/exportador-autorizado.enum';
+import { PASOS } from '../../constants/exportador-autorizado.enum';
 
 
 /**
@@ -38,7 +38,7 @@ export class DatosComponent {
   /**
    * Lista de pasos para el asistente (wizard) de asignación directa.
    */
-  pantallasPasos: ListaPasosWizard[] = PASSOS;
+  pantallasPasos: ListaPasosWizard[] = PASOS;
  
   /**
    * Índice actual del paso en el asistente.
