@@ -48,30 +48,48 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   private destroyNotifier$ = new Subject<void>();
   /**
-    * Configuración para el select de aduana de ingreso. --220201
+    * Configuración para el select de aduana de ingreso. --220102
     * @property {Catalogo} nombreComunCatalogo
     */
   nombreComunCatalogo: Catalogo[] = [];
   /**
-    * Configuración para el select de aduana de ingreso. --220201
+    * Configuración para el select de aduana de ingreso. --220102
     * @property {Catalogo} nombreCientificoCatalog
     */
   nombreCientificoCatalog: Catalogo[] = [];
   /**
-  * Configuración para el select de aduana de ingreso. --220201
+  * Configuración para el select de aduana de ingreso. --220102
   * @property {Catalogo} nombreCientificoCatalog
   */
   usoCatalog: Catalogo[] = [];
   /**
-* Configuración para el select de aduana de ingreso. --220201
-* @property {Catalogo} nombreCientificoCatalog
+* Configuración para el select de aduana de ingreso. --220102
+* @property {Catalogo} paisOrigenCatalog
 */
   paisOrigenCatalog: Catalogo[] = [];
+  /**
+* Configuración para el select de aduana de ingreso. --220102
+* @property {Catalogo} paisProcedenciaCatalog
+*/
+  paisProcedenciaCatalog: Catalogo[] = [];
+  /**
+* Configuración para el select de aduana de ingreso. --220102
+* @property {Catalogo} tipoProductoCatalog
+*/
+  tipoProductoCatalog: Catalogo[] = [];
+  /**
+* Configuración para el select de aduana de ingreso. --220102
+* @property {Catalogo} tipoProductoCatalog
+*/
+  umcCatalog: Catalogo[] = [];
 
   constructor(private readonly fb: FormBuilder, private readonly datosMercanciaService: DatosMercanciaService) {
     this.getnombreComun();
     this.getnombreCientifico();
     this.getUso();
+    this.getpaisProcedencia();
+    this.gettipoProducto();
+    this.getpaisOrigen();
   }
   ngOnInit(): void {
     this.formMercancia = this.fb.group({
@@ -82,9 +100,9 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       paisProcedencia: ['', Validators.required],
       tipoProducto: ['', Validators.required],
       fraccionArancelaria: ['', Validators.required],
-      descripcionFraccionArancelaria: [''],
+      descripcionFraccionArancelaria: [{ value: '', disabled: true }, Validators.required],
       cantidadUMT: [''],
-      umt: [''],
+      umt: [{ value: '', disabled: true }],
       cantidadUMC: ['', Validators.required],
       umc: ['', Validators.required],
       descripcion: ['', Validators.required]
@@ -130,7 +148,37 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       this.paisOrigenCatalog = data;
     })
   }
+  /**
+* @description Obtiene la lista de aduanas desde un archivo JSON.
+* @method getnombreComun
+* @returns {void}
+*/
+  getpaisProcedencia() {
+    this.datosMercanciaService.obtenerSelectorList('paisprocedencia.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.paisProcedenciaCatalog = data;
+    })
+  }
+  /**
+* @description Obtiene la lista de aduanas desde un archivo JSON.
+* @method gettipoProducto
+* @returns {void}
+*/
+  gettipoProducto() {
+    this.datosMercanciaService.obtenerSelectorList('tipoproducto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.tipoProductoCatalog = data;
+    })
+  }
 
+  /**
+* @description Obtiene la lista de aduanas desde un archivo JSON.
+* @method gettipoProducto
+* @returns {void}
+*/
+  getUmc() {
+    this.datosMercanciaService.obtenerSelectorList('umc.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.umcCatalog = data;
+    })
+  }
   openDatosPara() {
     this.estadoChecker = !this.estadoChecker;
   }

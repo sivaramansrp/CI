@@ -69,15 +69,69 @@
      <div class="row">
         <div class="col-md-6">
             <app-catalogo-select
-            [catalogo]="usoCatalog"
+            [catalogo]="paisOrigenCatalog"
             formControlName="paisOrigen"
             [label]="'País de origen'"
             [required]="true"
             name="paisOrigen"
           ></app-catalogo-select>
         </div>
+        <div class="col-md-6">
+            <app-catalogo-select
+            [catalogo]="paisProcedenciaCatalog"
+            formControlName="paisProcedencia"
+            [label]="'País de procedencia'"
+            [required]="true"
+            name="paisProcedencia"
+          ></app-catalogo-select>
+        </div>
      </div>
-
+     <div class="row">
+        <div class="col-md-6">
+            <app-catalogo-select
+            [catalogo]="tipoProductoCatalog"
+            formControlName="tipoProducto"
+            [label]="'Tipo de producto'"
+            [required]="true"
+            name="tipoProducto"
+          ></app-catalogo-select>
+        </div>
+     </div>
+     <div class="row">
+        <div class="col-md-6">
+            <label for="fraccionArancelaria">Fracción arancelaria *:</label>
+            <input type="text" id="fraccionArancelaria" class="form-control" formControlName="fraccionArancelaria"/>
+        </div>
+        <div class="col-md-6">
+            <label for="descripcionFraccionArancelaria">Descripción de la fracción arancelaria*:</label>
+            <input type="text" id="descripcionFraccionArancelaria" class="form-control" formControlName="descripcionFraccionArancelaria"/>
+        </div>
+     </div>
+     <div class="row">
+        <div class="col-md-4">
+            <label for="cantidadUMT">Cantidad UMT :</label>
+            <input type="text" id="cantidadUMT" class="form-control" formControlName="cantidadUMT"/>
+        </div>
+        <div class="col-md-4">
+            <label for="descripcionFraccionArancelaria">UMT:</label>
+            <input type="text" id="UMT" class="form-control" formControlName="UMT"/>
+        </div>
+     </div>
+     <div class="row">
+        <div class="col-md-4">
+            <label for="cantidadUMC">Cantidad UMC*:</label>
+            <input type="text" id="cantidadUMC" class="form-control" formControlName="cantidadUMC"/>
+        </div>
+        <div class="col-md-4">
+            <app-catalogo-select
+            [catalogo]="tipoProductoCatalog"
+            formControlName="umc"
+            [label]="'UMC'"
+            [required]="true"
+            name="umc"
+          ></app-catalogo-select>
+        </div>
+     </div>
 
 </div>
 </form>
