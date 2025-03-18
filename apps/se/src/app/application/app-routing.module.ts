@@ -140,6 +140,13 @@ const ROUTES: Routes = [
       import('./tramites/80208/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
       ),
+  },
+  {
+          path: 'aviso-importacion-maquinas',
+          loadChildren: () =>
+            import('./tramites/130119/aviso-importacion-maquinas.module').then(
+              (m) => m.AvisoImportacionMaquinasModule
+            ),
   }
 ];
 

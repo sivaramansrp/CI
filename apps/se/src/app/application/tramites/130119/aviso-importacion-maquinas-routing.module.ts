@@ -6,14 +6,14 @@ import { DatosComponent } from './pages/datos/datos.component';
 const ROUTES: Routes = [
 
    {
-      path: 'aviso-importacion-maquinas',
+      path: 'registrar-solicitud',
       component: DatosComponent,
   
     },
     {
       path: '',
       pathMatch: 'full',
-      redirectTo: 'datos',
+      redirectTo: 'registrar-solicitud',
     },
 ];
 

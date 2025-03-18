@@ -3,19 +3,22 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AvisoImportacionMaquinasRoutingModule } from './aviso-importacion-maquinas-routing.module';
-import { BtnContinuarComponent } from "@ng-mf/data-access-user";
+
+import { BtnContinuarComponent, SolicitanteComponent } from "@ng-mf/data-access-user";
 import { DatosComponent } from './pages/datos/datos.component';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { WizardComponent } from "@ng-mf/data-access-user";
 
 
 
+
 @NgModule({
-  declarations: [DatosComponent],
+  declarations: [DatosComponent,PasoUnoComponent],
   imports: [
     CommonModule,
     AvisoImportacionMaquinasRoutingModule,
     WizardComponent,
-    BtnContinuarComponent
+    BtnContinuarComponent,SolicitanteComponent
 ]
 })
 export class AvisoImportacionMaquinasModule { }
