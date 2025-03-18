@@ -8,7 +8,7 @@
       <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="paisProc"
-          (change)="fetchPaisProc()"
+          (change)="fetchPaisProc();setValoresStore(paisForm,'bloque', 'setBloque')"
           [tooltipQuestionCircle]="true"
           [label]="'Bloque'"
           [placeholder]="'Seleccione un bloque'"
@@ -43,6 +43,7 @@
           id="descripcion"
           placeholder="Justificación y beneficio que se obtiene"
           formControlName="descripcionJustificacion"
+          (change)="setValoresStore(paisForm,'descripcionJustificacion', 'setDescripcionJustificacion')"
         ></textarea>
       </div>
     </div>
@@ -57,6 +58,7 @@
           id="descripcion"
           placeholder="Observaciones"
           formControlName="observaciones"
+          (change)="setValoresStore(paisForm,'observaciones', 'setObservaciones')"
         ></textarea>
       </div>
     </div>
