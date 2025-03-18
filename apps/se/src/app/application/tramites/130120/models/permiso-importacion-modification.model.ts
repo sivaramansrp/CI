@@ -1,26 +1,3 @@
-import { CatalogosSelect } from '../../../../../../../../libs/shared/data-access-user/src/core/models/shared/components.model';
-import { FormularioDinamico } from '../../../../../../../../libs/shared/data-access-user/src/core/models/shared/forms-model';
-
-export interface ListaPasosWizard {
-    indice: number;
-    titulo: string;
-    activo: boolean;
-    completado: boolean;
-}
-export interface InputConfig {
-  title: string,
-  formGroupName: string,
-  menu: MenuConfig[],
-}
-
-export interface MenuConfig {
-  inputType: string,
-  props: FormularioDinamico | CatalogosSelect | any,
-  class: string,
-  visibility?: string,
-  radioConfig?: string[],
-}
-
 export interface DatosGrupos {
     datosRealizer: DatosRealizer,
     datosMercanica: DatosMercanica,
@@ -87,7 +64,7 @@ export interface DatosExportador {
   observaciones: string,
 }
 
-export function createDatosGruposState(params: Partial<DatosGrupos>  = {}): DatosGrupos {
+export function createDatosGruposState(params: Partial<DatosGrupos> = {}): DatosGrupos {
   return {
     datosRealizer: params.datosRealizer || {
       régimen: '',

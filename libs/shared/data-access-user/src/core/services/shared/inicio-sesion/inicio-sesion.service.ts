@@ -1,4 +1,4 @@
-import { Login, TokenResponse } from '../../../models/shared/inicio-sesion.model';
+import { Login, TokenResponse } from 'libs/shared/data-access-user/src/core/models/shared/inicio-sesion.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { enviroment } from '../../../../enviroments/enviroment';
@@ -9,7 +9,7 @@ import { enviroment } from '../../../../enviroments/enviroment';
 export class InicioSesionService {
   urlServer = enviroment.URL_SERVER;
 
-  constructor(private http: HttpClient) {}
+  constructor(public http: HttpClient) {}
 
   obtenerToken(body: Login) {
     return this.http.post<TokenResponse>(`${this.urlServer}/login`, body);

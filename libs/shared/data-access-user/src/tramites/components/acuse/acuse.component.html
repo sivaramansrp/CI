@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md 6">
-      <h1>Acuse de recibo</h1>
+      <h1 class="titulo titulo-gold">{{titulo}}</h1>
     </div>
   </div>
 
@@ -13,8 +13,6 @@
 
   <div class="row">
     <div class="col-md-12">
-      <ng-titulo [titulo]="subtitulo"></ng-titulo>
-
       <table class="table table-striped">
         <thead>
           <tr>
@@ -40,6 +38,14 @@
           }
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <div class="row mt-5 mb-5">
+    <div class="col-md-12 d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="salir()">
+        Cerrar
+      </button>
     </div>
   </div>
 </div>

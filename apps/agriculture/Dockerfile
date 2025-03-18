@@ -5,20 +5,19 @@ FROM node:22-slim AS node
 WORKDIR /app
 
 # Install dependencies
-COPY package*.json ./
-COPY tsconfig.base.json nx.json ./
 COPY . .
+# RUN pwd && ls
 RUN npm ci
 
 # Install Nx CLI globally
-RUN npm install -g @nrwl/cli
+RUN npm install -g nx
 
 # Build the app using Nx.
-RUN npx nx build agriculture 
-#--configuration=production
-#RUN pwd && ls
+# RUN npm install --force --no-audit
+RUN npx nx build agriculture --configuration=development
+#RUN pwd && ls -a /app/dist/apps/agriculture
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine-slim
 COPY ./apps/agriculture/nginx.conf /etc/nginx/nginx.conf
-COPY --from=node app/dist/apps/agriculture /usr/share/nginx/html
+COPY --from=node /app/dist/apps/agriculture /usr/share/nginx/html
