@@ -28,7 +28,7 @@
               ></app-input-radio>
         </div>
     </div>
-    @if (esSolicitudFerrosValor === 1) {
+    @if (esSolicitudFerrosValor === '1') {
     <ng-alert [CONTENIDO]="TEXTOS.SECCION_LEYENDA_CONFIRMAR_TEXTOS"></ng-alert>
     }
 
@@ -36,7 +36,7 @@
 
     <ng-table [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"></ng-table>
 
-    @if (esSolicitudFerrosValor === 1) {
+    @if (esSolicitudFerrosValor === '1') {
     <div class="row">
         <div class="text-end">
             <button name="modificarSaldoMercancia" id="btnSaldoMercancia" class="btn btn-primary"
@@ -50,7 +50,7 @@
     }
     }
 
-    @if(esSolicitudFerrosValor !== 1) {
+    @if(esSolicitudFerrosValor !== '1') {
     <div class="row">
         <div class="col-md-4">
             <label for="totalGuia" class="form-label">Total de guías amparadas:<span class="bi bi-question-circle-fill"

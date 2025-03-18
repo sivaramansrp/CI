@@ -33,6 +33,15 @@ export interface Solicitud220501State {
   llavePago: string;
   importePago: string;
   fetchapago: string;
+  mostrarAgregarMercancia: boolean;
+  fraccionArancelaria: string;
+  descripcionFraccion: string;
+  nico: string;
+  descripcion: string;
+  unidaddeMedidaDeUMT: string;
+  cantidadTotalUMT: string;
+  saldoPendiente: string;
+  saldoACapturar: string;
 }
 
 /**
@@ -69,6 +78,15 @@ export function crearEstadoInicial(): Solicitud220501State {
     llavePago: '',
     importePago: '',
     fetchapago: '',
+    mostrarAgregarMercancia: false,
+    fraccionArancelaria: '',
+    descripcionFraccion: '',
+    nico: '',
+    descripcion: '',
+    unidaddeMedidaDeUMT: '',
+    cantidadTotalUMT: '',
+    saldoPendiente: '',
+    saldoACapturar: '',
   };
 }
 
@@ -176,7 +194,9 @@ export class Solicitud220501Store extends Store<Solicitud220501State> {
     }));
   }
 
-  public setCapturaDatosMercancia(capturaDatosMercancia: string| number): void {
+  public setCapturaDatosMercancia(
+    capturaDatosMercancia: string | number
+  ): void {
     this.update((state) => ({
       ...state,
       capturaDatosMercancia,
@@ -271,6 +291,20 @@ export class Solicitud220501Store extends Store<Solicitud220501State> {
     this.update((state) => ({
       ...state,
       fetchapago,
+    }));
+  }
+
+  public setMostrarAgregarMercancia(value: boolean): void {
+    this.update((state) => ({
+      ...state,
+      mostrarAgregarMercancia: value,
+    }));
+  }
+
+  public setSaldoACapturar(saldoACapturar: string): void{
+    this.update((state) => ({
+      ...state,
+      saldoACapturar,
     }));
   }
 

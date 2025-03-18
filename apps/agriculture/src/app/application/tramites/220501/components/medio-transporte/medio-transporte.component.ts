@@ -142,6 +142,10 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
               esSolicitudFerros: this.solicitud220501State.esSolicitudFerros,
               totalGuias: this.solicitud220501State.totalGuias,
             });
+            if(this.solicitud220501State.esSolicitudFerros === '1'){
+              this.esSolicitudFerrosValor = '1';
+              this.mostrarAgregarMercancia = this.solicitud220501State.mostrarAgregarMercancia;
+            }
           })
         )
         .subscribe();
@@ -202,13 +206,13 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   estableceSeleccionSolicitudFerro(value: number | string): void {
     // const TARGET = e.target as HTMLInputElement;
     this.esSolicitudFerrosValor = value;
-
-    if (this.esSolicitudFerrosValor === 1) {
+    if (this.esSolicitudFerrosValor === '1') {
       this.transporteSeleccionado.emit(true);
-    } else {
+    } else if(this.esSolicitudFerrosValor === '0'){
       this.transporteSeleccionado.emit(false);
     }
     this.mostrarAgregarMercancia = false;
+    this.solicitud220501Store.setMostrarAgregarMercancia(this.mostrarAgregarMercancia)
     this.solicitud220501Store.setEsSolicitudFerros(this.esSolicitudFerrosValor)
   }
 
@@ -218,6 +222,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   modificarSaldosMercancia(): void {
     this.obtenerMercancia();
     this.mostrarAgregarMercancia = true;
+    this.solicitud220501Store.setMostrarAgregarMercancia(this.mostrarAgregarMercancia)
   }
 
   /**
@@ -226,6 +231,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
  */
   obtenerAgregarMercanciaEvent(e: boolean): void {
     this.mostrarAgregarMercancia = e;
+    this.solicitud220501Store.setMostrarAgregarMercancia(this.mostrarAgregarMercancia)
   }
 
   /** 

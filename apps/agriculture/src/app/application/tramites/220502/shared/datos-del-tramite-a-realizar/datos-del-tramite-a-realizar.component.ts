@@ -70,7 +70,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
   configuracionFechaFinVigencia: InputFecha = {
     labelNombre: 'Fecha de Inicio de Vigencia',
     required: false,
-    habilitado: false,
+    habilitado: true,
   };
 
   /**
@@ -261,7 +261,6 @@ actualizarDatosIniciales(data: DatosDelTramiteRealizar): void {
    * @param nuevo_valor El nuevo valor de fecha seleccionado.
    */
   cambioFechaInicio(nuevo_valor: string): void {
-    // this.actualizarFormValue('fechaDeInspeccion', nuevo_valor);
     this.solicitud220502Store.setFechaDeInspeccion(nuevo_valor);
   }
   /**
