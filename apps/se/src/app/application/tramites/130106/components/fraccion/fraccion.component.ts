@@ -2,7 +2,6 @@ import { Component, OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent,TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-
 import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
 import {Subject, map,takeUntil } from 'rxjs';
 import { Partidas } from 'libs/shared/data-access-user/src/core/models/130106/partidas.model';
@@ -59,7 +58,7 @@ export class FraccionComponent implements OnInit, OnDestroy {
   /**
    * Subject para manejar la destrucción de observables y evitar fugas de memoria.
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Lista de partidas, cada una representando una línea de datos.
@@ -73,8 +72,8 @@ export class FraccionComponent implements OnInit, OnDestroy {
    * @param tramite130106Query - Query para obtener el estado de la solicitud.
    */
   constructor(private fb: FormBuilder,
-    private tramite130106Store: Tramite130106Store,
-    private tramite130106Query: Tramite130106Query) {
+    public tramite130106Store: Tramite130106Store,
+    public tramite130106Query: Tramite130106Query) {
       //Constructor
      }
 
@@ -194,7 +193,7 @@ export class FraccionComponent implements OnInit, OnDestroy {
   /**
    * Inicializa el formulario con los valores predeterminados de la solicitud.
    */
-  private inicializarFormulario(): void {
+  public inicializarFormulario(): void {
     this.tramite130106Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$), // Se asegura de limpiar los observables al destruir el componente
@@ -213,15 +212,23 @@ export class FraccionComponent implements OnInit, OnDestroy {
       mercanciaCantidad: [this.solicitudState.cantidad, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
       mercanciaFactura: [this.solicitudState.factura, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
       descripcion: [this.solicitudState.umt, Validators.required],
-      candidadTotal: [this.solicitudState.umt, Validators.required],
+      cantidadTotal: [this.solicitudState.umt, Validators.required],
       valorTotal: [this.solicitudState.umt, Validators.required],
       especifico: [this.solicitudState.especifico, Validators.required],
       justificacion: [this.solicitudState.justificacion, Validators.required],
-      Observaciones: [this.solicitudState.Observaciones, Validators.required],
+      Observaciones: [this.solicitudState.Observaciones],
       entidad: [this.solicitudState.entidad, Validators.required],
       representacion: [this.solicitudState.representacion, Validators.required],
       bloque: [this.solicitudState.bloque, Validators.required],
     });
+    this.updateformfied();
+  }
+  updateformfied(): void {
+  
+
+    // Deshabilita los campos para que no se puedan editar
+    this.FraccionForm.get('cantidadTotal')?.disable();
+    this.FraccionForm.get('valorTotal')?.disable();
   }
 
   /**
@@ -237,7 +244,11 @@ export class FraccionComponent implements OnInit, OnDestroy {
       precio: 1.000, // Precio fijo
       total: FORMDATA.cantidad // Total calculado con la cantidad
     };
-    this.partidas.push(NEWPARTIDA); // Agrega la nueva partida a la lista
+    this.partidas.push(NEWPARTIDA);
+    this.FraccionForm.patchValue({
+      cantidadTotal: FORMDATA.cantidad,
+      valorTotal:FORMDATA.cantidad
+    }); // Agrega la nueva partida a la lista
   }
 
   /**
