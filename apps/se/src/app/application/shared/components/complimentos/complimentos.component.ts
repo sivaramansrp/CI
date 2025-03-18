@@ -33,7 +33,7 @@ import {
 import { Observable, Subscription, delay } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplimentosService } from '../../services/complimentos.service';
-import { DatosCatalago } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
+import { DatosCatalago } from '../../../tramites/80101/models/nuevo-programa-industrial.model';
 
 
 @Component({
