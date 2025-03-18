@@ -79,7 +79,7 @@
                     <label class="form-label width-unset" for="razonSocial">Razón social :</label>
                     <input type="text"
                         (change)="setValoresStore(detosDelDestinatarioForm,'razonSocial','setRazonSocial')"
-                        class="form-control" id="razonSocial" formControlName="razonSocial" readonly/>
+                        class="form-control" id="razonSocial" formControlName="razonSocial"/>
                         <div *ngIf="detosDelDestinatarioForm.get('razonSocial')?.invalid">
                             <small *ngIf="detosDelDestinatarioForm.get('razonSocial')?.errors?.['pattern']"
                                 class="text-danger">  Por favor, corrija el nombre de la persona.</small>

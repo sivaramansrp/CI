@@ -55,8 +55,8 @@ export class DomicilioDelDestinatarioComponent implements OnInit, OnDestroy {
       numeroLetra: [ '', [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/),Validators.maxLength(30)]],
       ciudad: ['' , [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/),Validators.maxLength(50)]],
       correoElectronico: ['', [Validators.required, Validators.email,Validators.maxLength(70)]],
-      fax: ['',Validators.pattern(/^\d+$/),Validators.maxLength(30)],
-      telefono: ['' , Validators.pattern(/^\d+$/),Validators.maxLength(30)],
+      fax: ['',[Validators.pattern(/^\d+$/),Validators.maxLength(30)]],
+      telefono: ['' , [Validators.pattern(/^\d+$/),Validators.maxLength(30)]],
     });
   }
 
