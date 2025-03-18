@@ -14,6 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { DesmantelarComponent } from './pages/desmantelar/desmantelar.component';
 import { DatosDeLaSolicitudeComponent } from './components/datos-de-la-solicitude/datos-de-la-solicitude.component';
+import { FraccionComponent } from './components/fraccion/fraccion.component';
 
 
 @NgModule({
@@ -21,7 +22,7 @@ import { DatosDeLaSolicitudeComponent } from './components/datos-de-la-solicitud
     DatosComponent,FirmarSolicitudComponent,DesmantelarComponent
   ],
   imports: [
-    CommonModule,Solicitante130106Component,
+    CommonModule,Solicitante130106Component,FraccionComponent,
     DesmantelarRoutingModule,
     BtnContinuarComponent,   
     TituloComponent,
