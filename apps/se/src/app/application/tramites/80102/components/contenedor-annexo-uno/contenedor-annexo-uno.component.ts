@@ -5,6 +5,7 @@ import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Tramite80102Store } from '../../estados/tramite80102.store';
 
 @Component({
   selector: 'app-contenedor-annexo-uno',
@@ -34,7 +35,9 @@ export class ContenedorAnnexoUnoComponent {
     * @type {AnexoEncabezado[]}
     */
   public anexoDosTablaLista: AnexoImportacionEncabezado[] = [];
-  constructor(private router: Router, private activatedRoute: ActivatedRoute){
+  constructor(private router: Router, private activatedRoute: ActivatedRoute,
+    private store:Tramite80102Store
+  ){
     // do nothing
   }
 
@@ -45,6 +48,8 @@ export class ContenedorAnnexoUnoComponent {
    */
   public obtenerAnexoUnoDevolverLaLlamada(event: AnexoUnoEncabezado[]): void {
     this.anexoUnoTablaLista = event ? event : [];
+    this.store.setImportarDatosTabla(this.anexoUnoTablaLista);
+    
   }
    /**
    * Método para obtener la devolución de llamada del anexo Dos.
@@ -53,11 +58,18 @@ export class ContenedorAnnexoUnoComponent {
    */
    public obtenerAnexoDosDevolverLaLlamada(event: AnexoImportacionEncabezado[]): void {
     this.anexoDosTablaLista = event ? event : [];
+    this.store.setExportarDatosTabla(this.anexoDosTablaLista);
   }
 
   public rutaLaFraccionDeComplemento(event: RutaNombre): void{
     if(event && event.catagoria){
       this.router.navigate([`../${event.catagoria}`], { relativeTo: this.activatedRoute });
+    }
+  }
+
+  public navegacionDetectada(event: AnexoImportacionEncabezado[] | AnexoUnoEncabezado[]): void{
+    if(event){
+      this.store.setDatosParaNavegar(event);
     }
   }
 }

@@ -1,5 +1,7 @@
+import { AnexoEncabezado, AnexoImportacionEncabezado, AnexoUnoEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
   AnnexoDosTres,
+  AnnexoUno,
   DatosEmpresaExtranjera,
   Servicio,
   ServicioInmex,
@@ -16,7 +18,6 @@ import {
   PlantasSubfabricante,
 } from '../../../shared/models/empresas-subfabricanta.model';
 import { Store, StoreConfig } from '@datorama/akita';
-import { AnexoEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { Injectable } from '@angular/core';
 
 export interface Tramite80102State {
@@ -42,6 +43,7 @@ export interface Tramite80102State {
 
   empressaSubFabricantePlantas: EmpressaSubFabricantePlantas;
   annexoDosTres: AnnexoDosTres,
+  annexoUno: AnnexoUno,
   
   indicePrevioRuta: number;
 }
@@ -138,6 +140,12 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
   
   tablaDatosComplimentos: [],
   tablaDatosComplimentosExtranjera: [],
+
+  annexoUno:{
+    exportarDatosTabla:[],
+    importarDatosTabla:[],
+    datosParaNavegar:[]
+  },
 
   indicePrevioRuta: 0,
 };
@@ -425,6 +433,42 @@ export class Tramite80102Store extends Store<Tramite80102State> {
      
     }));
   }
+
+  //annexo uno estados
+
+  setImportarDatosTabla(importarDatosTabla:AnexoUnoEncabezado[] | AnexoImportacionEncabezado[]):void{
+    this.update((state) => ({
+      ...state,
+      annexoUno: {
+        ...state.annexoUno,
+        importarDatosTabla: importarDatosTabla,
+      }
+     
+    }));
+  }
+
+  setExportarDatosTabla(exportarDatosTabla:AnexoUnoEncabezado[] | AnexoImportacionEncabezado[]):void{
+    this.update((state) => ({
+      ...state,
+      annexoUno: {
+        ...state.annexoUno,
+        exportarDatosTabla: exportarDatosTabla,
+      }
+     
+    }));
+  }
+
+  setDatosParaNavegar(datosParaNavegar:AnexoUnoEncabezado[] | AnexoImportacionEncabezado[]):void{
+    this.update((state) => ({
+      ...state,
+      annexoUno: {
+        ...state.annexoUno,
+        datosParaNavegar: datosParaNavegar,
+      }
+     
+    }));
+  }
+
 
   setindicePrevioRuta(indice: number): void {
     this.update((state) => ({
