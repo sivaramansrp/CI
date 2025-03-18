@@ -133,6 +133,11 @@ export class PartidasDeLaComponent implements OnInit {
     this.getEstablecimiento();
     this.calculateTotals();
 
+    this.tramite130109Query.mostrarTabla$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((mostrarTabla) => {
+      this.mostrarTabla = mostrarTabla;
+    });
     this.tramite130109Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -277,6 +282,8 @@ export class PartidasDeLaComponent implements OnInit {
    */
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
+      this.tramite130109Store.setMostrarTabla(true);
+    this.tramite130109Store.storeTableValues(this.filaSeleccionada);
       this.router.navigate(['/pago/importacion/modificar-partida'], {
         state: { filaSeleccionada: this.filaSeleccionada },
       });

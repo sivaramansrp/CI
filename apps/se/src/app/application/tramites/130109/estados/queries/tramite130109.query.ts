@@ -10,12 +10,7 @@ export class Tramite130109Query extends Query<Tramite130109State> {
   selectSolicitud$ = this.select((state) => {
     return state;
   });
-
-  // Observable to watch selected row changes
+  mostrarTabla$ = this.select((state) => state.mostrarTabla);
   filaSeleccionada$ = this.select(state => state.filaSeleccionada);
-
-  // Observable to watch full table data
-  //tableData$ = this.select(state => state.tableDataDatos);
- 
   
 }

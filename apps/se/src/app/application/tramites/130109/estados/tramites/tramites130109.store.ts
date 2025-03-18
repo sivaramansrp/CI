@@ -7,16 +7,7 @@ export interface Tramite130109State {
   cantidad : string,
   valorPartidaUSD : number,
   descripcion : string,
-  fraccion: string,
-  valorFacturaUSD:string,
-  unidadMedida:string
-  bloque:string,
-  descripcioneSpecffico:string,
-  descripcionJustificacion:string,
-  observaciones:string,
-  entidad:string,
-  representacion:string
-
+  mostrarTabla: boolean,
 }
 
 export function createInitialState(): Tramite130109State {
@@ -25,16 +16,7 @@ export function createInitialState(): Tramite130109State {
     cantidad: '',
     valorPartidaUSD: 0,
     descripcion: '',
-    fraccion: '',
-    valorFacturaUSD:'',
-    unidadMedida:'',
-    bloque:'',
-    descripcioneSpecffico:'',
-    descripcionJustificacion:'',
-    observaciones:'',
-    entidad:'',
-    representacion:''
-
+    mostrarTabla: false
   };
 }
 
@@ -63,59 +45,62 @@ export class Tramite130109Store extends Store<Tramite130109State> {
       descripcion,
     }));
   }
-  public setFraccion(fraccion: string): void { // New method
+  public setFraccion(fraccion: string): void { 
     this.update((state) => ({
       ...state,
       fraccion,
     }));
   }
-  public setValorFacturaUSD(valorFacturaUSD: string): void { // New method
+  public setValorFacturaUSD(valorFacturaUSD: string): void { 
     this.update((state) => ({
       ...state,
       valorFacturaUSD,
     }));
   }
-  public setUnidadMedida(unidadMedida: string): void { // New method
+  public setUnidadMedida(unidadMedida: string): void { 
     this.update((state) => ({
       ...state,
       unidadMedida,
     }));
   }
-  public setBloque(bloque: string): void { // New method
+  public setBloque(bloque: string): void { 
     this.update((state) => ({
       ...state,
       bloque,
     }));
   }
-  public setDescripcioneSpecffico(descripcioneSpecffico: string): void { // New method
+  public setDescripcioneSpecffico(descripcioneSpecffico: string): void { 
     this.update((state) => ({
       ...state,
       descripcioneSpecffico,
     }));
   }
-  public setDescripcionJustificacion(descripcionJustificacion: string): void { // New method
+  public setDescripcionJustificacion(descripcionJustificacion: string): void { 
     this.update((state) => ({
       ...state,
       descripcionJustificacion,
     }));
   }
-  public setObservaciones(observaciones: string): void { // New method
+  public setObservaciones(observaciones: string): void { 
     this.update((state) => ({
       ...state,
       observaciones,
     }));
   }
-  public setEntidad(entidad: string): void { // New method
+  public setEntidad(entidad: string): void { 
     this.update((state) => ({
       ...state,
       entidad,
     }));
   }
-  public setRepresentacion(representacion: string): void { // New method
+  public setRepresentacion(representacion: string): void { 
     this.update((state) => ({
       ...state,
       representacion,
     }));
+  }
+  setMostrarTabla(mostrar: boolean): void {
+    this.update({ mostrarTabla: mostrar });
   }
   storeTableValues(fila: null): void {
     this.update({
