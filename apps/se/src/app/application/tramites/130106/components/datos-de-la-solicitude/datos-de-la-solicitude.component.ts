@@ -17,7 +17,7 @@ import { Tramite130106Store } from '../../../../estados/tramites/tramite130106.s
   templateUrl: './datos-de-la-solicitude.component.html',
   styleUrl: './datos-de-la-solicitude.component.scss'
 })
-export class DatosDeLaSolicitudeComponent implements OnInit,OnDestroy{
+export class DatosDeLaSolicitudeComponent implements OnInit, OnDestroy {
 
   /**
    * Representa el formulario del componente.
@@ -75,8 +75,8 @@ export class DatosDeLaSolicitudeComponent implements OnInit,OnDestroy{
       Clasificación: [this.solicitudState.clasificación, Validators.required],
       SolitudDescripcion: [this.solicitudState.solitudDescripcion, Validators.required],
       SolitudFraccion: [this.solicitudState.solitudFraccion, Validators.required],
-      SolitudCantidad: [this.solicitudState.solitudCantidad, Validators.required],
-      Valor: [this.solicitudState.valor, Validators.required],
+      SolitudCantidad: [this.solicitudState.solitudCantidad, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
+      Valor: [this.solicitudState.valor, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
       SolitudUMT: [this.solicitudState.solitudUMT, Validators.required]
     });
   }
@@ -97,12 +97,12 @@ export class DatosDeLaSolicitudeComponent implements OnInit,OnDestroy{
     (this.tramite130106Store[metodoNombre] as (value: unknown) => void)(VALOR); // Llama al método correspondiente en el store
   }
 
-    /**
-   * Se ejecuta cuando el componente es destruido. Limpia recursos y observables.
-   */
-    ngOnDestroy(): void {
-      this.destroyNotifier$.next(); // Notifica que el componente ha sido destruido
-      this.destroyNotifier$.complete(); // Completa el observable
-    }
+  /**
+ * Se ejecuta cuando el componente es destruido. Limpia recursos y observables.
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next(); // Notifica que el componente ha sido destruido
+    this.destroyNotifier$.complete(); // Completa el observable
+  }
 
 }
