@@ -1,5 +1,5 @@
-import { AnexoEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
-import { AnnexoDosTres } from '../models/nuevo-programa-industrial.model';
+import { AnexoEncabezado, AnexoImportacionEncabezado, AnexoUnoEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
+import { AnnexoDosTres, AnnexoUno } from '../models/nuevo-programa-industrial.model';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoPaises } from '@ng-mf/data-access-user';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
@@ -38,6 +38,7 @@ export interface Tramite80101State {
 
   empressaSubFabricantePlantas: EmpressaSubFabricantePlantas;
   annexoDosTres: AnnexoDosTres,
+  annexoUno: AnnexoUno,
   
   indicePrevioRuta: number;
 }
@@ -134,6 +135,23 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   
   tablaDatosComplimentos: [],
   tablaDatosComplimentosExtranjera: [],
+
+  annexoUno:{
+    exportarDatosTabla:[],
+    importarDatosTabla:[],
+    datosParaNavegar:{
+      ENCABEZADO_FRACCION: '',
+      ENCABEZADO_DESCRIPCION_COMERCIAL: '',
+      estatus: false,
+      ENCABEZADO_FRACCION_ARANCELARIA: '',
+      ENCABEZADO_ANEXO_II: '',
+      ENCABEZADO_TIPO: '',
+      ENCABEZADO_UMT: '',
+      ENCABEZADO_CATEGORIA: '',
+      ENCABEZADO_VALOR_EN_MERCADO: '',
+    },
+    seccionActiva:''
+  },
 
   indicePrevioRuta: 0,
 };
@@ -429,4 +447,46 @@ export class Tramite80101Store extends Store<Tramite80101State> {
     }));
   }
 
+  setAnnexoUnoSeccionActiva(seccionActiva: string): void {
+    this.update((state) => ({
+      ...state,
+      annexoUno: {
+        ...state.annexoUno,
+        seccionActiva: seccionActiva,
+      },
+    }));
+  }
+
+  setDatosParaNavegar(datosParaNavegar:AnexoUnoEncabezado | AnexoImportacionEncabezado):void{
+    this.update((state) => ({
+      ...state,
+      annexoUno: {
+        ...state.annexoUno,
+        datosParaNavegar: datosParaNavegar,
+      }
+     
+    }));
+  }
+
+  setImportarDatosTabla(importarDatosTabla:AnexoUnoEncabezado[]):void{
+    this.update((state) => ({
+      ...state,
+      annexoUno: {
+        ...state.annexoUno,
+        importarDatosTabla: importarDatosTabla,
+      }
+     
+    }));
+  }
+
+  setExportarDatosTabla(exportarDatosTabla:AnexoImportacionEncabezado[]):void{
+    this.update((state) => ({
+      ...state,
+      annexoUno: {
+        ...state.annexoUno,
+        exportarDatosTabla: exportarDatosTabla,
+      }
+     
+    }));
+  }
 }
