@@ -26,6 +26,7 @@ import { PasoUnoCsComponent } from './pages/paso-uno-cs/paso-uno-cs.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MontosDeInversionComponent } from '../../shared/components/montos-de-inversion/montos-de-inversion.component';
 import { EmpleadosComponent } from '../../shared/components/empleados/empleados.component';
+import { CapacidadInstaladaComponent } from '../../shared/components/capacidad-instalada/capacidad-instalada.component';
 @NgModule({
   declarations: [
     PasoCapturarSolicitudComponent,
@@ -54,6 +55,7 @@ import { EmpleadosComponent } from '../../shared/components/empleados/empleados.
     ComplementarPlantaComponent,
     MontosDeInversionComponent,
     EmpleadosComponent,
+    CapacidadInstaladaComponent,
   ],
 })
 export class NuevoProgramaIndustrialModule {}
