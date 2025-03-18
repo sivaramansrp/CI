@@ -43,7 +43,7 @@ export class AutorizacionProgrmaNuevoService {
    */
    obtenerListaEstado(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
-      'assets/json/80207/estado-datos.json'
+      'assets/json/80102/estado.json'
     );
   }
 

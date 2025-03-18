@@ -130,7 +130,7 @@
           </div>
           <div class="col-4 mb-4 mt-1">
             <app-catalogo-select
-              [catalogo]="(estados$ | async) || []"
+              [catalogo]="estados || []"
               [label]="'Estado'"
               [required]="true"
               name="estado"
@@ -299,7 +299,7 @@
         }@else if (item.tipo_input === 'select-catalog') {
         <div [ngClass]="item.class">
           <app-catalogo-select
-            [catalogo]="item?.opciones || []"
+            [catalogo]="item?.opcionesCatalogo || []"
             [label]="item.labelNombre"
             [required]="item.required"
             [formControlName]="item.campo"
@@ -335,6 +335,8 @@
 
     <div class="col-12">
       <label> Socios y accionistas </label>
+      <label class="my-3">Datos de los Socios y/o accionistas </label>
+
       <app-tabla-dinamica
         [configuracionTabla]="tablaSociaAccionistas"
         [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
