@@ -190,3 +190,23 @@ export const TEXTOS_REQUISITOS = {
  * @constant {Object} URL
  */
 export const URL = '../../../../../assets/json/220202/';
+
+export const FECHA_SALIDA_ACUICULTURA = {
+    labelNombre: 'Fecha de pago',
+    required: true,
+    habilitado: false,
+};
+
+/**
+ * @description Constantes con las opciones de radio para la exención de pago.
+ */
+export const TIPO_RADIO = [
+    {
+        label: "No",
+        value: "No"
+    },
+    {
+        label: "Sí",
+        value: "Si"
+    }
+];
