@@ -17,7 +17,6 @@ import { DatosDeLaComponent } from './components/datosDeLa/datosDeLa.component';
     BtnContinuarComponent,
     AlertComponent,
     DatosDeLaComponent,
-    
   ],
 })
 export class PermisoSanitarioModule {}
