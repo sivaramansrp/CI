@@ -62,6 +62,11 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * @property {Catalogo} nombreCientificoCatalog
   */
   usoCatalog: Catalogo[] = [];
+  /**
+* Configuración para el select de aduana de ingreso. --220201
+* @property {Catalogo} nombreCientificoCatalog
+*/
+  paisOrigenCatalog: Catalogo[] = [];
 
   constructor(private readonly fb: FormBuilder, private readonly datosMercanciaService: DatosMercanciaService) {
     this.getnombreComun();
@@ -113,6 +118,16 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   getUso() {
     this.datosMercanciaService.obtenerSelectorList('uso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.usoCatalog = data;
+    })
+  }
+  /**
+* @description Obtiene la lista de aduanas desde un archivo JSON.
+* @method getnombreComun
+* @returns {void}
+*/
+  getpaisOrigen() {
+    this.datosMercanciaService.obtenerSelectorList('paisorigen.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.paisOrigenCatalog = data;
     })
   }
 

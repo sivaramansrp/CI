@@ -1,4 +1,4 @@
-<div class="container" *ngIf ="!estadoChecker">
+<div  *ngIf ="!estadoChecker">
     <div class="row">
         <div class="col-md-12">        
             <ng-titulo titulo="Datos del trámite" />
@@ -29,7 +29,7 @@
     </div>
 </div>
 <form [formGroup]="formMercancia">
-<div class="container" *ngIf ="estadoChecker">
+<div  *ngIf ="estadoChecker">
     <div class="row">
         <div class="col-md-12">        
             <ng-titulo titulo="Datos mercancia" />
@@ -66,6 +66,18 @@
           ></app-catalogo-select>
         </div>
      </div>
+     <div class="row">
+        <div class="col-md-6">
+            <app-catalogo-select
+            [catalogo]="usoCatalog"
+            formControlName="paisOrigen"
+            [label]="'País de origen'"
+            [required]="true"
+            name="paisOrigen"
+          ></app-catalogo-select>
+        </div>
+     </div>
+
 
 </div>
 </form>
