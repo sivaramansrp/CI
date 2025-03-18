@@ -8,6 +8,7 @@ import { CatalogoSelectComponent, FechasService, ValidacionesFormularioService }
 import { CancelarSolicitudService } from '../../service/cancelar-solicitud.service';
 import { CancelarSolicitudQuery } from '../../estados/tramite570101.query';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CancelarSolicitudForm } from '../../modelos/cancelar-solicitud.modalidad.model';
 
 describe('CancelarSolicitudComponent', () => {
   let component: CancelarSolicitudComponent;
@@ -15,6 +16,7 @@ describe('CancelarSolicitudComponent', () => {
   let cancelarSolicitudServiceMock: any;
   let cancelarSolicitudStoreMock: any;
   let cancelarSolicitudQueryMock: any;
+  let cancelarSolicitudFormState: CancelarSolicitudForm;
   let fechaServiceMock: any;
   let validacionesServiceMock: any;
 
@@ -39,11 +41,23 @@ describe('CancelarSolicitudComponent', () => {
     };
 
     cancelarSolicitudStoreMock = {
-      setTipoSolicitudSeleccion: jest.fn(),
+      setTipoDeCancelacion: jest.fn(),
       setFechasSeleccionadas: jest.fn(),
       setDescripcion: jest.fn()
     };
 
+    cancelarSolicitudFormState = {
+      folioSVEX: "SVEX470000012025",
+      folioVUCEM: "01057001000120252470000002",
+      tipoDeCancelacion: "",
+      horaInicio: "06:00",
+      horaFin: "23:00",
+      descripcion: "",
+      fechasSeleccionadas: {
+          selectedFechas: [] 
+      }
+    }
+    
     cancelarSolicitudQueryMock = {
       selectCancelarSolicitud$: of({
         folioSVEX: "SVEX470000012025",
@@ -117,25 +131,25 @@ describe('CancelarSolicitudComponent', () => {
     component.formCancelorSolicitud.patchValue({ tipoDeCancelacion: '2' });
     component.tipoSolicitudSeleccion();
     expect(component.esSeleccionadaTipoParcial).toBe(true);
-    expect(cancelarSolicitudStoreMock.setTipoSolicitudSeleccion).toHaveBeenCalledWith('2');
+    expect(cancelarSolicitudStoreMock.setTipoDeCancelacion).toHaveBeenCalledWith(cancelarSolicitudFormState,'2');
   });
   
   it('should set esSeleccionadaTipoParcial to false for a non-parcial tipoDeCancelacion', () => {
     component.formCancelorSolicitud.patchValue({ tipoDeCancelacion: '1' });
     component.tipoSolicitudSeleccion();
     expect(component.esSeleccionadaTipoParcial).toBe(false);
-    expect(cancelarSolicitudStoreMock.setTipoSolicitudSeleccion).toHaveBeenCalledWith('1');
+    expect(cancelarSolicitudStoreMock.setTipoDeCancelacion).toHaveBeenCalledWith(cancelarSolicitudFormState,'1');
   });
 
   it('should call store when updating selected fechas', () => {
     component.onFechasSeleccionadasChange(['02-03-2025']);
-    expect(cancelarSolicitudStoreMock.setFechasSeleccionadas).toHaveBeenCalledWith(['02-03-2025']);
+    expect(cancelarSolicitudStoreMock.setFechasSeleccionadas).toHaveBeenCalledWith(cancelarSolicitudFormState, ['02-03-2025']);
   });
 
   it('should call store when updating descripcion', () => {
     component.formCancelorSolicitud.get('descripcion')?.setValue('Test description');
     component.onDescripcionChange();
-    expect(cancelarSolicitudStoreMock.setDescripcion).toHaveBeenCalledWith('Test description');
+    expect(cancelarSolicitudStoreMock.setDescripcion).toHaveBeenCalledWith(cancelarSolicitudFormState,'Test description', );
   });
 
   it('should return valid status for a form field', () => {

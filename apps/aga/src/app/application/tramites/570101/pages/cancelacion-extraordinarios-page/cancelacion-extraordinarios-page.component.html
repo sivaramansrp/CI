@@ -26,7 +26,8 @@
         <button
         type="button"
         class="btn btn-default me-md-3"
-        (click)="abrirModal()">
+        (click)="abrirModal()"
+        [disabled]="!isCancelarFormValid()">
           Guardar y firmar
       </button>
       </div>

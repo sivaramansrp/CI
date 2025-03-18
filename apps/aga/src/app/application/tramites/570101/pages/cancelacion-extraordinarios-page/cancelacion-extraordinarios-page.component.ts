@@ -1,10 +1,9 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { DatosPasos, ListaPasosWizard, SECCIONES_TRAMITE_570101, SeccionLibQuery, SeccionLibState, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CANCELACION_PASOS } from '../../enum/cancelacion-servicios-extraordinarios.enum';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
 
 interface AccionBoton {
   accion: string;
@@ -16,7 +15,7 @@ interface AccionBoton {
   styles: ``,
 })
 
-export class CancelacionExtraordinariosPageComponent implements AfterViewInit {
+export class CancelacionExtraordinariosPageComponent implements AfterViewInit,OnInit {
   pasos: ListaPasosWizard[] = CANCELACION_PASOS;
   indice: number = 1;
   mostrarBotonParaModal:boolean = false;
@@ -28,6 +27,8 @@ export class CancelacionExtraordinariosPageComponent implements AfterViewInit {
     txtBtnSig: 'Guardar y firmar',
   };
   accionBoton!: AccionBoton;
+  public seccion!: SeccionLibState;
+  private destroyNotifier$: Subject<void> = new Subject();
 
   @ViewChild('modalAddAgent') modalElement!: ElementRef;
   @ViewChild('closeModal') closeModal!: ElementRef;
@@ -40,6 +41,41 @@ export class CancelacionExtraordinariosPageComponent implements AfterViewInit {
    *  Instancia del modal de Bootstrap.
    */
   cancelarModelInstance!: Modal;
+
+  constructor(
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore
+  ) {
+    // El constructor está intencionalmente vacío para la inyección de dependencias 
+   }
+
+  ngOnInit():void {
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
+
+    this.asignarSecciones();
+  }
+
+   /**
+     * Método para asignar las secciones existentes al stored
+     */
+   private asignarSecciones():void {
+    const SECCIONES: boolean[] = [];
+    const FORM_VALIDA: boolean[] = [];
+    for (const LLAVE_SECCIONE in SECCIONES_TRAMITE_570101.PASO_1) {
+      if(LLAVE_SECCIONE) {
+        FORM_VALIDA.push(false);
+      }
+    }
+    this.seccionStore.establecerSeccion(SECCIONES);
+    this.seccionStore.establecerFormaValida(FORM_VALIDA);
+  }
 
   // Cambia la pestaña activa al índice proporcionado
   seleccionaTab(i: number): void {
@@ -60,9 +96,13 @@ export class CancelacionExtraordinariosPageComponent implements AfterViewInit {
 
   // Cambia el estado del modal a "mostrar"
   abrirModal():void{
-    if (this.cancelarModelInstance && this.pasoUnoComponent.isFormValid()) {
+    if (this.isCancelarFormValid()) {
       this.cancelarModelInstance.show();
     }
+  }
+
+  public isCancelarFormValid():boolean {
+    return this.cancelarModelInstance && this.pasoUnoComponent.isFormValid();
   }
 
   // Cierra el modal haciendo clic en el botón de cierre

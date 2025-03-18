@@ -24,11 +24,11 @@ export interface CancelarSolicitudState {
  */
 export function createInitialState(): CancelarSolicitudState {
     return {
-        folioSVEX: "SVEX470000012025",
-        folioVUCEM: "01057001000120252470000002",
+        folioSVEX: "",
+        folioVUCEM: "",
         tipoDeCancelacion: "",
-        horaInicio: "06:00",
-        horaFin: "23:00",
+        horaInicio: "",
+        horaFin: "",
         descripcion: "",
         fechasSeleccionadas: {
             selectedFechas: [] 
@@ -54,11 +54,12 @@ export class CancelarSolicitudStore extends Store<CancelarSolicitudState> {
      * Actualiza el estado de `tipoSolicitudSeleccion` con nuevos valores.
      * @param {string} tipoSolicitudSeleccion - Datos seleccionados para el tipo de solicitud.
      */
-    public setTipoSolicitudSeleccion(tipoSolicitudSeleccion: string): void {
+    public setTipoDeCancelacion(state: CancelarSolicitudState, tipoDeCancelacion: string): void {
+        const UPDATED_STATE = { ...state, tipoDeCancelacion };
         this.update((state) => ({
             ...state,
-            tipoSolicitudSeleccion,
-        }));
+            ...UPDATED_STATE
+        }));    
     }
 
     /**
@@ -67,10 +68,14 @@ export class CancelarSolicitudStore extends Store<CancelarSolicitudState> {
      * Actualiza el estado de `selectedFechas` con las fechas seleccionadas.
      * @param {string[]} selectedFechas - Lista de fechas seleccionadas.
      */
-    public setFechasSeleccionadas(selectedFechas: string[]): void {
+    public setFechasSeleccionadas(state: CancelarSolicitudState, selectedFechas: string[]): void {
+        const FECHAS_SELECCIONADAS = {
+            selectedFechas : selectedFechas
+        }
+        const UPDATED_STATE = { ...state, fechasSeleccionadas: FECHAS_SELECCIONADAS};
         this.update((state) => ({
             ...state,
-            selectedFechas,
+            ...UPDATED_STATE,
         }));
     }
 
@@ -80,10 +85,11 @@ export class CancelarSolicitudStore extends Store<CancelarSolicitudState> {
      * Actualiza el estado de `descripcion` con la nueva descripción ingresada.
      * @param {string} descripcion - Texto de la descripción.
      */
-    public setDescripcion(descripcion: string): void {
+    public setDescripcion(state:CancelarSolicitudState, descripcion: string): void {
+        const UPDATED_STATE = { ...state, descripcion };
         this.update((state) => ({
             ...state,
-            descripcion,
+            ...UPDATED_STATE,
         }));
     }
       /**

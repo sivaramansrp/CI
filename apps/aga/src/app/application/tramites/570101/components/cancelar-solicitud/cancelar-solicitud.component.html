@@ -43,7 +43,7 @@
           </div>
           <div class="row mb-3">
             <label>Especifique los días que se cancelaron dentro del periodo:</label>
-            <crosslist [fechas]="selectRangoDias" formControlName="selectedFechas" 
+            <crosslist [fechas]="selectRangoDias" formControlName="selectedFechas" [fechasSeleccionadas]="fechasSeleccionadas"
             [label]="fechasCancelaranLabel" 
             (fechasSeleccionadasChange)="onFechasSeleccionadasChange($event)"></crosslist>
           </div>
