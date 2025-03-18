@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { TEXTOS } from '../../constantes/constantes';
-import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import {
+  ConfiguracionColumna,
+  TablaSeleccion,
+} from '@libs/shared/data-access-user/src';
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-terceros-relacionados',
@@ -43,11 +47,10 @@ export class TercerosRelacionadosComponent {
       nombre: '1234567890',
       rfc: '21/11/2024',
       curp: '29/06/2025',
-      relefono:'test',
-      electronico:'test'
+      relefono: 'test',
+      electronico: 'test',
     },
   ];
-
 
   fabricanteSeleccionTabla = TablaSeleccion.CHECKBOX;
   fabricanteConfiguracionTabla: ConfiguracionColumna<any>[] = [
@@ -82,8 +85,20 @@ export class TercerosRelacionadosComponent {
       nombre: '1234567890',
       rfc: '21/11/2024',
       curp: '29/06/2025',
-      relefono:'test',
-      electronico:'test'
+      relefono: 'test',
+      electronico: 'test',
     },
   ];
+
+  /**
+   * Referencia al elemento del modal.
+   */
+  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
+  
+  openModificarMercancias() {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
 }

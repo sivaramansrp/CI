@@ -15,8 +15,22 @@
     </app-tabla-dinamica>
   </div>
 
-  <div class="col-md-12 d-flex align-items-end">
-      <button class="btn btn-default" type="button">Agregar</button>
+  <div class="col-md-12 d-flex justify-content-end align-items-end">
+    <div class="btn-group">
+      <button class="btn btn-default 3" type="button">Eliminar</button>
+      <button
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#modalAgregarMercancias"
+        class="btn btn-default btn-space ms-3"
+        (click)="openModificarMercancias()"
+      >
+        Modificar
+      </button>
+      <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal">
+        Agregar
+      </button>
+    </div>
   </div>
 
   <div class="col-md-12">
@@ -29,4 +43,16 @@
     </app-tabla-dinamica>
   </div>
 </div>
-<app-modificar-destinatario></app-modificar-destinatario>
+<div
+  class="modal fade"
+  id="modalAgregarMercancias"
+  tabindex="-1"
+  aria-labelledby="modalAgregarMercanciasLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <app-modificar-destinatario></app-modificar-destinatario>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TEXTOS } from '../../constantes/constantes';
 import {
   DatosDeSolicitud,
@@ -9,6 +9,7 @@ import { ImportacionProductosStore } from '../../estados/importacion-productos.s
 import { ImportacionProductosQuery } from '../../estados/importacion-productos.query';
 import { map, Subject, takeUntil } from 'rxjs';
 import { CatalogosSelect, TableData } from '@libs/shared/data-access-user/src';
+import { Modal } from 'bootstrap';
 // import { Subject } from 'rxjs';
 
 /**
@@ -55,6 +56,11 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
 
   regimenCatalogo: CatalogosSelect = {} as CatalogosSelect;
   aduanaCatalogo: CatalogosSelect = {} as CatalogosSelect;
+
+    /**
+   * Referencia al elemento del modal.
+   */
+    @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
 
   hacerlosRadioOptions = [
     {
@@ -131,6 +137,13 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
 
   updateSCIANData(tablaFilaDatos: SolicitudDatos[], index: number): void {
     this.tableDataSCIAN = tablaFilaDatos[index].SCIANLista;
+  }
+
+  openModificarMercancias(): void{
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
   }
 
   ngOnDestroy(): void {

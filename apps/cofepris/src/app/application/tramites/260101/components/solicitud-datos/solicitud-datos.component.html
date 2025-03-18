@@ -61,7 +61,7 @@
     <ng-titulo titulo="Datos del establecimiento" />
   </div>
 
-  <div class="col-md-12 d-flex align-items-end">
+  <div class="col-md-12 d-flex justify-content-end align-items-end">
     <div class="btn-group">
       <button class="btn btn-primary ms-2" type="button">
         Seleccionar establecimiento
@@ -195,11 +195,26 @@
     ></ng-table>
   </div>
 
-  <div class="col-md-12 d-flex align-items-end">
+  <div class="col-md-12 d-flex justify-content-end align-items-end">
     <div class="btn-group">
-      <button type="button" class="btn btn-default btn-space">Modificar</button>
-      <button class="btn btn-default" type="button">Eliminar</button>
-      <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal">
+      <button
+        type="button"
+        class="btn btn-default btn-space"
+        data-bs-toggle="modal"
+        data-bs-target="#modalAgregarMercancias"
+        (click)="openModificarMercancias()"
+      >
+        Modificar
+      </button>
+      <button
+        class="btn btn-default ms-3"
+        type="button"
+        name="aceptar"
+        id="agregarAduana"
+      >
+        Eliminar
+      </button>
+      <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal">
         Agregar
       </button>
     </div>
@@ -238,9 +253,7 @@
     <button type="button" class="btn btn-default btn-space">Buscar</button>
   </div>
 
-  <div class="col-md-6">
-
-  </div>
+  <div class="col-md-6"></div>
 
   <div class="col-md-4">
     <label class="form-label" for="">Nombre o Razon Social*:</label>
@@ -257,4 +270,16 @@
     <input class="form-control" id="" placeholder="" type="text" />
   </div>
 </div>
-<app-modificar-mercancias></app-modificar-mercancias>
+<div
+  class="modal fade"
+  id="modalAgregarMercancias"
+  tabindex="-1"
+  aria-labelledby="modalAgregarMercanciasLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <app-modificar-mercancias></app-modificar-mercancias>
+    </div>
+  </div>
+</div>

@@ -169,13 +169,13 @@ export class ModificarMercanciasComponent {
   fechaFabricacion: InputFecha = {
     labelNombre: 'Fecha de fabricacion',
     required: false,
-    habilitado: false,
+    habilitado: true,
   };
 
   fechaCaducidad: InputFecha = {
     labelNombre: 'Fecha de Caducidad',
     required: false,
-    habilitado: false,
+    habilitado: true,
   };
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
   configuracionTabla: ConfiguracionColumna<any>[] = [
