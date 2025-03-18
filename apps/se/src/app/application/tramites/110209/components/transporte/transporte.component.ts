@@ -59,7 +59,7 @@ export class TransporteComponent implements OnInit, OnDestroy {
    */
   constructor(private fb: FormBuilder, private service: TransporteService, private tramite110209Store: Tramite110209Store, private tramite110209Query: Tramite110209Query) {
     this.transporteForm = this.fb.group({
-      medioDeTransporte: [''],
+      medioDeTransporte: ['',Validators.required],
       rutaCompleta: ['',Validators.pattern(/^(?!\s)(.*\S)?$/)],
       puertoDeEmbarque: ['',Validators.pattern(/^(?!\s)(.*\S)?$/)],
       puertoDeDesembarque: ['',Validators.pattern(/^(?!\s)(.*\S)?$/)]

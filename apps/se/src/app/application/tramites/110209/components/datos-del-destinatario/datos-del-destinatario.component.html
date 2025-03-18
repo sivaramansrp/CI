@@ -12,6 +12,8 @@
                         *ngIf="detosDelDestinatarioForm.get('nombre')?.touched && detosDelDestinatarioForm.get('nombre')?.invalid">
                         <small *ngIf="detosDelDestinatarioForm.get('nombre')?.errors?.['pattern']"
                             class="text-danger"> Por favor, corrija el nombre de la persona.</small>
+                        <small *ngIf="detosDelDestinatarioForm.get('nombre')?.errors?.['maxlength']"
+                            class="text-danger"> Por favor, no escriba más de 25 caracteres.</small>
                     </div>
                 </div>
             </div>
@@ -25,6 +27,8 @@
                     <div *ngIf="detosDelDestinatarioForm.get('primerApellido')?.invalid">
                         <small *ngIf="detosDelDestinatarioForm.get('primerApellido')?.errors?.['pattern']"
                             class="text-danger"> Por favor, corrija el nombre de la persona.</small>
+                            <small *ngIf="detosDelDestinatarioForm.get('primerApellido')?.errors?.['maxlength']"
+                            class="text-danger"> Por favor, no escriba más de 20 caracteres.</small>
                     </div>
                 </div>
             </div>
@@ -39,6 +43,8 @@
                     <div *ngIf="detosDelDestinatarioForm.get('segundoApellido')?.invalid">
                         <small *ngIf="detosDelDestinatarioForm.get('segundoApellido')?.errors?.['pattern']"
                             class="text-danger">  Por favor, corrija el nombre de la persona.</small>
+                            <small *ngIf="detosDelDestinatarioForm.get('segundoApellido')?.errors?.['maxlength']"
+                            class="text-danger"> Por favor, no escriba más de 20 caracteres.</small>
                     </div>
                 </div>
             </div>
@@ -62,6 +68,8 @@
                         <small *ngIf="detosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.errors?.['required']"
                             class="text-danger">
                             Este campo es obligatorio.</small>
+                            <small *ngIf="detosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.errors?.['maxlength']"
+                            class="text-danger"> Por favor, no escriba más de 30 caracteres.</small>
                     </div>
                 </div>
             </div>
@@ -75,6 +83,8 @@
                         <div *ngIf="detosDelDestinatarioForm.get('razonSocial')?.invalid">
                             <small *ngIf="detosDelDestinatarioForm.get('razonSocial')?.errors?.['pattern']"
                                 class="text-danger">  Por favor, corrija el nombre de la persona.</small>
+                                <small *ngIf="detosDelDestinatarioForm.get('razonSocial')?.errors?.['maxlength']"
+                            class="text-danger"> Por favor, no escriba más de 70 caracteres.</small>
                         </div>
                 </div>
             </div>

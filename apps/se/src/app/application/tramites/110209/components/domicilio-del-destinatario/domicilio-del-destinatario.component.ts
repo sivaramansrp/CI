@@ -51,12 +51,12 @@ export class DomicilioDelDestinatarioComponent implements OnInit, OnDestroy {
    */
   crearFormulario(): void {
     this.domicilioDelDestinatarioForm = this.fb.group({
-      calle: ['', [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/)]],
-      numeroLetra: [ '', [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/)]],
-      ciudad: ['' , [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/)]],
-      correoElectronico: ['', [Validators.required, Validators.email]],
-      fax: ['',Validators.pattern(/^\d+$/)],
-      telefono: ['' , Validators.pattern(/^\d+$/)],
+      calle: ['', [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/),Validators.maxLength(100)]],
+      numeroLetra: [ '', [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/),Validators.maxLength(30)]],
+      ciudad: ['' , [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/),Validators.maxLength(50)]],
+      correoElectronico: ['', [Validators.required, Validators.email,Validators.maxLength(70)]],
+      fax: ['',Validators.pattern(/^\d+$/),Validators.maxLength(30)],
+      telefono: ['' , Validators.pattern(/^\d+$/),Validators.maxLength(30)],
     });
   }
 

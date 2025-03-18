@@ -57,11 +57,11 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
    */
   crearFormulario(): void {
     this.detosDelDestinatarioForm = this.fb.group({
-      nombre: ['' , Validators.pattern(/^(?!\s)(.*\S)?$/)],
-      primerApellido: ['', Validators.pattern(/^(?!\s)(.*\S)?$/)],
-      segundoApellido: ['', Validators.pattern(/^(?!\s)(.*\S)?$/)],
-      numeroDeRegistroFiscal: ['' , [Validators.required, Validators.pattern(/^\d+$/)]],
-      razonSocial: ['', Validators.pattern(/^(?!\s)(.*\S)?$/)],
+      nombre: ['' , Validators.pattern(/^(?!\s)(.*\S)?$/),Validators.maxLength(25)],
+      primerApellido: ['', Validators.pattern(/^(?!\s)(.*\S)?$/),Validators.maxLength(20)],
+      segundoApellido: ['', Validators.pattern(/^(?!\s)(.*\S)?$/),Validators.maxLength(20)],
+      numeroDeRegistroFiscal: ['' , [Validators.required, Validators.pattern(/^\d+$/), Validators.maxLength(30)]],
+      razonSocial: ['', Validators.pattern(/^(?!\s)(.*\S)?$/),Validators.maxLength(70)],
     });
   }
 

@@ -9,7 +9,8 @@
                         class="form-control" id="calle" formControlName="calle" placeholder="Pruebas" />
                     <div *ngIf="domicilioDelDestinatarioForm.controls['calle'].invalid && domicilioDelDestinatarioForm.controls['calle'].touched">
                         <small *ngIf="domicilioDelDestinatarioForm.controls['calle'].hasError('required')" class="text-danger">Este campo es obligatorio.</small>
-                        <small *ngIf="domicilioDelDestinatarioForm.get('calle')?.errors?.['pattern']" class="text-danger"> Por favor, corrija la dirección.</small>
+                        <small *ngIf="domicilioDelDestinatarioForm.controls['calle'].hasError('pattern')" class="text-danger"> Por favor, corrija la dirección.</small>
+                        <small *ngIf="domicilioDelDestinatarioForm.controls['calle'].hasError('maxlength')" class="text-danger"> Por favor, no escriba más de 100 caracteres.</small>
                     </div>
                 </div>
             </div>
@@ -28,6 +29,7 @@
                             class="text-danger">Este campo es obligatorio.</small>
                         <small *ngIf="domicilioDelDestinatarioForm.get('numeroLetra')?.errors?.['pattern']"
                             class="text-danger"> Por favor, corrija la dirección.</small>
+                            <small *ngIf="domicilioDelDestinatarioForm.controls['numeroLetra'].hasError('maxlength')" class="text-danger"> Por favor, no escriba más de 30 caracteres.</small>
                     </div>
                 </div>
             </div>
@@ -50,6 +52,7 @@
                             class="text-danger">
                             Por favor, corrija la dirección.
                         </small>
+                        <small *ngIf="domicilioDelDestinatarioForm.controls['ciudad'].hasError('maxlength')" class="text-danger"> Por favor, no escriba más de 50 caracteres.</small>
                     </div>
                 </div>
             </div>
@@ -71,6 +74,7 @@
                             class="text-danger">
                         Por favor, escriba una dirección de correo válida.
                     </small>
+                    <small *ngIf="domicilioDelDestinatarioForm.controls['correoElectronico'].hasError('maxlength')" class="text-danger"> Por favor, no escriba más de 70 caracteres.</small>
 
                     </div>
                 </div>
@@ -87,6 +91,7 @@
                         *ngIf="domicilioDelDestinatarioForm.get('fax')?.touched && domicilioDelDestinatarioForm.get('fax')?.invalid">
                         <small *ngIf="domicilioDelDestinatarioForm.get('fax')?.errors?.['pattern']" class="text-danger">
                             Por favor, sólo escriba dígitos.</small>
+                            <small *ngIf="domicilioDelDestinatarioForm.controls['fax'].hasError('maxlength')" class="text-danger"> Por favor, no escriba más de 30 caracteres.</small>
                     </div>
                 </div>
             </div>
@@ -102,6 +107,7 @@
                         <small *ngIf="domicilioDelDestinatarioForm.get('telefono')?.errors?.['pattern']"
                             class="text-danger">
                             Por favor, sólo escriba dígitos.</small>
+                            <small *ngIf="domicilioDelDestinatarioForm.controls['telefono'].hasError('maxlength')" class="text-danger"> Por favor, no escriba más de 30 caracteres.</small>
                     </div>
                 </div>
             </div>
