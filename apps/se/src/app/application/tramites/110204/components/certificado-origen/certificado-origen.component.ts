@@ -13,13 +13,30 @@ import { ToastrService } from 'ngx-toastr';
 import { Tramite110204Query } from '../../estados/tramite110204.query';
 import { Tramite110204Store } from '../../estados/tramite110204.store';
 
-// Constantes para las fechas
+/**
+ * Constante que representa la configuración de la fecha final en el componente de certificado de origen.
+ * 
+ * @constant
+ * @type {Object}
+ * @property {string} labelNombre - El nombre de la etiqueta para la fecha final.
+ * @property {boolean} required - Indica si el campo de fecha final es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo de fecha final está habilitado.
+*/
 export const FECHA_INICIO = {
   labelNombre: 'Fecha inicio',
   required: true,
   habilitado: true,
 };
 
+/**
+ * Constante que representa la configuración de la fecha final en el componente de certificado de origen.
+ * 
+ * @constant
+ * @type {Object}
+ * @property {string} labelNombre - El nombre de la etiqueta para la fecha final.
+ * @property {boolean} required - Indica si el campo de fecha final es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo de fecha final está habilitado.
+ */
 export const FECHA_FINAL = {
   labelNombre: 'Fecha fin',
   required: true,

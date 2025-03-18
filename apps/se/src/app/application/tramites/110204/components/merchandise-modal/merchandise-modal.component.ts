@@ -7,6 +7,15 @@ import { CommonModule } from '@angular/common';
 import { Mercancia } from '../../models/plantas-consulta.model';
 import { Tramite110204Query } from '../../estados/tramite110204.query';
 import { Tramite110204Store } from '../../estados/tramite110204.store';
+/**
+ * Constante que representa la configuración de la fecha final.
+ * 
+ * @constant
+ * @type {Object}
+ * @property {string} labelNombre - El nombre de la etiqueta para la fecha final.
+ * @property {boolean} required - Indica si el campo de fecha final es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo de fecha final está habilitado.
+ */
 export const FECHA_FINAL = {
   labelNombre: 'Fecha fin',
   required: true,
@@ -26,6 +35,9 @@ export const FECHA_FINAL = {
 
 export class MerchandiseModalComponent implements OnInit, OnDestroy {
   showAlert: boolean = false;
+  /**
+   * @property {string} alertMessage - La lista de mercancías mostrada solamente contiene aquellas mercancías que tienen un registro de productos vigente para el tratado/acuerdo-país/bloque y cuya fracción arancelaria no está asociada a un cupo.
+   */
   alertMessage: string = 'La lista de mercancías mostrada solamente contiene aquellas mercancías que tienen un registro de productos vigente para el tratado/acuerdo-país/bloque y cuya fracción arancelaria no está asociada a un cupo.';
   mercanciaForm!: FormGroup;
   @Output() saveClicked = new EventEmitter();
@@ -141,6 +153,9 @@ export class MerchandiseModalComponent implements OnInit, OnDestroy {
     this.store.setUmc([umc]);
   }
 
+  /**
+   * Carga las facturas desde el servicio y las establece en el store.
+   */
   cargarFactura(): void {
     this.certificadoService
       .obtenerFacturas()
@@ -148,7 +163,6 @@ export class MerchandiseModalComponent implements OnInit, OnDestroy {
       .subscribe(
         (data: Catalogo[]) => {
           this.store.setFactura(data)
-          // data.forEach(factura => this.store.setFactura(factura));
         },
         (error) => {
           console.error('Error al cargar los estados:', error);
@@ -156,6 +170,9 @@ export class MerchandiseModalComponent implements OnInit, OnDestroy {
       );
   }
 
+  /**
+   * Carga las UMC desde el servicio y las establece en el store.
+   */
   cargarUmc(): void {
     this.certificadoService
       .obtenerUmc()
@@ -170,16 +187,25 @@ export class MerchandiseModalComponent implements OnInit, OnDestroy {
       );
   }
 
+  /**
+   * Dispara el evento para guardar los datos del formulario y muestra una alerta.
+   */
   triggerModal(): void {
     this.saveClicked.emit(this.mercanciaForm.value);
     this.showAlert = true;
   }
 
+  /**
+   * Dispara el evento para cerrar el modal y oculta la alerta.
+   */
   closeModal(): void {
     this.closeClicked.emit();
     this.showAlert = false;
   }
 
+  /**
+   * Cancela las suscripciones al destruir el componente.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

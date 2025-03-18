@@ -79,7 +79,6 @@ describe('CertificadoOrigenComponent', () => {
     component.store.setaltaPlanta = jest.fn();
     component.cargarEstados();
     expect(component.certificadoService.obtenerListaEstado).toHaveBeenCalled();
-    // expect(component.store.setaltaPlanta).toHaveBeenCalled();
   });
 
 
@@ -94,7 +93,6 @@ describe('CertificadoOrigenComponent', () => {
     component.store = component.store || {};
     component.store.setBloque = jest.fn();
     component.tipoSeleccion({});
-    // expect(component.store.setBloque).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -118,7 +116,6 @@ describe('CertificadoOrigenComponent', () => {
     component.buscarrMercancia();
     expect(component.certificadoService.obtenerMercancia).toHaveBeenCalled();
     expect(component.store.setbuscarMercancia).toHaveBeenCalled();
-    // expect(component.toastr.error).toHaveBeenCalled();
   });
 
   it('should run #cambioFechaInicio()', async () => {

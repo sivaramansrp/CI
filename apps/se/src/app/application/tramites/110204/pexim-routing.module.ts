@@ -5,13 +5,13 @@ import { RouterModule, Routes } from '@angular/router';
 
 export const ROUTES_SOLICITUDES: Routes = [
   {
-    path: '110204',
+    path: 'certificado-origen',
     component: SolicitudPageComponent,
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: '110204',
+    redirectTo: 'certificado-origen',
   },
 ];
 

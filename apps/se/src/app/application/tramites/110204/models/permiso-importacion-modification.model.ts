@@ -1,8 +1,14 @@
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 
+
 /**
- * Interfaz que define la estructura de los pasos en el wizard.
+ * Interfaz que representa una lista de pasos en un asistente (wizard).
+ * 
+ * @property {number} indice - Índice del paso en el wizard.
+ * @property {string} titulo - Título del paso.
+ * @property {boolean} activo - Indica si el paso está activo en el wizard.
+ * @property {boolean} completado - Indica si el paso ha sido completado.
  */
 export interface ListaPasosWizard {
   indice: number; // Índice del paso en el wizard.
@@ -11,8 +17,13 @@ export interface ListaPasosWizard {
   completado: boolean; // Indica si el paso ha sido completado.
 }
 
+
 /**
- * Interfaz para la configuración de los inputs.
+ * Configuración de entrada para un formulario.
+ * 
+ * @property {string} title - Título del input.
+ * @property {string} formGroupName - Nombre del formulario o grupo de inputs.
+ * @property {MenuConfig[]} menu - Menú de configuración de los inputs.
  */
 export interface InputConfig {
   title: string; // Título del input.
@@ -21,7 +32,13 @@ export interface InputConfig {
 }
 
 /**
- * Interfaz para la configuración de cada ítem del menú del input.
+ * Interfaz que define la configuración de un menú.
+ * 
+ * @property {string} inputType - Tipo de input (por ejemplo, 'text', 'select', etc.).
+ * @property {FormularioDinamico | CatalogosSelect | undefined} props - Propiedades dinámicas o catálogo de selección para el input.
+ * @property {string} class - Clase CSS asociada con el input.
+ * @property {string} [visibility] - Condición opcional para la visibilidad del input (si es necesario).
+ * @property {string[]} [radioConfig] - Configuración de los radio buttons (si se aplica).
  */
 export interface MenuConfig {
   inputType: string; // Tipo de input (por ejemplo, 'text', 'select', etc.).
@@ -32,7 +49,29 @@ export interface MenuConfig {
 }
 
 /**
- * Interfaz que define la estructura de los datos de la mercancía.
+ * Interfaz que representa los datos de la mercancía.
+ * 
+ * @property {string} descripcion - Descripción de la mercancía.
+ * @property {string} marca - Marca de la mercancía.
+ * @property {string} tipoEntrada - Tipo de entrada de la mercancía.
+ * @property {string} fraccion - Fracción arancelaria de la mercancía.
+ * @property {string} nico - NICO (Número de Identificación Comercial).
+ * @property {string} umt - Unidad de medida tarifaria.
+ * @property {string} facturaNumero - Número de la factura.
+ * @property {string} facturaFecha - Fecha de la factura.
+ * @property {string} umc - Unidad de medida comercial.
+ * @property {string} otroUmc - Otro tipo de unidad de medida comercial (si aplica).
+ * @property {string} cantidadUmc - Cantidad en unidades comerciales.
+ * @property {string} factorConversion - Factor de conversión entre unidades.
+ * @property {string} cantidadUmt - Cantidad en unidades de medida tarifarias.
+ * @property {string} valorFactura - Valor total de la factura.
+ * @property {string} monedaComercializacion - Moneda de comercialización de la mercancía.
+ * @property {string} valorFacturaUsd - Valor total de la factura en USD.
+ * @property {string} precioUnitarioUsd - Precio unitario en USD.
+ * @property {string} paisExportador - País exportador de la mercancía.
+ * @property {string} paisOrigen - País de origen de la mercancía.
+ * @property {string} valorTotalFactura - Valor total de la factura (en moneda local).
+ * @property {string} valorTotalFacturaUsd - Valor total de la factura en USD.
  */
 export interface DatosMercancia {
   descripcion: string; // Descripción de la mercancía.
