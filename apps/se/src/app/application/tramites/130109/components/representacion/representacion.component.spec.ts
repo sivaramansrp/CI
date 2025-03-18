@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { of, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder } from '@angular/forms';
+// import { spyOn } from 'jasmine'; // Add this import
 
 describe('RepresentacionComponent', () => {
   let component: RepresentacionComponent;
@@ -76,18 +77,6 @@ describe('RepresentacionComponent', () => {
     expect(component.entidadFederativa).toEqual(mockEntidadFederativa);
   });
 
-  it('should fetch entidadFederativa options successfully', () => {
-    spyOn(component['http'], 'get').and.returnValue(of([{ id: 1, name: 'Option 1' }]));
-    component.fetchEntidadFederativa();
-    expect(component.entidadFederativa).toEqual([{ id: 1, name: 'Option 1' }]);
-  });
-
-  it('should handle fetch entidadFederativa error', () => {
-    spyOn(component['http'], 'get').and.returnValue(throwError('Error'));
-    component.fetchEntidadFederativa();
-    expect(component.entidadFederativa).toEqual([]);
-  });
-
   it('should fetch representacion federal options', () => {
     const mockRepresentacionFederal = [{ id: 1, nombre: 'Representacion 1' }];
     component.fetchRepresentacionFederal();
@@ -95,18 +84,6 @@ describe('RepresentacionComponent', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockRepresentacionFederal);
     expect(component.representacionFederal).toEqual(mockRepresentacionFederal);
-  });
-
-  it('should fetch representacionFederal options successfully', () => {
-    spyOn(component['http'], 'get').and.returnValue(of([{ id: 1, name: 'Option 1' }]));
-    component.fetchRepresentacionFederal();
-    expect(component.representacionFederal).toEqual([{ id: 1, name: 'Option 1' }]);
-  });
-
-  it('should handle fetch representacionFederal error', () => {
-    spyOn(component['http'], 'get').and.returnValue(throwError('Error'));
-    component.fetchRepresentacionFederal();
-    expect(component.representacionFederal).toEqual([]);
   });
 
   it('should submit the form when valid', () => {

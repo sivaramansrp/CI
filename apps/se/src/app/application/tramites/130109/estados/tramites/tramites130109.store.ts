@@ -4,10 +4,19 @@ import { Injectable } from '@angular/core';
 
 export interface Tramite130109State {
   filaSeleccionada: null;
-  cantidad : string,
-  valorPartidaUSD : number,
-  descripcion : string,
-  mostrarTabla: boolean,
+  cantidad: string;
+  valorPartidaUSD: number;
+  descripcion: string;
+  fraccion: string;
+  valorFacturaUSD: string;
+  unidadMedida: string;
+  bloque: string;
+  usoEspecifico: string;
+  justificacionImportacionExportacion: string;
+  observaciones: string;
+  entidad: string;
+  representacion: string;
+  mostrarTabla: boolean;
 }
 
 export function createInitialState(): Tramite130109State {
@@ -16,6 +25,15 @@ export function createInitialState(): Tramite130109State {
     cantidad: '',
     valorPartidaUSD: 0,
     descripcion: '',
+    fraccion:'',
+    valorFacturaUSD:'',
+    unidadMedida:'',
+    bloque:'',
+    usoEspecifico:'',
+    justificacionImportacionExportacion:'',
+    observaciones:'',
+    entidad:'',
+    representacion:'',
     mostrarTabla: false
   };
 }
@@ -69,16 +87,16 @@ export class Tramite130109Store extends Store<Tramite130109State> {
       bloque,
     }));
   }
-  public setDescripcioneSpecffico(descripcioneSpecffico: string): void { 
+  public setUsoEspecifico(usoEspecifico: string): void { 
     this.update((state) => ({
       ...state,
-      descripcioneSpecffico,
+      usoEspecifico,
     }));
   }
-  public setDescripcionJustificacion(descripcionJustificacion: string): void { 
+  public setJustificacionImportacionExportacion(justificacionImportacionExportacion: string): void { 
     this.update((state) => ({
       ...state,
-      descripcionJustificacion,
+      justificacionImportacionExportacion,
     }));
   }
   public setObservaciones(observaciones: string): void { 

@@ -157,8 +157,8 @@ export class PaisProcendenciaComponent implements OnInit {
   ngOnInit(): void {
     this.paisForm = this.fb.group({
       bloque: [''],
-      descripcioneSpecffico: ['', Validators.required],
-      descripcionJustificacion: ['', [Validators.required]],
+      usoEspecifico: ['', Validators.required],
+      justificacionImportacionExportacion: ['', [Validators.required]],
       observaciones: [''],
     });
     this.fetchPaisProc();

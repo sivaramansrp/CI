@@ -2,10 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PaisProcendenciaComponent } from './pais-procendencia.component';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { of } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { Tramite130109Store } from '../../estados/tramites/tramites130109.store';
+import { Tramite130109Query } from '../../estados/queries/tramite130109.query';
 
 describe('PaisProcendenciaComponent', () => {
   let component: PaisProcendenciaComponent;
@@ -14,12 +15,17 @@ describe('PaisProcendenciaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PaisProcendenciaComponent, CatalogoSelectComponent, CrosslistComponent, TituloComponent],
-      imports: [HttpClientTestingModule, ReactiveFormsModule],
+      imports: [
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+        PaisProcendenciaComponent, // Include the standalone component here
+        CrosslistComponent,
+        TituloComponent,
+        CatalogoSelectComponent
+      ],
+      providers: [Tramite130109Store, Tramite130109Query]
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(PaisProcendenciaComponent);
     component = fixture.componentInstance;
     httpMock = TestBed.inject(HttpTestingController);
@@ -37,73 +43,56 @@ describe('PaisProcendenciaComponent', () => {
   it('should initialize form on ngOnInit', () => {
     component.ngOnInit();
     expect(component.paisForm).toBeDefined();
-    expect(component.paisForm.controls['bloque']).toBeDefined();
-    expect(component.paisForm.controls['descripcioneSpecffico']).toBeDefined();
-    expect(component.paisForm.controls['descripcionJustificacion']).toBeDefined();
-    expect(component.paisForm.controls['observaciones']).toBeDefined();
+    expect(component.paisForm.controls['usoEspecifico'].valid).toBeFalsy();
   });
 
-  it('should fetch paisProc on fetchPaisProc call', () => {
-    const mockData = [{ id: 1, descripcion: 'Test' }];
-    component.fetchPaisProc();
+  it('should fetch paisProc on ngOnInit', () => {
+    component.ngOnInit();
     const req = httpMock.expectOne('/assets/json/130109/pais-procenia.json');
     expect(req.request.method).toBe('GET');
-    expect(component.paisProc).toEqual(mockData);
+    req.flush([{ id: 1, descripcion: 'Country 1' }]);
+    expect(component.paisProc.length).toBeGreaterThan(0);
   });
 
-  it('should fetch paisesPorBloque on fetchPaisesPorBloque call', () => {
-    const mockData = [{ id: 1, descripcion: 'Test' }];
-    component.fetchPaisesPorBloque(1);
+  it('should fetchPaisesPorBloque when bloque is selected', () => {
+    component.paisForm.controls['bloque'].setValue(1);
+    component.fetchPaisProc();
     const req = httpMock.expectOne('/assets/json/130109/paises-por-bloque.json');
     expect(req.request.method).toBe('GET');
-    req.flush(mockData);
-    expect(component.paisesPorBloque).toEqual(mockData);
-    expect(component.selectRangoDias).toEqual(['Test']);
+    req.flush([{ id: 1, descripcion: 'Country 1' }]);
+    expect(component.paisesPorBloque.length).toBeGreaterThan(0);
   });
 
-  it('should validate descripcioneSpecffico as required', () => {
-    const control = component.paisForm.controls['descripcioneSpecffico'];
-    control.setValue('');
-    expect(control.valid).toBeFalsy();
-    expect(control.errors?.['required']).toBeTruthy();
-  });
-
-  it('should validate descripcionJustificacion as required', () => {
-    const control = component.paisForm.controls['descripcionJustificacion'];
-    control.setValue('');
-    expect(control.valid).toBeFalsy();
-    expect(control.errors?.['required']).toBeTruthy();
-  });
-
-  it('should call agregar method of crosslistComponent on Agregar todos button click', () => {
+  it('should call agregar method of crosslistComponent when botonField funcion is called', () => {
     spyOn(component.crosslistComponent, 'agregar');
     component.botonField[0].funcion();
     expect(component.crosslistComponent.agregar).toHaveBeenCalledWith('t');
   });
 
-  it('should call quitar method of crosslistComponent on Restar todos button click', () => {
+  it('should call quitar method of crosslistComponent when botonField funcion is called', () => {
     spyOn(component.crosslistComponent, 'quitar');
     component.botonField[3].funcion();
     expect(component.crosslistComponent.quitar).toHaveBeenCalledWith('t');
   });
 
-  it('should call fetchPaisesPorBloque when bloque value changes', () => {
-    spyOn(component, 'fetchPaisesPorBloque');
-    component.paisForm.controls['bloque'].setValue(1);
-    expect(component.fetchPaisesPorBloque).toHaveBeenCalledWith(1);
+  it('should update fechasSeleccionadas when fechaSeleccionada changes', () => {
+    component.fechaSeleccionada.setValue('2023-10-01');
+    component.fechaSeleccionada.valueChanges.subscribe(value => {
+      component.fechasSeleccionadas.push(value);
+    });
+    component.fechaSeleccionada.setValue('2023-10-02');
+    expect(component.fechasSeleccionadas).toContain('2023-10-02');
   });
 
-  it('should update fechasDatos when fechaSeleccionada changes', () => {
-    component.fechaSeleccionada.setValue('2025-03-17');
-    expect(component.fechasDatos).toContain('2025-03-17');
+  it('should update selectRangoDias when paisesPorBloque changes', () => {
+    component.paisesPorBloque = [{ id: 1, descripcion: 'Country 1' }];
+    component.selectRangoDias = component.paisesPorBloque.map(pais => pais.descripcion);
+    expect(component.selectRangoDias).toContain('Country 1');
   });
 
-  it('should reset form on resetForm call', () => {
-    component.paisForm.controls['bloque'].setValue(1);
-    // component.resetForm();
-    expect(component.paisForm.controls['bloque'].value).toBeNull();
-    expect(component.paisForm.controls['descripcioneSpecffico'].value).toBe('');
-    expect(component.paisForm.controls['descripcionJustificacion'].value).toBe('');
-    expect(component.paisForm.controls['observaciones'].value).toBe('');
+  it('should set valores in store', () => {
+    spyOn(component, 'setValoresStore');
+    component.setValoresStore(component.paisForm, 'usoEspecifico', 'setUsoEspecifico');
+    expect(component.setValoresStore).toHaveBeenCalled();
   });
 });

@@ -36,36 +36,39 @@
           <small *ngIf="formDelLa.controls['descripcion'].errors?.['required']"
             >La descripción es obligatoria.</small
           >
-          <small *ngIf="formDelLa.controls['descripcion'].errors?.['minlength']"
-            >Debe tener al menos 10 caracteres.</small
-          >
           <small *ngIf="formDelLa.controls['descripcion'].errors?.['maxlength']"
-            >No puede exceder 500 caracteres.</small
+            >No puede exceder 254 caracteres.</small
           >
         </div>
       </div>
     </div>
-    <div class="form-group">
-      <app-catalogo-select
-        [catalogo]="fraccionF"
-        [label]="'Fracción arancelaria'"
-        [required]="true"
-        (change)="fetchFraccion()"
-        [placeholder]="'Seleccione un documento'"
-        formControlName="fraccion"
-        (change)="setValoresStore(formDelLa, 'fraccion', 'setFraccion')"
-      ></app-catalogo-select>
-      <div
-        *ngIf="
-          formDelLa.controls['fraccion'].invalid && formDelLa.controls['fraccion'].touched
-        "
-        class="text-danger"
-      >
-        <small *ngIf="formDelLa.controls['fraccion'].errors?.['required']"
-          >Debe seleccionar un valor.</small
+  
+    <div class="row">
+      <div class="col-md-12 mb-5">
+        <div class="form-group">
+          <app-catalogo-select
+          [catalogo]="fraccionF"
+          [label]="'Fracción arancelaria'"
+          [required]="true"
+          (change)="fetchFraccion()"
+          [placeholder]="'Seleccione un documento'"
+          formControlName="fraccion"
+          (change)="setValoresStore(formDelLa, 'fraccion', 'setFraccion')"
+        ></app-catalogo-select>
+        <div
+          *ngIf="
+            formDelLa.controls['fraccion'].invalid && formDelLa.controls['fraccion'].touched
+          "
+          class="text-danger"
         >
+          <small *ngIf="formDelLa.controls['fraccion'].errors?.['required']"
+            >Debe seleccionar un valor.</small
+          >
+        </div>
+        </div>
       </div>
     </div>
+
     <div class="row">
       <div class="col-md-4 form-group">
         <label class="form-label" for="nombre_imp"

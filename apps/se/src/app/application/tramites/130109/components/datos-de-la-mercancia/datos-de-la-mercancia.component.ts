@@ -202,8 +202,7 @@
          '',
          [
            Validators.required,
-           Validators.minLength(10),
-           Validators.maxLength(500),
+           Validators.maxLength(254),
          ],
        ],
        fraccion: ['', [Validators.required]],
@@ -212,7 +211,6 @@
          '',
          [
            Validators.required,
-           Validators.min(1),
            Validators.pattern(REG_X.SOLO_NUMEROS), 
          ],
        ],
@@ -220,7 +218,6 @@
          '',
          [
            Validators.required,
-           Validators.min(0.01),
            Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
          ],
        ],

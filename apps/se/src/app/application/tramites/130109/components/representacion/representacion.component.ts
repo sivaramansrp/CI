@@ -39,6 +39,7 @@ import { Tramite130109Store } from '../../estados/tramites/tramites130109.store'
     TituloComponent,
   ],
   templateUrl: './representacion.component.html',
+  styleUrl: './representacion.component.scss'
 })
 export class RepresentacionComponent implements OnInit {
   /**

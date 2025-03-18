@@ -8,12 +8,14 @@ import { DatosDeLaMercanciaComponent } from './components/datos-de-la-mercancia/
 import { DetosDelTramiteComponent } from './components/detos-del-tramite/detos-del-tramite.component';
 import { PaisProcendenciaComponent } from './components/pais-procendencia/pais-procendencia.component';
 import { PartidasDeLaComponent } from './components/partidas-de-la/partidas-de-la.component';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RepresentacionComponent } from './components/representacion/representacion.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { VehiculosUsadosAdaptadosRoutingModule } from './vehiculos-usados-adaptados-routing.module';
+
 
 @NgModule({
   declarations: [
@@ -41,6 +43,7 @@ import { VehiculosUsadosAdaptadosRoutingModule } from './vehiculos-usados-adapta
     FirmaElectronicaComponent,
     AnexarDocumentosComponent,
     AlertComponent,
+    PasoDosComponent,
     CatalogoSelectComponent,
     DatosDeLaMercanciaComponent,
     DetosDelTramiteComponent,

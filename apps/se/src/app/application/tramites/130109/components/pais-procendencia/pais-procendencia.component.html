@@ -39,19 +39,19 @@
         <textarea
           class="form-control"
           rows="2"
-          id="descripcion"
+          id="usoEspecifico"
           placeholder="Uso(s) especffico(s) de la mercancia*:"
-          formControlName="descripcioneSpecffico"
-          (change)="setValoresStore(paisForm, 'descripcioneSpecffico', 'setDescripcioneSpecffico')"
+          formControlName="usoEspecifico"
+          (change)="setValoresStore(paisForm, 'usoEspecifico', 'setUsoEspecifico')"
         ></textarea>
         <div
         *ngIf="
-          paisForm.controls['descripcioneSpecffico'].invalid &&
-          paisForm.controls['descripcioneSpecffico'].touched
+          paisForm.controls['usoEspecifico'].invalid &&
+          paisForm.controls['usoEspecifico'].touched
         "
         class="text-danger"
       >
-        <small *ngIf="paisForm.controls['descripcioneSpecffico'].errors?.['required']"
+        <small *ngIf="paisForm.controls['usoEspecifico'].errors?.['required']"
           >La descripción es obligatoria.</small
         >
         </div>
@@ -62,25 +62,25 @@
   <div class="row mt-4">
     <div class="col-md-8">
       <div class="form-group">
-        <label for="descripcion" class="form-label"
+        <label for="justificacionImportacionExportacion" class="form-label"
           >Justificación y beneficio que se obtiene*:</label
         >
         <textarea
           class="form-control"
           rows="2"
-          id="descripcion"
+          id="justificacionImportacionExportacion"
           placeholder="Justificación y beneficio que se obtiene"
-          formControlName="descripcionJustificacion"
-          (change)="setValoresStore(paisForm, 'descripcionJustificacion', 'setDescripcionJustificacion')"
+          formControlName="justificacionImportacionExportacion"
+          (change)="setValoresStore(paisForm, 'justificacionImportacionExportacion', 'setJustificacionImportacionExportacion')"
         ></textarea>
         <div
         *ngIf="
-          paisForm.controls['descripcionJustificacion'].invalid &&
-          paisForm.controls['descripcionJustificacion'].touched
+          paisForm.controls['justificacionImportacionExportacion'].invalid &&
+          paisForm.controls['justificacionImportacionExportacion'].touched
         "
         class="text-danger"
       >
-        <small *ngIf="paisForm.controls['descripcionJustificacion'].errors?.['required']"
+        <small *ngIf="paisForm.controls['justificacionImportacionExportacion'].errors?.['required']"
           >La justificacion es obligatoria.</small
         >
         </div>
@@ -91,11 +91,11 @@
   <div class="row mt-4">
     <div class="col-md-8">
       <div class="form-group">
-        <label for="descripcion" class="form-label">Observaciones:</label>
+        <label for="Observaciones" class="form-label">Observaciones:</label>
         <textarea
           class="form-control"
           rows="2"
-          id="descripcion"
+          id="Observaciones"
           placeholder="Observaciones"
           formControlName="observaciones"
           (change)="setValoresStore(paisForm, 'observaciones', 'setObservaciones')"
