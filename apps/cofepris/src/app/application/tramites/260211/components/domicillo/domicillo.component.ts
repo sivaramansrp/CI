@@ -139,41 +139,41 @@ export class DomicilloComponent implements OnInit,AfterViewInit {
     this.domicilio = this.fb.group({
       codigoPostal: [this.solicitudState?.codigoPostal, Validators.required],
       estado:[this.solicitudState?.estado,Validators.required],
-      muncipio: ['', Validators.required],
-      localidad: [''],
-      colonia: [''],
-      calle: [''],
-      lada: [''],
-      telefono: ['', Validators.required],
-      avisoCheckbox:[''],
-      licenciaSanitaria:[{value:'',disabled:false}],
-      regimen: [''],
-      aduanasEntradas: [''],
-      numeroPermiso:['']
+      muncipio: [this.solicitudState?.muncipio, Validators.required],
+      localidad: [this.solicitudState?.localidad],
+      colonia: [this.solicitudState?.colonia],
+      calle: [this.solicitudState?.calle],
+      lada: [this.solicitudState?.lada],
+      telefono: [this.solicitudState?.telefono, Validators.required],
+      avisoCheckbox:[this.solicitudState?.avisoCheckbox],
+      licenciaSanitaria:[{value:this.solicitudState?.licenciaSanitaria,disabled:false}],
+      regimen: [this.solicitudState?.regimen],
+      aduanasEntradas: [this.solicitudState?.aduanasEntradas],
+      numeroPermiso:[this.solicitudState?.numeroPermiso]
     });
 
     this.formAgente = this.fb.group({
-      claveScianModal: ['', Validators.required],
-      claveDescripcionModal:['']
+      claveScianModal: [this.solicitudState?.claveScianModal, Validators.required],
+      claveDescripcionModal:[this.solicitudState?.claveDescripcionModal],
     });
 
     this.formMercancias = this.fb.group({
-      clasificacion: ['', Validators.required],
-      especificar: ['', Validators.required],
-      denominacionEspecifica: ['', Validators.required],
-      denominacionDistintiva: ['', Validators.required],
-      denominacionComun: ['', Validators.required],
-      tipoDeProducto: ['', Validators.required],
-      estadoFisico:['', Validators.required],
-      fraccionArancelaria:['', Validators.required],
-      descripcionFraccion:[{value:'',disabled:true}, Validators.required],
-      cantidadUMT:['', Validators.required],
-      UMT:[{value:'',disabled:true}, Validators.required],
-      cantidadUMC:['', Validators.required],
-      UMC:['', Validators.required],
-      presentacion:['', Validators.required],
-      numeroRegistro:['', Validators.required],
-      fechaCaducidad:['']
+      clasificacion: [this.solicitudState?.clasificacion, Validators.required],
+      especificar: [this.solicitudState?.especificar, Validators.required],
+      denominacionEspecifica: [this.solicitudState?.denominacionEspecifica, Validators.required],
+      denominacionDistintiva: [this.solicitudState?.denominacionDistintiva, Validators.required],
+      denominacionComun: [this.solicitudState?.denominacionComun, Validators.required],
+      tipoDeProducto: [this.solicitudState?.tipoDeProducto, Validators.required],
+      estadoFisico:[this.solicitudState?.estadoFisico, Validators.required],
+      fraccionArancelaria:[this.solicitudState?.fraccionArancelaria, Validators.required],
+      descripcionFraccion:[{value:this.solicitudState?.descripcionFraccion,disabled:true}, Validators.required],
+      cantidadUMT:[this.solicitudState?.cantidadUMT, Validators.required],
+      UMT:[{value:this.solicitudState?.UMT,disabled:true}, Validators.required],
+      cantidadUMC:[this.solicitudState?.cantidadUMC, Validators.required],
+      UMC:[this.solicitudState?.UMC, Validators.required],
+      presentacion:[this.solicitudState?.presentacion, Validators.required],
+      numeroRegistro:[this.solicitudState?.numeroRegistro, Validators.required],
+      fechaCaducidad:[this.solicitudState?.fechaCaducidad]
     });
     
   }
@@ -283,13 +283,15 @@ export class DomicilloComponent implements OnInit,AfterViewInit {
     });
   }
 
-  onAvisoCheckboxChange(event: Event): void {
+  onAvisoCheckboxChange(event: Event,form: FormGroup, campo: string, metodoNombre: keyof Tramite216001Store): void {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
       this.domicilio.get('licenciaSanitaria')?.disable();
     } else {
       this.domicilio.get('licenciaSanitaria')?.enable();
     }
+    const valor = form.get(campo)?.value;
+    (this.tramite216001Store[metodoNombre] as (value: any) => void)(valor);
   }
 
   /**

@@ -11,6 +11,7 @@
                         placeholder=""
                         type="text"
                         formControlName="rfc"
+                        (change)="setValoresStore(representante,'rfc', 'setRfc')"
                     />
                 </div>
             </div>
@@ -28,6 +29,7 @@
                         placeholder=""
                         type="number"
                         formControlName="nombre"
+                        (change)="setValoresStore(representante,'nombre', 'setNombre')"
                     />
                 </div>
             </div>
@@ -40,6 +42,7 @@
                         placeholder=""
                         type="text"
                         formControlName="apellidoPaterno"
+                        (change)="setValoresStore(representante,'apellidoPaterno', 'setApellidoPaterno')"
                     />
                 </div>
             </div>
@@ -52,6 +55,7 @@
                         placeholder=""
                         type="text"
                         formControlName="apellidoMaterno"
+                        (change)="setValoresStore(representante,'apellidoMaterno', 'setApellidoMaterno')"
                     />
                 </div>
             </div>
