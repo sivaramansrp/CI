@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlDar, AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { DomicilloComponent } from '../domicillo/domicillo.component';
+import { ManifiestosComponent } from '../manifiestos/manifiestos.component';
+import { RepresentanteLegalComponent } from '../representanteLegal/representanteLegal.component';
 
 @Component({
   selector: 'app-datos-de-la',
@@ -12,7 +14,9 @@ import { DomicilloComponent } from '../domicillo/domicillo.component';
     ReactiveFormsModule,
     AlertComponent,
     TituloComponent,
-    DomicilloComponent
+    DomicilloComponent,
+    ManifiestosComponent,
+    RepresentanteLegalComponent
   ],
   templateUrl: './datosDeLa.component.html',
   styleUrl: './datosDeLa.component.css',
