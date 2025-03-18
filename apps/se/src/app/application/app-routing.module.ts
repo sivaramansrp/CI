@@ -16,12 +16,25 @@ const ROUTES: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
+   {
+    path: 'entidad-legal',
+    loadChildren: () =>
+      import('./tramites/120404/entidad-legal.module').then(
+        (m) => m.EntidadLegalModule)
+      },
 
   {
     path: 'exportador-autorizado',
     loadChildren: () =>
       import('./tramites/110102/exportador-autorizado.module').then(
         (m) => m.ExportadorautorizadoModule
+      ),
+  },
+  {
+    path: 'registro-como-empresa',
+    loadChildren: () =>
+      import('./tramites/120601/registro-como-empresa.module').then(
+        (m) => m.RegistroComoEmpresaModule
       ),
   },
   {

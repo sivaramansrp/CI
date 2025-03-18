@@ -79,6 +79,16 @@ export class Tramite80101Query extends Query<Tramite80101State> {
     (state) => state.tablaDatosComplimentosExtranjera
   );
 
+  selectImportarTablsDatos$ = this.select(
+    (state) => state.annexoUno.importarDatosTabla
+  );
+  selectExportarTablsDatos$ = this.select(
+    (state) => state.annexoUno.exportarDatosTabla
+  );
+  selectDatosParaNavegar$ = this.select(
+    (state) => state.annexoUno.datosParaNavegar
+  );
+  
   constructor(protected override store: Tramite80101Store) {
     super(store);
   }
