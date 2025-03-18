@@ -28,8 +28,8 @@
                     <div class="col-md-4">
                         <div class="radio">
                             <label>
-                                <input type="radio" formControlName="tipoBusqueda" id="idRedioExcel"
-                                    value="Archivo CSV" class="form-check-input">
+                                <input type="radio" formControlName="tipoBusqueda" id="idRedioExcel" value="Archivo CSV"
+                                    class="form-check-input">
                                 Archivo CSV
                             </label>
                         </div>
@@ -52,10 +52,11 @@
                         <div class="form-group">
                             <label for="aduanas">Aduana/sección aduanera</label>
                             <span class="require">*</span>
-                            <select formControlName="aduana" id="aduana" class="form-control" [ngClass]="isValid('aduana') ? 'required' : ''">
+                            <select formControlName="aduana" id="aduana" class="form-control"
+                                [ngClass]="isValid('aduana') ? 'required' : ''">
                                 <option value="" disabled selected>Selecciona un valor</option>
-                                <option *ngFor="let aduana of aduanas" [value]="aduana.id">
-                                    {{ aduana.nombre }}
+                                <option *ngFor="let aduana of aduanaList" [value]="aduana.id">
+                                    {{ aduana.descripcion }}
                                 </option>
                             </select>
                         </div>
@@ -90,7 +91,8 @@
                             <label for="inicialesContenedor">Iniciales del equipo</label>
                             <span class="require">*</span>
                             <input type="text" formControlName="inicialesContenedor" id="inicialesContenedor"
-                                maxlength="10" class="form-control" [ngClass]="isValid('inicialesContenedor') ? 'required' : ''">
+                                maxlength="10" class="form-control"
+                                [ngClass]="isValid('inicialesContenedor') ? 'required' : ''">
                         </div>
                     </div>
 
@@ -117,7 +119,9 @@
                         <div class="form-group">
                             <label for="contenedores">Tipo de equipo</label>
                             <span class="require">*</span>
-                            <select formControlName="contenedores" id="contenedores" class="form-control"  [ngClass]="isValid('contenedores') ? 'required' : ''"  (change)="setValoresStore(solicitudForm, 'contenedores','setContenedores' )">
+                            <select formControlName="contenedores" id="contenedores" class="form-control"
+                                [ngClass]="isValid('contenedores') ? 'required' : ''"
+                                (change)="setValoresStore(solicitudForm, 'contenedores','setContenedores' )">
                                 <option value="" disabled selected>Selecciona un valor</option>
                                 <option *ngFor="let contenedor of contenedores" [value]="contenedor.id">
                                     {{ contenedor.tipo }}
@@ -131,7 +135,7 @@
                     <div class="col-md-12">
                         <div class="form-group pull-right">
                             <button type="button" class="btn btn-default" (click)="limpiarCampos()">Limpiar</button>
-                            <button type="button" class="btn btn-primary"
+                            <button type="button" class="btn btn-primary ms-2"
                                 (click)="validarDigitoVerificador()">Agregar</button>
                         </div>
                     </div>
@@ -149,7 +153,9 @@
                 <div class="row">
                     <div class="col-md-6">
                         <app-catalogo-select [catalogo]="catalogoList" [label]="transporteList.labelNombre"
-                            [placeholder]="transporteList.primerOpcion" formControlName="dropdown" (change)="setValoresStore(solicitudForm,'dropdown', 'setDropdown')" [required]="true"></app-catalogo-select>
+                            [placeholder]="transporteList.primerOpcion" formControlName="dropdown"
+                            (change)="setValoresStore(solicitudForm,'dropdown', 'setDropdown')"
+                            [required]="true"></app-catalogo-select>
                     </div>
 
                     <div class="col-md-4">
@@ -157,7 +163,8 @@
                             <label for="numManifiesto">No. Manifiesto</label>
                             <span class="require">*</span>
                             <input type="text" formControlName="numManifiesto" id="numManifiesto" maxlength="50"
-                                class="form-control" (change)="setValoresStore(solicitudForm,'numManifiesto', 'setNumManifiesto')">
+                                class="form-control"
+                                (change)="setValoresStore(solicitudForm,'numManifiesto', 'setNumManifiesto')">
                         </div>
                     </div>
                 </div>
@@ -178,7 +185,8 @@
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        <th><input type="checkbox" formControlName="commonCheckbox" (change)="toggleAllCheckboxes($event)" /></th>
+                                        <th><input type="checkbox" formControlName="commonCheckbox"
+                                                (change)="toggleAllCheckboxes($event)" /></th>
                                         <th>Iniciales del equipo</th>
                                         <th>Número de equipo</th>
                                         <th>Dígito Verificador</th>
@@ -198,7 +206,7 @@
                                     <tr *ngFor="let item of datosTabla; let i = index">
                                         <td class="grey-column">{{ i + 1 }}</td>
                                         <td><input type="checkbox" [checked]="individualCheckbox.value[i]"
-                                            (change)="onCheckboxChange($event, i)" /></td>
+                                                (change)="onCheckboxChange($event, i)" /></td>
                                         <td>{{ item.inicialesEquipo }}</td>
                                         <td>{{ item.numeroEquipo }}</td>
                                         <td>{{ item.digitoVerificador }}</td>
@@ -220,7 +228,7 @@
                     <div align="center" id="paginGridContenedoresITC">
                         <div class="page-container">
                             <div class="page-number">1</div>
-                          </div>
+                        </div>
                     </div>
 
                     <!-- <div>
@@ -240,19 +248,25 @@
                         <div class="col-md-4">
                             <ng-titulo titulo="Datos generales" />
                             <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
-                                [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduanaDropdown" (change)="setValoresStore(solicitudForm,'aduanaDropdown', 'setAduanaDropdown')"></app-catalogo-select>
+                                [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduanaDropdown"
+                                (change)="setValoresStore(solicitudForm,'aduanaDropdown', 'setAduanaDropdown')"></app-catalogo-select>
                             <label for="fechaDeIngreso" class="form-label">Fecha de ingreso*:</label>
-                            <input class="form-control" type="date" name="fechaDeIngreso" id="fechaDeIngreso" formControlName="fechaDeIngreso" (change)="setValoresStore(solicitudForm,'fechaDeIngreso', 'setFechaDeIngreso')" required>
+                            <input class="form-control" type="date" name="fechaDeIngreso" id="fechaDeIngreso"
+                                formControlName="fechaDeIngreso"
+                                (change)="setValoresStore(solicitudForm,'fechaDeIngreso', 'setFechaDeIngreso')"
+                                required>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <ng-titulo titulo="Adjuntar archivo" />
                             <label for="archivoSeleccionado" class="form-label">Archivo Seleccionado*:</label>
-                            <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado" required>
+                            <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado"
+                                required>
                         </div>
                         <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
-                            <button type="button" class="btn btn-default" (click)="adjuntarArchivo($event)">Cargar Archivo</button>
+                            <button type="button" class="btn btn-default" (click)="adjuntarArchivo()">Cargar
+                                Archivo</button>
                         </div>
                         <div *ngIf="showArchivoSeleccionadoTable">
                             <table class="table table-bordered" align="center">
@@ -300,7 +314,7 @@
                             <input class="form-control" type="file" name="cargarArchivo" id="cargarArchivo" required>
                         </div>
                         <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
-                            <button type="button" class="btn btn-default" (click)="Archivo($event)">Enviar</button>
+                            <button type="button" class="btn btn-default" (click)="Archivo()">Enviar</button>
                         </div>
                         <div *ngIf="showCargarArchivoTable">
                             <table class="table table-bordered" align="center">
@@ -347,6 +361,7 @@
             </div>
         </ng-container>
         <div class="col-md-12" id="IdGridContenedoresITC">
+            <br>
             <div class="table-responsive">
                 <div class="innercontainer">
                     <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla"

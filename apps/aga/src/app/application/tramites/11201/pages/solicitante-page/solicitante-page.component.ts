@@ -36,7 +36,7 @@ export class SolicitantePageComponent implements OnInit {
     console.log();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.pasos = PASOS.slice(0, 2);
     this.pasos = this.pasos.map((paso) => {
       if (paso.indice === 2 && paso.titulo === 'Anexar necesarios') {
@@ -60,7 +60,7 @@ export class SolicitantePageComponent implements OnInit {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 6) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -73,7 +73,7 @@ export class SolicitantePageComponent implements OnInit {
   /**
    * Método para asignar las secciones existentes al stored
    */
-  private asignarSecciones() {
+  private asignarSecciones(): void {
     type SeccionKeys = keyof typeof SECCIONES_TRAMITE_5701.PASO_1;
     const SECCIONES: boolean[] = [];
     const FORMAVALIDA: boolean[] = [];

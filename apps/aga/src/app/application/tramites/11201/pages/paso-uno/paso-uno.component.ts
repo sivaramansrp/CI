@@ -1,11 +1,13 @@
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ContenedorComponent } from '../../components/contenedor/contenedor.component';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
+import { Input } from '@angular/core';
 import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-// import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
-import { ContenedorComponent } from '../../components/contenedor/contenedor.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
+import { ViewChild } from '@angular/core';
 
 @Component({
   selector: 'paso-uno',

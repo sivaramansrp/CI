@@ -30,27 +30,27 @@ export class Solicitud11201Store extends Store<Solicitud11201State> {
     super(createInitialSolicitudState());
   }
 
-  public setRfc(rfc: string) {
+  public setRfc(rfc: string): void {
     this.update((state) => ({
       ...state,
       rfc
     }));
   }
-  public setDenominacion(denominacion: string) {
+  public setDenominacion(denominacion: string): void {
     this.update((state) => ({
       ...state,
       denominacion
     }));
   }
 
-  public setActividadEconomica(actividadEconomica: string) {
+  public setActividadEconomica(actividadEconomica: string): void {
     this.update((state) => ({
       ...state,
       actividadEconomica
     }));
   }
 
-  public setCorreoElectronico(correoElectronico: string) {
+  public setCorreoElectronico(correoElectronico: string): void {
     this.update((state) => ({
       ...state,
       correoElectronico

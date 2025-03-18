@@ -1,14 +1,14 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFechaComponent, TablaDinamicaComponent, TEXTOS, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+/* eslint-disable sort-imports */
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, TEXTOS, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud11201State, Tramite11201Store } from '../../../../estados/tramites/tramite11201.store';
-import {Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { Tramite11201Query } from '../../../../estados/queries/tramite11201.query';
 import { Aduanas, Contenedores, DatosDelContenedor } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import moment from 'moment';
-// import mockData from 'libs/shared/theme/assets/json/11202/contenedor-mockdata.json';
 @Component({
   selector: 'app-contenedor',
   templateUrl: './contenedor.component.html',
@@ -21,7 +21,6 @@ import moment from 'moment';
     TituloComponent,
     CatalogoSelectComponent,
     AlertComponent,
-    InputFechaComponent,
     TablaDinamicaComponent
   ],
 })
@@ -36,12 +35,11 @@ export class ContenedorComponent implements OnInit {
   showSeccionExcel: boolean = false;
   mostrarMensaje: boolean = false;
   mensajeCamposObligatorios: string = 'Faltan campos por capturar.';
-  aduanas: Aduanas[] = [];
+  aduanaList: Aduanas[] = [];
   contenedores: Contenedores[] = [];
   requiereGuardadoParcial: boolean = false;
   currentIdx: number = 0;
   @Input() catalogoList: Catalogo[] = [];
-  @Input() aduanaList: Catalogo[] = [];
   transporteList: {
     catalogos: Catalogo[];
     labelNombre: string;
@@ -138,6 +136,7 @@ export class ContenedorComponent implements OnInit {
             ...this.solicitud11201State,
             ...seccionState,
           };
+          console.log(this.solicitud11201State);
         })
       )
       .subscribe();
@@ -167,7 +166,7 @@ export class ContenedorComponent implements OnInit {
         this.solicitud11201State.aduanaDropdown,
         Validators.required,
       ],
-      archivoSeleccionado: [this.solicitud11201State?.archivoSeleccionado , Validators.required],
+      archivoSeleccionado: [this.solicitud11201State?.archivoSeleccionado, Validators.required],
       individualCheckbox: this.fb.array(
         this.solicitud11201State?.individualCheckbox
       ),
@@ -195,7 +194,7 @@ export class ContenedorComponent implements OnInit {
         }
       });
 
-      this.solicitudForm
+    this.solicitudForm
       .get('numeroContenedor')
       ?.valueChanges.subscribe((value) => {
         if (value) {
@@ -206,7 +205,7 @@ export class ContenedorComponent implements OnInit {
           this.setValoresStore(this.solicitudForm, 'numeroContenedor', 'setNumeroContenedor');
         }
       });
-      this.solicitudForm
+    this.solicitudForm
       .get('digitoDeControl')
       ?.valueChanges.subscribe((value) => {
         if (value) {
@@ -218,10 +217,10 @@ export class ContenedorComponent implements OnInit {
         }
       });
     // Escuchar cambios en tipoBusqueda para mostrar secciones
-this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe(() => {
-  this.setValoresStore(this.solicitudForm, 'tipoBusqueda', 'setTipoBusqueda');
-  this.mostrarCampos();
-});
+    this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe(() => {
+      this.setValoresStore(this.solicitudForm, 'tipoBusqueda', 'setTipoBusqueda');
+      this.mostrarCampos();
+    });
 
     // Escuchar cambios en tipoTransporte
     this.solicitudForm.get('aduana')?.valueChanges.subscribe(() => {
@@ -234,7 +233,7 @@ this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe(() => {
   /**
    * Obtener el array de checkboxes individuales
    */
-  get individualCheckbox() {
+  get individualCheckbox(): FormArray {
     return this.solicitudForm.get('individualCheckbox') as FormArray;
   }
 
@@ -254,19 +253,10 @@ this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe(() => {
   }
 
   cargarCatalogos(): void {
-    // Cargar catálogo de aduanas
-    this.datosTramiteService.getAduanas().subscribe(
-      (data) => {
-        this.aduanas = data;
-      },
-      (error) => {
-        console.error('Error al cargar aduanas', error);
-      }
-    );
     // Cargar catálogo de contenedores
     this.datosTramiteService.getContenedores().subscribe(
       (data) => {
-        this.contenedores = data;
+        this.contenedores = data.data;
       },
       (error) => {
         console.error('Error al cargar contenedores', error);
@@ -343,24 +333,14 @@ this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe(() => {
     }
   }
 
-  seleccionCatalogo(event: any): void {
-    // Manejar selección de tipoTransporte
-    if (event.target.value === '1') {
-      // Lógica para FERROVIARIO
-    } else if (event.target.value === '2') {
-      // Lógica para MARÍTIMO
-    }
-    // Lógica adicional si es requerida
-  }
-
-  adjuntarArchivo(event: any): void {
+  adjuntarArchivo(): void {
     const FILE_INPUT = document.getElementById(
       'archivoSeleccionado'
     ) as HTMLInputElement;
     const FILE = FILE_INPUT.files?.[0];
     if (FILE) {
       const READER = new FileReader();
-      READER.onload = (e) => {
+      READER.onload = (e): void => {
         const TEXT = e.target?.result as string;
         this.parseCSV(TEXT);
         this.showArchivoSeleccionadoTable = true;
@@ -369,14 +349,14 @@ this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe(() => {
     }
   }
 
-  Archivo(event: any): void {
+  Archivo(): void {
     const FILE_INPUT = document.getElementById(
       'cargarArchivo'
     ) as HTMLInputElement;
     const FILE = FILE_INPUT.files?.[0];
     if (FILE) {
       const READER = new FileReader();
-      READER.onload = (e) => {
+      READER.onload = (e): void => {
         const TEXT = e.target?.result as string;
         this.parseCSV(TEXT);
         this.showCargarArchivoTable = true;
@@ -390,6 +370,7 @@ this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe(() => {
     const HEADERS = LINES[0].split(',');
     const DATA = LINES.slice(1).map((line) => {
       const VALUES = line.split(',');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const OBJ: any = {};
       HEADERS.forEach((header, index) => {
         OBJ[header.trim()] = VALUES[index]?.trim() || '';
@@ -404,7 +385,7 @@ this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe(() => {
       this.solicitudForm.get('numManifiesto')?.valid &&
       this.solicitudForm.get('tipoTransporte')?.valid
     ) {
-      const MANIFIESTO_DATA = this.solicitudForm.value;
+      // const MANIFIESTO_DATA = this.solicitudForm.value;
       // this.datosTramiteService.enviarManifiesto(MANIFIESTO_DATA).subscribe(
       //   (response) => {
       //     // Manejar éxito, posiblemente mostrar mensaje o navegar
@@ -420,11 +401,11 @@ this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe(() => {
   }
 
   esPago(): void {
+    console.log('Pago');
     if (this.solicitudForm.valid) {
       // Implementar lógica de pago y envío del formulario
-      const SOLICITUD_DATA = this.solicitudForm.value;
-      this.datosTramiteService.submitSolicitud(SOLICITUD_DATA).subscribe(
-        (response) => {
+      this.datosTramiteService.submitSolicitud().subscribe(
+        () => {
           // Manejar envío exitoso
         },
         (error) => {
@@ -446,41 +427,10 @@ this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe(() => {
     }
   }
 
-  abrirModalCancelarTramite(): void {
-    // this.modalService.open(content, { ariaLabelledBy: 'modalCancelarTraniteLabel' }).result.then((result) => {
-    //   // Manejar acción al cerrar el modal si es necesario
-    // }, (reason) => {
-    //   // Manejar rechazo del modal si es necesario
-    // });
-  }
-  guardarParcial(): void {}
-
-  abrirModalEliminarPendiente(content: any): void {
-    // this.modalService.open(content, { ariaLabelledBy: 'modalEliminarPendienteLabel' }).result.then((result) => {
-    //   // Manejar acción al cerrar el modal si es necesario
-    // }, (reason) => {
-    //   // Manejar rechazo del modal si es necesario
-    // });
-  }
-
   cancelarRadioButton(): void {
     // Resetear botones de radio y campos relacionados
     this.solicitudForm.get('tipoBusqueda')?.setValue('');
     this.limpiarCampos();
-  }
-
-  eliminarTramitePendienteITC(): void {
-    // const idSolicitud = this.solicitudForm.get('solicitud.idSolicitud')?.value;
-    // this.datosTramiteService.eliminarTramitePendiente(idSolicitud).subscribe(
-    //   (response) => {
-    //     // Manejar éxito, posiblemente resetear formulario o mostrar mensaje
-    //     this.limpiarCampos();
-    //   },
-    //   (error) => {
-    //     console.error('Error al eliminar trámite pendiente', error);
-    //     // Mostrar mensaje de error
-    //   }
-    // );
   }
 
   agregarSolicitud(): void {
@@ -509,11 +459,6 @@ this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe(() => {
         // Mostrar mensaje de error
       }
     );
-  }
-
-  quitarErrorInput(selector: string): void {
-    // Implementar lógica para quitar errores de entrada
-    // Si se utiliza validación de formularios de Angular, esto puede no ser necesario
   }
 
   private fetchgetTransporteList(): void {
