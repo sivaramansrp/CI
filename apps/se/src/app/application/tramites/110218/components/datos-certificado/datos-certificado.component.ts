@@ -110,8 +110,15 @@ export class DatosCertificadoComponent implements OnInit {
    * Datos seleccionados previamente en la tabla, obtenidos desde el store.
   */
   selectedTableFromStore: any;
+
+  /**
+ * Índice utilizado para propósitos internos del componente.
+ */
   indice: number=5;
 
+  /**
+ * Evento de salida que emite un valor booleano cuando se modifica el certificado.
+ */
   @Output() modificarEventCertificado: EventEmitter<boolean> = new EventEmitter<boolean>(false);
   /**
    * Constructor del componente.
