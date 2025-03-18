@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProyectoImmexVistaComponent } from './proyecto-immex-vista.component';
-import { ProyectoImmexEncabezado } from '../../../../shared/models/se-shared.model';
+import { ProyectoImmexEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 
 describe('ProyectoImmexVistaComponent', () => {
   let component: ProyectoImmexVistaComponent;

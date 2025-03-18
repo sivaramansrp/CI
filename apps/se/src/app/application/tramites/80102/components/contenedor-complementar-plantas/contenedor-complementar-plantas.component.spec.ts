@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ContenedorComplementarPlantasComponent } from './contenedor-complementar-plantas.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ContenedorComplementarPlantasComponent', () => {
   let component: ContenedorComplementarPlantasComponent;
@@ -7,7 +8,7 @@ describe('ContenedorComplementarPlantasComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ContenedorComplementarPlantasComponent],
+      imports: [ContenedorComplementarPlantasComponent, RouterTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ContenedorComplementarPlantasComponent);

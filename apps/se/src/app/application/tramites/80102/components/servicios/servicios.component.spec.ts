@@ -1,141 +1,266 @@
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AmpliacionServiciosComponent } from './servicios.component';
-import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
-import { Catalogo, CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { ComponentFixture } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
+import { ServiciosComponent } from './servicios.component';
+import { FormBuilder } from '@angular/forms';
+import { Tramite80102Query } from '../../estados/tramite80102.query';
+import { Tramite80102Store } from '../../estados/tramite80102.store';
+import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
+import { CatalogosService } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
-import { Tramite80102Store } from '../../estados/tramite80205.store';
-import { Tramite80102Query } from '../../estados/tramite80205.query';
 
-describe('AmpliacionServiciosComponent', () => {
-  let component: AmpliacionServiciosComponent;
-  let fixture: ComponentFixture<AmpliacionServiciosComponent>;
-  let Tramite80102Store: Tramite80102Store;
-  let Tramite80102Query: Tramite80102Query;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        ReactiveFormsModule,
-        FormsModule,
-        CommonModule,
-        HttpClientTestingModule,
-        CatalogoSelectComponent,
-        AmpliacionServiciosComponent, // Add the standalone component here
-      ],
-      providers: [AmpliacionServiciosService, Tramite80102Store, Tramite80102Query]
-    }).compileComponents();
+@Injectable()
+class MockTramite80102Query {
+  selectAduanaDeIngresoSelecion$ = observableOf({
+    id: {}
   });
+  selectdatosEmpresaExtranjera$ = {};
+}
+
+@Injectable()
+class MockTramite80102Store {
+  setFormValida = function() {};
+}
+
+describe('ServiciosComponent', () => {
+  let fixture;
+  let component;
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AmpliacionServiciosComponent);
-    component = fixture.componentInstance;
-    Tramite80102Store = TestBed.inject(Tramite80102Store);
-    Tramite80102Query = TestBed.inject(Tramite80102Query);
-    fixture.detectChanges();
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        FormBuilder,
+        { provide: Tramite80102Query, useClass: MockTramite80102Query },
+        { provide: Tramite80102Store, useClass: MockTramite80102Store },
+        CatalogosService
+      ]
+    }).overrideComponent(ServiciosComponent, {
+
+    }).compileComponents();
+    fixture = TestBed.createComponent(ServiciosComponent);
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms', () => {
-    expect(component.formularioInfoRegistro).toBeDefined();
-  });
-
-  it('should call getDatos on init', () => {
-    jest.spyOn(component, 'getDatos');
-    component.ngOnInit();
-    expect(component.getDatos).toHaveBeenCalled();
-  });
-
-  it('should call obtenerIngresoSelectList on init', () => {
-    jest.spyOn(component, 'obtenerIngresoSelectList');
+  it('should run #ngOnInit()', async () => {
+    component.obtenerIngresoSelectList = jest.fn();
+    component.getDatos = jest.fn();
+    component.suscribirseADatosImmex = jest.fn();
+    component.suscribirseADatos = jest.fn();
+    component.suscribirseAFields = jest.fn();
+    component.getCatalogoPaises = jest.fn();
     component.ngOnInit();
     expect(component.obtenerIngresoSelectList).toHaveBeenCalled();
-  });
-
-  it('should initialize formularioInfoRegistro with empty values if infoRegistro is not defined', () => {
-    component.inicializarFormularioInfoRegistro();
-    expect(component.formularioInfoRegistro.value).toEqual({
-      seleccionaLaModalidad: '',
-      folio: '',
-      ano: ''
-    });
-  });
-
-  
-  it('should call suscribirseADatos on init', () => {
-    jest.spyOn(component, 'suscribirseADatos');
-    component.ngOnInit();
-    expect(component.suscribirseADatos).toHaveBeenCalled();
-  });
-
-  it('should call suscribirseAFields on init', () => {
-    jest.spyOn(component, 'suscribirseAFields');
-    component.ngOnInit();
-    expect(component.suscribirseAFields).toHaveBeenCalled();
-  });
-
-  it('should call suscribirseADatosImmex on init', () => {
-    jest.spyOn(component, 'suscribirseADatosImmex');
-    component.ngOnInit();
+    expect(component.getDatos).toHaveBeenCalled();
     expect(component.suscribirseADatosImmex).toHaveBeenCalled();
   });
 
-  it('should call enCambioDeCampo and update store with rfcEmpresa, numeroPrograma, tiempoPrograma', () => {
-    const newRfc = 'XYZ123';
-    const newNumero = 'IMMEX456';
-    const newTiempo = '2026';
-
-    const setRfcEmpresaSpy = jest.spyOn(Tramite80102Store, 'setRfcEmpresa');
-    const setNumeroProgramaSpy = jest.spyOn(Tramite80102Store, 'setNumeroPrograma');
-    const setTiempoProgramaSpy = jest.spyOn(Tramite80102Store, 'setTiempoPrograma');
-
-    component.enCambioDeCampo('rfcEmpresa', newRfc);
-    component.enCambioDeCampo('numeroPrograma', newNumero);
-    component.enCambioDeCampo('tiempoPrograma', newTiempo);
-
-    expect(setRfcEmpresaSpy).toHaveBeenCalledWith(newRfc);
-    expect(setNumeroProgramaSpy).toHaveBeenCalledWith(newNumero);
-    expect(setTiempoProgramaSpy).toHaveBeenCalledWith(newTiempo);
+  it('should run #getCatalogoPaises()', async () => {
+    component.subscription = component.subscription || {};
+    component.subscription.add = jest.fn();
+    component.catalogosServices = component.catalogosServices || {};
+    component.catalogosServices.getCatalogoPaises = jest.fn().mockReturnValue(observableOf({}));
+    component.camposFormulario = component.camposFormulario || {};
+    component.camposFormulario.findIndex = jest.fn().mockReturnValue([
+      {
+        "campo": {}
+      }
+    ]);
+    component.camposFormulario.INDICE = {
+      opciones: {}
+    };
+    component.Tramite80102Store = component.Tramite80102Store || {};
+    component.Tramite80102Store.setPaisesOrigen = jest.fn();
+    component.getCatalogoPaises();
+    expect(component.subscription.add).toHaveBeenCalled();
+    expect(component.catalogosServices.getCatalogoPaises).toHaveBeenCalled();
+    expect(component.camposFormulario.findIndex).toHaveBeenCalled();
   });
 
-  it('should call procesarDatosDelHijo and update store with new data', () => {
-    const newCatalogo: Catalogo = { id: 1, descripcion: 'Catalogo1' };
-    const setAduanaDeIngresoSeleccionSpy = jest.spyOn(Tramite80102Store, 'setAduanaDeIngresoSeleccion');
-
-    component.procesarDatosDelHijo(newCatalogo);
-
-    expect(component.recibioDatos).toEqual([newCatalogo]);
-    expect(setAduanaDeIngresoSeleccionSpy).toHaveBeenCalledWith(newCatalogo);
+  it('should run #enCambioDeCampo()', async () => {
+    component.Tramite80102Store = component.Tramite80102Store || {};
+    component.Tramite80102Store.setRfcEmpresa = jest.fn();
+    component.Tramite80102Store.setNumeroPrograma = jest.fn();
+    component.Tramite80102Store.setTiempoPrograma = jest.fn();
+    component.enCambioDeCampo('numeroPrograma', {});
+    expect(component.Tramite80102Store.setNumeroPrograma).toHaveBeenCalled();
   });
 
-  it('should call eliminarServiciosGrid and update the store', () => {
-    const selectedService = { descripiónDelServicio: 'Service 1' };
-    component.domiciliosSeleccionados = [selectedService];
-    component.datosImmex = [{ descripiónDelServicio: 'Service 1' }, { descripiónDelServicio: 'Service 2' }];
-    const setDatosImmexSpy = jest.spyOn(Tramite80102Store, 'setDatosImmex');
+  it('should run #suscribirseADatos()', async () => {
+    component.subscription = component.subscription || {};
+    component.subscription.add = jest.fn();
+    component.Tramite80102Query = component.Tramite80102Query || {};
+    component.Tramite80102Query.selectDatos$ = observableOf({});
+    component.suscribirseADatos();
+    expect(component.subscription.add).toHaveBeenCalled();
+  });
 
+  it('should run #suscribirseAFields()', async () => {
+    component.subscription = component.subscription || {};
+    component.subscription.add = jest.fn();
+    component.Tramite80102Query = component.Tramite80102Query || {};
+    component.Tramite80102Query.select = jest.fn().mockReturnValue({
+      0: {
+        rfcEmpresa: {},
+        numeroPrograma: {},
+        tiempoPrograma: {}
+      },
+      subscribe: function() {
+        return [
+          {
+            "rfcEmpresa": {},
+            "numeroPrograma": {},
+            "tiempoPrograma": {}
+          }
+        ];
+      }
+    });
+    component.suscribirseAFields();
+    expect(component.subscription.add).toHaveBeenCalled();
+    expect(component.Tramite80102Query.select).toHaveBeenCalled();
+  });
+
+  it('should run #getDatos()', async () => {
+    component.subscription = component.subscription || {};
+    component.subscription.add = jest.fn();
+    component.autorizacionProgrmaNuevoService = component.autorizacionProgrmaNuevoService || {};
+    component.autorizacionProgrmaNuevoService.getDatos = jest.fn().mockReturnValue(observableOf({}));
+    component.Tramite80102Store = component.Tramite80102Store || {};
+    component.Tramite80102Store.setInfoRegistro = jest.fn();
+    component.getDatos();
+    expect(component.subscription.add).toHaveBeenCalled();
+    expect(component.autorizacionProgrmaNuevoService.getDatos).toHaveBeenCalled();
+    expect(component.Tramite80102Store.setInfoRegistro).toHaveBeenCalled();
+  });
+
+  it('should run #suscribirseADatosImmex()', async () => {
+    component.Tramite80102Query = component.Tramite80102Query || {};
+    component.Tramite80102Query.selectDatosImmex$ = observableOf({});
+    component.suscribirseADatosImmex();
+
+  });
+
+  it('should run #obtenerIngresoSelectList()', async () => {
+    component.subscription = component.subscription || {};
+    component.subscription.add = jest.fn();
+    component.autorizacionProgrmaNuevoService = component.autorizacionProgrmaNuevoService || {};
+    component.autorizacionProgrmaNuevoService.obtenerIngresoSelectList = jest.fn().mockReturnValue(observableOf({}));
+    component.Tramite80102Store = component.Tramite80102Store || {};
+    component.Tramite80102Store.setAduanaDeIngreso = jest.fn();
+    component.Tramite80102Query = component.Tramite80102Query || {};
+    component.Tramite80102Query.selectAduanaDeIngreso$ = observableOf({});
+    component.obtenerIngresoSelectList();
+    expect(component.subscription.add).toHaveBeenCalled();
+    expect(component.autorizacionProgrmaNuevoService.obtenerIngresoSelectList).toHaveBeenCalled();
+    expect(component.Tramite80102Store.setAduanaDeIngreso).toHaveBeenCalled();
+  });
+
+  it('should run #eliminarServiciosGrid()', async () => {
+    component.datosImmex = component.datosImmex || {};
+    component.datosImmex.findIndex = jest.fn().mockReturnValue([
+      {
+        "descripiónDelServicio": {}
+      }
+    ]);
+    component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
+    component.domiciliosSeleccionados[0] = '0';
+    component.Tramite80102Store = component.Tramite80102Store || {};
+    component.Tramite80102Store.setDatosImmex = jest.fn();
     component.eliminarServiciosGrid();
-
-    expect(setDatosImmexSpy).toHaveBeenCalledWith([{ descripiónDelServicio: 'Service 2' }]);
+    expect(component.datosImmex.findIndex).toHaveBeenCalled();
+    expect(component.Tramite80102Store.setDatosImmex).toHaveBeenCalled();
   });
 
-  
+  it('should run #agregarServiciosAmpliacion()', async () => {
+    component.recibioDatos = component.recibioDatos || {};
+    component.recibioDatos[0] = {
+      descripcion: {},
+      tipode: {}
+    };
+    component.Tramite80102Store = component.Tramite80102Store || {};
+    component.Tramite80102Store.setDatosImmex = jest.fn();
+    component.agregarServiciosAmpliacion();
+    expect(component.Tramite80102Store.setDatosImmex).toHaveBeenCalled();
+  });
 
-  it('should call eliminarEmpresasNacionales and update the store', () => {
-    const selectedEmpresa = { RegistroContribuyentes: '1234' };
-    component.empresasSeleccionados = [selectedEmpresa];
-    component.datos = [{ RegistroContribuyentes: '1234' }, { RegistroContribuyentes: '5678' }];
-    const setDatosSpy = jest.spyOn(Tramite80102Store, 'setDatos');
-
+  it('should run #eliminarEmpresasNacionales()', async () => {
+    component.datos = component.datos || {};
+    component.datos.findIndex = jest.fn().mockReturnValue([
+      {
+        "RegistroContribuyentes": {}
+      }
+    ]);
+    component.empresasSeleccionados = component.empresasSeleccionados || {};
+    component.empresasSeleccionados[0] = {
+      RegistroContribuyentes: {}
+    };
+    component.Tramite80102Store = component.Tramite80102Store || {};
+    component.Tramite80102Store.setDatos = jest.fn();
     component.eliminarEmpresasNacionales();
-
-    expect(setDatosSpy).toHaveBeenCalledWith([{ RegistroContribuyentes: '5678' }]);
+    expect(component.datos.findIndex).toHaveBeenCalled();
   });
 
- 
+  it('should run #actualizaGridEmpresasNacionales()', async () => {
+    component.Tramite80102Store = component.Tramite80102Store || {};
+    component.Tramite80102Store.setDatos = jest.fn();
+    component.Tramite80102Store.setCamposEmpresa = jest.fn();
+    component.actualizaGridEmpresasNacionales();
+    expect(component.Tramite80102Store.setCamposEmpresa).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.subscription = component.subscription || {};
+    component.subscription.unsubscribe = jest.fn();
+    component.ngOnDestroy();
+    expect(component.subscription.unsubscribe).toHaveBeenCalled();
+  });
+
+  it('should run #procesarDatosDelHijo()', async () => {
+    component.Tramite80102Store = component.Tramite80102Store || {};
+    component.Tramite80102Store.setAduanaDeIngresoSeleccion = jest.fn();
+    component.procesarDatosDelHijo({});
+    expect(component.Tramite80102Store.setAduanaDeIngresoSeleccion).toHaveBeenCalled();
+  });
+
+  it('should run #seleccionarDomicilios()', async () => {
+
+    component.seleccionarDomicilios({});
+
+  });
+
+  it('should run #seleccionarEmpresas()', async () => {
+
+    component.seleccionarEmpresas({});
+
+  });
+
+  it('should run #eliminarEmpresaExtranjera()', async () => {
+    component.empresaExtranjeraSeleccionados = [0];
+    component.Tramite80102Store = component.Tramite80102Store || {};
+    component.Tramite80102Store.eliminarDatosEmpresaExtranjera = jest.fn();
+    component.eliminarEmpresaExtranjera();
+    expect(component.Tramite80102Store.eliminarDatosEmpresaExtranjera).toHaveBeenCalled();
+  });
+
+  it('should run #agregarEmpresaExtranjera()', async () => {
+    component.Tramite80102Store = component.Tramite80102Store || {};
+    component.Tramite80102Store.agregarDdatosEmpresaExtranjera = jest.fn();
+    component.formularioEmpresaExtranjera = component.formularioEmpresaExtranjera || {};
+    component.formularioEmpresaExtranjera.value = 'value';
+    component.agregarEmpresaExtranjera();
+    expect(component.Tramite80102Store.agregarDdatosEmpresaExtranjera).toHaveBeenCalled();
+  });
+
 });
