@@ -5,6 +5,9 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { HttpClient } from '@angular/common/http';
 import { MERCANCIAS_DATA, mercanciasInfo, NICO_TABLA, nicoInfo } from '../../modelos/domicilo.model';
 import { CONTINUAR, CROSLISTA_DE_PAISES } from '../../enum/domicilo.enum';
+import { Solicitud216001State, Tramite216001Store } from '../../../../estados/tramites/tramite261001.store';
+import { Tramite216001Query } from '../../../../estados/queries/tramite261001.query';
+import { map, Subject, takeUntil } from 'rxjs';
 
 export interface RespuestaTabla {
   code: number;
@@ -36,8 +39,20 @@ export interface MercanciasTabla {
 export class DomicilloComponent implements OnInit,AfterViewInit {
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
+  /**
+   * Estado de la solicitud.
+   */
+  public solicitudState!: Solicitud216001State;
+
+  /**
+   * Notificador para destruir observables.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
   constructor(private readonly fb: FormBuilder, 
     private readonly httpServicios: HttpClient,
+    private tramite216001Store: Tramite216001Store,
+    private tramite216001Query: Tramite216001Query
   ) {}
 
 
@@ -110,12 +125,20 @@ export class DomicilloComponent implements OnInit,AfterViewInit {
   };
   
   ngOnInit(){
+    this.tramite216001Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.obtenerEstadoList()
     this.obtenerTablaDatos()
     this.obtenerMercanciasDatos()
     this.domicilio = this.fb.group({
-      codigoPostal: ['', Validators.required],
-      estado:['',Validators.required],
+      codigoPostal: [this.solicitudState?.codigoPostal, Validators.required],
+      estado:[this.solicitudState?.estado,Validators.required],
       muncipio: ['', Validators.required],
       localidad: [''],
       colonia: [''],
@@ -283,6 +306,25 @@ export class DomicilloComponent implements OnInit,AfterViewInit {
 
   mostrar_colapsableTres() {
     this.colapsableTres = !this.colapsableTres;
+  }
+  /**
+   * Establece el valor de un campo en el store de Tramite31601.
+   * @param form - El grupo de formularios que contiene el campo.
+   * @param campo - El nombre del campo cuyo valor se va a establecer.
+   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite216001Store): void {
+    const valor = form.get(campo)?.value;
+    (this.tramite216001Store[metodoNombre] as (value: any) => void)(valor);
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }

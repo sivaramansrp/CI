@@ -50,6 +50,7 @@
                     type="text"
                     [disabled]="true"
                     formControlName="rfcDel"
+                    (change)="setValoresStore(forma,'rfcDel', 'setRfcDel')"
                   />
                 </div>
             </div>
@@ -62,6 +63,7 @@
                     placeholder=""
                     type="text"
                     formControlName="denominacion"
+                    (change)="setValoresStore(forma,'denominacion', 'setDenominacion')"
                   />
                 </div>
             </div>
@@ -76,6 +78,7 @@
                     placeholder=""
                     type="text"
                     formControlName="correo"
+                    (change)="setValoresStore(forma,'correo', 'setCorreo')"
                   />
                 </div>
             </div>
