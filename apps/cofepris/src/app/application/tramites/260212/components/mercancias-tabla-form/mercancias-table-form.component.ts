@@ -13,10 +13,10 @@ import { SolicitudService } from '../../services/solicitud.service';
 @Component({
   selector: 'app-mercancias-table-form',
   standalone: true,
-  imports: [CommonModule, 
+  imports: [CommonModule,
     ReactiveFormsModule,
     CatalogoSelectComponent,
-    TituloComponent, 
+    TituloComponent,
     CrosslistComponent,
     PaisDeOriginComponent
   ],
@@ -25,32 +25,15 @@ import { SolicitudService } from '../../services/solicitud.service';
 })
 export class MercanciasTableFormComponent implements OnInit {
   /**
-   * Evento de salida que emite una acción de cancelación.
+   * Evento de salida que emite una acción de Cancelaración.
    */
-  @Output() cancel = new EventEmitter<void>();
+  @Output() Cancelar = new EventEmitter<void>();
 
   /**
-   * Lista de fechas seleccionables en el rango de días.
-   */
-  selectRangoDias: string[] = [];
-
-  /**
-  * Variable que controla la visibilidad de la sección colapsable.
+  * Emite el evento de Cancelaración para cerrar el formulario.
   */
-  colapsable = false;
-
-  /**
-   * Alterna la visibilidad de la sección colapsable.
-   */
-  mostrar_colapsable() {
-    this.colapsable = !this.colapsable;
-  }
-
-  /**
-  * Emite el evento de cancelación para cerrar el formulario.
-  */
-  close() {
-    this.cancel.emit();
+  cerrarMercanciasTableForm() {
+    this.Cancelar.emit();
   }
   /**
     * Arreglo que almacena las claves del catálogo.

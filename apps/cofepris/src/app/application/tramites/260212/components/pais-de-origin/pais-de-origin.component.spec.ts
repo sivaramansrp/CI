@@ -22,10 +22,10 @@ describe('PaisDeOriginComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should toggle colapsable when mostrar_colapsable is called', () => {
-    const initialState = component.colapsable;
-    component.mostrar_colapsable();
-    expect(component.colapsable).toBe(!initialState);
+  it('should toggle plegable when mostrar_plegable is called', () => {
+    const initialState = component.plegable;
+    component.mostrar_plegable();
+    expect(component.plegable).toBe(!initialState);
   });
 
   it('should add all elements to fechasSeleccionadas when agregar is called with "t"', () => {

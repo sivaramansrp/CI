@@ -33,18 +33,10 @@ describe('MercanciasTableFormComponent', () => {
     expect(formControls['clasificacion'].hasError('required')).toBeTruthy();
   });
 
-  it('should toggle "colapsable" when mostrar_colapsable is called', () => {
-    expect(component.colapsable).toBeFalsy();
-    component.mostrar_colapsable();
-    expect(component.colapsable).toBeTruthy();
-    component.mostrar_colapsable();
-    expect(component.colapsable).toBeTruthy();
-  });
-
-  it('should emit cancel event when close is called', () => {
-    spyOn(component.cancel, 'emit');
-    component.close();
-    expect(component.cancel.emit).toHaveBeenCalled();
+  it('should emit Cancelar event when cerrarMercanciasTableForm is called', () => {
+    spyOn(component.Cancelar, 'emit');
+    component.cerrarMercanciasTableForm();
+    expect(component.Cancelar.emit).toHaveBeenCalled();
   });
 
   it('should populate "clave" using SolicitudService.getclave()', () => {

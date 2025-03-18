@@ -2,7 +2,7 @@
 <form [formGroup]="personaForm">
     <div class="col-md-12 p-0">
       <label for="losDatos" class="form-label">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
-      <app-input-radio  [radioOptions]="losDatos" [selectedValue]="selectedValue" [isRequired]="true"
+      <app-input-radio  [radioOptions]="losDatos" [selectedValue]="valorSeleccionado" [isRequired]="true"
         [layout]="'horizontal'" ></app-input-radio>
     </div>
 
@@ -19,7 +19,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row pt-5">
     <div class="col-md-4 form-group">
       <label class="control-label" for="nombre">Nombre(s):</label>
       <input class="form-control" id="nombre" placeholder="" type="text" formControlName="nombre"

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { solicitudModel } from '../models/permiso-maquila.models';
+import { LosOption, solicitudModel } from '../models/permiso-maquila.models';
 import { catalogoResponse } from '@libs/shared/data-access-user/src';
 
 @Injectable({
@@ -19,6 +19,10 @@ export class SolicitudService {
 
   getclave(): Observable<catalogoResponse[]> {
     return this.http.get<catalogoResponse[]>('assets/json/260212/clave.json');
+  }
+
+  getLosOption(){
+    return  this.http.get<LosOption[]>('/assets/json/260212/opciones-de-radio.json')
   }
 
 }

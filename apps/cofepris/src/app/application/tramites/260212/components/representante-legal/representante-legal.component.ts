@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { InputRadioComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { LosOption } from '../../models/permiso-maquila.models';
+import { SolicitudService } from '../../services/solicitud.service';
 
 /**
  * Componente RepresentanteLegalComponent
@@ -28,15 +29,15 @@ export class RepresentanteLegalComponent implements OnInit {
    */
   personaForm!: FormGroup;
 
-    /**
-   * Arreglo que almacena las opciones dinámicas obtenidas desde un archivo JSON.
-   */
-  losDatos:LosOption[]=[];
+  /**
+ * Arreglo que almacena las opciones dinámicas obtenidas desde un archivo JSON.
+ */
+  losDatos: LosOption[] = [];
 
-    /**
-   * Valor seleccionado en los radios de opciones, con un valor predeterminado.
-   */
-  selectedValue ='option1'
+  /**
+ * Valor seleccionado en los radios de opciones, con un valor predeterminado.
+ */
+  valorSeleccionado = 'option1'
 
   /**
    * Constructor de la clase RepresentanteLegalComponent.
@@ -47,7 +48,7 @@ export class RepresentanteLegalComponent implements OnInit {
    */
   constructor(private http: HttpClient,
     private fb: FormBuilder,
-    private validacionesService: ValidacionesFormularioService) { }
+    private validacionesService: ValidacionesFormularioService, private solicitudService: SolicitudService) { }
 
   /**
    * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
@@ -57,7 +58,7 @@ export class RepresentanteLegalComponent implements OnInit {
   ngOnInit() {
     this.fetchSolicitudeOptions()
     this.personaForm = this.fb.group({
-      rfc:['',Validators.required],
+      rfc: ['', Validators.required],
       nombre: [{ value: '', disabled: true }],
       primerApellido: [{ value: '', disabled: true }],
       segundoApellido: [{ value: '', disabled: true }],
@@ -72,17 +73,15 @@ export class RepresentanteLegalComponent implements OnInit {
   isValid(field: string) {
     return this.validacionesService.isValid(this.personaForm, field);
   }
-    /**
-   * Obtiene las opciones dinámicas para los radios desde un archivo JSON y las almacena en `losDatos`.
-   * Utiliza una petición HTTP para leer el archivo local.
-   */
+  /**
+ * Obtiene las opciones dinámicas para los radios desde un archivo JSON y las almacena en `losDatos`.
+ * Utiliza una petición HTTP para leer el archivo local.
+ */
   fetchSolicitudeOptions() {
-    this.http
-      .get<LosOption[]>('/assets/json/260212/opciones-de-radio.json')
-      .subscribe((data) => {
-        this.losDatos = data;
-      });
+    this.solicitudService.getLosOption().subscribe((data) => {
+      this.losDatos = data;
+    });
   }
 
-  
+
 }

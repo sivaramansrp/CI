@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 
 class MockSolicitudService {
   getclave() {
-    return of([{ id: 1, descripcion: 'Mock Clave' }]); // Returning mock observable data
+    return of([{ id: 1, descripcion: 'Mock Clave' }]); 
   }
 }
 

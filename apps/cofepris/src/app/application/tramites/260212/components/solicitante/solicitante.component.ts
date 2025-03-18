@@ -18,7 +18,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-solicitante',
   standalone: true,
-  imports: [CommonModule,TituloComponent,ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
 })
@@ -38,7 +38,7 @@ export class SolicitanteComponent {
    */
   constructor(private fb: FormBuilder) {
     this.establecerSolicitudForm();
-   }
+  }
 
   /**
    * Gancho de ciclo de vida que se llama después de que se inicializan las propiedades enlazadas a datos de una directiva.
@@ -60,21 +60,21 @@ export class SolicitanteComponent {
    */
   public establecerSolicitudForm(): void {
     this.solicitudForm = this.fb.group({
-      rfc: [{value: '',disabled: true}],
-      denominacion: [{value: '',disabled: true}],
-      actividadEconomica: [{value: '',disabled: true}],
-      correoElectronico: [{value: '',disabled: true}],
-      pais: [{value: '',disabled: true}],
-      codigoPostal:[{value: '',disabled: true}],
-      estado: [{value: '',disabled: true}],
-      municipioAlcaldia: [{value: '',disabled: true}],
-      localidad: [{value: '',disabled: true}],
-      colonia: [{value: '',disabled: true}],
-      calle: [{value: '',disabled: true}],
-      numeroExterior: [{value: '',disabled: true}],
-      numeroInterior: [{value: '',disabled: true}],
-      lada: [{value: '',disabled: true}],
-      telefono: [{value: '',disabled: true}]
+      rfc: [{ value: '', disabled: true }],
+      denominacion: [{ value: '', disabled: true }],
+      actividadEconomica: [{ value: '', disabled: true }],
+      correoElectronico: [{ value: '', disabled: true }],
+      pais: [{ value: '', disabled: true }],
+      codigoPostal: [{ value: '', disabled: true }],
+      estado: [{ value: '', disabled: true }],
+      municipioAlcaldia: [{ value: '', disabled: true }],
+      localidad: [{ value: '', disabled: true }],
+      colonia: [{ value: '', disabled: true }],
+      calle: [{ value: '', disabled: true }],
+      numeroExterior: [{ value: '', disabled: true }],
+      numeroInterior: [{ value: '', disabled: true }],
+      lada: [{ value: '', disabled: true }],
+      telefono: [{ value: '', disabled: true }]
     });
   }
 
@@ -95,13 +95,13 @@ export class SolicitanteComponent {
     this.solicitudForm.get('actividadEconomica')?.setValue('SIMa gsys');
     this.solicitudForm.get('correoElectronico')?.setValue('SV US');
     this.solicitudForm.get('pais')?.setValue('ESTADOS UNIDOS MEXICANOS'),
-    this.solicitudForm.get('codigoPostal')?.setValue('81210'),
-    this.solicitudForm.get('estado')?.setValue('SINALOA'),
-    this.solicitudForm.get('municipioAlcaldia')?.setValue('AHOME'),
-    this.solicitudForm.get('localidad')?.setValue('LOS MOCHIS'),
-    this.solicitudForm.get('colonia')?.setValue('MIGUEL HIDALGO'),
-    this.solicitudForm.get('calle')?.setValue('CAMINO VIEJO'),
-    this.solicitudForm.get('numeroExterior')?.setValue('1353')
+      this.solicitudForm.get('codigoPostal')?.setValue('81210'),
+      this.solicitudForm.get('estado')?.setValue('SINALOA'),
+      this.solicitudForm.get('municipioAlcaldia')?.setValue('AHOME'),
+      this.solicitudForm.get('localidad')?.setValue('LOS MOCHIS'),
+      this.solicitudForm.get('colonia')?.setValue('MIGUEL HIDALGO'),
+      this.solicitudForm.get('calle')?.setValue('CAMINO VIEJO'),
+      this.solicitudForm.get('numeroExterior')?.setValue('1353')
   }
 
 

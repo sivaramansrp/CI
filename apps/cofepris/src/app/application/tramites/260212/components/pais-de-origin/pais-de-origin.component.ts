@@ -51,16 +51,16 @@ export class PaisDeOriginComponent {
   fechaSeleccionada: FormControl = new FormControl('');
 
   /**
- * Variable que controla la visibilidad de una sección colapsable.
+ * Variable que controla la visibilidad de una sección plegable.
  */
-  colapsable = false;
+  plegable = false;
 
 
   /**
-   * Alterna la visibilidad de la sección colapsable.
+   * Alterna la visibilidad de la sección plegable.
    */
-  mostrar_colapsable() {
-    this.colapsable = !this.colapsable;
+  mostrar_plegable() {
+    this.plegable = !this.plegable;
   }
 
 

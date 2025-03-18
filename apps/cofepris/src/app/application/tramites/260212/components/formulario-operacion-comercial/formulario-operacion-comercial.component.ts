@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {  catalogoResponse, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { catalogoResponse, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
 
@@ -12,26 +12,26 @@ import { SolicitudService } from '../../services/solicitud.service';
 @Component({
   selector: 'app-formulario-operacion-comercial',
   standalone: true,
-  imports: [CommonModule, 
+  imports: [CommonModule,
     CatalogoSelectComponent
   ],
   templateUrl: './formulario-operacion-comercial.component.html',
   styleUrl: './formulario-operacion-comercial.component.scss',
 })
 export class FormularioOperacionComercialComponent implements OnInit {
-    /**
-   * Arreglo que almacena las claves del catálogo.
-   */
+  /**
+ * Arreglo que almacena las claves del catálogo.
+ */
   clave: catalogoResponse[] = [];
 
- /**
-   * Variable que controla si los campos del formulario están en estado de solo lectura.
-   */
-  isReadonly = true;
+  /**
+    * Variable que controla si los campos del formulario están en estado de solo lectura.
+    */
+  esSoloLectura = true;
 
-    /**
-   * Formulario reactivo para gestionar los datos de operación comercial.
-   */
+  /**
+ * Formulario reactivo para gestionar los datos de operación comercial.
+ */
   formularioOperacionForm!: FormGroup
 
   /**
@@ -42,11 +42,11 @@ export class FormularioOperacionComercialComponent implements OnInit {
    */
   constructor(private fb: FormBuilder, private solicitudService: SolicitudService) { }
 
-    /**
-   * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
-   * - Inicializa el formulario.
-   * - Recupera las claves del catálogo mediante el servicio.
-   */
+  /**
+ * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
+ * - Inicializa el formulario.
+ * - Recupera las claves del catálogo mediante el servicio.
+ */
   ngOnInit(): void {
 
     this.formularioOperacionInitial()
@@ -72,8 +72,8 @@ export class FormularioOperacionComercialComponent implements OnInit {
    * Cambia el estado de solo lectura del formulario según el estado del checkbox.
    * @param event Evento que activa el cambio de estado.
    */
-  toggleReadonly(event: Event) {
+  alternarSoloLectura(event: Event) {
     const checkbox = event.target as HTMLInputElement;
-    this.isReadonly = !checkbox.checked;
+    this.esSoloLectura = !checkbox.checked;
   }
 }

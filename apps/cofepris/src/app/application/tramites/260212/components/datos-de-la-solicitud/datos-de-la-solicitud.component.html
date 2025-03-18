@@ -96,7 +96,7 @@
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" for="caller">Caller:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip" ></span>
+                  title="Title" ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" class="form-control" id="caller" formControlName="caller">
             </div>
@@ -154,7 +154,7 @@
       </div>
       <ng-titulo titulo="Manifiestos y declaraciones" />
       <div class="alert alert-info manifest-box">
-        <input class="form-check-input" type="checkbox" id="datosManifiestos" >
+        <input class="form-check-input" type="checkbox" id="datosManifiestos">
         <p>{{ MANIFIESTOS_ALERT.DATOS_MANIFIESTOS }}</p>
       </div>
 
@@ -164,17 +164,10 @@
 </div>
 
 <div *ngIf="mostrarFormularioMercancias">
-  <app-mercancias-table-form (cancel)="closeMercanciasForm()"></app-mercancias-table-form>
+  <app-mercancias-table-form (Cancelar)="closeMercanciasForm()"></app-mercancias-table-form>
 </div>
 
-<div
-  class="modal fade"
-  tabindex="-1"
-  role="dialog"
-  *ngIf="mostrarFormularioScian"
-  id="myModal"
-  [ngClass]="{ show: mostrarFormularioScian }"
-  aria-hidden="true"
->
+<div class="modal fade" tabindex="-1" role="dialog" *ngIf="mostrarFormularioScian" id="myModal"
+  [ngClass]="{ show: mostrarFormularioScian }" aria-hidden="true">
   <app-clave-scian (cancel)="cerrarScianFormulario()"></app-clave-scian>
 </div>

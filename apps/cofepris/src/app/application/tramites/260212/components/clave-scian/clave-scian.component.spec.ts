@@ -8,7 +8,7 @@ describe('ClaveScianComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,ClaveScianComponent],
+      imports: [ReactiveFormsModule, ClaveScianComponent],
       declarations: [],
     }).compileComponents();
 
