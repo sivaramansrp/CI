@@ -23,6 +23,8 @@ describe('PagoDeDerechosComponent', () => {
 });
 
 
+
+// test cases - try and remove if not useful
 // import { ComponentFixture, TestBed } from '@angular/core/testing';
 // import { ReactiveFormsModule } from '@angular/forms';
 // import { PagoDeDerechosComponent } from './pago-de-derechos.component'; // Replace with actual component path
@@ -88,12 +90,9 @@ describe('PagoDeDerechosComponent', () => {
 //   });
 
 //   it('should handle "Borrar datos del pago" button click', () => {
-//     spyOn(component, 'clearForm'); // Assuming clearForm is a method to clear the form
 //     const compiled = fixture.nativeElement;
 //     const button = compiled.querySelector('.btn-danger');
 //     button.click();
 //     fixture.detectChanges();
-
-//     expect(component.clearForm).toHaveBeenCalled();
 //   });
 // });

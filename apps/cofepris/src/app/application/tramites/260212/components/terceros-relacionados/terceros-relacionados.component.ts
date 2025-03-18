@@ -27,6 +27,7 @@ import { Tramite260212Store } from '../../../../estados/tramites/tramite260212.s
 
 const TERCEROS_TEXTO_DE_ALERTA =
   'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
+
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
@@ -45,7 +46,6 @@ const TERCEROS_TEXTO_DE_ALERTA =
 })
 
 export class TercerosRelacionadosComponent implements OnInit {
-
   showTableDiv = true;
   showFabricante = false;
   showDestinatario = false;
@@ -115,11 +115,11 @@ export class TercerosRelacionadosComponent implements OnInit {
       correoElectronico: new FormControl(''),
     });
 
-    this.agregarFabricanteFormGroup.get('rfc')?.disable();
+    this.agregarFabricanteFormGroup.get('rfc')?.disable(); //disabling fields when radio buttons are not selected initially
     this.agregarFabricanteFormGroup.get('curp')?.disable();
     this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.disable();
 
-    this.agregarFabricanteFormGroup.get('tipoPersona')?.valueChanges.subscribe((value:string) => {
+    this.agregarFabricanteFormGroup.get('tipoPersona')?.valueChanges.subscribe(() => {
       this.agregarFabricanteFormGroup.get('rfc')?.enable();
       this.agregarFabricanteFormGroup.get('curp')?.enable();
       this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.enable();
@@ -149,11 +149,11 @@ export class TercerosRelacionadosComponent implements OnInit {
       correoElectronico: new FormControl(''),
     });
 
-    this.agregarDestinatarioFormGroup.get('rfc')?.disable();
+    this.agregarDestinatarioFormGroup.get('rfc')?.disable(); //disabling fields when radio buttons are not selected initially
     this.agregarDestinatarioFormGroup.get('curp')?.disable();
     this.agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.disable();
 
-    this.agregarDestinatarioFormGroup.get('tipoPersona')?.valueChanges.subscribe((value:string) => {
+    this.agregarDestinatarioFormGroup.get('tipoPersona')?.valueChanges.subscribe(() => {
       this.agregarDestinatarioFormGroup.get('rfc')?.enable();
       this.agregarDestinatarioFormGroup.get('curp')?.enable();
       this.agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.enable();
@@ -167,6 +167,7 @@ export class TercerosRelacionadosComponent implements OnInit {
       tipoPersona: new FormControl('', [Validators.required]),
       nombre: new FormControl('', [Validators.required]),
       primerApellido: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl('', [Validators.required]),
       segundoApellido: new FormControl(''),
       pais: new FormControl('', [Validators.required]),
       estado: new FormControl('', [Validators.required]),
@@ -181,17 +182,17 @@ export class TercerosRelacionadosComponent implements OnInit {
     });
 
     
-    this.agregarProveedorFormGroup.get('nombre')?.disable();
+    this.agregarProveedorFormGroup.get('nombre')?.disable(); //disabling fields when radio buttons are not selected initially
     this.agregarProveedorFormGroup.get('segundoApellido')?.disable();
     this.agregarProveedorFormGroup.get('primerApellido')?.disable();
-    // this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.disable();
+    this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.disable();
 
 
-    this.agregarProveedorFormGroup.get('tipoPersona')?.valueChanges.subscribe((value:string) => {
+    this.agregarProveedorFormGroup.get('tipoPersona')?.valueChanges.subscribe(() => {
       this.agregarProveedorFormGroup.get('nombre')?.enable();
       this.agregarProveedorFormGroup.get('primerApellido')?.enable();
       this.agregarProveedorFormGroup.get('segundoApellido')?.enable();
-      // this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.enable();
+      this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.enable();
     })
   }
 
@@ -215,13 +216,13 @@ export class TercerosRelacionadosComponent implements OnInit {
       correoElectronico: new FormControl(''),
     });
 
-    this.agregarFacturadorFormGroup.get('nombre')?.disable();
+    this.agregarFacturadorFormGroup.get('nombre')?.disable(); //disabling fields when radio buttons are not selected initially
     this.agregarFacturadorFormGroup.get('segundoApellido')?.disable();
     this.agregarFacturadorFormGroup.get('primerApellido')?.disable();
     this.agregarFacturadorFormGroup.get('denominacionRazonSocial')?.disable();
 
 
-    this.agregarFacturadorFormGroup.get('tipoPersona')?.valueChanges.subscribe((value:string) => {
+    this.agregarFacturadorFormGroup.get('tipoPersona')?.valueChanges.subscribe(() => {
       this.agregarFacturadorFormGroup.get('nombre')?.enable();
       this.agregarFacturadorFormGroup.get('primerApellido')?.enable();
       this.agregarFacturadorFormGroup.get('segundoApellido')?.enable();
@@ -234,7 +235,6 @@ export class TercerosRelacionadosComponent implements OnInit {
   destinatarioHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
   proveedorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
   facturadorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
-
 
   public fisica = false;
   public moral = false;
@@ -255,14 +255,12 @@ export class TercerosRelacionadosComponent implements OnInit {
     }
   }
 
-
   toggleDivFabricante() {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
     this.showFabricante = !this.showFabricante;
   }
-
  
   toggleDivDestinatario() {
     this.fisica = false;

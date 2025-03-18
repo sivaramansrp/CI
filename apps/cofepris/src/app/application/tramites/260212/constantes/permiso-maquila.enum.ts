@@ -1,4 +1,3 @@
-import { Catalogo } from "@libs/shared/data-access-user/src";
 
 export const PERMISO_MAQUILA = [
   {
