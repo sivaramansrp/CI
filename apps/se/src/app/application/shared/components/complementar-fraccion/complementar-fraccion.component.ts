@@ -86,7 +86,7 @@ export class ComplementarFraccionComponent implements OnInit {
   /**
    * Método para regresar a la ubicación anterior.
    */
-  goBack(): void {
+  regresar(): void {
     this.ubicaccion.back();
   }
 }

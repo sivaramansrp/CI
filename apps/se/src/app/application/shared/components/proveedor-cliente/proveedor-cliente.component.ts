@@ -15,7 +15,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { PROVEEDOR_CLIENTE_TABLA_CONFIG } from '../../constants/anexo-dos-y-tres.enum';
+import { PROVEEDOR_CLIENTE_TABLA_CONFIG } from '../../constantes/anexo-dos-y-tres.enum';
 
 @Component({
   selector: 'app-proveedor-cliente',

@@ -6,7 +6,7 @@ import {
   CatalogoSelectComponent,
   InputFechaComponent,
 } from '@ng-mf/data-access-user';
-import { FECHA_DE_PAGO } from '../../enum/federatarios-y-plantas.enum';
+import { FECHA_DE_PAGO } from '../../constantes/federatarios-y-plantas.enum';
 import { InputFecha } from '@ng-mf/data-access-user';
 import {
   FormControl,

@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component } from '@angular/core';
-import { TEXTOS_REQUISITOS } from '../../enum/nuevo-programa.enum';
+import { TEXTOS_REQUISITOS } from '../../constantes/nuevo-programa.enum';
 
 @Component({
   selector: 'app-paso-dos',

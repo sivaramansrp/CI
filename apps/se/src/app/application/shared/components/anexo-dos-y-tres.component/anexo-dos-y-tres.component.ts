@@ -1,4 +1,4 @@
-import { ANEXO_TRES_ALERTA } from '../../constants/anexo-dos-y-tres.enum';
+import { ANEXO_TRES_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { Anexo1y3Configuartion } from '../../models/nuevo-programa-industrial.model';
 import { AnexoEncabezado } from '../../models/nuevo-programa-industrial.model';
