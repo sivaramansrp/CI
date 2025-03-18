@@ -7,18 +7,33 @@
  * @import { FormGroup } from '@angular/forms';
  */
 
-import { Component } from '@angular/core';
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { Catalogo, RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Subject,delay, map, takeUntil, tap } from 'rxjs';
+
+import { 
+  Catalogo, 
+  
+  SeccionLibQuery, 
+  
+  SeccionLibState, 
+  
+  SeccionLibStore 
+
+} from '@ng-mf/data-access-user';
+
+import { ElegibilidadDeTextilesStore, TextilesState, createInitialState } from '../../estados/elegibilidad-de-textiles.store';
+import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'importador-en-destino',
+  selector: 'app-importador-en-destino',
   templateUrl: './importador-en-destino.component.html',
   styleUrl: './importador-en-destino.component.scss'
 })
-export class ImportadorEnDestinoComponent {
+export class ImportadorEnDestinoComponent implements OnInit, OnDestroy{
   /**
    * @property {FormGroup} forma - El grupo de formularios para capturar los datos del importador.
    */
@@ -29,7 +44,13 @@ export class ImportadorEnDestinoComponent {
    */
   importadorEnDestino!: FormGroup;
 
-  tipo: Catalogo[] = [];
+  tipoData: Catalogo[] = [];
+
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  private importadorState!: TextilesState;
+
+  private seccionState!: SeccionLibState
 
   /**
    * Constructor del componente.
@@ -37,33 +58,58 @@ export class ImportadorEnDestinoComponent {
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
    * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.--220201
    */
-  constructor(private ElegibilidadTextilesService: ElegibilidadTextilesService, private readonly fb: FormBuilder, private readonly httpServicios: HttpClient) {
-    this.crearFormulario();
-    this.initActionFormBuild();
+  constructor(private ElegibilidadTextilesService: ElegibilidadTextilesService, private readonly fb: FormBuilder, private readonly httpServicios: HttpClient,
+    private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
+    private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
+    private seccionStore: SeccionLibStore,
+    private seccionQuery: SeccionLibQuery
+  ) {
+    // Constructor logic can be added here if needed
   }
 
-  /**
-   * Crea el grupo de formularios principal.
-   * @method crearFormulario
-   */
-  crearFormulario(): void {
-    this.importadorForm = this.fb.group({
-      tipo: ['', Validators.required],
-      cantidadTotal: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      razonSocial: ['', Validators.required],
-      domicilio: ['', Validators.required],
-      ciudad: ['', Validators.required],
-      cp: ['', [Validators.required, Validators.pattern('^[0-9]{5}$')]], // Assuming CP is a 5-digit code
-      pais: ['', Validators.required]
-    });
-  }
 
   /**
    * Inicializa el componente.
    * @method ngOnInit
    */
   ngOnInit(): void {
-    this.obtenerListasDesplegables();
+    
+    this.seccionQuery.selectSeccionState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.seccionState = seccionState;
+          })
+        )
+        .subscribe();
+    this.ElegibilidadDeTextilesQuery.selectTextile$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.importadorState = state as TextilesState;
+        })
+      )
+      .subscribe();
+      this.initActionFormBuild();
+      this.obtenerListasDesplegables();
+      
+    this.seccionStore.establecerFormaValida([false])
+
+      this.importadorForm.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((_value) => {
+          if (this.importadorForm.valid) {
+            this.ElegibilidadDeTextilesStore.setFormaValida([
+              ...this.importadorState.formaValida,
+              { id: 4, descripcion: "AllValida" }])
+          }
+          this.seccionStore.establecerSeccion([true]);
+          this.seccionStore.establecerFormaValida([true])
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -71,8 +117,14 @@ export class ImportadorEnDestinoComponent {
    * @method initActionFormBuild
    */
   initActionFormBuild() {
-    this.importadorEnDestino = this.fb.group({
-      tipo: ['', Validators.required],
+    this.importadorForm = this.fb.group({
+      tipo: [this.importadorState.tipo, Validators.required],
+      cantidadTotalImportador: [this.importadorState.cantidadTotalImportador, [Validators.required, Validators.pattern('^[0-9]+$')]],
+      razonSocialImportador: [this.importadorState.razonSocialImportador, Validators.required],
+      domicilio: [this.importadorState.domicilio, Validators.required],
+      ciudadImportador: [this.importadorState.ciudadImportador, Validators.required],
+      cpImportador: [this.importadorState.cpImportador, [Validators.required, Validators.pattern('^[0-9]{5}$')]], // Assuming CP is a 5-digit code
+      PaisImportador: [this.importadorState.PaisImportador, Validators.required]
     });
 
   }
@@ -90,9 +142,31 @@ export class ImportadorEnDestinoComponent {
    * @method obtenerIngresoSelectList
    */
   obtenerIngresoSelectList() {
-    this.ElegibilidadTextilesService.obtenerMenuDesplegable('tipo.json').subscribe(data => {
-      this.tipo = data as Catalogo[];
+    this.ElegibilidadTextilesService.obtenerMenuDesplegable('tipo.json')
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(
+      data => {
+      this.tipoData = data as Catalogo[];
     })
+  }
+
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof ElegibilidadDeTextilesStore
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(
+      VALOR
+    );
+  }
+
+  /**
+   * @description Método que se ejecuta cuando el componente es destruido.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }
