@@ -18,8 +18,6 @@ import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 
 import { Observable, Subject, takeUntil } from 'rxjs';
 
-import { ActivatedRoute, Router } from '@angular/router';
-
 import { CERTIFICADO_TABLA, CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
 
 /**
@@ -133,9 +131,7 @@ export class DatosCertificadoComponent implements OnInit {
     private fb: FormBuilder,
     private service: CertificadoTecnicoJaponService,
     private tramite110218Store: Tramite110218Store,
-    private tramite110218Query: Tramite110218Query,
-    private router: Router,
-    private route: ActivatedRoute
+    private tramite110218Query: Tramite110218Query
   ) {
     this.datosdelcertificado = this.fb.group({
       lugar: ['', Validators.required],
@@ -174,14 +170,6 @@ export class DatosCertificadoComponent implements OnInit {
    */
   handleFilaSeleccionada(fila: CompliMentaria): void {
     this.selectedRow = fila;
-  }
-  /**
-   * Maneja la selección de múltiples filas en la tabla.
-   * DatosCertificadoComponent
-   * Lista de filas seleccionadas.
-   */
-  handleListaDeFilaSeleccionada(filasSeleccionadas: any[]): void {
-    this.selectedRows = filasSeleccionadas;
   }
   /**
    * Navega a la sección de mercancías seleccionadas del formulario.
