@@ -24,7 +24,8 @@ import { PasoFirmarSolicitudComponent } from './pages/paso-firmar-solicitud/paso
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoCsComponent } from './pages/paso-uno-cs/paso-uno-cs.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import {MontosDeInversionComponent} from '../../shared/components/montos-de-inversion/montos-de-inversion.component';
+import { MontosDeInversionComponent } from '../../shared/components/montos-de-inversion/montos-de-inversion.component';
+import { EmpleadosComponent } from '../../shared/components/empleados/empleados.component';
 @NgModule({
   declarations: [
     PasoCapturarSolicitudComponent,
@@ -52,6 +53,7 @@ import {MontosDeInversionComponent} from '../../shared/components/montos-de-inve
     FederatariosYPlantasVistaComponent,
     ComplementarPlantaComponent,
     MontosDeInversionComponent,
+    EmpleadosComponent,
   ],
 })
 export class NuevoProgramaIndustrialModule {}
