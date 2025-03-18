@@ -84,19 +84,4 @@ export class PasoUnoComponent implements OnInit{
     this.indice = i;
     this.tabChanged.emit(i);
   }
-   //For Continue button enable
-  // private asignarSecciones(): void {
-  //   const SECCIONES: boolean[] = [];
-  //   const FORMA_VALIDA: boolean[] = [];
-  //   const PREDETERMINADO = SECCIONES_TRAMITE_80203
-  //   for (const LLAVE_SECCION in PREDETERMINADO.PASO_1) {
-  //     if (Object.prototype.hasOwnProperty.call(PREDETERMINADO.PASO_1, LLAVE_SECCION)) {
-  //       // @ts-expect-error - fix this
-  //       SECCIONES.push(PREDETERMINADO.PASO_1[LLAVE_SECCION]);
-  //       FORMA_VALIDA.push(false);
-  //     }
-  //   }
-  //   this.seccionStore.establecerSeccion(SECCIONES); 
-  //   this.seccionStore.establecerFormaValida(FORMA_VALIDA); 
-  // }
 }

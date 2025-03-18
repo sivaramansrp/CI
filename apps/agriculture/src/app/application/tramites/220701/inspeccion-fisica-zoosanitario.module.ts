@@ -8,9 +8,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
-// import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-// import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-// import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 import { InspeccionFisicaZoosanitarioRoutingModule } from './inspeccion-fisica-zoosanitario-routing.module';
 import { InspeccionFisicaComponent } from './pages/inspeccion-fisica/inspeccion-fisica.component';
