@@ -140,6 +140,13 @@ const ROUTES: Routes = [
       import('./tramites/80208/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
       ),
+  },
+  {
+    path: 'ref-procedure',
+    loadChildren: () =>
+      import('./tramites/000000/ref-procedure.module').then(
+        (m) => m.RefProcedureModule
+      ),
   }
 ];
 
