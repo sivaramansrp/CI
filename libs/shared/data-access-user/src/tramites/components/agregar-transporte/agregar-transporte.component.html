@@ -23,8 +23,8 @@
 </div>
 
 <!-- Modal error -->
-<div class="modal modal-lg fade" [ngClass]="modal" id="modalError" #modalError tabindex="-1"
-  aria-labelledby="modalErrorLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal modal-lg fade" #agregarTransporte id="agregarTransporte" tabindex="-1" tabindex="-1"
+  aria-labelledby="modalAgregarTransporte" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -61,9 +61,17 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" (click)="cerrarModal()">
+      <div class="modal-footer custom-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeModal (click)="cerrarModal()">
           Cerrar
+        </button>
+
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal" (click)="limpiarFormulario()">
+          Limpiar
+        </button>
+
+        <button type="button" class="btn btn-primary" (click)="agregarTipoTransporte()">
+          Agregar
         </button>
       </div>
     </div>
@@ -86,10 +94,8 @@
       </div>
     </div>
     <div class="col-md-6">
-      <div class="form-group">
-        <label class="form-label" for="idPedimento">Fecha carta porte:</label>
-        <input class="form-control" id="idPedimento" placeholder="" type="text" formControlName="numeroCartaPorte">
-      </div>
+      <label for="fechaPorte" class="form-label">Fecha carta porte:</label>
+      <input class="form-control" type="date" name="fechaPorte" id="fechaPorte" />
     </div>
     <div class="col-md-6">
       <div class="form-group">

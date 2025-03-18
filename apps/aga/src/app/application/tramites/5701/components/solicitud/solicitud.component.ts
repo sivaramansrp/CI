@@ -49,8 +49,9 @@ import { FechasService } from '@ng-mf/data-access-user';
 import { FormulariosService } from '@ng-mf/data-access-user';
 import { datosAgregarFormulario } from '@ng-mf/data-access-user';
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+import { Modal } from 'bootstrap';
 
 
 @Component({
@@ -60,6 +61,7 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
   @Input({ required: true }) tabindex!: number;
+
 
   tiposSolicitud!: Catalogo[];
   paisesOrigen!: CatalogoPaises[];

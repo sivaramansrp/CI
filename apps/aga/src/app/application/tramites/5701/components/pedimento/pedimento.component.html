@@ -46,7 +46,7 @@
 </div>
 
 <!-- Modal error -->
-<div class="modal" [ngClass]="modal" id="modalError" #modalError tabindex="-1" aria-labelledby="modalErrorLabel"
+<div class="modal fade modal" #aviso tabindex="-1" aria-labelledby="modalAviso"
   aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -61,11 +61,10 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" (click)="cerrarModal()">
+        <button type="button" data-bs-dismiss="modal" class="btn btn-default" #closeModal>
           Cerrar
         </button>
       </div>
     </div>
   </div>
 </div>
-

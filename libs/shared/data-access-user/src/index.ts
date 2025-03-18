@@ -95,7 +95,6 @@ export * from './core/services/220502/solicitud-pantallas.service';
 export * from './core/models/220502/solicitud-pantallas.model';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './core/enums/tabla-seleccion.enum';
-export * from './tramites/directives/Uppercase/uppercase.directive'
 export * from './tramites/constantes/constantes';
 export { PASOS as PASOS_CUATRO_STEPS } from './tramites/constantes/paso-cuatro-steps.enum';
 export { PASOS as PASOS_TRES_STEPS } from './tramites/constantes/paso-tres-steps.enum';

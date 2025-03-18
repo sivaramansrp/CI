@@ -1,18 +1,19 @@
 import * as CONSTANTES from '../../constantes/formularios-transportes.enums';
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { HEADER_TABLA_FERROVIARIO, HEADER_TABLA_CARRETERO, HEADER_TABLA_PEATONAL, HEADER_TABLA_OTRO } from '../../../core/enums/transporte-componente.enums';
 import { CampoForm } from '../../../core/models/shared/forms-model';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogosSelect } from '../../../core/models/shared/components.model';
 import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from '../input-fecha/input-fecha.component';
+import { Modal } from 'bootstrap';
 import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
-import { HEADER_TABLA_FERROVIARIO, HEADER_TABLA_CARRETERO, HEADER_TABLA_PEATONAL, HEADER_TABLA_OTRO } from '../../../core/enums/transporte-componente.enums';
 @Component({
   selector: 'lib-agregar-transporte',
   standalone: true,
@@ -27,13 +28,14 @@ import { HEADER_TABLA_FERROVIARIO, HEADER_TABLA_CARRETERO, HEADER_TABLA_PEATONAL
 })
 export class AgregarTransporteComponent implements OnInit, OnChanges {
   @Input() tipo!: string;
+  @ViewChild('agregarTransporte') agregarTransporte!: ElementRef;
+  @ViewChild('btnCerrarModal') btnCerrarModal!: ElementRef;
 
   readonly HEADER_TABLA_FERROVIARIO = HEADER_TABLA_FERROVIARIO;
   readonly HEADER_TABLA_CARRETERO = HEADER_TABLA_CARRETERO;
   readonly HEADER_TABLA_PEATONAL = HEADER_TABLA_PEATONAL
   readonly HEADER_TABLA_OTRO = HEADER_TABLA_OTRO;
 
-  modal: string = '';
   tituloModal!: string;
   mensajeModal!: string;
 
@@ -115,17 +117,27 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
 * @param {number} i - El índice del documento.
 */
   abrirModal(): void {
-
-    this.modal = 'show';
+    const MODAL_AGREGA = new Modal(this.agregarTransporte.nativeElement);
+    MODAL_AGREGA.show();
   }
 
   /**
   * Cierra el modal.
   */
   cerrarModal(): void {
-    this.modal = '';
+    // this.btnCerrarModal.nativeElement.click();
+    const MODAL_AGREGA = new Modal(this.agregarTransporte.nativeElement);
+    MODAL_AGREGA.hide();
+    
     this.tituloModal = '';
     this.mensajeModal = '';
+  }
+
+  limpiarFormulario(): void {}
+
+  agregarTipoTransporte(): void {
+    console.log('Agregando transporte');
+    
   }
 
 }

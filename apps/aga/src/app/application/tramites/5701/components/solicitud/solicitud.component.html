@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="tiposSolicitud" formControlName="tipoSolicitud" [label]="'Tipo solicitud'"
-          [required]="true" name="tipoSolicitud" (change)="tipoSolicitudSeleccion()" appUpperCase></app-catalogo-select>
+          [required]="true" name="tipoSolicitud" (change)="tipoSolicitudSeleccion()"></app-catalogo-select>
       </div>
     </div>
 
@@ -21,14 +21,14 @@
                 isValid(datosImportadorExportador, 'RFCImpExp')
                   ? 'required'
                   : ''
-              " appUppercase (blur)="busqueda_rfc()" />
+              " libUppercase (blur)="busqueda_rfc()" />
           </div>
         </div>
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" for="nombre">Nombre:</label>
             <input class="form-control" id="nombre" formControlName="nombre" placeholder="Nombre" type="text"
-              appUppercase />
+              libUppercase />
           </div>
         </div>
       </div>
@@ -488,7 +488,7 @@
 </div>
 
 <!-- Modal error -->
-<div class="modal" [ngClass]="modal" id="modalError" #modalError tabindex="-1" aria-labelledby="modalErrorLabel"
+<div class="modal" id="modalError" #modalError tabindex="-1" aria-labelledby="modalErrorLabel"
   aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -503,7 +503,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" (click)="cerrarModal('fecha')">
+        <button type="button" data-bs-dismiss="modal" class="btn btn-default" #closeModal>
           Cerrar
         </button>
       </div>

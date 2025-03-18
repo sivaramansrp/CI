@@ -1,21 +1,25 @@
-import { BooleanoSiNoPipe, ModalAvisoComponent, ModalAvisoService, SoloNumerosDirective, ValidacionesFormularioService, } from '@ng-mf/data-access-user';
-import { Component, Input, OnChanges, SimpleChanges, forwardRef, output } from '@angular/core';
+import { BooleanoSiNoPipe, SoloNumerosDirective, } from '@ng-mf/data-access-user';
+import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild, forwardRef, output } from '@angular/core';
 import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
 import { ERR_VALIDACION_PEDIMENTO, MSG_ADUANA_PEDIMENTO, MSG_ELIMINA_ELEMENTO, MSG_NRO_PEDIMENTO } from '../../../../core/enums/5701/tramite5701.enum';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'c-pedimento',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, forwardRef(() => BooleanoSiNoPipe), forwardRef(() => SoloNumerosDirective), ModalAvisoComponent],
+  imports: [ReactiveFormsModule, CommonModule, forwardRef(() => BooleanoSiNoPipe), forwardRef(() => SoloNumerosDirective)],
   templateUrl: './pedimento.component.html',
   styleUrl: './pedimento.component.scss',
 })
 export class PedimentoComponent implements OnChanges {
   @Input({ required: true }) validacion!: boolean;
   @Input({ required: true }) datosNroPedimento!: DatosComponentePedimento;
+
+  @ViewChild('aviso') AvisoModal!: ElementRef;
+  @ViewChild('closeModal') closeModal!: ElementRef;
 
   validaCampos = output<void>();
 
@@ -38,9 +42,7 @@ export class PedimentoComponent implements OnChanges {
   tituloModal!: string;
   mensajeModal!: string;
 
-  constructor(
-    private validacionesService: ValidacionesFormularioService,
-  ) { }
+  constructor() { }
 
   /**
    * Verifica si el formulario de pedimento es válido.
@@ -121,13 +123,10 @@ export class PedimentoComponent implements OnChanges {
         this.mensajeModal = ERR_VALIDACION_PEDIMENTO;
         this.abrirModal();
         this.pedimentos.push(PEDIMENTO);
-      } else {
-        console.log('entro aqui');
-        
-        // this.modalService.abrir('aviso');
-        // this.tituloModal = 'Aviso';
-        // this.mensajeModal = MSG_NRO_PEDIMENTO;
-        // this.abrirModal();
+      } else {        
+        this.tituloModal = 'Aviso';
+        this.mensajeModal = MSG_NRO_PEDIMENTO;
+        this.abrirModal();
       }
 
     } else {
@@ -159,14 +158,15 @@ export class PedimentoComponent implements OnChanges {
 */
   abrirModal(): void {
 
-    this.modal = 'show';
+    const MODAL_AVISO = new Modal(this.AvisoModal.nativeElement);
+    MODAL_AVISO.show();
   }
 
   /**
   * Cierra el modal.
   */
   cerrarModal(): void {
-    this.modal = '';
+    this.closeModal.nativeElement.click();
     this.tituloModal = '';
     this.mensajeModal = '';
   }
