@@ -1,0 +1,192 @@
+
+<div class="container" [formGroup]="FraccionForm">
+    <div>  
+           <div class="row">
+             <div class="col-md-12">
+                <app-catalogo-select [catalogo]="fraccion" [label]="'Fracción arancelaria:'"   [required]="true" name="fraccion"
+                formControlName="fraccion" (change)="setValoresStore(FraccionForm,'fraccion', 'setFraccion')">
+            </app-catalogo-select>
+  
+           </div>
+           </div>
+           <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="cantidad">Cantidad:</label>
+                    <input class="form-control" id="cantidad" formControlName="cantidad"  type="number" (change)="setValoresStore(FraccionForm,'cantidad', 'setCantidad')">
+                  </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="factura"> Valor factura USD:</label>
+                    <input class="form-control" id="factura" formControlName="factura"  type="number" (change)="setValoresStore(FraccionForm,'factura', 'setFactura')">
+                  </div>
+
+            </div>
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="umt" [label]="'UMT:'"   [required]="true" name="umt" 
+                formControlName="umt" (change)="setValoresStore(FraccionForm,'umt', 'setUmt')">
+            </app-catalogo-select>
+
+            </div>
+
+           </div>
+    </div>
+    <ng-titulo titulo="Partidas de la mercancía" /> 
+    <div>  
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="mercanciaCantidad">Cantidad:</label>
+                    <input class="form-control" id="mercanciaCantidad" formControlName="mercanciaCantidad"  type="number" (change)="setValoresStore(FraccionForm,'mercanciaCantidad', 'setMercanciaCantidad')">
+                  </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="mercanciaFactura"> Valor factura USD:</label>
+                    <input class="form-control" id="mercanciaFactura" formControlName="mercanciaFactura"  type="number" (change)="setValoresStore(FraccionForm,'mercanciaFactura', 'setMercanciaFactura')">
+                  </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="form-label" for="descripcion"> Descripción:</label>
+                      <textarea class="form-control" id="descripcion" formControlName="descripcion" style="height: 90px;" (change)="setValoresStore(FraccionForm,'descripcion', 'setDescripcion')">
+
+                      </textarea>
+                </div>
+            </div>
+
+        </div>
+        <div class="row" style="padding-bottom: 20px;text-align: right;">
+            <div>
+                
+                <button type="button" class="btn btn-default me-2 btn-space">Cargar archivo</button>
+                <button type="button" class="btn btn-primary btn-space" (click)="paridasData()">Agregar</button>
+                
+            </div>
+        </div>
+        <div class="row"  style="padding-bottom: 20px;" >
+            <div class="col-md-12">
+                <div class="form-group">
+                    <H6>Partidas</H6>
+                    <app-tabla-dinamica 
+                    [configuracionTabla]="partidasDatas"
+                    [datos]="partidas"
+                    [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX">
+                  </app-tabla-dinamica>
+                 
+    
+                    </div>
+                </div>
+            
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label" for="candidadTotal">Cantidad:</label>
+                        <input class="form-control" id="candidadTotal" formControlName="candidadTotal"  type="number" >
+                      </div>
+    
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label" for="valorTotal"> Valor factura USD:</label>
+                        <input class="form-control" id="valorTotal" formControlName="valorTotal"  type="number" >
+                      </div>
+    
+                </div>
+            </div>
+           
+                <div class="row">
+                    <ng-titulo titulo="País(es) procedencia"> </ng-titulo>
+                
+                    <div class="row mb-5">
+                      <div class="col-md-4">
+                        <app-catalogo-select [catalogo]="bloque" [label]="'Bloque:'"   name="bloque" 
+                        formControlName="bloque" (change)="setValoresStore(FraccionForm,'bloque', 'setBloque')">
+                    </app-catalogo-select>
+                
+                        
+                      </div>
+                      <div
+                        class="col-md-4 d-flex justify-content-center align-items-center mt-5 mx-4"
+                      >
+                        <button type="button" class="btn-primary btn" name="todos países">Todos los países</button>
+                      </div>
+                      <div class="col-md-4"></div>
+                    </div>
+                    <crosslist [fechas]="selectRangoDias"  [botonField]="botonField"   [showSearchInput1]="true"
+                [showSearchInput2]="true"></crosslist>
+                  </div>
+                
+
+                
+               
+                <div class="row">
+                    <div class="col-md-8">  
+                        <div class="form-group">
+                            <label class="form-label" for="especifico">Uso(s) específico(s) de la mercancía:*</label>
+                              <textarea class="form-control" id="especifico" formControlName="especifico" style="height: 90px;" (change)="setValoresStore(FraccionForm,'especifico', 'setEspecifico')">
+        
+                              </textarea>
+                        </div>
+                    </div>
+        
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label class="form-label" for="justificacion"> Justificación y beneficio que se obtiene:*</label>
+                              <textarea class="form-control" id="justificacion" formControlName="justificacion" style="height: 90px;" (change)="setValoresStore(FraccionForm,'justificacion', 'setJustificacion')">
+        
+                              </textarea>
+                        </div>
+                    </div>
+        
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label class="form-label" for="Observaciones"> Observaciones:</label>
+                              <textarea class="form-control" id="Observaciones" formControlName="Observaciones" style="height: 90px;" (change)="setValoresStore(FraccionForm,'Observaciones', 'setObservaciones')">
+        
+                              </textarea>
+                        </div>
+                    </div>
+        
+                </div>
+                
+            </div> 
+                     
+    
+
+    <ng-titulo titulo="Representación federal" /> 
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+              
+                
+            <app-catalogo-select [catalogo]="entidad" [label]="'Fracción arancelaria:'"   [required]="true" name="entidad"
+                formControlName="entidad" (change)="setValoresStore(FraccionForm,'entidad', 'setEntidad')">
+            </app-catalogo-select>
+            
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+            <app-catalogo-select [catalogo]="representacion" [label]="'Fracción arancelaria:'"   [required]="true" name="representacion"
+                formControlName="representacion" (change)="setValoresStore(FraccionForm,'representacion', 'setRepresentacion')">
+            </app-catalogo-select>
+            
+            </div>
+
+        </div>
+    </div>
+
+</div>
