@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { Location } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
@@ -92,7 +93,7 @@ export class EmpleadosComponent {
    * @constructor
    * @param {FormBuilder} fb - Servicio para construcción de formularios
    */
-  constructor(public fb: FormBuilder) {
+  constructor(public fb: FormBuilder, private ubicaccion: Location) {
     this.createEmpleadosForm();
   }
 
@@ -115,5 +116,13 @@ export class EmpleadosComponent {
       rfc: [''],
       razonSocial: [''],
     });
+  }
+
+  /**
+   * Navega a la ubicación anterior en el historial de navegación.
+   * Utiliza el servicio de ubicación para retroceder una página.
+   */
+  goBack(): void {
+    this.ubicaccion.back();
   }
 }

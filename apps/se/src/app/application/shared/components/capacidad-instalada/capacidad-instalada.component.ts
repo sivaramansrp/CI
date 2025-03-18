@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { Location } from '@angular/common';
 
 import { CAPACIDAD_INSTALADA } from '../../constantes/capacidad-instalada.enum';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
@@ -24,6 +25,8 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   styleUrl: './capacidad-instalada.component.css',
 })
 export class CapacidadInstaladaComponent {
+  constructor(private ubicaccion: Location) {}
+
   /**
    * Tipo de selección para la tabla de capacidad instalada
    * @property {TablaSeleccion} constructorapacidadInstaladaTablaSeleccion
@@ -47,4 +50,8 @@ export class CapacidadInstaladaComponent {
    * @property {any[]} fraccionArancelariaProductoTerminadoCatlogo
    */
   fraccionArancelariaProductoTerminadoCatlogo!: [];
+
+  goBack(): void {
+    this.ubicaccion.back();
+  }
 }

@@ -5,6 +5,7 @@ import { COMPLEMENTO_DE_PLANTA } from '../../constantes/complementar-planta.enum
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { Location } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
@@ -69,7 +70,7 @@ export class MontosDeInversionComponent {
    * @constructor
    * @param {FormBuilder} fb - Servicio para construcción de formularios
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private ubicaccion: Location) {
     this.createMontosDeInversionForm();
   }
 
@@ -85,5 +86,12 @@ export class MontosDeInversionComponent {
       descripsion: [''],
       mnx: [''],
     });
+  }
+  /**
+   * Navega a la ubicación anterior en el historial de navegación.
+   * Utiliza el servicio de ubicación para retroceder una página.
+   */
+  goBack(): void {
+    this.ubicaccion.back();
   }
 }

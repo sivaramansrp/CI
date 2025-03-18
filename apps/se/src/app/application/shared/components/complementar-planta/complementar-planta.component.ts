@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { Location } from '@angular/common';
 
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { InputFecha } from '@ng-mf/data-access-user';
@@ -30,6 +31,8 @@ import { FECHA_DE_FIRMA } from '../../constantes/complementar-planta.enum';
   styleUrl: './complementar-planta.component.scss',
 })
 export class ComplementarPlantaComponent {
+  constructor(private ubicaccion: Location) {}
+
   /**
    * Configuración de la fecha de firma.
    * @property {InputFecha} fetchaDeFirma
@@ -71,4 +74,12 @@ export class ComplementarPlantaComponent {
    * @property {Array} complementoDePlantaDatos
    */
   complementoDePlantaDatos = [];
+
+  /**
+   * Navega a la ubicación anterior en el historial de navegación.
+   * Utiliza el servicio de ubicación para retroceder una página.
+   */
+  goBack(): void {
+    this.ubicaccion.back();
+  }
 }
