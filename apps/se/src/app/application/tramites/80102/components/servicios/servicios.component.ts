@@ -1,6 +1,7 @@
 import {
   CATALOGOS_ID,
   Catalogo,
+  CatalogoPaises,
   CatalogoSelectComponent,
   CatalogosService,
   FormularioDinamico,
@@ -32,9 +33,9 @@ import {
   Servicios,
 } from '../../models/autorizacion-programa-nuevo.model';
 import { Observable, Subscription } from 'rxjs';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
 import { Input, OnDestroy, OnInit } from '@angular/core';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';

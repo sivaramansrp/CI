@@ -7,11 +7,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION, SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION } from '../../../../shared/constantes/plantas-subfabricante-disponibles.enum';
 import { Subject, takeUntil } from 'rxjs';
-import { Tramite80102Query } from '../../estados/tramite80102.query';
-import { Tramite80102Store } from '../../estados/tramite80102.store';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { CommonModule } from '@angular/common';
 import { GestionarEmpresasSubfabricantesComponent } from '../../../../shared/components/gestionar-empresas-subfabricante/gestionar-empresas-subfabricante.component';
+import { Tramite80102Query } from '../../estados/tramite80102.query';
+import { Tramite80102Store } from '../../estados/tramite80102.store';
 
 
 @Component({

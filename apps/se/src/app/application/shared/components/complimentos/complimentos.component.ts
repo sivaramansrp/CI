@@ -8,16 +8,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   DatosComplimentos,
   SociaoAccionistas,
@@ -59,40 +50,128 @@ const ESTADO = 'estado';
   styleUrl: './complimentos.component.scss',
 })
 export class ComplimentosComponent implements OnInit {
+  /**
+   * @type {FormGroup}
+   * @description Grupo de formularios para los complementos.
+   */
   formaComplimentos!: FormGroup;
 
+  /**
+   * @type {Observable<Catalogo[]>}
+   * @description Observable que emite una lista de catálogos.
+   */
   estados$!: Observable<Catalogo[]>;
 
+  /**
+   * @type {Subscription}
+   * @description Suscripción privada inicializada como una nueva suscripción.
+   */
   private subscription: Subscription = new Subscription();
 
+  /**
+   * @type {DatosCatalago[]}
+   * @description Campos del formulario por defecto para los socios accionistas.
+   */
   camposFormularioDefault: DatosCatalago[] = FORMA_SOCIO_ACCIONISTAS;
+
+  /**
+   * @type {any}
+   * @description Campos del formulario para la nacionalidad.
+   */
   camposFormularioNationalidad = FORMA_SOCIO;
+
+  /**
+   * @type {any}
+   * @description Campos del formulario para el tipo de persona.
+   */
   camposFormularioTipoPersona = FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS;
+
+  /**
+   * @type {DatosCatalago[]}
+   * @description Campos del formulario para los socios accionistas.
+   */
   camposFormulario: DatosCatalago[] = FORMA_SOCIO_ACCIONISTAS;
+
+  /**
+   * @type {any}
+   * @description Tipo de formulario por defecto.
+   */
   tipoFormulario = TIPO_FORMA.DEFAULT;
 
+  /**
+   * @type {DatosComplimentos | null}
+   * @description Datos de los complementos del formulario.
+   */
   @Input() datosFormaComplimentos!: DatosComplimentos | null;
+
+  /**
+   * @type {SociaoAccionistas[]}
+   * @description Datos de los socios accionistas.
+   */
   @Input() datosSocioAccionistas: SociaoAccionistas[] = [];
+
+  /**
+   * @type {SociaoAccionistas[]}
+   * @description Datos de los socios accionistas extranjeros.
+   */
   @Input() datosSocioAccionistasExtrenjeros: SociaoAccionistas[] = [];
 
+  /**
+   * @type {any}
+   * @description Tabla de socios accionistas.
+   */
   tablaSociaAccionistas = TABLA_SOCIO_ACCIONISTAS;
+
+  /**
+   * @type {any}
+   * @description Tabla de socios accionistas extranjeros.
+   */
   tablaSociaAccionistasExtranjeros = TABLA_SOCIO_ACCIONISTAS_EXTRANJEROS;
 
+  /**
+   * @type {any}
+   * @description Selección de tabla.
+   */
   tablaSeleccion = TablaSeleccion;
 
+  /**
+   * @type {SociaoAccionistas[]}
+   * @description Lista de socios accionistas seleccionados.
+   */
   empresaAccionistasSeleccionados: SociaoAccionistas[] = [];
+
+  /**
+   * @type {SociaoAccionistas[]}
+   * @description Lista de accionistas extranjeros seleccionados.
+   */
   accionistasExtranjerosSeleccionados: SociaoAccionistas[] = [];
 
-  estaCargando = false;
-
+  /**
+   * @type {EventEmitter<DatosComplimentos>}
+   * @description Emisor de eventos para los datos de complementos.
+   */
   @Output()
   complimentosDatos: EventEmitter<DatosComplimentos> =
     new EventEmitter<DatosComplimentos>(true);
 
+  /**
+   * @type {EventEmitter<SociaoAccionistas>}
+   * @description Emisor de eventos para los accionistas agregados.
+   */
   @Output() accionistasAgregados: EventEmitter<SociaoAccionistas> =
     new EventEmitter<SociaoAccionistas>(true);
+
+  /**
+   * @type {EventEmitter<SociaoAccionistas[]>}
+   * @description Emisor de eventos para los accionistas eliminados.
+   */
   @Output() accionistasEliminados: EventEmitter<SociaoAccionistas[]> =
     new EventEmitter<SociaoAccionistas[]>(true);
+
+  /**
+   * @type {EventEmitter<SociaoAccionistas[]>}
+   * @description Emisor de eventos para los accionistas extranjeros eliminados.
+   */
   @Output() accionistasExtranjerosEliminado: EventEmitter<SociaoAccionistas[]> =
     new EventEmitter<SociaoAccionistas[]>(true);
 
@@ -152,6 +231,12 @@ export class ComplimentosComponent implements OnInit {
     }
   }
 
+  /**
+   * Obtiene el formulario de datos según el tipo de formulario.
+   *
+   * @param {number} tipoForma - El tipo de formulario.
+   * @returns {FormGroup} El formulario correspondiente.
+   */
   obtainerFormaDatos(tipoForma: number): FormGroup {
     switch (tipoForma) {
       case TIPO_FORMA.DEFAULT:
@@ -192,6 +277,12 @@ export class ComplimentosComponent implements OnInit {
     }
   }
 
+  /**
+   * Modifica el formulario según el tipo de formulario y los campos del formulario.
+   *
+   * @param {number} tipoForma - El tipo de formulario.
+   * @param {DatosCatalago[]} camposDelFormulario - Los campos del formulario.
+   */
   modificarFormulario(
     tipoForma: number,
     camposDelFormulario: DatosCatalago[]
@@ -208,12 +299,21 @@ export class ComplimentosComponent implements OnInit {
     }, 10);
   }
 
-  getControls(): boolean {
+  /**
+   * Verifica si el formulario contiene controles.
+   *
+   * @returns {boolean} Verdadero si el formulario contiene controles, falso si no.
+   */
+  obtenerControles(): boolean {
     return (
       this.formaComplimentos.get('formaSocioAccionistas') as FormGroup
     ).contains('formaDatos');
   }
 
+  /**
+   * @description Obtiene el catálogo de países y actualiza las opciones de los campos del formulario.
+   * @returns {void}
+   */
   getCatalogoPaises(): void {
     this.subscription.add(
       this.catalogosServices
@@ -231,6 +331,10 @@ export class ComplimentosComponent implements OnInit {
     );
   }
 
+  /**
+   * @description Obtiene el catálogo de estados y actualiza las opciones de los campos del formulario.
+   * @returns {void}
+   */
   getCatalogoEstado(): void {
     this.subscription.add(
       this.catalogosServices
@@ -248,6 +352,10 @@ export class ComplimentosComponent implements OnInit {
     );
   }
 
+  /**
+   * @description Agrega un nuevo accionista desde el formulario de complementos y emite el evento correspondiente.
+   * @returns {void}
+   */
   aggregarAccionistas(): void {
     const CONTROL = this.formaComplimentos.get(
       'formaSocioAccionistas'
@@ -258,11 +366,21 @@ export class ComplimentosComponent implements OnInit {
       CONTROL.reset();
     }
   }
+
+  /**
+   * @description Elimina los accionistas seleccionados y emite el evento correspondiente.
+   * @returns {void}
+   */
   eliminarAccionistas(): void {
     if (this.empresaAccionistasSeleccionados.length) {
       this.accionistasEliminados.emit(this.empresaAccionistasSeleccionados);
     }
   }
+
+  /**
+   * @description Elimina los accionistas extranjeros seleccionados y emite el evento correspondiente.
+   * @returns {void}
+   */
   eliminarAccionistasExtrenjeros(): void {
     if (this.accionistasExtranjerosSeleccionados.length) {
       this.accionistasExtranjerosEliminado.emit(
@@ -271,6 +389,10 @@ export class ComplimentosComponent implements OnInit {
     }
   }
 
+  /**
+   * @description Maneja la modificación del formulario basado en la nacionalidad y el tipo de persona.
+   * @returns {void}
+   */
   handleModificarForma(): void {
     const VALUE = this.formaComplimentos.value;
     if (VALUE.formaSocioAccionistas.nationalidadMaxicana === 'true') {

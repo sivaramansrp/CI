@@ -1,10 +1,10 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy ,OnInit} from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { Tramite80102Query} from '../../estados/tramite80102.query';
 import { CommonModule } from '@angular/common';
 import { DetallesPlantasComponent } from '../../../../shared/components/detalles-plantas/detalles-plantas.component';
 import { PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
+import { Tramite80102Query} from '../../estados/tramite80102.query';
 
 
 @Component({

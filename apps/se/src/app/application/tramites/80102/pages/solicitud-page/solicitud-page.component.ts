@@ -9,7 +9,6 @@ import { PASOS, TITULOMENSAJE } from '../../constantes/autorizacion-programa-nue
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { Subject } from 'rxjs';
 
 /**

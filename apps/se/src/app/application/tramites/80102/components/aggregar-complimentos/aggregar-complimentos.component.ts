@@ -1,12 +1,12 @@
+import {
+  DatosComplimentos,
+  SociaoAccionistas,
+} from '../../../../shared/models/complimentos.model';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { CommonModule } from '@angular/common';
 import { ComplimentosComponent } from '../../../../shared/components/complimentos/complimentos.component';
 import { Component } from '@angular/core';
-import {
-  DatosComplimentos,
-  SociaoAccionistas,
-} from '../../../../shared/models/complimentos.model';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
 
