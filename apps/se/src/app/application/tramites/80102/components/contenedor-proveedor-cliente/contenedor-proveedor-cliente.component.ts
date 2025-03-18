@@ -32,7 +32,7 @@ export class ContenedorProveedorClienteComponent implements OnDestroy, OnInit {
       this.query.selectDatosParaNavegar$
           .pipe(takeUntil(this.destroyNotifier$))
           .subscribe((datosParaNavegar) => {
-           this.fraccionTablaDatos=datosParaNavegar[0];
+           this.fraccionTablaDatos=datosParaNavegar;
           });
   }
   

@@ -104,6 +104,7 @@ export interface ComplimentarFraccionResoponse {
 export interface RutaNombre {
   catagoria: string;
   id: string;
+  datos: AnexoUnoEncabezado | AnexoImportacionEncabezado;
 }
 
 export interface ProveedorClienteTabla {

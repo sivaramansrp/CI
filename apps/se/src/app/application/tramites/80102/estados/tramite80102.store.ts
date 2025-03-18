@@ -144,7 +144,18 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
   annexoUno:{
     exportarDatosTabla:[],
     importarDatosTabla:[],
-    datosParaNavegar:[]
+    datosParaNavegar:{
+      ENCABEZADO_FRACCION: '',
+      ENCABEZADO_DESCRIPCION_COMERCIAL: '',
+      estatus: false,
+      ENCABEZADO_FRACCION_ARANCELARIA: '',
+      ENCABEZADO_ANEXO_II: '',
+      ENCABEZADO_TIPO: '',
+      ENCABEZADO_UMT: '',
+      ENCABEZADO_CATEGORIA: '',
+      ENCABEZADO_VALOR_EN_MERCADO: '',
+    },
+    seccionActiva:''
   },
 
   indicePrevioRuta: 0,
@@ -436,7 +447,7 @@ export class Tramite80102Store extends Store<Tramite80102State> {
 
   //annexo uno estados
 
-  setImportarDatosTabla(importarDatosTabla:AnexoUnoEncabezado[] | AnexoImportacionEncabezado[]):void{
+  setImportarDatosTabla(importarDatosTabla:AnexoUnoEncabezado[]):void{
     this.update((state) => ({
       ...state,
       annexoUno: {
@@ -447,7 +458,7 @@ export class Tramite80102Store extends Store<Tramite80102State> {
     }));
   }
 
-  setExportarDatosTabla(exportarDatosTabla:AnexoUnoEncabezado[] | AnexoImportacionEncabezado[]):void{
+  setExportarDatosTabla(exportarDatosTabla:AnexoImportacionEncabezado[]):void{
     this.update((state) => ({
       ...state,
       annexoUno: {
@@ -458,7 +469,7 @@ export class Tramite80102Store extends Store<Tramite80102State> {
     }));
   }
 
-  setDatosParaNavegar(datosParaNavegar:AnexoUnoEncabezado[] | AnexoImportacionEncabezado[]):void{
+  setDatosParaNavegar(datosParaNavegar:AnexoUnoEncabezado | AnexoImportacionEncabezado):void{
     this.update((state) => ({
       ...state,
       annexoUno: {
@@ -469,11 +480,20 @@ export class Tramite80102Store extends Store<Tramite80102State> {
     }));
   }
 
-
   setindicePrevioRuta(indice: number): void {
     this.update((state) => ({
       ...state,
       indicePrevioRuta: indice,
+    }));
+  }
+
+  setAnnexoUnoSeccionActiva(seccionActiva: string): void {
+    this.update((state) => ({
+      ...state,
+      annexoUno: {
+        ...state.annexoUno,
+        seccionActiva: seccionActiva,
+      },
     }));
   }
 

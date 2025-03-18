@@ -56,7 +56,8 @@ export interface AnnexoDosTres{
 }
 
 export interface AnnexoUno{
-  exportarDatosTabla:AnexoUnoEncabezado[] | AnexoImportacionEncabezado[];
-  importarDatosTabla:AnexoUnoEncabezado[] | AnexoImportacionEncabezado[];
-  datosParaNavegar:AnexoUnoEncabezado[] | AnexoImportacionEncabezado[] ;
+  exportarDatosTabla: AnexoImportacionEncabezado[];
+  importarDatosTabla:AnexoUnoEncabezado[];
+  datosParaNavegar:AnexoUnoEncabezado | AnexoImportacionEncabezado ;
+  seccionActiva: string;
 }

@@ -72,9 +72,10 @@ export class AnexoUnoComponent {
   @Output() rutaLaFraccionDeComplemento: EventEmitter<RutaNombre> =
     new EventEmitter<RutaNombre>();
 
-  @Output() navegacionDetectada = new EventEmitter<
-    AnexoImportacionEncabezado[] | AnexoUnoEncabezado[]
-  >();
+  public datosImportacionSeleccionados!: AnexoImportacionEncabezado | AnexoUnoEncabezado;
+
+  public datosExportacionSeleccionados!: AnexoImportacionEncabezado | AnexoUnoEncabezado;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -160,7 +161,7 @@ export class AnexoUnoComponent {
     };
     this.anexoDosTablaLista.push(OBJECTO_IDX);
     this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
-    this.anexoUnoFormGroup.reset();
+    this.anexoDosFormGroup.reset();
   }
 
   /**
@@ -170,9 +171,9 @@ export class AnexoUnoComponent {
    * Si no se proporciona, se utilizará una lista vacía.
    * @returns {void}
    */
-  setAnexoUnoLista(event: AnexoUnoEncabezado[]): void {
-    const LISTA_SELECCIONADA = event ? event : [];
-    this.obtenerAnexoUnoDevolverLaLlamada.emit(LISTA_SELECCIONADA);
+  setAnexoUnoLista(event: AnexoUnoEncabezado): void {
+    this.datosImportacionSeleccionados = event;
+    //this.obtenerAnexoUnoDevolverLaLlamada.emit(LISTA_SELECCIONADA);
   }
 
   /**
@@ -182,9 +183,8 @@ export class AnexoUnoComponent {
    * Si no se proporciona, se utilizará una lista vacía.
    * @returns {void}
    */
-  setAnexoDosLista(event: AnexoImportacionEncabezado[]): void {
-    const LISTA_SELECCIONADA = event ? event : [];
-    this.obtenerAnexoDosDevolverLaLlamada.emit(LISTA_SELECCIONADA);
+  setAnexoDosLista(event: AnexoImportacionEncabezado): void {
+   this.datosExportacionSeleccionados = event;
   }
 
   /**
@@ -193,25 +193,14 @@ export class AnexoUnoComponent {
    * @param {string} nombre - El nombre de la categoría para establecer la ruta.
    * @returns {void}
    */
-  setRuta(nombre: string): void {
+  setRuta(nombre: string,id:string): void {
     if (nombre) {
       const RUTA_NOMBRE: RutaNombre = {
         catagoria: nombre,
-        id: 'EXPORT',
+        id: id,
+        datos:id ==='IMPORT'? this.datosImportacionSeleccionados:this.datosExportacionSeleccionados
       };
       this.rutaLaFraccionDeComplemento.emit(RUTA_NOMBRE);
     }
-  }
-
-  navegarAProveedorCliente(esDeImportación: boolean): void {
-    if (esDeImportación) {
-      this.navegacionDetectada.emit(this.anexoUnoTablaLista);
-    } else {
-      this.navegacionDetectada.emit(this.anexoDosTablaLista);
-    }
-
-    this.router.navigate(['../contenedor-proveedor-cliente'], {
-      relativeTo: this.activatedRoute,
-    });
   }
 }

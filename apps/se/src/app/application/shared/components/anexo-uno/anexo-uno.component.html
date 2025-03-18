@@ -26,7 +26,7 @@
             <div class="col-12 container text-end mt-5">
               <button class="btn btn-default me-2" (click)="eliminarAnexoUno()">Eliminar</button>
               <button class="btn btn-primary me-2" (click)="agregarAnexoUno()">Agregar</button>
-              <button class="btn btn-primary" (click)="setRuta('proveedor-por-archivo')">Carga por archivo</button>
+              <button class="btn btn-primary" (click)="setRuta('proveedor-por-archivo','IMPORT')">Carga por archivo</button>
             </div>
           </div>
 
@@ -34,18 +34,18 @@
             <app-tabla-dinamica [tipoSeleccionTabla]="anexoConfiguartion.anexoUnoTablaSeleccionRadio" 
              [configuracionTabla]="anexoConfiguartion.anexoUnoEncabezadoDeTabla"
              [datos]="anexoUnoTablaLista"
-             (listaDeFilaSeleccionada)="setAnexoUnoLista($event)"
+             (filaSeleccionada)="setAnexoUnoLista($event)"
              ></app-tabla-dinamica>
         </div>
     </form>
     <div class="row">
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-default me-2" (click)="setRuta('complementar-fraccion')">Complementar Función</button>
+          <button class="btn btn-default me-2" (click)="setRuta('complementar-fraccion','IMPORT')">Complementar Función</button>
 
-          <button class="btn btn-primary me-2" (click)="navegarAProveedorCliente(true)">Proveedor Cliente</button>
-          <button class="btn btn-primary me-2" (click)="setRuta('proyecto-immex')">Proyecto IMMEX</button>
+          <button class="btn btn-primary me-2" (click)="setRuta('contenedor-proveedor-cliente','IMPORT')">Proveedor Cliente</button>
+          <button class="btn btn-primary me-2" (click)="setRuta('proyecto-immex','IMPORT')">Proyecto IMMEX</button>
 
-          <button class="btn btn-primary" (click)="setRuta('proveedor-por-archivo')" >Proveedor Cliente por Archivo</button>
+          <button class="btn btn-primary" (click)="setRuta('proveedor-por-archivo','IMPORT')" >Proveedor Cliente por Archivo</button>
         </div>
       </div>
 
@@ -80,14 +80,14 @@
             <app-tabla-dinamica [tipoSeleccionTabla]="anexoImportacionConfiguartion.anexoDosTablaSeleccionRadio" 
              [configuracionTabla]="anexoImportacionConfiguartion.anexoDosEncabezadoDeTabla"
              [datos]="anexoDosTablaLista"
-             (listaDeFilaSeleccionada)="setAnexoDosLista($event)"
+             (filaSeleccionada)="setAnexoDosLista($event)"
              ></app-tabla-dinamica>
         </div>
     </form>
     <div class="row">
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-default me-2" (click)="setRuta('complementar-fraccion')">Complementar Función</button>
-          <button class="btn btn-primary me-2" (click)="navegarAProveedorCliente(false)">Proveedor Cliente</button>
+          <button class="btn btn-default me-2" (click)="setRuta('complementar-fraccion','EXPORT')">Complementar Función</button>
+          <button class="btn btn-primary me-2" (click)="setRuta('contenedor-proveedor-cliente','EXPORT')">Proveedor Cliente</button>
         </div>
       </div>
 </div>

@@ -43,7 +43,7 @@ export class AutorizacionProgrmaNuevoService {
    */
    obtenerListaEstado(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
-      'assets/json/80102/estado.json'
+      'assets/json/80102/estado-datos.json'
     );
   }
 
@@ -56,7 +56,7 @@ export class AutorizacionProgrmaNuevoService {
     return (
       this.http
         .get<PlantasSubfabricante[]>(
-          'assets/json/80207/submanufactureras-disponibles-datos.json'
+          'assets/json/80102/submanufactureras-disponibles-datos.json'
         )
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .pipe(map((response: any) => response.data))
