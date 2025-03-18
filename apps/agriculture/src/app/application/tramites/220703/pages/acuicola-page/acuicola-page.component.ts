@@ -1,13 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
+import { DatosPasos } from '@libs/shared/data-access-user/src';
+import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, SECCIONES_TRAMITE_5701, WizardComponent } from '@libs/shared/data-access-user/src';
+
+import { PASOS, SECCIONES_TRAMITE_220703 } from '../../constantes/acuicola.enum';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { map, takeUntil } from 'rxjs';
-import { PASOS } from '../../constantes/acuicola.enum';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SeccionQuery } from '../../../../estados/queries/seccion.query';
 import { Subject } from 'rxjs';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 interface AccionBoton {
   accion: string;
@@ -119,9 +123,9 @@ export class AcuicolaPageComponent implements OnInit {
     const SECCIONES: boolean[] = [];
     const FORMAVALIDA: boolean[] = [];
     // eslint-disable-next-line guard-for-in
-    for (const LLAVESECCION of Object.keys(SECCIONES_TRAMITE_5701.PASO_1) as Array<keyof typeof SECCIONES_TRAMITE_5701.PASO_1>) {
+    for (const LLAVESECCION of Object.keys(SECCIONES_TRAMITE_220703.PASO_1) as Array<keyof typeof SECCIONES_TRAMITE_220703.PASO_1>) {
 
-      SECCIONES.push(SECCIONES_TRAMITE_5701.PASO_1[LLAVESECCION]);
+      SECCIONES.push(SECCIONES_TRAMITE_220703.PASO_1[LLAVESECCION]);
       FORMAVALIDA.push(false);
     }
     this.seccionStore.establecerSeccion(SECCIONES);

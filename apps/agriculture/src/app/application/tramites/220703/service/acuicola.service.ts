@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DatosDelTramite, MercanciaDatos, PagoDeDerechos, PagoDeDerechosRevision, ResponsableInspección } from '../modelos/acuicola.model';
+import { DatosDelTramite, PagoDeDerechos, PagoDeDerechosRevision, ResponsableInspección } from '../modelos/acuicola.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -15,7 +15,7 @@ export class AcuicolaService {
   private apiUrl = 'assets/json/220703/';
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
     // eslint-disable-next-line no-empty-function
   ) {
 
@@ -106,6 +106,31 @@ export class AcuicolaService {
     return this.http.get<PagoDeDerechosRevision>(`${this.apiUrl}pago-de-derechos-revision.json`).pipe(
       map((res: any) => {
         return res.data;
+      })
+    );
+  }
+
+
+  getRegimenAlQue(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`${this.apiUrl}regimen-al-que-se-destinara.json`).pipe(
+      map(response => {
+        return response;
+      })
+    );
+  }
+
+  getDatosParaMovilizacion(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`${this.apiUrl}datos-para-movilizacio.json`).pipe(
+      map(response => {
+        return response;
+      })
+    );
+  }
+
+  getPuntoDeVerificacion(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`${this.apiUrl}punto-de-verificacion.json`).pipe(
+      map(response => {
+        return response;
       })
     );
   }

@@ -75,6 +75,7 @@
               [catalogo]="horaDeInspeccion.catalogos"
               [label]="horaDeInspeccion.labelNombre"
               [placeholder]="horaDeInspeccion.primerOpcion"
+              formControlName="horaDeInspeccion"
               [isDisabled]="true"
             ></app-catalogo-select>
           </div>
@@ -85,6 +86,7 @@
               [catalogo]="aduanaDeIngreso.catalogos"
               [label]="aduanaDeIngreso.labelNombre"
               [placeholder]="aduanaDeIngreso.primerOpcion"
+              formControlName="aduanaDeIngreso"
               [isDisabled]="false"
             ></app-catalogo-select>
           </div>
@@ -95,6 +97,7 @@
               [catalogo]="oficinaDeInspeccion.catalogos"
               [label]="oficinaDeInspeccion.labelNombre"
               [placeholder]="oficinaDeInspeccion.primerOpcion"
+              formControlName="oficinaDeInspeccion"
               [isDisabled]="true"
             ></app-catalogo-select>
           </div>
@@ -105,6 +108,7 @@
               [catalogo]="puntoDeInspeccion.catalogos"
               [label]="puntoDeInspeccion.labelNombre"
               [placeholder]="puntoDeInspeccion.primerOpcion"
+              formControlName="puntoDeInspeccion"
               [isDisabled]="true"
             ></app-catalogo-select>
           </div>
@@ -167,6 +171,7 @@
             [catalogo]="tipoContenedor.catalogos"
             [label]="tipoContenedor.labelNombre"
             [placeholder]="tipoContenedor.primerOpcion"
+            formControlName="tipoContenedor"
             [isDisabled]="false"
           ></app-catalogo-select>
         </div>
@@ -181,6 +186,7 @@
             [catalogo]="medioDeTransporte.catalogos"
             [label]="medioDeTransporte.labelNombre"
             [placeholder]="medioDeTransporte.primerOpcion"
+            formControlName="medioDeTransporte"
             [isDisabled]="true"
           ></app-catalogo-select>
         </div>
@@ -236,10 +242,11 @@
           [CONTENIDO]="TEXTOS.SECCION_LEYENDA_CONFIRMAR_TEXTOS"
         ></ng-alert>
         <h6>Datos de la mercancía:</h6>
-        <ng-table
-          [commonTableHeader]="tableData.header"
-          [commonTableBody]="mercanciaDatos"
-        ></ng-table>
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+          [configuracionTabla]="exportadorTabla"
+          [datos]="mercanciaDatos"
+        ></app-tabla-dinamica>
       </div>
     </div>
   </form>

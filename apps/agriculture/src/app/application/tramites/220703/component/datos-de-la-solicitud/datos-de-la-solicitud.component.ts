@@ -1,10 +1,20 @@
-import { AlertComponent, CatalogoSelectComponent, CatalogosSelect, InputFecha, InputFechaComponent, TableComponent, TEXTOS_220501, TituloComponent } from '@libs/shared/data-access-user/src';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { AlertComponent, CatalogoSelectComponent, CatalogosSelect, InputFecha, InputFechaComponent, SeccionLibState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DatosDelTramite, ResponsableInspección } from '../../modelos/acuicola.model';
-import { EXPEDICION_FACTURA_FECHA, INSTRUCCION_DOBLE_CLIC } from '../../constantes/acuicola.enum';
+import { DatosDeLaSolicitudInt, DatosDelTramite, ResponsableInspección } from '../../modelos/acuicola.model';
+import { EXPEDICION_FACTURA_FECHA, INSTRUCCION_DOBLE_CLIC, MEDIO_SERVICIO, medioInfo } from '../../constantes/acuicola.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { map, takeUntil, tap } from 'rxjs';
 import { AcuicolaService } from '../../service/acuicola.service';
+import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '../../modelos/configuracio-columna.model';
+import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { Subject } from 'rxjs';
+import { TEXTOS_220703 } from '../../constantes/acuicola.enum';
+import { TramiteStore } from '../../estados/tramite220703.store';
+import { TramiteStoreQuery } from '../../estados/tramite220703.query';
+import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -14,8 +24,9 @@ import { AcuicolaService } from '../../service/acuicola.service';
     TituloComponent,
     CatalogoSelectComponent,
     InputFechaComponent,
-    TableComponent,
-    ReactiveFormsModule
+    TablaDinamicaComponent,
+    ReactiveFormsModule,
+    CommonModule
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss'
@@ -24,42 +35,57 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   datosDeLaSolicitudForm!: FormGroup;
 
+  SolicitudState!: DatosDeLaSolicitudInt;
+
   colapsable: boolean = false;
 
   instruccionDobleClic: string = INSTRUCCION_DOBLE_CLIC;
 
+  tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
   horaDeInspeccion!: CatalogosSelect;
+
   aduanaDeIngreso!: CatalogosSelect;
+
   oficinaDeInspeccion!: CatalogosSelect;
+
   puntoDeInspeccion!: CatalogosSelect;
+
   tipoContenedor!: CatalogosSelect;
+
   medioDeTransporte!: CatalogosSelect;
 
-  TEXTOS = TEXTOS_220501;
+  TEXTOS = TEXTOS_220703;
 
-  mercanciaDatos: string[] = [];
+  exportadorTabla: ConfiguracionColumna<medioInfo>[] = MEDIO_SERVICIO;
+
+  mercanciaDatos: medioInfo[] = [];
 
   fechaInicioInput: InputFecha = EXPEDICION_FACTURA_FECHA;
 
-  tableData = {
-    header: [
-      "Fraccion arancelaria",
-      "Descripción de la fracción",
-      "Nico",
-      "Descripción Nico",
-      "Unidad de medida de tarifa (UMT)",
-      "Cantidad total UMT",
-    ],
-  };
-
+  private unsubscribe$ = new Subject<void>();
+  private seccion!: SeccionLibState;
   private destroyNotifier$: Subject<void> = new Subject();
 
   constructor(
     private readonly fb: FormBuilder,
     private readonly acuicolaService: AcuicolaService,
+    private tramiteStoreQuery: TramiteStoreQuery, //Para la integración de Akita
+    private tramiteStore: TramiteStore, //Para la integración de Akita
+    private seccionQuery: SeccionLibQuery, //Para la integración de Akita
+    private seccionStore: SeccionLibStore, //Para la integración de Akita
+
+    // eslint-disable-next-line no-empty-function
   ) { }
 
   ngOnInit(): void {
+    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.SolicitudState = seccionState.SolicitudState;
+      })
+    ).subscribe();
+
     this.iniciarFormulario();
     this.getHoraDeInspeccion();
     this.cargarDatos();
@@ -69,6 +95,38 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.getTipoContenedor();
     this.obtenerResponsableDatos();
     this.getMedioDeTransporte();
+
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState: any) => {
+          if (seccionState) {
+            this.SolicitudState = seccionState.SolicitudState;
+            this.datosDeLaSolicitudForm.patchValue(this.SolicitudState);
+          }
+        })
+      ).subscribe();
+
+    this.datosDeLaSolicitudForm.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap(() => {
+          const ACTIVE_STATE = { ...this.datosDeLaSolicitudForm.value };
+          this.tramiteStore.setSolicitudTramite(ACTIVE_STATE);
+        })
+      )
+      .subscribe();
+
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
+
   }
 
   iniciarFormulario(): void {
@@ -115,8 +173,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           catalogos: RESPONSE,
         };
       }
-    });
+    })
   }
+
+
 
   getAduanaDeIngreso(): void {
     this.acuicolaService.getAduanaDeIngreso().subscribe((resp) => {
@@ -124,7 +184,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         const RESPONSE = resp.data;
         this.aduanaDeIngreso = {
           labelNombre: 'Aduana de ingreso',
-          required: false,  
+          required: false,
           primerOpcion: 'Selecciona un valor',
           catalogos: RESPONSE,
         };
@@ -196,7 +256,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.datosDeLaSolicitudForm.patchValue(data);
       })
   }
-
 
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

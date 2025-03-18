@@ -36,3 +36,58 @@ export interface PagoDeDerechosRevision {
     fechaInicioRevision: string;
     importeDePagoRevision: string;
 }
+
+export interface DatosGenerales {
+    foliodel: string;
+    aduanaDeIngreso: string;
+    oficinaDeInspeccion: string;
+    puntoDeInspeccion: string;
+    numeroDeGuia: string;
+    regimenAlQueDestina: string;
+    datosParaMovilizacion: string;
+    puntoDeVerificacion: string;
+    identificacionDelTransporte: string;
+    nombreDeLaEmpresaTransportista: string;
+}
+
+export interface DatosDeLaSolicitudInt {
+    justificacion: string;
+    certificadosAutorizados: string;
+    fechaInicio: string;
+    horaDeInspeccion: string;
+    aduanaDeIngreso: string;
+    sanidadAgropecuaria: string;
+    puntoDeInspeccion: string;
+    nombreInsp: string;
+    primerApellido: string;
+    segundoApellido: string;
+    cantidadContenedores: string;
+    tipoContenedor: string;
+    medioDeTransporte: string;
+    identificacionTransporte: string;
+    esSolicitudFerros: string;
+    banco:string;
+
+}
+
+export interface InternaDatosGeneralesInt {
+    foliodel: number;
+    aduanaIngreso: string;
+    oficinaInspeccion: string;
+    puntoInspeccion: string;
+    claveUCON: string;
+    establecimientoTIFs: string;
+    nombreVeterinario: string;
+    numeroGuia: string;
+    regimen: string;
+    capturaMercancia: string;
+    animalesVivos: string;
+    coordenadas: string;
+    movilizacionNacional: string;
+    identTransporte: string;
+    puntoVerificacion: string;
+    empresaTransportista: string;
+    datosParaMovilizacion: string;
+    puntoDeVerificacion: string;
+    regimenAlQueDestina:string;
+}
