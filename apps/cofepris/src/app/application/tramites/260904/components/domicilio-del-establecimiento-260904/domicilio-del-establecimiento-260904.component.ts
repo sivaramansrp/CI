@@ -43,6 +43,7 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit {
       colonias: [''],
       calle: ['', [Validators.required]],
       lada: ['', [Validators.required]],
+      telefono: ['', [Validators.required]],
     });
   }
 }
