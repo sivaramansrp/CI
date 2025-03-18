@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { MensajeDeAlerta } from '../../enum/manifiestos.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud216001State, Tramite216001Store } from '../../../../estados/tramites/tramite261001.store';
-import { Tramite216001Query } from '../../../../estados/queries/tramite261001.query';
+import { Solicitud260211State, Tramite260211Store } from '../../../../estados/tramites/tramite260211.store';
+import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
 import { map, Subject, takeUntil } from 'rxjs';
-
+ 
+/**
+ * Componente principal para gestionar el formulario de manifiestos.
+ */
 @Component({
   selector: 'app-manifiestos',
   standalone: true,
@@ -14,38 +17,54 @@ import { map, Subject, takeUntil } from 'rxjs';
     CommonModule,
     TituloComponent,
     AlertComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   templateUrl: './manifiestos.component.html',
   styleUrl: './manifiestos.component.css',
 })
-export class ManifiestosComponent implements OnInit{
-
-  public mensaje:string = MensajeDeAlerta
-  
+ 
+/**
+ * Componente para gestionar los manifiestos de la solicitud.
+ */
+export class ManifiestosComponent implements OnInit, OnDestroy {
   /**
-   * Estado de la solicitud.
+   * Mensaje de alerta para el usuario.
    */
-  public solicitudState!: Solicitud216001State;
-
+  public mensaje: string = MensajeDeAlerta;
+ 
   /**
-   * Notificador para destruir observables.
+   * Estado de la solicitud obtenido desde el store.
+   */
+  public solicitudState!: Solicitud260211State;
+ 
+  /**
+   * Notificador para destruir observables activos y evitar pérdidas de memoria.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
-   constructor(private fb: FormBuilder,
-    private tramite216001Store: Tramite216001Store,
-    private tramite216001Query: Tramite216001Query
-   ){}
-  
-    /**
-     * Grupo de formularios principal.
-     * @property {FormGroup} manifiestos
-     */
-    manifiestos!: FormGroup;
-
-    ngOnInit(): void {
-      this.tramite216001Query.selectSolicitud$
+ 
+  /**
+   * Grupo de formularios principal para gestionar los manifiestos.
+   */
+  manifiestos!: FormGroup;
+ 
+  /**
+   * Constructor del componente.
+   * @param fb - FormBuilder para la creación de formularios.
+   * @param tramite260211Store - Servicio para interactuar con el store de Tramite260211.
+   * @param tramite260211Query - Servicio para consultar el estado de la solicitud.
+   */
+  constructor(
+    private fb: FormBuilder,
+    private tramite260211Store: Tramite260211Store,
+    private tramite260211Query: Tramite260211Query
+  ) {}
+ 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Obtiene el estado de la solicitud y crea el formulario de manifiestos.
+   */
+  ngOnInit(): void {
+    this.tramite260211Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -53,21 +72,30 @@ export class ManifiestosComponent implements OnInit{
         })
       )
       .subscribe();
-      this.manifiestos = this.fb.group({
-        cumplimiento: [this.solicitudState?.cumplimiento, Validators.required],
-      });
-    }
+ 
     /**
-   * Establece el valor de un campo en el store de Tramite31601.
+     * Inicialización del formulario de manifiestos.
+     */
+    this.manifiestos = this.fb.group({
+      cumplimiento: [this.solicitudState?.cumplimiento, Validators.required],
+    });
+  }
+ 
+  /**
+   * Establece el valor de un campo en el store de Tramite260211.
    * @param form - El grupo de formularios que contiene el campo.
    * @param campo - El nombre del campo cuyo valor se va a establecer.
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite216001Store): void {
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite260211Store
+  ): void {
     const valor = form.get(campo)?.value;
-    (this.tramite216001Store[metodoNombre] as (value: any) => void)(valor);
+    (this.tramite260211Store[metodoNombre] as (value: any) => void)(valor);
   }
-
+ 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
@@ -77,3 +105,4 @@ export class ManifiestosComponent implements OnInit{
     this.destroyNotifier$.complete();
   }
 }
+ 

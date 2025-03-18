@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 
 
 /**
- * Interfaz que representa el estado de Solicitud216001.
+ * Interfaz que representa el estado de Solicitud260211.
  */
-export interface Solicitud216001State {
+export interface Solicitud260211State {
     /**
      * El valor de rfcDel.
      */
@@ -164,10 +164,10 @@ export interface Solicitud216001State {
     apellidoMaterno:string;
 }
 /**
- * Función para crear el estado inicial de Solicitud216001State.
- * @returns {Solicitud216001State} El estado inicial de Solicitud216001State.
+ * Función para crear el estado inicial de Solicitud260211State.
+ * @returns {Solicitud260211State} El estado inicial de Solicitud260211State.
  */
-export function createInitialState(): Solicitud216001State {
+export function createInitialState(): Solicitud260211State {
     return {
         /**
          * El valor de rfcDel.
@@ -340,9 +340,9 @@ export function createInitialState(): Solicitud216001State {
  * @param {string} config.name - El nombre de la tienda.
  * @param {boolean} config.resettable - Indica si la tienda es restablecible.
  */
-@StoreConfig({ name: 'tramite216001', resettable: true })
+@StoreConfig({ name: 'tramite260211', resettable: true })
 
-export class Tramite216001Store extends Store<Solicitud216001State>{
+export class Tramite260211Store extends Store<Solicitud260211State>{
     /**
      * Crea una instancia de Tramite31601Store.
      * Inicializa la tienda con el estado inicial.
