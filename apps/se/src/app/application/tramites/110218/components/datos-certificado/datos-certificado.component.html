@@ -29,8 +29,7 @@
     </div>
     <h6>Mercancías seleccionadas</h6>
     <app-tabla-dinamica [configuracionTabla]="configTableArray" [datos]="datos" [tipoSeleccionTabla]="tableradio"
-        (filaSeleccionada)="handleFilaSeleccionada($event)"
-        (listaDeFilaSeleccionada)="handleListaDeFilaSeleccionada($event)">
+        (filaSeleccionada)="handleFilaSeleccionada($event)">
     </app-tabla-dinamica>
     <div class="col-md-12">
         <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3" (click)="onModifyForm()">

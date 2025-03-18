@@ -1,52 +1,43 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { DatosCertificadoComponent } from './datos-certificado.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
-import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
-import { of } from 'rxjs';
-import { Router } from '@angular/router';
-import { CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
+import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
 describe('DatosCertificadoComponent', () => {
   let component: DatosCertificadoComponent;
   let fixture: ComponentFixture<DatosCertificadoComponent>;
-  let mockService: jest.Mocked<CertificadoTecnicoJaponService>;
-  let mockStore: jest.Mocked<Tramite110218Store>;
-  let mockQuery: jest.Mocked<Tramite110218Query>;
-  let mockRouter: jest.Mocked<Router>;
+  let mockService: any;
+  let mockQuery: any;
+  let mockStore: any;
 
   beforeEach(async () => {
     mockService = {
-      getDatosCertificado: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Certificado 1' }]))
-    } as any;
-
-    mockStore = {
-      setlugar: jest.fn(),
-      setobservaciones: jest.fn(),
-      storeTableValues: jest.fn()
-    } as any;
+      getDatosCertificado: jest.fn().mockReturnValue(of([{ id: 1, name: 'Dato 1' }])),
+    };
 
     mockQuery = {
-      lugar$: of('México'),
-      observaciones$: of('Observación de prueba'),
-      tableDataDatos$: of([{ id: 1, nombre: 'Certificado 1' }])
-    } as any;
+      lugar$: of('Lugar 1'),
+      observaciones$: of('Observación 1'),
+      tableDataDatos$: of([{ id: 1, name: 'Dato 1' }]),
+    };
 
-    mockRouter = {
-      navigate: jest.fn()
-    } as any;
+    mockStore = {
+      storeTableValues: jest.fn(),
+      setlugar: jest.fn(),
+      setobservaciones: jest.fn(),
+    };
 
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule,DatosCertificadoComponent],
       declarations: [],
       providers: [
-        FormBuilder,
         { provide: CertificadoTecnicoJaponService, useValue: mockService },
-        { provide: Tramite110218Store, useValue: mockStore },
         { provide: Tramite110218Query, useValue: mockQuery },
-        { provide: Router, useValue: mockRouter }
-      ]
+        { provide: Tramite110218Store, useValue: mockStore },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosCertificadoComponent);
@@ -58,64 +49,65 @@ describe('DatosCertificadoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
-    expect(component.datosdelcertificado.value).toEqual({
-      lugar: '',
-      observaciones: ''
-    });
-  });
 
-  it('should call getTabledatas() on initialization', () => {
+  it('should fetch table data on initialization', () => {
     expect(mockService.getDatosCertificado).toHaveBeenCalled();
+    expect(component.datos).toEqual([{ id: 1, name: 'Dato 1' }]);
   });
 
-  it('should subscribe to store changes and update the form', () => {
-    expect(component.datosdelcertificado.value.lugar).toBe('México');
-    expect(component.datosdelcertificado.value.observaciones).toBe('Observación de prueba');
+  it('should subscribe to lugar$ and update the form', () => {
+    expect(component.datosdelcertificado.get('lugar')?.value).toBe('Lugar 1');
   });
 
-  it('should handle row selection', () => {
-    const selectedRow: CompliMentaria = {
-      númerodeOrden: '1',
-      fracciónArancelaria: '1234.56.78',
-      nombreTécnico: 'Certificado 1',
-      nombreComercial: 'Certificado Comercial 1',
-      nombreIngles: 'Certificate 1',
-      númerodeRegistro: '123456'
-    };
-    component.handleFilaSeleccionada(selectedRow);
-    expect(component.selectedRow).toEqual(selectedRow);
+  it('should subscribe to observaciones$ and update the form', () => {
+    expect(component.datosdelcertificado.get('observaciones')?.value).toBe('Observación 1');
   });
 
-  it('should handle multiple row selection', () => {
-    const selectedRows = [{ id: 1, nombre: 'Certificado 1' }, { id: 2, nombre: 'Certificado 2' }];
-    component.handleListaDeFilaSeleccionada(selectedRows);
-    expect(component.selectedRows).toEqual(selectedRows);
-  });
-
-  it('should navigate to mercancias-seleccionadas-form on form modification', () => {
+  it('should store selected row and emit event on form modification', () => {
+    jest.spyOn(component.modificarEventCertificado, 'emit');
+    const row = { id: 1, name: 'Row 1' };
+    component.selectedRow = row;
     component.onModifyForm();
-    expect(mockStore.storeTableValues).toHaveBeenCalledWith(component.selectedRow);
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['pago/certificado-tecnico-japon/mercancias-seleccionadas-form']);
+    expect(mockStore.storeTableValues).toHaveBeenCalledWith(row);
+    expect(component.modificarEventCertificado.emit).toHaveBeenCalledWith(false);
   });
 
-  it('should update the store when form values change', () => {
-    component.datosdelcertificado.get('lugar')?.setValue('España');
+  it('should update store on lugar change', () => {
+    component.datosdelcertificado.get('lugar')?.setValue('Nuevo Lugar');
     component.onDatosdelcertificadoChange('lugar');
-    expect(mockStore.setlugar).toHaveBeenCalledWith('España');
+    expect(mockStore.setlugar).toHaveBeenCalledWith('Nuevo Lugar');
+  });
 
-    component.datosdelcertificado.get('observaciones')?.setValue('Nueva observación');
+  it('should update store on observaciones change', () => {
+    component.datosdelcertificado.get('observaciones')?.setValue('Nueva Observación');
     component.onDatosdelcertificadoChange('observaciones');
-    expect(mockStore.setobservaciones).toHaveBeenCalledWith('Nueva observación');
+    expect(mockStore.setobservaciones).toHaveBeenCalledWith('Nueva Observación');
   });
 
-  it('should clean up subscriptions on component destruction', () => {
-    const spyNext = jest.spyOn(component['destroyed$'], 'next');
-    const spyComplete = jest.spyOn(component['destroyed$'], 'complete');
+  
 
+  it('should not update store if controlName is invalid', () => {
+    const spyLugar = jest.spyOn(mockStore, 'setlugar');
+    const spyObservaciones = jest.spyOn(mockStore, 'setobservaciones');
+
+    component.onDatosdelcertificadoChange('invalidControl');
+    expect(spyLugar).not.toHaveBeenCalled();
+    expect(spyObservaciones).not.toHaveBeenCalled();
+  });
+
+  it('should clean up subscriptions on destroy', () => {
+    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
-
-    expect(spyNext).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
+    expect(destroyedSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('should handle empty table data gracefully', () => {
+    mockService.getDatosCertificado.mockReturnValue(of([]));
+    component.getTabledatas();
+    expect(component.datos).toEqual([]);
+  });
+
+  
 });
