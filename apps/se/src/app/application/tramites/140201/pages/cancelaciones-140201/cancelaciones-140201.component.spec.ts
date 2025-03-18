@@ -73,7 +73,7 @@ describe('Cancelaciones140201Component', () => {
   });
 
   it('should initialize pasos with PASOS', () => {
-    expect(component.pasos).toBe(PASOS);
+    expect(component.pantallasPasos).toBe(PASOS);
   });
 
   it('should initialize datosPasos correctly', () => {

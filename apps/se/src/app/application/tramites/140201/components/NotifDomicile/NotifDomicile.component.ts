@@ -124,7 +124,6 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
     this.loadLocalidad();
     this.notifDomicileForm = this.fb.group({
       entidadFederativa: ['', [Validators.required]],
-      domicilio: [null],
       calle: [{ value: '', disabled: true }],
       numeroExterior: [{ value: '', disabled: true }],
       numeroInterior: [null],
