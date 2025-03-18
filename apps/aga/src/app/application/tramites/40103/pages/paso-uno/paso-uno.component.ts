@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
@@ -6,7 +7,6 @@ import {
 import {
   FormularioDinamico,
   SolicitanteComponent,
-  TIPO_PERSONA,
 } from '@ng-mf/data-access-user';
 
 @Component({
@@ -21,7 +21,7 @@ export class PasoUnoComponent implements AfterViewInit {
   domicilioFiscal: FormularioDinamico[] = [];
   indice: number = 1;
   validacion: boolean = false;
-  @Input() datosNroPedimento!: any;
+  @Input() datosNroPedimento!: string;
   /**
    * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
    */

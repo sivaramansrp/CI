@@ -58,10 +58,16 @@ describe('DirectorGeneralComponent', () => {
     fixture.destroy();
   });
 
+  /**
+   * Prueba para verificar que el constructor se ejecuta correctamente.
+   */
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
+  /**
+   * Prueba para verificar que el método ngOnInit se ejecuta correctamente.
+   */
   it('should run #ngOnInit()', async () => {
     component.crearFormularioDirectorGeneral = jest.fn();
     component.setFormValues = jest.fn();
@@ -70,6 +76,9 @@ describe('DirectorGeneralComponent', () => {
     // expect(component.setFormValues).toHaveBeenCalled();
   });
 
+  /**
+   * Prueba para verificar que el método crearFormularioDirectorGeneral se ejecuta correctamente.
+   */
   it('should run #crearFormularioDirectorGeneral()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
@@ -77,6 +86,9 @@ describe('DirectorGeneralComponent', () => {
     // expect(component.fb.group).toHaveBeenCalled();
   });
 
+  /**
+   * Prueba para verificar que el método setFormValues se ejecuta correctamente.
+   */
   it('should run #setFormValues()', async () => {
     component.directorGeneralForm = component.directorGeneralForm || {};
     component.directorGeneralForm.patchValue = jest.fn();

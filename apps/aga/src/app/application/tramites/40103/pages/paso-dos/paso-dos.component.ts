@@ -1,15 +1,15 @@
+/* eslint-disable no-empty-function */
 import { Component, OnInit } from '@angular/core';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { TEXTOS } from '@ng-mf/data-access-user';
-import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
+import { TEXTOS } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
-export class PasoDosComponent {
+export class PasoDosComponent implements OnInit {
   TEXTOS = TEXTOS;
   tiposDocumentos: Catalogo[] = [];
   infoAlert = 'alert-info';
@@ -47,7 +47,9 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
             this.catalogoDocumentos = resp;
           }
         },
-        error: (_error): void => {},
+        error: (error): void => {
+          console.error('Error fetching catalog:', error);
+        },
       });
   }
 }

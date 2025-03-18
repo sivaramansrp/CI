@@ -9,6 +9,7 @@ import {
   Directive,
   Input,
   Output,
+  NgModule,
 } from '@angular/core';
 import {
   FormsModule,
@@ -22,6 +23,9 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { SolicitanteComponent } from './solicitante.component';
+
+// Importa el componente ng-titulo
+import { NgTituloComponent } from '../ng-titulo/ng-titulo.component';
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -49,19 +53,27 @@ class SafeHtmlPipe implements PipeTransform {
   }
 }
 
+@NgModule({
+  declarations: [
+    SolicitanteComponent,
+    NgTituloComponent, // Declara el componente ng-titulo
+    TranslatePipe,
+    PhoneNumberPipe,
+    SafeHtmlPipe,
+    MyCustomDirective,
+  ],
+  imports: [FormsModule, ReactiveFormsModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA], // Agrega CUSTOM_ELEMENTS_SCHEMA
+})
+class TestModule {}
+
 describe('SolicitanteComponent', () => {
   let fixture: ComponentFixture<SolicitanteComponent>;
   let component: SolicitanteComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [SolicitanteComponent, FormsModule, ReactiveFormsModule],
-      declarations: [
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective,
-      ],
+      imports: [TestModule], // Importa el módulo de prueba
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [FormBuilder],
     }).compileComponents();

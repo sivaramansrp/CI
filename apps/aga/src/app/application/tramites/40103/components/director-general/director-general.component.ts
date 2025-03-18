@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import mockData from 'libs/shared/theme/assets/json/40103/director-general-mockdata.json';
 import { Chofer40101Query } from '../../estados/chofer40101.query';
 import { Chofer40101Store } from '../../estados/chofer40101.store';
+import mockData from '@libs/shared/theme/assets/json/40103/director-general-mockdata.json';
+
 @Component({
   selector: 'app-director-general',
   templateUrl: './director-general.component.html',
@@ -10,28 +11,28 @@ import { Chofer40101Store } from '../../estados/chofer40101.store';
 })
 export class DirectorGeneralComponent implements OnInit {
   directorGeneralForm!: FormGroup;
-  constructor(
-    private fb: FormBuilder,
-    private chofer40101Query: Chofer40101Query,
-    private chofer40101Store: Chofer40101Store
-  ) {}
-  /**
-   * Crea el formulario para el director general.
-   */
+
+  // eslint-disable-next-line no-empty-function
+  constructor(private fb: FormBuilder, private chofer40101Query: Chofer40101Query, private chofer40101Store: Chofer40101Store) {}
 
   /**
    * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
+   * Inicializa el formulario del director general y establece los valores del formulario.
    */
   ngOnInit(): void {
     this.crearFormularioDirectorGeneral();
     this.setFormValues();
 
-    // Escuche los cambios de formulario y actualice la tienda
+    // Escucha los cambios del formulario y actualiza la tienda
     this.directorGeneralForm.valueChanges.subscribe((formData) => {
       this.updateStore(formData);
     });
     this.updateStore(this.directorGeneralForm.value);
   }
+
+  /**
+   * Crea el formulario para el director general.
+   */
   crearFormularioDirectorGeneral(): void {
     this.directorGeneralForm = this.fb.group({
       nombre: ['', [Validators.required]],
@@ -39,6 +40,7 @@ export class DirectorGeneralComponent implements OnInit {
       segundoApellido: ['', [Validators.required]],
     });
   }
+
   /**
    * Establece los valores del formulario utilizando datos simulados.
    */
@@ -53,7 +55,13 @@ export class DirectorGeneralComponent implements OnInit {
       });
     }
   }
-  updateStore(updatedData: any): void {
-    const existingData = this.chofer40101Query.getValue().choferes;
+
+  /**
+   * Actualiza la tienda con los datos del formulario actualizados.
+   * @param updatedData Los datos actualizados del formulario.
+   */
+  updateStore(updatedData: string): void {
+    const EXISTINGDATA = this.chofer40101Query.getValue().choferes;
+    // Aquí puedes agregar la lógica para actualizar la tienda con los datos actualizados
   }
 }

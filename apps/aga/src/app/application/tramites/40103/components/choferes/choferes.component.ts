@@ -1,44 +1,41 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @nx/enforce-module-boundaries */
 import {
+  AfterViewInit,
   Component,
   ElementRef,
-  ViewChild,
-  OnInit,
-  AfterViewInit,
   Input,
+  OnInit,
+  ViewChild,
 } from '@angular/core';
 import {
-  FormControl,
-  ReactiveFormsModule,
-  Validators,
   FormBuilder,
+  FormControl,
   FormGroup,
   FormsModule,
+  ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Modal } from 'bootstrap';
-
-import { SharedModule } from '@ng-mf/data-access-user';
-import { ToastrService } from 'ngx-toastr';
-import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Nacional } from 'libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
+import { Modal } from 'bootstrap';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import {
-  extranjero,
   Catalogo,
+  extranjero,
 } from 'libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
-// import { StoreService } from 'libs/shared/data-access-user/src/core/services/40101/store/store.service';
 import { ChangeDetectorRef } from '@angular/core';
-import {
-  Chofer40101Store,
-  Choferesnacionales40101State,
-} from '../../estados/chofer40101.store';
 import { Chofer40101Query } from '../../estados/chofer40101.query';
 import { Chofer40101Service } from '../../estados/chofer40101.service';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { Chofer40101Store } from '../../estados/chofer40101.store';
+import { Nacional } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
+import { SharedModule } from '@ng-mf/data-access-user';
+import { ToastrService } from 'ngx-toastr';
 import mockData from 'libs/shared/theme/assets/json/40103/director-general-mockdata.json';
-
 @Component({
   selector: 'app-choferes',
   templateUrl: './choferes.component.html',
@@ -104,11 +101,13 @@ export class ChoferesComponent implements OnInit {
   selectedRow: any;
   @ViewChild('modalRef', { static: false }) modalRef!: ElementRef;
   @Input() catalogo: Catalogo[] = [];
+  onEstadoChange: any;
+  onMunicipioChange: any;
   /**
    * Establece la pestaña activa.
    * @param tab La pestaña que se establecerá como activa.
    */
-  setActiveTab(tab: string) {
+  setActiveTab(tab: string): void {
     this.activeTab = tab;
   }
   constructor(
@@ -119,9 +118,10 @@ export class ChoferesComponent implements OnInit {
     private chofer40101Store: Chofer40101Store,
     private chofer40101Service: Chofer40101Service,
     private chofer40101Query: Chofer40101Query,
-    private cdRef: ChangeDetectorRef,
-    private catalogosService: CatalogosService
-  ) {}
+    private cdRef: ChangeDetectorRef
+  ) {
+    // Initialization logic can be added here if needed
+  }
   /**
    * Inicializa el formulario para chofer nacional.
    */
@@ -190,9 +190,13 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.choferesextranjerosList$ =
       this.chofer40101Query.getchoferesextranjero$;
 
-    this.choferesList$.subscribe((choferes) => {});
+    // eslint-disable-next-line no-empty-function
+    this.choferesList$.subscribe((_choferes: unknown) => {});
 
-    this.choferesextranjerosList$.subscribe((choferesextranjeros) => {});
+    this.choferesextranjerosList$.subscribe(
+      // eslint-disable-next-line no-empty-function
+      (_choferesextranjeros: unknown) => {}
+    );
 
     // Comprobar si la tienda tiene datos sincrónicamente
     this.chofernacionalForm();
@@ -200,7 +204,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.fetchChoferes();
     this.estado$ = this.chofer40101Store._select((state) => state.estado);
 
-    this.loadEstados();
+    ChoferesComponent.loadEstados();
     this.estadoSeleccion();
     this.setFormValues();
   }
@@ -210,17 +214,17 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   get f() {
     return this.formChoferes.controls;
   }
-  abrirModal() {
+  abrirModal(): void {
     this.modal = 'show';
   }
-  cerrarModal() {
+  cerrarModal(): void {
     if (this.modalRef) {
       this.modalRef.nativeElement.classList.remove('show');
       this.modalRef.nativeElement.style.display = 'none';
       document.body.classList.remove('modal-open');
-      const backdrop = document.querySelector('.modal-backdrop');
-      if (backdrop) {
-        backdrop.remove();
+      const BACK_DROP = document.querySelector('.modal-backdrop');
+      if (BACK_DROP) {
+        BACK_DROP.remove();
       }
     } else {
       console.error('modalRef is undefined');
@@ -231,17 +235,18 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    * Guarda los datos del formulario del chofer extranjero.
    */
 
-  extranjeroGuardar() {
+  extranjeroGuardar(): void {
     if (this.formChoferes.invalid) {
+      /* empty */
     }
-    const nuevoMiembro = this.formChoferes.getRawValue();
+    const NUEVO_MIEMBRO = this.formChoferes.getRawValue();
 
-    if (!nuevoMiembro || Object.keys(nuevoMiembro).length === 0) {
+    if (!NUEVO_MIEMBRO || Object.keys(NUEVO_MIEMBRO).length === 0) {
       this.toastr.error('Invalid form data. Please try again.');
       return;
     }
     // Utilice el servicio para agregar el nuevo registro a la lista de extranjeros
-    this.chofer40101Service.addChofer(nuevoMiembro, true);
+    this.chofer40101Service.addChofer(NUEVO_MIEMBRO, true);
 
     //Restablecer el formulario
     this.formChoferes.reset();
@@ -257,19 +262,20 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   /**
    * Guarda los datos del formulario de selección.
    */
-  Guardar() {
+  Guardar(): void {
     if (this.formChoferes.invalid) {
+      /* empty */
     }
 
-    const nuevoMiembro = this.formChoferes.getRawValue();
+    const NUEVO_MIEMBRO = this.formChoferes.getRawValue();
 
-    if (!nuevoMiembro || Object.keys(nuevoMiembro).length === 0) {
+    if (!NUEVO_MIEMBRO || Object.keys(NUEVO_MIEMBRO).length === 0) {
       this.toastr.error('Invalid form data. Please try again.');
       return;
     }
 
     // Llamar al método de servicio para agregar el nuevo miembro
-    this.chofer40101Service.addChofer(nuevoMiembro);
+    this.chofer40101Service.addChofer(NUEVO_MIEMBRO);
     this.toastr.success('Chofer Nacional forms data added successfully');
     this.formChoferes.reset();
     this.cerrarModal();
@@ -285,17 +291,15 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     });
   }
 
-  agregarMiembro() {}
   /**
    * Carga datos almacenados desde el almacenamiento de la sesión.
    */
 
-  loadStoredData() {
-    let storedData = sessionStorage.getItem('nacionalData');
-    this.nacional = storedData ? JSON.parse(storedData) : [];
+  loadStoredData(): void {
+    const STORE_DATA = sessionStorage.getItem('nacionalData');
+    this.nacional = STORE_DATA ? JSON.parse(STORE_DATA) : [];
   }
-  closeDialogoCaptura() {}
-  agregarChoferNacional() {}
+
   /**
    * Obtiene datos de los choferes del servicio.
    */
@@ -320,19 +324,19 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    * Busca un chofer por CURP.
    * @param curp La CURP a buscar.
    */
-  onCurpInput() {
-    const curpValue = this.formChoferes.get('curp')?.value;
-    if (curpValue && curpValue.length >= 18) {
-      this.buscarChoferNacional(curpValue);
+  onCurpInput(): void {
+    const CURP_VALUE = this.formChoferes.get('curp')?.value;
+    if (CURP_VALUE && CURP_VALUE.length >= 18) {
+      this.buscarChoferNacional(CURP_VALUE);
     }
   }
-  buscarChoferNacional(curp: string) {
+  buscarChoferNacional(curp: string): void {
     if (!curp) {
       console.warn('CURP is empty!');
       return;
     }
 
-    const choferData = {
+    const CHOFER_DATA = {
       nombre: 'Juan',
       apellidoPaterno: 'Pérez',
       apellidoMaternoCHN: 'González',
@@ -349,26 +353,26 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     };
 
     // Rellenar el formulario
-    this.formChoferes.patchValue(choferData);
+    this.formChoferes.patchValue(CHOFER_DATA);
 
     // Asegúrese de que `estados` estén cargados antes de configurar `entidadFederativaCHN`
-    this.loadEstados().then(() => {
+    ChoferesComponent.loadEstados().then(() => {
       this.formChoferes.patchValue({
-        entidadFederativaCHN: choferData.entidadFederativaCHN,
+        entidadFederativaCHN: CHOFER_DATA.entidadFederativaCHN,
       });
       this.onEstadoChange({
-        target: { value: choferData.entidadFederativaCHN },
+        target: { value: CHOFER_DATA.entidadFederativaCHN },
       } as unknown as Event).then(() => {
         setTimeout(() => {
           this.formChoferes.patchValue({
-            delegacionCHN: choferData.delegacionCHN,
+            delegacionCHN: CHOFER_DATA.delegacionCHN,
           });
           this.onMunicipioChange({
-            target: { value: choferData.delegacionCHN },
+            target: { value: CHOFER_DATA.delegacionCHN },
           } as unknown as Event).then(() => {
             setTimeout(() => {
               this.formChoferes.patchValue({
-                coloniaCHN: choferData.coloniaCHN,
+                coloniaCHN: CHOFER_DATA.coloniaCHN,
               });
             }, 300);
           });
@@ -377,36 +381,29 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     });
   }
 
-  updateDropdowns(choferData: any) {
-    const estadoClave = choferData.datosGenerales.estados;
-    const municipioClave = choferData.datosGenerales.municipio;
+  updateDropdowns(choferData: any): void {
+    const ESTADO_CLAVE = choferData.datosGenerales.estados;
+    const MUNICIPIO_CLAVE = choferData.datosGenerales.municipio;
 
-    if (estadoClave) {
-      this.loadMunicipios(estadoClave);
+    if (ESTADO_CLAVE) {
+      this.loadMunicipios(ESTADO_CLAVE);
     }
 
-    if (municipioClave) {
-      this.loadColonias(municipioClave);
+    if (MUNICIPIO_CLAVE) {
+      this.loadColonias(MUNICIPIO_CLAVE);
     }
   }
 
-  onChanges(): void {
-    this.formChoferes
-      .get('formChoferes.entidadFederativaCHN')
-      ?.valueChanges.subscribe((valor) => {});
-
-    this.formChoferes
-      .get('formChoferes.delegacionCHN')
-      ?.valueChanges.subscribe((valor) => {});
-  }
-  loadEstados(): Promise<void> {
+  static loadEstados(): Promise<void> {
     return new Promise((resolve) => {
       resolve();
     });
   }
 
   loadMunicipios(claveEstado: string): void {
-    if (!claveEstado) return;
+    if (!claveEstado) {
+      return;
+    }
     this.chofer40101Service.getMunicipios(claveEstado).subscribe(
       (data) => {
         this.municipios = data;
@@ -418,7 +415,9 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   }
 
   loadColonias(claveMunicipio: string): void {
-    if (!claveMunicipio) return;
+    if (!claveMunicipio) {
+      return;
+    }
 
     this.chofer40101Service.getColonias(claveMunicipio).subscribe(
       (data) => {
@@ -429,36 +428,19 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       }
     );
   }
-  onPaisChange(event: Event): void {
-    const pais = (event.target as HTMLSelectElement).value;
-    if (pais) {
-      this.loadEstados();
+  static onPaisChange(event: Event): void {
+    const PAIS = (event.target as HTMLSelectElement).value;
+    if (PAIS) {
+      ChoferesComponent.loadEstados();
     }
-  }
-
-  onEstadoChange(event: Event): Promise<void> {
-    return new Promise((resolve) => {
-      const selectedEstado = (event.target as HTMLSelectElement).value;
-
-      resolve();
-    });
-  }
-
-  onMunicipioChange(event: Event): Promise<void> {
-    return new Promise((resolve) => {
-      const selectedMunicipio = (event.target as HTMLSelectElement).value;
-
-      resolve();
-    });
   }
 
   /**
    * Restablece el formato de choferes.
    */
-  limpiarFormulario() {
+  limpiarFormulario(): void {
     this.formChoferes.reset();
   }
-  buscarChoferEx() {}
   setFormValues(): void {
     if (mockData) {
       setTimeout(() => {
@@ -470,86 +452,83 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       });
     }
   }
-
-  toggleRowSelection(row: any) {
+  toggleRowSelection(row: any): void {
     this.selectedRow = row;
     this.formChoferes.patchValue(row);
   }
 
-  editarFilaSeleccionada() {
+  editarFilaSeleccionada(): void {
     if (this.selectedRow) {
       this.isEditing = true;
       this.formChoferes.patchValue(this.selectedRow);
       if (this.modalRef) {
-        const modal = new Modal(this.modalRef.nativeElement);
-        modal.show();
+        const MODEL = new Modal(this.modalRef.nativeElement);
+        MODEL.show();
       } else {
         console.error('modalRef is undefined');
       }
     }
   }
-  guardarFilaEditada() {
+  guardarFilaEditada(): void {
     if (this.selectedRow) {
       // Create a new object with the updated values
-      const updatedRow = { ...this.selectedRow, ...this.formChoferes.value };
+      const UPDATE_ROWS = { ...this.selectedRow, ...this.formChoferes.value };
 
       // Update the data source (choferesList$)
       this.choferesList$ = this.choferesList$.pipe(
         map((choferes: any) => {
           return choferes.map((chofer: any) => {
-            if (chofer.id === this.selectedRow.id) {
-              return updatedRow;
+            if ((chofer as any).id === (this.selectedRow as any).id) {
+              return UPDATE_ROWS;
             }
             return chofer;
           });
         })
       );
 
-      // Refresh the table
+      //Actualizar la mesa
       this.choferesList$.subscribe();
 
-      // Close the modal
+      //cerrar el modal
       this.isEditing = false;
-      const modal = Modal.getInstance(this.modalRef.nativeElement);
-      if (modal) {
-        modal.hide();
+      const MODEL = Modal.getInstance(this.modalRef.nativeElement);
+      if (MODEL) {
+        MODEL.hide();
       }
     }
   }
-  extranjeroGuardars() {
+  extranjeroGuardars(): void {
     if (this.selectedRow) {
-      // Create a new object with the updated values
-      const updatedRow = { ...this.selectedRow, ...this.formChoferes.value };
+      // Crea un nuevo objeto con los valores actualizados
+      const UPDATE_ROWS = { ...this.selectedRow, ...this.formChoferes.value };
 
-      // Update the data source (choferesList$)
+      // Actualizar la fuente de datos (choferesList$)
       this.choferesextranjerosList$ = this.choferesextranjerosList$.pipe(
         map((choferesextranjero: any) => {
           return choferesextranjero.map((choferesextranjero: any) => {
-            if (choferesextranjero.id === this.selectedRow.id) {
-              return updatedRow;
+            if (
+              (choferesextranjero as any).id === (this.selectedRow as any).id
+            ) {
+              return UPDATE_ROWS;
             }
             return choferesextranjero;
           });
         })
       );
 
-      // Refresh the table
+      // Actualizar la mesa
       this.choferesextranjerosList$.subscribe();
 
-      // Close the modal
+      // cerrar el modal
       this.isEditing = false;
-      const modal = Modal.getInstance(this.modalRef.nativeElement);
-      if (modal) {
-        modal.hide();
+      const MODEL = Modal.getInstance(this.modalRef.nativeElement);
+      if (MODEL) {
+        MODEL.hide();
       }
     }
   }
   estadoSeleccion(): void {
-    const estado = this.formChoferes.get('estado')?.value;
-    this.chofer40101Store.setEstado(estado);
-  }
-  eliminar() {
-    // this.personas.splice(i, 1);
-    //modal de confirmacion de elimincacion
+    const ESTADO = this.formChoferes.get('estado')?.value;
+    this.chofer40101Store.setEstado(ESTADO);
   }
 }

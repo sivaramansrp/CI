@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
-
 export const ROUTES_MODIFICAR: Routes = [
   {
     path: 'solicitante',
