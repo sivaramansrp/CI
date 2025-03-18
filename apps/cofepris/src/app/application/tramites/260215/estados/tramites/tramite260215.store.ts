@@ -7,19 +7,79 @@ import { Injectable } from '@angular/core';
  */
 export interface Solicitud260215State {
   /**
-   * linea
+   * claveDeReferencia
    * @type {string}
    */
-  linea: string;
+  claveDeReferencia: string;
+
+  /**
+   * cadenaDependencia
+   * @type {string}
+   */
+  cadenaDependencia: string;
+
+  /**
+   * banco
+   * @type {string}
+   */
+  banco: string;
+
+  /**
+   * llaveDePago
+   * @type {string}
+   */
+  llaveDePago: string;
+
+  /**
+   * fechaPago
+   * @type {string}
+   */
+  fechaPago: string;
+
+  /**
+   * importePago
+   * @type {string}
+   */
+  importePago: string;
 }
 
 export function createInitialState(): Solicitud260215State {
   return {
     /**
-     * linea
+     * claveDeReferencia
      * @type {string}
      */
-    linea: '',
+    claveDeReferencia: '',
+
+    /**
+     * cadenaDependencia
+     * @type {string}
+     * */
+    cadenaDependencia: '',
+
+    /**
+     * banco
+     * @type {string}
+     */
+    banco: '',
+
+    /**
+     * llaveDePago
+     * @type {string}
+     */
+    llaveDePago: '',
+
+    /**
+     * fechaPago
+     * @type {string}
+     */
+    fechaPago: '',
+
+    /**
+     * importePago
+     * @type {string}
+     */
+    importePago: '',
   };
 }
 
@@ -37,13 +97,68 @@ export class Tramite260215Store extends Store<Solicitud260215State> {
   }
 
   /**
-   * Guarda la línea en el estado.
-   * @param linea
+   * Guarda la clave de referencia en el estado.
+   * @param claveDeReferencia
    */
-  public setLinea(linea: string) {
+  public setClaveDeReferencia(claveDeReferencia: string) {
     this.update((state) => ({
       ...state,
-      linea,
+      claveDeReferencia,
+    }));
+  }
+
+  /**
+   * Guarda la cadena de dependencia en el estado.
+   * @param cadenaDependencia
+   */
+  public setCadenaDependencia(cadenaDependencia: string) {
+    this.update((state) => ({
+      ...state,
+      cadenaDependencia,
+    }));
+  }
+
+  /**
+   * Guarda el banco en el estado.
+   * @param banco
+   */
+  public setBanco(banco: string) {
+    this.update((state) => ({
+      ...state,
+      banco,
+    }));
+  }
+
+  /**
+   * Guarda la llave de pago en el estado.
+   * @param llaveDePago
+   */
+  public setllaveDePago(llaveDePago: string) {
+    this.update((state) => ({
+      ...state,
+      llaveDePago,
+    }));
+  }
+
+  /**
+   * Guarda la fecha de pago en el estado.
+   * @param fechaPago
+   */
+  public setFechaPago(fechaPago: string) {
+    this.update((state) => ({
+      ...state,
+      fechaPago,
+    }));
+  }
+
+  /**
+   * Guarda el importe de pago en el estado.
+   * @param importePago
+   * */
+  public setImportePago(importePago: string) {
+    this.update((state) => ({
+      ...state,
+      importePago,
     }));
   }
 
