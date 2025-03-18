@@ -59,20 +59,26 @@ export interface DatosDeFila {
     cantidad: number;
     proveedor: string;
 }
+export interface FinalEnviar {
+    datosFormaValidacion: boolean;
+    movilizacionValidacion: boolean;
+    validaciondeFormulariodePago: boolean;
+}
 
 /**
  * @interface ListaDeDatosFinal
  * @description 
  * Interfaz que agrupa los datos principales, información de movilización y pago.
  * 
- * @property {DatosForma[]} datos - Información de los productos y mercancías.
- * @property {Movilizacion[]} movilizacion - Datos relacionados con el transporte.
- * @property {PagoForm[]} pago - Datos de pago asociados a la transacción.
+ * @property {DatosForma} datos - Información de los productos y mercancías.
+ * @property {Movilizacion} movilizacion - Datos relacionados con el transporte.
+ * @property {PagoForm} pago - Datos de pago asociados a la transacción.
  */
 export interface ListaDeDatosFinal {
-    datos: DatosForma[];
-    movilizacion: Movilizacion[];
-    pago: PagoForm[];
+    datos: DatosForma;
+    movilizacion: Movilizacion;
+    pago: PagoForm;
+    finalEnviar: FinalEnviar;
 }
 
 /**
@@ -89,7 +95,7 @@ export interface Movilizacion {
     transporte: string;
     guiaIdentificacion: string;
     empresaTransportista: string;
-    punto: string;
+    medioTransporte: string;
 }
 
 /**
@@ -115,6 +121,8 @@ export interface PagoForm {
     llavePago: string;
     importePago: string;
     fechaDePago: string;
+    fechaInicioInput: string;
+    fechaPago: string;
 }
 
 /**
@@ -169,28 +177,76 @@ export interface Mercancia {
  * @property {string} uso - Uso previsto del producto.
  * @property {string} producto - Nombre del producto.
  */
+// customs-form.interface.ts
+
+/**
+ * Interface representing the data structure for a customs import form
+ */
 export interface DatosForma {
-    aduana: string;
-    agropecuaria: string;
-    punto: string;
-    guia: string;
+    aduanaDeIngreso: string;
+    oficinaDeInspeccion: string;
+    puntoDeInspeccion: string;
+    numeroDeGuia?: string;
     regimen: string;
-    ferrocarril: string;
-    mercancias: Mercancia[];
-    aduanaMercancia: string;
-    requisito: string;
-    numCertificadoInternacional: string;
-    arancelaria: string;
-    descFraccionArancelaria: string;
+    numeroDeCarro?: string;
+    tipoDeRequisito: string;
+    requisito?: string;
+    numeroCertificadoInternacional?: string;
+    fraccionArancelaria: string;
+    descripcionFraccion?: string;
     nico: string;
-    descNico: string;
-    descripcion: string;
-    cantidadUMT: string;
+    descripcionNico?: string;
+    descripcion?: string;
+    cantidadUMT: string | number;
     umt: string;
-    cantidadUMC: string;
+    cantidadUMC: string | number;
     umc: string;
     uso: string;
-    producto: string;
+    tipoDeProducto: string;
+}
+export interface FilaSolicitud {
+    noPartida: string;
+    tipoRequisito: string;
+    requisito: string;
+    numeroCertificadoInternacional: string;
+    fraccionArancelaria: string;
+    descripcionFraccion: string;
+    nico: string;
+}
+/**
+ * @function getDefaultValue
+ * @description Función auxiliar para retornar el valor por defecto de cada propiedad.
+ * 
+ * @param {any} value - El valor a verificar.
+ * @param {any} defaultValue - El valor por defecto a retornar si `value` es undefined o null.
+ * @returns {any} - El valor o el valor por defecto.
+ */
+function getDefaultValue(value: string | undefined, defaultValue: string): string {
+    return value !== undefined && value !== null ? value : defaultValue;
+}
+
+/**
+ * @function getMercanciasDefault
+ * @description Función auxiliar específicamente para la propiedad `mercancias`.
+ * 
+ * @param {Mercancia[]} value - El valor a verificar para `mercancias`.
+ * @param {Mercancia[]} defaultValue - El valor por defecto (array vacío) para `mercancias` si `value` no es un array.
+ * @returns {Mercancia[]} - El array de `mercancias` o un array vacío si el valor no es un array.
+ */
+function getMercanciasDefault(value: Mercancia[], defaultValue: Mercancia[]): Mercancia[] {
+    return Array.isArray(value) ? value : defaultValue;
+}
+
+/**
+ * @function finalEnviar
+ * @description Función auxiliar para la propiedad `finalEnviar`.
+ * 
+ * @param {boolean} value - El valor a verificar para `finalEnviar`.
+ * @param {boolean} defaultValue - El valor por defecto para `finalEnviar` si `value` es undefined o null.
+ * @returns {boolean} - El valor o el valor por defecto.
+ */
+function finalEnviar(value: boolean, defaultValue: boolean): boolean {
+    return value !== undefined && value !== null ? value : defaultValue;
 }
 
 /**
@@ -203,8 +259,50 @@ export interface DatosForma {
  */
 export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): ListaDeDatosFinal {
     return {
-        datos: params.datos || [],
-        movilizacion: params.movilizacion || [],
-        pago: params.pago || []
+        datos: {
+            aduanaDeIngreso: getDefaultValue(params.datos?.aduanaDeIngreso, ''),
+            oficinaDeInspeccion: getDefaultValue(params.datos?.oficinaDeInspeccion, ''),
+            puntoDeInspeccion: getDefaultValue(params.datos?.puntoDeInspeccion, ''),
+            numeroDeGuia: getDefaultValue(params.datos?.numeroDeGuia, ''),
+            regimen: getDefaultValue(params.datos?.regimen, ''),
+            numeroDeCarro: getDefaultValue(params.datos?.numeroDeCarro, ''),
+            tipoDeRequisito: getDefaultValue(params.datos?.tipoDeRequisito, ''),
+            requisito: getDefaultValue(params.datos?.requisito, ''),
+            numeroCertificadoInternacional: getDefaultValue(params.datos?.numeroCertificadoInternacional, ''),
+            fraccionArancelaria: getDefaultValue(params.datos?.fraccionArancelaria, ''),
+            descripcionFraccion: getDefaultValue(params.datos?.descripcionFraccion, ''),
+            nico: getDefaultValue(params.datos?.nico, ''),
+            descripcionNico: getDefaultValue(params.datos?.descripcion, ''),
+            descripcion: getDefaultValue(params.datos?.descripcion, ''),
+            cantidadUMT: getDefaultValue(params.datos?.cantidadUMT as string, ''),
+            umt: getDefaultValue(params.datos?.umt, ''),
+            cantidadUMC: getDefaultValue(params.datos?.cantidadUMC as string, ''),
+            umc: getDefaultValue(params.datos?.umc, ''),
+            uso: getDefaultValue(params.datos?.uso, ''),
+            tipoDeProducto: getDefaultValue(params.datos?.tipoDeProducto, ''),
+        },
+        movilizacion: {
+            transporte: getDefaultValue(params.movilizacion?.transporte, ''),
+            guiaIdentificacion: getDefaultValue(params.movilizacion?.guiaIdentificacion, ''),
+            empresaTransportista: getDefaultValue(params.movilizacion?.empresaTransportista, ''),
+            medioTransporte: getDefaultValue(params.movilizacion?.medioTransporte, ''),
+        },
+        pago: {
+            exentoPago: getDefaultValue(params.pago?.exentoPago, ''),
+            justificacion: getDefaultValue(params.pago?.justificacion, ''),
+            claveReferencia: getDefaultValue(params.pago?.claveReferencia, ''),
+            cadenaDependencia: getDefaultValue(params.pago?.cadenaDependencia, ''),
+            banco: getDefaultValue(params.pago?.banco, ''),
+            llavePago: getDefaultValue(params.pago?.llavePago, ''),
+            importePago: getDefaultValue(params.pago?.importePago, ''),
+            fechaDePago: getDefaultValue(params.pago?.fechaDePago, ''),
+            fechaInicioInput: getDefaultValue(params.pago?.fechaInicioInput, ''),
+            fechaPago: getDefaultValue(params.pago?.fechaPago, '')
+        },
+        finalEnviar: {
+            datosFormaValidacion: finalEnviar(params.finalEnviar?.datosFormaValidacion as boolean, false),
+            movilizacionValidacion: finalEnviar(params.finalEnviar?.movilizacionValidacion as boolean, false),
+            validaciondeFormulariodePago: finalEnviar(params.finalEnviar?.validaciondeFormulariodePago as boolean, false)
+        }
     };
 }
