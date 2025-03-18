@@ -6,6 +6,16 @@ import { MercanciaForm } from '../../models/fitosanitario.model';
 import { Subject, takeUntil } from 'rxjs';
 import { DatosMercanciaService } from '../../services/datos-mercancia/datos-mercancia.service';
 
+/**
+ * @component
+ * @selector app-datos-mercancia
+ * @templateUrl ./datos-mercancia.component.html
+ * @styleUrl ./datos-mercancia.component.css
+ * @class DatosMercanciaComponent
+ * @implements OnInit
+ * @implements OnDestroy
+ * @description Componente para la gestión de los datos de la mercancía fitosanitaria.
+ */
 @Component({
   selector: 'app-datos-mercancia',
   templateUrl: './datos-mercancia.component.html',
@@ -13,24 +23,24 @@ import { DatosMercanciaService } from '../../services/datos-mercancia/datos-merc
 })
 export class DatosMercanciaComponent implements OnInit, OnDestroy {
   /**
+    * @property {TablaSeleccion} tipoSeleccionsoli
     * @description Tipo de selección para la tabla de solicitudes.
-    * @type {TablaSeleccion}
     */
   tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
-   * @description Configuración de columnas para la tabla principal.
-   * @type {ConfiguracionColumna<Fila>[]}
+   * @property {ConfiguracionColumna<MercanciaForm>[]} configuracionColumnasoli
+   * @description Configuración de columnas para la tabla principal de mercancías.
    */
   configuracionColumnasoli: ConfiguracionColumna<MercanciaForm>[] = [
     { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 1 },
     { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccionArancelaria, orden: 2 },
-    { encabezado: 'Descripción de la mercancía', clave: (fila) => fila.descripcion, orden: 3 }, // Usando "descripcion" aquí
-    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 4 }, // Usando "umt" aquí
+    { encabezado: 'Descripción de la mercancía', clave: (fila) => fila.descripcion, orden: 3 },
+    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 4 },
     { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 5 },
-    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 6 }, // Usando "umc" aquí
+    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 6 },
     { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 7 },
-    { encabezado: 'Nombre común', clave: (fila) => fila.nombreComun, orden: 8 }, // Usando "nombreComun" aquí
+    { encabezado: 'Nombre común', clave: (fila) => fila.nombreComun, orden: 8 },
     { encabezado: 'Nombre científico', clave: (fila) => fila.nombreCientifico, orden: 9 },
     { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 10 },
     { encabezado: 'País de origen', clave: (fila) => fila.paisOrigen, orden: 11 },
@@ -38,72 +48,117 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     { encabezado: 'Tipo de producto', clave: (fila) => fila.tipoProducto, orden: 13 },
   ];
 
+  /**
+   * @property {string} IMPORTANTES
+   * @description Constante que representa la etiqueta de "Importante".
+   */
   IMPORTANTES: string = IMPORTANTE.Importante;
 
+  /**
+   * @property {MercanciaForm[]} cuerpoTabla
+   * @description Arreglo que contiene los datos de la mercancía para la tabla.
+   */
   cuerpoTabla: MercanciaForm[] = [];
 
+  /**
+   * @property {FormGroup} formMercancia
+   * @description Formulario reactivo para la captura de datos de la mercancía.
+   */
   formMercancia!: FormGroup;
 
+  /**
+   * @property {boolean} estadoChecker
+   * @description Variable para controlar el estado de visibilidad de un elemento (ej. un formulario).
+   */
   estadoChecker: boolean = true;
 
+  /**
+   * @private
+   * @property {Subject<void>} destroyNotifier$
+   * @description Subject para notificar la destrucción del componente y desuscribir observables.
+   */
   private destroyNotifier$ = new Subject<void>();
+
   /**
-    * Configuración para el select de aduana de ingreso. --220102
-    * @property {Catalogo} nombreComunCatalogo
-    */
-  nombreComunCatalogo: Catalogo[] = [];
+   * @property {Catalogo[]} catalogoNombreComun
+   * @description Catálogo para el select de nombre común.
+   */
+  catalogoNombreComun: Catalogo[] = [];
+
   /**
-    * Configuración para el select de aduana de ingreso. --220102
-    * @property {Catalogo} nombreCientificoCatalog
-    */
-  nombreCientificoCatalog: Catalogo[] = [];
+   * @property {Catalogo[]} catalogoNombreCientifico
+   * @description Catálogo para el select de nombre científico.
+   */
+  catalogoNombreCientifico: Catalogo[] = [];
+
   /**
-  * Configuración para el select de aduana de ingreso. --220102
-  * @property {Catalogo} nombreCientificoCatalog
+  * @property {Catalogo[]} catalogoUso
+  * @description Catálogo para el select de uso.
   */
-  usoCatalog: Catalogo[] = [];
-  /**
-* Configuración para el select de aduana de ingreso. --220102
-* @property {Catalogo} paisOrigenCatalog
-*/
-  paisOrigenCatalog: Catalogo[] = [];
-  /**
-* Configuración para el select de aduana de ingreso. --220102
-* @property {Catalogo} paisProcedenciaCatalog
-*/
-  paisProcedenciaCatalog: Catalogo[] = [];
-  /**
-* Configuración para el select de aduana de ingreso. --220102
-* @property {Catalogo} tipoProductoCatalog
-*/
-  tipoProductoCatalog: Catalogo[] = [];
-  /**
-* Configuración para el select de aduana de ingreso. --220102
-* @property {Catalogo} tipoProductoCatalog
-*/
-  umcCatalog: Catalogo[] = [];
+  catalogoUso: Catalogo[] = [];
 
+  /**
+  * @property {Catalogo[]} catalogoPaisOrigen
+  * @description Catálogo para el select de país de origen.
+  */
+  catalogoPaisOrigen: Catalogo[] = [];
+
+  /**
+  * @property {Catalogo[]} catalogoPaisProcedencia
+  * @description Catálogo para el select de país de procedencia.
+  */
+  catalogoPaisProcedencia: Catalogo[] = [];
+
+  /**
+  * @property {Catalogo[]} catalogoTipoProducto
+  * @description Catálogo para el select de tipo de producto.
+  */
+  catalogoTipoProducto: Catalogo[] = [];
+
+  /**
+  * @property {Catalogo[]} catalogoUmc
+  * @description Catálogo para el select de unidad de medida de comercialización (UMC).
+  */
+  catalogoUmc: Catalogo[] = [];
+
+  /**
+   * @constructor
+   * @param {FormBuilder} fb Servicio para la construcción de formularios reactivos.
+   * @param {DatosMercanciaService} datosMercanciaService Servicio para obtener datos de la mercancía.
+   */
   constructor(private readonly fb: FormBuilder, private readonly datosMercanciaService: DatosMercanciaService) {
-    this.getnombreComun();
-    this.getnombreCientifico();
-    this.getUso();
-    this.getpaisProcedencia();
-    this.gettipoProducto();
-    this.getpaisOrigen();
-    this.getUmc();
+    this.obtenerNombreComun();
+    this.obtenerNombreCientifico();
+    this.obtenerUso();
+    this.obtenerPaisProcedencia();
+    this.obtenerTipoProducto();
+    this.obtenerPaisOrigen();
+    this.obtenerUmc();
   }
+
+  /**
+   * @method ngOnInit
+   * @lifecycle OnInit
+   * @description Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Inicializa el formulario de la mercancía y suscribe a los cambios para realizar validaciones.
+   * @returns {void}
+   */
   ngOnInit(): void {
-
-    this.formMercancia?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
+    this.crearFormulario();
+    this.formMercancia?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((cambios) => {
       if (this.formMercancia.valid) {
-        this.cuerpoTabla.push(this.formMercancia.value as MercanciaForm);
-
-        this.estadoChecker = false;
-        console.log(this.cuerpoTabla)
+        // Se pueden realizar acciones cuando el formulario es válido
       }
     })
   }
-  crearDesdeDatos() {
+
+  /**
+   * @method crearFormulario
+   * @description Método para crear e inicializar el formulario reactivo de la mercancía.
+   * Define los controles del formulario y sus validadores.
+   * @returns {void}
+   */
+  crearFormulario() {
     this.formMercancia = this.fb.group({
       nombreComun: ['', Validators.required],
       nombreCientifico: ['', Validators.required],
@@ -120,99 +175,152 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       descripcion: ['', Validators.required]
     });
   }
+
   /**
-   * @description Obtiene la lista de aduanas desde un archivo JSON.
-   * @method getnombreComun
+   * @method obtenerNombreComun
+   * @description Obtiene la lista de nombres comunes desde un archivo JSON a través del servicio.
+   * Suscribe al observable para actualizar el catálogo de nombres comunes.
    * @returns {void}
    */
-  getnombreComun() {
+  obtenerNombreComun() {
     this.datosMercanciaService.obtenerSelectorList('nombrecomun.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.nombreComunCatalogo = data;
-    })
-  }
-  /**
- * @description Obtiene la lista de aduanas desde un archivo JSON.
- * @method getnombreComun
- * @returns {void}
- */
-  getnombreCientifico() {
-    this.datosMercanciaService.obtenerSelectorList('nombrecientifico.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.nombreCientificoCatalog = data;
-    })
-  }
-  /**
-* @description Obtiene la lista de aduanas desde un archivo JSON.
-* @method getnombreComun
-* @returns {void}
-*/
-  getUso() {
-    this.datosMercanciaService.obtenerSelectorList('uso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.usoCatalog = data;
-    })
-  }
-  /**
-* @description Obtiene la lista de aduanas desde un archivo JSON.
-* @method getnombreComun
-* @returns {void}
-*/
-  getpaisOrigen() {
-    this.datosMercanciaService.obtenerSelectorList('paisorigen.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.paisOrigenCatalog = data;
-    })
-  }
-  /**
-* @description Obtiene la lista de aduanas desde un archivo JSON.
-* @method getnombreComun
-* @returns {void}
-*/
-  getpaisProcedencia() {
-    this.datosMercanciaService.obtenerSelectorList('paisprocedencia.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.paisProcedenciaCatalog = data;
-    })
-  }
-  /**
-* @description Obtiene la lista de aduanas desde un archivo JSON.
-* @method gettipoProducto
-* @returns {void}
-*/
-  gettipoProducto() {
-    this.datosMercanciaService.obtenerSelectorList('tipoproducto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.tipoProductoCatalog = data;
+      this.catalogoNombreComun = data;
     })
   }
 
   /**
-* @description Obtiene la lista de aduanas desde un archivo JSON.
-* @method gettipoProducto
-* @returns {void}
-*/
-  getUmc() {
-    this.datosMercanciaService.obtenerSelectorList('umc.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.umcCatalog = data;
+  * @method obtenerNombreCientifico
+  * @description Obtiene la lista de nombres científicos desde un archivo JSON a través del servicio.
+  * Suscribe al observable para actualizar el catálogo de nombres científicos.
+  * @returns {void}
+  */
+  obtenerNombreCientifico() {
+    this.datosMercanciaService.obtenerSelectorList('nombrecientifico.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.catalogoNombreCientifico = data;
     })
   }
-  openDatosPara() {
-    this.crearDesdeDatos();
+
+  /**
+  * @method obtenerUso
+  * @description Obtiene la lista de usos desde un archivo JSON a través del servicio.
+  * Suscribe al observable para actualizar el catálogo de usos.
+  * @returns {void}
+  */
+  obtenerUso() {
+    this.datosMercanciaService.obtenerSelectorList('uso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.catalogoUso = data;
+    })
+  }
+
+  /**
+  * @method obtenerPaisOrigen
+  * @description Obtiene la lista de países de origen desde un archivo JSON a través del servicio.
+  * Suscribe al observable para actualizar el catálogo de países de origen.
+  * @returns {void}
+  */
+  obtenerPaisOrigen() {
+    this.datosMercanciaService.obtenerSelectorList('paisorigen.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.catalogoPaisOrigen = data;
+    })
+  }
+
+  /**
+  * @method obtenerPaisProcedencia
+  * @description Obtiene la lista de países de procedencia desde un archivo JSON a través del servicio.
+  * Suscribe al observable para actualizar el catálogo de países de procedencia.
+  * @returns {void}
+  */
+  obtenerPaisProcedencia() {
+    this.datosMercanciaService.obtenerSelectorList('paisprocedencia.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.catalogoPaisProcedencia = data;
+    })
+  }
+
+  /**
+  * @method obtenerTipoProducto
+  * @description Obtiene la lista de tipos de producto desde un archivo JSON a través del servicio.
+  * Suscribe al observable para actualizar el catálogo de tipos de producto.
+  * @returns {void}
+  */
+  obtenerTipoProducto() {
+    this.datosMercanciaService.obtenerSelectorList('tipoproducto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.catalogoTipoProducto = data;
+    })
+  }
+
+  /**
+  * @method obtenerUmc
+  * @description Obtiene la lista de unidades de medida de comercialización (UMC) desde un archivo JSON a través del servicio.
+  * Suscribe al observable para actualizar el catálogo de UMCs.
+  * @returns {void}
+  */
+  obtenerUmc() {
+    this.datosMercanciaService.obtenerSelectorList('umc.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.catalogoUmc = data;
+    })
+  }
+
+  /**
+   * @method abrirDatosPara
+   * @description Método para cambiar el estado de visibilidad del formulario de datos.
+   * Invierte el valor de la variable `estadoChecker`.
+   * @returns {void}
+   */
+  abrirDatosPara() {
     this.estadoChecker = !this.estadoChecker;
   }
 
-  setValoresStore(
+  /**
+   * @method establecerValoresStore
+   * @param {string} [campo] Campo específico que desencadenó la acción.
+   * @description Método para establecer valores en el formulario de mercancía basado en el campo que se modificó.
+   * Actualmente, solo establece la descripción de la fracción arancelaria y la UMT si el campo es 'fraccionArancelaria'.
+   * @returns {void}
+   */
+  establecerValoresStore(
     campo?: string
   ): void {
     if (campo === 'fraccionArancelaria') {
       this.formMercancia.patchValue({
         descripcionFraccionArancelaria: 'CR-123456',
-        umt: 'Dependencia-34',
+        umt: 'Dependencia-34'
       });
     }
-
   }
+
   /**
- * @description Limpia las suscripciones activas cuando el componente es destruido.
- * Este método se llama automáticamente cuando el componente es destruido para evitar fugas de memoria.
- * @method ngOnDestroy
- * @returns {void}
- */
+   * @method almacenarDatoEnTabla
+   * @param {string} nombre Acción que se va a realizar ('add' para agregar).
+   * @description Método para almacenar los datos del formulario en la tabla de mercancías.
+   * Si el nombre es 'add', agrega el valor actual del formulario al arreglo `cuerpoTabla` y cambia el estado del formulario.
+   * Luego, limpia los datos del formulario.
+   * @returns {void}
+   */
+  almacenarDatoEnTabla(nombre: string) {
+    if (nombre === 'add') {
+      this.cuerpoTabla.push(this.formMercancia.value as MercanciaForm);
+      this.estadoChecker = !this.estadoChecker;
+    }
+    else {
+      this.estadoChecker = !this.estadoChecker;
+    }
+    this.limpiarDatosFormulario();
+  }
+
+  /**
+   * @method limpiarDatosFormulario
+   * @description Método para resetear los valores del formulario de la mercancía.
+   * @returns {void}
+   */
+  limpiarDatosFormulario() {
+    this.formMercancia.reset();
+  }
+
+  /**
+  * @method ngOnDestroy
+  * @lifecycle OnDestroy
+  * @description Método del ciclo de vida que se ejecuta cuando el componente es destruido.
+*/
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

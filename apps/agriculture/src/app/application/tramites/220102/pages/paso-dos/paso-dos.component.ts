@@ -12,7 +12,7 @@ import { TEXTOS_REQUISITOS } from '../../constantes/fitosanitario.enum';
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
-  styleUrls: ['./paso-dos.component.scss']
+  styleUrls: ['./paso-dos.component.css']
 })
 export class PasoDosComponent {
 
