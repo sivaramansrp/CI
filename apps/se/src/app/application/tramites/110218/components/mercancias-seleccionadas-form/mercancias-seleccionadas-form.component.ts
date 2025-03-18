@@ -62,12 +62,41 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
   /**
    * Observable para la unidad de medida de comercialización.
    */
-  unidaddeMedidadeComercializacion$: Observable<Catalogo | null> = this.tramite110218Query.unidaddeMedidadeComercializacion$;
-  tipodeFactura$: Observable<Catalogo | null> = this.tramite110218Query.tipodeFactura$;
-  complementoDelaDescripcion$: Observable<string | null> = this.tramite110218Query.complementoDelaDescripcion$;
-  marca$: Observable<string | null> = this.tramite110218Query.marca$;
-  valorMercancia$: Observable<string | null> = this.tramite110218Query.valorMercancia$;
-  numerodeFactura: Observable<string | null> = this.tramite110218Query.numerodeFactura$;
+  /**
+ * Observable que proporciona las opciones para la unidad de medida de comercialización.
+ * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
+ */
+unidaddeMedidadeComercializacion$: Observable<Catalogo | null> = this.tramite110218Query.unidaddeMedidadeComercializacion$;
+
+/**
+ * Observable que proporciona las opciones para el tipo de factura.
+ * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
+ */
+tipodeFactura$: Observable<Catalogo | null> = this.tramite110218Query.tipodeFactura$;
+
+/**
+ * Observable que proporciona el complemento de la descripción.
+ * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
+ */
+complementoDelaDescripcion$: Observable<string | null> = this.tramite110218Query.complementoDelaDescripcion$;
+
+/**
+ * Observable que proporciona la marca de la mercancía.
+ * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
+ */
+marca$: Observable<string | null> = this.tramite110218Query.marca$;
+
+/**
+ * Observable que proporciona el valor de la mercancía.
+ * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
+ */
+valorMercancia$: Observable<string | null> = this.tramite110218Query.valorMercancia$;
+
+/**
+ * Observable que proporciona el número de la factura.
+ * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
+ */
+numerodeFactura: Observable<string | null> = this.tramite110218Query.numerodeFactura$;
 
   /**
    * Evento que se emite cuando la modificación se realiza con éxito.
