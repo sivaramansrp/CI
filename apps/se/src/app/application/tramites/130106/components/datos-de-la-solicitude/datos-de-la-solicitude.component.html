@@ -12,11 +12,11 @@
             <div class="col-md-6">
                 <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="Régimen"
                     [label]="'Régimen al que se destinará la mercancía'" [required]="true"
-                    name="Régimen al que se destinará la mercancía"></app-catalogo-select>
+                    name="Régimen al que se destinará la mercancía" (change)="setValoresStore(formulario,'Régimen', 'setRégimen')"></app-catalogo-select>
                 <br>
                 <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="Clasificación"
                     [label]="'Clasificación del régimen'" [required]="true"
-                    name="Clasificación del régimen"></app-catalogo-select>
+                    name="Clasificación del régimen" (change)="setValoresStore(formulario,'Clasificación', 'setClasificación')"></app-catalogo-select>
             </div>
         </div>
     </form>

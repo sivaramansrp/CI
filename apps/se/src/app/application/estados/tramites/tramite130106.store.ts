@@ -4,7 +4,8 @@ import { Injectable } from '@angular/core';
 
 export interface Solicitud130106State {
   
- 
+ régimen:string;
+ clasificación:string
  fraccion:string;
  cantidad:string;
  factura:string;
@@ -23,6 +24,8 @@ export interface Solicitud130106State {
 
 export function createInitialState(): Solicitud130106State {
   return {
+    régimen:'',
+    clasificación: '',
     fraccion: '',    
     cantidad:'',
     factura:'',
@@ -128,6 +131,19 @@ export function createInitialState(): Solicitud130106State {
             }));
         }
 
+        public setRégimen(régimen: string) {
+            this.update((state) => ({
+                ...state,
+                régimen,
+            }));
+        }
+
+        public setClasificación(clasificación: string) {
+            this.update((state) => ({
+                ...state,
+                clasificación,
+            }));
+        }
 
     }
 
