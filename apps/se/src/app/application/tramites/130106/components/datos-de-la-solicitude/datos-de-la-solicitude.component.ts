@@ -82,10 +82,6 @@ export class DatosDeLaSolicitudeComponent implements OnInit, OnDestroy {
       Régimen: [this.solicitudState.régimen, Validators.required], // Campo de régimen, requerido
       Clasificación: [this.solicitudState.clasificación, Validators.required], // Campo de clasificación, requerido
       SolitudDescripcion: [this.solicitudState.solitudDescripcion, Validators.required], // Campo de descripción de la solicitud, requerido
-      SolitudFraccion: [this.solicitudState.solitudFraccion, Validators.required], // Campo de fracción de la solicitud, requerido
-      SolitudCantidad: [this.solicitudState.solitudCantidad, [Validators.required, Validators.pattern(/^[0-9]*$/)]], // Campo de cantidad de la solicitud, requerido y debe ser un número
-      Valor: [this.solicitudState.valor, [Validators.required, Validators.pattern(/^[0-9]*$/)]], // Campo de valor, requerido y debe ser un número
-      SolitudUMT: [this.solicitudState.solitudUMT, Validators.required] // Campo de UMT de la solicitud, requerido
     });
   }
 

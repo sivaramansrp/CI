@@ -34,26 +34,5 @@
                     formControlName="SolitudDescripcion" style="height: 90px;" (change)="setValoresStore(formulario,'SolitudDescripcion', 'setSolitudeDescripcion')"></textarea>
             </div>
         </div>
-        <div class="row mb-3">
-            <div class="col-md-12">
-                <app-catalogo-select [catalogo]="configuracionesDropdown[2].catalogos" formControlName="SolitudFraccion"
-                    [label]="'Fracción arancelaria'" [required]="true"
-                    name="Fracción arancelaria" (change)="setValoresStore(formulario,'SolitudFraccion', 'setSolitudFraccion')"></app-catalogo-select>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label for="cantidad" class="form-label">Cantidad*:</label>
-                <input type="number" id="cantidad" name="cantidad" class="form-control" formControlName="SolitudCantidad" (change)="setValoresStore(formulario,'SolitudCantidad', 'setSolitudCantidad')">
-            </div>
-            <div class="col-md-4">
-                <label for="valor" class="form-label">Valor factura USD*:</label>
-                <input type="number" id="valor" name="valor" class="form-control" formControlName="Valor" (change)="setValoresStore(formulario,'Valor', 'setValor')">
-            </div>
-            <div class="col-md-4">
-                <app-catalogo-select [catalogo]="configuracionesDropdown[3].catalogos" formControlName="SolitudUMT"
-                    [label]="'UMT'" [required]="true" name="UMT" (change)="setValoresStore(formulario,'SolitudUMT', 'setSolitudUMT')"></app-catalogo-select>
-            </div>
-        </div>
     </form>
 </div>
