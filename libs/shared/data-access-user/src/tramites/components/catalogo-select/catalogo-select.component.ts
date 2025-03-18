@@ -42,6 +42,7 @@ export class CatalogoSelectComponent
   @Input() tooltipQuestionCircle: boolean = false;
   @Output() selectionChange = new EventEmitter<Catalogo>();
   formSelect: FormGroup;
+  @Input() isInline: boolean = false;
 
   constructor(private fb: FormBuilder) {
     this.formSelect = this.fb.group({
@@ -89,8 +90,8 @@ export class CatalogoSelectComponent
   private onTouched: () => void = () => { };
 
   writeValue(value: string): void {
-    if (value) {
-      this.formSelect.get('selectControl')?.setValue(value);
+    if (value && this.formSelect.get('selectControl')?.value !== value) {
+      this.formSelect.get('selectControl')?.setValue(value, { emitEvent: false });
     }
   }
 

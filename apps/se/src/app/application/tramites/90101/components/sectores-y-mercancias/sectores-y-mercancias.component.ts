@@ -117,7 +117,6 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         tap((_value) => {
           if (this.sectoresYMercancias.valid) {
             this.AutorizacionProsecStore.setFormaValida([{ id: 2, descripcion: "AllValida" }])
-            console.log("ccc",this.sectoresState)
           }
         })
       )

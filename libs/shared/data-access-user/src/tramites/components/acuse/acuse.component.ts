@@ -4,6 +4,7 @@ import { AlertComponent } from '../alert/alert.component';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '../titulo/titulo.component';
 import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-component-acuse',
@@ -17,6 +18,7 @@ export class AcuseComponent implements OnChanges {
   @Input() txtAlerta!: string;
   @Input() subtitulo!: string;
   @Input() folio!: string;
+  @Input() url!: string;
 
   readonly encabezadoTablaAcuse: { valor: string, key: keyof BodyTablaAcuse }[] = [
     {
@@ -30,6 +32,7 @@ export class AcuseComponent implements OnChanges {
   ];  
   readonly datosTablaAcuse: BodyTablaAcuse[] = ACUSE_SERVICIOS_EXTRAORDINARIOS.datosTablaAcuse;
 
+  constructor(private router: Router) {}
   /**
    * Método que se ejecuta cuando uno o más inputs del componente cambian.
    *
@@ -50,5 +53,9 @@ export class AcuseComponent implements OnChanges {
    */
   verPdf(url: string): void {
     window.open(url, '_blank');
+  }
+
+  salir(): void {
+    this.router.navigate(['funcionario/app-seleccion-modulo']);
   }
 }

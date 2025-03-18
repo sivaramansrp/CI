@@ -7,10 +7,18 @@
  * @import { FormBuilder, FormGroup, Validators } from '@angular/forms';
  */
 import { Component, OnInit } from '@angular/core';
-import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ConstanciaDelRegistroService } from '../../services/constancia-del-registro/constancia-del-registro.service';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { ElegibilidadDeTextilesStore, TextilesState} from '../../estados/elegibilidad-de-textiles.store';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
+import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service'
+import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { SeccionLibQuery } from '@ng-mf/data-access-user';
+import { SeccionLibState } from '@ng-mf/data-access-user';
+import { SeccionLibStore } from '@ng-mf/data-access-user';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import radioOptionsData from '@libs/shared/theme/assets/json/120301/mostrar.json';
 @Component({
   selector: 'app-constancia-del-registro',
   templateUrl: './constancia-del-registro.component.html',
@@ -19,7 +27,8 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
   imports: [
     TableComponent,
     TituloComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InputRadioComponent
   ]
 })
 export class ConstanciaDelRegistroComponent implements OnInit {
@@ -43,6 +52,16 @@ export class ConstanciaDelRegistroComponent implements OnInit {
    */
   ConstanciaDelRegistro!: FormGroup;
 
+  radioOptions = radioOptionsData;
+
+  selectedValue: string | number = '';
+
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  private constanciaState!: TextilesState;
+
+  private seccionState!: SeccionLibState
+
   /**
    * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
    */
@@ -55,60 +74,83 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     'Fecha fin vigencia',
   ];
 
-  /**
-   * @property {Array} federal - Array de datos de federal para mostrar en la tabla.
-   */
-  federal: any[] = [];
   constructor(
     private fb: FormBuilder,
-    private constanciaDelRegistroService: ConstanciaDelRegistroService
-  ) { }
-
+    private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
+    private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
+    private seccionStore: SeccionLibStore,
+    private seccionQuery: SeccionLibQuery,
+    private ElegibilidadTextilesService: ElegibilidadTextilesService,
+  ) { 
+    // Constructor logic can be added here if needed
+  }
+  
   ngOnInit(): void {
-    this.fetchData();
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
+    this.ElegibilidadDeTextilesQuery.selectTextile$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.constanciaState = state as TextilesState;
+        })
+      )
+      .subscribe();
+      
+    this.initActionFormBuild();
+
+      this.seccionStore.establecerFormaValida([false]);
+
+    if(this.constanciaState.formaValida && this.constanciaState.formaValida[0] && this.constanciaState.formaValida[0].descripcion === 'AllValida'){
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([true])
+    }
+    else{
+      this.seccionStore.establecerFormaValida([false]);
+    }
+    
+  }
+
+  initActionFormBuild(): void {
     this.fitosanitarioForm = this.fb.group({
-      flexRadioRegistro: ['Datos'],
-      estado: [''],
-      representacionFederal: [''],
-      fraccionArancelaria: [''],
-      descripcionProducto: [''],
-      tratado: [''],
-      subproducto: [''],
-      mecanismo: [''],
-      typoCategoria: [''],
-      typoRegimen: [''],
-      descripcionCategoriaTextil: [''],
-      pais: [''],
-      unidadMedidaCategoriaTextil: [''],
-      factorConversionCategoriaTextil: [''],
-      fechaInicioVigencia: [''],
-      fechaFinVigencia: ['']
+      flexRadioRegistro: ['Todos'],
+      estado: [this.constanciaState.estado],
+      representacionFederal: [this.constanciaState.representacionFederal],
+      fraccionArancelaria: [this.constanciaState.fraccionArancelaria],
+      descripcionProducto: [this.constanciaState.descripcionProducto],
+      tratado: [this.constanciaState.tratado],
+      subproducto: [this.constanciaState.subproducto],
+      mecanismo: [this.constanciaState.mecanismo],
+      typoCategoria: [this.constanciaState.typoCategoria],
+      typoRegimen: [this.constanciaState.typoRegimen],
+      descripcionCategoriaTextil: [this.constanciaState.descripcionCategoriaTextil],
+      PaisDestino: [this.constanciaState.PaisDestino],
+      unidadMedidaCategoriaTextil: [this.constanciaState.unidadMedidaCategoriaTextil],
+      factorConversionCategoriaTextil: [this.constanciaState.factorConversionCategoriaTextil],
+      fechaInicioVigencia: [this.constanciaState.fechaInicioVigencia],
+      fechaFinVigencia: [this.constanciaState.fechaFinVigencia]
     });
   }
-  fetchData(): void {
-    this.constanciaDelRegistroService.getFederal().subscribe({
-      next: (response: any) => {
-        if (response && Array.isArray(response.federal)) {
 
-          this.federal = response.federal.map((item: any) => {
-            var data = {
-              tbodyData: item.tbodyData
-            }
-            return data;
-          }
-          );
-
-          this.federal = [...this.federal]
-
-        } else {
-          console.error('La respuesta de la API no tiene el formato esperado:', response);
-          this.federal = [];
-        }
-      },
-      error: (error: any) => {
-        console.error('Error al recuperar los datos:', error);
-        this.federal = [];
-      }
-    });
+  onValueChange(newValue: number|string) {
+    this.selectedValue = newValue;
   }
+
+  setValoresStore(
+      form: FormGroup,
+      campo: string,
+      metodoNombre: keyof ElegibilidadDeTextilesStore
+    ): void {
+      const VALOR = form.get(campo)?.value;
+      (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(
+        VALOR
+      );
+    }
+
 }
