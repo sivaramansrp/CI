@@ -31,7 +31,7 @@ export class TablaDinamicaComponent<T> {
    * @type {typeof TablaSeleccion}
    */
   TablaSeleccion = TablaSeleccion;
-
+  
   /**
    * Configuración de las columnas de la tabla.
    * Contiene la información sobre cómo se deben mostrar las columnas, incluyendo el nombre, el orden,

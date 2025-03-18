@@ -27,9 +27,21 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registro-cuentas-bancarias',
+    loadChildren: () =>
+      import('./tramites/6001/registro-cuentas-bancarias/registro-cuentas-bancarias.module').then((m) => m.RegistroCuentasBancariasModule),
+  },
+  {
     path: 'importante',
     loadChildren: () =>
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
+  },
+  {
+    path: 'muestras-mercancias',
+    loadChildren: () =>
+      import('./tramites/30901/renovaciones-muestras-mercancias.module').then(
+        (m) => m.RenovacionesMuestrasMercanciasModule
+      ),
   },
   {
 
