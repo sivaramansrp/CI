@@ -31,14 +31,14 @@
             <div class="col-md-6">
                 <label for="descripcion">Descripción de la mercancía*:</label>
                 <textarea id="descripcion" name="descripcion" class="form-control" rows="4"
-                    formControlName="Descripcion"></textarea>
+                    formControlName="SolitudDescripcion" style="height: 90px;" (change)="setValoresStore(formulario,'SolitudDescripcion', 'setSolitudeDescripcion')"></textarea>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-12">
-                <app-catalogo-select [catalogo]="configuracionesDropdown[2].catalogos" formControlName="Fraccion"
+                <app-catalogo-select [catalogo]="configuracionesDropdown[2].catalogos" formControlName="SolitudFraccion"
                     [label]="'Fracción arancelaria'" [required]="true"
-                    name="Fracción arancelaria"></app-catalogo-select>
+                    name="Fracción arancelaria" (change)="setValoresStore(formulario,'SolitudFraccion', 'setSolitudFraccion')"></app-catalogo-select>
             </div>
         </div>
         <div class="row mb-3">

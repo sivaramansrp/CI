@@ -5,8 +5,10 @@ import { Injectable } from '@angular/core';
 export interface Solicitud130106State {
   
  régimen:string;
- clasificación:string
- fraccion:string;
+ clasificación:string;
+ solitudDescripcion:string
+ solitudFraccion:string;
+ fraccion:string
  cantidad:string;
  factura:string;
  umt:string;
@@ -26,7 +28,9 @@ export function createInitialState(): Solicitud130106State {
   return {
     régimen:'',
     clasificación: '',
-    fraccion: '',    
+    solitudDescripcion: '',
+    solitudFraccion: '',    
+    fraccion:'',
     cantidad:'',
     factura:'',
     umt: '',
@@ -144,6 +148,21 @@ export function createInitialState(): Solicitud130106State {
                 clasificación,
             }));
         }
+
+        public setSolitudeDescripcion(SolitudDescripcion: string) {
+            this.update((state) => ({
+                ...state,
+                SolitudDescripcion,
+            }));
+        }
+        
+        public setSolitudFraccion(SolitudFraccion: string) {
+            this.update((state) => ({
+                ...state,
+                SolitudFraccion,
+            }));
+        }
+
 
     }
 

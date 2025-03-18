@@ -73,8 +73,8 @@ export class DatosDeLaSolicitudeComponent implements OnInit,OnDestroy{
       Solicitud: ['', Validators.required],
       Régimen: [this.solicitudState.régimen, Validators.required],
       Clasificación: [this.solicitudState.clasificación, Validators.required],
-      Descripcion: ['', Validators.required],
-      Fraccion: ['', Validators.required],
+      SolitudDescripcion: [this.solicitudState.solitudDescripcion, Validators.required],
+      SolitudFraccion: [this.solicitudState.solitudFraccion, Validators.required],
       Cantidad: ['', Validators.required],
       Valor: ['', Validators.required],
       Umt: ['', Validators.required]
