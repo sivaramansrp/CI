@@ -24,7 +24,6 @@ import { Tramite80102Store } from '../../estados/tramite80102.store';
 })
 export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
 
-  @Input() tabIndex:number=0;
 
   /**
    * Formulario para los datos del subcontratista.
@@ -287,9 +286,6 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
     complementarPlantas(complementarPlantas:PlantasSubfabricante[]):void{
       if(complementarPlantas){
         this.store.setPlantasPorCompletar(complementarPlantas);
-      }
-      if(this.tabIndex){
-        this.store.setindicePrevioRuta(this.tabIndex);
       }
       this.router.navigate(['../complementar-plantas'], { relativeTo: this.activatedRoute });
     }

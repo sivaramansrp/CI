@@ -10,6 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ServiciosComponent } from "../../components/servicios/servicios.component";
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
+import { Tramite80102Store } from '../../estados/tramite80102.store';
 
 
 @Component({
@@ -56,7 +57,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   indice: number = 1;
 
-  constructor(private query:Tramite80102Query){
+  constructor(private query:Tramite80102Query,private store:Tramite80102Store) {
     //constructor vacío
   }
 
@@ -66,10 +67,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((indice: number) => {
      if(indice){
-      this.seleccionaTab(indice);
-     }
-     else{
-      this.seleccionaTab(1);
+      this.indice = indice;
      }
       });
   }
@@ -82,6 +80,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+    this.store.setindicePrevioRuta(i);
   }
 
    /**
