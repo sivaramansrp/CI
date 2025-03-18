@@ -1,4 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @nx/enforce-module-boundaries */
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 import {
@@ -10,7 +12,12 @@ import { Subscription, Subject, takeUntil, map } from 'rxjs';
 import { TituloComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { CatalogoSelectComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
+/**
+ * Componente para la sección de pago de derechos.
+ */
 @Component({
   selector: 'app-pago-de-derechos',
   standalone: true,
@@ -21,7 +28,7 @@ import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/s
     ReactiveFormsModule,
   ],
   templateUrl: './pago-de-derechos.component.html',
-  styleUrl: './pago-de-derechos.component.scss',
+  styleUrls: ['./pago-de-derechos.component.scss'],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
@@ -31,7 +38,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   FormSolicitud!: FormGroup;
 
   /**
-   * Suscripción a los cambios en el formulario react
+   * Suscripción a los cambios en el formulario reactivo.
    */
   private subscription: Subscription = new Subscription();
 
@@ -45,14 +52,22 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constructor del componente.
+   */
   constructor(
     private fb: FormBuilder,
     private tramite301Store: Tramite260215Store,
-    private tramite301Query: Tramite260215Query
+    private tramite301Query: Tramite260215Query,
+    @Inject(ServiciosPermisoSanitarioService)
+    private serviciosPermisoSanitarioService: ServiciosPermisoSanitarioService
   ) {
-    // add initialization code here
+    this.fetchBancoData();
   }
 
+  /**
+   * Catálogo de bancos.
+   */
   public bancoCatalogo: CatalogosSelect = {
     labelNombre: 'Banco',
     required: true,
@@ -60,6 +75,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     catalogos: [],
   };
 
+  /**
+   * Método para actualizar el banco seleccionado.
+   * @param e {Catalogo} Banco seleccionado.
+   */
   ngOnInit(): void {
     this.subscription.add(
       this.tramite301Query.selectSolicitud$
@@ -84,19 +103,46 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Método para actualizar el banco seleccionado.
+   * @param e {Catalogo} Banco seleccionado.
+   */
+  fetchBancoData(): void {
+    this.serviciosPermisoSanitarioService
+      .getBancoData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.bancoCatalogo.catalogos = data as Catalogo[];
+      });
+  }
+
+  /**
+   * Método para actualizar el banco seleccionado.
+   * @param e {Catalogo} Banco seleccionado.
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
     metodoNombre: keyof Tramite260215Store
   ): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
+    const valor = form.get(campo)?.value;
+    (this.tramite301Store[metodoNombre] as (value: any) => void)(valor);
   }
 
+  /**
+   * Método para actualizar el banco seleccionado.
+   * @param e {Catalogo} Banco seleccionado.
+   */
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
+  /**
+   * Método para actualizar el banco seleccionado.
+   * @param e {Catalogo} Banco seleccionado.
+   */
   get datosImportadorExportador(): FormGroup {
     return this.FormSolicitud.get('datosImportadorExportador') as FormGroup;
   }
