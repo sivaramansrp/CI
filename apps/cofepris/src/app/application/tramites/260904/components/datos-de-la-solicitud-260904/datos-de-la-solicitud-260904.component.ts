@@ -11,7 +11,7 @@ import { Component } from '@angular/core';
   styleUrl: './datos-de-la-solicitud-260904.component.scss',
 })
 export class DatosDeLaSolicitud260904Component {  
-  colapsable: boolean = false;
+  colapsable: boolean = true;
   TEXTOS = ALERT
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;

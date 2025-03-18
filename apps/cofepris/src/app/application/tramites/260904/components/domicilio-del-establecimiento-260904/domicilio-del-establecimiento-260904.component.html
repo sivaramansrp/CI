@@ -1,1 +1,140 @@
-<p>domicilio-del-establecimiento-260904 works!</p>
+<div class="container">
+  <form [formGroup]="form">
+    <div>
+      <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="códigoPostal">Código postal*:</label>
+            <input
+              class="form-control"
+              type="text"
+              id="códigoPostal"
+              formControlName="códigoPostal"
+              appUppercase
+              aria-labelledby="códigoPostal"
+            />
+            <!-- <div *ngIf="esInvalido('códigoPostal')" class="text-danger">
+              <small
+                *ngIf="form.controls['códigoPostal'].hasError('required')"
+                >La cantidad solicitada es un campo obligatorio.</small
+              >
+            </div> -->
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <app-catalogo-select
+              [catalogo]="estado"
+              [label]="'Estado*'"
+              name="estado"
+              formControlName="estado"
+            >
+            </app-catalogo-select>
+
+            <!-- <div *ngIf="esInvalido('códigoPostal')" class="text-danger">
+                <small
+                  *ngIf="form.controls['códigoPostal'].hasError('required')"
+                  >La cantidad solicitada es un campo obligatorio.</small
+                >
+              </div> -->
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="municipioOAlcaldía"
+              >Municipio o alcaldía*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="municipioOAlcaldía"
+              formControlName="municipioOAlcaldía"
+              appUppercase
+              aria-labelledby="municipioOAlcaldía"
+            />
+            <!-- <div *ngIf="esInvalido('códigoPostal')" class="text-danger">
+                <small
+                  *ngIf="form.controls['códigoPostal'].hasError('required')"
+                  >La cantidad solicitada es un campo obligatorio.</small
+                >
+              </div> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <ng-alert
+          [CONTENIDO]="TEXTOS.ADVERTENCIA"
+          [CUSTOMECLASS]="class"
+        ></ng-alert>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="localidad">Localidad:</label>
+            <input
+              class="form-control"
+              type="text"
+              id="localidad"
+              formControlName="localidad"
+              appUppercase
+              aria-labelledby="localidad"
+            />
+            <!-- <div *ngIf="esInvalido('códigoPostal')" class="text-danger">
+                <small
+                  *ngIf="form.controls['códigoPostal'].hasError('required')"
+                  >La cantidad solicitada es un campo obligatorio.</small
+                >
+              </div> -->
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="colonias">Colonias:</label>
+            <input
+              class="form-control"
+              type="text"
+              id="colonias"
+              formControlName="colonias"
+              appUppercase
+              aria-labelledby="colonias"
+            />
+            <!-- <div *ngIf="esInvalido('códigoPostal')" class="text-danger">
+                <small
+                  *ngIf="form.controls['códigoPostal'].hasError('required')"
+                  >La cantidad solicitada es un campo obligatorio.</small
+                >
+              </div> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label" for="calle">Calle*:</label>
+            <input
+              class="form-control"
+              type="text"
+              id="calle"
+              formControlName="calle"
+              appUppercase
+              aria-labelledby="calle"
+            />
+            <!-- <div *ngIf="esInvalido('códigoPostal')" class="text-danger">
+                  <small
+                    *ngIf="form.controls['códigoPostal'].hasError('required')"
+                    >La cantidad solicitada es un campo obligatorio.</small
+                  >
+                </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
