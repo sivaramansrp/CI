@@ -29,3 +29,5 @@ export const TEXTOS_REQUISITOS = {
       <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`,
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"</p>`,
 };
+
+export const URL = '../../../../../assets/json/220102/';

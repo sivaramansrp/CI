@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf ="!estadoChecker">
     <div class="row">
         <div class="col-md-12">        
             <ng-titulo titulo="Datos del trámite" />
@@ -24,12 +24,48 @@
     </div>
     <div class="row">
         <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-            <button class="btn btn-primary" >Agregar</button>
+            <button class="btn btn-primary" (click)="openDatosPara()" >Agregar</button>
         </div>
     </div>
 </div>
-<div class="container">
+<form [formGroup]="formMercancia">
+<div class="container" *ngIf ="estadoChecker">
     <div class="row">
-        
+        <div class="col-md-12">        
+            <ng-titulo titulo="Datos mercancia" />
+        </div>
     </div>
+    <div class="row">
+                <div class="col-md-6">
+                    <app-catalogo-select
+                      [catalogo]="nombreComunCatalogo"
+                      formControlName="nombreComun"
+                      [label]="'Nombre común'"
+                      [required]="true"
+                      name="nombreComun"
+                    ></app-catalogo-select>
+                  </div>
+                  <div class="col-md-6">
+                    <app-catalogo-select
+                      [catalogo]="nombreComunCatalogo"
+                      formControlName="nombreCientifico"
+                      [label]="'Nombre científico'"
+                      [required]="true"
+                      name="nombreCientifico"
+                    ></app-catalogo-select>
+                  </div>
+     </div>
+     <div class="row">
+        <div class="col-md-6">
+            <app-catalogo-select
+            [catalogo]="usoCatalog"
+            formControlName="uso"
+            [label]="'Uso'"
+            [required]="true"
+            name="uso"
+          ></app-catalogo-select>
+        </div>
+     </div>
+
 </div>
+</form>

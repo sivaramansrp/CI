@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IMPORTANTE } from '../../constantes/fitosanitario.enum';
-import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MercanciaForm } from '../../models/fitosanitario.model';
+import { Subject, takeUntil } from 'rxjs';
+import { DatosMercanciaService } from '../../services/datos-mercancia/datos-mercancia.service';
 
 @Component({
   selector: 'app-datos-mercancia',
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.css',
 })
-export class DatosMercanciaComponent implements OnInit {
+export class DatosMercanciaComponent implements OnInit, OnDestroy {
   /**
     * @description Tipo de selección para la tabla de solicitudes.
     * @type {TablaSeleccion}
@@ -37,11 +39,34 @@ export class DatosMercanciaComponent implements OnInit {
   ];
 
   IMPORTANTES: string = IMPORTANTE.Importante;
+
   cuerpoTabla: any[] = [];
 
-  formMercancia?: FormGroup;
-  constructor(private fb: FormBuilder) {
+  formMercancia!: FormGroup;
 
+  estadoChecker: boolean = true;
+
+  private destroyNotifier$ = new Subject<void>();
+  /**
+    * Configuración para el select de aduana de ingreso. --220201
+    * @property {Catalogo} nombreComunCatalogo
+    */
+  nombreComunCatalogo: Catalogo[] = [];
+  /**
+    * Configuración para el select de aduana de ingreso. --220201
+    * @property {Catalogo} nombreCientificoCatalog
+    */
+  nombreCientificoCatalog: Catalogo[] = [];
+  /**
+  * Configuración para el select de aduana de ingreso. --220201
+  * @property {Catalogo} nombreCientificoCatalog
+  */
+  usoCatalog: Catalogo[] = [];
+
+  constructor(private readonly fb: FormBuilder, private readonly datosMercanciaService: DatosMercanciaService) {
+    this.getnombreComun();
+    this.getnombreCientifico();
+    this.getUso();
   }
   ngOnInit(): void {
     this.formMercancia = this.fb.group({
@@ -60,5 +85,50 @@ export class DatosMercanciaComponent implements OnInit {
       descripcion: ['', Validators.required]
     });
   }
+  /**
+   * @description Obtiene la lista de aduanas desde un archivo JSON.
+   * @method getnombreComun
+   * @returns {void}
+   */
+  getnombreComun() {
+    this.datosMercanciaService.obtenerSelectorList('nombrecomun.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.nombreComunCatalogo = data;
+    })
+  }
+  /**
+ * @description Obtiene la lista de aduanas desde un archivo JSON.
+ * @method getnombreComun
+ * @returns {void}
+ */
+  getnombreCientifico() {
+    this.datosMercanciaService.obtenerSelectorList('nombrecientifico.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.nombreCientificoCatalog = data;
+    })
+  }
+  /**
+* @description Obtiene la lista de aduanas desde un archivo JSON.
+* @method getnombreComun
+* @returns {void}
+*/
+  getUso() {
+    this.datosMercanciaService.obtenerSelectorList('uso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.usoCatalog = data;
+    })
+  }
 
+  openDatosPara() {
+    this.estadoChecker = !this.estadoChecker;
+  }
+
+
+  /**
+ * @description Limpia las suscripciones activas cuando el componente es destruido.
+ * Este método se llama automáticamente cuando el componente es destruido para evitar fugas de memoria.
+ * @method ngOnDestroy
+ * @returns {void}
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
