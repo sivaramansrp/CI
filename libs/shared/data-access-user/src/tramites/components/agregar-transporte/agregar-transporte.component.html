@@ -1,15 +1,36 @@
 <div class="row mt-4">
   <div class="col-md-12">
-    <table class="table table-striped">
-      <thead>
-        @for (item of headerTabla; track $index) {
-        <th>{{ item }}</th>
-        }
-      </thead>
-      <tbody>
+    <div class="main-table">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>
+              <div class="form-check">
+                <input class="form-check" type="checkbox" (change)="seleccionarTodos($event)">
+              </div>
+            </th>
+            @for (item of headerTabla; track $index) {
+            <th>{{ item.valor }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of bodyTabla; let i= $index; track i) {
+          <tr>
+            <td>
+              <div class="form-check">
+                <input class="form-check" type="checkbox" (change)="seleccionarTodos($event)">
+              </div>
+            </td>
+            @for (item of headerTabla; track $index) {
+            <td>{{row[item.llave]}}</td>
+            }
+          </tr>
+          }
 
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
 
   </div>
 </div>
@@ -56,14 +77,15 @@
 
             <div class="form-group">
               <label class="form-label" for="idPedimento">Observaciones</label>
-              <textarea class="form-control h-25" id="exampleFormControlTextarea1" rows="3"></textarea>
+              <textarea class="form-control h-25" id="exampleFormControlTextarea1" rows="3"
+                [formControl]="observaciones" id="observaciones"></textarea>
             </div>
           </div>
         </div>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeModal (click)="cerrarModal()">
-          Cerrar
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #btnCerrarModal (click)="cerrarModal()">
+          Cancelar
         </button>
 
         <button type="button" class="btn btn-default" data-bs-dismiss="modal" (click)="limpiarFormulario()">
@@ -82,43 +104,46 @@
   <div class="row" [formGroup]="carreteroForma">
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="empresaTransportista">Empresa transportista:</label>
-        <input class="form-control" id="empresaTransportista" placeholder="" type="text"
-          formControlName="empresaTransportista">
+        <label class="form-label" for="empTransportista">Empresa transportista:</label>
+        <input class="form-control" id="empTransportista" placeholder="" type="text" formControlName="empTransportista">
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="numeroCartaPorte">Número carta porte:</label>
-        <input class="form-control" id="numeroCartaPorte" placeholder="" type="text" formControlName="numeroCartaPorte">
+        <label class="form-label" for="numeroPorte">Número carta porte:</label>
+        <input class="form-control" id="numeroPorte" placeholder="" type="text" formControlName="numeroPorte">
       </div>
     </div>
     <div class="col-md-6">
       <label for="fechaPorte" class="form-label">Fecha carta porte:</label>
-      <input class="form-control" type="date" name="fechaPorte" id="fechaPorte" />
+      <input class="form-control" type="date" name="fechaPorte" id="fechaPorte" formControlName="fechaPorte" />
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="fechaCartaPorte">Marca:</label>
-        <input class="form-control" id="fechaCartaPorte" placeholder="" type="text" formControlName="fechaCartaPorte">
+        <label class="form-label" for="marcaTransporte">Marca:</label>
+        <input class="form-control" id="marcaTransporte" placeholder="" type="text" formControlName="marcaTransporte">
       </div>
     </div>
     <div class="col-md-6">
-      <div class="form-group">
-        <label class="form-label" for="modelo">Modelo:</label>
-        <input class="form-control" id="modelo" placeholder="" type="text" formControlName="modelo">
-      </div>
+      <label class="form-label" for="modeloTransporte">Modelo:</label>
+      <select class="form-control" id="modeloTransporte" formControlName="modeloTransporte">
+        <option value=-1>Selecciona un año</option>
+        @for (item of anios; track $index) {
+        <option value="{{ item }}">{{ item }}</option>
+        }
+      </select>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="placas">Placas:</label>
-        <input class="form-control" id="placas" placeholder="" type="text" formControlName="placas">
+        <label class="form-label" for="placasTransporte">Placas:</label>
+        <input class="form-control" id="placasTransporte" placeholder="" type="text" formControlName="placasTransporte">
       </div>
     </div>
     <div class="col-md-12">
       <div class="form-group">
-        <label class="form-label" for="contenedores">Contenedor(es)</label>
-        <textarea class="form-control h-25" id="contenedores" rows="3" formControlName="contenedores"></textarea>
+        <label class="form-label" for="contenedorTransporte">Contenedor(es)</label>
+        <textarea class="form-control h-25" id="contenedorTransporte" rows="3"
+          formControlName="contenedorTransporte"></textarea>
       </div>
     </div>
   </div>

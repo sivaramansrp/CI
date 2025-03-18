@@ -4,6 +4,10 @@
   gap: 5px;
 }
 
-tbody {
-  height: 400px;
+
+
+.main-table {
+  max-width: 100%;
+  overflow-x: auto;
+  min-height: 400px;
 }
