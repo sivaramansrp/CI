@@ -1,5 +1,5 @@
 <div class="container rounded p-3 bg-light">
-    <div class="row padding-top">
+    <div class="row padding-top ">
         <form [formGroup]="formSolicitudDocumentos">
             <h5>Agregar Documento</h5>
             <div class="col-md-12">
@@ -19,7 +19,7 @@
                                 <td>{{ i + 1 }}</td>
                                 <td>{{ doc }}</td>
                                 <td>
-                                  <button class="btn btn-danger btn-sm" (click)="eliminarDocumento(i)">Eliminar</button>
+                                  <button class="btn btn-danger btn-sm btn-size" (click)="eliminarDocumento(i)">Eliminar</button>
                                 </td>
                               </tr>
                             </tbody>
@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-md-6">
                       <app-catalogo-select [catalogo]="catTipoDocumento" formControlName="tipoDocumento" [label]="'Tipo documento'"
-                      [required]="true" name="tipoDocumento" (change)="tipoDocumentoSeleccionado()"></app-catalogo-select>
+                      [required]="true" name="tipoDocumento"></app-catalogo-select>
                       <br>
                     <button class="btn btn-primary" (click)="agregarDocumento()">Agregar nuevo</button>
                     <br>

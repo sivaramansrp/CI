@@ -1,4 +1,4 @@
-<div class="page">
+<div class="page page-margin-top">
   <div class="container bg-light">
     <div class="row">
       <div class="col-md-8">
@@ -8,8 +8,8 @@
     <lib-encabezado-requerimiento [numFolioTramite]="'02309482934723832'"
       [tipoTramite]="'Registro de solicitud de servicios extraordinarios'"></lib-encabezado-requerimiento>
     <br>
-    <div class="row margin-top">
-      <ul class="nav nav-tabs justify-content-center">
+    <div class="row">
+      <ul class="nav nav-tabs justify-content-center gap-3">
         <li [ngClass]="indice === 1 ? 'active' : ''">
           <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
             (keydown.space)="seleccionaTab(1)" role="button" tabindex="0">Dictamen</a>
@@ -32,8 +32,8 @@
     </div>
     <div class="d-flex justify-content-lg-end">
       <button type="button" class="btn btn-default ms-2">Cancelar</button>
-      <button *ngIf="!firmar" class="btn  btn-primary ms-2" type="button" (click)="guardarFirmar()">Continuar</button>
-      <button *ngIf="firmar" class="btn  btn-primary ms-2" type="button">Guardar y firmar</button>
+      <button *ngIf="!firmar" class="btn  btn-primary ms-2" type="button">Continuar</button>
+      <button *ngIf="firmar" class="btn  btn-primary ms-2" (click)="guardarFirmar()" type="button">Guardar y firmar</button>
     </div>
   </div>
 </div>

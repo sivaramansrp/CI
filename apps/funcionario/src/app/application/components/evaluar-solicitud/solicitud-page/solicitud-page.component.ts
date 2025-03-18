@@ -17,18 +17,16 @@ import { Router } from '@angular/router';
 export class SolicitudPageComponent {
   constructor(
     private router: Router
-  ){
-    
-  }
+  ){}
   /**
    * Índice de la pestaña seleccionada
    */
-  indice: number = 2;
+  indice: number = 1;
 
   /**
    * Variable para firmar
    */
-  firmar: boolean = false;
+  public firmar: boolean = true;
 
   /**
    * Método para seleccionar la pestaña
