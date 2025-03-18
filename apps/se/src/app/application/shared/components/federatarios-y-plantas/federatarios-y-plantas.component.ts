@@ -1,30 +1,32 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
+import { Input } from '@angular/core';
 
-import {
-  AlertComponent,
-  CatalogoSelectComponent,
-  InputFechaComponent,
-} from '@ng-mf/data-access-user';
-import { FECHA_DE_PAGO } from '../../constantes/federatarios-y-plantas.enum';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { InputFecha } from '@ng-mf/data-access-user';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-  FormsModule,
-} from '@angular/forms';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import {
-  FederatariosEncabezado,
-  FederatariosYPlantasConfiguration,
-  PlantasDisponibles,
-  PlantasImmex,
-  TEXTO_DE_ALERTA,
-} from '../../models/federatarios-y-plantas.model';
 
+import { FederatariosEncabezado } from '../../models/federatarios-y-plantas.model';
+import { FederatariosYPlantasConfiguration } from '../../models/federatarios-y-plantas.model';
+import { PlantasDisponibles } from '../../models/federatarios-y-plantas.model';
+import { PlantasImmex } from '../../models/federatarios-y-plantas.model';
+import { TEXTO_DE_ALERTA } from '../../models/federatarios-y-plantas.model';
+
+import { FECHA_DE_PAGO } from '../../constantes/federatarios-y-plantas.enum';
+
+import { FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Validators } from '@angular/forms';
+
+/**
+ * Componente para los federatarios y plantas
+ * @export FederatariosYPlantasComponent
+ */
 @Component({
   selector: 'app-federatarios-y-plantas',
   standalone: true,
@@ -42,29 +44,77 @@ import {
   styleUrl: './federatarios-y-plantas.component.scss',
 })
 export class FederatariosYPlantasComponent {
+  /**
+   * Configuración para la tabla de federatarios
+   * @property {FederatariosYPlantasConfiguration<FederatariosEncabezado>} federatariosConfig
+   */
   @Input()
   federatariosConfig!: FederatariosYPlantasConfiguration<FederatariosEncabezado>;
+
+  /**
+   * Configuración para la tabla de plantas disponibles
+   * @property {FederatariosYPlantasConfiguration<PlantasDisponibles>} plantasDisponiblesConfig
+   */
   @Input()
   plantasDisponiblesConfig!: FederatariosYPlantasConfiguration<PlantasDisponibles>;
+
+  /**
+   * Configuración para la tabla de plantas IMMEX
+   * @property {FederatariosYPlantasConfiguration<PlantasImmex>} plantasImmexConfig
+   */
   @Input() plantasImmexConfig!: FederatariosYPlantasConfiguration<PlantasImmex>;
 
+  /**
+   * Datos de federatarios para mostrar en la tabla
+   * @property {FederatariosEncabezado[]} federatariosDatos
+   */
   @Input() federatariosDatos!: FederatariosEncabezado[];
 
+  /**
+   * Datos de plantas disponibles para mostrar en la tabla
+   * @property {PlantasDisponibles[]} plantasDisponiblesDatos
+   */
   @Input() plantasDisponiblesDatos!: PlantasDisponibles[];
+
+  /**
+   * Datos de plantas IMMEX para mostrar en la tabla
+   * @property {PlantasImmex[]} plantasImmexDatos
+   */
   @Input() plantasImmexDatos!: PlantasImmex[];
 
+  /**
+   * Configuración del input de fecha de inicio
+   * @property {InputFecha} fechaInicioInput
+   */
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
+
+  /**
+   * Opciones de estados disponibles
+   * @property {[]} estadoOptions
+   */
   estadoOptions: [] = [];
 
+  /**
+   * Texto para mostrar en la alerta
+   * @property {string} textodAlerta
+   */
   public textodAlerta = TEXTO_DE_ALERTA;
-  //
 
+  /**
+   * Formulario para los datos de federatarios
+   * @property {FormGroup} federatariosFormGroup
+   */
   public federatariosFormGroup!: FormGroup;
 
   constructor() {
     this.initFederatariosFormGroup();
   }
 
+  /**
+   * Inicializa el formulario de federatarios con sus campos y validaciones
+   * @method initFederatariosFormGroup
+   * @returns {void}
+   */
   initFederatariosFormGroup(): void {
     this.federatariosFormGroup = new FormGroup({
       nombre: new FormControl('', Validators.required),

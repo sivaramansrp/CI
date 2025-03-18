@@ -6,32 +6,30 @@ export interface MontoDeInversion {
   MONTO: string;
 }
 
-//#Planta | Tipo | Cantidad | Descripción | Monto
-
 export const MONTOS_DE_INVERSION = [
   {
     encabezado: '#Planta',
-    clave: (ele: MontoDeInversion) => ele.PLANTA,
+    clave: (ele: MontoDeInversion): string => ele.PLANTA,
     orden: 1,
   },
   {
     encabezado: 'Tipo',
-    clave: (ele: MontoDeInversion) => ele.TIPO,
+    clave: (ele: MontoDeInversion): string => ele.TIPO,
     orden: 2,
   },
   {
     encabezado: 'Cantidad',
-    clave: (ele: MontoDeInversion) => ele.CANTIDAD,
+    clave: (ele: MontoDeInversion): string => ele.CANTIDAD,
     orden: 3,
   },
   {
     encabezado: 'Descripción',
-    clave: (ele: MontoDeInversion) => ele.DESCRIPCION,
+    clave: (ele: MontoDeInversion): string => ele.DESCRIPCION,
     orden: 4,
   },
   {
     encabezado: 'Monto',
-    clave: (ele: MontoDeInversion) => ele.MONTO,
+    clave: (ele: MontoDeInversion): string => ele.MONTO,
     orden: 5,
   },
 ];
