@@ -49,6 +49,7 @@ export * from './tramites/components/agregar-archivo/agregar-archivo.component';
 export * from './tramites/components/agregar-transporte/agregar-transporte.component';
 export * from './tramites/components/alert/alert.component';
 export * from './tramites/components/anexar-documentos/anexar-documentos.component';
+export * from './tramites/constantes/registro-como-empresa.enum'
 export * from './tramites/components/breadcrumb/breadcrumb.component';
 export * from './tramites/components/btn-continuar/btn-continuar.component';
 export * from './tramites/components/catalogo-select/catalogo-select.component';
@@ -91,6 +92,11 @@ export * from './tramites/constantes/regex.constants';
 export * from './tramites/constantes/seccionesTramites';
 export * from './tramites/constantes/servicios-extraordinarios.enum';
 export * from './tramites/directives/Uppercase/uppercase.directive';
+export * from './tramites/constantes/solicitante-constantes.enum';
+export * from './tramites/constantes/120601/datos-generales-socios-tabledata.enum';
+
+
+
 export * from './tramites/pages/acuse-page/acuse-page.component';
 export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
