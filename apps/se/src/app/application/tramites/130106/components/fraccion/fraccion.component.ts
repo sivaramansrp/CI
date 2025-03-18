@@ -4,9 +4,9 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent,TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
 import {Subject, map,takeUntil } from 'rxjs';
-import { Partidas } from 'libs/shared/data-access-user/src/core/models/130106/partidas.model';
+import { Partidas } from '@libs/shared/data-access-user/src/core/models/130106/partidas.model';
 import { Tramite130106Query } from '../../../../estados/queries/tramite130106.query';
-import fraccions from 'libs/shared/theme/assets/json/130106/fraccion.json';
+import fraccions from '@libs/shared/theme/assets/json/130106/fraccion.json';
 
 /**
  * Componente que maneja el formulario de fracción, incluyendo la inicialización y la gestión de fechas seleccionadas.
@@ -123,22 +123,22 @@ export class FraccionComponent implements OnInit, OnDestroy {
     {
       btnNombre: 'Agregar todos',
       class: 'btn-primary',
-      funcion: () => this.agregar(''),
+      funcion: (): void => this.agregar(''),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-default',
-      funcion: () => this.agregar('t'),
+      funcion: (): void => this.agregar('t'),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-danger',
-      funcion: () => this.quitar(''),
+      funcion: (): void => this.quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: () => this.quitar('t'),
+      funcion: (): void => this.quitar('t'),
     },
   ];
 
@@ -146,7 +146,7 @@ export class FraccionComponent implements OnInit, OnDestroy {
    * Agrega elementos a la lista de fechas seleccionadas dependiendo del tipo de acción.
    * @param tipo - El tipo de acción ('t' para agregar todos, otro valor para agregar una sola fecha).
    */
-  agregar(tipo: string) {
+  agregar(tipo: string): void {
     if (tipo === 't') {
       this.fechasSeleccionadas = [...this.selectRangoDias]; // Agrega todos los rangos de días
       this.fechasDatos = []; // Vacía las fechas disponibles
@@ -161,7 +161,7 @@ export class FraccionComponent implements OnInit, OnDestroy {
    * Elimina elementos de la lista de fechas seleccionadas dependiendo del tipo de acción.
    * @param tipo - El tipo de acción ('t' para eliminar todas, otro valor para eliminar una sola fecha).
    */
-  quitar(tipo: string = '') {
+  quitar(tipo: string = ''): void {
     if (tipo === 't') {
       this.fechasDatos = [...this.fechasSeleccionadas]; // Mueve todas las fechas seleccionadas a fechas disponibles
       this.fechasSeleccionadas = []; // Limpia la lista de fechas seleccionadas
@@ -234,7 +234,7 @@ export class FraccionComponent implements OnInit, OnDestroy {
   /**
    * Convierte los datos del formulario en una nueva partida y la agrega a la lista de partidas.
    */
-  paridasData() {
+  paridasData(): void {
     const FORMDATA = this.FraccionForm.value; // Obtiene los datos del formulario
     const NEWPARTIDA: Partidas = {
       cantidad: FORMDATA.cantidad, // Asigna la cantidad

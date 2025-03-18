@@ -180,7 +180,7 @@
             <div class="form-group">
               
                 
-            <app-catalogo-select [catalogo]="entidad" [label]="'Fracción arancelaria'"   [required]="true" name="entidad"
+            <app-catalogo-select [catalogo]="entidad" [label]="'Entidad federativa'"   [required]="true" name="entidad"
                 formControlName="entidad" (change)="setValoresStore(FraccionForm,'entidad', 'setEntidad')">
             </app-catalogo-select>
             
@@ -189,7 +189,7 @@
         </div>
         <div class="col-md-4">
             <div class="form-group">
-            <app-catalogo-select [catalogo]="representacion" [label]="'Fracción arancelaria'"   [required]="true" name="representacion"
+            <app-catalogo-select [catalogo]="representacion" [label]="'Representación federal'"   [required]="true" name="representacion"
                 formControlName="representacion" (change)="setValoresStore(FraccionForm,'representacion', 'setRepresentacion')">
             </app-catalogo-select>
             
