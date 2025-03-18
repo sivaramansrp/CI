@@ -29,7 +29,9 @@ export class PasoDosComponent {
    * Constructor del componente.
    * @param {CatalogosService} catalogosServices - Servicio para obtener los catálogos.
    */
-  constructor(private catalogosServices: CatalogosService) {}
+  constructor(private catalogosServices: CatalogosService) {
+    
+  }
 
   /**
    * Método que se ejecuta al iniciar el componente

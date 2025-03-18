@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SanitarioComponent } from './pages/sanitario/sanitario.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
     path: 'sanitario',
     component: SanitarioComponent,
@@ -15,7 +15,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class PermisoSanitarioImportacionRoutingModule { }

@@ -1,14 +1,16 @@
+import { Observable,catchError,throwError } from 'rxjs';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable,throwError } from 'rxjs';
 import { PermisoModel } from '../models/permiso-sanitario.model';
-import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServiciosPermisoSanitarioService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // to be initilized
+  }
 
   getBancoData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('./assets/json/260215/banco-options.json');
