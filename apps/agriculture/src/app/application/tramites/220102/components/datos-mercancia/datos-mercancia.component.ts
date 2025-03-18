@@ -40,7 +40,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   IMPORTANTES: string = IMPORTANTE.Importante;
 
-  cuerpoTabla: any[] = [];
+  cuerpoTabla: MercanciaForm[] = [];
 
   formMercancia!: FormGroup;
 
@@ -90,8 +90,20 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     this.getpaisProcedencia();
     this.gettipoProducto();
     this.getpaisOrigen();
+    this.getUmc();
   }
   ngOnInit(): void {
+
+    this.formMercancia?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
+      if (this.formMercancia.valid) {
+        this.cuerpoTabla.push(this.formMercancia.value as MercanciaForm);
+
+        this.estadoChecker = false;
+        console.log(this.cuerpoTabla)
+      }
+    })
+  }
+  crearDesdeDatos() {
     this.formMercancia = this.fb.group({
       nombreComun: ['', Validators.required],
       nombreCientifico: ['', Validators.required],
@@ -100,9 +112,9 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       paisProcedencia: ['', Validators.required],
       tipoProducto: ['', Validators.required],
       fraccionArancelaria: ['', Validators.required],
-      descripcionFraccionArancelaria: [{ value: '', disabled: true }, Validators.required],
+      descripcionFraccionArancelaria: ['', Validators.required],
       cantidadUMT: [''],
-      umt: [{ value: '', disabled: true }],
+      umt: [''],
       cantidadUMC: ['', Validators.required],
       umc: ['', Validators.required],
       descripcion: ['', Validators.required]
@@ -180,10 +192,21 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     })
   }
   openDatosPara() {
+    this.crearDesdeDatos();
     this.estadoChecker = !this.estadoChecker;
   }
 
+  setValoresStore(
+    campo?: string
+  ): void {
+    if (campo === 'fraccionArancelaria') {
+      this.formMercancia.patchValue({
+        descripcionFraccionArancelaria: 'CR-123456',
+        umt: 'Dependencia-34',
+      });
+    }
 
+  }
   /**
  * @description Limpia las suscripciones activas cuando el componente es destruido.
  * Este método se llama automáticamente cuando el componente es destruido para evitar fugas de memoria.
