@@ -26,14 +26,21 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registro-cuentas-bancarias',
+    loadChildren: () =>
+      import('./tramites/6001/registro-cuentas-bancarias/registro-cuentas-bancarias.module').then((m) => m.RegistroCuentasBancariasModule),
+  },
+  {
     path: 'importante',
     loadChildren: () =>
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
   },
   {
-    path: 'certi-registro',
+    path: 'muestras-mercancias',
     loadChildren: () =>
-      import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
+      import('./tramites/30901/renovaciones-muestras-mercancias.module').then(
+        (m) => m.RenovacionesMuestrasMercanciasModule
+      ),
   },
   {
     path: 'atender-requerimientos',
@@ -52,6 +59,11 @@ const ROUTES: Routes = [
   {
     path: 'acuse',
     component: AcusePageComponent
+  },
+  {
+  path: 'certi-registro',
+    loadChildren: () =>
+      import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
   }
 ];
 
