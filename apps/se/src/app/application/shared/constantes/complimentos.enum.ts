@@ -1,4 +1,4 @@
-import { DatosCatalago } from '../../tramites/80102/models/autorizacion-programa-nuevo.model';
+import { DatosCatalago } from '../../tramites/80101/models/nuevo-programa-industrial.model';
 import { SociaoAccionistas } from '../models/complimentos.model';
 
 export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [

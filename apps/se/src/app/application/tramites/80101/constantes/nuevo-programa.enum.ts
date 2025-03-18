@@ -3,7 +3,7 @@ import {
   DatosEmpresaExtranjera,
   Servicio,
   ServicioInmex,
-} from '../models/autorizacion-programa-nuevo.model';
+} from '../models/nuevo-programa-industrial.model';
 
 export const PASOS = [
   {

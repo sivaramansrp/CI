@@ -9,9 +9,11 @@ import {
   TituloComponent,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-import { AnexoVistaDosYTresComponent } from './component/anexo-vista-dos-y-tres/anexo-vista-dos-y-tres.component';
+import { AggregarComplimentosComponent } from './component/aggregar-complimentos/aggregar-complimentos.component';
 import { AnexoVistaUnoComponent } from './component/anexo-vista-uno/anexo-vista-uno.component';
+import { AnexoVistaDosYTresComponent } from './component/anexo-vista-dos-y-tres/anexo-vista-dos-y-tres.component';
 import { CommonModule } from '@angular/common';
+import { EmpresasSubfabricanteComponent } from './component/empresas-subfabricante/empresas-subfabricante.component';
 import { NgModule } from '@angular/core';
 
 import { ComplementarPlantaComponent } from '../../shared/components/complementar-planta/complementar-planta.component';
@@ -50,6 +52,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     AnexoVistaUnoComponent,
     FederatariosYPlantasVistaComponent,
     ComplementarPlantaComponent,
+    AggregarComplimentosComponent,
+    EmpresasSubfabricanteComponent
   ],
 })
 export class NuevoProgramaIndustrialModule {}

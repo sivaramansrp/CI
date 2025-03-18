@@ -1,5 +1,6 @@
 import { RouterModule, Routes } from '@angular/router';
 import { ComplementarFraccionVistaComponent } from './component/complementar-fraccion-vista/complementar-fraccion-vista.component';
+import { ContenedorComplementarPlantasComponent } from './component/contenedor-complementar-plantas/contenedor-complementar-plantas.component';
 import { ContenedorProveedorClienteComponent } from './component/contenedor-proveedor-cliente/contenedor-proveedor-cliente.component';
 import { NgModule } from '@angular/core';
 import { PasoCapturarSolicitudComponent } from './pages/paso-capturar-solicitud/paso-capturar-solicitud.component';
@@ -32,6 +33,10 @@ const ROUTES: Routes = [
   {
     path: 'contenedor-proveedor-cliente',
     component: ContenedorProveedorClienteComponent,
+  },
+  {
+    path: 'complementar-plantas',
+    component: ContenedorComplementarPlantasComponent,
   },
 ];
 
