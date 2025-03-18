@@ -1,14 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { PERMISO_MAQUILA } from '../../constantes/permiso-maquila.enum';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
 
+interface AccionBoton {
+  accion: string;
+  valor: number;
+}
 @Component({
   selector: 'app-permiso-maquila',
   standalone: false,
   templateUrl: './permiso-maquila.component.html',
 })
 export class PermisoMaquilaComponent {
-
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   /**
      * Esta variable se utiliza para almacenar la lista de pasos.
      */
@@ -19,4 +23,23 @@ export class PermisoMaquilaComponent {
    */
   indice = 1;
 
+  pasos: ListaPasosWizard[] = PASOS;
+  datosPasos: DatosPasos = {
+    nroPasos: this.pasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
+  };
+
+
+  getValorIndice(e: AccionBoton) {
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
+  }
 }
