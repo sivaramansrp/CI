@@ -75,22 +75,21 @@
 
     <ng-container>
       @switch (indice) { @case (1) {
-      <solicitante ></solicitante>
+      <solicitante></solicitante>
       } @case (2) {
-       <app-aggregar-complimentos></app-aggregar-complimentos>
-     
+      <app-aggregar-complimentos></app-aggregar-complimentos>
+
       } @case (3) {
       <app-servicios></app-servicios>
       } @case (4) {
-        <app-contenedor-annexo-uno></app-contenedor-annexo-uno>
-        } 
-      @case(6){
-        <app-empresas-subfabricante [tabIndex]="indice"></app-empresas-subfabricante>
-      }
-      @case(7){
-        <app-contenedor-annexo-dos-tres></app-contenedor-annexo-dos-tres>
-      }
-    }
+      <app-contenedor-annexo-uno></app-contenedor-annexo-uno>
+      } @case (5) {
+        <app-federatarios-y-plantas-vista></app-federatarios-y-plantas-vista>
+      } @case(6){
+      <app-empresas-subfabricante></app-empresas-subfabricante>
+      } @case(7){
+      <app-contenedor-annexo-dos-tres></app-contenedor-annexo-dos-tres>
+      } }
     </ng-container>
   </div>
 </div>

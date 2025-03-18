@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ContenedorAnnexoDosTresComponent } from '../../components/contenedor-annexo-dos-tres/contenedor-annexo-dos-tres.component';
 import { ContenedorAnnexoUnoComponent } from '../../components/contenedor-annexo-uno/contenedor-annexo-uno.component';
 import { EmpresasSubfabricanteComponent } from '../../components/empresas-subfabricante/empresas-subfabricante.component';
+import { FederatariosYPlantasVistaComponent } from '../../components/federatarios-y-plantas-vista/federatarios-y-plantas-vista.component';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ServiciosComponent } from "../../components/servicios/servicios.component";
@@ -26,7 +27,8 @@ import { Tramite80102Store } from '../../estados/tramite80102.store';
     AggregarComplimentosComponent,
     EmpresasSubfabricanteComponent,
     ContenedorAnnexoDosTresComponent,
-    ContenedorAnnexoUnoComponent
+    ContenedorAnnexoUnoComponent,
+    FederatariosYPlantasVistaComponent
 ],
   host: { hostID: crypto.randomUUID().toString() },
 })
