@@ -1,15 +1,38 @@
-/* eslint-disable sort-imports */
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, TEXTOS, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud11201State, Tramite11201Store } from '../../../../estados/tramites/tramite11201.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Aduanas } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
+import { AlertComponent } from '@libs/shared/data-access-user/src';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { Contenedores } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
+import { DatosDelContenedor } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
+import { FormArray } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { Input } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Solicitud11201State } from '../../../../estados/tramites/tramite11201.store';
+import { Subject } from 'rxjs';
+import { TEXTOS } from '@libs/shared/data-access-user/src';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TemplateRef } from '@angular/core';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite11201Query } from '../../../../estados/queries/tramite11201.query';
-import { Aduanas, Contenedores, DatosDelContenedor } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
+import { Tramite11201Store } from '../../../../estados/tramites/tramite11201.store';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Validators } from '@angular/forms';
+import { ViewChild } from '@angular/core';
+import { map } from 'rxjs';
 import moment from 'moment';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { takeUntil } from 'rxjs';
+
 @Component({
   selector: 'app-contenedor',
   templateUrl: './contenedor.component.html',
@@ -26,7 +49,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
   ],
   providers: [BsModalService]
 })
-export class ContenedorComponent implements OnInit {
+export class ContenedorComponent implements OnInit, OnDestroy {
   solicitudForm!: FormGroup;
   showAdjuntarArchivo: boolean = false;
   showSeccionAduanaaFecha: boolean = false;
@@ -510,4 +533,11 @@ export class ContenedorComponent implements OnInit {
     this.abiertoModeloDatos = datos;
     this.modalRef = this.modalService.show(this.plantillaDeModelo, { id: 1, class: 'modal-sm' });
   }
+
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }
