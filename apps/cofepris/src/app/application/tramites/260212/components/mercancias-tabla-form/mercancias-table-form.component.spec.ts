@@ -39,9 +39,9 @@ describe('MercanciasTableFormComponent', () => {
     expect(component.Cancelar.emit).toHaveBeenCalled();
   });
 
-  it('should populate "clave" using SolicitudService.getclave()', () => {
+  it('should populate "especificarClasificacion"', () => {
     expect(mockSolicitudService.getclave).toHaveBeenCalled();
-    expect(component.clave).toEqual([{ id: 1, descripcion: 'Test Catalogo' }]);
+    expect(component.especificarClasificacion).toEqual([{ id: 1, descripcion: 'Test Catalogo' }]);
   });
 
   it('should set form values and mark fields as required', () => {

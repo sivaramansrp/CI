@@ -1,10 +1,13 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Catalogo, CatalogoSelectComponent, CrosslistComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { PaisDeOriginComponent } from '../pais-de-origin/pais-de-origin.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { SolicitudService } from '../../services/solicitud.service';
+import { Tramite260212Store } from '../../estados/tramite260212.store';
+import { Tramite260212Query } from '../../estados/tramite260212.query';
+import { Observable, Subject } from 'rxjs';
 
 /**
  * Componente MercanciasTableFormComponent
@@ -23,11 +26,28 @@ import { SolicitudService } from '../../services/solicitud.service';
   templateUrl: './mercancias-table-form.component.html',
   styleUrl: './mercancias-table-form.component.scss',
 })
-export class MercanciasTableFormComponent implements OnInit {
+export class MercanciasTableFormComponent implements OnInit, OnDestroy {
   /**
    * Evento de salida que emite una acción de Cancelaración.
    */
   @Output() Cancelar = new EventEmitter<void>();
+
+  /**
+    * Subject used for cleaning up component resources when destroyed.
+    */
+  private destroy$ = new Subject<void>();
+
+  /**
+   * Observable for the currently selected "clave" (key) value from the store.
+   */
+  selecteDespecificarClasificacion$: Observable<Catalogo | null> =
+    this.tramite260212Query.selecteDespecificarClasificacion$;
+
+  /**
+   * Observable for the currently selected "descripcion" (description) value from the store.
+   */
+  selectedDescripcion$: Observable<Catalogo | null> =
+    this.tramite260212Query.selectedDescripcion$;
 
   /**
   * Emite el evento de Cancelaración para cerrar el formulario.
@@ -38,8 +58,11 @@ export class MercanciasTableFormComponent implements OnInit {
   /**
     * Arreglo que almacena las claves del catálogo.
     */
-  clave: Catalogo[] = []
+  especificarClasificacion: Catalogo[] = [];
 
+  clasificacionProducto: Catalogo[] = [];
+
+  estadoFisico: Catalogo[] = [];
 
   /**
    * Formulario reactivo para gestionar los datos de mercancías.
@@ -52,7 +75,10 @@ export class MercanciasTableFormComponent implements OnInit {
    * @param {FormBuilder} fb - Servicio de Angular para la creación de formularios reactivos.
    * @param {SolicitudService} solicitudService - Servicio personalizado para manejar solicitudes.
    */
-  constructor(private fb: FormBuilder, private solicitudService: SolicitudService) { }
+  constructor(private fb: FormBuilder, private solicitudService: SolicitudService,
+    private tramite260212Store: Tramite260212Store,
+    private tramite260212Query: Tramite260212Query
+  ) { }
 
   /**
   * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
@@ -62,9 +88,22 @@ export class MercanciasTableFormComponent implements OnInit {
     this.datosMercanciaFormInitial();
 
     this.solicitudService.getclave().subscribe((data) => {
-      this.clave = data;
-    }
-    );
+      this.especificarClasificacion = data;
+    });
+
+    this.solicitudService.getclasificacionProducto().subscribe((data) => {
+      this.clasificacionProducto = data;
+    });
+
+    this.solicitudService.geTestadoFisico().subscribe((data) => {
+      this.estadoFisico = data;
+    });
+
+    this.selecteDespecificarClasificacion$.subscribe((selectedDespecificarClasificacion) => {
+      if (selectedDespecificarClasificacion) {
+        this.datosMercanciaForm.get('especificarClasificacion')?.setValue(selectedDespecificarClasificacion);
+      }
+    });
   }
 
   /**
@@ -88,4 +127,18 @@ export class MercanciasTableFormComponent implements OnInit {
       tipoDeEnvase: ['', Validators.required]
     });
   }
+
+  getMunicipios(): void {
+    const SELECTED_ESPECIFICIAR = this.datosMercanciaForm.get('especificarClasificacion')?.value;
+    this.tramite260212Store.setDespecificarClasificacion(SELECTED_ESPECIFICIAR);
+  }
+
+    /**
+   * Angular lifecycle hook invoked when the component is destroyed.
+   * Cleans up any subscriptions or resources associated with the component.
+   */
+    ngOnDestroy(): void {
+      this.destroy$.next();
+      this.destroy$.complete();
+    }
 }

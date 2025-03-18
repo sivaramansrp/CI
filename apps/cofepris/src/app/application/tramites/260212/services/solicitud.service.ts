@@ -25,4 +25,13 @@ export class SolicitudService {
     return  this.http.get<LosOption[]>('/assets/json/260212/opciones-de-radio.json')
   }
 
+  getclasificacionProducto(){
+    return  this.http.get<[]>('/assets/json/260212/clasificacionProducto.json')
+  }
+
+  geTestadoFisico(){
+    return  this.http.get<[]>('/assets/json/260212/estadoFisico.json')
+  }
+  
+
 }
