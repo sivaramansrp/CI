@@ -9,6 +9,8 @@ export interface Solicitud130106State {
  solitudDescripcion:string
  solitudFraccion:string;
  solitudCantidad:string;
+ valor:string;
+ solitudUMT:string;
  fraccion:string
  cantidad:string;
  factura:string;
@@ -32,6 +34,8 @@ export function createInitialState(): Solicitud130106State {
     solitudDescripcion: '',
     solitudFraccion: '',    
     solitudCantidad: '',
+    valor:'',
+    solitudUMT:'',
     fraccion:'',
     cantidad:'',
     factura:'',
@@ -172,6 +176,19 @@ export function createInitialState(): Solicitud130106State {
             }));
         }
 
+        public setValor(valor: string) {
+            this.update((state) => ({
+                ...state,
+                valor,
+            }));
+        }
+
+        public setSolitudUMT(solitudUMT: string) {
+            this.update((state) => ({
+                ...state,
+                solitudUMT,
+            }));
+        }
 
     }
 

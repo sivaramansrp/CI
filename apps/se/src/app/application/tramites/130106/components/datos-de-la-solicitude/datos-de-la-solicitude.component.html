@@ -48,11 +48,11 @@
             </div>
             <div class="col-md-4">
                 <label for="valor" class="form-label">Valor factura USD*:</label>
-                <input type="number" id="valor" name="valor" class="form-control" formControlName="Valor">
+                <input type="number" id="valor" name="valor" class="form-control" formControlName="Valor" (change)="setValoresStore(formulario,'Valor', 'setValor')">
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="configuracionesDropdown[3].catalogos" formControlName="Umt"
-                    [label]="'UMT'" [required]="true" name="UMT"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="configuracionesDropdown[3].catalogos" formControlName="SolitudUMT"
+                    [label]="'UMT'" [required]="true" name="UMT" (change)="setValoresStore(formulario,'SolitudUMT', 'setSolitudUMT')"></app-catalogo-select>
             </div>
         </div>
     </form>
