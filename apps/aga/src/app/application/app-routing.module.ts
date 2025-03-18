@@ -44,7 +44,6 @@ const ROUTES: Routes = [
       ),
   },
   {
-
     path: 'atender-requerimientos',
     loadChildren: () => import('./atencion-requerimientos/atencion-requerimientos.module').then(
       (m) => m.AtencionRequerimientosModule
