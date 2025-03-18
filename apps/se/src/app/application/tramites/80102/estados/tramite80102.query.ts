@@ -59,6 +59,16 @@ export class AmpliacionServiciosQuery extends Query<AmpliacionServiciosState> {
     return state.empressaSubFabricantePlantas.plantasPorCompletar
   });
 
+  //annexo-dos-tres-queries
+
+  anexoDosTableLista$ = this.select((state) => {
+    return state.annexoDosTres.anexoDosTablaLista
+  });
+
+  anexoTresTablaLista$ = this.select((state) => {
+    return state.annexoDosTres.anexoTresTablaLista
+  });
+
   indicePrevioRuta$ = this.select((state) => {
     return state.indicePrevioRuta
   });

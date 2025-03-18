@@ -1,12 +1,14 @@
-import { Catalogo, CatalogoPaises } from '@ng-mf/data-access-user';
 import {
+  AnnexoDosTres,
   DatosEmpresaExtranjera,
   Servicio,
   ServicioInmex,
   Servicios,
 } from '../models/autorizacion-programa-nuevo.model';
+import { Catalogo, CatalogoPaises } from '@ng-mf/data-access-user';
 import { DatosSubcontratista, EmpressaSubFabricantePlantas, PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { Store, StoreConfig } from '@datorama/akita';
+import { AnexoEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { Injectable } from '@angular/core';
 
@@ -28,7 +30,8 @@ export interface AmpliacionServiciosState {
 
   datosComplimentos: DatosComplimentos;
 
- empressaSubFabricantePlantas:EmpressaSubFabricantePlantas
+ empressaSubFabricantePlantas:EmpressaSubFabricantePlantas,
+ annexoDosTres: AnnexoDosTres,
  indicePrevioRuta:number
  
 }
@@ -106,6 +109,10 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
     plantasSubfabricantesAgregar: [],
     plantasPorCompletar:[],
     
+},
+annexoDosTres:{
+  anexoDosTablaLista:[],
+  anexoTresTablaLista:[]
 },
 indicePrevioRuta:0,
 };
@@ -323,10 +330,36 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
     }));
   }
 
+  //annexo dos y tres estados
+
+  setAnnexoDosTableLista(anexoDosTablaLista:AnexoEncabezado[]):void{
+    this.update((state) => ({
+      ...state,
+      annexoDosTres: {
+        ...state.annexoDosTres,
+        anexoDosTablaLista: anexoDosTablaLista,
+      }
+     
+    }));
+  }
+
+  setAnnexoTresTableLista(anexoTresTablaLista:AnexoEncabezado[]):void{
+    this.update((state) => ({
+      ...state,
+      annexoDosTres: {
+        ...state.annexoDosTres,
+        anexoTresTablaLista: anexoTresTablaLista,
+      }
+     
+    }));
+  }
+
   setindicePrevioRuta(indice:number):void{
     this.update((state) => ({
       ...state,
       indicePrevioRuta: indice,
     }));
   }
+
+  
 }
