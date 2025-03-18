@@ -5,8 +5,8 @@ import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MediodetransporteService } from '../../services//medio-de-transporte.service';
 import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
-import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
+import { Solicitud230101State, Solicitud230101Store } from '../../estados/tramites/tramites230101.store';
+import { Solicitud230101Query } from '../../estados/queries/tramites230101.query';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 @Component({
@@ -19,7 +19,7 @@ export class PagoDeDerechoComponent implements OnInit {
   /**
      * Estado de la transporte.
      */
-  public derechoState!: Solicitud220402State;
+  public derechoState!: Solicitud230101State;
 
   private destroyNotifier$: Subject<void> = new Subject();
 
@@ -41,8 +41,8 @@ export class PagoDeDerechoComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private captuaservice: CapturaSolicitudeService,
-    private solicitud220402Store: Solicitud220402Store,
-    private solicitud220402Query: Solicitud220402Query,
+    private solicitud230101Store: Solicitud230101Store,
+    private solicitud230101Query: Solicitud230101Query,
     private validacionesService: ValidacionesFormularioService,
     private mediodetransporteService: MediodetransporteService
   ) {
@@ -72,7 +72,7 @@ export class PagoDeDerechoComponent implements OnInit {
   ngOnInit(): void {
     this.getMercancia();
 
-    this.solicitud220402Query.selectSolicitud$
+    this.solicitud230101Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -84,7 +84,6 @@ export class PagoDeDerechoComponent implements OnInit {
     this.FormSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
         exentoDePago: [this.derechoState?.exentoDePago, Validators.required],
-        nombreImportExport: [this.derechoState?.nombreImportExport, Validators.required],
         justificacion: [this.derechoState?.justificacion, Validators.required],
         claveDeReferencia: [this.derechoState?.claveDeReferencia, Validators.required],
         cadenaDependencia: [this.derechoState?.cadenaDependencia, Validators.required],
@@ -205,9 +204,9 @@ export class PagoDeDerechoComponent implements OnInit {
        * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
        * @returns {void}
        */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud220402Store): void {
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud230101Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud220402Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.solicitud230101Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
   /**

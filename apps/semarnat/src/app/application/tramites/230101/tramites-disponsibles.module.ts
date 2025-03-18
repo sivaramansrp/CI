@@ -30,6 +30,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { SolicitudDatosComponent } from './shared/solicitud-datos/solicitud-datos.component';
 import { SolicitudPantallasService } from './services/solicitud-pantallas.service';
+import { MediodetransporteService } from './services/medio-de-transporte.service';
 
 
 @NgModule({
@@ -67,7 +68,7 @@ import { SolicitudPantallasService } from './services/solicitud-pantallas.servic
     SolicitudDatosComponent,
     ToastrModule.forRoot()
   ],
-  providers:[ToastrService, SolicitudPantallasService],
+  providers:[ToastrService, SolicitudPantallasService, MediodetransporteService],
   exports: [],
 })
 export class TramitesDisponiblesModule {}

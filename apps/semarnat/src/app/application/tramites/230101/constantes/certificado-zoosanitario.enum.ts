@@ -27,5 +27,6 @@ export const TEXTOS_REQUISITOS = {
 };
 
 export const TEXTOS = {
-  TEXTOS_SOLICITUD: 'Al dar doble-clic en una Solicitud, se copiar&aacute;n sus datos en esta Solicitud.'
+  TEXTOS_SOLICITUD: 'Al dar doble-clic en una Solicitud, se copiar&aacute;n sus datos en esta Solicitud.',
+  MERCANCIAS: 'Se permite agregar solo una Fracción Arancelaria por solicitud'
 };
