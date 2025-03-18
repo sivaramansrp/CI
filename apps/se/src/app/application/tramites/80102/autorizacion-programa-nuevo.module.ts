@@ -10,7 +10,8 @@ import { ToastrService } from "ngx-toastr";
   declarations: [],
   imports: [CommonModule,AutorizacionProgrmaNuevoRoutingModule,
      EmpresasSubfabricanteComponent,
-     ContenedorComplementarPlantasComponent],
+     ContenedorComplementarPlantasComponent,
+    ],
   providers: [ToastrService,AutorizacionProgrmaNuevoService]
 })
 export class AutorizacionProgrmaNuevoModule { }
