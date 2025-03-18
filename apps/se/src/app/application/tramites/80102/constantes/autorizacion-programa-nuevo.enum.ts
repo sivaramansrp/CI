@@ -133,4 +133,133 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
   },
 ];
 
+export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
+  {
+    labelNombre: 'Tax ID',
+    campo: 'taxId',
+    class: 'col-md-7 col-sm-10 pr-5',
+    tipo_input: 'text',
+    required: true,
+    orden: 1,
+  },
+  {
+    labelNombre: 'Denominación o razón social',
+    campo: 'razonSocial',
+    class: 'col-md-6 col-sm-10 mt-3',
+    tipo_input: 'text',
+    required: true,
+    orden: 2,
+  },
+  {
+    labelNombre: 'País',
+    campo: 'pais',
+    class: 'col-md-6 col-10 mt-1',
+    tipo_input: 'select-paise',
+    required: true,
+    opciones: [],
+    orden: 3,
+  },
+  {
+    labelNombre: 'Código postal',
+    campo: 'codigoPostal',
+    class: 'col-md-6 col-10 mt-3',
+    tipo_input: 'text',
+    required: true,
+    orden: 4,
+  },
+  {
+    labelNombre: 'Estado',
+    campo: 'estado',
+    class: 'col-md-6 col-10  mt-1',
+    tipo_input: 'select-catalog',
+    required: true,
+    opcionesCatalogo: [],
+    orden: 5,
+  },
+  {
+    labelNombre: 'Correo electrónico',
+    campo: 'correoElectronico ',
+    class: 'col-md-6 col-10 mt-3',
+    tipo_input: 'text',
+    required: true,
+    orden: 6,
+  },
+];
 
+export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
+  {
+    labelNombre: 'Nombre',
+    campo: 'nombre',
+    class: 'col-md-6 col-sm-10 mt-3',
+    tipo_input: 'text',
+    required: true,
+    orden: 1,
+  },
+  {
+    labelNombre: 'Apellido paterno',
+    campo: 'apellidoPaterno',
+    class: 'col-md-6 col-sm-10 mt-3',
+    tipo_input: 'text',
+    required: true,
+    orden: 2,
+  },
+  {
+    labelNombre: 'País',
+    campo: 'pais',
+    class: 'col-md-10 col-10 mt-1',
+    tipo_input: 'select-paise',
+    required: true,
+    opciones: [],
+    orden: 3,
+  },
+  {
+    labelNombre: 'Código postal',
+    campo: 'codigoPostal',
+    class: 'col-md-6 col-10 mt-3',
+    tipo_input: 'text',
+    required: true,
+    orden: 4,
+  },
+  {
+    labelNombre: 'Estado',
+    campo: 'estado',
+    class: 'col-md-6 col-10 mt-3',
+    tipo_input: 'select-catalog ',
+    required: true,
+    opcionesCatalogo: [],
+    orden: 5,
+  },
+  {
+    labelNombre: 'Correo electrónico',
+    campo: 'correoElectronico',
+    class: 'col-md-6 col-10 mt-3',
+    tipo_input: 'text',
+    required: true,
+    orden: 6,
+  },
+  {
+    labelNombre: 'Tax ID',
+    campo: 'taxId',
+    class: 'col-md-6 col-sm-10 mt-3',
+    tipo_input: 'text',
+    required: true,
+    orden: 7,
+  },
+];
+
+export const FORMA_SOCIO: DatosCatalago[] = [
+  {
+    labelNombre: 'Registro Federal de Contribuyentes',
+    campo: 'rfc',
+    class: 'col-md-6 col-10 mt-3',
+    tipo_input: 'text',
+    required: true,
+    orden: 1,
+  },
+];
+
+export enum TIPO_FORMA {
+  DEFAULT = 1,
+  TIPO_PERSONA = 2,
+  NATIONALIDAD_MEXICANA = 3,
+}

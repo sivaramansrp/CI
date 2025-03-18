@@ -1,7 +1,6 @@
 import {
   CATALOGOS_ID,
   Catalogo,
-  CatalogoPaises,
   CatalogoSelectComponent,
   CatalogosService,
   FormularioDinamico,

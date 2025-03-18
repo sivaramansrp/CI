@@ -32,6 +32,7 @@ export class AggregarComplimentosComponent {
       this.tramiteQuery.selectTablaDatosComplimentos$;
     this.tablaDatosComplimentosExtranjera$ =
       this.tramiteQuery.selectTablaDatosComplimentosExtranjera$;
+  
     this.tramiteQuery.selectDatosComplimento$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
