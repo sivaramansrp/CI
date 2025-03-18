@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
 
+/**
+ * @descripción
+ * Componente `Datos260212Component` encargado de manejar las pestañas (tabs) 
+ * en la interfaz de usuario. Proporciona la funcionalidad de selección de pestañas.
+ */
 @Component({
   selector: 'app-datos-260212',
   standalone: false,

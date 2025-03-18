@@ -5,6 +5,7 @@ import { TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { PermisoMaquilaComponent } from './pages/permiso-maquila/permiso-maquila.component';
 import { Datos260212Component } from './pages/datos-260212/datos-260212.component';
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { SolicitanteComponent } from './components/solicitante/solicitante.component';
 
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
@@ -25,7 +26,8 @@ import { RepresentanteLegalComponent } from './components/representante-legal/re
     DatosDeLaSolicitudComponent,
     ClaveScianComponent,
     FormularioOperacionComercialComponent,
-    RepresentanteLegalComponent
+    RepresentanteLegalComponent,
+    SolicitanteComponent
   ],
   providers: [provideHttpClient(), ToastrService,SolicitudService],
 })

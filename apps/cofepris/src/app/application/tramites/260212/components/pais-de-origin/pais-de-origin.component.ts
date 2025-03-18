@@ -6,27 +6,67 @@ import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-pais-de-origin',
   standalone: true,
-  imports: [CommonModule,CrosslistComponent],
+  imports: [CommonModule,
+     CrosslistComponent
+    ],
   templateUrl: './pais-de-origin.component.html',
   styleUrl: './pais-de-origin.component.scss',
 })
 export class PaisDeOriginComponent {
+  /**
+ * Arreglo para almacenar el rango de días seleccionables.
+ */
   selectRangoDias: string[] = [];
+  /**
+ * Arreglo para almacenar las fechas seleccionadas por el usuario.
+ */
   fechasSeleccionadas: string[] = [];
+  /**
+   * Arreglo para almacenar los datos relacionados con las fechas.
+   */
   fechasDatos: string[] = [];
+
+  /**
+   * Constructor de la clase PaisDeOriginComponent.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  constructor(){}
+
+  /**
+   * Etiquetas para el componente CrossList que representan el país de procedencia.
+   */
   public paisDeProcedenciaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de origen',
     derecha: 'País(es) seleccionados',
   };
+
+  /**
+ * Control de formulario para manejar una fecha individual.
+ */
   fecha: FormControl = new FormControl('');
+
+  /**
+   * Control de formulario para manejar una fecha seleccionada por el usuario.
+   */
   fechaSeleccionada: FormControl = new FormControl('');
 
+  /**
+ * Variable que controla la visibilidad de una sección colapsable.
+ */
   colapsable = false;
 
+
+  /**
+   * Alterna la visibilidad de la sección colapsable.
+   */
   mostrar_colapsable() {
     this.colapsable = !this.colapsable;
   }
 
+
+  /**
+   * Configuración de los botones y sus respectivas funciones para manipular las selecciones.
+   */
   botonField = [
     {
       btnNombre: 'Agregar todos',
@@ -70,7 +110,7 @@ export class PaisDeOriginComponent {
    * Elimina elementos de la lista de fechas según el tipo especificado.
    * @param {string} tipo - Tipo de acción a realizar.
    */
-  quitar(tipo: string = '') {
+  quitar(tipo = '') {
     if (tipo === 't') {
       this.fechasDatos = [...this.fechasSeleccionadas];
       this.fechasSeleccionadas = [];
