@@ -20,6 +20,7 @@ import { RepresentanteLegalComponent } from './components/representante-legal/re
 
 import { DatosCertificadoComponent } from './components/datos-certificado/datos-certificado.component';
 import { MercanciasSeleccionadasFormComponent } from './components/mercancias-seleccionadas-form/mercancias-seleccionadas-form.component';
+import { PasoTresComponent } from '../120402/components/paso-tres/paso-tres.component';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { MercanciasSeleccionadasFormComponent } from './components/mercancias-se
     RepresentanteLegalComponent,
     DatosCertificadoComponent,
     MercanciasSeleccionadasFormComponent,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    PasoTresComponent
     
   ]
 })

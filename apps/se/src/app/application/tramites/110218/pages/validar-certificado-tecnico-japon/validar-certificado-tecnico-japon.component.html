@@ -14,7 +14,7 @@
             @case(1){
                 <app-solicitante-tabs [indice]="capturarTapIndice" (SolicitanteEventCertificado)="isModificar($event,1)"></app-solicitante-tabs>
             }@case(2){
-                <p>2</p>
+              <app-paso-tres></app-paso-tres>
             }
         }
         <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
