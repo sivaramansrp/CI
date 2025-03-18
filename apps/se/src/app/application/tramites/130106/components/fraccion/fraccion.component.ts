@@ -1,399 +1,250 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent, CrossListLable, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import fraccions from 'libs/shared/theme/assets/json/130106/fraccion.json';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Tramite130106Query } from '../../../../estados/queries/tramite130106.query';
+
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent,TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+
 import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
+import {Subject, map,takeUntil } from 'rxjs';
 import { Partidas } from 'libs/shared/data-access-user/src/core/models/130106/partidas.model';
+import { Tramite130106Query } from '../../../../estados/queries/tramite130106.query';
+import fraccions from 'libs/shared/theme/assets/json/130106/fraccion.json';
 
 /**
- * @Component FraccionComponent
- * Este componente gestiona la selección de fracciones arancelarias y maneja los datos del formulario para la clasificación arancelaria.
- * El formulario incluye campos de entrada como la cantidad, descripción, unidad de medida, y otros detalles relacionados con las fracciones.
- * El componente permite agregar, quitar y modificar las fracciones arancelarias en una tabla dinámica y almacenar la información seleccionada en el estado global de la aplicación.
+ * Componente que maneja el formulario de fracción, incluyendo la inicialización y la gestión de fechas seleccionadas.
  */
 @Component({
-  selector: 'app-fraccion', // El selector que se utiliza para incluir este componente en otras plantillas.
-  standalone: true, // Indica que este componente es autónomo y no depende de otros módulos de Angular.
-  imports: [CatalogoSelectComponent, FormsModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent, CrosslistComponent], // Módulos y componentes importados que se utilizan en este componente.
-  templateUrl: './fraccion.component.html', // Archivo de plantilla (HTML) que define la estructura visual del componente.
-  styleUrl: './fraccion.component.scss' // Archivo de estilos (CSS) que define la apariencia visual del componente.
+  selector: 'app-fraccion', // Selector del componente en el DOM
+  standalone: true,
+  imports: [CatalogoSelectComponent, FormsModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent, CrosslistComponent], // Importa los módulos necesarios para el funcionamiento del componente
+  templateUrl: './fraccion.component.html', // Define la plantilla HTML del componente
+  styleUrl: './fraccion.component.scss' // Define los estilos CSS del componente
 })
-/**
- * @class FraccionComponent
- * @description Componente Angular que gestiona la lógica para el módulo de fracciones. 
- * Implementa las interfaces OnInit y OnDestroy para manejar los ciclos de vida del componente.
- * 
- * @implements OnInit
- * @implements OnDestroy
- */
 export class FraccionComponent implements OnInit, OnDestroy {
- /** @property {FormGroup} FraccionForm - Grupo de formulario reactivo que contiene todos los controles de formulario relacionados con las fracciones
-  * 
-  */
+
+  /**
+   * Formulario reactivo para manejar los datos de la fracción.
+   */
   FraccionForm!: FormGroup;
-    /** @property {Catalogo[]} fraccion - Lista de fracciones arancelarias disponibles que se cargan desde un archivo JSON
-     * 
-     */
+
+  /**
+   * Lista de fracciones obtenidas del archivo JSON.
+   */
   public fraccion: Catalogo[] = fraccions.fraccion;
-   /** @property {Catalogo[]} umt - Lista de unidades de medida disponibles para la selección
-    * 
-    */
+
+  /**
+   * Lista de unidades de medida obtenidas del archivo JSON.
+   */
   public umt: Catalogo[] = fraccions.UMT;
-   /** @property {Catalogo[]} bloque - Lista de bloques disponibles para la clasificación 
-    * 
+
+  /**
+   * Lista de bloques obtenidos del archivo JSON.
    */
   public bloque: Catalogo[] = fraccions.bloque;
-  /** @property {Catalogo[]} entidad - Lista de entidades disponibles que pueden ser asociadas con la fracción 
-   * 
-  */
+
+  /**
+   * Lista de entidades obtenidas del archivo JSON.
+   */
   public entidad: Catalogo[] = fraccions.entidad;
-  /** @property {Catalogo[]} representacion - Lista de representaciones disponibles para la fracción arancelaria
-   * 
+
+  /**
+   * Lista de representaciones obtenidas del archivo JSON.
    */
   public representacion: Catalogo[] = fraccions.representacion;
-    /** @property {Solicitud130106State} solicitudState - Almacena el estado actual de la solicitud, que se usa para manejar los datos del formulario 
-     * 
-    */
 
-  public solicitudState!: Solicitud130106State;
-  /** @property {Subject<void>} destroyNotifier$ - Un subject que se usa para gestionar la cancelación de las suscripciones a los observables cuando el componente se destruye 
-   * 
-  */
-  private destroyNotifier$: Subject<void> = new Subject();
- /** @property {Partidas[]} partidas - Lista que almacena las partidas que el usuario selecciona o agrega al formulario */
-  partidas: Partidas[] = [];
   /**
- * @constructor
- * El constructor inicializa las dependencias necesarias para el componente.
- * 
- * @param {FormBuilder} fb - Instancia de FormBuilder para crear formularios reactivos.
- * @param {Tramite130106Store} tramite130106Store - Instancia del store que maneja el estado de los trámites.
- * @param {Tramite130106Query} tramite130106Query - Instancia de la clase que consulta el estado de los trámites.
- */
-  constructor(
-    private fb: FormBuilder, // Inicializa el servicio FormBuilder para manejar formularios reactivos.
-    private tramite130106Store: Tramite130106Store, // Almacena el estado de los trámites del proceso 130106.
-    private tramite130106Query: Tramite130106Query // Consulta el estado actual del trámite.
-  ) { }
-  
- /**
- * @constant partidasDatas
- * @description Configuración de columnas para la visualización de datos de partidas. 
- * Define los encabezados, claves y el orden de las columnas en una tabla o interfaz de usuario.
- * 
- * @type {ConfiguracionColumna<Partidas>[]}
- * @property {string} encabezado - El nombre de la columna que se mostrará al usuario.
- * @property {(item: Partidas) => any} clave - Una función que accede al valor correspondiente en el objeto `Partidas`.
- * @property {number} orden - El orden en el que se muestra la columna en la tabla.
- */
-const partidasDatas: ConfiguracionColumna<Partidas>[] = [
-  {
-    /**
-     * @property encabezado
-     * @description Título de la columna: "Cantidad".
-     * Muestra la cantidad de elementos en las partidas.
-     */
-    encabezado: 'Cantidad',
-
-    /**
-     * @property clave
-     * @description Obtiene el valor de la propiedad `cantidad` del objeto `Partidas`.
-     */
-    clave: (item: Partidas) => item.cantidad,
-
-    /**
-     * @property orden
-     * @description Define el orden de la columna como la primera en la tabla.
-     */
-    orden: 1
-  },
-  {
-    encabezado: 'Unidad de medida',
-    clave: (item: Partidas) => item.unidad,
-    orden: 2 // Segunda columna en la tabla
-  },
-  {
-    encabezado: 'Fracción arancelaria',
-    clave: (item: Partidas) => item.fraccion,
-    orden: 3 // Tercera columna en la tabla
-  },
-  {
-    encabezado: 'Descripción',
-    clave: (item: Partidas) => item.descripcion,
-    orden: 4 // Cuarta columna en la tabla
-  },
-  {
-    encabezado: 'Precio unitario USD',
-    clave: (item: Partidas) => item.precio,
-    orden: 5 // Quinta columna en la tabla
-  },
-  {
-    encabezado: 'Total USD',
-    clave: (item: Partidas) => item.total,
-    orden: 6 // Sexta columna en la tabla
-  }
-];
-
-      /** @property {typeof TablaSeleccion} TablaSeleccion - Almacena el tipo de selección de tabla, utilizado para configurar la selección en la tabla
-       * 
-       */
-    TablaSeleccion = TablaSeleccion;
- /** @property {string[]} selectRangoDias - Lista de días seleccionados por el usuario en el formulario
-  * 
-  */
-    selectRangoDias: string[] = [];
-    /** @property {string[]} fechasDatos - Fechas disponibles para la selección y visualización 
-     * 
-    */
-  fechasSeleccionadas: string[] = [];
-    /** @property {string[]} fechasDatos - Fechas disponibles para la selección y visualización */
-  fechasDatos: string[] = [];
-  /** @property {FormControl} fecha - Control de formulario para manejar la entrada de fechas */
-  fecha: FormControl = new FormControl('');
-  /** @property {FormControl} fechaSeleccionada - Control de formulario para manejar la entrada de fechaSeleccionada */
-  fechaSeleccionada: FormControl = new FormControl('');
-   /** 
-   * @property {Array} botonField - Configuración de botones para realizar acciones de agregar o quitar fechas en la lista
+   * Estado de la solicitud 130106.
    */
-/**
- * @constant botonField
- * @description Arreglo que contiene la configuración de botones utilizados en la interfaz de usuario.
- * Cada objeto representa un botón con su nombre, clase CSS, y una función asignada.
- */
- botonField = [
-  {
-    /**
-     * @property btnNombre
-     * @description Nombre del botón que se muestra en la interfaz de usuario.
-     */
-    btnNombre: 'Agregar todos',
-
-    /**
-     * @property class
-     * @description Clase CSS aplicada para el estilo del botón.
-     */
-    class: 'btn-primary',
-
-    /**
-     * @property funcion
-     * @description Función que se ejecuta al hacer clic en este botón. 
-     * En este caso, llama a `this.agregar` con un parámetro vacío.
-     */
-    funcion: () => this.agregar(''),
-  },
-  {
-    btnNombre: 'Agregar selección',
-    class: 'btn-default',
-    funcion: () => this.agregar('t'), // Agrega una selección específica
-  },
-  {
-    btnNombre: 'Restar selección',
-    class: 'btn-danger',
-    funcion: () => this.quitar(''), // Resta una selección específica
-  },
-  {
-    btnNombre: 'Restar todos',
-    class: 'btn-default',
-    funcion: () => this.quitar('t'), // Resta todos los elementos
-  },
-];
+  public solicitudState!: Solicitud130106State;
 
   /**
- * @method agregar
- * @description Método encargado de gestionar las fechas seleccionadas en función del tipo de acción solicitado.
- * Si el tipo es `'t'`, selecciona todas las fechas disponibles y las almacena en `fechasSeleccionadas`, 
- * mientras que vacía el arreglo `fechasDatos`. En cualquier otro caso, realiza la operación específica basada
- * en la selección de una fecha.
- * 
- * @param {string} tipo - Define el tipo de acción a realizar:
- *   - `'t'`: Selecciona y transfiere todas las fechas disponibles.
- *   - Cualquier otro valor: Transfiere una fecha específica de `fechasDatos` a `fechasSeleccionadas`.
- * 
- * @returns {void} Este método no devuelve un valor.
- */
-agregar(tipo: string): void {
-  if (tipo === 't') {
-    /**
-     * Si el tipo es 't':
-     * 1. Se seleccionan todas las fechas disponibles en el rango (`selectRangoDias`).
-     * 2. Estas fechas se asignan al arreglo `fechasSeleccionadas`.
-     * 3. El arreglo `fechasDatos` se vacía.
-     */
-    this.fechasSeleccionadas = [...this.selectRangoDias];
-    this.fechasDatos = [];
-  } else {
-    /**
-     * En caso contrario:
-     * 1. Se obtiene el índice (FECHAVALOR) de la fecha seleccionada a partir de `this.fecha.value`.
-     *    El valor se convierte a un número.
-     * 2. Se agrega la fecha correspondiente en `fechasDatos[FECHAVALOR]` al arreglo `fechasSeleccionadas`.
-     * 3. Se elimina la fecha seleccionada de `fechasDatos` para evitar duplicados.
-     */
-    const FECHAVALOR = this.fecha.value.map(Number); // Convertir valores a números
-    this.fechasSeleccionadas.push(this.fechasDatos[FECHAVALOR]); // Agregar la fecha seleccionada
-    this.fechasDatos.splice(FECHAVALOR, 1); // Eliminar la fecha de fechasDatos
+   * Subject para manejar la destrucción de observables y evitar fugas de memoria.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Lista de partidas, cada una representando una línea de datos.
+   */
+  partidas: Partidas[] = [];
+
+  /**
+   * Constructor que inyecta dependencias necesarias para el componente.
+   * @param fb - FormBuilder para crear el formulario reactivo.
+   * @param tramite130106Store - Store para manejar el estado de la solicitud.
+   * @param tramite130106Query - Query para obtener el estado de la solicitud.
+   */
+  constructor(private fb: FormBuilder,
+    private tramite130106Store: Tramite130106Store,
+    private tramite130106Query: Tramite130106Query) {
+      //Constructor
+     }
+
+  /**
+   * Datos que configuran las columnas de la tabla de partidas.
+   */
+  partidasDatas: ConfiguracionColumna<Partidas>[] = [
+    { encabezado: 'Cantidad', clave: (item: Partidas) => item.cantidad, orden: 1 },
+    { encabezado: 'Unidad de medida', clave: (item: Partidas) => item.unidad, orden: 2 },
+    { encabezado: 'Fracción arancelaria', clave: (item: Partidas) => item.fraccion, orden: 3 },
+    { encabezado: 'Descripción', clave: (item: Partidas) => item.descripcion, orden: 4 },
+    { encabezado: 'Precio unitario USD', clave: (item: Partidas) => item.precio, orden: 5 },
+    { encabezado: 'Total USD', clave: (item: Partidas) => item.total, orden: 6 }
+  ];
+
+  TablaSeleccion = TablaSeleccion;
+
+  /**
+   * Lista de rangos de días seleccionados por el usuario.
+   */
+  selectRangoDias: string[] = [];
+
+  /**
+   * Lista de fechas seleccionadas por el usuario.
+   */
+  fechasSeleccionadas: string[] = [];
+
+  /**
+   * Lista de fechas disponibles.
+   */
+  fechasDatos: string[] = [];
+
+  /**
+   * Control de formulario para la fecha.
+   */
+  fecha: FormControl = new FormControl('');
+
+  /**
+   * Control de formulario para la fecha seleccionada.
+   */
+  fechaSeleccionada: FormControl = new FormControl('');
+
+  /**
+   * Definición de los botones con su respectiva acción para agregar y quitar fechas.
+   */
+  botonField = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: () => this.agregar(''),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: () => this.agregar('t'),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: () => this.quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: () => this.quitar('t'),
+    },
+  ];
+
+  /**
+   * Agrega elementos a la lista de fechas seleccionadas dependiendo del tipo de acción.
+   * @param tipo - El tipo de acción ('t' para agregar todos, otro valor para agregar una sola fecha).
+   */
+  agregar(tipo: string) {
+    if (tipo === 't') {
+      this.fechasSeleccionadas = [...this.selectRangoDias]; // Agrega todos los rangos de días
+      this.fechasDatos = []; // Vacía las fechas disponibles
+    } else {
+      const FECHAVALOR = this.fecha.value.map(Number); // Convierte las fechas seleccionadas en un array de números
+      this.fechasSeleccionadas.push(this.fechasDatos[FECHAVALOR]); // Agrega la fecha seleccionada a las fechas seleccionadas
+      this.fechasDatos.splice(FECHAVALOR, 1); // Elimina la fecha seleccionada de las fechas disponibles
+    }
   }
-}
 
-
- /**
- * @method quitar
- * @description Método encargado de gestionar la eliminación de fechas seleccionadas en función del tipo de acción.
- * Si el tipo es `'t'`, transfiere todas las fechas de `fechasSeleccionadas` a `fechasDatos` y vacía `fechasSeleccionadas`.
- * En cualquier otro caso, transfiere una fecha específica.
- * 
- * @param {string} tipo - Define el tipo de acción a realizar:
- *   - `'t'`: Transfiere todas las fechas de `fechasSeleccionadas` a `fechasDatos`.
- *   - Cualquier otro valor: Transfiere una fecha específica.
- * 
- * @returns {void} Este método no devuelve un valor.
- */
-quitar(tipo: string = ''): void {
-  if (tipo === 't') {
-    /**
-     * Si el tipo es 't':
-     * 1. Transfiere todas las fechas almacenadas en `fechasSeleccionadas` al arreglo `fechasDatos`.
-     * 2. Vacía completamente el arreglo `fechasSeleccionadas`.
-     */
-    this.fechasDatos = [...this.fechasSeleccionadas];
-    this.fechasSeleccionadas = [];
-  } else {
-    /**
-     * En caso contrario:
-     * 1. Obtiene el índice (FECHAVALOR) de la fecha seleccionada desde `this.fechaSeleccionada.value`.
-     * 2. Agrega la fecha correspondiente en `fechasSeleccionadas[FECHAVALOR]` al arreglo `fechasDatos`.
-     * 3. Elimina la fecha transferida del arreglo `fechasSeleccionadas` para evitar duplicados.
-     */
-    const FECHAVALOR = this.fechaSeleccionada.value.map(Number); // Convertir valores a números
-    this.fechasDatos.push(this.fechasSeleccionadas[FECHAVALOR]); // Agregar la fecha seleccionada
-    this.fechasSeleccionadas.splice(FECHAVALOR, 1); // Eliminar la fecha de fechasSeleccionadas
+  /**
+   * Elimina elementos de la lista de fechas seleccionadas dependiendo del tipo de acción.
+   * @param tipo - El tipo de acción ('t' para eliminar todas, otro valor para eliminar una sola fecha).
+   */
+  quitar(tipo: string = '') {
+    if (tipo === 't') {
+      this.fechasDatos = [...this.fechasSeleccionadas]; // Mueve todas las fechas seleccionadas a fechas disponibles
+      this.fechasSeleccionadas = []; // Limpia la lista de fechas seleccionadas
+    } else {
+      const FECHAVALOR = this.fechaSeleccionada.value.map(Number); // Convierte la fecha seleccionada en un número
+      this.fechasDatos.push(this.fechasSeleccionadas[FECHAVALOR]); // Agrega la fecha seleccionada de vuelta a las fechas disponibles
+      this.fechasSeleccionadas.splice(FECHAVALOR, 1); // Elimina la fecha seleccionada de la lista
+    }
   }
-}
 
-    /**
-   * @method ngOnInit
-   * Hook del ciclo de vida de Angular: Se ejecuta cuando el componente se inicializa. Inicializa el formulario y configura los datos necesarios.
+  /**
+   * Método que se ejecuta cuando el componente es inicializado.
    */
   ngOnInit(): void {
-    this.inicializarFormulario();
-    // Load your catalog data here if necessary (e.g., from an API or JSON file)
+    this.inicializarFormulario(); // Inicializa el formulario con los valores predeterminados
   }
- /**
- * @method setValoresStore
- * Este método establece un valor en el store de trámites basado en el campo y el método proporcionado.
- * 
- * @param {FormGroup} form - El grupo de formulario desde el cual se extrae el valor.
- * @param {string} campo - El nombre del campo cuyo valor se va a establecer.
- * @param {keyof Tramite130106Store} metodoNombre - El nombre del método del store que se usará para actualizar el estado.
- * 
- * @returns {void}
- */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130106Store): void { 
-    // Obtiene el valor del campo del formulario
-  const valor = form.get(campo)?.value;
-  // Llama al método del store para establecer el valor     
-    (this.tramite130106Store[metodoNombre] as (value: any) => void)(valor);
-  }
-/**
- * @method inicializarFormulario
- * @description Método privado encargado de inicializar el formulario y establecer el estado de la solicitud.
- * Utiliza un observable para suscribirse a los cambios en el estado y actualiza la propiedad `solicitudState`.
- * 
- * @private
- * @returns {void} Este método no devuelve un valor.
- */
-private inicializarFormulario(): void {
-  this.tramite130106Query.selectSolicitud$ // Observa los cambios en la solicitud
-    .pipe(
-      /**
-       * @operator takeUntil
-       * @description Completa la suscripción cuando se emite un valor desde `destroyNotifier$`,
-       * evitando fugas de memoria.
-       */
-      takeUntil(this.destroyNotifier$),
 
-      /**
-       * @operator map
-       * @description Transforma el estado recibido en un objeto de tipo `Solicitud130106State`
-       * y lo asigna a la propiedad `solicitudState`.
-       */
-      map((seccionState) => {
-        this.solicitudState = seccionState as Solicitud130106State;
-      })
-    )
-    .subscribe((data) => {
-      // Lógica adicional si es necesario
-    });
- // Inicializa el formulario reactivo con los valores del estado de la solicitud
+  /**
+   * Establece valores en el store del trámite a partir de los campos del formulario.
+   * @param form - El formulario con los valores que se deben asignar.
+   * @param campo - El campo específico del formulario.
+   * @param metodoNombre - El nombre del método en el store donde se deben asignar los valores.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130106Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite130106Store[metodoNombre] as (value: unknown) => void)(VALOR); // Llama al método correspondiente en el store
+  }
+
+  /**
+   * Inicializa el formulario con los valores predeterminados de la solicitud.
+   */
+  private inicializarFormulario(): void {
+    this.tramite130106Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$), // Se asegura de limpiar los observables al destruir el componente
+        map((seccionState) => {
+          this.solicitudState = seccionState as Solicitud130106State; // Asigna el estado de la solicitud
+        })
+      )
+      .subscribe(); // Realiza la suscripción para actualizar el estado
+
+    // Crea el formulario con los valores predeterminados
     this.FraccionForm = this.fb.group({
-      fraccion: [this.solicitudState.fraccion, Validators.required], // Campo de fracción arancelaria, obligatorio.
-      cantidad: [this.solicitudState.cantidad, [Validators.required, Validators.pattern(/^[0-9]*$/)]], // Campo de cantidad, obligatorio y solo números.
-      factura: [this.solicitudState.factura, [Validators.required, Validators.pattern(/^[0-9]*$/)]], // Campo de factura, obligatorio y solo números.
-      umt: [this.solicitudState.umt, Validators.required], // Campo de unidad de medida, obligatorio.
-      mercanciaCantidad: [this.solicitudState.cantidad, [Validators.required, Validators.pattern(/^[0-9]*$/)]], // Campo de cantidad de mercancía, obligatorio y solo números.
-      mercanciaFactura: [this.solicitudState.factura, [Validators.required, Validators.pattern(/^[0-9]*$/)]], // Campo de factura de mercancía, obligatorio y solo números.
-      descripcion: [this.solicitudState.umt, Validators.required], // Campo de descripción, obligatorio.
-      candidadTotal: [this.solicitudState.umt, Validators.required], // Campo de cantidad total, obligatorio.
-      valorTotal: [this.solicitudState.umt, Validators.required], // Campo de valor total, obligatorio.
-      especifico: [this.solicitudState.especifico, Validators.required], // Campo específico, obligatorio.
-      justificacion: [this.solicitudState.justificacion, Validators.required], // Campo de justificación, obligatorio.
-      Observaciones: [this.solicitudState.Observaciones, Validators.required], // Campo de observaciones, obligatorio.
-      entidad: [this.solicitudState.entidad, Validators.required], // Campo de entidad, obligatorio.
-      representacion: [this.solicitudState.representacion, Validators.required], // Campo de representación, obligatorio.
-      bloque: [this.solicitudState.bloque, Validators.required], // Campo de bloque, obligatorio.
+      fraccion: [this.solicitudState.fraccion, Validators.required],
+      cantidad: [this.solicitudState.cantidad, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
+      factura: [this.solicitudState.factura, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
+      umt: [this.solicitudState.umt, Validators.required],
+      mercanciaCantidad: [this.solicitudState.cantidad, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
+      mercanciaFactura: [this.solicitudState.factura, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
+      descripcion: [this.solicitudState.umt, Validators.required],
+      candidadTotal: [this.solicitudState.umt, Validators.required],
+      valorTotal: [this.solicitudState.umt, Validators.required],
+      especifico: [this.solicitudState.especifico, Validators.required],
+      justificacion: [this.solicitudState.justificacion, Validators.required],
+      Observaciones: [this.solicitudState.Observaciones, Validators.required],
+      entidad: [this.solicitudState.entidad, Validators.required],
+      representacion: [this.solicitudState.representacion, Validators.required],
+      bloque: [this.solicitudState.bloque, Validators.required],
     });
-    this.updateformfied();
-
   }
-  updateformfied(): void {
-       // Deshabilita los campos para que no se puedan editar
-    this.FraccionForm.get('candidadTotal')?.disable();
-    this.FraccionForm.get('valorTotal')?.disable();
-     }
+
   /**
- * @method paridasData
- * Este método agrega una nueva partida a la lista de partidas basada en los datos del formulario.
- * 
- * @returns {void}
- */
+   * Convierte los datos del formulario en una nueva partida y la agrega a la lista de partidas.
+   */
   paridasData() {
-    // Obtiene los datos del formulario reactivo
-    const FORMDATA = this.FraccionForm.value;
-  
-    // Crea un nuevo objeto de tipo Partidas con los datos del formulario
+    const FORMDATA = this.FraccionForm.value; // Obtiene los datos del formulario
     const NEWPARTIDA: Partidas = {
-      cantidad: FORMDATA.cantidad, // Cantidad especificada en el formulario.
-      unidad: fraccions.UMT.find(item => item.id === Number(FORMDATA.umt))?.descripcion, // Descripción de la unidad de medida.
-      fraccion: fraccions.fraccion.find(item => item.id === Number(FORMDATA.fraccion))?.descripcion, // Descripción de la fracción arancelaria.
-      descripcion: FORMDATA.descripcion, // Descripción adicional de la fracción.
-      precio: 1.000, // Precio unitario predeterminado.
-      total: FORMDATA.cantidad // Total calculado según la cantidad.
-    };  
-    // Agrega la nueva partida a la lista de partidas
-    this.partidas.push(NEWPARTIDA);
+      cantidad: FORMDATA.cantidad, // Asigna la cantidad
+      unidad: fraccions.UMT.find(item => item.id === Number(FORMDATA.umt))?.descripcion, // Asigna la unidad
+      fraccion: fraccions.fraccion.find(item => item.id === Number(FORMDATA.fraccion))?.descripcion, // Asigna la fracción arancelaria
+      descripcion: FORMDATA.descripcion, // Asigna la descripción
+      precio: 1.000, // Precio fijo
+      total: FORMDATA.cantidad // Total calculado con la cantidad
+    };
+    this.partidas.push(NEWPARTIDA); // Agrega la nueva partida a la lista
   }
-/**
- * @method ngOnDestroy
- * @description Método del ciclo de vida de Angular que se ejecuta justo antes de que el componente sea destruido.
- * Este método se utiliza para realizar tareas de limpieza, como notificar la finalización de observables
- * para prevenir fugas de memoria.
- * 
- * @returns {void} Este método no devuelve un valor.
- */
-ngOnDestroy(): void {
-  /**
-   * @description Emite un valor a través del `destroyNotifier$` para notificar a los observables suscritos
-   * que deben completar sus operaciones.
-   */
-  this.destroyNotifier$.next();
 
   /**
-   * @description Completa el observable `destroyNotifier$`, indicando que ya no habrá más emisiones.
+   * Se ejecuta cuando el componente es destruido. Limpia recursos y observables.
    */
-  this.destroyNotifier$.complete();
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next(); // Notifica que el componente ha sido destruido
+    this.destroyNotifier$.complete(); // Completa el observable
+  }
 }
-
-}
-   
