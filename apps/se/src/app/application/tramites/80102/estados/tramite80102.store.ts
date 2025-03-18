@@ -1,4 +1,8 @@
-import { AnexoEncabezado, AnexoImportacionEncabezado, AnexoUnoEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
+import {
+  AnexoEncabezado,
+  AnexoImportacionEncabezado,
+  AnexoUnoEncabezado,
+} from '../../../shared/models/nuevo-programa-industrial.model';
 import {
   AnnexoDosTres,
   AnnexoUno,
@@ -18,6 +22,7 @@ import {
   PlantasSubfabricante,
 } from '../../../shared/models/empresas-subfabricanta.model';
 import { Store, StoreConfig } from '@datorama/akita';
+import { FederatariosEncabezado } from '../../../shared/models/federatarios-y-plantas.model';
 import { Injectable } from '@angular/core';
 
 export interface Tramite80102State {
@@ -42,10 +47,11 @@ export interface Tramite80102State {
   tablaDatosComplimentosExtranjera: SociaoAccionistas[];
 
   empressaSubFabricantePlantas: EmpressaSubFabricantePlantas;
-  annexoDosTres: AnnexoDosTres,
-  annexoUno: AnnexoUno,
-  
+  annexoDosTres: AnnexoDosTres;
+  annexoUno: AnnexoUno;
+
   indicePrevioRuta: number;
+  tablaDatosFederatarios: FederatariosEncabezado[]
 }
 
 export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
@@ -64,8 +70,9 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
     descripcion: '',
   },
   formaValida: {
-    entidadFederativa: false,
-    formaEmpresaExtranjera: false,
+    complimentos: false,
+    servicios: false,
+    submanufacturas: false,
   },
   rfcEmpresa: '',
   numeroPrograma: '',
@@ -133,18 +140,18 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
     plantasSubfabricantesAgregar: [],
     plantasPorCompletar: [],
   },
-  annexoDosTres:{
-    anexoDosTablaLista:[],
-    anexoTresTablaLista:[]
+  annexoDosTres: {
+    anexoDosTablaLista: [],
+    anexoTresTablaLista: [],
   },
-  
+
   tablaDatosComplimentos: [],
   tablaDatosComplimentosExtranjera: [],
 
-  annexoUno:{
-    exportarDatosTabla:[],
-    importarDatosTabla:[],
-    datosParaNavegar:{
+  annexoUno: {
+    exportarDatosTabla: [],
+    importarDatosTabla: [],
+    datosParaNavegar: {
       ENCABEZADO_FRACCION: '',
       ENCABEZADO_DESCRIPCION_COMERCIAL: '',
       estatus: false,
@@ -155,10 +162,12 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
       ENCABEZADO_CATEGORIA: '',
       ENCABEZADO_VALOR_EN_MERCADO: '',
     },
-    seccionActiva:''
+    seccionActiva: '',
   },
 
   indicePrevioRuta: 0,
+
+  tablaDatosFederatarios: []
 };
 
 /**
@@ -405,14 +414,17 @@ export class Tramite80102Store extends Store<Tramite80102State> {
       };
       return {
         ...state,
-        tablaDatosComplimentosExtranjera: [...state.tablaDatosComplimentosExtranjera, DATOS],
+        tablaDatosComplimentosExtranjera: [
+          ...state.tablaDatosComplimentosExtranjera,
+          DATOS,
+        ],
       };
     });
   }
   eliminarTablaDatosComplimentosExtranjera(datos: SociaoAccionistas[]): void {
     this.update((state) => {
-      const DOMICILIOS = [...state.tablaDatosComplimentosExtranjera].filter((ele) =>
-        datos.some((datos) => ele.id !== datos.id)
+      const DOMICILIOS = [...state.tablaDatosComplimentosExtranjera].filter(
+        (ele) => datos.some((datos) => ele.id !== datos.id)
       );
       return {
         ...state,
@@ -423,60 +435,59 @@ export class Tramite80102Store extends Store<Tramite80102State> {
 
   //annexo dos y tres estados
 
-  setAnnexoDosTableLista(anexoDosTablaLista:AnexoEncabezado[]):void{
+  setAnnexoDosTableLista(anexoDosTablaLista: AnexoEncabezado[]): void {
     this.update((state) => ({
       ...state,
       annexoDosTres: {
         ...state.annexoDosTres,
         anexoDosTablaLista: anexoDosTablaLista,
-      }
-     
+      },
     }));
   }
 
-  setAnnexoTresTableLista(anexoTresTablaLista:AnexoEncabezado[]):void{
+  setAnnexoTresTableLista(anexoTresTablaLista: AnexoEncabezado[]): void {
     this.update((state) => ({
       ...state,
       annexoDosTres: {
         ...state.annexoDosTres,
         anexoTresTablaLista: anexoTresTablaLista,
-      }
-     
+      },
     }));
   }
 
   //annexo uno estados
 
-  setImportarDatosTabla(importarDatosTabla:AnexoUnoEncabezado[]):void{
+  setImportarDatosTabla(importarDatosTabla: AnexoUnoEncabezado[]): void {
     this.update((state) => ({
       ...state,
       annexoUno: {
         ...state.annexoUno,
         importarDatosTabla: importarDatosTabla,
-      }
-     
+      },
     }));
   }
 
-  setExportarDatosTabla(exportarDatosTabla:AnexoImportacionEncabezado[]):void{
+  setExportarDatosTabla(
+    exportarDatosTabla: AnexoImportacionEncabezado[]
+  ): void {
     this.update((state) => ({
       ...state,
       annexoUno: {
         ...state.annexoUno,
         exportarDatosTabla: exportarDatosTabla,
-      }
-     
+      },
     }));
   }
 
-  setDatosParaNavegar(datosParaNavegar:AnexoUnoEncabezado | AnexoImportacionEncabezado):void{
+  setDatosParaNavegar(
+    datosParaNavegar: AnexoUnoEncabezado | AnexoImportacionEncabezado
+  ): void {
     this.update((state) => ({
       ...state,
       annexoUno: {
         ...state.annexoUno,
         datosParaNavegar: datosParaNavegar,
-      }
-     
+      },
     }));
   }
 
@@ -497,4 +508,10 @@ export class Tramite80102Store extends Store<Tramite80102State> {
     }));
   }
 
+  setFederatarios(formaFederatarios: FederatariosEncabezado): void {
+    this.update((state) => ({
+      ...state,
+      tablaDatosFederatarios: [...state.tablaDatosFederatarios, formaFederatarios],
+    }));
+  }
 }

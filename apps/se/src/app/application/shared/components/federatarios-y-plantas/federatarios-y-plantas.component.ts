@@ -1,7 +1,7 @@
+import { Component, EventEmitter } from '@angular/core';
+import { Input , Output} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
@@ -108,6 +108,8 @@ export class FederatariosYPlantasComponent {
    */
   public federatariosFormGroup!: FormGroup;
 
+  @Output() datosFormaFedratario: EventEmitter<FederatariosEncabezado> = new EventEmitter<FederatariosEncabezado>(true);
+
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
     this.initFederatariosFormGroup();
   }
@@ -128,6 +130,7 @@ export class FederatariosYPlantasComponent {
       estado: new FormControl(''),
       estadoOptions: new FormControl(''),
     });
+
   }
   /**
    * Navega a la ruta de acciones
@@ -137,5 +140,9 @@ export class FederatariosYPlantasComponent {
     this.router.navigate([accionesPath], {
       relativeTo: this.activatedRoute,
     });
+  }
+
+  aggregarDatos(): void {
+    this.datosFormaFedratario.emit(this.federatariosFormGroup.value);
   }
 }

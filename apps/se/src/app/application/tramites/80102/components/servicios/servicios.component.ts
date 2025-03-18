@@ -123,7 +123,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
           });
         }
         this.Tramite80102Store.setFormValida({
-          entidadFederativa: this.formulario.valid,
+          servicios: this.formulario.valid
         });
       });
 

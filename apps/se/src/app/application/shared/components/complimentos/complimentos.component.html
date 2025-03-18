@@ -308,7 +308,7 @@
 
         } @else {
         <div [ngClass]="item.class">
-          <label for="{{ item.campo }}">{{ item.labelNombre }}:</label>
+          <label for="{{ item.campo }}">{{ item.labelNombre }} @if (item.required) {*}:</label>
           <input
             class="form-control"
             [type]="item.tipo_input"

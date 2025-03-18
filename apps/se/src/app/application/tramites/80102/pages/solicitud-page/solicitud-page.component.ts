@@ -2,14 +2,19 @@ import {
   BtnContinuarComponent,
   DatosPasos,
   ListaPasosWizard,
+  SeccionLibStore,
   WizardComponent,
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { PASOS, TITULOMENSAJE } from '../../constantes/autorizacion-programa-nuevo.enum';
+import {
+  PASOS,
+  TITULOMENSAJE,
+} from '../../constantes/autorizacion-programa-nuevo.enum';
+import { Subject, takeUntil } from 'rxjs';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { Subject } from 'rxjs';
+import { Tramite80102Query } from '../../estados/tramite80102.query';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -35,22 +40,21 @@ interface AccionBoton {
     PasoUnoComponent,
     PasoDosComponent,
     BtnContinuarComponent,
-    PasoTresComponent
-],
-  standalone: true
+    PasoTresComponent,
+  ],
+  standalone: true,
 })
 /**
  * Componente que representa la página de solicitud.
  */
 export class SolicitudPageComponent implements OnDestroy {
-
   /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
    * @private
    * @type {Subject<void>}
    */
   destroyNotifier$: Subject<void> = new Subject();
-  
+
   /**
    * Lista de pasos del asistente.
    */
@@ -82,6 +86,17 @@ export class SolicitudPageComponent implements OnDestroy {
    */
   tituloMensaje: string = TITULOMENSAJE;
 
+  constructor(
+    private tramiteQuery: Tramite80102Query,
+    private seccion: SeccionLibStore
+  ) {
+    this.tramiteQuery.FormaValida$.pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((res) => {
+      this.seccion.establecerSeccion([true]);
+      this.seccion.establecerFormaValida([res]);
+    });
+  }
   /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.

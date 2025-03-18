@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { DatosSubcontratista, PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -243,6 +243,7 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
       this.formularioDatosSubcontratista.get('estado')?.value !== ''
     ) {
       this.obtenerSubfabricantesDisponibles();
+      this.store.setFormValida({submanufacturas: true})
     }
   }
 

@@ -50,11 +50,7 @@ export class DetallesPlantasComponent {
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param fb - FormBuilder para la creación del formulario reactivo.
    */
-  constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
+  constructor( private fb: FormBuilder ) {
     this.inicializarFormularioDatosPlantas();
   }
 

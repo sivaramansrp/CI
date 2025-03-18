@@ -89,6 +89,10 @@ export class Tramite80102Query extends Query<Tramite80102State> {
     (state) => state.annexoUno.datosParaNavegar
   );
 
+  selectDatosFederatarios$ = this.select(
+    (state) => state.tablaDatosFederatarios
+  );
+
   constructor(protected override store: Tramite80102Store) {
     super(store);
   }

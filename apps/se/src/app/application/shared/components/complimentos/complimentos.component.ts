@@ -30,7 +30,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Observable, Subscription, delay } from 'rxjs';
+import { Subscription, delay } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplimentosService } from '../../services/complimentos.service';
 import { DatosCatalago } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
@@ -177,6 +177,8 @@ export class ComplimentosComponent implements OnInit {
   @Output() accionistasExtranjerosEliminado: EventEmitter<SociaoAccionistas[]> =
     new EventEmitter<SociaoAccionistas[]>(true);
 
+  @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(false);
+
   constructor(
     private fb: FormBuilder,
     private catalogosServices: CatalogosService,
@@ -226,6 +228,7 @@ export class ComplimentosComponent implements OnInit {
     this.subscription.add(
       this.formaComplimentos.valueChanges.pipe(delay(100)).subscribe((_) => {
         this.complimentosDatos.emit(this.formaComplimentos.value);
+        this.formaValida.emit(this.formaComplimentos.valid)
       })
     );
 
@@ -368,7 +371,6 @@ export class ComplimentosComponent implements OnInit {
     const VALUE = CONTROL.get('formaDatos')?.value;
     if (VALUE) {
       this.accionistasAgregados.emit(VALUE);
-      CONTROL.get('formaDatos')?.reset();
     }
   }
 

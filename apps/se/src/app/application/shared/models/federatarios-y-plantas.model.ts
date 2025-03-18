@@ -7,14 +7,14 @@ export interface FederatariosYPlantasConfiguration<T> {
 }
 
 export interface FederatariosEncabezado {
-  NUMBORE: string;
-  PRIMER_APELLIDO: string;
-  SEGUNDO_APELLIDO: string;
-  NUMERO_DE_ACTA: string;
-  FECHA_DEL_ACTA: string;
-  NUMERO_DE_NOTARIA: string;
-  ENTIDAD_FEDERATIVA: string;
-  MUNICIPI_O_DELEGACION: string;
+  nombre: string;
+  fechaInicioInput: string;
+  primerApellido: string;
+  segundoApellido: string;
+  numeroDeActa: string;
+  numeroDeNotaria: string;
+  estado: string;
+  estadoOptions: string;
 }
 
 export interface PlantasDisponibles {
@@ -51,42 +51,42 @@ export interface PlantasImmex {
 export const FEDERATARIOS = [
   {
     encabezado: 'Nombre(s)',
-    clave: (ele: FederatariosEncabezado) => ele.NUMBORE,
+    clave: (ele: FederatariosEncabezado) => ele.nombre,
     orden: 1,
   },
   {
     encabezado: 'Primer apellido',
-    clave: (ele: FederatariosEncabezado) => ele.PRIMER_APELLIDO,
+    clave: (ele: FederatariosEncabezado) => ele.primerApellido,
     orden: 2,
   },
   {
     encabezado: 'Segundo apellido',
-    clave: (ele: FederatariosEncabezado) => ele.SEGUNDO_APELLIDO,
+    clave: (ele: FederatariosEncabezado) => ele.segundoApellido,
     orden: 3,
   },
   {
     encabezado: 'Número de acta',
-    clave: (ele: FederatariosEncabezado) => ele.NUMERO_DE_ACTA,
+    clave: (ele: FederatariosEncabezado) => ele.numeroDeActa,
     orden: 4,
   },
   {
     encabezado: 'Fecha del acta',
-    clave: (ele: FederatariosEncabezado) => ele.FECHA_DEL_ACTA,
+    clave: (ele: FederatariosEncabezado) => ele.fechaInicioInput,
     orden: 5,
   },
   {
     encabezado: 'Número de notaría',
-    clave: (ele: FederatariosEncabezado) => ele.NUMERO_DE_NOTARIA,
+    clave: (ele: FederatariosEncabezado) => ele.numeroDeNotaria,
     orden: 6,
   },
   {
     encabezado: 'Entidad federativa',
-    clave: (ele: FederatariosEncabezado) => ele.ENTIDAD_FEDERATIVA,
+    clave: (ele: FederatariosEncabezado) => ele.estado,
     orden: 7,
   },
   {
     encabezado: 'Municipio o delegación',
-    clave: (ele: FederatariosEncabezado) => ele.MUNICIPI_O_DELEGACION,
+    clave: (ele: FederatariosEncabezado) => ele.estadoOptions,
     orden: 8,
   },
 ];

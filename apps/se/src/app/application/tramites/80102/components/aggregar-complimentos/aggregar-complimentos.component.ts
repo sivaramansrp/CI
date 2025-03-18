@@ -59,4 +59,8 @@ export class AggregarComplimentosComponent {
   accionistasExtranjerosEliminado(datos: SociaoAccionistas[]): void {
     this.store.eliminarTablaDatosComplimentosExtranjera(datos);
   }
+
+  setFormValida(valida: boolean): void {
+    this.store.setFormValida({ complimentos: valida});
+  }
 }
