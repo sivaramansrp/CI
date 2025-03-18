@@ -60,9 +60,13 @@ export class DatosDeLaSolicitudeComponent implements OnInit, OnDestroy {
   }
 
 
-
+  /**
+   * Inicializa el formulario de la solicitud con los valores del estado.
+   * También se suscribe a los cambios en el estado de la solicitud.
+   */
   inicializarFormularioSolicitud(): void {
 
+    // Se suscribe a los cambios en el estado de la solicitud
     this.tramite130106Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$), // Se asegura de limpiar los observables al destruir el componente
@@ -72,27 +76,39 @@ export class DatosDeLaSolicitudeComponent implements OnInit, OnDestroy {
       )
       .subscribe(); // Realiza la suscripción para actualizar el estado
 
+    // Inicializa el formulario con los valores del estado de la solicitud
     this.formulario = this.fb.group({
-      Solicitud: ['', Validators.required],
-      Régimen: [this.solicitudState.régimen, Validators.required],
-      Clasificación: [this.solicitudState.clasificación, Validators.required],
-      SolitudDescripcion: [this.solicitudState.solitudDescripcion, Validators.required],
-      SolitudFraccion: [this.solicitudState.solitudFraccion, Validators.required],
-      SolitudCantidad: [this.solicitudState.solitudCantidad, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
-      Valor: [this.solicitudState.valor, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
-      SolitudUMT: [this.solicitudState.solitudUMT, Validators.required]
+      Solicitud: ['', Validators.required], // Campo de solicitud, requerido
+      Régimen: [this.solicitudState.régimen, Validators.required], // Campo de régimen, requerido
+      Clasificación: [this.solicitudState.clasificación, Validators.required], // Campo de clasificación, requerido
+      SolitudDescripcion: [this.solicitudState.solitudDescripcion, Validators.required], // Campo de descripción de la solicitud, requerido
+      SolitudFraccion: [this.solicitudState.solitudFraccion, Validators.required], // Campo de fracción de la solicitud, requerido
+      SolitudCantidad: [this.solicitudState.solitudCantidad, [Validators.required, Validators.pattern(/^[0-9]*$/)]], // Campo de cantidad de la solicitud, requerido y debe ser un número
+      Valor: [this.solicitudState.valor, [Validators.required, Validators.pattern(/^[0-9]*$/)]], // Campo de valor, requerido y debe ser un número
+      SolitudUMT: [this.solicitudState.solitudUMT, Validators.required] // Campo de UMT de la solicitud, requerido
     });
   }
 
+  /**
+   * Configuraciones para los menús desplegables.
+   * Cada objeto en el array representa una configuración de catálogo.
+   */
   configuracionesDropdown = [
-    { catalogos: SolicitudeDropdown.tramite },
-    { catalogos: SolicitudeDropdown.regimen },
-    { catalogos: SolicitudeDropdown.arancelaria },
-    { catalogos: SolicitudeDropdown.umt }
+    { catalogos: SolicitudeDropdown.tramite }, // Configuración para el catálogo de trámites
+    { catalogos: SolicitudeDropdown.regimen }, // Configuración para el catálogo de regímenes
+    { catalogos: SolicitudeDropdown.arancelaria }, // Configuración para el catálogo de aranceles
+    { catalogos: SolicitudeDropdown.umt } // Configuración para el catálogo de UMT
   ];
 
+  /**
+   * Establece los valores en el store a partir del formulario.
+   *
+   * @param {FormGroup} form - El formulario del cual se obtendrán los valores.
+   * @param {string} campo - El nombre del campo en el formulario.
+   * @param {keyof Tramite130106Store} metodoNombre - El nombre del método en el store que se llamará.
+   */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130106Store): void {
-    const VALOR = form.get(campo)?.value;
+    const VALOR = form.get(campo)?.value; // Obtiene el valor del campo en el formulario
     (this.tramite130106Store[metodoNombre] as (value: unknown) => void)(VALOR); // Llama al método correspondiente en el store
   }
 
