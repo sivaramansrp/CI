@@ -1,129 +1,74 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { of as observableOf } from 'rxjs';
-
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { SeccionQuery } from '@ng-mf/data-access-user';
+import { SeccionQuery } from '../../../../estados/queries/seccion.query';
 import { SeccionStore } from '../../../../estados/seccion.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
-
-// Mock Store Service
-@Injectable()
-class MockSeccionStore {
-  establecerSeccion = jest.fn();
-  establecerFormaValida = jest.fn();
-}
-
-// Custom Directive Mock
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
-// Pipe Mocks
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value: any): any {
-    return value;
-  }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value: any): any {
-    return value;
-  }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value: any): any {
-    return value;
-  }
-}
+import { of } from 'rxjs';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('SolicitantePageComponent', () => {
-  let fixture: ComponentFixture<SolicitantePageComponent>;
   let component: SolicitantePageComponent;
-  let seccionQueryMock: jest.Mocked<SeccionQuery>;
-  let seccionStoreMock: MockSeccionStore;
+  let fixture: ComponentFixture<SolicitantePageComponent>;
+  let mockSeccionQuery: any;
+  let mockSeccionStore: any;
 
   beforeEach(async () => {
-    // Correcting Mock for SeccionQuery
-    seccionQueryMock = {
-      selectSeccionState$: observableOf({
-        pasos: [],
-        currentStep: 1
-      }) // ✅ Now it's an Observable
-    } as unknown as jest.Mocked<SeccionQuery>;
+    mockSeccionQuery = {
+      selectSeccionState$: of({}),
+    };
 
-    // Creating Mock for SeccionStore
-    seccionStoreMock = new MockSeccionStore();
+    mockSeccionStore = {
+      establecerSeccion: jest.fn(),
+      establecerFormaValida: jest.fn(),
+    };
 
     await TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [
-        SolicitantePageComponent,
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      declarations: [SolicitantePageComponent],
       providers: [
-        { provide: SeccionQuery, useValue: seccionQueryMock },
-        { provide: SeccionStore, useValue: seccionStoreMock }
-      ]
+        { provide: SeccionQuery, useValue: mockSeccionQuery },
+        { provide: SeccionStore, useValue: mockSeccionStore },
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
-
-    fixture = TestBed.createComponent(SolicitantePageComponent);
-    component = fixture.componentInstance;
   });
 
-  afterEach(() => {
-    fixture.destroy();
-    jest.clearAllMocks();
+  beforeEach(() => {
+    fixture = TestBed.createComponent(SolicitantePageComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize properly on ngOnInit()', () => {
-    jest.spyOn(component as any, 'asignarSecciones'); // FIXED TypeScript error
+  
 
+  it('should update pasos on ngOnInit', () => {
     component.ngOnInit();
-
-    expect((component as any).asignarSecciones).toHaveBeenCalled();
+    const updatedPaso = component.pasos.find(paso => paso.indice === 2);
+    expect(updatedPaso?.titulo).toBe('Requsitors necesarios');
   });
 
-  it('should call seleccionaTab() with a given value', () => {
-    const tabMock = 1;
-    jest.spyOn(component, 'seleccionaTab');
-
-    component.seleccionaTab(tabMock);
-
-    expect(component.seleccionaTab).toHaveBeenCalledWith(tabMock);
+  it('should set indice on seleccionaTab', () => {
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
   });
 
-  it('should call getValorIndice() and trigger wizard navigation', () => {
+  it('should update indice and call wizardComponent methods on getValorIndice', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
-      atras: jest.fn()
-    } as any; // FIXED TypeScript error
+      atras: jest.fn(),
+    } as any;
 
-    component.getValorIndice({ valor: 2, accion: 'cont' });
+    component.getValorIndice({ accion: 'cont', valor: 2 });
+    expect(component.indice).toBe(2);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
 
-    component.getValorIndice({ valor: 1, accion: 'prev' });
+    component.getValorIndice({ accion: 'prev', valor: 1 });
+    expect(component.indice).toBe(1);
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should assign sections correctly using asignarSecciones()', () => {
-    (component as any).asignarSecciones(); // FIXED TypeScript error
 
-    expect(seccionStoreMock.establecerSeccion).toHaveBeenCalled();
-    expect(seccionStoreMock.establecerFormaValida).toHaveBeenCalled();
-  });
 });

@@ -2,86 +2,34 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatosTramiteService } from 'libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
 import mockData from 'libs/shared/theme/assets/json/11202/contenedor-mockdata.json';
-import { map, Subject, takeUntil } from 'rxjs';
-import * as XLSX from 'xlsx';
+import { map, Subject, Subscription, takeUntil } from 'rxjs';
+
 import { TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
 import { Contenedor11202Query } from '../../../../estados/queries/contenedor11202.query';
 import {
   Contenedor11202State,
   Contenedor11202Store,
 } from '../../../../estados/tramites/contenedor11202.store';
-//import { Solicitud11202State, Solicitud11202Store } from "../../../../estados/tramites/solicitud11202.store";
-// import { Solicitud11202Query } from '../../../../estados/queries/solicitud11202.query';
-// import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
+
 
 @Component({
   selector: 'app-contenedor',
   templateUrl: './contenedor.component.html',
   styleUrl: './contenedor.component.scss',
+ 
 })
 export class ContenedorComponent {
   public contenedorState!: Contenedor11202State;
   TEXTOS = TEXTOS_REQUISITOS;
 
-  //  for upload excel
-  archivoSeleccionado1: string = '';
-  selectedFile: File | null = null;
-  excelData: any[] = []; // Store parsed Excel data
-  tableHeaders: string[] = []; // Store table headers dynamically
-  triggerFileInput() {
-    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
-    fileInput.click();
-  }
-
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
-      this.archivoSeleccionado1 = this.selectedFile.name;
-    }
-  }
-  procesarArchivo() {
-    console.log('inside procesarArchivo');
-    if (!this.selectedFile) {
-      alert('Por favor, seleccione un archivo antes de enviarlo.');
-      return;
-    }
-    console.log('inside procesarArchivo1');
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-      const data = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(data, { type: 'array' });
-      const sheetName = workbook.SheetNames[0]; // Get the first sheet
-      const worksheet = workbook.Sheets[sheetName];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
-      if (jsonData.length > 0) {
-        this.tableHeaders = jsonData[0] as string[]; // First row as headers
-        this.excelData = jsonData
-          .slice(1)
-          .map((row: any) =>
-            Object.fromEntries(
-              row.map((cell: any, index: number) => [
-                this.tableHeaders[index],
-                cell,
-              ])
-            )
-          );
-      }
-    };
-
-    reader.readAsArrayBuffer(this.selectedFile);
-  }
-
-  //end of upload excel
-
+ 
+private subscription: Subscription = new Subscription();
   private destroyNotifier$: Subject<void> = new Subject();
   onPageChange($event: Event) {
-    throw new Error('Method not implemented.');
+    this.subscription.unsubscribe();
+    
   }
-  ngSubmit() {
-    throw new Error('Method not implemented.');
-  }
+ 
   solicitudForm!: FormGroup;
   isAdjuntarArchivoVisible: boolean = false;
   seccionAduanaaFechaVisible: boolean = false;
@@ -118,6 +66,7 @@ export class ContenedorComponent {
     this.configurarValidaciones();
     this.setFormValues();
 
+    this.subscription.add(
     this.contenedorQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -125,10 +74,10 @@ export class ContenedorComponent {
           this.contenedorState = seccionState;
         })
       )
-      .subscribe();
+      .subscribe()
+    );
     this.crearFormSolicitud();
-    console.log();
-  }
+     }
 
   inicializarFormulario(): void {
     this.solicitudForm = this.fb.group({
@@ -214,10 +163,8 @@ export class ContenedorComponent {
       },
       error: (error) => {
         console.error('Error al cargar aduanas', error);
-      },
-      complete: () => {
-        console.log('Carga de aduanas completada.');
-      },
+      }
+      
     });
   }
 
@@ -228,10 +175,7 @@ export class ContenedorComponent {
       },
       error: (error) => {
         console.error('Error al cargar contenedores', error);
-      },
-      complete: () => {
-        console.log('Carga de contenedores completada.');
-      },
+      }
     });
   }
 
@@ -240,10 +184,10 @@ export class ContenedorComponent {
   }
 
   mostrarCampos(): void {
-    console.log('inside mostrarCampos');
+  
     const tipoBusqueda = this.solicitudForm.get('tipoBusqueda')?.value;
     if (tipoBusqueda === 'Contenedor') {
-      console.log('inside mostrarCamposwwww');
+      
       this.seccionContenedorVisible = false;
       this.seccionContenedor = true;
       this.seccionAduanaaFechaVisible = true;
@@ -275,9 +219,9 @@ export class ContenedorComponent {
         .subscribe(
           (response) => {
             // Manejar la respuesta exitosa
-            alert(
-              'Constancia no encontrada, ¿Deseas agregar una nueva constancia?.'
-            );
+            // alert(
+            //   'Constancia no encontrada, ¿Deseas agregar una nueva constancia?.'
+            // );
           },
           (error) => {
             this.exceptionCaught = true;
@@ -288,7 +232,7 @@ export class ContenedorComponent {
     }
   }
   agregarAGrid(): void {
-    console.log('inside agregar button');
+   
     const nuevoContenedor = {
       tipoContenedor: this.datosContenedor.get('tipoContenedor')?.value,
       //  tipoContenedor: this.solicitudForm.get('tipoContenedor')?.value,
@@ -298,13 +242,10 @@ export class ContenedorComponent {
         ?.value,
       numeroContenedor: this.datosContenedor.get('numeroContenedor')?.value,
     };
-    console.log('tipoContenedor' + nuevoContenedor.tipoContenedor);
-    console.log('inside agregar button 1' + nuevoContenedor.aduana);
-
+   
     if (nuevoContenedor.aduana) {
       this.contenedores.push(nuevoContenedor);
-      console.log(nuevoContenedor.aduana);
-      // Limpiar los campos después de agregar
+    
       this.solicitudForm.patchValue({
         contenedores: '',
         digitoDeControl: '',
@@ -341,10 +282,7 @@ export class ContenedorComponent {
     this.agregarTipoContenedorVisible = true;
   }
 
-  vaiarGridRC(): void {
-    // Implementar la lógica necesaria para "vaiarGridRC"
-    // Esta función fue referenciada en el HTML original
-  }
+ 
 
   crearFormSolicitud(): void {
     this.solicitudForm = this.fb.group({

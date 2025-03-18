@@ -37,7 +37,7 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
     PasoUnoComponent,
     SolicitantePageComponent,
     PasoDosComponent,
-    PasoTresComponent
+    
   ],
   imports: [
     CommonModule,
@@ -59,6 +59,8 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
     SelectPaisesComponent,
     CatalogoSelectComponent,
     RepresentanteFiscalComponent,
+    FirmaElectronicaComponent,
+    
     
   ],
   exports: [SolicitanteComponent, ContenedorComponent, PasoUnoComponent],

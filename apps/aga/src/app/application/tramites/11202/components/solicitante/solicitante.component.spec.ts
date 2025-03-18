@@ -9,6 +9,7 @@ import {
   Directive,
   Input,
   Output,
+  NgModule,
 } from '@angular/core';
 import {
   FormsModule,
@@ -49,20 +50,26 @@ class SafeHtmlPipe implements PipeTransform {
   }
 }
 
+@NgModule({
+  declarations: [
+    SolicitanteComponent,
+    TranslatePipe,
+    PhoneNumberPipe,
+    SafeHtmlPipe,
+    MyCustomDirective,
+  ],
+  imports: [FormsModule, ReactiveFormsModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+})
+class TestModule {}
+
 describe('SolicitanteComponent', () => {
   let fixture: ComponentFixture<SolicitanteComponent>;
   let component: SolicitanteComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [SolicitanteComponent, FormsModule, ReactiveFormsModule],
-      declarations: [
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective,
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      imports: [TestModule],
       providers: [FormBuilder],
     }).compileComponents();
 

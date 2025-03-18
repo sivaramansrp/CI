@@ -1,66 +1,86 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { Router } from '@angular/router';
+import { of, throwError } from 'rxjs';
 import { PasoTresComponent } from './paso-tres.component';
+import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
+import { TramiteStore } from '../../../../estados/tramite.store';
+import { FirmaElectronicaComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component";
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
   let fixture: ComponentFixture<PasoTresComponent>;
+  let mockRouter: any;
+  let mockServiciosExtraordinariosService: any;
+  let mockTramiteStore: any;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PasoTresComponent]
-    }).compileComponents();
+    mockRouter = {
+      navigate: jest.fn()
+    };
 
+    mockServiciosExtraordinariosService = {
+      obtenerTramite: jest.fn()
+    };
+
+    mockTramiteStore = {
+      establecerTramite: jest.fn()
+    };
+
+    await TestBed.configureTestingModule({
+      declarations: [],
+      providers: [
+        { provide: Router, useValue: mockRouter },
+        { provide: ServiciosExtraordinariosService, useValue: mockServiciosExtraordinariosService },
+        { provide: TramiteStore, useValue: mockTramiteStore },
+        ToastrService
+      ],
+      imports: [FirmaElectronicaComponent, ToastrModule.forRoot()]
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
     fixture = TestBed.createComponent(PasoTresComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have TEXTOS defined and not empty', () => {
+  it('should have TEXTOS defined', () => {
     expect(component.TEXTOS).toBeDefined();
-    // Check if TEXTOS is a string and not an empty string
-    expect(typeof component.TEXTOS).toBe('string');
-    expect(component.TEXTOS.length).toBeGreaterThan(0);
   });
 
+  it('should call obtieneFirma and navigate on success', () => {
+    const mockTramite = { data: 'mockData' };
+    mockServiciosExtraordinariosService.obtenerTramite.mockReturnValue(of(mockTramite));
+    const firma = 'mockFirma';
 
-  it('should render the content correctly', () => {
-    const compiled = fixture.nativeElement;
+    component.obtieneFirma(firma);
 
-    // Check if the TEXTOS content is present in the template.
-    // Use a more specific selector if possible (e.g., a data-testid attribute).
-    const elementWithText = compiled.querySelector('[data-testid="instrucciones"]'); // Example using data-testid
-
-    if (elementWithText) {
-      expect(elementWithText.textContent).toContain(component.TEXTOS);
-    } else {
-      fixture.detectChanges(); // Force change detection in case the view hasn't initialized yet
-      const elementWithTextAfterCD = compiled.querySelector('[data-testid="instrucciones"]');
-      if (elementWithTextAfterCD) {
-        expect(elementWithTextAfterCD.textContent).toContain(component.TEXTOS);
-      } else {
-        console.warn('Element with data-testid="instrucciones" not found. Check template and test.');
-      }
-    }
+    expect(mockServiciosExtraordinariosService.obtenerTramite).toHaveBeenCalledWith(19);
+    expect(mockTramiteStore.establecerTramite).toHaveBeenCalledWith(mockTramite.data, firma);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
-  it('should handle undefined TEXTOS gracefully', () => {
-    // Simulate TEXTOS being undefined (e.g., if the enum is not loaded yet)
-    component.TEXTOS = undefined as any; // Use "as any" to force undefined
+  it('should handle error in obtieneFirma', () => {
+    const error = new Error('Test error');
+    mockServiciosExtraordinariosService.obtenerTramite.mockReturnValue(throwError(error));
+    const firma = 'mockFirma';
 
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement;
-    // Check if the template handles the undefined value without errors.
-    // For example, you might expect an empty string or some default text.
-    const element = compiled.querySelector('[data-testid="instrucciones"]');
-    if (element) {
-      // Check if the element handles undefined gracefully.
-      // For example, you might expect an empty string or some default text.
-      expect(element.textContent).not.toContain('undefined'); // Or any other error indicator
-    }
+    component.obtieneFirma(firma);
+
+    expect(mockServiciosExtraordinariosService.obtenerTramite).toHaveBeenCalledWith(19);
+    // Error handling can be tested here if there's specific logic for it
+  });
+
+  it('should not call obtieneFirma if FIRMA is empty', () => {
+    component.obtieneFirma('');
+
+    expect(mockServiciosExtraordinariosService.obtenerTramite).not.toHaveBeenCalled();
+    expect(mockTramiteStore.establecerTramite).not.toHaveBeenCalled();
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 });

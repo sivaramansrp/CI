@@ -29,7 +29,7 @@ export class PasoDosComponent {
  
       lector.readAsText(archivo);
     } else {
-      alert('Por favor, sube un archivo CSV válido');
+     // alert('Por favor, sube un archivo CSV válido');
     }
   }
  
