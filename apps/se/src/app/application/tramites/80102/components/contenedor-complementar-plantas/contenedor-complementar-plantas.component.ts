@@ -1,8 +1,9 @@
-import { ActivatedRoute, Router } from '@angular/router';
+
 import { Component, OnDestroy ,OnInit} from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DetallesPlantasComponent } from '../../../../shared/components/detalles-plantas/detalles-plantas.component';
+import { Location } from '@angular/common';
 import { PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
 import { Tramite80102Query} from '../../estados/tramite80102.query';
 
@@ -25,8 +26,7 @@ export class ContenedorComplementarPlantasComponent implements OnInit, OnDestroy
 
     plantasSeleccionadas:PlantasSubfabricante[]=[]
   constructor( private query: Tramite80102Query,
-    private router:Router,
-    private activatedRoute:ActivatedRoute
+    private ubicaccion: Location
   )
   {
     //temp
@@ -45,7 +45,7 @@ export class ContenedorComplementarPlantasComponent implements OnInit, OnDestroy
   }
 
   regressarPlantas():void{
-    this.router.navigate(['../solicitud'], { relativeTo: this.activatedRoute });
+    this.ubicaccion.back();
     
   }
    /**
