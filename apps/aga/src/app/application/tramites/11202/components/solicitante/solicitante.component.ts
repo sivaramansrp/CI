@@ -1,38 +1,41 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import mockData from 'libs/shared/theme/assets/json/11202/solicitante-mockdata.json';
+import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { Solicitud11202Query } from "../../../../estados/queries/solicitud11202.query";
+import { Solicitud11202State, Solicitud11202Store } from "../../../../estados/tramites/solicitud11202.store";
+import { map, takeUntil, ReplaySubject, Subject } from "rxjs";
 
 /**
  * Componente para gestionar el formulario del solicitante.
  */
-
 @Component({
-  selector: 'app-solicitante',
-  templateUrl: './solicitante.component.html',
-  styleUrl: './solicitante.component.scss',
+  selector: "app-solicitante",
+  templateUrl: "./solicitante.component.html",
+  styleUrl: "./solicitante.component.scss",
 })
 export class SolicitanteComponent implements OnInit {
+  /**
+   * Estado de la solicitud.
+   */
+  public solicitudState!: Solicitud11202State;
+
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Formulario principal de la solicitud.
+   */
+  solicitudForm!: FormGroup;
+
   /**
    * Constructor para inyectar las dependencias necesarias.
    * @param fb - Servicio FormBuilder para crear formularios reactivos.
    */
   // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder) {}
-
-  /**
-   * Grupo de formulario para el formulario de solicitud.
-   */
-  solicitudForm!: FormGroup;
-
-  /**
-   * Datos simulados que representan a un solicitante con varios atributos.
-   *
-   * @property {string} rfc - El RFC (Registro Federal de Contribuyentes) del solicitante.
-   * @property {string} denominacion - El nombre o denominación del negocio del solicitante.
-   * @property {string} actividadEconomica - La actividad económica o sector empresarial del solicitante.
-   * @property {string} correoElectronico - La dirección de correo electrónico del solicitante.
-   */
+  constructor(
+    private fb: FormBuilder,
+    private solicitudStore: Solicitud11202Store,
+    private solicitudQuery: Solicitud11202Query
+  ) {}
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -40,38 +43,82 @@ export class SolicitanteComponent implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.solicitudForm = this.fb.group({
-      rfc: [''],
-      denominacion: [''],
-      actividadEconomica: [''],
-      correoElectronico: [''],
-    });
-    this.setFormValues();
+    this.solicitudQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
+    // Inicializar el formulario principal
+    this.crearFormSolicitud();
   }
 
   /**
-   * Establece los valores del formulario `solicitudForm` utilizando datos simulados.
-   *
-   * Este método llena los siguientes campos en el formulario:
-   * - rfc: El RFC (Registro Federal de Contribuyentes).
-   * - denominacion: La denominación o razón social.
-   * - actividadEconomica: La actividad económica.
-   * - correoElectronico: La dirección de correo electrónico.
-   *
-   * @remarks
-   * Este método asume que `mockData` contiene los campos necesarios
-   * y que `solicitudForm` está correctamente inicializado.
+   * Crea el formulario de solicitud.
+   * @return {void} No retorna ningún valor.
    */
+  crearFormSolicitud(): void {
+    this.solicitudForm = this.fb.group({
+      datosGenerales: this.fb.group({
+        rfc: [this.solicitudState?.rfc],
+        denominacion: [this.solicitudState?.denominacion],
+        actividadEconomica: [this.solicitudState?.actividadEconomica],
+        correoElectronico: [this.solicitudState?.correoElectronico],
+      }),
+      domicilioFiscal: this.fb.group({
+        pais: [this.solicitudState?.pais],
+        codigoPostal: [this.solicitudState?.codigoPostal],
+        estado: [this.solicitudState?.estado],
+        municipioAlcaldia: [this.solicitudState?.municipioAlcaldia],
+        localidad: [this.solicitudState?.localidad],
+        colonia: [this.solicitudState?.colonia],
+        calle: [this.solicitudState?.calle],
+        numeroExterior: [this.solicitudState?.numeroExterior],
+        numeroInterior: [this.solicitudState?.numeroInterior],
+        lada: [this.solicitudState?.lada],
+        telefono: [this.solicitudState?.telefono],
+      })
+    });
+  }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  setFormValues() {
-    this.solicitudForm.get('rfc')?.setValue(mockData.rfc);
-    this.solicitudForm.get('denominacion')?.setValue(mockData.denominacion);
-    this.solicitudForm
-      .get('actividadEconomica')
-      ?.setValue(mockData.actividadEconomica);
-    this.solicitudForm
-      .get('correoElectronico')
-      ?.setValue(mockData.correoElectronico);
+    /**
+   * Establece los valores en el store de tramite5701.
+   *
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   * @returns {void}
+   */
+    setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud11202Store): void {
+      const valor = form.get(campo)?.value;
+      (this.solicitudStore[metodoNombre] as (value: any) => void)(valor);
+    }
+
+  /**
+   * Obtiene el grupo de formulario 'datosGenerales' del formulario principal 'FormSolicitud'.
+   * @returns {FormGroup} El grupo de formulario 'datosGenerales'.
+   */
+  get datosGenerales(): FormGroup {
+    return this.solicitudForm.get("datosGenerales") as FormGroup;
+  }
+
+  /**
+   * Obtiene el grupo de formulario 'domicilioFiscal' del formulario principal 'FormSolicitud'.
+   * @returns {FormGroup} El grupo de formulario 'domicilioFiscal'.
+   */
+  get domicilioFiscal(): FormGroup {
+    return this.solicitudForm.get("domicilioFiscal") as FormGroup;
+  }
+
+  /**
+   * Este método se utiliza para destruir la suscripción.
+   * @returns destroyed$
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }
