@@ -2,6 +2,7 @@ import { Component, OnDestroy ,OnInit} from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { AggregarComplimentosComponent } from '../../components/aggregar-complimentos/aggregar-complimentos.component';
 import { CommonModule } from '@angular/common';
+import { ContenedorAnnexoDosTresComponent } from '../../components/contenedor-annexo-dos-tres/contenedor-annexo-dos-tres.component';
 import { EmpresasSubfabricanteComponent } from '../../components/empresas-subfabricante/empresas-subfabricante.component';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -21,7 +22,8 @@ import { Tramite80102Query } from '../../estados/tramite80102.query';
     SolicitanteComponent,
     ServiciosComponent,
     AggregarComplimentosComponent,
-    EmpresasSubfabricanteComponent
+    EmpresasSubfabricanteComponent,
+    ContenedorAnnexoDosTresComponent
 ],
   host: { hostID: crypto.randomUUID().toString() },
 })
