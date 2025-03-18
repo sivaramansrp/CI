@@ -11,8 +11,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { AlertComponent, DatosPasos, ListaPasosWizard, PASOS, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import {ListaPasosWizard, PASOS, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-user/src/core/services/120404/solicitanteAsigncionservice.service';
 
 /**
@@ -26,7 +25,7 @@ import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-use
 @Component({
   selector: 'app-solicitantetab',
   standalone: true,
-  imports: [CommonModule, TituloComponent, AlertComponent, ReactiveFormsModule, BtnContinuarComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
   templateUrl: './solicitantetab.component.html',
   styleUrls: ['./solicitantetab.component.scss'],
 })
@@ -41,11 +40,6 @@ export class SolicitantetabComponent implements OnInit, OnDestroy {
    * @private
    */
   private destroyed$ = new Subject<void>();
-
-  /**
-   * Texto de la alerta.
-   */
-  texto: string = 'La solicitud ha quedado registrada con el número de expediente 202758350. Esto no tiene validez legal, sirve solamente para efectos de identificar tu solitud. Un folio le será asignado a la solitud al momento en que esta sea firmada.';
 
   /**
    * Índice del paso actual.
@@ -70,15 +64,6 @@ export class SolicitantetabComponent implements OnInit, OnDestroy {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-  /**
-   * Datos de los pasos del wizard.
-   */
-  datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length,
-    indice: this.indice,
-    txtBtnAnt: 'Anterior',
-    txtBtnSig: 'Continuar',
-  };
 
   /**
    * Método de destrucción del componente.
