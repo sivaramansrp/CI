@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { Component } from '@angular/core';
+
 import { CAPACIDAD_INSTALADA } from '../../constantes/capacidad-instalada.enum';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-capacidad-instalada',

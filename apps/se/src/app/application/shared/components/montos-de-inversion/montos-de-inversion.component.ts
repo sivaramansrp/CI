@@ -1,10 +1,14 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { Component } from '@angular/core';
+
 import { COMPLEMENTO_DE_PLANTA } from '../../constantes/complementar-planta.enum';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-montos-de-inversion',

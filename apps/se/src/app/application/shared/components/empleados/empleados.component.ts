@@ -1,21 +1,18 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
-import {
-  DIRECTOS,
-  FECHA_DE_CEDULA,
-  FECHA_DE_FIRMA,
-  FECHA_FIN_VIGENCIA,
-} from '../../constantes/empleados.enum';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { Component } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { DIRECTOS } from '../../constantes/empleados.enum';
+import { FECHA_DE_CEDULA } from '../../constantes/empleados.enum';
+import { FECHA_DE_FIRMA } from '../../constantes/empleados.enum';
+import { FECHA_FIN_VIGENCIA } from '../../constantes/empleados.enum';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
-import {
-  Form,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-empleados',

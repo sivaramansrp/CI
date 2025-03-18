@@ -1,23 +1,3 @@
-// Planta
-// Fracción arancelaria de producto
-// UMT
-
-// Descripción comercial del producto terminado
-
-// Turnos
-// Horas por turno
-
-// Cantidad empleados
-// Cantidad maquinaria
-
-// Descripción de la maquinaria
-
-// Capacidad instalada mensual
-// Capacidad instalada anual
-
-// Capacidad efectivamente utilizada (porcentaje)
-
-// Cálculo de la capacidad instalada
 export interface CapacidadInstalada {
   PLANTA: string;
   FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO: string;
@@ -42,55 +22,65 @@ export const CAPACIDAD_INSTALADA = [
   },
   {
     encabezado: 'Fracción arancelaria de producto',
-    clave: (ele: CapacidadInstalada) =>
+    clave: (ele: CapacidadInstalada): string =>
       ele.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO,
     orden: 2,
   },
-  { encabezado: 'UMT', clave: (ele: CapacidadInstalada) => ele.UMT, orden: 3 },
+  {
+    encabezado: 'UMT',
+    clave: (ele: CapacidadInstalada): string => ele.UMT,
+    orden: 3,
+  },
   {
     encabezado: 'Descripción comercial del producto terminado',
-    clave: (ele: CapacidadInstalada) =>
+    clave: (ele: CapacidadInstalada): string =>
       ele.DESCRIPCION_COMERCIAL_PRODUCTO_TERMINADO,
     orden: 4,
   },
   {
     encabezado: 'Turnos',
-    clave: (ele: CapacidadInstalada) => ele.TURNOS,
+    clave: (ele: CapacidadInstalada): string => ele.TURNOS,
     orden: 5,
   },
   {
     encabezado: 'Horas por turno',
-    clave: (ele: CapacidadInstalada) => ele.HORAS_POR_TURNO,
+    clave: (ele: CapacidadInstalada): string => ele.HORAS_POR_TURNO,
     orden: 6,
   },
   {
     encabezado: 'Cantidad empleados',
-    clave: (ele: CapacidadInstalada) => ele.CANTIDAD_EMPLEADOS,
+    clave: (ele: CapacidadInstalada): string => ele.CANTIDAD_EMPLEADOS,
     orden: 7,
   },
   {
     encabezado: 'Cantidad maquinaria',
-    clave: (ele: CapacidadInstalada) => ele.CANTIDAD_MAQUINARIA,
+    clave: (ele: CapacidadInstalada): string => ele.CANTIDAD_MAQUINARIA,
     orden: 8,
   },
   {
     encabezado: 'Descripción de la maquinaria',
-    clave: (ele: CapacidadInstalada) => ele.DESCRIPCION_MAQUINARIA,
+    clave: (ele: CapacidadInstalada): string => ele.DESCRIPCION_MAQUINARIA,
     orden: 9,
   },
   {
     encabezado: 'Capacidad instalada mensual',
-    clave: (ele: CapacidadInstalada) => ele.CAPACIDAD_INSTALADA_MENSUAL,
+    clave: (ele: CapacidadInstalada): string => ele.CAPACIDAD_INSTALADA_MENSUAL,
     orden: 10,
   },
   {
     encabezado: 'Capacidad instalada anual',
-    clave: (ele: CapacidadInstalada) => ele.CAPACIDAD_INSTALADA_ANUAL,
+    clave: (ele: CapacidadInstalada): string => ele.CAPACIDAD_INSTALADA_ANUAL,
     orden: 11,
   },
   {
     encabezado: 'Capacidad efectivamente utilizada (porcentaje)',
-    clave: (ele: CapacidadInstalada) => ele.CAPACIDAD_EFECTIVAMENTE_UTILIZADA,
+    clave: (ele: CapacidadInstalada): string =>
+      ele.CAPACIDAD_EFECTIVAMENTE_UTILIZADA,
     orden: 12,
+  },
+  {
+    encabezado: 'Cálculo capacidad instalada',
+    clave: (ele: CapacidadInstalada): string => ele.CALCULO_CAPACIDAD_INSTALADA,
+    orden: 13,
   },
 ];

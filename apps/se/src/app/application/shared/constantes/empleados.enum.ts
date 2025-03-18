@@ -1,18 +1,3 @@
-//Directos
-
-// #Planta
-// Total
-// Directos
-// Cedula de cuotas
-// Fecha de cedula
-// Indirectos
-// Contrato
-// Objeto del contrato del servicio
-// Fecha firma
-// Fecha fin vigencia
-// RFC
-// Razon social
-
 export interface Directos {
   PLANTA: string;
   TOTAL: string;
@@ -34,42 +19,58 @@ export const DIRECTOS = [
     clave: (ele: Directos): string => ele.PLANTA,
     orden: 1,
   },
-  { encabezado: 'Total', clave: (ele: Directos) => ele.TOTAL, orden: 2 },
-  { encabezado: 'Directos', clave: (ele: Directos) => ele.DIRECTOS, orden: 3 },
   {
-    encabezado: 'Cedula de cuotas',
-    clave: (ele: Directos) => ele.CEDULA_DE_CUOTAS,
+    encabezado: 'Total',
+    clave: (ele: Directos): string => ele.TOTAL,
+    orden: 2,
+  },
+  {
+    encabezado: 'Directos',
+    clave: (ele: Directos): string => ele.DIRECTOS,
+    orden: 3,
+  },
+  {
+    encabezado: 'Cédula de cuotas',
+    clave: (ele: Directos): string => ele.CEDULA_DE_CUOTAS,
     orden: 4,
   },
   {
-    encabezado: 'Fecha de cedula',
-    clave: (ele: Directos) => ele.FECHA_DE_CEDULA,
+    encabezado: 'Fecha de cédula',
+    clave: (ele: Directos): string => ele.FECHA_DE_CEDULA,
     orden: 5,
   },
   {
     encabezado: 'Indirectos',
-    clave: (ele: Directos) => ele.INDIRECTOS,
+    clave: (ele: Directos): string => ele.INDIRECTOS,
     orden: 6,
   },
-  { encabezado: 'Contrato', clave: (ele: Directos) => ele.CONTRATO, orden: 7 },
+  {
+    encabezado: 'Contrato',
+    clave: (ele: Directos): string => ele.CONTRATO,
+    orden: 7,
+  },
   {
     encabezado: 'Objeto del contrato del servicio',
-    clave: (ele: Directos) => ele.OBJETO_DEL_CONTRATO_DEL_SERVICIO,
+    clave: (ele: Directos): string => ele.OBJETO_DEL_CONTRATO_DEL_SERVICIO,
     orden: 8,
   },
   {
-    encabezado: 'Fecha firma',
-    clave: (ele: Directos) => ele.FECHA_FIRMA,
+    encabezado: 'Fecha de firma',
+    clave: (ele: Directos): string => ele.FECHA_FIRMA,
     orden: 9,
   },
   {
-    encabezado: 'Fecha fin vigencia',
-    clave: (ele: Directos) => ele.FECHA_FIN_VIGENCIA,
+    encabezado: 'Fecha de fin de vigencia',
+    clave: (ele: Directos): string => ele.FECHA_FIN_VIGENCIA,
     orden: 10,
   },
-  { encabezado: 'RFC', clave: (ele: Directos) => ele.RFC, orden: 11 },
   {
-    encabezado: 'Razon social',
+    encabezado: 'RFC',
+    clave: (ele: Directos): string => ele.RFC,
+    orden: 11,
+  },
+  {
+    encabezado: 'Razón social',
     clave: (ele: Directos): string => ele.RAZON_SOCIAL,
     orden: 12,
   },
