@@ -226,6 +226,13 @@
             [datos]="tableSeleccionadas.data"
           ></app-tabla-dinamica>
         </div>
+        <!-- <div class="table-container mt-5" *ngIf="isMercancia">
+          <app-tabla-dinamica
+            [tipoSeleccionTabla]="TablaSeleccion.RADIO"
+            [configuracionTabla]="tableSeleccionadas.headers"
+            
+          ></app-tabla-dinamica>
+        </div> -->
         <i id="bi-1-square" class="bi bi-1-square" viewBox="0 0 16 16"></i>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
           <button type="button" class="btn btn-default ms-3">Eliminar</button>
@@ -260,7 +267,7 @@
     </ng-container>
   </form>
 </div>
-<div class="container">
+<div class="container" *ngIf="!isMercancia">
   <ng-titulo titulo="Datos de la mercancía" />
   <form [formGroup]="mercanciaForm" (ngSubmit)="validarmercanciaForm()">
     <ng-container formGroupName="validacionMercanciaForm">
@@ -273,7 +280,6 @@
             class="form-control"
             formControlName="fraccionMercanArancelaria"
             value=""
-            [disabled]="true"
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -293,7 +299,6 @@
             class="form-control"
             formControlName="nombrecomercialdelamercancia"
             value=""
-            [disabled]="true"
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -313,7 +318,6 @@
             class="form-control"
             formControlName="nombretecnico"
             value=""
-            [disabled]="true"
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -333,7 +337,6 @@
             class="form-control"
             formControlName="nomreeningles"
             value=""
-            [disabled]="true"
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -351,7 +354,6 @@
             class="form-control"
             formControlName="criterioparaconferir"
             value=""
-            [disabled]="true"
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -394,14 +396,16 @@
       </div>
       <div class="row mt-5">
         <div class="col-md-4">
-          <label>UMC*:</label>
-          <input
-            type="text"
-            required="true"
-            class="form-control"
+          <app-catalogo-select
+            [catalogo]="umc.catalogos"
+            [label]="umc.labelNombre"
+            [placeholder]="umc.primerOpcion"
+            [required]="true"
+            [tooltipQuestionCircle]="true"
+            id="umc"
             formControlName="umc"
-            (change)="setValoresStore(validacionMercanciaForm, 'umc', 'setumc')"
-          />
+            (change)="setValoresStore(validacionMercanciaForm, 'umc', 'setUMC')"
+          ></app-catalogo-select>
         </div>
       </div>
       <div class="row mt-5">
@@ -455,17 +459,38 @@
           />
         </div>
         <div class="col-md-8">
-          Unidad de medida de la masa bruta*:
+          <app-catalogo-select
+            [catalogo]="unidadMedida.catalogos"
+            [label]="unidadMedida.labelNombre"
+            [placeholder]="unidadMedida.primerOpcion"
+            [required]="true"
+            id="unidadMedida"
+            formControlName="unidadMedida"
+            (change)="
+              setValoresStore(
+                validacionMercanciaForm,
+                'unidadMedida',
+                'setUnidadMedida'
+              )
+            "
+          ></app-catalogo-select>
         </div>
       </div>
-      <div class="row">
+      <div class="row mt-5">
         <div class="col-md-4">
           <label>Fecha de factura*:</label>
           <input
-            type="text"
+            type="date"
             required="true"
             class="form-control"
-            formControlName=""
+            formControlName="fecha"
+            (change)="
+              setValoresStore(
+                validacionMercanciaForm,
+                'fecha',
+                'setFecha'
+              )
+            "
           />
         </div>
         <div class="col-md-4">
@@ -474,18 +499,37 @@
             type="text"
             required="true"
             class="form-control"
-            formControlName=""
+            formControlName="nFactura"
+            (change)="
+              setValoresStore(
+                validacionMercanciaForm,
+                'nFactura',
+                'setNFactura'
+              )
+            "
           />
         </div>
         <div class="col-md-4">
-          <label>Tipo de factura*:</label>
-          <input
-            type="text"
-            required="true"
-            class="form-control"
-            formControlName=""
-          />
+          <app-catalogo-select
+            [catalogo]="tipoFactura.catalogos"
+            [label]="tipoFactura.labelNombre"
+            [placeholder]="tipoFactura.primerOpcion"
+            [required]="true"
+            id="tipoFactura"
+            formControlName="tipoFactura"
+            (change)="
+              setValoresStore(
+                validacionMercanciaForm,
+                'tipoFactura',
+                'setTipoFactura'
+              )
+            "
+          ></app-catalogo-select>
         </div>
+      </div>
+      <div class="col-md-12 mt-5 d-flex justify-content-end">
+        <button type="button" class="btn btn-default ms-3">Cancelar</button>
+        <button type="button" class="btn btn-primary ms-3" (click)="agregar()">Agregar</button>
       </div>
     </ng-container>
   </form>

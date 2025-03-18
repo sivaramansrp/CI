@@ -40,12 +40,31 @@
           (change)="setValoresStore(validacionForm, 'idioma', 'setIdioma')"
         ></app-catalogo-select>
       </div>
+      <ng-titulo titulo="Justificación para obtención del certificado" />
+      <div class="row">
+        <label>¿Desea obtener el certificado de origen?:</label>
+      </div>
+      <div class="row">
+        <label style="font-weight: bold">
+          <input type="checkbox" formControlName="checkbox"
+          (change)="setValoresStore(validacionForm, 'checkbox', 'setCheckbox')"/> Sí
+        </label>
+      </div>
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label>Justificación*:</label>
+          <div class="col-md-12 align-text-area">
+            <textarea cols="80" rows="5" formControlName="justificacion"
+            (change)="setValoresStore(validacionForm, 'justificacion', 'setJustificacion')"></textarea>
+          </div>
+        </div>
+      </div>
       <ng-titulo titulo="Representación federal" />
       <div class="row">
       <div class="col-md-4">
       <app-catalogo-select
       [catalogo]="entidad.catalogos"
-      [label]="entidad.labelNombre"
+      [label]="entidad.labelNombre" 
       [placeholder]="entidad.primerOpcion"
       [required]="true"
       id="entidadFederativa"

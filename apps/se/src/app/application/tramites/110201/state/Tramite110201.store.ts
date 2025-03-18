@@ -44,11 +44,17 @@ export interface Solicitud110201State {
   criterioparaconferir: string;
   marca: string;
   cantidad: string;
-  umc: string;
+  umc:Catalogo[] | null ;
   valordelamercancia: string;
   complementodeladescripcion: string;
   masabruta: string;
   nombrecomercialdelamercancia: string;
+  unidadMedida:Catalogo[] | null;
+  tipoFactura:Catalogo[] | null;
+  fecha: string;
+  nFactura: string;
+  justificacion: string;
+  checkbox: string;
 }
 
 export function createInitialState(): Solicitud110201State {
@@ -87,11 +93,17 @@ export function createInitialState(): Solicitud110201State {
     criterioparaconferir:'',
     marca:'',
     cantidad:'',
-    umc:'',
+    umc:null,
     valordelamercancia:'',
     complementodeladescripcion:'',
     masabruta:'',
     nombrecomercialdelamercancia:'',
+    unidadMedida:null,
+    tipoFactura:null,
+    fecha: '',
+    nFactura: '',
+    justificacion : '',
+    checkbox: '',
   };
 }
 
@@ -166,10 +178,45 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
     }));
   } 
 
-  public setumc(umc: string) {
+  public setUMC(umc: Catalogo[]) {
     this.update((state) => ({
       ...state,
       umc,
+    }));
+  }
+
+  public setUnidadMedida(unidadMedida: Catalogo[]) {
+    this.update((state) => ({
+      ...state,
+      unidadMedida,
+    }));
+  }
+
+  public setTipoFactura(tipoFactura: Catalogo[]) {
+    this.update((state) => ({
+      ...state,
+      tipoFactura,
+    }));
+  }
+
+public setFecha(fecha: string) {
+    this.update((state) => ({
+      ...state,
+      fecha,
+    }));
+  }
+
+  public setNFactura(nFactura: string) {
+    this.update((state) => ({
+      ...state,
+      nFactura,
+    }));
+  }
+
+public setJustificacion(justificacion: string) {
+    this.update((state) => ({ 
+      ...state,
+      justificacion,
     }));
   }
 
@@ -373,6 +420,13 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
     this.update((state) => ({
       ...state,
       transporte,
+    }));
+  }
+
+  public setCheckbox(checkbox: string) {
+    this.update((state) => ({
+      ...state,
+      checkbox,
     }));
   }
 

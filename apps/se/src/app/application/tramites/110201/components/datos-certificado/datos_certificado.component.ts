@@ -32,7 +32,7 @@ import { map, Subject, Subscription, takeUntil } from 'rxjs';
   templateUrl: './datos_certificado.component.html',
   styleUrl: './datos_certificado.component.css',
 })
-export class DatosCertificadoComponent implements OnInit,OnDestroy {
+export class DatosCertificadoComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   getIdiomaSubscripcion!: Subscription;
   getEntidadSubscripcion!: Subscription;
@@ -165,9 +165,17 @@ export class DatosCertificadoComponent implements OnInit,OnDestroy {
         presica: [this.solicitudState?.presica, [Validators.required]],
         presenta: [this.solicitudState?.presenta, [Validators.required]],
         idioma: [this.solicitudState?.idioma, [Validators.required]],
-        entidadFederativa: [this.solicitudState?.entidad, [Validators.required]],
+        entidadFederativa: [
+          this.solicitudState?.entidad,
+          [Validators.required],
+        ],
         representacion: [
           this.solicitudState?.representacion,
+          [Validators.required],
+        ],
+        checkbox: [this.solicitudState?.checkbox, [Validators.requiredTrue]],
+        justificacion: [
+          this.solicitudState?.justificacion,
           [Validators.required],
         ],
       }),
@@ -178,12 +186,12 @@ export class DatosCertificadoComponent implements OnInit,OnDestroy {
     if (this.getIdiomaSubscripcion) {
       this.getIdiomaSubscripcion.unsubscribe();
     }
-    if (this.getEntidadSubscripcion) {  
+    if (this.getEntidadSubscripcion) {
       this.getEntidadSubscripcion.unsubscribe();
     }
     if (this.getRepresentacionSubscripcion) {
       this.getRepresentacionSubscripcion.unsubscribe();
     }
-    this.destroyNotifier$.next();    
+    this.destroyNotifier$.next();
   }
 }

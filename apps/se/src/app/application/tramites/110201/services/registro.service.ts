@@ -29,4 +29,13 @@ export class RegistroService {
   getRepresentacion() {
     return this.http.get<RespuestaCatalogos>('assets/json/110201/entidad.json');
   }
+  getTipoFactura() {
+    return this.http.get<RespuestaCatalogos>('assets/json/110201/tipofactura.json');
+  }
+  getUMC() {
+    return this.http.get<RespuestaCatalogos>('assets/json/110201/umc.json');
+  }
+  getUnidadMedida() {
+    return this.http.get<RespuestaCatalogos>('assets/json/110201/umc.json');
+  }
 }

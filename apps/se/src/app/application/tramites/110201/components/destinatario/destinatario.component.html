@@ -3,11 +3,10 @@
     <ng-titulo titulo="Datos del destinatario" />
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Nombre(s)*:</label>
+        <label>Nombre(s):</label>
         <input
           type="text"
           class="form-control"
-          id="nombre"
           formControlName="nombre"
           (change)="setValoresStore(validacionForm, 'nombre', 'setNombre')"
         />
@@ -96,7 +95,7 @@
         />
       </div>
       <div class="col-md-4 mb-3">
-        <label>Número y/o letra:</label>
+        <label>Número y/o letra*:</label>
         <input
           type="text"
           class="form-control"
@@ -140,7 +139,8 @@
         />
       </div>
       <div class="col-md-4 mb-3">
-        <label>Correo electrónico*:</label>
+        <label>Correo electrónico*:</label><span class="bi bi-question-circle-fill" title="ejemplo@dominio.com"
+        data-bs-toggle="tooltip"></span>
         <input
           type="text"
           class="form-control"

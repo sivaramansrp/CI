@@ -55,6 +55,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
   pais!: CatalogosSelect;
   tratado!: CatalogosSelect;
+  umc!: CatalogosSelect;
+  unidadMedida!: CatalogosSelect;
+  tipoFactura!: CatalogosSelect;
   cargarArchivo: boolean = false;
   giveErrors: boolean = false;
   nombreArchivo: string = '';
@@ -69,10 +72,15 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   getTratadoSubscription!: Subscription;
   getPaisSubscription!: Subscription;
+  getUMCSubscription!: Subscription;
+  getUnidadMedidaSubscription!: Subscription;
+  getTipoFacturaSubscription!: Subscription;
   isDisponibles: boolean = false;
   TablaSeleccion = TablaSeleccion;
   Tratadodescripcion: unknown[] = [];
   selectTratado: string | null = null;
+  isMercancia: boolean = false;
+  fraccionArancelariaValue!: string;
   //MercanciaDisponsibles
   tableData: {
     headers: {
@@ -194,14 +202,15 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     ],
     data: [
       {
-        fraccionArancelaria: '123456789',
-        cantidad: '1',
-        unidadMedida: 'Kilogramos',
-        valorMercancia: '1000',
-        tipoFactura: 'Factura',
-        numFactura: '123456',
-        complementoDescripcion: 'Complemento',
-        fechaFactura: '2021-12-01',
+        fraccionArancelaria: this.fraccionArancelariaValue ,
+        cantidad: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
+        unidadMedida: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
+        valorMercancia: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
+        tipoFactura: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
+        numFactura: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
+        complementoDescripcion: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
+        fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
+        
       },
     ],
   };
@@ -234,6 +243,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.mercanciatable();
     this.getTratado();
     this.getPais();
+    this.getUMC();
+    this.getUnidadMedida();
+    this.getTipoFactura();
 
     this.query.selectSolicitud$
       .pipe(
@@ -267,6 +279,40 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         };
       })
     );
+
+    this.subscriptions.push(
+      this.query.selectUMC$.subscribe((umc) => {
+        this.umc = {
+          labelNombre: 'UMC',
+          required: true,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: umc ?? [],
+        }
+      })
+    );
+
+    this.subscriptions.push(
+      this.query.selectUnidadMedida$.subscribe((unidadMedida) => {
+        this.unidadMedida = {
+          labelNombre: 'Unidad de medida de la masa bruta',
+          required: true,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: unidadMedida ?? [],
+        }
+      })
+    );
+
+    this.subscriptions.push(
+      this.query.selectTipoFactura$.subscribe((tipoFactura) => {
+        this.tipoFactura = {
+          labelNombre: 'Tipo de factura',
+          required: true,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: tipoFactura ?? [],
+        }
+      })
+    );
+
   }
 
   buscarMercancias() {
@@ -275,7 +321,24 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     }
   }
 
- 
+  agregar(){
+    // if(this.mercanciaForm.valid){
+      this.tableSeleccionadas.data.push({
+        fraccionArancelaria: this.fraccionArancelariaValue,
+        cantidad: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
+        unidadMedida: this.mercanciaForm?.value.validacionMercanciaForm.unidadMedida,
+        valorMercancia: this.mercanciaForm?.value.validacionMercanciaForm.valorMercancia,
+        tipoFactura: this.mercanciaForm?.value.validacionMercanciaForm.tipoFactura,
+        numFactura: this.mercanciaForm?.value.validacionMercanciaForm.numFactura,
+        complementoDescripcion: this.mercanciaForm?.value.validacionMercanciaForm.complementoDescripcion,
+        fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fechaFactura,
+      });
+
+      
+    // }
+   
+    
+  }
 
   public mercanciaDisponsible(): void {
     this.mercanciasdisponibles =
@@ -316,6 +379,39 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.store.setPais(RESPONSE);
+        }
+      });
+  }
+
+  getUMC(): void {
+    this.getUMCSubscription = this.registroService
+      .getUMC()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.store.setUMC(RESPONSE);
+        }
+      });
+  }
+
+  getUnidadMedida(): void {
+    this.getUnidadMedidaSubscription = this.registroService
+      .getUnidadMedida()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.store.setUnidadMedida(RESPONSE);
+        }
+      });
+  }
+
+  getTipoFactura(): void {
+    this.getTipoFacturaSubscription = this.registroService
+      .getTipoFactura()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.store.setTipoFactura(RESPONSE);
         }
       });
   }
@@ -393,6 +489,10 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         valordelamercancia: [this.solicitudState?.valordelamercancia, [Validators.required]],
         complementodeladescripcion: [ this.solicitudState?.complementodeladescripcion, [Validators.required]],
         masabruta: [this.solicitudState?.masabruta, [Validators.required]],
+        unidadMedida: [this.solicitudState?.unidadMedida, [Validators.required]],
+        tipoFactura: [this.solicitudState?.tipoFactura, [Validators.required]],
+        fecha: [this.solicitudState?.fecha, [Validators.required]],
+        nFactura: [this.solicitudState?.nFactura, [Validators.required]],
       }),
     });
   }
@@ -402,6 +502,15 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     }
     if (this.getPaisSubscription) {
       this.getPaisSubscription.unsubscribe();
+    }
+    if (this.getUMCSubscription) {
+      this.getUMCSubscription.unsubscribe();
+    }
+    if (this.getUnidadMedidaSubscription) { 
+      this.getUnidadMedidaSubscription.unsubscribe();
+    }
+    if (this.getTipoFacturaSubscription) {
+      this.getTipoFacturaSubscription.unsubscribe();
     }
     this.destroyNotifier$.next();
   }

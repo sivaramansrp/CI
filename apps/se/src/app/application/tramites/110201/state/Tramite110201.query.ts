@@ -43,4 +43,7 @@ export class Tramite110201Query extends Query<Solicitud110201State> {
   selectCorreoElectronico$ = this.select((state) => state.correoElectronico);
   selectNacion$ = this.select((state) => state.nacion);
   selectTransporte$ = this.select((state) => state.transporte);
+  selectUMC$ = this.select((state) => state.umc);
+  selectUnidadMedida$ = this.select((state) => state.unidadMedida);
+  selectTipoFactura$ = this.select((state) => state.tipoFactura);
 }

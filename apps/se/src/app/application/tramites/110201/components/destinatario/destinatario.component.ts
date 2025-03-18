@@ -161,7 +161,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
         lada: [this.solicitudState?.lada, [Validators.required]],
         telefono: [this.solicitudState?.telefono, [Validators.required]],
-        fax: [this.solicitudState?.fax, [Validators.required]],
+        fax: [this.solicitudState?.fax, [Validators.required, ]],
         correoElectronico: [
           this.solicitudState?.correoElectronico,
           [Validators.required],
