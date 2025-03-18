@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@ng-mf/data-access-user';
-import { AccionBoton } from '../../enum/nuevo-programa.enum';
+import { AccionBoton } from '../../constantes/nuevo-programa.enum';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 
 @Component({

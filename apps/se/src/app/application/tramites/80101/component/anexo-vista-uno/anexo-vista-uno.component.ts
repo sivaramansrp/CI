@@ -1,5 +1,5 @@
-import { ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constants/anexo-dos-y-tres.enum';
-import { ANEXO_I_SERVICIO } from '../../../../shared/constants/anexo-dos-y-tres.enum';
+import { ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
+import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
 import { AnexoImportacionEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';

@@ -1,4 +1,4 @@
-import { ANEXO_SERVICIO } from '../../../../shared/constants/anexo-dos-y-tres.enum';
+import { ANEXO_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { AnexoDosYTresComponent } from '../../../../shared/components/anexo-dos-y-tres.component/anexo-dos-y-tres.component';
 import { AnexoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';

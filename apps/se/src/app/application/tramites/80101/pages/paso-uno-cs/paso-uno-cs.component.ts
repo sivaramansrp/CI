@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SECCIONES_TRAMITE_230401 } from '../../enum/nuevo-programa.enum';
+import { SECCIONES_TRAMITE_230401 } from '../../constantes/nuevo-programa.enum';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 
 @Component({

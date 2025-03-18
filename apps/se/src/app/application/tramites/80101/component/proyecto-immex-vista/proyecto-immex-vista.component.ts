@@ -1,7 +1,7 @@
 import { Catalogo } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { PROYECTO_IMMEX_CONFIG } from '../../../../shared/constants/anexo-dos-y-tres.enum';
+import { PROYECTO_IMMEX_CONFIG } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { PoryectoDatos } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { ProyectoImmexComponent } from '../../../../shared/components/proyecto-immex/proyecto-immex.component';
 import { ProyectoImmexEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';

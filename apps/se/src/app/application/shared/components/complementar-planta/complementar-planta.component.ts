@@ -12,7 +12,7 @@ import {
   COMPLEMENTO_DE_PLANTA,
   FECHA_DE_FIN_DE_VIGENCIA,
   FECHA_DE_FIRMA,
-} from '../../constants/complementar-planta.enum';
+} from '../../constantes/complementar-planta.enum';
 @Component({
   selector: 'app-complementar-planta',
   standalone: true,
