@@ -8,9 +8,9 @@ services:
     container_name: modulefederation-aga-microfront
     restart: on-failure
     expose:
-      - '4203'
+      - '4202'
     ports:
-      - "4203:80"
+      - "4202:80"
     networks:
       - modulefederation-network
 #----------------------------------------------------------------

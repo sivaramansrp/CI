@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "dbg": "npx nx serve dashboard",
-    "compodoc": "npx compodoc -p tsconfig.doc.json"
+    "dashboard": "npx nx serve dashboard --port 5200",    
+    "compodoc": "npx compodoc -p tsconfig.doc.json",
+    "reset": "npx nx reset"
   },
   "private": true,
   "dependencies": {
@@ -45,8 +46,6 @@
     "@angular/cli": "~18.0.0",
     "@angular/compiler-cli": "18.0.4",
     "@angular/language-service": "18.0.4",
-    "@babel/core": "^7.26.9",
-    "@babel/preset-env": "^7.26.9",
     "@compodoc/compodoc": "^1.1.26",
     "@nx/cypress": "19.3.1",
     "@nx/eslint": "19.3.1",
@@ -66,7 +65,6 @@
     "@typescript-eslint/eslint-plugin": "^7.3.0",
     "@typescript-eslint/parser": "^7.3.0",
     "@typescript-eslint/utils": "^8.0.0-alpha.28",
-    "babel-jest": "^29.7.0",
     "cypress": "13.9.0",
     "eslint": "~8.57.0",
     "eslint-config-prettier": "^9.0.0",
@@ -82,5 +80,10 @@
     "webpack": "^5.91.0",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^4.0.0"
+  },
+  "overrides": {
+    "@nx/webpack": {
+      "webpack": "5.91.0"
+    }
   }
 }
