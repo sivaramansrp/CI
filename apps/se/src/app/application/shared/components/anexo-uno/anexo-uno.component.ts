@@ -1,5 +1,11 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { AnexoImportacionConfiguartion, AnexoImportacionEncabezado, AnexoUnoConfiguartion, AnexoUnoEncabezado, RutaNombre } from '../../models/nuevo-programa-industrial.model';
+import {
+  AnexoImportacionConfiguartion,
+  AnexoImportacionEncabezado,
+  AnexoUnoConfiguartion,
+  AnexoUnoEncabezado,
+  RutaNombre,
+} from '../../models/nuevo-programa-industrial.model';
 import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -17,7 +23,13 @@ import { Validators } from '@angular/forms';
 @Component({
   selector: 'app-anexo-uno',
   standalone: true,
-  imports: [CommonModule, TituloComponent, AlertComponent, ReactiveFormsModule, TablaDinamicaComponent],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    AlertComponent,
+    ReactiveFormsModule,
+    TablaDinamicaComponent,
+  ],
   templateUrl: './anexo-uno.component.html',
   styleUrl: './anexo-uno.component.scss',
 })
@@ -27,13 +39,14 @@ export class AnexoUnoComponent {
   public anexoDosFormGroup!: FormGroup;
 
   /**
-    * Configuración de Anexo 1 y 3
-    */
+   * Configuración de Anexo 1 y 3
+   */
   @Input() anexoConfiguartion!: AnexoUnoConfiguartion<AnexoUnoEncabezado>;
   /**
    * Configuración de Anexo 1 y 3
    */
-  @Input() anexoImportacionConfiguartion!: AnexoImportacionConfiguartion<AnexoImportacionEncabezado>;
+  @Input()
+  anexoImportacionConfiguartion!: AnexoImportacionConfiguartion<AnexoImportacionEncabezado>;
   /**
    * Lista de tabla del Anexo Tres
    */
@@ -46,14 +59,26 @@ export class AnexoUnoComponent {
   /**
    * Evento para devolver la llamada del Anexo Uno
    */
-  @Output() obtenerAnexoUnoDevolverLaLlamada: EventEmitter<AnexoUnoEncabezado[]> = new EventEmitter<AnexoUnoEncabezado[]>(true);
+  @Output() obtenerAnexoUnoDevolverLaLlamada: EventEmitter<
+    AnexoUnoEncabezado[]
+  > = new EventEmitter<AnexoUnoEncabezado[]>(true);
 
   /**
    * Evento para devolver la llamada del Anexo Dos
    */
-  @Output() obtenerAnexoDosDevolverLaLlamada: EventEmitter<AnexoImportacionEncabezado[]> = new EventEmitter<AnexoImportacionEncabezado[]>(true);
-  @Output() rutaLaFraccionDeComplemento: EventEmitter<RutaNombre> = new EventEmitter<RutaNombre>();
-  constructor(private fb: FormBuilder,private router:Router,
+  @Output() obtenerAnexoDosDevolverLaLlamada: EventEmitter<
+    AnexoImportacionEncabezado[]
+  > = new EventEmitter<AnexoImportacionEncabezado[]>(true);
+  @Output() rutaLaFraccionDeComplemento: EventEmitter<RutaNombre> =
+    new EventEmitter<RutaNombre>();
+
+  public datosImportacionSeleccionados!: AnexoImportacionEncabezado | AnexoUnoEncabezado;
+
+  public datosExportacionSeleccionados!: AnexoImportacionEncabezado | AnexoUnoEncabezado;
+
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
     this.createAnexoUnoForm();
@@ -71,8 +96,8 @@ export class AnexoUnoComponent {
   }
 
   /**
-* Crea el formulario del Anexo Uno
-*/
+   * Crea el formulario del Anexo Uno
+   */
   createAnexoDosForm(): void {
     this.anexoDosFormGroup = this.fb.group({
       fraccionArancelaria: ['', Validators.required],
@@ -80,8 +105,8 @@ export class AnexoUnoComponent {
     });
   }
   /**
-* Elimina elementos del Anexo Tres que no tienen estatus
-*/
+   * Elimina elementos del Anexo Tres que no tienen estatus
+   */
   eliminarAnexoUno(): void {
     this.anexoUnoTablaLista = this.anexoUnoTablaLista.filter((idx) => {
       return !idx.estatus;
@@ -90,8 +115,8 @@ export class AnexoUnoComponent {
   }
 
   /**
-* Elimina elementos del Anexo Tres que no tienen estatus
-*/
+   * Elimina elementos del Anexo Tres que no tienen estatus
+   */
   eliminarAnexoDos(): void {
     this.anexoDosTablaLista = this.anexoDosTablaLista.filter((idx) => {
       return !idx.estatus;
@@ -104,15 +129,17 @@ export class AnexoUnoComponent {
    */
   agregarAnexoUno(): void {
     const OBJECTO_IDX: AnexoUnoEncabezado = {
-      ENCABEZADO_FRACCION: this.anexoUnoFormGroup.get('fraccionArancelaria')?.value,
-      ENCABEZADO_DESCRIPCION_COMERCIAL: this.anexoUnoFormGroup.get('descripcion')?.value,
+      ENCABEZADO_FRACCION: this.anexoUnoFormGroup.get('fraccionArancelaria')
+        ?.value,
+      ENCABEZADO_DESCRIPCION_COMERCIAL:
+        this.anexoUnoFormGroup.get('descripcion')?.value,
       estatus: false,
       ENCABEZADO_FRACCION_ARANCELARIA: '',
       ENCABEZADO_ANEXO_II: '',
       ENCABEZADO_TIPO: '',
       ENCABEZADO_UMT: '',
       ENCABEZADO_CATEGORIA: '',
-      ENCABEZADO_VALOR_EN_MERCADO: ''
+      ENCABEZADO_VALOR_EN_MERCADO: '',
     };
     this.anexoUnoTablaLista.push(OBJECTO_IDX);
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
@@ -120,19 +147,21 @@ export class AnexoUnoComponent {
   }
 
   /**
-* Agrega un nuevo elemento al Anexo Dos
-*/
+   * Agrega un nuevo elemento al Anexo Dos
+   */
   agregarAnexoDos(): void {
     const OBJECTO_IDX: AnexoImportacionEncabezado = {
-      ENCABEZADO_FRACCION: this.anexoDosFormGroup.get('fraccionArancelaria')?.value,
-      ENCABEZADO_DESCRIPCION_COMERCIAL: this.anexoDosFormGroup.get('descripcion')?.value,
+      ENCABEZADO_FRACCION: this.anexoDosFormGroup.get('fraccionArancelaria')
+        ?.value,
+      ENCABEZADO_DESCRIPCION_COMERCIAL:
+        this.anexoDosFormGroup.get('descripcion')?.value,
       ENCABEZADO_FRACCION_EXPORTACION: '',
       ENCABEZADO_FRACCION_IMPORTACION: '',
-      estatus: false
+      estatus: false,
     };
     this.anexoDosTablaLista.push(OBJECTO_IDX);
     this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
-    this.anexoUnoFormGroup.reset();
+    this.anexoDosFormGroup.reset();
   }
 
   /**
@@ -142,9 +171,9 @@ export class AnexoUnoComponent {
    * Si no se proporciona, se utilizará una lista vacía.
    * @returns {void}
    */
-  setAnexoUnoLista(event: AnexoUnoEncabezado[]): void {
-    const LISTA_SELECCIONADA = event ? event : [];
-    this.obtenerAnexoUnoDevolverLaLlamada.emit(LISTA_SELECCIONADA);
+  setAnexoUnoLista(event: AnexoUnoEncabezado): void {
+    this.datosImportacionSeleccionados = event;
+    //this.obtenerAnexoUnoDevolverLaLlamada.emit(LISTA_SELECCIONADA);
   }
 
   /**
@@ -154,9 +183,8 @@ export class AnexoUnoComponent {
    * Si no se proporciona, se utilizará una lista vacía.
    * @returns {void}
    */
-  setAnexoDosLista(event: AnexoImportacionEncabezado[]): void {
-    const LISTA_SELECCIONADA = event ? event : [];
-    this.obtenerAnexoDosDevolverLaLlamada.emit(LISTA_SELECCIONADA);
+  setAnexoDosLista(event: AnexoImportacionEncabezado): void {
+   this.datosExportacionSeleccionados = event;
   }
 
   /**
@@ -165,19 +193,14 @@ export class AnexoUnoComponent {
    * @param {string} nombre - El nombre de la categoría para establecer la ruta.
    * @returns {void}
    */
-  setRuta(nombre: string): void {
+  setRuta(nombre: string,id:string): void {
     if (nombre) {
       const RUTA_NOMBRE: RutaNombre = {
         catagoria: nombre,
-        id: 'EXPORT'
-      }
+        id: id,
+        datos:id ==='IMPORT'? this.datosImportacionSeleccionados:this.datosExportacionSeleccionados
+      };
       this.rutaLaFraccionDeComplemento.emit(RUTA_NOMBRE);
     }
   }
-
-  navegarAProveedorCliente(esDeImportación:boolean): void {
-    //set a value in store as from import or export using esDeImportación
-    this.router.navigate(['../contenedor-proveedor-cliente'],{relativeTo: this.activatedRoute});
-
-}
 }

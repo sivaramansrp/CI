@@ -1,5 +1,4 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { AnexoUnoEncabezado, ProveedorClienteTabla } from '../../models/nuevo-programa-industrial.model';
+import { AnexoImportacionEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla } from '../../models/nuevo-programa-industrial.model';
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -7,7 +6,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges,Output} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -15,6 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Location } from '@angular/common';
 import { PROVEEDOR_CLIENTE_TABLA_CONFIG } from '../../constantes/anexo-dos-y-tres.enum';
 
 @Component({
@@ -30,8 +30,8 @@ import { PROVEEDOR_CLIENTE_TABLA_CONFIG } from '../../constantes/anexo-dos-y-tre
   templateUrl: './proveedor-cliente.component.html',
   styleUrl: './proveedor-cliente.component.scss',
 })
-export class ProveedorClienteComponent{
-  @Input() public fraccionTablaDatos!: AnexoUnoEncabezado;
+export class ProveedorClienteComponent implements OnChanges{
+  @Input() public fraccionTablaDatos!: AnexoUnoEncabezado | AnexoImportacionEncabezado;
   @Output() public datosActualizadosProveedorCliente = new EventEmitter<ProveedorClienteTabla[]>();
   public formularioProveedorCliente!: FormGroup;
 
@@ -57,8 +57,18 @@ export class ProveedorClienteComponent{
   public readonly PROVEEDOR_CLIENTE_TABLA_CONFIG =
     PROVEEDOR_CLIENTE_TABLA_CONFIG;
 
-  constructor(private fb: FormBuilder,private router:Router,private activatedRoute: ActivatedRoute) {
+  constructor(private fb: FormBuilder,
+    private ubicaccion:Location
+  ) {
     this.inicializarFormularioProveedorCliente();
+  }
+
+  ngOnChanges(): void {
+    if(this.fraccionTablaDatos){
+      this.formularioProveedorCliente.patchValue({
+        descripcionComercial: this.fraccionTablaDatos.ENCABEZADO_DESCRIPCION_COMERCIAL,
+      });
+    }
   }
 
      //in NgOnInit using store value of isfromImport or export set fraccionTablaDatos
@@ -134,8 +144,8 @@ export class ProveedorClienteComponent{
   }
 
   regrssarAnnexoI():void{
-    this.datosActualizadosProveedorCliente .emit(this.proveedorClienteTablsDatos);
-      this.router.navigate(['../action'], { relativeTo: this.activatedRoute });
+    this.ubicaccion.back();
+    this.datosActualizadosProveedorCliente.emit(this.proveedorClienteTablsDatos);
   }
 
 }

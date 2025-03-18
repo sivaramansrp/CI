@@ -11,26 +11,6 @@ import { ProyectoImmexComponent } from './proyecto-immex.component';
 import { FormBuilder } from '@angular/forms';
 import { Location } from '@angular/common';
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
 describe('ProyectoImmexComponent', () => {
   let fixture;
   let component;
@@ -38,11 +18,7 @@ describe('ProyectoImmexComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ],
-      declarations: [
-        ProyectoImmexComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
+
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
@@ -55,10 +31,6 @@ describe('ProyectoImmexComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
@@ -133,21 +105,20 @@ describe('ProyectoImmexComponent', () => {
   });
 
   it('should run #eidtar()', async () => {
-    component.proyectoImmexTablaLista = component.proyectoImmexTablaLista || {};
-    component.proyectoImmexTablaLista = ['proyectoImmexTablaLista'];
-    component.seleccionList = component.seleccionList || {};
-    component.seleccionList[0] = {
-      ENCABEZADO_DESCRIPCION_OTRO: {},
-      ENCABEZADO_TIPO_DOCUMENT: {},
-      ENCABEZADO_FECHA_FIRMA: {},
-      ENCABEZADO_FECHA_VIGENCIA: {},
-      ENCABEZADO_RFC: {},
-      ENCABEZADO_RAZON_FIRMANTE: {}
-    };
+    component.proyectoImmexTablaLista = [{
+      ENCABEZADO_DESCRIPCION_OTRO: '',
+      ENCABEZADO_TIPO_DOCUMENT: '',
+      ENCABEZADO_FECHA_FIRMA: '',
+      ENCABEZADO_FECHA_VIGENCIA: '',
+      ENCABEZADO_RFC: '',
+      ENCABEZADO_RAZON_FIRMANTE: '',
+      estatus: true
+    }];
+    component.seleccionList = [];
     component.proyectoForm = component.proyectoForm || {};
     component.proyectoForm.patchValue = jest.fn();
     component.eidtar();
-    // expect(component.proyectoForm.patchValue).toHaveBeenCalled();
+    expect(component.proyectoForm.patchValue).toHaveBeenCalled();
   });
 
   it('should run #goBack()', async () => {

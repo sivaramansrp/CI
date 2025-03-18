@@ -14,9 +14,11 @@ import {
   SociaoAccionistas,
 } from '../../models/complimentos.model';
 import {
+  ESTADO,
   FORMA_SOCIO,
   FORMA_SOCIO_ACCIONISTAS,
   FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS,
+  PAIS,
   TABLA_SOCIO_ACCIONISTAS,
   TABLA_SOCIO_ACCIONISTAS_EXTRANJEROS,
   TIPO_FORMA,
@@ -30,10 +32,10 @@ import {
 } from '@angular/forms';
 import { Observable, Subscription, delay } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DatosCatalago } from '../../../tramites/80101/models/nuevo-programa-industrial.model';
+import { ComplimentosService } from '../../services/complimentos.service';
+import { DatosCatalago } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
 
-const PAIS = 'pais';
-const ESTADO = 'estado';
+
 @Component({
   selector: 'app-complimentos',
   standalone: true,
@@ -57,10 +59,10 @@ export class ComplimentosComponent implements OnInit {
   formaComplimentos!: FormGroup;
 
   /**
-   * @type {Observable<Catalogo[]>}
-   * @description Observable que emite una lista de catálogos.
+   * @type {Catalogo[]}
+   * @description lista de catálogos.
    */
-  estados$!: Observable<Catalogo[]>;
+  estados!: Catalogo[];
 
   /**
    * @type {Subscription}
@@ -177,7 +179,8 @@ export class ComplimentosComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private catalogosServices: CatalogosService
+    private catalogosServices: CatalogosService,
+    private complimentosService: ComplimentosService
   ) {
     this.formaComplimentos = this.fb.group({
       modalidad: [{ value: '', disabled: true }],
@@ -337,8 +340,8 @@ export class ComplimentosComponent implements OnInit {
    */
   getCatalogoEstado(): void {
     this.subscription.add(
-      this.catalogosServices
-        .getCatalogos(CATALOGOS_ID.CAT_ESTADO)
+      this.complimentosService
+        .obtenerListaEstado()
         .subscribe((datos) => {
           const INDICE = this.camposFormulario.findIndex(
             (ele) => ele.campo === ESTADO
@@ -346,8 +349,10 @@ export class ComplimentosComponent implements OnInit {
           const INDICEALT = this.camposFormularioTipoPersona.findIndex(
             (ele) => ele.campo === ESTADO
           );
-          this.camposFormularioTipoPersona[INDICEALT].opciones = datos.data;
-          this.camposFormularioDefault[INDICE].opciones = datos.data;
+          this.estados = datos;
+          this.camposFormularioTipoPersona[INDICEALT].opcionesCatalogo =
+            datos;
+          this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;
         })
     );
   }
@@ -363,7 +368,7 @@ export class ComplimentosComponent implements OnInit {
     const VALUE = CONTROL.get('formaDatos')?.value;
     if (VALUE) {
       this.accionistasAgregados.emit(VALUE);
-      CONTROL.reset();
+      CONTROL.get('formaDatos')?.reset();
     }
   }
 

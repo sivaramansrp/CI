@@ -14,7 +14,6 @@ export interface SociaoAccionistas {
   apellidoMaterno?: string;
   cp?: string;
 }
- 
 
 export interface DatosComplimentos {
   modalidad: string;

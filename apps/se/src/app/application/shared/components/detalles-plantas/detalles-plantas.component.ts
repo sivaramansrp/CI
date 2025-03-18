@@ -62,7 +62,7 @@ export class DetallesPlantasComponent {
     this.formularioDatosPlantas = this.fb.group({
       permaneceMercancia: [0, Validators.required],
       tipoContribuyente: [0, Validators.required],
-      opinionSAT: [1, { disabled: true }, Validators.required],
+      opinionSAT: [ {value: 1, disabled: true }, Validators.required],
       fechaOpinion: ['12/03/2025', Validators.required],
     });
     this.formularioDatosPlantas.get('fechaOpinion')?.disable();
