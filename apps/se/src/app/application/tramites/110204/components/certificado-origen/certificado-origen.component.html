@@ -61,7 +61,7 @@
 
         <div class="row w-100">
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary"                     (click)="buscarrMercancia()">Mercancia Disponibles</button>
+                <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarrMercancia()">Mercancia Disponibles</button>
             </div>
         </div>
 
@@ -72,12 +72,13 @@
             </div>
         </div>
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="(datos1$ | async) || []"
-            [tipoSeleccionTabla]="seleccionTabla" [isSelectTable]="isSelectTable" (rowClicked)="openModifyModal($event)"></app-tabla-dinamica>
-            
+            [tipoSeleccionTabla]="seleccionTabla" (rowClicked)="openModifyModal($event)"></app-tabla-dinamica>
+
     </form>
 
 </div>
 
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
-    <app-merchandise-modal [selectedData]="selectedData"></app-merchandise-modal>
+    <app-merchandise-modal [selectedData]="selectedData" (saveClicked)="openModifyModal($event)"
+        (closeClicked)="closeModifyModal()"></app-merchandise-modal>
 </div>

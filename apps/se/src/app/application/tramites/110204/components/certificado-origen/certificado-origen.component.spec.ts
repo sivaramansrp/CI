@@ -59,36 +59,17 @@ describe('CertificadoOrigenComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run GetterDeclaration #formularioControl', async () => {
-    component.formCertificado = component.formCertificado || {};
-    component.formCertificado.get = jest.fn();
-    const formularioControl = component.formularioControl;
-    // expect(component.formCertificado.get).toHaveBeenCalled();
-  });
-
-  it('should run #esFormValido()', async () => {
-    component.formCertificado = component.formCertificado || {};
-    component.formCertificado.get = jest.fn().mockReturnValue({
-      invalid: {},
-      enabled: {}
-    });
-    component.esFormValido();
-    // expect(component.formCertificado.get).toHaveBeenCalled();
-  });
-
   it('should run #ngOnInit()', async () => {
     component.cargarEstados = jest.fn();
     component.cargarBloque = jest.fn();
-    component.validarFormulario = jest.fn();
     component.formCertificado = component.formCertificado || {};
     component.formCertificado.valueChanges = observableOf({});
     component.store = component.store || {};
     component.store.setFormCertificado = jest.fn();
     component.ngOnInit();
-    // expect(component.cargarEstados).toHaveBeenCalled();
-    // expect(component.cargarBloque).toHaveBeenCalled();
-    // expect(component.validarFormulario).toHaveBeenCalled();
-    // expect(component.store.setFormCertificado).toHaveBeenCalled();
+    expect(component.cargarEstados).toHaveBeenCalled();
+    expect(component.cargarBloque).toHaveBeenCalled();
+    expect(component.store.setFormCertificado).toHaveBeenCalled();
   });
 
   it('should run #cargarEstados()', async () => {
@@ -97,27 +78,16 @@ describe('CertificadoOrigenComponent', () => {
     component.store = component.store || {};
     component.store.setaltaPlanta = jest.fn();
     component.cargarEstados();
-    // expect(component.certificadoService.obtenerListaEstado).toHaveBeenCalled();
+    expect(component.certificadoService.obtenerListaEstado).toHaveBeenCalled();
     // expect(component.store.setaltaPlanta).toHaveBeenCalled();
   });
 
- 
-
-  it('should run #cargarBloque()', async () => {
-    component.certificadoService = component.certificadoService || {};
-    component.certificadoService.obtenerPaísBloque = jest.fn().mockReturnValue(observableOf({}));
-    component.store = component.store || {};
-    component.store.setBloque = jest.fn();
-    component.cargarBloque();
-    // expect(component.certificadoService.obtenerPaísBloque).toHaveBeenCalled();
-    // expect(component.store.setBloque).toHaveBeenCalled();
-  });
 
   it('should run #tipoEstadoSeleccion()', async () => {
     component.store = component.store || {};
     component.store.setEstado = jest.fn();
     component.tipoEstadoSeleccion({});
-    // expect(component.store.setEstado).toHaveBeenCalled();
+    expect(component.store.setEstado).toHaveBeenCalled();
   });
 
   it('should run #tipoSeleccion()', async () => {
@@ -132,8 +102,8 @@ describe('CertificadoOrigenComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
   it('should run #buscarrMercancia()', async () => {
@@ -146,8 +116,8 @@ describe('CertificadoOrigenComponent', () => {
     component.toastr = component.toastr || {};
     component.toastr.error = jest.fn();
     component.buscarrMercancia();
-    // expect(component.certificadoService.obtenerMercancia).toHaveBeenCalled();
-    // expect(component.store.setbuscarMercancia).toHaveBeenCalled();
+    expect(component.certificadoService.obtenerMercancia).toHaveBeenCalled();
+    expect(component.store.setbuscarMercancia).toHaveBeenCalled();
     // expect(component.toastr.error).toHaveBeenCalled();
   });
 
@@ -158,7 +128,7 @@ describe('CertificadoOrigenComponent', () => {
       setValue: function() {}
     });
     component.cambioFechaInicio({});
-    // expect(component.formCertificado.get).toHaveBeenCalled();
+    expect(component.formCertificado.get).toHaveBeenCalled();
   });
 
   it('should run #cambioFechaFinal()', async () => {
@@ -168,7 +138,7 @@ describe('CertificadoOrigenComponent', () => {
       setValue: function() {}
     });
     component.cambioFechaFinal({});
-    // expect(component.formCertificado.get).toHaveBeenCalled();
+    expect(component.formCertificado.get).toHaveBeenCalled();
   });
 
 });

@@ -9,7 +9,7 @@ import { Mercancia } from '../models/plantas-consulta.model';
 })
 export class CertificadosOrigenGridService {
   // eslint-disable-next-line no-empty-function
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /**
    * Obtiene la lista de estados desde un archivo JSON local.
@@ -76,4 +76,27 @@ export class CertificadosOrigenGridService {
       .get<{ data: Catalogo[] }>('assets/json/110204/representacion-federal.json') // Solicita los datos del archivo JSON
       .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
   }
+
+  /**
+ * Obtiene la lista de facturas desde un archivo JSON local.
+ * @method obtenerFacturas
+ * @returns {Observable<Catalogo[]>} Observable con la lista de facturas.
+ */
+  obtenerFacturas(): Observable<Catalogo[]> {
+    return this.http
+      .get<{ data: Catalogo[] }>('assets/json/110204/factura.json') // Solicita los datos del archivo JSON
+      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
+  }
+
+  /**
+   * Obtiene la lista de UMC desde un archivo JSON local.
+   * @method obtenerUmc
+   * @returns {Observable<Catalogo[]>} Observable con la lista de UMC.
+   */
+  obtenerUmc(): Observable<Catalogo[]> {
+    return this.http
+      .get<{ data: Catalogo[] }>('assets/json/110204/umc.json') // Solicita los datos del archivo JSON
+      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
+  }
+
 }

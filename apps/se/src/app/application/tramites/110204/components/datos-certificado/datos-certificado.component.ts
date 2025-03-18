@@ -63,6 +63,9 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * @param certificadoService Servicio encargado de obtener los datos del certificado.
    * @param toastr Servicio de notificaciones (Toastr).
    */
+
+  private isUpdatingForm = false;
+
   constructor(
     private fb: FormBuilder, public store: Tramite110204Store,
     public tramiteQuery: Tramite110204Query,
@@ -76,7 +79,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
      * Inicialización del formulario reactivo con los controles y validaciones correspondientes.
      */
     this.formDatesCerticado = this.fb.group({
-      observacionesDates: ['', [Validators.required]],
+      observacionesDates: [''],
       idiomaDates: ['', [Validators.required, Validators.min(0)]],
       EntidadFederativaDates: ['', [Validators.required, Validators.min(0)]],
       representacionFederalDates: ['', [Validators.required, Validators.min(0)]],
@@ -88,8 +91,10 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     this.tramiteQuery.formDatesCerticado$.pipe(
       takeUntil(this.destroyNotifier$)
     ).subscribe(estado => {
-      if (estado) {
+      if (!this.isUpdatingForm && estado) {
+        this.isUpdatingForm = true;
         this.formDatesCerticado.patchValue(estado);
+        this.isUpdatingForm = false;
       }
     });
        /**
@@ -176,8 +181,10 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
      * Suscripción a los cambios de valor del formulario para enviar los datos al store.
     */
    this.formDatesCerticado.valueChanges.subscribe(value => {
+    if (!this.isUpdatingForm) {
       this.store.setFormDatesCerticado(value);
       this.validarFormulario();
+    }
     });
     this.cargarRepresentacionFederal();
 

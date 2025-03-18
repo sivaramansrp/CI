@@ -7,7 +7,7 @@ import { CertificadosOrigenGridService } from '../../services/certificadosOrigen
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
 import { Mercancia } from '../../models/plantas-consulta.model';
-import { MerchandiseModalComponent } from '../merchandise-modal/MerchandiseModal.component';
+import { MerchandiseModalComponent } from '../merchandise-modal/merchandise-modal.component';
 import { Modal } from 'bootstrap';                     
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110204Query } from '../../estados/tramite110204.query';
@@ -126,7 +126,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @type {Mercancia[]}
    */
 
-  isSelectTable:boolean = true;
   selectedData!: Mercancia;
     /**
    * Instancia del modal de modificación.
@@ -149,6 +148,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @param seccionQuery Consulta para obtener el estado de la sección.
    * @param seccionStore Store para actualizar el estado de la sección.
    */
+  private isUpdatingForm = false;
+
   constructor(
     private fb: FormBuilder,
     private store: Tramite110204Store,
@@ -176,10 +177,13 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     this.tramiteQuery.formCertificado$.pipe(
       takeUntil(this.destroyNotifier$)
     ).subscribe(estado => {
-      if (estado) {
+      if (!this.isUpdatingForm && estado) {
+        this.isUpdatingForm = true;
         this.formCertificado.patchValue(estado);
+        this.isUpdatingForm = false;
       }
     });
+  
 
     /**
      * Suscripción al estado de la sección para obtener y actualizar el estado.
@@ -228,8 +232,10 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     this.cargarEstados();
     this.cargarBloque();
     this.formCertificado.valueChanges.subscribe(value => {
+      if (!this.isUpdatingForm) {
       this.store.setFormCertificado(value);
       this.validarFormulario();
+      }
     });
   }
 
@@ -379,10 +385,17 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       }      
     }
 
+    closeModifyModal():void {
+      if (this.modalInstance) {
+        this.modalInstance.hide();
+      }
+    }
+
     ngAfterViewInit():void {
       // Inicializa el modal de modificación
       if (this.modifyModal) {
         this.modalInstance = new Modal(this.modifyModal.nativeElement);
       }
     }  
+    
 }

@@ -71,6 +71,22 @@ export class Tramite110204Query extends Query<TramiteState> {
     return state.altaPlanta;
   });
 
+   /**
+   * Selecciona el estado del factura.
+   * @returns {Observable<any>} - Observable con los factura.
+   */
+   selectFactura$ = this.select((state) => {
+    return state.factura;
+  });
+
+    /**
+   * Selecciona el estado del umc.
+   * @returns {Observable<any>} - Observable con los umc.
+   */
+    selectUmc$ = this.select((state) => {
+      return state.umcs;
+    });
+  
   /**
    * Selecciona los países bloqueados.
    * @returns {Observable<any>} - Observable con los países bloqueados.

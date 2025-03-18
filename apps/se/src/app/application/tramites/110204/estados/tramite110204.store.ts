@@ -10,6 +10,10 @@ export interface TramiteState {
   representacionFederalDatos: Catalogo[];
   altaPlanta: Catalogo[];
   estado: Catalogo;
+  factura:Catalogo[];
+  facturas:Catalogo,
+  umc:Catalogo;
+  umcs:Catalogo[],
   paisBloques: Catalogo[];
   paisBloque: Catalogo;
   formCertificado: { [key: string]: undefined | boolean | string | number | object };
@@ -45,6 +49,8 @@ export interface Solicitud110204State {
   domicilio: string;
   estado: string;
   paisBloque: string;
+  factura:string;
+  umc:string;
   representacionFederal: string;
 }
 
@@ -56,6 +62,9 @@ export const INITIAL_STATE: TramiteState = {
     id: -1,
     descripcion: '',
   },
+  umc:{id:-1,descripcion:''},
+  umcs:[],
+  factura:[],
   formaValida: {},
   formCertificado: {
     entidadFederativa: '',
@@ -88,6 +97,10 @@ export const INITIAL_STATE: TramiteState = {
     numeroFactura:'',
     nalad:'',
     complementoClasificacion:''
+  },
+  facturas:{
+    id: -1,
+    descripcion: '',
   },
   buscarMercancia: [],
   paisBloque: {
@@ -135,6 +148,19 @@ export class Tramite110204Store extends Store<TramiteState> {
     }));
   }
 
+  setFactura(factura: Catalogo[]): void {    
+    this.update((state) => ({
+      ...state,
+      factura,
+    }));
+  }
+
+  setUmc(umcs: Catalogo[]): void {    
+    this.update((state) => ({
+      ...state,
+      umcs,
+    }));
+  }
   /**
    * Establece los bloques de países en el almacén.
    * 
