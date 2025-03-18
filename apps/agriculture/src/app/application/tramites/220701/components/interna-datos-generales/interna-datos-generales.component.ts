@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable sort-imports */
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -14,24 +15,34 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { HttpClient } from "@angular/common/http";
+import { InternaDatosGeneralesInt } from '../../modelos/datos-de-interfaz.model'
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 import { MERCANCIA_SERVICIO } from '../../modelos/datos-de-interfaz.model';
 import { OnInit } from '@angular/core';
+import { OnDestroy } from '@angular/core'; 
 import { mercanciaInfo} from '../../modelos/datos-de-interfaz.model';
 import { MercanciaDatosService } from '../../servicios/mercancia-datos.service'
 import { ReactiveFormsModule } from '@angular/forms';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { RevisionService } from '@libs/shared/data-access-user/src';
+import { SeccionLibQuery} from '@libs/shared/data-access-user/src'; 
+import { SeccionLibState} from '@libs/shared/data-access-user/src'; 
+import { SeccionLibStore } from '@libs/shared/data-access-user/src'; 
+import { TramiteStore } from '../../estados/tramite220701.store'; 
+import { TramiteStoreQuery } from '../../estados/tramite220701.query'; 
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Validators } from "@angular/forms";
-import { delay, map, takeUntil, tap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { delay } from 'rxjs/operators'; 
+import { map } from 'rxjs/operators'; 
+import { pipe } from 'rxjs'; 
+import { Subject } from 'rxjs'; 
+import { takeUntil } from 'rxjs/operators'; 
+import { tap } from 'rxjs/operators'; 
 /**
  * Interfaz para definir la estructura de las filas.
  */
-
 interface PuntoInspeccion {
   labelNombre: string;
   required: boolean;
@@ -45,29 +56,37 @@ interface PuntoInspeccion {
   templateUrl: './interna-datos-generales.component.html',
   styleUrl: './interna-datos-generales.component.scss'
 })
-export class InternaDatosGeneralesComponent implements OnInit {
+export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
     /**
-   * Grupo de formularios principal.
-   * @property {FormGroup} forma
-   */
+     * Grupo de formularios principal.
+     * @type {FormGroup}
+     */
     forma!: FormGroup;
-      /**
-   * Grupo de formularios anidado para los datos de la solicitud.--220701
-   * @property {FormGroup} datosDelaSolicitud
+  
+    /**
+   * Estado de los datos generales internos.
+   * Contiene la información manejada dentro del componente.
+   * @type {InternaDatosGeneralesInt}
+   */
+   InternaDatosGeneralesState!: InternaDatosGeneralesInt;
+    
+  /**
+   * Grupo de formularios anidado para los datos de la solicitud.
+   * Maneja la información específica de la solicitud dentro del formulario principal.
+   * @type {FormGroup}
    */
   datosDelaSolicitud!: FormGroup;
+
   /**
    * Selección de empresa transportista.
+   * Contiene opciones disponibles para la selección de empresas transportistas.
    * @type {CatalogosSelect}
    */
   empresaTransportista!: CatalogosSelect;
-  /**
-   * Aduana de ingreso seleccionada.
-   * @type {Catalogo}
-   */
   
-    /**
-   * Formulario de movilización.
+  /**
+   * Formulario para la movilización de mercancías.
+   * Contiene los campos y validaciones relacionadas con la movilización.
    * @type {FormGroup}
    */
     movilizacionForm!: FormGroup;
@@ -76,12 +95,13 @@ export class InternaDatosGeneralesComponent implements OnInit {
    * @type {number | null}
    */
   currentDirection: number | null = 1;
-      /**
+  /**
    * Datos del dropdown.
+   * Contiene las opciones disponibles para el menú desplegable.
    * @type {any[]}
    */
   dropdownData = [];
-    /**
+  /**
    * Selección de aduana de ingreso.
    * @type {CatalogosSelect}
    */
@@ -155,27 +175,48 @@ export class InternaDatosGeneralesComponent implements OnInit {
 
 
   /**
-   * Configuración de las columnas de la tabla para servicios MERCANCIA.
+   * Configuración de las columnas de la tabla para servicios de mercancía.
+   * Define la estructura y propiedades de las columnas.
    * @type {ConfiguracionColumna<mercanciaInfo>[]}
-   */
-    mercanciaTabla: ConfiguracionColumna<mercanciaInfo>[] = MERCANCIA_SERVICIO;
-    /**
-     * Datos de los servicios MERCANCIA.
-     * @type {mercanciaInfo[]}
-     */
-    immexTableDatos: mercanciaInfo[] = [];
+   */ 
+      mercanciaTabla: ConfiguracionColumna<mercanciaInfo>[] = MERCANCIA_SERVICIO;
 
-      /**
-   * @property {any[]} permisoImmexDatos - Array de datos permiso immex.
+  /**
+   * Datos de los servicios de mercancía.
+   * Contiene la información mostrada en la tabla de mercancía.
+   * @type {mercanciaInfo[]}
+   */
+      mercanciaTableDatos: mercanciaInfo[] = [];
+
+  /**
+   * Datos obtenidos de la API para mercancía.
+   * Contiene información relacionada con los permisos de importación y exportación bajo el programa IMMEX.
+   * @type {any[]}
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  permisoImmexDatos: any[] = [];
-
-          /**
+    mercanciaApiDatos: any[] = [];
+   
+  /**
+ * Subject para manejar la desuscripción de observables.
+ * @type {Subject<void>}
+ */
+  private unsubscribe$ = new Subject<void>();
+  private seccion!: SeccionLibState;
+  private destroyNotifier$: Subject<void> = new Subject();
+  /**
    * Constructor del componente.
+   * Inicializa servicios y dependencias necesarias para el funcionamiento del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
-   * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.--220701
+   * @param {RevisionService} revisionService - Servicio para la gestión de revisiones.
+   * @param {ValidacionesFormularioService} validacionesService - Servicio para validaciones de formularios.
+   * @param {MercanciaDatosService} mercanciaDatosService - Servicio para obtener datos de mercancía.
+   * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.
+   * @param {ChangeDetectorRef} cdr - Servicio para detectar cambios en la vista.
+   * @param {TramiteStoreQuery} tramiteStoreQuery - Query para obtener el estado del trámite.
+   * @param {TramiteStore} tramiteStore - Store para manejar el estado del trámite.
+   * @param {SeccionLibQuery} seccionQuery - Query para obtener el estado de la sección.
+   * @param {SeccionLibStore} seccionStore - Store para manejar el estado de la sección.
    */
     constructor(
       private readonly fb: FormBuilder,
@@ -183,10 +224,29 @@ export class InternaDatosGeneralesComponent implements OnInit {
       private validacionesService: ValidacionesFormularioService,
       private mercanciaDatosService: MercanciaDatosService,
       private httpServicios: HttpClient,
-      private cdr: ChangeDetectorRef
+      private cdr: ChangeDetectorRef,
+      private tramiteStoreQuery: TramiteStoreQuery, 
+      private tramiteStore: TramiteStore, 
+      private seccionQuery: SeccionLibQuery, 
+      private seccionStore: SeccionLibStore, 
     ) { 
+        /**
+   * Inicializa y configura los formularios del componente.
+   * - Llama a `crearFormulario` para establecer la estructura del formulario principal.
+   * - Llama a `initActionFormBuild` para configurar acciones adicionales en los formularios.
+   * - Configura `movilizacionForm` con validaciones y valores por defecto.
+   */
     this.crearFormulario();
-       this.initActionFormBuild();
+    this.initActionFormBuild();
+    /**
+   * Formulario para la movilización.
+   * Contiene los siguientes campos:
+   * - `coordenadas`: Campo deshabilitado para coordenadas.
+   * - `nombre`: Campo obligatorio para el nombre.
+   * - `medio`: Selección del medio de transporte (por defecto, 'Aéreo').
+   * - `transporte`: Campo deshabilitado con valor predefinido '020202'.
+   * - `punto`: Campo obligatorio para el punto de referencia.
+   */
       this.movilizacionForm = this.fb.group({
         coordenadas: [{ value: '', disabled: true }],
         nombre: ['', Validators.required],
@@ -195,6 +255,8 @@ export class InternaDatosGeneralesComponent implements OnInit {
         punto: ['', [Validators.required]],
       });
   }
+   
+
     /**
    * Crea el grupo de formularios principal.
    * @method crearFormulario
@@ -248,6 +310,13 @@ export class InternaDatosGeneralesComponent implements OnInit {
    * @method ngOnInit
    */
   ngOnInit(): void {
+       
+       this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.InternaDatosGeneralesState = seccionState.InternaDatosGeneralesState;
+        })
+      ).subscribe();
     this.datosDelaSolicitud = this.fb.group({
       aduanaIngreso: ['', Validators.required],
       oficinaInspeccion: ['', Validators.required],
@@ -266,21 +335,80 @@ export class InternaDatosGeneralesComponent implements OnInit {
     this.getPuntoVerificacion();
     this.getEmpresaTransportista();
     this.obtenerListasDesplegables();
-    this.fetchData();
+
+        this.tramiteStoreQuery.selectSolicitudTramite$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState: any) => {
+            if (seccionState) {
+              this.InternaDatosGeneralesState = seccionState.InternaDatosGeneralesState;
+              this.forma.patchValue(this.InternaDatosGeneralesState);
+            }
+          })
+        ).subscribe();
+
+        this.forma.statusChanges
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          delay(10),
+          tap(() => {
+            const ACTIVE_STATE = { ...this.forma.value };
+            this.tramiteStore.setInternaDatosGeneralesTramite(ACTIVE_STATE); 
+          })
+        )
+        .subscribe();
+
+      this.fetchData(); 
+  
+      this.seccionQuery.selectSeccionState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.seccion = seccionState;
+          })
+        )
+        .subscribe();
+  
+        /**
+       * Observa los cambios en el estado del formulario y actualiza la validación de la sección correspondiente.
+       * 
+       * @description 
+       * - Se suscribe a los cambios en el estado del formulario.
+       * - Cancela la suscripción cuando `destroyNotifier$` emite un valor.
+       * - Aplica un retraso de 10ms antes de ejecutar la lógica.
+       * - Obtiene el estado actual de la sección desde `seccionQuery`.
+       * - Actualiza la validación en `seccionStore` basándose en el estado del formulario.
+       * 
+       * @see {@link seccionQuery} para obtener el estado de la sección.
+       * @see {@link seccionStore} para actualizar la validación de la sección.
+       */
+      this.forma.statusChanges
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          delay(10),
+          tap(() => {
+            const SECCION: number = 1;
+            const seccionState = this.seccionQuery.getValue();
+            const FORMAS_VALIDADAS = [...seccionState.formaValida];
+            const controlPath = 'forma';
+            const CONTROL = this.forma.get(controlPath)?.status;
+  
+            FORMAS_VALIDADAS[SECCION] = this.forma.valid || CONTROL === 'VALID';
+  
+            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+          })
+        )
+        .subscribe();
   }
-  /**
-   * Subject para manejar la desuscripción de observables.
-   * @type {Subject<void>}
-   */
-  private unsubscribe$ = new Subject<void>();
+
 
   fetchData(): void {
     this.mercanciaDatosService.getDatos()
       // .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (response: any) => {
-          if (response && Array.isArray(response.permisoImmexDatos)) {
-            this.immexTableDatos = response.permisoImmexDatos;
+          if (response && Array.isArray(response.mercanciaApiDatos)) {
+            this.mercanciaTableDatos = response.mercanciaApiDatos;
             this.cdr.detectChanges();
             } else {
               console.error('La respuesta de la API no tiene el formato esperado:', response);
@@ -291,9 +419,16 @@ export class InternaDatosGeneralesComponent implements OnInit {
           }
       });
   }
-    /**
-   * Obtiene las listas desplegables.
+  /**
    * @method obtenerListasDesplegables
+   * @description Obtiene y carga las listas desplegables necesarias para el formulario.
+   * - Llama a métodos específicos para recuperar datos de:
+   *   - Ingreso (`obtenerIngresoSelectList`)
+   *   - Sanidad agropecuaria (`obtenerSanidadAgropecuariaList`)
+   *   - Puntos de inspección (`obtenerPuntoInspeccionList`)
+   *   - Establecimientos (`obtenerEstablecimientoList`)
+   *   - Veterinarios (`obtenerVeterinarioList`)
+   *   - Régimen (`obtenerRegimenList`)
    */
     obtenerListasDesplegables() {
       this.obtenerIngresoSelectList();
@@ -303,7 +438,8 @@ export class InternaDatosGeneralesComponent implements OnInit {
       this.obtenerVeterinarioList();
       this.obtenerRegimenList();
     }
-    /**
+
+  /**
    * Obtiene la lista para el select de aduana de ingreso.
    * @method obtenerIngresoSelectList
    */
@@ -514,7 +650,25 @@ export class InternaDatosGeneralesComponent implements OnInit {
     });
   }
 
+    /**
+   * @method disableFormControls
+   * @description Deshabilita controles específicos del formulario.
+   * - En este caso, deshabilita el control `foliodel` si existe en el formulario `forma`.
+   */
   disableFormControls(): void {
     this.forma.get('foliodel')?.disable();
   }
+
+    /**
+   * @method ngOnDestroy
+   * @description Maneja la limpieza de recursos antes de destruir el componente.
+   * - Completa y libera `unsubscribe$` para detener suscripciones activas.
+   * - Completa y libera `destroyNotifier$` para evitar fugas de memoria.
+   */
+    ngOnDestroy(): void {
+      this.unsubscribe$.next();
+      this.unsubscribe$.complete();
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
+    }
 }

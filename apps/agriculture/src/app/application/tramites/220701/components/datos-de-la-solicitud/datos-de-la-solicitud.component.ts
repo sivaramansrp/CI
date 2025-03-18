@@ -1,16 +1,19 @@
+/* eslint-disable class-methods-use-this */
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-empty-function */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AcuicolaService } from '../../servicios/acuicola.service';
-import { AlertComponent} from '@libs/shared/data-access-user/src';
+import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConfiguracionColumna} from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { DatosDeLaSolicitudInt } from '../../modelos/datos-de-interfaz.model';
 import { DatosDelTramite } from '../../modelos/acuicola.model';
 import { EXPEDICION_FACTURA_FECHA } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 import { FormBuilder } from '@angular/forms';
@@ -25,14 +28,23 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsableInspección } from '../../modelos/acuicola.model';
+import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
+import { SeccionLibState } from '@libs/shared/data-access-user/src';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
 import { TEXTOS_220501 } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { takeUntil } from 'rxjs';
+import { TramiteStore } from '../../estados/tramite220701.store';
+import { TramiteStoreQuery } from '../../estados/tramite220701.query';
+import { delay } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { pipe } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
+import { Validators } from '@angular/forms';
 import { medioInfo } from '../../modelos/datos-de-interfaz.model';
 @Component({
   selector: 'datos-de-la-solicitud',
@@ -50,70 +62,146 @@ import { medioInfo } from '../../modelos/datos-de-interfaz.model';
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss'
 })
+/**
+ * Componente que maneja los datos de la solicitud en el formulario.
+ * Implementa `OnInit` y `OnDestroy` para la inicialización y limpieza de recursos.
+ */
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
-
+  /**
+   * Formulario reactivo para capturar los datos de la solicitud.
+   */
   datosDeLaSolicitudForm!: FormGroup;
-
+  /**
+ * Estado actual de la solicitud basado en el modelo `DatosDeLaSolicitudInt`.
+ */
+  SolicitudState!: DatosDeLaSolicitudInt;
+  /**
+ * Indica si la sección del formulario es colapsable.
+ * @default false
+ */
   colapsable: boolean = false;
-
+  /**
+ * Mensaje de instrucción para la acción de doble clic.
+ */
   instruccionDobleClic: string = INSTRUCCION_DOBLE_CLIC;
-
+  /**
+   * Catálogo de opciones para la hora de inspección.
+   */
   horaDeInspeccion!: CatalogosSelect;
+  /**
+ * Catálogo de opciones para la aduana de ingreso.
+ */
   aduanaDeIngreso!: CatalogosSelect;
+  /**
+ * Catálogo de opciones para la oficina de inspección.
+ */
   oficinaDeInspeccion!: CatalogosSelect;
+  /**
+ * Catálogo de opciones para el punto de inspección.
+ */
   puntoDeInspeccion!: CatalogosSelect;
+  /**
+ * Catálogo de opciones para el tipo de contenedor.
+ */
   tipoContenedor!: CatalogosSelect;
+  /**
+ * Catálogo de opciones para el medio de transporte.
+ */
   medioDeTransporte!: CatalogosSelect;
-
+  /**
+   * Constante que contiene los textos utilizados en el componente.
+   */
   TEXTOS = TEXTOS_220501;
-
+  /**
+   * Lista de datos relacionados con la mercancía.
+   */
   mercanciaDatos: string[] = [];
-
+  /**
+   * Fecha de inicio utilizada en el componente, basada en la expedición de la factura.
+   */
   fechaInicioInput: InputFecha = EXPEDICION_FACTURA_FECHA;
 
-  tableData = {
-    header: [
-      "Fraccion arancelaria",
-      "Descripción de la fracción",
-      "Nico",
-      "Descripción Nico",
-      "Unidad de medida de tarifa (UMT)",
-      "Cantidad total UMT",
-    ],
-  };
+  /**
+ * Tipo de selección de la tabla (Checkbox).
+ * @type {TablaSeleccion}
+ */
+  tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  /**
+  * Configuración de las columnas de la tabla para los servicios de mercancía.  
+  * @type {ConfiguracionColumna<medioInfo>[]}
+  */
+  exportadorTabla: ConfiguracionColumna<medioInfo>[] = MEDIO_SERVICIO;
+  /**
+  * Datos de los servicios de mercancía.
+  * @type {medioInfo[]}
+  */
+  medioTableDatos: medioInfo[] = [];
 
   /**
-   * Tipo de selección de la tabla.
-   * @type {TablaSeleccion}
-   */
-       tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
-     /**
-      * Configuración de las columnas de la tabla para servicios MERCANCIA.
-      * @type {ConfiguracionColumna<medioInfo>[]}
-      */
-     exportadorTabla: ConfiguracionColumna<medioInfo>[] = MEDIO_SERVICIO;
-       /**
-        * Datos de los servicios MERCANCIA.
-        * @type {medioInfo[]}
-        */
-       medioTableDatos: medioInfo[] = [];
-   
-         /**
-      * @property {any[]} medioContenido - Array de datos Medio de transporte.
-      */
-     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-     medioContenido: any[] = [];
+  * Contenido relacionado con el medio de transporte.
+  * @type {any[]} 
+  * @note Se permite `any[]` debido a la estructura variable de los datos.
+  * @property {any[]} medioContenido - Array de datos Medio de transporte.
+  */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  medioContenido: any[] = [];
 
+
+  /**
+   * Subject para manejar la desuscripción de observables y evitar fugas de memoria.
+   * @type {Subject<void>}
+   */
+  private unsubscribe$ = new Subject<void>();
+
+  /**
+   * Estado de la sección actual.
+   * @type {SeccionLibState}
+   */
+  private seccion!: SeccionLibState;
+
+  /**
+   * Subject para notificar la destrucción del componente.
+   * @type {Subject<void>}
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
   constructor(
+   /**
+   * @param {FormBuilder} fb - Servicio para la construcción y gestión de formularios reactivos.
+   * @param {AcuicolaService} acuicolaService - Servicio para obtener y gestionar datos de acuicultura.
+   * @param {MedioDeTransporteService} medioDeTransporteService - Servicio para obtener y gestionar datos del medio de transporte.
+   * @param {ChangeDetectorRef} cdr - Servicio para detectar y optimizar cambios en la vista.
+   * @param {TramiteStoreQuery} tramiteStoreQuery - Query de Akita para consultar el estado del trámite.
+   * @param {TramiteStore} tramiteStore - Tienda Akita para manejar y actualizar el estado del trámite.
+   * @param {SeccionLibQuery} seccionQuery - Query de Akita para consultar el estado de una sección específica.
+   * @param {SeccionLibStore} seccionStore - Tienda Akita para manejar y actualizar el estado de una sección.
+   */
     private readonly fb: FormBuilder,
     private readonly acuicolaService: AcuicolaService,
     private readonly medioDeTransporteService: MedioDeTransporteService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private tramiteStoreQuery: TramiteStoreQuery,
+    private tramiteStore: TramiteStore,
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore,
   ) { }
 
+  /**
+   * Inicializa el componente y obtiene los datos necesarios.
+   * Se suscribe a los cambios en el estado y configura el formulario.
+   * 
+   * @method ngOnInit
+   * @returns {void}
+   */
   ngOnInit(): void {
+
+    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.SolicitudState = seccionState.SolicitudState;
+      })
+    ).subscribe();
+
     this.iniciarFormulario();
     this.getHoraDeInspeccion();
     this.cargarDatos();
@@ -123,9 +211,96 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.getTipoContenedor();
     this.obtenerResponsableDatos();
     this.getMedioDeTransporte();
-    this.fetchData();
-  }
 
+
+    /**
+ * Se suscribe a los cambios en el estado de la solicitud de trámite.
+ * Actualiza el formulario con los datos obtenidos del estado.
+ */
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState: any) => {
+          if (seccionState) {
+            this.SolicitudState = seccionState.SolicitudState;
+            this.datosDeLaSolicitudForm.patchValue(this.SolicitudState);
+          }
+        })
+      ).subscribe();
+  /**
+   * Se suscribe a los cambios en el estado del formulario.
+   * Después de un breve retraso, actualiza el estado de la solicitud en el store.
+   */
+    this.datosDeLaSolicitudForm.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap(() => {
+          const ACTIVE_STATE = { ...this.datosDeLaSolicitudForm.value };
+          this.tramiteStore.setSolicitudTramite(ACTIVE_STATE);
+        })
+      )
+      .subscribe();
+
+  /**
+   * Obtiene los datos iniciales requeridos para el componente.
+   */
+    this.fetchData();
+
+      /**
+   * Se suscribe a los cambios en el estado de la sección.
+   * Almacena la información de la sección en la propiedad `seccion`.
+   * Para el botón de validación Continuar
+   */
+
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
+
+    // Para el botón Continuar
+    /**
+   * Observa los cambios en el estado del formulario y actualiza la validación de la sección correspondiente.
+   * 
+   * @description 
+   * - Se suscribe a los cambios en el estado del formulario.
+   * - Cancela la suscripción cuando `destroyNotifier$` emite un valor.
+   * - Aplica un retraso de 10ms antes de ejecutar la lógica.
+   * - Obtiene el estado actual de la sección desde `seccionQuery`.
+   * - Actualiza la validación en `seccionStore` basándose en el estado del formulario.
+   * 
+   * @see {@link seccionQuery} para obtener el estado de la sección.
+   * @see {@link seccionStore} para actualizar la validación de la sección.
+   */
+    this.datosDeLaSolicitudForm.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap(() => {
+          const SECCION: number = 1;
+          const seccionState = this.seccionQuery.getValue();
+          const FORMAS_VALIDADAS = [...seccionState.formaValida];
+          const controlPath = 'datosDeLaSolicitudForm';
+          const CONTROL = this.datosDeLaSolicitudForm.get(controlPath)?.status;
+
+          FORMAS_VALIDADAS[SECCION] = this.datosDeLaSolicitudForm.valid || CONTROL === 'VALID';
+
+          this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+        })
+      )
+      .subscribe();
+  }
+  /**
+   * Inicializa el formulario reactivo con los campos requeridos.
+   * Configura validaciones y deshabilita ciertos campos según sea necesario.
+   * 
+   * @method iniciarFormulario
+   * @returns {void}
+   */
   iniciarFormulario(): void {
     this.datosDeLaSolicitudForm = this.fb.group({
       justificacion: ['', Validators.required],
@@ -145,26 +320,57 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       esSolicitudFerros: ['', Validators.required]
     });
   }
+
+    /**
+   * Obtiene datos del servicio de medio de transporte y actualiza el estado del componente.
+   * 
+   * - La primera llamada obtiene `medioContenido` y actualiza `medioTableDatos`.
+   * - La segunda llamada actualiza los valores del formulario con los datos recibidos.
+   * 
+   * Se gestiona la suscripción con `takeUntil(this.unsubscribe$)` para evitar fugas de memoria.
+   * 
+   * @method fetchData
+   * @returns {void}
+   */
   fetchData(): void {
     this.medioDeTransporteService.getDatos()
-    .subscribe({
-      next: (response: any) => {
-        if (response && Array.isArray(response.medioContenido)) {
-          this.medioTableDatos = response.medioContenido;
-          this.cdr.detectChanges(); 
-        } else {
-          console.error("La respuesta de la API no tiene el formato esperado: ", response);
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (response: any) => {
+          if (response && Array.isArray(response.medioContenido)) {
+            this.medioTableDatos = response.medioContenido;
+            this.cdr.detectChanges();
+          } else {
+            console.error("La respuesta de la API no tiene el formato esperado: ", response);
+          }
+        },
+        error: (error) => {
+          console.error("Error al obtener datos: ", error);
         }
-      },
-      error: (error) => {
-        console.error("Error al obtener datos: ", error);
-      }
-    });
+      });
+    this.medioDeTransporteService.getDatos()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.datosDeLaSolicitudForm.patchValue(data);
+      });
   }
+
+    /**
+   * Alterna el estado de la propiedad `colapsable`, mostrando u ocultando contenido colapsable.
+   * 
+   * @method mostrarColapsable
+   * @returns {void}
+   */
   mostrarColapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
+    /**
+   * Carga los datos de certificados autorizados y los establece en el formulario.
+   * 
+   * @method cargarDatos
+   * @returns {void}
+   */
   cargarDatos(): void {
     this.acuicolaService
       .obtenerDatosCertificados()
@@ -174,6 +380,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       })
   }
 
+    /**
+   * Obtiene la lista de horas de inspección desde el servicio y la almacena en `horaDeInspeccion`.
+   * 
+   * @method getHoraDeInspeccion
+   * @returns {void}
+   */
   getHoraDeInspeccion(): void {
     this.acuicolaService.getHoraDeInspeccion().subscribe((resp) => {
       if (resp.code === 200) {
@@ -188,13 +400,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+
+    /**
+   * Obtiene la lista de aduanas de ingreso desde el servicio y la almacena en `aduanaDeIngreso`.
+   * 
+   * @method getAduanaDeIngreso
+   * @returns {void}
+   */
   getAduanaDeIngreso(): void {
     this.acuicolaService.getAduanaDeIngreso().subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.aduanaDeIngreso = {
           labelNombre: 'Aduana de ingreso',
-          required: false,  
+          required: false,
           primerOpcion: 'Selecciona un valor',
           catalogos: RESPONSE,
         };
@@ -202,6 +421,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  
+  /**
+   * Obtiene la lista de oficinas de inspección y la almacena en `oficinaDeInspeccion`.
+   * 
+   * @method getOficinaDeInspeccion
+   * @returns {void}
+   */
   getOficinaDeInspeccion(): void {
     this.acuicolaService.getOficinaDeInspeccion().subscribe((resp) => {
       if (resp.code === 200) {
@@ -216,6 +442,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+    /**
+   * Obtiene la lista de puntos de inspección desde el servicio y la almacena en `puntoDeInspeccion`.
+   * 
+   * @method getPuntoDeInspeccion
+   * @returns {void}
+   */
   getPuntoDeInspeccion(): void {
     this.acuicolaService.getPuntoDeInspeccion().subscribe((resp) => {
       if (resp.code === 200) {
@@ -230,6 +462,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+    /**
+   * Obtiene la lista de tipos de contenedor desde el servicio y la almacena en `tipoContenedor`.
+   * 
+   * @method getTipoContenedor
+   * @returns {void}
+   */
   getTipoContenedor(): void {
     this.acuicolaService.getTipoContenedor().subscribe((resp) => {
       if (resp.code === 200) {
@@ -244,6 +482,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+    /**
+   * Obtiene la lista de medios de transporte desde el servicio y la almacena en `medioDeTransporte`.
+   * 
+   * @method getMedioDeTransporte
+   * @returns {void}
+   */
   getMedioDeTransporte(): void {
     this.acuicolaService.getMedioDeTransporte().subscribe((resp) => {
       if (resp.code === 200) {
@@ -258,6 +502,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+    /**
+   * Obtiene los datos del responsable de la inspección y los establece en el formulario.
+   * 
+   * @method obtenerResponsableDatos
+   * @returns {void}
+   */
   obtenerResponsableDatos(): void {
     this.acuicolaService
       .obtenerResponsableDatos()
@@ -267,9 +517,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       })
   }
 
-
+  /**
+   * @method ngOnDestroy
+   * @description Maneja la limpieza de recursos antes de destruir el componente.
+   */
   ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
     this.destroyNotifier$.next();
-    this.destroyNotifier$.unsubscribe();
+    this.destroyNotifier$.complete();
   }
+
 }

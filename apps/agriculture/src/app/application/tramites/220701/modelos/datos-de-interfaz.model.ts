@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 /**
- * @interface datosDeLaSolicitudForm
+ * @interface DatosDeLaSolicitud
  * @description Interfaz para el formulario de Datos de la solicitud.
  */
-export interface datosDeLaSolicitudForm {
+export interface DatosDeLaSolicitudInt {
   justificacion: string;
   certificadosAutorizados: string;
   fechaInicio: string;
@@ -13,7 +13,7 @@ export interface datosDeLaSolicitudForm {
   sanidadAgropecuaria: string;
   puntoDeInspeccion: string;
   nombreInsp: string;
-  primerApellido: number;
+  primerApellido: string;
   segundoApellido: string;
   cantidadContenedores: string;
   tipoContenedor: string;
@@ -23,10 +23,10 @@ export interface datosDeLaSolicitudForm {
 }
 
 /**
- * @interface forma
+ * @interface InternaDatosGeneralesInt
  * @description Interfaz para el formulario de Datos Generales.
  */
-export interface forma {
+export interface InternaDatosGeneralesInt {
   foliodel: number;
   aduanaIngreso: string;
   oficinaInspeccion: string;
@@ -46,10 +46,10 @@ export interface forma {
 }
 
 /**
- * @interface formularioPago
+ * @interface FormularioPago
  * @description Interfaz para el formulario de Pago de derechos(Revisión Documental).
  */
-export interface formularioPago {
+export interface FormularioPagoInt {
   exentoPago: string;
   justificacion: string;
   claveReferencia: string;
@@ -60,10 +60,10 @@ export interface formularioPago {
   importePago: string;
 }
 /**
- * @interface pagosDeDerechosForm
+ * @interface PagosDeDerechosForm
  * @description Interfaz para el formulario de Pago de derechos.
  */
-export interface pagosDeDerechosForm {
+export interface PagosDeDerechosFormInt {
   claveDeReferencia: string;
   cadenaDependencia: string;
   banco: string;

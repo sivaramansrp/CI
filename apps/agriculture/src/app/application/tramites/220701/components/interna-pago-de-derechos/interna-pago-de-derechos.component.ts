@@ -1,22 +1,40 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 
-import { Catalogo, InputFecha } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
 import { EXPEDICION_FACTURA_FECHA } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 
-import { FormularioPago, OpcionDeRadio } from '../../modelos/importacion-de-acuicultura.module';
-
-import { Subject, takeUntil } from 'rxjs';
-import { ReactiveFormsModule } from '@angular/forms';
-
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { FormularioPago } from '../../modelos/importacion-de-acuicultura.module';
+import { FormularioPagoInt } from '../../modelos/datos-de-interfaz.model'; 
 import { ImportacionDeAcuiculturaService } from '../../servicios/importacion-de-acuicultura.service';
+import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { OnDestroy } from '@angular/core'; 
+import { OnInit } from '@angular/core';
+import { OpcionDeRadio } from '../../modelos/importacion-de-acuicultura.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SeccionLibQuery} from '@libs/shared/data-access-user/src'; 
+import { SeccionLibState} from '@libs/shared/data-access-user/src'; 
+import { SeccionLibStore } from '@libs/shared/data-access-user/src'; 
+import { Subject } from 'rxjs'; 
+
 import { TIPO_RADIO } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { TramiteStore } from '../../estados/tramite220701.store'; 
+import { TramiteStoreQuery } from '../../estados/tramite220701.query'; 
+import { Validators } from '@angular/forms';
+import { delay } from 'rxjs/operators'; 
+import { map } from 'rxjs/operators'; 
+import { pipe } from 'rxjs'; 
+import { takeUntil } from 'rxjs/operators'; 
+import { tap } from 'rxjs/operators'; 
 
 @Component({
   selector: 'interna-pago-de-derechos',
@@ -28,53 +46,96 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 })
 export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
-   * @description Formulario para el pago de derechos.
-   * @type {FormGroup}
+   * @property {FormGroup} formularioPago
+   * @description Formulario para gestionar el pago de derechos.
    */
   formularioPago!: FormGroup;
+   
+  /**
+   * @property {FormularioPagoInt} FormularioPagoState
+   * @description Estado del formulario de pago.
+   */
+   FormularioPagoState!: FormularioPagoInt;
 
   /**
+   * @property {OpcionDeRadio[]} exentoPagoRadio
    * @description Opciones de radio para la exención de pago.
-   * @type {OpcionDeRadio[]}
    */
   exentoPagoRadio: OpcionDeRadio[] = TIPO_RADIO;
 
   /**
+   * @property {string} exentoPagoValor
    * @description Valor seleccionado para la exención de pago.
-   * @type {string}
+   * @default 'Si'
    */
   exentoPagoValor: string = 'Si';
 
   /**
+   * @property {Catalogo[]} justificacionCatalogo
    * @description Catálogo de justificaciones para la exención de pago.
-   * @type {Catalogo[]}
    */
   justificacionCatalogo: Catalogo[] = [];
 
   /**
-   * @description Catálogo de bancos para el pago.
-   * @type {Catalogo[]}
+   * @property {Catalogo[]} bancoCatalogo
+   * @description Catálogo de bancos disponibles para el pago.
    */
   bancoCatalogo: Catalogo[] = [];
 
   /**
+   * @property {InputFecha} fechaFinalInput
    * @description Configuración para el input de fecha de salida.
-   * @type {InputFecha}
    */
   fechaFinalInput: InputFecha = EXPEDICION_FACTURA_FECHA;
 
-  fechaPagoDate: string = '15/03/2025';
+    /**
+   * @property {string} fechaPagoDate
+   * @description Fecha seleccionada para el pago.
+   * @default ''
+   */
+  fechaPagoDate: string = '';
 
-  private destroyNotifier$ = new Subject<void>();
+   
+  /**
+   * @property {Subject<void>} unsubscribe$
+   * @description Subject para manejar la desuscripción de observables y evitar memory leaks.
+   */
+
+  private unsubscribe$ = new Subject<void>();
+    /**
+   * @property {SeccionLibState} seccion
+   * @description Estado de la sección actual en la tienda.
+   */
+  private seccion!: SeccionLibState;
+
+    /**
+   * @property {Subject<void>} destroyNotifier$
+   * @description Subject utilizado para desuscribirse de observables al destruir el componente.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+    /**
+   * @property {FormularioPago} formularioPagoStore
+   * @description Estado del formulario de pago almacenado en el store.
+   */
   formularioPagoStore: FormularioPago = {} as FormularioPago;
   /**
-   * @description Constructor que inicializa el servicio de formularios y el servicio de importación de acuicultura.
-   * @param {FormBuilder} fb FormBuilder para la creación de formularios reactivos.
-   * @param {ImportacionDeAcuiculturasService} importacionAcuiculturasServicio Servicio para obtener datos de importación.
+   * @constructor
+   * @description Inicializa el servicio de formularios y los servicios relacionados con la importación de acuicultura y el estado del trámite.
+   * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
+   * @param {ImportacionDeAcuiculturaService} importacionAcuiculturaServicio - Servicio para obtener datos de importación de acuicultura.
+   * @param {TramiteStoreQuery} tramiteStoreQuery - Consulta del estado de la tienda Akita para trámites.
+   * @param {TramiteStore} tramiteStore - Tienda Akita para manejar el estado del trámite.
+   * @param {SeccionLibQuery} seccionQuery - Consulta del estado de la tienda Akita para secciones.
+   * @param {SeccionLibStore} seccionStore - Tienda Akita para manejar el estado de la sección.
    */
   constructor(
     private readonly fb: FormBuilder,
-    private readonly importacionAcuiculturaServicio: ImportacionDeAcuiculturaService
+    private readonly importacionAcuiculturaServicio: ImportacionDeAcuiculturaService,
+    private tramiteStoreQuery: TramiteStoreQuery, 
+    private tramiteStore: TramiteStore, 
+    private seccionQuery: SeccionLibQuery, 
+    private seccionStore: SeccionLibStore, 
   ) {
     this.importacionAcuiculturaServicio.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.formularioPagoStore = datos.formularioPago
@@ -83,15 +144,24 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description Método de inicialización del componente.
+   * @method ngOnInit
+   * @description Inicializa el componente y obtiene los datos necesarios para el formulario de pago.
    */
   ngOnInit(): void {
+         
+         this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.FormularioPagoState = seccionState.FormularioPagoState;
+          })
+        ).subscribe();
+
     this.crearFormularioPago();
     this.formularioPago.statusChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
         () => {
-          this.verificarEstadoDelBoton(); // Se puede implementar este método para manejar cambios en el estado del botón.
+          this.verificarEstadoDelBoton(); 
         },
         (error) => {
           console.error('Error durante los cambios de estado del formulario:', error);
@@ -100,6 +170,69 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
 
     this.obtenerListaJustificacion();
     this.obtenerListaBanco();
+
+        this.tramiteStoreQuery.selectSolicitudTramite$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState: any) => {
+            if (seccionState) {
+              this.FormularioPagoState = seccionState.FormularioPagoState;
+              this.formularioPago.patchValue(this.FormularioPagoState);
+            }
+          })
+        ).subscribe();
+
+        this.formularioPago.statusChanges
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          delay(10),
+          tap(() => {
+            const ACTIVE_STATE = { ...this.formularioPago.value };
+            this.tramiteStore.setInternaPagoDeDerechosTramite(ACTIVE_STATE); 
+          })
+        )
+        .subscribe();
+  
+      // Para el botón de validación Continuar
+      this.seccionQuery.selectSeccionState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.seccion = seccionState;
+          })
+        )
+        .subscribe();
+  
+    /**
+     * Observa los cambios en el estado del formulario y actualiza la validación de la sección correspondiente.
+     *
+     * @description
+     * - Se suscribe a los cambios en el estado del formulario.
+     * - Cancela la suscripción cuando `destroyNotifier$` emite un valor.
+     * - Aplica un retraso de 10ms antes de ejecutar la lógica.
+     * - Obtiene el estado actual de la sección desde `seccionQuery`.
+     * - Actualiza la validación en `seccionStore` basándose en el estado del formulario.
+     *
+     * @see {@link seccionQuery} para obtener el estado de la sección.
+     * @see {@link seccionStore} para actualizar la validación de la sección.
+     */
+      this.formularioPago.statusChanges
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          delay(10),
+          tap(() => {
+            const SECCION: number = 1;
+            const seccionState = this.seccionQuery.getValue();
+            const FORMAS_VALIDADAS = [...seccionState.formaValida];
+            const controlPath = 'formularioPago';
+            const CONTROL = this.formularioPago.get(controlPath)?.status;
+  
+            FORMAS_VALIDADAS[SECCION] = this.formularioPago.valid || CONTROL === 'VALID';
+  
+            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+          })
+        )
+        .subscribe();
   }
 
   /**
@@ -134,7 +267,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * @description Actualiza la fecha de pago en el formulario.
-   * @param {string} nuevoValor Nueva fecha de pago.
+   * @param {string} nuevoValor - Nueva fecha de pago.
    */
   cambioFechaFinal(nuevoValor: string): void {
     this.formularioPago.patchValue({
@@ -242,18 +375,20 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    * @returns {string} La fecha formateada como un string.
    */
   static formatearFecha(fecha: Date): string {
-    const DIA = fecha.getDate().toString().padStart(2, '0'); // Asegura que el día tenga 2 dígitos
-    const MES = (fecha.getMonth() + 1).toString().padStart(2, '0'); // Asegura que el mes tenga 2 dígitos
+    const DIA = fecha.getDate().toString().padStart(2, '0');
+    const MES = (fecha.getMonth() + 1).toString().padStart(2, '0');
     const ANO = fecha.getFullYear();
 
     return `${DIA}/${MES}/${ANO}`;
   }
-
-
+ 
   /**
-   * @description Método que se ejecuta cuando el componente es destruido.
+   * @method ngOnDestroy
+   * @description Maneja la limpieza de recursos antes de destruir el componente.
    */
   ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

@@ -116,114 +116,114 @@
                             ></app-catalogo-select>
                           </div>
                     </div>
-              </div>
-              <div class="row">
-                <ng-titulo titulo="Tipo de Mercancía" />
-                <div class="col-md-12">
-                  <label for="capturaMercancia">Captura de datos de mercancía*:</label>
-                </div>
-                <div class="col-md-12">
-                  <input
-                    class="form-check-input me-3"
-                    type="radio"
-                    name="capturaMercancia"
-                    formControlName="capturaMercancia"
-                    value="a"
-                    id="certficacion_a"
-                  />
-                  <label class="form-label" for="animalesVivos">Animales Vivos:</label>
-                </div>
-                <div class="col-md-12">
-                  <input
-                    class="form-check-input me-3"
-                    type="radio"
-                    name="animalesVivos"
-                    formControlName="animalesVivos"
-                    value="aa"
-                    id="certficacion_aa"
-                  />
-                  <label class="form-label" for="animalesVivos"
-                    >Productos Subproductos</label
-                  >
-                </div>
-              </div>
-              <div class="row">
-                <div class="row mt-5">
-                  <div class="col-md-12">
-                    <label for="mercancia">Mercancía</label>
-                  </div>
-                  <div class="col-md-12 mt-5">
-                    <div class="table-container">
-                        <app-tabla-dinamica *ngIf="immexTableDatos.length > 0" [configuracionTabla]="mercanciaTabla" [datos]="immexTableDatos"></app-tabla-dinamica>
-                    </div>
-                  </div>
-                </div>
-                <div class="container">
-                  <form [formGroup]="movilizacionForm">
-                    <ng-titulo titulo="Destino" />
                     <div class="row">
-                      <div class="col-md-7 form-group">
-                        <label class="form-label" for="coordenadas"
-                          >Coordenadas geográficas:</label
-                        >
+                      <ng-titulo titulo="Tipo de Mercancía" />
+                      <div class="col-md-12">
+                        <label for="capturaMercancia">Captura de datos de mercancía*:</label>
+                      </div>
+                      <div class="col-md-12">
                         <input
-                          class="form-control"
-                          id="coordenadas"
-                          readonly
-                          formControlName="coordenadas"
-                          placeholder=""
-                          type="text"
+                          class="form-check-input me-3"
+                          type="radio"
+                          name="capturaMercancia"
+                          formControlName="capturaMercancia"
+                          value="a"
+                          id="certficacion_a"
                         />
+                        <label class="form-label" for="animalesVivos">Animales Vivos:</label>
+                      </div>
+                      <div class="col-md-12">
+                        <input
+                          class="form-check-input me-3"
+                          type="radio"
+                          name="animalesVivos"
+                          formControlName="animalesVivos"
+                          value="aa"
+                          id="certficacion_aa"
+                        />
+                        <label class="form-label" for="animalesVivos"
+                          >Productos Subproductos</label
+                        >
                       </div>
                     </div>
-                    <ng-titulo titulo="Medio de transporte" />
                     <div class="row">
-                      <div class="col-md-4">
-                        <app-catalogo-select
-                          [catalogo]="movilizacionNacional.catalogos"
-                          [label]="movilizacionNacional.labelNombre"
-                          [placeholder]="movilizacionNacional.primerOpcion"
-                          [isDisabled]="false"
-                          formControlName="movilizacionNacional"
-                        ></app-catalogo-select>
+                      <div class="row mt-5">
+                        <div class="col-md-12">
+                          <label for="mercancia">Mercancía</label>
+                        </div>
+                        <div class="col-md-12 mt-5">
+                          <div class="table-container">
+                              <app-tabla-dinamica *ngIf="mercanciaTableDatos.length > 0" [configuracionTabla]="mercanciaTabla" [datos]="mercanciaTableDatos"></app-tabla-dinamica>
+                          </div>
+                        </div>
                       </div>
-                      <div class="col-md-8 form-group">
-                        <label class="form-label" for="identificacionTransporte"
-                          >Identificación del transporte:</label
-                        >
-                        <input
-                          class="form-control"
-                          id="identificacionTransporte"
-                          readonly
-                          placeholder=""
-                          type="text"
-                          formControlName="identTransporte"
-                        />
+                      <div class="container">
+                        <form [formGroup]="movilizacionForm">
+                          <ng-titulo titulo="Destino" />
+                          <div class="row">
+                            <div class="col-md-7 form-group">
+                              <label class="form-label" for="coordenadas"
+                                >Coordenadas geográficas:</label
+                              >
+                              <input
+                                class="form-control"
+                                id="coordenadas"
+                                readonly
+                                formControlName="coordenadas"
+                                placeholder=""
+                                type="text"
+                              />
+                            </div>
+                          </div>
+                          <ng-titulo titulo="Medio de transporte" />
+                          <div class="row">
+                            <div class="col-md-4">
+                              <app-catalogo-select
+                                [catalogo]="movilizacionNacional.catalogos"
+                                [label]="movilizacionNacional.labelNombre"
+                                [placeholder]="movilizacionNacional.primerOpcion"
+                                [isDisabled]="false"
+                                formControlName="movilizacionNacional"
+                              ></app-catalogo-select>
+                            </div>
+                            <div class="col-md-8 form-group">
+                              <label class="form-label" for="identificacionTransporte"
+                                >Identificación del transporte:</label
+                              >
+                              <input
+                                class="form-control"
+                                id="identificacionTransporte"
+                                readonly
+                                placeholder=""
+                                type="text"
+                                formControlName="identTransporte"
+                              />
+                            </div>
+                            <div class="col-md-4">
+                              <app-catalogo-select
+                                [catalogo]="puntoVerificacion.catalogos"
+                                [label]="puntoVerificacion.labelNombre"
+                                [placeholder]="puntoVerificacion.primerOpcion"
+                                [isDisabled]="false"
+                                formControlName="puntoVerificacion"
+                              ></app-catalogo-select>
+                            </div>
+                            <div class="col-md-8">
+                              <app-catalogo-select
+                                [catalogo]="empresaTransportista.catalogos"
+                                [label]="empresaTransportista.labelNombre"
+                                [placeholder]="empresaTransportista.primerOpcion"
+                                [isDisabled]="true"
+                                formControlName="empresaTransportista"
+                              ></app-catalogo-select>
+                            </div>
+                          </div>
+                        </form>
                       </div>
-                      <div class="col-md-4">
-                        <app-catalogo-select
-                          [catalogo]="puntoVerificacion.catalogos"
-                          [label]="puntoVerificacion.labelNombre"
-                          [placeholder]="puntoVerificacion.primerOpcion"
-                          [isDisabled]="false"
-                          formControlName="puntoVerificacion"
-                        ></app-catalogo-select>
-                      </div>
-                      <div class="col-md-8">
-                        <app-catalogo-select
-                          [catalogo]="empresaTransportista.catalogos"
-                          [label]="empresaTransportista.labelNombre"
-                          [placeholder]="empresaTransportista.primerOpcion"
-                          [isDisabled]="true"
-                          formControlName="empresaTransportista"
-                        ></app-catalogo-select>
+                      <div class="row my-5">
+                        <div class="col-md-12 d-flex justify-content-end"></div>
                       </div>
                     </div>
-                  </form>
-                </div>
-                <div class="row my-5">
-                  <div class="col-md-12 d-flex justify-content-end"></div>
-                </div>
               </div>
       </div>
     </form>

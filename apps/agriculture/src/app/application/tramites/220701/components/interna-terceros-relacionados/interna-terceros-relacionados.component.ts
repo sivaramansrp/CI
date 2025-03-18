@@ -28,62 +28,95 @@ import { exportadorInfo} from '../../modelos/datos-de-interfaz.model';
   styleUrl: './interna-terceros-relacionados.component.scss'
 })
 export class InternaTercerosRelacionadosComponent implements OnInit {
-
+  /**
+   * Instrucción obligatoria para la acción de doble clic.
+   * @type {string}
+   */
    instruccionDobleClic: string = MANDATORY_INSTRUCTION;
 
-
-     /**
-   * Tipo de selección de la tabla.
+  /**
+   * Tipo de selección de la tabla utilizando un radio button.
    * @type {TablaSeleccion}
    */
      tablaSeleccionRadio: TablaSeleccion = TablaSeleccion.RADIO;
+
+       /**
+   * Tipo de selección de la tabla utilizando checkbox.
+   * @type {TablaSeleccion}
+   */
      tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
    
-   /**
-    * Configuración de las columnas de la tabla para servicios MERCANCIA.
-    * @type {ConfiguracionColumna<exportadorInfo>[]}
-    */
+  /**
+   * Configuración de las columnas de la tabla para la lista de exportadores.
+   * Define las propiedades y formato de las columnas en la tabla de exportadores.
+   * @type {ConfiguracionColumna<exportadorInfo>[]}
+   */
    exportadorTabla: ConfiguracionColumna<exportadorInfo>[] = EXPORTADOR_SERVICIO;
-     /**
-      * Datos de los servicios MERCANCIA.
-      * @type {exportadorInfo[]}
-      */
+
+  /**
+   * Datos de los exportadores cargados en la tabla.
+   * Contiene la información de los exportadores asociados al trámite.
+   * @type {exportadorInfo[]}
+   */
      exportadorTableDatos: exportadorInfo[] = [];
  
-       /**
-    * @property {any[]} exportadorContenido - Array de datos MERCANCIA.
-    */
-   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  /**
+   * Contenido de los exportadores obtenido desde el servicio o API.
+   * Este array almacena la información sin formato antes de ser procesada para la tabla.
+   * @type {any[]}
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
    exportadorContenido: any[] = [];
 
-
-      /**
-    * Configuración de las columnas de la tabla para servicios MERCANCIA.
-    * @type {ConfiguracionColumna<destinoInfo>[]}
-    */
+  /**
+   * Configuración de las columnas de la tabla para la lista de destinos.
+   * Define las propiedades y formato de las columnas en la tabla de destinos.
+   * @type {ConfiguracionColumna<destinoInfo>[]}
+   */
       destinoTabla: ConfiguracionColumna<destinoInfo>[] = DESTINO_SERVICIO;
-      /**
-       * Datos de los servicios MERCANCIA.
-       * @type {destinoInfo[]}
-       */
+  
+  /**
+   * Datos de los destinos cargados en la tabla.
+   * Contiene la información de los destinos relacionados con el trámite.
+   * @type {destinoInfo[]}
+   */
       destinoTableDatos: destinoInfo[] = [];
   
-        /**
-     * @property {any[]} exportadorContenido - Array de datos MERCANCIA.
-     */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+  /**
+   * Contenido de los destinos obtenido desde el servicio o API.
+   * Este array almacena la información sin formato antes de ser procesada para la tabla.
+   * @type {any[]}
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
     destinoContenido: any[] = [];
 
-
+  /**
+   * Constructor del componente.
+   * Inicializa los servicios necesarios para gestionar datos de exportadores y detectar cambios en la vista.
+   *
+   * @param {ExportadorDatosService} exportadorDatosService - Servicio para gestionar los datos de exportadores.
+   * @param {ChangeDetectorRef} cdr - Detector de cambios para actualizar la vista cuando los datos cambian.
+   */
     constructor(
       private exportadorDatosService: ExportadorDatosService,
       private cdr: ChangeDetectorRef
     ) {};
 
+      /**
+   * @method ngOnInit
+   * @description Método de inicialización del componente.
+   * Llama a `fetchData` para obtener los datos necesarios al cargar el componente.
+   */
      ngOnInit(): void {
       this.fetchData();
      }
      
+       /**
+   * @method fetchData
+   * @description Obtiene los datos de exportadores y destinos desde el servicio `ExportadorDatosService`.
+   * Actualiza las tablas y detecta cambios en la vista.
+   */
      fetchData(): void {
       this.exportadorDatosService.getDatos()
       .subscribe({

@@ -28,21 +28,31 @@ export class RevisionDocumentalComponent implements OnInit{
 
   /**
    * Índice de la pestaña seleccionada.
-   * @property {number} indice - Índice de la pestaña actualmente seleccionada.
+   * @type {number}
    * @default 1
+   * @description Controla qué pestaña está activa en la interfaz.
    */
   indice: number = 1;
-  // constructor(private seccionStore: SeccionLibStore) {} For Continue button enable
+ 
+  
+  /**
+   * @constructor
+   * @param {ChangeDetectorRef} cdr - Servicio para la detección de cambios en el componente.
+   */
   constructor(private cdr: ChangeDetectorRef){}
  
+    /**
+   * @method ngOnInit
+   * @description Inicializa el componente, actualmente sin lógica adicional.
+   */
   ngOnInit(): void {
     
   }
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   /**
    * Lista de secciones del formulario.
-   * @property {Array<{ index: number; title: string; component: string; }>} seccionesDeLaSolicitud
-   * - Lista de pasos dentro del formulario con sus respectivos componentes.
+   * @type {Array<{ index: number; title: string; component: string }>}
+   * @description Define las pestañas disponibles dentro del formulario, cada una asociada a un componente específico.
    */
   seccionesDeLaSolicitud = [
     { index: 1, title: 'Dtos Generales', component: 'interna-datos-generales' },
@@ -51,34 +61,21 @@ export class RevisionDocumentalComponent implements OnInit{
   ];
 
   /**
-   * Evento emitido al cambiar de pestaña.
+   * Evento emitido cuando el usuario cambia de pestaña.
    * @event tabChanged
    * @type {EventEmitter<number>}
+   * @description Notifica el cambio de pestaña a otros componentes.
    */
   @Output() tabChanged = new EventEmitter<number>();
 
   /**
-   * Cambia el índice de la pestaña seleccionada.
+   * Cambia el índice de la pestaña seleccionada y emite el evento correspondiente.
    * @method seleccionaTab
    * @param {number} i - El índice de la pestaña a seleccionar.
+   * @description Actualiza la pestaña activa y notifica el cambio a otros componentes.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
     this.tabChanged.emit(i);
   }
-   //For Continue button enable
-  // private asignarSecciones(): void {
-  //   const SECCIONES: boolean[] = [];
-  //   const FORMA_VALIDA: boolean[] = [];
-  //   const PREDETERMINADO = SECCIONES_TRAMITE_80203
-  //   for (const LLAVE_SECCION in PREDETERMINADO.PASO_1) {
-  //     if (Object.prototype.hasOwnProperty.call(PREDETERMINADO.PASO_1, LLAVE_SECCION)) {
-  //       // @ts-expect-error - fix this
-  //       SECCIONES.push(PREDETERMINADO.PASO_1[LLAVE_SECCION]);
-  //       FORMA_VALIDA.push(false);
-  //     }
-  //   }
-  //   this.seccionStore.establecerSeccion(SECCIONES); 
-  //   this.seccionStore.establecerFormaValida(FORMA_VALIDA); 
-  // }
 }
