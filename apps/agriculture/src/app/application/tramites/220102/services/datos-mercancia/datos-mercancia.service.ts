@@ -1,8 +1,15 @@
 import { Injectable } from '@angular/core';
-import { URL } from '../../constantes/fitosanitario.enum';
-import { Catalogo, RespuestaCatalogos, SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { map, Observable } from 'rxjs';
+
 import { HttpClient } from '@angular/common/http';
+
+import { Observable } from 'rxjs';
+
+import { map } from 'rxjs/operators';
+
+import { URL } from '../../constantes/fitosanitario.enum';
+
+import { Catalogo, RespuestaCatalogos, SeccionLibStore } from '@libs/shared/data-access-user/src';
+
 
 @Injectable({
   providedIn: 'root'

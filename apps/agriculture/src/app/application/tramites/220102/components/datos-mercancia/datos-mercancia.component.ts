@@ -1,9 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { IMPORTANTE } from '../../constantes/fitosanitario.enum';
-import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
+
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MercanciaForm } from '../../models/fitosanitario.model';
+
 import { Subject, takeUntil } from 'rxjs';
+
+import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
+
+import { IMPORTANTE } from '../../constantes/fitosanitario.enum';
+
+import { MercanciaForm } from '../../models/fitosanitario.model';
+
 import { DatosMercanciaService } from '../../services/datos-mercancia/datos-mercancia.service';
 
 /**
