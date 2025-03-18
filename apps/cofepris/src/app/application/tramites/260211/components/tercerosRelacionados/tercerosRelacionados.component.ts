@@ -14,13 +14,14 @@ import { PermisoModel } from '../detos.model';
 import { AgregarProveedorComponent } from '../agregarProveedor/agregarProveedor.component';
 import { AgregarFacturatorComponent } from '../agregarFacturator/agregarFacturator.component';
 import { AgregarRequeridaComponent } from '../agregarRequerida/agregarRequerida.component';
-import { AgregarDestinatarioComponent } from '../agregar-destinatario/agregar-destinatario.component';
+// import { AgregarDestinatarioComponent } from '../agregar-destinatario/agregar-destinatario.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AgregarDestinatarioComponent } from '../agregar-destinatario/agregar-destinatario.component';
 
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
-  imports: [CommonModule,TituloComponent,TableComponent,AlertComponent,TablaDinamicaComponent,AgregarProveedorComponent,AgregarFacturatorComponent,AgregarRequeridaComponent,AgregarDestinatarioComponent,CatalogoSelectComponent,ReactiveFormsModule],
+  imports: [CommonModule,TituloComponent,TableComponent,AlertComponent,TablaDinamicaComponent,AgregarProveedorComponent,AgregarFacturatorComponent,AgregarRequeridaComponent,CatalogoSelectComponent,ReactiveFormsModule,AgregarDestinatarioComponent],
   templateUrl: './tercerosRelacionados.component.html',
   styleUrl: './tercerosRelacionados.component.css',
 })

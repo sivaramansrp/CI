@@ -1,168 +1,152 @@
-<!-- <p>agregar-destinatario works!</p>
-
 <div class="row">
-    <div class="col-md-12">
-        <h6 class="mb-5">Proveedor</h6>
-<app-tabla-dinamica
-[configuracionTabla]="configuracionTabla"
-[datos]="tercerosProd"
-[tipoSeleccionTabla]="TablaSeleccion.CHECKBOX">
-</app-tabla-dinamica>
-<div  style="text-align: right">
-    <button style="text-align: right"
-            type="button"
-            class="btn btn-primary ms-2"
-            data-bs-toggle="modal"
-            data-bs-target="#modaldestinatario"
-            (click)="abrirModaldestinatario()"
-          >
-            Agregar
-          </button>
-      
+  <div class="col-md-12">
+    <h6 class="mb-5">Proveedor</h6>
+    <app-tabla-dinamica
+      [configuracionTabla]="configuracionTabla"
+      [datos]="tercerosProd"
+      [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX">
+    </app-tabla-dinamica>
+    <div style="text-align: right">
+      <button style="text-align: right"
+              type="button"
+              class="btn btn-primary ms-2"
+              data-bs-toggle="modal"
+              data-bs-target="#modaldestinatario"
+              (click)="abrirModaldestinatario()">
+        Agregar
+      </button>
     </div>
-    </div>
-    </div>
-    
-    
-    <div class="container mt-4">
-        <div
-          class="modal fade"
-          id="modalrequerida"
-          tabindex="-1"
-          aria-labelledby="modaldestinatarioLabel"
-          aria-hidden="true"
-        >
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <ng-titulo titulo="Agregar Proveedor" />
-                
-              </div>
-              <div class="modal-body">
-                <form [formGroup]="requeridaForm"  ">
-                    <h6>Datos generales</h6>
-                    <div class="row mb-3">
-                         <div class="col-md-6">
-                         <div class="col-md-12">
-                          
-                        </div> 
-                        
-                       </div>
-                  <div class="col-md-6">
-                        <div class="col-md-12">
-                          <label class="form-label" for="tipoPersona">Tipo persona*:</label>
-                        </div>
-                        <div class="col-md-12">
-                          <input type="radio" id="fisica" name="nacional2" formControlName="profisica" >
-                          <label for="fisica">Física</label>
-                        </div>
-                        <div class="col-md-12">
-                          <input type="radio" id="moral" name="nacional2" formControlName="moral" value="promoral" (change)="JustificacionSeleccion()" >
-                          <label for="moral">Moral</label>
-                        </div>
-                      </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-6 ">
-                          <label class="form-label" for="rfc">R.F.C:</label>
-                          <input type="text" class="form-control" id="nombre" formControlName="tiporfc">
-                        </div>
-                        <div class="col-md-6 *ngIf=hideCurp ">
-                            <label class="form-label" for="curp">C.U.R.P*:</label>
-                            <input type="text" class="form-control" id="curp" formControlName="tipocurp">
-                          </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-8 mb-3">
-                          <label class="form-label" for="denominación">Denominación/razón social*:</label>
-                          <input type="text" class="form-control" id="tipodenominacion" formControlName="tipodenominacion">
-                        </div>
-                    </div>
-                    <ng-titulo titulo="Domicilio" />
-                  
-                    <div class="row">
-                      <div class="col-md-4 ">
-                       <app-catalogo-select
-                        [catalogo]="proveedorList"
-                        formControlName="tipopail"
-                        [label]="'Pail*'"
-                        [placeholder]="'Seleccione una aduana'"
-                       
-                      ></app-catalogo-select>
-                        
-                      </div>
-                      <div class="col-md-4 mb-3">
-                        <label class="form-label" for="localidad">Estado*:</label>
-                        <input type="text" class="form-control" id="localidad" formControlName="numeroEstado">
-                        
-                      
-                      </div>
-                      <div class="col-md-4">
-                        <label class="form-label" for="municipio">Codigo postal o equivalente</label>
-                        <input type="text" class="form-control" id="numeropostal" formControlName="numeropostal">
-                       
-                      </div>
-                    </div>
-                  
-                    <div class="row">
-                      <div class="col-md-4 ">
-                        <label class="form-label" for="nombrelocalidad">Colonia o equivalente:</label>
-                        <input type="text" class="form-control" id="nombreequivalente" formControlName="nombreequivalente">
-                        
-                      </div>
-                      <div class="col-md-4 mb-3">
-                       
-                      </div>
-                      <div class="col-md-4 ">
-                        
-                      </div>
-                    </div>
-                   
-                    <div class="row">
-                      <div class="col-md-8">
-                        <label class="form-label" for="numeroCalle">Calle*:</label>
-                        <input type="text" class="form-control" id="numeroCalle" formControlName="numeroCalle">
-                      </div>
-                      <div class="col-md-4">
-                        <label class="form-label" for="experior">Numero experior*:</label>
-                        <input type="text" class="form-control" id="experior" formControlName="numbroexperior">
-                      </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="form-label" for="numbrointerior">Numero interior:</label>
-                      <input type="text" class="form-control" id="numbrointerior" formControlName="numbrointerior">
-                    </div>
-                    <div class="col-md-1 mb-3">
-                      <label class="form-label" for="numbrolada">Lada:</label>
-                      <input type="text" class="form-control" id="numbrolada" formControlName="numbrolada">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                      <label class="form-label" for="numerotelefono">Teléfono:</label>
-                      <input type="text" class="form-control" id="numerotelefono" formControlName="numerotelefono">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                      <label class="form-label" for="correoElectronico">Correo electrónico:</label>
-                      <div class="input-group">
-                        <input type="email" class="form-control" id="tipocorreoElectronico" formControlName="tipocorreoElectronico">
-                        </div>
-                    </div>
-                  </div>
-    </form>
-    </div>
-    
-    
-    <div class="modal-footer custom-footer justify-content-center">
-        <button type="button" class="btn btn-primary">Agregar</button>
-        <button
-          type="button"
-          class="btn btn-default"
-          data-bs-dismiss="modal"
-          #closeModal
-        >
-          Cerrar
-        </button>
-      </div>     
-    </div>
+  </div>
 </div>
-</div> -->
+
+<div class="container mt-4">
+  <div class="modal fade" id="modaldestinatario" tabindex="-1" aria-labelledby="modaldestinatarioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <ng-titulo titulo="Agregar Proveedor"></ng-titulo>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="destinatarioForm">
+            <h6>Datos generales</h6>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <div class="col-md-12">
+                  <label class="form-label" for="tipoPersona">Tipo persona*:</label>
+                  
+                  <div>
+                    <input type="radio" id="rediofisica" formControlName="rediofisica">
+                    <label for="fisica">Física</label>
+                  </div>
+                  <div>
+                    <input type="radio" id="rediomoral" formControlName="rediomoral">
+                    <label for="moral">Moral</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+              <div class="col-md-6">
+                <label class="form-label" for="rfc">R.F.C:</label>
+                <input type="text" class="form-control" id="destinatariorfc" formControlName="destinatariorfc">
+              </div>
+            </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8 mb-3">
+                <label class="form-label" for="denominacion">Denominación/razón social*:</label>
+                <input type="text" class="form-control" id="destinatariodenominacion" formControlName="destinatariodenominacion">
+              </div>
+            </div>
+            <ng-titulo titulo="Domicilio"></ng-titulo>
+            <div class="row">
+              <div class="col-md-4">
+                <app-catalogo-select
+                  [catalogo]="proveedorList"
+                  formControlName="destinatariopail"
+                  [label]="'Pail*'"
+                  [placeholder]="'Seleccione una aduana'">
+                </app-catalogo-select>
+              </div>
+              <div class="col-md-4 mb-3">
+                <app-catalogo-select
+                  [catalogo]="proveedorList"
+                  formControlName="destinatariomunicipio"
+                  [label]="'Municipio*'"
+                  [placeholder]="'Seleccione un municipio'">
+                </app-catalogo-select>
+              </div>
+              <div class="col-md-4">
+                <app-catalogo-select
+                  [catalogo]="proveedorList"
+                  formControlName="destinatariolocalidad"
+                  [label]="'Localidad*'"
+                  [placeholder]="'Seleccione una localidad'">
+                </app-catalogo-select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <app-catalogo-select
+                  [catalogo]="proveedorList"
+                  formControlName="destinatarioApellido"
+                  [label]="'Apellido*'"
+                  [placeholder]="'Seleccione un apellido'">
+                </app-catalogo-select>
+              </div>
+              <div class="col-md-4 mb-3">
+                <app-catalogo-select
+                  [catalogo]="proveedorList"
+                  formControlName="destinatarioequivalente"
+                  [label]="'Equivalente'"
+                  [placeholder]="'Seleccione un equivalente'">
+                </app-catalogo-select>
+              </div>
+              <div class="col-md-4">
+                <app-catalogo-select
+                  [catalogo]="proveedorList"
+                  formControlName="destinatario"
+                  [label]="'Destinatario*'"
+                  [placeholder]="'Seleccione un destinatario'">
+                </app-catalogo-select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <label class="form-label" for="destinatarionumeroCalle">Calle*:</label>
+                <input type="text" class="form-control" id="destinatarionumeroCalle" formControlName="destinatarionumeroCalle">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="destinatarioexperior">Numero exterior*:</label>
+                <input type="text" class="form-control" id="destinatarioexperior" formControlName="destinatarioexperior">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label class="form-label" for="destinatariointerior">Numero interior:</label>
+                <input type="text" class="form-control" id="destinatariointerior" formControlName="destinatariointerior">
+              </div>
+              <div class="col-md-1 mb-3">
+                <label class="form-label" for="destinatariolada">Lada:</label>
+                <input type="text" class="form-control" id="destinatariolada" formControlName="destinatariolada">
+              </div>
+              <div class="col-md-3 mb-3">
+                <label class="form-label" for="destinatarionumerotelefono">Teléfono:</label>
+                <input type="text" class="form-control" id="destinatarionumerotelefono" formControlName="destinatarionumerotelefono">
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="destinatariocorreoElectronico">Correo electrónico:</label>
+                <div class="input-group">
+                  <input type="email" class="form-control" id="destinatariocorreoElectronico" formControlName="destinatariocorreoElectronico">
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer custom-footer justify-content-center">
+          <button type="button" class="btn btn-primary">Agregar</button>
+          <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
