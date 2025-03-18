@@ -249,6 +249,23 @@ export const Aviso = {
 
 export const AlDar = {
   AlDar: `<p>Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.</p>`
+}
+export const Sectoresy = {
+  alerta: `<p>Para continuar con el trámite, debes agregar por lo menos una mercancía.</p>`,
+}
+
+export const firmar = {
+  alerta: `<p>La solicitud ha sido guardada exitosamente. Tiene 15 días naturales para firmarla, después de ese tiempo desaparecerá
+del listado de solicitudes pendientes por firmar. Número de solicitud [202758747]</p>`,
+}
+
+export const solicitud = {
+  alerta: `<p>Tu solicitud ha sido registrada con el siguiente número de folio <0200900200120242540000002>.</p>`,
+}
+
+export const Todospasos = {
+  Importante: `<p>La Solicitud ha quedado registrada con el número temporal 202767557. Éste no tiene validez legal y sirve solamente para
+  efectos de identificar tu Solicitud. Un folio oficial le será asignado a la Solicitud al momento en que ésta sea firmada.</p>`
 };
 
 

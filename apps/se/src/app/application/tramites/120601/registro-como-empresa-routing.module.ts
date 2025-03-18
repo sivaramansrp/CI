@@ -1,0 +1,39 @@
+import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+// eslint-disable-next-line sort-imports
+import { CargarArchivosComponent } from './component/cargar-archivos/cargar-archivos.component';
+import { DatosGeneralesSociosComponent } from './component/datos-generales-socios/datos-generales-socios.component';
+import { DomicilioComponent } from './component/domicilio/domicilio.component';
+
+import { DatosComponent } from './pages/datos/datos.component';
+
+const ROUTES: Routes = [
+  {
+    path: 'datos',
+    component: DatosComponent,
+
+  },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'datos',
+  },
+  {
+    path: 'domicilio',
+    component: DomicilioComponent
+  },
+  {
+    path: 'datos-generales-socios',
+    component: DatosGeneralesSociosComponent
+  },
+  {
+    path:'cargar-archivos',
+    component:CargarArchivosComponent
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(ROUTES)],
+  exports: [RouterModule]
+})
+export class RegistroComoEmpresaRoutingModule { }
