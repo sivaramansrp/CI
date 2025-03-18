@@ -26,7 +26,7 @@
             <div class="col-12 container text-end mt-5">
               <button class="btn btn-default me-2" (click)="eliminarAnexoUno()">Eliminar</button>
               <button class="btn btn-primary me-2" (click)="agregarAnexoUno()">Agregar</button>
-              <button class="btn btn-primary">Carga por archivo</button>
+              <button class="btn btn-primary" (click)="setRuta('proveedor-por-archivo')">Carga por archivo</button>
             </div>
           </div>
 
@@ -40,14 +40,16 @@
     </form>
     <div class="row">
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-default me-2">Complementar Función</button>
-          <button class="btn btn-primary me-2">Proveedor Cliente</button>
-          <button class="btn btn-primary me-2">Proyecto MMUS</button>
-          <button class="btn btn-primary">Proveedor Cliente por Archivo</button>
+          <button class="btn btn-default me-2" (click)="setRuta('complementar-fraccion')">Complementar Función</button>
+
+          <button class="btn btn-primary me-2" (click)="navegarAProveedorCliente(true)">Proveedor Cliente</button>
+          <button class="btn btn-primary me-2" (click)="setRuta('proyecto-immex')">Proyecto IMMEX</button>
+
+          <button class="btn btn-primary" (click)="setRuta('proveedor-por-archivo')" >Proveedor Cliente por Archivo</button>
         </div>
       </div>
 
-      <form [formGroup]="anexoDosFormGroup">
+      <form  class="row mt-5" [formGroup]="anexoDosFormGroup">
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
@@ -70,13 +72,13 @@
         <div class="row">
             <div class="col-12 container text-end mt-5">
               <button class="btn btn-default me-2" (click)="eliminarAnexoDos()">Eliminar</button>
-              <button class="btn btn-primary me-2" >Agregar</button>
+              <button class="btn btn-primary me-2" (click)="agregarAnexoDos()">Agregar</button>
             </div>
           </div>
 
         <div class="row mt-5">
-            <app-tabla-dinamica [tipoSeleccionTabla]="anexoConfiguartion.anexoDosTablaSeleccionRadio" 
-             [configuracionTabla]="anexoConfiguartion.anexoDosEncabezadoDeTabla"
+            <app-tabla-dinamica [tipoSeleccionTabla]="anexoImportacionConfiguartion.anexoDosTablaSeleccionRadio" 
+             [configuracionTabla]="anexoImportacionConfiguartion.anexoDosEncabezadoDeTabla"
              [datos]="anexoDosTablaLista"
              (listaDeFilaSeleccionada)="setAnexoDosLista($event)"
              ></app-tabla-dinamica>
@@ -84,8 +86,8 @@
     </form>
     <div class="row">
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-default me-2">Complementar Función</button>
-          <button class="btn btn-primary me-2">Proveedor Cliente</button>
+          <button class="btn btn-default me-2" (click)="setRuta('complementar-fraccion')">Complementar Función</button>
+          <button class="btn btn-primary me-2" (click)="navegarAProveedorCliente(false)">Proveedor Cliente</button>
         </div>
       </div>
 </div>
