@@ -47,6 +47,14 @@ export class Tramite110204Query extends Query<TramiteState> {
     return state.formDatesCerticado;
   });
 
+
+    /**
+   * Selecciona las fechas del certificado.
+   * @returns {Observable<any>} - Observable con las fechas del certificado.
+   */
+    formMercancia$ = this.select((state) => {    
+      return state.mercanciaForm;
+    });
   /**
    * Selecciona la mercancía que se está buscando.
    * @returns {Observable<any>} - Observable con los datos de la mercancía a buscar.

@@ -57,3 +57,4 @@ export interface DatosMercancia {
   valorTotalFactura: string; // Valor total de la factura (en moneda local).
   valorTotalFacturaUsd: string; // Valor total de la factura en USD.
 }
+

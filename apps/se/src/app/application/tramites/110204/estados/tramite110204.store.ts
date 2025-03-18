@@ -14,6 +14,7 @@ export interface TramiteState {
   paisBloque: Catalogo;
   formCertificado: { [key: string]: undefined | boolean | string | number | object };
   formDatesCerticado: { [key: string]: undefined | boolean | string | number | object };
+  mercanciaForm:{ [key: string]: undefined | boolean | string | number | object}
   buscarMercancia: Mercancia[];
   formaValida: { [key: string]: boolean };
 }
@@ -69,6 +70,24 @@ export const INITIAL_STATE: TramiteState = {
     idiomaDates: '',
     EntidadFederativaDates: '',
     representacionFederalDates: '',
+  },
+  mercanciaForm:{
+    fraccionNaladi:'',
+    fraccionNaladiSa93: '',
+    fraccionNaladiSa96: '',
+    fraccionNaladiSa02: '',
+    nombreTecnico: '',
+    nombreComercial:'',
+    normaOrigen:'',
+    id:'',
+    cantidad:'',
+    umc:'',
+    tipoFactura:'',
+    valorMercancia:'',
+    fechaFinalInput:'',
+    numeroFactura:'',
+    nalad:'',
+    complementoClasificacion:''
   },
   buscarMercancia: [],
   paisBloque: {
@@ -193,6 +212,21 @@ export class Tramite110204Store extends Store<TramiteState> {
     }));
   }
 
+  /**
+   * Establece los valores del formulario del certificado en el almacén.
+   * 
+   * @param {Object} values - Un objeto con las claves y valores para actualizar el formulario del certificado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setFormMercancia(values: { [key: string]: undefined | boolean | string | number | object }): void {
+    this.update((state) => ({
+      mercanciaForm: {
+        ...state.mercanciaForm,
+        ...values,
+      },
+    }));
+  }
   /**
    * Establece los datos de la mercancía a buscar en el almacén.
    * 

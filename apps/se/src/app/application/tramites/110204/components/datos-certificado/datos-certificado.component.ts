@@ -1,7 +1,7 @@
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
@@ -47,6 +47,14 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   representaconFederal$!: Observable<Catalogo[]>;
 
+    /**
+     * Estado de la sección, gestionado mediante el store.
+     * @type {SeccionLibState}
+     */
+    private seccion!: SeccionLibState
+    ;
+  
+
   /**
    * Constructor del componente. Inicializa el formulario y las dependencias necesarias.
    * @param fb Instancia del FormBuilder para la creación del formulario.
@@ -59,7 +67,10 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     private fb: FormBuilder, public store: Tramite110204Store,
     public tramiteQuery: Tramite110204Query,
     public certificadoService: CertificadosOrigenGridService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+      private seccionQuery: SeccionLibQuery,
+      private seccionStore: SeccionLibStore
+  ) {
 
     /**
      * Inicialización del formulario reactivo con los controles y validaciones correspondientes.
@@ -81,6 +92,17 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
         this.formDatesCerticado.patchValue(estado);
       }
     });
+       /**
+         * Suscripción al estado de la sección para obtener y actualizar el estado.
+         */
+        this.seccionQuery.selectSeccionState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.seccion = seccionState;
+            })
+          )
+          .subscribe();
 
     /**
      * Asignación de los observables que contienen los catálogos de datos a los que se puede suscribir el componente.
@@ -98,6 +120,50 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     return this.formDatesCerticado.get('') as FormControl;
   }
 
+   /**
+   * Verifica si el formulario es válido.
+   * @returns {boolean} Retorna true si el formulario es válido, de lo contrario false.
+   */
+   esFormValido(): boolean {
+    // Recorre todos los controles del formulario para verificar si alguno es inválido.
+    for (const NOMBRE_DEL_CONTROL in this.formDatesCerticado.controls) {
+      if (Object.prototype.hasOwnProperty.call(this.formDatesCerticado.controls,
+        NOMBRE_DEL_CONTROL)) {
+        const CONTROL = this.formDatesCerticado.get(NOMBRE_DEL_CONTROL);
+        if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+    /**
+     * Valida el formulario y actualiza el estado de la sección en el store.
+     */
+    validarFormulario(): void {
+      this.formDatesCerticado.statusChanges
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          delay(10),
+          tap((_value) => {
+            const SECCION: number = 2;
+            const FORMAS_VALIDADAS = this.seccion.formaValida;
+            const ES_VALIDO_EL_FORM = this.esFormValido();
+  
+            if (this.formDatesCerticado.valid || (ES_VALIDO_EL_FORM)) {
+              FORMAS_VALIDADAS[SECCION] = true;
+              this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+            } else {
+              FORMAS_VALIDADAS[SECCION] = false;
+              this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+            }
+          })
+        )
+        .subscribe();
+    }
+  
+
   /**
    * Método de ciclo de vida de Angular, se ejecuta al inicializar el componente.
    * Se utiliza para cargar los datos y suscribirse a los cambios del formulario.
@@ -108,14 +174,15 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     
     /**
      * Suscripción a los cambios de valor del formulario para enviar los datos al store.
-     */
-    this.formDatesCerticado.valueChanges.subscribe(value => {
+    */
+   this.formDatesCerticado.valueChanges.subscribe(value => {
       this.store.setFormDatesCerticado(value);
+      this.validarFormulario();
     });
-    
     this.cargarRepresentacionFederal();
-  }
 
+  }
+  
   /**
    * Método que selecciona un idioma y actualiza el estado en el store.
    * @param estado El estado del idioma seleccionado.

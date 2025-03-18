@@ -1,5 +1,5 @@
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { CONFIGURACION_MERCANCIA } from '../../constantes/modificacion.enum';
@@ -7,6 +7,8 @@ import { CertificadosOrigenGridService } from '../../services/certificadosOrigen
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
 import { Mercancia } from '../../models/plantas-consulta.model';
+import { MerchandiseModalComponent } from '../merchandise-modal/MerchandiseModal.component';
+import { Modal } from 'bootstrap';                     
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110204Query } from '../../estados/tramite110204.query';
 import { Tramite110204Store } from '../../estados/tramite110204.store';
@@ -34,16 +36,17 @@ export const FECHA_FINAL = {
   imports: [
     TituloComponent,
     ReactiveFormsModule,
-    CatalogoSelectComponent,
     CommonModule,
     TablaDinamicaComponent,
     InputFechaComponent,
-  ],
+    CatalogoSelectComponent,
+    MerchandiseModalComponent
+],
   providers: [ToastrService],
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.scss',
 })
-export class CertificadoOrigenComponent implements OnInit, OnDestroy {
+export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewInit {
 
   /**
    * Formulario reactivo utilizado para la gestión de los datos del certificado.
@@ -117,6 +120,24 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    */
   private seccion!: SeccionLibState;
 
+
+    /**
+   * Datos de la bitácora obtenidos desde el servicio.
+   * @type {Mercancia[]}
+   */
+
+  isSelectTable:boolean = true;
+  selectedData!: Mercancia;
+    /**
+   * Instancia del modal de modificación.
+   */
+    modalInstance!: Modal;
+
+    /**
+   * Referencia al modal de modificación en la plantilla HTML.
+   */
+      @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+
   /**
    * Constructor del componente.
    * Inicializa el formulario y las dependencias necesarias para la carga de datos.
@@ -179,6 +200,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.pais$ = this.tramiteQuery.selectPaisBloque$;
     this.datos1$ = this.tramiteQuery.selectBuscarMercancia$;
   }
+
 
   /**
    * Verifica si el formulario es válido.
@@ -344,4 +366,23 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.formCertificado.get('fechaFinal')?.setValue(nuevo_valor);
     this.formCertificado.get('fechaFinal')?.markAsUntouched();
   }
+
+    /**
+   * Método para abrir el modal de modificación.
+   */
+    openModifyModal(datos1: Mercancia): void {
+      this.selectedData = datos1;    
+      this.store.setFormMercancia({ ...datos1 });
+        
+      if (this.modalInstance) {
+        this.modalInstance.show();
+      }      
+    }
+
+    ngAfterViewInit():void {
+      // Inicializa el modal de modificación
+      if (this.modifyModal) {
+        this.modalInstance = new Modal(this.modifyModal.nativeElement);
+      }
+    }  
 }

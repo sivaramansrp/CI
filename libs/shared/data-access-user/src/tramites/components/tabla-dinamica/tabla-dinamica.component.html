@@ -25,10 +25,10 @@
       </thead>
       <tbody>
         <!-- Crear las filas de manera dinámica -->
-        <tr *ngFor="let fila of datos;let i=index">
+        <tr *ngFor="let fila of datos;let i=index" (click)="onRowClick(datos[i])">
           <!-- Botón de radio para seleccionar una fila -->
            @if(tipoSeleccionTabla === TablaSeleccion.RADIO) {
-            <td>
+            <td >
               <input 
                 class="cursor-pointer"
                 type="radio" 
@@ -43,7 +43,7 @@
     
            }
            @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
-            <td>
+            <td>`
               <input 
                 class="cursor-pointer"
                 type="checkbox" 
