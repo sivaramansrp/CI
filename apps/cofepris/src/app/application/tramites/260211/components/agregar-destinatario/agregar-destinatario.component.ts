@@ -105,19 +105,21 @@ this.destinatarioForm = this.fb.group({
           destinatariolocalidad: ['', Validators.required],
           destinatarioApellido: ['', Validators.required],
          
-          destinatarioequivalente: [''],
-          destinatario: ['', Validators.required],
+          destinatarioequivalente: ['', Validators.required],
+          destinatario: [''],
           destinatarionumeroCalle: ['', Validators.required],
        
         destinatarioexperior: ['', Validators.required],
-        destinatariointerior: [''],
-        destinatariolada: ['', Validators.required],
+        destinatariointerior: ['', Validators.required],
+        destinatariolada: [''],
         destinatarionumerotelefono: [''],
         destinatariocorreoElectronico: ['', [Validators.required, Validators.email]]
         });
 
   }
-
+  isValid(form: FormGroup, field: string): boolean {
+    return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
+  }
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();

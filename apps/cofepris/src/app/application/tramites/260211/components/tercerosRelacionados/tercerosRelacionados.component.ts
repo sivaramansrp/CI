@@ -142,9 +142,9 @@ export class TercerosRelacionadosComponent {
           fisica: [false],
           moral: ["moral", Validators.required],
           rfc: ['', Validators.required],
-          curp: ['', Validators.required],
+          // curp: ['', Validators.required],
           denominacion: ['', Validators.required],
-          pail: [{value:'',disabled:true}, Validators.required ],
+          pail: [{ value: '', disabled: true }, Validators.required ],
           localidad: ['', Validators.required],
           municipio: ['', Validators.required],
           nombrelocalidad: ['', Validators.required],
@@ -158,11 +158,11 @@ export class TercerosRelacionadosComponent {
           numerotelefono: [''],
           correoElectronico: ['', [Validators.required, Validators.email]]
         });
+        this.proveedorForm.get('pail')?.disable();
         this.loadComboUnidad();
         this.loadLocalidad();
       
       }
-
 
       getFormrequerida(){
 
@@ -208,25 +208,13 @@ export class TercerosRelacionadosComponent {
         } else {
           console.log('Formulario no válido');
         }
+        
       }
-    
+      isValid(form: FormGroup, field: string): boolean {
+        return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
+      }
       
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ngOnDestroy(): void {
+ngOnDestroy(): void {
         this.destroyed$.next();
         this.destroyed$.complete();
       }

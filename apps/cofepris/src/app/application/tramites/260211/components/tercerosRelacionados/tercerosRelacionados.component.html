@@ -74,18 +74,18 @@
                   </div>
                   <div class="row">
                     <div class="col-md-6 ">
-                      <label class="form-label" for="rfc">R.F.C:</label>
-                      <input type="text" class="form-control" id="nombre" formControlName="rfc">
+                      <label class="form-label" for="rfc">R.F.C*:</label>
+                      <input type="text" class="form-control" id="nombre" formControlName="rfc" [ngClass]="isValid(proveedorForm, 'rfc') ? 'required' : ''">
                     </div>
                     <div class="col-md-6 *ngIf=hideCurp ">
-                        <label class="form-label" for="curp">C.U.R.P*:</label>
-                        <input type="text" class="form-control" id="curp" formControlName="rfc">
+                        <!-- <label class="form-label" for="curp">C.U.R.P*:</label>
+                        <input type="text" class="form-control" id="curp" formControlName="rfc"> -->
                       </div>
                   </div>
                   <div class="row">
                     <div class="col-md-8 mb-3">
                       <label class="form-label" for="denominación">Denominación/razón social*:</label>
-                      <input type="text" class="form-control" id="denominacion" formControlName="denominacion">
+                      <input type="text" class="form-control" id="denominacion" formControlName="denominacion" [ngClass]="isValid(proveedorForm, 'denominacion') ? 'required' : ''">
                     </div>
                 </div>
                 <ng-titulo titulo="Domicilio" />
@@ -98,7 +98,7 @@
                     formControlName="pail"
                     [label]="'Pail*'"
                     [placeholder]="'Seleccione una aduana'"
-                    
+                    [ngClass]="isValid(proveedorForm, 'pail') ? 'required' : ''"
                   ></app-catalogo-select>
                     
                   </div>
@@ -107,9 +107,9 @@
                     <app-catalogo-select
                     [catalogo]=" localidadList "
                     formControlName="pail"
-                    [label]="'localidad'"
+                    [label]="'localidad*'"
                     [placeholder]="'Seleccione una aduana'"
-                    
+                    [ngClass]="isValid(proveedorForm, 'pail') ? 'required' : ''"
                   ></app-catalogo-select>
                   
                   </div>
@@ -120,7 +120,7 @@
                     formControlName="municipio"
                     [label]="'Municipio/alcalda*'"
                     [placeholder]="'Seleccione una aduana'"
-                   
+                    [ngClass]="isValid(proveedorForm, 'municipio') ? 'required' : ''"
                   ></app-catalogo-select>
                   </div>
                 </div>
@@ -133,7 +133,7 @@
                    [label]="'Localidad*'"
                     [placeholder]="'Seleccione una aduana'"
                     formControlName="nombrelocalidad"
-                  ></app-catalogo-select>
+                    [ngClass]="isValid(proveedorForm, 'nombrelocalidad') ? 'required' : ''"></app-catalogo-select>
                   </div>
                   <div class="col-md-4 mb-3">
                     
@@ -167,11 +167,13 @@
                 <div class="row">
                   <div class="col-md-8">
                     <label class="form-label" for="numeroCalle">Calle*:</label>
-                    <input type="text" class="form-control" id="numeroCalle" formControlName="numeroCalle">
+                    <input type="text" class="form-control" id="numeroCalle" formControlName="numeroCalle"
+                    [ngClass]="isValid(proveedorForm, 'numeroCalle') ? 'required' : ''">
                   </div>
                   <div class="col-md-4">
                     <label class="form-label" for="experior">Numero experior*:</label>
-                    <input type="text" class="form-control" id="experior" formControlName="experior">
+                    <input type="text" class="form-control" id="experior" formControlName="experior"
+                    [ngClass]="isValid(proveedorForm, 'experior') ? 'required' : ''">
                   </div>
               </div>
               <div class="row">
@@ -190,7 +192,8 @@
                 <div class="col-md-4 mb-3">
                   <label class="form-label" for="correoElectronico">Correo electrónico:</label>
                   <div class="input-group">
-                    <input type="email" class="form-control" id="correoElectronico" formControlName="correoElectronico">
+                    <input type="email" class="form-control" id="correoElectronico" formControlName="correoElectronico"
+                    [ngClass]="isValid(proveedorForm, 'correoElectronico') ? 'required' : ''">
                     </div>
                 </div>
               </div>
@@ -198,26 +201,25 @@
 </div>
 
 
-<div class="modal-footer custom-footer justify-content-center">
-    <button type="button" class="btn btn-primary">Agregar</button>
+<div class="modal-footer custom-footer ">
+    <button type="button" class="btn btn-primary">Cancelar</button>
     <button
       type="button"
       class="btn btn-default"
       data-bs-dismiss="modal"
       #closeModal
     >
-      Cerrar
+      Limpiar
     </button>
+    <button type="button" class="btn btn-primary">Guardar</button>
   </div>     
 </div>
 </div>
 
 </div>   
       
------------raff---------------------------------
-
 <app-agregar-destinatario></app-agregar-destinatario>
-----------------------second------------
+
 <div class="row">
     <div class="col-md-12">
         <h6 class="mb-5">Proveedor</h6>
@@ -271,11 +273,11 @@
                           <label class="form-label" for="tipoPersona">Tipo persona*:</label>
                         </div>
                         <div class="col-md-12">
-                          <input type="radio" id="fisica" formControlName="profisica" >
+                          <input type="radio" id="fisica" name="nacional1" formControlName="profisica" >
                           <label for="fisica">Física</label>
                         </div>
                         <div class="col-md-12">
-                          <input type="radio" id="moral"  formControlName="moral"  >
+                          <input type="radio" id="moral" name="nacional1" formControlName="moral"  >
                           <label for="moral">Moral</label>
                         </div>
                       </div>
@@ -366,245 +368,24 @@
                         </div>
                     </div>
                   </div>
-    </form>
+          </form>
     </div>
-    
-    
-    <div class="modal-footer custom-footer justify-content-center">
-        <button type="button" class="btn btn-primary">Agregar</button>
+    <div class="modal-footer custom-footer">
+        <button type="button" class="btn btn-primary">Cancelar</button>
         <button
           type="button"
           class="btn btn-default"
           data-bs-dismiss="modal"
           #closeModal
         >
-          Cerrar
+          Limpiar
         </button>
+        <button type="button" class="btn btn-primary">Guardar</button>
       </div>     
     </div>
 </div>
 </div>
-
-----------third-----
-<!-- <div class="row">
-    <div class="col-md-12">
-        <h6 class="mb-5">Facturador:</h6>
-<app-tabla-dinamica
-[configuracionTabla]="configuracionTabla"
-[datos]="tercerosProd"
-[tipoSeleccionTabla]="TablaSeleccion.CHECKBOX">
-</app-tabla-dinamica> 
- <div class="container-fluid text-end mt-5">
-    <button class="btn btn-agregar me-3" (click)="destinatario('destinatario')">Agregar</button>
-</div>
-
-@if(hasdestinatario) {
-    <app-agregar-destinatario></app-agregar-destinatario>
-}
-
-
-<div  style="text-align: right">
-    <button style="text-align: right"
-            type="button"
-            class="btn btn-primary ms-2"
-            data-bs-toggle="modal"
-            data-bs-target="#modalAgregar"
-            (click)="abrirModal()"
-          >
-            Agregar
-          </button>
-         </div>
-    </div>
-    </div>
-    </div>
-    
-    
-    <div class="container mt-4">
-        <div
-          class="modal fade"
-          id="modalAgregar"
-          tabindex="-1"
-          aria-labelledby="modalAgregarLabel"
-          aria-hidden="true"
-        >
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <ng-titulo titulo="Agregar Fabricante" />
-               
-              </div>
-              <div class="modal-body">
-                <form [formGroup]="proveedorForm"  (ngSubmit)="guardarProveedor()">
-                    <h6>Datos generales</h6>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                        <div class="col-md-12">
-                          <label class="form-label" for="tipoPersona">Terceros Naciolalidad:</label>
-                        </div>
-                        
-                        <div class="col-md-12">
-                          <input type="radio" id="fisica" name="nacional" formControlName="nacional" value="nacional"  (change)="JustificacionSeleccion()" >
-                          <label for="fisica"  >Nacional</label>
-                        </div>
-                        <div class="col-md-12">
-                          <input type="radio" id="moral" name="nacional" formControlName="extranjero">
-                          <label for="moral">Extranjero</label>
-                        </div>
-                      </div>
-                  <div class="col-md-6">
-                        <div class="col-md-12">
-                          <label class="form-label" for="tipoPersona">Tipo persona*:</label>
-                        </div>
-                        <div class="col-md-12">
-                          <input type="radio" id="fisica" name="nacional1" formControlName="fisica" >
-                          <label for="fisica">Física</label>
-                        </div>
-                        <div class="col-md-12">
-                          <input type="radio" id="moral" name="nacional1" formControlName="moral" value="moral" (change)="JustificacionSeleccion()" >
-                          <label for="moral">Moral</label>
-                        </div>
-                      </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-6 ">
-                          <label class="form-label" for="rfc">R.F.C:</label>
-                          <input type="text" class="form-control" id="nombre" formControlName="rfc">
-                        </div>
-                        <div class="col-md-6 *ngIf=hideCurp ">
-                            <label class="form-label" for="curp">C.U.R.P*:</label>
-                            <input type="text" class="form-control" id="curp" formControlName="rfc">
-                          </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-8 mb-3">
-                          <label class="form-label" for="denominación">Denominación/razón social*:</label>
-                          <input type="text" class="form-control" id="denominacion" formControlName="denominacion">
-                        </div>
-                    </div>
-                    <ng-titulo titulo="Domicilio" />
-                  
-                    <div class="row">
-                      <div class="col-md-4 ">
-                        
-                        <app-catalogo-select
-                        [catalogo]="proveedorList"
-                        formControlName="pail"
-                        [label]="'Pail*'"
-                        [placeholder]="'Seleccione una aduana'"
-                        
-                      ></app-catalogo-select>
-                        
-                      </div>
-                      <div class="col-md-4 mb-3">
-                        
-                        <app-catalogo-select
-                        [catalogo]=" localidadList "
-                        formControlName="pail"
-                        [label]="'localidad'"
-                        [placeholder]="'Seleccione una aduana'"
-                       
-                      ></app-catalogo-select>
-                      
-                      </div>
-                      <div class="col-md-4 mb-3">
-                        
-                        <app-catalogo-select
-                        [catalogo]=" localidadList "
-                        formControlName="municipio"
-                        [label]="'Municipio/alcalda*'"
-                        [placeholder]="'Seleccione una aduana'"
-                        formControlName="benco"
-                      ></app-catalogo-select>
-                      </div>
-                    </div>
-                  
-                    <div class="row">
-                      <div class="col-md-4 ">
-                       
-                        <app-catalogo-select
-                        [catalogo]=" localidadList "
-                       [label]="'Localidad*'"
-                        [placeholder]="'Seleccione una aduana'"
-                        formControlName="nombrelocalidad"
-                      ></app-catalogo-select>
-                      </div>
-                      <div class="col-md-4 mb-3">
-                       
-                        <app-catalogo-select
-                        [catalogo]=" localidadList "
-                       [label]="'Cadigo Postal oequd'"
-                        [placeholder]="'Seleccione una aduana'"
-                        formControlName="primerApellido"
-                      ></app-catalogo-select>
-                      </div>
-                      <div class="col-md-4 ">
-                       
-                        <app-catalogo-select
-                        [catalogo]=" localidadList "
-                         [label]="'Colonia'"
-                        [placeholder]="'Seleccione una aduana'"
-                        formControlName="segundoApellido"
-                      ></app-catalogo-select>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4 ">
-                      </div>
-                      <div class="col-md-4">
-                        <label class="form-label" for="equivalente">Colonia o equivalente:</label>
-                        <input type="text" class="form-control" id="equivalente" formControlName="equivalente">
-                      </div>
-                      <div class="col-md-4 ">
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-8">
-                        <label class="form-label" for="numeroCalle">Calle*:</label>
-                        <input type="text" class="form-control" id="numeroCalle" formControlName="numeroCalle">
-                      </div>
-                      <div class="col-md-4">
-                        <label class="form-label" for="experior">Numero experior*:</label>
-                        <input type="text" class="form-control" id="experior" formControlName="experior">
-                      </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="form-label" for="interior">Numero interior:</label>
-                      <input type="text" class="form-control" id="interior" formControlName="interior">
-                    </div>
-                    <div class="col-md-1 mb-3">
-                      <label class="form-label" for="lada">Lada:</label>
-                      <input type="text" class="form-control" id="lada" formControlName="lada">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                      <label class="form-label" for="numerotelefono">Teléfono:</label>
-                      <input type="text" class="form-control" id="numerotelefono" formControlName="numerotelefono">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                      <label class="form-label" for="correoElectronico">Correo electrónico:</label>
-                      <div class="input-group">
-                        <input type="email" class="form-control" id="correoElectronico" formControlName="correoElectronico">
-                        </div>
-                    </div>
-                  </div>
-    </form>
-    </div>
-    
-    
-    <div class="modal-footer custom-footer justify-content-center">
-        <button type="button" class="btn btn-primary">Agregar</button>
-        <button
-          type="button"
-          class="btn btn-default"
-          data-bs-dismiss="modal"
-          #closeModal
-        >
-          Cerrar
-        </button>
-      </div>     
-    </div>
-</div>
-</div> -->
+<app-agregar-facturator></app-agregar-facturator>
 </div>
 
 

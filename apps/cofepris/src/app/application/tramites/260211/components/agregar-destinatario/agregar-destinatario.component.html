@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-12">
-    <h6 class="mb-5">Proveedor</h6>
+    <h6 class="mb-5">Destinatario (destino final)*</h6>
     <app-tabla-dinamica
       [configuracionTabla]="configuracionTabla"
       [datos]="tercerosProd"
@@ -35,26 +35,26 @@
                   <label class="form-label" for="tipoPersona">Tipo persona*:</label>
                   
                   <div>
-                    <input type="radio" id="rediofisica" formControlName="rediofisica">
+                    <input type="radio" id="rediofisica"  name="nacional1" formControlName="rediofisica">
                     <label for="fisica">Física</label>
                   </div>
                   <div>
-                    <input type="radio" id="rediomoral" formControlName="rediomoral">
+                    <input type="radio" id="rediomoral" name="nacional1" formControlName="rediomoral">
                     <label for="moral">Moral</label>
                   </div>
                 </div>
               </div>
               <div class="row">
               <div class="col-md-6">
-                <label class="form-label" for="rfc">R.F.C:</label>
-                <input type="text" class="form-control" id="destinatariorfc" formControlName="destinatariorfc">
+                <label class="form-label" for="rfc">R.F.C*:</label>
+                <input type="text" class="form-control" id="destinatariorfc" formControlName="destinatariorfc"[ngClass]="isValid(destinatarioForm, 'destinatariorfc') ? 'required' : ''">
               </div>
             </div>
             </div>
             <div class="row">
               <div class="col-md-8 mb-3">
                 <label class="form-label" for="denominacion">Denominación/razón social*:</label>
-                <input type="text" class="form-control" id="destinatariodenominacion" formControlName="destinatariodenominacion">
+                <input type="text" class="form-control" id="destinatariodenominacion" formControlName="destinatariodenominacion" [ngClass]="isValid(destinatarioForm, 'destinatariodenominacion') ? 'required' : ''">
               </div>
             </div>
             <ng-titulo titulo="Domicilio"></ng-titulo>
@@ -65,6 +65,7 @@
                   formControlName="destinatariopail"
                   [label]="'Pail*'"
                   [placeholder]="'Seleccione una aduana'">
+                  [ngClass]="isValid(destinatarioForm, 'destinatariopail') ? 'required' : ''"
                 </app-catalogo-select>
               </div>
               <div class="col-md-4 mb-3">
@@ -73,6 +74,7 @@
                   formControlName="destinatariomunicipio"
                   [label]="'Municipio*'"
                   [placeholder]="'Seleccione un municipio'">
+                  [ngClass]="isValid(destinatarioForm, 'destinatariomunicipio') ? 'required' : ''"
                 </app-catalogo-select>
               </div>
               <div class="col-md-4">
@@ -80,7 +82,8 @@
                   [catalogo]="proveedorList"
                   formControlName="destinatariolocalidad"
                   [label]="'Localidad*'"
-                  [placeholder]="'Seleccione una localidad'">
+                  [placeholder]="'Seleccione una localidad'"
+                  [ngClass]="isValid(destinatarioForm, 'destinatariolocalidad') ? 'required' : ''">
                 </app-catalogo-select>
               </div>
             </div>
@@ -90,7 +93,7 @@
                   [catalogo]="proveedorList"
                   formControlName="destinatarioApellido"
                   [label]="'Apellido*'"
-                  [placeholder]="'Seleccione un apellido'">
+                  [placeholder]="'Seleccione un apellido'" [ngClass]="isValid(destinatarioForm, 'destinatarioApellido') ? 'required' : ''">
                 </app-catalogo-select>
               </div>
               <div class="col-md-4 mb-3">
@@ -98,7 +101,8 @@
                   [catalogo]="proveedorList"
                   formControlName="destinatarioequivalente"
                   [label]="'Equivalente'"
-                  [placeholder]="'Seleccione un equivalente'">
+                  [placeholder]="'Seleccione un equivalente'"
+                  [ngClass]="isValid(destinatarioForm, 'destinatarioequivalente') ? 'required' : ''">
                 </app-catalogo-select>
               </div>
               <div class="col-md-4">
@@ -113,11 +117,13 @@
             <div class="row">
               <div class="col-md-8">
                 <label class="form-label" for="destinatarionumeroCalle">Calle*:</label>
-                <input type="text" class="form-control" id="destinatarionumeroCalle" formControlName="destinatarionumeroCalle">
+                <input type="text" class="form-control" id="destinatarionumeroCalle" formControlName="destinatarionumeroCalle"
+                [ngClass]="isValid(destinatarioForm, 'destinatarionumeroCalle') ? 'required' : ''">
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="destinatarioexperior">Numero exterior*:</label>
-                <input type="text" class="form-control" id="destinatarioexperior" formControlName="destinatarioexperior">
+                <input type="text" class="form-control" id="destinatarioexperior" formControlName="destinatarioexperior"
+                [ngClass]="isValid(destinatarioForm, 'destinatarioexperior') ? 'required' : ''">
               </div>
             </div>
             <div class="row">
@@ -142,9 +148,10 @@
             </div>
           </form>
         </div>
-        <div class="modal-footer custom-footer justify-content-center">
-          <button type="button" class="btn btn-primary">Agregar</button>
-          <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Cerrar</button>
+        <div class="modal-footer custom-footer">
+          <button type="button" class="btn btn-primary">Cancelar</button>
+          <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Limpiar</button>
+          <button type="button" class="btn btn-primary">Guardar</button>
         </div>
       </div>
     </div>
