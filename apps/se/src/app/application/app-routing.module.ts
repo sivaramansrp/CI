@@ -1,5 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
+
+import { ComplementarPlantaComponent } from './shared/components/complementar-planta/complementar-planta.component';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
@@ -27,7 +29,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/120602/empresa-frontera-solicitud.module').then(
         (m) => m.EmpresaFronteraSolicitudModule
-      )
+      ),
   },
   {
     path: 'prosec-modificacion',
@@ -58,8 +60,9 @@ const ROUTES: Routes = [
   {
     path: 'expansion-de-productores',
     loadChildren: () =>
-      import('./tramites/90201/expansion-de-productores/expansion-de-productores.module').then(
-        (m) => m.ExpansionDeProductoresModule),
+      import(
+        './tramites/90201/expansion-de-productores/expansion-de-productores.module'
+      ).then((m) => m.ExpansionDeProductoresModule),
   },
   {
     path: 'elegibilidad-de-textiles',
@@ -74,24 +77,27 @@ const ROUTES: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
-  }, 
+  },
   {
     path: 'cancelacion-de',
     loadChildren: () =>
       import('./tramites/140103/cancelacion-de.module').then(
-        (m) => m.CancelacionDeModule)
+        (m) => m.CancelacionDeModule
+      ),
   },
   {
     path: 'certificado-registro',
     loadChildren: () =>
       import('./tramites/80205/certificado-registro.module').then(
-        (m) => m.CertificadoRegistroModule)
+        (m) => m.CertificadoRegistroModule
+      ),
   },
   {
     path: 'certificado-registro',
     loadChildren: () =>
       import('./tramites/80205/certificado-registro.module').then(
-        (m) => m.CertificadoRegistroModule)
+        (m) => m.CertificadoRegistroModule
+      ),
   },
   {
     path: 'subfabricante-immex',
@@ -110,9 +116,9 @@ const ROUTES: Routes = [
   {
     path: 'immex-registro-solicitud-modality',
     loadChildren: () =>
-      import('./tramites/80203/immex-registro-de-solicitud-modalidad.modulo').then(
-        (m) => m.ImmexRegistroDeSolicitudModalityModule
-      )
+      import(
+        './tramites/80203/immex-registro-de-solicitud-modalidad.modulo'
+      ).then((m) => m.ImmexRegistroDeSolicitudModalityModule),
   },
   {
     path: 'modificacion',
@@ -141,11 +147,11 @@ const ROUTES: Routes = [
       import('./tramites/80101/nuevo-programa-industrial.module').then(
         (m) => m.NuevoProgramaIndustrialModule
       ),
-  }
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

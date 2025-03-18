@@ -1,6 +1,8 @@
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Input } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
@@ -106,7 +108,7 @@ export class FederatariosYPlantasComponent {
    */
   public federatariosFormGroup!: FormGroup;
 
-  constructor() {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
     this.initFederatariosFormGroup();
   }
 
@@ -125,6 +127,15 @@ export class FederatariosYPlantasComponent {
       numeroDeNotaria: new FormControl(''),
       estado: new FormControl(''),
       estadoOptions: new FormControl(''),
+    });
+  }
+  /**
+   * Navega a la ruta de acciones
+   * @param accionesPath
+   */
+  navigateToAcciones(accionesPath: string): void {
+    this.router.navigate([accionesPath], {
+      relativeTo: this.activatedRoute,
     });
   }
 }

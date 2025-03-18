@@ -207,16 +207,40 @@
           <div class="row">
             <div class="d-flex flex-row flex-wrap">
               <div class="p-2">
-                <button class="btn btn-primary">Complementar planta</button>
+                <button
+                  class="btn btn-primary"
+                  (click)="
+                    navigateToAcciones('../complementar-plantas-acciones')
+                  "
+                >
+                  Complementar planta
+                </button>
               </div>
               <div class="p-2">
-                <button class="btn btn-primary">Montos de inversión</button>
+                <button
+                  class="btn btn-primary"
+                  (click)="navigateToAcciones('../montos-inversion-acciones')"
+                >
+                  Montos de inversión
+                </button>
               </div>
               <div class="p-2">
-                <button class="btn btn-primary">Empleados</button>
+                <button
+                  class="btn btn-primary"
+                  (click)="navigateToAcciones('../empleados-acciones')"
+                >
+                  Empleados
+                </button>
               </div>
               <div class="p-2">
-                <button class="btn btn-primary">Capacidad Instalada</button>
+                <button
+                  class="btn btn-primary"
+                  (click)="
+                    navigateToAcciones('../capacidad-instalada-acciones')
+                  "
+                >
+                  Capacidad Instalada
+                </button>
               </div>
               <div class="p-2">
                 <button class="btn btn-primary">Carga por archivo</button>
