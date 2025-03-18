@@ -1,13 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { BtnContinuarComponent } from "libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component";
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ListaPasosWizard } from 'apps/se/src/app/application/tramites/130120/models/permiso-importacion-modification.model';
-import { PASOS } from 'apps/se/src/app/application/tramites/130120/constants/permiso-importacion-modification.enum';
-import { PasoCuatroComponent } from "../paso-cuatro/paso-cuatro.component";
-import { PasoDosComponent } from "../paso-dos/paso-dos.component";
-import { PasoTresComponent } from "../paso-tres/paso-tres.component";
-import { PasoUnoComponent } from "../paso-uno/paso-uno.component";
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from '../../constants/intropermiso.enum';
 
 interface AccionBoton {
   accion: string;
@@ -17,28 +12,74 @@ interface AccionBoton {
   selector: 'app-intro-permiso',
   templateUrl: './intro-permiso.component.html',
   styleUrl: './intro-permiso.component.scss',
-  imports: [WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoDosComponent, PasoTresComponent, PasoCuatroComponent],
-  standalone: true,
+
 })
 export class IntroPermisoComponent {
-
-  indice = 1;
+  /**
+ * @description Array de objetos que definen los pasos del formulario.
+ * Cada objeto contiene información sobre un paso específico,
+ * incluyendo su número, título y si está completado.
+ * Este array permite la gestión de las secciones o pasos dentro del formulario.
+ * @type {ListaPasosWizard[]}
+ */
   pasos: ListaPasosWizard[] = PASOS;
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * @description Referencia al componente Wizard.
+   * Esta referencia permite acceder a los métodos y propiedades del componente Wizard,
+   * como `siguiente()` y `atras()`, para controlar la navegación entre los pasos.
+   * 
+   * @type {WizardComponent}
+   * @viewChild WizardComponent
+   */
+  @ViewChild(WizardComponent) componenteWizard!: WizardComponent;
+
+  /**
+   * @description Índice actual del paso en el que se encuentra el usuario.
+   * Este índice se utiliza para determinar qué paso se muestra en cada momento.
+   * Los valores posibles de `indice` corresponden a los pasos definidos en el arreglo `pasos`.
+   * 
+   * @type {number}
+   * @default 1
+   */
+  indice: number = 1;
+
+  /**
+   * @description Objeto que contiene los datos de los pasos del formulario.
+   * Este objeto se utiliza para comunicar información entre el componente Agricultura
+   * y el componente Wizard, como el número total de pasos, el índice del paso actual
+   * y los textos de los botones de navegación (anterior y siguiente).
+   * 
+   * @type {DatosPasos}
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
-    txtBtnAnt: 'Anterior',
+    txtBtnAnt: 'Guardar',
     txtBtnSig: 'Continuar',
   };
 
-  getValorIndice(e: AccionBoton): void {
+  /**
+   * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
+   * Este método se llama cuando el usuario hace clic en uno de los botones de navegación
+   * del formulario.
+   * 
+   * Recibe un objeto `AccionBoton` que contiene la acción a realizar (`cont` o `atras`)
+   * y el valor del índice del paso al que se debe navegar.
+   * 
+   * @param {AccionBoton} e - Objeto que contiene la acción y el valor a manejar.
+   *   El `valor` representa el índice del paso al que ir. La `accion` determina si avanzar
+   *   (valor `cont`) o retroceder (valor `atras`).
+   * 
+   * @returns {void}
+   */
+  getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+        this.componenteWizard.siguiente();
       } else {
-        this.wizardComponent.atras();
+        this.componenteWizard.atras();
       }
     }
   }
