@@ -134,6 +134,13 @@ const ROUTES: Routes = [
       import('./tramites/80208/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
       ),
+  },
+  {
+    path: 'solicitud-importacion-neumaticos-comercializar',
+    loadChildren: () =>
+      import('./tramites/130110/solicitud-importacion-neumaticos-comercializar.module').then(
+        (m) => m.SolicitudImportacionNeumaticosComercializarModule
+      ),
   }
 ];
 
