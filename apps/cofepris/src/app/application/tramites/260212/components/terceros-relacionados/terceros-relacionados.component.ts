@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { AlertComponent } from '@ng-mf/data-access-user';
+import {Catalogo, CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 
-import {
-  TablaDinamicaComponent,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { TableComponent } from '@ng-mf/data-access-user';
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -15,44 +14,19 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  TERCEROS_RELACIONADOS_DESTINATARIO,
-  TERCEROS_RELACIONADOS_FABRICANTE,
-  TERCEROS_RELACIONADOS_FACTURADOR,
-  TERCEROS_RELACIONADOS_PROVEEDOR,
-} from '../../constantes/permiso-maquila.enum';
-import { ModalComponent } from '../modal/modal.component';
-import { selectedRowData, tableData } from '../../models/permiso-maquila.models';
+import { TercerosService } from '../../services/terceros.service';
 
-/**
- * Constante que contiene el texto de alerta que se mostrará cuando las tablas con asterisco sean obligatorias.
- * 
- * @constant TERCEROS_TEXTO_DE_ALERTA
- * @description Esta constante se utiliza para mostrar un mensaje de alerta que informa al usuario que las tablas marcadas con un asterisco (*) son obligatorias y debe agregar al menos un registro en ellas.
- * 
- * @example
- * console.log(TERCEROS_TEXTO_DE_ALERTA); // Imprime el mensaje de alerta.
- */
+import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA, MUNICIPIOSELECTDATA, PAISSELECTDATA, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '../../constantes/permiso-maquila.enum';
+import { ModalComponent } from '../modal/modal.component';
+import {
+  selectedRowData,
+  tableData,
+} from '../../models/permiso-maquila.models';
+import { Tramite260212Store } from '../../../../estados/tramites/tramite260212.store';
+
+
 const TERCEROS_TEXTO_DE_ALERTA =
   'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
-
-
-/**
- * Componente para gestionar los terceros relacionados en el sistema.
- * 
- * Este componente permite gestionar los datos de los fabricantes, destinatarios, proveedores y facturadores,
- * incluyendo la visualización de tablas dinámicas y formularios para agregar información relacionada con
- * estos terceros.
- * 
- * @component TercerosRelacionadosComponent
- * @description Componente para gestionar la relación de terceros en el sistema.
- * 
- * @example
- * ```ts
- * const componente = new TercerosRelacionadosComponent(formBuilder);
- * componente.submitFabricanteForm();
- * ```
- */
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
@@ -60,37 +34,18 @@ const TERCEROS_TEXTO_DE_ALERTA =
   styleUrl: './terceros-relacionados.component.scss',
   imports: [
     CommonModule,
-    TablaDinamicaComponent,
     TituloComponent,
     TableComponent,
     AlertComponent,
     FormsModule,
     ReactiveFormsModule,
-    ModalComponent
+    ModalComponent,
+    CatalogoSelectComponent,
   ],
 })
 
-/**
- * Clase que representa el componente para gestionar los terceros relacionados en el sistema.
- * 
- * @class TercerosRelacionadosComponent
- * @description Componente para gestionar la relación de terceros en el sistema.
- */
 export class TercerosRelacionadosComponent implements OnInit {
 
-  /**
-   * Variables de control para la visibilidad de las secciones de las tablas.
-   * 
-   * @property {boolean} showTableDiv - Controla la visibilidad de la tabla.
-   * @property {boolean} showFabricante - Controla la visibilidad del formulario de fabricante.
-   * @property {boolean} showDestinatario - Controla la visibilidad del formulario de destinatario.
-   * @property {boolean} showProveedor - Controla la visibilidad del formulario de proveedor.
-   * @property {boolean} showFacturador - Controla la visibilidad del formulario de facturador.
-   * @property {boolean} showFabricanteButtons - Controla la visibilidad de los botones del fabricante.
-   * @property {boolean} showDestinatarioButtons - Controla la visibilidad de los botones del destinatario.
-   * @property {boolean} showProveedorButtons - Controla la visibilidad de los botones del proveedor.
-   * @property {boolean} showFacturadorButtons - Controla la visibilidad de los botones del facturador.
-   */
   showTableDiv = true;
   showFabricante = false;
   showDestinatario = false;
@@ -101,63 +56,79 @@ export class TercerosRelacionadosComponent implements OnInit {
   showProveedorButtons = false;
   showFacturadorButtons = false;
 
-  /**
-   * Formulario para agregar un fabricante.
-   * 
-   * @property {FormGroup} agregarFabricanteFormGroup - Formulario reactivo para agregar un fabricante.
-   */
+
+  tipoPersonaSelection! :string;
+
+  dropdownData: Catalogo[] = [];
+  paisDropdownData: Catalogo[] = PAISSELECTDATA;
+  localidadDropdownData: Catalogo[] = LOCALIDADSELECTDATA;
+  municipioDropdownData: Catalogo[] = MUNICIPIOSELECTDATA;
+  codigoPostalDropdownData: Catalogo[] = CODIGOPOSTALSELECTDATA;
+  coloniaDropdownData:Catalogo[] = COLONIASELECTDATA;
+
   agregarFabricanteFormGroup!: FormGroup;
 
-  /**
-   * Formulario para agregar un destinatario.
-   * 
-   * @property {FormGroup} agregarDestinatarioFormGroup - Formulario reactivo para agregar un destinatario.
-   */
   agregarDestinatarioFormGroup!: FormGroup;
 
-  /**
-   * Formulario para agregar un proveedor.
-   * 
-   * @property {FormGroup} agregarProveedorFormGroup - Formulario reactivo para agregar un proveedor.
-   */
   agregarProveedorFormGroup!: FormGroup;
 
-  /**
-   * Formulario para agregar un facturador.
-   * 
-   * @property {FormGroup} agregarFacturadorFormGroup - Formulario reactivo para agregar un facturador.
-   */
   agregarFacturadorFormGroup!: FormGroup;
 
-  /**
-   * Constructor que inicializa el formulario utilizando `FormBuilder`.
-   * 
-   * @constructor
-   * @param {FormBuilder} fb - El `FormBuilder` utilizado para crear formularios reactivos.
-   */
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,
+    private tramite260212Store: Tramite260212Store,
+    private tercerosService : TercerosService
+  ) {}
 
-  /**
-   * Método de inicialización del componente, se ejecuta al inicializar el componente.
-   * Inicializa los formularios para agregar fabricante, destinatario, proveedor y facturador.
-   * 
-   * @method ngOnInit
-   */
-  ngOnInit() {
+
+  ngOnInit(): void {
+    this.tercerosService.getData().subscribe((data) => {
+      this.dropdownData = data;
+    });
+
     this.initializeAgregarFabricanteFormGroup();
     this.initializeAgregarDestinatarioFormGroup();
     this.initializeAgregarProveedorFormGroup();
     this.initializeAgregarFacturadorFormGroup();
   }
 
-  /**
-   * Inicializa el formulario para agregar un fabricante.
-   * 
-   * @method initializeAgregarFabricanteFormGroup
-   */
+
   initializeAgregarFabricanteFormGroup() {
     this.agregarFabricanteFormGroup = this.fb.group({
       tercerosNacionalidad: new FormControl('', [Validators.required]),
+      tipoPersona: new FormControl('', [Validators.required]),
+      rfc: new FormControl('', [Validators.required, this.rfcValidator]),
+      curp: new FormControl('', [Validators.required,this.curpValidator]),
+      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      pais: new FormControl('', [Validators.required,this.requiredPaisValidator]),
+      estadoLocalidad: new FormControl('', [Validators.required]),
+      municipioAlcaldia: new FormControl('', [Validators.required]),
+      localidad: new FormControl(''),
+      entidadFederativa: new FormControl('', [Validators.required]),
+      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
+      colonia: new FormControl(''),
+      coloniaoEquivalente: new FormControl(''),
+      calle: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl('', [Validators.required]),
+      numeroInterior: new FormControl(''),
+      lada: new FormControl(''),
+      telefono: new FormControl('',[this.telefonoValidator]),
+      correoElectronico: new FormControl(''),
+    });
+
+    this.agregarFabricanteFormGroup.get('rfc')?.disable();
+    this.agregarFabricanteFormGroup.get('curp')?.disable();
+    this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.disable();
+
+    this.agregarFabricanteFormGroup.get('tipoPersona')?.valueChanges.subscribe((value:string) => {
+      this.agregarFabricanteFormGroup.get('rfc')?.enable();
+      this.agregarFabricanteFormGroup.get('curp')?.enable();
+      this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.enable();
+    })
+  }
+
+
+  initializeAgregarDestinatarioFormGroup() {
+    this.agregarDestinatarioFormGroup = this.fb.group({
       tipoPersona: new FormControl('', [Validators.required]),
       rfc: new FormControl('', [Validators.required]),
       curp: new FormControl('', [Validators.required]),
@@ -177,126 +148,103 @@ export class TercerosRelacionadosComponent implements OnInit {
       telefono: new FormControl(''),
       correoElectronico: new FormControl(''),
     });
+
+    this.agregarDestinatarioFormGroup.get('rfc')?.disable();
+    this.agregarDestinatarioFormGroup.get('curp')?.disable();
+    this.agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.disable();
+
+    this.agregarDestinatarioFormGroup.get('tipoPersona')?.valueChanges.subscribe((value:string) => {
+      this.agregarDestinatarioFormGroup.get('rfc')?.enable();
+      this.agregarDestinatarioFormGroup.get('curp')?.enable();
+      this.agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.enable();
+
+    })
   }
 
-  /**
-   * Inicializa el formulario para agregar un destinatario.
-   * 
-   * @method initializeAgregarDestinatarioFormGroup
-   */
-  initializeAgregarDestinatarioFormGroup() {
-    this.agregarDestinatarioFormGroup = this.fb.group({
-      tipoPersona: new FormControl('', [Validators.required]),
-      rfc: new FormControl('', [Validators.required]),
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
-      pais: new FormControl('', [Validators.required]),
-      estadoLocalidad: new FormControl('', [Validators.required]),
-      municipioAlcaldia: new FormControl('', [Validators.required]),
-      localidad: new FormControl('', [Validators.required]),
-      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
-      colonia: new FormControl('', [Validators.required]),
-      calle: new FormControl('', [Validators.required]),
-      numeroExterior: new FormControl('', [Validators.required]),
-      numeroInterior: new FormControl('', [Validators.required]),
-      lada: new FormControl('', [Validators.required]),
-      telefono: new FormControl('', [Validators.required]),
-      correoElectronico: new FormControl('', [Validators.required]),
-    });
-  }
 
-  /**
-   * Inicializa el formulario para agregar un proveedor.
-   * 
-   * @method initializeAgregarProveedorFormGroup
-   */
   initializeAgregarProveedorFormGroup() {
     this.agregarProveedorFormGroup = this.fb.group({
       tipoPersona: new FormControl('', [Validators.required]),
       nombre: new FormControl('', [Validators.required]),
       primerApellido: new FormControl('', [Validators.required]),
-      segundoApellido: new FormControl('', [Validators.required]),
+      segundoApellido: new FormControl(''),
       pais: new FormControl('', [Validators.required]),
       estado: new FormControl('', [Validators.required]),
-      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
-      coloniaoEquivalente: new FormControl('', [Validators.required]),
+      codigoPostaloEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl(''),
       calle: new FormControl('', [Validators.required]),
       numeroExterior: new FormControl('', [Validators.required]),
-      numeroInterior: new FormControl('', [Validators.required]),
-      lada: new FormControl('', [Validators.required]),
-      telefono: new FormControl('', [Validators.required]),
-      correoElectronico: new FormControl('', [Validators.required]),
+      numeroInterior: new FormControl(''),
+      lada: new FormControl(''),
+      telefono: new FormControl(''),
+      correoElectronico: new FormControl(''),
     });
+
+    
+    this.agregarProveedorFormGroup.get('nombre')?.disable();
+    this.agregarProveedorFormGroup.get('segundoApellido')?.disable();
+    this.agregarProveedorFormGroup.get('primerApellido')?.disable();
+    // this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.disable();
+
+
+    this.agregarProveedorFormGroup.get('tipoPersona')?.valueChanges.subscribe((value:string) => {
+      this.agregarProveedorFormGroup.get('nombre')?.enable();
+      this.agregarProveedorFormGroup.get('primerApellido')?.enable();
+      this.agregarProveedorFormGroup.get('segundoApellido')?.enable();
+      // this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.enable();
+    })
   }
 
-  /**
-   * Inicializa el formulario para agregar un facturador.
-   * 
-   * @method initializeAgregarFacturadorFormGroup
-   */
+
   initializeAgregarFacturadorFormGroup() {
     this.agregarFacturadorFormGroup = this.fb.group({
       tipoPersona: new FormControl('', [Validators.required]),
       nombre: new FormControl('', [Validators.required]),
       primerApellido: new FormControl('', [Validators.required]),
-      segundoApellido: new FormControl('', [Validators.required]),
-      pais: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      segundoApellido: new FormControl(''),
+      pais: new FormControl('', [Validators.required,this.requiredPaisValidator]),
       estado: new FormControl('', [Validators.required]),
-      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
-      coloniaoEquivalente: new FormControl('', [Validators.required]),
+      codigoPostaloEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl(''),
       calle: new FormControl('', [Validators.required]),
       numeroExterior: new FormControl('', [Validators.required]),
-      numeroInterior: new FormControl('', [Validators.required]),
-      lada: new FormControl('', [Validators.required]),
-      telefono: new FormControl('', [Validators.required]),
-      correoElectronico: new FormControl('', [Validators.required]),
+      numeroInterior: new FormControl(''),
+      lada: new FormControl(''),
+      telefono: new FormControl(''),
+      correoElectronico: new FormControl(''),
     });
+
+    this.agregarFacturadorFormGroup.get('nombre')?.disable();
+    this.agregarFacturadorFormGroup.get('segundoApellido')?.disable();
+    this.agregarFacturadorFormGroup.get('primerApellido')?.disable();
+    this.agregarFacturadorFormGroup.get('denominacionRazonSocial')?.disable();
+
+
+    this.agregarFacturadorFormGroup.get('tipoPersona')?.valueChanges.subscribe((value:string) => {
+      this.agregarFacturadorFormGroup.get('nombre')?.enable();
+      this.agregarFacturadorFormGroup.get('primerApellido')?.enable();
+      this.agregarFacturadorFormGroup.get('segundoApellido')?.enable();
+      this.agregarFacturadorFormGroup.get('denominacionRazonSocial')?.enable();
+    })
   }
 
-  /**
-   * Datos de las cabeceras de las tablas para cada tipo de tercero.
-   * 
-   * @property {Array<string>} fabricanteHeaderData - Cabeceras de la tabla para los fabricantes.
-   * @property {Array<string>} destinatarioHeaderData - Cabeceras de la tabla para los destinatarios.
-   * @property {Array<string>} proveedorHeaderData - Cabeceras de la tabla para los proveedores.
-   * @property {Array<string>} facturadorHeaderData - Cabeceras de la tabla para los facturadores.
-   */
-  fabricanteHeaderData = TERCEROS_RELACIONADOS_FABRICANTE;
-  destinatarioHeaderData = TERCEROS_RELACIONADOS_DESTINATARIO;
-  proveedorHeaderData = TERCEROS_RELACIONADOS_PROVEEDOR;
-  facturadorHeaderData = TERCEROS_RELACIONADOS_FACTURADOR;
+
+  fabricanteHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
+  destinatarioHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
+  proveedorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
+  facturadorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
 
 
-  /**
-   * Variables para controlar los tipos de persona seleccionados.
-   * 
-   * @property {boolean} fisica - Indica si el tipo de persona seleccionado es física.
-   * @property {boolean} moral - Indica si el tipo de persona seleccionado es moral.
-   */
-  public fisica= true;
-  public moral= false;
+  public fisica = false;
+  public moral = false;
 
-
-
-
-  /**
-   * Datos de las filas para cada tipo de tercero.
-   * 
-   * @property {Array<tableData>} fabricanteRowData - Datos de las filas de la tabla de fabricantes.
-   * @property {Array<tableData>} destinatarioRowData - Datos de las filas de la tabla de destinatarios.
-   * @property {Array<tableData>} proveedorRowData - Datos de las filas de la tabla de proveedores.
-   * @property {Array<tableData>} facturadorRowData - Datos de las filas de la tabla de facturadores.
-   */
   fabricanteRowData: tableData[] = [];
   destinatarioRowData: tableData[] = [];
   proveedorRowData: tableData[] = [];
   facturadorRowData: tableData[] = [];
 
-  /**
-   * Cambia el valor de los tipos de persona seleccionados (física o moral).
-   * 
-   * @method inputChecked
-   * @param {string} checkBoxName - El nombre del checkBox seleccionado (fisica o moral).
-   */
+
   public inputChecked(checkBoxName: string) {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
@@ -307,99 +255,67 @@ export class TercerosRelacionadosComponent implements OnInit {
     }
   }
 
-  /**
-   * Método para alternar la visibilidad de la sección de Fabricante.
-   * 
-   * @method toggleDivFabricante
-   */
+
   toggleDivFabricante() {
+    this.fisica = false;
+    this.moral = false;
     this.showTableDiv = !this.showTableDiv;
     this.showFabricante = !this.showFabricante;
   }
 
-  /**
-   * Método para alternar la visibilidad de la sección de Destinatario.
-   * 
-   * @method toggleDivDestinatario
-   */
+ 
   toggleDivDestinatario() {
+    this.fisica = false;
+    this.moral = false;
     this.showTableDiv = !this.showTableDiv;
     this.showDestinatario = !this.showDestinatario;
   }
 
-  /**
-   * Método para alternar la visibilidad de la sección de Proveedor.
-   * 
-   * @method toggleDivProveedor
-   */
   toggleDivProveedor() {
+    this.fisica = false;
+    this.moral = false;
     this.showTableDiv = !this.showTableDiv;
     this.showProveedor = !this.showProveedor;
   }
 
-  /**
-   * Método para alternar la visibilidad de la sección de Facturador.
-   * 
-   * @method toggleDivFacturador
-   */
   toggleDivFacturador() {
+    this.fisica = false;
+    this.moral = false;
     this.showTableDiv = !this.showTableDiv;
     this.showFacturador = !this.showFacturador;
   }
 
-  /**
-   * Método que maneja la selección de las filas en la tabla de fabricantes.
-   * 
-   * @method selectedFabricanteRows
-   * @param {selectedRowData} data - Datos de la fila seleccionada en la tabla de fabricantes.
-   */
+
   selectedFabricanteRows(data: selectedRowData) {
     this.showFabricanteButtons = data.checked;
   }
 
-  /**
-   * Método que maneja la selección de las filas en la tabla de destinatarios.
-   * 
-   * @method selectedDestinatarioRows
-   * @param {selectedRowData} data - Datos de la fila seleccionada en la tabla de destinatarios.
-   */
+
   selectedDestinatarioRows(data: selectedRowData) {
     this.showDestinatarioButtons = data.checked;
   }
 
-  /**
-   * Método que maneja la selección de las filas en la tabla de proveedores.
-   * 
-   * @method selectedProveedorRows
-   * @param {selectedRowData} data - Datos de la fila seleccionada en la tabla de proveedores.
-   */
+
   selectedProveedorRows(data: selectedRowData) {
     this.showProveedorButtons = data.checked;
   }
 
-  /**
-   * Método que maneja la selección de las filas en la tabla de facturadores.
-   * 
-   * @method selectedFacturadorRows
-   * @param {selectedRowData} data - Datos de la fila seleccionada en la tabla de facturadores.
-   */
+
   selectedFacturadorRows(data: selectedRowData) {
     this.showFacturadorButtons = data.checked;
   }
 
-  /**
-   * Texto de alerta que se muestra cuando las tablas con asterisco no tienen registros.
-   * 
-   * @property {string} TEXTO_DE_ALERTA
-   */
+
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
 
-  /**
-   * Método para enviar el formulario de fabricante y agregarlo a la tabla.
-   * 
-   * @method submitFabricanteForm
-   */
+
   submitFabricanteForm() {
+    const localidadValue = this.localidadDropdownData.find((item: Catalogo) => item.id == this.agregarFabricanteFormGroup.value.localidad)?.descripcion;
+    const municipioValue = this.municipioDropdownData.find((item: Catalogo) => item.id == this.agregarFabricanteFormGroup.value.municipioAlcaldia)?.descripcion;
+    const codigoPostalValue = this.codigoPostalDropdownData.find((item: Catalogo) => item.id == this.agregarFabricanteFormGroup.value.codigoPostaloEquivalente)?.descripcion;
+    const coloniaValue = this.coloniaDropdownData.find((item: Catalogo) => item.id == this.agregarFabricanteFormGroup.value.colonia)?.descripcion;
+    // const paisValue = this.paisDropdownData.find((item: Catalogo) => item.id == this.agregarFabricanteFormGroup.value.pais)?.descripcion;
+
     const fabricanteRow = {
       tbodyData: [
         this.agregarFabricanteFormGroup.value.denominacionRazonSocial,
@@ -413,26 +329,34 @@ export class TercerosRelacionadosComponent implements OnInit {
         this.agregarFabricanteFormGroup.value.numeroExterior,
         this.agregarFabricanteFormGroup.value.numeroInterior,
         this.agregarFabricanteFormGroup.value.pais,
-        this.agregarFabricanteFormGroup.value.colonia,
-        this.agregarFabricanteFormGroup.value.municipioAlcaldia,
-        this.agregarFabricanteFormGroup.value.localidad,
+        coloniaValue,
+        municipioValue,
+        localidadValue,
         this.agregarFabricanteFormGroup.value.entidadFederativa,
-        this.agregarFabricanteFormGroup.value.codigoPostaloEquivalente,
+        this.agregarFabricanteFormGroup.value.estadoLocalidad,
+        codigoPostalValue,
+        this.agregarFabricanteFormGroup.value.coloniaoEquivalente,
       ],
     };
     this.fabricanteRowData.push(fabricanteRow);
+    this.tramite260212Store.setFabricante(this.fabricanteRowData);
+    this.showTableDiv = !this.showTableDiv;
+    this.showFabricante = !this.showFabricante;
   }
 
-  /**
-   * Método para enviar el formulario de destinatario y agregarlo a la tabla.
-   * 
-   * @method submitDestinatarioForm
-   */
+
   submitDestinatarioForm() {
+    const localidadValue = this.localidadDropdownData.find((item: Catalogo) => item.id == this.agregarDestinatarioFormGroup.value.localidad)?.descripcion;
+    const municipioValue = this.municipioDropdownData.find((item: Catalogo) => item.id == this.agregarDestinatarioFormGroup.value.municipioAlcaldia)?.descripcion;
+    const codigoPostalValue = this.codigoPostalDropdownData.find((item: Catalogo) => item.id == this.agregarDestinatarioFormGroup.value.codigoPostaloEquivalente)?.descripcion;
+    const coloniaValue = this.coloniaDropdownData.find((item: Catalogo) => item.id == this.agregarDestinatarioFormGroup.value.colonia)?.descripcion;
+    // const paisValue = this.paisDropdownData.find((item: Catalogo) => item.id == this.agregarFabricanteFormGroup.value.pais)?.descripcion;
+
     const destinatarioRow = {
       tbodyData: [
         this.agregarDestinatarioFormGroup.value.denominacionRazonSocial,
         this.agregarDestinatarioFormGroup.value.rfc,
+        this.agregarDestinatarioFormGroup.value.curp,
         this.agregarDestinatarioFormGroup.value.lada +
           '-' +
           this.agregarDestinatarioFormGroup.value.telefono,
@@ -441,64 +365,103 @@ export class TercerosRelacionadosComponent implements OnInit {
         this.agregarDestinatarioFormGroup.value.numeroExterior,
         this.agregarDestinatarioFormGroup.value.numeroInterior,
         this.agregarDestinatarioFormGroup.value.pais,
-        this.agregarDestinatarioFormGroup.value.colonia,
-        this.agregarDestinatarioFormGroup.value.municipioAlcaldia,
-        this.agregarDestinatarioFormGroup.value.localidad,
-        this.agregarDestinatarioFormGroup.value.codigoPostaloEquivalente,
+        coloniaValue,
+        municipioValue,
+        localidadValue,
+        this.agregarDestinatarioFormGroup.value.entidadFederativa,
+        this.agregarDestinatarioFormGroup.value.estadoLocalidad,
+        codigoPostalValue,
+        this.agregarDestinatarioFormGroup.value.coloniaoEquivalente,
       ],
     };
     this.destinatarioRowData.push(destinatarioRow);
+    this.tramite260212Store.setDestinatario(this.destinatarioRowData);
+    this.showTableDiv = !this.showTableDiv;
+    this.showDestinatario = !this.showDestinatario;
   }
 
-  /**
-   * Método para enviar el formulario de proveedor y agregarlo a la tabla.
-   * 
-   * @method submitProveedorForm
-   */
+
   submitProveedorForm() {
     const proveedorRow = {
       tbodyData: [
-        this.agregarProveedorFormGroup.value.nombre +
-          ' ' +
-          this.agregarProveedorFormGroup.value.primerApellido +
-          ' ' +
-          this.agregarProveedorFormGroup.value.segundoApellido,
-        this.agregarProveedorFormGroup.value.telefono,
+        this.agregarProveedorFormGroup.value.denominacionRazonSocial,
+        this.agregarProveedorFormGroup.value.rfc,
+        this.agregarProveedorFormGroup.value.curp,
+        this.agregarProveedorFormGroup.value.lada +
+          '-' +
+          this.agregarProveedorFormGroup.value.telefono,
         this.agregarProveedorFormGroup.value.correoElectronico,
         this.agregarProveedorFormGroup.value.calle,
         this.agregarProveedorFormGroup.value.numeroExterior,
         this.agregarProveedorFormGroup.value.numeroInterior,
         this.agregarProveedorFormGroup.value.pais,
         this.agregarProveedorFormGroup.value.colonia,
+        this.agregarProveedorFormGroup.value.municipioAlcaldia,
+        this.agregarProveedorFormGroup.value.localidad,
+        this.agregarProveedorFormGroup.value.entidadFederativa,
+        this.agregarProveedorFormGroup.value.estadoLocalidad,
         this.agregarProveedorFormGroup.value.codigoPostaloEquivalente,
+        this.agregarProveedorFormGroup.value.coloniaoEquivalente,
       ],
     };
     this.proveedorRowData.push(proveedorRow);
+    this.tramite260212Store.setProveedor(this.proveedorRowData);
+    this.showTableDiv = !this.showTableDiv;
+    this.showProveedor = !this.showProveedor;
   }
 
-  /**
-   * Método para enviar el formulario de facturador y agregarlo a la tabla.
-   * 
-   * @method submitFacturadorForm
-   */
+
   submitFacturadorForm() {
     const facturadorRow = {
       tbodyData: [
-        this.agregarFacturadorFormGroup.value.nombre +
-          ' ' +
-          this.agregarFacturadorFormGroup.value.primerApellido +
-          ' ' +
-          this.agregarFacturadorFormGroup.value.segundoApellido,
-        this.agregarFacturadorFormGroup.value.telefono,
+        this.agregarFacturadorFormGroup.value.denominacionRazonSocial,
+        this.agregarFacturadorFormGroup.value.rfc,
+        this.agregarFacturadorFormGroup.value.curp,
+        this.agregarFacturadorFormGroup.value.lada +
+          '-' +
+          this.agregarFacturadorFormGroup.value.telefono,
         this.agregarFacturadorFormGroup.value.correoElectronico,
         this.agregarFacturadorFormGroup.value.calle,
         this.agregarFacturadorFormGroup.value.numeroExterior,
         this.agregarFacturadorFormGroup.value.numeroInterior,
         this.agregarFacturadorFormGroup.value.pais,
         this.agregarFacturadorFormGroup.value.colonia,
+        this.agregarFacturadorFormGroup.value.municipioAlcaldia,
+        this.agregarFacturadorFormGroup.value.localidad,
+        this.agregarFacturadorFormGroup.value.entidadFederativa,
+        this.agregarFacturadorFormGroup.value.estadoLocalidad,
         this.agregarFacturadorFormGroup.value.codigoPostaloEquivalente,
+        this.agregarFacturadorFormGroup.value.coloniaoEquivalente,
       ],
     };
     this.facturadorRowData.push(facturadorRow);
+    this.tramite260212Store.setFacturador(this.facturadorRowData);
+    this.showTableDiv = !this.showTableDiv;
+    this.showFacturador = !this.showFacturador;
   }
+
+
+  // Custom Required Validator for Pais
+requiredPaisValidator(control: AbstractControl) {
+  return control.value !== '' && control.value !== '-1' ? null : { requiredPais: true };
+}
+
+// RFC Validator
+rfcValidator(control: AbstractControl) {
+  const rfcFisica = /^([a-zñA-ZÑ]{4})(\d{6})(([a-zA-Z]|\d){3})$/;
+  const rfcMoral = /^([a-zñA-ZÑ&]{3})(\d{6})(([a-zA-Z]|\d){3})$/;
+  return rfcFisica.test(control.value) || rfcMoral.test(control.value) ? null : { invalidRFC: true };
+}
+
+// CURP Validator
+curpValidator(control: AbstractControl) {
+  const pattern = /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
+  return pattern.test(control.value) ? null : { invalidCURP: true };
+}
+
+// Phone Validator
+telefonoValidator(control: AbstractControl) {
+  const pattern = /^([0-9A-Za-z\-() ])*$/;
+  return pattern.test(control.value) ? null : { invalidTelefono: true };
+}
 }

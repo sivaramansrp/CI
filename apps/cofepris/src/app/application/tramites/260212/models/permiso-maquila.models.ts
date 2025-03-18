@@ -53,8 +53,6 @@ export interface tableData {
   tbodyData: string[];
 }
 
-
-
 /**
  * Interfaz que representa los datos de una fila seleccionada de la tabla.
  * 

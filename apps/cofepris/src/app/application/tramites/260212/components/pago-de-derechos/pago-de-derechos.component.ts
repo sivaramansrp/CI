@@ -1,13 +1,12 @@
 
-import { Component } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {Catalogo, CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 
-import {
-  TablaDinamicaComponent,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
+import {TituloComponent} from '@libs/shared/data-access-user/src';
 import { TableComponent } from '@ng-mf/data-access-user';
+import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
 /**
  * Componente que gestiona el pago de derechos en el sistema.
  * 
@@ -26,18 +25,24 @@ import { TableComponent } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-pago-de-derechos',
   standalone: true,
-  imports: [CommonModule, TablaDinamicaComponent, TituloComponent, TableComponent, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    TableComponent,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+  ],
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.scss',
 })
-export class PagoDeDerechosComponent {
-  
+export class PagoDeDerechosComponent implements OnInit {
+  dropdownData: Catalogo[] = [];
   /**
    * Formulario para gestionar el pago de derechos.
-   * 
+   *
    * Este formulario incluye los campos necesarios para realizar un pago de derechos, como la clave de referencia,
    * la cadena de la dependencia, el banco, la llave de pago, la fecha de pago y el importe de pago.
-   * 
+   *
    * @property {FormGroup} pagoDerechos
    * @public
    * @type {FormGroup}
@@ -51,20 +56,30 @@ export class PagoDeDerechosComponent {
     importeDePago: ['', [Validators.required]],
   });
 
+  ngOnInit(): void {
+    this.pagoDeDerechosService.getData().subscribe((data) => {
+      this.dropdownData = data;
+    });
+  }
+
+
   /**
    * Constructor para inicializar el formulario.
-   * 
+   *
    * @constructor
    * @param {FormBuilder} fb - Constructor que se utiliza para inicializar el formulario de pago de derechos.
    */
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private pagoDeDerechosService: PagoDeDerechosService
+  ) {}
 
   /**
    * Envía el formulario de pago de derechos y muestra los valores en la consola.
-   * 
+   *
    * Este método se ejecuta cuando el formulario es enviado. Muestra los valores del formulario en la consola
    * para su verificación.
-   * 
+   *
    * @method submitPagoDeDerechos
    * @description Envía el formulario de pago de derechos y muestra los valores en la consola.
    */

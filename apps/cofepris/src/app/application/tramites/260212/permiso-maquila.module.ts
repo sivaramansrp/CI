@@ -15,6 +15,8 @@ import { SolicitudService } from './services/solicitud.service';
 import { ClaveScianComponent } from './components/clave-scian/clave-scian.component';
 import { FormularioOperacionComercialComponent } from './components/formulario-operacion-comercial/formulario-operacion-comercial.component';
 import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
+import { PagoDeDerechosService } from './services/pago-de-derechos.service';
+import { TercerosService } from './services/terceros.service';
 
 
 @NgModule({
@@ -33,6 +35,6 @@ import { RepresentanteLegalComponent } from './components/representante-legal/re
     FormularioOperacionComercialComponent,
     RepresentanteLegalComponent
   ],
-  providers: [provideHttpClient(), ToastrService,SolicitudService],
+  providers: [provideHttpClient(), ToastrService,SolicitudService, PagoDeDerechosService,TercerosService],
 })
 export class PermisoMaquilaModule { }
