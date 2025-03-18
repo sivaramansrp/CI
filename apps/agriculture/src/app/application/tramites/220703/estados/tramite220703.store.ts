@@ -43,7 +43,7 @@ export function createInitialState(): TramiteState {
             medioDeTransporte: '',
             identificacionTransporte: '',
             esSolicitudFerros: '',
-            banco:''
+            banco: ''
 
         },
         InternaDatosGeneralesState: {
@@ -65,7 +65,7 @@ export function createInitialState(): TramiteState {
             empresaTransportista: '',
             datosParaMovilizacion: '',
             puntoDeVerificacion: '',
-            regimenAlQueDestina:''
+            regimenAlQueDestina: ''
         }
     };
 }

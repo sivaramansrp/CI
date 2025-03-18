@@ -22,18 +22,40 @@ import { Subject } from 'rxjs';
 })
 export class TercerosRelacionadosComponent {
 
+  /**
+    * Instrucción que se muestra al usuario para indicar que debe hacer doble clic en un elemento
+    * de la tabla para seleccionarlo.
+    */
   instruccionDobleClic: string = MANDATORY_INSTRUCTION;
 
+  /**
+   * Configuración para la selección de elementos en la tabla mediante checkboxes.
+   */
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
+  /**
+   * Configuración de las columnas de la tabla para los datos de exportadores.
+   */
   exportadorTabla: ConfiguracionColumna<exportadorInfo>[] = EXPORTADOR_SERVICIO;
 
+  /**
+   * Datos que se muestran en la tabla de exportadores.
+   */
   exportadorTableDatos: exportadorInfo[] = [];
 
+  /**
+   * Configuración de las columnas de la tabla para los datos de destinos.
+   */
   destinoTabla: ConfiguracionColumna<destinoInfo>[] = DESTINO_SERVICIO;
 
+  /**
+   * Datos que se muestran en la tabla de destinos.
+   */
   destinoTableDatos: destinoInfo[] = [];
 
+  /**
+   * Subject utilizado para notificar la destrucción del componente y limpiar suscripciones.
+   */
   destroyNotifier$: Subject<void> = new Subject();
 
 }

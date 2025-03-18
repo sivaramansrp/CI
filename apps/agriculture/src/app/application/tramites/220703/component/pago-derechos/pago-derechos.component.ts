@@ -17,22 +17,40 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 })
 export class PagoDerechosComponent implements OnInit, OnDestroy {
 
+  /**
+    * Formulario reactivo para gestionar los datos del pago de derechos.
+    */
   pagosDerechosForm!: FormGroup;
 
+  /**
+   * Subject utilizado para gestionar la destrucción de suscripciones.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constructor del componente.
+   * 
+   * @param fb Servicio de FormBuilder para crear formularios reactivos.
+   * @param acuicolaService Servicio para interactuar con la lógica de negocio relacionada con la acuicultura.
+   */
   constructor(
     private readonly fb: FormBuilder,
     private readonly acuicolaService: AcuicolaService,
     // eslint-disable-next-line no-empty-function
   ) { }
 
-
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Inicializa el formulario y carga los datos del pago de derechos.
+   */
   ngOnInit(): void {
     this.iniciarFormulario();
     this.pagoDeCargarDatos();
   }
 
+  /**
+   * Inicializa el formulario reactivo con los controles necesarios.
+   */
   iniciarFormulario(): void {
     this.pagosDerechosForm = this.fb.group({
       claveDeReferencia: [{ value: '', disabled: true }, Validators.required],
@@ -44,6 +62,9 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Carga los datos del pago de derechos desde el servicio.
+   */
   pagoDeCargarDatos(): void {
     this.acuicolaService
       .pagoDeCargarDatos()
@@ -53,11 +74,12 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
       })
   }
 
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Se encarga de liberar las suscripciones para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.unsubscribe();
   }
-
-
-
 }

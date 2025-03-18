@@ -33,51 +33,140 @@ import { delay } from 'rxjs';
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
+  /**
+   * Formulario reactivo para capturar los datos de la solicitud.
+   * @type {FormGroup}
+   */
   datosDeLaSolicitudForm!: FormGroup;
 
+  /**
+   * Estado actual de la solicitud.
+   * @type {DatosDeLaSolicitudInt}
+   */
   SolicitudState!: DatosDeLaSolicitudInt;
 
+  /**
+   * Indica si la sección colapsable está abierta o cerrada.
+   * @type {boolean}
+   */
   colapsable: boolean = false;
 
+  /**
+   * Instrucción para el usuario sobre cómo interactuar con la tabla.
+   * @type {string}
+   */
   instruccionDobleClic: string = INSTRUCCION_DOBLE_CLIC;
 
+  /**
+   * Tipo de selección en la tabla (checkbox).
+   * @type {TablaSeleccion}
+   */
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
+  /**
+   * Catálogo de horas de inspección.
+   * @type {CatalogosSelect}
+   */
   horaDeInspeccion!: CatalogosSelect;
 
+  /**
+   * Catálogo de aduanas de ingreso.
+   * @type {CatalogosSelect}
+   */
   aduanaDeIngreso!: CatalogosSelect;
 
+  /**
+   * Catálogo de oficinas de inspección.
+   * @type {CatalogosSelect}
+   */
   oficinaDeInspeccion!: CatalogosSelect;
 
+  /**
+   * Catálogo de puntos de inspección.
+   * @type {CatalogosSelect}
+   */
   puntoDeInspeccion!: CatalogosSelect;
 
+  /**
+   * Catálogo de tipos de contenedores.
+   * @type {CatalogosSelect}
+   */
   tipoContenedor!: CatalogosSelect;
 
+  /**
+   * Catálogo de medios de transporte.
+   * @type {CatalogosSelect}
+   */
   medioDeTransporte!: CatalogosSelect;
 
+  /**
+   * Textos estáticos utilizados en el componente.
+   * @type {Object}
+   */
   TEXTOS = TEXTOS_220703;
 
+  /**
+   * Configuración de columnas para la tabla de medios de servicio.
+   * @type {ConfiguracionColumna<medioInfo>[]}
+   */
   exportadorTabla: ConfiguracionColumna<medioInfo>[] = MEDIO_SERVICIO;
 
+  /**
+   * Datos de la mercancía para la tabla.
+   * @type {medioInfo[]}
+   */
   mercanciaDatos: medioInfo[] = [];
 
+  /**
+   * Configuración del campo de fecha de inicio.
+   * @type {InputFecha}
+   */
   fechaInicioInput: InputFecha = EXPEDICION_FACTURA_FECHA;
 
+  /**
+   * Subject para manejar la desuscripción de observables.
+   * @type {Subject<void>}
+   */
   private unsubscribe$ = new Subject<void>();
-  private seccion!: SeccionLibState;
+
+  /**
+   * Subject para notificar la destrucción del componente.
+   * @type {Subject<void>}
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Estado de la sección actual.
+   * @type {SeccionLibState}
+   */
+  private seccion!: SeccionLibState;
+
+  /**
+   * Constructor del componente.
+   * @constructor
+   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
+   * @param {AcuicolaService} acuicolaService - Servicio para obtener datos relacionados con la acuicultura.
+   * @param {TramiteStoreQuery} tramiteStoreQuery - Query para acceder al estado del trámite.
+   * @param {TramiteStore} tramiteStore - Store para gestionar el estado del trámite.
+   * @param {SeccionLibQuery} seccionQuery - Query para acceder al estado de la sección.
+   * @param {SeccionLibStore} seccionStore - Store para gestionar el estado de la sección.
+   */
   constructor(
     private readonly fb: FormBuilder,
     private readonly acuicolaService: AcuicolaService,
-    private tramiteStoreQuery: TramiteStoreQuery, //Para la integración de Akita
-    private tramiteStore: TramiteStore, //Para la integración de Akita
-    private seccionQuery: SeccionLibQuery, //Para la integración de Akita
-    private seccionStore: SeccionLibStore, //Para la integración de Akita
-
-    // eslint-disable-next-line no-empty-function
+    private tramiteStoreQuery: TramiteStoreQuery,
+    private tramiteStore: TramiteStore,
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore,
+  // eslint-disable-next-line no-empty-function
   ) { }
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Aquí se configuran las suscripciones a los estados y se inicializa el formulario.
+   * @method ngOnInit
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
       takeUntil(this.destroyNotifier$),
@@ -126,9 +215,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
   }
 
+  /**
+   * Inicializa el formulario reactivo con los controles necesarios.
+   * @method iniciarFormulario
+   * @returns {void}
+   */
   iniciarFormulario(): void {
     this.datosDeLaSolicitudForm = this.fb.group({
       justificacion: ['', Validators.required],
@@ -149,10 +242,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Alterna la visibilidad de la sección colapsable.
+   * @method mostrarColapsable
+   * @returns {void}
+   */
   mostrarColapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
+  /**
+   * Carga los datos de los certificados desde el servicio.
+   * @method cargarDatos
+   * @returns {void}
+   */
   cargarDatos(): void {
     this.acuicolaService
       .obtenerDatosCertificados()
@@ -162,6 +265,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       })
   }
 
+  /**
+   * Obtiene las horas de inspección desde el servicio.
+   * @method getHoraDeInspeccion
+   * @returns {void}
+   */
   getHoraDeInspeccion(): void {
     this.acuicolaService.getHoraDeInspeccion().subscribe((resp) => {
       if (resp.code === 200) {
@@ -176,8 +284,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     })
   }
 
-
-
+  /**
+   * Obtiene las aduanas de ingreso desde el servicio.
+   * @method getAduanaDeIngreso
+   * @returns {void}
+   */
   getAduanaDeIngreso(): void {
     this.acuicolaService.getAduanaDeIngreso().subscribe((resp) => {
       if (resp.code === 200) {
@@ -192,6 +303,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Obtiene las oficinas de inspección desde el servicio.
+   * @method getOficinaDeInspeccion
+   * @returns {void}
+   */
   getOficinaDeInspeccion(): void {
     this.acuicolaService.getOficinaDeInspeccion().subscribe((resp) => {
       if (resp.code === 200) {
@@ -206,6 +322,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Obtiene los puntos de inspección desde el servicio.
+   * @method getPuntoDeInspeccion
+   * @returns {void}
+   */
   getPuntoDeInspeccion(): void {
     this.acuicolaService.getPuntoDeInspeccion().subscribe((resp) => {
       if (resp.code === 200) {
@@ -220,6 +341,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Obtiene los tipos de contenedores desde el servicio.
+   * @method getTipoContenedor
+   * @returns {void}
+   */
   getTipoContenedor(): void {
     this.acuicolaService.getTipoContenedor().subscribe((resp) => {
       if (resp.code === 200) {
@@ -234,6 +360,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Obtiene los medios de transporte desde el servicio.
+   * @method getMedioDeTransporte
+   * @returns {void}
+   */
   getMedioDeTransporte(): void {
     this.acuicolaService.getMedioDeTransporte().subscribe((resp) => {
       if (resp.code === 200) {
@@ -248,6 +379,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Obtiene los datos del responsable de la inspección desde el servicio.
+   * @method obtenerResponsableDatos
+   * @returns {void}
+   */
   obtenerResponsableDatos(): void {
     this.acuicolaService
       .obtenerResponsableDatos()
@@ -257,6 +393,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       })
   }
 
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Aquí se desuscriben los observables para evitar fugas de memoria.
+   * @method ngOnDestroy
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.unsubscribe();

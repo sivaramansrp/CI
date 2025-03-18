@@ -21,22 +21,34 @@ import { FECHA_DE_PAGO } from '../../constantes/acuicola.enum';
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
+
+  /** Formulario reactivo para la captura y visualización de datos de pago de derechos. */
   pagosDeDerechosForm!: FormGroup;
 
+  /** Catálogo de bancos para selección en el formulario. */
   banco!: CatalogosSelect;
 
+  /** Configuración de la fecha de inicio para el campo de fecha en el formulario. */
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
 
+  /** Subject utilizado para gestionar la desuscripción de observables. */
   private destroyNotifier$: Subject<void> = new Subject();
 
-
+  /**
+   * Constructor del componente.
+   * @param fb Servicio para la creación de formularios reactivos.
+   * @param acuicolaService Servicio para interactuar con la lógica de negocio relacionada con la acuicultura.
+   */
   constructor(
     private readonly fb: FormBuilder,
     private readonly acuicolaService: AcuicolaService,
-    // eslint-disable-next-line no-empty-function
+  // eslint-disable-next-line no-empty-function
   ) { }
 
-
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Inicializa el formulario, carga los datos del banco y los datos de pago de derechos.
+   */
   ngOnInit(): void {
     this.iniciarFormulario();
     this.getBancoDatos();
@@ -44,7 +56,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.pagoDerechosRevision();
   }
 
-
+  /**
+   * Inicializa el formulario reactivo con los controles y validaciones necesarias.
+   */
   iniciarFormulario(): void {
     this.pagosDeDerechosForm = this.fb.group({
       claveDeReferencia: [{ value: '', disabled: true }, Validators.required],
@@ -62,6 +76,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Carga los datos de pago de derechos desde el servicio y los asigna al formulario.
+   */
   pagoDeCargarDatos(): void {
     this.acuicolaService
       .pagoDeCargarDatos()
@@ -71,6 +88,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       })
   }
 
+  /**
+   * Obtiene los datos del banco desde el servicio y los asigna al catálogo de bancos.
+   */
   getBancoDatos(): void {
     this.acuicolaService.getBancoDatos().subscribe((resp) => {
       if (resp.code === 200) {
@@ -85,6 +105,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Carga los datos de revisión de pago de derechos desde el servicio y los asigna al formulario.
+   */
   pagoDerechosRevision(): void {
     this.acuicolaService
       .getPagoDerechosRevision()
@@ -94,6 +117,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       })
   }
 
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Se encarga de desuscribir los observables para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.unsubscribe();

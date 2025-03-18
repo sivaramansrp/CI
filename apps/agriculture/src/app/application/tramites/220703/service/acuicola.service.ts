@@ -12,15 +12,26 @@ import { map } from 'rxjs';
 })
 export class AcuicolaService {
 
+  /**
+   * URL base para acceder a los archivos JSON que contienen los datos.
+   */
   private apiUrl = 'assets/json/220703/';
 
+  /**
+   * Constructor del servicio.
+   * 
+   * @param http - Servicio de Angular `HttpClient` para realizar solicitudes HTTP.
+   */
   constructor(
     private http: HttpClient,
     // eslint-disable-next-line no-empty-function
-  ) {
+  ) { }
 
-  }
-
+  /**
+   * Obtiene los datos de los certificados.
+   * 
+   * @returns Un `Observable` que emite un objeto de tipo `DatosDelTramite`.
+   */
   obtenerDatosCertificados(): Observable<DatosDelTramite> {
     return this.http.get<DatosDelTramite>(`${this.apiUrl}datos-certificados.json`).pipe(
       map((res: any) => {
@@ -29,6 +40,11 @@ export class AcuicolaService {
     );
   }
 
+  /**
+   * Obtiene las horas de inspección disponibles.
+   * 
+   * @returns Un `Observable` que emite un objeto de tipo `RespuestaCatalogos`.
+   */
   getHoraDeInspeccion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`${this.apiUrl}hora-de-inspeccion.json`).pipe(
       map(response => {
@@ -37,6 +53,11 @@ export class AcuicolaService {
     );
   }
 
+  /**
+   * Obtiene las aduanas de ingreso disponibles.
+   * 
+   * @returns Un `Observable` que emite un objeto de tipo `RespuestaCatalogos`.
+   */
   getAduanaDeIngreso(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`${this.apiUrl}aduana-de-ingreso.json`).pipe(
       map(response => {
@@ -45,6 +66,11 @@ export class AcuicolaService {
     );
   }
 
+  /**
+   * Obtiene las oficinas de inspección disponibles.
+   * 
+   * @returns Un `Observable` que emite un objeto de tipo `RespuestaCatalogos`.
+   */
   getOficinaDeInspeccion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`${this.apiUrl}oficina-de-inspeccion.json`).pipe(
       map(response => {
@@ -53,6 +79,11 @@ export class AcuicolaService {
     );
   }
 
+  /**
+   * Obtiene los puntos de inspección disponibles.
+   * 
+   * @returns Un `Observable` que emite un objeto de tipo `RespuestaCatalogos`.
+   */
   getPuntoDeInspeccion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`${this.apiUrl}punto-de-inspeccion.json`).pipe(
       map(response => {
@@ -61,6 +92,11 @@ export class AcuicolaService {
     );
   }
 
+  /**
+   * Obtiene los datos del responsable de inspección.
+   * 
+   * @returns Un `Observable` que emite un objeto de tipo `ResponsableInspección`.
+   */
   obtenerResponsableDatos(): Observable<ResponsableInspección> {
     return this.http.get<ResponsableInspección>(`${this.apiUrl}responsable-inspeccion.json`).pipe(
       map((res: any) => {
@@ -69,6 +105,11 @@ export class AcuicolaService {
     );
   }
 
+  /**
+   * Obtiene los tipos de contenedores disponibles.
+   * 
+   * @returns Un `Observable` que emite un objeto de tipo `RespuestaCatalogos`.
+   */
   getTipoContenedor(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`${this.apiUrl}tipo-contenedor.json`).pipe(
       map(response => {
@@ -77,6 +118,11 @@ export class AcuicolaService {
     );
   }
 
+  /**
+   * Obtiene los medios de transporte disponibles.
+   * 
+   * @returns Un `Observable` que emite un objeto de tipo `RespuestaCatalogos`.
+   */
   getMedioDeTransporte(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`${this.apiUrl}medio-de-transporte.json`).pipe(
       map(response => {
@@ -85,6 +131,11 @@ export class AcuicolaService {
     );
   }
 
+  /**
+   * Obtiene los datos de los bancos disponibles.
+   * 
+   * @returns Un `Observable` que emite un objeto de tipo `RespuestaCatalogos`.
+   */
   getBancoDatos(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`${this.apiUrl}banco-datos.json`).pipe(
       map(response => {
@@ -93,7 +144,11 @@ export class AcuicolaService {
     );
   }
 
-
+  /**
+   * Obtiene los datos de pago de derechos.
+   * 
+   * @returns Un `Observable` que emite un objeto de tipo `PagoDeDerechos`.
+   */
   pagoDeCargarDatos(): Observable<PagoDeDerechos> {
     return this.http.get<PagoDeDerechos>(`${this.apiUrl}pago-de-derechos.json`).pipe(
       map((res: any) => {
@@ -102,6 +157,11 @@ export class AcuicolaService {
     );
   }
 
+  /**
+   * Obtiene los datos de revisión de pago de derechos.
+   * 
+   * @returns Un `Observable` que emite un objeto de tipo `PagoDeDerechosRevision`.
+   */
   getPagoDerechosRevision(): Observable<PagoDeDerechosRevision> {
     return this.http.get<PagoDeDerechosRevision>(`${this.apiUrl}pago-de-derechos-revision.json`).pipe(
       map((res: any) => {
@@ -110,7 +170,11 @@ export class AcuicolaService {
     );
   }
 
-
+  /**
+   * Obtiene los regímenes a los que se puede destinar.
+   * 
+   * @returns Un `Observable` que emite un objeto de tipo `RespuestaCatalogos`.
+   */
   getRegimenAlQue(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`${this.apiUrl}regimen-al-que-se-destinara.json`).pipe(
       map(response => {
@@ -119,6 +183,11 @@ export class AcuicolaService {
     );
   }
 
+  /**
+   * Obtiene los datos para la movilización.
+   * 
+   * @returns Un `Observable` que emite un objeto de tipo `RespuestaCatalogos`.
+   */
   getDatosParaMovilizacion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`${this.apiUrl}datos-para-movilizacio.json`).pipe(
       map(response => {
@@ -127,6 +196,11 @@ export class AcuicolaService {
     );
   }
 
+  /**
+   * Obtiene los puntos de verificación disponibles.
+   * 
+   * @returns Un `Observable` que emite un objeto de tipo `RespuestaCatalogos`.
+   */
   getPuntoDeVerificacion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`${this.apiUrl}punto-de-verificacion.json`).pipe(
       map(response => {
