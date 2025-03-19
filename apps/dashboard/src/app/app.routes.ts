@@ -86,5 +86,14 @@ export const appRoutes: Route[] = [
         remoteName: 'agace',
         exposedModule: './Module'
       }).then((m) => m.AppAgaceModule)
+  },
+  {
+    path: 'sener',
+    loadChildren: () =>
+        loadRemoteModule({
+            remoteEntry: 'http://localhost:4217/remoteAppEntry.js',
+            remoteName: 'sener',
+            exposedModule: './Module'
+        }).then((m) => m.AppSenerModule)
   }
 ];

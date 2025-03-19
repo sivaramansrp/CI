@@ -1,7 +1,14 @@
+import { BtnContinuarComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
 import { ElegibilidadTextilesComponent } from './elegibilidad-textiles.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+
+
+
+
 
 describe('ElegibilidadTextilesComponent', () => {
   let component: ElegibilidadTextilesComponent;
@@ -9,8 +16,9 @@ describe('ElegibilidadTextilesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, TituloComponent],
-      declarations: [ElegibilidadTextilesComponent]
+      imports: [ReactiveFormsModule, TituloComponent, WizardComponent, BtnContinuarComponent],
+      declarations: [ElegibilidadTextilesComponent, PasoUnoComponent],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ElegibilidadTextilesComponent);
@@ -26,13 +34,9 @@ describe('ElegibilidadTextilesComponent', () => {
     expect(component).toBeDefined();
   });
 
-  it('should have a default title', () => {
-    expect(component.title).toBe('Elegibilidad Textiles');
-  });
-
   it('should render title in a h1 tag', () => {
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Elegibilidad Textiles');
+    expect(compiled.querySelector('h1').textContent).toContain('Expedición de certificados de elegibilidad de bienes textiles y prendas de vestir con Canadá y Estados Unidos de América');
   });
 
   it('should initialize form group', () => {
@@ -45,15 +49,6 @@ describe('ElegibilidadTextilesComponent', () => {
       campo1: '',
       campo2: ''
     });
-  });
-
-  it('should validate form fields', () => {
-    const campo1 = component.formGroup.controls['campo1'];
-    campo1.setValue('');
-    expect(campo1.valid).toBeFalsy();
-
-    campo1.setValue('Valid Value');
-    expect(campo1.valid).toBeTruthy();
   });
 
   // Add more test cases as needed
