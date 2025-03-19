@@ -7,6 +7,10 @@ const ROUTES: Routes = [
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
+  },
+  {
+    path: 'aviso-de-importacion',
+    loadChildren: () => import('./tramites/260603/aviso-de-importacion.module').then(m => m.AvisoDeImportacionModule)  
   }
 ];
 
