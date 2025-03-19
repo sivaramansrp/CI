@@ -407,6 +407,17 @@ export class Tramite130118Store extends Store<Solicitud130118State> {
   }
 
   /**
+   * Actualiza las fechaSalida.
+   * @param observaciones - Nuevas fechaSalida.
+   */
+  public setFechaSalida(fechaSalida: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaSalida,
+    }));
+  }
+
+  /**
    * Actualiza las observaciones.
    * @param observaciones - Nuevas observaciones.
    */

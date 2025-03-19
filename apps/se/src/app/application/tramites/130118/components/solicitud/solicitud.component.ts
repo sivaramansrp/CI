@@ -285,7 +285,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           ]
         ],
         fechaSalida: [
-          { value: this.solicitudState?.fechaSalida, disabled: true }
+          this.solicitudState?.fechaSalida,
+          [
+            Validators.required
+          ]
         ],
         observaciones: [
           this.solicitudState?.observaciones,
@@ -678,8 +681,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param nuevo_valor Nuevo valor de la fecha final.
    */
   cambioFechaFinal(nuevo_valor: string): void {
-    this.datosMercancia.get('fechaFinal')?.setValue(nuevo_valor);
-    this.datosMercancia.get('fechaFinal')?.markAsUntouched();
+    this.datosMercancia.patchValue({
+      fechaSalida: nuevo_valor,
+    });
+    this.tramite130118Store.setFechaSalida(nuevo_valor);
   }
 
   /**
