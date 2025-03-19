@@ -14,7 +14,7 @@ interface AccionBoton {
   styleUrl: './solicitante-page.component.scss',
 })
 export class SolicitantePageComponent implements OnInit {
-  pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
+  pasos: Array<ListaPasosWizard> = PASOS;
   indice: number = 1;
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   datosPasos: DatosPasos = {
@@ -25,10 +25,9 @@ export class SolicitantePageComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.pasos = PASOS.slice(0, 2);
     this.pasos = this.pasos.map((paso) => {
       if (paso.indice === 2 && paso.titulo === 'Anexar necesarios') {
-        return { ...paso, titulo: 'Firmar solicitud' };
+        return { ...paso, titulo: 'Cargar pago' };
       }
       return paso;
     });

@@ -26,6 +26,20 @@ export interface Solicitud11201State {
   fechaDeIngreso: string;
   commonCheckbox: boolean;
   archivoSeleccionado: string;
+    /**
+   * linea
+   * @type {string}
+   */
+    linea: string;
+
+      /**
+   * linea checkbox
+   * @type {string}
+   */
+  lineaCheckbox: string;
+
+  monto: string;
+
 }
 
 export function createInitialState(): Solicitud11201State {
@@ -48,7 +62,10 @@ export function createInitialState(): Solicitud11201State {
     numManifiesto: 0,
     fechaDeIngreso: '',
     commonCheckbox: false,
-    archivoSeleccionado: ''
+    archivoSeleccionado: '',
+    linea: '',
+    lineaCheckbox: '',
+    monto: '',
 
   };
 }
@@ -188,6 +205,28 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
       ...state,
       archivoSeleccionado
     }));
+  }
+
+  public setLinea(linea: string) {
+    this.update((state) => ({
+      ...state,
+      linea,
+    }));
+  }
+
+
+  public setLineaCheckbox(lineaCheckbox: string) {
+    this.update((state) => ({
+      ...state,
+      lineaCheckbox,
+    }));
+  }
+
+    public setMonto(monto: string) {
+      this.update((state) => ({
+        ...state,
+        monto,
+      }));
   }
 
   /**
