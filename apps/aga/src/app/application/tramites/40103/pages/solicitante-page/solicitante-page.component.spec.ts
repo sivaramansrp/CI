@@ -20,10 +20,12 @@ class MockChofer40101Store {
   establecerSeccion = jest.fn();
   establecerFormaValida = jest.fn();
 }
+
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
   @Input() myCustom: any;
 }
+
 @Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
   transform(value: any): any {
@@ -84,10 +86,16 @@ describe('SolicitantePageComponent', () => {
     jest.clearAllMocks();
   });
 
+  /**
+   * Verifica que el componente se haya creado correctamente.
+   */
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
+  /**
+   * Verifica que el método `ngOnInit` se inicialice correctamente.
+   */
   it('should initialize properly on ngOnInit()', () => {
     jest.spyOn(component as any, 'asignarSecciones');
 
@@ -96,6 +104,9 @@ describe('SolicitantePageComponent', () => {
     expect((component as any).asignarSecciones).toHaveBeenCalled();
   });
 
+  /**
+   * Verifica que el método `seleccionaTab` se llame con un valor dado.
+   */
   it('should call seleccionaTab() with a given value', () => {
     const tabMock = 1;
     jest.spyOn(component, 'seleccionaTab');
@@ -105,6 +116,9 @@ describe('SolicitantePageComponent', () => {
     expect(component.seleccionaTab).toHaveBeenCalledWith(tabMock);
   });
 
+  /**
+   * Verifica que el método `getValorIndice` se llame y active la navegación del asistente.
+   */
   it('should call getValorIndice() and trigger wizard navigation', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
@@ -117,6 +131,9 @@ describe('SolicitantePageComponent', () => {
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
+  /**
+   * Verifica que el método `asignarSecciones` asigne las secciones correctamente.
+   */
   it('should assign sections correctly using asignarSecciones()', () => {
     (component as any).asignarSecciones();
     expect(chofer40101StoreMock.establecerSeccion).toHaveBeenCalled();

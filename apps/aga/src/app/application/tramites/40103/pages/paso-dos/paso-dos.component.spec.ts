@@ -31,10 +31,16 @@ describe('PasoDosComponent', () => {
     fixture.detectChanges();
   });
 
+  /**
+   * Verifica que el componente se haya creado correctamente.
+   */
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  /**
+   * Verifica que el método `getTiposDocumentos` maneje correctamente los errores al obtener los tipos de documentos.
+   */
   it('should handle error when getting tipos de documentos', () => {
     catalogosServiceMock.getCatalogo.mockReturnValue(
       throwError(() => new Error('API Error'))

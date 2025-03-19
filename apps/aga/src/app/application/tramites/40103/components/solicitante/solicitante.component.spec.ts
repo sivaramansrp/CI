@@ -23,9 +23,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { SolicitanteComponent } from './solicitante.component';
-
-// Importa el componente ng-titulo
-import { NgTituloComponent } from '../ng-titulo/ng-titulo.component';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -56,14 +54,13 @@ class SafeHtmlPipe implements PipeTransform {
 @NgModule({
   declarations: [
     SolicitanteComponent,
-    NgTituloComponent, // Declara el componente ng-titulo
     TranslatePipe,
     PhoneNumberPipe,
     SafeHtmlPipe,
     MyCustomDirective,
   ],
-  imports: [FormsModule, ReactiveFormsModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA], // Agrega CUSTOM_ELEMENTS_SCHEMA
+  imports: [FormsModule, ReactiveFormsModule, TituloComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class TestModule {}
 
@@ -97,10 +94,16 @@ describe('SolicitanteComponent', () => {
     }
   });
 
+  /**
+   * Verifica que el componente se haya creado correctamente.
+   */
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
+  /**
+   * Verifica que el método `ngOnInit` funcione correctamente.
+   */
   it('should run #ngOnInit()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
