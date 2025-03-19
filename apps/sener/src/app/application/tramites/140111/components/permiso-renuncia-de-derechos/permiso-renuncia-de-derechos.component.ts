@@ -50,7 +50,9 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
    * @returns void
    * @description Inicializa el componente PermisoRenunciaDeDerechosComponent.
    */
-  constructor(private fb:FormBuilder, private Servicio: RenunciaDeDerechosAlServicio, private tramite140111Store:Tramite140111Store,private tramite140111Query:Tramite140111Query) {}
+  constructor(private fb:FormBuilder, private Servicio: RenunciaDeDerechosAlServicio, private tramite140111Store:Tramite140111Store,private tramite140111Query:Tramite140111Query) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.

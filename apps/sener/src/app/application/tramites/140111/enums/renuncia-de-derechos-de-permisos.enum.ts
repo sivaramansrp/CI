@@ -16,11 +16,5 @@ export const PERMISOS = [
         titulo: 'Anexar requisitos',
         activo: false,
         completado: false,
-      },
-      {
-        indice: 4,
-        titulo: 'Firmar solicitud',
-        activo: false,
-        completado: false,
       }
 ]
