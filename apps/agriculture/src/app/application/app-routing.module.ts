@@ -56,7 +56,15 @@ const routes: Routes = [
       import('./tramites/220402/pantallas-captura.module').then(
         (m) => m.PantallasCapturaModule
       )
-  }
+  },
+  {
+
+    path: 'inspeccionfitosanitario',
+    loadChildren: () =>
+      import('./tramites/220702/inspeccionfitosanitario.module').then(
+        (m) => m.InspeccionFitosanitarioModule
+      ),
+  },
 ];
 
 @NgModule({
