@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
+import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 
 @Component({
   selector: 'app-cancelacion-de-solicitus',
@@ -24,7 +25,7 @@ export class CancelacionDeSolicitusComponent implements OnInit {
   tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.CHECKBOX;
   cuerpoTabla: Cancelacion[] = [];
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService) { }
   ngOnInit(): void {
     this.solicitudForm = this.fb.group({
       folioTramite: ['', Validators.required],
@@ -38,5 +39,11 @@ export class CancelacionDeSolicitusComponent implements OnInit {
       valorSolicitado: ['', [Validators.required]],
     });
   }
+  public busqueda(event: any): void{
+    this.servicioDeMensajesService.sendMessage(true);
+  }
+  public eliminarRegistro(event: any): void{
+      }
+  
 
 }

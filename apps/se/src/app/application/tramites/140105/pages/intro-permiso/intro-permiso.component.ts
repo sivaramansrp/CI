@@ -3,6 +3,8 @@ import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/
 import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/intropermiso.enum';
+import { BusquedaFolioComponent } from '../busqueda-folio/busqueda-folio.component';
+import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 
 interface AccionBoton {
   accion: string;
@@ -23,7 +25,7 @@ export class IntroPermisoComponent {
  * @type {ListaPasosWizard[]}
  */
   pasos: ListaPasosWizard[] = PASOS;
-
+  mostrarBusqueda: boolean = false;
   /**
    * @description Referencia al componente Wizard.
    * Esta referencia permite acceder a los métodos y propiedades del componente Wizard,
@@ -73,6 +75,14 @@ export class IntroPermisoComponent {
    * 
    * @returns {void}
    */
+
+  constructor(private servicioDeMensajesService: ServicioDeMensajesService){}
+
+  ngOnInit() {
+    this.servicioDeMensajesService.message$.subscribe((message) => {
+      this.mostrarBusqueda = message;
+    });
+  }
   getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;

@@ -1,0 +1,22 @@
+<div class="container">
+<ng-titulo titulo="Buscar permiso a cancelar" />
+<form [formGroup]="busquedaForm">
+    <div class="row">
+        <div class="col-md-8">
+            <label class="form-label" for="rfc">Folio tramite*:<span 
+                class="bi bi-question-circle-fill fs-4 m-1" title="Title" 
+                ata-bs-toggle="tooltip"></span>
+            </label>
+            <input type="text" class="form-control" id="tramite" formControlName="tramite">
+        </div>
+        </div>
+        </form>
+        <div class="row"><div class="col-md-8 d-flex justify-content-end"></div></div>
+        <div class="row mt-2">
+            <div class="col-md-8 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="cancelar($event)">Cancelar</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="buscar($event)">Buscar</button>
+            </div>
+          </div>
+          </div>
+        

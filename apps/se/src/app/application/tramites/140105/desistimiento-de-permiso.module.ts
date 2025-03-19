@@ -10,7 +10,7 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { CancelacionDeSolicitusComponent } from './components/cancelacion-de-solicitus/cancelacion-de-solicitus.component';
-
+import { BusquedaFolioComponent } from './pages/busqueda-folio/busqueda-folio.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +18,8 @@ import { CancelacionDeSolicitusComponent } from './components/cancelacion-de-sol
     PasoTresComponent,
     PasoUnoComponent,
     PasoDosComponent,
-    CancelacionDeSolicitusComponent
+    CancelacionDeSolicitusComponent,
+    BusquedaFolioComponent
   ],
   imports: [
     CommonModule,
