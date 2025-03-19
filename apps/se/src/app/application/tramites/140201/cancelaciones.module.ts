@@ -12,7 +12,7 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CancelacionesComponent } from './pages/cancelaciones/cancelaciones.component';
 import { DatosComponent } from './pages/datos/datos.component';
-import { DatosDelLasComponent } from './components/datos-del-las/datos-del-las.component';
+import { DatosNotificationRecipientsComponent } from './components/datos-notification-recipients/datos-notification-recipients.component';
 
 import { CancelacionDeAutorizacionesComponent } from './components/cancelacion-de-autorizaciones/cancelacion-de-autorizaciones.component';
 import { EntidadExternaComponent } from './components/entidad-externa/entidad-externa.component';
@@ -37,7 +37,7 @@ import { PasoDosComponent } from '../90305/component/paso-dos/paso-dos.component
     SolicitanteComponent,
     FormsModule,
     ReactiveFormsModule,
-    DatosDelLasComponent,
+    DatosNotificationRecipientsComponent,
     PasoTresComponent,
     PasoDosComponent,
     CancelacionDeAutorizacionesComponent,

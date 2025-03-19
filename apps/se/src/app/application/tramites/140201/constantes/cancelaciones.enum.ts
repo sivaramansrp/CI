@@ -1,4 +1,4 @@
-export const CANCELACIONES = [
+export const CANCELACIONES_PASOS = [
     {
         indice: 1,
         titulo: 'Capturar solicitud',

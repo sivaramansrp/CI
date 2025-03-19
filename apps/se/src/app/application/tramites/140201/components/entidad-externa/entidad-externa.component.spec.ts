@@ -30,7 +30,7 @@ describe('EntidadExternaComponent', () => {
     cancelacionesStore.setPaisInput = jest.fn();
     cancelacionesStore.setNumeroInterior = jest.fn();
     cancelacionesStore.setCodigoPostal = jest.fn();
-    cancelacionesStore.setTelefona = jest.fn();
+    cancelacionesStore.setTelefono = jest.fn();
     cancelacionesStore.destroy = jest.fn();
 
     // Create Mock for CancelacionesQuery

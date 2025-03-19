@@ -1,5 +1,5 @@
 /** 
- * NotifDomicileComponent
+ * DireccionDeNotificacionesComponent
  */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
@@ -19,16 +19,17 @@ import { CancelacionesStore } from '../../estados/cancelaciones.store';
 import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 
 import { Subject, takeUntil } from 'rxjs';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 /**
- * Componente NotifDomicileComponent
+ * Componente DireccionDeNotificacionesComponent
  *
  * Este componente es responsable de manejar el formulario de notificación de domicilio
  * para el trámite 140201. Permite la actualización de los datos de entidad federativa,
  * colonia, localidad, municipio, país, número interior, código postal y teléfono.
  */
 @Component({
-  selector: 'app-notif-domicile',
+  selector: 'app-direccion-de-notificaciones',
   standalone: true,
   imports: [
     CommonModule,
@@ -36,12 +37,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
     ReactiveFormsModule,
     CatalogoSelectComponent,
   ],
-  templateUrl: './notif-domicile.component.html',
-  styleUrl: './notif-domicile.component.scss',
+  templateUrl: './direccion-de-notificaciones.component.html',
+  styleUrl: './direccion-de-notificaciones.component.scss',
 })
 /***
- *  NotifDomicileComponent */
-export class NotifDomicileComponent implements OnInit, OnDestroy {
+ *  DireccionDeNotificacionesComponent */
+export class DireccionDeNotificacionesComponent implements OnInit, OnDestroy {
   /**
    * Observable para la entidad federativa
    */
@@ -71,14 +72,14 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
    */
   codigoPostal$ = this.cancelacionesQuery.codigoPostal$;
   /**
-   * Observable para el teléfono
+   * Observable para el telefono
    */
-  telefona$ = this.cancelacionesQuery.telefona$;
+  telefono$ = this.cancelacionesQuery.telefono$;
 
   /**
    * Formulario reactivo para la notificación de domicilio
    */
-  notifDomicileForm!: FormGroup;
+  direccionNotificacionesForm!: FormGroup;
   /**
    * Subject para manejar la destrucción de las suscripciones
    */
@@ -122,7 +123,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
     this.loadColonia();
     this.loadMunicipiosOalcaldia();
     this.loadLocalidad();
-    this.notifDomicileForm = this.fb.group({
+    this.direccionNotificacionesForm = this.fb.group({
       entidadFederativa: ['', [Validators.required]],
       calle: [{ value: '', disabled: true }],
       numeroExterior: [{ value: '', disabled: true }],
@@ -138,7 +139,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
       pais: [null],
       municipioAlcaldia: [null],
       colonia: [null],
-      telefona: ['', [Validators.maxLength(15)]],
+      telefono: ['', [Validators.maxLength(15)]],
       localidad: [null],
     });
     this.updateState();
@@ -155,37 +156,37 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((entidadFederativa) => {
         if (entidadFederativa) {
-          this.notifDomicileForm
+          this.direccionNotificacionesForm
             .get('entidadFederativa')
             ?.setValue(entidadFederativa);
         }
       });
     this.colonia$.pipe(takeUntil(this.destroy$)).subscribe((colonia) => {
       if (colonia) {
-        this.notifDomicileForm.get('colonia')?.setValue(colonia);
+        this.direccionNotificacionesForm.get('colonia')?.setValue(colonia);
       }
     });
     this.localidad$.pipe(takeUntil(this.destroy$)).subscribe((localidad) => {
       if (localidad) {
-        this.notifDomicileForm.get('localidad')?.setValue(localidad);
+        this.direccionNotificacionesForm.get('localidad')?.setValue(localidad);
       }
     });
 
     this.municipio$.pipe(takeUntil(this.destroy$)).subscribe((municipio) => {
       if (municipio) {
-        this.notifDomicileForm.get('municipioAlcaldia')?.setValue(municipio);
+        this.direccionNotificacionesForm.get('municipioAlcaldia')?.setValue(municipio);
       }
     });
     this.paisInput$.pipe(takeUntil(this.destroy$)).subscribe((pais) => {
       if (pais) {
-        this.notifDomicileForm.get('pais')?.setValue(pais);
+        this.direccionNotificacionesForm.get('pais')?.setValue(pais);
       }
     });
     this.numeroInterior$
       .pipe(takeUntil(this.destroy$))
       .subscribe((numeroInterior) => {
         if (numeroInterior) {
-          this.notifDomicileForm
+          this.direccionNotificacionesForm
             .get('numeroInterior')
             ?.setValue(numeroInterior);
         }
@@ -194,12 +195,12 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((codigoPostal) => {
         if (codigoPostal) {
-          this.notifDomicileForm.get('codigoPostal')?.setValue(codigoPostal);
+          this.direccionNotificacionesForm.get('codigoPostal')?.setValue(codigoPostal);
         }
       });
-    this.telefona$.pipe(takeUntil(this.destroy$)).subscribe((telefona) => {
-      if (telefona) {
-        this.notifDomicileForm.get('telefona')?.setValue(telefona);
+    this.telefono$.pipe(takeUntil(this.destroy$)).subscribe((telefono) => {
+      if (telefono) {
+        this.direccionNotificacionesForm.get('telefono')?.setValue(telefono);
       }
     });
   }
@@ -266,7 +267,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
    * Actualiza la entidad federativa en el store.
    */
   getEntidad(): void {
-    const ENTIDAD_FED = this.notifDomicileForm.get('entidadFederativa')?.value;
+    const ENTIDAD_FED = this.direccionNotificacionesForm.get('entidadFederativa')?.value;
     this.cancelacionesStore.setEntidadFed(ENTIDAD_FED);
   }
 
@@ -277,7 +278,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
    */
   getMunicipiosOalcaldia(): void {
     const MUNICIPIOS_ALCALDIA =
-      this.notifDomicileForm.get('municipioAlcaldia')?.value;
+      this.direccionNotificacionesForm.get('municipioAlcaldia')?.value;
     this.cancelacionesStore.setMunicipiosAlcaldia(MUNICIPIOS_ALCALDIA);
   }
 
@@ -287,7 +288,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
    * Actualiza la colonia en el store.
    */
   getColonia(): void {
-    const COLONIA = this.notifDomicileForm.get('colonia')?.value;
+    const COLONIA = this.direccionNotificacionesForm.get('colonia')?.value;
     this.cancelacionesStore.setColonia(COLONIA);
   }
 
@@ -297,7 +298,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
    * Actualiza la localidad en el store.
    */
   getLocalidad(): void {
-    const LOCALIDAD = this.notifDomicileForm.get('localidad')?.value;
+    const LOCALIDAD = this.direccionNotificacionesForm.get('localidad')?.value;
     this.cancelacionesStore.setLocalidad(LOCALIDAD);
   }
 
@@ -307,7 +308,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
    * Actualiza el país en el store.
    */
   updatePais(): void {
-    const PAIS = this.notifDomicileForm.get('pais')?.value;
+    const PAIS = this.direccionNotificacionesForm.get('pais')?.value;
     this.cancelacionesStore.setPaisInput(PAIS);
   }
 
@@ -317,7 +318,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
    * Actualiza el número interior en el store.
    */
   updateNumeroInterior(): void {
-    const NUMERO_INTERIOR = this.notifDomicileForm.get('numeroInterior')?.value;
+    const NUMERO_INTERIOR = this.direccionNotificacionesForm.get('numeroInterior')?.value;
     this.cancelacionesStore.setNumeroInterior(NUMERO_INTERIOR);
   }
 
@@ -327,18 +328,18 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
    * Actualiza el código postal en el store.
    */
   updateCodigoPostal(): void {
-    const CODIGO_POSTAL = this.notifDomicileForm.get('codigoPostal')?.value;
+    const CODIGO_POSTAL = this.direccionNotificacionesForm.get('codigoPostal')?.value;
     this.cancelacionesStore.setCodigoPostal(CODIGO_POSTAL);
   }
 
   /**
-   * Método updateTelefona
+   * Método updateTelefono
    *
    * Actualiza el teléfono en el store.
    */
-  updateTelefona(): void {
-    const TELEFONA = this.notifDomicileForm.get('telefona')?.value;
-    this.cancelacionesStore.setTelefona(TELEFONA);
+  updateTelefono(): void {
+    const TELEFONO = this.direccionNotificacionesForm.get('telefono')?.value;
+    this.cancelacionesStore.setTelefono(TELEFONO);
   }
 
   /**
@@ -351,7 +352,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
       .getInfo()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
-        this.notifDomicileForm.patchValue({
+        this.direccionNotificacionesForm.patchValue({
           calle: data.calle,
           numeroExterior: data.numeroExterior,
         });

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 
 import { DomicilioNotificacion } from '../models/cancelacions.model';
 
-import { CancellationOfAuthorizations } from '../models/cancelacions.model'
+import { CancelacionDeAutorizaciones } from '../models/cancelacions.model'
 
 /**
  * @description
@@ -55,6 +55,10 @@ export class CancelacionesService {
   getLocalidad(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/140201/localidad140201.json');
   }
+  /**
+   * Obtiene la información de notificación de domicilio desde un archivo JSON.
+   * @returns {Observable<DomicilioNotificacion>} Un observable con la información de notificación de domicilio.
+   */
   getInfo(): Observable<DomicilioNotificacion> {
     return this.http.get<DomicilioNotificacion>(
       'assets/json/140201/notificacionsInfo.json'
@@ -64,9 +68,9 @@ export class CancelacionesService {
 
   /**
    * Obtiene los datos de cancelación de autorizaciones desde un archivo JSON.
-   * @returns {Observable<CancellationOfAuthorizations[]>} Un observable con la lista de cancelaciones de autorizaciones.
+   * @returns {Observable<CancelacionDeAutorizaciones[]>} Un observable con la lista de cancelaciones de autorizaciones.
    */
-  getCancelacionDeAutorizaciones(): Observable<CancellationOfAuthorizations[]> {
-    return this.http.get<CancellationOfAuthorizations[]>('assets/json/140201/cancelacion-de-autorizaciones-140201.json');
+  getCancelacionDeAutorizaciones(): Observable<CancelacionDeAutorizaciones[]> {
+    return this.http.get<CancelacionDeAutorizaciones[]>('assets/json/140201/cancelacion-de-autorizaciones-140201.json');
   }
 }

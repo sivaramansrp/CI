@@ -9,7 +9,7 @@ import { TablaDinamicaComponent, TablaSeleccion, } from '@libs/shared/data-acces
 
 import { CancelacionesService } from '../../services/cancelaciones.service'
 
-import { CancellationOfAuthorizations } from '../../models/cancelacions.model'
+import { CancelacionDeAutorizaciones } from '../../models/cancelacions.model'
 
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 
@@ -20,7 +20,7 @@ import { CancelacionesStore } from '../../estados/cancelaciones.store';
 
 import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 
-import { CANCELLATIONOFAUTHORIZATIONS } from '../../constantes/cancelacion-table.enum'
+import { CANCELACION_DE_AUTORIZACIONES } from '../../constantes/cancelacion-table.enum'
 /**
  * @description
  * Componente para la cancelación de autorizaciones 140201.
@@ -77,7 +77,7 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla.
    */
-  configuracionTabla:ConfiguracionColumna<CancellationOfAuthorizations>[] = CANCELLATIONOFAUTHORIZATIONS;
+  configuracionTabla:ConfiguracionColumna<CancelacionDeAutorizaciones>[] = CANCELACION_DE_AUTORIZACIONES;
 
   /**
    * Referencia al componente de selección de tabla.
@@ -87,7 +87,7 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   /**
    * Datos de cancelación de autorizaciones.
    */
-  cancelacionData: CancellationOfAuthorizations[] = [];
+  cancelacionData: CancelacionDeAutorizaciones[] = [];
 
   /**
    * Inicializa el componente.
@@ -100,13 +100,13 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
     });
 
     this.getCancelacioneServiceData();
-    this.updateState();
+    this.actualizarEstado();
   }
 
   /**
    * Actualiza el estado del formulario con los datos observables.
    */
-  updateState(): void {
+  actualizarEstado(): void {
     this.rfcIngresado$.pipe(takeUntil(this.destroy$)).subscribe((rfcIngresado) => {
       if (rfcIngresado) {
         this.cancelacionForm.get('rfcIngresado')?.setValue(rfcIngresado);

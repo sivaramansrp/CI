@@ -64,7 +64,7 @@ describe('CancelacionDeAutorizacionesComponent', () => {
 
   it('should update the form state with observable values', () => {
     component.ngOnInit();
-    component.updateState();
+    component.actualizarEstado();
     expect(component.cancelacionForm.get('rfcIngresado')?.value).toBe('RFC123456789');
     expect(component.cancelacionForm.get('motivoCancelacion')?.value).toBe('Motivo de cancelación');
   });

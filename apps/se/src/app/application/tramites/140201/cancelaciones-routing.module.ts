@@ -5,7 +5,7 @@ import { CancelacionesComponent } from './pages/cancelaciones/cancelaciones.comp
 
 const ROUTES: Routes = [
     {
-      path: 'solicitute',
+      path: 'solicitud',
       component:CancelacionesComponent ,
     },
    

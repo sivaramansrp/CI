@@ -48,7 +48,7 @@ export class CancelacionesQuery extends Query<CancelacionesState> {
   /**
    * Observable para el teléfono.
    */
-  telefona$ = this.select((state) => state.telefona);
+  telefono$ = this.select((state) => state.telefono);
 
   /**
    * Observable para el nombre.

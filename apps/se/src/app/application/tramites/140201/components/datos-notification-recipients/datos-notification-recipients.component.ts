@@ -13,14 +13,13 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { NotifDomicileComponent } from '../notif-domicile/notif-domicile.component';
-
 import { CancelacionesStore } from '../../estados/cancelaciones.store';
 
 import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 import { CancelacionesService } from '../../services/cancelaciones.service';
 
 import { Subject, takeUntil } from 'rxjs';
+import { DireccionDeNotificacionesComponent } from '../direccion-de-notificaciones/direccion-de-notificaciones.component';
 
 /**
  * Componente DatosDelLasComponent
@@ -30,21 +29,21 @@ import { Subject, takeUntil } from 'rxjs';
  * y correo electrónico, y carga la información adicional desde el servicio.
  */
 @Component({
-  selector: 'app-datos-del-las',
+  selector: 'app-datos-notification-recipients',
   standalone: true,
   imports: [
     CommonModule,
     TituloComponent,
     ReactiveFormsModule,
-    NotifDomicileComponent,
+    DireccionDeNotificacionesComponent,
   ],
-  templateUrl: './datos-del-las.component.html',
-  styleUrl: './datos-del-las.component.scss',
+  templateUrl: './datos-notification-recipients.component.html',
+  styleUrl: './datos-notification-recipients.component.scss',
 })
 /** DatosDelLasComponent */
-export class DatosDelLasComponent implements OnInit, OnDestroy {
+export class DatosNotificationRecipientsComponent implements OnInit, OnDestroy {
   /** Formulario reactivo para la notificación de personas */
-  authNotifPersonsForm!: FormGroup;
+  formularioDeNotificacionesForm!: FormGroup;
   /** Subject para manejar la destrucción de las suscripciones */
   private destroy$ = new Subject<void>();
 
@@ -71,14 +70,14 @@ export class DatosDelLasComponent implements OnInit, OnDestroy {
    * Inicializa el formulario y carga el estado y la información.
    */
   ngOnInit(): void {
-    this.authNotifPersonsForm = this.fb.group({
+    this.formularioDeNotificacionesForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       apellidoPaterno: ['', [Validators.required]],
       apellidoMaterno: [{ value: '', disabled: true }],
       correoElectronico: ['', [Validators.email]],
     });
     this.updateState();
-    this.loadInfo();
+    this.infoDeCarga();
   }
 
   /**
@@ -90,19 +89,19 @@ export class DatosDelLasComponent implements OnInit, OnDestroy {
   updateState(): void {
     this.nombre$.pipe(takeUntil(this.destroy$)).subscribe((nombre) => {
       if (nombre) {
-        this.authNotifPersonsForm.get('nombre')?.setValue(nombre);
+        this.formularioDeNotificacionesForm.get('nombre')?.setValue(nombre);
       }
     });
 
     this.apellidoPaterno$.pipe(takeUntil(this.destroy$)).subscribe((apellidoPaterno) => {
       if (apellidoPaterno) {
-        this.authNotifPersonsForm.get('apellidoPaterno')?.setValue(apellidoPaterno);
+        this.formularioDeNotificacionesForm.get('apellidoPaterno')?.setValue(apellidoPaterno);
       }
     });
 
     this.correoElectronico$.pipe(takeUntil(this.destroy$)).subscribe((correoElectronico) => {
       if (correoElectronico) {
-        this.authNotifPersonsForm.get('correoElectronico')?.setValue(correoElectronico);
+        this.formularioDeNotificacionesForm.get('correoElectronico')?.setValue(correoElectronico);
       }
     });
   }
@@ -113,7 +112,7 @@ export class DatosDelLasComponent implements OnInit, OnDestroy {
    * Actualiza el nombre en el store.
    */
   updateNombre(): void {
-    const NOMBRE = this.authNotifPersonsForm.get('nombre')?.value;
+    const NOMBRE = this.formularioDeNotificacionesForm.get('nombre')?.value;
     this.cancelacionesStore.setNombre(NOMBRE);
   }
 
@@ -123,7 +122,7 @@ export class DatosDelLasComponent implements OnInit, OnDestroy {
    * Actualiza el apellido paterno en el store.
    */
   updateApellidoPaterno(): void {
-    const APELLIDO_PATERNO = this.authNotifPersonsForm.get('apellidoPaterno')?.value;
+    const APELLIDO_PATERNO = this.formularioDeNotificacionesForm.get('apellidoPaterno')?.value;
     this.cancelacionesStore.setApellidoPaterno(APELLIDO_PATERNO);
   }
 
@@ -133,21 +132,21 @@ export class DatosDelLasComponent implements OnInit, OnDestroy {
    * Actualiza el correo electrónico en el store.
    */
   updateCorreoElectronico(): void {
-    const CORREO_ELECTRONICO = this.authNotifPersonsForm.get('correoElectronico')?.value;
+    const CORREO_ELECTRONICO = this.formularioDeNotificacionesForm.get('correoElectronico')?.value;
     this.cancelacionesStore.setCorreoElectronico(CORREO_ELECTRONICO);
   }
 
   /**
-   * Método loadInfo
+   * Método infoDeCarga
    * 
    * Carga la información adicional desde el servicio y actualiza el formulario.
    */
-  loadInfo(): void {
+  infoDeCarga(): void {
     this.cancelacionService
       .getInfo()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
-        this.authNotifPersonsForm.patchValue({
+        this.formularioDeNotificacionesForm.patchValue({
           apellidoMaterno: data.apellidoMaterno
         });
       });

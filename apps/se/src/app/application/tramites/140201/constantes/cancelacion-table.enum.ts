@@ -1,19 +1,19 @@
-import { CancellationOfAuthorizations } from "../models/cancelacions.model";
+import { CancelacionDeAutorizaciones } from "../models/cancelacions.model";
 
-export const CANCELLATIONOFAUTHORIZATIONS=[
+export const CANCELACION_DE_AUTORIZACIONES=[
     {
         encabezado: 'Folio de programa',
-        clave: (ele: CancellationOfAuthorizations): string => ele.FolioDePrograma,
+        clave: (ele: CancelacionDeAutorizaciones): string => ele.folioDePrograma,
         orden: 1,
       },
       {
         encabezado: 'Tipo programa',
-        clave: (ele: CancellationOfAuthorizations): string => ele.TipoPrograma,
+        clave: (ele: CancelacionDeAutorizaciones): string => ele.tipoPrograma,
         orden: 1,
       },
       {
         encabezado: 'Selecciona la modalidad',
-        clave: (ele: CancellationOfAuthorizations): string => ele.SeleccionaLaModalidad,
+        clave: (ele: CancelacionDeAutorizaciones): string => ele.seleccionaLaModalidad,
         orden: 1,
       }
 

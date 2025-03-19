@@ -1,5 +1,5 @@
 <ng-titulo titulo="Domicilio para oír y recibir notificaciones"></ng-titulo>
-<form [formGroup]="notifDomicileForm">
+<form [formGroup]="direccionNotificacionesForm">
   <div class="row mt-5">
     <div class="col-md-6">
       <label class="form-label" for="calle"
@@ -51,15 +51,15 @@
         (input)="updateCodigoPostal()"
       />
 
-      <div *ngIf="notifDomicileForm.get('codigoPostal')?.invalid && notifDomicileForm.get('codigoPostal')?.touched">
-        <small class="text-danger" *ngIf="notifDomicileForm.get('codigoPostal')?.errors?.['required']">
+      <div *ngIf="direccionNotificacionesForm.get('codigoPostal')?.invalid && direccionNotificacionesForm.get('codigoPostal')?.touched">
+        <small class="text-danger" *ngIf="direccionNotificacionesForm.get('codigoPostal')?.errors?.['required']">
           El código postal es obligatorio.
         </small>
-        <small class="text-danger" *ngIf="notifDomicileForm.get('codigoPostal')?.errors?.['pattern']">
+        <small class="text-danger" *ngIf="direccionNotificacionesForm.get('codigoPostal')?.errors?.['pattern']">
           El código postal debe contener solo números.
         </small>
      
-        <small class="text-danger" *ngIf="notifDomicileForm.get('codigoPostal')?.errors?.['maxlength']">
+        <small class="text-danger" *ngIf="direccionNotificacionesForm.get('codigoPostal')?.errors?.['maxlength']">
           El código postal no puede tener más de 10 dígitos.
         </small>
       </div>
@@ -85,8 +85,8 @@
         formControlName="entidadFederativa"
         (change)="getEntidad()"
       ></app-catalogo-select>
-      <div *ngIf="notifDomicileForm.get('entidadFederativa')?.invalid && notifDomicileForm.get('entidadFederativa')?.touched">
-        <small class="text-danger" *ngIf="notifDomicileForm.get('entidadFederativa')?.errors?.['required']">
+      <div *ngIf="direccionNotificacionesForm.get('entidadFederativa')?.invalid && direccionNotificacionesForm.get('entidadFederativa')?.touched">
+        <small class="text-danger" *ngIf="direccionNotificacionesForm.get('entidadFederativa')?.errors?.['required']">
           La entidad federativa es obligatoria.
         </small>
       </div>
@@ -122,14 +122,14 @@
         (change)="getLocalidad()"
       ></app-catalogo-select></div>
     <div class="col-md-6">
-        <label class="form-label" for="telefona">Telefona</label>
+        <label class="form-label" for="telefono">Teléfono</label>
       <input
         class="form-control"
-        id="telefona"
+        id="telefono"
         placeholder=""
         type="text"
-        formControlName="telefona"
-        (input)="updateTelefona()"
+        formControlName="telefono"
+        (input)="updateTelefono()"
       />
     </div>
   </div>

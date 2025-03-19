@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../../80205/models/datos-info.model';
-import { CANCELACIONES } from '../../constantes/cancelaciones.enum';
+import { CANCELACIONES_PASOS } from '../../constantes/cancelaciones.enum';
 //getCancelacionDeAutorizaciones
 @Component({
   selector: 'app-cancelaciones',
@@ -16,7 +16,7 @@ export class CancelacionesComponent {
    * 
    * @type {ListaPasosWizard[]}
    */
-  pantallasPasos: ListaPasosWizard[] = CANCELACIONES;
+  pantallasPasos: ListaPasosWizard[] = CANCELACIONES_PASOS;
 
   /**
    * Índice del paso actual dentro del asistente.

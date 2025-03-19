@@ -149,7 +149,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'cancelaciones-ministerioEconomia',
+    path: 'cancelaciones-ministerio',
     loadChildren: () =>
       import('./tramites/140201/cancelaciones.module').then(
         (m) => m.CancelacionesModule

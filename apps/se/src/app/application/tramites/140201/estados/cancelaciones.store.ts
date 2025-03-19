@@ -18,7 +18,7 @@ export interface CancelacionesState {
   paisInput: null;
   numeroInterior: null;
   codigoPostal: null;
-  telefona: null;
+  telefono: null;
   nombre: null;
   apellidoPaterno: null;
   correoElectronico: null;
@@ -45,7 +45,7 @@ export function createInitialState(): CancelacionesState {
     paisInput: null,
     numeroInterior: null,
     codigoPostal: null,
-    telefona: null,
+    telefono: null,
     nombre: null,
     apellidoPaterno: null,
     correoElectronico: null,
@@ -154,12 +154,12 @@ export class CancelacionesStore extends Store<CancelacionesState> {
 
   /**
    * Establece el teléfono en el estado.
-   * @param {any} telefona - El teléfono a establecer.
+   * @param {any} telefono - El teléfono a establecer.
    */
-  public setTelefona(telefona: any): void {
+  public setTelefono(telefono: any): void {
     this.update((state) => ({
       ...state,
-      telefona,
+      telefono,
     }));
   }
 

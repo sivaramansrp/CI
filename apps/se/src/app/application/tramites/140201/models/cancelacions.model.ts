@@ -7,19 +7,19 @@ export interface DomicilioNotificacion{
  * @description
  * Interfaz que representa los datos de cancelación de autorizaciones.
  */
-export interface CancellationOfAuthorizations {
+export interface CancelacionDeAutorizaciones {
     /**
      * Folio del programa.
      */
-    FolioDePrograma: string;
+    folioDePrograma: string;
 
     /**
      * Tipo de programa.
      */
-    TipoPrograma: string;
+    tipoPrograma: string;
 
     /**
      * Modalidad seleccionada.
      */
-    SeleccionaLaModalidad: string;
+    seleccionaLaModalidad: string;
 }

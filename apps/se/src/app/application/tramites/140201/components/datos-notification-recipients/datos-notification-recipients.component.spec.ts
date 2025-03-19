@@ -1,17 +1,17 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DatosDelLasComponent } from './datos-del-las.component';
+import { DatosNotificationRecipientsComponent } from './datos-notification-recipients.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { CancelacionesService } from '../../services/cancelaciones.service';
 import { CancelacionesStore } from '../../estados/cancelaciones.store';
 import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { NotifDomicileComponent } from '../notif-domicile/notif-domicile.component';
+import { DireccionDeNotificacionesComponent } from '../direccion-de-notificaciones/direccion-de-notificaciones.component';
 
-describe('DatosDelLasComponent', () => {
-  let component: DatosDelLasComponent;
-  let fixture: ComponentFixture<DatosDelLasComponent>;
+describe('DatosNotificationRecipientsComponent', () => {
+  let component: DatosNotificationRecipientsComponent;
+  let fixture: ComponentFixture<DatosNotificationRecipientsComponent>;
   let mockService: Partial<CancelacionesService>;
   let mockStore: Partial<CancelacionesStore>;
   let mockQuery: Partial<CancelacionesQuery>;
@@ -34,7 +34,7 @@ describe('DatosDelLasComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,DatosDelLasComponent, TituloComponent, NotifDomicileComponent],
+      imports: [ReactiveFormsModule,DatosNotificationRecipientsComponent, TituloComponent, DireccionDeNotificacionesComponent],
       declarations: [],
       providers: [
         { provide: CancelacionesService, useValue: mockService },
@@ -43,7 +43,7 @@ describe('DatosDelLasComponent', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DatosDelLasComponent);
+    fixture = TestBed.createComponent(DatosNotificationRecipientsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -53,38 +53,38 @@ describe('DatosDelLasComponent', () => {
   });
 
   it('should initialize the form with correct controls', () => {
-    expect(component.authNotifPersonsForm.contains('nombre')).toBeTruthy();
-    expect(component.authNotifPersonsForm.contains('apellidoPaterno')).toBeTruthy();
-    expect(component.authNotifPersonsForm.contains('apellidoMaterno')).toBeTruthy();
-    expect(component.authNotifPersonsForm.contains('correoElectronico')).toBeTruthy();
+    expect(component.formularioDeNotificacionesForm.contains('nombre')).toBeTruthy();
+    expect(component.formularioDeNotificacionesForm.contains('apellidoPaterno')).toBeTruthy();
+    expect(component.formularioDeNotificacionesForm.contains('apellidoMaterno')).toBeTruthy();
+    expect(component.formularioDeNotificacionesForm.contains('correoElectronico')).toBeTruthy();
   });
 
   it('should initialize form values from query observables', () => {
-    expect(component.authNotifPersonsForm.get('nombre')?.value).toBe('Carlos');
-    expect(component.authNotifPersonsForm.get('apellidoPaterno')?.value).toBe('Gómez');
-    expect(component.authNotifPersonsForm.get('correoElectronico')?.value).toBe('carlos@example.com');
+    expect(component.formularioDeNotificacionesForm.get('nombre')?.value).toBe('Carlos');
+    expect(component.formularioDeNotificacionesForm.get('apellidoPaterno')?.value).toBe('Gómez');
+    expect(component.formularioDeNotificacionesForm.get('correoElectronico')?.value).toBe('carlos@example.com');
   });
 
-  it('should call loadInfo and update form values', () => {
-    component.loadInfo();
+  it('should call infoDeCarga and update form values', () => {
+    component.infoDeCarga();
     expect(mockService.getInfo).toHaveBeenCalled();
-    expect(component.authNotifPersonsForm.get('apellidoMaterno')?.value).toBe('Rodríguez');
+    expect(component.formularioDeNotificacionesForm.get('apellidoMaterno')?.value).toBe('Rodríguez');
   });
 
   it('should update store when updateNombre is called', () => {
-    component.authNotifPersonsForm.get('nombre')?.setValue('Carlos');
+    component.formularioDeNotificacionesForm.get('nombre')?.setValue('Carlos');
     component.updateNombre();
     expect(mockStore.setNombre).toHaveBeenCalledWith('Carlos');
   });
 
   it('should update store when updateApellidoPaterno is called', () => {
-    component.authNotifPersonsForm.get('apellidoPaterno')?.setValue('Gómez');
+    component.formularioDeNotificacionesForm.get('apellidoPaterno')?.setValue('Gómez');
     component.updateApellidoPaterno();
     expect(mockStore.setApellidoPaterno).toHaveBeenCalledWith('Gómez');
   });
 
   it('should update store when updateCorreoElectronico is called', () => {
-    component.authNotifPersonsForm.get('correoElectronico')?.setValue('carlos@example.com');
+    component.formularioDeNotificacionesForm.get('correoElectronico')?.setValue('carlos@example.com');
     component.updateCorreoElectronico();
     expect(mockStore.setCorreoElectronico).toHaveBeenCalledWith('carlos@example.com');
   });
@@ -95,17 +95,17 @@ describe('DatosDelLasComponent', () => {
     expect(updateStateSpy).toHaveBeenCalled();
   });
 
-  it('should call loadInfo on ngOnInit', () => {
-    const loadInfoSpy = jest.spyOn(component, 'loadInfo');
+  it('should call infoDeCarga on ngOnInit', () => {
+    const infoDeCargaSpy = jest.spyOn(component, 'infoDeCarga');
     component.ngOnInit();
-    expect(loadInfoSpy).toHaveBeenCalled();
+    expect(infoDeCargaSpy).toHaveBeenCalled();
   });
 
   it('should update form controls in updateState', () => {
     component.updateState();
-    expect(component.authNotifPersonsForm.get('nombre')?.value).toBe('Carlos');
-    expect(component.authNotifPersonsForm.get('apellidoPaterno')?.value).toBe('Gómez');
-    expect(component.authNotifPersonsForm.get('correoElectronico')?.value).toBe('carlos@example.com');
+    expect(component.formularioDeNotificacionesForm.get('nombre')?.value).toBe('Carlos');
+    expect(component.formularioDeNotificacionesForm.get('apellidoPaterno')?.value).toBe('Gómez');
+    expect(component.formularioDeNotificacionesForm.get('correoElectronico')?.value).toBe('carlos@example.com');
   });
 
   it('should unsubscribe from observables on destroy', () => {

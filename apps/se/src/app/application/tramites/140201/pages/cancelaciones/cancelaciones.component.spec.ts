@@ -6,7 +6,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { WizardComponent, DatosPasos, ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../../80205/models/datos-info.model';
-import { CANCELACIONES } from '../../constantes/cancelaciones.enum';
+import { CANCELACIONES_PASOS } from '../../constantes/cancelaciones.enum';
 import { Component, Input, EventEmitter } from '@angular/core';
 
 @Component({
@@ -69,7 +69,7 @@ describe('CancelacionesComponent', () => {
   });
 
   it('should initialize pantallasPasos with CANCELACIONES', () => {
-    expect(component.pantallasPasos).toBe(CANCELACIONES);
+    expect(component.pantallasPasos).toBe(CANCELACIONES_PASOS);
   });
 
   it('should initialize pasos with PASOS', () => {
