@@ -20,7 +20,7 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
     AltaPlantaComponent,
     DatosModificacionesComponent,
   ],
-  host: { hostID: crypto.randomUUID().toString() },
+  host: {},
 })
 export class PasoUnoComponent {
   /**

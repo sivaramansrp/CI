@@ -10,7 +10,7 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
   styleUrl: './tabla-dinamica.component.scss',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  host: { hostID: crypto.randomUUID().toString() },
+  host: {},
 })
 export class TablaDinamicaComponent<T> {
   /**
@@ -27,7 +27,7 @@ export class TablaDinamicaComponent<T> {
    * @type {typeof TablaSeleccion}
    */
   TablaSeleccion = TablaSeleccion;
-
+  
   /**
    * Configuración de las columnas de la tabla.
    * Contiene la información sobre cómo se deben mostrar las columnas, incluyendo el nombre, el orden,

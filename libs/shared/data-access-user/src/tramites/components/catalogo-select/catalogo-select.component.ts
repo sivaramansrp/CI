@@ -29,20 +29,20 @@ import { CommonModule } from '@angular/common';
       multi: true,
     },
   ],
- host: { 'hostID': crypto.randomUUID().toString() }
+  host: {}
 })
 export class CatalogoSelectComponent
-  implements ControlValueAccessor, OnChanges
-{
+  implements ControlValueAccessor, OnChanges {
   @Input() id!: string;
   @Input() catalogo!: Catalogo[];
   @Input() label!: string;
   @Input() placeholder!: string;
   @Input() isDisabled!: boolean;
   @Input() required!: boolean;
-  @Input() tooltipQuestionCircle:boolean = false;
+  @Input() tooltipQuestionCircle: boolean = false;
   @Output() selectionChange = new EventEmitter<Catalogo>();
   formSelect: FormGroup;
+  @Input() isInline: boolean = false;
 
   constructor(private fb: FormBuilder) {
     this.formSelect = this.fb.group({
@@ -86,12 +86,12 @@ export class CatalogoSelectComponent
     this.onChange(value);
   }
 
-  private onChange: (value: string) => void = () => {};
-  private onTouched: () => void = () => {};
+  private onChange: (value: string) => void = () => { };
+  private onTouched: () => void = () => { };
 
   writeValue(value: string): void {
-    if (value) {
-      this.formSelect.get('selectControl')?.setValue(value);
+    if (value && this.formSelect.get('selectControl')?.value !== value) {
+      this.formSelect.get('selectControl')?.setValue(value, { emitEvent: false });
     }
   }
 
@@ -106,7 +106,7 @@ export class CatalogoSelectComponent
   }
 
   registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;    
+    this.onTouched = fn;
   }
 
   setDisabledState?(isDisabled: boolean): void {

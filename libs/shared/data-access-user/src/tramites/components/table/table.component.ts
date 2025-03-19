@@ -10,15 +10,16 @@ import {
 import { TableData } from '../../../core/models/shared/components.model';
 
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @Component({
   selector: 'ng-table',
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
   standalone: true,
-  imports: [CommonModule,FormsModule,ReactiveFormsModule],
-  host: { hostID: crypto.randomUUID().toString() },
+  imports: [
+    CommonModule
+  ],
+  host: {}
 })
 export class TableComponent implements OnInit, OnChanges {
   @Input() enableScrollbar: boolean = false;
@@ -34,9 +35,9 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() commonTableBody: any = [];
 
   /**
-   * @description
-   * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero
-   */
+  * @description
+  * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero
+  */
 
   /**
    * @description
