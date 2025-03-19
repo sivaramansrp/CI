@@ -6,6 +6,8 @@ import { AvisoImportacionMaquinasRoutingModule } from './aviso-importacion-maqui
 
 import { BtnContinuarComponent, SolicitanteComponent } from "@ng-mf/data-access-user";
 import { DatosComponent } from './pages/datos/datos.component';
+import { DatosDeLaMercanciaComponent } from './components/datos-de-la-mercancia/datos-de-la-mercancia.component';
+import { DatosDeLaSolicitudComponent } from './pages/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosDelTramiteComponent } from "./components/datos-del-tramite/datos-del-tramite.component";
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { WizardComponent } from "@ng-mf/data-access-user";
@@ -14,14 +16,16 @@ import { WizardComponent } from "@ng-mf/data-access-user";
 
 
 
+
+
 @NgModule({
-  declarations: [DatosComponent,PasoUnoComponent],
+  declarations: [DatosComponent,PasoUnoComponent,DatosDeLaSolicitudComponent],
   imports: [
     CommonModule,
     AvisoImportacionMaquinasRoutingModule,
     WizardComponent,
-    BtnContinuarComponent, SolicitanteComponent,
-    DatosDelTramiteComponent
+    BtnContinuarComponent, SolicitanteComponent,DatosDeLaMercanciaComponent,DatosDelTramiteComponent
+  
 ]
 })
 export class AvisoImportacionMaquinasModule { }

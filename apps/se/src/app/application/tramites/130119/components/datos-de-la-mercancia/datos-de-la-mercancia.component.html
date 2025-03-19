@@ -1,0 +1,100 @@
+<div class="container">
+    <ng-titulo [titulo]="'Datos de la Mercancía'"></ng-titulo>
+    <form [formGroup]="datosDeLaMercanciaForm">
+        <div class="row">
+            <div class="col-md-8">
+                   <div class="form-group">
+                    <label for="descripcion" class="form-label">Descripción de la mercancía *:</label>
+                    <textarea id="descripcion" formControlName="descripcion" class="form-control"></textarea>
+                    <div *ngIf="datosDeLaMercanciaForm.get('descripcion')?.touched && datosDeLaMercanciaForm.get('descripcion')?.invalid">
+                        <small *ngIf="datosDeLaMercanciaForm.get('descripcion')?.errors?.['required']" class="text-danger">Este campo es obligatorio.</small>
+                        <small *ngIf="datosDeLaMercanciaForm.get('descripcion')?.errors?.['pattern']" class="text-danger">Por favor, corrija la descripción.</small>
+                    </div>
+                   </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="form-group">
+                     <app-catalogo-select [label]="'Fracción arancelaria'" [required]="true" formControlName="fraccionArancelaria">
+                     </app-catalogo-select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="umt" class="form-label">UMT :</label>
+                    <input type="text" id="umt" formControlName="umt" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                <label for="cantidad" class="form-label">Cantidad *:</label>
+                <input type="number" id="cantidad" formControlName="cantidad" class="form-control">
+                <div *ngIf="datosDeLaMercanciaForm.get('cantidad')?.touched && datosDeLaMercanciaForm.get('cantidad')?.invalid">
+                    <small *ngIf="datosDeLaMercanciaForm.get('cantidad')?.errors?.['required']" class="text-danger">Este campo es obligatorio.</small>
+                    <small *ngIf="datosDeLaMercanciaForm.get('cantidad')?.errors?.['pattern']" class="text-danger">El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales.</small>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="valorFacturaUSD" class="form-label">Valor factura USD *:</label>
+                    <input type="number" id="valorFacturaUSD" formControlName="valorFacturaUSD" class="form-control">
+                    <div *ngIf="datosDeLaMercanciaForm.get('valorFacturaUSD')?.touched && datosDeLaMercanciaForm.get('valorFacturaUSD')?.invalid">
+                        <small *ngIf="datosDeLaMercanciaForm.get('valorFacturaUSD')?.errors?.['required']" class="text-danger">Este campo es obligatorio.</small>
+                        <small *ngIf="datosDeLaMercanciaForm.get('valorFacturaUSD')?.errors?.['pattern']" class="text-danger">El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales.</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <app-catalogo-select [label]="'País origen'" [required]="true"></app-catalogo-select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <app-catalogo-select [label]="'País exportador'" [required]="true"></app-catalogo-select>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="form-group">
+                <label for="numeroFactura" class="form-label">Número de factura *:</label>
+                <input type="text" id="numeroFactura" formControlName="numeroFactura" class="form-control">
+                <div *ngIf="datosDeLaMercanciaForm.get('numeroFactura')?.touched && datosDeLaMercanciaForm.get('numeroFactura')?.invalid">
+                    <small *ngIf="datosDeLaMercanciaForm.get('numeroFactura')?.errors?.['required']" class="text-danger">Este campo es obligatorio.</small>
+                    <small *ngIf="datosDeLaMercanciaForm.get('numeroFactura')?.errors?.['pattern']" class="text-danger">Por favor, corrija el número de factura.</small>
+                </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fechaExpedicionFactura" class="form-label">Fecha de expedición de factura *:</label>
+                    <input type="date" id="fechaExpedicionFactura" formControlName="fechaExpedicionFactura" class="form-control">
+                    <div *ngIf="datosDeLaMercanciaForm.get('fechaExpedicionFactura')?.touched && datosDeLaMercanciaForm.get('fechaExpedicionFactura')?.invalid">
+                        <small *ngIf="datosDeLaMercanciaForm.get('fechaExpedicionFactura')?.errors?.['required']" class="text-danger">Este campo es obligatorio.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <div class="form-group">
+                        <label for="observaciones" class="form-label">Observaciones:</label>
+                        <textarea class="form-control" id="observaciones" formControlName="observaciones"
+                        placeholder="pruebas"
+                    ></textarea>
+                        <div *ngIf="datosDeLaMercanciaForm.get('observaciones')?.touched && datosDeLaMercanciaForm.get('observaciones')?.invalid">
+                            <small *ngIf="datosDeLaMercanciaForm.get('observaciones')?.errors?.['pattern']" class="text-danger">Por favor, corrija la observaciones.</small>
+                          </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
