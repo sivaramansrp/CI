@@ -113,6 +113,13 @@ export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
 export * from './tramites/shared.module';
 
+export * from './core/models/shared/configuracion-columna.model';
+export * from './core/enums/tabla-seleccion.enum';
+
+export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
+export * from './tramites/directives/Uppercase/uppercase.directive'
+export * from './tramites/directives/Uppercase/uppercase.directive';
+export { RespuestaCatalogos } from './core/models/shared/catalogos.model';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './core/models/shared/configuracion-columna.model';
 export * from './core/enums/tabla-seleccion.enum';
