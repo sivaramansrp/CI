@@ -14,6 +14,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 import { SolicitanteService } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
+import { ModificacionDeDispositivosModule } from './tramites/260911/modificacion-de-dispositivos.module';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { TituloComponent } from "@ng-mf/data-access-user";
     AppRoutingModule,
     CommonModule,
     BreadcrumbComponent,
+    ModificacionDeDispositivosModule,
     FooterComponent,
     HeaderComponent,
     InformacionUsuarioComponent,

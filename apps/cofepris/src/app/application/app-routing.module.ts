@@ -8,11 +8,11 @@ const ROUTES: Routes = [
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
   },
-  {
-    path: 'mod-permiso-importacion',
-    loadChildren: () =>
-      import('./tramites/260912/mod-permiso-importacion.module').then(
-        (m)=> m.ModPermisoImportacionModule
+  { 
+    path:'modificacion-de-dispositivos',
+    loadChildren: () => 
+      import('./tramites/260911/modificacion-de-dispositivos.module').then(
+        (m) => m.ModificacionDeDispositivosModule
       )
   }
 ];
