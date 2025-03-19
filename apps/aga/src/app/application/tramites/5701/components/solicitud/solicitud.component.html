@@ -122,9 +122,9 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <div class="form-check-reverse">
+            <div class="form-check-custome">
               <label class="form-check-label" for="checkIMMEX">Immex (Número/aaaa):</label>
-              <input class="form-check-input" type="checkbox" id="checkIMMEX" formControlName="checkIMMEX"
+              <input class="form-check-input check-ms" type="checkbox" id="checkIMMEX" formControlName="checkIMMEX"
                 (change)="checkImmex()" />
 
             </div>
@@ -140,9 +140,9 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <div class="form-check-reverse">
+            <div class="form-check-custome">
               <label class="form-label" for="industriaAutomotriz">Industria Automotriz:</label>
-              <input class="form-check-input" type="checkbox" id="industriaAutomotriz"
+              <input class="form-check-input check-ms" type="checkbox" id="industriaAutomotriz"
                 formControlName="industriaAutomotriz" (change)="checkAutomotriz()" />
             </div>
             <input class="form-control" id="desIndustrialAutomotriz" placeholder="" type="text"
@@ -165,8 +165,8 @@
         <div class="col-md-6">
           <div class="col">
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="a"
-                id="certificacionA" formControlName="tipoEmpresaCertificada" (change)="
+              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="a" id="certificacionA"
+                formControlName="tipoEmpresaCertificada" (change)="
                   setValoresStore(
                     datosImportadorExportador,
                     'tipoEmpresaCertificada',
@@ -178,8 +178,8 @@
           </div>
           <div class="col">
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="aa"
-                id="certificacionAA" formControlName="tipoEmpresaCertificada" (change)="
+              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="aa" id="certificacionAA"
+                formControlName="tipoEmpresaCertificada" (change)="
                   setValoresStore(
                     datosImportadorExportador,
                     'tipoEmpresaCertificada',
@@ -208,7 +208,7 @@
           <div class="col">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="" id="socioComercial"
-                formControlName="socioComercial" (change)="socioComercialChange()" />
+                formControlName="socioComercial" (change)="checkIdSocioComercial()" />
               <label class="form-check-label" for="socioComercial">Socio comercial</label>
             </div>
           </div>
@@ -229,8 +229,8 @@
 
           <div class="col">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="revision"
-                formControlName="revision" (change)="
+              <input class="form-check-input" type="checkbox" value="" id="revision" formControlName="revision"
+                (change)="
                   setValoresStore(
                     datosImportadorExportador,
                     'revision',
@@ -253,7 +253,16 @@
                 isValid(datosImportadorExportador, 'idSocioComercial')
                   ? 'required'
                   : ''
+              " (change)="
+                setValoresStore(
+                  datosImportadorExportador,
+                  'idSocioComercial',
+                  'setIdSocioComercial'
+                )
               " />
+            @if(isValid(datosImportadorExportador,'idSocioComercial')) {
+            <div class="mensaje-error">Campo requerido</div>
+            }
           </div>
         </div>
       </div>
@@ -323,7 +332,7 @@
                     Especifique los días que se utilizarán dentro del periodo*:
                   </a>
                 </h4>
-                <button type="button" class="collpase-button collapsed"></button>
+                <button type="button" class="collpase-button collapsed" title="Colapsable"></button>
               </div>
               @if(colapsable){
               <div class="panel-collapse collapse in" id="panel-01">

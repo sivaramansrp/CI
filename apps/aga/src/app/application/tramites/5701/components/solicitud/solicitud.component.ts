@@ -52,6 +52,7 @@ import { FormulariosService } from '@ng-mf/data-access-user';
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { Modal } from 'bootstrap';
+import { throws } from 'assert';
 
 
 @Component({
@@ -201,6 +202,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tipoSolicitudSeleccion();
 
     this.desactivarSelectSeccionAduanera = (this.seccionAduanera && this.seccionAduanera.length === 0) ? true : false;
+
+
+    const SOCIO_COMERCIAL = this.datosImportadorExportador.get('socioComercial')?.value;
+    if (SOCIO_COMERCIAL) {
+      this.datosImportadorExportador.get('idSocioComercial')?.enable();
+      this.datosImportadorExportador.get('idSocioComercial')?.setValue(this.solicitudState?.idSocioComercial);
+    }
   }
 
   /**
@@ -802,7 +810,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    *
    * @returns {void} No retorna ningún valor.
    */
-  socioComercialChange(): void {
+  checkIdSocioComercial(): void {
     const SOCIO_COMERCIAL =
       this.datosImportadorExportador.get('socioComercial')?.value;
     if (SOCIO_COMERCIAL) {
@@ -816,11 +824,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.datosImportadorExportador.get('idSocioComercial')?.disable();
     }
 
-    this.setValoresStore(
-      this.datosImportadorExportador,
-      'idSocioComercial',
-      'setIdSocioComercial'
-    );
     this.setValoresStore(
       this.datosImportadorExportador,
       'socioComercial',
@@ -1022,7 +1025,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.datosImportadorExportador.get('desProgramaFomento')?.disable();
     }
 
+    this.setValoresStore(this.datosImportadorExportador, 'programa', 'setPrograma');
   }
+
 
   checkImmex(): void {
     const IMMEX = this.datosImportadorExportador.get('checkIMMEX')?.value;
@@ -1036,7 +1041,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.datosImportadorExportador.get('desImmex')?.reset();
       this.datosImportadorExportador.get('desImmex')?.disable();
     }
+
+    this.setValoresStore(
+      this.datosImportadorExportador, 'checkIMMEX', 'setCheckIMMEX')
   }
+
+
 
   checkAutomotriz(): void {
     const AUTOMOTRIZ = this.datosImportadorExportador.get('industriaAutomotriz')?.value;
@@ -1050,6 +1060,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.datosImportadorExportador.get('desIndustrialAutomotriz')?.reset();
       this.datosImportadorExportador.get('desIndustrialAutomotriz')?.disable();
     }
+
+    this.setValoresStore(this.datosImportadorExportador, 'industriaAutomotriz', 'setIndustriaAutomotriz');
   }
 
 
