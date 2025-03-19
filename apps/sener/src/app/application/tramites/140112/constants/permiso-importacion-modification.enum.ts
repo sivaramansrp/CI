@@ -17,12 +17,6 @@ export const PASOS = [
         activo: false,
         completado: false,
     },
-    {
-        indice: 4,
-        titulo: 'Firmar solicitud',
-        activo: false,
-        completado: false,
-    },
 ];
 
 export const DATOS_GENERALES_SOLICITANTE = [
