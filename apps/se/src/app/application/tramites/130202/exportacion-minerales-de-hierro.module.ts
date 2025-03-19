@@ -14,9 +14,13 @@ import { DatosDelTramiteRealizarComponent } from './components/datos-del-tramite
 
 import { DatosDeLaMercanciaComponent } from './components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { PartidasDeLaMercanciaComponent } from './components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
+
 import { PaisesDeDestinoComponent } from './components/paises-de-destino/paises-de-destino.component';
 import { RepresentacionFederalComponent } from './components/representacion-federal/representacion-federal.component';
 
+import { PasoTresComponent } from '../120402/components/paso-tres/paso-tres.component';
+
+import { PasoDosComponent } from '../120402/components/paso-dos/paso-dos.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +39,9 @@ import { RepresentacionFederalComponent } from './components/representacion-fede
     DatosDeLaMercanciaComponent,
     PartidasDeLaMercanciaComponent,
     PaisesDeDestinoComponent,
-    RepresentacionFederalComponent
+    RepresentacionFederalComponent,
+    PasoTresComponent,
+    PasoDosComponent
   ]
 })
 export class ExportacionMineralesDeHierroModule { }
