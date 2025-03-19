@@ -4,12 +4,13 @@ import { CONSTANTES } from '../../../core/enums/constantes-alertas.enum';
 import { CommonModule } from '@angular/common';
 import { PersonaTerceros } from '../../../core/models/shared/datos-generales.model';
 import { TituloComponent } from '../titulo/titulo.component';
+import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
 
 @Component({
   selector: 'lib-terceros',
   templateUrl: './terceros.component.html',
   standalone: true,
-  imports: [ CommonModule, ReactiveFormsModule, FormsModule, TituloComponent],
+  imports: [ CommonModule, ReactiveFormsModule, FormsModule, TituloComponent, UppercaseDirective],
   styleUrl: './terceros.component.scss',
 })
 export class TercerosComponent {

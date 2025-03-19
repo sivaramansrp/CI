@@ -553,7 +553,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         patente: [{ value: this.solicitudState?.patente, disabled: true }],
         relacionSociedad: [this.solicitudState?.relacionSociedad],
         encargoConferido: [this.solicitudState?.encargoConferido],
-        domicilio: [this.solicitudState?.domicilio],
+        domicilioDespacho: [this.solicitudState?.domicilioDespacho],
       }),
 
       mercancia: this.fb.group({
@@ -562,10 +562,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.solicitudState?.paisProcedencia,
           Validators.required,
         ],
-        descripcion: [this.solicitudState?.descripcion, Validators.required],
+        descripcionGenerica: [this.solicitudState?.descripcionGenerica, [Validators.required, Validators.maxLength(500)]],
         justificacion: [
           this.solicitudState?.justificacion,
-          Validators.required,
+          [Validators.required, Validators.maxLength(1000)],
         ],
       }),
 
@@ -922,15 +922,32 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
  * Cierra el modal.
  */
-  cerrarModal(tipo: string, acepta: boolean = false): void {
+  cerrarModal(tipo: string, acepta: boolean): void {
     this.closeModal.nativeElement.click();
     this.tituloModal = '';
     this.mensajeModal = '';
-
-    if (tipo === 'aviso' && acepta) {
-      console.log('limpio el formulario de despacho');
-      
-      this.despacho.reset();
+    
+    if (tipo === 'aviso' && acepta) {      
+      this.despacho.reset({
+        idAduanaDespacho: '',
+        aduanaDespacho: '',
+        idSeccionDespacho: '',
+        seccionAduanera: '',
+        nombreRecinto: '',
+        tipoOperacion: '',
+        patente: '',
+        relacionSociedad: '',
+        encargoConferido: '',
+        domicilioDespacho: '',
+      });
+     
+      this.setValoresStore(this.despacho, 'idAduanaDespacho', 'setIdAduanaDespacho');
+      this.setValoresStore(this.despacho, 'aduanaDespacho', 'setAduanaDespacho');
+      this.setValoresStore(this.despacho, 'idSeccionDespacho', 'setIdSeccionDespacho');
+      this.setValoresStore(this.despacho, 'seccionAduanera', 'setSeccionAduanera');
+      this.setValoresStore(this.despacho, 'nombreRecinto', 'setNombreRecinto');
+      this.setValoresStore(this.despacho, 'tipoOperacion', 'setTipoOperacion');  
+      this.setValoresStore(this.mercancia, this.idNameAutorizacion, 'setAutorizacionDDEX' )    
     } 
 
 
@@ -940,21 +957,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-  showConfirmDialogLDA_DD(tipo: string): void {
-    console.log('entro en el change de tipos despacho');
-    
-    const SELECCION = this.despachoSeleccion.get(tipo)?.value;
+  showConfirmDialogLDA_DD(tipo: string): void {   
     const ADUANA = this.despacho.get('idAduanaDespacho')?.value;
     const DESPACHO = this.despacho.get('idSeccionDespacho')?.value;
     const RECINTO = this.despacho.get('nombreRecinto')?.value;
-
-    console.log(SELECCION);    
-    console.log(ADUANA);
-    console.log(DESPACHO);
-    console.log(RECINTO);
-    
-    
-    
+ 
 
     if (ADUANA !== '' || DESPACHO !== '' || RECINTO !== '') {      
       this.tituloModal = TITULO_MODAL_ERROR;

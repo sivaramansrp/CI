@@ -68,7 +68,7 @@
                   isValid(datosImportadorExportador, 'rfcImportExport')
                     ? 'required'
                     : ''
-                " appUppercase (blur)="busqueda_rfc()" />
+                " libUppercase (blur)="busqueda_rfc()" />
           </div>
         </div>
         <div class="col-md-8">
@@ -436,6 +436,16 @@
           </div>
         </div>
       </div>
+
+      <div class="row" *ngIf="tipoDespacho">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label" for="domicilioDespacho">Indica el domicilio*:</label>
+            <textarea class="form-control h-25" id="exampleFormControlTextarea1" rows="3"
+              formControlName="domicilioDespacho" id="domicilioDespacho" placeholder="" title="Domicilio"></textarea>
+          </div>
+        </div>
+      </div>
     </div>
 
     @if (individual()) {
@@ -466,9 +476,9 @@
 
         <div class="col-md-8">
           <div class="form-group">
-            <label for="descripcion" class="form-label">Descripción genérica*:</label>
-            <textarea class="form-control" rows="3" id="descripcion" formControlName="descripcion" (change)="
-                setValoresStore(mercancia, 'descripcion', 'setDescripcion')
+            <label for="descripcionGenerica" class="form-label">Descripción genérica*:</label>
+            <textarea class="form-control" rows="3" id="descripcionGenerica" formControlName="descripcionGenerica" (change)="
+                setValoresStore(mercancia, 'descripcionGenerica', 'setDescripcionGenerica')
               "></textarea>
           </div>
         </div>

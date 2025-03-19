@@ -83,16 +83,25 @@ export class CatalogoSelectComponent
     if (selectedOption) {
       this.selectionChange.emit(selectedOption);
     }
-    this.onChange(value);
+    this.onChange(value);    
   }
 
   private onChange: (value: string) => void = () => { };
   private onTouched: () => void = () => { };
 
   writeValue(value: string): void {
-    if (value && this.formSelect.get('selectControl')?.value !== value) {
-      this.formSelect.get('selectControl')?.setValue(value, { emitEvent: false });
+    if (value === null || value === undefined) {
+      // Limpia el valor en el formulario interno del componente
+      this.formSelect.get('selectControl')?.reset();
+    } else {
+      // Establece el valor si no está vacío
+      if (this.formSelect.get('selectControl')?.value !== value) {
+        this.formSelect.get('selectControl')?.setValue(value, { emitEvent: false });
+      }
     }
+    // if (value && this.formSelect.get('selectControl')?.value !== value) {
+    //   this.formSelect.get('selectControl')?.setValue(value, { emitEvent: false });
+    // }
   }
 
   isInvalid(): boolean | null {

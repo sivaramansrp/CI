@@ -58,11 +58,11 @@ export interface Solicitud5701State {
   patente: string;
   relacionSociedad: boolean;
   encargoConferido: boolean;
-  domicilio: string;
+  domicilioDespacho: string;
 
   paisOrigen: number;
   paisProcedencia: number;
-  descripcion: string;
+  descripcionGenerica: string;
   justificacion: string;
 
   idPedimento: number;
@@ -84,6 +84,14 @@ export interface Solicitud5701State {
   monto: string;
 
   tercerosRelacionados: Personas[];
+}
+
+export interface Tercero5701State {
+  nombreTercero: string;
+  correoTercero: string;
+}
+export interface Terceros5701State {
+  terceros: Tercero5701State[];
 }
 
 export function createInitialState(): Solicitud5701State {
@@ -125,10 +133,10 @@ export function createInitialState(): Solicitud5701State {
     patente: '',
     relacionSociedad: false,
     encargoConferido: false,
-    domicilio: '',
+    domicilioDespacho: '',
     paisOrigen: 0,
     paisProcedencia: 0,
-    descripcion: '',
+    descripcionGenerica: '',
     justificacion: '',
     idPedimento: 0,
     patentePedimento: 0,
@@ -414,10 +422,10 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setDomicilio(domicilio: string): void {
+  public setDomicilioDespacho(domicilioDespacho: string): void {
     this.update((state) => ({
       ...state,
-      domicilio,
+      domicilioDespacho,
     }));
   }
 
@@ -435,10 +443,10 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setDescripcion(descripcion: string): void {
+  public setDescripcionGenerica(descripcionGenerica: string): void {
     this.update((state) => ({
       ...state,
-      descripcion,
+      descripcionGenerica,
     }));
   }
 
