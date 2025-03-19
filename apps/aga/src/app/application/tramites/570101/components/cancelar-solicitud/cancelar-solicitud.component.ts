@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil, tap } from 'rxjs';
 
 
 import { CancelarModalidad, CancelarSolicitudForm } from '../../modelos/cancelar-solicitud.modalidad.model';
-import { CrossListLable, FechasService, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { CrossListLable, FechasService, SeccionLibQuery, SeccionLibState, SeccionLibStore, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CancelarSolicitudQuery } from '../../estados/tramite570101.query';
 import { CancelarSolicitudService } from '../../service/cancelar-solicitud.service';
 import { CancelarSolicitudStore } from '../../estados/tramite570101.store';
@@ -44,6 +44,7 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
   cancelarSolicitudFormState!: CancelarSolicitudForm;
   formCancelorSolicitud!: FormGroup;
   public destroyNotifier$: Subject<void> = new Subject();
+  public seccion!: SeccionLibState;
 
   /**
    *Retorna una lista de fechas seleccionadas desde el estado actual del formulario "cancelarSolicitudFormState".
@@ -52,7 +53,7 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
   public get fechasSeleccionadas(): string[] {
     return this.cancelarSolicitudFormState.fechasSeleccionadas.selectedFechas ?? [];
   }
- 
+
   // Inyectamos los servicios necesarios
   constructor(
     private fb: FormBuilder,
@@ -60,7 +61,9 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
     public fechaService: FechasService,
     public cancelarSolictudService: CancelarSolicitudService,
     public cancelarSolicitudQuery: CancelarSolicitudQuery,
-    public validacionesService: ValidacionesFormularioService
+    public validacionesService: ValidacionesFormularioService,
+    private seccionStore: SeccionLibStore,
+    private seccionQuery: SeccionLibQuery
   ) {
     // El constructor está intencionalmente vacío para la inyección de dependencias 
   }
@@ -76,11 +79,54 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((cancelarSolicitud) => {
           this.cancelarSolicitudFormState = cancelarSolicitud;
-          this.crearFormSolicitud(); 
+          this.crearFormSolicitud();
         })
       ).subscribe();
     this.rango_fechas();
     this.getTipoSolicitud();
+
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
+
+    this.formCancelorSolicitud.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        tap((_value) => {
+          this.actualizarValidationInStore();
+
+        })
+      )
+      .subscribe();
+  }
+
+  actualizarValidationInStore(): void {
+    let seccion: number | null = 0;
+    const FORMAS_VALIDAS = this.seccion.formaValida;
+
+    for (let i = 0; i < this.seccion.seccion.length; i++) {
+      if (this.seccion.seccion[i] === true) {
+        seccion = i;
+        break;
+      } else {
+        seccion = null;
+      }
+    }
+
+    if (seccion !== null) {
+      if (this.formCancelorSolicitud.valid) {
+        FORMAS_VALIDAS[seccion] = true;
+        this.seccionStore.establecerFormaValida(FORMAS_VALIDAS);
+      } else {
+        FORMAS_VALIDAS[seccion] = false;
+        this.seccionStore.establecerFormaValida(FORMAS_VALIDAS);
+      }
+    }
   }
 
   // Método para crear el formulario de la solicitud
@@ -93,7 +139,7 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
         { value: this.cancelarSolicitudFormState?.folioVUCEM || '', disabled: true }
       ],
       tipoDeCancelacion: [
-        { value: this.cancelarSolicitudFormState?.tipoDeCancelacion || '', disabled: false},
+        { value: this.cancelarSolicitudFormState?.tipoDeCancelacion || '', disabled: false },
         [Validators.required]
       ],
       horaInicio: [
@@ -108,19 +154,19 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
       ],
       fechasSeleccionadas: this.fb.group({
         selectedFechas: [
-          { value: this.cancelarSolicitudFormState?.fechasSeleccionadas.selectedFechas, disabled: false }
-        ],    
+          { value: this.cancelarSolicitudFormState?.fechasSeleccionadas.selectedFechas || [], disabled: false }
+        ],
       })
     });
 
-    if(this.esSeleccionadaTipoParcial){
+    if (this.esSeleccionadaTipoParcial) {
       this.setSelectedFechasRequired(true);
     }
   }
 
   setSelectedFechasRequired(isRequired: boolean): void {
     const CONTROL = this.formCancelorSolicitud.get('fechasSeleccionadas.selectedFechas');
-    
+
     if (CONTROL) {
       if (isRequired) {
         CONTROL.setValidators([Validators.required]);
@@ -130,14 +176,14 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
       CONTROL.updateValueAndValidity();
     }
   }
-  
+
   // Método para obtener la solicitud de cancelación desde el servicio
   getCancelarSolicitud(): void {
     this.cancelarSolictudService.getCancelarSolicitud()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         // Actualizamos los valores del formulario con los datos obtenidos
-        if(this.cancelarSolicitudFormState.folioSVEX === ""){
+        if (this.cancelarSolicitudFormState.folioSVEX === "") {
           this.formCancelorSolicitud.patchValue(data);
           this.cancelarSolicitudFormState = data;
         }
@@ -171,6 +217,7 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
     const TIPO_SELECCION = this.formCancelorSolicitud.get('tipoDeCancelacion')?.value;
     // Guardamos el tipo de solicitud en el estado global
     this.cancelarSolicitudStore.setTipoDeCancelacion(this.cancelarSolicitudFormState, TIPO_SELECCION);
+    this.formCancelorSolicitud.get('tipoDeCancelacion')?.updateValueAndValidity();
   }
 
   // Método que se ejecuta cuando se seleccionan fechas
@@ -180,6 +227,8 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
     SELECTED_FECHAS_CONTROL?.setValue(selectedFechas);
     // Actualizamos las fechas seleccionadas en el estado global
     this.cancelarSolicitudStore.setFechasSeleccionadas(this.cancelarSolicitudFormState, selectedFechas);
+    FECHAS_SELECCIONDAS_GROUP.updateValueAndValidity();
+    this.actualizarValidationInStore();
   }
 
   // Método que se ejecuta cuando cambia la descripción
@@ -187,6 +236,8 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
     const DESCRIPCION = this.formCancelorSolicitud.get('descripcion')?.value;
     // Actualizamos la descripción en el estado global
     this.cancelarSolicitudStore.setDescripcion(this.cancelarSolicitudFormState, DESCRIPCION);
+    this.formCancelorSolicitud.get('descripcion')?.updateValueAndValidity();
+    this.actualizarValidationInStore();
   }
   /**
    * Verifica si un campo específico en un formulario es válido.

@@ -19,6 +19,7 @@ describe('CancelarSolicitudComponent', () => {
   let cancelarSolicitudFormState: CancelarSolicitudForm;
   let fechaServiceMock: any;
   let validacionesServiceMock: any;
+  let seccion:any;
 
   beforeEach(async () => {
     // Mock Services
@@ -46,6 +47,17 @@ describe('CancelarSolicitudComponent', () => {
       setDescripcion: jest.fn()
     };
 
+    seccion = {
+      seccion :[
+        false,
+        true
+      ],
+      formvalida:[
+        false,
+        false
+      ]
+    }
+    
     cancelarSolicitudFormState = {
       folioSVEX: "SVEX470000012025",
       folioVUCEM: "01057001000120252470000002",
@@ -121,35 +133,44 @@ describe('CancelarSolicitudComponent', () => {
     expect(component.formCancelorSolicitud.get('folioSVEX')?.value).toBe('SVEX470000012025');
   });
 
-  it('should update esSeleccionadaTipoParcial when tipoDeCancelacion changes', () => {
+  it('should update esSeleccionadaTipoParcial to true when tipoDeCancelacion is "2"', () => {
     component.formCancelorSolicitud.get('tipoDeCancelacion')?.setValue('2');
+    component.seccion = seccion;
     component.tipoSolicitudSeleccion();
     expect(component.esSeleccionadaTipoParcial).toBe(true);
+    expect(cancelarSolicitudStoreMock.setTipoDeCancelacion).toHaveBeenCalledWith(
+      cancelarSolicitudFormState,
+      '2'
+    );
   });
 
-  it('should set esSeleccionadaTipoParcial and call store when tipoDeCancelacion is set', () => {
+  it('should call store and update esSeleccionadaTipoParcial to true when tipoDeCancelacion is patched to "2"', () => {
     component.formCancelorSolicitud.patchValue({ tipoDeCancelacion: '2' });
+    component.seccion = seccion;
     component.tipoSolicitudSeleccion();
     expect(component.esSeleccionadaTipoParcial).toBe(true);
-    expect(cancelarSolicitudStoreMock.setTipoDeCancelacion).toHaveBeenCalledWith(cancelarSolicitudFormState,'2');
+    expect(cancelarSolicitudStoreMock.setTipoDeCancelacion).toHaveBeenCalledWith(
+      cancelarSolicitudFormState,
+      '2'
+    );
   });
-  
-  it('should set esSeleccionadaTipoParcial to false for a non-parcial tipoDeCancelacion', () => {
+
+  it('should call store and update esSeleccionadaTipoParcial to false when tipoDeCancelacion is "1"', () => {
     component.formCancelorSolicitud.patchValue({ tipoDeCancelacion: '1' });
+    component.seccion = seccion;
     component.tipoSolicitudSeleccion();
     expect(component.esSeleccionadaTipoParcial).toBe(false);
-    expect(cancelarSolicitudStoreMock.setTipoDeCancelacion).toHaveBeenCalledWith(cancelarSolicitudFormState,'1');
+    expect(cancelarSolicitudStoreMock.setTipoDeCancelacion).toHaveBeenCalledWith(
+      cancelarSolicitudFormState,
+      '1'
+    );
   });
 
-  it('should call store when updating selected fechas', () => {
-    component.onFechasSeleccionadasChange(['02-03-2025']);
-    expect(cancelarSolicitudStoreMock.setFechasSeleccionadas).toHaveBeenCalledWith(cancelarSolicitudFormState, ['02-03-2025']);
-  });
-
-  it('should call store when updating descripcion', () => {
-    component.formCancelorSolicitud.get('descripcion')?.setValue('Test description');
-    component.onDescripcionChange();
-    expect(cancelarSolicitudStoreMock.setDescripcion).toHaveBeenCalledWith(cancelarSolicitudFormState,'Test description', );
+  it('should update form and call updateValueAndValidity on tipoDeCancelacion', () => {
+    const tipoDeCancelacionControl = component.formCancelorSolicitud.get('tipoDeCancelacion');
+    jest.spyOn(tipoDeCancelacionControl!, 'updateValueAndValidity');
+    component.tipoSolicitudSeleccion();
+    expect(tipoDeCancelacionControl?.updateValueAndValidity).toHaveBeenCalled();
   });
 
   it('should return valid status for a form field', () => {

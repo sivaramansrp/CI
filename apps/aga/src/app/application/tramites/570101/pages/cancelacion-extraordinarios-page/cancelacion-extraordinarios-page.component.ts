@@ -65,8 +65,8 @@ export class CancelacionExtraordinariosPageComponent implements AfterViewInit,On
    /**
      * Método para asignar las secciones existentes al stored
      */
-   private asignarSecciones():void {
-    const SECCIONES: boolean[] = [];
+   private asignarSecciones(): void {
+    const SECCIONES: boolean[] = Object.values(SECCIONES_TRAMITE_570101.PASO_1);
     const FORM_VALIDA: boolean[] = [];
     for (const LLAVE_SECCIONE in SECCIONES_TRAMITE_570101.PASO_1) {
       if(LLAVE_SECCIONE) {
