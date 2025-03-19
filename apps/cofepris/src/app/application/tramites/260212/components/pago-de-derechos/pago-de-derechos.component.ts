@@ -1,26 +1,18 @@
 
-import { Component, OnInit} from '@angular/core';
+/**
+ * Importaciones necesarias para el funcionamiento del componente.
+ */
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import {Catalogo, CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 
-import {TituloComponent} from '@libs/shared/data-access-user/src';
-import { TableComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
+
 /**
- * Componente que gestiona el pago de derechos en el sistema.
- * 
- * Este componente permite gestionar el proceso de pago de derechos, incluyendo la captura de datos relacionados
- * con la clave de referencia, la dependencia, el banco, la llave de pago, la fecha de pago y el importe.
- * 
- * @component PagoDeDerechosComponent
- * @description Componente para gestionar el pago de derechos en el sistema.
- * 
- * @example
- * ```ts
- * const componente = new PagoDeDerechosComponent(formBuilder);
- * componente.submitPagoDeDerechos();
- * ```
+ * Componente que gestiona el pago de derechos.
+ * Utiliza un formulario reactivos para recopilar datos del usuario.
  */
 @Component({
   selector: 'app-pago-de-derechos',
@@ -28,62 +20,69 @@ import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
   imports: [
     CommonModule,
     TituloComponent,
-    TableComponent,
     ReactiveFormsModule,
     CatalogoSelectComponent,
   ],
   templateUrl: './pago-de-derechos.component.html',
-  styleUrl: './pago-de-derechos.component.scss',
+  styleUrls: ['./pago-de-derechos.component.scss',],
 })
 export class PagoDeDerechosComponent implements OnInit {
-  dropdownData: Catalogo[] = [];
+
   /**
-   * Formulario para gestionar el pago de derechos.
-   *
-   * Este formulario incluye los campos necesarios para realizar un pago de derechos, como la clave de referencia,
-   * la cadena de la dependencia, el banco, la llave de pago, la fecha de pago y el importe de pago.
-   *
-   * @property {FormGroup} pagoDerechos
-   * @public
-   * @type {FormGroup}
+   * Datos para el selector de opciones.
+   */
+  dropdownData: any[] = [];
+
+  /**
+   * Formulario reactivos para el pago de derechos.
+   * Cada campo es obligatorio.
    */
   public pagoDerechos: FormGroup = this.fb.group({
+    /**
+     * Clave de referencia.
+     */
     claveDeReferncia: ['', [Validators.required]],
+    /**
+     * Cadena de la dependencia.
+     */
     cadenaDeLaDependencia: ['', [Validators.required]],
+    /**
+     * Banco seleccionado.
+     */
     banco: ['', [Validators.required]],
+    /**
+     * Llave de pago.
+     */
     llaveDePago: ['', [Validators.required]],
+    /**
+     * Fecha de pago.
+     */
     fechaDePago: ['', [Validators.required]],
+    /**
+     * Importe del pago.
+     */
     importeDePago: ['', [Validators.required]],
   });
 
+  /**
+   * Ciclo de vida que se ejecuta al iniciar el componente.
+   * Obtiene los datos para el selector de opciones desde el servicio.
+   */
   ngOnInit(): void {
     this.pagoDeDerechosService.getData().subscribe((data) => {
       this.dropdownData = data;
     });
   }
 
-
   /**
-   * Constructor para inicializar el formulario.
-   *
-   * @constructor
-   * @param {FormBuilder} fb - Constructor que se utiliza para inicializar el formulario de pago de derechos.
+   * Constructor del componente.
+   * Inyecta el FormBuilder y el servicio de pago de derechos.
+   * 
+   * @param fb Constructor de formularios para crear el formulario reactivos.
+   * @param pagoDeDerechosService Servicio que proporciona datos para el componente.
    */
   constructor(
     private fb: FormBuilder,
     private pagoDeDerechosService: PagoDeDerechosService
-  ) {}
-
-  /**
-   * Envía el formulario de pago de derechos y muestra los valores en la consola.
-   *
-   * Este método se ejecuta cuando el formulario es enviado. Muestra los valores del formulario en la consola
-   * para su verificación.
-   *
-   * @method submitPagoDeDerechos
-   * @description Envía el formulario de pago de derechos y muestra los valores en la consola.
-   */
-  submitPagoDeDerechos() {
-    console.log(this.pagoDerechos.value);
-  }
+  ) { }
 }

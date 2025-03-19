@@ -1,14 +1,32 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
+import { of } from 'rxjs';
 
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
   let fixture: ComponentFixture<PagoDeDerechosComponent>;
+  let pagoDeDerechosMockService: any;
 
   beforeEach(async () => {
+    pagoDeDerechosMockService = {
+      getData: jest.fn().mockReturnValue(of([
+        { id: "Banco1", descripcion: "Banco1" },
+        { id: "Banco2", descripcion: "Banco2" },
+        { id: "Banco3", descripcion: "Banco3" },
+      ])),
+    };
+
     await TestBed.configureTestingModule({
-      imports: [PagoDeDerechosComponent]
+      imports: [CommonModule, ReactiveFormsModule, PagoDeDerechosComponent],
+      declarations: [],
+      providers: [
+        { provide: PagoDeDerechosService, useValue: pagoDeDerechosMockService }
+      ]
+
     })
     .compileComponents();
 
@@ -17,82 +35,28 @@ describe('PagoDeDerechosComponent', () => {
     fixture.detectChanges();
   });
 
+  beforeEach(() => {
+    fixture = TestBed.createComponent(PagoDeDerechosComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should initialize the form', () => {
+    expect(component.pagoDerechos).toBeDefined();
+    expect(component.pagoDerechos.controls['claveDeReferncia']).toBeDefined();
+  });
+
+  it('should call getData on init', () => {
+    expect(pagoDeDerechosMockService.getData).toHaveBeenCalled();
+  });
+
+  it('should log form values to the console', () => {
+    spyOn(console, 'log');
+    component.submitPagoDeDerechos();
+    expect(console.log).toHaveBeenCalledTimes(1);
+  });
 });
-
-
-
-// test cases - try and remove if not useful
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
-// import { ReactiveFormsModule } from '@angular/forms';
-// import { PagoDeDerechosComponent } from './pago-de-derechos.component'; // Replace with actual component path
-// import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src'; // Replace with actual path
-
-// describe('PagoDerechosComponent', () => {
-//   let component: PagoDeDerechosComponent;
-//   let fixture: ComponentFixture<PagoDeDerechosComponent>;
-
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       declarations: [PagoDeDerechosComponent, CatalogoSelectComponent],
-//       imports: [ReactiveFormsModule]
-//     }).compileComponents();
-
-//     fixture = TestBed.createComponent(PagoDeDerechosComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
-
-//   it('should create the component', () => {
-//     expect(component).toBeTruthy();
-//   });
-
-//   it('should initialize the form group', () => {
-//     expect(component.pagoDerechos).toBeDefined();
-//     expect(component.pagoDerechos.controls['claveDeReferncia']).toBeDefined();
-//     expect(component.pagoDerechos.controls['cadenaDeLaDependencia']).toBeDefined();
-//     expect(component.pagoDerechos.controls['llaveDePago']).toBeDefined();
-//     expect(component.pagoDerechos.controls['fechaDePago']).toBeDefined();
-//     expect(component.pagoDerechos.controls['importeDePago']).toBeDefined();
-//   });
-
-//   it('should render form fields correctly', () => {
-//     const compiled = fixture.nativeElement;
-//     expect(compiled.querySelector('#claveDeReferncia')).toBeTruthy();
-//     expect(compiled.querySelector('#cadenaDeLaDependencia')).toBeTruthy();
-//     expect(compiled.querySelector('#llaveDePago')).toBeTruthy();
-//     expect(compiled.querySelector('#fechaDePago')).toBeTruthy();
-//     expect(compiled.querySelector('#importeDePago')).toBeTruthy();
-//   });
-
-//   it('should validate required fields', () => {
-//     const claveDeRefernciaControl = component.pagoDerechos.get('claveDeReferncia');
-//     claveDeRefernciaControl?.setValue('');
-//     expect(claveDeRefernciaControl?.valid).toBeFalsy();
-
-//     const cadenaDeLaDependenciaControl = component.pagoDerechos.get('cadenaDeLaDependencia');
-//     cadenaDeLaDependenciaControl?.setValue('');
-//     expect(cadenaDeLaDependenciaControl?.valid).toBeFalsy();
-
-//     const llaveDePagoControl = component.pagoDerechos.get('llaveDePago');
-//     llaveDePagoControl?.setValue('');
-//     expect(llaveDePagoControl?.valid).toBeFalsy();
-
-//     const fechaDePagoControl = component.pagoDerechos.get('fechaDePago');
-//     fechaDePagoControl?.setValue('');
-//     expect(fechaDePagoControl?.valid).toBeFalsy();
-
-//     const importeDePagoControl = component.pagoDerechos.get('importeDePago');
-//     importeDePagoControl?.setValue('');
-//     expect(importeDePagoControl?.valid).toBeFalsy();
-//   });
-
-//   it('should handle "Borrar datos del pago" button click', () => {
-//     const compiled = fixture.nativeElement;
-//     const button = compiled.querySelector('.btn-danger');
-//     button.click();
-//     fixture.detectChanges();
-//   });
-// });

@@ -35,6 +35,6 @@ import { TercerosService } from './services/terceros.service';
     FormularioOperacionComercialComponent,
     RepresentanteLegalComponent
   ],
-  providers: [provideHttpClient(), ToastrService,SolicitudService, PagoDeDerechosService,TercerosService],
+  providers: [provideHttpClient(), ToastrService,SolicitudService,PagoDeDerechosService,TercerosService],
 })
 export class PermisoMaquilaModule { }

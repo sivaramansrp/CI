@@ -115,12 +115,14 @@
             <h6>Terceros nacionalidad*:</h6>
             <div class="mt-2">
               <input class="form-check-input me-3" type="radio" name="tercerosNacionalidad" value="nacional"
-                formControlName="tercerosNacionalidad" id="nacional" />
+                formControlName="tercerosNacionalidad" id="nacional" [checked]="nacional"
+                (change)="tercerosInputChecked('nacional')" />
               <label class="control-label" for="nacional">Nacional</label>
             </div>
             <div class="mt-2">
               <input class="form-check-input me-3" type="radio" name="tercerosNacionalidad" value="extranjero"
-                formControlName="tercerosNacionalidad" id="extranjero" />
+                formControlName="tercerosNacionalidad" id="extranjero" [checked]="extranjero"
+                (change)="tercerosInputChecked('extranjero')" />
               <label class="control-label" for="extranjero">Extranjero</label>
             </div>
           </div>
@@ -146,34 +148,61 @@
       </div>
       <hr />
 
+      <!-- toggling inputs based on radio button selection -->
 
       <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
-                ata-bs-toggle="tooltip"></span>
-            </label>
-            <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
-          </div>
-        </div>
-
-
-        <!-- toggling inputs based on radio button selection -->
-
-        @if (fisica || (!fisica && !moral)){
+        @if (nacional && fisica || (!fisica && !moral)){
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label">C.U.R.P*:<span class="bi bi-question-circle-fill fs-4 m-1"
+              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+                  ata-bs-toggle="tooltip"></span>
+              </label>
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+            </div>
+          </div>
+        </div>
+        <hr>
+        <hr>
+        <h5>Datos personales</h5>
+        <div class="row d-flex datos-personales-form-container">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="nombre" class="form-label">Nombre(s)*: </label>
+              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="primerApellido">Primer apellido*:</label>
+              <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
+                class="form-control" />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
+              <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
+                class="form-control" />
+            </div>
+          </div>
+        </div>
+        }
+
+        @if (nacional && moral){
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1"
                   title="Title" ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
             </div>
           </div>
         </div>
-        }
 
-        @if (moral || (!fisica && !moral)){
         <div class="row">
           <div class="col-md-8">
             <div class="form-group">
@@ -185,6 +214,47 @@
         </div>
         }
 
+        @if (extranjero && moral || (!fisica && !moral)){
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
+              <input type="text" class="form-control" id="denominacionRazonSocial"
+                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+            </div>
+          </div>
+        </div>
+        }
+
+        @if (extranjero && fisica){
+        <h5>Datos personales</h5>
+        <div class="row d-flex datos-personales-form-container">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="nombre" class="form-label">Nombre(s)*: </label>
+              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="primerApellido">Primer apellido*:</label>
+              <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
+                class="form-control" />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
+              <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
+                class="form-control" />
+            </div>
+          </div>
+        </div>
+        }
+
+
 
         <hr>
         <hr>
@@ -192,84 +262,122 @@
         <!-- Domicilio-form-container -->
         <h5>Domicilio</h5>
         <div class="row d-flex domicilio-form-container">
-          <div class="col-md-4 mt-5">
-            <div class="form-group">
-              <label class="form-label" for="pais">Pais*:</label>
-              <select class="form-control" id="pais" formControlName="pais" name="pais">
-                <option value="">MEXICO(ESTADOS UNIDOS MEXICANO)</option>
-                <option value="sample 1">sample 1</option>
-                <option value="sample 2">sample 2</option>
-                <option value="sample 3">sample 3</option>
-              </select>
+
+          @if(nacional){
+          <div>
+            <div class="col-md-4 mt-2">
+              <div class="form-group">
+                <label class="form-label" for="pais">Pais*:</label>
+                <select class="form-control" id="pais" formControlName="pais" name="pais">
+                  <option value="">MEXICO(ESTADOS UNIDOS MEXICANO)</option>
+                  <option value="sample 1">sample 1</option>
+                  <option value="sample 2">sample 2</option>
+                  <option value="sample 3">sample 3</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-4 mt-2">
+              <div class="form-group">
+                <app-catalogo-select [catalogo]="dropdownData" [label]="'Estado/localidad'" [required]="true"
+                  for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad"></app-catalogo-select>
+              </div>
+            </div>
+
+            <div class="col-md-4 mt-2">
+              <div class="form-group">
+                <app-catalogo-select [catalogo]="municipioDropdownData" [label]="'Municipio/alcaldia'" [required]="true"
+                  for="municipioAlcaldia" id="municipioAlcaldia"
+                  formControlName="municipioAlcaldia"></app-catalogo-select>
+              </div>
+            </div>
+            <hr />
+
+            <div class="col-md-4 mt-2">
+              <div class="form-group">
+                <app-catalogo-select [catalogo]="localidadDropdownData" [label]="'Localidad'" [required]="false"
+                  for="localidad" id="localidad" formControlName="localidad"></app-catalogo-select>
+              </div>
+            </div>
+
+            <div class="col-md-4 mt-2">
+              <div class="form-group">
+                <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente'"
+                  [required]="true" for="codigoPostaloEquivalente" id="codigoPostaloEquivalente"
+                  formControlName="codigoPostaloEquivalente"></app-catalogo-select>
+              </div>
+            </div>
+
+            <div class="col-md-4 mt-2">
+              <div class="form-group">
+                <app-catalogo-select [catalogo]="coloniaDropdownData" [label]="'Colonia'" for="colonia" id="colonia"
+                  formControlName="colonia"></app-catalogo-select>
+              </div>
+            </div>
+          </div>
+          }
+
+          @if(extranjero){
+          <div class="pl-0">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="pais">Pais*:</label>
+                <select class="form-control" id="pais" formControlName="pais" name="pais">
+                  <option value="">MEXICO(ESTADOS UNIDOS MEXICANO)</option>
+                  <option value="sample 1">sample 1</option>
+                  <option value="sample 2">sample 2</option>
+                  <option value="sample 3">sample 3</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="extranjeroEstado" class="form-label">Estado*: </label>
+                <input type="text" id="extranjeroEstado" formControlName="extranjeroEstado" name="extranjeroEstado"
+                  class="form-control" />
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="extranjeroCodigo">Código postal o equivalente:</label>
+                <input type="text" id="extranjeroCodigo" formControlName="extranjeroCodigo" name="extranjeroCodigo"
+                  class="form-control" />
+              </div>
+            </div>
+
+          </div>
+          <div class="pl-0">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="extranjeroColonia">Colonia o equivalente:</label>
+                <input class="form-control" type="text" id="extranjeroColonia" formControlName="extranjeroColonia"
+                  name="extranjeroColonia" />
+              </div>
+            </div>
+          </div>
+          }
+
+          <div class="mt-5 p-0">
+            <div class="col-md-8">
+              <div class="form-group">
+                <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
+                    title="Title" ata-bs-toggle="tooltip"></span></label>
+                <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="numeroExterior" class="form-label">Número exterior*:
+                </label>
+                <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control"
+                  name="numeroExterior" />
+              </div>
             </div>
           </div>
 
-          <div class="col-md-4 mt-5">
-            <div class="form-group">
-              <app-catalogo-select [catalogo]="dropdownData" [label]="'Estado/localidad*'" [required]="true"
-                for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad"></app-catalogo-select>
-            </div>
-          </div>
-
-          <div class="col-md-4 mt-5">
-            <div class="form-group">
-              <app-catalogo-select [catalogo]="municipioDropdownData" [label]="'Municipio/alcaldia:'" [required]="true"
-                for="municipioAlcaldia" id="municipioAlcaldia"
-                formControlName="municipioAlcaldia"></app-catalogo-select>
-            </div>
-          </div>
-
-          <hr />
-
-          <div class="col-md-4 mt-5">
-            <div class="form-group">
-              <app-catalogo-select [catalogo]="localidadDropdownData" [label]="'Localidad'" [required]="false"
-                for="localidad" id="localidad" formControlName="localidad"></app-catalogo-select>
-            </div>
-          </div>
-
-          <div class="col-md-4 mt-5">
-            <div class="form-group">
-              <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente*:'"
-                for="codigoPostaloEquivalente" id="codigoPostaloEquivalente"
-                formControlName="codigoPostaloEquivalente"></app-catalogo-select>
-            </div>
-          </div>
-
-          <div class="col-md-4 mt-5">
-            <div class="form-group">
-              <app-catalogo-select [catalogo]="coloniaDropdownData" [label]="'Colonia:'" for="colonia" id="colonia"
-                formControlName="colonia"></app-catalogo-select>
-            </div>
-          </div>
-
-          <div class="col-md-4 mt-5 offset-md-4">
-            <div class="form-group">
-              <label class="form-label" for="coloniaoEquivalente">Colonia o equivalente:</label>
-              <input class="form-control" type="text" id="coloniaoEquivalente" formControlName="coloniaoEquivalente"
-                name="coloniaoEquivalente" />
-            </div>
-          </div>
-
-          <br />
-          <br />
-
-          <div class="col-md-8">
-            <div class="form-group">
-              <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
-              <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="form-group">
-              <label for="numeroExterior" class="form-label">Número exterior*:
-              </label>
-              <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control"
-                name="numeroExterior" />
-            </div>
-          </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
